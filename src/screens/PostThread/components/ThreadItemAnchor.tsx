@@ -27,6 +27,7 @@ import {
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
+import {useMerticDisabledPref} from '#/state/preferences'
 import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
@@ -201,6 +202,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const threadRootUri = record.reply?.root?.uri || post.uri
   const authorHref = makeProfileLink(post.author)
   const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
+
+  const {likeMetrics, repostMetrics, quoteMetrics, bookmarkMetrics} =
+    useMerticDisabledPref()
 
   const likesHref = useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -415,10 +419,25 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             post={item.value.post}
             isThreadAuthor={isThreadAuthor}
           />
-          {post.repostCount !== 0 ||
-          post.likeCount !== 0 ||
+          {(post.repostCount !== 0 &&
+            !(
+              repostMetrics === 'hide-all' ||
+              (repostMetrics === 'hide-own' &&
+                post.author.did === currentAccount?.did)
+            )) ||
+          (post.likeCount !== 0 &&
+            !(
+              likeMetrics === 'hide-all' ||
+              (likeMetrics === 'hide-own' &&
+                post.author.did === currentAccount?.did)
+            )) ||
           post.quoteCount !== 0 ||
-          post.bookmarkCount !== 0 ? (
+          (post.bookmarkCount !== 0 &&
+            !(
+              bookmarkMetrics === 'hide-all' ||
+              (bookmarkMetrics === 'hide-own' &&
+                post.author.did === currentAccount?.did)
+            )) ? (
             // Show this section unless we're *sure* it has no engagement.
             <View
               style={[
@@ -435,7 +454,13 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 a.py_md,
                 t.atoms.border_contrast_low,
               ]}>
-              {post.repostCount != null && post.repostCount !== 0 ? (
+              {post.repostCount != null &&
+              post.repostCount !== 0 &&
+              !(
+                repostMetrics === 'hide-all' ||
+                (repostMetrics === 'hide-own' &&
+                  post.author.did === currentAccount?.did)
+              ) ? (
                 <Link to={repostsHref} label={_(msg`Reposts of this post`)}>
                   <Text
                     testID="repostCount-expanded"
@@ -452,24 +477,43 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 </Link>
               ) : null}
               {post.quoteCount != null &&
-              post.quoteCount !== 0 &&
+              post.quoteCount > 0 &&
               !post.viewer?.embeddingDisabled ? (
                 <Link to={quotesHref} label={_(msg`Quotes of this post`)}>
                   <Text
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.quoteCount)}
-                    </Text>{' '}
-                    <Plural
-                      value={post.quoteCount}
-                      one="quote"
-                      other="quotes"
-                    />
+                    {quoteMetrics === 'hide-all' ||
+                    (quoteMetrics === 'hide-own' &&
+                      post.author.did === currentAccount?.did) ? (
+                      <Plural
+                        value={post.quoteCount}
+                        one="View Quote"
+                        other="View Quotes"
+                      />
+                    ) : (
+                      <>
+                        <Text
+                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                          {formatPostStatCount(post.quoteCount)}
+                        </Text>{' '}
+                        <Plural
+                          value={post.quoteCount}
+                          one="quote"
+                          other="quotes"
+                        />
+                      </>
+                    )}
                   </Text>
                 </Link>
               ) : null}
-              {post.likeCount != null && post.likeCount !== 0 ? (
+              {post.likeCount != null &&
+              post.likeCount !== 0 &&
+              !(
+                likeMetrics === 'hide-all' ||
+                (likeMetrics === 'hide-own' &&
+                  post.author.did === currentAccount?.did)
+              ) ? (
                 <Link to={likesHref} label={_(msg`Likes on this post`)}>
                   <Text
                     testID="likeCount-expanded"
@@ -481,7 +525,13 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   </Text>
                 </Link>
               ) : null}
-              {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
+              {post.bookmarkCount != null &&
+              post.bookmarkCount !== 0 &&
+              !(
+                bookmarkMetrics === 'hide-all' ||
+                (bookmarkMetrics === 'hide-own' &&
+                  post.author.did === currentAccount?.did)
+              ) ? (
                 <Text
                   testID="bookmarkCount-expanded"
                   style={[a.text_md, t.atoms.text_contrast_medium]}>
