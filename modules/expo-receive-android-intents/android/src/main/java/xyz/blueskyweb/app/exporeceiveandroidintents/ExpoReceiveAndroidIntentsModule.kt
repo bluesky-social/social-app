@@ -23,8 +23,14 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     ModuleDefinition {
       Name("ExpoReceiveAndroidIntents")
 
+      OnStart {
+        intent?.let {
+          handleIntent(intent)
+        }
+      }
+
       OnNewIntent {
-        handleIntent(it)
+        intent = it
       }
     }
 
