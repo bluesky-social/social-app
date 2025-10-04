@@ -190,15 +190,19 @@ export function SearchScreenShell({
     setShowAutocomplete(false)
     if (isWeb) {
       // Empty params resets the URL to be /search rather than /search?q=
-
-      const {q: _q, ...parameters} = (route.params ?? {}) as {
+      // Also clear the tab parameter
+      const {
+        q: _q,
+        tab: _tab,
+        ...parameters
+      } = (route.params ?? {}) as {
         [key: string]: string
       }
       // @ts-expect-error route is not typesafe
       navigation.replace(route.name, parameters)
     } else {
       setSearchText('')
-      navigation.setParams({q: ''})
+      navigation.setParams({q: '', tab: undefined})
     }
   }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
 
@@ -236,15 +240,19 @@ export function SearchScreenShell({
   const onSoftReset = useCallback(() => {
     if (isWeb) {
       // Empty params resets the URL to be /search rather than /search?q=
-
-      const {q: _q, ...parameters} = (route.params ?? {}) as {
+      // Also clear the tab parameter when soft resetting
+      const {
+        q: _q,
+        tab: _tab,
+        ...parameters
+      } = (route.params ?? {}) as {
         [key: string]: string
       }
       // @ts-expect-error route is not typesafe
       navigation.replace(route.name, parameters)
     } else {
       setSearchText('')
-      navigation.setParams({q: ''})
+      navigation.setParams({q: '', tab: undefined})
       textInput.current?.focus()
     }
   }, [navigation, route])
@@ -268,9 +276,21 @@ export function SearchScreenShell({
     }
   }, [setShowAutocomplete])
 
-  const focusSearchInput = useCallback(() => {
-    textInput.current?.focus()
-  }, [])
+  const focusSearchInput = useCallback(
+    (tab?: 'user' | 'profile' | 'feed') => {
+      textInput.current?.focus()
+
+      // If a tab is specified, set the tab parameter
+      if (tab) {
+        if (isWeb) {
+          navigation.setParams({...route.params, tab})
+        } else {
+          navigation.setParams({tab})
+        }
+      }
+    },
+    [navigation, route],
+  )
 
   const showHeader = !gtMobile || navButton !== 'menu'
 
@@ -421,13 +441,42 @@ let SearchScreenInner = ({
   query: string
   queryWithParams: string
   headerHeight: number
-  focusSearchInput: () => void
+  focusSearchInput: (tab?: 'user' | 'profile' | 'feed') => void
 }): React.ReactNode => {
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
-  const [activeTab, setActiveTab] = useState(0)
+  const route = useRoute()
+
+  // Get tab parameter from route params
+  const tabParam = (
+    route.params as {q?: string; tab?: 'user' | 'profile' | 'feed'}
+  )?.tab
+
+  // Map tab parameter to tab index
+  const getInitialTabIndex = useCallback(() => {
+    if (!tabParam) return 0
+    switch (tabParam) {
+      case 'user':
+      case 'profile':
+        return 2 // People tab
+      case 'feed':
+        return 3 // Feeds tab
+      default:
+        return 0
+    }
+  }, [tabParam])
+
+  const [activeTab, setActiveTab] = useState(getInitialTabIndex())
+
+  // Update activeTab when tabParam changes
+  useLayoutEffect(() => {
+    const newTabIndex = getInitialTabIndex()
+    if (newTabIndex !== activeTab) {
+      setActiveTab(newTabIndex)
+    }
+  }, [tabParam, activeTab, getInitialTabIndex])
 
   const onPageSelected = useCallback(
     (index: number) => {
@@ -444,6 +493,7 @@ let SearchScreenInner = ({
       activeTab={activeTab}
       headerHeight={headerHeight}
       onPageSelected={onPageSelected}
+      initialPage={activeTab}
     />
   ) : hasSession ? (
     <Explore focusSearchInput={focusSearchInput} headerHeight={headerHeight} />
