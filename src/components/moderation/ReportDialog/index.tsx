@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {type ScrollView} from 'react-native-gesture-handler'
-import {type AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs, BSKY_LABELER_DID} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -30,12 +30,20 @@ import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
-import {SUPPORT_PAGE} from './const'
+import {
+  BSKY_LABELER_ONLY_REPORT_REASONS,
+  NEW_TO_OLD_REASONS_MAP,
+  SUPPORT_PAGE,
+} from './const'
 import {useCopyForSubject} from './copy'
 import {initialState, reducer} from './state'
 import {type ReportDialogProps, type ReportSubject} from './types'
 import {parseReportSubject} from './utils/parseReportSubject'
-import {type ReportOption, useReportOptions} from './utils/useReportOptions'
+import {
+  type ReportCategoryConfig,
+  type ReportOption,
+  useReportOptions,
+} from './utils/useReportOptions'
 
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
@@ -95,7 +103,7 @@ function Inner(props: ReportDialogProps) {
   } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
   const copy = useCopyForSubject(props.subject)
-  const reportOptions = useReportOptions()
+  const {sortedCategories, getCategory} = useReportOptions()
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
   /**
@@ -131,9 +139,18 @@ function Inner(props: ReportDialogProps) {
       })
       .filter(l => {
         if (!state.selectedOption) return true
+        // some reasons ONLY go to Bluesky
+        if (BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)) {
+          return l.creator.did === BSKY_LABELER_DID
+        }
         const reasonTypes: string[] | undefined = l.reasonTypes
         if (reasonTypes === undefined) return true
-        return reasonTypes.includes(state.selectedOption.reason)
+        return (
+          reasonTypes.includes(state.selectedOption.reason) ||
+          reasonTypes.includes(
+            NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
+          )
+        )
       })
   }, [props, allLabelers, state.selectedOption])
   const hasSupportedLabelers = !!supportedLabelers.length
@@ -237,32 +254,36 @@ function Inner(props: ReportDialogProps) {
             </Admonition.Outer>
           ) : (
             <>
-              {state.selectedOption ? (
+              {state.selectedCategory ? (
                 <View style={[a.flex_row, a.align_center, a.gap_md]}>
                   <View style={[a.flex_1]}>
-                    <OptionCard option={state.selectedOption} />
+                    <CategoryCard option={state.selectedCategory} />
                   </View>
                   <Button
-                    testID="report:clearOption"
-                    label={_(msg`Change report reason`)}
+                    testID="report:clearCategory"
+                    label={_(msg`Change report category`)}
                     size="tiny"
                     variant="solid"
                     color="secondary"
                     shape="round"
                     onPress={() => {
-                      dispatch({type: 'clearOption'})
+                      dispatch({type: 'clearCategory'})
                     }}>
                     <ButtonIcon icon={X} />
                   </Button>
                 </View>
               ) : (
                 <View style={[a.gap_sm]}>
-                  {reportOptions[props.subject.type].map(o => (
-                    <OptionCard
-                      key={o.reason}
+                  {sortedCategories.map(o => (
+                    <CategoryCard
+                      key={o.key}
                       option={o}
                       onSelect={() => {
-                        dispatch({type: 'selectOption', option: o})
+                        dispatch({
+                          type: 'selectCategory',
+                          option: o,
+                          otherOption: getCategory('other').options[0],
+                        })
                       }}
                     />
                   ))}
@@ -310,10 +331,49 @@ function Inner(props: ReportDialogProps) {
         <StepOuter>
           <StepTitle
             index={2}
+            title={_(msg`Select a reason`)}
+            activeIndex1={state.activeStepIndex1}
+          />
+          {state.selectedOption ? (
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              <View style={[a.flex_1]}>
+                <OptionCard option={state.selectedOption} />
+              </View>
+              <Button
+                testID="report:clearReportOption"
+                label={_(msg`Change report reason`)}
+                size="tiny"
+                variant="solid"
+                color="secondary"
+                shape="round"
+                onPress={() => {
+                  dispatch({type: 'clearOption'})
+                }}>
+                <ButtonIcon icon={X} />
+              </Button>
+            </View>
+          ) : state.selectedCategory ? (
+            <View style={[a.gap_sm]}>
+              {getCategory(state.selectedCategory.key).options.map(o => (
+                <OptionCard
+                  key={o.reason}
+                  option={o}
+                  onSelect={() => {
+                    dispatch({type: 'selectOption', option: o})
+                  }}
+                />
+              ))}
+            </View>
+          ) : null}
+        </StepOuter>
+
+        <StepOuter>
+          <StepTitle
+            index={3}
             title={_(msg`Select moderation service`)}
             activeIndex1={state.activeStepIndex1}
           />
-          {state.activeStepIndex1 >= 2 && (
+          {state.activeStepIndex1 >= 3 && (
             <>
               {state.selectedLabeler ? (
                 <>
@@ -386,11 +446,11 @@ function Inner(props: ReportDialogProps) {
 
         <StepOuter>
           <StepTitle
-            index={3}
+            index={4}
             title={_(msg`Submit report`)}
             activeIndex1={state.activeStepIndex1}
           />
-          {state.activeStepIndex1 === 3 && (
+          {state.activeStepIndex1 === 4 && (
             <>
               <View style={[a.pb_xs, a.gap_xs]}>
                 <Text style={[a.leading_snug, a.pb_xs]}>
@@ -569,12 +629,12 @@ function StepTitle({
   )
 }
 
-function OptionCard({
+function CategoryCard({
   option,
   onSelect,
 }: {
-  option: ReportOption
-  onSelect?: (option: ReportOption) => void
+  option: ReportCategoryConfig
+  onSelect?: (option: ReportCategoryConfig) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -584,7 +644,7 @@ function OptionCard({
   }, [onSelect, option])
   return (
     <Button
-      testID={`report:option:${option.reason}`}
+      testID={`report:option:${option.title}`}
       label={_(msg`Create report for ${option.title}`)}
       onPress={onPress}
       disabled={!onSelect}>
@@ -607,6 +667,53 @@ function OptionCard({
           <Text
             style={[a.text_sm, , a.leading_snug, t.atoms.text_contrast_medium]}>
             {option.description}
+          </Text>
+        </View>
+      )}
+    </Button>
+  )
+}
+
+function OptionCard({
+  option,
+  onSelect,
+}: {
+  option: ReportOption
+  onSelect?: (option: ReportOption) => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const gutters = useGutters(['compact'])
+  const onPress = React.useCallback(() => {
+    onSelect?.(option)
+  }, [onSelect, option])
+  return (
+    <Button
+      testID={`report:option:${option.title}`}
+      label={_(
+        msg({
+          message: `Create report for ${option.title}`,
+          comment:
+            'Accessibility label for button to create a moderation report for the selected option',
+        }),
+      )}
+      onPress={onPress}
+      disabled={!onSelect}>
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.w_full,
+            gutters,
+            a.py_sm,
+            a.rounded_sm,
+            a.border,
+            t.atoms.bg_contrast_25,
+            hovered || pressed
+              ? [t.atoms.border_contrast_high]
+              : [t.atoms.border_contrast_low],
+          ]}>
+          <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+            {option.title}
           </Text>
         </View>
       )}
