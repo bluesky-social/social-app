@@ -9,7 +9,7 @@ import {h} from 'preact'
 import likeIcon from '../../assets/heart_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo_full_name.svg'
 import replyIcon from '../../assets/reply_unfilled_stroke2_corner0_rounded.svg'
-import repostIcon from '../../assetsrepost_unfilled_stroke2_corner0_rounded.svg'
+import repostIcon from '../../assets/repost_unfilled_stroke2_corner0_rounded.svg'
 import {CONTENT_LABELS} from '../labels'
 import * as bsky from '../types/bsky'
 import {niceDate} from '../util/nice-date'
@@ -47,8 +47,10 @@ export function Post({thread}: Props) {
   const href = `/profile/${post.author.did}/post/${getRkey(post)}`
   return (
     <Container href={href}>
-      <div className="flex-1 flex-col flex gap-2" lang={record?.langs?.[0]}>
-        <div className="flex gap-2.5 items-center cursor-pointer w-full max-w-full">
+      <div
+        className="flex-1 flex-col flex gap-2 bg-neutral-50 dark:bg-black dark:hover:bg-slate-900 hover:bg-blue-50  rounded-2xl p-4"
+        lang={record?.langs?.[0]}>
+        <div className="flex gap-2.5 items-center cursor-pointer w-full max-w-full ">
           <Link
             href={`/profile/${post.author.did}`}
             className="rounded-full shrink-0">
@@ -80,66 +82,62 @@ export function Post({thread}: Props) {
               @{post.author.handle}
             </Link>
           </div>
-          <Link
-            href={href}
-            className="transition-transform hover:scale-110 shrink-0 self-start">
-            <img src={logo} className="h-8" />
-          </Link>
         </div>
         <PostContent record={record} />
         <Embed content={post.embed} labels={post.labels} />
-        <Link href={href}>
-          <time
-            datetime={new Date(post.indexedAt).toISOString()}
-            className="text-textLight dark:text-textDimmed mt-1 text-sm hover:underline">
-            {niceDate(post.indexedAt)}
-          </time>
-        </Link>
-        <div className="border-t w-full pt-2.5 flex items-center gap-5 text-sm cursor-pointer">
-          {!!post.likeCount && (
-            <div className="flex items-center gap-2 cursor-pointer">
-              <img src={likeIcon} className="w-5 h-5" />
-              <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
-                {prettyNumber(post.likeCount)}
-              </p>
-            </div>
-          )}
-          {!!post.replyCount && (
-            <div className="flex items-center gap-2 cursor-pointer">
-              <img src={replyIcon} className="w-5 h-5" />
-              <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
-                {prettyNumber(post.replyCount)}
-              </p>
-            </div>
-          )}
-          {!!post.repostCount && (
-            <div className="flex items-center gap-2 cursor-pointer">
-              <img src={repostIcon} className="w-5 h-5" />
-              <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
-                {prettyNumber(post.repostCount)}
-              </p>
-            </div>
-          )}
-          <div className="flex-1" />
-          <p className="cursor-pointer text-brand dark:text-brandLighten font-bold hover:underline hidden min-[450px]:inline">
-            {post.replyCount
-              ? `Read ${prettyNumber(post.replyCount)} ${
-                  post.replyCount > 1 ? 'replies' : 'reply'
-                } on Bluesky`
-              : `View on Bluesky`}
-          </p>
-        </div>
 
-        <div className="flex cursor-pointer min-[450px]:hidden">
-          <Link
-            href={href}
-            className="transition-transform hover:scale-110 shrink-0 self-start">
-            <img src={logo} className="h-8" />
+        <div className="flex items-center justify-between w-full pt-2.5  text-sm">
+          <div className="flex items-center gap-3 text-sm cursor-pointer">
+            {!!post.likeCount && (
+              <div className="flex items-center gap-1 cursor-pointer group">
+                <img
+                  src={likeIcon}
+                  className="w-5 h-5 group-hover:opacity-100 dark:opacity-100 group-hover:brightness-0 group-hover:invert-[0.2] dark:group-hover:invert-[0.9] transition-all"
+                />
+                <p className="font-bold text-neutral-600 dark:text-neutral-300 mb-px group-hover:text-neutral-800 dark:group-hover:text-white transition-colors dark:text-slate-500">
+                  {prettyNumber(post.likeCount)}
+                </p>
+              </div>
+            )}
+            {!!post.replyCount && (
+              <div className="flex items-center gap-1 cursor-pointer group">
+                <img
+                  src={replyIcon}
+                  className="w-5 h-5 group-hover:opacity-100 dark:opacity-100 group-hover:brightness-0 group-hover:invert-[0.2] dark:group-hover:invert-[0.9] transition-all"
+                />
+                <p className="font-bold text-neutral-600 dark:text-neutral-300 mb-px group-hover:text-neutral-800 dark:group-hover:text-white transition-colors dark:text-slate-500">
+                  {prettyNumber(post.replyCount)}
+                </p>
+              </div>
+            )}
+
+            {!!post.repostCount && (
+              <div className="flex items-center gap-1 cursor-pointer group">
+                <img
+                  src={repostIcon}
+                  className="w-5 h-5 dark:opacity-100 group-hover:opacity-100 group-hover:brightness-0 group-hover:invert-[0.2] dark:group-hover:invert-[0.9] transition-all"
+                />
+                <p className="font-bold text-neutral-600 dark:text-neutral-300 mb-px group-hover:text-neutral-800 dark:group-hover:text-white transition-colors dark:text-slate-500">
+                  {prettyNumber(post.repostCount)}
+                </p>
+              </div>
+            )}
+          </div>
+          <Link href={href}>
+            <time
+              datetime={new Date(post.indexedAt).toISOString()}
+              className="text-textLight dark:text-textDimmed text-sm hover:underline dark:text-slate-500">
+              {niceDate(post.indexedAt)}
+            </time>
           </Link>
-          <p className="cursor-pointer text-brand font-bold hover:underline min-[450px]:hidden">
-            Bluesky
-          </p>
         </div>
+      </div>
+      <div className="flex items-center justify-end pt-2">
+        <Link
+          href={href}
+          className="transition-transform hover:scale-110 shrink-0">
+          <img src={logo} className="h-8" />
+        </Link>
       </div>
     </Container>
   )
