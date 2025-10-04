@@ -1,7 +1,7 @@
 
 # flow.yaml
 
-appId: xyz.blueskyweb.app
+appId: dev.xyz.blueskyweb.app
 ---
 - launchApp
 # Login
