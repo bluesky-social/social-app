@@ -11,14 +11,15 @@ import {
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
@@ -166,15 +167,15 @@ let FeedItemInner = ({
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const queryClient = useQueryClient()
-  const {openComposer} = useOpenComposer()
+  const navigation = useNavigation<NavigationProp>()
   const pal = usePalette('default')
   const {_} = useLingui()
 
   const [hover, setHover] = useState(false)
 
-  const href = useMemo(() => {
+  const [href, rkey] = useMemo(() => {
     const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey)
+    return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey]
   }, [post.uri, post.author])
   const {sendInteraction, feedSourceInfo} = useFeedFeedbackContext()
 
@@ -185,16 +186,9 @@ let FeedItemInner = ({
       feedContext,
       reqId,
     })
-    openComposer({
-      replyTo: {
-        uri: post.uri,
-        cid: post.cid,
-        text: record.text || '',
-        author: post.author,
-        embed: post.embed,
-        moderation,
-        langs: record.langs,
-      },
+    navigation.navigate('PostThread', {
+      name: post.author.did,
+      rkey,
     })
   }
 
