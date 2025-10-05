@@ -349,6 +349,14 @@ function DialogInner({
       ? _(msg`Create user list`)
       : _(msg`Create moderation list`)
 
+  const displayNamePlaceholder = isCurateList
+    ? _(msg`e.g. Great Posters`)
+    : _(msg`e.g. Spammers`)
+
+  const descriptionPlaceholder = isCurateList
+    ? _(msg`e.g. The posters who never miss.`)
+    : _(msg`e.g. Users that repeatedly reply with ads.`)
+
   return (
     <Dialog.ScrollableInner
       label={title}
@@ -389,7 +397,7 @@ function DialogInner({
               defaultValue={displayName}
               onChangeText={onChangeDisplayName}
               label={_(msg`Name`)}
-              placeholder={_(msg`e.g. Great Posters`)}
+              placeholder={displayNamePlaceholder}
               testID="editListNameInput"
             />
           </TextField.Root>
@@ -426,7 +434,7 @@ function DialogInner({
               onChangeText={onChangeDescription}
               multiline
               label={_(msg`Description`)}
-              placeholder={_(msg`e.g. The posters that never miss.`)}
+              placeholder={descriptionPlaceholder}
               testID="editProfileDescriptionInput"
             />
           </TextField.Root>
