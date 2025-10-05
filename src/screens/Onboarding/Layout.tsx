@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {ScrollView, View} from 'react-native'
+import {Dimensions} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -77,10 +78,10 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             a.absolute,
             a.z_10,
             {
-              left: '50%',
+              left: isWeb ? '50%' : Dimensions.get('window').width / 2 - 45,
               top: insets.top + 2,
-              transform: [{translateX: '-50%'}],
             },
+            web({transform: [{translateX: '-50%'}]}),
           ]}>
           <ButtonText>[DEV] Clear</ButtonText>
         </Button>
