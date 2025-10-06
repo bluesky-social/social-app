@@ -5346,6 +5346,11 @@
     "@expo/image-utils" "^0.8.7"
     xcode "^3.0.1"
 
+"@mozzius/react-native-mmkv@2.12.3":
+  version "2.12.3"
+  resolved "https://registry.yarnpkg.com/@mozzius/react-native-mmkv/-/react-native-mmkv-2.12.3.tgz#562e78c608703cfc1ee2b31c7d3ec328167b708a"
+  integrity sha512-w3T9lstT69Xln0gpxGEtB6/L2i7977WFLCa7CCu/9iyLHEXxOGCbzWWdFnR7SW53GlIMMn5/z9/nqoSiprVySQ==
+
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz#dbf733a965ca47b1973177dc0bb6c889edcfb129"
@@ -17064,11 +17069,6 @@ react-native-keyboard-controller@1.18.5:
   integrity sha512-wbYN6Tcu3G5a05dhRYBgjgd74KqoYWuUmroLpigRg9cXy5uYo7prTMIvMgvLtARQtUF7BOtFggUnzgoBOgk0TQ==
   dependencies:
     react-native-is-edge-to-edge "^1.2.1"
-
-"react-native-mmkv@npm:@mozzius/react-native-mmkv@2.12.3":
-  version "2.12.3"
-  resolved "https://registry.yarnpkg.com/@mozzius/react-native-mmkv/-/react-native-mmkv-2.12.3.tgz#562e78c608703cfc1ee2b31c7d3ec328167b708a"
-  integrity sha512-w3T9lstT69Xln0gpxGEtB6/L2i7977WFLCa7CCu/9iyLHEXxOGCbzWWdFnR7SW53GlIMMn5/z9/nqoSiprVySQ==
 
 react-native-pager-view@6.8.0:
   version "6.8.0"
