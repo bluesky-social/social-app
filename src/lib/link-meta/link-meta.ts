@@ -62,10 +62,10 @@ export async function getLinkMeta(
     likelyType,
     url,
   }
-  const trustedHostnames: string[] = ['storage.courtlistener.com']
-  const isTrusted = trustedHostnames.includes(urlp.hostname)
-  // Only allow non-HTML links to continue if they're from trusted sources
-  if (likelyType !== LikelyType.HTML && !isTrusted) {
+  const htmlExemptedHostnames: string[] = ['storage.courtlistener.com']
+  const isExemptedFromHtmlCheck = htmlExemptedHostnames.includes(urlp.hostname)
+  // Skip early return only for hosts exempted from the HTML check
+  if (likelyType !== LikelyType.HTML && !isExemptedFromHtmlCheck) {
     return meta
   }
 
