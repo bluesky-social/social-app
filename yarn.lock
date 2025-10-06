@@ -5346,10 +5346,10 @@
     "@expo/image-utils" "^0.8.7"
     xcode "^3.0.1"
 
-"@mozzius/react-native-mmkv@2.12.3":
-  version "2.12.3"
-  resolved "https://registry.yarnpkg.com/@mozzius/react-native-mmkv/-/react-native-mmkv-2.12.3.tgz#562e78c608703cfc1ee2b31c7d3ec328167b708a"
-  integrity sha512-w3T9lstT69Xln0gpxGEtB6/L2i7977WFLCa7CCu/9iyLHEXxOGCbzWWdFnR7SW53GlIMMn5/z9/nqoSiprVySQ==
+"@mozzius/react-native-mmkv@2.12.4":
+  version "2.12.4"
+  resolved "https://registry.yarnpkg.com/@mozzius/react-native-mmkv/-/react-native-mmkv-2.12.4.tgz#f8c90df83cdc53fcce90f948e52da697df7c5db1"
+  integrity sha512-11ibH3ROlVbEqZEg/8OPdntlNC/EgvwpU79p6IAkYRwVnLMeyiNk0Bz128s3Ea7QsHpVtC3OsiEHH//GkMGbPg==
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
