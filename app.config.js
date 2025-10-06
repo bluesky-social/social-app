@@ -215,7 +215,6 @@ module.exports = function (_config) {
               compileSdkVersion: 35,
               targetSdkVersion: 35,
               buildToolsVersion: '35.0.0',
-              ndkVersion: '27.3.13750724',
             },
           },
         ],
