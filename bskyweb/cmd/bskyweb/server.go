@@ -540,13 +540,13 @@ func (srv *Server) WebPost(c echo.Context) error {
 		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
 		if ok {
 			data["postText"] = ExpandPostText(postRecord)
-		}
 
-		if !isEmbedHidden && postRecord.Labels != nil && postRecord.Labels.LabelDefs_SelfLabels != nil {
-			for _, label := range postRecord.Labels.LabelDefs_SelfLabels.Values {
-				if hideEmbedLabels[label.Val] {
-					isEmbedHidden = true
-					break
+			if !isEmbedHidden && postRecord.Labels != nil && postRecord.Labels.LabelDefs_SelfLabels != nil {
+				for _, label := range postRecord.Labels.LabelDefs_SelfLabels.Values {
+					if hideEmbedLabels[label.Val] {
+						isEmbedHidden = true
+						break
+					}
 				}
 			}
 		}
