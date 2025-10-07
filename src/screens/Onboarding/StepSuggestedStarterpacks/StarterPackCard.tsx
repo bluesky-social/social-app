@@ -141,7 +141,7 @@ export function StarterPackCard({
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
             emoji
-            style={[a.text_md, a.font_bold, a.leading_snug]}
+            style={[a.text_md, a.font_semi_bold, a.leading_snug]}
             numberOfLines={1}>
             {record.name}
           </Text>
