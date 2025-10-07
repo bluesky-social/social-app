@@ -278,6 +278,7 @@
     "@react-native/babel-preset": "0.81.4",
     "@react-native/normalize-colors": "0.81.4",
     "**/@expo/image-utils": "0.8.7",
+    "**/better-sqlite3": "^12.4.1",
     "**/expo-constants": "18.0.8",
     "**/expo-device": "7.1.4",
     "**/zod": "3.23.8",
