@@ -31,7 +31,7 @@ export function useOnboardingSuggestedStarterPacksQuery({
     queryFn: async () => {
       const {data} =
         await agent.app.bsky.unspecced.getOnboardingSuggestedStarterPacks(
-          {limit: 5},
+          {limit: 6},
           {
             headers: {
               ...createBskyTopicsHeader(
