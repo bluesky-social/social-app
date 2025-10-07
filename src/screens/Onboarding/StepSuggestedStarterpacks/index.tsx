@@ -67,18 +67,6 @@ export function StepSuggestedStarterpacks() {
           a.justify_start,
           a.w_full,
         ]}>
-        {/*<TabBar
-          selectedInterest={selectedInterest}
-          onSelectInterest={setSelectedInterest}
-          defaultTabLabel={_(
-            msg({
-              message: 'All',
-              comment: 'the default tab in the interests tab bar',
-            }),
-          )}
-          selectedInterests={state.interestsStepResults.selectedInterests}
-        />*/}
-
         {isLoading || !moderationOpts ? (
           <View
             style={[
