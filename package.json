@@ -192,7 +192,7 @@
     "react-native-gesture-handler": "~2.28.0",
     "react-native-get-random-values": "~1.11.0",
     "react-native-keyboard-controller": "1.18.5",
-    "react-native-mmkv": "^2.12.2",
+    "@bsky.app/react-native-mmkv": "2.12.5",
     "react-native-pager-view": "6.8.0",
     "react-native-progress": "bluesky-social/react-native-progress",
     "react-native-qrcode-styled": "^0.3.3",

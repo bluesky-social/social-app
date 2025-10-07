@@ -3685,6 +3685,11 @@
   dependencies:
     react-responsive "^10.0.1"
 
+"@bsky.app/react-native-mmkv@2.12.5":
+  version "2.12.5"
+  resolved "https://registry.yarnpkg.com/@bsky.app/react-native-mmkv/-/react-native-mmkv-2.12.5.tgz#eb17d31a6158c74393f617a1763ac223ff3f83a6"
+  integrity sha512-3vUz1nQY1DiKIPAWRkpp5ZGxH5f2G6Ui0UuQuEYjYv81xx1qFcSzS9KQ2sHcOKYdkOM9amWV2Q8TQCxt1lrAHg==
+
 "@bufbuild/protobuf@^1.5.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@bufbuild/protobuf/-/protobuf-1.7.0.tgz#cecddc8162a231642b410bc7b99309cd5969733c"
@@ -17064,11 +17069,6 @@ react-native-keyboard-controller@1.18.5:
   integrity sha512-wbYN6Tcu3G5a05dhRYBgjgd74KqoYWuUmroLpigRg9cXy5uYo7prTMIvMgvLtARQtUF7BOtFggUnzgoBOgk0TQ==
   dependencies:
     react-native-is-edge-to-edge "^1.2.1"
-
-react-native-mmkv@^2.12.2:
-  version "2.12.2"
-  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
-  integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
 
 react-native-pager-view@6.8.0:
   version "6.8.0"
