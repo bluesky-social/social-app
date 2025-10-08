@@ -41,12 +41,6 @@ export function Pager({
   const scrollYs = useRef<Array<number | null>>([])
   const anchorRef = useRef(null)
 
-  useImperativeHandle(ref, () => ({
-    setPage: (index: number) => {
-      onTabBarSelect(index)
-    },
-  }))
-
   const onTabBarSelect = useCallback(
     (index: number) => {
       const scrollY = window.scrollY
@@ -80,12 +74,18 @@ export function Pager({
     [selectedPage, setSelectedPage, onPageSelected],
   )
 
+  useImperativeHandle(ref, () => ({
+    setPage: (index: number) => {
+      onTabBarSelect(index)
+    },
+  }))
+
   return (
     <View style={s.hContentRegion}>
       {renderTabBar({
         selectedPage,
         tabBarAnchor: <View ref={anchorRef} />,
-        onSelect: e => onTabBarSelect(e),
+        onSelect: onTabBarSelect,
       })}
       {Children.map(children, (child, i) => (
         <View
