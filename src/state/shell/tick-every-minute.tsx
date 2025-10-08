@@ -6,7 +6,7 @@ const stateContext = React.createContext<StateContext>(0)
 stateContext.displayName = 'TickEveryMinuteContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [tick, setTick] = React.useState(Date.now())
+  const [tick, setTick] = React.useState(() => Date.now())
   React.useEffect(() => {
     const i = setInterval(() => {
       setTick(Date.now())

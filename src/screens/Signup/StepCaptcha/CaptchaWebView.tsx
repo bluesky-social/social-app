@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {WebView, type WebViewNavigation} from 'react-native-webview'
 import {type ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
 
@@ -30,7 +30,7 @@ export function CaptchaWebView({
   onSuccess: (code: string) => void
   onError: (error: unknown) => void
 }) {
-  const startedAt = useRef(Date.now())
+  const [startedAt] = useState(() => Date.now())
   const successTo = useRef<NodeJS.Timeout>(undefined)
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export function CaptchaWebView({
     // We want to delay the completion of this screen ever so slightly so that it doesn't appear to be a glitch if it completes too fast
     wasSuccessful.current = true
     const now = Date.now()
-    const timeTaken = now - startedAt.current
+    const timeTaken = now - startedAt
     if (timeTaken < MIN_DELAY) {
       successTo.current = setTimeout(() => {
         onSuccess(code)

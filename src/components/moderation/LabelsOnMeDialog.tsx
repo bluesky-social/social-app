@@ -13,6 +13,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isAndroid} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
+import {useTickEveryMinute} from '#/state/shell'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -126,6 +127,7 @@ function Label({
     ? sanitizeHandle(labeler.creator.handle, '@')
     : label.src
   const timeDiff = useGetTimeAgo({future: true})
+  const tick = useTickEveryMinute()
   return (
     <View
       style={[
@@ -198,7 +200,7 @@ function Label({
                     a.italic,
                     t.atoms.text_contrast_medium,
                   ]}>
-                  <Trans>Expires in {timeDiff(Date.now(), label.exp)}</Trans>
+                  <Trans>Expires in {timeDiff(tick, label.exp)}</Trans>
                 </Text>
               </View>
             )}

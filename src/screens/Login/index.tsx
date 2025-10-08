@@ -38,7 +38,7 @@ const OrderedForms = [
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const {_} = useLingui()
   const failedAttemptCountRef = useRef(0)
-  const startTimeRef = useRef(Date.now())
+  const [startTime] = useState(() => Date.now())
 
   const {accounts} = useSession()
   const {requestedAccountSwitchTo} = useLoggedOutView()
@@ -118,7 +118,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const onAttemptSuccess = () => {
     logEvent('signin:success', {
       isUsingCustomProvider: serviceUrl !== DEFAULT_SERVICE,
-      timeTakenSeconds: Math.round((Date.now() - startTimeRef.current) / 1000),
+      timeTakenSeconds: Math.round((Date.now() - startTime) / 1000),
       failedAttemptsCount: failedAttemptCountRef.current,
     })
   }
