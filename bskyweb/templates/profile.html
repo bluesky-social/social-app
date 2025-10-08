@@ -59,7 +59,11 @@
     "dateCreated": "{{ profileView.CreatedAt }}",
     "mainEntity": {
       "@type": "Person",
-      "name": "{{ profileView.DisplayName }}",
+      {%- if postView.Author.DisplayName %}
+      "name": "{{ postView.Author.DisplayName }} (@{{ postView.Author.Handle }})",
+      {% else %}
+      "name": "@{{ postView.Author.Handle }}",
+      {% endif -%}
       "alternateName": "@{{ profileView.Handle }}",
       "identifier": "{{ profileView.Did }}",
       "description": "{{ profileView.Description }}",

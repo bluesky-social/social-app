@@ -62,7 +62,11 @@
       "@type": "DiscussionForumPosting",
       "author": {
         "@type": "Person",
-        "name": "{{ postView.Author.DisplayName }}",
+        {%- if postView.Author.DisplayName %}
+        "name": "{{ postView.Author.DisplayName }} (@{{ postView.Author.Handle }})",
+        {% else %}
+        "name": "@{{ postView.Author.Handle }}",
+        {% endif -%}
         "url": "https://bsky.app/profile/{{ postView.Author.Handle }}"
       },
       {%- if postText %}
