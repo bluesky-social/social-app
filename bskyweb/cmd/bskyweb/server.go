@@ -536,6 +536,22 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
+	if postView.Record != nil {
+		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
+		if ok {
+			data["postText"] = ExpandPostText(postRecord)
+
+			if !isEmbedHidden && postRecord.Labels != nil && postRecord.Labels.LabelDefs_SelfLabels != nil {
+				for _, label := range postRecord.Labels.LabelDefs_SelfLabels.Values {
+					if hideEmbedLabels[label.Val] {
+						isEmbedHidden = true
+						break
+					}
+				}
+			}
+		}
+	}
+
 	if postView.Embed != nil && !isEmbedHidden {
 		hasImages := postView.Embed.EmbedImages_View != nil
 		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
@@ -552,13 +568,6 @@ func (srv *Server) WebPost(c echo.Context) error {
 				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
 			}
 			data["imgThumbUrls"] = thumbUrls
-		}
-	}
-
-	if postView.Record != nil {
-		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
-		if ok {
-			data["postText"] = ExpandPostText(postRecord)
 		}
 	}
 
