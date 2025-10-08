@@ -226,7 +226,8 @@ let PostFeed = ({
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = useState(false)
-  const lastFetchRef = useRef<number>(Date.now())
+  const [firstFetchTime] = useState(() => Date.now())
+  const lastFetchRef = useRef<number>(firstFetchTime)
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
@@ -263,9 +264,11 @@ let PostFeed = ({
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
   const lastFetchedAt = data?.pages[0].fetchedAt
-  if (lastFetchedAt) {
-    lastFetchRef.current = lastFetchedAt
-  }
+  useEffect(() => {
+    if (lastFetchedAt) {
+      lastFetchRef.current = lastFetchedAt
+    }
+  }, [lastFetchedAt])
   const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],
