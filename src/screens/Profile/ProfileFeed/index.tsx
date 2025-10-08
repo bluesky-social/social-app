@@ -45,6 +45,7 @@ import {
   ProfileFeedHeader,
   ProfileFeedHeaderSkeleton,
 } from '#/screens/Profile/components/ProfileFeedHeader'
+import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
@@ -189,7 +190,13 @@ export function ProfileFeedScreenInner({
   }, [onScrollToTop, isScreenFocused])
 
   const renderPostsEmpty = useCallback(() => {
-    return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
+    return (
+      <EmptyState
+        icon={HashtagWideIcon}
+        iconSize="2xl"
+        message={_(msg`This feed is empty.`)}
+      />
+    )
   }, [_])
 
   const isVideoFeed = React.useMemo(() => {
