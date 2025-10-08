@@ -4,6 +4,7 @@ module.exports = {
     '@react-native',
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
+    'plugin:react-hooks/recommended-latest-legacy',
     'plugin:react-native-a11y/ios',
     'prettier',
   ],
@@ -11,15 +12,21 @@ module.exports = {
   plugins: [
     '@typescript-eslint',
     'react',
+    'react-hooks',
+    'react-compiler',
+    'jest',
     'lingui',
     'simple-import-sort',
     'bsky-internal',
-    'eslint-plugin-react-compiler',
     'import',
   ],
   rules: {
     'react/no-unescaped-entities': 0,
     'react/prop-types': 0,
+    'react-hooks/refs': 'warn',
+    'react-hooks/set-state-in-effect': 'warn',
+    'react-hooks/immutability': 'warn',
+    'react-compiler/react-compiler': 'warn',
     'react-native/no-inline-styles': 0,
     'bsky-internal/avoid-unwrapped-text': [
       'error',
@@ -85,7 +92,6 @@ module.exports = {
       },
     ],
     'simple-import-sort/exports': 'error',
-    'react-compiler/react-compiler': 'warn',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
