@@ -148,7 +148,7 @@ function StarterPackList({
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
-    } catch (err) {
+    } catch {
       // Error handling is optional since this is just pagination
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])

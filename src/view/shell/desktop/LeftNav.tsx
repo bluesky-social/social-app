@@ -539,7 +539,7 @@ function ComposeBtn() {
         try {
           setIsFetchingHandle(true)
           handle = await fetchHandle(handle)
-        } catch (e) {
+        } catch {
           handle = undefined
         } finally {
           setIsFetchingHandle(false)

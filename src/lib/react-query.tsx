@@ -32,7 +32,7 @@ async function checkIsOnline(): Promise<boolean> {
     } else {
       return false
     }
-  } catch (e) {
+  } catch {
     return false
   }
 }

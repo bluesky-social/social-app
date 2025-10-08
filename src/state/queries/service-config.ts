@@ -27,7 +27,8 @@ export function useServiceConfigQuery() {
           topicsEnabled: Boolean(data.topicsEnabled),
           liveNow: data.liveNow ?? [],
         }
-      } catch (e) {
+      } catch (err) {
+        console.error('Failed to fetch service config', err)
         return {
           checkEmailConfirmed: false,
           topicsEnabled: false,

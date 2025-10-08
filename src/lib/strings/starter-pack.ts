@@ -21,7 +21,7 @@ export function createStarterPackLinkFromAndroidReferrer(
     if (contentParts.length !== 3) return null
 
     return `at://${contentParts[1]}/app.bsky.graph.starterpack/${contentParts[2]}`
-  } catch (e) {
+  } catch {
     return null
   }
 }
@@ -56,7 +56,7 @@ export function parseStarterPackUri(uri?: string): {
         rkey,
       }
     }
-  } catch (e) {
+  } catch {
     return null
   }
 }

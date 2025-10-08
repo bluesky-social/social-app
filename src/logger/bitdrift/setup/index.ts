@@ -14,7 +14,7 @@ initPromise.then(() => {
     if (Statsig.checkGate('enable_bitdrift_v2_networking')) {
       isNetworkEnabled = true
     }
-  } catch (e) {
+  } catch {
     // Statsig may complain about it being called too early.
   }
   if (isEnabled && BITDRIFT_API_KEY) {
