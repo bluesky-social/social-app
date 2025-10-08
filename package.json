@@ -216,7 +216,7 @@
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "tldts": "^6.1.46",
-    "zod": "^3.25.76"
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@atproto/dev-env": "^0.3.172",
