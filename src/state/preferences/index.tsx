@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'
@@ -17,12 +17,7 @@ export {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from './alt-text-required'
-export {
-  useVideoAutoplayDisabled,
-  useSetVideoAutoplayDisabled,
-  useGifAutoplayDisabled,
-  useSetGifAutoplayDisabled,
-} from './autoplay'
+export {useAutoplayDisabledPref, useSetAutoplayDisabledPref} from './autoplay'
 export {useHapticsDisabled, useSetHapticsDisabled} from './disable-haptics'
 export {
   useExternalEmbedsPrefs,
