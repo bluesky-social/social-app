@@ -18,7 +18,6 @@ export type ReportCategoryConfig = {
   title: string
   description: string
   options: ReportOption[]
-  isOther?: boolean
 }
 
 export type ReportOption = {
@@ -246,7 +245,6 @@ export function useReportOptions() {
             reason: OzoneReportDefs.REASONOTHER,
           },
         ],
-        isOther: true,
       },
     }
 
