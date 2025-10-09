@@ -428,7 +428,6 @@ let SearchScreenInner = ({
   const {hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
   const [activeTab, setActiveTab] = useState(0)
-  const {_} = useLingui()
 
   const onPageSelected = useCallback(
     (index: number) => {

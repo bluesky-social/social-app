@@ -1,0 +1,516 @@
+diff --git a/node_modules/react-native-compressor/android/build.gradle b/node_modules/react-native-compressor/android/build.gradle
+index 5071139..84bee34 100644
+--- a/node_modules/react-native-compressor/android/build.gradle
++++ b/node_modules/react-native-compressor/android/build.gradle
+@@ -115,7 +115,6 @@ dependencies {
+   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+   implementation 'org.mp4parser:isoparser:1.9.56'
+-  implementation 'com.github.banketree:AndroidLame-kotlin:v0.0.1'
+   implementation 'javazoom:jlayer:1.0.1'
+ }
+ 
+diff --git a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioCompressor.kt b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioCompressor.kt
+deleted file mode 100644
+index 9292d3e..0000000
+--- a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioCompressor.kt
++++ /dev/null
+@@ -1,264 +0,0 @@
+-package com.reactnativecompressor.Audio
+-
+-
+-import android.annotation.SuppressLint
+-import com.facebook.react.bridge.Promise
+-import com.facebook.react.bridge.ReactApplicationContext
+-import com.facebook.react.bridge.ReadableMap
+-import com.naman14.androidlame.LameBuilder
+-import com.naman14.androidlame.WaveReader
+-import com.reactnativecompressor.Utils.MediaCache
+-import com.reactnativecompressor.Utils.Utils
+-import com.reactnativecompressor.Utils.Utils.addLog
+-import javazoom.jl.converter.Converter
+-import javazoom.jl.decoder.JavaLayerException
+-import java.io.BufferedOutputStream
+-import java.io.File
+-import java.io.FileNotFoundException
+-import java.io.FileOutputStream
+-import java.io.IOException
+-
+-class AudioCompressor {
+-  companion object {
+-    val TAG="AudioMain"
+-    private const val OUTPUT_STREAM_BUFFER = 8192
+-
+-    var outputStream: BufferedOutputStream? = null
+-    var waveReader: WaveReader? = null
+-    @JvmStatic
+-    fun CompressAudio(
+-      fileUrl: String,
+-      optionMap: ReadableMap,
+-      context: ReactApplicationContext,
+-      promise: Promise,
+-    ) {
+-      val realPath = Utils.getRealPath(fileUrl, context)
+-      var _fileUrl=realPath
+-      val filePathWithoutFileUri = realPath!!.replace("file://", "")
+-      try {
+-        var wavPath=filePathWithoutFileUri;
+-        var isNonWav:Boolean=false
+-        if (fileUrl.endsWith(".mp4", ignoreCase = true))
+-        {
+-          addLog("mp4 file found")
+-          val mp3Path= Utils.generateCacheFilePath("mp3", context)
+-          AudioExtractor().genVideoUsingMuxer(fileUrl, mp3Path, -1, -1, true, false)
+-          _fileUrl=Utils.slashifyFilePath(mp3Path)
+-          wavPath= Utils.generateCacheFilePath("wav", context)
+-          try {
+-            val converter = Converter()
+-            converter.convert(mp3Path, wavPath)
+-          } catch (e: JavaLayerException) {
+-            addLog("JavaLayerException error"+e.localizedMessage)
+-            e.printStackTrace();
+-          }
+-          isNonWav=true
+-        }
+-        else if (!fileUrl.endsWith(".wav", ignoreCase = true))
+-        {
+-          addLog("non wav file found")
+-          wavPath= Utils.generateCacheFilePath("wav", context)
+-          try {
+-          val converter = Converter()
+-          converter.convert(filePathWithoutFileUri, wavPath)
+-        } catch (e: JavaLayerException) {
+-          addLog("JavaLayerException error"+e.localizedMessage)
+-          e.printStackTrace();
+-        }
+-          isNonWav=true
+-        }
+-
+-
+-        autoCompressHelper(wavPath,filePathWithoutFileUri, optionMap,context) { mp3Path, finished ->
+-          if (finished) {
+-            val returnableFilePath:String="file://$mp3Path"
+-            addLog("finished: " + returnableFilePath)
+-            MediaCache.removeCompletedImagePath(fileUrl)
+-            if(isNonWav)
+-            {
+-              File(wavPath).delete()
+-            }
+-            promise.resolve(returnableFilePath)
+-          } else {
+-            addLog("error: "+mp3Path)
+-            promise.resolve(_fileUrl)
+-          }
+-        }
+-      } catch (e: Exception) {
+-        promise.resolve(_fileUrl)
+-      }
+-    }
+-
+-    @SuppressLint("WrongConstant")
+-    private fun autoCompressHelper(
+-      fileUrl: String,
+-      actualFileUrl: String,
+-      optionMap: ReadableMap,
+-      context: ReactApplicationContext,
+-      completeCallback: (String, Boolean) -> Unit
+-    ) {
+-
+-      val options = AudioHelper.fromMap(optionMap)
+-      val quality = options.quality
+-
+-      var isCompletedCallbackTriggered:Boolean=false
+-      try {
+-        var mp3Path = Utils.generateCacheFilePath("mp3", context)
+-        val input = File(fileUrl)
+-        val output = File(mp3Path)
+-
+-        val CHUNK_SIZE = 8192
+-      addLog("Initialising wav reader")
+-
+-      waveReader = WaveReader(input)
+-
+-      try {
+-        waveReader!!.openWave()
+-      } catch (e: IOException) {
+-        e.printStackTrace()
+-      }
+-
+-      addLog("Intitialising encoder")
+-
+-
+-        // for bitrate
+-        var audioBitrate:Int
+-        if(options.bitrate != -1)
+-        {
+-          audioBitrate= options.bitrate/1000
+-        }
+-        else
+-        {
+-          audioBitrate=AudioHelper.getDestinationBitrateByQuality(actualFileUrl, quality!!)
+-          Utils.addLog("dest bitrate: $audioBitrate")
+-        }
+-
+-        var androidLame = LameBuilder();
+-        androidLame.setOutBitrate(audioBitrate)
+-
+-        // for channels
+-        var audioChannels:Int
+-        if(options.channels != -1){
+-          audioChannels= options.channels!!
+-        }
+-        else
+-        {
+-          audioChannels=waveReader!!.channels
+-        }
+-        androidLame.setOutChannels(audioChannels)
+-
+-        // for sample rate
+-        androidLame.setInSampleRate(waveReader!!.sampleRate)
+-        var audioSampleRate:Int
+-        if(options.samplerate != -1){
+-          audioSampleRate= options.samplerate!!
+-        }
+-        else
+-        {
+-          audioSampleRate=waveReader!!.sampleRate
+-        }
+-        androidLame.setOutSampleRate(audioSampleRate)
+-        val androidLameBuild=androidLame.build()
+-
+-      try {
+-        outputStream = BufferedOutputStream(FileOutputStream(output), OUTPUT_STREAM_BUFFER)
+-      } catch (e: FileNotFoundException) {
+-        e.printStackTrace()
+-      }
+-
+-      var bytesRead = 0
+-
+-      val buffer_l = ShortArray(CHUNK_SIZE)
+-      val buffer_r = ShortArray(CHUNK_SIZE)
+-      val mp3Buf = ByteArray(CHUNK_SIZE)
+-
+-      val channels = waveReader!!.channels
+-
+-      addLog("started encoding")
+-      while (true) {
+-        try {
+-          if (channels == 2) {
+-
+-            bytesRead = waveReader!!.read(buffer_l, buffer_r, CHUNK_SIZE)
+-            addLog("bytes read=$bytesRead")
+-
+-            if (bytesRead > 0) {
+-
+-              var bytesEncoded = 0
+-              bytesEncoded = androidLameBuild.encode(buffer_l, buffer_r, bytesRead, mp3Buf)
+-              addLog("bytes encoded=$bytesEncoded")
+-
+-              if (bytesEncoded > 0) {
+-                try {
+-                  addLog("writing mp3 buffer to outputstream with $bytesEncoded bytes")
+-                  outputStream!!.write(mp3Buf, 0, bytesEncoded)
+-                } catch (e: IOException) {
+-                  e.printStackTrace()
+-                }
+-
+-              }
+-
+-            } else
+-              break
+-          } else {
+-
+-            bytesRead = waveReader!!.read(buffer_l, CHUNK_SIZE)
+-            addLog("bytes read=$bytesRead")
+-
+-            if (bytesRead > 0) {
+-              var bytesEncoded = 0
+-
+-              bytesEncoded = androidLameBuild.encode(buffer_l, buffer_l, bytesRead, mp3Buf)
+-              addLog("bytes encoded=$bytesEncoded")
+-
+-              if (bytesEncoded > 0) {
+-                try {
+-                  addLog("writing mp3 buffer to outputstream with $bytesEncoded bytes")
+-                  outputStream!!.write(mp3Buf, 0, bytesEncoded)
+-                } catch (e: IOException) {
+-                  e.printStackTrace()
+-                }
+-
+-              }
+-
+-            } else
+-              break
+-          }
+-
+-
+-        } catch (e: IOException) {
+-          e.printStackTrace()
+-        }
+-
+-      }
+-
+-      addLog("flushing final mp3buffer")
+-      val outputMp3buf = androidLameBuild.flush(mp3Buf)
+-      addLog("flushed $outputMp3buf bytes")
+-      if (outputMp3buf > 0) {
+-        try {
+-          addLog("writing final mp3buffer to outputstream")
+-          outputStream!!.write(mp3Buf, 0, outputMp3buf)
+-          addLog("closing output stream")
+-          outputStream!!.close()
+-          completeCallback(output.absolutePath, true)
+-          isCompletedCallbackTriggered=true
+-        } catch (e: IOException) {
+-          completeCallback(e.localizedMessage, false)
+-          e.printStackTrace()
+-        }
+-      }
+-
+-      } catch (e: IOException) {
+-        completeCallback(e.localizedMessage, false)
+-      }
+-      if(!isCompletedCallbackTriggered)
+-      {
+-        completeCallback("something went wrong", false)
+-      }
+-    }
+-
+-
+-
+-  }
+-}
+diff --git a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioExtractor.kt b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioExtractor.kt
+deleted file mode 100644
+index c655182..0000000
+--- a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioExtractor.kt
++++ /dev/null
+@@ -1,112 +0,0 @@
+-package com.reactnativecompressor.Audio
+-
+-import android.annotation.SuppressLint
+-import android.media.MediaCodec
+-import android.media.MediaExtractor
+-import android.media.MediaFormat
+-import android.media.MediaMetadataRetriever
+-import android.media.MediaMuxer
+-import android.util.Log
+-import java.io.IOException
+-import java.nio.ByteBuffer
+-
+-
+-class AudioExtractor {
+-  /**
+-   * @param srcPath  the path of source video file.
+-   * @param dstPath  the path of destination video file.
+-   * @param startMs  starting time in milliseconds for trimming. Set to
+-   * negative if starting from beginning.
+-   * @param endMs    end time for trimming in milliseconds. Set to negative if
+-   * no trimming at the end.
+-   * @param useAudio true if keep the audio track from the source.
+-   * @param useVideo true if keep the video track from the source.
+-   * @throws IOException
+-   */
+-  @SuppressLint("NewApi", "WrongConstant")
+-  @Throws(IOException::class)
+-  fun genVideoUsingMuxer(srcPath: String?, dstPath: String?, startMs: Int, endMs: Int, useAudio: Boolean, useVideo: Boolean) {
+-    // Set up MediaExtractor to read from the source.
+-    val extractor = MediaExtractor()
+-    extractor.setDataSource(srcPath!!)
+-    val trackCount = extractor.trackCount
+-    // Set up MediaMuxer for the destination.
+-    val muxer: MediaMuxer
+-    muxer = MediaMuxer(dstPath!!, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+-    // Set up the tracks and retrieve the max buffer size for selected
+-    // tracks.
+-    val indexMap = HashMap<Int, Int>(trackCount)
+-    var bufferSize = -1
+-    for (i in 0 until trackCount) {
+-      val format = extractor.getTrackFormat(i)
+-      val mime = format.getString(MediaFormat.KEY_MIME)
+-      var selectCurrentTrack = false
+-      if (mime!!.startsWith("audio/") && useAudio) {
+-        selectCurrentTrack = true
+-      } else if (mime.startsWith("video/") && useVideo) {
+-        selectCurrentTrack = true
+-      }
+-      if (selectCurrentTrack) {
+-        extractor.selectTrack(i)
+-        val dstIndex = muxer.addTrack(format)
+-        indexMap[i] = dstIndex
+-        if (format.containsKey(MediaFormat.KEY_MAX_INPUT_SIZE)) {
+-          val newSize = format.getInteger(MediaFormat.KEY_MAX_INPUT_SIZE)
+-          bufferSize = if (newSize > bufferSize) newSize else bufferSize
+-        }
+-      }
+-    }
+-    if (bufferSize < 0) {
+-      bufferSize = DEFAULT_BUFFER_SIZE
+-    }
+-    // Set up the orientation and starting time for extractor.
+-    val retrieverSrc = MediaMetadataRetriever()
+-    retrieverSrc.setDataSource(srcPath)
+-    val degreesString = retrieverSrc.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+-    if (degreesString != null) {
+-      val degrees = degreesString.toInt()
+-      if (degrees >= 0) {
+-        muxer.setOrientationHint(degrees)
+-      }
+-    }
+-    if (startMs > 0) {
+-      extractor.seekTo((startMs * 1000).toLong(), MediaExtractor.SEEK_TO_CLOSEST_SYNC)
+-    }
+-    // Copy the samples from MediaExtractor to MediaMuxer. We will loop
+-    // for copying each sample and stop when we get to the end of the source
+-    // file or exceed the end time of the trimming.
+-    val offset = 0
+-    var trackIndex = -1
+-    val dstBuf = ByteBuffer.allocate(bufferSize)
+-    val bufferInfo = MediaCodec.BufferInfo()
+-    muxer.start()
+-    while (true) {
+-      bufferInfo.offset = offset
+-      bufferInfo.size = extractor.readSampleData(dstBuf, offset)
+-      if (bufferInfo.size < 0) {
+-        Log.d(TAG, "Saw input EOS.")
+-        bufferInfo.size = 0
+-        break
+-      } else {
+-        bufferInfo.presentationTimeUs = extractor.sampleTime
+-        if (endMs > 0 && bufferInfo.presentationTimeUs > endMs * 1000) {
+-          Log.d(TAG, "The current sample is over the trim end time.")
+-          break
+-        } else {
+-          bufferInfo.flags = extractor.sampleFlags
+-          trackIndex = extractor.sampleTrackIndex
+-          muxer.writeSampleData(indexMap[trackIndex]!!, dstBuf, bufferInfo)
+-          extractor.advance()
+-        }
+-      }
+-    }
+-    muxer.stop()
+-    muxer.release()
+-    return
+-  }
+-
+-  companion object {
+-    private const val DEFAULT_BUFFER_SIZE = 1 * 1024 * 1024
+-    private const val TAG = "AudioExtractorDecoder"
+-  }
+-}
+diff --git a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioHelper.kt b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioHelper.kt
+deleted file mode 100644
+index 42040b4..0000000
+--- a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioHelper.kt
++++ /dev/null
+@@ -1,72 +0,0 @@
+-package com.reactnativecompressor.Audio
+-
+-import android.media.MediaExtractor
+-import android.media.MediaFormat
+-import com.facebook.react.bridge.ReadableMap
+-import com.reactnativecompressor.Utils.Utils
+-import java.io.File
+-import java.io.IOException
+-
+-
+-class AudioHelper {
+-
+-  var quality: String? = "medium"
+-  var bitrate: Int = -1
+-  var samplerate: Int = -1
+-  var channels: Int = -1
+-  var progressDivider: Int? = 0
+-
+-  companion object {
+-    fun fromMap(map: ReadableMap): AudioHelper {
+-      val options = AudioHelper()
+-      val iterator = map.keySetIterator()
+-      while (iterator.hasNextKey()) {
+-        val key = iterator.nextKey()
+-        when (key) {
+-          "quality" -> options.quality = map.getString(key)
+-          "bitrate" -> {
+-            val bitrate = map.getInt(key)
+-            options.bitrate = if (bitrate > 320000 || bitrate < 64000) 64000 else bitrate
+-          }
+-          "samplerate" -> options.samplerate = map.getInt(key)
+-          "channels" -> options.channels = map.getInt(key)
+-        }
+-      }
+-      return options
+-    }
+-
+-
+-    fun getAudioBitrate(path: String): Int {
+-      val file = File(path)
+-      val fileSize = file.length() * 8 // size in bits
+-
+-      val mex = MediaExtractor()
+-      try {
+-        mex.setDataSource(path)
+-      } catch (e: IOException) {
+-        e.printStackTrace()
+-      }
+-
+-      val mf = mex.getTrackFormat(0)
+-      val durationUs = mf.getLong(MediaFormat.KEY_DURATION)
+-      val durationSec = durationUs / 1_000_000.0 // convert duration to seconds
+-
+-      return (fileSize / durationSec).toInt()/1000 // bitrate in bits per second
+-    }
+-    fun getDestinationBitrateByQuality(path: String, quality: String): Int {
+-      val originalBitrate = getAudioBitrate(path)
+-      var destinationBitrate = originalBitrate
+-      Utils.addLog("source bitrate: $originalBitrate")
+-
+-      when (quality.lowercase()) {
+-        "low" -> destinationBitrate = maxOf(64, (originalBitrate * 0.3).toInt())
+-        "medium" -> destinationBitrate = (originalBitrate * 0.5).toInt()
+-        "high" -> destinationBitrate = minOf(320, (originalBitrate * 0.7).toInt())
+-        else -> Utils.addLog("Invalid quality level. Please enter 'low', 'medium', or 'high'.")
+-      }
+-
+-      return destinationBitrate
+-    }
+-
+-  }
+-}
+diff --git a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioMain.kt b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioMain.kt
+index 446d4fb..f021909 100644
+--- a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioMain.kt
++++ b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioMain.kt
+@@ -11,7 +11,9 @@ class AudioMain(private val reactContext: ReactApplicationContext) {
+     promise: Promise) {
+     try {
+ 
+-      AudioCompressor.CompressAudio(fileUrl,optionMap,reactContext,promise)
++    // Skip compression on Android to avoid libandroidlame dependency
++    // Return the original file URL without compression
++    promise.resolve(fileUrl)
+     } catch (ex: Exception) {
+       promise.reject(ex)
+     }
+diff --git a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Utils/Utils.kt b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Utils/Utils.kt
+index c14b727..1198908 100644
+--- a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Utils/Utils.kt
++++ b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Utils/Utils.kt
+@@ -7,7 +7,6 @@ import android.provider.OpenableColumns
+ import android.util.Log
+ import com.facebook.react.bridge.Promise
+ import com.facebook.react.bridge.ReactApplicationContext
+-import com.reactnativecompressor.Audio.AudioCompressor
+ import com.reactnativecompressor.Video.VideoCompressor.CompressionListener
+ import com.reactnativecompressor.Video.VideoCompressor.VideoCompressorClass
+ import java.io.FileNotFoundException
+@@ -152,10 +151,6 @@ object Utils {
+     }
+   }
+ 
+-  fun addLog(log: String) {
+-    Log.d(AudioCompressor.TAG,  log)
+-  }
+-
+   val exifAttributes = arrayOf(
+     "FNumber",
+     "ApertureValue",

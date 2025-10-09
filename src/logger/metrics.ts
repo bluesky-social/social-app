@@ -175,19 +175,24 @@ export type MetricEvents = {
   'feed:suggestion:press': {
     feedUrl: string
   }
-  'discover:showMore': {
+  'feed:showMore': {
+    feed: string
     feedContext: string
   }
-  'discover:showLess': {
+  'feed:showLess': {
+    feed: string
     feedContext: string
   }
-  'discover:clickthrough': {
+  'feed:clickthrough': {
+    feed: string
     count: number
   }
-  'discover:engaged': {
+  'feed:engaged': {
+    feed: string
     count: number
   }
-  'discover:seen': {
+  'feed:seen': {
+    feed: string
     count: number
   }
 
@@ -321,6 +326,12 @@ export type MetricEvents = {
       | 'ChatsList'
       | 'SendViaChatDialog'
   }
+  'starterPack:addUser': {
+    starterPack?: string
+  }
+  'starterPack:removeUser': {
+    starterPack?: string
+  }
   'starterPack:share': {
     starterPack: string
     shareType: 'link' | 'qrcode'
@@ -352,6 +363,7 @@ export type MetricEvents = {
   'feed:interstitial:feedCard:press': {}
 
   'profile:header:suggestedFollowsCard:press': {}
+  'profile:addToStarterPack': {}
 
   'test:all:always': {}
   'test:all:sometimes': {}

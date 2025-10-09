@@ -77,6 +77,20 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
+"@atproto/api@^0.17.0":
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.17.0.tgz#1fe87ef703f8020dbe00bb5e5cc18622b8b91f4a"
+  integrity sha512-FNS9SW7/3kslAnJH7F4fO9/jPjXzC0NMD6u9NjJ/h4EnaIEpWHZQPkmD9Q2hvAwD6+Uo2boYZEPKkOa55Lr5Dg==
+  dependencies:
+    "@atproto/common-web" "^0.4.3"
+    "@atproto/lexicon" "^0.5.1"
+    "@atproto/syntax" "^0.4.1"
+    "@atproto/xrpc" "^0.7.5"
+    await-lock "^2.2.2"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    zod "^3.23.8"
+
 "@atproto/aws@^0.2.28":
   version "0.2.28"
   resolved "https://registry.yarnpkg.com/@atproto/aws/-/aws-0.2.28.tgz#17bd88a6276e323ebb094a3f01bd94b1173a29a4"
@@ -164,6 +178,16 @@
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.2.tgz#6e3add6939da93d3dfbc8f87e26dc4f57fad7259"
   integrity sha512-vrXwGNoFGogodjQvJDxAeP3QbGtawgZute2ed1XdRO0wMixLk3qewtikZm06H259QDJVu6voKC5mubml+WgQUw==
+  dependencies:
+    graphemer "^1.4.0"
+    multiformats "^9.9.0"
+    uint8arrays "3.0.0"
+    zod "^3.23.8"
+
+"@atproto/common-web@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.3.tgz#b4480220b5682db09da45f4ef906eb7619c838b5"
+  integrity sha512-nRDINmSe4VycJzPo6fP/hEltBcULFxt9Kw7fQk6405FyAWZiTluYHlXOnU7GkQfeUK44OENG1qFTBcmCJ7e8pg==
   dependencies:
     graphemer "^1.4.0"
     multiformats "^9.9.0"
@@ -298,6 +322,17 @@
   integrity sha512-3aAzEAy9EAPs3CxznzMhEcqDd7m3vz1eze/ya9/ThbB7yleqJIhz5GY2q76tCCwHPhn5qDDMhlA9kKV6fG23gA==
   dependencies:
     "@atproto/common-web" "^0.4.2"
+    "@atproto/syntax" "^0.4.1"
+    iso-datestring-validator "^2.2.2"
+    multiformats "^9.9.0"
+    zod "^3.23.8"
+
+"@atproto/lexicon@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.5.1.tgz#e9b7d5c70dc5a38518a8069cd80fea77ab526947"
+  integrity sha512-y8AEtYmfgVl4fqFxqXAeGvhesiGkxiy3CWoJIfsFDDdTlZUC8DFnZrYhcqkIop3OlCkkljvpSJi1hbeC1tbi8A==
+  dependencies:
+    "@atproto/common-web" "^0.4.3"
     "@atproto/syntax" "^0.4.1"
     iso-datestring-validator "^2.2.2"
     multiformats "^9.9.0"
@@ -514,6 +549,14 @@
   integrity sha512-sDi68+QE1XHegTaNAndlX41Gp827pouSzSs8CyAwhrqZdsJUxE3P7TMtrA0z+zAjvxVyvzscRc0TsN/fGUGrhw==
   dependencies:
     "@atproto/lexicon" "^0.5.0"
+    zod "^3.23.8"
+
+"@atproto/xrpc@^0.7.5":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.7.5.tgz#40cef1a657b5f28af8ebec9e3dac5872e58e88ea"
+  integrity sha512-MUYNn5d2hv8yVegRL0ccHvTHAVj5JSnW07bkbiaz96UH45lvYNRVwt44z+yYVnb0/mvBzyD3/ZQ55TRGt7fHkA==
+  dependencies:
+    "@atproto/lexicon" "^0.5.1"
     zod "^3.23.8"
 
 "@aws-crypto/crc32@3.0.0":
@@ -3641,6 +3684,11 @@
   integrity sha512-lIidmkoHsqXwj07BY4fYIu/JyWGXRAGLfh65qhGzWpXLTK1DGyoQUjz5CwsqTDSQWpCfBC7eEaOtYjjv9cAjSQ==
   dependencies:
     react-responsive "^10.0.1"
+
+"@bsky.app/react-native-mmkv@2.12.5":
+  version "2.12.5"
+  resolved "https://registry.yarnpkg.com/@bsky.app/react-native-mmkv/-/react-native-mmkv-2.12.5.tgz#eb17d31a6158c74393f617a1763ac223ff3f83a6"
+  integrity sha512-3vUz1nQY1DiKIPAWRkpp5ZGxH5f2G6Ui0UuQuEYjYv81xx1qFcSzS9KQ2sHcOKYdkOM9amWV2Q8TQCxt1lrAHg==
 
 "@bufbuild/protobuf@^1.5.0":
   version "1.7.0"
@@ -8603,14 +8651,7 @@ babel-plugin-polyfill-regenerator@^0.6.1:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.6.3"
 
-babel-plugin-react-compiler@^19.1.0-rc.1:
-  version "19.1.0-rc.1"
-  resolved "https://registry.yarnpkg.com/babel-plugin-react-compiler/-/babel-plugin-react-compiler-19.1.0-rc.1.tgz#99d131be61017e40abbaedd98321069bf8b7e54a"
-  integrity sha512-M4fpG+Hfq5gWzsJeeMErdRokzg0fdJ8IAk+JDhfB/WLT+U3WwJWR8edphypJrk447/JEvYu6DBFwsTn10bMW4Q==
-  dependencies:
-    "@babel/types" "^7.26.0"
-
-babel-plugin-react-compiler@^19.1.0-rc.2:
+babel-plugin-react-compiler@^19.1.0-rc.2, babel-plugin-react-compiler@^19.1.0-rc.3:
   version "19.1.0-rc.3"
   resolved "https://registry.yarnpkg.com/babel-plugin-react-compiler/-/babel-plugin-react-compiler-19.1.0-rc.3.tgz#45e5a282a2460b3701971e5eb8310a90a7919022"
   integrity sha512-mjRn69WuTz4adL0bXGx8Rsyk1086zFJeKmes6aK0xPuK3aaXmDJdLHqwKKMrpm6KAI1MCoUK72d2VeqQbu8YIA==
@@ -10824,10 +10865,10 @@ eslint-plugin-lingui@^0.2.0:
   dependencies:
     "@typescript-eslint/utils" "^5.61.0"
 
-eslint-plugin-react-compiler@^19.1.0-rc.1:
-  version "19.1.0-rc.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react-compiler/-/eslint-plugin-react-compiler-19.1.0-rc.1.tgz#e974ba9541c9a4464d77723e0505b5742bc22e56"
-  integrity sha512-3umw5eqZXapBl7aQGmvcjheKhUbsElb9jTETxRZg371e1LG4EPs/zCHt2JzP+wNcdaZWzjU/R730zPUJblY2zw==
+eslint-plugin-react-compiler@^19.1.0-rc.2:
+  version "19.1.0-rc.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-compiler/-/eslint-plugin-react-compiler-19.1.0-rc.2.tgz#83343e7422e00fa61e729af8e8468f0ddec37925"
+  integrity sha512-oKalwDGcD+RX9mf3NEO4zOoUMeLvjSvcbbEOpquzmzqEEM2MQdp7/FY/Hx9NzmUwFzH1W9SKTz5fihfMldpEYw==
   dependencies:
     "@babel/core" "^7.24.4"
     "@babel/parser" "^7.24.4"
@@ -17029,11 +17070,6 @@ react-native-keyboard-controller@1.18.5:
   dependencies:
     react-native-is-edge-to-edge "^1.2.1"
 
-react-native-mmkv@^2.12.2:
-  version "2.12.2"
-  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
-  integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
-
 react-native-pager-view@6.8.0:
   version "6.8.0"
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.8.0.tgz#5bac05203d911bf9bf039d47db41b1313dbd1a7a"
@@ -17070,11 +17106,6 @@ react-native-reanimated@^3.19.1:
     convert-source-map "^2.0.0"
     invariant "^2.2.4"
     react-native-is-edge-to-edge "1.1.7"
-
-react-native-root-siblings@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-root-siblings/-/react-native-root-siblings-5.0.1.tgz#97e050e5155228f65810fb1c466ff8e769c5272c"
-  integrity sha512-Ay3k/fBj6ReUkWX5WNS+oEAcgPLEGOK8n7K/L7D85mf3xvd8rm/b4spsv26E4HlFzluVx5HKbxEt9cl0wQ1u3g==
 
 react-native-safe-area-context@~5.6.0:
   version "5.6.1"

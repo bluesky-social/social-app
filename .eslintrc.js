@@ -37,6 +37,7 @@ module.exports = {
           'Toast.Action',
           'AgeAssuranceAdmonition',
           'Span',
+          'StackedButton',
         ],
         impliedTextProps: [],
         suggestedTextWrappers: {
@@ -88,7 +89,7 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
-      {argsIgnorePattern: '^_', varsIgnorePattern: '^_'},
+      {argsIgnorePattern: '^_', varsIgnorePattern: '^_.+'},
     ],
     '@typescript-eslint/consistent-type-imports': [
       'warn',

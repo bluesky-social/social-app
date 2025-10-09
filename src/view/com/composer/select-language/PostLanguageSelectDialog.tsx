@@ -8,6 +8,7 @@ import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {isNative, isWeb} from '#/platform/detection'
 import {
+  toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
@@ -23,8 +24,16 @@ import {Text} from '#/components/Typography'
 
 export function PostLanguageSelectDialog({
   control,
+  /**
+   * Optionally can be passed to show different values than what is saved in
+   * langPrefs.
+   */
+  currentLanguages,
+  onSelectLanguage,
 }: {
   control: Dialog.DialogControlProps
+  currentLanguages?: string[]
+  onSelectLanguage?: (language: string) => void
 }) {
   const {height} = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -40,13 +49,22 @@ export function PostLanguageSelectDialog({
       nativeOptions={{minHeight: height - insets.top}}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
-        <DialogInner />
+        <DialogInner
+          currentLanguages={currentLanguages}
+          onSelectLanguage={onSelectLanguage}
+        />
       </ErrorBoundary>
     </Dialog.Outer>
   )
 }
 
-export function DialogInner() {
+export function DialogInner({
+  currentLanguages,
+  onSelectLanguage,
+}: {
+  currentLanguages?: string[]
+  onSelectLanguage?: (language: string) => void
+}) {
   const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
 
@@ -63,8 +81,11 @@ export function DialogInner() {
   }, [])
 
   const langPrefs = useLanguagePrefs()
+  const postLanguagesPref =
+    currentLanguages ?? toPostLanguages(langPrefs.postLanguage)
+
   const [checkedLanguagesCode2, setCheckedLanguagesCode2] = useState<string[]>(
-    langPrefs.postLanguage.split(',') || [langPrefs.primaryLanguage],
+    postLanguagesPref || [langPrefs.primaryLanguage],
   )
   const [search, setSearch] = useState('')
 
@@ -79,6 +100,7 @@ export function DialogInner() {
         langsString = langPrefs.primaryLanguage
       }
       setLangPrefs.setPostLanguage(langsString)
+      onSelectLanguage?.(langsString)
     })
   }
 
