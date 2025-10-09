@@ -9,8 +9,6 @@ export type Gate =
   | 'explore_show_suggested_feeds'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
-  | 'onboarding_suggested_accounts'
-  | 'onboarding_value_prop'
   | 'post_follow_profile_suggested_accounts'
   | 'remove_show_latest_button'
   | 'test_gate_1'
