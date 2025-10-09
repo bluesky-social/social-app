@@ -24,15 +24,6 @@ export function StepSuggestedStarterpacks() {
   const {state, dispatch} = useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
 
-  /*
-   * Special language handling copied wholesale from the Explore screen
-   */
-  // const {contentLanguages} = useLanguagePrefs()
-  // const useFullExperience = useMemo(() => {
-  //   if (contentLanguages.length === 0) return true
-  //   return bcp47Match.basicFilter('en', contentLanguages).length > 0
-  // }, [contentLanguages])
-
   const {
     data: suggestedStarterPacks,
     isLoading,
