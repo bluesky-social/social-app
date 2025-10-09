@@ -99,7 +99,7 @@ export const OTHER_REPORT_REASONS: Set<OzoneReportDefs.ReasonType> = new Set([
 ])
 
 /**
- * Set of report reasons that should only be sent Bluesky's moderation service.
+ * Set of report reasons that should only be sent to Bluesky's moderation service.
  */
 export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<OzoneReportDefs.ReasonType> =
   new Set([

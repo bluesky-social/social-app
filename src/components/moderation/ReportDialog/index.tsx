@@ -103,7 +103,7 @@ function Inner(props: ReportDialogProps) {
   } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
   const copy = useCopyForSubject(props.subject)
-  const {sortedCategories, getCategory} = useReportOptions()
+  const {categories, getCategory} = useReportOptions()
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
   /**
@@ -274,7 +274,7 @@ function Inner(props: ReportDialogProps) {
                 </View>
               ) : (
                 <View style={[a.gap_sm]}>
-                  {sortedCategories.map(o => (
+                  {categories.map(o => (
                     <CategoryCard
                       key={o.key}
                       option={o}
