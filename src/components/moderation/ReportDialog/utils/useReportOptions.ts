@@ -9,7 +9,7 @@ export type ReportCategory =
   | 'harassmentHate'
   | 'misleading'
   | 'ruleBreaking'
-  | 'civicIntegrity'
+  | 'selfHarm'
   | 'other'
 
 export type ReportCategoryConfig = {
@@ -32,7 +32,7 @@ export function useReportOptions() {
   const categories: Record<ReportCategory, ReportCategoryConfig> = {
     childSafety: {
       key: 'childSafety',
-      title: _(msg`Child Safety`),
+      title: _(msg`Child safety`),
       description: _(
         msg`Content harming or endangering minors' safety and wellbeing`,
       ),
@@ -43,110 +43,94 @@ export function useReportOptions() {
           reason: OzoneReportDefs.REASONCHILDSAFETYCSAM,
         },
         {
-          title: _(msg`Grooming or Predatory Behavior`),
+          title: _(msg`Grooming or predatory behavior`),
           reason: OzoneReportDefs.REASONCHILDSAFETYGROOM,
         },
         {
-          title: _(msg`Minor Privacy Violation`),
-          reason: OzoneReportDefs.REASONCHILDSAFETYMINORPRIVACY,
+          title: _(msg`Privacy violation of a minor`),
+          reason: OzoneReportDefs.REASONCHILDSAFETYPRIVACY,
         },
         {
-          title: _(msg`Child Endangerment`),
-          reason: OzoneReportDefs.REASONCHILDSAFETYENDANGERMENT,
-        },
-        {
-          title: _(msg`Minor Harassment or Bullying`),
+          title: _(msg`Minor harassment or bullying`),
           reason: OzoneReportDefs.REASONCHILDSAFETYHARASSMENT,
         },
         {
-          title: _(msg`Promotion of Child Exploitation`),
-          reason: OzoneReportDefs.REASONCHILDSAFETYPROMOTION,
-        },
-        {
-          title: _(msg`Other Child Safety Issue`),
+          title: _(msg`Other child safety issue`),
           reason: OzoneReportDefs.REASONCHILDSAFETYOTHER,
         },
       ],
     },
     violencePhysicalHarm: {
       key: 'violencePhysicalHarm',
-      title: _(msg`Violence or Physical Harm`),
+      title: _(msg`Violence or physical harm`),
       sort: 2,
       description: _(msg`Threats, calls for violence, or graphic content`),
       options: [
         {
-          title: _(msg`Animal Welfare`),
-          reason: OzoneReportDefs.REASONVIOLENCEANIMALWELFARE,
+          title: _(msg`Animal welfare`),
+          reason: OzoneReportDefs.REASONVIOLENCEANIMAL,
         },
         {
-          title: _(msg`Threats or Incitement`),
+          title: _(msg`Threats or incitement`),
           reason: OzoneReportDefs.REASONVIOLENCETHREATS,
         },
         {
-          title: _(msg`Graphic Violent Content`),
+          title: _(msg`Graphic violent content`),
           reason: OzoneReportDefs.REASONVIOLENCEGRAPHICCONTENT,
         },
         {
-          title: _(msg`Self Harm`),
-          reason: OzoneReportDefs.REASONVIOLENCESELFHARM,
-        },
-        {
-          title: _(msg`Glorification of Violence`),
+          title: _(msg`Glorification of violence`),
           reason: OzoneReportDefs.REASONVIOLENCEGLORIFICATION,
         },
         {
-          title: _(msg`Extremist Content`),
+          title: _(msg`Extremist content`),
           reason: OzoneReportDefs.REASONVIOLENCEEXTREMISTCONTENT,
         },
         {
-          title: _(msg`Human Trafficking`),
+          title: _(msg`Human trafficking`),
           reason: OzoneReportDefs.REASONVIOLENCETRAFFICKING,
         },
         {
-          title: _(msg`Other Violent Content`),
+          title: _(msg`Other violent content`),
           reason: OzoneReportDefs.REASONVIOLENCEOTHER,
         },
       ],
     },
     sexualAdultContent: {
       key: 'sexualAdultContent',
-      title: _(msg`Sexual and Adult Content`),
+      title: _(msg`Sexual and adult content`),
       description: _(msg`Adult, child or animal sexual abuse`),
       sort: 3,
       options: [
         {
-          title: _(msg`Adult Sexual Abuse Content`),
+          title: _(msg`Adult sexual abuse content`),
           reason: OzoneReportDefs.REASONSEXUALABUSECONTENT,
         },
         {
-          title: _(msg`Non-Consensual Intimate Imagery`),
+          title: _(msg`Non-consensual intimate imagery`),
           reason: OzoneReportDefs.REASONSEXUALNCII,
         },
         {
-          title: _(msg`Sextortion`),
-          reason: OzoneReportDefs.REASONSEXUALSEXTORTION,
-        },
-        {
-          title: _(msg`Deepfake Adult Content`),
+          title: _(msg`Deepfake adult content`),
           reason: OzoneReportDefs.REASONSEXUALDEEPFAKE,
         },
         {
-          title: _(msg`Animal Sexual Abuse`),
+          title: _(msg`Animal sexual abuse`),
           reason: OzoneReportDefs.REASONSEXUALANIMAL,
         },
         {
-          title: _(msg`Unlabeled Adult Content`),
+          title: _(msg`Unlabeled adult content`),
           reason: OzoneReportDefs.REASONSEXUALUNLABELED,
         },
         {
-          title: _(msg`Other Sexual Violence Content`),
+          title: _(msg`Other sexual violence content`),
           reason: OzoneReportDefs.REASONSEXUALOTHER,
         },
       ],
     },
     harassmentHate: {
       key: 'harassmentHate',
-      title: _(msg`Harassment or Hate`),
+      title: _(msg`Harassment or hate`),
       description: _(
         msg`Targeted attacks, hate speech, or organized harassment`,
       ),
@@ -157,11 +141,11 @@ export function useReportOptions() {
           reason: OzoneReportDefs.REASONHARASSMENTTROLL,
         },
         {
-          title: _(msg`Targeted Harassment`),
+          title: _(msg`Targeted harassment`),
           reason: OzoneReportDefs.REASONHARASSMENTTARGETED,
         },
         {
-          title: _(msg`Hate Speech`),
+          title: _(msg`Hate speech`),
           reason: OzoneReportDefs.REASONHARASSMENTHATESPEECH,
         },
         {
@@ -169,7 +153,7 @@ export function useReportOptions() {
           reason: OzoneReportDefs.REASONHARASSMENTDOXXING,
         },
         {
-          title: _(msg`Other Harassing or Hateful Content`),
+          title: _(msg`Other harassing or hateful content`),
           reason: OzoneReportDefs.REASONHARASSMENTOTHER,
         },
       ],
@@ -181,7 +165,7 @@ export function useReportOptions() {
       sort: 5,
       options: [
         {
-          title: _(msg`Fake Account or Bot`),
+          title: _(msg`Fake account or bot`),
           reason: OzoneReportDefs.REASONMISLEADINGBOT,
         },
         {
@@ -197,74 +181,64 @@ export function useReportOptions() {
           reason: OzoneReportDefs.REASONMISLEADINGSCAM,
         },
         {
-          title: _(msg`Unlabeled Generative AI or Synthetic Content`),
-          reason: OzoneReportDefs.REASONMISLEADINGSYNTHETICCONTENT,
+          title: _(msg`False information about elections`),
+          reason: OzoneReportDefs.REASONMISLEADINGELECTIONS,
         },
         {
-          title: _(msg`Harmful False Claims`),
-          reason: OzoneReportDefs.REASONMISLEADINGMISINFORMATION,
-        },
-        {
-          title: _(msg`Other Misleading Content`),
+          title: _(msg`Other misleading content`),
           reason: OzoneReportDefs.REASONMISLEADINGOTHER,
         },
       ],
     },
     ruleBreaking: {
       key: 'ruleBreaking',
-      title: _(msg`Breaking Network Rules`),
+      title: _(msg`Breaking network rules`),
       description: _(msg`Hacking, stolen content, or prohibited sales`),
       sort: 6,
       options: [
         {
-          title: _(msg`Hacking or System Attacks`),
+          title: _(msg`Hacking or system attacks`),
           reason: OzoneReportDefs.REASONRULESITESECURITY,
         },
         {
-          title: _(msg`Stolen Content`),
-          reason: OzoneReportDefs.REASONRULESTOLENCONTENT,
-        },
-        {
-          title: _(msg`Promoting or Selling Prohibited Items or Services`),
+          title: _(msg`Promoting or selling prohibited items or services`),
           reason: OzoneReportDefs.REASONRULEPROHIBITEDSALES,
         },
         {
-          title: _(msg`Banned User Returning`),
+          title: _(msg`Banned user returning`),
           reason: OzoneReportDefs.REASONRULEBANEVASION,
         },
         {
-          title: _(msg`Other Network Rule-breaking`),
+          title: _(msg`Other network rule-breaking`),
           reason: OzoneReportDefs.REASONRULEOTHER,
         },
       ],
     },
-    civicIntegrity: {
-      key: 'civicIntegrity',
-      title: _(msg`Civic Integrity`),
-      description: _(
-        msg`Electoral interference or political process violations`,
-      ),
+    selfHarm: {
+      key: 'selfHarm',
+      title: _(msg`Self-harm`),
+      description: _(msg`Harmful or high-risk activities`),
       sort: 7,
       options: [
         {
-          title: _(msg`Electoral Process Violations`),
-          reason: OzoneReportDefs.REASONCIVICELECTORALPROCESS,
+          title: _(msg`Content promoting or depicting self-harm`),
+          reason: OzoneReportDefs.REASONSELFHARMCONTENT,
         },
         {
-          title: _(msg`Disclosure and Transparency Violations`),
-          reason: OzoneReportDefs.REASONCIVICDISCLOSURE,
+          title: _(msg`Eating disorders`),
+          reason: OzoneReportDefs.REASONSELFHARMED,
         },
         {
-          title: _(msg`Voter Intimidation or Interference`),
-          reason: OzoneReportDefs.REASONCIVICINTERFERENCE,
+          title: _(msg`Dangerous challenges or activities`),
+          reason: OzoneReportDefs.REASONSELFHARMSTUNTS,
         },
         {
-          title: _(msg`Election Misinformation`),
-          reason: OzoneReportDefs.REASONCIVICMISINFORMATION,
+          title: _(msg`Dangerous substances or drug abuse`),
+          reason: OzoneReportDefs.REASONSELFHARMSUBSTANCES,
         },
         {
-          title: _(msg`Impersonation of Electoral Officials or Entities`),
-          reason: OzoneReportDefs.REASONCIVICIMPERSONATION,
+          title: _(msg`Other dangerous content`),
+          reason: OzoneReportDefs.REASONSELFHARMOTHER,
         },
       ],
     },
@@ -276,7 +250,7 @@ export function useReportOptions() {
       options: [
         {
           title: _(msg`Other`),
-          reason: OzoneReportDefs.REASONRULEOTHER,
+          reason: OzoneReportDefs.REASONOTHER,
         },
       ],
       isOther: true,
