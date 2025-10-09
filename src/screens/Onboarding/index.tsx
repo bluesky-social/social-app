@@ -1,8 +1,10 @@
 import {useMemo, useReducer} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as bcp47Match from 'bcp-47-match'
 
 import {useGate} from '#/lib/statsig/statsig'
+import {useLanguagePrefs} from '#/state/preferences'
 import {
   Layout,
   OnboardingControls,
@@ -21,8 +23,19 @@ import {StepSuggestedStarterpacks} from './StepSuggestedStarterpacks'
 export function Onboarding() {
   const {_} = useLingui()
   const gate = useGate()
+
+  const {contentLanguages} = useLanguagePrefs()
+  const probablySpeaksEnglish = useMemo(() => {
+    if (contentLanguages.length === 0) return true
+    return bcp47Match.basicFilter('en', contentLanguages).length > 0
+  }, [contentLanguages])
+
+  // starter packs screen is currently geared towards english-speaking accounts
   const showSuggestedStarterpacks =
-    ENV !== 'e2e' && gate('onboarding_suggested_starterpacks')
+    ENV !== 'e2e' &&
+    probablySpeaksEnglish &&
+    gate('onboarding_suggested_starterpacks')
+
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     totalSteps: 4 + (showSuggestedStarterpacks ? 1 : 0),
