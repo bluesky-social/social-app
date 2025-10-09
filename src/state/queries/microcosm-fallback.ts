@@ -41,6 +41,11 @@ async function fetchFromSlingshot<T>(
 
 /**
  * Fetch a record directly from PDS via Slingshot proxy
+ *
+ * Uses the ergonomic `com.bad-example.repo.getUriRecord` endpoint which accepts
+ * a full at-uri instead of separate repo/collection/rkey parameters.
+ *
+ * @see https://slingshot.microcosm.blue/ for full API documentation
  */
 export async function fetchRecordViaSlingshot(
   atUri: string
@@ -53,6 +58,13 @@ export async function fetchRecordViaSlingshot(
 
 /**
  * Resolve identity (DID/handle) via Slingshot
+ *
+ * Uses `com.bad-example.identity.resolveMiniDoc` which returns a compact identity
+ * document with bi-directionally verified DID/handle and the user's PDS URL.
+ * This is more convenient than the standard resolveHandle + describeRepo flow.
+ *
+ * @returns {did, handle, pds} or null if resolution fails
+ * @see https://slingshot.microcosm.blue/ for full API documentation
  */
 export async function resolveIdentityViaSlingshot(
   identifier: string
@@ -63,6 +75,17 @@ export async function resolveIdentityViaSlingshot(
   )
 }
 
+/**
+ * Fetch engagement counts from Constellation backlink indexer
+ *
+ * Constellation indexes all social interactions (likes, reposts, replies) as backlinks
+ * to posts. This provides real engagement counts even for AppView-suspended users.
+ *
+ * Note: Constellation only provides per-post engagement counts, not profile-level
+ * aggregates (total followers, following, posts).
+ *
+ * @see https://constellation.microcosm.blue/ for more about Constellation
+ */
 export async function fetchConstellationCounts(
     atUri: string
 ): Promise<ConstellationCounts> {
@@ -107,6 +130,13 @@ export function isAppViewError(error: any): boolean {
 
 /**
  * Build synthetic ProfileViewDetailed from PDS data
+ *
+ * Fetches the user's profile record from their PDS via Slingshot and constructs
+ * an AppView-compatible ProfileViewDetailed object.
+ *
+ * LIMITATION: Profile-level aggregate counts (followers, following, posts) are not
+ * available from Slingshot or Constellation and are set to undefined. These would
+ * require AppView-style indexing infrastructure.
  */
 export async function buildSyntheticProfileView(
   did: string,
@@ -127,9 +157,9 @@ export async function buildSyntheticProfileView(
     banner: record?.value?.banner
       ? `https://cdn.bsky.app/img/banner/plain/${did}/${record.value.banner.ref.$link}@jpeg`
       : undefined,
-    followersCount: undefined, // Not available from PDS
-    followsCount: undefined,   // Not available from PDS
-    postsCount: undefined,     // Not available from PDS
+    followersCount: undefined, // Not available from PDS or Constellation
+    followsCount: undefined,   // Not available from PDS or Constellation
+    postsCount: undefined,     // Not available from PDS or Constellation
     indexedAt: new Date().toISOString(),
     viewer: {},
     labels: [],
@@ -170,6 +200,18 @@ export async function buildSyntheticPostView(
 /**
  * Build synthetic feed page from PDS data
  * This is used for infinite queries that need paginated results
+ *
+ * IMPORTANT: This function bypasses Slingshot and fetches directly from the user's PDS
+ * because Slingshot does not support the `com.atproto.repo.listRecords` endpoint needed
+ * for bulk record fetching.
+ *
+ * Trade-off: No caching benefit from Slingshot, but we can still provide author feed
+ * functionality for AppView-suspended users.
+ *
+ * Each post in the feed will trigger:
+ * - 1 record fetch via Slingshot (for the full post data, cached)
+ * - 1 Constellation request (for engagement counts)
+ * - Profile fetch (cached after first request)
  */
 export async function buildSyntheticFeedPage(
   did: string,
@@ -181,6 +223,7 @@ export async function buildSyntheticFeedPage(
     const cursorParam = cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''
 
     // Fetch posts directly from PDS using com.atproto.repo.listRecords
+    // NOTE: This bypasses Slingshot because listRecords is not available there
     const url = `${pdsUrl}/xrpc/com.atproto.repo.listRecords?repo=${did}&collection=app.bsky.feed.post&limit=${limit}${cursorParam}`
     const res = await fetch(url)
 
