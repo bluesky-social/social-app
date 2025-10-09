@@ -18,7 +18,6 @@ export type ReportCategoryConfig = {
   title: string
   description: string
   options: ReportOption[]
-  sort: number
   isOther?: boolean
 }
 
@@ -36,7 +35,6 @@ export function useReportOptions() {
         key: 'misleading',
         title: _(msg`Misleading`),
         description: _(msg`Spam, scams, bots, false info, or impersonation`),
-        sort: 5,
         options: [
           {
             title: _(msg`Spam`),
@@ -68,7 +66,6 @@ export function useReportOptions() {
         key: 'sexualAdultContent',
         title: _(msg`Sexual and adult content`),
         description: _(msg`Adult, child or animal sexual abuse`),
-        sort: 3,
         options: [
           {
             title: _(msg`Unlabeled adult content`),
@@ -102,7 +99,6 @@ export function useReportOptions() {
         description: _(
           msg`Targeted attacks, hate speech, or organized harassment`,
         ),
-        sort: 4,
         options: [
           {
             title: _(msg`Trolling`),
@@ -132,7 +128,6 @@ export function useReportOptions() {
         description: _(
           msg`Content harming or endangering minors' safety and wellbeing`,
         ),
-        sort: 1,
         options: [
           {
             title: _(msg`Child Sexual Abuse Material (CSAM)`),
@@ -159,7 +154,6 @@ export function useReportOptions() {
       violencePhysicalHarm: {
         key: 'violencePhysicalHarm',
         title: _(msg`Violence or physical harm`),
-        sort: 2,
         description: _(msg`Threats, calls for violence, or graphic content`),
         options: [
           {
@@ -196,7 +190,6 @@ export function useReportOptions() {
         key: 'selfHarm',
         title: _(msg`Self-harm`),
         description: _(msg`Harmful or high-risk activities`),
-        sort: 7,
         options: [
           {
             title: _(msg`Content promoting or depicting self-harm`),
@@ -224,7 +217,6 @@ export function useReportOptions() {
         key: 'ruleBreaking',
         title: _(msg`Breaking network rules`),
         description: _(msg`Hacking, stolen content, or prohibited sales`),
-        sort: 6,
         options: [
           {
             title: _(msg`Hacking or system attacks`),
@@ -248,7 +240,6 @@ export function useReportOptions() {
         key: 'other',
         title: _(msg`Other`),
         description: _(msg`An issue not included in these options`),
-        sort: 8,
         options: [
           {
             title: _(msg`Other`),
