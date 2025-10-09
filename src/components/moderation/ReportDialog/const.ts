@@ -96,6 +96,8 @@ export const OTHER_REPORT_REASONS: Set<OzoneReportDefs.ReasonType> = new Set([
   OzoneReportDefs.REASONHARASSMENTOTHER,
   OzoneReportDefs.REASONMISLEADINGOTHER,
   OzoneReportDefs.REASONRULEOTHER,
+  OzoneReportDefs.REASONSELFHARMOTHER,
+  OzoneReportDefs.REASONOTHER,
 ])
 
 /**
