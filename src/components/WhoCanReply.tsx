@@ -30,13 +30,13 @@ import {
   PostInteractionSettingsDialog,
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
-import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
-import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
-import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
+import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon} from '#/components/icons/CircleBanSign'
+import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
+import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
-import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
 interface WhoCanReplyProps {
   post: AppBskyFeedDefs.PostView
@@ -111,7 +111,9 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         {({hovered}) => (
           <View style={[a.flex_row, a.align_center, a.gap_xs, style]}>
             <Icon
-              color={t.palette.contrast_400}
+              color={
+                isThreadAuthor ? t.palette.primary_500 : t.palette.contrast_400
+              }
               width={16}
               settings={settings}
             />
@@ -119,14 +121,16 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
               style={[
                 a.text_sm,
                 a.leading_tight,
-                t.atoms.text_contrast_medium,
+                isThreadAuthor
+                  ? {color: t.palette.primary_500}
+                  : t.atoms.text_contrast_medium,
                 hovered && a.underline,
               ]}>
               {description}
             </Text>
 
             {isThreadAuthor && (
-              <PencilLine width={12} fill={t.palette.primary_500} />
+              <ChevronDownIcon width={12} fill={t.palette.primary_500} />
             )}
           </View>
         )}
@@ -164,7 +168,11 @@ function Icon({
     settings.length === 0 ||
     settings.every(setting => setting.type === 'everybody')
   const isNobody = !!settings.find(gate => gate.type === 'nobody')
-  const IconComponent = isEverybody ? Earth : isNobody ? CircleBanSign : Group
+  const IconComponent = isEverybody
+    ? EarthIcon
+    : isNobody
+      ? CircleBanSignIcon
+      : GroupIcon
   return <IconComponent fill={color} width={width} />
 }
 
