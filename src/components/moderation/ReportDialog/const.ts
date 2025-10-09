@@ -10,79 +10,62 @@ export const NEW_TO_OLD_REASON_MAPPING: Record<string, string> = {}
  * Mapping of new (Ozone namespace) reason types to old reason types.
  *
  * Matches the mapping defined in the Ozone codebase:
- * @see https://github.com/bluesky-social/atproto/blob/09439d7d688294ad1a0c78a74b901ba2f7c5f4c3/packages/ozone/src/mod-service/profile.ts#L15
+ * @see https://github.com/bluesky-social/atproto/blob/4c15fb47cec26060bff2e710e95869a90c9d7fdd/packages/ozone/src/mod-service/profile.ts#L16-L64
  */
 export const NEW_TO_OLD_REASONS_MAP: Record<
   OzoneReportDefs.ReasonType,
   RootReportDefs.ReasonType
 > = {
   [OzoneReportDefs.REASONAPPEAL]: RootReportDefs.REASONAPPEAL,
+  [OzoneReportDefs.REASONOTHER]: RootReportDefs.REASONOTHER,
 
-  // Violence-related
-  [OzoneReportDefs.REASONVIOLENCEANIMALWELFARE]: RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.REASONVIOLENCEANIMAL]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONVIOLENCETHREATS]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONVIOLENCEGRAPHICCONTENT]:
     RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCESELFHARM]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONVIOLENCEGLORIFICATION]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONVIOLENCEEXTREMISTCONTENT]:
     RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONVIOLENCETRAFFICKING]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONVIOLENCEOTHER]: RootReportDefs.REASONVIOLATION,
 
-  // Sexual-related
   [OzoneReportDefs.REASONSEXUALABUSECONTENT]: RootReportDefs.REASONSEXUAL,
   [OzoneReportDefs.REASONSEXUALNCII]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALSEXTORTION]: RootReportDefs.REASONSEXUAL,
   [OzoneReportDefs.REASONSEXUALDEEPFAKE]: RootReportDefs.REASONSEXUAL,
   [OzoneReportDefs.REASONSEXUALANIMAL]: RootReportDefs.REASONSEXUAL,
   [OzoneReportDefs.REASONSEXUALUNLABELED]: RootReportDefs.REASONSEXUAL,
   [OzoneReportDefs.REASONSEXUALOTHER]: RootReportDefs.REASONSEXUAL,
 
-  // Child safety
   [OzoneReportDefs.REASONCHILDSAFETYCSAM]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONCHILDSAFETYGROOM]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYMINORPRIVACY]:
-    RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYENDANGERMENT]:
-    RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.REASONCHILDSAFETYPRIVACY]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONCHILDSAFETYHARASSMENT]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYPROMOTION]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONCHILDSAFETYOTHER]: RootReportDefs.REASONVIOLATION,
 
-  // Harassment
   [OzoneReportDefs.REASONHARASSMENTTROLL]: RootReportDefs.REASONRUDE,
   [OzoneReportDefs.REASONHARASSMENTTARGETED]: RootReportDefs.REASONRUDE,
   [OzoneReportDefs.REASONHARASSMENTHATESPEECH]: RootReportDefs.REASONRUDE,
   [OzoneReportDefs.REASONHARASSMENTDOXXING]: RootReportDefs.REASONRUDE,
   [OzoneReportDefs.REASONHARASSMENTOTHER]: RootReportDefs.REASONRUDE,
 
-  // Misleading
-  [OzoneReportDefs.REASONMISLEADINGSPAM]: RootReportDefs.REASONSPAM,
   [OzoneReportDefs.REASONMISLEADINGBOT]: RootReportDefs.REASONMISLEADING,
   [OzoneReportDefs.REASONMISLEADINGIMPERSONATION]:
     RootReportDefs.REASONMISLEADING,
+  [OzoneReportDefs.REASONMISLEADINGSPAM]: RootReportDefs.REASONSPAM,
   [OzoneReportDefs.REASONMISLEADINGSCAM]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGSYNTHETICCONTENT]:
-    RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGMISINFORMATION]:
-    RootReportDefs.REASONMISLEADING,
+  [OzoneReportDefs.REASONMISLEADINGELECTIONS]: RootReportDefs.REASONMISLEADING,
   [OzoneReportDefs.REASONMISLEADINGOTHER]: RootReportDefs.REASONMISLEADING,
 
-  // Map all rule-related reasons to REASONVIOLATION
   [OzoneReportDefs.REASONRULESITESECURITY]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONRULESTOLENCONTENT]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONRULEPROHIBITEDSALES]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONRULEBANEVASION]: RootReportDefs.REASONVIOLATION,
   [OzoneReportDefs.REASONRULEOTHER]: RootReportDefs.REASONVIOLATION,
 
-  // Information Integrity
-  [OzoneReportDefs.REASONCIVICELECTORALPROCESS]:
-    RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONCIVICDISCLOSURE]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONCIVICINTERFERENCE]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONCIVICMISINFORMATION]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONCIVICIMPERSONATION]: RootReportDefs.REASONMISLEADING,
+  [OzoneReportDefs.REASONSELFHARMCONTENT]: RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.REASONSELFHARMED]: RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.REASONSELFHARMSTUNTS]: RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.REASONSELFHARMSUBSTANCES]: RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.REASONSELFHARMOTHER]: RootReportDefs.REASONVIOLATION,
 }
 
 /**
@@ -98,7 +81,7 @@ export const OLD_TO_NEW_REASONS_MAP: Record<
   [RootReportDefs.REASONMISLEADING]: [OzoneReportDefs.REASONMISLEADINGOTHER],
   [RootReportDefs.REASONSEXUAL]: [OzoneReportDefs.REASONSEXUALUNLABELED],
   [RootReportDefs.REASONRUDE]: [OzoneReportDefs.REASONHARASSMENTOTHER],
-  [RootReportDefs.REASONOTHER]: [OzoneReportDefs.REASONRULEOTHER],
+  [RootReportDefs.REASONOTHER]: [OzoneReportDefs.REASONOTHER],
   [RootReportDefs.REASONAPPEAL]: [OzoneReportDefs.REASONAPPEAL],
 }
 
@@ -122,8 +105,6 @@ export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<OzoneReportDefs.ReasonType> =
   new Set([
     OzoneReportDefs.REASONCHILDSAFETYCSAM,
     OzoneReportDefs.REASONCHILDSAFETYGROOM,
-    OzoneReportDefs.REASONCHILDSAFETYENDANGERMENT,
-    OzoneReportDefs.REASONCHILDSAFETYPROMOTION,
     OzoneReportDefs.REASONCHILDSAFETYOTHER,
     OzoneReportDefs.REASONVIOLENCEEXTREMISTCONTENT,
   ])
