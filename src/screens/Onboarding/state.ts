@@ -1,6 +1,4 @@
 import React from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {
@@ -22,7 +20,6 @@ export type OnboardingState = {
 
   interestsStepResults: {
     selectedInterests: string[]
-    apiResponse: ApiResponseMap
   }
   profileStepResults: {
     isCreatedAvatar: boolean
@@ -61,7 +58,6 @@ export type OnboardingAction =
   | {
       type: 'setInterestsStepResults'
       selectedInterests: string[]
-      apiResponse: ApiResponseMap
     }
   | {
       type: 'setProfileStepResults'
@@ -77,62 +73,6 @@ export type OnboardingAction =
         | undefined
     }
 
-export type ApiResponseMap = {
-  interests: string[]
-  suggestedAccountDids: {
-    [key: string]: string[]
-  }
-  suggestedFeedUris: {
-    [key: string]: string[]
-  }
-}
-
-// most popular selected interests
-export const popularInterests = [
-  'art',
-  'gaming',
-  'sports',
-  'comics',
-  'music',
-  'politics',
-  'photography',
-  'science',
-  'news',
-]
-
-export function useInterestsDisplayNames() {
-  const {_} = useLingui()
-
-  return React.useMemo<Record<string, string>>(() => {
-    return {
-      // Keep this alphabetized
-      animals: _(msg`Animals`),
-      art: _(msg`Art`),
-      books: _(msg`Books`),
-      comedy: _(msg`Comedy`),
-      comics: _(msg`Comics`),
-      culture: _(msg`Culture`),
-      dev: _(msg`Software Dev`),
-      education: _(msg`Education`),
-      food: _(msg`Food`),
-      gaming: _(msg`Video Games`),
-      journalism: _(msg`Journalism`),
-      movies: _(msg`Movies`),
-      music: _(msg`Music`),
-      nature: _(msg`Nature`),
-      news: _(msg`News`),
-      pets: _(msg`Pets`),
-      photography: _(msg`Photography`),
-      politics: _(msg`Politics`),
-      science: _(msg`Science`),
-      sports: _(msg`Sports`),
-      tech: _(msg`Tech`),
-      tv: _(msg`TV`),
-      writers: _(msg`Writers`),
-    }
-  }, [_])
-}
-
 export const initialState: OnboardingState = {
   hasPrev: false,
   totalSteps: 3,
@@ -142,11 +82,6 @@ export const initialState: OnboardingState = {
 
   interestsStepResults: {
     selectedInterests: [],
-    apiResponse: {
-      interests: [],
-      suggestedAccountDids: {},
-      suggestedFeedUris: {},
-    },
   },
   profileStepResults: {
     isCreatedAvatar: false,
@@ -212,7 +147,6 @@ export function reducer(
     case 'setInterestsStepResults': {
       next.interestsStepResults = {
         selectedInterests: a.selectedInterests,
-        apiResponse: a.apiResponse,
       }
       break
     }
