@@ -36,11 +36,11 @@ export function useSubmitReportMutation() {
       const labelerSupportedReasonTypes = labeler.reasonTypes || []
 
       let reasonType = state.selectedOption.reason
-      const backwardsCompatableReasonType = NEW_TO_OLD_REASONS_MAP[reasonType]
+      const backwardsCompatibleReasonType = NEW_TO_OLD_REASONS_MAP[reasonType]
       const supportsNewReasonType =
         labelerSupportedReasonTypes.includes(reasonType)
       const supportsOldReasonType = labelerSupportedReasonTypes.includes(
-        backwardsCompatableReasonType,
+        backwardsCompatibleReasonType,
       )
 
       /*
@@ -49,7 +49,7 @@ export function useSubmitReportMutation() {
        * supported reason types, send the new version.
        */
       if (supportsOldReasonType && !supportsNewReasonType) {
-        reasonType = backwardsCompatableReasonType
+        reasonType = backwardsCompatibleReasonType
       }
 
       let report:
