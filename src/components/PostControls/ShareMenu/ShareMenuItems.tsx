@@ -136,7 +136,9 @@ let ShareMenuItems = ({
         {hideInPWI && (
           <Menu.Group>
             <Menu.ContainerItem>
-              <Admonition type="warning" style={[a.flex_1, a.border_0, a.p_0]}>
+              <Admonition
+                type="warning"
+                style={[a.flex_1, a.border_0, a.p_0, a.bg_transparent]}>
                 <Trans>This post is only visible to logged-in users.</Trans>
               </Admonition>
             </Menu.ContainerItem>
