@@ -1,15 +1,16 @@
-import React, {useEffect, useMemo, useReducer, useRef} from 'react'
+import {createContext, useContext, useEffect, useMemo, useReducer} from 'react'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useCurrentConvoId} from './current-convo-id'
 
-const MessageDraftsContext = React.createContext<{
+const MessageDraftsContext = createContext<{
   state: State
   dispatch: React.Dispatch<Actions>
 } | null>(null)
 MessageDraftsContext.displayName = 'MessageDraftsContext'
 
 function useMessageDraftsContext() {
-  const ctx = React.useContext(MessageDraftsContext)
+  const ctx = useContext(MessageDraftsContext)
   if (!ctx) {
     throw new Error(
       'useMessageDrafts must be used within a MessageDraftsContext',
@@ -37,20 +38,22 @@ export function useMessageDraft() {
 export function useSaveMessageDraft(message: string) {
   const {currentConvoId} = useCurrentConvoId()
   const {dispatch} = useMessageDraftsContext()
-  const messageRef = useRef(message)
-  messageRef.current = message
+
+  const onUnmount = useNonReactiveCallback((convoId: string) => {
+    dispatch({
+      type: 'set',
+      convoId,
+      draft: message,
+    })
+  })
 
   useEffect(() => {
     return () => {
       if (currentConvoId) {
-        dispatch({
-          type: 'set',
-          convoId: currentConvoId,
-          draft: messageRef.current,
-        })
+        onUnmount(currentConvoId)
       }
     }
-  }, [currentConvoId, dispatch])
+  }, [currentConvoId, onUnmount])
 }
 
 type State = {[convoId: string]: string}
