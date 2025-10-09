@@ -15,7 +15,7 @@ import {
   type QueryClient,
   type QueryKey,
   useInfiniteQuery,
-} from '@tanstack/react-query'
+} from './useQueryWithFallback'
 
 import {AuthorFeedAPI} from '#/lib/api/feed/author'
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
@@ -381,6 +381,11 @@ export function usePostFeedQuery(
       },
       [selectArgs /* Don't change. Everything needs to go into selectArgs. */],
     ),
+    enableFallback: feedDesc.startsWith('author'),
+    fallbackType: 'feed',
+    fallbackIdentifier: feedDesc.startsWith('author|')
+      ? feedDesc.split('|')[1]
+      : undefined,
   })
 
   // The server may end up returning an empty page, a page with too few items,

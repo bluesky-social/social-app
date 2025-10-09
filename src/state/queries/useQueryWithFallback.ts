@@ -359,10 +359,11 @@ async function attemptInfiniteFallback(
   }
 }
 
-// Re-export other hooks from TanStack Query for convenience
+// Re-export other hooks and utilities from TanStack Query for convenience
 export {
   useMutation,
   useQueryClient,
+  keepPreviousData,
   type UseMutationOptions,
   type UseMutationResult,
 } from '@tanstack/react-query'

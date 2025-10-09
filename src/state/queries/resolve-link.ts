@@ -1,4 +1,4 @@
-import {QueryClient, useQuery} from '@tanstack/react-query'
+import {fetchQueryWithFallback, type QueryClient, useQuery} from './useQueryWithFallback'
 
 import {STALE} from '#/state/queries/index'
 import {useAgent} from '../session'
@@ -29,12 +29,14 @@ export function fetchResolveLinkQuery(
   agent: BskyAgent,
   url: string,
 ) {
-  return queryClient.fetchQuery({
-    staleTime: STALE.HOURS.ONE,
+  return fetchQueryWithFallback(queryClient, {
     queryKey: RQKEY_LINK(url),
     queryFn: async () => {
       return await resolveLink(agent, url)
     },
+    enableFallback: true,
+    fallbackType: 'generic',
+    fallbackIdentifier: url,
   })
 }
 export function precacheResolveLinkQuery(
@@ -60,11 +62,13 @@ export function fetchResolveGifQuery(
   agent: BskyAgent,
   gif: Gif,
 ) {
-  return queryClient.fetchQuery({
-    staleTime: STALE.HOURS.ONE,
+  return fetchQueryWithFallback(queryClient, {
     queryKey: RQKEY_GIF(gif.url),
     queryFn: async () => {
       return await resolveGif(agent, gif)
     },
+    enableFallback: true,
+    fallbackType: 'generic',
+    fallbackIdentifier: gif.url,
   })
 }
