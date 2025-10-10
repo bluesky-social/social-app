@@ -25,6 +25,11 @@ import * as bsky from '#/types/bsky'
 export * from '#/state/queries/threadgate/types'
 export * from '#/state/queries/threadgate/util'
 
+/**
+ * Must match the threadgate lexicon record definition.
+ */
+export const MAX_HIDDEN_REPLIES = 300
+
 export const threadgateRecordQueryKeyRoot = 'threadgate-record'
 export const createThreadgateRecordQueryKey = (uri: string) => [
   threadgateRecordQueryKeyRoot,
@@ -205,6 +210,7 @@ export async function upsertThreadgate(
   })
   const next = await callback(prev)
   if (!next) return
+  validateThreadgateRecordOrThrow(next)
   await writeThreadgateRecord({
     agent,
     postUri,
@@ -357,4 +363,32 @@ export function useToggleReplyVisibilityMutation() {
       }
     },
   })
+}
+
+export class MaxHiddenRepliesError extends Error {
+  constructor(message?: string) {
+    super(message || 'Maximum number of hidden replies reached')
+    this.name = 'MaxHiddenRepliesError'
+  }
+}
+
+export class InvalidInteractionSettingsError extends Error {
+  constructor(message?: string) {
+    super(message || 'Invalid interaction settings')
+    this.name = 'InvalidInteractionSettingsError'
+  }
+}
+
+export function validateThreadgateRecordOrThrow(
+  record: AppBskyFeedThreadgate.Record,
+) {
+  const result = AppBskyFeedThreadgate.validateRecord(record)
+
+  if (result.success) {
+    if ((result.value.hiddenReplies?.length ?? 0) > MAX_HIDDEN_REPLIES) {
+      throw new MaxHiddenRepliesError()
+    }
+  } else {
+    throw new InvalidInteractionSettingsError()
+  }
 }
