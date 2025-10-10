@@ -11,6 +11,7 @@ import {
   TREE_VIEW_BELOW_DESKTOP,
   TREE_VIEW_BF,
 } from '#/state/queries/usePostThread/const'
+import {type PostThreadContextType} from '#/state/queries/usePostThread/context'
 import {
   createCacheMutator,
   getThreadPlaceholder,
