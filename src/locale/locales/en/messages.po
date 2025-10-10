@@ -493,7 +493,7 @@ msgstr ""
 msgid "<0>{date}</0> at {time}"
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:255
+#: src/screens/Search/SearchResults.tsx:257
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr ""
 
@@ -568,7 +568,7 @@ msgstr ""
 msgid "Accept Request"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:179
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:178
 msgid "Accept this language suggestion"
 msgstr ""
 
@@ -1564,7 +1564,7 @@ msgstr ""
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:686
 #: src/screens/Search/components/StarterPackCard.tsx:106
-#: src/screens/Search/Explore.tsx:930
+#: src/screens/Search/Explore.tsx:940
 msgid "By {0}"
 msgstr ""
 
@@ -1620,7 +1620,7 @@ msgstr ""
 #: src/screens/Deactivated.tsx:158
 #: src/screens/Profile/Header/EditProfileDialog.tsx:218
 #: src/screens/Profile/Header/EditProfileDialog.tsx:226
-#: src/screens/Search/Shell.tsx:349
+#: src/screens/Search/Shell.tsx:369
 #: src/screens/Settings/AppIconSettings/index.tsx:44
 #: src/screens/Settings/AppIconSettings/index.tsx:230
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:78
@@ -1657,7 +1657,7 @@ msgstr ""
 msgid "Cancel reactivation and sign out"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:341
+#: src/screens/Search/Shell.tsx:361
 msgid "Cancel search"
 msgstr ""
 
@@ -2452,7 +2452,7 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
-#: src/screens/Search/SearchResults.tsx:266
+#: src/screens/Search/SearchResults.tsx:268
 msgid "Create an account"
 msgstr ""
 
@@ -3252,7 +3252,7 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:144
+#: src/screens/Search/SearchResults.tsx:146
 msgid "Error: {error}"
 msgstr ""
 
@@ -3365,7 +3365,7 @@ msgid "Explicit sexual images."
 msgstr ""
 
 #: src/Navigation.tsx:759
-#: src/screens/Search/Shell.tsx:307
+#: src/screens/Search/Shell.tsx:327
 #: src/view/shell/desktop/LeftNav.tsx:690
 #: src/view/shell/Drawer.tsx:414
 msgid "Explore"
@@ -3647,7 +3647,7 @@ msgstr ""
 
 #: src/Navigation.tsx:574
 #: src/screens/SavedFeeds.tsx:108
-#: src/screens/Search/SearchResults.tsx:73
+#: src/screens/Search/SearchResults.tsx:75
 #: src/screens/StarterPack/StarterPackScreen.tsx:190
 #: src/view/screens/Feeds.tsx:511
 #: src/view/screens/Profile.tsx:230
@@ -3719,7 +3719,7 @@ msgstr ""
 msgid "Find people to follow"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:475
+#: src/screens/Search/Shell.tsx:525
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
@@ -3958,7 +3958,7 @@ msgstr ""
 msgid "From @{sanitizedAuthor}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:327
+#: src/view/com/posts/PostFeedItem.tsx:345
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
@@ -4693,7 +4693,7 @@ msgid "Last initiated just now"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:95
-#: src/screens/Search/SearchResults.tsx:57
+#: src/screens/Search/SearchResults.tsx:59
 #: src/screens/Topic.tsx:77
 msgid "Latest"
 msgstr ""
@@ -5685,7 +5685,7 @@ msgstr ""
 msgid "No results"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:787
+#: src/screens/Search/Explore.tsx:797
 msgid "No results for \"{0}\"."
 msgstr ""
 
@@ -5697,13 +5697,13 @@ msgstr ""
 msgid "No results found for \"{query}\""
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:311
-#: src/screens/Search/SearchResults.tsx:347
-#: src/screens/Search/SearchResults.tsx:392
+#: src/screens/Search/SearchResults.tsx:313
+#: src/screens/Search/SearchResults.tsx:349
+#: src/screens/Search/SearchResults.tsx:394
 msgid "No results found for {query}"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:791
+#: src/screens/Search/Explore.tsx:801
 msgid "No results."
 msgstr ""
 
@@ -6200,7 +6200,7 @@ msgid "Pause video"
 msgstr ""
 
 #: src/screens/ProfileList/index.tsx:166
-#: src/screens/Search/SearchResults.tsx:67
+#: src/screens/Search/SearchResults.tsx:69
 #: src/screens/StarterPack/StarterPackScreen.tsx:189
 msgid "People"
 msgstr ""
@@ -6263,7 +6263,7 @@ msgstr ""
 msgid "Pin to your profile"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:408
+#: src/view/com/posts/PostFeedItem.tsx:426
 msgid "Pinned"
 msgstr ""
 
@@ -7246,16 +7246,16 @@ msgstr ""
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:348
+#: src/view/com/posts/PostFeedItem.tsx:366
 msgid "Reposted by {0}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:367
+#: src/view/com/posts/PostFeedItem.tsx:385
 msgid "Reposted by <0><1/></0>"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:346
-#: src/view/com/posts/PostFeedItem.tsx:365
+#: src/view/com/posts/PostFeedItem.tsx:364
+#: src/view/com/posts/PostFeedItem.tsx:383
 msgid "Reposted by you"
 msgstr ""
 
@@ -7500,8 +7500,8 @@ msgstr ""
 #: src/components/dialogs/SearchablePeopleList.tsx:514
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
-#: src/screens/Search/Shell.tsx:307
-#: src/screens/Search/Shell.tsx:463
+#: src/screens/Search/Shell.tsx:327
+#: src/screens/Search/Shell.tsx:513
 #: src/view/shell/bottom-bar/BottomBar.tsx:198
 msgid "Search"
 msgstr ""
@@ -7549,7 +7549,7 @@ msgstr ""
 msgid "Search for more feeds"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:334
+#: src/screens/Search/Shell.tsx:354
 msgid "Search for posts, users, or feeds"
 msgstr ""
 
@@ -7557,7 +7557,7 @@ msgstr ""
 msgid "Search GIFs"
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:253
+#: src/screens/Search/SearchResults.tsx:255
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
@@ -8132,7 +8132,7 @@ msgstr ""
 #: src/screens/Login/index.tsx:136
 #: src/screens/Login/index.tsx:157
 #: src/screens/Login/LoginForm.tsx:181
-#: src/screens/Search/SearchResults.tsx:258
+#: src/screens/Search/SearchResults.tsx:260
 #: src/view/com/auth/SplashScreen.tsx:81
 #: src/view/com/auth/SplashScreen.tsx:89
 #: src/view/com/auth/SplashScreen.web.tsx:127
@@ -8820,7 +8820,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:986
+#: src/screens/Search/Explore.tsx:996
 #: src/view/com/posts/PostFeed.tsx:709
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
@@ -9199,7 +9199,7 @@ msgid "Toggles the sound"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:84
-#: src/screens/Search/SearchResults.tsx:47
+#: src/screens/Search/SearchResults.tsx:49
 #: src/screens/Topic.tsx:71
 msgid "Top"
 msgstr ""
@@ -10143,7 +10143,7 @@ msgstr ""
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:285
+#: src/screens/Search/SearchResults.tsx:287
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
@@ -10299,7 +10299,7 @@ msgstr ""
 msgid "www.mylivestream.tv"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:181
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:180
 msgid "Yes"
 msgstr ""
 
