@@ -191,11 +191,23 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
       text = _(msg`Hot`)
       break
     }
-    default: {
+    case 'new': {
       Icon = TrendingIcon
       text = _(msg`New`)
       color = t.palette.positive_600
       backgroundColor = t.palette.positive_50
+      break
+    }
+    default: {
+      text = _(
+        msg({
+          message: `${type}h ago`,
+          comment:
+            'trending topic time spent trending. should be as short as possible to fit in a pill',
+        }),
+      )
+      color = t.atoms.text_contrast_medium.color
+      backgroundColor = t.atoms.bg_contrast_25.backgroundColor
       break
     }
   }
