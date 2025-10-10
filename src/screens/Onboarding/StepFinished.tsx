@@ -401,7 +401,7 @@ function ValueProposition({
             ]}>
             <Image
               source={image}
-              style={[a.w_full, {aspectRatio: 1}]}
+              style={[a.w_full, a.aspect_square]}
               alt={alt}
               accessibilityIgnoresInvertColors={false} // I guess we do need it to blend into the background
             />
