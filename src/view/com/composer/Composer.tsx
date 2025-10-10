@@ -44,9 +44,8 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
-  AppBskyFeedDefs,
-  type AppBskyFeedGetPostThread,
   AppBskyUnspeccedDefs,
+  type AppBskyUnspeccedGetPostThreadV2,
   AtUri,
   type BskyAgent,
   type RichText,
@@ -549,10 +548,10 @@ export const ComposePost = ({
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
       whenAppViewReady(agent, initQuote.uri, res => {
-        const quotedThread = res.data.thread
+        const anchor = res.data.thread.at(0)
         if (
-          AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
-          quotedThread.post.quoteCount !== initQuote.quoteCount
+          AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
+          anchor.value.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
           onPostSuccess?.(postSuccessData)
@@ -1661,16 +1660,18 @@ function useKeyboardVerticalOffset() {
 async function whenAppViewReady(
   agent: BskyAgent,
   uri: string,
-  fn: (res: AppBskyFeedGetPostThread.Response) => boolean,
+  fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.feed.getPostThread({
-        uri,
-        depth: 0,
+      agent.app.bsky.unspecced.getPostThreadV2({
+        anchor: uri,
+        above: false,
+        below: 0,
+        branchingFactor: 0,
       }),
   )
 }
