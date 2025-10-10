@@ -103,6 +103,8 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
       paddingTop: Math.abs(contentOffset.y),
     })
   }
+  // @ts-expect-error web only
+  let dataSet = props.dataSet || {}
   if (desktopFixedHeight) {
     if (typeof desktopFixedHeight === 'number') {
       // @ts-expect-error Web only -prf
@@ -121,10 +123,7 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
       // around this, we set data-stable-gutters which can then be
       // styled in our external CSS.
       // -prf
-      // @ts-expect-error web only -prf
-      props.dataSet = props.dataSet || {}
-      // @ts-expect-error web only -prf
-      props.dataSet.stableGutters = '1'
+      dataSet = {...dataSet, stableGutters: '1'}
     }
   }
   return (
@@ -133,6 +132,8 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
       contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
       style={style}
       contentOffset={contentOffset}
+      // @ts-expect-error web only
+      dataSet={dataSet}
       {...props}
     />
   )

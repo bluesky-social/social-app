@@ -331,7 +331,7 @@ export function TabBar({
             syncScrollState.set('unsynced')
           }}
           onScroll={e => {
-            scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
+            scrollX.set(Math.round(e.nativeEvent.contentOffset.x))
           }}>
           <Animated.View
             onLayout={e => {

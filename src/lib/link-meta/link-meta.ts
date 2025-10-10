@@ -50,7 +50,7 @@ export async function getLinkMeta(
     // follow redirects for soundcloud shortlinks
     // QUESTION - do we want to follow redirects in other cases? -sfn
     shouldFollowRedirect = urlp.hostname === 'on.soundcloud.com'
-  } catch (e) {
+  } catch {
     return {
       error: 'Invalid URL',
       likelyType: LikelyType.Other,
@@ -107,7 +107,7 @@ export function getLikelyType(url: URL | string): LikelyType {
   if (typeof url === 'string') {
     try {
       url = new URL(url)
-    } catch (e) {
+    } catch {
       return LikelyType.Other
     }
   }

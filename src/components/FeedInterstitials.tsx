@@ -140,6 +140,11 @@ function sortSeenPosts(postA: SeenPost, postB: SeenPost): 0 | 1 | -1 {
   }
 }
 
+const random1 = Math.random()
+const random2 = Math.random()
+const random3 = Math.random()
+const random4 = Math.random()
+
 function useExperimentalSuggestedUsersQuery() {
   const {currentAccount} = useSession()
   const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
@@ -153,10 +158,10 @@ function useExperimentalSuggestedUsersQuery() {
     if (followSuggestions.length > 0) {
       suggestedDids = [
         // It's ok if these will pick the same item (weighed by its frequency)
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        followSuggestions[Math.floor(random1 * followSuggestions.length)],
+        followSuggestions[Math.floor(random2 * followSuggestions.length)],
+        followSuggestions[Math.floor(random3 * followSuggestions.length)],
+        followSuggestions[Math.floor(random4 * followSuggestions.length)],
       ]
     }
     const seenDids = seen

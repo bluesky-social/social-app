@@ -9,6 +9,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {listUriToHref} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
+import {useTickEveryMinute} from '#/state/shell'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
@@ -44,6 +45,7 @@ function ModerationDetailsDialogInner({
   const {_} = useLingui()
   const desc = useModerationCauseDescription(modcause)
   const {currentAccount} = useSession()
+  const tick = useTickEveryMinute()
   const timeDiff = useGetTimeAgo({future: true})
 
   let name
@@ -208,7 +210,7 @@ function ModerationDetailsDialogInner({
                         t.atoms.text_contrast_medium,
                       ]}>
                       <Trans>
-                        Expires in {timeDiff(Date.now(), modcause.label.exp)}
+                        Expires in {timeDiff(tick, modcause.label.exp)}
                       </Trans>
                     </Text>
                   </View>

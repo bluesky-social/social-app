@@ -47,23 +47,21 @@ export function SuggestedLanguage({
     string | undefined
   >(undefined)
 
-  useEffect(() => {
-    if (text.length > 0 && !hasInteracted) {
-      setHasInteracted(true)
-    }
-  }, [text, hasInteracted])
+  if (!hasInteracted && text.length > 0) {
+    setHasInteracted(true)
+  }
 
   useEffect(() => {
     const textTrimmed = text.trim()
 
-    // Don't run the language model on small posts, the results are likely
-    // to be inaccurate anyway.
-    if (textTrimmed.length < 40) {
-      setSuggestedLanguage(undefined)
-      return
-    }
-
     const idle = onIdle(() => {
+      // Don't run the language model on small posts, the results are likely
+      // to be inaccurate anyway.
+      if (textTrimmed.length < 40) {
+        setSuggestedLanguage(undefined)
+        return
+      }
+
       setSuggestedLanguage(guessLanguage(textTrimmed))
     })
 

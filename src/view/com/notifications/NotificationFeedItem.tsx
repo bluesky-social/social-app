@@ -322,7 +322,7 @@ let NotificationFeedItem = ({
       try {
         const rkey = new AtUri(item.notification.author.viewer.following).rkey
         followingTimestamp = TID.fromStr(rkey).timestamp()
-      } catch (e) {
+      } catch {
         // For some reason the following URI was invalid. Default to it not being a follow back.
         console.error('Invalid following URI')
       }

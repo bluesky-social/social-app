@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import {useState} from 'react'
 import {
   type DimensionValue,
   type StyleProp,
@@ -283,7 +283,7 @@ export function ChatListItemLoadingPlaceholder({
   style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme_NEW()
-  const random = useMemo(() => Math.random(), [])
+  const [random] = useState(() => Math.random())
   return (
     <View style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, t.atoms.bg, style]}>
       <LoadingPlaceholder width={52} height={52} style={a.rounded_full} />

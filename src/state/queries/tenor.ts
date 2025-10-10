@@ -91,7 +91,7 @@ export function tenorUrlToBskyGifUrl(tenorUrl: string) {
   let url
   try {
     url = new URL(tenorUrl)
-  } catch (e) {
+  } catch {
     logger.debug('invalid url passed to tenorUrlToBskyGifUrl()')
     return ''
   }

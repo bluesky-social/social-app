@@ -49,7 +49,7 @@ function Inner({}: {control: DialogControlProps}) {
           token: state.code.trim(),
         })
         setStatus('success')
-      } catch (e) {
+      } catch {
         setStatus('failure')
       }
     })()

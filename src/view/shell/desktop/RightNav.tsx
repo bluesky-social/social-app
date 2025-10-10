@@ -34,7 +34,7 @@ function useWebQueryParams() {
         const {state} = e.data
         const lastRoute = state.routes[state.routes.length - 1]
         setParams(lastRoute.params)
-      } catch (err) {}
+      } catch {}
     })
   }, [navigation, setParams])
 

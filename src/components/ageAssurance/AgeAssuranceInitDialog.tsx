@@ -19,6 +19,7 @@ import {useInitAgeAssurance} from '#/state/ageAssurance/useInitAgeAssurance'
 import {logger} from '#/state/ageAssurance/util'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
+import {useTickEveryMinute} from '#/state/shell'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -73,10 +74,11 @@ function Inner() {
   const getTimeAgo = useGetTimeAgo()
   const tlds = useTLDs()
   const createSupportLink = useCreateSupportLink()
+  const tick = useTickEveryMinute()
 
   const wasRecentlyInitiated =
     lastInitiatedAt &&
-    new Date(lastInitiatedAt).getTime() > Date.now() - 5 * 60 * 1000 // 5 minutes
+    new Date(lastInitiatedAt).getTime() > tick - 5 * 60 * 1000 // 5 minutes
 
   const [success, setSuccess] = useState(false)
   const [email, setEmail] = useState(currentAccount?.email || '')

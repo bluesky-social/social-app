@@ -195,14 +195,15 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
     resultsKey,
   ])
 
-  if (
+  const isEmpty =
     searchText &&
     !isFetchingSearchResults &&
     !items.length &&
     !isSearchResultsError
-  ) {
-    items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
-  }
+
+  const allItems = isEmpty
+    ? [{type: 'empty', key: 'empty', message: _(msg`No results`)}]
+    : items
 
   const renderItems = useCallback(
     ({item, index}: {item: Item; index: number}) => {
@@ -260,7 +261,7 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
   return (
     <Dialog.InnerFlatList
       ref={listRef}
-      data={items}
+      data={allItems}
       renderItem={renderItems}
       ListHeaderComponent={listHeader}
       stickyHeaderIndices={[0]}

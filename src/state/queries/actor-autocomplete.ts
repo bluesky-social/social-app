@@ -29,19 +29,19 @@ export function useActorAutocompleteQuery(
   const moderationOpts = useModerationOpts()
   const agent = useAgent()
 
-  prefix = prefix.toLowerCase().trim()
-  if (prefix.endsWith('.')) {
+  let cleanPrefix = prefix.toLowerCase().trim()
+  if (cleanPrefix.endsWith('.')) {
     // Going from "foo" to "foo." should not clear matches.
-    prefix = prefix.slice(0, -1)
+    cleanPrefix = cleanPrefix.slice(0, -1)
   }
 
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(prefix || ''),
+    queryKey: RQKEY(cleanPrefix || ''),
     async queryFn() {
-      const res = prefix
+      const res = cleanPrefix
         ? await agent.searchActorsTypeahead({
-            q: prefix,
+            q: cleanPrefix,
             limit: limit || 8,
           })
         : undefined
@@ -50,12 +50,12 @@ export function useActorAutocompleteQuery(
     select: React.useCallback(
       (data: AppBskyActorDefs.ProfileViewBasic[]) => {
         return computeSuggestions({
-          q: prefix,
+          q: cleanPrefix,
           searched: data,
           moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
         })
       },
-      [prefix, moderationOpts],
+      [cleanPrefix, moderationOpts],
     ),
     placeholderData: maintainData ? keepPreviousData : undefined,
   })

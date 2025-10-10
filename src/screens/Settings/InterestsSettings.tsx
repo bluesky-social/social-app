@@ -126,7 +126,7 @@ function Inner({
             }),
           ),
         )
-      } catch (error) {
+      } catch {
         Toast.show(
           _(
             msg({
