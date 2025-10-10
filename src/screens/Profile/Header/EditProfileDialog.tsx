@@ -56,6 +56,7 @@ export function EditProfileDialog({
       nativeOptions={{
         preventDismiss: dirty,
         minHeight: height,
+        cornerRadius: 20,
       }}
       webOptions={{
         onBackgroundPress: () => {

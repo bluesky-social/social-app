@@ -26,7 +26,7 @@ import {useLingui} from '@lingui/react'
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {isAndroid, isIOS, isIOS26} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
@@ -166,7 +166,8 @@ export function Outer({
   return (
     <BottomSheet
       ref={ref}
-      cornerRadius={20}
+      // device-bezel radius when undefined
+      cornerRadius={isIOS26 ? undefined : 20}
       backgroundColor={t.atoms.bg.backgroundColor}
       {...nativeOptions}
       onSnapPointChange={onSnapPointChange}
@@ -181,6 +182,9 @@ export function Outer({
   )
 }
 
+/**
+ * @deprecated use `Dialog.ScrollableInner` instead
+ */
 export function Inner({children, style, header}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
@@ -190,9 +194,7 @@ export function Inner({children, style, header}: DialogInnerProps) {
         style={[
           a.pt_2xl,
           a.px_xl,
-          {
-            paddingBottom: insets.bottom + insets.top,
-          },
+          isIOS26 ? {paddingBottom: insets.bottom + insets.top} : a.pb_2xl,
           style,
         ]}>
         {children}
@@ -208,6 +210,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
+    const [contentSize, setContentSize] = React.useState(0)
 
     useEnableKeyboardController(isIOS)
 
@@ -251,11 +254,37 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       }
     }
 
+    // iOS26 floaty sheets have this annoying extra safe area when sheets are 150px or more
+    // TODO: Remove this behaviour on the native side!! I could not figure it out -sfn
+    //
+    // fix by using a negative margin on the scrollview when the sheet is in this zone (it's fine for large sheets)
+    const IOS_MIN_HEIGHT_FOR_SAFEAREA = 151
+    const IOS_MAX_HEIGHT_FOR_SAFEAREA = 400
+    const iosAutoSafeAreaHeightAdjust = 34
+    const shouldAttemptUndoSafeArea =
+      isIOS26 &&
+      contentSize > IOS_MIN_HEIGHT_FOR_SAFEAREA &&
+      contentSize < IOS_MAX_HEIGHT_FOR_SAFEAREA
+    const adjustedSize =
+      contentSize -
+      (shouldAttemptUndoSafeArea ? iosAutoSafeAreaHeightAdjust : 0)
+    // reducing the padding obviously then makes it dip back under 150px, so we need to adjust
+    // again to ensure a minimum height of 150
+    const ensureMinHeight = Math.min(
+      0,
+      adjustedSize - IOS_MIN_HEIGHT_FOR_SAFEAREA,
+    )
+    const marginBottom = shouldAttemptUndoSafeArea
+      ? iosAutoSafeAreaHeightAdjust * -1 - ensureMinHeight
+      : 0
+
     return (
       <KeyboardAwareScrollView
+        style={[{marginBottom}]}
+        onContentSizeChange={(_width, height) => setContentSize(height)}
         contentContainerStyle={[
           a.pt_2xl,
-          a.px_xl,
+          a.px_2xl,
           {paddingBottom},
           contentContainerStyle,
         ]}
@@ -346,7 +375,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
         a.pt_md,
         {
           paddingBottom: platform({
-            ios: tokens.space.md + bottom,
+            ios: tokens.space.md + bottom + (isIOS26 ? top : 0),
             android: tokens.space.md + bottom + top,
           }),
         },
