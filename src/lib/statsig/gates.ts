@@ -1,8 +1,6 @@
 export type Gate =
   // Keep this alphabetic please.
   | 'alt_share_icon'
-  | 'cta_above_post_heading'
-  | 'cta_above_post_replies'
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'
   | 'disable_onboarding_policy_update_notice'
@@ -10,8 +8,6 @@ export type Gate =
   | 'feed_reply_button_open_thread'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
-  | 'onboarding_suggested_accounts'
-  | 'onboarding_value_prop'
   | 'post_follow_profile_suggested_accounts'
   | 'remove_show_latest_button'
   | 'test_gate_1'

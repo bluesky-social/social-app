@@ -38,7 +38,6 @@ import {
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
-import {LoggedOutCTA} from '#/components/LoggedOutCTA'
 
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
@@ -410,8 +409,6 @@ export function PostThread({uri}: {uri: string}) {
                 onPostSuccess={optimisticOnPostReply}
                 postSource={anchorPostSource}
               />
-              {/* Show CTA for logged-out visitors */}
-              <LoggedOutCTA style={a.px_lg} gateName="cta_above_post_replies" />
             </View>
           )
         } else {
