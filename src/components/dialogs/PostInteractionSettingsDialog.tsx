@@ -31,6 +31,10 @@ import {
   useSetThreadgateAllowMutation,
   useThreadgateViewQuery,
 } from '#/state/queries/threadgate'
+import {
+  PostThreadContextProvider,
+  usePostThreadContext,
+} from '#/state/queries/usePostThread'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
@@ -133,10 +137,13 @@ export type PostInteractionSettingsDialogProps = {
 export function PostInteractionSettingsDialog(
   props: PostInteractionSettingsDialogProps,
 ) {
+  const postThreadContext = usePostThreadContext()
   return (
     <Dialog.Outer control={props.control}>
       <Dialog.Handle />
-      <PostInteractionSettingsDialogControlledInner {...props} />
+      <PostThreadContextProvider context={postThreadContext}>
+        <PostInteractionSettingsDialogControlledInner {...props} />
+      </PostThreadContextProvider>
     </Dialog.Outer>
   )
 }

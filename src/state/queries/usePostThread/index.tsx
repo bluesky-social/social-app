@@ -31,6 +31,8 @@ import {useAgent, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useBreakpoints} from '#/alf'
 
+export * from '#/state/queries/usePostThread/context'
+export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
 export * from '#/state/queries/usePostThread/types'
 
 export function usePostThread({anchor}: {anchor?: string}) {
@@ -277,8 +279,13 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setOtherItemsVisible,
   ])
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    const context: PostThreadContextType = {
+      postThreadQueryKey,
+      postThreadOtherQueryKey,
+    }
+    return {
+      context,
       state: {
         /*
          * Copy in any query state that is useful
@@ -309,17 +316,18 @@ export function usePostThread({anchor}: {anchor?: string}) {
         setSort,
         setView,
       },
-    }),
-    [
-      query,
-      mutator.insertReplies,
-      otherItemsVisible,
-      sort,
-      view,
-      setSort,
-      setView,
-      threadgate,
-      items,
-    ],
-  )
+    }
+  }, [
+    query,
+    mutator.insertReplies,
+    otherItemsVisible,
+    sort,
+    view,
+    setSort,
+    setView,
+    threadgate,
+    items,
+    postThreadQueryKey,
+    postThreadOtherQueryKey,
+  ])
 }
