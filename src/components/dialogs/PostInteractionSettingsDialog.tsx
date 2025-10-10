@@ -13,6 +13,7 @@ import isEqual from 'lodash.isequal'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
+import {useGetPost} from '#/state/queries/post'
 import {
   createPostgateQueryKey,
   getPostgateRecord,
@@ -25,7 +26,6 @@ import {
 } from '#/state/queries/postgate/util'
 import {
   createThreadgateViewQueryKey,
-  getThreadgateView,
   type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
   useSetThreadgateAllowMutation,
@@ -565,6 +565,7 @@ export function usePrefetchPostInteractionSettings({
 }) {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const getPost = useGetPost()
 
   return React.useCallback(async () => {
     try {
@@ -577,7 +578,10 @@ export function usePrefetchPostInteractionSettings({
         }),
         queryClient.prefetchQuery({
           queryKey: createThreadgateViewQueryKey(rootPostUri),
-          queryFn: () => getThreadgateView({agent, postUri: rootPostUri}),
+          queryFn: async () => {
+            const post = await getPost({uri: rootPostUri})
+            return post.threadgate ?? null
+          },
           staleTime: STALE.SECONDS.THIRTY,
         }),
       ])
@@ -586,5 +590,5 @@ export function usePrefetchPostInteractionSettings({
         safeMessage: e.message,
       })
     }
-  }, [queryClient, agent, postUri, rootPostUri])
+  }, [queryClient, agent, postUri, rootPostUri, getPost])
 }

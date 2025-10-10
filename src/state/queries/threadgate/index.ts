@@ -1,5 +1,5 @@
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedThreadgate,
   AtUri,
   type BskyAgent,
@@ -70,7 +70,7 @@ export function useThreadgateViewQuery({
   postUri?: string
   initialData?: AppBskyFeedDefs.ThreadgateView
 } = {}) {
-  const agent = useAgent()
+  const getPost = useGetPost()
 
   return useQuery({
     enabled: !!postUri,
@@ -78,31 +78,10 @@ export function useThreadgateViewQuery({
     placeholderData: initialData,
     staleTime: STALE.MINUTES.ONE,
     async queryFn() {
-      return getThreadgateView({
-        agent,
-        postUri: postUri!,
-      })
+      const post = await getPost({uri: postUri!})
+      return post.threadgate ?? null
     },
   })
-}
-
-export async function getThreadgateView({
-  agent,
-  postUri,
-}: {
-  agent: BskyAgent
-  postUri: string
-}) {
-  const {data} = await agent.app.bsky.feed.getPostThread({
-    uri: postUri!,
-    depth: 0,
-  })
-
-  if (AppBskyFeedDefs.isThreadViewPost(data.thread)) {
-    return data.thread.post.threadgate ?? null
-  }
-
-  return null
 }
 
 export async function getThreadgateRecord({
