@@ -10,7 +10,6 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {networkRetry, retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
 import {STALE} from '#/state/queries'
-import {RQKEY_ROOT as postThreadQueryKeyRoot} from '#/state/queries/post-thread'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {
   createThreadgateRecord,
@@ -293,9 +292,6 @@ export function useSetThreadgateAllowMutation() {
         },
       )
 
-      queryClient.invalidateQueries({
-        queryKey: [postThreadQueryKeyRoot],
-      })
       queryClient.invalidateQueries({
         queryKey: [threadgateRecordQueryKeyRoot],
       })
