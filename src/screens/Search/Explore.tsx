@@ -1082,12 +1082,26 @@ export function Explore({
       windowSize={platform({android: 11})}
       /**
        * Default: 10
+       *
+       * NOTE: This was 1 on Android. Unfortunately this leads to the list totally freaking out
+       * when the sticky headers changed. I made a minimal reproduction and yeah, it's this prop.
+       * Totally fine when the sticky headers are static, but when they're dynamic, it's a mess.
+       *
+       * Repro: https://github.com/mozzius/stickyindices-repro
+       *
+       * I then found doubling this prop on iOS also reduced it freaking out there as well.
+       *
+       * Trades off seeing more blank space due to it having to render more items before it can show anything.
+       * -sfn
        */
-      maxToRenderPerBatch={platform({android: 1})}
+      maxToRenderPerBatch={platform({android: 10, ios: 20})}
       /**
        * Default: 50
+       *
+       * NOTE: This was 25 on Android. However, due to maxToRenderPerBatch being set to 10,
+       * the lower batching period is no longer necessary (?)
        */
-      updateCellsBatchingPeriod={platform({android: 25})}
+      updateCellsBatchingPeriod={50}
       refreshing={isPTR}
       onRefresh={onPTR}
     />
