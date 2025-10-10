@@ -4,7 +4,6 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
@@ -21,6 +20,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
+import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 
@@ -176,9 +176,8 @@ let SearchScreenPostResults = ({
   active: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
-  const isLoggedin = Boolean(currentAccount?.did)
 
   const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -195,7 +194,6 @@ let SearchScreenPostResults = ({
     hasNextPage,
   } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
 
-  const pal = usePalette('default')
   const t = useTheme()
   const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
@@ -249,14 +247,13 @@ let SearchScreenPostResults = ({
     requestSwitchToAccount({requestedAccount: 'new'})
   }
 
-  if (!isLoggedin) {
+  if (!hasSession) {
     return (
       <SearchError
         title={_(msg`Search is currently unavailable when logged out`)}>
         <Text style={[a.text_md, a.text_center, a.leading_snug]}>
           <Trans>
             <InlineLinkText
-              style={[pal.link]}
               label={_(msg`Sign in`)}
               to={'#'}
               onPress={showSignIn}>
@@ -264,7 +261,6 @@ let SearchScreenPostResults = ({
             </InlineLinkText>
             <Text style={t.atoms.text_contrast_medium}> or </Text>
             <InlineLinkText
-              style={[pal.link]}
               label={_(msg`Create an account`)}
               to={'#'}
               onPress={showCreateAccount}>
@@ -307,7 +303,12 @@ let SearchScreenPostResults = ({
               onRefresh={onPullToRefresh}
               onEndReached={onEndReached}
               desktopFixedHeight
-              contentContainerStyle={{paddingBottom: 100}}
+              ListFooterComponent={
+                <ListFooter
+                  isFetchingNextPage={isFetchingNextPage}
+                  hasNextPage={hasNextPage}
+                />
+              }
             />
           ) : (
             <EmptyState message={_(msg`No results found for ${query}`)} />
@@ -329,21 +330,66 @@ let SearchScreenUserResults = ({
   active: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
+  const {hasSession} = useSession()
+  const [isPTR, setIsPTR] = useState(false)
 
-  const {data: results, isFetched} = useActorSearch({
+  const {
+    isFetched,
+    data: results,
+    isFetching,
+    error,
+    refetch,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useActorSearch({
     query,
     enabled: active,
   })
 
-  return isFetched && results ? (
+  const onPullToRefresh = useCallback(async () => {
+    setIsPTR(true)
+    await refetch()
+    setIsPTR(false)
+  }, [setIsPTR, refetch])
+  const onEndReached = useCallback(() => {
+    if (!hasSession) return
+    if (isFetching || !hasNextPage || error) return
+    fetchNextPage()
+  }, [isFetching, error, hasNextPage, fetchNextPage, hasSession])
+
+  const profiles = useMemo(() => {
+    return results?.pages.flatMap(page => page.actors) || []
+  }, [results])
+
+  if (error) {
+    return (
+      <EmptyState
+        message={_(
+          msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
+        )}
+        error={error.toString()}
+      />
+    )
+  }
+
+  return isFetched && profiles ? (
     <>
-      {results.length ? (
+      {profiles.length ? (
         <List
-          data={results}
+          data={profiles}
           renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} />}
           keyExtractor={item => item.did}
+          refreshing={isPTR}
+          onRefresh={onPullToRefresh}
+          onEndReached={onEndReached}
           desktopFixedHeight
-          contentContainerStyle={{paddingBottom: 100}}
+          ListFooterComponent={
+            <ListFooter
+              hasNextPage={hasNextPage && hasSession}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          }
         />
       ) : (
         <EmptyState message={_(msg`No results found for ${query}`)} />
@@ -378,7 +424,7 @@ let SearchScreenFeedsResults = ({
           renderItem={({item}) => (
             <View
               style={[
-                a.border_b,
+                a.border_t,
                 t.atoms.border_contrast_low,
                 a.px_lg,
                 a.py_lg,
@@ -388,7 +434,7 @@ let SearchScreenFeedsResults = ({
           )}
           keyExtractor={item => item.uri}
           desktopFixedHeight
-          contentContainerStyle={{paddingBottom: 100}}
+          ListFooterComponent={<ListFooter />}
         />
       ) : (
         <EmptyState message={_(msg`No results found for ${query}`)} />
