@@ -58,7 +58,7 @@ import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import * as bsky from '#/types/bsky'
 
 interface FeedItemProps {
@@ -317,7 +317,7 @@ let FeedItemInner = ({
       onPointerLeave={() => {
         setHover(false)
       }}>
-      <SubtleWebHover hover={hover} />
+      <SubtleHover hover={hover} />
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 42}}>
           {isThreadChild && (

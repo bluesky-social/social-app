@@ -66,7 +66,7 @@ import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -613,7 +613,7 @@ let NotificationFeedItem = ({
       }}>
       {({hovered}) => (
         <>
-          <SubtleWebHover hover={hovered} />
+          <SubtleHover hover={hovered} />
           <View style={[styles.layoutIcon, a.pr_sm]}>
             {/* TODO: Prevent conditional rendering and move toward composable
           notifications for clearer accessibility labeling */}
