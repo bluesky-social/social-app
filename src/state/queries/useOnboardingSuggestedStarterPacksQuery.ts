@@ -9,12 +9,11 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
-export const createSuggestedStarterPacksQueryKey = (interests?: string[]) => [
-  'suggested-starter-packs',
-  interests?.join(','),
-]
+export const createOnboardingSuggestedStarterPacksQueryKey = (
+  interests?: string[],
+) => ['onboarding-suggested-starter-packs', interests?.join(',')]
 
-export function useSuggestedStarterPacksQuery({
+export function useOnboardingSuggestedStarterPacksQuery({
   enabled,
   overrideInterests,
 }: {
@@ -28,21 +27,22 @@ export function useSuggestedStarterPacksQuery({
   return useQuery({
     enabled: !!preferences && enabled !== false,
     staleTime: STALE.MINUTES.THREE,
-    queryKey: createSuggestedStarterPacksQueryKey(overrideInterests),
+    queryKey: createOnboardingSuggestedStarterPacksQueryKey(overrideInterests),
     queryFn: async () => {
-      const {data} = await agent.app.bsky.unspecced.getSuggestedStarterPacks(
-        undefined,
-        {
-          headers: {
-            ...createBskyTopicsHeader(
-              overrideInterests
-                ? overrideInterests.join(',')
-                : aggregateUserInterests(preferences),
-            ),
-            'Accept-Language': contentLangs,
+      const {data} =
+        await agent.app.bsky.unspecced.getOnboardingSuggestedStarterPacks(
+          {limit: 6},
+          {
+            headers: {
+              ...createBskyTopicsHeader(
+                overrideInterests
+                  ? overrideInterests.join(',')
+                  : aggregateUserInterests(preferences),
+              ),
+              'Accept-Language': contentLangs,
+            },
           },
-        },
-      )
+        )
       return data
     },
   })
