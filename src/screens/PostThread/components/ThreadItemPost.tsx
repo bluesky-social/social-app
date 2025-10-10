@@ -41,7 +41,7 @@ import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 
 export type ThreadItemPostProps = {
@@ -246,7 +246,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   const {isActive: live} = useActorStatus(post.author)
 
   return (
-    <SubtleHover>
+    <SubtleHoverWrapper>
       <ThreadItemPostOuterWrapper item={item} overrides={overrides}>
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
@@ -339,11 +339,11 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
           </View>
         </PostHider>
       </ThreadItemPostOuterWrapper>
-    </SubtleHover>
+    </SubtleHoverWrapper>
   )
 })
 
-function SubtleHover({children}: {children: ReactNode}) {
+function SubtleHoverWrapper({children}: {children: ReactNode}) {
   const {
     state: hover,
     onIn: onHoverIn,
@@ -354,7 +354,7 @@ function SubtleHover({children}: {children: ReactNode}) {
       onPointerEnter={onHoverIn}
       onPointerLeave={onHoverOut}
       style={a.pointer}>
-      <SubtleWebHover hover={hover} />
+      <SubtleHover hover={hover} />
       {children}
     </View>
   )
