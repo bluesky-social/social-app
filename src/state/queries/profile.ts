@@ -11,11 +11,12 @@ import {
 } from '@atproto/api'
 import {
   keepPreviousData,
+  prefetchQueryWithFallback,
   type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
-} from '@tanstack/react-query'
+} from './useQueryWithFallback'
 
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
@@ -83,6 +84,9 @@ export function useProfileQuery({
       return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed
     },
     enabled: !!did,
+    enableFallback: true,
+    fallbackType: 'profile',
+    fallbackIdentifier: did,
   })
 }
 
@@ -110,13 +114,16 @@ export function usePrefetchProfileQuery() {
   const queryClient = useQueryClient()
   const prefetchProfileQuery = useCallback(
     async (did: string) => {
-      await queryClient.prefetchQuery({
+      await prefetchQueryWithFallback(queryClient, {
         staleTime: STALE.SECONDS.THIRTY,
         queryKey: RQKEY(did),
         queryFn: async () => {
           const res = await agent.getProfile({actor: did || ''})
           return res.data
         },
+        enableFallback: true,
+        fallbackType: 'profile',
+        fallbackIdentifier: did,
       })
     },
     [queryClient, agent],

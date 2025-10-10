@@ -1,5 +1,5 @@
 import React from 'react'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {fetchQueryWithFallback, useMutation, useQueryClient} from './useQueryWithFallback'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
@@ -19,10 +19,12 @@ export function useFetchHandle() {
   return React.useCallback(
     async (handleOrDid: string) => {
       if (handleOrDid.startsWith('did:')) {
-        const res = await queryClient.fetchQuery({
-          staleTime: STALE.MINUTES.FIVE,
+        const res = await fetchQueryWithFallback(queryClient, {
           queryKey: fetchHandleQueryKey(handleOrDid),
           queryFn: () => agent.getProfile({actor: handleOrDid}),
+          enableFallback: true,
+          fallbackType: 'profile',
+          fallbackIdentifier: handleOrDid,
         })
         return res.data.handle
       }
@@ -57,8 +59,7 @@ export function useFetchDid() {
 
   return React.useCallback(
     async (handleOrDid: string) => {
-      return queryClient.fetchQuery({
-        staleTime: STALE.INFINITY,
+      return fetchQueryWithFallback(queryClient, {
         queryKey: fetchDidQueryKey(handleOrDid),
         queryFn: async () => {
           let identifier = handleOrDid
@@ -68,6 +69,9 @@ export function useFetchDid() {
           }
           return identifier
         },
+        enableFallback: true,
+        fallbackType: 'profile',
+        fallbackIdentifier: handleOrDid,
       })
     },
     [queryClient, agent],

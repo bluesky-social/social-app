@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {fetchQueryWithFallback, useMutation, useQuery, useQueryClient} from './useQueryWithFallback'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {type LogEvents, toClout} from '#/lib/statsig/statsig'
@@ -37,6 +37,9 @@ export function usePostQuery(uri: string | undefined) {
       throw new Error('No data')
     },
     enabled: !!uri,
+    enableFallback: true,
+    fallbackType: 'post',
+    fallbackIdentifier: uri,
   })
 }
 
@@ -45,9 +48,9 @@ export function useGetPost() {
   const agent = useAgent()
   return useCallback(
     async ({uri}: {uri: string}) => {
-      return queryClient.fetchQuery({
+      return fetchQueryWithFallback(queryClient, {
         queryKey: RQKEY(uri || ''),
-        async queryFn() {
+        queryFn: async () => {
           const urip = new AtUri(uri)
 
           if (!urip.host.startsWith('did:')) {
@@ -67,6 +70,9 @@ export function useGetPost() {
 
           throw new Error('useGetPost: post not found')
         },
+        enableFallback: true,
+        fallbackType: 'post',
+        fallbackIdentifier: uri,
       })
     },
     [queryClient, agent],
@@ -78,9 +84,9 @@ export function useGetPosts() {
   const agent = useAgent()
   return useCallback(
     async ({uris}: {uris: string[]}) => {
-      return queryClient.fetchQuery({
+      return fetchQueryWithFallback(queryClient, {
         queryKey: RQKEY(uris.join(',') || ''),
-        async queryFn() {
+        queryFn: async () => {
           const res = await agent.getPosts({
             uris,
           })
@@ -91,6 +97,9 @@ export function useGetPosts() {
             throw new Error('useGetPosts failed')
           }
         },
+        enableFallback: true,
+        fallbackType: 'post',
+        fallbackIdentifier: uris[0], // Use first URI as identifier
       })
     },
     [queryClient, agent],

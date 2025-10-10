@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '../useQueryWithFallback'
 
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -125,6 +125,9 @@ export function usePostThread({anchor}: {anchor?: string}) {
       }
       return data
     },
+    enableFallback: true,
+    fallbackType: 'thread',
+    fallbackIdentifier: anchor,
   })
 
   const thread = useMemo(() => query.data?.thread || [], [query.data?.thread])
