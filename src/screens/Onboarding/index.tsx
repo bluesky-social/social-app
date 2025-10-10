@@ -2,7 +2,6 @@ import {useMemo, useReducer} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {
   Layout,
   OnboardingControls,
@@ -13,21 +12,19 @@ import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {Portal} from '#/components/Portal'
-import {ENV} from '#/env'
 import {StepSuggestedAccounts} from './StepSuggestedAccounts'
 
 export function Onboarding() {
   const {_} = useLingui()
-  const gate = useGate()
-  const showValueProp = ENV !== 'e2e' && gate('onboarding_value_prop')
-  const showSuggestedAccounts =
-    ENV !== 'e2e' && gate('onboarding_suggested_accounts')
+
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    totalSteps: showSuggestedAccounts ? 4 : 3,
+    totalSteps: 4,
     experiments: {
-      onboarding_suggested_accounts: showSuggestedAccounts,
-      onboarding_value_prop: showValueProp,
+      // let's leave this flag logic in for now to avoid rebase churn
+      // TODO: remove this flag logic once we've finished with all experiments -sfn
+      onboarding_suggested_accounts: true,
+      onboarding_value_prop: true,
     },
   })
 

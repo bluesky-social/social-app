@@ -132,9 +132,7 @@ const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
     <View
       style={[
         showTopBorder && [a.border_t, t.atoms.border_contrast_low],
-        {
-          paddingHorizontal: OUTER_SPACE,
-        },
+        {paddingHorizontal: OUTER_SPACE},
         // If there's no next child, add a little padding to bottom
         !item.ui.showChildReplyLine &&
           !item.ui.precedesChildReadMore && {
@@ -255,8 +253,9 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
           href={postHref}
           disabled={overrides?.moderation === true}
           modui={moderation.ui('contentList')}
+          hiderStyle={[a.pl_0, a.pr_2xs, a.bg_transparent]}
           iconSize={LINEAR_AVI_WIDTH}
-          iconStyles={{marginLeft: 2, marginRight: 2}}
+          iconStyles={[a.mr_xs]}
           profile={post.author}
           interpretFilterAsBlur>
           <ThreadItemPostParentReplyLine item={item} />

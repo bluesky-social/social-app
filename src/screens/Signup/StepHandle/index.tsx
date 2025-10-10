@@ -169,7 +169,7 @@ export function StepHandle() {
             {isHandleAvailable?.available && (
               <CheckIcon
                 testID="handleAvailableCheck"
-                style={[{color: t.palette.positive_600}, a.z_20]}
+                style={[{color: t.palette.positive_500}, a.z_20]}
               />
             )}
           </TextField.Root>

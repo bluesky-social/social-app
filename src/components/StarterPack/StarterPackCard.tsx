@@ -191,7 +191,7 @@ export function Embed({
       <Link starterPack={starterPack}>
         <Image
           source={imageUri}
-          style={[a.w_full, {aspectRatio: 1.91}]}
+          style={[a.w_full, a.aspect_card]}
           accessibilityIgnoresInvertColors={true}
         />
         <View style={[a.px_sm, a.py_md]}>

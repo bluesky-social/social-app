@@ -162,7 +162,6 @@ function LanguageSuggestionButton({
         <View style={[a.flex_1]}>
           <Text
             style={[
-              a.flex_1,
               a.leading_snug,
               {
                 maxWidth: 400,

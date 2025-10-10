@@ -330,7 +330,7 @@ function ExternalEmbed({
       {content.external.thumb && (
         <img
           src={content.external.thumb}
-          className="aspect-[1.91/1] object-cover"
+          className="aspect-[1200/630] object-cover"
         />
       )}
       <div className="py-3 px-4">
@@ -435,7 +435,7 @@ function StarterPackEmbed({
     <Link
       href={starterPackHref}
       className="w-full rounded-xl overflow-hidden border dark:border-slate-600 flex flex-col items-stretch">
-      <img src={imageUri} className="aspect-[1.91/1] object-cover" />
+      <img src={imageUri} className="aspect-[1200/630] object-cover" />
       <div className="py-3 px-4">
         <div className="flex space-x-2 items-center">
           <img src={starterPackIcon} className="w-10 h-10" />

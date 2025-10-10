@@ -281,7 +281,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
           <Divider />
           <View style={[a.gap_sm]}>
             <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-              <Check fill={t.palette.positive_600} size="xs" />
+              <Check fill={t.palette.positive_500} size="xs" />
               <Text style={[a.text_md, a.font_bold]}>
                 <Trans>Success!</Trans>
               </Text>
