@@ -282,7 +282,6 @@
     "**/@expo/image-utils": "0.8.7",
     "**/expo-constants": "18.0.8",
     "**/expo-device": "7.1.4",
-    "**/zod": "3.23.8",
     "**/multiformats": "9.9.0"
   },
   "jest": {
