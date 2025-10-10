@@ -636,7 +636,7 @@ function SuccessMessage({text}: {text: string}) {
           a.rounded_full,
           a.align_center,
           a.justify_center,
-          {backgroundColor: t.palette.positive_600},
+          {backgroundColor: t.palette.positive_500},
         ]}>
         <CheckIcon fill={t.palette.white} size="xs" />
       </View>

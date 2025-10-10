@@ -307,7 +307,7 @@ let NotificationFeedItem = ({
     ) : (
       <Trans>{firstAuthorLink} reposted your post</Trans>
     )
-    icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
+    icon = <RepostIcon size="xl" style={{color: t.palette.positive_500}} />
   } else if (item.type === 'follow') {
     let isFollowBack = false
 
@@ -519,7 +519,7 @@ let NotificationFeedItem = ({
     ) : (
       <Trans>{firstAuthorLink} reposted your repost</Trans>
     )
-    icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
+    icon = <RepostIcon size="xl" style={{color: t.palette.positive_500}} />
   } else if (item.type === 'subscribed-post') {
     const postsCount = 1 + (item.additional?.length || 0)
     a11yLabel = hasMultipleAuthors

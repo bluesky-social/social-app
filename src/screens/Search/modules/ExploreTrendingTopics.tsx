@@ -194,7 +194,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
     case 'new': {
       Icon = TrendingIcon
       text = _(msg`New`)
-      color = t.palette.positive_700
+      color = t.palette.positive_600
       backgroundColor = t.palette.positive_50
       break
     }
