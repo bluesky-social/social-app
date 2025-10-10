@@ -1,21 +1,18 @@
-import {AtUri} from '@atproto/api'
-import type {AppBskyFeedPost, AppBskyActorProfile} from '@atproto/api'
-
 const SLINGSHOT_URL = 'https://slingshot.microcosm.blue'
 const CONSTELLATION_URL = 'https://constellation.microcosm.blue'
 
 export interface MicrocosmRecord {
-    uri: string
-    cid: string
-    value: any
+  uri: string
+  cid: string
+  value: any
 }
 
 export interface ConstellationCounts {
-    likeCount: number
-    repostCount: number
-    replyCount: number
-    // might need a saves/bookmark counter
-    // bookmarkCount: number
+  likeCount: number
+  repostCount: number
+  replyCount: number
+  // might need a saves/bookmark counter
+  // bookmarkCount: number
 }
 
 /**
@@ -23,13 +20,12 @@ export interface ConstellationCounts {
  */
 async function fetchFromSlingshot<T>(
   endpoint: string,
-  params: Record<string, string>
+  params: Record<string, string>,
 ): Promise<T | null> {
   try {
-    const queryString = new URLSearchParams(
-      Object.entries(params).map(([key, value]) => [key, encodeURIComponent(value)])
-    ).toString()
-    
+    // URLSearchParams handles encoding automatically, no need for manual encodeURIComponent
+    const queryString = new URLSearchParams(params).toString()
+
     const res = await fetch(`${SLINGSHOT_URL}/xrpc/${endpoint}?${queryString}`)
     if (!res.ok) return null
     return await res.json()
@@ -48,11 +44,11 @@ async function fetchFromSlingshot<T>(
  * @see https://slingshot.microcosm.blue/ for full API documentation
  */
 export async function fetchRecordViaSlingshot(
-  atUri: string
+  atUri: string,
 ): Promise<MicrocosmRecord | null> {
   return fetchFromSlingshot<MicrocosmRecord>(
     'com.bad-example.repo.getUriRecord',
-    { at_uri: atUri }
+    {at_uri: atUri},
   )
 }
 
@@ -67,12 +63,11 @@ export async function fetchRecordViaSlingshot(
  * @see https://slingshot.microcosm.blue/ for full API documentation
  */
 export async function resolveIdentityViaSlingshot(
-  identifier: string
+  identifier: string,
 ): Promise<{did: string; handle: string; pds: string} | null> {
-  return fetchFromSlingshot(
-    'com.bad-example.identity.resolveMiniDoc',
-    { identifier }
-  )
+  return fetchFromSlingshot('com.bad-example.identity.resolveMiniDoc', {
+    identifier,
+  })
 }
 
 /**
@@ -87,11 +82,11 @@ export async function resolveIdentityViaSlingshot(
  * @see https://constellation.microcosm.blue/ for more about Constellation
  */
 export async function fetchConstellationCounts(
-    atUri: string
+  atUri: string,
 ): Promise<ConstellationCounts> {
-    try {
+  try {
     const res = await fetch(
-    `${CONSTELLATION_URL}/links/all?target=${encodeURIComponent(atUri)}`
+      `${CONSTELLATION_URL}/links/all?target=${encodeURIComponent(atUri)}`,
     )
     if (!res.ok) throw new Error('Constellation fetch failed')
 
@@ -99,9 +94,12 @@ export async function fetchConstellationCounts(
     const links = data.links || {}
 
     return {
-      likeCount: links?.['app.bsky.feed.like']?.['.subject.uri']?.distinct_dids ?? 0,
-      repostCount: links?.['app.bsky.feed.repost']?.['.subject.uri']?.distinct_dids ?? 0,
-      replyCount: links?.['app.bsky.feed.post']?.['.reply.parent.uri']?.records ?? 0,
+      likeCount:
+        links?.['app.bsky.feed.like']?.['.subject.uri']?.distinct_dids ?? 0,
+      repostCount:
+        links?.['app.bsky.feed.repost']?.['.subject.uri']?.distinct_dids ?? 0,
+      replyCount:
+        links?.['app.bsky.feed.post']?.['.reply.parent.uri']?.records ?? 0,
     }
   } catch (e) {
     console.error('Constellation fetch failed:', e)
@@ -140,7 +138,7 @@ export function isAppViewError(error: any): boolean {
  */
 export async function buildSyntheticProfileView(
   did: string,
-  handle: string
+  handle: string,
 ): Promise<any> {
   const profileUri = `at://${did}/app.bsky.actor.profile/self`
   const record = await fetchRecordViaSlingshot(profileUri)
@@ -158,8 +156,8 @@ export async function buildSyntheticProfileView(
       ? `https://cdn.bsky.app/img/banner/plain/${did}/${record.value.banner.ref.$link}@jpeg`
       : undefined,
     followersCount: undefined, // Not available from PDS or Constellation
-    followsCount: undefined,   // Not available from PDS or Constellation
-    postsCount: undefined,     // Not available from PDS or Constellation
+    followsCount: undefined, // Not available from PDS or Constellation
+    postsCount: undefined, // Not available from PDS or Constellation
     indexedAt: new Date().toISOString(),
     viewer: {},
     labels: [],
@@ -173,7 +171,7 @@ export async function buildSyntheticProfileView(
 export async function buildSyntheticPostView(
   atUri: string,
   authorDid: string,
-  authorHandle: string
+  authorHandle: string,
 ): Promise<any> {
   const record = await fetchRecordViaSlingshot(atUri)
   if (!record) return null
@@ -216,7 +214,7 @@ export async function buildSyntheticPostView(
 export async function buildSyntheticFeedPage(
   did: string,
   pdsUrl: string,
-  cursor?: string
+  cursor?: string,
 ): Promise<any> {
   try {
     const limit = 25
@@ -228,7 +226,10 @@ export async function buildSyntheticFeedPage(
     const res = await fetch(url)
 
     if (!res.ok) {
-      console.error('[Fallback] Failed to fetch author feed from PDS:', res.statusText)
+      console.error(
+        '[Fallback] Failed to fetch author feed from PDS:',
+        res.statusText,
+      )
       return null
     }
 
@@ -240,7 +241,7 @@ export async function buildSyntheticFeedPage(
         const postView = await buildSyntheticPostView(
           record.uri,
           did,
-          '' // Handle will be resolved in buildSyntheticPostView
+          '', // Handle will be resolved in buildSyntheticPostView
         )
 
         if (!postView) return null
@@ -251,7 +252,7 @@ export async function buildSyntheticFeedPage(
           post: postView,
           feedContext: undefined,
         }
-      })
+      }),
     )
 
     // Filter out null results

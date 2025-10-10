@@ -1,21 +1,21 @@
-
-
-import {
-  useQuery as useTanstackQuery,
-  useInfiniteQuery as useTanstackInfiniteQuery,
-  type UseQueryOptions,
-  type UseQueryResult,
-  type UseInfiniteQueryOptions,
-  type UseInfiniteQueryResult,
-  type QueryFunctionContext,
-} from '@tanstack/react-query'
 import {AtUri} from '@atproto/api'
 import {
+  type QueryClient,
+  type QueryFunctionContext,
+  useInfiniteQuery as useTanstackInfiniteQuery,
+  type UseInfiniteQueryOptions,
+  type UseInfiniteQueryResult,
+  useQuery as useTanstackQuery,
+  type UseQueryOptions,
+  type UseQueryResult,
+} from '@tanstack/react-query'
+
+import {
+  buildSyntheticFeedPage,
+  buildSyntheticPostView,
+  buildSyntheticProfileView,
   isAppViewError,
   resolveIdentityViaSlingshot,
-  buildSyntheticProfileView,
-  buildSyntheticPostView,
-  buildSyntheticFeedPage,
 } from './microcosm-fallback'
 
 /**
@@ -45,7 +45,14 @@ export interface UseQueryWithFallbackOptions<TData, TError>
  * Extended infinite query options that include fallback configuration
  */
 export interface UseInfiniteQueryWithFallbackOptions<TData, TError, TPageParam>
-  extends UseInfiniteQueryOptions<TData, TError, TData, TData, any, TPageParam> {
+  extends UseInfiniteQueryOptions<
+    TData,
+    TError,
+    TData,
+    TData,
+    any,
+    TPageParam
+  > {
   /**
    * Enable automatic fallback to PDS + Microcosm on AppView errors
    * @default false
@@ -90,7 +97,7 @@ export interface UseInfiniteQueryWithFallbackOptions<TData, TError, TPageParam>
  * ```
  */
 export function useQuery<TData = unknown, TError = Error>(
-  options: UseQueryWithFallbackOptions<TData, TError>
+  options: UseQueryWithFallbackOptions<TData, TError>,
 ): UseQueryResult<TData, TError> {
   const {
     queryFn,
@@ -101,7 +108,7 @@ export function useQuery<TData = unknown, TError = Error>(
   } = options
 
   // Wrap the original queryFn with fallback logic
-  const wrappedQueryFn: typeof queryFn = async (context) => {
+  const wrappedQueryFn: typeof queryFn = async context => {
     if (!queryFn) return undefined as TData
 
     try {
@@ -120,7 +127,9 @@ export function useQuery<TData = unknown, TError = Error>(
       })
 
       // Extract identifier from queryKey if not provided
-      const identifier = fallbackIdentifier || extractIdentifierFromQueryKey(context.queryKey)
+      const identifier =
+        fallbackIdentifier ||
+        extractIdentifierFromQueryKey(context.queryKey as unknown[])
 
       if (!identifier) {
         console.error('[Fallback] No identifier found for fallback')
@@ -129,16 +138,15 @@ export function useQuery<TData = unknown, TError = Error>(
 
       // Attempt fallback based on query type
       try {
-        const fallbackData = await attemptFallback(
-          fallbackType,
-          identifier
-        )
+        const fallbackData = await attemptFallback(fallbackType, identifier)
 
         if (!fallbackData) {
           throw error // Fallback failed, re-throw original error
         }
 
-        console.log('[Fallback] Successfully retrieved data via PDS + Microcosm')
+        console.log(
+          '[Fallback] Successfully retrieved data via PDS + Microcosm',
+        )
         return fallbackData as TData
       } catch (fallbackError) {
         console.error('[Fallback] Failed:', fallbackError)
@@ -182,9 +190,9 @@ export function useQuery<TData = unknown, TError = Error>(
 export function useInfiniteQuery<
   TData = unknown,
   TError = Error,
-  TPageParam = unknown
+  TPageParam = unknown,
 >(
-  options: UseInfiniteQueryWithFallbackOptions<TData, TError, TPageParam>
+  options: UseInfiniteQueryWithFallbackOptions<TData, TError, TPageParam>,
 ): UseInfiniteQueryResult<TData, TError> {
   const {
     queryFn,
@@ -195,7 +203,9 @@ export function useInfiniteQuery<
   } = options
 
   // Wrap the original queryFn with fallback logic
-  const wrappedQueryFn = async (context: QueryFunctionContext<any, TPageParam>) => {
+  const wrappedQueryFn = async (
+    context: QueryFunctionContext<any, TPageParam>,
+  ) => {
     if (!queryFn) return undefined as TData
 
     try {
@@ -207,15 +217,22 @@ export function useInfiniteQuery<
         throw error
       }
 
-      console.log('[Fallback] Attempting PDS + Microcosm fallback (infinite):', {
-        fallbackType,
-        fallbackIdentifier,
-        pageParam: context.pageParam,
-        error: error.message,
-      })
+      const pageParam = 'pageParam' in context ? context.pageParam : undefined
+
+      console.log(
+        '[Fallback] Attempting PDS + Microcosm fallback (infinite):',
+        {
+          fallbackType,
+          fallbackIdentifier,
+          pageParam,
+          error: error.message,
+        },
+      )
 
       // Extract identifier from queryKey if not provided
-      const identifier = fallbackIdentifier || extractIdentifierFromQueryKey(context.queryKey)
+      const identifier =
+        fallbackIdentifier ||
+        extractIdentifierFromQueryKey(context.queryKey as unknown[])
 
       if (!identifier) {
         console.error('[Fallback] No identifier found for fallback')
@@ -227,14 +244,16 @@ export function useInfiniteQuery<
         const fallbackData = await attemptInfiniteFallback(
           fallbackType,
           identifier,
-          context.pageParam as string | undefined
+          pageParam as string | undefined,
         )
 
         if (!fallbackData) {
           throw error // Fallback failed, re-throw original error
         }
 
-        console.log('[Fallback] Successfully retrieved paginated data via PDS + Microcosm')
+        console.log(
+          '[Fallback] Successfully retrieved paginated data via PDS + Microcosm',
+        )
         return fallbackData as TData
       } catch (fallbackError) {
         console.error('[Fallback] Failed:', fallbackError)
@@ -267,10 +286,7 @@ function extractIdentifierFromQueryKey(queryKey: unknown[]): string | null {
 /**
  * Attempt to fetch data using PDS + Microcosm fallback
  */
-async function attemptFallback(
-  type: string,
-  identifier: string
-): Promise<any> {
+async function attemptFallback(type: string, identifier: string): Promise<any> {
   switch (type) {
     case 'profile': {
       // identifier is a DID or handle
@@ -289,7 +305,7 @@ async function attemptFallback(
       return await buildSyntheticPostView(
         identifier,
         identity.did,
-        identity.handle
+        identity.handle,
       )
     }
 
@@ -302,7 +318,7 @@ async function attemptFallback(
       const post = await buildSyntheticPostView(
         identifier,
         identity.did,
-        identity.handle
+        identity.handle,
       )
 
       // Return thread structure with single post
@@ -327,7 +343,7 @@ async function attemptFallback(
 async function attemptInfiniteFallback(
   type: string,
   identifier: string,
-  cursor?: string
+  cursor?: string,
 ): Promise<any> {
   switch (type) {
     case 'feed': {
@@ -335,11 +351,7 @@ async function attemptInfiniteFallback(
       const identity = await resolveIdentityViaSlingshot(identifier)
       if (!identity) return null
 
-      return await buildSyntheticFeedPage(
-        identity.did,
-        identity.pds,
-        cursor
-      )
+      return await buildSyntheticFeedPage(identity.did, identity.pds, cursor)
     }
 
     case 'profile':
@@ -359,11 +371,209 @@ async function attemptInfiniteFallback(
   }
 }
 
+/**
+ * Fetch query data with automatic PDS + Microcosm fallback
+ *
+ * This is the fetch equivalent of useQuery with fallback support.
+ * Used for imperatively fetching data when you need the result immediately.
+ *
+ * @example
+ * ```typescript
+ * const post = await fetchQueryWithFallback(queryClient, {
+ *   queryKey: RQKEY(uri),
+ *   queryFn: async () => {
+ *     const res = await agent.getPosts({uris: [uri]})
+ *     return res.data.posts[0]
+ *   },
+ *   enableFallback: true,
+ *   fallbackType: 'post',
+ *   fallbackIdentifier: uri,
+ * })
+ * ```
+ */
+export async function fetchQueryWithFallback<TData = unknown, TError = Error>(
+  queryClient: QueryClient,
+  options: UseQueryWithFallbackOptions<TData, TError>,
+): Promise<TData> {
+  const {
+    queryFn,
+    enableFallback = false,
+    fallbackType = 'generic',
+    fallbackIdentifier,
+    queryKey,
+    ...restOptions
+  } = options
+
+  // Wrap the original queryFn with fallback logic
+  const wrappedQueryFn = async (context: QueryFunctionContext) => {
+    if (!queryFn) return undefined as TData
+
+    try {
+      // Try the original query function (AppView)
+      return await queryFn(context)
+    } catch (error: any) {
+      // If fallback is disabled or this isn't an AppView error, re-throw
+      if (!enableFallback || !isAppViewError(error)) {
+        throw error
+      }
+
+      console.log('[Fallback] Attempting PDS + Microcosm fallback (fetch):', {
+        fallbackType,
+        fallbackIdentifier,
+        error: error.message,
+      })
+
+      // Extract identifier from queryKey if not provided
+      const identifier =
+        fallbackIdentifier ||
+        extractIdentifierFromQueryKey(context.queryKey as unknown[])
+
+      if (!identifier) {
+        console.error('[Fallback] No identifier found for fallback')
+        throw error
+      }
+
+      // Attempt fallback based on query type
+      try {
+        const fallbackData = await attemptFallback(fallbackType, identifier)
+
+        if (!fallbackData) {
+          throw error // Fallback failed, re-throw original error
+        }
+
+        console.log(
+          '[Fallback] Successfully retrieved data via PDS + Microcosm (fetch)',
+        )
+        return fallbackData as TData
+      } catch (fallbackError) {
+        console.error('[Fallback] Failed:', fallbackError)
+        throw error // Fallback failed, re-throw original error
+      }
+    }
+  }
+
+  // Use the wrapped queryFn with TanStack Query's fetchQuery
+  return await queryClient.fetchQuery({
+    ...restOptions,
+    queryKey,
+    queryFn: wrappedQueryFn,
+  })
+}
+
+/**
+ * Prefetch query data with automatic PDS + Microcosm fallback
+ *
+ * This is the prefetch equivalent of useQuery with fallback support.
+ * Used for pre-loading data before it's needed (e.g., on hover interactions).
+ *
+ * @example
+ * ```typescript
+ * export function usePrefetchProfileQuery() {
+ *   const agent = useAgent()
+ *   const queryClient = useQueryClient()
+ *   const prefetchProfileQuery = useCallback(
+ *     async (did: string) => {
+ *       await prefetchQueryWithFallback(queryClient, {
+ *         staleTime: STALE.SECONDS.THIRTY,
+ *         queryKey: RQKEY(did),
+ *         queryFn: async () => {
+ *           const res = await agent.getProfile({actor: did || ''})
+ *           return res.data
+ *         },
+ *         enableFallback: true,
+ *         fallbackType: 'profile',
+ *         fallbackIdentifier: did,
+ *       })
+ *     },
+ *     [queryClient, agent],
+ *   )
+ *   return prefetchProfileQuery
+ * }
+ * ```
+ */
+export async function prefetchQueryWithFallback<
+  TData = unknown,
+  TError = Error,
+>(
+  queryClient: QueryClient,
+  options: UseQueryWithFallbackOptions<TData, TError>,
+): Promise<void> {
+  const {
+    queryFn,
+    enableFallback = false,
+    fallbackType = 'generic',
+    fallbackIdentifier,
+    queryKey,
+    ...restOptions
+  } = options
+
+  // Wrap the original queryFn with fallback logic
+  const wrappedQueryFn = async (context: QueryFunctionContext) => {
+    if (!queryFn) return undefined as TData
+
+    try {
+      // Try the original query function (AppView)
+      return await queryFn(context)
+    } catch (error: any) {
+      // If fallback is disabled or this isn't an AppView error, re-throw
+      if (!enableFallback || !isAppViewError(error)) {
+        throw error
+      }
+
+      console.log(
+        '[Fallback] Attempting PDS + Microcosm fallback (prefetch):',
+        {
+          fallbackType,
+          fallbackIdentifier,
+          error: error.message,
+        },
+      )
+
+      // Extract identifier from queryKey if not provided
+      const identifier =
+        fallbackIdentifier ||
+        extractIdentifierFromQueryKey(context.queryKey as unknown[])
+
+      if (!identifier) {
+        console.error('[Fallback] No identifier found for fallback')
+        throw error
+      }
+
+      // Attempt fallback based on query type
+      try {
+        const fallbackData = await attemptFallback(fallbackType, identifier)
+
+        if (!fallbackData) {
+          throw error // Fallback failed, re-throw original error
+        }
+
+        console.log(
+          '[Fallback] Successfully retrieved data via PDS + Microcosm (prefetch)',
+        )
+        return fallbackData as TData
+      } catch (fallbackError) {
+        console.error('[Fallback] Failed:', fallbackError)
+        throw error // Fallback failed, re-throw original error
+      }
+    }
+  }
+
+  // Use the wrapped queryFn with TanStack Query's prefetchQuery
+  await queryClient.prefetchQuery({
+    ...restOptions,
+    queryKey,
+    queryFn: wrappedQueryFn,
+  })
+}
+
 // Re-export other hooks and utilities from TanStack Query for convenience
 export {
-  useMutation,
-  useQueryClient,
+  type InfiniteData,
   keepPreviousData,
+  type QueryClient,
+  type QueryKey,
+  useMutation,
   type UseMutationOptions,
   type UseMutationResult,
+  useQueryClient,
 } from '@tanstack/react-query'
