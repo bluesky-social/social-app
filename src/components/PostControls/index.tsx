@@ -15,10 +15,12 @@ import {useHaptics} from '#/lib/haptics'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {type Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useMerticDisabledPref} from '#/state/preferences'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
+import {useSession} from '#/state/session'
 import {useRequireAuth} from '#/state/session'
 import {
   ProgressGuideAction,
@@ -98,6 +100,11 @@ let PostControls = ({
   const formatPostStatCount = useFormatPostStatCount()
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
+
+  const {likeMetrics, repostMetrics, replyMetrics, quoteMetrics} =
+    useMerticDisabledPref()
+
+  const {currentAccount} = useSession()
 
   const onPressToggleLike = async () => {
     if (isBlocked) {
@@ -231,17 +238,40 @@ let PostControls = ({
             )}
             big={big}>
             <PostControlButtonIcon icon={Bubble} />
-            {typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
-              <PostControlButtonText>
-                {formatPostStatCount(post.replyCount)}
-              </PostControlButtonText>
-            )}
+            {typeof post.replyCount !== 'undefined' && post.replyCount > 0 ? (
+              !(
+                replyMetrics === 'hide-all' ||
+                (replyMetrics === 'hide-own' &&
+                  post.author.did === currentAccount?.did)
+              ) ? (
+                <PostControlButtonText>
+                  {formatPostStatCount(post.replyCount)}
+                </PostControlButtonText>
+              ) : (
+                <PostControlButtonText>{'1+'}</PostControlButtonText>
+              )
+            ) : null}
           </PostControlButton>
         </View>
         <View style={[a.flex_1, a.align_start]}>
           <RepostButton
             isReposted={!!post.viewer?.repost}
-            repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
+            repostCount={
+              !(
+                repostMetrics === 'hide-all' ||
+                (repostMetrics === 'hide-own' &&
+                  post.author.did === currentAccount?.did)
+              )
+                ? (post.repostCount ?? 0) +
+                  (!(
+                    quoteMetrics === 'hide-all' ||
+                    (quoteMetrics === 'hide-own' &&
+                      post.author.did === currentAccount?.did)
+                  )
+                    ? (post.quoteCount ?? 0)
+                    : 0)
+                : 0
+            }
             onRepost={onRepost}
             onQuote={onQuote}
             big={big}
@@ -282,7 +312,15 @@ let PostControls = ({
               hasBeenToggled={hasLikeIconBeenToggled}
             />
             <CountWheel
-              likeCount={post.likeCount ?? 0}
+              likeCount={
+                !(
+                  likeMetrics === 'hide-all' ||
+                  (likeMetrics === 'hide-own' &&
+                    post.author.did === currentAccount?.did)
+                )
+                  ? (post.likeCount ?? 0)
+                  : 0
+              }
               big={big}
               isLiked={Boolean(post.viewer?.like)}
               hasBeenToggled={hasLikeIconBeenToggled}
