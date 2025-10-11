@@ -1,13 +1,13 @@
 import React from 'react'
 import {type TextStyle, View, type ViewStyle} from 'react-native'
 
+import {type Interest, useInterestsDisplayNames} from '#/lib/interests'
 import {capitalize} from '#/lib/strings/capitalize'
-import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 import {atoms as a, native, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
-export function InterestButton({interest}: {interest: string}) {
+export function InterestButton({interest}: {interest: Interest}) {
   const t = useTheme()
   const interestsDisplayNames = useInterestsDisplayNames()
   const ctx = Toggle.useItemContext()
