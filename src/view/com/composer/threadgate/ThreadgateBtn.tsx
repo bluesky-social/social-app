@@ -6,12 +6,12 @@ import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {native} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PostInteractionSettingsControlledDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
-import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
-import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
+import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
+import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 
 export function ThreadgateBtn({
   postgate,
@@ -51,7 +51,6 @@ export function ThreadgateBtn({
   return (
     <>
       <Button
-        variant="solid"
         color="secondary"
         size="small"
         testID="openReplyGateButton"
@@ -59,15 +58,10 @@ export function ThreadgateBtn({
         label={label}
         accessibilityHint={_(
           msg`Opens a dialog to choose who can reply to this thread`,
-        )}
-        style={[
-          native({
-            paddingHorizontal: 8,
-            paddingVertical: 6,
-          }),
-        ]}>
-        <ButtonIcon icon={anyoneCanInteract ? Earth : Group} />
+        )}>
+        <ButtonIcon icon={anyoneCanInteract ? EarthIcon : GroupIcon} />
         <ButtonText numberOfLines={1}>{label}</ButtonText>
+        <ButtonIcon icon={ChevronDownIcon} size="xs" />
       </Button>
       <PostInteractionSettingsControlledDialog
         control={control}
