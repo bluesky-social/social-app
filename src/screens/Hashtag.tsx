@@ -1,7 +1,7 @@
 import React from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -14,16 +14,22 @@ import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {List} from '#/view/com/util/List'
-import {atoms as a, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import * as Layout from '#/components/Layout'
+import {InlineLinkText} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {SearchError} from '#/components/SearchError'
+import {Text} from '#/components/Typography'
 
 const renderItem = ({item}: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
   return <Post post={item} />
@@ -161,6 +167,9 @@ function HashtagScreenTab({
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = React.useState(false)
+  const t = useTheme()
+  const {currentAccount} = useSession()
+  const isLoggedin = Boolean(currentAccount?.did)
 
   const queryParam = React.useMemo(() => {
     if (!author) return fullTag
@@ -193,6 +202,49 @@ function HashtagScreenTab({
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
+
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+
+  const showSignIn = () => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'none'})
+  }
+
+  const showCreateAccount = () => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'new'})
+  }
+
+  if (!isLoggedin) {
+    return (
+      <SearchError
+        title={_(msg`Search is currently unavailable when logged out`)}>
+        <Text style={[a.text_md, a.text_center, a.leading_snug]}>
+          <Trans>
+            <InlineLinkText
+              label={_(msg`Sign in`)}
+              to={'#'}
+              onPress={showSignIn}>
+              Sign in
+            </InlineLinkText>
+            <Text style={t.atoms.text_contrast_medium}> or </Text>
+            <InlineLinkText
+              label={_(msg`Create an account`)}
+              to={'#'}
+              onPress={showCreateAccount}>
+              create an account
+            </InlineLinkText>
+            <Text> </Text>
+            <Text style={t.atoms.text_contrast_medium}>
+              to search for news, sports, politics, and everything else
+              happening on Bluesky.
+            </Text>
+          </Trans>
+        </Text>
+      </SearchError>
+    )
+  }
 
   return (
     <>
