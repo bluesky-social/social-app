@@ -16,7 +16,6 @@ import {findAllProfilesInQueryData as findAllProfilesInFeedsQueryData} from '#/s
 import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '#/state/queries/post-liked-by'
 import {findAllProfilesInQueryData as findAllProfilesInPostQuotesQueryData} from '#/state/queries/post-quotes'
 import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '#/state/queries/post-reposted-by'
-import {findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData} from '#/state/queries/post-thread'
 import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '#/state/queries/profile'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '#/state/queries/profile-followers'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '#/state/queries/profile-follows'
@@ -173,7 +172,6 @@ function* findProfilesInCache(
   yield* findAllProfilesInActorSearchQueryData(queryClient, did)
   yield* findAllProfilesInListConvosQueryData(queryClient, did)
   yield* findAllProfilesInFeedsQueryData(queryClient, did)
-  yield* findAllProfilesInPostThreadQueryData(queryClient, did)
   yield* findAllProfilesInPostThreadV2QueryData(queryClient, did)
   yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
   yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did)

@@ -1,3 +1,4 @@
+import {useCallback} from 'react'
 import {
   type $Typed,
   type AppBskyActorDefs,
@@ -7,7 +8,7 @@ import {
   type AppBskyUnspeccedGetPostThreadV2,
   AtUri,
 } from '@atproto/api'
-import {type QueryClient} from '@tanstack/react-query'
+import {type QueryClient, useQueryClient} from '@tanstack/react-query'
 
 import {
   dangerousGetPostShadow,
@@ -18,6 +19,7 @@ import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
+import {usePostThreadContext} from '#/state/queries/usePostThread'
 import {getBranch} from '#/state/queries/usePostThread/traversal'
 import {
   type ApiThreadItem,
@@ -321,4 +323,52 @@ export function* findAllProfilesInQueryData(
       }
     }
   }
+}
+
+export function useUpdatePostThreadThreadgateQueryCache() {
+  const qc = useQueryClient()
+  const context = usePostThreadContext()
+
+  return useCallback(
+    (threadgate: AppBskyFeedDefs.ThreadgateView) => {
+      if (!context) return
+
+      function mutator<T>(thread: ApiThreadItem[]): T[] {
+        for (let i = 0; i < thread.length; i++) {
+          const item = thread[i]
+
+          if (!AppBskyUnspeccedDefs.isThreadItemPost(item.value)) continue
+
+          if (item.depth === 0) {
+            thread.splice(i, 1, {
+              ...item,
+              value: {
+                ...item.value,
+                post: {
+                  ...item.value.post,
+                  threadgate,
+                },
+              },
+            })
+          }
+        }
+
+        return thread as T[]
+      }
+
+      qc.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
+        context.postThreadQueryKey,
+        data => {
+          if (!data) return
+          return {
+            ...data,
+            thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([
+              ...data.thread,
+            ]),
+          }
+        },
+      )
+    },
+    [qc, context],
+  )
 }

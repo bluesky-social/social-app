@@ -7,7 +7,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
-import {usePostThreadQuery} from '#/state/queries/post-thread'
+import {usePostQuery} from '#/state/queries/post'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {PostRepostedBy as PostRepostedByComponent} from '#/view/com/post-thread/PostRepostedBy'
 import * as Layout from '#/components/Layout'
@@ -17,11 +17,11 @@ export const PostRepostedByScreen = ({route}: Props) => {
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {data: post} = usePostThreadQuery(uri)
+  const {data: post} = usePostQuery(uri)
 
   let quoteCount
-  if (post?.thread.type === 'post') {
-    quoteCount = post.thread.post.repostCount
+  if (post) {
+    quoteCount = post.repostCount
   }
 
   useFocusEffect(

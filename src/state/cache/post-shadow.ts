@@ -12,7 +12,6 @@ import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} f
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
-import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '#/state/queries/post-thread'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
 import {findAllPostsInQueryData as findAllPostsInThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
 import {castAsShadow, type Shadow} from './types'
@@ -175,11 +174,6 @@ function* findPostsInCache(
   }
   for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
     yield post
-  }
-  for (let node of findAllPostsInThreadQueryData(queryClient, uri)) {
-    if (node.type === 'post') {
-      yield node.post
-    }
   }
   for (let post of findAllPostsInThreadV2QueryData(queryClient, uri)) {
     yield post
