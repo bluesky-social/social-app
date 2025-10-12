@@ -11,7 +11,7 @@ import {
   useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import throttle from 'lodash.throttle'
+import throttle from 'es-toolkit/compat/throttle'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
