@@ -458,7 +458,7 @@ let PostContent = ({
       childContainerStyle={styles.contentHiderChild}>
       <PostAlerts
         modui={moderation.ui('contentList')}
-        style={[a.py_2xs]}
+        style={[a.pb_xs]}
         additionalCauses={additionalPostAlerts}
       />
       {richText.text ? (
