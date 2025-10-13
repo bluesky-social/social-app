@@ -7,7 +7,11 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
-import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
+import {
+  PostThreadContextProvider,
+  type ThreadItem,
+  usePostThread,
+} from '#/state/queries/usePostThread'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -492,7 +496,7 @@ export function PostThread({uri}: {uri: string}) {
   const defaultListFooterHeight = hasParents ? windowHeight - 200 : undefined
 
   return (
-    <>
+    <PostThreadContextProvider context={thread.context}>
       <Layout.Header.Outer headerRef={headerRef}>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
@@ -575,7 +579,7 @@ export function PostThread({uri}: {uri: string}) {
       {!gtMobile && canReply && hasSession && (
         <MobileComposePrompt onPressReply={onReplyToAnchor} />
       )}
-    </>
+    </PostThreadContextProvider>
   )
 }
 
