@@ -195,7 +195,7 @@ function PostInner({
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               modui={moderation.ui('contentView')}
-              style={[a.py_xs]}
+              style={[a.pb_xs]}
             />
             {richText.text ? (
               <View>
