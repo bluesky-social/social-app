@@ -135,11 +135,11 @@ export function sortAndAnnotateThreadItems(
       } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
         if (parentMetadata) {
           /*
-           * Set this value before incrementing the `repliesIndexCounter`, since
-           * `repliesIndexCounter` is 1-indexed and `replyIndex` is 0-indexed.
+           * Set this value before incrementing the `repliesSeenCounter` later
+           * on, since `repliesSeenCounter` is 1-indexed and `replyIndex` is
+           * 0-indexed.
            */
-          metadata!.replyIndex = parentMetadata.repliesIndexCounter
-          parentMetadata.repliesIndexCounter += 1
+          metadata!.replyIndex = parentMetadata.repliesSeenCounter
         }
 
         const post = views.threadPost({
@@ -194,12 +194,11 @@ export function sortAndAnnotateThreadItems(
                 if (childParentMetadata) {
                   /*
                    * Set this value before incrementing the
-                   * `repliesIndexCounter`, since `repliesIndexCounter` is
-                   * 1-indexed and `replyIndex` is 0-indexed.
+                   * `repliesSeenCounter` later on, since `repliesSeenCounter`
+                   * is 1-indexed and `replyIndex` is 0-indexed.
                    */
                   childMetadata!.replyIndex =
-                    childParentMetadata.repliesIndexCounter
-                  childParentMetadata.repliesIndexCounter += 1
+                    childParentMetadata.repliesSeenCounter
                 }
 
                 const childPost = views.threadPost({
