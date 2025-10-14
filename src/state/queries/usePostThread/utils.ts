@@ -63,6 +63,13 @@ export function getTraversalMetadata({
   if (!AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
     throw new Error(`Expected thread item to be a post`)
   }
+  const rootUri = getRootPostAtUri(item.value.post)
+  const rootAuthorDid = rootUri?.host
+  const isRoot = item.uri === item.value.post.uri
+  const isPartOfOPThreadFromRoot = Boolean(
+    item.value.post.author.did === rootAuthorDid &&
+      (parentMetadata?.isRoot || parentMetadata?.isPartOfOPThreadFromRoot),
+  )
   const repliesCount = item.value.post.replyCount || 0
   const repliesUnhydrated = item.value.moreReplies || 0
   const metadata = {
@@ -81,6 +88,8 @@ export function getTraversalMetadata({
      * replies, we'll override this after traversal.
      */
     isPartOfLastBranchFromDepth: item.depth === 1 ? 1 : undefined,
+    isPartOfOPThreadFromRoot,
+    isRoot,
     nextItemDepth: nextItem?.depth,
     parentMetadata,
     prevItemDepth: prevItem?.depth,
@@ -130,6 +139,7 @@ export function getThreadPostUI({
   repliesCount,
   prevItemDepth,
   isLastChild,
+  isPartOfOPThreadFromRoot,
   skippedIndentIndices,
   repliesSeenCounter,
   repliesUnhydrated,
@@ -147,7 +157,7 @@ export function getThreadPostUI({
       followsReadMoreUp ||
       (!!prevItemDepth && prevItemDepth !== 0 && prevItemDepth < depth),
     showChildReplyLine: depth < 0 || isReplyAndHasReplies,
-    indent: depth,
+    indent: isPartOfOPThreadFromRoot ? (depth < 1 ? 0 : 1) : depth,
     /*
      * If there are no slices below this one, or the next slice has a depth <=
      * than the depth of this post, it's the last child of the reply tree. It

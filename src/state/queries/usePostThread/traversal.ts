@@ -151,6 +151,17 @@ export function sortAndAnnotateThreadItems(
         })
 
         if (!post.isBlurred || skipModerationHandling) {
+          const skip =
+            parentMetadata?.isPartOfOPThreadFromRoot &&
+            !metadata?.isPartOfOPThreadFromRoot
+
+          if (skip) {
+            const branch = getBranch(thread, i, item.depth)
+            // could insert tombstone
+            i = branch.end
+            continue traversal
+          }
+
           /*
            * Not moderated, need to insert it
            */

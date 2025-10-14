@@ -156,6 +156,16 @@ export type TraversalMetadata = {
    */
   isPartOfLastBranchFromDepth?: number
   /**
+   * Indicates if the post is part of the thread started by the original
+   * poster, starting from the root post. OP threads within other branches
+   * of the tree are not considered part of the OP thread.
+   */
+  isPartOfOPThreadFromRoot: boolean
+  /**
+   * Indicates if this item is the root post of the thread.
+   */
+  isRoot: boolean
+  /**
    * The depth of the slice immediately following this one, if it exists.
    */
   nextItemDepth?: number
