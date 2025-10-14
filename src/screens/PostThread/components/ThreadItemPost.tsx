@@ -38,7 +38,7 @@ import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
-import {PostControls} from '#/components/PostControls'
+import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -389,13 +389,7 @@ export function ThreadItemPostSkeleton({index}: {index: number}) {
             )}
           </Skele.Col>
 
-          <Skele.Row style={[a.justify_between, a.pt_xs]}>
-            <Skele.Pill blend size={16} />
-            <Skele.Pill blend size={16} />
-            <Skele.Pill blend size={16} />
-            <Skele.Circle blend size={16} />
-            <View />
-          </Skele.Row>
+          <PostControlsSkeleton />
         </Skele.Col>
       </Skele.Row>
     </View>

@@ -28,6 +28,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, flatten, useBreakpoints} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
+import * as Skele from '#/components/Skeleton'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
@@ -188,11 +189,11 @@ let PostControls = ({
     })
   }
 
-  const secondaryControlSpacingStyles = flatten([
-    {gap: 0}, // default, we want `gap` to be defined on the resulting object
-    variant !== 'compact' && a.gap_xs,
-    (big || gtPhone) && a.gap_sm,
-  ])
+  const secondaryControlSpacingStyles = getSecondaryControlSpacingStyles({
+    variant,
+    big,
+    gtPhone,
+  })
 
   return (
     <View
@@ -336,3 +337,68 @@ let PostControls = ({
 }
 PostControls = memo(PostControls)
 export {PostControls}
+
+export function PostControlsSkeleton({
+  big,
+  style,
+  variant,
+}: {
+  big?: boolean
+  style?: StyleProp<ViewStyle>
+  variant?: 'compact' | 'normal' | 'large'
+}) {
+  const {gtPhone} = useBreakpoints()
+
+  const secondaryControlSpacingStyles = getSecondaryControlSpacingStyles({
+    variant,
+    big,
+    gtPhone,
+  })
+
+  return (
+    <Skele.Row
+      style={[
+        a.flex_row,
+        a.justify_between,
+        a.align_center,
+        !big && a.pt_2xs,
+        a.gap_md,
+        style,
+      ]}>
+      <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
+        <View style={[a.flex_1, a.align_start, {marginLeft: big ? -2 : -6}]}>
+          <Skele.Pill blend size={28} />
+        </View>
+
+        <View style={[a.flex_1, a.align_start]}>
+          <Skele.Pill blend size={28} />
+        </View>
+
+        <View style={[a.flex_1, a.align_start]}>
+          <Skele.Pill blend size={28} />
+        </View>
+      </View>
+      <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
+        <Skele.Circle size={28} />
+        <Skele.Circle size={28} />
+        <Skele.Circle size={28} />
+      </View>
+    </Skele.Row>
+  )
+}
+
+function getSecondaryControlSpacingStyles({
+  variant,
+  big,
+  gtPhone,
+}: {
+  variant?: 'compact' | 'normal' | 'large'
+  big?: boolean
+  gtPhone: boolean
+}) {
+  return flatten([
+    {gap: 0}, // default, we want `gap` to be defined on the resulting object
+    variant !== 'compact' && a.gap_xs,
+    (big || gtPhone) && a.gap_sm,
+  ])
+}
