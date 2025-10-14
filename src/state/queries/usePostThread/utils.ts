@@ -65,7 +65,7 @@ export function getTraversalMetadata({
   }
   const rootUri = getRootPostAtUri(item.value.post)
   const rootAuthorDid = rootUri?.host
-  const isRoot = item.uri === item.value.post.uri
+  const isRoot = item.uri === rootUri?.toString()
   const isPartOfOPThreadFromRoot = Boolean(
     item.value.post.author.did === rootAuthorDid &&
       (parentMetadata?.isRoot || parentMetadata?.isPartOfOPThreadFromRoot),
