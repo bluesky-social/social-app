@@ -200,12 +200,20 @@ export type TraversalMetadata = {
    *
    * After traversal, we can use this to calculate if we actually got all the
    * replies we expected, or if some were blocked, etc.
+   *
+   * Because this value is incremented startging from 0, it is 1-indexed. So to
+   * when comparing to the `replyIndex`, you'll need to subtract 1 from this
+   * value.
    */
   repliesSeenCounter: number
   /**
    * The total number of replies to this post hydrated in this response. Used
    * for populating the `replyIndex` of the post by referencing this value on
    * the parent.
+   *
+   * Because this value is incremented startging from 0, it is 1-indexed. So to
+   * when comparing to the `replyIndex`, you'll need to subtract 1 from this
+   * value.
    */
   repliesIndexCounter: number
   /**

@@ -193,7 +193,9 @@ export function sortAndAnnotateThreadItems(
                 storeTraversalMetadata(metadatas, childMetadata)
                 if (childParentMetadata) {
                   /*
-                   * Set this value before incrementing the parent's repliesIndexCounter
+                   * Set this value before incrementing the parent's
+                   * `repliesIndexCounter`, since `repliesIndexCounter` is
+                   * 1-indexed and `replyIndex` is 0-indexed.
                    */
                   childMetadata!.replyIndex =
                     childParentMetadata.repliesIndexCounter
@@ -273,6 +275,14 @@ export function sortAndAnnotateThreadItems(
               metadata.replyIndex ===
               metadata.parentMetadata.repliesIndexCounter - 1
 
+            /**
+             * Item is also the last "sibling" if its index matches the total
+             * number of replies we're actually able to render to the page.
+             */
+            const isLastSiblingDueToMissingReplies =
+              metadata.replyIndex ===
+              metadata.parentMetadata.repliesSeenCounter - 1
+
             /*
              * Item can also be the last "sibling" if we know we don't have a
              * next item, OR if that next item's depth is less than this item's
@@ -280,6 +290,7 @@ export function sortAndAnnotateThreadItems(
              * item).
              */
             const isImplicitlyLastSibling =
+              nextItem === undefined ||
               metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth < metadata.depth
 
@@ -287,7 +298,9 @@ export function sortAndAnnotateThreadItems(
              * Ok now we can set the last sibling state.
              */
             metadata.isLastSibling =
-              isLastSiblingByCounts || isImplicitlyLastSibling
+              isLastSiblingByCounts ||
+              isImplicitlyLastSibling ||
+              isLastSiblingDueToMissingReplies
 
             /*
              * Item is the last "child" in a branch if there is no next item,
@@ -296,6 +309,7 @@ export function sortAndAnnotateThreadItems(
              * of this item)
              */
             metadata.isLastChild =
+              nextItem === undefined ||
               metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth <= metadata.depth
 
