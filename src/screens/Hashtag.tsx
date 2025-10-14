@@ -168,8 +168,7 @@ function HashtagScreenTab({
   const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = React.useState(false)
   const t = useTheme()
-  const {currentAccount} = useSession()
-  const isLoggedin = Boolean(currentAccount?.did)
+  const {hasSession} = useSession()
 
   const queryParam = React.useMemo(() => {
     if (!author) return fullTag
@@ -216,7 +215,7 @@ function HashtagScreenTab({
     requestSwitchToAccount({requestedAccount: 'new'})
   }
 
-  if (!isLoggedin) {
+  if (!hasSession) {
     return (
       <SearchError
         title={_(msg`Search is currently unavailable when logged out`)}>
