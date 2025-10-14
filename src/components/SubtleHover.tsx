@@ -39,15 +39,6 @@ export function SubtleHover({
     />
   )
 
-  if (hover) {
-    console.log({
-      isWeb,
-      web,
-      isNative,
-      native,
-    })
-  }
-
   if (isWeb && web) {
     return isTouchDevice ? null : el
   } else if (isNative && native) {
