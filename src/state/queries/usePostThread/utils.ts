@@ -74,6 +74,7 @@ export function getTraversalMetadata({
   const repliesUnhydrated = item.value.moreReplies || 0
   const metadata = {
     depth: item.depth,
+    indent: isPartOfOPThreadFromRoot ? (item.depth < 1 ? 0 : 1) : item.depth,
     /*
      * Unknown until after traversal
      */
@@ -136,10 +137,10 @@ export function storeTraversalMetadata(
 
 export function getThreadPostUI({
   depth,
+  indent,
   repliesCount,
   prevItemDepth,
   isLastChild,
-  isPartOfOPThreadFromRoot,
   skippedIndentIndices,
   repliesSeenCounter,
   repliesUnhydrated,
@@ -157,7 +158,7 @@ export function getThreadPostUI({
       followsReadMoreUp ||
       (!!prevItemDepth && prevItemDepth !== 0 && prevItemDepth < depth),
     showChildReplyLine: depth < 0 || isReplyAndHasReplies,
-    indent: isPartOfOPThreadFromRoot ? (depth < 1 ? 0 : 1) : depth,
+    indent,
     /*
      * If there are no slices below this one, or the next slice has a depth <=
      * than the depth of this post, it's the last child of the reply tree. It
@@ -181,5 +182,13 @@ export function getThreadPostNoUnauthenticatedUI({
   return {
     showChildReplyLine: depth < 0,
     showParentReplyLine: Boolean(prevItemDepth && prevItemDepth < depth),
+  }
+}
+
+export function getReadMoreUI({
+  indent,
+}: TraversalMetadata): Extract<ThreadItem, {type: 'readMore'}>['ui'] {
+  return {
+    indent,
   }
 }

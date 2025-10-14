@@ -106,6 +106,9 @@ export type ThreadItem =
       href: string
       moreReplies: number
       skippedIndentIndices: Set<number>
+      ui: {
+        indent: number
+      }
     }
   | {
       /*
@@ -137,6 +140,12 @@ export type TraversalMetadata = {
    * calculated on the server.
    */
   depth: number
+  /**
+   * The visual indentation level of the post. This is usually the same as
+   * `depth`, except in the case where the post is part of the OP thread,
+   * which is always indented to level 1 (except the root post, which is 0).
+   */
+  indent: number
   /**
    * Indicates if this item is a "read more" link preceding this post that
    * continues the thread upwards.

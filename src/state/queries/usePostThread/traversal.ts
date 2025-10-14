@@ -9,6 +9,7 @@ import {
 } from '#/state/queries/usePostThread/types'
 import {
   getPostRecord,
+  getReadMoreUI,
   getThreadPostNoUnauthenticatedUI,
   getThreadPostUI,
   getTraversalMetadata,
@@ -385,7 +386,9 @@ export function sortAndAnnotateThreadItems(
            */
           if (metadata.repliesUnhydrated > 0 && metadata.isLastChild) {
             metadata.precedesChildReadMore = true
-            subset.splice(i + 1, 0, views.readMore(metadata))
+            const view = views.readMore(metadata)
+            view.ui = getReadMoreUI(metadata)
+            subset.splice(i + 1, 0, view)
             i++ // skip next iteration
           }
 
@@ -408,11 +411,9 @@ export function sortAndAnnotateThreadItems(
             (metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth <= metadata.upcomingParentReadMore.depth)
           ) {
-            subset.splice(
-              i + 1,
-              0,
-              views.readMore(metadata.upcomingParentReadMore),
-            )
+            const view = views.readMore(metadata.upcomingParentReadMore)
+            view.ui = getReadMoreUI(metadata.upcomingParentReadMore)
+            subset.splice(i + 1, 0, view)
             i++
           }
 

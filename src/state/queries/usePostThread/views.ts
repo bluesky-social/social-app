@@ -124,6 +124,8 @@ export function readMore({
     moreReplies: repliesUnhydrated,
     depth,
     skippedIndentIndices,
+    // @ts-ignore populated by the traversal
+    ui: {},
   }
 }
 

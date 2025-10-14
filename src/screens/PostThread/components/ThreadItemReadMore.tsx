@@ -28,7 +28,8 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
   const t = useTheme()
   const {_} = useLingui()
   const isTreeView = view === 'tree'
-  const indent = Math.max(0, item.depth - 1)
+  const indent = Math.max(0, item.ui.indent - 1)
+  console.log({indent, id: item.ui.indent})
 
   const spacers = isTreeView
     ? Array.from(Array(indent)).map((_, n: number) => {
