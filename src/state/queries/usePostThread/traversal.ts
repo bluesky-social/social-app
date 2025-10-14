@@ -135,10 +135,10 @@ export function sortAndAnnotateThreadItems(
       } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
         if (parentMetadata) {
           /*
-           * Set this value before incrementing the parent's repliesSeenCounter
+           * Set this value before incrementing the `repliesIndexCounter`, since
+           * `repliesIndexCounter` is 1-indexed and `replyIndex` is 0-indexed.
            */
           metadata!.replyIndex = parentMetadata.repliesIndexCounter
-          // Increment the parent's repliesIndexCounter
           parentMetadata.repliesIndexCounter += 1
         }
 
@@ -193,7 +193,7 @@ export function sortAndAnnotateThreadItems(
                 storeTraversalMetadata(metadatas, childMetadata)
                 if (childParentMetadata) {
                   /*
-                   * Set this value before incrementing the parent's
+                   * Set this value before incrementing the
                    * `repliesIndexCounter`, since `repliesIndexCounter` is
                    * 1-indexed and `replyIndex` is 0-indexed.
                    */
