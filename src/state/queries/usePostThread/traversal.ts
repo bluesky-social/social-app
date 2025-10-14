@@ -266,15 +266,6 @@ export function sortAndAnnotateThreadItems(
             if (nextItem?.type === 'threadPost')
               metadata.nextItemDepth = nextItem?.depth
 
-            /*
-             * Item is the last "sibling" if we know for sure we're out of
-             * replies on the parent (even though this item itself may have its
-             * own reply branches).
-             */
-            const isLastSiblingByCounts =
-              metadata.replyIndex ===
-              metadata.parentMetadata.repliesIndexCounter - 1
-
             /**
              * Item is also the last "sibling" if its index matches the total
              * number of replies we're actually able to render to the page.
@@ -298,9 +289,7 @@ export function sortAndAnnotateThreadItems(
              * Ok now we can set the last sibling state.
              */
             metadata.isLastSibling =
-              isLastSiblingByCounts ||
-              isImplicitlyLastSibling ||
-              isLastSiblingDueToMissingReplies
+              isImplicitlyLastSibling || isLastSiblingDueToMissingReplies
 
             /*
              * Item is the last "child" in a branch if there is no next item,
