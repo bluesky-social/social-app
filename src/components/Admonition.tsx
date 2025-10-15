@@ -7,13 +7,14 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Text as BaseText, type TextProps} from '#/components/Typography'
+import {EmojiSad_Stroke2_Corner0_Rounded as EmojiSadIcon} from './icons/Emoji'
 
 export const colors = {
   warning: '#FFC404',
 }
 
 type Context = {
-  type: 'info' | 'tip' | 'warning' | 'error'
+  type: 'info' | 'tip' | 'warning' | 'error' | 'apology'
 }
 
 const Context = createContext<Context>({
@@ -29,12 +30,14 @@ export function Icon() {
     tip: CircleInfoIcon,
     warning: WarningIcon,
     error: CircleXIcon,
+    apology: EmojiSadIcon,
   }[type]
   const fill = {
     info: t.atoms.text_contrast_medium.color,
     tip: t.palette.primary_500,
     warning: colors.warning,
     error: t.palette.negative_500,
+    apology: t.atoms.text_contrast_medium.color,
   }[type]
   return <Icon fill={fill} size="md" />
 }
@@ -109,6 +112,7 @@ export function Outer({
     tip: t.palette.primary_500,
     warning: colors.warning,
     error: t.palette.negative_500,
+    apology: t.atoms.border_contrast_high.borderColor,
   }[type]
   return (
     <Context.Provider value={{type}}>

@@ -7,6 +7,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
 import {wait} from '#/lib/async/wait'
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -16,11 +17,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {OnboardingControls} from '#/screens/Onboarding/Layout'
-import {
-  Context,
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
+import {Context} from '#/screens/Onboarding/state'
 import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -77,6 +74,8 @@ export function StepSuggestedAccounts() {
   })
 
   const isError = !!error
+  const isEmpty =
+    !isLoading && suggestedUsers && suggestedUsers.actors.length === 0
 
   const skipOnboarding = useCallback(() => {
     onboardDispatch({type: 'finish'})
@@ -171,10 +170,18 @@ export function StepSuggestedAccounts() {
             <Loader size="xl" />
           </View>
         ) : isError ? (
-          <View style={[a.flex_1, a.px_xl, a.pt_5xl]}>
+          <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
             <Admonition type="error">
               <Trans>
                 An error occurred while fetching suggested accounts.
+              </Trans>
+            </Admonition>
+          </View>
+        ) : isEmpty ? (
+          <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
+            <Admonition type="apology">
+              <Trans>
+                Sorry, we're unable to load account suggestions at this time.
               </Trans>
             </Admonition>
           </View>
