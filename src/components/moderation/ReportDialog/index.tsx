@@ -138,7 +138,7 @@ function Inner(props: ReportDialogProps) {
         return collections.includes(props.subject.nsid)
       })
       .filter(l => {
-        if (!state.selectedOption) return true
+        if (!state.selectedOption) return false
         // some reasons ONLY go to Bluesky
         if (BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)) {
           return l.creator.did === BSKY_LABELER_DID
