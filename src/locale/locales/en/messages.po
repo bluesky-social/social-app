@@ -832,7 +832,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:429
+#: src/screens/Moderation/index.tsx:418
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr ""
 
@@ -845,7 +845,7 @@ msgstr ""
 msgid "Adult Content labels"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:479
+#: src/screens/Moderation/index.tsx:468
 msgid "Advanced"
 msgstr ""
 
@@ -2101,11 +2101,11 @@ msgstr ""
 msgid "Confirm delete account"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:354
+#: src/screens/Moderation/index.tsx:356
 msgid "Confirm your age:"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:345
+#: src/screens/Moderation/index.tsx:347
 msgid "Confirm your birthdate"
 msgstr ""
 
@@ -2172,8 +2172,7 @@ msgstr ""
 msgid "Content Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:341
-#: src/screens/Moderation/index.tsx:375
+#: src/screens/Moderation/index.tsx:340
 msgid "Content filters"
 msgstr ""
 
@@ -2744,7 +2743,7 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
 #: src/screens/Messages/Settings.tsx:144
 #: src/screens/Messages/Settings.tsx:147
-#: src/screens/Moderation/index.tsx:419
+#: src/screens/Moderation/index.tsx:408
 msgid "Disabled"
 msgstr ""
 
@@ -3114,7 +3113,7 @@ msgstr ""
 msgid "Enable {0} only"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:406
+#: src/screens/Moderation/index.tsx:395
 msgid "Enable adult content"
 msgstr ""
 
@@ -3161,7 +3160,7 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:135
 #: src/screens/Messages/Settings.tsx:138
-#: src/screens/Moderation/index.tsx:417
+#: src/screens/Moderation/index.tsx:406
 msgid "Enabled"
 msgstr ""
 
@@ -7867,7 +7866,7 @@ msgstr ""
 msgid "Set app icon to {0}"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:357
+#: src/screens/Moderation/index.tsx:359
 msgid "Set birthdate"
 msgstr ""
 
@@ -8716,7 +8715,7 @@ msgstr ""
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:432
+#: src/screens/Moderation/index.tsx:421
 msgid "The Bluesky web application"
 msgstr ""
 
@@ -9200,7 +9199,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:409
+#: src/screens/Moderation/index.tsx:398
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
@@ -10084,7 +10083,7 @@ msgstr ""
 msgid "We were unable to load your birth date preferences. Please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:489
+#: src/screens/Moderation/index.tsx:478
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
@@ -10604,7 +10603,7 @@ msgstr ""
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:379
+#: src/screens/Moderation/index.tsx:368
 msgid "You must complete age assurance in order to access the settings below."
 msgstr ""
 
