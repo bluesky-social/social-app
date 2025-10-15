@@ -349,13 +349,19 @@ export function PostControlsSkeleton({
 }) {
   const {gtPhone} = useBreakpoints()
 
+  const rowHeight = big ? 32 : 28
+  const padding = 4
+  const size = rowHeight - padding * 2
+
   const secondaryControlSpacingStyles = getSecondaryControlSpacingStyles({
     variant,
     big,
     gtPhone,
   })
 
-  const size = big ? 32 : 28
+  const itemStyles = {
+    padding,
+  }
 
   return (
     <Skele.Row
@@ -368,22 +374,29 @@ export function PostControlsSkeleton({
         style,
       ]}>
       <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
-        <View style={[a.flex_1, a.align_start, {marginLeft: big ? -2 : -6}]}>
+        <View
+          style={[itemStyles, a.flex_1, a.align_start, {marginLeft: -padding}]}>
           <Skele.Pill blend size={size} />
         </View>
 
-        <View style={[a.flex_1, a.align_start]}>
+        <View style={[itemStyles, a.flex_1, a.align_start]}>
           <Skele.Pill blend size={size} />
         </View>
 
-        <View style={[a.flex_1, a.align_start]}>
+        <View style={[itemStyles, a.flex_1, a.align_start]}>
           <Skele.Pill blend size={size} />
         </View>
       </View>
       <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
-        <Skele.Circle size={size} />
-        <Skele.Circle size={size} />
-        <Skele.Circle size={size} />
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
       </View>
     </Skele.Row>
   )
