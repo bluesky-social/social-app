@@ -35,7 +35,7 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: IS_DEV ? 'Bluesky (DEV)' : 'Bluesky',
+      name: 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
@@ -64,6 +64,8 @@ module.exports = function (_config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
+          // Change the display name without affecting target name
+          CFBundleDisplayName: IS_DEV ? 'Bluesky (DEV)' : 'Bluesky',
           CFBundleSpokenName: 'Blue Sky',
           CFBundleLocalizations: [
             'en',
