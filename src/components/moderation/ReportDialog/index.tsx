@@ -143,11 +143,13 @@ function Inner(props: ReportDialogProps) {
         if (BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)) {
           return l.creator.did === BSKY_LABELER_DID
         }
-        const reasonTypes: string[] | undefined = l.reasonTypes
-        if (reasonTypes === undefined) return true
+        const supportedReasonTypes: string[] | undefined = l.reasonTypes
+        if (supportedReasonTypes === undefined) return true
         return (
-          reasonTypes.includes(state.selectedOption.reason) ||
-          reasonTypes.includes(
+          // supports new reason type
+          supportedReasonTypes.includes(state.selectedOption.reason) ||
+          // supports old reason type (backwards compat)
+          supportedReasonTypes.includes(
             NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
           )
         )
