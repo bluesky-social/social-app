@@ -180,17 +180,9 @@ export function StepSuggestedAccounts() {
         ) : isEmpty ? (
           <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
             <Admonition type="apology">
-              {selectedInterest ? (
-                <Trans>
-                  Sorry, we couldn't find any accounts for{' '}
-                  {interestsDisplayNames[selectedInterest]}
-                </Trans>
-              ) : (
-                <Trans>
-                  Sorry, we couldn't find any accounts that match your
-                  interests.
-                </Trans>
-              )}
+              <Trans>
+                Sorry, we're unable to load account suggestions at this time.
+              </Trans>
             </Admonition>
           </View>
         ) : (
