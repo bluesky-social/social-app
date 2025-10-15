@@ -193,23 +193,24 @@ export type TraversalMetadata = {
    */
   repliesUnhydrated: number
   /**
-   * The number of replies that have been seen so far in the traversal.
-   * Excludes replies that are moderated in some way, since those are not
-   * "seen" on first load. Use `repliesIndexCounter` for the total number of
-   * replies that were hydrated in the response.
+   * The number of replies that have been "seen" (actually able to be rendered)
+   * so far in the traversal. Excludes replies that are moderated in some way,
+   * since those are not "seen" on first load.
    *
-   * After traversal, we can use this to calculate if we actually got all the
-   * replies we expected, or if some were blocked, etc.
+   * We use this to compute the `replyIndex` values of the children of this
+   * parent. E.g. if a reply is not hydrated on the response, or is moderated
+   * in some way (including by the user), this value is not incremented. So
+   * this represents the _actual_ index of the reply in the rendered view.
+   *
+   * Note: this is a "counter", not an "index". Because this value is
+   * incremented starting from 0, it is 1-indexed. So to when comparing to the
+   * `replyIndex`, you'll need to subtract 1 from this value.
    */
   repliesSeenCounter: number
   /**
-   * The total number of replies to this post hydrated in this response. Used
-   * for populating the `replyIndex` of the post by referencing this value on
-   * the parent.
-   */
-  repliesIndexCounter: number
-  /**
-   * The index-0-based index of this reply in the parent post's replies.
+   * The index-0-based index of this reply in the parent post's replies. This
+   * is computed from the `repliesSeenCounter` of the parent post, prior to it
+   * being incremented for this reply.
    */
   replyIndex: number
   /**
