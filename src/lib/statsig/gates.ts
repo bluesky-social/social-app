@@ -3,7 +3,6 @@ export type Gate =
   | 'alt_share_icon'
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'
-  | 'disable_onboarding_policy_update_notice'
   | 'explore_show_suggested_feeds'
   | 'feed_reply_button_open_thread'
   | 'old_postonboarding'
