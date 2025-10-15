@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -84,12 +84,10 @@ let ProfileHeaderLabeler = ({
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
-  const [likeUri, setLikeUri] = React.useState<string>(
-    labeler.viewer?.like || '',
-  )
-  const [likeCount, setLikeCount] = React.useState(labeler.likeCount || 0)
+  const [likeUri, setLikeUri] = useState<string>(labeler.viewer?.like || '')
+  const [likeCount, setLikeCount] = useState(labeler.likeCount || 0)
 
-  const onToggleLiked = React.useCallback(async () => {
+  const onToggleLiked = useCallback(async () => {
     if (!labeler) {
       return
     }
@@ -118,7 +116,7 @@ let ProfileHeaderLabeler = ({
 
   const editProfileControl = useDialogControl()
 
-  const onPressSubscribe = React.useCallback(() => {
+  const onPressSubscribe = useCallback(() => {
     requireAuth(async (): Promise<void> => {
       playHaptic()
       const subscribe = !isSubscribed
@@ -155,7 +153,7 @@ let ProfileHeaderLabeler = ({
     reset,
   ])
 
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
