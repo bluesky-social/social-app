@@ -141,7 +141,12 @@ function Inner(props: ReportDialogProps) {
       .filter(l => {
         if (!state.selectedOption) return false
         // some reasons ONLY go to Bluesky
-        if (BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)) {
+        const isBskyOnlyReason = BSKY_LABELER_ONLY_REPORT_REASONS.has(
+          state.selectedOption.reason,
+        )
+        // some subjects (chats) only go to Bluesky
+        const isBskyOnlySubject = props.subject.type === 'convoMessage'
+        if (isBskyOnlyReason || isBskyOnlySubject) {
           return l.creator.did === BSKY_LABELER_DID
         }
         const supportedReasonTypes: string[] | undefined = l.reasonTypes
