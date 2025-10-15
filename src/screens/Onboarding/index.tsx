@@ -1,7 +1,10 @@
 import {useMemo, useReducer} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as bcp47Match from 'bcp-47-match'
 
+import {useGate} from '#/lib/statsig/statsig'
+import {useLanguagePrefs} from '#/state/preferences'
 import {
   Layout,
   OnboardingControls,
@@ -12,19 +15,34 @@ import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {Portal} from '#/components/Portal'
+import {ScreenTransition} from '#/components/ScreenTransition'
+import {ENV} from '#/env'
 import {StepSuggestedAccounts} from './StepSuggestedAccounts'
+import {StepSuggestedStarterpacks} from './StepSuggestedStarterpacks'
 
 export function Onboarding() {
   const {_} = useLingui()
+  const gate = useGate()
+
+  const {contentLanguages} = useLanguagePrefs()
+  const probablySpeaksEnglish = useMemo(() => {
+    if (contentLanguages.length === 0) return true
+    return bcp47Match.basicFilter('en', contentLanguages).length > 0
+  }, [contentLanguages])
+
+  // starter packs screen is currently geared towards english-speaking accounts
+  const showSuggestedStarterpacks =
+    ENV !== 'e2e' &&
+    probablySpeaksEnglish &&
+    gate('onboarding_suggested_starterpacks')
 
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    totalSteps: 4,
+    totalSteps: 4 + (showSuggestedStarterpacks ? 1 : 0),
     experiments: {
-      // let's leave this flag logic in for now to avoid rebase churn
-      // TODO: remove this flag logic once we've finished with all experiments -sfn
       onboarding_suggested_accounts: true,
       onboarding_value_prop: true,
+      onboarding_suggested_starterpacks: showSuggestedStarterpacks,
     },
   })
 
@@ -65,12 +83,19 @@ export function Onboarding() {
               [state, dispatch, interestsDisplayNames],
             )}>
             <Layout>
-              {state.activeStep === 'profile' && <StepProfile />}
-              {state.activeStep === 'interests' && <StepInterests />}
-              {state.activeStep === 'suggested-accounts' && (
-                <StepSuggestedAccounts />
-              )}
-              {state.activeStep === 'finished' && <StepFinished />}
+              <ScreenTransition
+                key={state.activeStep}
+                direction={state.stepTransitionDirection}>
+                {state.activeStep === 'profile' && <StepProfile />}
+                {state.activeStep === 'interests' && <StepInterests />}
+                {state.activeStep === 'suggested-accounts' && (
+                  <StepSuggestedAccounts />
+                )}
+                {state.activeStep === 'suggested-starterpacks' && (
+                  <StepSuggestedStarterpacks />
+                )}
+                {state.activeStep === 'finished' && <StepFinished />}
+              </ScreenTransition>
             </Layout>
           </Context.Provider>
         </OnboardingHeaderSlot.Provider>
