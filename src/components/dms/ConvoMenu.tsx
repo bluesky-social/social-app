@@ -18,6 +18,7 @@ import {type ViewStyleProp} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
+import {BlockOrDeleteDialog} from '#/components/dms/BlockOrDeleteDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
@@ -65,6 +66,7 @@ let ConvoMenu = ({
   const leaveConvoControl = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
   const blockedByListControl = Prompt.usePromptControl()
+  const blockOrDeleteControl = Prompt.usePromptControl()
 
   const {listBlocks} = blockInfo
 
@@ -113,14 +115,27 @@ let ConvoMenu = ({
         currentScreen={currentScreen}
       />
       {latestReportableMessage ? (
-        <ReportDialog
-          subject={{
-            view: 'convo',
-            convoId: convo.id,
-            message: latestReportableMessage,
-          }}
-          control={reportControl}
-        />
+        <>
+          <ReportDialog
+            subject={{
+              view: 'convo',
+              convoId: convo.id,
+              message: latestReportableMessage,
+            }}
+            control={reportControl}
+            onClose={() => {
+              blockOrDeleteControl.open()
+            }}
+          />
+          <BlockOrDeleteDialog
+            control={blockOrDeleteControl}
+            currentScreen={currentScreen}
+            params={{
+              convoId: convo.id,
+              message: latestReportableMessage,
+            }}
+          />
+        </>
       ) : (
         <ReportConversationPrompt control={reportControl} />
       )}

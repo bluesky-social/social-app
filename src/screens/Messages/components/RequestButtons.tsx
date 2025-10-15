@@ -25,6 +25,7 @@ import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
+import {BlockOrDeleteDialog} from '#/components/dms/BlockOrDeleteDialog'
 import {CircleX_Stroke2_Corner0_Rounded} from '#/components/icons/CircleX'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons/Person'
@@ -100,6 +101,7 @@ export function RejectMenu({
   }, [queueBlock, leaveConvo, _])
 
   const reportControl = useDialogControl()
+  const blockOrDeleteControl = useDialogControl()
 
   const lastMessage = ChatBskyConvoDefs.isMessageView(convo.lastMessage)
     ? convo.lastMessage
@@ -162,14 +164,27 @@ export function RejectMenu({
         </Menu.Outer>
       </Menu.Root>
       {lastMessage && (
-        <ReportDialog
-          subject={{
-            view: 'convo',
-            convoId: convo.id,
-            message: lastMessage,
-          }}
-          control={reportControl}
-        />
+        <>
+          <ReportDialog
+            subject={{
+              view: 'convo',
+              convoId: convo.id,
+              message: lastMessage,
+            }}
+            control={reportControl}
+            onClose={() => {
+              blockOrDeleteControl.open()
+            }}
+          />
+          <BlockOrDeleteDialog
+            control={blockOrDeleteControl}
+            currentScreen={currentScreen}
+            params={{
+              convoId: convo.id,
+              message: lastMessage,
+            }}
+          />
+        </>
       )}
     </>
   )

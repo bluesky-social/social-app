@@ -60,7 +60,8 @@ export function ReportDialog(
   )
   const onClose = React.useCallback(() => {
     logger.metric('reportDialog:close', {}, {statsig: false})
-  }, [])
+    props.onClose?.()
+  }, [props])
   return (
     <Dialog.Outer control={props.control} onClose={onClose}>
       <Dialog.Handle />
