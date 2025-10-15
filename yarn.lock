@@ -17149,13 +17149,12 @@ react-native-safe-area-context@~5.6.0:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.6.1.tgz#cb4d249ef1a6f7e8fd0cfdfa9764838dffda26b6"
   integrity sha512-/wJE58HLEAkATzhhX1xSr+fostLsK8Q97EfpfMDKo8jlOc1QKESSX/FQrhk7HhQH/2uSaox4Y86sNaI02kteiA==
 
-react-native-screens@~4.16.0:
-  version "4.16.0"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.16.0.tgz#efa42e77a092aa0b5277c9ae41391ea0240e0870"
-  integrity sha512-yIAyh7F/9uWkOzCi1/2FqvNvK6Wb9Y1+Kzn16SuGfN9YFJDTbwlzGRvePCNTOX0recpLQF3kc2FmvMUhyTCH1Q==
+react-native-screens@^4.17.0:
+  version "4.17.0"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.17.0.tgz#961c84eda16eabeaf6477d05096240f0a601e28b"
+  integrity sha512-Ppu5cL+eIWCBbvW/pFu4ci5uADHc5ciE+4Fqts70ooa13Q2GwHg5BEhYnXMEv8al7ww66LD4+TCgounUaFzKVg==
   dependencies:
     react-freeze "^1.0.0"
-    react-native-is-edge-to-edge "^1.2.1"
     warn-once "^0.1.0"
 
 react-native-svg@15.12.1:
