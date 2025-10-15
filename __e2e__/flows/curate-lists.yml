@@ -17,13 +17,12 @@ appId: xyz.blueskyweb.app
     id: "e2eGotoLists"
 - tapOn:
     id: "newUserListBtn"
-- assertVisible:
-    id: "createOrEditListModal"
+- waitForAnimationToEnd
 - tapOn:
-    id: "editNameInput"
+    id: "editListNameInput"
 - inputText: "Good Ppl"
 - tapOn:
-    id: "editDescriptionInput"
+    id: "editListDescriptionInput"
 - inputText: "They good"
 - tapOn: "Save"
 - tapOn: "Save"
@@ -40,12 +39,12 @@ appId: xyz.blueskyweb.app
 - assertVisible:
     id: "createOrEditListModal"
 - tapOn:
-    id: "editNameInput"
+    id: "editListNameInput"
 - eraseText
 - inputText: "Bad Ppl"
 - hideKeyboard
 - tapOn:
-    id: "editDescriptionInput"
+    id: "editListDescriptionInput"
 - eraseText
 - inputText: "They bad"
 - tapOn: "Save"
@@ -62,7 +61,7 @@ appId: xyz.blueskyweb.app
 - assertVisible:
     id: "createOrEditListModal"
 - tapOn:
-    id: "editDescriptionInput"
+    id: "editListDescriptionInput"
 - eraseText
 - tapOn: "Save"
 - tapOn: "Save"
@@ -85,10 +84,10 @@ appId: xyz.blueskyweb.app
 - assertVisible:
     id: "createOrEditListModal"
 - tapOn:
-    id: "editNameInput"
+    id: "editListNameInput"
 - inputText: "Good Ppl"
 - tapOn:
-    id: "editDescriptionInput"
+    id: "editListDescriptionInput"
 - inputText: "They good"
 - tapOn: "Save"
 - tapOn: "Save"

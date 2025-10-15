@@ -30,6 +30,12 @@ appId: xyz.blueskyweb.app
 - assertVisible: "What are your interests?"
 - tapOn:
     id: "onboardingContinue"
+- tapOn:
+    id: "onboardingContinue"
+- tapOn:
+    id: "onboardingContinue"
+- tapOn:
+    id: "onboardingContinue"
 - assertVisible: "You're ready to go!"
 - tapOn:
     id: "onboardingFinish"

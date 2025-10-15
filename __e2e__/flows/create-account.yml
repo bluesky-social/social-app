@@ -3,7 +3,7 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: ""
+      SERVER_PATH: ""
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
@@ -34,7 +34,7 @@ appId: xyz.blueskyweb.app
 - inputText: "e2e-test"
 - extendedWaitUntil:
     visible:
-        id: "handleAvailableCheck"
+      id: "handleAvailableCheck"
 - tapOn:
     id: "nextBtn"
 - assertVisible: "Give your profile a face"

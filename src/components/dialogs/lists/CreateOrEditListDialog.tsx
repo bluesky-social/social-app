@@ -435,7 +435,7 @@ function DialogInner({
               multiline
               label={_(msg`Description`)}
               placeholder={descriptionPlaceholder}
-              testID="editProfileDescriptionInput"
+              testID="editListDescriptionInput"
             />
           </TextField.Root>
           {descriptionTooLong && (
