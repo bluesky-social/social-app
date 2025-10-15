@@ -59,20 +59,48 @@ function DialogInner({
   params: ReportDialogParams
   currentScreen: 'list' | 'conversation'
 }) {
-  const {data: profile} = useProfileQuery({
+  const t = useTheme()
+  const {_} = useLingui()
+  const control = Dialog.useDialogContext()
+  const {
+    data: profile,
+    isLoading,
+    isError,
+  } = useProfileQuery({
     did: params.message.sender.did,
   })
 
-  return profile ? (
+  return isLoading ? (
+    <View style={[a.w_full, a.py_5xl, a.align_center]}>
+      <Loader size="lg" />
+    </View>
+  ) : isError || !profile ? (
+    <View style={[a.w_full, a.gap_lg]}>
+      <View style={[a.justify_center, a.gap_sm]}>
+        <Text style={[a.text_2xl, a.font_semi_bold]}>
+          <Trans>Report submitted</Trans>
+        </Text>
+        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+          <Trans>Our moderation team has received your report.</Trans>
+        </Text>
+      </View>
+
+      <Button
+        label={_(msg`Close`)}
+        onPress={() => control.close()}
+        size={platform({native: 'small', web: 'large'})}
+        color="secondary">
+        <ButtonText>
+          <Trans>Close</Trans>
+        </ButtonText>
+      </Button>
+    </View>
+  ) : (
     <DoneStep
       convoId={params.convoId}
       currentScreen={currentScreen}
       profile={profile}
     />
-  ) : (
-    <View style={[a.w_full, a.py_5xl, a.align_center]}>
-      <Loader />
-    </View>
   )
 }
 
