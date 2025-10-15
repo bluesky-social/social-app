@@ -258,6 +258,7 @@ let PostMenuItems = ({
 
   const onHidePost = () => {
     hidePost({uri: postUri})
+    logEvent('thread:click:hideReplyForMe', {})
   }
 
   const hideInPWI = !!postAuthor.labels?.find(
@@ -338,6 +339,12 @@ let PostMenuItems = ({
         replyUri: postUri,
         action,
       })
+
+      // Log metric only when hiding (not when showing)
+      if (isHide) {
+        logEvent('thread:click:hideReplyForEveryone', {})
+      }
+
       Toast.show(
         isHide
           ? _(msg`Reply was successfully hidden`)
