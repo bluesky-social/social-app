@@ -74,6 +74,8 @@ export function StepSuggestedAccounts() {
   })
 
   const isError = !!error
+  const isEmpty =
+    !isLoading && suggestedUsers && suggestedUsers.actors.length === 0
 
   const skipOnboarding = useCallback(() => {
     onboardDispatch({type: 'finish'})
@@ -168,11 +170,27 @@ export function StepSuggestedAccounts() {
             <Loader size="xl" />
           </View>
         ) : isError ? (
-          <View style={[a.flex_1, a.px_xl, a.pt_5xl]}>
+          <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
             <Admonition type="error">
               <Trans>
                 An error occurred while fetching suggested accounts.
               </Trans>
+            </Admonition>
+          </View>
+        ) : isEmpty ? (
+          <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
+            <Admonition type="apology">
+              {selectedInterest ? (
+                <Trans>
+                  Sorry, we couldn't find any accounts for{' '}
+                  {interestsDisplayNames[selectedInterest]}
+                </Trans>
+              ) : (
+                <Trans>
+                  Sorry, we couldn't find any accounts that match your
+                  interests.
+                </Trans>
+              )}
             </Admonition>
           </View>
         ) : (
