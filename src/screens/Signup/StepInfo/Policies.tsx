@@ -4,41 +4,10 @@ import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {webLinks} from '#/lib/constants'
-import {useGate} from '#/lib/statsig/statsig'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-
-function CommunityGuidelinesNotice({}: {}) {
-  const {_} = useLingui()
-  const gate = useGate()
-
-  if (gate('disable_onboarding_policy_update_notice')) return null
-
-  return (
-    <View style={[a.pt_xs]}>
-      <Admonition type="tip">
-        <Trans>
-          You also agree to{' '}
-          <InlineLinkText
-            label={_(msg`Bluesky's Community Guidelines`)}
-            to={webLinks.communityDeprecated}>
-            Bluesky’s Community Guidelines
-          </InlineLinkText>
-          . An{' '}
-          <InlineLinkText
-            label={_(msg`Bluesky's Updated Community Guidelines`)}
-            to={webLinks.community}>
-            updated version of our Community Guidelines
-          </InlineLinkText>{' '}
-          will take effect on October 15th.
-        </Trans>
-      </Admonition>
-    </View>
-  )
-}
 
 export const Policies = ({
   serviceDescription,
@@ -67,7 +36,6 @@ export const Policies = ({
             This service has not provided terms of service or a privacy policy.
           </Trans>
         </Admonition>
-        <CommunityGuidelinesNotice />
       </View>
     )
   }
@@ -145,8 +113,6 @@ export const Policies = ({
           </Trans>
         </Admonition>
       ) : undefined}
-
-      <CommunityGuidelinesNotice />
     </View>
   )
 }

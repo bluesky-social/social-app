@@ -428,6 +428,7 @@ export function PostThread({uri}: {uri: string}) {
               />
             )
           } else {
+            // return <ThreadItemPostSkeleton index={index} />
             return (
               <ThreadItemPost
                 item={item}
