@@ -280,7 +280,6 @@ export function sortAndAnnotateThreadItems(
              * item).
              */
             const isImplicitlyLastSibling =
-              nextItem === undefined ||
               metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth < metadata.depth
 
@@ -297,7 +296,6 @@ export function sortAndAnnotateThreadItems(
              * of this item)
              */
             metadata.isLastChild =
-              nextItem === undefined ||
               metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth <= metadata.depth
 
