@@ -33,7 +33,7 @@ export function useReportOptions() {
       misleading: {
         key: 'misleading',
         title: _(msg`Misleading`),
-        description: _(msg`Spam, scams, bots, false info, or impersonation`),
+        description: _(msg`Spam or other inauthentic behavior or deception`),
         options: [
           {
             title: _(msg`Spam`),
@@ -63,8 +63,10 @@ export function useReportOptions() {
       },
       sexualAdultContent: {
         key: 'sexualAdultContent',
-        title: _(msg`Sexual and adult content`),
-        description: _(msg`Adult, child or animal sexual abuse`),
+        title: _(msg`Adult content`),
+        description: _(
+          msg`Unlabeled, abusive, or non-consensual adult content`,
+        ),
         options: [
           {
             title: _(msg`Unlabeled adult content`),
@@ -95,9 +97,7 @@ export function useReportOptions() {
       harassmentHate: {
         key: 'harassmentHate',
         title: _(msg`Harassment or hate`),
-        description: _(
-          msg`Targeted attacks, hate speech, or organized harassment`,
-        ),
+        description: _(msg`Abusive or discriminatory behavior`),
         options: [
           {
             title: _(msg`Trolling`),
@@ -121,39 +121,10 @@ export function useReportOptions() {
           },
         ],
       },
-      childSafety: {
-        key: 'childSafety',
-        title: _(msg`Child safety`),
-        description: _(
-          msg`Content harming or endangering minors' safety and wellbeing`,
-        ),
-        options: [
-          {
-            title: _(msg`Child Sexual Abuse Material (CSAM)`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYCSAM,
-          },
-          {
-            title: _(msg`Grooming or predatory behavior`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYGROOM,
-          },
-          {
-            title: _(msg`Privacy violation of a minor`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYPRIVACY,
-          },
-          {
-            title: _(msg`Minor harassment or bullying`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYHARASSMENT,
-          },
-          {
-            title: _(msg`Other child safety issue`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYOTHER,
-          },
-        ],
-      },
       violencePhysicalHarm: {
         key: 'violencePhysicalHarm',
-        title: _(msg`Violence or physical harm`),
-        description: _(msg`Threats, calls for violence, or graphic content`),
+        title: _(msg`Violence`),
+        description: _(msg`Violent or threatening content`),
         options: [
           {
             title: _(msg`Animal welfare`),
@@ -185,9 +156,36 @@ export function useReportOptions() {
           },
         ],
       },
+      childSafety: {
+        key: 'childSafety',
+        title: _(msg`Child safety`),
+        description: _(msg`Harming or endangering minors`),
+        options: [
+          {
+            title: _(msg`Child Sexual Abuse Material (CSAM)`),
+            reason: OzoneReportDefs.REASONCHILDSAFETYCSAM,
+          },
+          {
+            title: _(msg`Grooming or predatory behavior`),
+            reason: OzoneReportDefs.REASONCHILDSAFETYGROOM,
+          },
+          {
+            title: _(msg`Privacy violation of a minor`),
+            reason: OzoneReportDefs.REASONCHILDSAFETYPRIVACY,
+          },
+          {
+            title: _(msg`Minor harassment or bullying`),
+            reason: OzoneReportDefs.REASONCHILDSAFETYHARASSMENT,
+          },
+          {
+            title: _(msg`Other child safety issue`),
+            reason: OzoneReportDefs.REASONCHILDSAFETYOTHER,
+          },
+        ],
+      },
       selfHarm: {
         key: 'selfHarm',
-        title: _(msg`Self-harm`),
+        title: _(msg`Self-harm or dangerous behaviors`),
         description: _(msg`Harmful or high-risk activities`),
         options: [
           {
@@ -214,8 +212,8 @@ export function useReportOptions() {
       },
       ruleBreaking: {
         key: 'ruleBreaking',
-        title: _(msg`Breaking network rules`),
-        description: _(msg`Hacking, stolen content, or prohibited sales`),
+        title: _(msg`Breaking site rules`),
+        description: _(msg`Banned activities or security violations`),
         options: [
           {
             title: _(msg`Hacking or system attacks`),
