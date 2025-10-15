@@ -355,6 +355,8 @@ export function PostControlsSkeleton({
     gtPhone,
   })
 
+  const size = big ? 32 : 28
+
   return (
     <Skele.Row
       style={[
@@ -367,21 +369,21 @@ export function PostControlsSkeleton({
       ]}>
       <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
         <View style={[a.flex_1, a.align_start, {marginLeft: big ? -2 : -6}]}>
-          <Skele.Pill blend size={28} />
+          <Skele.Pill blend size={size} />
         </View>
 
         <View style={[a.flex_1, a.align_start]}>
-          <Skele.Pill blend size={28} />
+          <Skele.Pill blend size={size} />
         </View>
 
         <View style={[a.flex_1, a.align_start]}>
-          <Skele.Pill blend size={28} />
+          <Skele.Pill blend size={size} />
         </View>
       </View>
       <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
-        <Skele.Circle size={28} />
-        <Skele.Circle size={28} />
-        <Skele.Circle size={28} />
+        <Skele.Circle size={size} />
+        <Skele.Circle size={size} />
+        <Skele.Circle size={size} />
       </View>
     </Skele.Row>
   )
