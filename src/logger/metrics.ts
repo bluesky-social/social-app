@@ -481,6 +481,8 @@ export type MetricEvents = {
   'share:press:embed': {}
 
   'thread:click:showOtherReplies': {}
+  'thread:click:hideReplyForMe': {}
+  'thread:click:hideReplyForEveryone': {}
   'thread:preferences:load': {
     [key: string]: any
   }
