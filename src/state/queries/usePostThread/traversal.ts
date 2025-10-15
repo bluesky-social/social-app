@@ -154,6 +154,7 @@ export function sortAndAnnotateThreadItems(
         if (!post.isBlurred || skipModerationHandling) {
           const skip =
             parentMetadata?.isPartOfOPThreadFromRoot &&
+            !parentMetadata.isEndOfOPThreadFromRoot &&
             !metadata?.isPartOfOPThreadFromRoot
 
           if (skip) {
@@ -364,19 +365,25 @@ export function sortAndAnnotateThreadItems(
             ])
 
             /**
-             * If this is the last sibling, and the parent has no unhydrated
-             * replies, then we know we can skip an indent line.
+             * If the parent has no unhydrated replies that may require a
+             * `readMore`, we may be able to skip some of the indent lines.
              */
-            if (
-              metadata.parentMetadata.repliesUnhydrated <= 0 &&
-              metadata.isLastSibling
-            ) {
-              /**
-               * Depth is 2 more than the 0-index of the indent calculation
-               * bc of how we render these. So instead of handling that in the
-               * component, we just adjust that back to 0-index here.
-               */
-              metadata.skippedIndentIndices.add(item.depth - 2)
+            if (metadata.parentMetadata.repliesUnhydrated <= 0) {
+              if (metadata.isLastSibling) {
+                /**
+                 * We should definitely have a "last sibling" at this point.
+                 *
+                 * Note: depth is 2 more than the 0-index of the indent
+                 * calculation bc of how we render these. So instead of
+                 * handling that in the component, we just adjust that back to
+                 * 0-index here.
+                 */
+                metadata.skippedIndentIndices.add(item.depth - 2)
+              } else if (metadata.parentMetadata?.isEndOfOPThreadFromRoot) {
+                metadata.skippedIndentIndices.delete(
+                  metadata.parentMetadata.indent - 1,
+                )
+              }
             }
           }
 

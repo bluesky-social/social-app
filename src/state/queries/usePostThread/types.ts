@@ -170,10 +170,12 @@ export type TraversalMetadata = {
    * of the tree are not considered part of the OP thread.
    */
   isPartOfOPThreadFromRoot: boolean
+  isEndOfOPThreadFromRoot: boolean
   /**
    * Indicates if this item is the root post of the thread.
    */
-  isRoot: boolean
+  isRootPost: boolean
+  endOfOPThreadDepthOffset: number
   /**
    * The depth of the slice immediately following this one, if it exists.
    */

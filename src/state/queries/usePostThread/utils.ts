@@ -63,18 +63,40 @@ export function getTraversalMetadata({
   if (!AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
     throw new Error(`Expected thread item to be a post`)
   }
-  const rootUri = getRootPostAtUri(item.value.post)
-  const rootAuthorDid = rootUri?.host
-  const isRoot = item.uri === rootUri?.toString()
-  const isPartOfOPThreadFromRoot = Boolean(
-    item.value.post.author.did === rootAuthorDid &&
-      (parentMetadata?.isRoot || parentMetadata?.isPartOfOPThreadFromRoot),
+  const rootPostUri = getRootPostAtUri(item.value.post)
+  const isRootPost = item.uri === rootPostUri?.toString()
+  const rootPostAuthorDid = rootPostUri?.host
+  const currentPostAuthorDid = item.value.post.author.did
+  const currentPostIsByRootAuthor = currentPostAuthorDid === rootPostAuthorDid
+  const nextPostAuthorDid =
+    nextItem && AppBskyUnspeccedDefs.isThreadItemPost(nextItem.value)
+      ? nextItem.value.post.author.did
+      : undefined
+
+  const parentIsPartOfOPThreadFromRoot = Boolean(
+    parentMetadata?.isRootPost || parentMetadata?.isPartOfOPThreadFromRoot,
   )
+  const isPartOfOPThreadFromRoot =
+    currentPostIsByRootAuthor && parentIsPartOfOPThreadFromRoot
+  const isEndOfOPThreadFromRoot =
+    isPartOfOPThreadFromRoot && currentPostAuthorDid !== nextPostAuthorDid
+
+  let indent = item.depth
+  if (isPartOfOPThreadFromRoot) {
+    indent = item.depth > 1 ? 1 : 0
+  } else if (parentMetadata?.endOfOPThreadDepthOffset) {
+    indent = item.depth - parentMetadata?.endOfOPThreadDepthOffset
+  }
+
+  // minus 1 so that the next reply under the end of the OP thread is indented by 1
+  const endOfOPThreadDepthOffset = isEndOfOPThreadFromRoot ? item.depth - 1 : 0
+
   const repliesCount = item.value.post.replyCount || 0
   const repliesUnhydrated = item.value.moreReplies || 0
+
   const metadata = {
     depth: item.depth,
-    indent: isPartOfOPThreadFromRoot ? (item.depth < 1 ? 0 : 1) : item.depth,
+    indent,
     /*
      * Unknown until after traversal
      */
@@ -90,7 +112,10 @@ export function getTraversalMetadata({
      */
     isPartOfLastBranchFromDepth: item.depth === 1 ? 1 : undefined,
     isPartOfOPThreadFromRoot,
-    isRoot,
+    isEndOfOPThreadFromRoot,
+    isRootPost,
+    endOfOPThreadDepthOffset:
+      parentMetadata?.endOfOPThreadDepthOffset || endOfOPThreadDepthOffset,
     nextItemDepth: nextItem?.depth,
     parentMetadata,
     prevItemDepth: prevItem?.depth,
