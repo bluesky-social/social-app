@@ -564,31 +564,33 @@ export const ComposePost = ({
       onPostSuccess?.(postSuccessData)
     }
     onClose()
-    Toast.show(
-      <Toast.Outer>
-        <Toast.Icon />
-        <Toast.Text>
-          {thread.posts.length > 1
-            ? _(msg`Your posts were sent`)
-            : replyTo
-              ? _(msg`Your reply was sent`)
-              : _(msg`Your post was sent`)}
-        </Toast.Text>
-        {postUri && (
-          <Toast.Action
-            label={_(msg`View post`)}
-            onPress={() => {
-              const {host: name, rkey} = new AtUri(postUri)
-              navigation.navigate('PostThread', {name, rkey})
-            }}>
-            <Trans context="Action to view the post the user just created">
-              View
-            </Trans>
-          </Toast.Action>
-        )}
-      </Toast.Outer>,
-      {type: 'success'},
-    )
+    setTimeout(() => {
+      Toast.show(
+        <Toast.Outer>
+          <Toast.Icon />
+          <Toast.Text>
+            {thread.posts.length > 1
+              ? _(msg`Your posts were sent`)
+              : replyTo
+                ? _(msg`Your reply was sent`)
+                : _(msg`Your post was sent`)}
+          </Toast.Text>
+          {postUri && (
+            <Toast.Action
+              label={_(msg`View post`)}
+              onPress={() => {
+                const {host: name, rkey} = new AtUri(postUri)
+                navigation.navigate('PostThread', {name, rkey})
+              }}>
+              <Trans context="Action to view the post the user just created">
+                View
+              </Trans>
+            </Toast.Action>
+          )}
+        </Toast.Outer>,
+        {type: 'success'},
+      )
+    }, 500)
   }, [
     _,
     agent,
