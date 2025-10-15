@@ -123,7 +123,7 @@ let ConvoMenu = ({
               message: latestReportableMessage,
             }}
             control={reportControl}
-            onClose={() => {
+            onAfterSubmit={() => {
               blockOrDeleteControl.open()
             }}
           />

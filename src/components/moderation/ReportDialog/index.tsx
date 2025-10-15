@@ -60,8 +60,7 @@ export function ReportDialog(
   )
   const onClose = React.useCallback(() => {
     logger.metric('reportDialog:close', {}, {statsig: false})
-    props.onClose?.()
-  }, [props])
+  }, [])
   return (
     <Dialog.Outer control={props.control} onClose={onClose}>
       <Dialog.Handle />
@@ -191,7 +190,9 @@ function Inner(props: ReportDialogProps) {
       )
       // give time for user feedback
       setTimeout(() => {
-        props.control.close()
+        props.control.close(() => {
+          props.onAfterSubmit?.()
+        })
       }, 1e3)
     } catch (e: any) {
       logger.metric('reportDialog:failure', {}, {statsig: false})

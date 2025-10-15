@@ -172,7 +172,7 @@ export function RejectMenu({
               message: lastMessage,
             }}
             control={reportControl}
-            onClose={() => {
+            onAfterSubmit={() => {
               blockOrDeleteControl.open()
             }}
           />

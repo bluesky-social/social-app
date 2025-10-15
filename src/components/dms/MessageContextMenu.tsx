@@ -180,7 +180,7 @@ export let MessageContextMenu = ({
           convoId: convo.convo.id,
           message,
         }}
-        onClose={() => {
+        onAfterSubmit={() => {
           blockOrDeleteControl.open()
         }}
       />
