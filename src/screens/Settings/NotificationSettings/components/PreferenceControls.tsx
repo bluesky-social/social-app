@@ -54,7 +54,9 @@ export function Inner({
 }: {
   name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
   syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference: AppBskyNotificationDefs.Preference | FilterablePreference
+  preference:
+    | AppBskyNotificationDefs.Preference
+    | AppBskyNotificationDefs.FilterablePreference
   allowDisableInApp: boolean
 }) {
   const t = useTheme()
