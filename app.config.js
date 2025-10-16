@@ -19,6 +19,7 @@ module.exports = function (_config) {
     process.env.EXPO_PUBLIC_ENV === 'development' ||
     (!IS_TESTFLIGHT && !IS_PRODUCTION)
 
+  const APP_GROUP = IS_DEV ? 'group.dev.app.bsky' : 'group.app.bsky'
   const ASSOCIATED_DOMAINS = [
     'applinks:bsky.app',
     'applinks:staging.bsky.app',
@@ -115,7 +116,7 @@ module.exports = function (_config) {
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
-          'com.apple.security.application-groups': 'group.app.bsky',
+          'com.apple.security.application-groups': APP_GROUP,
         },
         privacyManifests: {
           NSPrivacyAccessedAPITypes: [
@@ -383,9 +384,7 @@ module.exports = function (_config) {
                       ? 'dev.xyz.blueskyweb.app.Share-with-Bluesky'
                       : 'xyz.blueskyweb.app.Share-with-Bluesky',
                     entitlements: {
-                      'com.apple.security.application-groups': [
-                        'group.app.bsky',
-                      ],
+                      'com.apple.security.application-groups': [APP_GROUP],
                     },
                   },
                   {
@@ -394,9 +393,7 @@ module.exports = function (_config) {
                       ? 'dev.xyz.blueskyweb.app.BlueskyNSE'
                       : 'xyz.blueskyweb.app.BlueskyNSE',
                     entitlements: {
-                      'com.apple.security.application-groups': [
-                        'group.app.bsky',
-                      ],
+                      'com.apple.security.application-groups': [APP_GROUP],
                     },
                   },
                   {
