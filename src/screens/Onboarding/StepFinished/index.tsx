@@ -330,6 +330,7 @@ function ValueProposition({
             </Button>
           )}
           <Button
+            testID="onboardingFinish"
             disabled={saving}
             key={state.activeStep} // remove focus state on nav
             color="primary"
