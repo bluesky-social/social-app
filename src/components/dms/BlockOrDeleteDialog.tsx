@@ -203,7 +203,7 @@ function DoneStep({
         <Button
           label={_(msg`Close`)}
           onPress={() => control.close()}
-          size={platform({native: 'small', web: 'large'})}
+          size="large"
           color="secondary">
           <ButtonText>
             <Trans>Close</Trans>
