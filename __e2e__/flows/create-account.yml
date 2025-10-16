@@ -25,7 +25,10 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "passwordInput"
 - inputText: "hunter22"
-- hideKeyboard
+- tapOn:
+    # hideKeyboard on ios is borked
+    # https://docs.maestro.dev/troubleshooting/known-issues#hidekeyboard-command-is-flaky
+    text: "Your account"
 - tapOn:
     id: "nextBtn"
 - tapOn:
