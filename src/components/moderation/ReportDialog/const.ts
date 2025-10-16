@@ -1,5 +1,7 @@
-import * as RootReportDefs from '@atproto/api/dist/client/types/com/atproto/moderation/defs'
-import * as OzoneReportDefs from '@atproto/api/dist/client/types/tools/ozone/report/defs'
+import {
+  ComAtprotoModerationDefs as RootReportDefs,
+  ToolsOzoneReportDefs as OzoneReportDefs,
+} from '@atproto/api'
 
 export const DMCA_LINK = 'https://bsky.social/about/support/copyright'
 export const SUPPORT_PAGE = 'https://bsky.social/about/support'
