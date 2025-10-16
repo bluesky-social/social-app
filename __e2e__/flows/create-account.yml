@@ -3,7 +3,7 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: ""
+      SERVER_PATH: ""
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
@@ -25,7 +25,10 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "passwordInput"
 - inputText: "hunter22"
-- hideKeyboard
+- tapOn:
+    # hideKeyboard on ios is borked
+    # https://docs.maestro.dev/troubleshooting/known-issues#hidekeyboard-command-is-flaky
+    text: "Your account"
 - tapOn:
     id: "nextBtn"
 - tapOn:
@@ -34,7 +37,7 @@ appId: xyz.blueskyweb.app
 - inputText: "e2e-test"
 - extendedWaitUntil:
     visible:
-        id: "handleAvailableCheck"
+      id: "handleAvailableCheck"
 - tapOn:
     id: "nextBtn"
 - assertVisible: "Give your profile a face"
