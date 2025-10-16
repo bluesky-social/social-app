@@ -38,7 +38,7 @@ export const BlockOrDeleteDialog = memo(function BlockOrDeleteDialogInner({
 }): React.ReactNode {
   const {_} = useLingui()
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(
