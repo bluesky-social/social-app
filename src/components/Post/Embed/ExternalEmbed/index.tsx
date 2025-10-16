@@ -97,9 +97,7 @@ export const ExternalEmbed = ({
           ]}>
           {imageUri && !embedPlayerParams ? (
             <Image
-              style={{
-                aspectRatio: 1.91,
-              }}
+              style={[a.aspect_card]}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
             />

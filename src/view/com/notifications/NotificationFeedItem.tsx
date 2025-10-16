@@ -66,7 +66,7 @@ import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -307,7 +307,7 @@ let NotificationFeedItem = ({
     ) : (
       <Trans>{firstAuthorLink} reposted your post</Trans>
     )
-    icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
+    icon = <RepostIcon size="xl" style={{color: t.palette.positive_500}} />
   } else if (item.type === 'follow') {
     let isFollowBack = false
 
@@ -519,7 +519,7 @@ let NotificationFeedItem = ({
     ) : (
       <Trans>{firstAuthorLink} reposted your repost</Trans>
     )
-    icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
+    icon = <RepostIcon size="xl" style={{color: t.palette.positive_500}} />
   } else if (item.type === 'subscribed-post') {
     const postsCount = 1 + (item.additional?.length || 0)
     a11yLabel = hasMultipleAuthors
@@ -613,7 +613,7 @@ let NotificationFeedItem = ({
       }}>
       {({hovered}) => (
         <>
-          <SubtleWebHover hover={hovered} />
+          <SubtleHover hover={hovered} />
           <View style={[styles.layoutIcon, a.pr_sm]}>
             {/* TODO: Prevent conditional rendering and move toward composable
           notifications for clearer accessibility labeling */}

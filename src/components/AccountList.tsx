@@ -172,7 +172,7 @@ function AccountItem({
           </View>
 
           {isCurrentAccount ? (
-            <Check size="sm" style={[{color: t.palette.positive_600}]} />
+            <Check size="sm" style={[{color: t.palette.positive_500}]} />
           ) : (
             <Chevron size="sm" style={[t.atoms.text]} />
           )}

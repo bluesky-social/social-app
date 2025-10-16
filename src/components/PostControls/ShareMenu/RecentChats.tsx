@@ -24,7 +24,6 @@ import type * as bsky from '#/types/bsky'
 
 export function RecentChats({postUri}: {postUri: string}) {
   const control = useDialogContext()
-  const {_} = useLingui()
   const {currentAccount} = useSession()
   const {data} = useListConvosQuery({status: 'accepted'})
   const convos = data?.pages[0]?.convos?.slice(0, 10)

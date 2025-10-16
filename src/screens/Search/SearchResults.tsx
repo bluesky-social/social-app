@@ -30,12 +30,14 @@ let SearchResults = ({
   activeTab,
   onPageSelected,
   headerHeight,
+  initialPage = 0,
 }: {
   query: string
   queryWithParams: string
   activeTab: number
   onPageSelected: (page: number) => void
   headerHeight: number
+  initialPage?: number
 }): React.ReactNode => {
   const {_} = useLingui()
 
@@ -89,7 +91,7 @@ let SearchResults = ({
           <TabBar items={sections.map(section => section.title)} {...props} />
         </Layout.Center>
       )}
-      initialPage={0}>
+      initialPage={initialPage}>
       {sections.map((section, i) => (
         <View key={i}>{section.component}</View>
       ))}

@@ -59,8 +59,12 @@
     "dateCreated": "{{ profileView.CreatedAt }}",
     "mainEntity": {
       "@type": "Person",
+      {%- if profileView.DisplayName %}
       "name": "{{ profileView.DisplayName }}",
       "alternateName": "@{{ profileView.Handle }}",
+      {% else %}
+      "name": "@{{ profileView.Handle }}",
+      {% endif -%}
       "identifier": "{{ profileView.Did }}",
       "description": "{{ profileView.Description }}",
       "image": "{{ profileView.Avatar }}",

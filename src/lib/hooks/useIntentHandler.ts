@@ -51,7 +51,7 @@ export function useIntentHandler() {
       }
 
       const urlp = new URL(url)
-      const [_, intent, intentType] = urlp.pathname.split('/')
+      const [__, intent, intentType] = urlp.pathname.split('/')
 
       // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
       // intent check. On web, we have to check the first part of the path since we have an actual hostname

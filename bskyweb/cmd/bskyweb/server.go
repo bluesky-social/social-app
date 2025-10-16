@@ -458,6 +458,18 @@ func (srv *Server) WebHome(c echo.Context) error {
 	return c.Render(http.StatusOK, "home.html", data)
 }
 
+// Posts that include these labels will not have embeds passed to the metadata
+// template.
+var hideEmbedLabels = map[string]bool{
+	"nudity":            true,
+	"porn":              true,
+	"sexual":            true,
+	"sexual-figurative": true,
+	"graphic-media":     true,
+	"self-harm":         true,
+	"sensitive":         true,
+}
+
 func (srv *Server) WebPost(c echo.Context) error {
 	ctx := c.Request().Context()
 	data := srv.NewTemplateContext()
@@ -512,19 +524,15 @@ func (srv *Server) WebPost(c echo.Context) error {
 	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
 	data["postView"] = postView
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-	if postView.Embed != nil {
-		if postView.Embed.EmbedImages_View != nil {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
-			}
-			data["imgThumbUrls"] = thumbUrls
-		} else if postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
-			}
-			data["imgThumbUrls"] = thumbUrls
+
+	// If any undesirable labels are set, the embed will not be included in
+	// metadata
+	isEmbedHidden := false
+	for _, label := range postView.Labels {
+		isNeg := label.Neg != nil && *label.Neg
+		if hideEmbedLabels[label.Val] && !isNeg {
+			isEmbedHidden = true
+			break
 		}
 	}
 
@@ -532,6 +540,34 @@ func (srv *Server) WebPost(c echo.Context) error {
 		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
 		if ok {
 			data["postText"] = ExpandPostText(postRecord)
+
+			if !isEmbedHidden && postRecord.Labels != nil && postRecord.Labels.LabelDefs_SelfLabels != nil {
+				for _, label := range postRecord.Labels.LabelDefs_SelfLabels.Values {
+					if hideEmbedLabels[label.Val] {
+						isEmbedHidden = true
+						break
+					}
+				}
+			}
+		}
+	}
+
+	if postView.Embed != nil && !isEmbedHidden {
+		hasImages := postView.Embed.EmbedImages_View != nil
+		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
+
+		if hasImages {
+			var thumbUrls []string
+			for i := range postView.Embed.EmbedImages_View.Images {
+				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
+			}
+			data["imgThumbUrls"] = thumbUrls
+		} else if hasMedia {
+			var thumbUrls []string
+			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
+				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
+			}
+			data["imgThumbUrls"] = thumbUrls
 		}
 	}
 

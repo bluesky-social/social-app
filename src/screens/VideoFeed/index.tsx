@@ -93,6 +93,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/i
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
 import {Leaf_Stroke2_Corner0_Rounded as LeafIcon} from '#/components/icons/Leaf'
+import {KeepAwake} from '#/components/KeepAwake'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
@@ -150,6 +151,7 @@ export function VideoFeed({}: NativeStackScreenProps<
   return (
     <ThemeProvider theme="dark">
       <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
+        <KeepAwake />
         <SystemBars style={{statusBar: 'light', navigationBar: 'light'}} />
         <View
           style={[

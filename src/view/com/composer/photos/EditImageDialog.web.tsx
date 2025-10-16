@@ -116,7 +116,6 @@ function EditImageInner({
   }) {
   const t = useTheme()
   const [isDragging, setIsDragging] = useState(false)
-  const {_} = useLingui()
   const control = Dialog.useDialogContext()
 
   const source = image.source

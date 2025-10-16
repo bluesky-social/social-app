@@ -11,6 +11,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {
   invalidateActorStarterPacksWithMembershipQuery,
@@ -47,7 +48,6 @@ export function StarterPackDialog({
   targetDid,
   enabled,
 }: StarterPackDialogProps) {
-  const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const requireEmailVerification = useRequireEmailVerification()
 
@@ -295,6 +295,7 @@ function StarterPackItem({
     if (!starterPack.list?.uri || isPendingRefresh) return
 
     const listUri = starterPack.list.uri
+    const starterPackUri = starterPack.uri
 
     setIsPendingRefresh(true)
 
@@ -303,6 +304,7 @@ function StarterPackItem({
         listUri: listUri,
         actorDid: targetDid,
       })
+      logger.metric('starterPack:addUser', {starterPack: starterPackUri})
     } else {
       if (!starterPackWithMembership.listItem?.uri) {
         console.error('Cannot remove: missing membership URI')
@@ -314,6 +316,7 @@ function StarterPackItem({
         actorDid: targetDid,
         membershipUri: starterPackWithMembership.listItem.uri,
       })
+      logger.metric('starterPack:removeUser', {starterPack: starterPackUri})
     }
   }
 

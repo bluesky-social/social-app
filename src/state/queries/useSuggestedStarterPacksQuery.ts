@@ -9,11 +9,18 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
-export const createSuggestedStarterPacksQueryKey = () => [
+export const createSuggestedStarterPacksQueryKey = (interests?: string[]) => [
   'suggested-starter-packs',
+  interests?.join(','),
 ]
 
-export function useSuggestedStarterPacksQuery({enabled}: {enabled?: boolean}) {
+export function useSuggestedStarterPacksQuery({
+  enabled,
+  overrideInterests,
+}: {
+  enabled?: boolean
+  overrideInterests?: string[]
+}) {
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
   const contentLangs = getContentLanguages().join(',')
@@ -21,13 +28,17 @@ export function useSuggestedStarterPacksQuery({enabled}: {enabled?: boolean}) {
   return useQuery({
     enabled: !!preferences && enabled !== false,
     staleTime: STALE.MINUTES.THREE,
-    queryKey: createSuggestedStarterPacksQueryKey(),
-    async queryFn() {
+    queryKey: createSuggestedStarterPacksQueryKey(overrideInterests),
+    queryFn: async () => {
       const {data} = await agent.app.bsky.unspecced.getSuggestedStarterPacks(
         undefined,
         {
           headers: {
-            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+            ...createBskyTopicsHeader(
+              overrideInterests
+                ? overrideInterests.join(',')
+                : aggregateUserInterests(preferences),
+            ),
             'Accept-Language': contentLangs,
           },
         },

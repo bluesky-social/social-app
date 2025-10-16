@@ -17,7 +17,13 @@ import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {PostLanguageSelectDialog} from './PostLanguageSelectDialog'
 
-export function PostLanguageSelect() {
+export function PostLanguageSelect({
+  currentLanguages: currentLanguagesProp,
+  onSelectLanguage,
+}: {
+  currentLanguages?: string[]
+  onSelectLanguage?: (language: string) => void
+}) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
@@ -27,6 +33,9 @@ export function PostLanguageSelect() {
     new Set([...langPrefs.postLanguageHistory, langPrefs.postLanguage]),
   )
 
+  const currentLanguages =
+    currentLanguagesProp ?? toPostLanguages(langPrefs.postLanguage)
+
   if (
     dedupedHistory.length === 1 &&
     dedupedHistory[0] === langPrefs.postLanguage
@@ -34,7 +43,10 @@ export function PostLanguageSelect() {
     return (
       <>
         <LanguageBtn onPress={languageDialogControl.open} />
-        <PostLanguageSelectDialog control={languageDialogControl} />
+        <PostLanguageSelectDialog
+          control={languageDialogControl}
+          currentLanguages={currentLanguages}
+        />
       </>
     )
   }
@@ -43,7 +55,9 @@ export function PostLanguageSelect() {
     <>
       <Menu.Root>
         <Menu.Trigger label={_(msg`Select post language`)}>
-          {({props}) => <LanguageBtn {...props} />}
+          {({props}) => (
+            <LanguageBtn currentLanguages={currentLanguages} {...props} />
+          )}
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
@@ -56,10 +70,13 @@ export function PostLanguageSelect() {
                 <Menu.Item
                   key={historyItem}
                   label={_(msg`Select ${langName}`)}
-                  onPress={() => setLangPrefs.setPostLanguage(historyItem)}>
+                  onPress={() => {
+                    setLangPrefs.setPostLanguage(historyItem)
+                    onSelectLanguage?.(historyItem)
+                  }}>
                   <Menu.ItemText>{langName}</Menu.ItemText>
                   <Menu.ItemRadio
-                    selected={historyItem === langPrefs.postLanguage}
+                    selected={currentLanguages.includes(historyItem)}
                   />
                 </Menu.Item>
               )
@@ -77,17 +94,26 @@ export function PostLanguageSelect() {
         </Menu.Outer>
       </Menu.Root>
 
-      <PostLanguageSelectDialog control={languageDialogControl} />
+      <PostLanguageSelectDialog
+        control={languageDialogControl}
+        currentLanguages={currentLanguages}
+        onSelectLanguage={onSelectLanguage}
+      />
     </>
   )
 }
 
-function LanguageBtn(props: Omit<ButtonProps, 'label' | 'children'>) {
+function LanguageBtn(
+  props: Omit<ButtonProps, 'label' | 'children'> & {
+    currentLanguages?: string[]
+  },
+) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const t = useTheme()
 
   const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
+  const currentLanguages = props.currentLanguages ?? postLanguagesPref
 
   return (
     <Button
@@ -106,7 +132,7 @@ function LanguageBtn(props: Omit<ButtonProps, 'label' | 'children'>) {
       {({pressed, hovered}) => {
         const color =
           pressed || hovered ? t.palette.primary_300 : t.palette.primary_500
-        if (postLanguagesPref.length > 0) {
+        if (currentLanguages.length > 0) {
           return (
             <Text
               style={[
@@ -117,7 +143,7 @@ function LanguageBtn(props: Omit<ButtonProps, 'label' | 'children'>) {
                 {maxWidth: 100},
               ]}
               numberOfLines={1}>
-              {postLanguagesPref
+              {currentLanguages
                 .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
                 .join(', ')}
             </Text>

@@ -258,7 +258,7 @@ export function InterestTabs({
               t.atoms.border_contrast_low,
               t.atoms.bg,
               a.h_full,
-              {aspectRatio: 1},
+              a.aspect_square,
               a.rounded_full,
             ]}>
             <ButtonIcon icon={ArrowLeft} />
@@ -292,7 +292,7 @@ export function InterestTabs({
               t.atoms.border_contrast_low,
               t.atoms.bg,
               a.h_full,
-              {aspectRatio: 1},
+              a.aspect_square,
               a.rounded_full,
             ]}>
             <ButtonIcon icon={ArrowRight} />

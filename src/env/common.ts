@@ -21,12 +21,12 @@ export const ENV: string = process.env.EXPO_PUBLIC_ENV
 export const IS_TESTFLIGHT = ENV === 'testflight'
 
 /**
- * Indicates whether the app is __DEV__
+ * Indicates whether the app is `__DEV__`
  */
 export const IS_DEV = __DEV__
 
 /**
- * Indicates whether the app is __DEV__ or TestFlight
+ * Indicates whether the app is `__DEV__` or TestFlight
  */
 export const IS_INTERNAL = IS_DEV || IS_TESTFLIGHT
 
