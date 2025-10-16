@@ -18,6 +18,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "newUserListBtn"
 - waitForAnimationToEnd
+- assertVisible: "Create user list"
 - tapOn:
     id: "editListNameInput"
 - inputText: "Good Ppl"
@@ -25,19 +26,15 @@ appId: xyz.blueskyweb.app
     id: "editListDescriptionInput"
 - inputText: "They good"
 - tapOn: "Save"
-- tapOn: "Save"
-- assertNotVisible:
-    id: "createOrEditListModal"
+- assertNotVisible: "Create user list"
 - tapOn: "People"
 - assertVisible: "Good Ppl"
 - assertVisible: "They good"
 
 - tapOn:
-    label: "Edit display name and description via the edit curatelist modal"
-    point: "90%,9%"
+    id: "moreOptionsBtn"
 - tapOn: "Edit list details"
-- assertVisible:
-    id: "createOrEditListModal"
+- assertVisible: "Edit user list"
 - tapOn:
     id: "editListNameInput"
 - eraseText
@@ -48,31 +45,24 @@ appId: xyz.blueskyweb.app
 - eraseText
 - inputText: "They bad"
 - tapOn: "Save"
-- tapOn: "Save"
-- assertNotVisible:
-    id: "createOrEditListModal"
+- assertNotVisible: "Edit user list"
 - assertVisible: Bad Ppl
 - assertVisible: They bad
 
 - tapOn:
-    label: "Remove description via the edit curatelist modal"
-    point: "90%,9%"
+    id: "moreOptionsBtn"
 - tapOn: "Edit list details"
-- assertVisible:
-    id: "createOrEditListModal"
+- assertVisible: "Edit user list"
 - tapOn:
     id: "editListDescriptionInput"
 - eraseText
 - tapOn: "Save"
-- tapOn: "Save"
-- assertNotVisible:
-    id: "createOrEditListModal"
+- assertNotVisible: "Edit user list"
 - assertNotVisible:
     id: "listDescription"
 
 - tapOn:
-    label: "Delete the curatelist"
-    point: "90%,9%"
+    id: "moreOptionsBtn"
 - tapOn: "Delete List"
 - tapOn:
     id: "confirmBtn"
@@ -81,8 +71,7 @@ appId: xyz.blueskyweb.app
     id: "newUserListBtn"
 - tapOn:
     id: "newUserListBtn"
-- assertVisible:
-    id: "createOrEditListModal"
+- assertVisible: "Create user list"
 - tapOn:
     id: "editListNameInput"
 - inputText: "Good Ppl"
@@ -90,9 +79,7 @@ appId: xyz.blueskyweb.app
     id: "editListDescriptionInput"
 - inputText: "They good"
 - tapOn: "Save"
-- tapOn: "Save"
-- assertNotVisible:
-    id: "createOrEditListModal"
+- assertNotVisible: "Create user list"
 - tapOn: "People"
 - assertVisible: "Good Ppl"
 - assertVisible: "They good"
