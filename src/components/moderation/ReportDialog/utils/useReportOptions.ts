@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import * as OzoneReportDefs from '@atproto/api/dist/client/types/tools/ozone/report/defs'
+import {ToolsOzoneReportDefs as OzoneReportDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
