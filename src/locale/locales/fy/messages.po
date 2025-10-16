@@ -877,7 +877,7 @@ msgid "alice@example.com"
 msgstr "alice@example.com"
 
 #. the default tab in the interests tab bar
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:153
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
 #: src/view/screens/Notifications.tsx:88
 msgid "All"
 msgstr "Alles"
@@ -990,8 +990,8 @@ msgstr "Der is in flater bard"
 msgid "An error occurred while compressing the video."
 msgstr "Der is in flater bard wylst it komprimearjen fan de fideo."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:175
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:75
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:168
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:66
 msgid "An error occurred while fetching suggested accounts."
 msgstr ""
 
@@ -1825,7 +1825,7 @@ msgstr "Persoanen kieze"
 msgid "Choose Post Languages"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:424
+#: src/screens/Onboarding/StepFinished/index.tsx:425
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "De algoritmen kieze dy’t dyn personalisearre feeds oanstjoere."
 
@@ -2051,8 +2051,8 @@ msgstr "Strips"
 msgid "Community Guidelines"
 msgstr "Mienskipsrjochtlinen"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:339
-#: src/screens/Onboarding/StepFinished/index.tsx:437
+#: src/screens/Onboarding/StepFinished/index.tsx:340
+#: src/screens/Onboarding/StepFinished/index.tsx:438
 msgid "Complete onboarding and start using your account"
 msgstr "Foltôgje de yntroduksje en begjin mei it brûken fan dyn account"
 
@@ -2207,8 +2207,8 @@ msgstr "Kontekstmenu-eftergrûn, klik om it menu te sluten."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:94
 #: src/screens/Onboarding/StepProfile/index.tsx:280
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:253
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:123
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 msgid "Continue"
 msgstr "Trochgean"
 
@@ -2226,8 +2226,8 @@ msgstr "Fierder lêze…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:91
 #: src/screens/Onboarding/StepProfile/index.tsx:277
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:250
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:120
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:111
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
 msgstr "Trochgean nei folgjende stap"
@@ -3456,7 +3456,7 @@ msgstr "Berjocht fuortsmiten mislearre, probearje it opnij"
 msgid "Failed to delete starter pack"
 msgstr "Fuortsmiten fan it startpakket is mislearre"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:125
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:118
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr ""
 
@@ -3700,8 +3700,8 @@ msgstr "Filter wa’t kieze kin meldingen foar dyn aktiviteit te ûntfangen"
 msgid "Filter who you receive notifications from"
 msgstr "Filter fan wa’tsto meldingen ûntfangst"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:345
-#: src/screens/Onboarding/StepFinished/index.tsx:440
+#: src/screens/Onboarding/StepFinished/index.tsx:346
+#: src/screens/Onboarding/StepFinished/index.tsx:441
 msgid "Finalizing"
 msgstr "Foltôgje"
 
@@ -3756,7 +3756,7 @@ msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "Plat wyt"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:420
+#: src/screens/Onboarding/StepFinished/index.tsx:421
 msgid "Flexible"
 msgstr "Fleksibel"
 
@@ -3798,7 +3798,7 @@ msgstr "7 accounts folgje"
 msgid "Follow account"
 msgstr "Account folgje"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:242
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:235
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
 #: src/screens/StarterPack/StarterPackScreen.tsx:438
@@ -3806,7 +3806,7 @@ msgstr "Account folgje"
 msgid "Follow all"
 msgstr "Alle folgje"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:239
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:232
 msgid "Follow all accounts"
 msgstr ""
 
@@ -3822,7 +3822,7 @@ msgctxt "action"
 msgid "Follow back"
 msgstr "Weromfolgje"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:120
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:113
 msgid "Followed all accounts!"
 msgstr ""
 
@@ -3923,7 +3923,7 @@ msgstr "Om feilichheidsredenen kinsto dit net mear besjen. Do moatst in nij app-
 msgid "For the best experience, we recommend using the theme font."
 msgstr "Foar de beste ûnderfining riede wy dy oan it temalettertype te brûken."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:300
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:293
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:91
 msgid "For You"
 msgstr "Foar dy"
@@ -4817,8 +4817,8 @@ msgstr "Lit my kieze"
 msgid "Let's get your password reset!"
 msgstr "Litte wy dyn wachtwurd opnij ynstelle!"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:347
-#: src/screens/Onboarding/StepFinished/index.tsx:440
+#: src/screens/Onboarding/StepFinished/index.tsx:348
+#: src/screens/Onboarding/StepFinished/index.tsx:441
 msgid "Let's go!"
 msgstr "Los!"
 
@@ -5464,7 +5464,7 @@ msgstr "Moatst melding meitsje fan in skeining fan it auteursrjocht, in wetlike 
 msgid "Need to report a copyright violation?"
 msgstr "Wolsto in ynbreuk op it auteursrjocht melde?"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:408
+#: src/screens/Onboarding/StepFinished/index.tsx:409
 msgid "Never lose access to your followers or data."
 msgstr "Ferlies nea tagong ta dyn folgers of gegevens."
 
@@ -5591,8 +5591,8 @@ msgstr "Nijs"
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
-#: src/screens/Onboarding/StepFinished/index.tsx:340
-#: src/screens/Onboarding/StepFinished/index.tsx:349
+#: src/screens/Onboarding/StepFinished/index.tsx:341
+#: src/screens/Onboarding/StepFinished/index.tsx:350
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -5947,7 +5947,7 @@ msgstr "Och heden! Der is wat misgien!"
 msgid "Oops!"
 msgstr "Wûpsty!"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:404
+#: src/screens/Onboarding/StepFinished/index.tsx:405
 msgid "Open"
 msgstr "Iepenje"
 
@@ -6678,7 +6678,7 @@ msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profyl bywurke"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:390
+#: src/screens/Onboarding/StepFinished/index.tsx:391
 msgid "Public"
 msgstr "Iepenbier"
 
@@ -7369,10 +7369,10 @@ msgstr "Werhellet de lêste aksje, dêr’t in flater by barde"
 #: src/screens/Messages/ChatList.tsx:292
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:219
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:216
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:98
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:101
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:209
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:212
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:89
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:92
 #: src/screens/PostThread/components/ThreadError.tsx:80
 #: src/screens/PostThread/components/ThreadError.tsx:86
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -8227,8 +8227,8 @@ msgstr "Fergelykbere accounts"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:306
 #: src/screens/Onboarding/StepFinished/index.tsx:328
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:229
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:111
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:222
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:102
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Skip"
 msgstr "Oerslaan"
@@ -8238,10 +8238,10 @@ msgstr "Oerslaan"
 msgid "Skip introduction and start using your account"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:226
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:108
-msgid "Skip this flow"
-msgstr "Dizze flow oerslaan"
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:99
+msgid "Skip to next step"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
@@ -8318,7 +8318,7 @@ msgstr "Der is wat misgien. Probearje it nochris."
 msgid "Something wrong? Let us know."
 msgstr "Klopt er wat net? Lit it ús witte."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:183
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
@@ -8501,8 +8501,8 @@ msgstr "Foarstelde accounts"
 #. Accounts suggested to the user for them to follow
 #. Accounts suggested to the user for them to follow
 #: src/components/FeedInterstitials.tsx:385
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:48
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:129
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:39
 msgid "Suggested for you"
 msgstr "Foarsteld foar dy"
 
@@ -10066,7 +10066,7 @@ msgstr "Wy wurkje gear mei <0>KWS</0> om te kontrolearjen oftsto in folwoeksene 
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "Wy hawwe in nije ferifikaasje-e-mailberjocht ferstjoerd nei <0>{0}</0>."
 
-#: src/screens/Onboarding/StepFinished/index.tsx:382
+#: src/screens/Onboarding/StepFinished/index.tsx:383
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "Wy hoopje datsto in geweldige tiid hast. Ferjit net, Bluesky is:"
 
@@ -10708,7 +10708,7 @@ msgstr "Do bliuwst op de hichte fia dizze feeds"
 msgid "You're in line"
 msgstr "Do stiest yn de rige"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:379
+#: src/screens/Onboarding/StepFinished/index.tsx:380
 msgid "You're ready to go!"
 msgstr "Do bist de klear foar!"
 
@@ -10880,7 +10880,7 @@ msgstr ""
 msgid "Your posts were sent"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:394
+#: src/screens/Onboarding/StepFinished/index.tsx:395
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Dyn berjochten, mei-’k-wol-oers en blokkearringen binne iepenbier. Negearringen binne privee."
 
@@ -10920,4 +10920,3 @@ msgstr "Dyn selektearre ynteressen helpe ús dy ynhâld dy’t dy ynteressearret
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Dyn ferifikaasjes"
-

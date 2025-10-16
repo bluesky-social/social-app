@@ -877,7 +877,7 @@ msgid "alice@example.com"
 msgstr "alice@example.com"
 
 #. the default tab in the interests tab bar
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:153
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
 #: src/view/screens/Notifications.tsx:88
 msgid "All"
 msgstr "Alle"
@@ -990,8 +990,8 @@ msgstr "Ein Fehler ist aufgetreten"
 msgid "An error occurred while compressing the video."
 msgstr "Beim Komprimieren des Videos ist ein Fehler aufgetreten."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:175
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:75
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:168
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:66
 msgid "An error occurred while fetching suggested accounts."
 msgstr "Beim Abrufen der vorgeschlagenen Accounts ist ein Fehler aufgetreten."
 
@@ -1825,7 +1825,7 @@ msgstr "Menschen auswählen"
 msgid "Choose Post Languages"
 msgstr "Post-Sprachen auswählen"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:424
+#: src/screens/Onboarding/StepFinished/index.tsx:425
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "Wähle die Algorithmen aus, welche deine benutzerdefinierten Feeds generieren."
 
@@ -2051,8 +2051,8 @@ msgstr "Comics"
 msgid "Community Guidelines"
 msgstr "Community-Richtlinien"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:339
-#: src/screens/Onboarding/StepFinished/index.tsx:437
+#: src/screens/Onboarding/StepFinished/index.tsx:340
+#: src/screens/Onboarding/StepFinished/index.tsx:438
 msgid "Complete onboarding and start using your account"
 msgstr "Schließe das Onboarding ab und nutze deinen Account"
 
@@ -2207,8 +2207,8 @@ msgstr "Hintergrund des Kontextmenüs; klicken, um das Menü zu schließen"
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:94
 #: src/screens/Onboarding/StepProfile/index.tsx:280
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:253
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:123
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 msgid "Continue"
 msgstr "Fortfahren"
 
@@ -2226,8 +2226,8 @@ msgstr "Thread fortsetzen…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:91
 #: src/screens/Onboarding/StepProfile/index.tsx:277
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:250
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:120
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:111
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
 msgstr "Weiter zum nächsten Schritt"
@@ -3456,7 +3456,7 @@ msgstr "Post konnte nicht gelöscht werden, bitte versuche es erneut"
 msgid "Failed to delete starter pack"
 msgstr "Startpaket konnte nicht gelöscht werden"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:125
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:118
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "Fehler beim Folgen aller vorgeschlagenen Accounts. Bitte versuche es erneut"
 
@@ -3700,8 +3700,8 @@ msgstr "Filtere, wer Mitteilungen zu deiner Aktivität erhalten kann"
 msgid "Filter who you receive notifications from"
 msgstr "Filtere, von wem du Mitteilungen erhalten möchtest"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:345
-#: src/screens/Onboarding/StepFinished/index.tsx:440
+#: src/screens/Onboarding/StepFinished/index.tsx:346
+#: src/screens/Onboarding/StepFinished/index.tsx:441
 msgid "Finalizing"
 msgstr "Abschließen"
 
@@ -3756,7 +3756,7 @@ msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "Flaches Weiß"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:420
+#: src/screens/Onboarding/StepFinished/index.tsx:421
 msgid "Flexible"
 msgstr "Flexibel"
 
@@ -3798,7 +3798,7 @@ msgstr "Folge 7 Accounts"
 msgid "Follow account"
 msgstr "Account folgen"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:242
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:235
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
 #: src/screens/StarterPack/StarterPackScreen.tsx:438
@@ -3806,7 +3806,7 @@ msgstr "Account folgen"
 msgid "Follow all"
 msgstr "Allen folgen"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:239
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:232
 msgid "Follow all accounts"
 msgstr "Allen Accounts folgen"
 
@@ -3822,7 +3822,7 @@ msgctxt "action"
 msgid "Follow back"
 msgstr "Zurückfolgen"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:120
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:113
 msgid "Followed all accounts!"
 msgstr "Allen Accounts gefolgt!"
 
@@ -3923,7 +3923,7 @@ msgstr "Aus Sicherheitsgründen kannst du dies nicht erneut ansehen. Falls du di
 msgid "For the best experience, we recommend using the theme font."
 msgstr "Für das beste Erlebnis empfehlen wir, die Schriftart des Themes zu verwenden."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:300
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:293
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:91
 msgid "For You"
 msgstr "Für dich"
@@ -4817,8 +4817,8 @@ msgstr "Lass mich wählen"
 msgid "Let's get your password reset!"
 msgstr "Lass uns dein Passwort zurücksetzen!"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:347
-#: src/screens/Onboarding/StepFinished/index.tsx:440
+#: src/screens/Onboarding/StepFinished/index.tsx:348
+#: src/screens/Onboarding/StepFinished/index.tsx:441
 msgid "Let's go!"
 msgstr "Los geht's!"
 
@@ -5464,7 +5464,7 @@ msgstr "Möchtest du eine Urheberrechtsverletzung, eine rechtliche Anfrage oder 
 msgid "Need to report a copyright violation?"
 msgstr "Möchtest du eine Urheberrechtsverletzung melden?"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:408
+#: src/screens/Onboarding/StepFinished/index.tsx:409
 msgid "Never lose access to your followers or data."
 msgstr "Verliere nie den Zugriff auf deine Follower oder Daten."
 
@@ -5591,8 +5591,8 @@ msgstr "Aktuelles"
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
-#: src/screens/Onboarding/StepFinished/index.tsx:340
-#: src/screens/Onboarding/StepFinished/index.tsx:349
+#: src/screens/Onboarding/StepFinished/index.tsx:341
+#: src/screens/Onboarding/StepFinished/index.tsx:350
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -5947,7 +5947,7 @@ msgstr "Huch, da ist etwas schief gelaufen!"
 msgid "Oops!"
 msgstr "Huch!"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:404
+#: src/screens/Onboarding/StepFinished/index.tsx:405
 msgid "Open"
 msgstr "Öffnen"
 
@@ -6678,7 +6678,7 @@ msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profil aktualisiert"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:390
+#: src/screens/Onboarding/StepFinished/index.tsx:391
 msgid "Public"
 msgstr "Öffentlich"
 
@@ -7369,10 +7369,10 @@ msgstr "Wiederholt die letzte Aktion, bei der ein Fehler aufgetreten ist"
 #: src/screens/Messages/ChatList.tsx:292
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:219
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:216
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:98
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:101
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:209
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:212
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:89
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:92
 #: src/screens/PostThread/components/ThreadError.tsx:80
 #: src/screens/PostThread/components/ThreadError.tsx:86
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -8227,8 +8227,8 @@ msgstr "Ähnliche Accounts"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:306
 #: src/screens/Onboarding/StepFinished/index.tsx:328
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:229
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:111
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:222
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:102
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Skip"
 msgstr "Überspringen"
@@ -8238,10 +8238,10 @@ msgstr "Überspringen"
 msgid "Skip introduction and start using your account"
 msgstr "Überspringe die Einführung und beginne mit der Nutzung deines Accounts"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:226
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:108
-msgid "Skip this flow"
-msgstr "Diesen Schritt überspringen"
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:99
+msgid "Skip to next step"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
@@ -8318,7 +8318,7 @@ msgstr "Etwas ist schiefgelaufen. Bitte versuche es erneut."
 msgid "Something wrong? Let us know."
 msgstr "Etwas stimmt nicht? Lass es uns wissen."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:183
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
@@ -8501,8 +8501,8 @@ msgstr "Vorgeschlagene Accounts"
 #. Accounts suggested to the user for them to follow
 #. Accounts suggested to the user for them to follow
 #: src/components/FeedInterstitials.tsx:385
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:48
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:129
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:39
 msgid "Suggested for you"
 msgstr "Vorgeschlagen für dich"
 
@@ -10066,7 +10066,7 @@ msgstr "Wir arbeiten mit <0>KWS</0> zusammen, um zu überprüfen, ob du volljäh
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "Wir haben eine weitere Verifizierungs-E-Mail an <0>{0}</0> gesendet."
 
-#: src/screens/Onboarding/StepFinished/index.tsx:382
+#: src/screens/Onboarding/StepFinished/index.tsx:383
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "Wir hoffen, du hast eine wundervolle Zeit. Denk daran, Bluesky ist:"
 
@@ -10708,7 +10708,7 @@ msgstr "Mit diesen Feeds bleibst du auf dem Laufenden"
 msgid "You're in line"
 msgstr "Du bist in der Warteschlange"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:379
+#: src/screens/Onboarding/StepFinished/index.tsx:380
 msgid "You're ready to go!"
 msgstr "Du kannst loslegen!"
 
@@ -10880,7 +10880,7 @@ msgstr "Dein Post wurde gesendet"
 msgid "Your posts were sent"
 msgstr "Deine Posts wurden gesendet"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:394
+#: src/screens/Onboarding/StepFinished/index.tsx:395
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Deine Posts, „Gefällt mir“-Angaben und Blockierungen sind öffentlich. Stummschaltungen sind privat."
 
@@ -10920,4 +10920,3 @@ msgstr "Deine ausgewählten Interessen helfen uns dabei, dir Inhalte anzuzeigen,
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Deine Verifizierungen"
-

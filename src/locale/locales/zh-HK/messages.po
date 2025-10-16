@@ -877,7 +877,7 @@ msgid "alice@example.com"
 msgstr "alice@example.com"
 
 #. the default tab in the interests tab bar
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:153
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
 #: src/view/screens/Notifications.tsx:88
 msgid "All"
 msgstr "所有"
@@ -990,8 +990,8 @@ msgstr "發生錯誤"
 msgid "An error occurred while compressing the video."
 msgstr "壓縮影片嗰陣發生錯誤。"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:175
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:75
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:168
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:66
 msgid "An error occurred while fetching suggested accounts."
 msgstr "攞緊建議帳號嗰陣出咗錯誤。"
 
@@ -1825,7 +1825,7 @@ msgstr "揀人"
 msgid "Choose Post Languages"
 msgstr "揀選帖文語言"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:424
+#: src/screens/Onboarding/StepFinished/index.tsx:425
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "自由選擇適合你動態源嘅演算法。"
 
@@ -2051,8 +2051,8 @@ msgstr "漫畫"
 msgid "Community Guidelines"
 msgstr "社羣準則"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:339
-#: src/screens/Onboarding/StepFinished/index.tsx:437
+#: src/screens/Onboarding/StepFinished/index.tsx:340
+#: src/screens/Onboarding/StepFinished/index.tsx:438
 msgid "Complete onboarding and start using your account"
 msgstr "攪掂入門指導跟住開始使用你嘅帳號"
 
@@ -2207,8 +2207,8 @@ msgstr "內容選單背景，撳低去閂咗選單。"
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:94
 #: src/screens/Onboarding/StepProfile/index.tsx:280
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:253
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:123
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 msgid "Continue"
 msgstr "繼續"
 
@@ -2226,8 +2226,8 @@ msgstr "繼續撈啲討論串……"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:91
 #: src/screens/Onboarding/StepProfile/index.tsx:277
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:250
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:120
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:111
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
 msgstr "繼續去下一步"
@@ -3456,7 +3456,7 @@ msgstr "刪唔到帖文，唔該試多次"
 msgid "Failed to delete starter pack"
 msgstr "刪唔到新手包"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:125
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:118
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "跟唔到所有建議嘅帳號，唔該試多次"
 
@@ -3700,8 +3700,8 @@ msgstr "篩選邊個可以選擇接收你嘅動態通知"
 msgid "Filter who you receive notifications from"
 msgstr "篩選你想接收嘅通知來源"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:345
-#: src/screens/Onboarding/StepFinished/index.tsx:440
+#: src/screens/Onboarding/StepFinished/index.tsx:346
+#: src/screens/Onboarding/StepFinished/index.tsx:441
 msgid "Finalizing"
 msgstr "幫緊你幫緊你"
 
@@ -3756,7 +3756,7 @@ msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "啞白"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:420
+#: src/screens/Onboarding/StepFinished/index.tsx:421
 msgid "Flexible"
 msgstr "靈活"
 
@@ -3798,7 +3798,7 @@ msgstr "跟 7 個人"
 msgid "Follow account"
 msgstr "跟佢"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:242
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:235
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
 #: src/screens/StarterPack/StarterPackScreen.tsx:438
@@ -3806,7 +3806,7 @@ msgstr "跟佢"
 msgid "Follow all"
 msgstr "跟晒佢哋"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:239
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:232
 msgid "Follow all accounts"
 msgstr "跟晒所有帳號"
 
@@ -3822,7 +3822,7 @@ msgctxt "action"
 msgid "Follow back"
 msgstr "跟返佢"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:120
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:113
 msgid "Followed all accounts!"
 msgstr "跟晒所有帳號！"
 
@@ -3923,7 +3923,7 @@ msgstr "基於保安理由，你唔可以再睇返呢個密碼。若然你真係
 msgid "For the best experience, we recommend using the theme font."
 msgstr "爲咗有最佳體驗，我哋建議使用主題字型。"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:300
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:293
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:91
 msgid "For You"
 msgstr "估你心水"
@@ -4817,8 +4817,8 @@ msgstr "等我自己揀"
 msgid "Let's get your password reset!"
 msgstr "等我哋重設你嘅密碼啦！"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:347
-#: src/screens/Onboarding/StepFinished/index.tsx:440
+#: src/screens/Onboarding/StepFinished/index.tsx:348
+#: src/screens/Onboarding/StepFinished/index.tsx:441
 msgid "Let's go!"
 msgstr "行啦我哋！"
 
@@ -5464,7 +5464,7 @@ msgstr "需要擧報侵犯版權、法律要求，或監管合規問題？"
 msgid "Need to report a copyright violation?"
 msgstr "需要擧報侵犯版權行爲？"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:408
+#: src/screens/Onboarding/StepFinished/index.tsx:409
 msgid "Never lose access to your followers or data."
 msgstr "你永遠唔會失去對擁躉或個人資訊嘅取用權。"
 
@@ -5591,8 +5591,8 @@ msgstr "新聞"
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
-#: src/screens/Onboarding/StepFinished/index.tsx:340
-#: src/screens/Onboarding/StepFinished/index.tsx:349
+#: src/screens/Onboarding/StepFinished/index.tsx:341
+#: src/screens/Onboarding/StepFinished/index.tsx:350
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -5947,7 +5947,7 @@ msgstr "弊，出咗問題！"
 msgid "Oops!"
 msgstr "大鑊！"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:404
+#: src/screens/Onboarding/StepFinished/index.tsx:405
 msgid "Open"
 msgstr "開放"
 
@@ -6678,7 +6678,7 @@ msgctxt "toast"
 msgid "Profile updated"
 msgstr "個人檔案經已更新"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:390
+#: src/screens/Onboarding/StepFinished/index.tsx:391
 msgid "Public"
 msgstr "公開"
 
@@ -7369,10 +7369,10 @@ msgstr "試多次執行上一個出錯誤嘅動作"
 #: src/screens/Messages/ChatList.tsx:292
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:219
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:216
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:98
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:101
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:209
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:212
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:89
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:92
 #: src/screens/PostThread/components/ThreadError.tsx:80
 #: src/screens/PostThread/components/ThreadError.tsx:86
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -8227,8 +8227,8 @@ msgstr "類似帳號"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:306
 #: src/screens/Onboarding/StepFinished/index.tsx:328
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:229
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:111
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:222
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:102
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Skip"
 msgstr "跳過"
@@ -8238,10 +8238,10 @@ msgstr "跳過"
 msgid "Skip introduction and start using your account"
 msgstr "跳過介紹直接開始使用你嘅帳號"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:226
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:108
-msgid "Skip this flow"
-msgstr "跳過呢段流程"
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:99
+msgid "Skip to next step"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
@@ -8318,7 +8318,7 @@ msgstr "出咗問題，唔該試多次。"
 msgid "Something wrong? Let us know."
 msgstr "有輘輷？話畀我哋知。"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:183
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "對唔住，我哋而家撈唔到帳號建議。"
 
@@ -8501,8 +8501,8 @@ msgstr "建議帳號"
 #. Accounts suggested to the user for them to follow
 #. Accounts suggested to the user for them to follow
 #: src/components/FeedInterstitials.tsx:385
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:48
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:129
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:39
 msgid "Suggested for you"
 msgstr "估你心水"
 
@@ -10066,7 +10066,7 @@ msgstr "我哋同 <0>KWS</0> 合作去驗證你係一個成年人。喺你撳「
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "我哋傳送咗另一封驗證電郵去到 <0>{0}</0> 度。"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:382
+#: src/screens/Onboarding/StepFinished/index.tsx:383
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "我哋希望你玩得開心。唔好忘記，Bluesky 係："
 
@@ -10708,7 +10708,7 @@ msgstr "呢啲動態源有新嘢嘅話你都會收到"
 msgid "You're in line"
 msgstr "輪到你喇"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:379
+#: src/screens/Onboarding/StepFinished/index.tsx:380
 msgid "You're ready to go!"
 msgstr "喂，攪掂喇！"
 
@@ -10880,7 +10880,7 @@ msgstr "你嘅帖文經已發布"
 msgid "Your posts were sent"
 msgstr "你嘅帖文經已發布"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:394
+#: src/screens/Onboarding/StepFinished/index.tsx:395
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "你嘅帖文、讚好同封鎖都係公開，而靜音嗰度淨係得你知。"
 
@@ -10920,4 +10920,3 @@ msgstr "你揀選嘅心水主題可以幫我哋提供更多你所關注嘅內容
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "你嘅驗證"
-

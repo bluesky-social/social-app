@@ -877,7 +877,7 @@ msgid "alice@example.com"
 msgstr "andreea@exemplu.ro"
 
 #. the default tab in the interests tab bar
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:153
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
 #: src/view/screens/Notifications.tsx:88
 msgid "All"
 msgstr "Toate"
@@ -990,8 +990,8 @@ msgstr "A apărut o eroare"
 msgid "An error occurred while compressing the video."
 msgstr "A apărut o eroare la comprimarea videoclipului."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:175
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:75
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:168
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:66
 msgid "An error occurred while fetching suggested accounts."
 msgstr "A apărut o eroare la preluarea conturilor sugerate."
 
@@ -1825,7 +1825,7 @@ msgstr "Alegeți persoane"
 msgid "Choose Post Languages"
 msgstr "Alegeți limbi pentru postare"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:424
+#: src/screens/Onboarding/StepFinished/index.tsx:425
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "Alegeți algoritmii care alimentează fluxurile dvs. personalizate."
 
@@ -2051,8 +2051,8 @@ msgstr "Benzi Desenate"
 msgid "Community Guidelines"
 msgstr "Regulile Comunității"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:339
-#: src/screens/Onboarding/StepFinished/index.tsx:437
+#: src/screens/Onboarding/StepFinished/index.tsx:340
+#: src/screens/Onboarding/StepFinished/index.tsx:438
 msgid "Complete onboarding and start using your account"
 msgstr "Finalizați înregistrarea și începeți să vă folosiți contul"
 
@@ -2207,8 +2207,8 @@ msgstr "Fundal meniu contextual, faceți clic pentru a închide meniul."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:94
 #: src/screens/Onboarding/StepProfile/index.tsx:280
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:253
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:123
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 msgid "Continue"
 msgstr "Continuare"
 
@@ -2226,8 +2226,8 @@ msgstr "Continuați firul..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:91
 #: src/screens/Onboarding/StepProfile/index.tsx:277
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:250
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:120
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:111
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
 msgstr "Continuați la pasul următor"
@@ -3456,7 +3456,7 @@ msgstr "Ștergerea postării a eșuat, vă rugăm să încercați din nou"
 msgid "Failed to delete starter pack"
 msgstr "Ștergerea pachetului de pornire a eșuat"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:125
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:118
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "Nu s-a reușit urmărirea tuturor conturilor sugerate. Vă rugăm să încercați din nou"
 
@@ -3700,8 +3700,8 @@ msgstr "Filtrați cine poate opta să primească notificări pentru activitatea 
 msgid "Filter who you receive notifications from"
 msgstr "Filtrați de la cine primiți notificări"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:345
-#: src/screens/Onboarding/StepFinished/index.tsx:440
+#: src/screens/Onboarding/StepFinished/index.tsx:346
+#: src/screens/Onboarding/StepFinished/index.tsx:441
 msgid "Finalizing"
 msgstr "Se finalizează"
 
@@ -3756,7 +3756,7 @@ msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "Alb Plat"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:420
+#: src/screens/Onboarding/StepFinished/index.tsx:421
 msgid "Flexible"
 msgstr "Flexibil"
 
@@ -3798,7 +3798,7 @@ msgstr "Urmăriți 7 conturi"
 msgid "Follow account"
 msgstr "Urmăriți contul"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:242
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:235
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
 #: src/screens/StarterPack/StarterPackScreen.tsx:438
@@ -3806,7 +3806,7 @@ msgstr "Urmăriți contul"
 msgid "Follow all"
 msgstr "Urmăriții pe toți"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:239
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:232
 msgid "Follow all accounts"
 msgstr "Urmăriți toate conturile"
 
@@ -3822,7 +3822,7 @@ msgctxt "action"
 msgid "Follow back"
 msgstr "Urmăriți înapoi"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:120
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:113
 msgid "Followed all accounts!"
 msgstr "Toate conturile au fost urmărite!"
 
@@ -3923,7 +3923,7 @@ msgstr "Din motive de securitate, nu veți mai putea vizualiza acest lucru din n
 msgid "For the best experience, we recommend using the theme font."
 msgstr "Pentru cea mai bună experiență, vă recomandăm să utilizați fontul temă."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:300
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:293
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:91
 msgid "For You"
 msgstr "Pentru Dvs."
@@ -4817,8 +4817,8 @@ msgstr "Doresc să aleg"
 msgid "Let's get your password reset!"
 msgstr "Să vă resetăm parola!"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:347
-#: src/screens/Onboarding/StepFinished/index.tsx:440
+#: src/screens/Onboarding/StepFinished/index.tsx:348
+#: src/screens/Onboarding/StepFinished/index.tsx:441
 msgid "Let's go!"
 msgstr "Să începem!"
 
@@ -5464,7 +5464,7 @@ msgstr "Doriți să raportați o încălcare a drepturilor de autor, o solicitar
 msgid "Need to report a copyright violation?"
 msgstr "Doriți să raportați o încălcare a drepturilor de autor?"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:408
+#: src/screens/Onboarding/StepFinished/index.tsx:409
 msgid "Never lose access to your followers or data."
 msgstr "Nu pierdeți niciodată accesul la urmăritori sau datele dvs."
 
@@ -5591,8 +5591,8 @@ msgstr "Știri"
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
-#: src/screens/Onboarding/StepFinished/index.tsx:340
-#: src/screens/Onboarding/StepFinished/index.tsx:349
+#: src/screens/Onboarding/StepFinished/index.tsx:341
+#: src/screens/Onboarding/StepFinished/index.tsx:350
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -5947,7 +5947,7 @@ msgstr "Hopa, ceva nu a mers bine!"
 msgid "Oops!"
 msgstr "Hopa!"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:404
+#: src/screens/Onboarding/StepFinished/index.tsx:405
 msgid "Open"
 msgstr "Deschis"
 
@@ -6678,7 +6678,7 @@ msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profil actualizat"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:390
+#: src/screens/Onboarding/StepFinished/index.tsx:391
 msgid "Public"
 msgstr "Public"
 
@@ -7369,10 +7369,10 @@ msgstr "Reîncearcă ultima acțiune, care a eșuat"
 #: src/screens/Messages/ChatList.tsx:292
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:219
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:216
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:98
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:101
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:209
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:212
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:89
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:92
 #: src/screens/PostThread/components/ThreadError.tsx:80
 #: src/screens/PostThread/components/ThreadError.tsx:86
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -8227,8 +8227,8 @@ msgstr "Conturi similare"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:306
 #: src/screens/Onboarding/StepFinished/index.tsx:328
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:229
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:111
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:222
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:102
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Skip"
 msgstr "Omitere"
@@ -8238,10 +8238,10 @@ msgstr "Omitere"
 msgid "Skip introduction and start using your account"
 msgstr "Omiteți introducerea și începeți să vă folosiți contul"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:226
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:108
-msgid "Skip this flow"
-msgstr "Omiteți acest proces"
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:99
+msgid "Skip to next step"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
@@ -8318,7 +8318,7 @@ msgstr "Ceva n-a mers bine. Vă rugăm să încercați din nou."
 msgid "Something wrong? Let us know."
 msgstr "E ceva în neregulă? Anunțați-ne."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:183
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "Ne pare rău, nu putem încărca sugestiile de conturi în acest moment."
 
@@ -8501,8 +8501,8 @@ msgstr "Conturi Sugerate"
 #. Accounts suggested to the user for them to follow
 #. Accounts suggested to the user for them to follow
 #: src/components/FeedInterstitials.tsx:385
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
-#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:48
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:129
+#: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:39
 msgid "Suggested for you"
 msgstr "Sugerat pentru dvs."
 
@@ -10066,7 +10066,7 @@ msgstr "Am încheiat un parteneriat cu <0>KWS</0> pentru a verifica dacă sunte�
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "Am trimis un alt e-mail de verificare la <0>{0}</0>."
 
-#: src/screens/Onboarding/StepFinished/index.tsx:382
+#: src/screens/Onboarding/StepFinished/index.tsx:383
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "Sperăm să aveți un timp minunat. Amintiți-vă, Bluesky este:"
 
@@ -10708,7 +10708,7 @@ msgstr "Veți rămâne la zi cu aceste fluxuri"
 msgid "You're in line"
 msgstr "Sunteți la coadă"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:379
+#: src/screens/Onboarding/StepFinished/index.tsx:380
 msgid "You're ready to go!"
 msgstr "Sunteți gata de pornire!"
 
@@ -10880,7 +10880,7 @@ msgstr "Postarea dvs. a fost trimisă"
 msgid "Your posts were sent"
 msgstr "Postările dvs. au fost trimise"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:394
+#: src/screens/Onboarding/StepFinished/index.tsx:395
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Postările, aprecierile și blocările dvs. sunt publice. Amuțirile sunt private."
 
@@ -10920,4 +10920,3 @@ msgstr "Interesele dvs. selectate ne ajută să vă oferim conținut care vă in
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Verificările dvs."
-
