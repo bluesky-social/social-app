@@ -15,8 +15,11 @@ module.exports = function (_config) {
 
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
-  const IS_DEV = !IS_TESTFLIGHT || !IS_PRODUCTION
+  const IS_DEV =
+    process.env.EXPO_PUBLIC_ENV === 'development' ||
+    (!IS_TESTFLIGHT && !IS_PRODUCTION)
 
+  const APP_GROUP = IS_DEV ? 'group.dev.app.bsky' : 'group.app.bsky'
   const ASSOCIATED_DOMAINS = [
     'applinks:bsky.app',
     'applinks:staging.bsky.app',
@@ -46,7 +49,9 @@ module.exports = function (_config) {
       newArchEnabled: false,
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: IS_DEV
+          ? 'dev.xyz.blueskyweb.app'
+          : 'xyz.blueskyweb.app',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -60,6 +65,8 @@ module.exports = function (_config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
+          // Change the display name without affecting target name
+          CFBundleDisplayName: IS_DEV ? 'Bluesky (DEV)' : 'Bluesky',
           CFBundleSpokenName: 'Blue Sky',
           CFBundleLocalizations: [
             'en',
@@ -109,7 +116,7 @@ module.exports = function (_config) {
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
-          'com.apple.security.application-groups': 'group.app.bsky',
+          'com.apple.security.application-groups': APP_GROUP,
         },
         privacyManifests: {
           NSPrivacyAccessedAPITypes: [
@@ -150,8 +157,10 @@ module.exports = function (_config) {
           backgroundImage: './assets/icon-android-background.png',
           backgroundColor: '#1185FE',
         },
-        googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        googleServicesFile: IS_DEV
+          ? './google-services.json.example'
+          : './google-services.json',
+        package: IS_DEV ? 'dev.xyz.blueskyweb.app' : 'xyz.blueskyweb.app',
         intentFilters: [
           {
             action: 'VIEW',
@@ -371,25 +380,27 @@ module.exports = function (_config) {
                 appExtensions: [
                   {
                     targetName: 'Share-with-Bluesky',
-                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    bundleIdentifier: IS_DEV
+                      ? 'dev.xyz.blueskyweb.app.Share-with-Bluesky'
+                      : 'xyz.blueskyweb.app.Share-with-Bluesky',
                     entitlements: {
-                      'com.apple.security.application-groups': [
-                        'group.app.bsky',
-                      ],
+                      'com.apple.security.application-groups': [APP_GROUP],
                     },
                   },
                   {
                     targetName: 'BlueskyNSE',
-                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNSE',
+                    bundleIdentifier: IS_DEV
+                      ? 'dev.xyz.blueskyweb.app.BlueskyNSE'
+                      : 'xyz.blueskyweb.app.BlueskyNSE',
                     entitlements: {
-                      'com.apple.security.application-groups': [
-                        'group.app.bsky',
-                      ],
+                      'com.apple.security.application-groups': [APP_GROUP],
                     },
                   },
                   {
                     targetName: 'BlueskyClip',
-                    bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
+                    bundleIdentifier: IS_DEV
+                      ? 'dev.xyz.blueskyweb.app.AppClip'
+                      : 'xyz.blueskyweb.app.AppClip',
                   },
                 ],
               },
