@@ -124,7 +124,7 @@ function Inner(props: ReportDialogProps) {
         if (subjectTypes === undefined) return true
         if (props.subject.type === 'account') {
           return subjectTypes.includes('account')
-        } else if (props.subject.type === 'chatMessage') {
+        } else if (props.subject.type === 'convoMessage') {
           return subjectTypes.includes('chat')
         } else {
           return subjectTypes.includes('record')
@@ -134,13 +134,18 @@ function Inner(props: ReportDialogProps) {
         const collections: string[] | undefined = l.subjectCollections
         if (collections === undefined) return true
         // all chat collections accepted, since only Bluesky handles chats
-        if (props.subject.type === 'chatMessage') return true
+        if (props.subject.type === 'convoMessage') return true
         return collections.includes(props.subject.nsid)
       })
       .filter(l => {
         if (!state.selectedOption) return false
         // some reasons ONLY go to Bluesky
-        if (BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)) {
+        const isBskyOnlyReason = BSKY_LABELER_ONLY_REPORT_REASONS.has(
+          state.selectedOption.reason,
+        )
+        // some subjects (chats) only go to Bluesky
+        const isBskyOnlySubject = props.subject.type === 'convoMessage'
+        if (isBskyOnlyReason || isBskyOnlySubject) {
           return l.creator.did === BSKY_LABELER_DID
         }
         const supportedReasonTypes: string[] | undefined = l.reasonTypes
@@ -185,7 +190,9 @@ function Inner(props: ReportDialogProps) {
       )
       // give time for user feedback
       setTimeout(() => {
-        props.control.close()
+        props.control.close(() => {
+          props.onAfterSubmit?.()
+        })
       }, 1e3)
     } catch (e: any) {
       logger.metric('reportDialog:failure', {}, {statsig: false})
