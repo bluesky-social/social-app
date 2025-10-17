@@ -378,6 +378,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://music.apple.com/us/playlist/playlistName/playlistId',
     'https://music.apple.com/us/album/albumName/albumId',
     'https://music.apple.com/us/album/albumName/albumId?i=songId',
+    'https://music.apple.com/us/song/songName/songId',
 
     'https://vimeo.com/videoId',
     'https://vimeo.com/videoId?autoplay=0',
@@ -603,6 +604,11 @@ describe('parseEmbedPlayerFromUrl', () => {
       source: 'appleMusic',
       playerUri:
         'https://embed.music.apple.com/us/album/albumName/albumId?i=songId',
+    },
+    {
+      type: 'apple_music_song',
+      source: 'appleMusic',
+      playerUri: 'https://embed.music.apple.com/us/song/songName/songId',
     },
 
     {
