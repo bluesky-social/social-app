@@ -1,7 +1,8 @@
 import {
   type $Typed,
   type AppBskyBookmarkGetBookmarks,
-  type AppBskyFeedDefs,
+  AppBskyFeedDefs,
+  AtUri,
 } from '@atproto/api'
 import {
   type InfiniteData,
@@ -10,7 +11,13 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
+import * as bsky from '#/types/bsky'
 
 export const bookmarksQueryKeyRoot = 'bookmarks'
 export const createBookmarksQueryKey = () => [bookmarksQueryKeyRoot]
@@ -111,4 +118,42 @@ export async function optimisticallyDeleteBookmark(
       }
     },
   )
+}
+
+export function* findAllPostsInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): Generator<AppBskyFeedDefs.PostView, undefined> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyBookmarkGetBookmarks.OutputSchema>
+  >({
+    queryKey: [bookmarksQueryKeyRoot],
+  })
+  const atUri = new AtUri(uri)
+
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const bookmark of page.bookmarks) {
+        if (
+          !bsky.dangerousIsType<AppBskyFeedDefs.PostView>(
+            bookmark.item,
+            AppBskyFeedDefs.isPostView,
+          )
+        )
+          continue
+
+        if (didOrHandleUriMatches(atUri, bookmark.item)) {
+          yield bookmark.item
+        }
+
+        const quotedPost = getEmbeddedPost(bookmark.item.embed)
+        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
+          yield embedViewRecordToPostView(quotedPost)
+        }
+      }
+    }
+  }
 }
