@@ -16,7 +16,6 @@ export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs
 
 export const DEFAULT_THREAD_VIEW_PREFS: ThreadViewPreferences = {
   sort: 'hotness',
-  prioritizeFollowedUsers: true,
   lab_treeViewEnabled: false,
 }
 
