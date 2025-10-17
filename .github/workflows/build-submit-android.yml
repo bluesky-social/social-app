@@ -50,8 +50,8 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: ⚙️ Install dependencies
         run: yarn install
@@ -96,7 +96,7 @@ jobs:
         id: timestamp
         uses: nanzm/get-time-action@master
         with:
-          format: 'MM-DD-HH-mm-ss'
+          format: "MM-DD-HH-mm-ss"
 
       - name: 🚀 Upload Production Artifact
         id: upload-artifact-production
@@ -156,6 +156,7 @@ jobs:
           eas build -p android
           --profile production-apk
           --local --output build.apk --non-interactive
+          --clear-cache
 
       - name: 🚀 Upload Production APK Artifact
         id: upload-artifact-production-apk
