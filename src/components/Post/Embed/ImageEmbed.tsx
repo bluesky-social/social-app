@@ -1,4 +1,5 @@
-import {InteractionManager, View} from 'react-native'
+import React from 'react'
+import {View} from 'react-native'
 import {
   type AnimatedRef,
   measure,
@@ -26,13 +27,25 @@ export function ImageEmbed({
   const {openLightbox} = useLightboxControls()
   const {images} = embed.view
 
+  const items = React.useMemo(
+    () =>
+      images.map(img => ({
+        uri: img.fullsize,
+        thumbUri: img.thumb,
+        alt: img.alt,
+        dimensions: img.aspectRatio ?? null,
+      })),
+    [images],
+  )
+
+  // Prefetch full-size images on component mount for better responsiveness
+  React.useEffect(() => {
+    if (images.length > 0) {
+      Image.prefetch(items.map(i => i.uri))
+    }
+  }, [items, images.length])
+
   if (images.length > 0) {
-    const items = images.map(img => ({
-      uri: img.fullsize,
-      thumbUri: img.thumb,
-      alt: img.alt,
-      dimensions: img.aspectRatio ?? null,
-    }))
     const _openLightbox = (
       index: number,
       thumbRects: (MeasuredDimensions | null)[],
@@ -63,9 +76,8 @@ export function ImageEmbed({
       })()
     }
     const onPressIn = (_: number) => {
-      InteractionManager.runAfterInteractions(() => {
-        Image.prefetch(items.map(i => i.uri))
-      })
+      // Remove InteractionManager to eliminate delay and prefetch immediately
+      Image.prefetch(items.map(i => i.uri))
     }
 
     if (images.length === 1) {
