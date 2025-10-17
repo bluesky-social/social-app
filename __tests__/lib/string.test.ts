@@ -608,7 +608,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     {
       type: 'apple_music_song',
       source: 'appleMusic',
-      playerUri: 'https://music.apple.com/us/song/songName/songId',
+      playerUri: 'https://embed.music.apple.com/us/song/songName/songId',
     },
 
     {
