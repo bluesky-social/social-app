@@ -168,9 +168,13 @@ let FeedItemInner = ({
 
   const [hover, setHover] = useState(false)
 
-  const [href, rkey] = useMemo(() => {
+  const [href, rkey, atUri] = useMemo(() => {
     const urip = new AtUri(post.uri)
-    return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey]
+    return [
+      makeProfileLink(post.author, 'post', urip.rkey),
+      urip.rkey,
+      urip.href,
+    ]
   }, [post.uri, post.author])
   const {sendInteraction, feedSourceInfo} = useFeedFeedbackContext()
 
@@ -296,7 +300,10 @@ let FeedItemInner = ({
       noFeedback
       accessible={false}
       onBeforePress={onBeforePress}
-      dataSet={{feedContext}}
+      dataSet={{
+        feedContext,
+        'at-uri': atUri,
+      }}
       onPointerEnter={() => {
         setHover(true)
       }}
