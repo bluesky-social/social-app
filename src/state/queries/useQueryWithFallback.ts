@@ -6,6 +6,7 @@ import {
   type UseInfiniteQueryOptions,
   type UseInfiniteQueryResult,
   useQuery as useTanstackQuery,
+  useQueryClient,
   type UseQueryOptions,
   type UseQueryResult,
 } from '@tanstack/react-query'
@@ -107,6 +108,8 @@ export function useQuery<TData = unknown, TError = Error>(
     ...restOptions
   } = options
 
+  const queryClient = useQueryClient()
+
   // Wrap the original queryFn with fallback logic
   const wrappedQueryFn: typeof queryFn = async context => {
     if (!queryFn) return undefined as TData
@@ -138,7 +141,11 @@ export function useQuery<TData = unknown, TError = Error>(
 
       // Attempt fallback based on query type
       try {
-        const fallbackData = await attemptFallback(fallbackType, identifier)
+        const fallbackData = await attemptFallback(
+          queryClient,
+          fallbackType,
+          identifier,
+        )
 
         if (!fallbackData) {
           throw error // Fallback failed, re-throw original error
@@ -202,6 +209,8 @@ export function useInfiniteQuery<
     ...restOptions
   } = options
 
+  const queryClient = useQueryClient()
+
   // Wrap the original queryFn with fallback logic
   const wrappedQueryFn = async (
     context: QueryFunctionContext<any, TPageParam>,
@@ -242,6 +251,7 @@ export function useInfiniteQuery<
       // Attempt fallback based on query type
       try {
         const fallbackData = await attemptInfiniteFallback(
+          queryClient,
           fallbackType,
           identifier,
           pageParam as string | undefined,
@@ -286,14 +296,22 @@ function extractIdentifierFromQueryKey(queryKey: unknown[]): string | null {
 /**
  * Attempt to fetch data using PDS + Microcosm fallback
  */
-async function attemptFallback(type: string, identifier: string): Promise<any> {
+async function attemptFallback(
+  queryClient: QueryClient,
+  type: string,
+  identifier: string,
+): Promise<any> {
   switch (type) {
     case 'profile': {
       // identifier is a DID or handle
       const identity = await resolveIdentityViaSlingshot(identifier)
       if (!identity) return null
 
-      return await buildSyntheticProfileView(identity.did, identity.handle)
+      return await buildSyntheticProfileView(
+        queryClient,
+        identity.did,
+        identity.handle,
+      )
     }
 
     case 'post': {
@@ -303,6 +321,7 @@ async function attemptFallback(type: string, identifier: string): Promise<any> {
       if (!identity) return null
 
       return await buildSyntheticPostView(
+        queryClient,
         identifier,
         identity.did,
         identity.handle,
@@ -316,6 +335,7 @@ async function attemptFallback(type: string, identifier: string): Promise<any> {
       if (!identity) return null
 
       const post = await buildSyntheticPostView(
+        queryClient,
         identifier,
         identity.did,
         identity.handle,
@@ -341,6 +361,7 @@ async function attemptFallback(type: string, identifier: string): Promise<any> {
  * This is used by useInfiniteQuery for feeds, followers, etc.
  */
 async function attemptInfiniteFallback(
+  queryClient: QueryClient,
   type: string,
   identifier: string,
   cursor?: string,
@@ -351,7 +372,12 @@ async function attemptInfiniteFallback(
       const identity = await resolveIdentityViaSlingshot(identifier)
       if (!identity) return null
 
-      return await buildSyntheticFeedPage(identity.did, identity.pds, cursor)
+      return await buildSyntheticFeedPage(
+        queryClient,
+        identity.did,
+        identity.pds,
+        cursor,
+      )
     }
 
     case 'profile':
@@ -435,7 +461,11 @@ export async function fetchQueryWithFallback<TData = unknown, TError = Error>(
 
       // Attempt fallback based on query type
       try {
-        const fallbackData = await attemptFallback(fallbackType, identifier)
+        const fallbackData = await attemptFallback(
+          queryClient,
+          fallbackType,
+          identifier,
+        )
 
         if (!fallbackData) {
           throw error // Fallback failed, re-throw original error
@@ -541,7 +571,11 @@ export async function prefetchQueryWithFallback<
 
       // Attempt fallback based on query type
       try {
-        const fallbackData = await attemptFallback(fallbackType, identifier)
+        const fallbackData = await attemptFallback(
+          queryClient,
+          fallbackType,
+          identifier,
+        )
 
         if (!fallbackData) {
           throw error // Fallback failed, re-throw original error

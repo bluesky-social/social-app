@@ -1,8 +1,8 @@
-import {AppBskyActorDefs, AppBskyGraphGetMutes} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyGraphGetMutes} from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -55,4 +55,34 @@ export function* findAllProfilesInQueryData(
       }
     }
   }
+}
+
+/**
+ * Check if a DID is muted by the current user
+ * Used by fallback mechanism to maintain mute preferences
+ */
+export function isDidMuted(
+  queryClient: QueryClient,
+  did: string,
+): {muted: boolean} {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyGraphGetMutes.OutputSchema>
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const mute of page.mutes) {
+        if (mute.did === did) {
+          return {muted: true}
+        }
+      }
+    }
+  }
+
+  return {muted: false}
 }
