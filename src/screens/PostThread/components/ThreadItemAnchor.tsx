@@ -306,6 +306,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
 
       <View
+        dataSet={{'at-uri': post.uri}}
         testID={`postThreadItem-by-${post.author.handle}`}
         style={[
           {

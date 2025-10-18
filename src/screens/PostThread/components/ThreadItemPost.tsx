@@ -249,6 +249,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
     <SubtleHoverWrapper>
       <ThreadItemPostOuterWrapper item={item} overrides={overrides}>
         <PostHider
+          dataSet={{'at-uri': post.uri}}
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
           disabled={overrides?.moderation === true}
