@@ -15,7 +15,7 @@ import {redirectLogger} from '../logger.js'
 
 const SAFELINK_MIN_FETCH_INTERVAL = 1_000
 const SAFELINK_MAX_FETCH_INTERVAL = 10_000
-const SCHEME_REGEX = /^[a-zA-Z][a-zA-Z0-9+.-]*:/
+const SCHEME_REGEX = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//
 
 export class SafelinkClient {
   private domainCache: LRUCache<string, SafelinkRule | 'ok'>
