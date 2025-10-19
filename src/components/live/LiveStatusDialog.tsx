@@ -102,7 +102,7 @@ export function LiveStatus({
           style={[
             t.atoms.bg_contrast_25,
             a.w_full,
-            {aspectRatio: 1.91},
+            a.aspect_card,
             android([
               a.overflow_hidden,
               {

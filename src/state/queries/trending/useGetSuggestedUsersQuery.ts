@@ -8,6 +8,7 @@ import {
   aggregateUserInterests,
   createBskyTopicsHeader,
 } from '#/lib/api/feed/utils'
+import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -38,7 +39,13 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const interests = aggregateUserInterests(preferences)
+      const userInterests = aggregateUserInterests(preferences)
+
+      const interests =
+        props.overrideInterests && props.overrideInterests.length > 0
+          ? props.overrideInterests.join(',')
+          : userInterests
+
       const {data} = await agent.app.bsky.unspecced.getSuggestedUsers(
         {
           category: props.category ?? undefined,
@@ -46,15 +53,30 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
         },
         {
           headers: {
-            ...createBskyTopicsHeader(
-              props.overrideInterests && props.overrideInterests.length > 0
-                ? props.overrideInterests.join(',')
-                : interests,
-            ),
+            ...createBskyTopicsHeader(interests),
             'Accept-Language': contentLangs,
           },
         },
       )
+      // FALLBACK: if no results for 'all', try again with no interests specified
+      if (!props.category && data.actors.length === 0) {
+        logger.error(
+          `Did not get any suggested users, falling back - interests: ${interests}`,
+        )
+        const {data: fallbackData} =
+          await agent.app.bsky.unspecced.getSuggestedUsers(
+            {
+              category: props.category ?? undefined,
+              limit: props.limit || 10,
+            },
+            {
+              headers: {
+                'Accept-Language': contentLangs,
+              },
+            },
+          )
+        return fallbackData
+      }
 
       return data
     },

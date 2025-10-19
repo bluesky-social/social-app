@@ -16,7 +16,8 @@ appId: xyz.blueskyweb.app
     id: "e2eStartOnboarding"
 - tapOn: "Select an avatar"
 - waitForAnimationToEnd
-- assertVisible: "Search your library…"
+- assertVisible: "Photos"
+- assertVisible: "Collections"
 - tapOn:
     point: "50%,22%"
 - waitForAnimationToEnd
@@ -27,7 +28,14 @@ appId: xyz.blueskyweb.app
 - assertVisible: "What are your interests?"
 - tapOn:
     id: "onboardingContinue"
-- assertVisible: "You're ready to go!"
+- assertVisible: "Suggested for you"
+# mock server doesn't have suggestions api
+- tapOn: "Skip to next step"
+- swipe:
+    direction: "LEFT"
+- swipe:
+    direction: "LEFT"
+- assertVisible: "Complete onboarding and start using your account"
 - tapOn:
     id: "onboardingFinish"
 - tapOn:

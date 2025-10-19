@@ -91,8 +91,8 @@ function ShareDialogInner({
               source={{uri: imageUrl}}
               style={[
                 a.rounded_sm,
+                a.aspect_card,
                 {
-                  aspectRatio: 1200 / 630,
                   transform: [{scale: gtMobile ? 0.85 : 1}],
                   marginTop: gtMobile ? -20 : 0,
                 },

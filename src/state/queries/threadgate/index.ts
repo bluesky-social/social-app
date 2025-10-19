@@ -1,6 +1,5 @@
 import {
-  AppBskyFeedDefs,
-  type AppBskyFeedGetPostThread,
+  type AppBskyFeedDefs,
   AppBskyFeedThreadgate,
   AtUri,
   type BskyAgent,
@@ -8,9 +7,8 @@ import {
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
-import {until} from '#/lib/async/until'
 import {STALE} from '#/state/queries'
-import {RQKEY_ROOT as postThreadQueryKeyRoot} from '#/state/queries/post-thread'
+import {useGetPost} from '#/state/queries/post'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {
   createThreadgateRecord,
@@ -18,12 +16,18 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate/util'
+import {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread'
 import {useAgent} from '#/state/session'
 import {useThreadgateHiddenReplyUrisAPI} from '#/state/threadgate-hidden-replies'
 import * as bsky from '#/types/bsky'
 
 export * from '#/state/queries/threadgate/types'
 export * from '#/state/queries/threadgate/util'
+
+/**
+ * Must match the threadgate lexicon record definition.
+ */
+export const MAX_HIDDEN_REPLIES = 300
 
 export const threadgateRecordQueryKeyRoot = 'threadgate-record'
 export const createThreadgateRecordQueryKey = (uri: string) => [
@@ -66,7 +70,7 @@ export function useThreadgateViewQuery({
   postUri?: string
   initialData?: AppBskyFeedDefs.ThreadgateView
 } = {}) {
-  const agent = useAgent()
+  const getPost = useGetPost()
 
   return useQuery({
     enabled: !!postUri,
@@ -74,31 +78,10 @@ export function useThreadgateViewQuery({
     placeholderData: initialData,
     staleTime: STALE.MINUTES.ONE,
     async queryFn() {
-      return getThreadgateView({
-        agent,
-        postUri: postUri!,
-      })
+      const post = await getPost({uri: postUri!})
+      return post.threadgate ?? null
     },
   })
-}
-
-export async function getThreadgateView({
-  agent,
-  postUri,
-}: {
-  agent: BskyAgent
-  postUri: string
-}) {
-  const {data} = await agent.app.bsky.feed.getPostThread({
-    uri: postUri!,
-    depth: 0,
-  })
-
-  if (AppBskyFeedDefs.isThreadViewPost(data.thread)) {
-    return data.thread.post.threadgate ?? null
-  }
-
-  return null
 }
 
 export async function getThreadgateRecord({
@@ -205,6 +188,7 @@ export async function upsertThreadgate(
   })
   const next = await callback(prev)
   if (!next) return
+  validateThreadgateRecordOrThrow(next)
   await writeThreadgateRecord({
     agent,
     postUri,
@@ -242,6 +226,8 @@ export async function updateThreadgateAllow({
 export function useSetThreadgateAllowMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
+  const getPost = useGetPost()
+  const updatePostThreadThreadgate = useUpdatePostThreadThreadgateQueryCache()
 
   return useMutation({
     mutationFn: async ({
@@ -266,30 +252,32 @@ export function useSetThreadgateAllowMutation() {
       })
     },
     async onSuccess(_, {postUri, allow}) {
-      await until(
+      const data = await retry<AppBskyFeedDefs.ThreadgateView | undefined>(
         5, // 5 tries
-        1e3, // 1s delay between tries
-        (res: AppBskyFeedGetPostThread.Response) => {
-          const thread = res.data.thread
-          if (AppBskyFeedDefs.isThreadViewPost(thread)) {
-            const fetchedSettings = threadgateViewToAllowUISetting(
-              thread.post.threadgate,
+        _e => true,
+        async () => {
+          const post = await getPost({uri: postUri})
+          const threadgate = post.threadgate
+          if (!threadgate) {
+            throw new Error(
+              `useSetThreadgateAllowMutation: could not fetch threadgate, appview may not be ready yet`,
             )
-            return JSON.stringify(fetchedSettings) === JSON.stringify(allow)
           }
-          return false
+          const fetchedSettings = threadgateViewToAllowUISetting(threadgate)
+          const isReady =
+            JSON.stringify(fetchedSettings) === JSON.stringify(allow)
+          if (!isReady) {
+            throw new Error(
+              `useSetThreadgateAllowMutation: appview isn't ready yet`,
+            ) // try again
+          }
+          return threadgate
         },
-        () => {
-          return agent.app.bsky.feed.getPostThread({
-            uri: postUri,
-            depth: 0,
-          })
-        },
-      )
+        1e3, // 1s delay between tries
+      ).catch(() => {})
 
-      queryClient.invalidateQueries({
-        queryKey: [postThreadQueryKeyRoot],
-      })
+      if (data) updatePostThreadThreadgate(data)
+
       queryClient.invalidateQueries({
         queryKey: [threadgateRecordQueryKeyRoot],
       })
@@ -357,4 +345,32 @@ export function useToggleReplyVisibilityMutation() {
       }
     },
   })
+}
+
+export class MaxHiddenRepliesError extends Error {
+  constructor(message?: string) {
+    super(message || 'Maximum number of hidden replies reached')
+    this.name = 'MaxHiddenRepliesError'
+  }
+}
+
+export class InvalidInteractionSettingsError extends Error {
+  constructor(message?: string) {
+    super(message || 'Invalid interaction settings')
+    this.name = 'InvalidInteractionSettingsError'
+  }
+}
+
+export function validateThreadgateRecordOrThrow(
+  record: AppBskyFeedThreadgate.Record,
+) {
+  const result = AppBskyFeedThreadgate.validateRecord(record)
+
+  if (result.success) {
+    if ((result.value.hiddenReplies?.length ?? 0) > MAX_HIDDEN_REPLIES) {
+      throw new MaxHiddenRepliesError()
+    }
+  } else {
+    throw new InvalidInteractionSettingsError()
+  }
 }

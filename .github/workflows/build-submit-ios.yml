@@ -15,7 +15,7 @@ jobs:
   build:
     if: github.repository == 'bluesky-social/social-app'
     name: Build and Submit iOS
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -53,7 +53,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.4"
+          xcode-version: "26.0"
 
       - name: ☕️ Setup Cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1

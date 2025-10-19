@@ -8,7 +8,7 @@ import {useLingui} from '@lingui/react'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 
@@ -33,7 +33,7 @@ export function ViewFullThread({uri}: {uri: string}) {
       noFeedback
       onPointerEnter={onHoverIn}
       onPointerLeave={onHoverOut}>
-      <SubtleWebHover
+      <SubtleHover
         hover={hover}
         // adjust position for visual alignment - the actual box has lots of top padding and not much bottom padding -sfn
         style={{top: 8, bottom: -5}}

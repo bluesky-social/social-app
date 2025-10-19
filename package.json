@@ -46,8 +46,9 @@
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "NODE_ENV=development ./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
-    "e2e:metro": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
-    "e2e:metro-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
+    "e2e:build": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
+    "e2e:build-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
+    "e2e:start": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo start",
     "e2e:run": "maestro test __e2e__",
     "perf:test": "NODE_ENV=test maestro test",
     "perf:test:run": "NODE_ENV=test maestro test __e2e__/perf-test.yml",
@@ -71,10 +72,11 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.17.0",
+    "@atproto/api": "^0.17.1",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
-    "@bsky.app/alf": "^0.1.2",
+    "@bsky.app/alf": "^0.1.5",
+    "@bsky.app/react-native-mmkv": "2.12.5",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
@@ -145,6 +147,7 @@
     "expo-image-manipulator": "~14.0.7",
     "expo-image-picker": "~17.0.8",
     "expo-intent-launcher": "~13.0.7",
+    "expo-keep-awake": "^15.0.7",
     "expo-linear-gradient": "~15.0.7",
     "expo-linking": "~8.0.8",
     "expo-localization": "~17.0.7",
@@ -192,7 +195,6 @@
     "react-native-gesture-handler": "~2.28.0",
     "react-native-get-random-values": "~1.11.0",
     "react-native-keyboard-controller": "1.18.5",
-    "@bsky.app/react-native-mmkv": "2.12.5",
     "react-native-pager-view": "6.8.0",
     "react-native-progress": "bluesky-social/react-native-progress",
     "react-native-qrcode-styled": "^0.3.3",
@@ -219,7 +221,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.3.172",
+    "@atproto/dev-env": "^0.3.181",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/runtime": "^7.26.0",
@@ -271,6 +273,7 @@
     "react-refresh": "^0.14.0",
     "svgo": "^3.3.2",
     "ts-node": "^10.9.1",
+    "ts-plugin-sort-import-suggestions": "^1.0.4",
     "typescript": "^5.9.2",
     "webpack-bundle-analyzer": "^4.10.1"
   },
