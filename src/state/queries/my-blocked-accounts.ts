@@ -1,8 +1,8 @@
-import {AppBskyActorDefs, AppBskyGraphGetBlocks} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyGraphGetBlocks} from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -55,4 +55,37 @@ export function* findAllProfilesInQueryData(
       }
     }
   }
+}
+
+/**
+ * Check if a DID is blocked by the current user
+ * Used by fallback mechanism to maintain block privacy
+ */
+export function isDidBlocked(
+  queryClient: QueryClient,
+  did: string,
+): {blocked: boolean; blockUri?: string} {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyGraphGetBlocks.OutputSchema>
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const block of page.blocks) {
+        if (block.did === did && block.viewer?.blocking) {
+          return {
+            blocked: true,
+            blockUri: block.viewer.blocking,
+          }
+        }
+      }
+    }
+  }
+
+  return {blocked: false}
 }

@@ -1,3 +1,9 @@
+import {AtUri} from '@atproto/api'
+import {type QueryClient} from '@tanstack/react-query'
+
+import {isDidBlocked} from './my-blocked-accounts'
+import {isDidMuted} from './my-muted-accounts'
+
 const SLINGSHOT_URL = 'https://slingshot.microcosm.blue'
 const CONSTELLATION_URL = 'https://constellation.microcosm.blue'
 
@@ -109,21 +115,104 @@ export async function fetchConstellationCounts(
 
 /**
  * Detect if error is AppView-related (suspended user, not found, etc.)
+ *
+ * IMPORTANT: This determines whether fallback should be triggered.
+ * We should NOT trigger fallback for intentional blocking/privacy errors.
  */
 export function isAppViewError(error: any): boolean {
   if (!error) return false
 
+  const msg = error.message?.toLowerCase() || ''
+
+  // Do NOT trigger fallback for intentional blocking
+  // "Requester has blocked actor" means the user intentionally blocked someone
+  // This is NOT an AppView outage - it's privacy enforcement
+  if (msg.includes('blocked actor')) return false
+  if (msg.includes('requester has blocked')) return false
+  if (msg.includes('blocking')) return false
+
   // Check HTTP status codes
   if (error.status === 400 || error.status === 404) return true
 
-  // Check error messages
-  // TODO: see if there is an easy way to source error messages from the appview
-  const msg = error.message?.toLowerCase() || ''
+  // Check error messages for actual AppView issues
   if (msg.includes('not found')) return true
   if (msg.includes('suspended')) return true
   if (msg.includes('could not locate')) return true
 
   return false
+}
+
+/**
+ * Build viewer state for fallback profiles
+ * Checks local block/mute cache to populate viewer relationship fields
+ */
+function buildViewerState(
+  queryClient: QueryClient,
+  did: string,
+): {
+  blocking?: string
+  blockedBy?: boolean
+  muted?: boolean
+  mutedByList?: boolean
+  following?: string
+  followedBy?: string
+} {
+  const blockStatus = isDidBlocked(queryClient, did)
+  const muteStatus = isDidMuted(queryClient, did)
+
+  const viewer: any = {}
+
+  if (blockStatus.blocked) {
+    viewer.blocking = blockStatus.blockUri
+  }
+
+  if (muteStatus.muted) {
+    viewer.muted = true
+  }
+
+  // We can't determine blockedBy, mutedByList, following, or followedBy from PDS alone
+  // These require AppView indexing, so we leave them undefined
+
+  return viewer
+}
+
+/**
+ * Build a BlockedPost stub to match AppView behavior
+ * Returns the same structure as app.bsky.feed.defs#blockedPost
+ */
+function buildBlockedPost(uri: string): any {
+  return {
+    $type: 'app.bsky.feed.defs#blockedPost',
+    uri,
+    blocked: true,
+    author: {
+      did: new AtUri(uri).host,
+      handle: '',
+    },
+  }
+}
+
+/**
+ * Build a BlockedProfile stub to match AppView behavior
+ * Returns a minimal profile view indicating the profile is blocked
+ */
+function buildBlockedProfileView(did: string): any {
+  return {
+    $type: 'app.bsky.actor.defs#profileViewBasic',
+    did,
+    handle: '',
+    displayName: '',
+    avatar: undefined,
+    viewer: {
+      blocking: 'blocked',
+      blockedBy: false,
+      muted: false,
+      mutedByList: false,
+    },
+    labels: [],
+    __fallbackMode: true,
+    __blocked: true, // Internal marker
+  }
 }
 
 /**
@@ -135,11 +224,25 @@ export function isAppViewError(error: any): boolean {
  * LIMITATION: Profile-level aggregate counts (followers, following, posts) are not
  * available from Slingshot or Constellation and are set to undefined. These would
  * require AppView-style indexing infrastructure.
+ *
+ * SECURITY: Checks local block/mute state to maintain privacy preferences.
+ * Throws error if user has blocked the profile to prevent privacy bypass.
  */
 export async function buildSyntheticProfileView(
+  queryClient: QueryClient,
   did: string,
   handle: string,
 ): Promise<any> {
+  // Check viewer state before fetching profile data
+  const viewer = buildViewerState(queryClient, did)
+
+  // If user has blocked this profile, return BlockedProfile stub
+  // This matches AppView behavior and allows existing UI to handle it correctly
+  if (viewer.blocking) {
+    console.log('[Fallback] Returning blocked profile stub for', did)
+    return buildBlockedProfileView(did)
+  }
+
   const profileUri = `at://${did}/app.bsky.actor.profile/self`
   const record = await fetchRecordViaSlingshot(profileUri)
 
@@ -159,7 +262,7 @@ export async function buildSyntheticProfileView(
     followsCount: undefined, // Not available from PDS or Constellation
     postsCount: undefined, // Not available from PDS or Constellation
     indexedAt: new Date().toISOString(),
-    viewer: {},
+    viewer, // Use viewer state with block/mute info
     labels: [],
     __fallbackMode: true, // Mark as fallback data
   }
@@ -167,17 +270,37 @@ export async function buildSyntheticProfileView(
 
 /**
  * Build synthetic PostView from PDS + Constellation data
+ *
+ * SECURITY: Inherits block/mute checking from buildSyntheticProfileView.
+ * If the author is blocked, returns BlockedPost stub to match AppView behavior.
  */
 export async function buildSyntheticPostView(
+  queryClient: QueryClient,
   atUri: string,
   authorDid: string,
   authorHandle: string,
 ): Promise<any> {
+  // Check if author is blocked first, before fetching any data
+  const viewer = buildViewerState(queryClient, authorDid)
+  if (viewer.blocking) {
+    console.log('[Fallback] Returning blocked post stub for', atUri)
+    return buildBlockedPost(atUri)
+  }
+
   const record = await fetchRecordViaSlingshot(atUri)
   if (!record) return null
 
   const counts = await fetchConstellationCounts(atUri)
-  const profileView = await buildSyntheticProfileView(authorDid, authorHandle)
+  // Build profile view (will return basic info since not blocked)
+  const profileView = await buildSyntheticProfileView(
+    queryClient,
+    authorDid,
+    authorHandle,
+  )
+
+  // Get viewer state for the post itself (like, repost status)
+  // For now we just use empty viewer as we can't determine these from PDS
+  const postViewer = {}
 
   return {
     $type: 'app.bsky.feed.defs#postView',
@@ -189,7 +312,7 @@ export async function buildSyntheticPostView(
     likeCount: counts.likeCount,
     repostCount: counts.repostCount,
     replyCount: counts.replyCount,
-    viewer: {},
+    viewer: postViewer, // Post-level viewer state (likes, reposts, etc)
     labels: [],
     __fallbackMode: true, // Mark as fallback data
   }
@@ -210,12 +333,28 @@ export async function buildSyntheticPostView(
  * - 1 record fetch via Slingshot (for the full post data, cached)
  * - 1 Constellation request (for engagement counts)
  * - Profile fetch (cached after first request)
+ *
+ * SECURITY: Respects block/mute relationships. If author is blocked, the feed will be empty.
  */
 export async function buildSyntheticFeedPage(
+  queryClient: QueryClient,
   did: string,
   pdsUrl: string,
   cursor?: string,
 ): Promise<any> {
+  // Check if this author is blocked before fetching any posts
+  const viewer = buildViewerState(queryClient, did)
+  if (viewer.blocking) {
+    console.log('[Fallback] Author is blocked, returning empty feed for', did)
+    // Return empty feed to prevent viewing blocked user's posts via fallback
+    return {
+      feed: [],
+      cursor: undefined,
+      __fallbackMode: true,
+      __blocked: true,
+    }
+  }
+
   try {
     const limit = 25
     const cursorParam = cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''
@@ -239,6 +378,7 @@ export async function buildSyntheticFeedPage(
     const feed = await Promise.all(
       data.records.map(async (record: any) => {
         const postView = await buildSyntheticPostView(
+          queryClient,
           record.uri,
           did,
           '', // Handle will be resolved in buildSyntheticPostView
