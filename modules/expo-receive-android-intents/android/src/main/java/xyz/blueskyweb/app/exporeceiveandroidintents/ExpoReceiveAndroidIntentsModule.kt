@@ -23,8 +23,14 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     ModuleDefinition {
       Name("ExpoReceiveAndroidIntents")
 
+      OnActivityEntersForeground {
+        appContext.currentActivity?.intent.let {
+          handleIntent(it)
+        }
+      }
+
       OnNewIntent {
-        handleIntent(it)
+        appContext.currentActivity?.setIntent(it);
       }
     }
 
