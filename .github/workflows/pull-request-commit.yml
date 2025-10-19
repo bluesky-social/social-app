@@ -24,12 +24,12 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -101,7 +101,7 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 100
 
@@ -110,7 +110,7 @@ jobs:
         if: github.event_name == 'pull_request'
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
           cache: yarn

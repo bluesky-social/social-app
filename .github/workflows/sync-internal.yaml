@@ -10,7 +10,7 @@ jobs:
     if: github.repository == 'bluesky-social/social-app'
     steps:
       - name: Checkout public repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Generate GitHub App Token
