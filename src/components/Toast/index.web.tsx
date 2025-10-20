@@ -13,6 +13,7 @@ import {
 import {type BaseToastOptions} from '#/components/Toast/types'
 
 export {DURATION} from '#/components/Toast/const'
+export {dismiss} from '#/components/Toast/sonner'
 export * from '#/components/Toast/Toast'
 export {type ToastType} from '#/components/Toast/types'
 

@@ -12,7 +12,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
-import {dismiss} from '#/components/Toast/sonner'
+import {dismiss} from '#/components/Toast'
 import {type ToastType} from '#/components/Toast/types'
 import {Text as BaseText} from '#/components/Typography'
 
@@ -177,7 +177,6 @@ export function Action(
   }, [t, type])
 
   const onPress = (e: GestureResponderEvent) => {
-    console.log('Toast Action pressed, dismissing toast', id)
     dismiss(id)
     props.onPress?.(e)
   }
