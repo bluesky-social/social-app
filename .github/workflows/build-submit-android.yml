@@ -182,11 +182,11 @@ jobs:
       - name: ⬇️ Restore Cache
         id: get-base-commit
         uses: actions/cache@v4
-        if: ${{ inputs.profile == 'testflight' }}
+        if: ${{ inputs.profile == 'testflight-android' }}
         with:
           path: most-recent-testflight-commit.txt
           key: most-recent-testflight-commit
 
       - name: ✏️ Write commit hash to cache
-        if: ${{ inputs.profile == 'testflight' }}
+        if: ${{ inputs.profile == 'testflight-android' }}
         run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
