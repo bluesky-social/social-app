@@ -300,7 +300,7 @@ export function GifPreview({
             a.flex_1,
             a.mb_sm,
             a.rounded_sm,
-            a.aspect_card,
+            a.aspect_square,
             {opacity: pressed ? 0.8 : 1},
             t.atoms.bg_contrast_25,
           ]}
