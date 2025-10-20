@@ -98,10 +98,21 @@ jobs:
           yarn use-build-number-with-bump
           eas build -p ios
           --profile ${{ inputs.profile || 'testflight' }}
-          --local --output build.ipa --non-interactive
+          --local --output build.tar.gz --non-interactive
+
+      - name: Extract build artifact
+        run: |
+          if [ -f "build.tar.gz" ]; then
+            echo "Extracting build.tar.gz..."
+            tar -xzf build.tar.gz
+            echo "Extraction completed successfully"
+          else
+            echo "Archive file not found!"
+            exit 1
+          fi
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path build.ipa
+        run: eas submit -p ios --non-interactive --path ./ios/build/Bluesky.ipa
 
       - name: 📚 Get version from package.json
         id: get-build-info
