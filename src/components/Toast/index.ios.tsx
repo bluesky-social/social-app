@@ -2,7 +2,6 @@ import React, {useSyncExternalStore} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {nanoid} from 'nanoid/non-secure'
-import {toast as sonner} from 'sonner-native'
 
 import {atoms as a} from '#/alf'
 import {DURATION} from '#/components/Toast/const'
@@ -96,12 +95,6 @@ export function Outer({children}: {children: React.ReactNode}) {
     </View>
   )
 }
-
-/**
- * Access the full Sonner API
- * @deprecated TBD
- */
-export const api = sonner
 
 /**
  * Our base toast API, using the `Toast` export of this file.

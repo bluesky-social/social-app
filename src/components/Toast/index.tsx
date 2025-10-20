@@ -35,11 +35,6 @@ export function Outer({children}: {children: React.ReactNode}) {
 }
 
 /**
- * Access the full Sonner API
- */
-export const api = sonner
-
-/**
  * Our base toast API, using the `Toast` export of this file.
  */
 export function show(
