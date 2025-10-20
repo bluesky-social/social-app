@@ -1,5 +1,11 @@
 import {useCallback, useState} from 'react'
-import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
+import {
+  Pressable,
+  Text,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {
   useFocusedInputHandler,
   useReanimatedKeyboardAnimation,
@@ -62,6 +68,7 @@ export function MessageInput({
   const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
   const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
+  const graphemeCount = new Graphemer().countGraphemes(message)
 
   const {needsEmailVerification} = useEmail()
 
@@ -75,7 +82,7 @@ export function MessageInput({
     if (!hasEmbed && message.trim() === '') {
       return
     }
-    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+    if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
@@ -98,6 +105,7 @@ export function MessageInput({
     needsEmailVerification,
     hasEmbed,
     message,
+    graphemeCount,
     clearDraft,
     onSendMessage,
     playHaptic,
@@ -203,6 +211,15 @@ export function MessageInput({
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>
+      {graphemeCount > MAX_DM_GRAPHEME_LENGTH ? (
+        <Text
+          style={[
+            a.py_sm,
+            {
+              color: t.palette.negative_500,
+            },
+          ]}>{`Message is too long by ${graphemeCount - MAX_DM_GRAPHEME_LENGTH} characters`}</Text>
+      ) : null}
     </View>
   )
 }
