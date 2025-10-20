@@ -146,6 +146,11 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
+      - name: 🧹 Clear Metro cache
+        if: ${{ inputs.profile == 'production' }}
+        # https://github.com/expo/eas-cli/issues/2959#issuecomment-2749791326
+        run: rm -rf ${TMPDIR:-/tmp}/metro-cache
+
       - name: 🏗️ Build Production APK
         if: ${{ inputs.profile == 'production' }}
         run: >
@@ -156,7 +161,6 @@ jobs:
           eas build -p android
           --profile production-apk
           --local --output build.apk --non-interactive
-          --clear-cache
 
       - name: 🚀 Upload Production APK Artifact
         id: upload-artifact-production-apk
