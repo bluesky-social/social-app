@@ -36,8 +36,7 @@
       "extends": "base",
       "ios": {
         "resourceClass": "large",
-        "autoIncrement": true,
-        "buildArtifactPaths": ["ios/build/*"]
+        "autoIncrement": true
       },
       "android": {
         "autoIncrement": true
@@ -51,8 +50,7 @@
       "extends": "base",
       "distribution": "internal",
       "ios": {
-        "autoIncrement": false,
-        "buildArtifactPaths": ["ios/build/*"]
+        "autoIncrement": false
       },
       "android": {
         "autoIncrement": false
@@ -65,8 +63,7 @@
     "testflight": {
       "extends": "base",
       "ios": {
-        "autoIncrement": true,
-        "buildArtifactPaths": ["ios/build/*"]
+        "autoIncrement": true
       },
       "android": {
         "autoIncrement": true
@@ -80,8 +77,7 @@
       "extends": "base",
       "distribution": "internal",
       "ios": {
-        "autoIncrement": true,
-        "buildArtifactPaths": ["ios/build/*"]
+        "autoIncrement": true
       },
       "android": {
         "autoIncrement": true
