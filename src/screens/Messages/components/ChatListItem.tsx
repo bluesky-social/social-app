@@ -30,7 +30,7 @@ import {
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import * as tokens from '#/alf/tokens'
 import {useDialogControl} from '#/components/Dialog'
@@ -47,6 +47,7 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import type * as bsky from '#/types/bsky'
+import {Button} from '#/components/Button'
 
 export const ChatListItemPortal = createPortalGroup()
 
@@ -349,15 +350,14 @@ function ChatListItemReady({
               a.absolute,
               {top: tokens.space.md, left: tokens.space.lg},
             ]}>
-            <PreviewableUserAvatar
-              profile={profile}
+            <UserAvatar
+              type="user"
               size={52}
               moderation={moderation.ui('avatar')}
             />
           </View>
 
-          <Link
-            to={`/messages/${convo.id}`}
+          <Button
             label={displayName}
             accessibilityHint={
               !isDeletedAccount
@@ -509,10 +509,10 @@ function ChatListItemReady({
                 )}
               </View>
             )}
-          </Link>
+          </Button>
 
           <ChatListItemPortal.Outlet />
-
+          {/*
           {showMenu && (
             <ConvoMenu
               convo={convo}
@@ -535,12 +535,12 @@ function ChatListItemReady({
               ]}
               latestReportableMessage={latestReportableMessage}
             />
-          )}
-          <LeaveConvoPrompt
+          )}*/}
+          {/*<LeaveConvoPrompt
             control={leaveConvoControl}
             convoId={convo.id}
             currentScreen="list"
-          />
+          />*/}
         </View>
       </GestureActionView>
     </ChatListItemPortal.Provider>

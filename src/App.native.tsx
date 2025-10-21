@@ -78,6 +78,8 @@ import {Splash} from '#/Splash'
 import {BottomSheetOutlet} from '../modules/bottom-sheet'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {RequestListItem} from './screens/Messages/components/RequestListItem'
+import {List} from './view/com/util/List'
 
 SplashScreen.preventAutoHideAsync()
 if (isIOS) {
@@ -257,9 +259,9 @@ export default Sentry.wrap(App)
 
 function Testbed() {
   const control = Dialog.useDialogControl()
+  const [showItem, setShowItem] = useState(true)
   return (
-    <View
-      style={[{height: '100%'}, a.align_center, a.justify_center, {gap: 16}]}>
+    <View style={[a.align_center, a.justify_center, {gap: 16}, a.h_full]}>
       <Button
         label="show dialog"
         onPress={() => {
@@ -269,6 +271,31 @@ function Testbed() {
         color="primary">
         <ButtonText>Show dialog</ButtonText>
       </Button>
+      <Button
+        label="toggle list item + show toast"
+        onPress={() => {
+          Toast.show('toggle list item')
+          setShowItem(x => !x)
+        }}
+        size="large"
+        color="primary">
+        <ButtonText>toggle list item + show toast</ButtonText>
+      </Button>
+      <List
+        style={[{width: '100%', height: 300}, a.flex_grow_0]}
+        data={showItem ? [true] : []}
+        renderItem={() => (
+          <RequestListItem
+            convo={{
+              id: 'abc',
+              members: [{did: 'did:plc:abc', handle: 'alice.example.com'}],
+              muted: false,
+              rev: '1',
+              unreadCount: 0,
+            }}
+          />
+        )}
+      />
       <Dialog.Outer control={control}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
@@ -302,6 +329,18 @@ function Testbed() {
             size="large"
             color="primary">
             <ButtonText>Close - toast after</ButtonText>
+          </Button>
+          <Button
+            label="close dialog"
+            onPress={() => {
+              control.close(() => {
+                setShowItem(false)
+                Toast.show('closed')
+              })
+            }}
+            size="large"
+            color="primary">
+            <ButtonText>Close - close + hide item</ButtonText>
           </Button>
         </Dialog.ScrollableInner>
       </Dialog.Outer>

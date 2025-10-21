@@ -50,11 +50,11 @@ export function RejectMenu({
 }) {
   const {_} = useLingui()
   const shadowedProfile = useProfileShadow(profile)
-  const navigation = useNavigation<NavigationProp>()
+  // const navigation = useNavigation<NavigationProp>()
   const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
-        navigation.dispatch(StackActions.pop())
+        // navigation.dispatch(StackActions.pop())
       }
     },
     onError: () => {
@@ -192,7 +192,7 @@ export function AcceptChatButton({
 }) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
-  const navigation = useNavigation<NavigationProp>()
+  // const navigation = useNavigation<NavigationProp>()
   const {needsEmailVerification} = useEmail()
   const emailDialogControl = useEmailDialogControl()
 
@@ -201,10 +201,10 @@ export function AcceptChatButton({
       onAcceptConvo?.()
       if (currentScreen === 'list') {
         precacheConvoQuery(queryClient, {...convo, status: 'accepted'})
-        navigation.navigate('MessagesConversation', {
-          conversation: convo.id,
-          accept: true,
-        })
+        // navigation.navigate('MessagesConversation', {
+        //   conversation: convo.id,
+        //   accept: true,
+        // })
       }
     },
     onError: () => {
@@ -272,12 +272,12 @@ export function DeleteChatButton({
   currentScreen: 'list' | 'conversation'
 }) {
   const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp>()
+  // const navigation = useNavigation<NavigationProp>()
 
   const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
-        navigation.dispatch(StackActions.pop())
+        // navigation.dispatch(StackActions.pop())
       }
     },
     onError: () => {
