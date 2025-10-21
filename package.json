@@ -73,7 +73,6 @@
   },
   "dependencies": {
     "@atproto/api": "^0.17.1",
-    "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.5",
     "@bsky.app/react-native-mmkv": "2.12.5",
@@ -97,6 +96,8 @@
     "@miblanchard/react-native-slider": "^2.6.0",
     "@mozzius/expo-dynamic-app-icon": "^1.8.0",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-firebase/app": "^23.4.1",
+    "@react-native-firebase/crashlytics": "^23.4.1",
     "@react-navigation/bottom-tabs": "^7.3.13",
     "@react-navigation/drawer": "^7.3.12",
     "@react-navigation/native": "^7.1.9",

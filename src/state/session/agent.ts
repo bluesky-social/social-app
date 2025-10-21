@@ -23,6 +23,7 @@ import {
 import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
+import {getCrashlytics, setUserId} from '#/logger/crashlytics/lib'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
@@ -79,6 +80,10 @@ export async function createAgentAndResume(
 
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
+  if (agent.sessionManager.did) {
+    setUserId(getCrashlytics(), agent.sessionManager.did)
+  }
+
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
@@ -113,6 +118,10 @@ export async function createAgentAndLogin(
   const moderation = configureModerationForAccount(agent, account)
 
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
+
+  if (agent.sessionManager.did) {
+    setUserId(getCrashlytics(), agent.sessionManager.did)
+  }
 
   return agent.prepare(gates, moderation, onSessionChange)
 }

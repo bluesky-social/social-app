@@ -1,4 +1,3 @@
-import '#/logger/bitdrift/setup'
 import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'

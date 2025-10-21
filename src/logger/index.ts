@@ -3,8 +3,8 @@ import {nanoid} from 'nanoid/non-secure'
 import {logEvent} from '#/lib/statsig/statsig'
 import {add} from '#/logger/logDump'
 import {type MetricEvents} from '#/logger/metrics'
-import {bitdriftTransport} from '#/logger/transports/bitdrift'
 import {consoleTransport} from '#/logger/transports/console'
+import {crashlyticsTransport} from '#/logger/transports/crashlytics'
 import {
   LogContext,
   LogLevel,
@@ -18,13 +18,15 @@ import {ENV} from '#/env'
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (ENV) {
     case 'production': {
-      return [isNative && bitdriftTransport].filter(Boolean) as Transport[]
+      return [isNative && crashlyticsTransport].filter(Boolean) as Transport[]
     }
     case 'test': {
       return []
     }
     default: {
-      return [consoleTransport]
+      return [consoleTransport, isNative && crashlyticsTransport].filter(
+        Boolean,
+      ) as Transport[]
     }
   }
 })()

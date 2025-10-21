@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {crash, getCrashlytics} from '#/logger/crashlytics/lib'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
@@ -94,6 +95,14 @@ function StorybookInner() {
               label="two"
               testID="sharedPrefsTestOpenBtn">
               <ButtonText>Open Shared Prefs Tester</ButtonText>
+            </Button>
+
+            <Button
+              color="negative"
+              size="large"
+              onPress={() => crash(getCrashlytics())}
+              label="crash">
+              <ButtonText>Crashlytics Test</ButtonText>
             </Button>
 
             <ThemeProvider theme="light">

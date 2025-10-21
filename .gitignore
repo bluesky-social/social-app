@@ -101,6 +101,7 @@ stats.json
 
 # Firebase (Android) Google services
 google-services.json
+GoogleService-Info.plist
 
 # Performance results (Flashlight)
 .perf/

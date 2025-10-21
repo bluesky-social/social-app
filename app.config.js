@@ -44,6 +44,7 @@ module.exports = function (_config) {
       newArchEnabled: false,
       ios: {
         supportsTablet: false,
+        googleServicesFile: './GoogleService-Info.plist',
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
           usesNonExemptEncryption: false,
@@ -194,12 +195,15 @@ module.exports = function (_config) {
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
         ],
+        '@react-native-firebase/app',
+        '@react-native-firebase/crashlytics',
         [
           'expo-build-properties',
           {
             ios: {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
+              useFrameworks: 'static',
             },
             android: {
               compileSdkVersion: 35,
@@ -217,12 +221,6 @@ module.exports = function (_config) {
           },
         ],
         'react-native-compressor',
-        [
-          '@bitdrift/react-native',
-          {
-            networkInstrumentation: true,
-          },
-        ],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withGradleJVMHeapSizeIncrease.js',
         './plugins/withAndroidManifestLargeHeapPlugin.js',
