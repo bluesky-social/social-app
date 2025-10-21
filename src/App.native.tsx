@@ -78,6 +78,7 @@ import {Splash} from '#/Splash'
 import {BottomSheetOutlet} from '../modules/bottom-sheet'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {useApplyPullRequestOTAUpdate} from './lib/hooks/useOTAUpdates'
 import {RequestListItem} from './screens/Messages/components/RequestListItem'
 import {List} from './view/com/util/List'
 
@@ -260,6 +261,9 @@ export default Sentry.wrap(App)
 function Testbed() {
   const control = Dialog.useDialogControl()
   const [showItem, setShowItem] = useState(true)
+
+  const {revertToEmbedded} = useApplyPullRequestOTAUpdate()
+
   return (
     <View style={[a.align_center, a.justify_center, {gap: 16}, a.h_full]}>
       <Button
@@ -296,6 +300,13 @@ function Testbed() {
           />
         )}
       />
+      <Button
+        label="revert to embedded js"
+        onPress={() => revertToEmbedded()}
+        size="large"
+        color="secondary">
+        <ButtonText>revert to embedded js</ButtonText>
+      </Button>
       <Dialog.Outer control={control}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
