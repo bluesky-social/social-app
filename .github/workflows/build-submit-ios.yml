@@ -92,7 +92,6 @@ jobs:
 
       - name: 🏗️ EAS Build
         run: >
-          SENTRY_INCLUDE_NATIVE_SOURCES=true
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
@@ -121,7 +120,7 @@ jobs:
           SENTRY_ORG=blueskyweb
           SENTRY_PROJECT=app
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          yarn sentry-cli debug-files upload ios-build/ios/build/Bluesky.app.dSYM.zip
+          yarn sentry-cli debug-files upload ios-build/ios/build/Bluesky.app.dSYM.zip --include-sources
 
       - name: 📚 Get version from package.json
         id: get-build-info
