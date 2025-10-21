@@ -92,6 +92,7 @@ jobs:
 
       - name: 🏗️ EAS Build
         run: >
+          SENTRY_LOG_LEVEL=debug
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
