@@ -30,14 +30,16 @@ import {
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import * as tokens from '#/alf/tokens'
-import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {ConvoMenu} from '#/components/dms/ConvoMenu'
+import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
+import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {createPortalGroup} from '#/components/Portal'
@@ -85,6 +87,7 @@ function ChatListItemReady({
   convo,
   profile: profileUnshadowed,
   moderationOpts,
+  showMenu,
   children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
@@ -98,6 +101,7 @@ function ChatListItemReady({
   const {currentAccount} = useSession()
   const menuControl = useMenuControl()
   const leaveConvoControl = useDialogControl()
+  const {gtMobile} = useBreakpoints()
   const profile = useProfileShadow(profileUnshadowed)
   const {mutate: markAsRead} = useMarkAsReadMutation()
   const moderation = React.useMemo(
@@ -111,6 +115,17 @@ function ChatListItemReady({
     profile,
   })
 
+  const blockInfo = useMemo(() => {
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
+
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? _(msg`Deleted Account`)
@@ -121,134 +136,137 @@ function ChatListItemReady({
 
   const isDimStyle = convo.muted || moderation.blocked || isDeletedAccount
 
-  const {lastMessage, lastMessageSentAt} = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    let lastMessage = _(msg`No messages yet`)
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    let lastMessageSentAt: string | null = null
+  const {lastMessage, lastMessageSentAt, latestReportableMessage} =
+    useMemo(() => {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      let lastMessage = _(msg`No messages yet`)
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      let lastMessageSentAt: string | null = null
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
 
-    let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
+      if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
+        const isFromMe = convo.lastMessage.sender?.did === currentAccount?.did
 
-    if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
-      const isFromMe = convo.lastMessage.sender?.did === currentAccount?.did
-
-      if (!isFromMe) {
-        latestReportableMessage = convo.lastMessage
-      }
-
-      if (convo.lastMessage.text) {
-        if (isFromMe) {
-          lastMessage = _(msg`You: ${convo.lastMessage.text}`)
-        } else {
-          lastMessage = convo.lastMessage.text
+        if (!isFromMe) {
+          latestReportableMessage = convo.lastMessage
         }
-      } else if (convo.lastMessage.embed) {
-        const defaultEmbeddedContentMessage = _(
-          msg`(contains embedded content)`,
-        )
 
-        if (AppBskyEmbedRecord.isView(convo.lastMessage.embed)) {
-          const embed = convo.lastMessage.embed
+        if (convo.lastMessage.text) {
+          if (isFromMe) {
+            lastMessage = _(msg`You: ${convo.lastMessage.text}`)
+          } else {
+            lastMessage = convo.lastMessage.text
+          }
+        } else if (convo.lastMessage.embed) {
+          const defaultEmbeddedContentMessage = _(
+            msg`(contains embedded content)`,
+          )
 
-          if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
-            const record = embed.record
-            const path = postUriToRelativePath(record.uri, {
-              handle: record.author.handle,
-            })
-            const href = path ? toBskyAppUrl(path) : undefined
-            const short = href
-              ? toShortUrl(href)
-              : defaultEmbeddedContentMessage
+          if (AppBskyEmbedRecord.isView(convo.lastMessage.embed)) {
+            const embed = convo.lastMessage.embed
+
+            if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
+              const record = embed.record
+              const path = postUriToRelativePath(record.uri, {
+                handle: record.author.handle,
+              })
+              const href = path ? toBskyAppUrl(path) : undefined
+              const short = href
+                ? toShortUrl(href)
+                : defaultEmbeddedContentMessage
+              if (isFromMe) {
+                lastMessage = _(msg`You: ${short}`)
+              } else {
+                lastMessage = short
+              }
+            }
+          } else {
             if (isFromMe) {
-              lastMessage = _(msg`You: ${short}`)
+              lastMessage = _(msg`You: ${defaultEmbeddedContentMessage}`)
             } else {
-              lastMessage = short
+              lastMessage = defaultEmbeddedContentMessage
             }
           }
-        } else {
-          if (isFromMe) {
-            lastMessage = _(msg`You: ${defaultEmbeddedContentMessage}`)
-          } else {
-            lastMessage = defaultEmbeddedContentMessage
-          }
         }
+
+        lastMessageSentAt = convo.lastMessage.sentAt
+      }
+      if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
+        lastMessageSentAt = convo.lastMessage.sentAt
+
+        lastMessage = isDeletedAccount
+          ? _(msg`Conversation deleted`)
+          : _(msg`Message deleted`)
       }
 
-      lastMessageSentAt = convo.lastMessage.sentAt
-    }
-    if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
-      lastMessageSentAt = convo.lastMessage.sentAt
-
-      lastMessage = isDeletedAccount
-        ? _(msg`Conversation deleted`)
-        : _(msg`Message deleted`)
-    }
-
-    if (ChatBskyConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
-      if (
-        !lastMessageSentAt ||
-        new Date(lastMessageSentAt) <
-          new Date(convo.lastReaction.reaction.createdAt)
-      ) {
-        const isFromMe =
-          convo.lastReaction.reaction.sender.did === currentAccount?.did
-        const lastMessageText = convo.lastReaction.message.text
-        const fallbackMessage = _(
-          msg({
-            message: 'a message',
-            comment: `If last message does not contain text, fall back to "{user} reacted to {a message}"`,
-          }),
-        )
-
-        if (isFromMe) {
-          lastMessage = _(
-            msg`You reacted ${convo.lastReaction.reaction.value} to ${
-              lastMessageText
-                ? `"${convo.lastReaction.message.text}"`
-                : fallbackMessage
-            }`,
+      if (ChatBskyConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
+        if (
+          !lastMessageSentAt ||
+          new Date(lastMessageSentAt) <
+            new Date(convo.lastReaction.reaction.createdAt)
+        ) {
+          const isFromMe =
+            convo.lastReaction.reaction.sender.did === currentAccount?.did
+          const lastMessageText = convo.lastReaction.message.text
+          const fallbackMessage = _(
+            msg({
+              message: 'a message',
+              comment: `If last message does not contain text, fall back to "{user} reacted to {a message}"`,
+            }),
           )
-        } else {
-          const senderDid = convo.lastReaction.reaction.sender.did
-          const sender = convo.members.find(member => member.did === senderDid)
-          if (sender) {
+
+          if (isFromMe) {
             lastMessage = _(
-              msg`${sanitizeDisplayName(
-                sender.displayName || sender.handle,
-              )} reacted ${convo.lastReaction.reaction.value} to ${
+              msg`You reacted ${convo.lastReaction.reaction.value} to ${
                 lastMessageText
                   ? `"${convo.lastReaction.message.text}"`
                   : fallbackMessage
               }`,
             )
           } else {
-            lastMessage = _(
-              msg`Someone reacted ${convo.lastReaction.reaction.value} to ${
-                lastMessageText
-                  ? `"${convo.lastReaction.message.text}"`
-                  : fallbackMessage
-              }`,
+            const senderDid = convo.lastReaction.reaction.sender.did
+            const sender = convo.members.find(
+              member => member.did === senderDid,
             )
+            if (sender) {
+              lastMessage = _(
+                msg`${sanitizeDisplayName(
+                  sender.displayName || sender.handle,
+                )} reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            } else {
+              lastMessage = _(
+                msg`Someone reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            }
           }
         }
       }
-    }
 
-    return {
-      lastMessage,
-      lastMessageSentAt,
-      latestReportableMessage,
-    }
-  }, [
-    _,
-    convo.lastMessage,
-    convo.lastReaction,
-    currentAccount?.did,
-    isDeletedAccount,
-    convo.members,
-  ])
+      return {
+        lastMessage,
+        lastMessageSentAt,
+        latestReportableMessage,
+      }
+    }, [
+      _,
+      convo.lastMessage,
+      convo.lastReaction,
+      currentAccount?.did,
+      isDeletedAccount,
+      convo.members,
+    ])
 
-  const [_showActions, setShowActions] = useState(false)
+  const [showActions, setShowActions] = useState(false)
 
   const onMouseEnter = useCallback(() => {
     setShowActions(true)
@@ -331,14 +349,15 @@ function ChatListItemReady({
               a.absolute,
               {top: tokens.space.md, left: tokens.space.lg},
             ]}>
-            <UserAvatar
-              type="user"
+            <PreviewableUserAvatar
+              profile={profile}
               size={52}
               moderation={moderation.ui('avatar')}
             />
           </View>
 
-          <Button
+          <Link
+            to={`/messages/${convo.id}`}
             label={displayName}
             accessibilityHint={
               !isDeletedAccount
@@ -490,10 +509,10 @@ function ChatListItemReady({
                 )}
               </View>
             )}
-          </Button>
+          </Link>
 
           <ChatListItemPortal.Outlet />
-          {/*
+
           {showMenu && (
             <ConvoMenu
               convo={convo}
@@ -516,12 +535,12 @@ function ChatListItemReady({
               ]}
               latestReportableMessage={latestReportableMessage}
             />
-          )}*/}
-          {/*<LeaveConvoPrompt
+          )}
+          <LeaveConvoPrompt
             control={leaveConvoControl}
             convoId={convo.id}
             currentScreen="list"
-          />*/}
+          />
         </View>
       </GestureActionView>
     </ChatListItemPortal.Provider>

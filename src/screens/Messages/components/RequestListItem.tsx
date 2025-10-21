@@ -5,6 +5,7 @@ import {Trans} from '@lingui/macro'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {atoms as a, tokens} from '#/alf'
+import {KnownFollowers} from '#/components/KnownFollowers'
 import {Text} from '#/components/Typography'
 import {ChatListItem, ChatListItemPortal} from './ChatListItem'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
@@ -26,6 +27,14 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   return (
     <View style={[a.relative, a.flex_1]}>
       <ChatListItem convo={convo} showMenu={false}>
+        <View style={[a.pt_xs, a.pb_2xs]}>
+          <KnownFollowers
+            profile={otherUser}
+            moderationOpts={moderationOpts}
+            minimal
+            showIfEmpty
+          />
+        </View>
         {/* spacer, since you can't nest pressables */}
         <View style={[a.pt_md, a.pb_xs, a.w_full, {opacity: 0}]} aria-hidden>
           {/* Placeholder text so that it responds to the font height */}
