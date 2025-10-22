@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-16 16:31\n"
+"PO-Revision-Date: 2025-10-22 19:26\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1269,7 +1269,7 @@ msgstr "Vælg emne for algo"
 msgid "At least 8 characters"
 msgstr "Mindst 8 tegn"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:58
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:62
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Nordlys"
@@ -1458,7 +1458,7 @@ msgstr "Bluesky"
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky kan ikke bekræfte den anførte datos gyldighed."
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:175
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:179
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr "Bluesky Classic™"
@@ -1513,20 +1513,20 @@ msgstr "Slør billeder og filtrer fra feeds"
 msgid "Books"
 msgstr "Bøger"
 
-#: src/components/FeedInterstitials.tsx:431
+#: src/components/FeedInterstitials.tsx:436
 msgid "Browse more accounts on the Explore page"
 msgstr "Se flere konti under Udforsk"
 
-#: src/components/FeedInterstitials.tsx:559
+#: src/components/FeedInterstitials.tsx:569
 msgid "Browse more feeds on the Explore page"
 msgstr "Se flere feeds under Udforsk"
 
-#: src/components/FeedInterstitials.tsx:540
-#: src/components/FeedInterstitials.tsx:543
+#: src/components/FeedInterstitials.tsx:550
+#: src/components/FeedInterstitials.tsx:553
 msgid "Browse more suggestions"
 msgstr "Se flere forslag"
 
-#: src/components/FeedInterstitials.tsx:568
+#: src/components/FeedInterstitials.tsx:578
 msgid "Browse more suggestions on the Explore page"
 msgstr "Se flere forslag under Udforsk"
 
@@ -2933,15 +2933,15 @@ msgstr "fx Fede profiler"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:354
 msgid "e.g. Spammers"
-msgstr ""
+msgstr "fx Spammere"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:357
 msgid "e.g. The posters who never miss."
-msgstr ""
+msgstr "fx Profiler, der altid rammer plet."
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:358
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr ""
+msgstr "fx Brugere, der laver for mange reklameopslag."
 
 #: src/screens/Settings/AccountSettings.tsx:145
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:252
@@ -3711,7 +3711,7 @@ msgstr "Endelig! Hold styr på opslag, der er relevante for dig. Gem dem og find
 
 #: src/lib/interests.ts:60
 msgid "Finance"
-msgstr ""
+msgstr "Økonomi"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:48
 #: src/view/com/posts/FollowingEmptyState.tsx:53
@@ -3741,17 +3741,17 @@ msgstr "Afslut"
 msgid "Fitness"
 msgstr "Motion"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:159
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:163
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
 msgstr "Flad sort"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:127
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:131
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
 msgstr "Flad blå"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:143
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:147
 msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "Flad hvid"
@@ -4140,7 +4140,7 @@ msgstr "Gå til samtale med {0}"
 
 #: src/view/com/posts/PostFeedReason.tsx:38
 msgid "Go to feed"
-msgstr ""
+msgstr "Gå til feed"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:165
 msgid "Go to next"
@@ -4569,7 +4569,7 @@ msgstr "Ugyldigt handle. Prøv et andet."
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:365
 msgctxt "toast"
 msgid "Invalid interaction settings."
-msgstr ""
+msgstr "Ugyldige interaktionsindstillinger."
 
 #: src/components/moderation/ReportDialog/index.tsx:73
 msgid "Invalid report subject"
@@ -5197,7 +5197,7 @@ msgstr "Beskedindstillinger"
 msgid "Messages"
 msgstr "Beskeder"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:111
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:115
 msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr "Midnat"
@@ -7260,11 +7260,11 @@ msgstr "Videredelt af"
 
 #: src/view/com/posts/PostFeedReason.tsx:77
 msgid "Reposted by {reposter}"
-msgstr ""
+msgstr "Videredelt af {reposter}"
 
 #: src/view/com/posts/PostFeedReason.tsx:91
 msgid "Reposted by <0><1>{reposter}</1></0>"
-msgstr ""
+msgstr "Videredelt af <0><1>{reposter}</1></0>"
 
 #: src/view/com/posts/PostFeedReason.tsx:77
 #: src/view/com/posts/PostFeedReason.tsx:89
@@ -7630,8 +7630,8 @@ msgstr "Se #{tag}-indlæg af bruger"
 msgid "See jobs at Bluesky"
 msgstr "Se jobs hos Bluesky"
 
-#: src/components/FeedInterstitials.tsx:394
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:399
+#: src/components/FeedInterstitials.tsx:455
 msgid "See more"
 msgstr "Se flere"
 
@@ -8241,7 +8241,7 @@ msgstr "Spring introduktionen over og kom i gang med din konto"
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:99
 msgid "Skip to next step"
-msgstr ""
+msgstr "Spring til næste trin"
 
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
@@ -8264,7 +8264,7 @@ msgstr "Softwareudvikling"
 msgid "Some of your verifications are invalid."
 msgstr "Nogle af dine verifikationer er ugyldige."
 
-#: src/components/FeedInterstitials.tsx:522
+#: src/components/FeedInterstitials.tsx:532
 msgid "Some other feeds you might like"
 msgstr "Nogle andre feeds, du måske kan lide"
 
@@ -8320,7 +8320,7 @@ msgstr "Noget galt? Fortæl os om det."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
 msgid "Sorry, we're unable to load account suggestions at this time."
-msgstr ""
+msgstr "Beklager, vi kan ikke indlæse forslag lige nu."
 
 #: src/App.native.tsx:128
 #: src/App.web.tsx:100
@@ -8511,12 +8511,12 @@ msgstr "Foreslået til dig"
 msgid "Suggestive"
 msgstr "Seksuelle undertoner"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:82
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:86
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
 msgstr "Solopgang"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:96
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:100
 msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr "Solnedgang"
@@ -8837,7 +8837,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Notifikationer kunne ikke indlæses. Tryk her for at prøve igen."
 
 #: src/screens/Search/Explore.tsx:993
-#: src/view/com/posts/PostFeed.tsx:709
+#: src/view/com/posts/PostFeed.tsx:712
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Opslag kunne ikke indlæses. Tryk her for at prøve igen."
 
@@ -10417,7 +10417,7 @@ msgstr "Du kan fortsætte igangværende samtaler, uanset hvilken indstilling du 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:357
 msgctxt "toast"
 msgid "You can hide a maximum of {MAX_HIDDEN_REPLIES} replies."
-msgstr ""
+msgstr "Du kan skjule højst {MAX_HIDDEN_REPLIES} svar."
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:148
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."

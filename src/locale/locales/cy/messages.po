@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-16 16:32\n"
+"PO-Revision-Date: 2025-10-22 19:27\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -1269,7 +1269,7 @@ msgstr "Neilltuo pwnc ar gyfer algo"
 msgid "At least 8 characters"
 msgstr "O leiaf 8 nod"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:58
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:62
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
@@ -1458,7 +1458,7 @@ msgstr "Bluesky"
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Dyw Bluesky ddim yn gallu cadarnhau dilysrwydd y dyddiad honedig."
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:175
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:179
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr "Bluesky Classic ™"
@@ -1513,20 +1513,20 @@ msgstr "Pylu delweddau a hidlo o ffrydiau"
 msgid "Books"
 msgstr "Llyfrau"
 
-#: src/components/FeedInterstitials.tsx:431
+#: src/components/FeedInterstitials.tsx:436
 msgid "Browse more accounts on the Explore page"
 msgstr "Porwch ragor o gyfrifon ar y dudalen Archwilio"
 
-#: src/components/FeedInterstitials.tsx:559
+#: src/components/FeedInterstitials.tsx:569
 msgid "Browse more feeds on the Explore page"
 msgstr "Porwch ragor o ffrydiau ar y dudalen Archwilio"
 
-#: src/components/FeedInterstitials.tsx:540
-#: src/components/FeedInterstitials.tsx:543
+#: src/components/FeedInterstitials.tsx:550
+#: src/components/FeedInterstitials.tsx:553
 msgid "Browse more suggestions"
 msgstr "Pori ragor o awgrymiadau"
 
-#: src/components/FeedInterstitials.tsx:568
+#: src/components/FeedInterstitials.tsx:578
 msgid "Browse more suggestions on the Explore page"
 msgstr "Porwch ragor o awgrymiadau ar y dudalen Archwilio"
 
@@ -3711,7 +3711,7 @@ msgstr "O'r diwedd! Cadwch drefn ar bostiadau sy'n bwysig i chi. Cadwch nhw i'w 
 
 #: src/lib/interests.ts:60
 msgid "Finance"
-msgstr ""
+msgstr "Cyllid"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:48
 #: src/view/com/posts/FollowingEmptyState.tsx:53
@@ -3741,17 +3741,17 @@ msgstr "Gorffen"
 msgid "Fitness"
 msgstr "Ffitrwydd"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:159
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:163
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
 msgstr "Du Disglein"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:127
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:131
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
 msgstr "Glas Disglein"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:143
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:147
 msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "Gwyn Disglein"
@@ -5197,7 +5197,7 @@ msgstr "Dewisiadau negeseuon"
 msgid "Messages"
 msgstr "Negeseuon"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:111
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:115
 msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr "Canol Nos"
@@ -7630,8 +7630,8 @@ msgstr "Gweld #{tag} postiad yn ôl defnyddiwr"
 msgid "See jobs at Bluesky"
 msgstr "Gweld swyddi yn Bluesky"
 
-#: src/components/FeedInterstitials.tsx:394
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:399
+#: src/components/FeedInterstitials.tsx:455
 msgid "See more"
 msgstr "Gweld rhagor"
 
@@ -8241,7 +8241,7 @@ msgstr "Hepgor y cyflwyniad a chychwyn defnyddio'ch cyfrif"
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:99
 msgid "Skip to next step"
-msgstr ""
+msgstr "Mynd i'r cam nesaf"
 
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
@@ -8264,7 +8264,7 @@ msgstr "Datblygwr Meddalwedd"
 msgid "Some of your verifications are invalid."
 msgstr "Mae rhai o'ch dilysiadau'n annilys."
 
-#: src/components/FeedInterstitials.tsx:522
+#: src/components/FeedInterstitials.tsx:532
 msgid "Some other feeds you might like"
 msgstr "Rhai ffrydiau eraill efallai y byddwch yn eu hoffi"
 
@@ -8320,7 +8320,7 @@ msgstr "Rhywbeth o'i le? Rhowch wybod i ni."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
 msgid "Sorry, we're unable to load account suggestions at this time."
-msgstr ""
+msgstr "Ymddiheuriadau, does dim modd i ni lwytho awgrymiadau cyfrifon ar hyn o bryd."
 
 #: src/App.native.tsx:128
 #: src/App.web.tsx:100
@@ -8511,12 +8511,12 @@ msgstr "Awgrymiadau i chi"
 msgid "Suggestive"
 msgstr "Awgrymiadol"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:82
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:86
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
 msgstr "Codiad Haul"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:96
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:100
 msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr "Machlud Haul"
@@ -8837,7 +8837,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Bu anhawster wrth geisio cael hysbysiadau. Tapiwch yma i geisio eto."
 
 #: src/screens/Search/Explore.tsx:993
-#: src/view/com/posts/PostFeed.tsx:709
+#: src/view/com/posts/PostFeed.tsx:712
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Bu anhawster wrth nôl postiadau. Tapiwch yma i geisio eto."
 

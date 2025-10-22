@@ -8,7 +8,7 @@ msgstr ""
 "Language: fy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-16 16:31\n"
+"PO-Revision-Date: 2025-10-22 19:26\n"
 "Last-Translator: \n"
 "Language-Team: Frisian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1269,7 +1269,7 @@ msgstr "Underwerp foar algoritme tawize"
 msgid "At least 8 characters"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:58
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:62
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
@@ -1458,7 +1458,7 @@ msgstr "Bluesky"
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky kin de wierheid fan dizze datum net befêstigje."
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:175
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:179
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr "Bluesky Classic™"
@@ -1513,20 +1513,20 @@ msgstr "Ofbyldingen dizich meitsje en út dyn feeds filterje"
 msgid "Books"
 msgstr "Boeken"
 
-#: src/components/FeedInterstitials.tsx:431
+#: src/components/FeedInterstitials.tsx:436
 msgid "Browse more accounts on the Explore page"
 msgstr "Blêdzje troch brûkers op de ûntdekkingsside"
 
-#: src/components/FeedInterstitials.tsx:559
+#: src/components/FeedInterstitials.tsx:569
 msgid "Browse more feeds on the Explore page"
 msgstr "Blêdzje troch feeds op de ûntdekkingsside"
 
-#: src/components/FeedInterstitials.tsx:540
-#: src/components/FeedInterstitials.tsx:543
+#: src/components/FeedInterstitials.tsx:550
+#: src/components/FeedInterstitials.tsx:553
 msgid "Browse more suggestions"
 msgstr "Blêdzje troch mear suggestjes"
 
-#: src/components/FeedInterstitials.tsx:568
+#: src/components/FeedInterstitials.tsx:578
 msgid "Browse more suggestions on the Explore page"
 msgstr "Blêdzje troch mear suggestjes op de ûntdekkingsside"
 
@@ -3741,17 +3741,17 @@ msgstr "Foltôgje"
 msgid "Fitness"
 msgstr "Fitness"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:159
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:163
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
 msgstr "Plat swart"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:127
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:131
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
 msgstr "Plat blau"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:143
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:147
 msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "Plat wyt"
@@ -5197,7 +5197,7 @@ msgstr "Berjochtopsjes"
 msgid "Messages"
 msgstr "Berjochten"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:111
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:115
 msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr "Middernacht"
@@ -7630,8 +7630,8 @@ msgstr "#{tag}-berjochten fan brûker besjen"
 msgid "See jobs at Bluesky"
 msgstr "Fakatueres by Bluesky bejen"
 
-#: src/components/FeedInterstitials.tsx:394
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:399
+#: src/components/FeedInterstitials.tsx:455
 msgid "See more"
 msgstr "Mear toane"
 
@@ -8264,7 +8264,7 @@ msgstr "Softwareûntwikkeler"
 msgid "Some of your verifications are invalid."
 msgstr "Guon fan dyn ferifikaasjes binne ûnjildich."
 
-#: src/components/FeedInterstitials.tsx:522
+#: src/components/FeedInterstitials.tsx:532
 msgid "Some other feeds you might like"
 msgstr "Inkelde oare feeds dêr’tsto miskien wol oer meist"
 
@@ -8511,12 +8511,12 @@ msgstr "Foarsteld foar dy"
 msgid "Suggestive"
 msgstr "Suggestyf"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:82
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:86
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
 msgstr "Sinneopgong"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:96
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:100
 msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr "Sinneûndergong"
@@ -8837,7 +8837,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Der is in probleem bard by it opheljen fan meldingen. Tik hjir om it opnij te probearjen."
 
 #: src/screens/Search/Explore.tsx:993
-#: src/view/com/posts/PostFeed.tsx:709
+#: src/view/com/posts/PostFeed.tsx:712
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Der is in probleem bard by it opheljen fan berjochten. Tik hjir om it opnij te probearjen."
 
