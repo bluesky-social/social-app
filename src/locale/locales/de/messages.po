@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-16 16:31\n"
+"PO-Revision-Date: 2025-10-22 19:26\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1269,7 +1269,7 @@ msgstr "Thema für den Algorithmus festlegen"
 msgid "At least 8 characters"
 msgstr "Mindestens 8 Zeichen"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:58
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:62
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
@@ -1458,7 +1458,7 @@ msgstr "Bluesky"
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky kann die Echtheit des angegebenen Datums nicht bestätigen."
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:175
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:179
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr "Bluesky Classic™"
@@ -1513,20 +1513,20 @@ msgstr "Bilder verwischen und aus Feeds herausfiltern"
 msgid "Books"
 msgstr "Bücher"
 
-#: src/components/FeedInterstitials.tsx:431
+#: src/components/FeedInterstitials.tsx:436
 msgid "Browse more accounts on the Explore page"
 msgstr "Finde weitere Accounts auf der Entdecken-Seite"
 
-#: src/components/FeedInterstitials.tsx:559
+#: src/components/FeedInterstitials.tsx:569
 msgid "Browse more feeds on the Explore page"
 msgstr "Stöbere auf der Seite „Explore” in weiteren Feeds"
 
-#: src/components/FeedInterstitials.tsx:540
-#: src/components/FeedInterstitials.tsx:543
+#: src/components/FeedInterstitials.tsx:550
+#: src/components/FeedInterstitials.tsx:553
 msgid "Browse more suggestions"
 msgstr "Weitere Vorschläge anzeigen"
 
-#: src/components/FeedInterstitials.tsx:568
+#: src/components/FeedInterstitials.tsx:578
 msgid "Browse more suggestions on the Explore page"
 msgstr "Stöbere auf der Seite „Explore” nach weiteren Vorschlägen"
 
@@ -3711,7 +3711,7 @@ msgstr "Endlich! Behalte Posts, die dir wichtig sind, im Auge. Speichere sie, um
 
 #: src/lib/interests.ts:60
 msgid "Finance"
-msgstr ""
+msgstr "Finanzen"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:48
 #: src/view/com/posts/FollowingEmptyState.tsx:53
@@ -3741,17 +3741,17 @@ msgstr "Beenden"
 msgid "Fitness"
 msgstr "Fitness"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:159
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:163
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
 msgstr "Flaches Schwarz"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:127
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:131
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
 msgstr "Flaches Blau"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:143
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:147
 msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "Flaches Weiß"
@@ -4140,7 +4140,7 @@ msgstr "Zur Konversation mit {0} gehen"
 
 #: src/view/com/posts/PostFeedReason.tsx:38
 msgid "Go to feed"
-msgstr ""
+msgstr "Zum Feed gehen"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:165
 msgid "Go to next"
@@ -5197,7 +5197,7 @@ msgstr "Nachrichtenoptionen"
 msgid "Messages"
 msgstr "Nachrichten"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:111
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:115
 msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr "Mitternacht"
@@ -7260,11 +7260,11 @@ msgstr "Repostet von"
 
 #: src/view/com/posts/PostFeedReason.tsx:77
 msgid "Reposted by {reposter}"
-msgstr ""
+msgstr "Repostet von {reposter}"
 
 #: src/view/com/posts/PostFeedReason.tsx:91
 msgid "Reposted by <0><1>{reposter}</1></0>"
-msgstr ""
+msgstr "Repostet von <0><1>{reposter}</1></0>"
 
 #: src/view/com/posts/PostFeedReason.tsx:77
 #: src/view/com/posts/PostFeedReason.tsx:89
@@ -7630,8 +7630,8 @@ msgstr "#{tag}-Posts des Nutzers ansehen"
 msgid "See jobs at Bluesky"
 msgstr "Sieh dir Jobs bei Bluesky an"
 
-#: src/components/FeedInterstitials.tsx:394
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:399
+#: src/components/FeedInterstitials.tsx:455
 msgid "See more"
 msgstr "Mehr sehen"
 
@@ -8241,7 +8241,7 @@ msgstr "Überspringe die Einführung und beginne mit der Nutzung deines Accounts
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:99
 msgid "Skip to next step"
-msgstr ""
+msgstr "Zum nächsten Schritt springen"
 
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
@@ -8264,7 +8264,7 @@ msgstr "Software-Entwicklung"
 msgid "Some of your verifications are invalid."
 msgstr "Einige deiner Verifizierungen sind ungültig."
 
-#: src/components/FeedInterstitials.tsx:522
+#: src/components/FeedInterstitials.tsx:532
 msgid "Some other feeds you might like"
 msgstr "Einige andere Feeds, die dir gefallen könnten"
 
@@ -8320,7 +8320,7 @@ msgstr "Etwas stimmt nicht? Lass es uns wissen."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
 msgid "Sorry, we're unable to load account suggestions at this time."
-msgstr ""
+msgstr "Leider können derzeit keine Account-Vorschläge geladen werden."
 
 #: src/App.native.tsx:128
 #: src/App.web.tsx:100
@@ -8511,12 +8511,12 @@ msgstr "Vorgeschlagen für dich"
 msgid "Suggestive"
 msgstr "Suggestiv"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:82
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:86
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
 msgstr "Sonnenaufgang"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:96
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:100
 msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr "Sonnenuntergang"
@@ -8837,7 +8837,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Beim Abrufen von Mitteilung ist ein Problem aufgetreten. Tippe hier, um es erneut zu versuchen."
 
 #: src/screens/Search/Explore.tsx:993
-#: src/view/com/posts/PostFeed.tsx:709
+#: src/view/com/posts/PostFeed.tsx:712
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Beim Abrufen von Posts ist ein Problem aufgetreten. Tippe hier, um es erneut zu versuchen."
 
