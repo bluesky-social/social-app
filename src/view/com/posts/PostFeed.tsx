@@ -32,6 +32,7 @@ import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logEvent} from '#/lib/statsig/statsig'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
@@ -290,7 +291,9 @@ let PostFeed = ({
         }
       }
     } catch (e) {
-      logger.error('Poll latest failed', {feed, message: String(e)})
+      if (!isNetworkError(e)) {
+        logger.error('Poll latest failed', {feed, message: String(e)})
+      }
     }
   })
 
