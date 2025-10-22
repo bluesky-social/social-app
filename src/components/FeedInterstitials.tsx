@@ -390,7 +390,12 @@ export function ProfileGrid({
         {!isProfileHeaderContext && (
           <InlineLinkText
             label={_(msg`See more suggested profiles on the Explore page`)}
-            to="/search">
+            to="/search"
+            onPress={() => {
+              logger.metric('suggestedUser:seeMore', {
+                logContext: isFeedContext ? 'Explore' : 'Profile',
+              })
+            }}>
             <Trans>See more</Trans>
           </InlineLinkText>
         )}
@@ -429,6 +434,11 @@ function SeeMoreSuggestedProfilesCard() {
       to="/search"
       color="primary"
       label={_(msg`Browse more accounts on the Explore page`)}
+      onPress={() => {
+        logger.metric('suggestedUser:seeMore', {
+          logContext: 'Explore',
+        })
+      }}
       style={[
         a.flex_col,
         a.align_center,

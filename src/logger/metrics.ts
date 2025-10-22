@@ -297,6 +297,14 @@ export type MetricEvents = {
     recId?: number
     position: number
   }
+  'suggestedUser:seeMore': {
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'Profile'
+      | 'Onboarding'
+  }
   'profile:unfollow': {
     logContext:
       | 'RecommendedFollowsItem'
