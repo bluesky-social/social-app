@@ -115,7 +115,7 @@ jobs:
       - name: 🚀 Deploy
         run: eas submit -p ios --non-interactive --path ios-build/ios/build/Bluesky.ipa
 
-      - name: Upload dSYM to Sentry
+      - name: 🪲 Upload dSYM to Sentry
         run: >
           SENTRY_ORG=blueskyweb
           SENTRY_PROJECT=app
