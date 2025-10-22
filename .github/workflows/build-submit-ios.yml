@@ -98,10 +98,29 @@ jobs:
           yarn use-build-number-with-bump
           eas build -p ios
           --profile ${{ inputs.profile || 'testflight' }}
-          --local --output build.ipa --non-interactive
+          --local --output build.tar.gz --non-interactive
+
+      - name: 📂 Extract build artifact
+        run: |
+          if [ -f "build.tar.gz" ]; then
+            echo "Extracting build.tar.gz..."
+            mkdir ios-build
+            tar -xzf build.tar.gz -C ios-build
+            echo "Extraction completed successfully"
+          else
+            echo "Archive file not found!"
+            exit 1
+          fi
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path build.ipa
+        run: eas submit -p ios --non-interactive --path ios-build/ios/build/Bluesky.ipa
+
+      - name: 🪲 Upload dSYM to Sentry
+        run: >
+          SENTRY_ORG=blueskyweb
+          SENTRY_PROJECT=app
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          yarn sentry-cli debug-files upload ios-build/ios/build/Bluesky.app.dSYM.zip --include-sources
 
       - name: 📚 Get version from package.json
         id: get-build-info
