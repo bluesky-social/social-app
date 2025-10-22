@@ -50,8 +50,8 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: ⚙️ Install dependencies
         run: yarn install
@@ -80,6 +80,7 @@ jobs:
 
       - name: 🏗️ EAS Build
         run: >
+          EAS_BUILD_DISABLE_BUNDLE_JAVASCRIPT_STEP=1
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
@@ -96,7 +97,7 @@ jobs:
         id: timestamp
         uses: nanzm/get-time-action@master
         with:
-          format: 'MM-DD-HH-mm-ss'
+          format: "MM-DD-HH-mm-ss"
 
       - name: 🚀 Upload Production Artifact
         id: upload-artifact-production
@@ -149,6 +150,7 @@ jobs:
       - name: 🏗️ Build Production APK
         if: ${{ inputs.profile == 'production' }}
         run: >
+          EAS_BUILD_DISABLE_BUNDLE_JAVASCRIPT_STEP=1
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
