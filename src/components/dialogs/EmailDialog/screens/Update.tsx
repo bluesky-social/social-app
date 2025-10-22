@@ -6,7 +6,6 @@ import {validate as validateEmail} from 'email-validator'
 
 import {wait} from '#/lib/async/wait'
 import {useCleanError} from '#/lib/hooks/useCleanError'
-import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -188,7 +187,6 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
         } catch {}
       }
     } catch (e) {
-      logger.error('EmailDialog: update email failed', {safeMessage: e})
       const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
