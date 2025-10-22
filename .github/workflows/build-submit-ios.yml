@@ -100,7 +100,7 @@ jobs:
           --profile ${{ inputs.profile || 'testflight' }}
           --local --output build.tar.gz --non-interactive
 
-      - name: Extract build artifact
+      - name: 📂 Extract build artifact
         run: |
           if [ -f "build.tar.gz" ]; then
             echo "Extracting build.tar.gz..."
