@@ -3,6 +3,7 @@ import '#/logger/bitdrift/setup'
 import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
+import {View} from 'react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {
   initialWindowMetrics,
@@ -60,22 +61,26 @@ import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
-import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import * as Toast from '#/view/com/util/Toast'
-import {Shell} from '#/view/shell'
-import {ThemeProvider as Alf} from '#/alf'
+import {atoms as a, ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {Button, ButtonText} from '#/components/Button'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
-import {NuxDialogs} from '#/components/dialogs/nuxs'
+import * as Dialog from '#/components/Dialog'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
+import {Outlet as PortalOutlet} from '#/components/Portal'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
 import {Splash} from '#/Splash'
+import {BottomSheetOutlet} from '../modules/bottom-sheet'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {useApplyPullRequestOTAUpdate} from './lib/hooks/useOTAUpdates'
+import {RequestListItem} from './screens/Messages/components/RequestListItem'
+import {List} from './view/com/util/List'
 
 SplashScreen.preventAutoHideAsync()
 if (isIOS) {
@@ -164,10 +169,10 @@ function InnerApp() {
                                                         style={s.h100pct}>
                                                         <GlobalGestureEventsProvider>
                                                           <IntentDialogProvider>
-                                                            <TestCtrls />
-                                                            <Shell />
-                                                            <NuxDialogs />
+                                                            <Testbed />
                                                             <ToastOutlet />
+                                                            <PortalOutlet />
+                                                            <BottomSheetOutlet />
                                                           </IntentDialogProvider>
                                                         </GlobalGestureEventsProvider>
                                                       </GestureHandlerRootView>
@@ -252,3 +257,104 @@ function App() {
 }
 
 export default Sentry.wrap(App)
+
+function Testbed() {
+  const control = Dialog.useDialogControl()
+  const [showItem, setShowItem] = useState(true)
+
+  const {revertToEmbedded} = useApplyPullRequestOTAUpdate()
+
+  return (
+    <View style={[a.align_center, a.justify_center, {gap: 16}, a.h_full]}>
+      <Button
+        label="show dialog"
+        onPress={() => {
+          control.open()
+        }}
+        size="large"
+        color="primary">
+        <ButtonText>Show dialog</ButtonText>
+      </Button>
+      <Button
+        label="toggle list item + show toast"
+        onPress={() => {
+          Toast.show('toggle list item')
+          setShowItem(x => !x)
+        }}
+        size="large"
+        color="primary">
+        <ButtonText>toggle list item + show toast</ButtonText>
+      </Button>
+      <List
+        style={[{width: '100%', height: 300}, a.flex_grow_0]}
+        data={showItem ? [true] : []}
+        renderItem={() => (
+          <RequestListItem
+            convo={{
+              id: 'abc',
+              members: [{did: 'did:plc:abc', handle: 'alice.example.com'}],
+              muted: false,
+              rev: '1',
+              unreadCount: 0,
+            }}
+          />
+        )}
+      />
+      <Button
+        label="revert to embedded js"
+        onPress={() => revertToEmbedded()}
+        size="large"
+        color="secondary">
+        <ButtonText>revert to embedded js</ButtonText>
+      </Button>
+      <Dialog.Outer control={control}>
+        <Dialog.Handle />
+        <Dialog.ScrollableInner
+          label=""
+          style={{height: 300}}
+          contentContainerStyle={{gap: 12}}>
+          <Button
+            label="show dialog"
+            onPress={() => Toast.show('Hello')}
+            size="large"
+            color="secondary">
+            <ButtonText>Show dialog</ButtonText>
+          </Button>
+          <Button
+            label="close dialog"
+            onPress={() => {
+              Toast.show('closing')
+              control.close()
+            }}
+            size="large"
+            color="primary">
+            <ButtonText>Close - toast before</ButtonText>
+          </Button>
+          <Button
+            label="close dialog"
+            onPress={() => {
+              control.close(() => {
+                Toast.show('closed')
+              })
+            }}
+            size="large"
+            color="primary">
+            <ButtonText>Close - toast after</ButtonText>
+          </Button>
+          <Button
+            label="close dialog"
+            onPress={() => {
+              control.close(() => {
+                setShowItem(false)
+                Toast.show('closed')
+              })
+            }}
+            size="large"
+            color="primary">
+            <ButtonText>Close - close + hide item</ButtonText>
+          </Button>
+        </Dialog.ScrollableInner>
+      </Dialog.Outer>
+    </View>
+  )
+}
