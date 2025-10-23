@@ -11,7 +11,7 @@ import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {isAndroid, isIOS, isIOS26} from '#/platform/detection'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
 import {useGeolocationStatus} from '#/state/geolocation'
 import {useSession} from '#/state/session'
@@ -207,7 +207,7 @@ export function Shell() {
       <SystemBars
         style={{
           statusBar:
-            t.name !== 'light' || (isIOS && fullyExpandedCount > 0)
+            t.name !== 'light' || (isIOS && !isIOS26 && fullyExpandedCount > 0)
               ? 'light'
               : 'dark',
           navigationBar: t.name !== 'light' ? 'light' : 'dark',
