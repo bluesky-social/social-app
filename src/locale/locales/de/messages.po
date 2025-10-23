@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:26\n"
+"PO-Revision-Date: 2025-10-23 16:19\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "Das ausgewählte Video ist größer als 100 MB. Bitte versuche es mit einer kleineren Datei erneut."
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "Der Server scheint Probleme zu haben. Bitte versuche es in ein paar Minuten erneut."
 
@@ -8998,7 +8998,7 @@ msgstr "Diese Funktion befindet sich in der Beta-Phase. Du kannst mehr über Rep
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "Diese Funktion ist bei Verwendung eines App-Passworts nicht verfügbar. Bitte logge dich mit deinem Hauptpasswort ein."
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Diese Funktion ist mit einem App-Passwort nicht verfügbar. Bitte logge dich mit deinem Hauptpasswort ein."
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "Standort konnte nicht abgerufen werden. Du musst deine Systemeinstellungen öffnen, um die Standortdienste für Bluesky aktivieren zu können."
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "Verbindung nicht möglich. Bitte überprüfe deine Internetverbindung und versuche es erneut."
 

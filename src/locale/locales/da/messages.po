@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:26\n"
+"PO-Revision-Date: 2025-10-23 16:19\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "Den valgte video er større end 100 MB. Prøv igen med en mindre fil."
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "Der ser ud til at være problemer med serveren. Prøv igen om lidt."
 
@@ -8998,7 +8998,7 @@ msgstr "Denne funktion er i beta. Du kan læse mere om dataeksport i <0>dette bl
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "Denne funktion er ikke tilgængelig, når du bruger en appadgangskode. Log ind med din primære adgangskode."
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Denne funktion er ikke tilgængelig, når du bruger en appadgangskode. Log ind med din primære adgangskode."
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "Kunne ikke tilgå lokation. Du skal give Bluesky adgang til lokationsoplysninger under systemindstillinger."
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "Kan ikke forbinde. Tjek din internetforbindelse og prøv igen."
 

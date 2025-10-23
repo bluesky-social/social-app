@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:27\n"
+"PO-Revision-Date: 2025-10-23 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "선택한 동영상이 100MB보다 큽니다. 더 작은 파일로 다시 시도해 주세요."
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "서버에 문제가 있는 것 같습니다. 잠시 후 다시 시도해 주세요."
 
@@ -8998,7 +8998,7 @@ msgstr "이 기능은 베타 버전입니다. 저장소 내보내기에 대한 �
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "앱 비밀번호를 사용하는 동안에는 이 기능을 사용할 수 없습니다. 기본 비밀번호로 로그인하세요."
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "앱 비밀번호를 사용하는 동안에는 이 기능을 사용할 수 없습니다. 기본 비밀번호로 로그인하세요."
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "위치에 접근할 수 없습니다. Bluesky 앱의 위치 서비스를 활성화하려면 시스템 설정으로 이동해 주세요."
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "연결할 수 없습니다. 인터넷 연결을 확인한 후 다시 시도해 주세요."
 

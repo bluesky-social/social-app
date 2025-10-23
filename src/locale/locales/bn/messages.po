@@ -8,7 +8,7 @@ msgstr ""
 "Language: bn\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:26\n"
+"PO-Revision-Date: 2025-10-23 16:19\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1513,20 +1513,20 @@ msgstr ""
 msgid "Books"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:431
+#: src/components/FeedInterstitials.tsx:436
 msgid "Browse more accounts on the Explore page"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:559
+#: src/components/FeedInterstitials.tsx:569
 msgid "Browse more feeds on the Explore page"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:540
-#: src/components/FeedInterstitials.tsx:543
+#: src/components/FeedInterstitials.tsx:550
+#: src/components/FeedInterstitials.tsx:553
 msgid "Browse more suggestions"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:568
+#: src/components/FeedInterstitials.tsx:578
 msgid "Browse more suggestions on the Explore page"
 msgstr ""
 
@@ -7630,8 +7630,8 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:394
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:399
+#: src/components/FeedInterstitials.tsx:455
 msgid "See more"
 msgstr ""
 
@@ -8264,7 +8264,7 @@ msgstr ""
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:522
+#: src/components/FeedInterstitials.tsx:532
 msgid "Some other feeds you might like"
 msgstr ""
 
@@ -8837,7 +8837,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:993
-#: src/view/com/posts/PostFeed.tsx:709
+#: src/view/com/posts/PostFeed.tsx:712
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:27\n"
+"PO-Revision-Date: 2025-10-23 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "O vídeo selecionado tem mais de 100 MB. Por favor, tente novamente com um ficheiro menor."
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "O servidor parece estar a passar por problemas. Por favor, tente novamente em alguns instantes."
 
@@ -8998,7 +8998,7 @@ msgstr "Esta funcionalidade está em beta. Pode ler mais sobre exportações de 
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "Esta funcionalidade não está disponível enquanto estiver a usar uma palavra-passe de aplicação. Por favor, entre com a sua palavra-passe principal."
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Esta funcionalidade não está disponível quando uma palavra-passe de aplicação está a ser usada. Por favor, inicie sessão com a sua palavra-passe principal."
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "Não foi possível aceder à localização. Vai ter de visitar as suas definições do sistema para ativar os serviços de localização para o Bluesky."
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "Não foi possível conectar. Verifique a sua conexão à internet e tente novamente."
 
