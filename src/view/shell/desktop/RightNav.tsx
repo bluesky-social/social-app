@@ -79,8 +79,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
            * Compensate for the right padding above (2px) to retain intended width.
            */
           width: width + gutters.paddingLeft + 2,
-          maxHeight: '100%',
-          overflowY: 'auto',
+          maxHeight: '100vh',
         }),
       ]}>
       {!isSearchScreen && <DesktopSearch />}
