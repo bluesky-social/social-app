@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:26\n"
+"PO-Revision-Date: 2025-10-23 16:19\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "El vídeo seleccionat té una mida superior a 100 MB. Torna-ho a provar amb un fitxer més petit."
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "Sembla que el servidor està experimentant problemes. Torneu-ho a provar d'aquí a uns moments."
 
@@ -8998,7 +8998,7 @@ msgstr "Aquesta funció està en versió beta. Podeu obtenir més informació so
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "Aquesta funció no està disponible mentre s'utilitza una contrasenya d'aplicació. Inicia la sessió amb la contrasenya principal."
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Aquesta funció no està disponible mentre s'utilitza una contrasenya d'aplicació. Inicieu la sessió amb la contrasenya principal."
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "No es pot accedir a la ubicació. Hauràs d'anar a la configuració del teu dispositiu i activar els serveis d'ubicació per a Bluesky."
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "No s'ha pogut connectar. Comprova la teva connexió a Internet i torna-ho a provar."
 

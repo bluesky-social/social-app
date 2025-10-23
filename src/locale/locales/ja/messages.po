@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:27\n"
+"PO-Revision-Date: 2025-10-23 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "選択したビデオが100MBより大きいです。小さいファイルでもう一度お試しください。"
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "サーバーで問題が発生しているようです。少し間をおいて再度試してください。"
 
@@ -8998,7 +8998,7 @@ msgstr "この機能はベータ版です。リポジトリのエクスポート
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "この機能はアプリパスワードでは利用できません。メインパスワードでサインインしてください。"
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "この機能はアプリパスワードでは利用できません。メインパスワードでサインインしてください。"
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "位置情報にアクセスできません。システムの設定を確認して、位置情報サービスをBlueskyが使えるよう許可する必要があります。"
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "接続できません。インターネットへの接続を確認して再度試してください。"
 

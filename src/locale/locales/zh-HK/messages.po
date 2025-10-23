@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:26\n"
+"PO-Revision-Date: 2025-10-23 16:19\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "你揀選嘅影片大過 100 MB。唔該用細啲嘅檔案試多次。"
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "伺服器似乎遇到問題。唔該遲啲試多次。"
 
@@ -8998,7 +8998,7 @@ msgstr "呢個功能仲喺測試階段。你可以睇 <0>呢篇網誌</0> 知多
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "呢個功能喺用 App 專用密碼嗰陣唔畀用。請用你嘅主密碼登入。"
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "呢個功能喺用 App 專用密碼嗰陣唔畀用，請用返你嘅主要密碼登入。"
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "取用唔到位置資訊，你需要去系統設定允許 Bluesky 使用定位服務。"
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "連線唔到伺服器。請檢查你嘅互聯網連線，跟住試多次。"
 

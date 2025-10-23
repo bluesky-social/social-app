@@ -8,7 +8,7 @@ msgstr ""
 "Language: ne\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:27\n"
+"PO-Revision-Date: 2025-10-23 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Nepali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr ""
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "सर्भर समस्यामा देखिनु भएको छ। कृपया केही समय पछि पुन: प्रयास गर्नुहोस्।"
 
@@ -8998,7 +8998,7 @@ msgstr "यो सुविधा बेटामा छ। तपाईं <0>�
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr ""
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "यो सुविधा App पासवर्ड प्रयोग गर्दा उपलब्ध छैन। कृपया आफ्नो मुख्य पासवर्ड सँग साइन इन गर्नुहोस्।"
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr ""
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "जडान गर्न असमर्थ। कृपया आफ्नो इन्टरनेट जडान जाँच गर्नुहोस् र पुनः प्रयास गर्नुहोस्।"
 

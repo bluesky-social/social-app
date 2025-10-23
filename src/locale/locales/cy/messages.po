@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-22 19:27\n"
+"PO-Revision-Date: 2025-10-23 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "Mae'r fideo hwn yn fwy na 100 MB. Ceisiwch eto gyda ffeil lai."
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "Mae'n ymddangos bod y gweinydd yn cael problemau. Ceisiwch eto ymhen ychydig funudau."
 
@@ -8998,7 +8998,7 @@ msgstr "Mae'r nodwedd hon mewn beta. Gallwch ddarllen mwy am allforio storfeydd 
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "Dyw'r nodwedd hon ddim ar gael wrth ddefnyddio cyfrinair ap. Mewngofnodwch gyda'ch prif gyfrinair."
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Dyw'r nodwedd hon ddim ar gael wrth ddefnyddio Cyfrinair Ap. Mewngofnodwch gyda'ch prif gyfrinair."
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "Methu cael mynediad i'ch lleoliad. Bydd rhaid i chi fynd i osodiadau'ch system i alluogi gwasanaethau lleoliad ar gyfer Bluesky."
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "Methu cysylltu. Gwiriwch eich cysylltiad rhyngrwyd a rhowch gynnig arall arni."
 
