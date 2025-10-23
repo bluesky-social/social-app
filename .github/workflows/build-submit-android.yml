@@ -80,6 +80,7 @@ jobs:
 
       - name: 🏗️ EAS Build
         run: >
+          EAS_BUILD_DISABLE_BUNDLE_JAVASCRIPT_STEP=1
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
@@ -154,6 +155,7 @@ jobs:
       - name: 🏗️ Build Production APK
         if: ${{ inputs.profile == 'production' }}
         run: >
+          EAS_BUILD_DISABLE_BUNDLE_JAVASCRIPT_STEP=1
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
