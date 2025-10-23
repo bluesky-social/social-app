@@ -13,16 +13,6 @@ export function useServiceQuery(serviceUrl: string) {
       const res = await agent.com.atproto.server.describeServer()
       return res.data
     },
-    enabled: isValidUrl(serviceUrl),
+    enabled: URL.canParse(serviceUrl),
   })
-}
-
-function isValidUrl(url: string) {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const urlp = new URL(url)
-    return true
-  } catch {
-    return false
-  }
 }
