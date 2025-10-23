@@ -1,3 +1,4 @@
+import {XRPCError} from '@atproto/xrpc'
 import {t} from '@lingui/macro'
 
 export function cleanError(str: any): string {
@@ -42,4 +43,12 @@ export function isNetworkError(e: unknown) {
     }
   }
   return false
+}
+
+export function isErrorMaybeAppPasswordPermissions(e: unknown) {
+  if (e instanceof XRPCError && e.error === 'TokenInvalid') {
+    return true
+  }
+  const str = String(e)
+  return str.includes('Bad token scope') || str.includes('Bad token method')
 }
