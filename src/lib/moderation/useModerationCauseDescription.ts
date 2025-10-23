@@ -28,7 +28,7 @@ export interface ModerationCauseDescription {
   sourceType?: ModerationCauseSource['type']
   sourceAvi?: string
   sourceDid?: string
-  subjectAccount?: bool
+  subjectAccount?: boolean
 }
 
 export function useModerationCauseDescription(
