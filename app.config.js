@@ -50,6 +50,11 @@ module.exports = function (_config) {
         config: {
           usesNonExemptEncryption: false,
         },
+        icon: {
+          light: './assets/app-icons/ios_icon_default_next.png',
+          dark: './assets/app-icons/ios_icon_default_next.png',
+          tinted: './assets/app-icons/ios_icon_default_tinted.png',
+        },
         infoPlist: {
           UIBackgroundModes: ['remote-notification'],
           NSCameraUsageDescription:
