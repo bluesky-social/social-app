@@ -85,7 +85,11 @@ function ContentHiderActive({
       blur.type !== 'label' ||
       (blur.type === 'label' && blur.source.type !== 'user')
     ) {
-      return desc.name
+      if (desc.subjectAccount) {
+        return _('{labelName} (Account)', {labelName: desc.name})
+      } else {
+        return desc.name
+      }
     }
 
     let hasAdultContentLabel = false
@@ -127,6 +131,7 @@ function ContentHiderActive({
     modui?.blurs,
     blur,
     desc.name,
+    desc.subjectAccount,
     labelDefs,
     i18n.locale,
     globalLabelStrings,

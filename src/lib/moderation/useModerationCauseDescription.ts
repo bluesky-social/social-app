@@ -28,6 +28,7 @@ export interface ModerationCauseDescription {
   sourceType?: ModerationCauseSource['type']
   sourceAvi?: string
   sourceDid?: string
+  subjectAccount?: bool
 }
 
 export function useModerationCauseDescription(
@@ -162,6 +163,7 @@ export function useModerationCauseDescription(
         sourceType: cause.source.type,
         sourceAvi: labeler?.creator.avatar,
         sourceDid: cause.label.src,
+        subjectAccount: cause.label.uri.startsWith('did:'),
       }
     }
     // should never happen
