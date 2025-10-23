@@ -341,10 +341,14 @@ function flushToStatsig(stats: AggregatedStats | null, feedDescriptor: string) {
   }
 
   if (stats.seenCount > 0) {
-    logger.metric('feed:seen', {
-      count: stats.seenCount,
-      feed: feedDescriptor,
-    })
+    logger.metric(
+      'feed:seen',
+      {
+        count: stats.seenCount,
+        feed: feedDescriptor,
+      },
+      {statsig: false},
+    )
     stats.seenCount = 0
   }
 }
