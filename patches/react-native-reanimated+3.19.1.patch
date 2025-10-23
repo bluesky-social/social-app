@@ -1,11 +1,22 @@
+diff --git a/node_modules/react-native-reanimated/lib/module/ConfigHelper.js b/node_modules/react-native-reanimated/lib/module/ConfigHelper.js
+index 6d5aee3..e72f8b6 100644
+--- a/node_modules/react-native-reanimated/lib/module/ConfigHelper.js
++++ b/node_modules/react-native-reanimated/lib/module/ConfigHelper.js
+@@ -18,6 +18,7 @@ export function configureProps() {
+   jsiConfigureProps(Object.keys(PropsAllowlists.UI_THREAD_PROPS_WHITELIST), Object.keys(PropsAllowlists.NATIVE_THREAD_PROPS_WHITELIST));
+ }
+ export function addWhitelistedNativeProps(props) {
++  throw new Error('addWhitelistedNativeProps crash!');
+   const oldSize = Object.keys(PropsAllowlists.NATIVE_THREAD_PROPS_WHITELIST).length;
+   PropsAllowlists.NATIVE_THREAD_PROPS_WHITELIST = {
+     ...PropsAllowlists.NATIVE_THREAD_PROPS_WHITELIST,
 diff --git a/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js b/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js
-deleted file mode 100644
-index 9c98d6c..0000000
+index 9c98d6c..70ada9f 100644
 --- a/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js
-+++ /dev/null
-@@ -1,164 +0,0 @@
--'use strict';
--
++++ b/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js
+@@ -1,125 +1,5 @@
+ 'use strict';
+ 
 -import React, { useEffect, useRef } from 'react';
 -import { StyleSheet, TextInput, View } from 'react-native';
 -import { addWhitelistedNativeProps } from "../ConfigHelper.js";
@@ -126,13 +137,13 @@ index 9c98d6c..0000000
 -      <AnimatedTextInput style={styles.text} animatedProps={animatedProps} editable={false} />
 -    </View>;
 -}
--/**
-- * A component that lets you measure fps values on JS and UI threads on both the
-- * Paper and Fabric architectures.
-- *
-- * @param smoothingFrames - Determines amount of saved frames which will be used
-- *   for fps value smoothing.
-- */
+ /**
+  * A component that lets you measure fps values on JS and UI threads on both the
+  * Paper and Fabric architectures.
+@@ -127,38 +7,7 @@ function UiPerformance({
+  * @param smoothingFrames - Determines amount of saved frames which will be used
+  *   for fps value smoothing.
+  */
 -export function PerformanceMonitor({
 -  smoothingFrames = DEFAULT_BUFFER_SIZE
 -}) {
@@ -140,7 +151,9 @@ index 9c98d6c..0000000
 -      <JsPerformance smoothingFrames={smoothingFrames} />
 -      <UiPerformance smoothingFrames={smoothingFrames} />
 -    </View>;
--}
++export function PerformanceMonitor() {
++  return null;
+ }
 -const styles = StyleSheet.create({
 -  monitor: {
 -    flexDirection: 'row',
@@ -167,35 +180,14 @@ index 9c98d6c..0000000
 -    flexWrap: 'wrap'
 -  }
 -});
--//# sourceMappingURL=PerformanceMonitor.js.map
-\ No newline at end of file
-diff --git a/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js.map b/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js.map
-deleted file mode 100644
-index 4457617..0000000
---- a/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js.map
-+++ /dev/null
-@@ -1 +0,0 @@
--{"version":3,"names":["React","useEffect","useRef","StyleSheet","TextInput","View","addWhitelistedNativeProps","createAnimatedComponent","useAnimatedProps","useFrameCallback","useSharedValue","createCircularDoublesBuffer","size","next","buffer","Float32Array","count","push","value","oldValue","oldCount","Math","min","front","notEmpty","current","index","back","DEFAULT_BUFFER_SIZE","text","AnimatedTextInput","loopAnimationFrame","fn","lastTime","loop","requestAnimationFrame","time","getFps","renderTimeInMs","completeBufferRoutine","timestamp","round","droppedTimestamp","measuredRangeDuration","JsPerformance","smoothingFrames","jsFps","totalRenderTime","circularBuffer","_","currentFps","toFixed","animatedProps","defaultValue","styles","container","UiPerformance","uiFps","PerformanceMonitor","monitor","create","flexDirection","position","backgroundColor","zIndex","header","fontSize","color","paddingHorizontal","fontVariant","fontFamily","alignItems","justifyContent","flexWrap"],"sourceRoot":"../../../src","sources":["component/PerformanceMonitor.tsx"],"mappings":"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","ignoreList":[]}
-diff --git a/node_modules/react-native-reanimated/lib/module/index.js b/node_modules/react-native-reanimated/lib/module/index.js
-index 3bad108..6bc119c 100644
---- a/node_modules/react-native-reanimated/lib/module/index.js
-+++ b/node_modules/react-native-reanimated/lib/module/index.js
-@@ -10,7 +10,6 @@ export { cancelAnimation, defineAnimation, withClamp, withDecay, withDelay, with
- export { convertToRGBA, isColor, processColor } from "./Colors.js";
- export { InterfaceOrientation, IOSReferenceFrame, isWorkletFunction, KeyboardState, ReduceMotion, SensorType, SharedTransitionType } from "./commonTypes.js";
- export { LayoutAnimationConfig } from "./component/LayoutAnimationConfig.js";
--export { PerformanceMonitor } from "./component/PerformanceMonitor.js";
- export { ReducedMotionConfig } from "./component/ReducedMotionConfig.js";
- export { configureReanimatedLogger } from "./ConfigHelper.js";
- export { createWorkletRuntime, enableLayoutAnimations, executeOnUIRuntimeSync, getViewProp, isConfigured, isReanimated3, makeMutable, makeShareableCloneRecursive, runOnJS, runOnRuntime, runOnUI } from "./core.js";
+ //# sourceMappingURL=PerformanceMonitor.js.map
 diff --git a/node_modules/react-native-reanimated/src/component/PerformanceMonitor.tsx b/node_modules/react-native-reanimated/src/component/PerformanceMonitor.tsx
-deleted file mode 100644
-index ff8fc8a..0000000
+index ff8fc8a..34dde79 100644
 --- a/node_modules/react-native-reanimated/src/component/PerformanceMonitor.tsx
-+++ /dev/null
-@@ -1,211 +0,0 @@
--'use strict';
--
++++ b/node_modules/react-native-reanimated/src/component/PerformanceMonitor.tsx
+@@ -1,170 +1,5 @@
+ 'use strict';
+ 
 -import React, { useEffect, useRef } from 'react';
 -import { StyleSheet, TextInput, View } from 'react-native';
 -
@@ -361,13 +353,13 @@ index ff8fc8a..0000000
 -  smoothingFrames?: number;
 -};
 -
--/**
-- * A component that lets you measure fps values on JS and UI threads on both the
-- * Paper and Fabric architectures.
-- *
-- * @param smoothingFrames - Determines amount of saved frames which will be used
-- *   for fps value smoothing.
-- */
+ /**
+  * A component that lets you measure fps values on JS and UI threads on both the
+  * Paper and Fabric architectures.
+@@ -172,40 +7,6 @@ export type PerformanceMonitorProps = {
+  * @param smoothingFrames - Determines amount of saved frames which will be used
+  *   for fps value smoothing.
+  */
 -export function PerformanceMonitor({
 -  smoothingFrames = DEFAULT_BUFFER_SIZE,
 -}: PerformanceMonitorProps) {
@@ -377,7 +369,9 @@ index ff8fc8a..0000000
 -      <UiPerformance smoothingFrames={smoothingFrames} />
 -    </View>
 -  );
--}
++export function PerformanceMonitor() {
++  return null;
+ }
 -
 -const styles = StyleSheet.create({
 -  monitor: {
@@ -405,16 +399,3 @@ index ff8fc8a..0000000
 -    flexWrap: 'wrap',
 -  },
 -});
-diff --git a/node_modules/react-native-reanimated/src/index.ts b/node_modules/react-native-reanimated/src/index.ts
-index 2500edb..ad150da 100644
---- a/node_modules/react-native-reanimated/src/index.ts
-+++ b/node_modules/react-native-reanimated/src/index.ts
-@@ -81,8 +81,6 @@ export {
- } from './commonTypes';
- export type { FlatListPropsWithLayout } from './component/FlatList';
- export { LayoutAnimationConfig } from './component/LayoutAnimationConfig';
--export type { PerformanceMonitorProps } from './component/PerformanceMonitor';
--export { PerformanceMonitor } from './component/PerformanceMonitor';
- export { ReducedMotionConfig } from './component/ReducedMotionConfig';
- export type { AnimatedScrollViewProps } from './component/ScrollView';
- export { configureReanimatedLogger } from './ConfigHelper';
