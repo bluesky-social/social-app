@@ -139,7 +139,7 @@ function Inner({
       style={web({maxWidth: 450})}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_heavy, a.text_2xl]}>{title}</Text>
+          <Text style={[a.font_bold, a.text_2xl]}>{title}</Text>
 
           {error ? (
             <View style={[a.rounded_sm, a.overflow_hidden]}>
