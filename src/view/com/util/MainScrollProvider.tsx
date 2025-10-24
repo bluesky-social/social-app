@@ -1,6 +1,11 @@
 import React, {useCallback, useEffect} from 'react'
 import {type NativeScrollEvent} from 'react-native'
-import {interpolate, useSharedValue, withSpring} from 'react-native-reanimated'
+import {
+  clamp,
+  interpolate,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -9,11 +14,6 @@ import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
-
-function clamp(num: number, min: number, max: number) {
-  'worklet'
-  return Math.min(Math.max(num, min), max)
-}
 
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
