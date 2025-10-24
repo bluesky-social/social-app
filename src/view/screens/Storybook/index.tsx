@@ -9,6 +9,7 @@ import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
+import {Link} from '#/components/Link'
 import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
@@ -103,6 +104,14 @@ function StorybookInner() {
               label="crash">
               <ButtonText>Sentry Crash</ButtonText>
             </Button>
+
+            <Link
+              to="/sys/debug-lists"
+              label="Lists debugger"
+              size="small"
+              color="primary_subtle">
+              <ButtonText>Lists debugger</ButtonText>
+            </Link>
 
             <ThemeProvider theme="light">
               <Theming />
