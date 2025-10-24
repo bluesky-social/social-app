@@ -8,7 +8,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
-import isEqual from 'lodash.isequal'
+import isEqual from 'es-toolkit/compat/isEqual'
 
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'

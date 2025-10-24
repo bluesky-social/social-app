@@ -6,7 +6,7 @@ import {
   type ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import chunk from 'lodash.chunk'
+import chunk from 'es-toolkit/compat/chunk'
 
 import {until} from '#/lib/async/until'
 

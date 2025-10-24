@@ -4,7 +4,7 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import debounce from 'lodash.debounce'
+import debounce from 'es-toolkit/compat/debounce'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'

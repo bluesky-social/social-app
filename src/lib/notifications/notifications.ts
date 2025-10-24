@@ -3,7 +3,7 @@ import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
-import debounce from 'lodash.debounce'
+import debounce from 'es-toolkit/compat/debounce'
 
 import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
 import {logger as notyLogger} from '#/lib/notifications/util'

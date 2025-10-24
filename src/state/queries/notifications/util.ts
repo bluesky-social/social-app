@@ -12,7 +12,7 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
-import chunk from 'lodash.chunk'
+import chunk from 'es-toolkit/compat/chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
 import * as bsky from '#/types/bsky'
