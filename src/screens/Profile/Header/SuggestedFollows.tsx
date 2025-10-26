@@ -28,6 +28,11 @@ export function AnimatedProfileHeaderSuggestedFollows({
   actorDid: string
 }) {
   const gate = useGate()
+  const {isLoading, data, error} = useSuggestedFollowsByActorQuery({
+    did: actorDid,
+  })
+
+  if (!data?.suggestions?.length) return null
 
   /* NOTE (caidanw):
    * Android does not work well with this feature yet.
@@ -40,7 +45,13 @@ export function AnimatedProfileHeaderSuggestedFollows({
 
   return (
     <AccordionAnimation isExpanded={isExpanded}>
-      <ProfileHeaderSuggestedFollows actorDid={actorDid} />
+      <ProfileGrid
+        isSuggestionsLoading={isLoading}
+        profiles={data.suggestions}
+        recId={data.recId}
+        error={error}
+        viewContext="profileHeader"
+      />
     </AccordionAnimation>
   )
 }
