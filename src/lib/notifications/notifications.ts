@@ -2,8 +2,7 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import type AtpAgent from '@atproto/api'
-import {type Agent} from '@atproto/api'
+import {type AtpAgent} from '@atproto/api'
 import {type AppBskyNotificationRegisterPush} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
@@ -26,7 +25,7 @@ async function _registerPushToken({
   token,
   extra = {},
 }: {
-  agent: Agent
+  agent: AtpAgent
   currentAccount: SessionAccount
   token: Notifications.DevicePushToken
   extra?: {
