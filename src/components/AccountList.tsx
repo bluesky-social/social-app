@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useActorStatus} from '#/lib/actor-status'
+import {isJwtExpired} from '#/lib/jwt'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfilesQuery} from '#/state/queries/profile'
@@ -121,6 +122,8 @@ function AccountItem({
     onSelect(account)
   }, [account, onSelect])
 
+  const isLoggedOut = !account.refreshJwt || isJwtExpired(account.refreshJwt)
+
   return (
     <Button
       testID={`chooseAccountBtn-${account.handle}`}
@@ -177,6 +180,17 @@ function AccountItem({
               ]}>
               {sanitizeHandle(account.handle, '@')}
             </Text>
+            {isLoggedOut && (
+              <Text
+                style={[
+                  a.leading_tight,
+                  a.text_xs,
+                  a.italic,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>Logged out</Trans>
+              </Text>
+            )}
           </View>
 
           {isCurrentAccount ? (
