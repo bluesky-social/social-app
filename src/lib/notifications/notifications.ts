@@ -289,7 +289,7 @@ export async function resetBadgeCount() {
   await setBadgeCountAsync(0)
 }
 
-export async function unregisterPushToken(agents: AtpAgent[], staging = false) {
+export async function unregisterPushToken(agents: AtpAgent[]) {
   if (!isNative) return
 
   try {
@@ -297,7 +297,9 @@ export async function unregisterPushToken(agents: AtpAgent[], staging = false) {
     if (token) {
       for (const agent of agents) {
         await agent.app.bsky.notification.unregisterPush({
-          serviceDid: staging ? PUBLIC_STAGING_APPVIEW_DID : PUBLIC_APPVIEW_DID,
+          serviceDid: agent.serviceUrl.hostname.includes('staging')
+            ? PUBLIC_STAGING_APPVIEW_DID
+            : PUBLIC_APPVIEW_DID,
           platform: Platform.OS,
           token: token.data,
           appId: 'xyz.blueskyweb.app',
