@@ -1,5 +1,7 @@
 import {jwtDecode} from 'jwt-decode'
 
+import {logger} from '#/logger'
+
 /**
  * Simple check if a JWT token has expired. Does *not* validate the token or check for revocation status,
  * just checks the expiration time.
@@ -15,6 +17,7 @@ export function isJwtExpired(token: string) {
     const now = Math.floor(Date.now() / 1000)
     return now >= payload.exp
   } catch {
+    logger.error(`session: could not decode jwt`)
     return true // invalid token or parse error
   }
 }
