@@ -195,6 +195,11 @@ export type MetricEvents = {
     feed: string
     count: number
   }
+  'feed:emptyError': {
+    feedType: string
+    feedId: string
+    userDid: string
+  }
 
   'composer:gif:open': {}
   'composer:gif:select': {}
