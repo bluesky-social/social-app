@@ -40,3 +40,11 @@ export function simpleAreDatesEqual(a: Date, b: Date): boolean {
     a.getDate() === b.getDate()
   )
 }
+
+export function formatJoinDate(date: number | string | Date): string {
+  const d = new Date(date)
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  })
+}
