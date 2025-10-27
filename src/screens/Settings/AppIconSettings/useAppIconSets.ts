@@ -37,20 +37,6 @@ export function useAppIconSets() {
           )
         },
       },
-      {
-        id: 'next',
-        name: _(msg({context: 'Name of app icon variant', message: 'Next'})),
-        iosImage: () => {
-          return require(
-            `../../../../assets/app-icons/ios_icon_default_next.png`,
-          )
-        },
-        androidImage: () => {
-          return require(
-            `../../../../assets/app-icons/android_icon_default_next.png`,
-          )
-        },
-      },
     ] satisfies AppIconSet[]
 
     /**

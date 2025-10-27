@@ -40,7 +40,7 @@ module.exports = function (_config) {
       runtimeVersion: {
         policy: 'appVersion',
       },
-      icon: './assets/app-icons/ios_icon_default_next.png',
+      icon: './assets/app-icons/ios_icon_default_light.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#1083fe',
       newArchEnabled: false,
@@ -51,8 +51,8 @@ module.exports = function (_config) {
           usesNonExemptEncryption: false,
         },
         icon: {
-          light: './assets/app-icons/ios_icon_default_next.png',
-          dark: './assets/app-icons/ios_icon_default_next.png',
+          light: './assets/app-icons/ios_icon_default_light.png',
+          dark: './assets/app-icons/ios_icon_default_dark.png',
           tinted: './assets/app-icons/ios_icon_default_tinted.png',
         },
         infoPlist: {
@@ -176,7 +176,7 @@ module.exports = function (_config) {
         barStyle: 'light-content',
       },
       android: {
-        icon: './assets/app-icons/android_icon_default_next.png',
+        icon: './assets/app-icons/android_icon_default_light.png',
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-foreground.png',
@@ -335,11 +335,6 @@ module.exports = function (_config) {
             default_dark: {
               ios: './assets/app-icons/ios_icon_default_dark.png',
               android: './assets/app-icons/android_icon_default_dark.png',
-              prerendered: true,
-            },
-            next: {
-              ios: './assets/app-icons/ios_icon_default_next.png',
-              android: './assets/app-icons/android_icon_default_next.png',
               prerendered: true,
             },
 
