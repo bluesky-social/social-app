@@ -230,7 +230,7 @@ function AppealForm({
   const sourceName = labeler
     ? sanitizeHandle(labeler.creator.handle, '@')
     : label.src
-  const [error, setError] = useState<React.ReactNode>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
@@ -255,14 +255,12 @@ function AppealForm({
       )
     },
     onError: err => {
-      if (err instanceof XRPCError) {
-        if (err.error === 'AlreadyAppealed') {
-          setError(
-            _(
-              msg`You've already appealed this label and it's being reviewed by our moderation team.`,
-            ),
-          )
-        }
+      if (err instanceof XRPCError && err.error === 'AlreadyAppealed') {
+        setError(
+          _(
+            msg`You've already appealed this label and it's being reviewed by our moderation team.`,
+          ),
+        )
       } else {
         setError(_(msg`Failed to submit appeal, please try again.`))
       }
@@ -300,7 +298,7 @@ function AppealForm({
       </View>
       {error && (
         <Admonition type="error" style={[a.mt_sm]}>
-          <Trans>{error}</Trans>
+          {error}
         </Admonition>
       )}
       <View style={[a.my_md]}>
