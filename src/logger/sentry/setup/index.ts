@@ -29,5 +29,5 @@ init({
    * @see https://docs.sentry.io/platforms/react-native/configuration/options/#attach-stacktrace
    */
   attachStacktrace: false,
-  // sampleRate: env.IS_INTERNAL ? 1.0 : 0.1,
+  sampleRate: env.IS_INTERNAL ? 1.0 : 0.1,
 })
