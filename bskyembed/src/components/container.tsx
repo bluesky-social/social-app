@@ -37,7 +37,7 @@ export function Container({
   return (
     <div
       ref={ref}
-      className="w-full bg-brand text-black dark:bg-brand relative transition-colors max-w-[600px] min-w-[300px] flex items-center border  dark:text-slate-200 rounded-[20px]"
+      className="w-full bg-brand text-black dark:bg-brand relative transition-colors max-w-[600px] min-w-[300px] flex items-center  dark:text-slate-200 rounded-[20px] cursor-pointer hover:bg-opacity-90"
       onClick={() => {
         if (ref.current && href) {
           // forwardRef requires preact/compat - let's keep it simple

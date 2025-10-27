@@ -48,7 +48,7 @@ export function Post({thread}: Props) {
   return (
     <Container href={href}>
       <div
-        className="flex-1 flex-col flex gap-2 bg-neutral-50 dark:bg-black dark:hover:bg-slate-900 hover:bg-blue-50  rounded-2xl p-4"
+        className="flex-1 flex-col flex gap-2 bg-neutral-50 dark:bg-black dark:hover:bg-slate-900 hover:bg-blue-50  rounded-[14px] p-4"
         lang={record?.langs?.[0]}>
         <div className="flex gap-2.5 items-center cursor-pointer w-full max-w-full ">
           <Link
