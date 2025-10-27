@@ -86,7 +86,7 @@ function ContentHiderActive({
       (blur.type === 'label' && blur.source.type !== 'user')
     ) {
       if (desc.subjectAccount) {
-        return _('{labelName} (Account)', {labelName: desc.name})
+        return _(msg`${desc.name} (Account)`)
       } else {
         return desc.name
       }
