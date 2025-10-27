@@ -10,6 +10,12 @@ jest.mock('jwt-decode', () => ({
   },
 }))
 
+jest.mock('#/lib/notifications/notifications', () => ({
+  unregisterPushToken(_agents: BskyAgent[]) {
+    return Promise.resolve()
+  },
+}))
+
 describe('session', () => {
   it('can log in and out', () => {
     let state = getInitialState([])
