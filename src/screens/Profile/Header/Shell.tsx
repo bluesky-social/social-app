@@ -8,7 +8,11 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  AtUri,
+  type ModerationDecision,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -63,6 +67,10 @@ let ProfileHeaderShell = ({
   const liveStatusControl = useDialogControl()
 
   const aviRef = useAnimatedRef()
+
+  const atUri = useMemo(() => {
+    return AtUri.make(profile.did).href
+  }, [profile.did])
 
   const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
@@ -143,7 +151,10 @@ let ProfileHeaderShell = ({
   ])
 
   return (
-    <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
+    <View
+      style={t.atoms.bg}
+      pointerEvents={isIOS ? 'auto' : 'box-none'}
+      dataSet={{'at-uri': atUri}}>
       <View
         pointerEvents={isIOS ? 'auto' : 'box-none'}
         style={[a.relative, {height: 150}]}>
