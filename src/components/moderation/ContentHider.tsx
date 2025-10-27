@@ -85,7 +85,7 @@ function ContentHiderActive({
       blur.type !== 'label' ||
       (blur.type === 'label' && blur.source.type !== 'user')
     ) {
-      if (desc.subjectAccount) {
+      if (desc.isSubjectAccount) {
         return _(msg`${desc.name} (Account)`)
       } else {
         return desc.name
@@ -131,7 +131,7 @@ function ContentHiderActive({
     modui?.blurs,
     blur,
     desc.name,
-    desc.subjectAccount,
+    desc.isSubjectAccount,
     labelDefs,
     i18n.locale,
     globalLabelStrings,
