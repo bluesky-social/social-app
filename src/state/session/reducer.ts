@@ -5,6 +5,7 @@ import {logger} from '#/lib/notifications/util'
 import {createPublicAgent} from './agent'
 import {wrapSessionReducerForLogging} from './logging'
 import {type SessionAccount} from './types'
+import {createTemporaryAgentsAndResume} from './util'
 
 // A hack so that the reducer can't read anything from the agent.
 // From the reducer's point of view, it should be a completely opaque object.
@@ -143,7 +144,8 @@ let reducer = (state: State, action: Action): State => {
       // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account) {
-        unregisterPushToken(accountDid, account.service?.includes('staging'))
+        createTemporaryAgentsAndResume([account])
+          .then(agents => unregisterPushToken(agents))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
           )
@@ -170,7 +172,8 @@ let reducer = (state: State, action: Action): State => {
       // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account && accountDid) {
-        unregisterPushToken(accountDid, account.service?.includes('staging'))
+        createTemporaryAgentsAndResume([account])
+          .then(agents => unregisterPushToken(agents))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
           )
@@ -197,19 +200,14 @@ let reducer = (state: State, action: Action): State => {
       }
     }
     case 'logged-out-every-account': {
-      for (const account of state.accounts) {
-        const accountDid = account.did
-        unregisterPushToken(accountDid, account.service?.includes('staging'))
-          .then(() =>
-            logger.debug('Push token unregistered', {did: accountDid}),
-          )
-          .catch(err => {
-            logger.error('Failed to unregister push token', {
-              did: accountDid,
-              error: err,
-            })
+      createTemporaryAgentsAndResume(state.accounts)
+        .then(agents => unregisterPushToken(agents))
+        .then(() => logger.debug('Push token unregistered'))
+        .catch(err => {
+          logger.error('Failed to unregister push token', {
+            error: err,
           })
-      }
+        })
 
       return {
         accounts: state.accounts.map(a => ({
