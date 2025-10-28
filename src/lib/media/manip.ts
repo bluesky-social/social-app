@@ -120,7 +120,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
             await MediaLibrary.migrateAlbumIfNeededAsync(album)
           }
         } catch (err) {
-          logger.debug('Attempted and failed to migrate album', {
+          logger.info('Attempted and failed to migrate album', {
             safeMessage: err,
           })
         }
@@ -129,7 +129,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
           // if album exists, put the image straight in there
           await MediaLibrary.createAssetAsync(imagePath, album)
         } catch (err) {
-          logger.debug('Failed to create asset', {safeMessage: err})
+          logger.info('Failed to create asset', {safeMessage: err})
           // however, it's possible that we don't have write permission to the album
           // try making a new one!
           try {
@@ -140,7 +140,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
               imagePath,
             )
           } catch (err2) {
-            logger.debug('Failed to create asset in a fresh album', {
+            logger.info('Failed to create asset in a fresh album', {
               safeMessage: err2,
             })
             // ... and if all else fails, just put it in DCIM
