@@ -36,7 +36,7 @@ export function useIntentHandler() {
     const handleIncomingURL = async (url: string) => {
       if (isNative) {
         // Close in-app browser if it's open
-        WebBrowser.dismissBrowser().catch(() => {})
+        await WebBrowser.dismissBrowser().catch(() => {})
       }
 
       const referrerInfo = Referrer.getReferrerInfo()
