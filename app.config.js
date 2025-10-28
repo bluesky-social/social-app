@@ -176,7 +176,7 @@ module.exports = function (_config) {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-foreground.png',
           backgroundImage: './assets/icon-android-background.png',
-          backgroundColor: '#1185FE',
+          backgroundColor: '#006AFF',
         },
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
