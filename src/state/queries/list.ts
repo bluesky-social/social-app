@@ -10,7 +10,7 @@ import {
   type Un$Typed,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
-import chunk from 'lodash.chunk'
+import chunk from 'es-toolkit/compat/chunk'
 
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'

@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
-import debounce from 'lodash.debounce'
+import debounce from 'es-toolkit/compat/debounce'
 
 import {
   type Interest,

@@ -3,7 +3,7 @@ import {
   type AppBskyFeedGetTimeline,
   type BskyAgent,
 } from '@atproto/api'
-import shuffle from 'lodash.shuffle'
+import shuffle from 'es-toolkit/compat/shuffle'
 
 import {bundleAsync} from '#/lib/async/bundle'
 import {timeout} from '#/lib/async/timeout'

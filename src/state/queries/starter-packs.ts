@@ -14,7 +14,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import chunk from 'lodash.chunk'
+import chunk from 'es-toolkit/compat/chunk'
 
 import {until} from '#/lib/async/until'
 import {createStarterPackList} from '#/lib/generate-starterpack'

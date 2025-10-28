@@ -8,7 +8,7 @@ import {
 } from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import throttle from 'lodash.throttle'
+import throttle from 'es-toolkit/compat/throttle'
 
 import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
 import {Logger} from '#/logger'
