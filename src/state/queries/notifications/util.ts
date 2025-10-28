@@ -11,8 +11,8 @@ import {
   moderateNotification,
   type ModerationOpts,
 } from '@atproto/api'
+import {chunkArray} from '@atproto/common-web'
 import {type QueryClient} from '@tanstack/react-query'
-import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
 import * as bsky from '#/types/bsky'
@@ -221,8 +221,8 @@ async function fetchSubjects(
       packUris.add(notif.notification.reasonSubject)
     }
   }
-  const postUriChunks = chunk(Array.from(postUris), 25)
-  const packUriChunks = chunk(Array.from(packUris), 25)
+  const postUriChunks = chunkArray(Array.from(postUris), 25)
+  const packUriChunks = chunkArray(Array.from(packUris), 25)
   const postsChunks = await Promise.all(
     postUriChunks.map(uris =>
       agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
