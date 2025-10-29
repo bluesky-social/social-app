@@ -26,7 +26,7 @@ import {useLingui} from '@lingui/react'
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
-import {isAndroid, isIOS, isIOS26} from '#/platform/detection'
+import {isAndroid, isIOS, isLiquid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
@@ -167,7 +167,7 @@ export function Outer({
     <BottomSheet
       ref={ref}
       // device-bezel radius when undefined
-      cornerRadius={isIOS26 ? undefined : 20}
+      cornerRadius={isLiquid ? undefined : 20}
       backgroundColor={t.atoms.bg.backgroundColor}
       {...nativeOptions}
       onSnapPointChange={onSnapPointChange}
@@ -194,7 +194,7 @@ export function Inner({children, style, header}: DialogInnerProps) {
         style={[
           a.pt_2xl,
           a.px_xl,
-          isIOS26 ? {paddingBottom: insets.bottom + insets.top} : a.pb_2xl,
+          isLiquid ? {paddingBottom: insets.bottom + insets.top} : a.pb_2xl,
           style,
         ]}>
         {children}
@@ -262,7 +262,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     const IOS_MAX_HEIGHT_FOR_SAFEAREA = 400
     const iosAutoSafeAreaHeightAdjust = 34
     const shouldAttemptUndoSafeArea =
-      isIOS26 &&
+      isLiquid &&
       contentSize > IOS_MIN_HEIGHT_FOR_SAFEAREA &&
       contentSize < IOS_MAX_HEIGHT_FOR_SAFEAREA
     const adjustedSize =
@@ -284,7 +284,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         onContentSizeChange={(_width, height) => setContentSize(height)}
         contentContainerStyle={[
           a.pt_2xl,
-          isIOS26 ? a.px_2xl : a.px_xl,
+          isLiquid ? a.px_2xl : a.px_xl,
           {paddingBottom},
           contentContainerStyle,
         ]}
@@ -375,7 +375,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
         a.pt_md,
         {
           paddingBottom: platform({
-            ios: tokens.space.md + bottom + (isIOS26 ? top : 0),
+            ios: tokens.space.md + bottom + (isLiquid ? top : 0),
             android: tokens.space.md + bottom + top,
           }),
         },

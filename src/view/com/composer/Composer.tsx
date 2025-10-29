@@ -76,7 +76,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isAndroid, isIOS, isIOS26, isNative, isWeb} from '#/platform/detection'
+import {isAndroid, isIOS, isLiquid, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
 import {
@@ -1653,7 +1653,7 @@ function useKeyboardVerticalOffset() {
   }
 
   // they ditched the gap behaviour on 26
-  if (isIOS26) {
+  if (isLiquid) {
     return top
   }
 

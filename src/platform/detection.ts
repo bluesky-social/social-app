@@ -1,4 +1,5 @@
 import {Platform} from 'react-native'
+import {isLiquidGlassAvailable} from 'expo-glass-effect'
 
 export const isIOS = Platform.OS === 'ios'
 export const isAndroid = Platform.OS === 'android'
@@ -11,9 +12,4 @@ export const isMobileWeb =
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
 export const isIPhoneWeb = isWeb && /iPhone/.test(navigator.userAgent)
 
-// for some reason Platform.OS === 'ios' AND Platform.Version is undefined in our CI unit tests -sfn
-const iOSMajorVersion =
-  Platform.OS === 'ios' && typeof Platform.Version === 'string'
-    ? parseInt(Platform.Version.split('.')[0], 10)
-    : 0
-export const isIOS26 = iOSMajorVersion >= 26
+export const isLiquid = isIOS && isLiquidGlassAvailable()

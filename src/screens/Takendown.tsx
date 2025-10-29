@@ -15,7 +15,7 @@ import {
 } from '#/lib/constants'
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {cleanError} from '#/lib/strings/errors'
-import {isIOS, isIOS26, isWeb} from '#/platform/detection'
+import {isIOS, isLiquid, isWeb} from '#/platform/detection'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {Logo} from '#/view/icons/Logo'
@@ -135,7 +135,7 @@ export function Takendown() {
       animationType={native('slide')}
       presentationStyle="formSheet"
       style={[web(a.util_screen_outer)]}>
-      {isIOS && !isIOS26 && <SystemBars style={{statusBar: 'light'}} />}
+      {isIOS && !isLiquid && <SystemBars style={{statusBar: 'light'}} />}
       <KeyboardAwareScrollView style={[a.flex_1, t.atoms.bg]} centerContent>
         <View
           style={[

@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
-import {isIOS26, isNative, isWeb} from '#/platform/detection'
+import {isLiquid, isNative, isWeb} from '#/platform/detection'
 import {
   toPostLanguages,
   useLanguagePrefs,
@@ -46,7 +46,7 @@ export function PostLanguageSelectDialog({
   return (
     <Dialog.Outer
       control={control}
-      nativeOptions={{minHeight: isIOS26 ? height : height - insets.top}}>
+      nativeOptions={{minHeight: isLiquid ? height : height - insets.top}}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
         <DialogInner
