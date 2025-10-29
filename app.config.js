@@ -53,7 +53,7 @@ module.exports = function (_config) {
         icon:
           PLATFORM === 'web' // web build doesn't like .icon files
             ? './assets/app-icons/ios_icon_default_next.png'
-            : '/assets/app-icons/ios_icon_default.icon',
+            : './assets/app-icons/ios_icon_default.icon',
         infoPlist: {
           UIBackgroundModes: ['remote-notification'],
           NSCameraUsageDescription:
