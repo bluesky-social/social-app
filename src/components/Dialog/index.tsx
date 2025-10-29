@@ -284,7 +284,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         onContentSizeChange={(_width, height) => setContentSize(height)}
         contentContainerStyle={[
           a.pt_2xl,
-          a.px_2xl,
+          isIOS26 ? a.px_2xl : a.px_xl,
           {paddingBottom},
           contentContainerStyle,
         ]}
