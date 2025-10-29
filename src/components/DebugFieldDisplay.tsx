@@ -31,7 +31,7 @@ export function DebugFieldDisplay<T extends {debug?: {[x: string]: unknown}}>({
     <>
       <Prompt.Basic
         control={prompt}
-        title="Post Debug"
+        title="Debug"
         description={JSON.stringify(subject.debug, null, 2)}
         cancelButtonCta="Close"
         confirmButtonCta="Copy"
