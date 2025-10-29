@@ -5,7 +5,7 @@ import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {
@@ -34,9 +34,12 @@ export function useIntentHandler() {
 
   React.useEffect(() => {
     const handleIncomingURL = async (url: string) => {
-      if (isNative) {
-        // Close in-app browser if it's open
-        await WebBrowser.dismissBrowser().catch(() => {})
+      if (isIOS) {
+        // Close in-app browser if it's open (iOS only)
+        // TEMP: promise never resolves if the browser is not open, so don't await
+        // https://github.com/expo/expo/issues/40710
+        // add the await back when possible since it's needed to fix the IAB share bug -sfn
+        /* await */ WebBrowser.dismissBrowser().catch(() => {})
       }
 
       const referrerInfo = Referrer.getReferrerInfo()
