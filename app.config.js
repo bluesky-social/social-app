@@ -11,7 +11,7 @@ module.exports = function (_config) {
    *
    * @see https://docs.expo.dev/build-reference/variables/#built-in-environment-variables
    */
-  const PLATFORM = process.env.EAS_BUILD_PLATFORM
+  const PLATFORM = process.env.EAS_BUILD_PLATFORM ?? 'web'
 
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
@@ -50,7 +50,10 @@ module.exports = function (_config) {
         config: {
           usesNonExemptEncryption: false,
         },
-        // icon: '/assets/app-icons/ios_icon_default.icon',
+        icon:
+          PLATFORM === 'web' // web build doesn't like .icon files
+            ? './assets/app-icons/ios_icon_default_next.png'
+            : '/assets/app-icons/ios_icon_default.icon',
         infoPlist: {
           UIBackgroundModes: ['remote-notification'],
           NSCameraUsageDescription:
