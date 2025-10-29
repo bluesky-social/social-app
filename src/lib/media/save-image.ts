@@ -3,7 +3,7 @@ import * as MediaLibrary from 'expo-media-library'
 import {t} from '@lingui/macro'
 
 import {isNative} from '#/platform/detection'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 import {saveImageToMediaLibrary} from './manip'
 
 /**
@@ -25,7 +25,7 @@ export function useSaveImageToMediaLibrary() {
           await saveImageToMediaLibrary({uri})
           Toast.show(t`Image saved`)
         } catch (e: any) {
-          Toast.show(t`Failed to save image: ${String(e)}`, 'xmark')
+          Toast.show(t`Failed to save image: ${String(e)}`, {type: 'error'})
         }
       }
 
@@ -43,13 +43,13 @@ export function useSaveImageToMediaLibrary() {
             // since we've been explicitly denied, show a toast.
             Toast.show(
               t`Images cannot be saved unless permission is granted to access your photo library.`,
-              'xmark',
+              {type: 'error'},
             )
           }
         } else {
           Toast.show(
             t`Permission to access your photo library was denied. Please enable it in your system settings.`,
-            'xmark',
+            {type: 'error'},
           )
         }
       }
