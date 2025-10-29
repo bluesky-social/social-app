@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-16 16:31\n"
+"PO-Revision-Date: 2025-10-23 16:19\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1269,7 +1269,7 @@ msgstr "为算法指定主题"
 msgid "At least 8 characters"
 msgstr "至少应含有 8 个字符"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:58
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:62
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "极光"
@@ -1458,7 +1458,7 @@ msgstr "Bluesky"
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky 无法确认帖文发布时间的真实性。"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:175
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:179
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr "Bluesky 经典™"
@@ -1513,20 +1513,20 @@ msgstr "模糊化图片并从动态源中过滤"
 msgid "Books"
 msgstr "书籍"
 
-#: src/components/FeedInterstitials.tsx:431
+#: src/components/FeedInterstitials.tsx:436
 msgid "Browse more accounts on the Explore page"
 msgstr "在探索页面浏览更多账户"
 
-#: src/components/FeedInterstitials.tsx:559
+#: src/components/FeedInterstitials.tsx:569
 msgid "Browse more feeds on the Explore page"
 msgstr "在探索页面浏览更多动态源"
 
-#: src/components/FeedInterstitials.tsx:540
-#: src/components/FeedInterstitials.tsx:543
+#: src/components/FeedInterstitials.tsx:550
+#: src/components/FeedInterstitials.tsx:553
 msgid "Browse more suggestions"
 msgstr "浏览更多建议"
 
-#: src/components/FeedInterstitials.tsx:568
+#: src/components/FeedInterstitials.tsx:578
 msgid "Browse more suggestions on the Explore page"
 msgstr "在探索页面浏览更多建议"
 
@@ -3741,17 +3741,17 @@ msgstr "完成"
 msgid "Fitness"
 msgstr "健康"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:159
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:163
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
 msgstr "哑光黑"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:127
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:131
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
 msgstr "哑光蓝"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:143
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:147
 msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "哑光白"
@@ -5197,7 +5197,7 @@ msgstr "私信选项"
 msgid "Messages"
 msgstr "私信"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:111
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:115
 msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr "午夜"
@@ -7630,8 +7630,8 @@ msgstr "查看该用户包含 #{tag} 的帖文"
 msgid "See jobs at Bluesky"
 msgstr "查看 Bluesky 的工作职缺"
 
-#: src/components/FeedInterstitials.tsx:394
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:399
+#: src/components/FeedInterstitials.tsx:455
 msgid "See more"
 msgstr "浏览更多"
 
@@ -8264,7 +8264,7 @@ msgstr "程序开发"
 msgid "Some of your verifications are invalid."
 msgstr "你当前被授予的部分认证无效。"
 
-#: src/components/FeedInterstitials.tsx:522
+#: src/components/FeedInterstitials.tsx:532
 msgid "Some other feeds you might like"
 msgstr "其他你可能喜欢的动态源"
 
@@ -8511,12 +8511,12 @@ msgstr "为你推荐"
 msgid "Suggestive"
 msgstr "性暗示"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:82
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:86
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
 msgstr "日出"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:96
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:100
 msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr "日落"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "你所选择的视频体积大于 100 MB，请选择其他较小的视频文件。"
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "服务器似乎遇到了问题，请稍后重试。"
 
@@ -8837,7 +8837,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
 #: src/screens/Search/Explore.tsx:993
-#: src/view/com/posts/PostFeed.tsx:709
+#: src/view/com/posts/PostFeed.tsx:712
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
 
@@ -8998,7 +8998,7 @@ msgstr "该功能正在测试。你可以在<0>这篇博客文章</0>中获得�
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "该功能在使用应用密码登录时不可用，请改用你的主密码登录。"
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "该功能在使用应用密码登录时不可用。请改用你的主密码登录。"
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "无法获取位置信息，你需要进入系统设置，找到并允许 Bluesky 获取你的位置。"
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "无法连接到服务器。请检查网络连接并重试。"
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-10-16 16:31\n"
+"PO-Revision-Date: 2025-10-23 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1269,7 +1269,7 @@ msgstr "알고리즘에 주제 지정"
 msgid "At least 8 characters"
 msgstr "8자 이상"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:58
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:62
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "오로라"
@@ -1458,7 +1458,7 @@ msgstr "Bluesky"
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky는 해당 날짜의 진위를 확인할 수 없습니다."
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:175
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:179
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr "Bluesky Classic™"
@@ -1513,20 +1513,20 @@ msgstr "이미지 블러 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/FeedInterstitials.tsx:431
+#: src/components/FeedInterstitials.tsx:436
 msgid "Browse more accounts on the Explore page"
 msgstr "탐색 페이지에서 더 많은 계정 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:559
+#: src/components/FeedInterstitials.tsx:569
 msgid "Browse more feeds on the Explore page"
 msgstr "탐색 페이지에서 더 많은 피드 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:540
-#: src/components/FeedInterstitials.tsx:543
+#: src/components/FeedInterstitials.tsx:550
+#: src/components/FeedInterstitials.tsx:553
 msgid "Browse more suggestions"
 msgstr "더 많은 추천 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:568
+#: src/components/FeedInterstitials.tsx:578
 msgid "Browse more suggestions on the Explore page"
 msgstr "탐색 페이지에서 더 많은 추천 찾아보기"
 
@@ -3741,17 +3741,17 @@ msgstr "완료"
 msgid "Fitness"
 msgstr "건강"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:159
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:163
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
 msgstr "플랫 블랙"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:127
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:131
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
 msgstr "플랫 블루"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:143
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:147
 msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr "플랫 화이트"
@@ -5197,7 +5197,7 @@ msgstr "메시지 옵션"
 msgid "Messages"
 msgstr "메시지"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:111
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:115
 msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr "심야"
@@ -7630,8 +7630,8 @@ msgstr "사용자의 #{tag} 게시물 보기"
 msgid "See jobs at Bluesky"
 msgstr "Bluesky에 지원하기"
 
-#: src/components/FeedInterstitials.tsx:394
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:399
+#: src/components/FeedInterstitials.tsx:455
 msgid "See more"
 msgstr "더 보기"
 
@@ -8241,7 +8241,7 @@ msgstr "소개를 건너뛰고 계정 사용 시작하기"
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:99
 msgid "Skip to next step"
-msgstr ""
+msgstr "다음 단계로 건너뛰기"
 
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
@@ -8264,7 +8264,7 @@ msgstr "소프트웨어 개발"
 msgid "Some of your verifications are invalid."
 msgstr "일부 인증이 유효하지 않습니다."
 
-#: src/components/FeedInterstitials.tsx:522
+#: src/components/FeedInterstitials.tsx:532
 msgid "Some other feeds you might like"
 msgstr "좋아할 만한 다른 피드"
 
@@ -8511,12 +8511,12 @@ msgstr "나를 위한 추천"
 msgid "Suggestive"
 msgstr "외설적"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:82
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:86
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
 msgstr "일출"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:96
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:100
 msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr "일몰"
@@ -8784,7 +8784,7 @@ msgid "The selected video is larger than 100 MB. Please try again with a smalle
 msgstr "선택한 동영상이 100MB보다 큽니다. 더 작은 파일로 다시 시도해 주세요."
 
 #: src/lib/hooks/useCleanError.ts:40
-#: src/lib/strings/errors.ts:18
+#: src/lib/strings/errors.ts:19
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "서버에 문제가 있는 것 같습니다. 잠시 후 다시 시도해 주세요."
 
@@ -8837,7 +8837,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 다시 시도하려면 이곳을 탭하세요."
 
 #: src/screens/Search/Explore.tsx:993
-#: src/view/com/posts/PostFeed.tsx:709
+#: src/view/com/posts/PostFeed.tsx:712
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 다시 시도하려면 이곳을 탭하세요."
 
@@ -8998,7 +8998,7 @@ msgstr "이 기능은 베타 버전입니다. 저장소 내보내기에 대한 �
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr "앱 비밀번호를 사용하는 동안에는 이 기능을 사용할 수 없습니다. 기본 비밀번호로 로그인하세요."
 
-#: src/lib/strings/errors.ts:21
+#: src/lib/strings/errors.ts:22
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "앱 비밀번호를 사용하는 동안에는 이 기능을 사용할 수 없습니다. 기본 비밀번호로 로그인하세요."
 
@@ -9283,7 +9283,7 @@ msgid "Unable to access location. You'll need to visit your system settings to e
 msgstr "위치에 접근할 수 없습니다. Bluesky 앱의 위치 서비스를 활성화하려면 시스템 설정으로 이동해 주세요."
 
 #: src/lib/hooks/useCleanError.ts:27
-#: src/lib/strings/errors.ts:11
+#: src/lib/strings/errors.ts:12
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "연결할 수 없습니다. 인터넷 연결을 확인한 후 다시 시도해 주세요."
 

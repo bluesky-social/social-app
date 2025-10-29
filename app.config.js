@@ -112,6 +112,34 @@ module.exports = function (_config) {
           'com.apple.security.application-groups': 'group.app.bsky',
         },
         privacyManifests: {
+          NSPrivacyCollectedDataTypes: [
+            {
+              NSPrivacyCollectedDataType: 'NSPrivacyCollectedDataTypeCrashData',
+              NSPrivacyCollectedDataTypeLinked: false,
+              NSPrivacyCollectedDataTypeTracking: false,
+              NSPrivacyCollectedDataTypePurposes: [
+                'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+              ],
+            },
+            {
+              NSPrivacyCollectedDataType:
+                'NSPrivacyCollectedDataTypePerformanceData',
+              NSPrivacyCollectedDataTypeLinked: false,
+              NSPrivacyCollectedDataTypeTracking: false,
+              NSPrivacyCollectedDataTypePurposes: [
+                'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+              ],
+            },
+            {
+              NSPrivacyCollectedDataType:
+                'NSPrivacyCollectedDataTypeOtherDiagnosticData',
+              NSPrivacyCollectedDataTypeLinked: false,
+              NSPrivacyCollectedDataTypeTracking: false,
+              NSPrivacyCollectedDataTypePurposes: [
+                'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+              ],
+            },
+          ],
           NSPrivacyAccessedAPITypes: [
             {
               NSPrivacyAccessedAPIType:
@@ -148,7 +176,7 @@ module.exports = function (_config) {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-foreground.png',
           backgroundImage: './assets/icon-android-background.png',
-          backgroundColor: '#1185FE',
+          backgroundColor: '#006AFF',
         },
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
