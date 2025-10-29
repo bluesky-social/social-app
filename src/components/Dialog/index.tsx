@@ -194,7 +194,9 @@ export function Inner({children, style, header}: DialogInnerProps) {
         style={[
           a.pt_2xl,
           a.px_xl,
-          isIOS26 ? {paddingBottom: insets.bottom + insets.top} : a.pb_2xl,
+          IS_LIQUID_GLASS
+            ? {paddingBottom: insets.bottom + insets.top}
+            : a.pb_2xl,
           style,
         ]}>
         {children}
@@ -260,7 +262,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     const IOS_MAX_HEIGHT_FOR_SAFEAREA = 400
     const iosAutoSafeAreaHeightAdjust = 34
     const shouldAttemptUndoSafeArea =
-      isIOS26 &&
+      IS_LIQUID_GLASS &&
       contentSize > IOS_MIN_HEIGHT_FOR_SAFEAREA &&
       contentSize < IOS_MAX_HEIGHT_FOR_SAFEAREA
     const adjustedSize =
@@ -282,7 +284,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         onContentSizeChange={(_width, height) => setContentSize(height)}
         contentContainerStyle={[
           a.pt_2xl,
-          isIOS26 ? a.px_2xl : a.px_xl,
+          IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
           {paddingBottom},
           contentContainerStyle,
         ]}
@@ -371,7 +373,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
         a.pt_md,
         {
           paddingBottom: platform({
-            ios: tokens.space.md + bottom + (isIOS26 ? top : 0),
+            ios: tokens.space.md + bottom + (IS_LIQUID_GLASS ? top : 0),
             android: tokens.space.md + bottom + top,
           }),
         },
