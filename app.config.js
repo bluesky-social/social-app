@@ -40,7 +40,7 @@ module.exports = function (_config) {
       runtimeVersion: {
         policy: 'appVersion',
       },
-      icon: './assets/app-icons/ios_icon_default_light.png',
+      icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#1083fe',
       newArchEnabled: false,
@@ -324,13 +324,13 @@ module.exports = function (_config) {
              * Default set
              */
             default_light: {
-              ios: './assets/app-icons/ios_icon_default_light.png',
-              android: './assets/app-icons/android_icon_default_light.png',
+              ios: './assets/app-icons/ios_icon_default_old_light.png',
+              android: './assets/app-icons/android_icon_default_old_light.png',
               prerendered: true,
             },
             default_dark: {
-              ios: './assets/app-icons/ios_icon_default_dark.png',
-              android: './assets/app-icons/android_icon_default_dark.png',
+              ios: './assets/app-icons/ios_icon_default_old_dark.png',
+              android: './assets/app-icons/android_icon_default_old_dark.png',
               prerendered: true,
             },
 
