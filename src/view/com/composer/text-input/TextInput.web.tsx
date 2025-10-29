@@ -211,17 +211,31 @@ export function TextInput({
             const isNotSelection = view.state.selection.empty
             if (isNotSelection) {
               const cursorPosition = view.state.selection.$anchor.pos
-              const textBefore = view.state.doc.textBetween(0, cursorPosition)
+              const textBefore = view.state.doc.textBetween(
+                0,
+                cursorPosition,
+                // important - use \n as a block separator, otherwise
+                // all the lines get mushed together -sfn
+                '\n',
+              )
               const graphemes = new Graphemer().splitGraphemes(textBefore)
 
               if (graphemes.length > 0) {
                 const lastGrapheme = graphemes[graphemes.length - 1]
-                const deleteFrom = cursorPosition - lastGrapheme.length
-                editor?.commands.deleteRange({
-                  from: deleteFrom,
-                  to: cursorPosition,
-                })
-                return true
+                // deleteRange doesn't work on newlines, because tiptap
+                // treats them as separate 'blocks' and we're using \n
+                // as a stand-in. bail out if the last grapheme is a newline
+                // to let the default behavior handle it -sfn
+                if (lastGrapheme !== '\n') {
+                  // otherwise, delete the last grapheme using deleteRange,
+                  // so that emojis are deleted as a whole
+                  const deleteFrom = cursorPosition - lastGrapheme.length
+                  editor?.commands.deleteRange({
+                    from: deleteFrom,
+                    to: cursorPosition,
+                  })
+                  return true
+                }
               }
             }
           }
@@ -353,7 +367,7 @@ export function TextInput({
               <Text
                 style={[
                   a.text_lg,
-                  a.font_bold,
+                  a.font_semi_bold,
                   t.atoms.text_contrast_medium,
                   t.atoms.border_contrast_high,
                   styles.dropText,

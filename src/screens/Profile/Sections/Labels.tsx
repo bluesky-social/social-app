@@ -48,11 +48,9 @@ export function ProfileLabelsSection({
   const t = useTheme()
 
   const onScrollToTop = useCallback(() => {
-    // @ts-expect-error TODO fix this
-    scrollElRef.current?.scrollTo({
+    scrollElRef.current?.scrollToOffset({
       animated: isNative,
-      x: 0,
-      y: -headerHeight,
+      offset: -headerHeight,
     })
   }, [scrollElRef, headerHeight])
 

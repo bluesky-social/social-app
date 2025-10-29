@@ -10,6 +10,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useActorStatus} from '#/lib/actor-status'
+import {useHaptics} from '#/lib/haptics'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
@@ -25,6 +26,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -79,12 +81,14 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
+  const playHaptic = useHaptics()
 
   const editProfileControl = useDialogControl()
 
   const onPressFollow = () => {
-    setShowSuggestedFollows(true)
+    playHaptic()
     requireAuth(async () => {
+      setShowSuggestedFollows(true)
       try {
         await queueFollow()
         Toast.show(
@@ -105,6 +109,7 @@ let ProfileHeaderStandard = ({
   }
 
   const onPressUnfollow = () => {
+    playHaptic()
     setShowSuggestedFollows(false)
     requireAuth(async () => {
       try {
@@ -127,6 +132,7 @@ let ProfileHeaderStandard = ({
   }
 
   const unblockAccount = useCallback(async () => {
+    playHaptic()
     try {
       await queueUnblock()
       Toast.show(_(msg({message: 'Account unblocked', context: 'toast'})))
@@ -136,7 +142,7 @@ let ProfileHeaderStandard = ({
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
-  }, [_, queueUnblock])
+  }, [_, queueUnblock, playHaptic])
 
   const isMe = useMemo(
     () => currentAccount?.did === profile.did,
@@ -267,7 +273,7 @@ let ProfileHeaderStandard = ({
                   t.atoms.text,
                   gtMobile ? a.text_4xl : a.text_3xl,
                   a.self_start,
-                  a.font_heavy,
+                  a.font_bold,
                   a.leading_tight,
                 ]}>
                 {sanitizeDisplayName(
@@ -315,6 +321,8 @@ let ProfileHeaderStandard = ({
                 )}
             </View>
           )}
+
+          <DebugFieldDisplay subject={profile} />
         </View>
 
         <Prompt.Basic

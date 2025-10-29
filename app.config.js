@@ -11,7 +11,7 @@ module.exports = function (_config) {
    *
    * @see https://docs.expo.dev/build-reference/variables/#built-in-environment-variables
    */
-  const PLATFORM = process.env.EAS_BUILD_PLATFORM
+  const PLATFORM = process.env.EAS_BUILD_PLATFORM ?? 'web'
 
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
@@ -40,15 +40,20 @@ module.exports = function (_config) {
       runtimeVersion: {
         policy: 'appVersion',
       },
-      icon: './assets/app-icons/ios_icon_default_light.png',
+      icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#1083fe',
+      newArchEnabled: false,
       ios: {
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
           usesNonExemptEncryption: false,
         },
+        icon:
+          PLATFORM === 'web' // web build doesn't like .icon files
+            ? './assets/app-icons/ios_icon_default_next.png'
+            : './assets/app-icons/ios_icon_default.icon',
         infoPlist: {
           UIBackgroundModes: ['remote-notification'],
           NSCameraUsageDescription:
@@ -102,6 +107,7 @@ module.exports = function (_config) {
             'zh-Hans',
             'zh-Hant',
           ],
+          UIDesignRequiresCompatibility: true,
         },
         associatedDomains: ASSOCIATED_DOMAINS,
         entitlements: {
@@ -110,6 +116,34 @@ module.exports = function (_config) {
           'com.apple.security.application-groups': 'group.app.bsky',
         },
         privacyManifests: {
+          NSPrivacyCollectedDataTypes: [
+            {
+              NSPrivacyCollectedDataType: 'NSPrivacyCollectedDataTypeCrashData',
+              NSPrivacyCollectedDataTypeLinked: false,
+              NSPrivacyCollectedDataTypeTracking: false,
+              NSPrivacyCollectedDataTypePurposes: [
+                'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+              ],
+            },
+            {
+              NSPrivacyCollectedDataType:
+                'NSPrivacyCollectedDataTypePerformanceData',
+              NSPrivacyCollectedDataTypeLinked: false,
+              NSPrivacyCollectedDataTypeTracking: false,
+              NSPrivacyCollectedDataTypePurposes: [
+                'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+              ],
+            },
+            {
+              NSPrivacyCollectedDataType:
+                'NSPrivacyCollectedDataTypeOtherDiagnosticData',
+              NSPrivacyCollectedDataTypeLinked: false,
+              NSPrivacyCollectedDataTypeTracking: false,
+              NSPrivacyCollectedDataTypePurposes: [
+                'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+              ],
+            },
+          ],
           NSPrivacyAccessedAPITypes: [
             {
               NSPrivacyAccessedAPIType:
@@ -141,12 +175,12 @@ module.exports = function (_config) {
         barStyle: 'light-content',
       },
       android: {
-        icon: './assets/app-icons/android_icon_default_light.png',
+        icon: './assets/app-icons/android_icon_default_next.png',
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-foreground.png',
           backgroundImage: './assets/icon-android-background.png',
-          backgroundColor: '#1185FE',
+          backgroundColor: '#006AFF',
         },
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
@@ -207,13 +241,12 @@ module.exports = function (_config) {
           {
             ios: {
               deploymentTarget: '15.1',
-              newArchEnabled: false,
+              buildReactNativeFromSource: true,
             },
             android: {
               compileSdkVersion: 35,
               targetSdkVersion: 35,
               buildToolsVersion: '35.0.0',
-              newArchEnabled: false,
             },
           },
         ],
@@ -294,18 +327,13 @@ module.exports = function (_config) {
              * Default set
              */
             default_light: {
-              ios: './assets/app-icons/ios_icon_default_light.png',
-              android: './assets/app-icons/android_icon_default_light.png',
+              ios: './assets/app-icons/ios_icon_legacy_light.png',
+              android: './assets/app-icons/android_icon_legacy_light.png',
               prerendered: true,
             },
             default_dark: {
-              ios: './assets/app-icons/ios_icon_default_dark.png',
-              android: './assets/app-icons/android_icon_default_dark.png',
-              prerendered: true,
-            },
-            next: {
-              ios: './assets/app-icons/icon_default_next.png',
-              android: './assets/app-icons/icon_default_next.png',
+              ios: './assets/app-icons/ios_icon_legacy_dark.png',
+              android: './assets/app-icons/android_icon_legacy_dark.png',
               prerendered: true,
             },
 

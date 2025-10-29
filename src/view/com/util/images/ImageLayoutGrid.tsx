@@ -67,7 +67,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       const containerRefs = [containerRef1, containerRef2]
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
-          <View style={[a.flex_1, {aspectRatio: 1}]}>
+          <View style={[a.flex_1, a.aspect_square]}>
             <GalleryItem
               {...props}
               index={0}
@@ -76,7 +76,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               thumbDimsRef={thumbDimsRef}
             />
           </View>
-          <View style={[a.flex_1, {aspectRatio: 1}]}>
+          <View style={[a.flex_1, a.aspect_square]}>
             <GalleryItem
               {...props}
               index={1}
@@ -93,7 +93,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       const containerRefs = [containerRef1, containerRef2, containerRef3]
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
-          <View style={[a.flex_1, {aspectRatio: 1}]}>
+          <View style={[a.flex_1, a.aspect_square]}>
             <GalleryItem
               {...props}
               index={0}
@@ -102,7 +102,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               thumbDimsRef={thumbDimsRef}
             />
           </View>
-          <View style={[a.flex_1, {aspectRatio: 1}, gap]}>
+          <View style={[a.flex_1, a.aspect_square, gap]}>
             <View style={[a.flex_1]}>
               <GalleryItem
                 {...props}

@@ -85,7 +85,11 @@ function ContentHiderActive({
       blur.type !== 'label' ||
       (blur.type === 'label' && blur.source.type !== 'user')
     ) {
-      return desc.name
+      if (desc.isSubjectAccount) {
+        return _(msg`${desc.name} (Account)`)
+      } else {
+        return desc.name
+      }
     }
 
     let hasAdultContentLabel = false
@@ -127,6 +131,7 @@ function ContentHiderActive({
     modui?.blurs,
     blur,
     desc.name,
+    desc.isSubjectAccount,
     labelDefs,
     i18n.locale,
     globalLabelStrings,
@@ -178,9 +183,9 @@ function ContentHiderActive({
               style={[
                 a.flex_1,
                 a.text_left,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_snug,
-                gtMobile && [a.font_bold],
+                gtMobile && [a.font_semi_bold],
                 t.atoms.text_contrast_medium,
                 web({
                   marginBottom: 1,
@@ -192,9 +197,9 @@ function ContentHiderActive({
             {!modui.noOverride && (
               <Text
                 style={[
-                  a.font_bold,
+                  a.font_semi_bold,
                   a.leading_snug,
-                  gtMobile && [a.font_bold],
+                  gtMobile && [a.font_semi_bold],
                   t.atoms.text_contrast_high,
                   web({
                     marginBottom: 1,

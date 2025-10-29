@@ -21,9 +21,11 @@ export function ConstrainedImage({
   aspectRatio,
   fullBleed,
   children,
+  minMobileAspectRatio,
 }: {
   aspectRatio: number
   fullBleed?: boolean
+  minMobileAspectRatio?: number
   children: React.ReactNode
 }) {
   const t = useTheme()
@@ -35,10 +37,10 @@ export function ConstrainedImage({
   const outerAspectRatio = React.useMemo<DimensionValue>(() => {
     const ratio =
       isNative || !gtMobile
-        ? Math.min(1 / aspectRatio, 16 / 9) // 9:16 bounding box
+        ? Math.min(1 / aspectRatio, minMobileAspectRatio ?? 16 / 9) // 9:16 bounding box
         : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
     return `${ratio * 100}%`
-  }, [aspectRatio, gtMobile])
+  }, [aspectRatio, gtMobile, minMobileAspectRatio])
 
   return (
     <View style={[a.w_full]}>
@@ -183,8 +185,7 @@ export function AutoSizedImage({
                   },
                 ],
               ]}>
-              <Text
-                style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
+              <Text style={[a.font_bold, largeAlt ? a.text_xs : {fontSize: 8}]}>
                 ALT
               </Text>
             </View>
@@ -203,6 +204,7 @@ export function AutoSizedImage({
         // alt here is what screen readers actually use
         accessibilityLabel={image.alt}
         accessibilityHint={_(msg`Views full image`)}
+        accessibilityRole="button"
         style={[
           a.w_full,
           a.rounded_md,
@@ -225,6 +227,7 @@ export function AutoSizedImage({
           // alt here is what screen readers actually use
           accessibilityLabel={image.alt}
           accessibilityHint={_(msg`Views full image`)}
+          accessibilityRole="button"
           style={[a.h_full]}>
           {contents}
         </Pressable>

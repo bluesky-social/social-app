@@ -57,7 +57,7 @@ let RepostButton = ({
       <PostControlButton
         testID="repostBtn"
         active={isReposted}
-        activeColor={t.palette.positive_600}
+        activeColor={t.palette.positive_500}
         big={big}
         onPress={onPress}
         onLongPress={onLongPress}
@@ -157,7 +157,7 @@ let RepostButtonDialogInner = ({
             variant="ghost"
             color="primary">
             <Repost size="lg" fill={t.palette.primary_500} />
-            <Text style={[a.font_bold, a.text_xl]}>
+            <Text style={[a.font_semi_bold, a.text_xl]}>
               {isReposted ? (
                 <Trans>Remove repost</Trans>
               ) : (
@@ -188,7 +188,7 @@ let RepostButtonDialogInner = ({
             />
             <Text
               style={[
-                a.font_bold,
+                a.font_semi_bold,
                 a.text_xl,
                 embeddingDisabled && t.atoms.text_contrast_low,
               ]}>

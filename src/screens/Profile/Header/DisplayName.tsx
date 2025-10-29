@@ -26,7 +26,7 @@ export function ProfileHeaderDisplayName({
           t.atoms.text,
           gtMobile ? a.text_4xl : a.text_3xl,
           a.self_start,
-          a.font_heavy,
+          a.font_bold,
         ]}>
         {sanitizeDisplayName(
           profile.displayName || sanitizeHandle(profile.handle),

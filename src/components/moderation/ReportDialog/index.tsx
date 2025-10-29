@@ -69,7 +69,7 @@ function Invalid() {
   const {_} = useLingui()
   return (
     <Dialog.ScrollableInner label={_(msg`Report dialog`)}>
-      <Text style={[a.font_heavy, a.text_xl, a.leading_snug, a.pb_xs]}>
+      <Text style={[a.font_bold, a.text_xl, a.leading_snug, a.pb_xs]}>
         <Trans>Invalid report subject</Trans>
       </Text>
       <Text style={[a.text_md, a.leading_snug]}>
@@ -219,10 +219,13 @@ function Inner(props: ReportDialogProps) {
             <Admonition.Outer type="error">
               <Admonition.Row>
                 <Admonition.Icon />
-                <Admonition.Text>
-                  <Trans>Something went wrong, please try again</Trans>
-                </Admonition.Text>
+                <Admonition.Content>
+                  <Admonition.Text>
+                    <Trans>Something went wrong, please try again</Trans>
+                  </Admonition.Text>
+                </Admonition.Content>
                 <Admonition.Button
+                  color="negative_subtle"
                   label={_(msg`Retry loading report options`)}
                   onPress={() => refetchLabelers()}>
                   <ButtonText>
@@ -393,7 +396,7 @@ function Inner(props: ReportDialogProps) {
                 <Text style={[a.leading_snug, a.pb_xs]}>
                   <Trans>
                     Your report will be sent to{' '}
-                    <Text style={[a.font_bold, a.leading_snug]}>
+                    <Text style={[a.font_semi_bold, a.leading_snug]}>
                       {state.selectedLabeler?.creator.displayName}
                     </Text>
                     .
@@ -529,7 +532,7 @@ function StepTitle({
         ) : (
           <Text
             style={[
-              a.font_heavy,
+              a.font_bold,
               a.text_center,
               t.atoms.text,
               {
@@ -552,7 +555,7 @@ function StepTitle({
       <Text
         style={[
           a.flex_1,
-          a.font_heavy,
+          a.font_bold,
           a.text_lg,
           a.leading_snug,
           active ? t.atoms.text : t.atoms.text_contrast_medium,
@@ -598,7 +601,7 @@ function OptionCard({
               ? [t.atoms.border_contrast_high]
               : [t.atoms.border_contrast_low],
           ]}>
-          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
             {option.title}
           </Text>
           <Text
@@ -670,7 +673,7 @@ function LabelerCard({
             avatar={labeler.creator.avatar}
           />
           <View style={[a.flex_1]}>
-            <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
               {title}
             </Text>
             <Text

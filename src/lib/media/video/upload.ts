@@ -1,4 +1,4 @@
-import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
+import {createUploadTask, FileSystemUploadType} from 'expo-file-system/legacy'
 import {type AppBskyVideoDefs, type BskyAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'

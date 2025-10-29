@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -84,12 +84,10 @@ let ProfileHeaderLabeler = ({
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
-  const [likeUri, setLikeUri] = React.useState<string>(
-    labeler.viewer?.like || '',
-  )
-  const [likeCount, setLikeCount] = React.useState(labeler.likeCount || 0)
+  const [likeUri, setLikeUri] = useState<string>(labeler.viewer?.like || '')
+  const [likeCount, setLikeCount] = useState(labeler.likeCount || 0)
 
-  const onToggleLiked = React.useCallback(async () => {
+  const onToggleLiked = useCallback(async () => {
     if (!labeler) {
       return
     }
@@ -118,44 +116,44 @@ let ProfileHeaderLabeler = ({
 
   const editProfileControl = useDialogControl()
 
-  const onPressSubscribe = React.useCallback(
-    () =>
-      requireAuth(async (): Promise<void> => {
-        const subscribe = !isSubscribed
+  const onPressSubscribe = useCallback(() => {
+    requireAuth(async (): Promise<void> => {
+      playHaptic()
+      const subscribe = !isSubscribed
 
-        try {
-          await toggleSubscription({
-            did: profile.did,
-            subscribe,
-          })
+      try {
+        await toggleSubscription({
+          did: profile.did,
+          subscribe,
+        })
 
-          logger.metric(
-            subscribe
-              ? 'moderation:subscribedToLabeler'
-              : 'moderation:unsubscribedFromLabeler',
-            {},
-            {statsig: true},
-          )
-        } catch (e: any) {
-          reset()
-          if (e.message === 'MAX_LABELERS') {
-            cantSubscribePrompt.open()
-            return
-          }
-          logger.error(`Failed to subscribe to labeler`, {message: e.message})
+        logger.metric(
+          subscribe
+            ? 'moderation:subscribedToLabeler'
+            : 'moderation:unsubscribedFromLabeler',
+          {},
+          {statsig: true},
+        )
+      } catch (e: any) {
+        reset()
+        if (e.message === 'MAX_LABELERS') {
+          cantSubscribePrompt.open()
+          return
         }
-      }),
-    [
-      requireAuth,
-      toggleSubscription,
-      isSubscribed,
-      profile,
-      cantSubscribePrompt,
-      reset,
-    ],
-  )
+        logger.error(`Failed to subscribe to labeler`, {message: e.message})
+      }
+    })
+  }, [
+    playHaptic,
+    requireAuth,
+    toggleSubscription,
+    isSubscribed,
+    profile,
+    cantSubscribePrompt,
+    reset,
+  ])
 
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
@@ -225,7 +223,7 @@ let ProfileHeaderLabeler = ({
                             ? t.palette.contrast_700
                             : t.palette.white,
                         },
-                        a.font_bold,
+                        a.font_semi_bold,
                         a.text_center,
                         a.leading_tight,
                       ]}>
@@ -297,7 +295,7 @@ let ProfileHeaderLabeler = ({
                     {({hovered, focused, pressed}) => (
                       <Text
                         style={[
-                          a.font_bold,
+                          a.font_semi_bold,
                           a.text_sm,
                           t.atoms.text_contrast_medium,
                           (hovered || focused || pressed) &&

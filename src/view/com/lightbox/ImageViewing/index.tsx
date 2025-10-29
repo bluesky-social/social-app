@@ -18,6 +18,7 @@ import Animated, {
   cancelAnimation,
   interpolate,
   measure,
+  ReduceMotion,
   runOnJS,
   type SharedValue,
   useAnimatedReaction,
@@ -516,6 +517,7 @@ function LightboxImage({
             velocity: e.velocityY,
             velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
             deceleration: 1, // Danger! This relies on the reaction below stopping it.
+            reduceMotion: ReduceMotion.Never, // If this animation doesn't run, the image gets stuck - therefore override Reduce Motion
           })
         })
       } else {
@@ -524,6 +526,7 @@ function LightboxImage({
           return withSpring(0, {
             stiffness: 700,
             damping: 50,
+            reduceMotion: ReduceMotion.Never,
           })
         })
       }
@@ -595,7 +598,8 @@ function LightboxFooter({
                 })
                 toggleAltExpanded()
               }}
-              onLongPress={() => {}}>
+              onLongPress={() => {}}
+              emoji>
               {altText}
             </Text>
           </View>

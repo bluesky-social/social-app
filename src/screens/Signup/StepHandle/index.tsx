@@ -19,7 +19,6 @@ import {
   checkHandleAvailability,
   useHandleAvailabilityQuery,
 } from '#/state/queries/handle-availability'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, native, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
@@ -141,7 +140,7 @@ export function StepHandle() {
     !validCheck.totalLength
 
   return (
-    <ScreenTransition>
+    <>
       <View style={[a.gap_sm, a.pt_lg, a.z_10]}>
         <View>
           <TextField.Root isInvalid={textFieldInvalid}>
@@ -170,7 +169,7 @@ export function StepHandle() {
             {isHandleAvailable?.available && (
               <CheckIcon
                 testID="handleAvailableCheck"
-                style={[{color: t.palette.positive_600}, a.z_20]}
+                style={[{color: t.palette.positive_500}, a.z_20]}
               />
             )}
           </TextField.Root>
@@ -252,7 +251,7 @@ export function StepHandle() {
           onNextPress={onNextPress}
         />
       </Animated.View>
-    </ScreenTransition>
+    </>
   )
 }
 

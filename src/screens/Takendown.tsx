@@ -148,7 +148,7 @@ export function Takendown() {
               <Logo width={64} />
             </View>
 
-            <Text style={[a.text_4xl, a.font_heavy, a.pb_md]}>
+            <Text style={[a.text_4xl, a.font_bold, a.pb_md]}>
               {isAppealling ? (
                 <Trans>Appeal suspension</Trans>
               ) : (

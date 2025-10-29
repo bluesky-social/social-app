@@ -3,11 +3,11 @@ import {RefreshControl, type ViewToken} from 'react-native'
 import {
   type FlatListPropsWithLayout,
   runOnJS,
+  useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
 import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'

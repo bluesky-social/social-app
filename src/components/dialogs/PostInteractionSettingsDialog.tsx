@@ -13,6 +13,7 @@ import isEqual from 'lodash.isequal'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
+import {useGetPost} from '#/state/queries/post'
 import {
   createPostgateQueryKey,
   getPostgateRecord,
@@ -25,12 +26,15 @@ import {
 } from '#/state/queries/postgate/util'
 import {
   createThreadgateViewQueryKey,
-  getThreadgateView,
   type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
   useSetThreadgateAllowMutation,
   useThreadgateViewQuery,
 } from '#/state/queries/threadgate'
+import {
+  PostThreadContextProvider,
+  usePostThreadContext,
+} from '#/state/queries/usePostThread'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
@@ -84,7 +88,7 @@ export function PostInteractionSettingsControlledDialog({
             ]}>
             <Trans>
               You can set default interaction settings in{' '}
-              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+              <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
                 Settings &rarr; Moderation &rarr; Interaction settings
               </Text>
               .
@@ -100,7 +104,7 @@ export function PostInteractionSettingsControlledDialog({
 export function Header() {
   return (
     <View style={[a.gap_md, a.pb_sm]}>
-      <Text style={[a.text_2xl, a.font_bold]}>
+      <Text style={[a.text_2xl, a.font_semi_bold]}>
         <Trans>Post interaction settings</Trans>
       </Text>
       <Text style={[a.text_md, a.pb_xs]}>
@@ -133,10 +137,13 @@ export type PostInteractionSettingsDialogProps = {
 export function PostInteractionSettingsDialog(
   props: PostInteractionSettingsDialogProps,
 ) {
+  const postThreadContext = usePostThreadContext()
   return (
     <Dialog.Outer control={props.control}>
       <Dialog.Handle />
-      <PostInteractionSettingsDialogControlledInner {...props} />
+      <PostThreadContextProvider context={postThreadContext}>
+        <PostInteractionSettingsDialogControlledInner {...props} />
+      </PostThreadContextProvider>
     </Dialog.Outer>
   )
 }
@@ -329,7 +336,7 @@ export function PostInteractionSettingsForm({
       <View style={[a.flex_1, a.gap_md]}>
         <View style={[a.gap_lg]}>
           <View style={[a.gap_sm]}>
-            <Text style={[a.font_bold, a.text_lg]}>
+            <Text style={[a.font_semi_bold, a.text_lg]}>
               <Trans>Quote settings</Trans>
             </Text>
 
@@ -385,7 +392,7 @@ export function PostInteractionSettingsForm({
                 opacity: replySettingsDisabled ? 0.3 : 1,
               },
             ]}>
-            <Text style={[a.font_bold, a.text_lg]}>
+            <Text style={[a.font_semi_bold, a.text_lg]}>
               <Trans>Reply settings</Trans>
             </Text>
 
@@ -535,7 +542,9 @@ function Selectable({
             },
             style,
           ]}>
-          <Text style={[a.text_sm, isSelected && a.font_bold]}>{label}</Text>
+          <Text style={[a.text_sm, isSelected && a.font_semi_bold]}>
+            {label}
+          </Text>
           {isSelected ? (
             <Check size="sm" fill={t.palette.primary_500} />
           ) : (
@@ -556,6 +565,7 @@ export function usePrefetchPostInteractionSettings({
 }) {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const getPost = useGetPost()
 
   return React.useCallback(async () => {
     try {
@@ -568,7 +578,10 @@ export function usePrefetchPostInteractionSettings({
         }),
         queryClient.prefetchQuery({
           queryKey: createThreadgateViewQueryKey(rootPostUri),
-          queryFn: () => getThreadgateView({agent, postUri: rootPostUri}),
+          queryFn: async () => {
+            const post = await getPost({uri: rootPostUri})
+            return post.threadgate ?? null
+          },
           staleTime: STALE.SECONDS.THIRTY,
         }),
       ])
@@ -577,5 +590,5 @@ export function usePrefetchPostInteractionSettings({
         safeMessage: e.message,
       })
     }
-  }, [queryClient, agent, postUri, rootPostUri])
+  }, [queryClient, agent, postUri, rootPostUri, getPost])
 }

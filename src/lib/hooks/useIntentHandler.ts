@@ -1,6 +1,7 @@
 import React from 'react'
 import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {logger} from '#/logger'
@@ -32,7 +33,12 @@ export function useIntentHandler() {
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
   React.useEffect(() => {
-    const handleIncomingURL = (url: string) => {
+    const handleIncomingURL = async (url: string) => {
+      if (isNative) {
+        // Close in-app browser if it's open
+        await WebBrowser.dismissBrowser().catch(() => {})
+      }
+
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
         logger.metric('deepLink:referrerReceived', {
@@ -51,7 +57,7 @@ export function useIntentHandler() {
       }
 
       const urlp = new URL(url)
-      const [_, intent, intentType] = urlp.pathname.split('/')
+      const [__, intent, intentType] = urlp.pathname.split('/')
 
       // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
       // intent check. On web, we have to check the first part of the path since we have an actual hostname

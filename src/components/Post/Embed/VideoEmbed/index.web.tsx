@@ -14,7 +14,7 @@ import {useLingui} from '@lingui/react'
 import {isFirefox} from '#/lib/browser'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {
@@ -32,6 +32,7 @@ export function VideoEmbed({
   embed: AppBskyEmbedVideo.View
   crop?: 'none' | 'square' | 'constrained'
 }) {
+  const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoWeb()
@@ -114,13 +115,24 @@ export function VideoEmbed({
         sendPosition={sendPosition}
         isAnyViewActive={currentActiveView !== null}>
         {cropDisabled ? (
-          <View style={[a.w_full, a.overflow_hidden, {aspectRatio: max ?? 1}]}>
+          <View
+            style={[
+              a.w_full,
+              a.overflow_hidden,
+              {aspectRatio: max ?? 1},
+              a.rounded_md,
+              a.overflow_hidden,
+              t.atoms.bg_contrast_25,
+            ]}>
             {contents}
           </View>
         ) : (
           <ConstrainedImage
             fullBleed={crop === 'square'}
-            aspectRatio={constrained || 1}>
+            aspectRatio={constrained || 1}
+            // slightly smaller max height than images
+            // images use 16 / 9, for reference
+            minMobileAspectRatio={14 / 9}>
             {contents}
           </ConstrainedImage>
         )}

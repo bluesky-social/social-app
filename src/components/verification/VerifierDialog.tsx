@@ -89,7 +89,8 @@ function Inner({
         </View>
 
         <View style={[a.gap_sm]}>
-          <Text style={[a.text_2xl, a.font_bold, a.pr_4xl, a.leading_tight]}>
+          <Text
+            style={[a.text_2xl, a.font_semi_bold, a.pr_4xl, a.leading_tight]}>
             {label}
           </Text>
           <Text style={[a.text_md, a.leading_snug]}>

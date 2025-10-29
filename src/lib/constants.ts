@@ -17,6 +17,7 @@ export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
+export const CARD_ASPECT_RATIO = 1200 / 630
 
 // HACK
 // Yes, this is exactly what it looks like. It's a hard-coded constant

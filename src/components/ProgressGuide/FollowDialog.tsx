@@ -4,6 +4,7 @@ import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -13,10 +14,6 @@ import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggeste
 import {useSession} from '#/state/session'
 import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
 import {type ListMethods} from '#/view/com/util/List'
-import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
 import {
   atoms as a,
   native,
@@ -360,7 +357,7 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
         style={[
           a.z_10,
           a.text_lg,
-          a.font_heavy,
+          a.font_bold,
           a.leading_tight,
           t.atoms.text_contrast_high,
         ]}>

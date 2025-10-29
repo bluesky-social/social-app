@@ -30,7 +30,7 @@ function getDecorations(doc: ProsemirrorNode) {
 
       let match
       while ((match = regex.exec(textContent))) {
-        const [matchedString, _, tag] = match
+        const [matchedString, __, tag] = match
 
         if (!tag || tag.replace(TRAILING_PUNCTUATION_REGEX, '').length > 64)
           continue
