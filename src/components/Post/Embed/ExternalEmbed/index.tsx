@@ -74,6 +74,15 @@ export const ExternalEmbed = ({
     )
   }
 
+  /* NOTE(caidanw):
+   * When there is no thumbnail or description, the embed is useless even with a title.
+   * Otherwise, we get a lot of boring embeds that just show the title of the page.
+   * So we shoudl not render anything in that case.
+   */
+  if (!link.thumb && !link.description) {
+    return null
+  }
+
   return (
     <Link
       label={link.title || _(msg`Open link to ${niceUrl}`)}
