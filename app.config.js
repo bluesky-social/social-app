@@ -327,13 +327,13 @@ module.exports = function (_config) {
              * Default set
              */
             default_light: {
-              ios: './assets/app-icons/ios_icon_default_old_light.png',
-              android: './assets/app-icons/android_icon_default_old_light.png',
+              ios: './assets/app-icons/ios_icon_legacy_light.png',
+              android: './assets/app-icons/android_icon_legacy_light.png',
               prerendered: true,
             },
             default_dark: {
-              ios: './assets/app-icons/ios_icon_default_old_dark.png',
-              android: './assets/app-icons/android_icon_default_old_dark.png',
+              ios: './assets/app-icons/ios_icon_legacy_dark.png',
+              android: './assets/app-icons/android_icon_legacy_dark.png',
               prerendered: true,
             },
 
