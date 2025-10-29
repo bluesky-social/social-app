@@ -100,7 +100,8 @@ export function PostFeedReason({
                     t.atoms.text_contrast_medium,
                     a.font_medium,
                     a.leading_snug,
-                  ]}>
+                  ]}
+                  emoji>
                   {reposter}
                 </WebOnlyInlineLinkText>
               </ProfileHoverCard>
