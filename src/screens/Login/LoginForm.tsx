@@ -64,8 +64,6 @@ export const LoginForm = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
     useState<boolean>(false)
-  const [isAuthFactorTokenValueEmpty, setIsAuthFactorTokenValueEmpty] =
-    useState<boolean>(true)
   const identifierValueRef = useRef<string>(initialHandle || '')
   const passwordValueRef = useRef<string>('')
   const authFactorTokenValueRef = useRef<string>('')
@@ -280,7 +278,6 @@ export const LoginForm = ({
               textContentType="username"
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               onChangeText={v => {
-                setIsAuthFactorTokenValueEmpty(v === '')
                 authFactorTokenValueRef.current = v
               }}
               onSubmitEditing={onPressNext}
@@ -288,13 +285,6 @@ export const LoginForm = ({
               accessibilityHint={_(
                 msg`Input the code which has been emailed to you`,
               )}
-              style={[
-                {
-                  textTransform: isAuthFactorTokenValueEmpty
-                    ? 'none'
-                    : 'uppercase',
-                },
-              ]}
             />
           </TextField.Root>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_sm]}>
