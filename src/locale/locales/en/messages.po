@@ -7429,7 +7429,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:610
+#: src/view/com/lightbox/ImageViewing/index.tsx:613
 msgctxt "action"
 msgid "Save"
 msgstr ""
@@ -7952,7 +7952,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:619
+#: src/view/com/lightbox/ImageViewing/index.tsx:622
 msgctxt "action"
 msgid "Share"
 msgstr ""
