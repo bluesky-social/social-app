@@ -6,10 +6,10 @@ import {
 } from '@atproto/api'
 import {h} from 'preact'
 
-import likeIcon from '../../assets/heart_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo_full_name.svg'
-import replyIcon from '../../assets/reply_unfilled_stroke2_corner0_rounded.svg'
-import repostIcon from '../../assets/repost_unfilled_stroke2_corner0_rounded.svg'
+import {Like as LikeIcon} from '../icons/Like'
+import {Reply as ReplyIcon} from '../icons/Reply'
+import {Repost as RepostIcon} from '../icons/Repost'
 import {CONTENT_LABELS} from '../labels'
 import * as bsky from '../types/bsky'
 import {niceDate} from '../util/nice-date'
@@ -45,6 +45,7 @@ export function Post({thread}: Props) {
   const verification = getVerificationState({profile: post.author})
 
   const href = `/profile/${post.author.did}/post/${getRkey(post)}`
+
   return (
     <Container href={href}>
       <div
@@ -90,22 +91,24 @@ export function Post({thread}: Props) {
           <div className="flex items-center gap-3 text-sm cursor-pointer">
             {!!post.likeCount && (
               <div className="flex items-center gap-1 cursor-pointer group">
-                <img
-                  src={likeIcon}
-                  className="w-5 h-5 group-hover:opacity-100 dark:opacity-100 group-hover:brightness-0 group-hover:invert-[0.2] dark:group-hover:invert-[0.9] transition-all"
+                <LikeIcon
+                  width={20}
+                  height={20}
+                  className="text-slate-600 dark:text-slate-400 group-hover:text-neutral-800 dark:group-hover:text-white transition-colors"
                 />
-                <p className="font-bold text-neutral-600 dark:text-neutral-300 mb-px group-hover:text-neutral-800 dark:group-hover:text-white transition-colors dark:text-slate-500">
+                <p className="font-medium  text-slate-600 text-neutral-600 dark:text-neutral-300 mb-px group-hover:text-neutral-800 dark:group-hover:text-white transition-colors dark:text-slate-400">
                   {prettyNumber(post.likeCount)}
                 </p>
               </div>
             )}
             {!!post.replyCount && (
               <div className="flex items-center gap-1 cursor-pointer group">
-                <img
-                  src={replyIcon}
-                  className="w-5 h-5 group-hover:opacity-100 dark:opacity-100 group-hover:brightness-0 group-hover:invert-[0.2] dark:group-hover:invert-[0.9] transition-all"
+                <ReplyIcon
+                  width={20}
+                  height={20}
+                  className="text-slate-600 dark:text-slate-400 group-hover:text-neutral-800 dark:group-hover:text-white transition-colors"
                 />
-                <p className="font-bold text-neutral-600 dark:text-neutral-300 mb-px group-hover:text-neutral-800 dark:group-hover:text-white transition-colors dark:text-slate-500">
+                <p className="font-medium text-slate-600 text-neutral-600 dark:text-neutral-300 mb-px group-hover:text-neutral-800 dark:group-hover:text-white transition-colors dark:text-slate-400">
                   {prettyNumber(post.replyCount)}
                 </p>
               </div>
@@ -113,11 +116,12 @@ export function Post({thread}: Props) {
 
             {!!post.repostCount && (
               <div className="flex items-center gap-1 cursor-pointer group">
-                <img
-                  src={repostIcon}
-                  className="w-5 h-5 dark:opacity-100 group-hover:opacity-100 group-hover:brightness-0 group-hover:invert-[0.2] dark:group-hover:invert-[0.9] transition-all"
+                <RepostIcon
+                  width={20}
+                  height={20}
+                  className="text-slate-600 dark:text-slate-400 group-hover:text-neutral-800 dark:group-hover:text-white transition-colors"
                 />
-                <p className="font-bold text-neutral-600 dark:text-neutral-300 mb-px group-hover:text-neutral-800 dark:group-hover:text-white transition-colors dark:text-slate-500">
+                <p className="font-medium text-slate-600 dark:text-slate-400 mb-px group-hover:text-neutral-800 dark:group-hover:text-white transition-colors">
                   {prettyNumber(post.repostCount)}
                 </p>
               </div>
@@ -126,7 +130,7 @@ export function Post({thread}: Props) {
           <Link href={href}>
             <time
               datetime={new Date(post.indexedAt).toISOString()}
-              className="text-textLight dark:text-textDimmed text-sm hover:underline dark:text-slate-500">
+              className="text-slate-500 dark:text-textDimmed text-sm hover:underline dark:text-slate-500">
               {niceDate(post.indexedAt)}
             </time>
           </Link>
