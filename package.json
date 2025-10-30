@@ -16,6 +16,13 @@
           "expo-image-picker"
         ]
       }
+    },
+    "install": {
+      "exclude": [
+        "react-native-reanimated",
+        "@sentry/react-native",
+        "react-native-pager-view"
+      ]
     }
   },
   "scripts": {
