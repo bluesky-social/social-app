@@ -1,12 +1,7 @@
 import {Platform} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 
-import {
-  BUNDLE_IDENTIFIER,
-  ENV,
-  IS_TESTFLIGHT,
-  RELEASE_VERSION,
-} from '#/env/common'
+import {BUNDLE_IDENTIFIER, IS_TESTFLIGHT, RELEASE_VERSION} from '#/env/common'
 
 export * from '#/env/common'
 
@@ -52,4 +47,5 @@ export const IS_WEB_FIREFOX: boolean = false
  * Misc
  */
 export const IS_HIGH_DPI: boolean = true
+// ideally we'd use isLiquidGlassAvailable() from expo-glass-effect but checking iOS version is good enough for now
 export const IS_LIQUID_GLASS: boolean = iOSMajorVersion >= 26
