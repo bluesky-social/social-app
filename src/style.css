@@ -40,7 +40,7 @@ html.theme--dark {
 }
 html.theme--dim {
   color-scheme: dark;
-  background-color: hsl(211, 28%, 12%);
+  background-color: rgb(21, 29, 40);
   --text: white;
   --background: hsl(211, 20%, 4%);
   --backgroundLight: hsl(211, 20%, 10%);
