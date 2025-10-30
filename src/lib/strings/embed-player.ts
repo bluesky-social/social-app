@@ -245,7 +245,7 @@ export function parseEmbedPlayerFromUrl(
     ) {
       // We want to append the songId to the end of the url if it exists
       const embedUri = `https://embed.music.apple.com${urlp.pathname}${
-        urlp.search ? '?i=' + songId : ''
+        songId ? `?i=${songId}` : ''
       }`
 
       if (type === 'playlist') {
