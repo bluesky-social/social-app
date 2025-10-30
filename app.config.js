@@ -42,7 +42,7 @@ module.exports = function (_config) {
       },
       icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
-      primaryColor: '#1083fe',
+      primaryColor: '#006aff',
       newArchEnabled: false,
       ios: {
         supportsTablet: false,
@@ -180,7 +180,7 @@ module.exports = function (_config) {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-foreground.png',
           backgroundImage: './assets/icon-android-background.png',
-          backgroundColor: '#006AFF',
+          backgroundColor: '#006aff',
         },
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
@@ -309,12 +309,12 @@ module.exports = function (_config) {
               },
             },
             android: {
-              backgroundColor: '#0c7cff',
-              image: './assets/splash-android-icon.png',
+              backgroundColor: '#006aff',
+              image: './assets/splash-icon-android.png',
               imageWidth: 150,
               dark: {
                 backgroundColor: '#0c2a49',
-                image: './assets/splash-android-icon-dark.png',
+                image: './assets/splash-icon-android.png',
                 imageWidth: 150,
               },
             },
