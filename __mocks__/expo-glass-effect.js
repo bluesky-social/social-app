@@ -1,3 +1,1 @@
-jest.mock('expo-glass-effect', () => ({
-  isLiquidGlassAvailable: () => jest.fn(() => false),
-}))
+export const isLiquidGlassAvailable = jest.fn(() => false)
