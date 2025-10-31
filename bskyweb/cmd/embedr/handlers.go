@@ -191,17 +191,17 @@ func (srv *Server) WebPostEmbed(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Invalid RecordKey: %v", err))
 	}
-	didParam := c.Param("did")
-	did, err := syntax.ParseDID(didParam)
+	atidParam := c.Param("atid")
+	atid, err := syntax.ParseAtIdentifier(atidParam)
 	if err != nil {
-		return c.String(http.StatusBadRequest, fmt.Sprintf("Invalid DID: %v", err))
+		return c.String(http.StatusBadRequest, fmt.Sprintf("Invalid Identifier: %v", err))
 	}
 	_ = rkey
-	_ = did
+	_ = atid
 
 	// NOTE: this request was't really necessary; the JS will do the same fetch
 	/*
-		postView, err := srv.getBlueskyPost(ctx, did, rkey)
+		postView, err := srv.getBlueskyPost(ctx, atid, rkey)
 		if err == ErrPostNotFound {
 			return c.String(http.StatusNotFound, fmt.Sprintf("%v", err))
 		} else if err == ErrPostNotPublic {
