@@ -192,7 +192,7 @@ func (srv *Server) WebPostEmbed(c echo.Context) error {
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Invalid RecordKey: %v", err))
 	}
 	didParam := c.Param("did")
-	did, err := syntax.ParseDID(didParam)
+	did, err := syntax.ParseAtIdentifier(didParam)
 	if err != nil {
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Invalid DID: %v", err))
 	}
