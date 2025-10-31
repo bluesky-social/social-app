@@ -1,34 +1,31 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect} from 'react'
 import {Modal, View} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 
-import {useDialogStateControlContext} from '#/state/dialogs'
 import {useComposerState} from '#/state/shell/composer'
+import {useComposerReducer} from '#/view/com/composer/state/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 export function Composer({}: {winHeight: number}) {
-  const {setFullyExpandedCount} = useDialogStateControlContext()
   const t = useTheme()
   const state = useComposerState()
   const ref = useComposerCancelRef()
-  const [isDirty, setIsDirty] = useState(
-    !!state?.text ||
-      !!state?.imageUris ||
-      !!state?.videoUri ||
-      !!state?.mention,
-  )
 
   const open = !!state
-  const prevOpen = useRef(open)
+
+  const [composerState, composerDispatch, isDirty] = useComposerReducer(state)
 
   useEffect(() => {
-    if (open && !prevOpen.current) {
-      setFullyExpandedCount(c => c + 1)
-    } else if (!open && prevOpen.current) {
-      setFullyExpandedCount(c => c - 1)
+    if (open) {
+      const entry = SystemBars.pushStackEntry({
+        style: {statusBar: 'light'},
+      })
+      return () => {
+        SystemBars.popStackEntry(entry)
+      }
     }
-    prevOpen.current = open
-  }, [open, setFullyExpandedCount])
+  }, [open])
 
   return (
     <Modal
@@ -50,7 +47,9 @@ export function Composer({}: {winHeight: number}) {
           text={state?.text}
           imageUris={state?.imageUris}
           videoUri={state?.videoUri}
-          setIsDirty={setIsDirty}
+          composerState={composerState}
+          composerDispatch={composerDispatch}
+          isDirty={isDirty}
         />
       </View>
     </Modal>

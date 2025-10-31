@@ -1,18 +1,35 @@
 import {useEffect} from 'react'
 import {Animated, Easing} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {useComposerState} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {ComposePost} from '../com/composer/Composer'
+import {useComposerReducer} from '../com/composer/state/composer'
 
 export function Composer({winHeight}: {winHeight: number}) {
   const state = useComposerState()
   const t = useTheme()
   const initInterp = useAnimatedValue(0)
 
+  const open = !!state
+
+  const [composerState, composerDispatch, isDirty] = useComposerReducer(state)
+
   useEffect(() => {
-    if (state) {
+    if (open) {
+      const entry = SystemBars.pushStackEntry({
+        style: {statusBar: t.scheme === 'light' ? 'dark' : 'light'},
+      })
+      return () => {
+        SystemBars.popStackEntry(entry)
+      }
+    }
+  }, [open, t.scheme])
+
+  useEffect(() => {
+    if (open) {
       Animated.timing(initInterp, {
         toValue: 1,
         duration: 300,
@@ -22,7 +39,7 @@ export function Composer({winHeight}: {winHeight: number}) {
     } else {
       initInterp.setValue(0)
     }
-  }, [initInterp, state])
+  }, [initInterp, open])
   const wrapperAnimStyle = {
     transform: [
       {
@@ -37,7 +54,7 @@ export function Composer({winHeight}: {winHeight: number}) {
   // rendering
   // =
 
-  if (!state) {
+  if (!open) {
     return null
   }
 
@@ -55,6 +72,9 @@ export function Composer({winHeight}: {winHeight: number}) {
         text={state.text}
         imageUris={state.imageUris}
         videoUri={state.videoUri}
+        composerState={composerState}
+        composerDispatch={composerDispatch}
+        isDirty={isDirty}
       />
     </Animated.View>
   )

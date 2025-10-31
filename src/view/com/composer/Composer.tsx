@@ -1,9 +1,10 @@
-import React, {
+import {
+  Fragment,
+  memo,
   useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
-  useReducer,
   useRef,
   useState,
 } from 'react'
@@ -84,7 +85,6 @@ import {
   createComposerImage,
   pasteImage,
 } from '#/state/gallery'
-import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   fromPostLanguages,
@@ -92,7 +92,6 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
@@ -139,8 +138,7 @@ import {
 } from './SelectMediaButton'
 import {
   type ComposerAction,
-  composerReducer,
-  createComposerState,
+  type ComposerState,
   type EmbedDraft,
   MAX_IMAGES,
   type PostAction,
@@ -167,16 +165,17 @@ export const ComposePost = ({
   onPost,
   onPostSuccess,
   quote: initQuote,
-  mention: initMention,
   openEmojiPicker,
-  text: initText,
-  imageUris: initImageUris,
   videoUri: initVideoUri,
+  composerState,
+  composerDispatch,
   cancelRef,
-  setIsDirty,
+  isDirty,
 }: Props & {
+  composerState: ComposerState
+  composerDispatch: React.Dispatch<ComposerAction>
   cancelRef?: React.RefObject<CancelRef | null>
-  setIsDirty?: React.Dispatch<React.SetStateAction<boolean>>
+  isDirty: boolean
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -190,8 +189,6 @@ export const ComposePost = ({
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
-  const {closeAllModals} = useModalControls()
-  const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
@@ -237,18 +234,6 @@ export const ComposePost = ({
     setReplyToLanguages([])
   }
 
-  const [composerState, composerDispatch] = useReducer(
-    composerReducer,
-    {
-      initImageUris,
-      initQuoteUri: initQuote?.uri,
-      initText,
-      initMention,
-      initInteractionSettings: preferences?.postInteractionSettings,
-    },
-    createComposerState,
-  )
-
   const thread = composerState.thread
   const activePost = thread.posts[composerState.activePostIndex]
   const nextPost: PostDraft | undefined =
@@ -261,10 +246,10 @@ export const ComposePost = ({
         postAction,
       })
     },
-    [activePost.id],
+    [activePost.id, composerDispatch],
   )
 
-  const selectVideo = React.useCallback(
+  const selectVideo = useCallback(
     (postId: string, asset: ImagePickerAsset) => {
       const abortController = new AbortController()
       composerDispatch({
@@ -307,7 +292,7 @@ export const ComposePost = ({
     onInitVideo()
   }, [onInitVideo])
 
-  const clearVideo = React.useCallback(
+  const clearVideo = useCallback(
     (postId: string) => {
       composerDispatch({
         type: 'update_post',
@@ -344,26 +329,7 @@ export const ComposePost = ({
     [insets, isKeyboardVisible],
   )
 
-  const isDirty = thread.posts.some(
-    post =>
-      post.shortenedGraphemeLength > 0 || post.embed.media || post.embed.link,
-  )
-
-  // very unfortunate, but we need to pass state back up to the parent on iOS
-  //
-  // WARNING - if the Modal on iOS thinks it's not dirty,
-  // `allowSwipeDismissal` will be true, and if we don't then close the composer
-  // when `onPressCancel` is called it will be bad (might even softlock)
-  // so we need to keep the parent state and the behaviour of onPressCancel in
-  // tight sync. do NOT force the modal to stay open without marking it as dirty! -sfn
-  useEffect(() => {
-    if (isIOS) {
-      setIsDirty?.(isDirty)
-    }
-  }, [isDirty, setIsDirty])
-
   const onPressCancel = useNonReactiveCallback(() => {
-    // web only, so it's fine w.r.t. the Modal
     const didCloseAutocomplete = textInput.current?.maybeClosePopup()
     if (isWeb && didCloseAutocomplete) {
       return
@@ -386,7 +352,7 @@ export const ComposePost = ({
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        if (closeAllDialogs() || closeAllModals()) {
+        if (closeAllDialogs()) {
           return true
         }
         onPressCancel()
@@ -396,7 +362,7 @@ export const ComposePost = ({
     return () => {
       backHandler.remove()
     }
-  }, [onPressCancel, closeAllDialogs, closeAllModals])
+  }, [onPressCancel, closeAllDialogs])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
@@ -434,7 +400,7 @@ export const ComposePost = ({
         ),
     )
 
-  const onPressPublish = React.useCallback(async () => {
+  const onPressPublish = useCallback(async () => {
     if (isPublishing) {
       return
     }
@@ -629,7 +595,7 @@ export const ComposePost = ({
     onPressPublish()
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (publishOnUpload) {
       let erroredVideos = 0
       let uploadingVideos = 0
@@ -673,8 +639,7 @@ export const ComposePost = ({
     if (rect) {
       openEmojiPicker?.({
         ...rect,
-        nextFocusRef:
-          textInput as unknown as React.MutableRefObject<HTMLElement>,
+        nextFocusRef: textInput as unknown as React.RefObject<HTMLElement>,
       })
     }
   }, [openEmojiPicker])
@@ -786,7 +751,7 @@ export const ComposePost = ({
             onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
             {thread.posts.map((post, index) => (
-              <React.Fragment key={post.id}>
+              <Fragment key={post.id}>
                 <ComposerPost
                   post={post}
                   dispatch={composerDispatch}
@@ -806,7 +771,7 @@ export const ComposePost = ({
                 {isWebFooterSticky && post.id === activePost.id && (
                   <View style={styles.stickyFooterWeb}>{footer}</View>
                 )}
-              </React.Fragment>
+              </Fragment>
             ))}
           </Animated.ScrollView>
           {!isWebFooterSticky && footer}
@@ -825,7 +790,7 @@ export const ComposePost = ({
   )
 }
 
-let ComposerPost = React.memo(function ComposerPost({
+let ComposerPost = memo(function ComposerPost({
   post,
   dispatch,
   textInput,
