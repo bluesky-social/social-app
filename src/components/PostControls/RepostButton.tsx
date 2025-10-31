@@ -204,8 +204,7 @@ let RepostButtonDialogInner = ({
           label={_(msg`Cancel quote post`)}
           onPress={onPressClose}
           size="large"
-          variant="outline"
-          color="primary">
+          color="secondary">
           <ButtonText>
             <Trans>Cancel</Trans>
           </ButtonText>
