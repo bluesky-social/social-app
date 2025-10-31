@@ -1,6 +1,8 @@
+import {StyleSheet} from 'react-native'
 import type React from 'react'
 
-import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import {isHighDPI} from '#/lib/browser'
+import {atoms as a, platform, useTheme, type ViewStyleProp} from '#/alf'
 import {Fill} from '#/components/Fill'
 
 /**
@@ -25,7 +27,15 @@ export function MediaInsetBorder({
     <Fill
       style={[
         a.rounded_md,
-        a.border,
+        {
+          borderWidth: platform({
+            native: StyleSheet.hairlineWidth,
+            // while we generally use hairlineWidth (aka 1px),
+            // we make an exception here for high DPI screens
+            // as the 1px border is very noticeable -sfn
+            web: isHighDPI ? 0.5 : StyleSheet.hairlineWidth,
+          }),
+        },
         opaque
           ? [t.atoms.border_contrast_low]
           : [
@@ -34,9 +44,7 @@ export function MediaInsetBorder({
                 : t.atoms.border_contrast_high,
               {opacity: 0.6},
             ],
-        {
-          pointerEvents: 'none',
-        },
+        a.pointer_events_none,
         style,
       ]}>
       {children}
