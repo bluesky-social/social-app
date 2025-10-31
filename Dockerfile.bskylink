@@ -1,4 +1,4 @@
-FROM node:20.11-alpine3.18 as build
+FROM node:20.11-alpine3.18 AS build
 
 # Move files into the image and install
 WORKDIR /app

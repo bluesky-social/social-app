@@ -1,15 +1,19 @@
 import assert from 'node:assert'
 
 import {DAY, SECOND} from '@atproto/common'
-import {Express} from 'express'
+import {type Express} from 'express'
 
-import {AppContext} from '../context.js'
+import {type AppContext} from '../context.js'
 import {handler} from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
     '/:linkId',
     handler(async (req, res) => {
+      const addMetrics = (statusCode: number) => {
+        ctx.shortLinkRequests.labels('GET', statusCode.toString()).inc()
+      }
+
       const linkId = req.params.linkId
       const contentType = req.accepts(['html', 'json'])
       assert(
@@ -35,6 +39,7 @@ export default function (ctx: AppContext, app: Express) {
         }
         // send the user to the app
         res.setHeader('Location', `https://${ctx.cfg.service.appHostname}`)
+        addMetrics(302)
         return res.status(302).end()
       }
       // build url from original url in order to preserve query params
@@ -45,9 +50,11 @@ export default function (ctx: AppContext, app: Express) {
       url.pathname = found.path
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
       if (contentType === 'json') {
+        addMetrics(302)
         return res.json({url: url.href}).end()
       }
       res.setHeader('Location', url.href)
+      addMetrics(302)
       return res.status(301).end()
     }),
   )
