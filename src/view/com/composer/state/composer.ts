@@ -1,3 +1,4 @@
+import {useReducer, useState} from 'react'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   type AppBskyFeedPostgate,
@@ -17,6 +18,7 @@ import {
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {type Gif} from '#/state/queries/tenor'
 import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
@@ -104,6 +106,8 @@ export type ComposerState = {
 }
 
 export type ComposerAction =
+  | {type: 'init'; initialState: InitialState}
+  | {type: 'clear'}
   | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {
@@ -125,11 +129,63 @@ export type ComposerAction =
 
 export const MAX_IMAGES = 4
 
-export function composerReducer(
+const EMPTY_STATE: ComposerState = {
+  thread: {
+    posts: [],
+    threadgate: [],
+    postgate: createPostgateRecord({post: ''}),
+  },
+  activePostIndex: 0,
+  mutableNeedsFocusActive: false,
+}
+
+/**
+ * Handles the internal state of the composer
+ */
+export function useComposerReducer(composerOpts: ComposerOpts | undefined) {
+  const {data: preferences} = usePreferencesQuery()
+
+  const [state, dispatch] = useReducer(composerReducer, EMPTY_STATE)
+
+  const open = !!composerOpts
+  const [prevOpen, setPrevOpen] = useState(open)
+  if (open !== prevOpen) {
+    setPrevOpen(open)
+    if (open) {
+      dispatch({
+        type: 'init',
+        initialState: {
+          initImageUris: composerOpts.imageUris,
+          initQuoteUri: composerOpts.quote?.uri,
+          initText: composerOpts.text,
+          initMention: composerOpts.mention,
+          initInteractionSettings: preferences?.postInteractionSettings,
+        },
+      })
+    } else {
+      dispatch({type: 'clear'})
+    }
+  }
+
+  const isDirty = state.thread.posts.some(
+    post =>
+      post.shortenedGraphemeLength > 0 || post.embed.media || post.embed.link,
+  )
+
+  return [state, dispatch, isDirty] as const
+}
+
+function composerReducer(
   state: ComposerState,
   action: ComposerAction,
 ): ComposerState {
   switch (action.type) {
+    case 'init': {
+      return createComposerState(action.initialState)
+    }
+    case 'clear': {
+      return state
+    }
     case 'update_postgate': {
       return {
         ...state,
@@ -482,13 +538,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
   }
 }
 
-export function createComposerState({
-  initText,
-  initMention,
-  initImageUris,
-  initQuoteUri,
-  initInteractionSettings,
-}: {
+type InitialState = {
   initText: string | undefined
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
@@ -496,7 +546,15 @@ export function createComposerState({
   initInteractionSettings:
     | BskyPreferences['postInteractionSettings']
     | undefined
-}): ComposerState {
+}
+
+function createComposerState({
+  initText,
+  initMention,
+  initImageUris,
+  initQuoteUri,
+  initInteractionSettings,
+}: InitialState): ComposerState {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
     media = {
