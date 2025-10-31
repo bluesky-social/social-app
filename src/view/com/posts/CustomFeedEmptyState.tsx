@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -11,11 +11,34 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useSession} from '#/state/session'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
 export function CustomFeedEmptyState() {
+  const feedFeedback = useFeedFeedbackContext()
+  const {currentAccount} = useSession()
+
+  useEffect(() => {
+    // Log the empty feed error event
+    if (feedFeedback.feedSourceInfo && currentAccount?.did) {
+      const feedDescriptor = feedFeedback.feedDescriptor
+      const [feedType, feedId] = feedDescriptor?.split('|') || [
+        'unknown',
+        'unknown',
+      ]
+
+      logger.metric('feed:emptyError', {
+        feedType,
+        feedId,
+        userDid: currentAccount.did,
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Only log once when component mounts
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()
