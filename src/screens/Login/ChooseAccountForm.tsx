@@ -8,7 +8,7 @@ import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
@@ -74,7 +74,8 @@ export const ChooseAccountForm = ({
   return (
     <FormContainer
       testID="chooseAccountForm"
-      titleText={<Trans>Select account</Trans>}>
+      titleText={<Trans>Select account</Trans>}
+      style={web([a.py_2xl])}>
       <View>
         <TextField.LabelText>
           <Trans>Sign in as...</Trans>
