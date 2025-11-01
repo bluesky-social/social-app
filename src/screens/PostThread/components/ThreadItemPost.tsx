@@ -30,6 +30,7 @@ import {
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
+import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
@@ -335,6 +336,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 logContext="PostThreadItem"
                 threadgateRecord={threadgateRecord}
               />
+              <DebugFieldDisplay subject={post} />
             </View>
           </View>
         </PostHider>

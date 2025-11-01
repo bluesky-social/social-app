@@ -598,7 +598,8 @@ function LightboxFooter({
                 })
                 toggleAltExpanded()
               }}
-              onLongPress={() => {}}>
+              onLongPress={() => {}}
+              emoji>
               {altText}
             </Text>
           </View>

@@ -27,7 +27,8 @@ export function FeedNameText({
         to={href}
         label={displayName}
         style={style}
-        numberOfLines={numberOfLines}>
+        numberOfLines={numberOfLines}
+        emoji>
         {sanitizeDisplayName(displayName)}
       </WebOnlyInlineLinkText>
     )

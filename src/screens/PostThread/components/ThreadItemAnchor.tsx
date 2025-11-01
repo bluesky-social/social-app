@@ -42,6 +42,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
+import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -512,6 +513,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               />
             </FeedFeedbackProvider>
           </View>
+          <DebugFieldDisplay subject={post} />
         </View>
       </View>
     </>
