@@ -27,7 +27,7 @@ export function normalizeTextStyles(
 ) {
   const s = flatten(styles)
   // should always be defined on these components
-  s.fontSize = (s.fontSize || atoms.text_md.fontSize) * fontScale
+  s.fontSize = Math.round((s.fontSize || atoms.text_md.fontSize) * fontScale)
 
   if (s?.lineHeight) {
     if (s.lineHeight !== 0 && s.lineHeight <= 2) {
