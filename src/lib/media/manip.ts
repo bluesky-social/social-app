@@ -157,7 +157,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
         )
       }
     } else {
-      await MediaLibrary.createAssetAsync(imagePath)
+      await MediaLibrary.saveToLibraryAsync(imagePath)
     }
   } catch (err) {
     logger.error(err instanceof Error ? err : String(err), {
