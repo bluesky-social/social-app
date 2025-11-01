@@ -301,7 +301,11 @@ export function MessagesList({
 
   const animatedStickyViewStyle = useAnimatedStyle(() => ({
     transform: [
-      {translateY: -Math.max(keyboardHeight.get(), footerHeight.get())},
+      {
+        translateY: isWeb
+          ? 0
+          : -Math.max(keyboardHeight.get(), footerHeight.get()),
+      },
     ],
   }))
 
