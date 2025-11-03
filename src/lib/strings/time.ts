@@ -1,10 +1,14 @@
 import {type I18n} from '@lingui/core'
 
-export function niceDate(i18n: I18n, date: number | string | Date) {
+export function niceDate(
+  i18n: I18n,
+  date: number | string | Date,
+  dateStyle: 'short' | 'medium' | 'long' | 'full' = 'long',
+) {
   const d = new Date(date)
 
   return i18n.date(d, {
-    dateStyle: 'long',
+    dateStyle,
     timeStyle: 'short',
   })
 }
