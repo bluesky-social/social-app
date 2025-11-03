@@ -47,7 +47,7 @@ export function Overlay({
         ) : (
           <LinearGradient
             colors={[
-              transparentifyColor(t.atoms.bg.backgroundColor, 0),
+              utils.alpha(t.atoms.bg.backgroundColor, 0),
               t.atoms.bg.backgroundColor,
               t.atoms.bg.backgroundColor,
             ]}
