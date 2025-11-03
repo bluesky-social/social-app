@@ -256,7 +256,7 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
         onFocus={onFocus}
         onBlur={onBlur}
         // need `flatten` here for Radix compat
-        style={flatten([
+        style={[
           a.flex_row,
           a.align_center,
           a.gap_lg,
@@ -272,7 +272,7 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
                 : t.atoms.bg_contrast_50,
             ],
           style,
-        ])}
+        ]}
         {...web({
           onMouseEnter,
           onMouseLeave,

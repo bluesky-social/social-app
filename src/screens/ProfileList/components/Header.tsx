@@ -200,7 +200,7 @@ export function Header({
       </ProfileSubpageHeader>
       {descriptionRT ? (
         <View style={[a.px_lg, a.pt_sm, a.pb_sm, a.gap_md]}>
-          <RichText value={descriptionRT} style={[a.text_md, a.leading_snug]} />
+          <RichText value={descriptionRT} style={[a.text_md]} />
         </View>
       ) : null}
     </>

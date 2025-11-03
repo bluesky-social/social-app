@@ -296,7 +296,7 @@ export function Link({
   return (
     <Button
       {...rest}
-      style={[a.justify_start, flatten(rest.style)]}
+      style={[a.justify_start, rest.style]}
       role="link"
       accessibilityRole="link"
       href={href}

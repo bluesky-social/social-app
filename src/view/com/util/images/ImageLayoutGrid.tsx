@@ -1,5 +1,5 @@
 import React from 'react'
-import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {type AppBskyEmbedImages} from '@atproto/api'
 
@@ -224,5 +224,5 @@ function noCorners(
   if (corners.includes('bottomRight')) {
     styles.push({borderBottomRightRadius: 0})
   }
-  return StyleSheet.flatten(styles)
+  return styles
 }

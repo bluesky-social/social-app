@@ -424,7 +424,7 @@ function PreviewMessage({message}: {message: ChatBskyConvoDefs.MessageView}) {
         ]}>
         <RichText
           value={rt}
-          style={[a.text_md, a.leading_snug]}
+          style={[a.text_md]}
           interactiveStyle={a.underline}
           enableTags
         />

@@ -1,4 +1,4 @@
-import {memo, useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -25,7 +25,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, flatten, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {BookmarkButton} from './BookmarkButton'
@@ -188,11 +188,12 @@ let PostControls = ({
     })
   }
 
-  const secondaryControlSpacingStyles = flatten([
-    {gap: 0}, // default, we want `gap` to be defined on the resulting object
-    variant !== 'compact' && a.gap_xs,
-    (big || gtPhone) && a.gap_sm,
-  ])
+  const secondaryControlSpacingStyles = useMemo(() => {
+    let gap = 0 // default, we want `gap` to be defined on the resulting object
+    if (variant !== 'compact') gap = a.gap_xs.gap
+    if (big || gtPhone) gap = a.gap_sm.gap
+    return {gap}
+  }, [variant, big, gtPhone])
 
   return (
     <View

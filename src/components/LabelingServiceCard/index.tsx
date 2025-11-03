@@ -55,7 +55,7 @@ export function Description({value, handle}: {value?: string; handle: string}) {
   const {_} = useLingui()
   return value ? (
     <Text numberOfLines={2}>
-      <RichText value={value} style={[a.leading_snug]} />
+      <RichText value={value} />
     </Text>
   ) : (
     <Text emoji style={[a.leading_snug]}>
