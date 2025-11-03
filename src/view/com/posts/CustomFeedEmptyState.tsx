@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -7,15 +7,38 @@ import {
 import {Trans} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useSession} from '#/state/session'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
 export function CustomFeedEmptyState() {
+  const feedFeedback = useFeedFeedbackContext()
+  const {currentAccount} = useSession()
+  const hasLoggedDiscoverEmptyErrorRef = React.useRef(false)
+
+  useEffect(() => {
+    // Log the empty feed error event
+    if (feedFeedback.feedSourceInfo && currentAccount?.did) {
+      const uri = feedFeedback.feedSourceInfo.uri
+      if (
+        uri === DISCOVER_FEED_URI &&
+        !hasLoggedDiscoverEmptyErrorRef.current
+      ) {
+        hasLoggedDiscoverEmptyErrorRef.current = true
+        logger.metric('feed:discover:emptyError', {
+          userDid: currentAccount.did,
+        })
+      }
+    }
+  }, [feedFeedback.feedSourceInfo, currentAccount?.did])
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()
