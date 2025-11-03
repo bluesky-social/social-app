@@ -176,7 +176,7 @@ const ThreadItemTreePostInnerWrapper = memo(
             paddingTop: OUTER_SPACE / 2,
           },
           item.ui.indent === 1 && [
-            !item.ui.showParentReplyLine && a.pt_lg,
+            !item.ui.showParentReplyLine && {paddingTop: OUTER_SPACE / 1.5},
             !item.ui.showChildReplyLine && a.pb_sm,
           ],
           item.ui.isLastChild &&
@@ -410,11 +410,10 @@ export function ThreadItemTreePostSkeleton({index}: {index: number}) {
     <View
       style={[
         {paddingHorizontal: OUTER_SPACE, paddingVertical: OUTER_SPACE / 1.5},
-        a.gap_md,
         a.border_t,
         t.atoms.border_contrast_low,
       ]}>
-      <Skele.Row style={[a.align_start, a.gap_md]}>
+      <Skele.Row style={[a.align_start, a.gap_xs]}>
         <Skele.Circle size={TREE_AVI_WIDTH} />
 
         <Skele.Col style={[a.gap_xs]}>

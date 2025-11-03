@@ -365,14 +365,7 @@ export function PostControlsSkeleton({
 
   return (
     <Skele.Row
-      style={[
-        a.flex_row,
-        a.justify_between,
-        a.align_center,
-        !big && a.pt_2xs,
-        a.gap_md,
-        style,
-      ]}>
+      style={[a.flex_row, a.justify_between, a.align_center, a.gap_md, style]}>
       <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
         <View
           style={[itemStyles, a.flex_1, a.align_start, {marginLeft: -padding}]}>
