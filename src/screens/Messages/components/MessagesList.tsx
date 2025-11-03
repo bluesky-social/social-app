@@ -254,7 +254,8 @@ export function MessagesList({
   )
 
   // -- Keyboard animation handling
-  const {footerHeight} = useShellLayout()
+  const {footerHeight: nativeFooterHeight} = useShellLayout()
+  const footerHeight = isWeb ? 0 : nativeFooterHeight
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
