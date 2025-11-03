@@ -1,12 +1,9 @@
-import {forwardRef, memo, useContext, useMemo} from 'react'
+import {memo, useContext, useMemo} from 'react'
 import {
   ScrollView,
   type ScrollViewProps,
-<<<<<<< HEAD
   type StyleProp,
-=======
   StyleSheet,
->>>>>>> c74c5a431 (Revert "rm stylesheet")
   View,
   type ViewProps,
   type ViewStyle,
@@ -60,51 +57,48 @@ export const Screen = memo(function Screen({
 })
 
 export type ContentProps = ScrollViewProps & {
+  ref?: React.Ref<ScrollView>
   ignoreTabletLayoutOffset?: boolean
 }
 
 /**
  * Default scroll view for simple pages
  */
-export const Content = memo(
-  forwardRef<ScrollView, ContentProps>(function Content(
-    {
-      children,
-      style,
-      contentContainerStyle,
-      ignoreTabletLayoutOffset,
-      ...props
-    },
-    ref,
-  ) {
-    const t = useTheme()
-    const {footerHeight} = useShellLayout()
+export const Content = memo(function Content({
+  ref,
+  children,
+  style,
+  contentContainerStyle,
+  ignoreTabletLayoutOffset,
+  ...props
+}: ContentProps) {
+  const t = useTheme()
+  const {footerHeight} = useShellLayout()
 
-    return (
-      <ScrollView
-        ref={ref}
-        id="content"
-        automaticallyAdjustsScrollIndicatorInsets={false}
-        scrollIndicatorInsets={{bottom: footerHeight, top: 0, right: 1}}
-        indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        style={[scrollViewStyles.common, style]}
-        contentInset={ios({top: 0, left: 0, bottom: footerHeight, right: 0})}
-        contentContainerStyle={[
-          !IS_IOS && {paddingBottom: footerHeight},
-          contentContainerStyle,
-        ]}
-        {...props}>
-        {IS_WEB ? (
-          <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
-            {children}
-          </Center>
-        ) : (
-          children
-        )}
-      </ScrollView>
-    )
-  }),
-)
+  return (
+    <ScrollView
+      ref={ref}
+      id="content"
+      automaticallyAdjustsScrollIndicatorInsets={false}
+      scrollIndicatorInsets={{bottom: footerHeight, top: 0, right: 1}}
+      indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
+      style={[scrollViewStyles.common, style]}
+      contentInset={ios({top: 0, left: 0, bottom: footerHeight, right: 0})}
+      contentContainerStyle={[
+        !IS_IOS && {paddingBottom: footerHeight},
+        contentContainerStyle,
+      ]}
+      {...props}>
+      {IS_WEB ? (
+        <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
+          {children}
+        </Center>
+      ) : (
+        children
+      )}
+    </ScrollView>
+  )
+})
 
 const scrollViewStyles = StyleSheet.create({
   common: {
@@ -136,7 +130,7 @@ export const KeyboardAwareContent = memo(function LayoutKeyboardAwareContent({
       scrollIndicatorInsets={{bottom: footerHeight, top: 0, right: 1}}
       contentInset={ios({top: 0, left: 0, bottom: footerHeight, right: 0})}
       contentContainerStyle={[
-        !isIOS && {paddingBottom: footerHeight},
+        !IS_IOS && {paddingBottom: footerHeight},
         contentContainerStyle,
       ]}
       keyboardShouldPersistTaps="handled"
