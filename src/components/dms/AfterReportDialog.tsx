@@ -27,7 +27,11 @@ type ReportDialogParams = {
   message: ChatBskyConvoDefs.MessageView
 }
 
-export const BlockOrDeleteDialog = memo(function BlockOrDeleteDialogInner({
+/**
+ * Dialog shown after a report is submitted, allowing the user to block the
+ * reporter and/or leave the conversation.
+ */
+export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
   control,
   params,
   currentScreen,

@@ -25,7 +25,7 @@ import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
-import {BlockOrDeleteDialog} from '#/components/dms/BlockOrDeleteDialog'
+import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {CircleX_Stroke2_Corner0_Rounded} from '#/components/icons/CircleX'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons/Person'
@@ -176,7 +176,7 @@ export function RejectMenu({
               blockOrDeleteControl.open()
             }}
           />
-          <BlockOrDeleteDialog
+          <AfterReportDialog
             control={blockOrDeleteControl}
             currentScreen={currentScreen}
             params={{

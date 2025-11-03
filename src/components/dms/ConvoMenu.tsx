@@ -17,8 +17,8 @@ import * as Toast from '#/view/com/util/Toast'
 import {type ViewStyleProp} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
-import {BlockOrDeleteDialog} from '#/components/dms/BlockOrDeleteDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
@@ -127,7 +127,7 @@ let ConvoMenu = ({
               blockOrDeleteControl.open()
             }}
           />
-          <BlockOrDeleteDialog
+          <AfterReportDialog
             control={blockOrDeleteControl}
             currentScreen={currentScreen}
             params={{
