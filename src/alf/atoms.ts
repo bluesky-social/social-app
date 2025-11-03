@@ -20,7 +20,7 @@ export const atoms = {
    */
   util_screen_outer: [
     web({
-      minHeight: '100vh',
+      minHeight: '100dvh',
     }),
     native({
       height: '100%',
