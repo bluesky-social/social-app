@@ -7,6 +7,7 @@ import {
 import {Trans} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -21,24 +22,23 @@ import {Text} from '../util/text/Text'
 export function CustomFeedEmptyState() {
   const feedFeedback = useFeedFeedbackContext()
   const {currentAccount} = useSession()
+  const hasLoggedDiscoverEmptyErrorRef = React.useRef(false)
 
   useEffect(() => {
     // Log the empty feed error event
     if (feedFeedback.feedSourceInfo && currentAccount?.did) {
-      const feedDescriptor = feedFeedback.feedDescriptor
-      const [feedType, feedId] = feedDescriptor?.split('|') || [
-        'unknown',
-        'unknown',
-      ]
-
-      logger.metric('feed:emptyError', {
-        feedType,
-        feedId,
-        userDid: currentAccount.did,
-      })
+      const uri = feedFeedback.feedSourceInfo.uri
+      if (
+        uri === DISCOVER_FEED_URI &&
+        !hasLoggedDiscoverEmptyErrorRef.current
+      ) {
+        hasLoggedDiscoverEmptyErrorRef.current = true
+        logger.metric('feed:discover:emptyError', {
+          userDid: currentAccount.did,
+        })
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // Only log once when component mounts
+  }, [feedFeedback.feedSourceInfo, currentAccount?.did])
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()

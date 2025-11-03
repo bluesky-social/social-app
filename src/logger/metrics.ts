@@ -195,9 +195,8 @@ export type MetricEvents = {
     feed: string
     count: number
   }
-  'feed:emptyError': {
-    feedType: string
-    feedId: string
+
+  'feed:discover:emptyError': {
     userDid: string
   }
 
