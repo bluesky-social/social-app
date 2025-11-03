@@ -22,7 +22,7 @@ import {
   type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
@@ -108,8 +108,15 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
             })
           : {})}
         hitSlop={HITSLOP_10}>
-        {({hovered}) => (
-          <View style={[a.flex_row, a.align_center, a.gap_xs, style]}>
+        {({hovered, focused, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.gap_xs,
+              (hovered || focused || pressed) && native({opacity: 0.5}),
+              style,
+            ]}>
             <Icon
               color={
                 isThreadAuthor ? t.palette.primary_500 : t.palette.contrast_400
@@ -124,7 +131,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
                 isThreadAuthor
                   ? {color: t.palette.primary_500}
                   : t.atoms.text_contrast_medium,
-                hovered && a.underline,
+                (hovered || focused || pressed) && web(a.underline),
               ]}>
               {description}
             </Text>
