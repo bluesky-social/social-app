@@ -252,6 +252,7 @@ const ImageItem = ({
                       onLoad({width: e.source.width, height: e.source.height})
                     }
               }
+              cachePolicy="memory"
             />
           </Animated.View>
         </Animated.View>
