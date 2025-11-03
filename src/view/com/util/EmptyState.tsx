@@ -75,7 +75,7 @@ export function EmptyState({
           a.self_center,
           a.rounded_full,
           a.mt_5xl,
-          {height: 80, width: 80},
+          {height: 64, width: 64},
           React.isValidElement(icon)
             ? a.bg_transparent
             : [isTabletOrDesktop && {width: 100, height: 100, marginTop: 50}],
