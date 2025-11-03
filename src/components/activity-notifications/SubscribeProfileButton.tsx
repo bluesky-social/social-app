@@ -28,7 +28,8 @@ export function SubscribeProfileButton({
   const [activitySubscriptionsNudged, setActivitySubscriptionsNudged] =
     useActivitySubscriptionsNudged()
 
-  const onDismissTooltip = () => {
+  const onDismissTooltip = (visible: boolean) => {
+    if (visible) return
     setActivitySubscriptionsNudged(true)
   }
 

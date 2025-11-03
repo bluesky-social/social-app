@@ -73,6 +73,7 @@ import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdate
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
+import {Provider as TooltipProvider} from '#/components/Tooltip'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -230,12 +231,14 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <BottomSheetProvider>
-                            <StarterPackProvider>
-                              <SafeAreaProvider
-                                initialMetrics={initialWindowMetrics}>
-                                <InnerApp />
-                              </SafeAreaProvider>
-                            </StarterPackProvider>
+                            <TooltipProvider>
+                              <StarterPackProvider>
+                                <SafeAreaProvider
+                                  initialMetrics={initialWindowMetrics}>
+                                  <InnerApp />
+                                </SafeAreaProvider>
+                              </StarterPackProvider>
+                            </TooltipProvider>
                           </BottomSheetProvider>
                         </PortalProvider>
                       </LightboxStateProvider>

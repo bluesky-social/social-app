@@ -14,7 +14,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {atoms as a, select, useTheme} from '#/alf'
 import {useOnGesture} from '#/components/hooks/useOnGesture'
-import {Portal} from '#/components/Portal'
+import {createPortalGroup} from '#/components/Portal'
 import {
   ARROW_HALF_SIZE,
   ARROW_SIZE,
@@ -22,6 +22,18 @@ import {
   MIN_EDGE_SPACE,
 } from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
+
+const TooltipPortal = createPortalGroup()
+
+export function Provider({children}: {children: React.ReactNode}) {
+  return (
+    <TooltipPortal.Provider>
+      {children}
+      <TooltipPortal.Outlet />
+    </TooltipPortal.Provider>
+  )
+}
+Provider.displayName = 'TooltipProvider'
 
 /**
  * These are native specific values, not shared with web
@@ -157,7 +169,7 @@ export function Content({
   if (!visible || !targetMeasurements) return null
 
   return (
-    <Portal>
+    <TooltipPortal.Portal>
       <Bubble
         label={label}
         position={position}
@@ -169,7 +181,7 @@ export function Content({
         requestClose={requestClose}>
         {children}
       </Bubble>
-    </Portal>
+    </TooltipPortal.Portal>
   )
 }
 
