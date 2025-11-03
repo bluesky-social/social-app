@@ -2,7 +2,11 @@ import {forwardRef, memo, useContext, useMemo} from 'react'
 import {
   ScrollView,
   type ScrollViewProps,
+<<<<<<< HEAD
   type StyleProp,
+=======
+  StyleSheet,
+>>>>>>> c74c5a431 (Revert "rm stylesheet")
   View,
   type ViewProps,
   type ViewStyle,
@@ -83,7 +87,7 @@ export const Content = memo(
         automaticallyAdjustsScrollIndicatorInsets={false}
         scrollIndicatorInsets={{bottom: footerHeight, top: 0, right: 1}}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        style={[a.w_full, style]}
+        style={[scrollViewStyles.common, style]}
         contentInset={ios({top: 0, left: 0, bottom: footerHeight, right: 0})}
         contentContainerStyle={[
           !IS_IOS && {paddingBottom: footerHeight},
@@ -101,6 +105,12 @@ export const Content = memo(
     )
   }),
 )
+
+const scrollViewStyles = StyleSheet.create({
+  common: {
+    width: '100%',
+  },
+})
 
 export type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
   children: React.ReactNode
