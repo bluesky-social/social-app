@@ -85,7 +85,7 @@ export function useSubmitReportMutation() {
           }
           break
         }
-        case 'chatMessage': {
+        case 'convoMessage': {
           report = {
             reasonType,
             reason: state.details,

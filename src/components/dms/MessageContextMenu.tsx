@@ -15,11 +15,12 @@ import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import * as ContextMenu from '#/components/ContextMenu'
 import {type TriggerProps} from '#/components/ContextMenu/types'
-import {ReportDialog} from '#/components/dms/ReportDialog'
+import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
@@ -37,6 +38,7 @@ export let MessageContextMenu = ({
   const convo = useConvoActive()
   const deleteControl = usePromptControl()
   const reportControl = usePromptControl()
+  const blockOrDeleteControl = usePromptControl()
   const langPrefs = useLanguagePrefs()
   const translate = useTranslate()
 
@@ -171,9 +173,24 @@ export let MessageContextMenu = ({
       </ContextMenu.Root>
 
       <ReportDialog
-        currentScreen="conversation"
-        params={{type: 'convoMessage', convoId: convo.convo.id, message}}
+        // currentScreen="conversation"
         control={reportControl}
+        subject={{
+          view: 'message',
+          convoId: convo.convo.id,
+          message,
+        }}
+        onAfterSubmit={() => {
+          blockOrDeleteControl.open()
+        }}
+      />
+      <AfterReportDialog
+        control={blockOrDeleteControl}
+        currentScreen="conversation"
+        params={{
+          convoId: convo.convo.id,
+          message,
+        }}
       />
 
       <Prompt.Basic

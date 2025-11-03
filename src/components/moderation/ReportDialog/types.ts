@@ -8,6 +8,12 @@ import {
 
 import type * as Dialog from '#/components/Dialog'
 
+export type ReportSubjectConvo = {
+  view: 'convo' | 'message'
+  convoId: string
+  message: ChatBskyConvoDefs.MessageView
+}
+
 export type ReportSubject =
   | $Typed<AppBskyActorDefs.ProfileViewBasic>
   | $Typed<AppBskyActorDefs.ProfileView>
@@ -16,7 +22,7 @@ export type ReportSubject =
   | $Typed<AppBskyFeedDefs.GeneratorView>
   | $Typed<AppBskyGraphDefs.StarterPackView>
   | $Typed<AppBskyFeedDefs.PostView>
-  | {convoId: string; message: ChatBskyConvoDefs.MessageView}
+  | ReportSubjectConvo
 
 export type ParsedReportSubject =
   | {
@@ -55,13 +61,15 @@ export type ParsedReportSubject =
       did: string
       nsid: string
     }
-  | {
-      type: 'chatMessage'
-      convoId: string
-      message: ChatBskyConvoDefs.MessageView
-    }
+  | ({
+      type: 'convoMessage'
+    } & ReportSubjectConvo)
 
 export type ReportDialogProps = {
   control: Dialog.DialogOuterProps['control']
   subject: ParsedReportSubject
+  /**
+   * Called if the report was successfully submitted.
+   */
+  onAfterSubmit?: () => void
 }

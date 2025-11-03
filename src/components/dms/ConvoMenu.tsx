@@ -17,10 +17,10 @@ import * as Toast from '#/view/com/util/Toast'
 import {type ViewStyleProp} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
-import {ReportDialog} from '#/components/dms/ReportDialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
@@ -33,6 +33,7 @@ import {
 } from '#/components/icons/Person'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
+import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import type * as bsky from '#/types/bsky'
 
@@ -65,6 +66,7 @@ let ConvoMenu = ({
   const leaveConvoControl = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
   const blockedByListControl = Prompt.usePromptControl()
+  const blockOrDeleteControl = Prompt.usePromptControl()
 
   const {listBlocks} = blockInfo
 
@@ -113,15 +115,27 @@ let ConvoMenu = ({
         currentScreen={currentScreen}
       />
       {latestReportableMessage ? (
-        <ReportDialog
-          currentScreen={currentScreen}
-          params={{
-            type: 'convoMessage',
-            convoId: convo.id,
-            message: latestReportableMessage,
-          }}
-          control={reportControl}
-        />
+        <>
+          <ReportDialog
+            subject={{
+              view: 'convo',
+              convoId: convo.id,
+              message: latestReportableMessage,
+            }}
+            control={reportControl}
+            onAfterSubmit={() => {
+              blockOrDeleteControl.open()
+            }}
+          />
+          <AfterReportDialog
+            control={blockOrDeleteControl}
+            currentScreen={currentScreen}
+            params={{
+              convoId: convo.id,
+              message: latestReportableMessage,
+            }}
+          />
+        </>
       ) : (
         <ReportConversationPrompt control={reportControl} />
       )}
