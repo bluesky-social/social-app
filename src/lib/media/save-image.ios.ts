@@ -1,5 +1,6 @@
 import {useCallback} from 'react'
-import {t} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
 import * as Toast from '#/components/Toast'
@@ -12,16 +13,20 @@ import {saveImageToMediaLibrary} from './manip'
  * so this file is platform-split as it's much simpler than the Android version.
  */
 export function useSaveImageToMediaLibrary() {
-  return useCallback(async (uri: string) => {
-    if (!isNative) {
-      throw new Error('useSaveImageToMediaLibrary is native only')
-    }
+  const {_} = useLingui()
+  return useCallback(
+    async (uri: string) => {
+      if (!isNative) {
+        throw new Error('useSaveImageToMediaLibrary is native only')
+      }
 
-    try {
-      await saveImageToMediaLibrary({uri})
-      Toast.show(t`Image saved`)
-    } catch (e: any) {
-      Toast.show(t`Failed to save image: ${String(e)}`, {type: 'error'})
-    }
-  }, [])
+      try {
+        await saveImageToMediaLibrary({uri})
+        Toast.show(_(msg`Image saved`))
+      } catch (e: any) {
+        Toast.show(_(msg`Failed to save image: ${String(e)}`), {type: 'error'})
+      }
+    },
+    [_],
+  )
 }
