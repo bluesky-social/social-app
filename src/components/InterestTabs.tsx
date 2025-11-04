@@ -210,7 +210,7 @@ export function InterestTabs({
         showsHorizontalScrollIndicator={false}
         decelerationRate="fast"
         snapToOffsets={
-          tabOffsets.length === interests.length && tabOffsets.filter(o => !!o)
+          tabOffsets.filter(o => !!o).length === interests.length
             ? tabOffsets.map(o => o.x - tokens.space.xl)
             : undefined
         }
