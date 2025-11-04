@@ -84,10 +84,10 @@ export function InterestTabs({
     if (!tabOffsets.length) {
       pendingTabOffsets.current[index] = {x, width}
       // not only do we check if the length is equal to the number of interests,
-      // but we also need to ensure that the array isn't sparse
+      // but we also need to ensure that the array isn't sparse. `.filter(() => true)`
+      // removes any empty slots from the array
       if (
-        pendingTabOffsets.current.length === interests.length &&
-        pendingTabOffsets.current.every(o => o != null)
+        pendingTabOffsets.current.filter(() => true).length === interests.length
       ) {
         setTabOffsets(pendingTabOffsets.current)
       }
@@ -210,8 +210,7 @@ export function InterestTabs({
         showsHorizontalScrollIndicator={false}
         decelerationRate="fast"
         snapToOffsets={
-          tabOffsets.length === interests.length &&
-          tabOffsets.every(o => o != null)
+          tabOffsets.length === interests.length && tabOffsets.filter(o => !!o)
             ? tabOffsets.map(o => o.x - tokens.space.xl)
             : undefined
         }
