@@ -1,5 +1,4 @@
 import {AccordionAnimation} from '#/lib/custom-animations/AccordionAnimation'
-import {useGate} from '#/lib/statsig/statsig'
 import {isAndroid} from '#/platform/detection'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {ProfileGrid} from '#/components/FeedInterstitials'
@@ -27,7 +26,11 @@ export function AnimatedProfileHeaderSuggestedFollows({
   isExpanded: boolean
   actorDid: string
 }) {
-  const gate = useGate()
+  const {isLoading, data, error} = useSuggestedFollowsByActorQuery({
+    did: actorDid,
+  })
+
+  if (!data?.suggestions?.length) return null
 
   /* NOTE (caidanw):
    * Android does not work well with this feature yet.
@@ -36,11 +39,15 @@ export function AnimatedProfileHeaderSuggestedFollows({
    **/
   if (isAndroid) return null
 
-  if (!gate('post_follow_profile_suggested_accounts')) return null
-
   return (
     <AccordionAnimation isExpanded={isExpanded}>
-      <ProfileHeaderSuggestedFollows actorDid={actorDid} />
+      <ProfileGrid
+        isSuggestionsLoading={isLoading}
+        profiles={data.suggestions}
+        recId={data.recId}
+        error={error}
+        viewContext="profileHeader"
+      />
     </AccordionAnimation>
   )
 }

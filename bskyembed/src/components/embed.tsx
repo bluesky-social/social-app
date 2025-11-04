@@ -83,9 +83,9 @@ export function Embed({
         return (
           <Link
             href={`/profile/${record.author.did}/post/${getRkey(record)}`}
-            className="transition-colors hover:bg-neutral-100 dark:hover:bg-slate-700 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
+            className="transition-colors hover:bg-blue-50 dark:hover:bg-slate-900 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
-              <div className="w-4 h-4 rounded-full bg-neutral-300 dark:bg-slate-700 shrink-0">
+              <div className="w-4 h-4 rounded-full bg-neutral-300 dark:bg-slate-900 shrink-0">
                 <img
                   className="rounded-full"
                   src={record.author.avatar}
@@ -222,7 +222,7 @@ export function Embed({
 
 function Info({children}: {children: ComponentChildren}) {
   return (
-    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
+    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 hover:bg-blue-50 dark:border-slate-600 dark:hover:bg-slate-900">
       <img src={infoIcon} className="w-4 h-4 shrink-0 mt-0.5" />
       <p className="text-sm text-textLight dark:text-textDimmed">{children}</p>
     </div>
@@ -330,7 +330,7 @@ function ExternalEmbed({
       {content.external.thumb && (
         <img
           src={content.external.thumb}
-          className="aspect-[1.91/1] object-cover"
+          className="aspect-[1200/630] object-cover"
         />
       )}
       <div className="py-3 px-4">
@@ -435,7 +435,7 @@ function StarterPackEmbed({
     <Link
       href={starterPackHref}
       className="w-full rounded-xl overflow-hidden border dark:border-slate-600 flex flex-col items-stretch">
-      <img src={imageUri} className="aspect-[1.91/1] object-cover" />
+      <img src={imageUri} className="aspect-[1200/630] object-cover" />
       <div className="py-3 px-4">
         <div className="flex space-x-2 items-center">
           <img src={starterPackIcon} className="w-10 h-10" />

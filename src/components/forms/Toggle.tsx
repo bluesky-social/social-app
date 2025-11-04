@@ -6,7 +6,6 @@ import {HITSLOP_10} from '#/lib/constants'
 import {isNative} from '#/platform/detection'
 import {
   atoms as a,
-  flatten,
   native,
   type TextStyleProp,
   useTheme,
@@ -233,7 +232,7 @@ export function Item({
         onPressOut={onPressOut}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={[a.flex_row, a.align_center, a.gap_sm, flatten(style)]}>
+        style={[a.flex_row, a.align_center, a.gap_sm, style]}>
         {typeof children === 'function' ? children(state) : children}
       </Pressable>
     </ItemContext.Provider>
@@ -260,7 +259,7 @@ export function LabelText({
         native({
           paddingTop: 2,
         }),
-        flatten(style),
+        style,
       ]}>
       {children}
     </Text>

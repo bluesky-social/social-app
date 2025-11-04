@@ -1,4 +1,4 @@
-import {useCallback, useContext, useMemo, useState} from 'react'
+import {useContext, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -7,6 +7,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
 import {wait} from '#/lib/async/wait'
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -14,13 +15,8 @@ import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
-import {useOnboardingDispatch} from '#/state/shell'
 import {OnboardingControls} from '#/screens/Onboarding/Layout'
-import {
-  Context,
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
+import {Context} from '#/screens/Onboarding/state'
 import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -45,7 +41,6 @@ export function StepSuggestedAccounts() {
   const queryClient = useQueryClient()
 
   const {state, dispatch} = useContext(Context)
-  const onboardDispatch = useOnboardingDispatch()
 
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
   // keeping track of who was followed via the follow all button
@@ -77,11 +72,8 @@ export function StepSuggestedAccounts() {
   })
 
   const isError = !!error
-
-  const skipOnboarding = useCallback(() => {
-    onboardDispatch({type: 'finish'})
-    dispatch({type: 'finish'})
-  }, [onboardDispatch, dispatch])
+  const isEmpty =
+    !isLoading && suggestedUsers && suggestedUsers.actors.length === 0
 
   const followableDids =
     suggestedUsers?.actors
@@ -171,10 +163,18 @@ export function StepSuggestedAccounts() {
             <Loader size="xl" />
           </View>
         ) : isError ? (
-          <View style={[a.flex_1, a.px_xl, a.pt_5xl]}>
+          <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
             <Admonition type="error">
               <Trans>
                 An error occurred while fetching suggested accounts.
+              </Trans>
+            </Admonition>
+          </View>
+        ) : isEmpty ? (
+          <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
+            <Admonition type="apology">
+              <Trans>
+                Sorry, we're unable to load account suggestions at this time.
               </Trans>
             </Admonition>
           </View>
@@ -216,8 +216,8 @@ export function StepSuggestedAccounts() {
             <Button
               color="secondary"
               size="large"
-              label={_(msg`Skip this flow`)}
-              onPress={skipOnboarding}>
+              label={_(msg`Skip to next step`)}
+              onPress={() => dispatch({type: 'next'})}>
               <ButtonText>
                 <Trans>Skip</Trans>
               </ButtonText>

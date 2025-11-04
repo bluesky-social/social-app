@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Error} from '#/components/Error'
 import {Loader} from '#/components/Loader'
@@ -43,7 +43,7 @@ export function ListFooter({
         a.pb_lg,
         t.atoms.border_contrast_low,
         {height: height ?? 180, paddingTop: 30},
-        flatten(style),
+        style,
       ]}>
       {isFetchingNextPage ? (
         <Loader size="xl" />

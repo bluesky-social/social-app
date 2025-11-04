@@ -445,7 +445,7 @@ function Header({
                 <ButtonText>
                   <Trans>Follow all</Trans>
                 </ButtonText>
-                {isProcessing && <Loader size="xs" />}
+                {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
             )}
             <OverflowMenu
@@ -458,9 +458,7 @@ function Header({
       </ProfileSubpageHeader>
       {!hasSession || richText || joinedAllTimeCount >= 25 ? (
         <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
-          {richText ? (
-            <RichText value={richText} style={[a.text_md, a.leading_snug]} />
-          ) : null}
+          {richText ? <RichText value={richText} style={[a.text_md]} /> : null}
           {!hasSession ? (
             <Button
               label={_(msg`Join Bluesky`)}

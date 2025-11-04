@@ -1,4 +1,4 @@
-import {memo, useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -25,7 +25,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, flatten, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
@@ -189,7 +189,7 @@ let PostControls = ({
     })
   }
 
-  const secondaryControlSpacingStyles = getSecondaryControlSpacingStyles({
+  const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({
     variant,
     big,
     gtPhone,
@@ -211,7 +211,7 @@ let PostControls = ({
             a.flex_1,
             a.align_start,
             {marginLeft: big ? -2 : -6},
-            replyDisabled ? {opacity: 0.5} : undefined,
+            replyDisabled ? {opacity: 0.6} : undefined,
           ]}>
           <PostControlButton
             testID="replyBtn"
@@ -353,7 +353,7 @@ export function PostControlsSkeleton({
   const padding = 4
   const size = rowHeight - padding * 2
 
-  const secondaryControlSpacingStyles = getSecondaryControlSpacingStyles({
+  const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({
     variant,
     big,
     gtPhone,
@@ -395,7 +395,7 @@ export function PostControlsSkeleton({
   )
 }
 
-function getSecondaryControlSpacingStyles({
+function useSecondaryControlSpacingStyles({
   variant,
   big,
   gtPhone,
@@ -404,9 +404,10 @@ function getSecondaryControlSpacingStyles({
   big?: boolean
   gtPhone: boolean
 }) {
-  return flatten([
-    {gap: 0}, // default, we want `gap` to be defined on the resulting object
-    variant !== 'compact' && a.gap_xs,
-    (big || gtPhone) && a.gap_sm,
-  ])
+  return useMemo(() => {
+    let gap = 0 // default, we want `gap` to be defined on the resulting object
+    if (variant !== 'compact') gap = a.gap_xs.gap
+    if (big || gtPhone) gap = a.gap_sm.gap
+    return {gap}
+  }, [variant, big, gtPhone])
 }

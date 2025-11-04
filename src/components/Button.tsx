@@ -7,7 +7,6 @@ import {
   Pressable,
   type PressableProps,
   type StyleProp,
-  StyleSheet,
   type TargetedEvent,
   type TextProps,
   type TextStyle,
@@ -512,8 +511,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
       [state, variant, color, size, disabled],
     )
 
-    const flattenedBaseStyles = flatten([baseStyles, style])
-
     return (
       <PressableComponent
         role="button"
@@ -533,9 +530,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.align_center,
           a.justify_center,
           a.curve_continuous,
-          flattenedBaseStyles,
+          baseStyles,
+          style,
           ...(state.hovered || state.pressed
-            ? [hoverStyles, flatten(hoverStyleProp)]
+            ? [hoverStyles, hoverStyleProp]
             : []),
         ]}
         onPressIn={onPressIn}
@@ -726,7 +724,7 @@ export function useSharedButtonTextStyles() {
       baseStyles.push(a.text_xs, a.leading_snug, a.font_semi_bold)
     }
 
-    return StyleSheet.flatten(baseStyles)
+    return flatten(baseStyles)
   }, [t, variant, color, size, disabled])
 }
 

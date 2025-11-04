@@ -1,9 +1,9 @@
 import {Children, createContext, useContext, useMemo} from 'react'
 import {View} from 'react-native'
+import {utils} from '@bsky.app/alf'
 import {Popover} from 'radix-ui'
 
 import {atoms as a, flatten, select, useTheme} from '#/alf'
-import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {
   ARROW_SIZE,
   BUBBLE_MAX_WIDTH,
@@ -80,9 +80,9 @@ export function Content({
           {
             minWidth: 'max-content',
             boxShadow: select(t.name, {
-              light: `0 0 24px ${transparentifyColor(t.palette.black, 0.2)}`,
-              dark: `0 0 24px ${transparentifyColor(t.palette.black, 0.2)}`,
-              dim: `0 0 24px ${transparentifyColor(t.palette.black, 0.2)}`,
+              light: `0 0 24px ${utils.alpha(t.palette.black, 0.2)}`,
+              dark: `0 0 24px ${utils.alpha(t.palette.black, 0.2)}`,
+              dim: `0 0 24px ${utils.alpha(t.palette.black, 0.2)}`,
             }),
           },
         ])}>

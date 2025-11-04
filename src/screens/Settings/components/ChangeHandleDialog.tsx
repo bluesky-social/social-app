@@ -428,10 +428,10 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               </Text>
               <View style={[a.py_xs]}>
                 <CopyButton
-                  variant="solid"
                   color="secondary"
                   value="_atproto"
                   label={_(msg`Copy host`)}
+                  style={[a.bg_transparent]}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
                   <Text style={[a.text_md, a.flex_1]}>_atproto</Text>
@@ -449,10 +449,10 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               </Text>
               <View style={[a.py_xs]}>
                 <CopyButton
-                  variant="solid"
                   color="secondary"
                   value={'did=' + currentAccount?.did}
                   label={_(msg`Copy TXT record value`)}
+                  style={[a.bg_transparent]}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
                   <Text style={[a.text_md, a.flex_1]}>
@@ -636,7 +636,7 @@ function SuccessMessage({text}: {text: string}) {
           a.rounded_full,
           a.align_center,
           a.justify_center,
-          {backgroundColor: t.palette.positive_600},
+          {backgroundColor: t.palette.positive_500},
         ]}>
         <CheckIcon fill={t.palette.white} size="xs" />
       </View>

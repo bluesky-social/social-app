@@ -14,21 +14,21 @@
 :root {
   --text: black;
   --background: white;
-  --backgroundLight: hsl(211, 20%, 95%);
+  --backgroundLight: #f9fafb;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
     --text: white;
     --background: black;
-    --backgroundLight: hsl(211, 20%, 20%);
+    --backgroundLight: #111822;
   }
 }
 
 html.theme--light {
   --text: black;
   --background: white;
-  --backgroundLight: hsl(211, 20%, 95%);
+  --backgroundLight: #f9fafb;
   background-color: white;
 }
 html.theme--dark {
@@ -36,14 +36,14 @@ html.theme--dark {
   background-color: black;
   --text: white;
   --background: black;
-  --backgroundLight: hsl(211, 20%, 20%);
+  --backgroundLight: #111822;
 }
 html.theme--dim {
   color-scheme: dark;
-  background-color: hsl(211, 28%, 12%);
+  background-color: #151d28;
   --text: white;
-  --background: hsl(211, 20%, 4%);
-  --backgroundLight: hsl(211, 20%, 10%);
+  --background: #151d28;
+  --backgroundLight: #1c2736;
 }
 
 /* Buttons and inputs have a font set by UA, so we'll have to reset that */

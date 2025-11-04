@@ -75,7 +75,7 @@ After you do `yarn ios` and `yarn android` once, you can later just run `yarn we
 
 - Start in various console tabs:
   - `yarn e2e:mock-server`
-  - `yarn e2e:metro`
+  - `yarn e2e:start`
 - Run once: `yarn e2e:build`
 - Each test run: `yarn e2e:run`
 

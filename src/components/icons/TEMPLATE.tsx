@@ -40,7 +40,7 @@ export function createSinglePathSVG({path}: {path: string}) {
         viewBox="0 0 24 24"
         width={size}
         height={size}
-        style={[style]}>
+        style={style}>
         {gradient}
         <Path fill={fill} fillRule="evenodd" clipRule="evenodd" d={path} />
       </Svg>

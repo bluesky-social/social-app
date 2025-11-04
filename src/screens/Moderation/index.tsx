@@ -328,19 +328,21 @@ export function ModerationScreenInner({
         </Link>
       </View>
 
-      {declaredAge === undefined && (
-        <>
-          <Text
-            style={[
-              a.pt_2xl,
-              a.pb_md,
-              a.text_md,
-              a.font_semi_bold,
-              t.atoms.text_contrast_high,
-            ]}>
-            <Trans>Content filters</Trans>
-          </Text>
+      {(!isDeclaredUnderage || declaredAge === undefined) && (
+        <Text
+          style={[
+            a.pt_2xl,
+            a.pb_md,
+            a.text_md,
+            a.font_semi_bold,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>Content filters</Trans>
+        </Text>
+      )}
 
+      {declaredAge === undefined ? (
+        <>
           <Button
             label={_(msg`Confirm your birthdate`)}
             size="small"
@@ -360,21 +362,8 @@ export function ModerationScreenInner({
 
           <BirthDateSettingsDialog control={birthdateDialogControl} />
         </>
-      )}
-
-      {!isDeclaredUnderage && (
+      ) : !isDeclaredUnderage ? (
         <>
-          <Text
-            style={[
-              a.pt_2xl,
-              a.pb_md,
-              a.text_md,
-              a.font_semi_bold,
-              t.atoms.text_contrast_high,
-            ]}>
-            <Trans>Content filters</Trans>
-          </Text>
-
           <AgeAssuranceAdmonition style={[a.pb_md]}>
             <Trans>
               You must complete age assurance in order to access the settings
@@ -466,7 +455,7 @@ export function ModerationScreenInner({
             </View>
           </View>
         </>
-      )}
+      ) : null}
 
       <Text
         style={[

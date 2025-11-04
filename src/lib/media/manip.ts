@@ -114,8 +114,39 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
       // as the starting image, or put it directly into the album
       const album = await MediaLibrary.getAlbumAsync(ALBUM_NAME)
       if (album) {
-        // if album exists, put the image straight in there
-        await MediaLibrary.createAssetAsync(imagePath, album)
+        // try and migrate if needed
+        try {
+          if (await MediaLibrary.albumNeedsMigrationAsync(album)) {
+            await MediaLibrary.migrateAlbumIfNeededAsync(album)
+          }
+        } catch (err) {
+          logger.info('Attempted and failed to migrate album', {
+            safeMessage: err,
+          })
+        }
+
+        try {
+          // if album exists, put the image straight in there
+          await MediaLibrary.createAssetAsync(imagePath, album)
+        } catch (err) {
+          logger.info('Failed to create asset', {safeMessage: err})
+          // however, it's possible that we don't have write permission to the album
+          // try making a new one!
+          try {
+            await MediaLibrary.createAlbumAsync(
+              ALBUM_NAME,
+              undefined,
+              undefined,
+              imagePath,
+            )
+          } catch (err2) {
+            logger.info('Failed to create asset in a fresh album', {
+              safeMessage: err2,
+            })
+            // ... and if all else fails, just put it in DCIM
+            await MediaLibrary.createAssetAsync(imagePath)
+          }
+        }
       } else {
         // otherwise, create album with asset (albums must always have at least one asset)
         await MediaLibrary.createAlbumAsync(
@@ -126,12 +157,13 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
         )
       }
     } else {
-      await MediaLibrary.createAssetAsync(imagePath)
+      await MediaLibrary.saveToLibraryAsync(imagePath)
     }
   } catch (err) {
     logger.error(err instanceof Error ? err : String(err), {
       message: 'Failed to save image to media library',
     })
+    throw err
   } finally {
     safeDeleteAsync(imagePath)
   }
@@ -378,14 +410,21 @@ function createPath(ext: string) {
 
 async function downloadImage(uri: string, path: string, timeout: number) {
   const dlResumable = createDownloadResumable(uri, path, {cache: true})
-
-  const to1 = setTimeout(() => dlResumable.cancelAsync(), timeout)
+  let timedOut = false
+  const to1 = setTimeout(() => {
+    timedOut = true
+    dlResumable.cancelAsync()
+  }, timeout)
 
   const dlRes = await dlResumable.downloadAsync()
   clearTimeout(to1)
 
   if (!dlRes?.uri) {
-    throw new Error('Failed to download image - dlRes is undefined')
+    if (timedOut) {
+      throw new Error('Failed to download image - timed out')
+    } else {
+      throw new Error('Failed to download image - dlRes is undefined')
+    }
   }
 
   return normalizePath(dlRes.uri)

@@ -50,8 +50,8 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: ⚙️ Install dependencies
         run: yarn install
@@ -96,7 +96,7 @@ jobs:
         id: timestamp
         uses: nanzm/get-time-action@master
         with:
-          format: 'MM-DD-HH-mm-ss'
+          format: "MM-DD-HH-mm-ss"
 
       - name: 🚀 Upload Production Artifact
         id: upload-artifact-production
@@ -146,6 +146,11 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
+      - name: 🧹 Clear Metro cache
+        if: ${{ inputs.profile == 'production' }}
+        # https://github.com/expo/eas-cli/issues/2959#issuecomment-2749791326
+        run: rm -rf ${TMPDIR:-/tmp}/metro-cache
+
       - name: 🏗️ Build Production APK
         if: ${{ inputs.profile == 'production' }}
         run: >
@@ -182,11 +187,11 @@ jobs:
       - name: ⬇️ Restore Cache
         id: get-base-commit
         uses: actions/cache@v4
-        if: ${{ inputs.profile == 'testflight' }}
+        if: ${{ inputs.profile == 'testflight-android' }}
         with:
           path: most-recent-testflight-commit.txt
           key: most-recent-testflight-commit
 
       - name: ✏️ Write commit hash to cache
-        if: ${{ inputs.profile == 'testflight' }}
+        if: ${{ inputs.profile == 'testflight-android' }}
         run: echo ${{ github.sha }} > most-recent-testflight-commit.txt

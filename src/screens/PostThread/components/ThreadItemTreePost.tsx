@@ -29,6 +29,7 @@ import {
   TREE_INDENT,
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
+import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
@@ -40,7 +41,7 @@ import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 
 /**
@@ -310,7 +311,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 
   return (
     <ThreadItemTreePostOuterWrapper item={item}>
-      <SubtleHover>
+      <SubtleHoverWrapper>
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
@@ -376,17 +377,18 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     logContext="PostThreadItem"
                     threadgateRecord={threadgateRecord}
                   />
+                  <DebugFieldDisplay subject={post} />
                 </View>
               </View>
             </View>
           </ThreadItemTreePostInnerWrapper>
         </PostHider>
-      </SubtleHover>
+      </SubtleHoverWrapper>
     </ThreadItemTreePostOuterWrapper>
   )
 })
 
-function SubtleHover({children}: {children: React.ReactNode}) {
+function SubtleHoverWrapper({children}: {children: React.ReactNode}) {
   const {
     state: hover,
     onIn: onHoverIn,
@@ -397,7 +399,7 @@ function SubtleHover({children}: {children: React.ReactNode}) {
       onPointerEnter={onHoverIn}
       onPointerLeave={onHoverOut}
       style={[a.flex_1, a.pointer]}>
-      <SubtleWebHover hover={hover} />
+      <SubtleHover hover={hover} />
       {children}
     </View>
   )

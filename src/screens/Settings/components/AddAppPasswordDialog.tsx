@@ -195,7 +195,6 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                 value={data.password}
                 label={_(msg`Copy App Password`)}
                 size="large"
-                variant="solid"
                 color="secondary">
                 <ButtonText>{data.password}</ButtonText>
                 <ButtonIcon icon={CopyIcon} />
