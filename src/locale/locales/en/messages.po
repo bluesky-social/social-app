@@ -3634,8 +3634,8 @@ msgstr ""
 msgid "Feed unavailable"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:105
 #: src/view/shell/desktop/RightNav.tsx:106
-#: src/view/shell/desktop/RightNav.tsx:107
 #: src/view/shell/Drawer.tsx:368
 msgid "Feedback"
 msgstr ""
@@ -3712,7 +3712,7 @@ msgstr ""
 msgid "Finance"
 msgstr ""
 
-#: src/view/com/posts/CustomFeedEmptyState.tsx:48
+#: src/view/com/posts/CustomFeedEmptyState.tsx:71
 #: src/view/com/posts/FollowingEmptyState.tsx:53
 #: src/view/com/posts/FollowingEndOfFeed.tsx:54
 msgid "Find accounts to follow"
@@ -4213,8 +4213,8 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:236
 #: src/screens/Settings/Settings.tsx:240
+#: src/view/shell/desktop/RightNav.tsx:123
 #: src/view/shell/desktop/RightNav.tsx:124
-#: src/view/shell/desktop/RightNav.tsx:125
 #: src/view/shell/Drawer.tsx:381
 msgid "Help"
 msgstr ""
@@ -4447,7 +4447,7 @@ msgstr ""
 msgid "Illegal and Urgent"
 msgstr ""
 
-#: src/view/com/util/images/Gallery.tsx:70
+#: src/view/com/util/images/Gallery.tsx:75
 msgid "Image"
 msgstr ""
 
@@ -5052,11 +5052,11 @@ msgstr ""
 msgid "Logged-out visibility"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:134
+#: src/view/shell/desktop/RightNav.tsx:133
 msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:131
+#: src/view/shell/desktop/RightNav.tsx:130
 #: src/view/shell/Drawer.tsx:709
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
@@ -5276,8 +5276,8 @@ msgstr ""
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
-#: src/view/shell/desktop/Feeds.tsx:108
-#: src/view/shell/desktop/Feeds.tsx:118
+#: src/view/shell/desktop/Feeds.tsx:104
+#: src/view/shell/desktop/Feeds.tsx:114
 msgid "More feeds"
 msgstr ""
 
@@ -6613,8 +6613,8 @@ msgstr ""
 msgid "Prioritize your Follows"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:113
 #: src/view/shell/desktop/RightNav.tsx:114
-#: src/view/shell/desktop/RightNav.tsx:115
 msgid "Privacy"
 msgstr ""
 
@@ -8614,8 +8614,8 @@ msgstr ""
 msgid "Tell us a little more"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:119
 #: src/view/shell/desktop/RightNav.tsx:120
-#: src/view/shell/desktop/RightNav.tsx:121
 msgid "Terms"
 msgstr ""
 
@@ -9000,7 +9000,7 @@ msgstr ""
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr ""
 
-#: src/view/com/posts/CustomFeedEmptyState.tsx:38
+#: src/view/com/posts/CustomFeedEmptyState.tsx:61
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr ""
 
@@ -9987,8 +9987,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/view/com/util/images/AutoSizedImage.tsx:206
-#: src/view/com/util/images/AutoSizedImage.tsx:229
+#: src/view/com/util/images/AutoSizedImage.tsx:207
+#: src/view/com/util/images/AutoSizedImage.tsx:234
 msgid "Views full image"
 msgstr ""
 
