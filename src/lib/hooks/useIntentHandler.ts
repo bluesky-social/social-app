@@ -36,10 +36,7 @@ export function useIntentHandler() {
     const handleIncomingURL = async (url: string) => {
       if (isIOS) {
         // Close in-app browser if it's open (iOS only)
-        // TEMP: promise never resolves if the browser is not open, so don't await
-        // https://github.com/expo/expo/issues/40710
-        // add the await back when possible since it's needed to fix the IAB share bug -sfn
-        /* await */ WebBrowser.dismissBrowser().catch(() => {})
+        await WebBrowser.dismissBrowser().catch(() => {})
       }
 
       const referrerInfo = Referrer.getReferrerInfo()
