@@ -51,7 +51,7 @@ import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
-import {PostControls} from '#/components/PostControls'
+import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
@@ -730,13 +730,7 @@ export function ThreadItemAnchorSkeleton() {
 
       <Skele.Text style={[a.text_sm, {width: '50%'}]} />
 
-      <Skele.Row style={[a.justify_between]}>
-        <Skele.Pill blend size={24} />
-        <Skele.Pill blend size={24} />
-        <Skele.Pill blend size={24} />
-        <Skele.Circle blend size={24} />
-        <Skele.Circle blend size={24} />
-      </Skele.Row>
+      <PostControlsSkeleton big />
     </View>
   )
 }
