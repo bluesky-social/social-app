@@ -175,24 +175,18 @@ let FeedItemInner = ({
   const {sendInteraction, feedSourceInfo} = useFeedFeedbackContext()
 
   const onPressReply = () => {
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#interactionReply',
+      feedContext,
+      reqId,
+    })
     if (gate('feed_reply_button_open_thread')) {
-      sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughItem',
-        feedContext,
-        reqId,
-      })
       navigation.navigate('PostThread', {
         name: post.author.did,
         rkey,
       })
     } else {
-      sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
-        feedContext,
-        reqId,
-      })
       openComposer({
         replyTo: {
           uri: post.uri,
