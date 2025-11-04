@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import Graphemer from 'graphemer'
@@ -51,12 +51,13 @@ export function MessageInput({
   const [isHovered, setIsHovered] = React.useState(false)
   const [textAreaHeight, setTextAreaHeight] = React.useState(38)
   const textAreaRef = React.useRef<HTMLTextAreaElement>(null)
+  const graphemeCount = new Graphemer().countGraphemes(message)
 
   const onSubmit = React.useCallback(() => {
     if (!hasEmbed && message.trim() === '') {
       return
     }
-    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+    if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
@@ -64,7 +65,7 @@ export function MessageInput({
     onSendMessage(message)
     setMessage('')
     setEmbed(undefined)
-  }, [message, onSendMessage, _, clearDraft, hasEmbed, setEmbed])
+  }, [message, graphemeCount, onSendMessage, _, clearDraft, hasEmbed, setEmbed])
 
   const onKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -249,6 +250,15 @@ export function MessageInput({
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>
+      {graphemeCount > MAX_DM_GRAPHEME_LENGTH ? (
+        <Text
+          style={[
+            a.py_sm,
+            {
+              color: t.palette.negative_500,
+            },
+          ]}>{`Message is too long by ${graphemeCount - MAX_DM_GRAPHEME_LENGTH} characters`}</Text>
+      ) : null}
     </View>
   )
 }
