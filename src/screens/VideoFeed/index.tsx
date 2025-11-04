@@ -955,7 +955,7 @@ function ExpandableRichTextView({
       ]}>
       <RichText
         value={value}
-        style={[a.text_sm, a.flex_1, a.leading_normal]}
+        style={[a.text_sm, a.flex_1, a.leading_relaxed]}
         authorHandle={authorHandle}
         enableTags
         numberOfLines={

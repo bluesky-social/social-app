@@ -10,7 +10,6 @@ import {useOnboardingDispatch} from '#/state/shell'
 import {Context} from '#/screens/Onboarding/state'
 import {
   atoms as a,
-  flatten,
   native,
   type TextStyleProp,
   tokens,
@@ -228,13 +227,7 @@ export function TitleText({
 }: React.PropsWithChildren<TextStyleProp>) {
   return (
     <Text
-      style={[
-        a.pb_sm,
-        a.text_4xl,
-        a.font_semi_bold,
-        a.leading_tight,
-        flatten(style),
-      ]}>
+      style={[a.pb_sm, a.text_4xl, a.font_semi_bold, a.leading_tight, style]}>
       {children}
     </Text>
   )
@@ -245,7 +238,5 @@ export function DescriptionText({
   style,
 }: React.PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
-  return (
-    <P style={[t.atoms.text_contrast_medium, flatten(style)]}>{children}</P>
-  )
+  return <P style={[t.atoms.text_contrast_medium, style]}>{children}</P>
 }

@@ -396,7 +396,7 @@ export function Description({
     <View style={[a.pt_xs]}>
       <RichText
         value={rt}
-        style={[a.leading_snug, style]}
+        style={style}
         numberOfLines={numberOfLines}
         disableLinks
       />
