@@ -7,6 +7,7 @@ import {
   useRef,
 } from 'react'
 
+import {logger} from '#/logger'
 import {useDialogStateContext} from '#/state/dialogs'
 import {
   type DialogContextProps,
@@ -50,7 +51,15 @@ export function useDialogControl(): DialogOuterProps['control'] {
       id,
       ref: control,
       open: () => {
-        control.current.open()
+        try {
+          control.current.open()
+        } catch (err) {
+          // note: we're seeing 100 crashes/day from the composer discard warning
+          // dialog being triggered by the android system back button immediately after posting
+          // Error is "Cannot read property 'open' of null"
+          // Is there a better way to handle this? I've try/catch'd this for now -sfn
+          logger.warn('Could not open dialog', {safeMessage: err})
+        }
       },
       close: cb => {
         control.current.close(cb)
