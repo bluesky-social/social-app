@@ -12,12 +12,14 @@ import {
 
 const InternalContext = createContext<{
   type: 'tabs' | 'radio'
+  size: 'small' | 'large'
   selectedValue: string
   selectedPosition: {width: number; x: number} | null
   onSelectValue: (
     value: string,
     position: {width: number; x: number} | null,
   ) => void
+  updatePosition: (position: {width: number; x: number}) => void
 } | null>(null)
 
 /**
@@ -42,6 +44,7 @@ const InternalContext = createContext<{
 export function Root<T extends string>({
   label,
   type,
+  size = 'large',
   value,
   onChange,
   children,
@@ -50,6 +53,7 @@ export function Root<T extends string>({
 }: {
   label: string
   type: 'tabs' | 'radio'
+  size?: 'small' | 'large'
   value: T
   onChange: (value: T) => void
   children: React.ReactNode
@@ -65,6 +69,7 @@ export function Root<T extends string>({
   const contextValue = useMemo(() => {
     return {
       type,
+      size,
       selectedValue: value,
       selectedPosition,
       onSelectValue: (
@@ -74,8 +79,20 @@ export function Root<T extends string>({
         onChange(val as T)
         if (position) setSelectedPosition(position)
       },
+      updatePosition: (position: {width: number; x: number}) => {
+        setSelectedPosition(currPos => {
+          if (
+            currPos &&
+            currPos.width === position.width &&
+            currPos.x === position.x
+          ) {
+            return currPos
+          }
+          return position
+        })
+      },
     }
-  }, [value, selectedPosition, setSelectedPosition, onChange, type])
+  }, [value, selectedPosition, setSelectedPosition, onChange, type, size])
 
   return (
     <View
@@ -86,7 +103,7 @@ export function Root<T extends string>({
         a.flex_1,
         a.relative,
         a.flex_row,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         {borderRadius: 14},
         a.curve_continuous,
         a.p_xs,
@@ -129,6 +146,15 @@ export function Item({
 
   const active = ctx.selectedValue === value
 
+  // update position if change was external, and not due to onPress
+  const [prevActive, setPrevActive] = useState(active)
+  if (active !== prevActive) {
+    setPrevActive(active)
+    if (active && position) {
+      ctx.updatePosition(position)
+    }
+  }
+
   const onPress = useCallback(
     (evt: any) => {
       ctx.onSelectValue(value, position)
@@ -155,7 +181,14 @@ export function Item({
         onPress={onPress}
         role={ctx.type === 'tabs' ? 'tab' : 'radio'}
         accessibilityState={{selected: active}}
-        style={[a.flex_1, a.bg_transparent, a.px_sm, style]}>
+        style={[
+          a.flex_1,
+          a.bg_transparent,
+          a.px_sm,
+          a.py_xs,
+          {minHeight: ctx.size === 'large' ? 40 : 32},
+          style,
+        ]}>
         {({pressed, hovered, focused}) => (
           <InternalItemContext.Provider
             value={{active, pressed, hovered, focused}}>
@@ -180,7 +213,7 @@ export function ItemText({style, ...props}: ButtonTextProps) {
       style={[
         a.text_center,
         a.text_md,
-        {paddingVertical: 10},
+        a.font_medium,
         a.px_xs,
         ctx.active
           ? t.atoms.text
@@ -203,7 +236,27 @@ function Slider({x, width}: {x: number; width: number}) {
         a.absolute,
         a.curve_continuous,
         t.atoms.bg,
-        {top: 4, bottom: 4, left: 0, width, borderRadius: 10},
+        {
+          top: 4,
+          bottom: 4,
+          left: 0,
+          width,
+          borderRadius: 10,
+        },
+        // TODO: new arch supports boxShadow on native
+        // in the meantime this is an attempt to get close
+        platform({
+          web: {
+            boxShadow: '0px 2px 4px 0px #0000000D',
+          },
+          ios: {
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0x0d / 0xff,
+            shadowRadius: 4,
+          },
+          android: {elevation: 0.25},
+        }),
         platform({
           native: [{left: x}],
           web: [{transform: [{translateX: x}]}, a.transition_transform],
