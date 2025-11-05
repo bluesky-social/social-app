@@ -137,7 +137,7 @@ function DialogInner({
       accessibilityLabelledBy="dialog-title"
       style={web({maxWidth: 500})}>
       <View style={[a.relative, a.gap_md, a.w_full]}>
-        <Text nativeID="dialog-title" style={[a.text_2xl, a.bold]}>
+        <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
           <Trans>Choose your account provider</Trans>
         </Text>
         <SegmentedControl.Root
