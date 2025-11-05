@@ -40,12 +40,13 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '../icons/Quote'
 
 export type PostInteractionSettingsFormProps = {
   canSave?: boolean
@@ -67,50 +68,36 @@ export function PostInteractionSettingsControlledDialog({
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
 }) {
-  const t = useTheme()
-  const {_} = useLingui()
-
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner
-        label={_(msg`Edit post interaction settings`)}
-        style={[{maxWidth: 500}, a.w_full]}>
-        <View style={[a.gap_md]}>
-          <Header />
-          <PostInteractionSettingsForm {...rest} />
-          <Text
-            style={[
-              a.pt_sm,
-              a.text_sm,
-              a.leading_snug,
-              t.atoms.text_contrast_medium,
-            ]}>
-            <Trans>
-              You can set default interaction settings in{' '}
-              <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
-                Settings &rarr; Moderation &rarr; Interaction settings
-              </Text>
-              .
-            </Trans>
-          </Text>
-        </View>
-        <Dialog.Close />
-      </Dialog.ScrollableInner>
+      <DialogInner {...rest} />
     </Dialog.Outer>
   )
 }
 
-export function Header() {
+function DialogInner(props: Omit<PostInteractionSettingsFormProps, 'control'>) {
+  const {_} = useLingui()
+
   return (
-    <View style={[a.gap_md, a.pb_sm]}>
-      <Text style={[a.text_2xl, a.font_semi_bold]}>
+    <Dialog.ScrollableInner
+      label={_(msg`Edit post interaction settings`)}
+      style={[{maxWidth: 400}, a.w_full]}>
+      <View style={[a.gap_md]}>
+        <Header />
+        <PostInteractionSettingsForm {...props} />
+      </View>
+      <Dialog.Close />
+    </Dialog.ScrollableInner>
+  )
+}
+
+function Header() {
+  return (
+    <View style={[a.pb_sm]}>
+      <Text style={[a.text_2xl, a.font_bold]}>
         <Trans>Post interaction settings</Trans>
       </Text>
-      <Text style={[a.text_md, a.pb_xs]}>
-        <Trans>Customize who can interact with this post.</Trans>
-      </Text>
-      <Divider />
     </View>
   )
 }
@@ -335,31 +322,6 @@ export function PostInteractionSettingsForm({
     <View>
       <View style={[a.flex_1, a.gap_md]}>
         <View style={[a.gap_lg]}>
-          <View style={[a.gap_sm]}>
-            <Text style={[a.font_semi_bold, a.text_lg]}>
-              <Trans>Quote settings</Trans>
-            </Text>
-
-            <Toggle.Item
-              name="quoteposts"
-              type="checkbox"
-              label={
-                quotesEnabled
-                  ? _(msg`Click to disable quote posts of this post.`)
-                  : _(msg`Click to enable quote posts of this post.`)
-              }
-              value={quotesEnabled}
-              onChange={onChangeQuotesEnabled}
-              style={[a.justify_between, a.pt_xs]}>
-              <Text style={[t.atoms.text_contrast_medium]}>
-                <Trans>Allow quote posts</Trans>
-              </Text>
-              <Toggle.Switch />
-            </Toggle.Item>
-          </View>
-
-          <Divider />
-
           {replySettingsDisabled && (
             <View
               style={[
@@ -483,6 +445,26 @@ export function PostInteractionSettingsForm({
             )}
           </View>
         </View>
+
+        <Toggle.Item
+          name="quoteposts"
+          type="checkbox"
+          label={
+            quotesEnabled
+              ? _(msg`Click to disable quote posts of this post.`)
+              : _(msg`Click to enable quote posts of this post.`)
+          }
+          value={quotesEnabled}
+          onChange={onChangeQuotesEnabled}>
+          {({selected}) => (
+            <Bleeeh active={selected}>
+              <BleeehText icon={QuoteIcon}>
+                <Trans>Allow quote posts</Trans>
+              </BleeehText>
+              <Toggle.Switch />
+            </Bleeeh>
+          )}
+        </Toggle.Item>
       </View>
 
       <Button
@@ -491,13 +473,63 @@ export function PostInteractionSettingsForm({
         onPress={onSave}
         color="primary"
         size="large"
-        variant="solid"
         style={a.mt_xl}>
         <ButtonText>{_(msg`Save`)}</ButtonText>
-        {isSaving && <ButtonIcon icon={Loader} position="right" />}
+        {isSaving && <ButtonIcon icon={Loader} />}
       </Button>
     </View>
   )
+}
+
+function Bleeeh({
+  children,
+  active,
+}: {
+  children: React.ReactNode
+  active?: boolean
+}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.px_md,
+        a.py_md,
+        a.rounded_md,
+        active
+          ? {backgroundColor: t.palette.primary_50}
+          : t.atoms.bg_contrast_50,
+      ]}>
+      {children}
+    </View>
+  )
+}
+
+function BleeehText({
+  children,
+  icon: Icon,
+}: {
+  children: React.ReactNode
+  icon?: React.ComponentType<SVGIconProps>
+}) {
+  const t = useTheme()
+
+  const text = <Text style={[a.font_medium, a.flex_1]}>{children}</Text>
+
+  if (Icon) {
+    // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
+    return (
+      <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+        <Icon style={[t.atoms.text, a.flex_shrink_0]} size="md" />
+        {text}
+      </View>
+    )
+  }
+
+  return text
 }
 
 function Selectable({
