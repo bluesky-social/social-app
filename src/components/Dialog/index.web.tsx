@@ -16,7 +16,7 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -180,7 +180,8 @@ export function Inner({
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
-        style={[
+        // note: flatten is required for some reason -sfn
+        style={flatten([
           a.relative,
           a.rounded_md,
           a.w_full,
@@ -195,7 +196,7 @@ export function Inner({
           },
           !reduceMotionEnabled && a.zoom_fade_in,
           style,
-        ]}>
+        ])}>
         <DismissableLayer.DismissableLayer
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
