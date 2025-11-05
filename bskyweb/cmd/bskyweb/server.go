@@ -135,12 +135,11 @@ func serve(cctx *cli.Context) error {
 
 	// SECURITY: Do not modify without due consideration.
 	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
-		ContentTypeNosniff: "nosniff",
-		XFrameOptions:      "SAMEORIGIN",
-		HSTSMaxAge:         31536000, // 365 days
-		// TODO:
-		// ContentSecurityPolicy
-		// XSSProtection
+		ContentTypeNosniff:    "nosniff",
+		XFrameOptions:         "SAMEORIGIN",
+		HSTSMaxAge:            31536000, // 365 days
+		ContentSecurityPolicy: fmt.Sprintf("default-src * 'unsafe-inline' blob:; script-src 'self' %s", staticCDNHost),
+		// Note: XSSProtection not configured because it is deprecated, superseded by CSP
 	}))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		// Don't log requests for static content.
