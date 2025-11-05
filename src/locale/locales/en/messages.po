@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
-#: src/components/InterestTabs.tsx:325
+#: src/components/InterestTabs.tsx:330
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr ""
 
@@ -120,7 +120,7 @@ msgid "{0, plural, other {{1} posts}}"
 msgstr ""
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
-#: src/screens/StarterPack/StarterPackScreen.tsx:494
+#: src/screens/StarterPack/StarterPackScreen.tsx:492
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr ""
 
@@ -1209,7 +1209,7 @@ msgstr ""
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:661
+#: src/screens/StarterPack/StarterPackScreen.tsx:659
 msgid "Are you sure you want to delete this starter pack?"
 msgstr ""
 
@@ -1658,9 +1658,9 @@ msgstr ""
 msgid "Cancel search"
 msgstr ""
 
-#: src/components/PostControls/index.tsx:105
-#: src/components/PostControls/index.tsx:136
-#: src/components/PostControls/index.tsx:164
+#: src/components/PostControls/index.tsx:106
+#: src/components/PostControls/index.tsx:137
+#: src/components/PostControls/index.tsx:165
 #: src/state/shell/composer/index.tsx:94
 msgid "Cannot interact with a blocked user"
 msgstr ""
@@ -2305,7 +2305,7 @@ msgid "Copy host"
 msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:621
+#: src/screens/StarterPack/StarterPackScreen.tsx:619
 msgid "Copy link"
 msgstr ""
 
@@ -2330,7 +2330,7 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:614
+#: src/screens/StarterPack/StarterPackScreen.tsx:612
 msgid "Copy link to starter pack"
 msgstr ""
 
@@ -2515,7 +2515,7 @@ msgstr ""
 msgid "Customize who can interact with this post."
 msgstr ""
 
-#: src/screens/Onboarding/Layout.tsx:61
+#: src/screens/Onboarding/Layout.tsx:60
 msgid "Customizes your Bluesky experience"
 msgstr ""
 
@@ -2570,9 +2570,9 @@ msgstr ""
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:280
 #: src/screens/Settings/AppPasswords.tsx:212
-#: src/screens/StarterPack/StarterPackScreen.tsx:603
-#: src/screens/StarterPack/StarterPackScreen.tsx:692
-#: src/screens/StarterPack/StarterPackScreen.tsx:764
+#: src/screens/StarterPack/StarterPackScreen.tsx:601
+#: src/screens/StarterPack/StarterPackScreen.tsx:690
+#: src/screens/StarterPack/StarterPackScreen.tsx:762
 msgid "Delete"
 msgstr ""
 
@@ -2640,12 +2640,12 @@ msgstr ""
 msgid "Delete post"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
-#: src/screens/StarterPack/StarterPackScreen.tsx:755
+#: src/screens/StarterPack/StarterPackScreen.tsx:595
+#: src/screens/StarterPack/StarterPackScreen.tsx:753
 msgid "Delete starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:658
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 msgid "Delete starter pack?"
 msgstr ""
 
@@ -2944,7 +2944,7 @@ msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:145
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:252
-#: src/screens/StarterPack/StarterPackScreen.tsx:592
+#: src/screens/StarterPack/StarterPackScreen.tsx:590
 #: src/screens/StarterPack/Wizard/index.tsx:339
 #: src/screens/StarterPack/Wizard/index.tsx:344
 msgid "Edit"
@@ -3025,7 +3025,7 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:584
+#: src/screens/StarterPack/StarterPackScreen.tsx:582
 msgid "Edit starter pack"
 msgstr ""
 
@@ -3451,7 +3451,7 @@ msgstr ""
 msgid "Failed to delete post, please try again"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:726
+#: src/screens/StarterPack/StarterPackScreen.tsx:724
 msgid "Failed to delete starter pack"
 msgstr ""
 
@@ -3534,7 +3534,8 @@ msgstr ""
 msgid "Failed to resolve location. Please try again."
 msgstr ""
 
-#: src/lib/media/save-image.ts:28
+#: src/lib/media/save-image.ios.ts:27
+#: src/lib/media/save-image.ts:31
 msgid "Failed to save image: {0}"
 msgstr ""
 
@@ -4078,7 +4079,7 @@ msgstr ""
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/screens/Profile/ProfileFeed/index.tsx:97
-#: src/screens/StarterPack/StarterPackScreen.tsx:777
+#: src/screens/StarterPack/StarterPackScreen.tsx:775
 #: src/view/screens/NotFound.tsx:56
 msgid "Go Back"
 msgstr ""
@@ -4086,8 +4087,8 @@ msgstr ""
 #: src/components/dms/ReportDialog.tsx:197
 #: src/components/ReportDialog/SelectReportOptionView.tsx:81
 #: src/components/ReportDialog/SubmitView.tsx:110
-#: src/screens/Onboarding/Layout.tsx:115
-#: src/screens/Onboarding/Layout.tsx:211
+#: src/screens/Onboarding/Layout.tsx:114
+#: src/screens/Onboarding/Layout.tsx:210
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr ""
@@ -4460,11 +4461,12 @@ msgstr ""
 msgid "Image cache cleared, freed {0}"
 msgstr ""
 
-#: src/lib/media/save-image.ts:26
+#: src/lib/media/save-image.ios.ts:25
+#: src/lib/media/save-image.ts:29
 msgid "Image saved"
 msgstr ""
 
-#: src/lib/media/save-image.ts:45
+#: src/lib/media/save-image.ts:51
 msgid "Images cannot be saved unless permission is granted to access your photo library."
 msgstr ""
 
@@ -4625,8 +4627,8 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:210
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:466
-#: src/screens/StarterPack/StarterPackScreen.tsx:477
+#: src/screens/StarterPack/StarterPackScreen.tsx:464
+#: src/screens/StarterPack/StarterPackScreen.tsx:475
 msgid "Join Bluesky"
 msgstr ""
 
@@ -4837,7 +4839,7 @@ msgid "Like"
 msgstr ""
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
-#: src/components/PostControls/index.tsx:269
+#: src/components/PostControls/index.tsx:270
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -6009,7 +6011,7 @@ msgstr ""
 msgid "Open share menu"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:570
+#: src/screens/StarterPack/StarterPackScreen.tsx:568
 msgid "Open starter pack menu"
 msgstr ""
 
@@ -6224,7 +6226,7 @@ msgstr ""
 msgid "People I follow"
 msgstr ""
 
-#: src/lib/media/save-image.ts:51
+#: src/lib/media/save-image.ts:59
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
 msgstr ""
 
@@ -7096,7 +7098,7 @@ msgid "Reply"
 msgstr ""
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
-#: src/components/PostControls/index.tsx:223
+#: src/components/PostControls/index.tsx:224
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -7179,8 +7181,8 @@ msgstr ""
 msgid "Report post"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:634
-#: src/screens/StarterPack/StarterPackScreen.tsx:637
+#: src/screens/StarterPack/StarterPackScreen.tsx:632
+#: src/screens/StarterPack/StarterPackScreen.tsx:635
 msgid "Report starter pack"
 msgstr ""
 
@@ -7244,7 +7246,7 @@ msgstr ""
 #: src/components/PostControls/RepostButton.tsx:145
 #: src/components/PostControls/RepostButton.web.tsx:44
 #: src/components/PostControls/RepostButton.web.tsx:104
-#: src/screens/StarterPack/StarterPackScreen.tsx:565
+#: src/screens/StarterPack/StarterPackScreen.tsx:563
 msgid "Repost or quote post"
 msgstr ""
 
@@ -7383,7 +7385,7 @@ msgstr ""
 
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:219
-#: src/screens/StarterPack/StarterPackScreen.tsx:771
+#: src/screens/StarterPack/StarterPackScreen.tsx:769
 msgid "Return to previous page"
 msgstr ""
 
@@ -7491,11 +7493,11 @@ msgstr ""
 msgid "Science"
 msgstr ""
 
-#: src/components/InterestTabs.tsx:250
+#: src/components/InterestTabs.tsx:255
 msgid "Scroll left"
 msgstr ""
 
-#: src/components/InterestTabs.tsx:284
+#: src/components/InterestTabs.tsx:289
 msgid "Scroll right"
 msgstr ""
 
@@ -7642,7 +7644,7 @@ msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space
 msgstr ""
 
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.
-#: src/components/InterestTabs.tsx:332
+#: src/components/InterestTabs.tsx:337
 msgid "Select \"{interestsDisplayName}\" category"
 msgstr ""
 
@@ -7868,7 +7870,7 @@ msgstr ""
 msgid "Set new password"
 msgstr ""
 
-#: src/screens/Onboarding/Layout.tsx:50
+#: src/screens/Onboarding/Layout.tsx:49
 msgid "Set up your account"
 msgstr ""
 
@@ -8006,8 +8008,8 @@ msgstr ""
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:120
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:165
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:171
-#: src/screens/StarterPack/StarterPackScreen.tsx:615
-#: src/screens/StarterPack/StarterPackScreen.tsx:623
+#: src/screens/StarterPack/StarterPackScreen.tsx:613
+#: src/screens/StarterPack/StarterPackScreen.tsx:621
 #: src/view/com/profile/ProfileMenu.tsx:251
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Share via..."
@@ -8397,7 +8399,7 @@ msgstr ""
 msgid "Starter pack by you"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:735
+#: src/screens/StarterPack/StarterPackScreen.tsx:733
 msgid "Starter pack is invalid"
 msgstr ""
 
@@ -8782,7 +8784,7 @@ msgstr ""
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:745
+#: src/screens/StarterPack/StarterPackScreen.tsx:743
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
@@ -9294,7 +9296,7 @@ msgstr ""
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:677
+#: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Unable to delete"
 msgstr ""
 
@@ -9398,7 +9400,7 @@ msgid "Unlike"
 msgstr ""
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
-#: src/components/PostControls/index.tsx:259
+#: src/components/PostControls/index.tsx:260
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -10314,7 +10316,7 @@ msgstr ""
 msgid "Yes, deactivate"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:689
+#: src/screens/StarterPack/StarterPackScreen.tsx:687
 msgid "Yes, delete this starter pack"
 msgstr ""
 
