@@ -392,31 +392,64 @@ export function PostInteractionSettingsForm({
               <Trans>Who can reply</Trans>
             </Text>
 
-            <Toggle.Item
-              name="everyone"
-              type="checkbox"
-              label={_(msg`Allow your followers to reply`)}
-              value={everyoneCanReply}
+            <Toggle.Group
+              label={_(msg`Set who can reply to your post`)}
+              type="radio"
+              maxSelections={1}
+              disabled={replySettingsDisabled}
+              values={
+                everyoneCanReply
+                  ? ['everyone']
+                  : noOneCanReply
+                    ? ['nobody']
+                    : []
+              }
               onChange={val => {
-                if (val) {
-                  toggleGroupOnChange([])
+                if (val.includes('everyone')) {
+                  onChangeThreadgateAllowUISettings([{type: 'everybody'}])
+                } else if (val.includes('nobody')) {
+                  onChangeThreadgateAllowUISettings([{type: 'nobody'}])
                 } else {
-                  toggleGroupOnChange(['mention'])
+                  onChangeThreadgateAllowUISettings([{type: 'mention'}])
                 }
               }}>
-              {({selected}) => (
-                <Panel active={selected}>
-                  <Toggle.Checkbox />
-                  <PanelText>
-                    <Trans>Anyone</Trans>
-                  </PanelText>
-                </Panel>
-              )}
-            </Toggle.Item>
+              <View style={[a.flex_row, a.gap_sm]}>
+                <Toggle.Item
+                  name="everyone"
+                  type="checkbox"
+                  label={_(msg`Allow anybody to reply`)}
+                  style={[a.flex_1]}>
+                  {({selected}) => (
+                    <Panel active={selected}>
+                      <Toggle.Radio />
+                      <PanelText>
+                        <Trans>Anyone</Trans>
+                      </PanelText>
+                    </Panel>
+                  )}
+                </Toggle.Item>
+                <Toggle.Item
+                  name="nobody"
+                  type="checkbox"
+                  label={_(msg`Disable replies entirely`)}
+                  style={[a.flex_1]}>
+                  {({selected}) => (
+                    <Panel active={selected}>
+                      <Toggle.Radio />
+                      <PanelText>
+                        <Trans>Nobody</Trans>
+                      </PanelText>
+                    </Panel>
+                  )}
+                </Toggle.Item>
+              </View>
+            </Toggle.Group>
 
             {!noOneCanReply && (
               <Toggle.Group
-                label={_(msg`Set who can reply to your post`)}
+                label={_(
+                  msg`Set precisely which groups of people can reply to your post`,
+                )}
                 values={toggleGroupValues}
                 onChange={toggleGroupOnChange}
                 disabled={replySettingsDisabled}>
