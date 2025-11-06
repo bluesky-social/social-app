@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {type ScrollView} from 'react-native-gesture-handler'
-import {type AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs, BSKY_LABELER_DID} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -30,12 +30,20 @@ import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
-import {SUPPORT_PAGE} from './const'
+import {
+  BSKY_LABELER_ONLY_REPORT_REASONS,
+  NEW_TO_OLD_REASONS_MAP,
+  SUPPORT_PAGE,
+} from './const'
 import {useCopyForSubject} from './copy'
 import {initialState, reducer} from './state'
 import {type ReportDialogProps, type ReportSubject} from './types'
 import {parseReportSubject} from './utils/parseReportSubject'
-import {type ReportOption, useReportOptions} from './utils/useReportOptions'
+import {
+  type ReportCategoryConfig,
+  type ReportOption,
+  useReportOptions,
+} from './utils/useReportOptions'
 
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
@@ -95,7 +103,7 @@ function Inner(props: ReportDialogProps) {
   } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
   const copy = useCopyForSubject(props.subject)
-  const reportOptions = useReportOptions()
+  const {categories, getCategory} = useReportOptions()
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
   /**
@@ -104,6 +112,13 @@ function Inner(props: ReportDialogProps) {
   const {mutateAsync: submitReport} = useSubmitReportMutation()
   const [isPending, setPending] = React.useState(false)
   const [isSuccess, setSuccess] = React.useState(false)
+
+  // some reasons ONLY go to Bluesky
+  const isBskyOnlyReason = state?.selectedOption?.reason
+    ? BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)
+    : false
+  // some subjects (chats) only go to Bluesky
+  const isBskyOnlySubject = props.subject.type === 'convoMessage'
 
   /**
    * Labelers that support this `subject` and its NSID collection
@@ -116,7 +131,7 @@ function Inner(props: ReportDialogProps) {
         if (subjectTypes === undefined) return true
         if (props.subject.type === 'account') {
           return subjectTypes.includes('account')
-        } else if (props.subject.type === 'chatMessage') {
+        } else if (props.subject.type === 'convoMessage') {
           return subjectTypes.includes('chat')
         } else {
           return subjectTypes.includes('record')
@@ -126,18 +141,43 @@ function Inner(props: ReportDialogProps) {
         const collections: string[] | undefined = l.subjectCollections
         if (collections === undefined) return true
         // all chat collections accepted, since only Bluesky handles chats
-        if (props.subject.type === 'chatMessage') return true
+        if (props.subject.type === 'convoMessage') return true
         return collections.includes(props.subject.nsid)
       })
       .filter(l => {
-        if (!state.selectedOption) return true
-        const reasonTypes: string[] | undefined = l.reasonTypes
-        if (reasonTypes === undefined) return true
-        return reasonTypes.includes(state.selectedOption.reason)
+        if (!state.selectedOption) return false
+        if (isBskyOnlyReason || isBskyOnlySubject) {
+          return l.creator.did === BSKY_LABELER_DID
+        }
+        const supportedReasonTypes: string[] | undefined = l.reasonTypes
+        if (supportedReasonTypes === undefined) return true
+        return (
+          // supports new reason type
+          supportedReasonTypes.includes(state.selectedOption.reason) ||
+          // supports old reason type (backwards compat)
+          supportedReasonTypes.includes(
+            NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
+          )
+        )
       })
-  }, [props, allLabelers, state.selectedOption])
+  }, [
+    props,
+    allLabelers,
+    state.selectedOption,
+    isBskyOnlyReason,
+    isBskyOnlySubject,
+  ])
   const hasSupportedLabelers = !!supportedLabelers.length
   const hasSingleSupportedLabeler = supportedLabelers.length === 1
+
+  /**
+   * We skip the select labeler step if there's only one possible labeler, and
+   * that labeler is Bluesky (which is the case for chat reports and certain
+   * reason types). We'll use this below to adjust the indexing and skip the
+   * step in the UI.
+   */
+  const isAlwaysBskyLabeler =
+    hasSingleSupportedLabeler && (isBskyOnlyReason || isBskyOnlySubject)
 
   const onSubmit = React.useCallback(async () => {
     dispatch({type: 'clearError'})
@@ -166,7 +206,9 @@ function Inner(props: ReportDialogProps) {
       )
       // give time for user feedback
       setTimeout(() => {
-        props.control.close()
+        props.control.close(() => {
+          props.onAfterSubmit?.()
+        })
       }, 1e3)
     } catch (e: any) {
       logger.metric('reportDialog:failure', {}, {statsig: false})
@@ -237,32 +279,36 @@ function Inner(props: ReportDialogProps) {
             </Admonition.Outer>
           ) : (
             <>
-              {state.selectedOption ? (
+              {state.selectedCategory ? (
                 <View style={[a.flex_row, a.align_center, a.gap_md]}>
                   <View style={[a.flex_1]}>
-                    <OptionCard option={state.selectedOption} />
+                    <CategoryCard option={state.selectedCategory} />
                   </View>
                   <Button
-                    testID="report:clearOption"
-                    label={_(msg`Change report reason`)}
+                    testID="report:clearCategory"
+                    label={_(msg`Change report category`)}
                     size="tiny"
                     variant="solid"
                     color="secondary"
                     shape="round"
                     onPress={() => {
-                      dispatch({type: 'clearOption'})
+                      dispatch({type: 'clearCategory'})
                     }}>
                     <ButtonIcon icon={X} />
                   </Button>
                 </View>
               ) : (
                 <View style={[a.gap_sm]}>
-                  {reportOptions[props.subject.type].map(o => (
-                    <OptionCard
-                      key={o.reason}
+                  {categories.map(o => (
+                    <CategoryCard
+                      key={o.key}
                       option={o}
                       onSelect={() => {
-                        dispatch({type: 'selectOption', option: o})
+                        dispatch({
+                          type: 'selectCategory',
+                          option: o,
+                          otherOption: getCategory('other').options[0],
+                        })
                       }}
                     />
                   ))}
@@ -310,87 +356,142 @@ function Inner(props: ReportDialogProps) {
         <StepOuter>
           <StepTitle
             index={2}
-            title={_(msg`Select moderation service`)}
+            title={_(msg`Select a reason`)}
             activeIndex1={state.activeStepIndex1}
           />
-          {state.activeStepIndex1 >= 2 && (
-            <>
-              {state.selectedLabeler ? (
-                <>
-                  {hasSingleSupportedLabeler ? (
-                    <LabelerCard labeler={state.selectedLabeler} />
-                  ) : (
-                    <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                      <View style={[a.flex_1]}>
-                        <LabelerCard labeler={state.selectedLabeler} />
+          {state.selectedOption ? (
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              <View style={[a.flex_1]}>
+                <OptionCard option={state.selectedOption} />
+              </View>
+              <Button
+                testID="report:clearReportOption"
+                label={_(msg`Change report reason`)}
+                size="tiny"
+                variant="solid"
+                color="secondary"
+                shape="round"
+                onPress={() => {
+                  dispatch({type: 'clearOption'})
+                }}>
+                <ButtonIcon icon={X} />
+              </Button>
+            </View>
+          ) : state.selectedCategory ? (
+            <View style={[a.gap_sm]}>
+              {getCategory(state.selectedCategory.key).options.map(o => (
+                <OptionCard
+                  key={o.reason}
+                  option={o}
+                  onSelect={() => {
+                    dispatch({type: 'selectOption', option: o})
+                  }}
+                />
+              ))}
+            </View>
+          ) : null}
+        </StepOuter>
+
+        {isAlwaysBskyLabeler ? (
+          <ActionOnce
+            check={() => !state.selectedLabeler}
+            callback={() => {
+              dispatch({
+                type: 'selectLabeler',
+                labeler: supportedLabelers[0],
+              })
+            }}
+          />
+        ) : (
+          <StepOuter>
+            <StepTitle
+              index={3}
+              title={_(msg`Select moderation service`)}
+              activeIndex1={state.activeStepIndex1}
+            />
+            {state.activeStepIndex1 >= 3 && (
+              <>
+                {state.selectedLabeler ? (
+                  <>
+                    {hasSingleSupportedLabeler ? (
+                      <LabelerCard labeler={state.selectedLabeler} />
+                    ) : (
+                      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                        <View style={[a.flex_1]}>
+                          <LabelerCard labeler={state.selectedLabeler} />
+                        </View>
+                        <Button
+                          label={_(msg`Change moderation service`)}
+                          size="tiny"
+                          variant="solid"
+                          color="secondary"
+                          shape="round"
+                          onPress={() => {
+                            dispatch({type: 'clearLabeler'})
+                          }}>
+                          <ButtonIcon icon={X} />
+                        </Button>
                       </View>
-                      <Button
-                        label={_(msg`Change moderation service`)}
-                        size="tiny"
-                        variant="solid"
-                        color="secondary"
-                        shape="round"
-                        onPress={() => {
-                          dispatch({type: 'clearLabeler'})
-                        }}>
-                        <ButtonIcon icon={X} />
-                      </Button>
-                    </View>
-                  )}
-                </>
-              ) : (
-                <>
-                  {hasSupportedLabelers ? (
-                    <View style={[a.gap_sm]}>
-                      {hasSingleSupportedLabeler ? (
-                        <>
-                          <LabelerCard labeler={supportedLabelers[0]} />
-                          <ActionOnce
-                            check={() => !state.selectedLabeler}
-                            callback={() => {
-                              dispatch({
-                                type: 'selectLabeler',
-                                labeler: supportedLabelers[0],
-                              })
-                            }}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          {supportedLabelers.map(l => (
-                            <LabelerCard
-                              key={l.creator.did}
-                              labeler={l}
-                              onSelect={() => {
-                                dispatch({type: 'selectLabeler', labeler: l})
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {hasSupportedLabelers ? (
+                      <View style={[a.gap_sm]}>
+                        {hasSingleSupportedLabeler ? (
+                          <>
+                            <LabelerCard labeler={supportedLabelers[0]} />
+                            <ActionOnce
+                              check={() => !state.selectedLabeler}
+                              callback={() => {
+                                dispatch({
+                                  type: 'selectLabeler',
+                                  labeler: supportedLabelers[0],
+                                })
                               }}
                             />
-                          ))}
-                        </>
-                      )}
-                    </View>
-                  ) : (
-                    // should never happen in our app
-                    <Admonition.Admonition type="warning">
-                      <Trans>
-                        Unfortunately, none of your subscribed labelers supports
-                        this report type.
-                      </Trans>
-                    </Admonition.Admonition>
-                  )}
-                </>
-              )}
-            </>
-          )}
-        </StepOuter>
+                          </>
+                        ) : (
+                          <>
+                            {supportedLabelers.map(l => (
+                              <LabelerCard
+                                key={l.creator.did}
+                                labeler={l}
+                                onSelect={() => {
+                                  dispatch({type: 'selectLabeler', labeler: l})
+                                }}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </View>
+                    ) : (
+                      // should never happen in our app
+                      <Admonition.Admonition type="warning">
+                        <Trans>
+                          Unfortunately, none of your subscribed labelers
+                          supports this report type.
+                        </Trans>
+                      </Admonition.Admonition>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </StepOuter>
+        )}
 
         <StepOuter>
           <StepTitle
-            index={3}
+            index={isAlwaysBskyLabeler ? 3 : 4}
             title={_(msg`Submit report`)}
-            activeIndex1={state.activeStepIndex1}
+            activeIndex1={
+              isAlwaysBskyLabeler
+                ? state.activeStepIndex1 - 1
+                : state.activeStepIndex1
+            }
           />
-          {state.activeStepIndex1 === 3 && (
+          {state.activeStepIndex1 === 4 && (
             <>
               <View style={[a.pb_xs, a.gap_xs]}>
                 <Text style={[a.leading_snug, a.pb_xs]}>
@@ -569,12 +670,12 @@ function StepTitle({
   )
 }
 
-function OptionCard({
+function CategoryCard({
   option,
   onSelect,
 }: {
-  option: ReportOption
-  onSelect?: (option: ReportOption) => void
+  option: ReportCategoryConfig
+  onSelect?: (option: ReportCategoryConfig) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -584,7 +685,7 @@ function OptionCard({
   }, [onSelect, option])
   return (
     <Button
-      testID={`report:option:${option.reason}`}
+      testID={`report:option:${option.title}`}
       label={_(msg`Create report for ${option.title}`)}
       onPress={onPress}
       disabled={!onSelect}>
@@ -607,6 +708,53 @@ function OptionCard({
           <Text
             style={[a.text_sm, , a.leading_snug, t.atoms.text_contrast_medium]}>
             {option.description}
+          </Text>
+        </View>
+      )}
+    </Button>
+  )
+}
+
+function OptionCard({
+  option,
+  onSelect,
+}: {
+  option: ReportOption
+  onSelect?: (option: ReportOption) => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const gutters = useGutters(['compact'])
+  const onPress = React.useCallback(() => {
+    onSelect?.(option)
+  }, [onSelect, option])
+  return (
+    <Button
+      testID={`report:option:${option.title}`}
+      label={_(
+        msg({
+          message: `Create report for ${option.title}`,
+          comment:
+            'Accessibility label for button to create a moderation report for the selected option',
+        }),
+      )}
+      onPress={onPress}
+      disabled={!onSelect}>
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.w_full,
+            gutters,
+            a.py_sm,
+            a.rounded_sm,
+            a.border,
+            t.atoms.bg_contrast_25,
+            hovered || pressed
+              ? [t.atoms.border_contrast_high]
+              : [t.atoms.border_contrast_low],
+          ]}>
+          <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+            {option.title}
           </Text>
         </View>
       )}
