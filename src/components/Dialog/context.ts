@@ -7,13 +7,13 @@ import {
   useRef,
 } from 'react'
 
-import {logger} from '#/logger'
 import {useDialogStateContext} from '#/state/dialogs'
 import {
   type DialogContextProps,
   type DialogControlRefProps,
   type DialogOuterProps,
 } from '#/components/Dialog/types'
+import {IS_DEV} from '#/env'
 import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 export const Context = createContext<DialogContextProps>({
@@ -51,18 +51,28 @@ export function useDialogControl(): DialogOuterProps['control'] {
       id,
       ref: control,
       open: () => {
-        try {
+        if (control.current) {
           control.current.open()
-        } catch (err) {
-          // note: we're seeing 100 crashes/day from the composer discard warning
-          // dialog being triggered by the android system back button immediately after posting
-          // Error is "Cannot read property 'open' of null"
-          // Is there a better way to handle this? I've try/catch'd this for now -sfn
-          logger.warn('Could not open dialog', {safeMessage: err})
+        } else {
+          if (IS_DEV) {
+            console.warn(
+              'Attemped to open a dialog control that was not attached to a dialog!\n' +
+                'Please ensure that the Dialog is mounted when calling open/close',
+            )
+          }
         }
       },
       close: cb => {
-        control.current.close(cb)
+        if (control.current) {
+          control.current.close(cb)
+        } else {
+          if (IS_DEV) {
+            console.warn(
+              'Attemped to close a dialog control that was not attached to a dialog!\n' +
+                'Please ensure that the Dialog is mounted when calling open/close',
+            )
+          }
+        }
       },
     }),
     [id, control],
