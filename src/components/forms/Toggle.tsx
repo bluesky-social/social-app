@@ -1,5 +1,11 @@
 import React from 'react'
-import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
+import {
+  Pressable,
+  type PressableProps,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -70,6 +76,7 @@ export type ItemProps = ViewStyleProp & {
   onChange?: (selected: boolean) => void
   isInvalid?: boolean
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
+  hitSlop?: PressableProps['hitSlop']
 }
 
 export function useItemContext() {
