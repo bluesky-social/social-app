@@ -250,6 +250,8 @@ class BottomSheetView(
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
       } else if (contentHeight < this.safeScreenHeight && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+      } else if (currentState == BottomSheetBehavior.STATE_HALF_EXPANDED && oldRatio != newHalfExpandedRatio) {
+        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
       }
     }
   }
