@@ -5,7 +5,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
-import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {createPostgateRecord} from '#/state/queries/postgate/util'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {
+  type ThreadgateAllowUISetting,
+  threadgateRecordToAllowUISetting,
+} from '#/state/queries/threadgate'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PostInteractionSettingsControlledDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
@@ -18,17 +23,22 @@ export function ThreadgateBtn({
   onChangePostgate,
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
+  persist,
+  onChangePersist,
 }: {
   postgate: AppBskyFeedPostgate.Record
   onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
 
   threadgateAllowUISettings: ThreadgateAllowUISetting[]
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
+  persist: boolean
+  onChangePersist: (next: boolean) => void
 
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
   const {_} = useLingui()
   const control = Dialog.useDialogControl()
+  const {data: preferences} = usePreferencesQuery()
 
   const onPress = () => {
     if (isNative && Keyboard.isVisible()) {
@@ -37,6 +47,18 @@ export function ThreadgateBtn({
 
     control.open()
   }
+
+  const defaultThreadgateAllowUISettings = threadgateRecordToAllowUISetting({
+    $type: 'app.bsky.feed.threadgate',
+    post: '',
+    createdAt: new Date().toISOString(),
+    allow: preferences?.postInteractionSettings.threadgateAllowRules,
+  })
+  const defaultPostgate = createPostgateRecord({
+    post: '',
+    embeddingRules:
+      preferences?.postInteractionSettings?.postgateEmbeddingRules || [],
+  })
 
   const anyoneCanReply =
     threadgateAllowUISettings.length === 1 &&
@@ -72,6 +94,10 @@ export function ThreadgateBtn({
         onChangePostgate={onChangePostgate}
         threadgateAllowUISettings={threadgateAllowUISettings}
         onChangeThreadgateAllowUISettings={onChangeThreadgateAllowUISettings}
+        defaultPostgate={defaultPostgate}
+        defaultThreadgateAllowUISettings={defaultThreadgateAllowUISettings}
+        persist={persist}
+        onChangePersist={onChangePersist}
       />
     </>
   )

@@ -95,6 +95,7 @@ export type ThreadDraft = {
   posts: PostDraft[]
   postgate: AppBskyFeedPostgate.Record
   threadgate: ThreadgateAllowUISetting[]
+  persistGates: boolean
 }
 
 export type ComposerState = {
@@ -106,6 +107,7 @@ export type ComposerState = {
 export type ComposerAction =
   | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
+  | {type: 'persist_gates'; enabled: boolean}
   | {
       type: 'update_post'
       postId: string
@@ -145,6 +147,15 @@ export function composerReducer(
         thread: {
           ...state.thread,
           threadgate: action.threadgate,
+        },
+      }
+    }
+    case 'persist_gates': {
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          persistGates: action.enabled,
         },
       }
     }
@@ -615,6 +626,7 @@ export function createComposerState({
         createdAt: new Date().toString(),
         allow: initInteractionSettings?.threadgateAllowRules,
       }),
+      persistGates: false,
     },
   }
 }

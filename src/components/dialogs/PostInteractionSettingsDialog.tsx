@@ -8,6 +8,7 @@ import {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
+import deepEqual from 'lodash.isequal'
 
 import {useHaptics} from '#/lib/haptics'
 import {logger} from '#/logger'
@@ -58,6 +59,11 @@ export type PostInteractionSettingsFormProps = {
   onSave: () => void
   isSaving?: boolean
 
+  defaultThreadgateAllowUISettings?: ThreadgateAllowUISetting[]
+  defaultPostgate?: AppBskyFeedPostgate.Record
+  persist?: boolean
+  onChangePersist?: (v: boolean) => void
+
   postgate: AppBskyFeedPostgate.Record
   onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
 
@@ -67,6 +73,9 @@ export type PostInteractionSettingsFormProps = {
   replySettingsDisabled?: boolean
 }
 
+/**
+ * Threadgate settings dialog. Used in the composer.
+ */
 export function PostInteractionSettingsControlledDialog({
   control,
   ...rest
@@ -114,6 +123,9 @@ export type PostInteractionSettingsDialogProps = {
   initialThreadgateView?: AppBskyFeedDefs.ThreadgateView
 }
 
+/**
+ * Threadgate settings dialog. Used in the thread.
+ */
 export function PostInteractionSettingsDialog(
   props: PostInteractionSettingsDialogProps,
 ) {
@@ -273,6 +285,10 @@ export function PostInteractionSettingsForm({
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
   replySettingsDisabled,
+  defaultPostgate,
+  defaultThreadgateAllowUISettings,
+  persist,
+  onChangePersist,
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
@@ -360,6 +376,22 @@ export function PostInteractionSettingsForm({
 
     onChangeThreadgateAllowUISettings(settings)
   }
+
+  const isDirty = useMemo(() => {
+    const everybody = [{type: 'everybody'}]
+    return (
+      !deepEqual(
+        threadgateAllowUISettings,
+        defaultThreadgateAllowUISettings ?? everybody,
+      ) ||
+      !deepEqual(postgate.embeddingRules, defaultPostgate?.embeddingRules ?? [])
+    )
+  }, [
+    defaultThreadgateAllowUISettings,
+    defaultPostgate,
+    threadgateAllowUISettings,
+    postgate,
+  ])
 
   return (
     <View>
@@ -612,6 +644,29 @@ export function PostInteractionSettingsForm({
             </Panel.Panel>
           )}
         </Toggle.Item>
+
+        {typeof persist !== 'undefined' && (
+          <View style={[{minHeight: 24}, a.justify_center]}>
+            {isDirty ? (
+              <Toggle.Item
+                name="persist"
+                type="checkbox"
+                label={_(msg`Save these options for next time`)}
+                value={persist}
+                onChange={() => onChangePersist?.(!persist)}>
+                <Toggle.Checkbox />
+                <Toggle.LabelText
+                  style={[a.text_md, a.font_normal, t.atoms.text]}>
+                  <Trans>Save these options for next time</Trans>
+                </Toggle.LabelText>
+              </Toggle.Item>
+            ) : (
+              <Text style={[a.text_md]}>
+                <Trans>These are your default settings</Trans>
+              </Text>
+            )}
+          </View>
+        )}
       </View>
 
       <Button
