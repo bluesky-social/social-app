@@ -1,10 +1,5 @@
-import {createContext, useCallback, useContext, useMemo, useState} from 'react'
-import {
-  LayoutAnimation,
-  Text as NestedText,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import {useCallback, useMemo, useState} from 'react'
+import {LayoutAnimation, Text as NestedText, View} from 'react-native'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPostgate,
@@ -42,7 +37,7 @@ import {
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, tokens, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
@@ -51,9 +46,9 @@ import {
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {type Props as SVGIconProps} from '#/components/icons/common'
 import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
 import {Loader} from '#/components/Loader'
+import * as Panel from '#/components/Panel'
 import {Text} from '#/components/Typography'
 
 export type PostInteractionSettingsFormProps = {
@@ -420,12 +415,12 @@ export function PostInteractionSettingsForm({
                   label={_(msg`Allow anybody to reply`)}
                   style={[a.flex_1]}>
                   {({selected}) => (
-                    <Panel active={selected}>
+                    <Panel.Panel active={selected}>
                       <Toggle.Radio />
-                      <PanelText>
+                      <Panel.PanelText>
                         <Trans>Anyone</Trans>
-                      </PanelText>
-                    </Panel>
+                      </Panel.PanelText>
+                    </Panel.Panel>
                   )}
                 </Toggle.Item>
                 <Toggle.Item
@@ -434,157 +429,155 @@ export function PostInteractionSettingsForm({
                   label={_(msg`Disable replies entirely`)}
                   style={[a.flex_1]}>
                   {({selected}) => (
-                    <Panel active={selected}>
+                    <Panel.Panel active={selected}>
                       <Toggle.Radio />
-                      <PanelText>
+                      <Panel.PanelText>
                         <Trans>Nobody</Trans>
-                      </PanelText>
-                    </Panel>
+                      </Panel.PanelText>
+                    </Panel.Panel>
                   )}
                 </Toggle.Item>
               </View>
             </Toggle.Group>
 
-            {!noOneCanReply && (
-              <Toggle.Group
-                label={_(
-                  msg`Set precisely which groups of people can reply to your post`,
-                )}
-                values={toggleGroupValues}
-                onChange={toggleGroupOnChange}
-                disabled={replySettingsDisabled}>
-                <PanelGroup>
-                  <Toggle.Item
-                    name="followers"
-                    type="checkbox"
-                    label={_(msg`Allow your followers to reply`)}
-                    hitSlop={0}>
-                    {({selected}) => (
-                      <Panel active={selected} adjacent="trailing">
-                        <Toggle.Checkbox />
-                        <PanelText>
-                          <Trans>Your followers</Trans>
-                        </PanelText>
-                      </Panel>
-                    )}
-                  </Toggle.Item>
-                  <Toggle.Item
-                    name="following"
-                    type="checkbox"
-                    label={_(msg`Allow people you follow to reply`)}
-                    hitSlop={0}>
-                    {({selected}) => (
-                      <Panel active={selected} adjacent="both">
-                        <Toggle.Checkbox />
-                        <PanelText>
-                          <Trans>People you follow</Trans>
-                        </PanelText>
-                      </Panel>
-                    )}
-                  </Toggle.Item>
-                  <Toggle.Item
-                    name="mention"
-                    type="checkbox"
-                    label={_(msg`Allow people you mention to reply`)}
-                    hitSlop={0}>
-                    {({selected}) => (
-                      <Panel active={selected} adjacent="both">
-                        <Toggle.Checkbox />
-                        <PanelText>
-                          <Trans>People you mention</Trans>
-                        </PanelText>
-                      </Panel>
-                    )}
-                  </Toggle.Item>
+            <Toggle.Group
+              label={_(
+                msg`Set precisely which groups of people can reply to your post`,
+              )}
+              values={toggleGroupValues}
+              onChange={toggleGroupOnChange}
+              disabled={replySettingsDisabled}>
+              <Panel.PanelGroup>
+                <Toggle.Item
+                  name="followers"
+                  type="checkbox"
+                  label={_(msg`Allow your followers to reply`)}
+                  hitSlop={0}>
+                  {({selected}) => (
+                    <Panel.Panel active={selected} adjacent="trailing">
+                      <Toggle.Checkbox />
+                      <Panel.PanelText>
+                        <Trans>Your followers</Trans>
+                      </Panel.PanelText>
+                    </Panel.Panel>
+                  )}
+                </Toggle.Item>
+                <Toggle.Item
+                  name="following"
+                  type="checkbox"
+                  label={_(msg`Allow people you follow to reply`)}
+                  hitSlop={0}>
+                  {({selected}) => (
+                    <Panel.Panel active={selected} adjacent="both">
+                      <Toggle.Checkbox />
+                      <Panel.PanelText>
+                        <Trans>People you follow</Trans>
+                      </Panel.PanelText>
+                    </Panel.Panel>
+                  )}
+                </Toggle.Item>
+                <Toggle.Item
+                  name="mention"
+                  type="checkbox"
+                  label={_(msg`Allow people you mention to reply`)}
+                  hitSlop={0}>
+                  {({selected}) => (
+                    <Panel.Panel active={selected} adjacent="both">
+                      <Toggle.Checkbox />
+                      <Panel.PanelText>
+                        <Trans>People you mention</Trans>
+                      </Panel.PanelText>
+                    </Panel.Panel>
+                  )}
+                </Toggle.Item>
 
-                  <Button
-                    label={
-                      showLists
-                        ? _(msg`Hide lists`)
-                        : _(msg`Show lists of users to select from`)
-                    }
-                    accessibilityHint={_(msg`Toggle showing lists`)}
-                    accessibilityRole="togglebutton"
-                    hitSlop={0}
-                    onPress={() => {
-                      LayoutAnimation.configureNext(
-                        LayoutAnimation.Presets.easeInEaseOut,
-                      )
-                      setShowLists(s => !s)
-                    }}>
-                    <Panel
-                      active={numberOfListsSelected > 0}
-                      adjacent={showLists ? 'both' : 'leading'}>
-                      <PanelText>
-                        {numberOfListsSelected === 0 ? (
-                          <Trans>Select from your lists</Trans>
-                        ) : (
-                          <Trans>
-                            Select from your lists{' '}
-                            <NestedText style={[a.font_normal, a.italic]}>
-                              <Plural
-                                value={numberOfListsSelected}
-                                other="(# selected)"
-                              />
-                            </NestedText>
-                          </Trans>
+                <Button
+                  label={
+                    showLists
+                      ? _(msg`Hide lists`)
+                      : _(msg`Show lists of users to select from`)
+                  }
+                  accessibilityHint={_(msg`Toggle showing lists`)}
+                  accessibilityRole="togglebutton"
+                  hitSlop={0}
+                  onPress={() => {
+                    LayoutAnimation.configureNext(
+                      LayoutAnimation.Presets.easeInEaseOut,
+                    )
+                    setShowLists(s => !s)
+                  }}>
+                  <Panel.Panel
+                    active={numberOfListsSelected > 0}
+                    adjacent={showLists ? 'both' : 'leading'}>
+                    <Panel.PanelText>
+                      {numberOfListsSelected === 0 ? (
+                        <Trans>Select from your lists</Trans>
+                      ) : (
+                        <Trans>
+                          Select from your lists{' '}
+                          <NestedText style={[a.font_normal, a.italic]}>
+                            <Plural
+                              value={numberOfListsSelected}
+                              other="(# selected)"
+                            />
+                          </NestedText>
+                        </Trans>
+                      )}
+                    </Panel.PanelText>
+                    <Panel.PanelIcon
+                      icon={showLists ? ChevronUpIcon : ChevronDownIcon}
+                    />
+                  </Panel.Panel>
+                </Button>
+                {showLists &&
+                  (isListsPending ? (
+                    <Panel.Panel>
+                      <Panel.PanelText>
+                        <Trans>Loading lists...</Trans>
+                      </Panel.PanelText>
+                    </Panel.Panel>
+                  ) : isListsError ? (
+                    <Panel.Panel>
+                      <Panel.PanelText>
+                        <Trans>
+                          An error occurred while loading your lists :/
+                        </Trans>
+                      </Panel.PanelText>
+                    </Panel.Panel>
+                  ) : lists.length === 0 ? (
+                    <Panel.Panel>
+                      <Panel.PanelText>
+                        <Trans>You have no lists yet.</Trans>
+                      </Panel.PanelText>
+                    </Panel.Panel>
+                  ) : (
+                    lists.map((list, i) => (
+                      <Toggle.Item
+                        key={list.uri}
+                        name={`list:${list.uri}`}
+                        type="checkbox"
+                        label={_(msg`Allow users in ${list.name} to reply`)}
+                        hitSlop={0}>
+                        {({selected}) => (
+                          <Panel.Panel
+                            active={selected}
+                            adjacent={
+                              i === lists.length - 1 ? 'leading' : 'both'
+                            }>
+                            <Toggle.Checkbox />
+                            <UserAvatar
+                              size={24}
+                              type="list"
+                              avatar={list.avatar}
+                            />
+                            <Panel.PanelText>{list.name}</Panel.PanelText>
+                          </Panel.Panel>
                         )}
-                      </PanelText>
-                      <PanelIcon
-                        icon={showLists ? ChevronUpIcon : ChevronDownIcon}
-                      />
-                    </Panel>
-                  </Button>
-                  {showLists &&
-                    (isListsPending ? (
-                      <Panel>
-                        <PanelText>
-                          <Trans>Loading lists...</Trans>
-                        </PanelText>
-                      </Panel>
-                    ) : isListsError ? (
-                      <Panel>
-                        <PanelText>
-                          <Trans>
-                            An error occurred while loading your lists :/
-                          </Trans>
-                        </PanelText>
-                      </Panel>
-                    ) : lists.length === 0 ? (
-                      <Panel>
-                        <PanelText>
-                          <Trans>You have no lists yet.</Trans>
-                        </PanelText>
-                      </Panel>
-                    ) : (
-                      lists.map((list, i) => (
-                        <Toggle.Item
-                          key={list.uri}
-                          name={`list:${list.uri}`}
-                          type="checkbox"
-                          label={_(msg`Allow users in ${list.name} to reply`)}
-                          hitSlop={0}>
-                          {({selected}) => (
-                            <Panel
-                              active={selected}
-                              adjacent={
-                                i === lists.length - 1 ? 'leading' : 'both'
-                              }>
-                              <Toggle.Checkbox />
-                              <UserAvatar
-                                size={24}
-                                type="list"
-                                avatar={list.avatar}
-                              />
-                              <PanelText>{list.name}</PanelText>
-                            </Panel>
-                          )}
-                        </Toggle.Item>
-                      ))
-                    ))}
-                </PanelGroup>
-              </Toggle.Group>
-            )}
+                      </Toggle.Item>
+                    ))
+                  ))}
+              </Panel.PanelGroup>
+            </Toggle.Group>
           </View>
         </View>
 
@@ -599,12 +592,12 @@ export function PostInteractionSettingsForm({
           value={quotesEnabled}
           onChange={onChangeQuotesEnabled}>
           {({selected}) => (
-            <Panel active={selected}>
-              <PanelText icon={QuoteIcon}>
+            <Panel.Panel active={selected}>
+              <Panel.PanelText icon={QuoteIcon}>
                 <Trans>Allow quote posts</Trans>
-              </PanelText>
+              </Panel.PanelText>
               <Toggle.Switch />
-            </Panel>
+            </Panel.Panel>
           )}
         </Toggle.Item>
       </View>
@@ -621,102 +614,6 @@ export function PostInteractionSettingsForm({
       </Button>
     </View>
   )
-}
-
-const PanelContext = createContext<{active: boolean}>({active: false})
-
-function Panel({
-  children,
-  active = false,
-  adjacent,
-}: {
-  children: React.ReactNode
-  active?: boolean
-  adjacent?: 'leading' | 'trailing' | 'both'
-}) {
-  const t = useTheme()
-
-  const leading = adjacent === 'leading' || adjacent === 'both'
-  const trailing = adjacent === 'trailing' || adjacent === 'both'
-  const rounding = {
-    borderTopLeftRadius: leading
-      ? tokens.borderRadius.xs
-      : tokens.borderRadius.md,
-    borderTopRightRadius: leading
-      ? tokens.borderRadius.xs
-      : tokens.borderRadius.md,
-    borderBottomLeftRadius: trailing
-      ? tokens.borderRadius.xs
-      : tokens.borderRadius.md,
-    borderBottomRightRadius: trailing
-      ? tokens.borderRadius.xs
-      : tokens.borderRadius.md,
-  } satisfies ViewStyle
-
-  return (
-    <View
-      style={[
-        a.w_full,
-        a.flex_row,
-        a.align_center,
-        a.gap_sm,
-        a.px_md,
-        a.py_md,
-        {minHeight: tokens.space._2xl + tokens.space.md * 2},
-        rounding,
-        active
-          ? {backgroundColor: t.palette.primary_50}
-          : t.atoms.bg_contrast_50,
-      ]}>
-      <PanelContext value={{active}}>{children}</PanelContext>
-    </View>
-  )
-}
-
-function PanelText({
-  children,
-  icon,
-}: {
-  children: React.ReactNode
-  icon?: React.ComponentType<SVGIconProps>
-}) {
-  const t = useTheme()
-  const ctx = useContext(PanelContext)
-
-  const text = (
-    <Text
-      style={[
-        a.text_md,
-        a.flex_1,
-        ctx.active
-          ? [a.font_medium, t.atoms.text]
-          : [t.atoms.text_contrast_medium],
-      ]}>
-      {children}
-    </Text>
-  )
-
-  if (icon) {
-    // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
-    return (
-      <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
-        <PanelIcon icon={icon} />
-        {text}
-      </View>
-    )
-  }
-
-  return text
-}
-
-function PanelIcon({icon: Icon}: {icon: React.ComponentType<SVGIconProps>}) {
-  const t = useTheme()
-  return <Icon style={[t.atoms.text, a.flex_shrink_0]} size="md" />
-}
-
-// TODO: auto-leading/trailing
-function PanelGroup({children}: {children: React.ReactNode}) {
-  return <View style={[a.w_full, a.gap_2xs]}>{children}</View>
 }
 
 export function usePrefetchPostInteractionSettings({
