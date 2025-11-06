@@ -1942,7 +1942,7 @@ msgid "Close"
 msgstr ""
 
 #: src/components/Dialog/index.web.tsx:118
-#: src/components/Dialog/index.web.tsx:295
+#: src/components/Dialog/index.web.tsx:296
 msgid "Close active dialog"
 msgstr ""
 
