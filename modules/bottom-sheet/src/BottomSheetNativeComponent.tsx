@@ -112,8 +112,10 @@ export class BottomSheetNativeComponent extends React.Component<
           onStateChange={this.onStateChange}
           extraStyles={extraStyles}
           onLayout={e => {
-            const {height} = e.nativeEvent.layout
-            this.setState({viewHeight: height})
+            if (isIOS15) {
+              const {height} = e.nativeEvent.layout
+              this.setState({viewHeight: height})
+            }
             this.updateLayout()
           }}
         />
