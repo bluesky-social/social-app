@@ -580,7 +580,7 @@ export const ComposePost = ({
               label={_(msg`View post`)}
               onPress={() => {
                 const {host: name, rkey} = new AtUri(postUri)
-                navigation.push('PostThread', {name, rkey})
+                navigation.navigate('PostThread', {name, rkey})
               }}>
               <Trans context="Action to view the post the user just created">
                 View
