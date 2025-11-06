@@ -57,7 +57,9 @@ export function VideoEmbedInnerWeb({
       style={[a.flex_1, a.rounded_md, a.overflow_hidden]}
       accessibilityLabel={_(msg`Embedded video player`)}
       accessibilityHint="">
-      <div ref={containerRef} style={{height: '100%', width: '100%'}}>
+      <div
+        ref={containerRef}
+        style={{height: '100%', width: '100%', backgroundColor: 'black'}}>
         <figure style={{margin: 0, position: 'absolute', inset: 0}}>
           <video
             ref={videoRef}
