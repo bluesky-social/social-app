@@ -593,8 +593,8 @@ export function PostInteractionSettingsForm({
           type="checkbox"
           label={
             quotesEnabled
-              ? _(msg`Click to disable quote posts of this post.`)
-              : _(msg`Click to enable quote posts of this post.`)
+              ? _(msg`Disable quote posts of this post.`)
+              : _(msg`Enable quote posts of this post.`)
           }
           value={quotesEnabled}
           onChange={onChangeQuotesEnabled}>
@@ -623,9 +623,11 @@ export function PostInteractionSettingsForm({
   )
 }
 
+const PanelContext = createContext<{active: boolean}>({active: false})
+
 function Panel({
   children,
-  active,
+  active = false,
   adjacent,
 }: {
   children: React.ReactNode
@@ -660,12 +662,13 @@ function Panel({
         a.gap_sm,
         a.px_md,
         a.py_md,
+        {minHeight: tokens.space._2xl + tokens.space.md * 2},
         rounding,
         active
           ? {backgroundColor: t.palette.primary_50}
           : t.atoms.bg_contrast_50,
       ]}>
-      {children}
+      <PanelContext value={{active}}>{children}</PanelContext>
     </View>
   )
 }
@@ -677,7 +680,21 @@ function PanelText({
   children: React.ReactNode
   icon?: React.ComponentType<SVGIconProps>
 }) {
-  const text = <Text style={[a.font_medium, a.flex_1]}>{children}</Text>
+  const t = useTheme()
+  const ctx = useContext(PanelContext)
+
+  const text = (
+    <Text
+      style={[
+        a.text_md,
+        a.flex_1,
+        ctx.active
+          ? [a.font_medium, t.atoms.text]
+          : [t.atoms.text_contrast_medium],
+      ]}>
+      {children}
+    </Text>
+  )
 
   if (icon) {
     // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
