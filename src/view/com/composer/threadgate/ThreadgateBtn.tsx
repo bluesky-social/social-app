@@ -33,8 +33,7 @@ export function ThreadgateBtn({
 }) {
   const {_} = useLingui()
   const control = Dialog.useDialogControl()
-  const [_threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
-  const threadgateNudged = false
+  const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
   const [showTooltip, setShowTooltip] = useState(false)
 
   useEffect(() => {
