@@ -559,12 +559,16 @@ msgstr ""
 msgid "About"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:100
+msgid "Abusive or discriminatory behavior"
+msgstr ""
+
 #. Accept a chat request
-#: src/screens/Messages/components/RequestButtons.tsx:255
+#: src/screens/Messages/components/RequestButtons.tsx:269
 msgid "Accept"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:246
+#: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Accept chat request"
 msgstr ""
 
@@ -596,7 +600,7 @@ msgid "Account"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:393
-#: src/screens/Messages/components/RequestButtons.tsx:90
+#: src/screens/Messages/components/RequestButtons.tsx:91
 #: src/view/com/profile/ProfileMenu.tsx:166
 msgctxt "toast"
 msgid "Account blocked"
@@ -744,8 +748,8 @@ msgstr ""
 msgid "Add media to post"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:406
-#: src/components/moderation/ReportDialog/index.tsx:410
+#: src/components/moderation/ReportDialog/index.tsx:507
+#: src/components/moderation/ReportDialog/index.tsx:511
 msgid "Add more details (optional)"
 msgstr ""
 
@@ -822,12 +826,16 @@ msgstr ""
 msgid "Additional details (limit 1000 characters)"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:424
+#: src/components/moderation/ReportDialog/index.tsx:525
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:159
 msgid "Adult"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:66
+msgid "Adult content"
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:120
@@ -848,6 +856,10 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:138
 #: src/view/com/composer/labels/LabelsBtn.tsx:196
 msgid "Adult Content labels"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:76
+msgid "Adult sexual abuse content"
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:468
@@ -1034,7 +1046,7 @@ msgstr ""
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:28
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
 msgstr ""
@@ -1069,6 +1081,14 @@ msgstr ""
 msgid "and"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:88
+msgid "Animal sexual abuse"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:130
+msgid "Animal welfare"
+msgstr ""
+
 #: src/lib/interests.ts:52
 #: src/screens/Onboarding/index.tsx:60
 msgid "Animals"
@@ -1087,7 +1107,6 @@ msgstr ""
 msgid "Announcing verification on Bluesky"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:33
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
 msgstr ""
@@ -1205,7 +1224,7 @@ msgstr ""
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:183
+#: src/components/dms/MessageContextMenu.tsx:200
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr ""
 
@@ -1307,6 +1326,14 @@ msgstr ""
 msgid "Back to Chats"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:216
+msgid "Banned activities or security violations"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:227
+msgid "Banned user returning"
+msgstr ""
+
 #: src/view/screens/Lists.tsx:42
 #: src/view/screens/ModerationModlists.tsx:42
 msgid "Before creating a list, you must first verify your email."
@@ -1322,7 +1349,7 @@ msgstr ""
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:232
+#: src/screens/Messages/components/RequestButtons.tsx:246
 msgid "Before you can accept this chat request, you must first verify your email."
 msgstr ""
 
@@ -1360,12 +1387,12 @@ msgstr ""
 msgid "Block"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:247
-#: src/components/dms/ConvoMenu.tsx:250
+#: src/components/dms/ConvoMenu.tsx:261
+#: src/components/dms/ConvoMenu.tsx:264
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:677
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:679
-#: src/screens/Messages/components/RequestButtons.tsx:142
 #: src/screens/Messages/components/RequestButtons.tsx:144
+#: src/screens/Messages/components/RequestButtons.tsx:146
 #: src/view/com/profile/ProfileMenu.tsx:401
 #: src/view/com/profile/ProfileMenu.tsx:408
 msgid "Block account"
@@ -1381,11 +1408,11 @@ msgstr ""
 msgid "Block accounts"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:323
+#: src/components/dms/AfterReportDialog.tsx:145
 msgid "Block and Delete"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:358
+#: src/components/dms/AfterReportDialog.tsx:180
 msgid "Block and/or delete this conversation"
 msgstr ""
 
@@ -1401,12 +1428,12 @@ msgstr ""
 msgid "Block these accounts?"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:362
-#: src/components/dms/ReportDialog.tsx:365
+#: src/components/dms/AfterReportDialog.tsx:184
+#: src/components/dms/AfterReportDialog.tsx:187
 msgid "Block user"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:329
+#: src/components/dms/AfterReportDialog.tsx:151
 msgid "Block User"
 msgstr ""
 
@@ -1512,6 +1539,10 @@ msgstr ""
 msgid "Books"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:215
+msgid "Breaking site rules"
+msgstr ""
+
 #: src/components/FeedInterstitials.tsx:436
 msgid "Browse more accounts on the Explore page"
 msgstr ""
@@ -1559,7 +1590,7 @@ msgid "Business"
 msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:62
-#: src/components/moderation/ReportDialog/index.tsx:686
+#: src/components/moderation/ReportDialog/index.tsx:834
 #: src/screens/Search/components/StarterPackCard.tsx:106
 #: src/screens/Search/Explore.tsx:937
 msgid "By {0}"
@@ -1696,7 +1727,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:328
+#: src/components/moderation/ReportDialog/index.tsx:424
 msgid "Change moderation service"
 msgstr ""
 
@@ -1709,7 +1740,11 @@ msgstr ""
 msgid "Change password dialog"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:247
+#: src/components/moderation/ReportDialog/index.tsx:289
+msgid "Change report category"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/index.tsx:369
 msgid "Change report reason"
 msgstr ""
 
@@ -1738,8 +1773,8 @@ msgstr ""
 msgid "Chat"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:77
-#: src/screens/Messages/components/RequestButtons.tsx:299
+#: src/screens/Messages/components/RequestButtons.tsx:78
+#: src/screens/Messages/components/RequestButtons.tsx:313
 msgctxt "toast"
 msgid "Chat deleted"
 msgstr ""
@@ -1752,7 +1787,7 @@ msgstr ""
 msgid "Chat messages - sound"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:176
+#: src/components/dms/ConvoMenu.tsx:190
 msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
@@ -1768,7 +1803,7 @@ msgstr ""
 msgid "Chat requests"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:76
+#: src/components/dms/ConvoMenu.tsx:78
 #: src/Navigation.tsx:554
 #: src/screens/Messages/ChatList.tsx:81
 #: src/screens/Messages/ChatList.tsx:85
@@ -1780,7 +1815,7 @@ msgstr ""
 msgid "Chat Settings"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:178
+#: src/components/dms/ConvoMenu.tsx:192
 msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
@@ -1802,6 +1837,14 @@ msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:161
+msgid "Child safety"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:165
+msgid "Child Sexual Abuse Material (CSAM)"
 msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:399
@@ -1918,9 +1961,11 @@ msgstr ""
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
 #: src/components/dialogs/StarterPackDialog.tsx:179
+#: src/components/dms/AfterReportDialog.tsx:93
+#: src/components/dms/AfterReportDialog.tsx:98
+#: src/components/dms/AfterReportDialog.tsx:208
+#: src/components/dms/AfterReportDialog.tsx:213
 #: src/components/dms/EmojiPopup.android.tsx:58
-#: src/components/dms/ReportDialog.tsx:387
-#: src/components/dms/ReportDialog.tsx:396
 #: src/components/live/EditLiveDialog.tsx:229
 #: src/components/live/EditLiveDialog.tsx:235
 #: src/components/NewskieDialog.tsx:167
@@ -2187,6 +2232,10 @@ msgstr ""
 msgid "Content Not Available"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:192
+msgid "Content promoting or depicting self-harm"
+msgstr ""
+
 #: src/components/moderation/ModerationDetailsDialog.tsx:52
 #: src/components/moderation/ScreenHider.tsx:99
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
@@ -2235,8 +2284,8 @@ msgstr ""
 msgid "Conversation"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:324
-#: src/components/dms/ReportDialog.tsx:327
+#: src/components/dms/AfterReportDialog.tsx:146
+#: src/components/dms/AfterReportDialog.tsx:149
 msgctxt "toast"
 msgid "Conversation deleted"
 msgstr ""
@@ -2253,7 +2302,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:55
+#: src/components/dms/MessageContextMenu.tsx:57
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:235
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:72
@@ -2334,8 +2383,8 @@ msgstr ""
 msgid "Copy link to starter pack"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:144
-#: src/components/dms/MessageContextMenu.tsx:147
+#: src/components/dms/MessageContextMenu.tsx:146
+#: src/components/dms/MessageContextMenu.tsx:149
 msgid "Copy message text"
 msgstr ""
 
@@ -2376,8 +2425,8 @@ msgstr ""
 msgid "Could not find profile"
 msgstr ""
 
+#: src/components/dms/AfterReportDialog.tsx:138
 #: src/components/dms/LeaveConvoPrompt.tsx:35
-#: src/components/dms/ReportDialog.tsx:316
 msgid "Could not leave chat"
 msgstr ""
 
@@ -2391,7 +2440,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:182
+#: src/components/dms/ConvoMenu.tsx:196
 msgid "Could not mute chat"
 msgstr ""
 
@@ -2475,8 +2524,9 @@ msgstr ""
 msgid "Create new account"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:588
-#: src/components/ReportDialog/SelectReportOptionView.tsx:102
+#. Accessibility label for button to create a moderation report for the selected option
+#: src/components/moderation/ReportDialog/index.tsx:689
+#: src/components/moderation/ReportDialog/index.tsx:735
 msgid "Create report for {0}"
 msgstr ""
 
@@ -2519,6 +2569,14 @@ msgstr ""
 msgid "Customizes your Bluesky experience"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:200
+msgid "Dangerous challenges or activities"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:204
+msgid "Dangerous substances or drug abuse"
+msgstr ""
+
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
 #: src/screens/Settings/AppearanceSettings.tsx:106
@@ -2557,6 +2615,10 @@ msgstr ""
 msgid "Debug panel"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:84
+msgid "Deepfake adult content"
+msgstr ""
+
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
 msgstr ""
@@ -2565,7 +2627,7 @@ msgstr ""
 msgid "Default icons"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:185
+#: src/components/dms/MessageContextMenu.tsx:202
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:736
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:280
@@ -2593,8 +2655,8 @@ msgstr ""
 msgid "Delete app password?"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:311
-#: src/screens/Messages/components/RequestButtons.tsx:317
+#: src/screens/Messages/components/RequestButtons.tsx:325
+#: src/screens/Messages/components/RequestButtons.tsx:331
 msgid "Delete chat"
 msgstr ""
 
@@ -2602,18 +2664,18 @@ msgstr ""
 msgid "Delete chat declaration record"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:368
-#: src/components/dms/ReportDialog.tsx:371
-#: src/screens/Messages/components/RequestButtons.tsx:134
-#: src/screens/Messages/components/RequestButtons.tsx:137
+#: src/components/dms/AfterReportDialog.tsx:190
+#: src/components/dms/AfterReportDialog.tsx:193
+#: src/screens/Messages/components/RequestButtons.tsx:136
+#: src/screens/Messages/components/RequestButtons.tsx:139
 msgid "Delete conversation"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:326
+#: src/components/dms/AfterReportDialog.tsx:148
 msgid "Delete Conversation"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:158
+#: src/components/dms/MessageContextMenu.tsx:160
 msgid "Delete for me"
 msgstr ""
 
@@ -2622,11 +2684,11 @@ msgstr ""
 msgid "Delete list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:181
+#: src/components/dms/MessageContextMenu.tsx:198
 msgid "Delete message"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:156
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete message for me"
 msgstr ""
 
@@ -2852,7 +2914,7 @@ msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:149
 #: src/components/dialogs/BirthDateSettings.tsx:156
-#: src/components/dms/ReportDialog.tsx:320
+#: src/components/dms/AfterReportDialog.tsx:142
 #: src/components/forms/DateField/index.tsx:103
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
@@ -2902,6 +2964,10 @@ msgstr ""
 msgid "Download CAR file"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:115
+msgid "Doxxing"
+msgstr ""
+
 #: src/view/com/composer/text-input/TextInput.web.tsx:375
 msgid "Drop to add images"
 msgstr ""
@@ -2940,6 +3006,10 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:358
 msgid "e.g. Users that repeatedly reply with ads."
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:196
+msgid "Eating disorders"
 msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:145
@@ -3271,8 +3341,8 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:88
 #: src/screens/Messages/Settings.tsx:91
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:164
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:174
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:167
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:177
 msgid "Everyone"
 msgstr ""
 
@@ -3281,12 +3351,10 @@ msgstr ""
 msgid "Everything else"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:73
 #: src/lib/moderation/useReportOptions.ts:73
 msgid "Excessive mentions or replies"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:86
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Excessive or unwanted messages"
 msgstr ""
@@ -3406,13 +3474,17 @@ msgstr ""
 msgid "External Media Preferences"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:217
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:146
+msgid "Extremist content"
+msgstr ""
+
+#: src/screens/Messages/components/RequestButtons.tsx:231
 msgctxt "toast"
 msgid "Failed to accept chat"
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:66
-#: src/components/dms/MessageContextMenu.tsx:99
+#: src/components/dms/MessageContextMenu.tsx:101
 msgid "Failed to add emoji reaction"
 msgstr ""
 
@@ -3437,13 +3509,13 @@ msgstr ""
 msgid "Failed to create starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:63
-#: src/screens/Messages/components/RequestButtons.tsx:286
+#: src/screens/Messages/components/RequestButtons.tsx:64
+#: src/screens/Messages/components/RequestButtons.tsx:300
 msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:79
+#: src/components/dms/MessageContextMenu.tsx:81
 msgid "Failed to delete message"
 msgstr ""
 
@@ -3518,7 +3590,7 @@ msgid "Failed to pin post"
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:60
-#: src/components/dms/MessageContextMenu.tsx:93
+#: src/components/dms/MessageContextMenu.tsx:95
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
@@ -3604,6 +3676,14 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:370
 msgid "Failed to verify handle. Please try again."
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:47
+msgid "Fake account or bot"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:55
+msgid "False information about elections"
 msgstr ""
 
 #: src/Navigation.tsx:291
@@ -3696,7 +3776,7 @@ msgstr ""
 msgid "Filter who can opt to receive notifications for your activity"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:158
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:161
 msgid "Filter who you receive notifications from"
 msgstr ""
 
@@ -3953,12 +4033,11 @@ msgstr ""
 msgid "Free your feed"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:54
 #: src/lib/moderation/useReportOptions.ts:54
 msgid "Frequently Posts Unwanted Content"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:154
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:157
 msgid "From"
 msgstr ""
 
@@ -4052,9 +4131,12 @@ msgstr ""
 msgid "Give your profile a face"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:39
 #: src/lib/moderation/useReportOptions.ts:39
 msgid "Glaring violations of law or terms of service"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:142
+msgid "Glorification of violence"
 msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:111
@@ -4084,9 +4166,6 @@ msgstr ""
 msgid "Go Back"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:197
-#: src/components/ReportDialog/SelectReportOptionView.tsx:81
-#: src/components/ReportDialog/SubmitView.tsx:110
 #: src/screens/Onboarding/Layout.tsx:114
 #: src/screens/Onboarding/Layout.tsx:210
 #: src/screens/Signup/BackNextButtons.tsx:35
@@ -4146,13 +4225,13 @@ msgstr ""
 msgid "Go to next"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:227
+#: src/components/dms/ConvoMenu.tsx:241
 #: src/view/shell/desktop/LeftNav.tsx:317
 #: src/view/shell/desktop/LeftNav.tsx:323
 msgid "Go to profile"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:224
+#: src/components/dms/ConvoMenu.tsx:238
 msgid "Go to user's profile"
 msgstr ""
 
@@ -4161,6 +4240,18 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:201
 #: src/view/com/composer/labels/LabelsBtn.tsx:204
 msgid "Graphic Media"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:138
+msgid "Graphic violent content"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:169
+msgid "Grooming or predatory behavior"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:219
+msgid "Hacking or system attacks"
 msgstr ""
 
 #: src/state/shell/progress-guide.tsx:220
@@ -4190,9 +4281,20 @@ msgstr ""
 msgid "Haptics"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:34
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:99
+msgid "Harassment or hate"
+msgstr ""
+
 #: src/lib/moderation/useReportOptions.ts:34
 msgid "Harassment, trolling, or intolerance"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:189
+msgid "Harmful or high-risk activities"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:162
+msgid "Harming or endangering minors"
 msgstr ""
 
 #: src/Navigation.tsx:539
@@ -4201,6 +4303,10 @@ msgstr ""
 
 #: src/components/RichTextTag.tsx:51
 msgid "Hashtag {tag}"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:111
+msgid "Hate speech"
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:198
@@ -4383,6 +4489,10 @@ msgstr ""
 msgid "How should we open this link?"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:150
+msgid "Human trafficking"
+msgstr ""
+
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:133
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
 msgid "I have a code"
@@ -4443,7 +4553,6 @@ msgstr ""
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:38
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
 msgstr ""
@@ -4470,12 +4579,14 @@ msgstr ""
 msgid "Images cannot be saved unless permission is granted to access your photo library."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:49
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:51
+msgid "Impersonation"
+msgstr ""
+
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:68
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
 msgstr ""
@@ -4484,7 +4595,7 @@ msgstr ""
 msgid "In-app"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:143
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:146
 msgid "In-app notifications"
 msgstr ""
 
@@ -4508,7 +4619,6 @@ msgstr ""
 msgid "In-app, Push, People you follow"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:91
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
 msgstr ""
@@ -4572,7 +4682,7 @@ msgctxt "toast"
 msgid "Invalid interaction settings."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:73
+#: src/components/moderation/ReportDialog/index.tsx:81
 msgid "Invalid report subject"
 msgstr ""
 
@@ -4788,10 +4898,10 @@ msgstr ""
 msgid "Leave chat"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:203
-#: src/components/dms/ConvoMenu.tsx:206
-#: src/components/dms/ConvoMenu.tsx:266
-#: src/components/dms/ConvoMenu.tsx:269
+#: src/components/dms/ConvoMenu.tsx:217
+#: src/components/dms/ConvoMenu.tsx:220
+#: src/components/dms/ConvoMenu.tsx:280
+#: src/components/dms/ConvoMenu.tsx:283
 #: src/components/dms/LeaveConvoPrompt.tsx:42
 msgid "Leave conversation"
 msgstr ""
@@ -5114,8 +5224,8 @@ msgstr ""
 msgid "Mark all as read"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:215
-#: src/components/dms/ConvoMenu.tsx:218
+#: src/components/dms/ConvoMenu.tsx:229
+#: src/components/dms/ConvoMenu.tsx:232
 msgid "Mark as read"
 msgstr ""
 
@@ -5164,7 +5274,7 @@ msgstr ""
 msgid "Message {0}"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:77
+#: src/components/dms/MessageContextMenu.tsx:79
 msgctxt "toast"
 msgid "Message deleted"
 msgstr ""
@@ -5173,7 +5283,7 @@ msgstr ""
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:125
+#: src/components/dms/MessageContextMenu.tsx:127
 msgid "Message from @{0}: {1}"
 msgstr ""
 
@@ -5190,7 +5300,7 @@ msgstr ""
 msgid "Message is too long"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:123
+#: src/components/dms/MessageContextMenu.tsx:125
 msgid "Message options"
 msgstr ""
 
@@ -5203,16 +5313,22 @@ msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:177
+msgid "Minor harassment or bullying"
+msgstr ""
+
 #: src/Navigation.tsx:500
 msgid "Miscellaneous notifications"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:47
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:35
+msgid "Misleading"
+msgstr ""
+
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Misleading Account"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:67
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
 msgstr ""
@@ -5333,8 +5449,8 @@ msgstr ""
 msgid "Mute accounts"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:232
-#: src/components/dms/ConvoMenu.tsx:238
+#: src/components/dms/ConvoMenu.tsx:246
+#: src/components/dms/ConvoMenu.tsx:252
 msgid "Mute conversation"
 msgstr ""
 
@@ -5422,10 +5538,6 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:59
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:98
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:106
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:114
 #: src/lib/moderation/useReportOptions.ts:59
 #: src/lib/moderation/useReportOptions.ts:98
 #: src/lib/moderation/useReportOptions.ts:106
@@ -5456,13 +5568,9 @@ msgstr ""
 msgid "Navigates to your profile"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:274
-#: src/components/moderation/ReportDialog/index.tsx:291
+#: src/components/moderation/ReportDialog/index.tsx:320
+#: src/components/moderation/ReportDialog/index.tsx:337
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
-msgstr ""
-
-#: src/components/ReportDialog/SelectReportOptionView.tsx:131
-msgid "Need to report a copyright violation?"
 msgstr ""
 
 #: src/screens/Onboarding/StepFinished/index.tsx:409
@@ -5575,8 +5683,8 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:93
 #: src/screens/PostThread/components/HeaderDropdown.tsx:98
-#: src/screens/Settings/ThreadPreferences.tsx:80
-#: src/screens/Settings/ThreadPreferences.tsx:83
+#: src/screens/Settings/ThreadPreferences.tsx:72
+#: src/screens/Settings/ThreadPreferences.tsx:75
 msgid "Newest replies first"
 msgstr ""
 
@@ -5749,6 +5857,10 @@ msgstr ""
 msgid "Nobody was found. Try searching for someone else."
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:80
+msgid "Non-consensual intimate imagery"
+msgstr ""
+
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
 msgstr ""
@@ -5844,7 +5956,6 @@ msgstr ""
 msgid "Nudity"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:78
 #: src/lib/moderation/useReportOptions.ts:78
 msgid "Nudity or adult content not labeled as such"
 msgstr ""
@@ -5875,8 +5986,8 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:83
 #: src/screens/PostThread/components/HeaderDropdown.tsx:88
-#: src/screens/Settings/ThreadPreferences.tsx:72
-#: src/screens/Settings/ThreadPreferences.tsx:75
+#: src/screens/Settings/ThreadPreferences.tsx:64
+#: src/screens/Settings/ThreadPreferences.tsx:67
 msgid "Oldest replies first"
 msgstr ""
 
@@ -6104,11 +6215,6 @@ msgstr ""
 msgid "Opens this profile"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:227
-#: src/components/ReportDialog/SubmitView.tsx:168
-msgid "Optionally provide additional information below:"
-msgstr ""
-
 #: src/components/dialogs/MutedWords.tsx:304
 msgid "Options:"
 msgstr ""
@@ -6141,7 +6247,8 @@ msgstr ""
 msgid "OTA status: None available"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:27
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:242
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:185
 msgid "Other"
@@ -6151,11 +6258,40 @@ msgstr ""
 msgid "Other account"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:181
+msgid "Other child safety issue"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:208
+msgid "Other dangerous content"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:119
+msgid "Other harassing or hateful content"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:59
+msgid "Other misleading content"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:231
+msgid "Other network rule-breaking"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:92
+msgid "Other sexual violence content"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:154
+msgid "Other violent content"
+msgstr ""
+
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:50
 msgid "Our blog post"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:354
+#: src/components/dms/AfterReportDialog.tsx:88
+#: src/components/dms/AfterReportDialog.tsx:176
 msgid "Our moderation team has received your report."
 msgstr ""
 
@@ -6221,8 +6357,8 @@ msgstr ""
 msgid "People following @{0}"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:178
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:188
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:181
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:191
 msgid "People I follow"
 msgstr ""
 
@@ -6442,11 +6578,11 @@ msgstr ""
 msgid "Please select a language"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/action.ts:31
+#: src/components/moderation/ReportDialog/action.ts:32
 msgid "Please select a moderation service"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/action.ts:28
+#: src/components/moderation/ReportDialog/action.ts:29
 msgid "Please select a reason for this report"
 msgstr ""
 
@@ -6610,11 +6746,6 @@ msgstr ""
 msgid "Primary Language"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:94
-#: src/screens/Settings/ThreadPreferences.tsx:99
-msgid "Prioritize your Follows"
-msgstr ""
-
 #: src/view/shell/desktop/RightNav.tsx:113
 #: src/view/shell/desktop/RightNav.tsx:114
 msgid "Privacy"
@@ -6648,6 +6779,10 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:173
+msgid "Privacy violation of a minor"
+msgstr ""
+
 #: src/view/com/composer/Composer.tsx:1892
 msgid "Processing video..."
 msgstr ""
@@ -6672,6 +6807,10 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:189
 msgctxt "toast"
 msgid "Profile updated"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:223
+msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
 #: src/screens/Onboarding/StepFinished/index.tsx:391
@@ -6710,7 +6849,7 @@ msgstr ""
 msgid "Push"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:126
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:129
 msgid "Push notifications"
 msgstr ""
 
@@ -6845,15 +6984,11 @@ msgstr ""
 msgid "Reason for appeal"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:218
-msgid "Reason:"
-msgstr ""
-
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:132
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:135
 msgid "Receive in-app notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:115
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:118
 msgid "Receive push notifications"
 msgstr ""
 
@@ -6874,11 +7009,11 @@ msgid "Reconnect"
 msgstr ""
 
 #. Reject a chat request, this opens a menu with options
-#: src/screens/Messages/components/RequestButtons.tsx:122
+#: src/screens/Messages/components/RequestButtons.tsx:124
 msgid "Reject"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:111
+#: src/screens/Messages/components/RequestButtons.tsx:113
 msgid "Reject chat request"
 msgstr ""
 
@@ -7137,7 +7272,7 @@ msgstr ""
 msgid "Reply was successfully hidden"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:166
+#: src/components/dms/MessageContextMenu.tsx:168
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -7148,17 +7283,16 @@ msgstr ""
 msgid "Report account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:255
-#: src/components/dms/ConvoMenu.tsx:258
+#: src/components/dms/ConvoMenu.tsx:269
+#: src/components/dms/ConvoMenu.tsx:272
 #: src/components/dms/ReportConversationPrompt.tsx:17
-#: src/screens/Messages/components/RequestButtons.tsx:153
-#: src/screens/Messages/components/RequestButtons.tsx:156
+#: src/screens/Messages/components/RequestButtons.tsx:155
+#: src/screens/Messages/components/RequestButtons.tsx:158
 msgid "Report conversation"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:71
-#: src/components/moderation/ReportDialog/index.tsx:198
-#: src/components/ReportDialog/index.tsx:44
+#: src/components/moderation/ReportDialog/index.tsx:79
+#: src/components/moderation/ReportDialog/index.tsx:240
 msgid "Report dialog"
 msgstr ""
 
@@ -7172,7 +7306,7 @@ msgstr ""
 msgid "Report list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:164
+#: src/components/dms/MessageContextMenu.tsx:166
 msgid "Report message"
 msgstr ""
 
@@ -7186,43 +7320,36 @@ msgstr ""
 msgid "Report starter pack"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:351
+#: src/components/dms/AfterReportDialog.tsx:85
+#: src/components/dms/AfterReportDialog.tsx:173
 msgid "Report submitted"
 msgstr ""
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:44
-msgid "Report this content"
+#: src/components/moderation/ReportDialog/copy.ts:45
+msgid "Report this conversation"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:31
-#: src/components/ReportDialog/SelectReportOptionView.tsx:57
 msgid "Report this feed"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:25
-#: src/components/ReportDialog/SelectReportOptionView.tsx:54
 msgid "Report this list"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:61
-#: src/components/dms/ReportDialog.tsx:185
-#: src/components/moderation/ReportDialog/copy.ts:43
-#: src/components/ReportDialog/SelectReportOptionView.tsx:63
+#: src/components/moderation/ReportDialog/copy.ts:51
 msgid "Report this message"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/components/ReportDialog/SelectReportOptionView.tsx:51
 msgid "Report this post"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:37
-#: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Report this starter pack"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:13
-#: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Report this user"
 msgstr ""
 
@@ -7356,7 +7483,7 @@ msgstr ""
 #: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
-#: src/components/moderation/ReportDialog/index.tsx:232
+#: src/components/moderation/ReportDialog/index.tsx:274
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:58
 #: src/components/StarterPack/ProfileStarterPacks.tsx:342
@@ -7378,7 +7505,7 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:229
+#: src/components/moderation/ReportDialog/index.tsx:271
 #: src/view/screens/Storybook/Admonitions.tsx:60
 msgid "Retry loading report options"
 msgstr ""
@@ -7486,6 +7613,10 @@ msgstr ""
 #: src/view/com/notifications/NotificationFeedItem.tsx:751
 #: src/view/com/notifications/NotificationFeedItem.tsx:776
 msgid "Say hello!"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:43
+msgid "Scam"
 msgstr ""
 
 #: src/lib/interests.ts:71
@@ -7661,6 +7792,10 @@ msgstr ""
 msgid "Select a color"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/index.tsx:359
+msgid "Select a reason"
+msgstr ""
+
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
 msgstr ""
@@ -7723,12 +7858,8 @@ msgstr ""
 msgid "Select languages"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:313
+#: src/components/moderation/ReportDialog/index.tsx:409
 msgid "Select moderation service"
-msgstr ""
-
-#: src/components/ReportDialog/SelectLabelerView.tsx:28
-msgid "Select moderator"
 msgstr ""
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:57
@@ -7746,10 +7877,6 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr ""
-
-#: src/components/ReportDialog/SubmitView.tsx:141
-msgid "Select the moderation service(s) to report to"
 msgstr ""
 
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:194
@@ -7781,12 +7908,16 @@ msgstr ""
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:110
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:113
 msgid "Select your preferred notification channels"
 msgstr ""
 
 #: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:188
+msgid "Self-harm or dangerous behaviors"
 msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:38
@@ -7822,18 +7953,7 @@ msgstr ""
 msgid "Send post to..."
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:277
-#: src/components/dms/ReportDialog.tsx:280
-#: src/components/ReportDialog/SubmitView.tsx:221
-#: src/components/ReportDialog/SubmitView.tsx:225
-msgid "Send report"
-msgstr ""
-
-#: src/components/ReportDialog/SelectLabelerView.tsx:42
-msgid "Send report to {0}"
-msgstr ""
-
-#: src/components/moderation/ReportDialog/index.tsx:652
+#: src/components/moderation/ReportDialog/index.tsx:800
 msgid "Send report to {title}"
 msgstr ""
 
@@ -8076,7 +8196,7 @@ msgstr ""
 msgid "Show more replies"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:127
+#: src/screens/Settings/ThreadPreferences.tsx:98
 msgid "Show post replies in a threaded tree view"
 msgstr ""
 
@@ -8092,10 +8212,6 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:43
 msgid "Show replies as"
-msgstr ""
-
-#: src/screens/Settings/ThreadPreferences.tsx:104
-msgid "Show replies by people you follow before all other replies"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
@@ -8276,7 +8392,7 @@ msgstr ""
 msgid "Someone reacted {0} to {1}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:76
+#: src/components/moderation/ReportDialog/index.tsx:84
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr ""
 
@@ -8285,14 +8401,13 @@ msgid "Something went wrong"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:138
-#: src/components/moderation/ReportDialog/index.tsx:224
+#: src/components/moderation/ReportDialog/index.tsx:266
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 #: src/view/screens/Storybook/Admonitions.tsx:55
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: src/components/ReportDialog/index.tsx:54
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:183
 msgid "Something went wrong, please try again."
@@ -8306,7 +8421,7 @@ msgstr ""
 msgid "Something went wrong. Please try again in a moment."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:178
+#: src/components/moderation/ReportDialog/index.tsx:220
 msgid "Something went wrong. Please try again."
 msgstr ""
 
@@ -8323,15 +8438,15 @@ msgstr ""
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:52
+#: src/screens/Settings/ThreadPreferences.tsx:44
 msgid "Sort replies"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:59
+#: src/screens/Settings/ThreadPreferences.tsx:51
 msgid "Sort replies by"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:56
+#: src/screens/Settings/ThreadPreferences.tsx:48
 msgid "Sort replies to the same post by:"
 msgstr ""
 
@@ -8340,14 +8455,16 @@ msgstr ""
 msgid "Source: <0>{sourceName}</0>"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:72
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:85
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:39
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
 msgid "Spam"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:55
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:36
+msgid "Spam or other inauthentic behavior or deception"
+msgstr ""
+
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
 msgstr ""
@@ -8447,9 +8564,9 @@ msgstr ""
 msgid "Submit Appeal"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:390
-#: src/components/moderation/ReportDialog/index.tsx:447
-#: src/components/moderation/ReportDialog/index.tsx:454
+#: src/components/moderation/ReportDialog/index.tsx:487
+#: src/components/moderation/ReportDialog/index.tsx:548
+#: src/components/moderation/ReportDialog/index.tsx:555
 msgid "Submit report"
 msgstr ""
 
@@ -8587,6 +8704,10 @@ msgstr ""
 msgid "Tap to dismiss"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:107
+msgid "Targeted harassment"
+msgstr ""
+
 #: src/state/shell/progress-guide.tsx:235
 msgid "Task complete - 10 follows!"
 msgstr ""
@@ -8633,10 +8754,6 @@ msgstr ""
 msgid "Terms of Service"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:60
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:99
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:107
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:115
 #: src/lib/moderation/useReportOptions.ts:60
 #: src/lib/moderation/useReportOptions.ts:99
 #: src/lib/moderation/useReportOptions.ts:107
@@ -8648,10 +8765,6 @@ msgstr ""
 msgid "Text & tags"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:235
-msgid "Text field"
-msgstr ""
-
 #: src/components/moderation/LabelsOnMeDialog.tsx:306
 #: src/screens/Messages/components/ChatDisabled.tsx:120
 msgid "Text input field"
@@ -8659,10 +8772,6 @@ msgstr ""
 
 #: src/view/com/posts/ShowLessFollowup.tsx:39
 msgid "Thank you for your feedback! It has been sent to the feed operator."
-msgstr ""
-
-#: src/components/ReportDialog/SubmitView.tsx:83
-msgid "Thank you. Your report has been sent."
 msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
@@ -8856,11 +8965,6 @@ msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:149
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
-msgstr ""
-
-#: src/components/dms/ReportDialog.tsx:265
-#: src/components/ReportDialog/SubmitView.tsx:88
-msgid "There was an issue sending your report. Please check your internet connection."
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:138
@@ -9164,7 +9268,7 @@ msgstr ""
 msgid "Thread preferences"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:42
+#: src/screens/Settings/ThreadPreferences.tsx:34
 msgid "Thread Preferences"
 msgstr ""
 
@@ -9175,6 +9279,10 @@ msgstr ""
 
 #: src/Navigation.tsx:369
 msgid "Threads Preferences"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:134
+msgid "Threats or incitement"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
@@ -9192,10 +9300,6 @@ msgstr ""
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr ""
-
-#: src/components/ReportDialog/SelectLabelerView.tsx:31
-msgid "To whom would you like to send this report?"
 msgstr ""
 
 #: src/components/dms/DateDivider.tsx:44
@@ -9218,8 +9322,8 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:73
 #: src/screens/PostThread/components/HeaderDropdown.tsx:78
-#: src/screens/Settings/ThreadPreferences.tsx:64
-#: src/screens/Settings/ThreadPreferences.tsx:67
+#: src/screens/Settings/ThreadPreferences.tsx:56
+#: src/screens/Settings/ThreadPreferences.tsx:59
 msgid "Top replies first"
 msgstr ""
 
@@ -9227,8 +9331,8 @@ msgstr ""
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:137
 #: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/dms/MessageContextMenu.tsx:141
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:476
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:478
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:591
@@ -9236,8 +9340,8 @@ msgstr ""
 msgid "Translate"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:115
-#: src/screens/Settings/ThreadPreferences.tsx:120
+#: src/screens/Settings/ThreadPreferences.tsx:86
+#: src/screens/Settings/ThreadPreferences.tsx:91
 msgid "Tree view"
 msgstr ""
 
@@ -9247,6 +9351,10 @@ msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:86
 msgid "Trending Videos"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:103
+msgid "Trolling"
 msgstr ""
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:138
@@ -9333,8 +9441,8 @@ msgctxt "action"
 msgid "Unblock"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:247
-#: src/components/dms/ConvoMenu.tsx:250
+#: src/components/dms/ConvoMenu.tsx:261
+#: src/components/dms/ConvoMenu.tsx:264
 #: src/view/com/profile/ProfileMenu.tsx:400
 #: src/view/com/profile/ProfileMenu.tsx:406
 msgid "Unblock account"
@@ -9387,12 +9495,20 @@ msgstr ""
 msgid "Unfortunately, Bluesky is unavailable in Mississippi right now."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:375
+#: src/components/moderation/ReportDialog/index.tsx:471
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:211
 msgid "Unknown verifier"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:72
+msgid "Unlabeled adult content"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:68
+msgid "Unlabeled, abusive, or non-consensual adult content"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:518
@@ -9427,7 +9543,7 @@ msgstr ""
 msgid "Unmute account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:236
+#: src/components/dms/ConvoMenu.tsx:250
 msgid "Unmute conversation"
 msgstr ""
 
@@ -9513,8 +9629,6 @@ msgstr ""
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:77
-#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:90
 #: src/lib/moderation/useReportOptions.ts:77
 #: src/lib/moderation/useReportOptions.ts:90
 msgid "Unwanted Sexual Content"
@@ -9634,7 +9748,7 @@ msgstr ""
 msgid "Use your account email address, or another real email address you control, in case KWS or Bluesky needs to contact you."
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:330
+#: src/components/dms/AfterReportDialog.tsx:152
 msgctxt "toast"
 msgid "User blocked"
 msgstr ""
@@ -9902,14 +10016,9 @@ msgstr ""
 msgid "View debug entry"
 msgstr ""
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:140
 #: src/screens/VideoFeed/index.tsx:661
 #: src/screens/VideoFeed/index.tsx:679
 msgid "View details"
-msgstr ""
-
-#: src/components/ReportDialog/SelectReportOptionView.tsx:135
-msgid "View details for reporting a copyright violation"
 msgstr ""
 
 #: src/view/com/posts/ViewFullThread.tsx:59
@@ -9996,6 +10105,14 @@ msgstr ""
 
 #: src/components/VideoPostCard.tsx:121
 msgid "Views video in immersive mode"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:126
+msgid "Violence"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/utils/useReportOptions.ts:127
+msgid "Violent or threatening content"
 msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:96
@@ -10245,38 +10362,36 @@ msgstr ""
 msgid "Why are you appealing?"
 msgstr ""
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:45
-msgid "Why should this content be reviewed?"
+#: src/components/moderation/ReportDialog/copy.ts:46
+msgid "Why should this conversation be reviewed?"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:32
-#: src/components/ReportDialog/SelectReportOptionView.tsx:58
 msgid "Why should this feed be reviewed?"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:26
-#: src/components/ReportDialog/SelectReportOptionView.tsx:55
 msgid "Why should this list be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:44
-#: src/components/ReportDialog/SelectReportOptionView.tsx:64
+#: src/components/moderation/ReportDialog/copy.ts:52
 msgid "Why should this message be reviewed?"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:20
-#: src/components/ReportDialog/SelectReportOptionView.tsx:52
 msgid "Why should this post be reviewed?"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:38
-#: src/components/ReportDialog/SelectReportOptionView.tsx:61
 msgid "Why should this starter pack be reviewed?"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:14
-#: src/components/ReportDialog/SelectReportOptionView.tsx:49
 msgid "Why should this user be reviewed?"
+msgstr ""
+
+#: src/components/dms/AfterReportDialog.tsx:49
+msgid "Would you like to block this account or delete this conversation?"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.tsx:154
@@ -10610,10 +10725,6 @@ msgstr ""
 msgid "You must grant access to your photo library to save a QR code"
 msgstr ""
 
-#: src/components/ReportDialog/SubmitView.tsx:211
-msgid "You must select at least one labeler for a report"
-msgstr ""
-
 #: src/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated.tsx:27
 #: src/screens/PostThread/components/ThreadItemPostNoUnauthenticated.tsx:47
 msgid "You must sign in to view this post."
@@ -10905,12 +11016,8 @@ msgstr ""
 msgid "Your reply was sent"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:397
+#: src/components/moderation/ReportDialog/index.tsx:498
 msgid "Your report will be sent to <0>{0}</0>."
-msgstr ""
-
-#: src/components/dms/ReportDialog.tsx:205
-msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr ""
 
 #: src/screens/Settings/InterestsSettings.tsx:60
