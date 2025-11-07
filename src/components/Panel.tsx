@@ -1,5 +1,10 @@
 import {createContext, useContext} from 'react'
-import {View, type ViewStyle} from 'react-native'
+import {
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
@@ -96,11 +101,13 @@ export function PanelText({
 
 export function PanelIcon({
   icon: Icon,
+  style,
 }: {
   icon: React.ComponentType<SVGIconProps>
+  style?: StyleProp<TextStyle>
 }) {
   const t = useTheme()
-  return <Icon style={[t.atoms.text, a.flex_shrink_0]} size="md" />
+  return <Icon style={[t.atoms.text, a.flex_shrink_0, style]} size="md" />
 }
 
 /**
