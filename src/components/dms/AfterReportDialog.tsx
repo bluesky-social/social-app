@@ -46,7 +46,7 @@ export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(
-          msg`Would you like to block this account or delete this conversation?`,
+          msg`Would you like to block this user and/or delete this conversation?`,
         )}
         style={[web({maxWidth: 400})]}>
         <DialogInner params={params} currentScreen={currentScreen} />
@@ -177,7 +177,7 @@ function DoneStep({
         </Text>
       </View>
       <Toggle.Group
-        label={_(msg`Block and/or delete this conversation`)}
+        label={_(msg`Block user and/or delete this conversation`)}
         values={actions}
         onChange={setActions}>
         <View style={[a.gap_md]}>
