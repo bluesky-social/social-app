@@ -178,7 +178,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
       swipeEdgeWidth={winDim.width}
       swipeMinVelocity={100}
       swipeMinDistance={10}
-      drawerType={isIOS ? 'slide' : 'front'}
+      drawerType={isIOS ? 'back' : 'front'}
       overlayStyle={{
         backgroundColor: select(t.name, {
           light: 'rgba(0, 57, 117, 0.1)',

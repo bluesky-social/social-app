@@ -1,5 +1,7 @@
 import React, {type ComponentProps, type JSX} from 'react'
 import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
+import {useDrawerProgress} from 'react-native-drawer-layout'
+import Animated, {interpolate, useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -13,7 +15,7 @@ import {getTabState, TabState} from '#/lib/routes/helpers'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -263,75 +265,97 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     <View
       testID="drawer"
       style={[a.flex_1, a.border_r, t.atoms.bg, t.atoms.border_contrast_low]}>
-      <ScrollView
-        style={[a.flex_1]}
-        contentContainerStyle={[
-          {
-            paddingTop: Math.max(
-              insets.top + a.pt_xl.paddingTop,
-              a.pt_xl.paddingTop,
-            ),
-          },
-        ]}>
-        <View style={[a.px_xl]}>
-          {hasSession && currentAccount ? (
-            <DrawerProfileCard
-              account={currentAccount}
-              onPressProfile={onPressProfile}
-            />
+      <AnimatedDrawerContent>
+        <ScrollView
+          style={[a.flex_1]}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            {
+              paddingTop: Math.max(
+                insets.top + a.pt_xl.paddingTop,
+                a.pt_xl.paddingTop,
+              ),
+            },
+          ]}>
+          <View style={[a.px_xl]}>
+            {hasSession && currentAccount ? (
+              <DrawerProfileCard
+                account={currentAccount}
+                onPressProfile={onPressProfile}
+              />
+            ) : (
+              <View style={[a.pr_xl]}>
+                <NavSignupCard />
+              </View>
+            )}
+
+            <Divider style={[a.mt_xl, a.mb_sm]} />
+          </View>
+
+          {hasSession ? (
+            <>
+              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+              <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+              <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
+              <NotificationsMenuItem
+                isActive={isAtNotifications}
+                onPress={onPressNotifications}
+              />
+              <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
+              <ListsMenuItem onPress={onPressLists} />
+              <BookmarksMenuItem
+                isActive={isAtBookmarks}
+                onPress={onPressBookmarks}
+              />
+              <ProfileMenuItem
+                isActive={isAtMyProfile}
+                onPress={onPressProfile}
+              />
+              <SettingsMenuItem onPress={onPressSettings} />
+            </>
           ) : (
-            <View style={[a.pr_xl]}>
-              <NavSignupCard />
-            </View>
+            <>
+              <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+              <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
+              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+            </>
           )}
 
-          <Divider style={[a.mt_xl, a.mb_sm]} />
-        </View>
+          <View style={[a.px_xl]}>
+            <Divider style={[a.mb_xl, a.mt_sm]} />
+            <ExtraLinks />
+          </View>
+        </ScrollView>
 
-        {hasSession ? (
-          <>
-            <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
-            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
-            <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
-            <NotificationsMenuItem
-              isActive={isAtNotifications}
-              onPress={onPressNotifications}
-            />
-            <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
-            <ListsMenuItem onPress={onPressLists} />
-            <BookmarksMenuItem
-              isActive={isAtBookmarks}
-              onPress={onPressBookmarks}
-            />
-            <ProfileMenuItem
-              isActive={isAtMyProfile}
-              onPress={onPressProfile}
-            />
-            <SettingsMenuItem onPress={onPressSettings} />
-          </>
-        ) : (
-          <>
-            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
-            <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
-            <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
-          </>
-        )}
-
-        <View style={[a.px_xl]}>
-          <Divider style={[a.mb_xl, a.mt_sm]} />
-          <ExtraLinks />
-        </View>
-      </ScrollView>
-
-      <DrawerFooter
-        onPressFeedback={onPressFeedback}
-        onPressHelp={onPressHelp}
-      />
+        <DrawerFooter
+          onPressFeedback={onPressFeedback}
+          onPressHelp={onPressHelp}
+        />
+      </AnimatedDrawerContent>
     </View>
   )
 }
 DrawerContent = React.memo(DrawerContent)
 export {DrawerContent}
+
+const AnimatedDrawerContent = isIOS ? DrawerProgressAnimation : View
+
+function DrawerProgressAnimation({children}: {children: React.ReactNode}) {
+  const drawerProgress = useDrawerProgress()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const progress = drawerProgress.get()
+
+    return {
+      opacity: progress,
+      transform: [{scale: interpolate(progress, [0, 1], [0.9, 1])}],
+    }
+  })
+
+  return (
+    <Animated.View style={[a.flex_1, animatedStyle]}>{children}</Animated.View>
+  )
+}
 
 let DrawerFooter = ({
   onPressFeedback,
