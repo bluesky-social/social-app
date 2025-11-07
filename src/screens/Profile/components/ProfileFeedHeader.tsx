@@ -441,12 +441,12 @@ function DialogInner({
 
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
-            style={[a.text_2xl, a.font_bold, a.leading_tight]}
+            style={[a.text_2xl, a.font_bold, a.leading_snug]}
             numberOfLines={2}>
             {info.displayName}
           </Text>
           <Text
-            style={[a.text_sm, a.leading_tight, t.atoms.text_contrast_medium]}
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
             <Trans>
               By{' '}
@@ -456,12 +456,7 @@ function DialogInner({
                   did: info.creatorDid,
                   handle: info.creatorHandle,
                 })}
-                style={[
-                  a.text_sm,
-                  a.leading_tight,
-                  a.underline,
-                  t.atoms.text_contrast_medium,
-                ]}
+                style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}
                 numberOfLines={1}
                 onPress={() => control.close()}>
                 {sanitizeHandle(info.creatorHandle, '@')}
