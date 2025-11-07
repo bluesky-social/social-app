@@ -88,6 +88,7 @@ function DialogInner(props: Omit<PostInteractionSettingsFormProps, 'control'>) {
     <Dialog.ScrollableInner
       label={_(msg`Edit post interaction settings`)}
       style={[web({maxWidth: 400}), a.w_full]}>
+      <Header />
       <PostInteractionSettingsForm {...props} />
       <Dialog.Close />
     </Dialog.ScrollableInner>
@@ -245,16 +246,20 @@ export function PostInteractionSettingsDialogControlledInner(
           </Text>
         </View>
       ) : (
-        <PostInteractionSettingsForm
-          replySettingsDisabled={!isThreadgateOwnedByViewer}
-          isSaving={isSaving}
-          onSave={onSave}
-          postgate={postgateValue}
-          onChangePostgate={setEditedPostgate}
-          threadgateAllowUISettings={allowUIValue}
-          onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
-        />
+        <>
+          <Header />
+          <PostInteractionSettingsForm
+            replySettingsDisabled={!isThreadgateOwnedByViewer}
+            isSaving={isSaving}
+            onSave={onSave}
+            postgate={postgateValue}
+            onChangePostgate={setEditedPostgate}
+            threadgateAllowUISettings={allowUIValue}
+            onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
+          />
+        </>
       )}
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
@@ -619,6 +624,16 @@ export function PostInteractionSettingsForm({
         <ButtonText>{_(msg`Save`)}</ButtonText>
         {isSaving && <ButtonIcon icon={Loader} />}
       </Button>
+    </View>
+  )
+}
+
+function Header() {
+  return (
+    <View style={[a.pb_lg]}>
+      <Text style={[a.text_2xl, a.font_bold]}>
+        <Trans>Post interaction settings</Trans>
+      </Text>
     </View>
   )
 }
