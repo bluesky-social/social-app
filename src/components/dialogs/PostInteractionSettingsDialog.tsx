@@ -533,7 +533,6 @@ export function PostInteractionSettingsForm({
                     </Panel.PanelText>
                     <Panel.PanelIcon
                       icon={showLists ? ChevronUpIcon : ChevronDownIcon}
-                      style={[t.atoms.text_contrast_medium]}
                     />
                   </Panel.Panel>
                 </Button>
