@@ -235,10 +235,11 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                         style={[
                           a.text_md,
                           a.font_bold,
-                          a.leading_relaxed,
+                          a.leading_snug,
                           gtMobile && a.text_lg,
                         ]}
-                        numberOfLines={2}>
+                        numberOfLines={2}
+                        emoji>
                         {info.displayName}
                       </Text>
                       <View style={[a.flex_row, {gap: 6}]}>
@@ -246,7 +247,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                           style={[
                             a.flex_shrink,
                             a.text_sm,
-                            a.leading_tight,
+                            a.leading_snug,
                             t.atoms.text_contrast_medium,
                           ]}
                           numberOfLines={1}>
@@ -264,7 +265,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                           <Text
                             style={[
                               a.text_sm,
-                              a.leading_tight,
+                              a.leading_snug,
                               t.atoms.text_contrast_medium,
                             ]}
                             numberOfLines={1}>
