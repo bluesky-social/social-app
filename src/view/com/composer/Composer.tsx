@@ -1302,13 +1302,6 @@ function ComposerPills({
                 threadgate: nextThreadgate,
               })
             }}
-            persist={thread.persistGates}
-            onChangePersist={nextPersist => {
-              dispatch({
-                type: 'persist_gates',
-                enabled: nextPersist,
-              })
-            }}
             style={bottomBarAnimatedStyle}
           />
         )}

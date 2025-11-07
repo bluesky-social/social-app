@@ -8,7 +8,6 @@ import {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
-import deepEqual from 'lodash.isequal'
 
 import {useHaptics} from '#/lib/haptics'
 import {logger} from '#/logger'
@@ -59,8 +58,7 @@ export type PostInteractionSettingsFormProps = {
   onSave: () => void
   isSaving?: boolean
 
-  defaultThreadgateAllowUISettings?: ThreadgateAllowUISetting[]
-  defaultPostgate?: AppBskyFeedPostgate.Record
+  isDirty?: boolean
   persist?: boolean
   onChangePersist?: (v: boolean) => void
 
@@ -83,7 +81,12 @@ export function PostInteractionSettingsControlledDialog({
   control: Dialog.DialogControlProps
 }) {
   return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+    <Dialog.Outer
+      control={control}
+      nativeOptions={{
+        preventExpansion: true,
+        preventDismiss: rest.isDirty && rest.persist,
+      }}>
       <Dialog.Handle />
       <DialogInner {...rest} />
     </Dialog.Outer>
@@ -285,8 +288,7 @@ export function PostInteractionSettingsForm({
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
   replySettingsDisabled,
-  defaultPostgate,
-  defaultThreadgateAllowUISettings,
+  isDirty,
   persist,
   onChangePersist,
 }: PostInteractionSettingsFormProps) {
@@ -376,22 +378,6 @@ export function PostInteractionSettingsForm({
 
     onChangeThreadgateAllowUISettings(settings)
   }
-
-  const isDirty = useMemo(() => {
-    const everybody = [{type: 'everybody'}]
-    return (
-      !deepEqual(
-        threadgateAllowUISettings,
-        defaultThreadgateAllowUISettings ?? everybody,
-      ) ||
-      !deepEqual(postgate.embeddingRules, defaultPostgate?.embeddingRules ?? [])
-    )
-  }, [
-    defaultThreadgateAllowUISettings,
-    defaultPostgate,
-    threadgateAllowUISettings,
-    postgate,
-  ])
 
   return (
     <View>
@@ -661,7 +647,7 @@ export function PostInteractionSettingsForm({
                 </Toggle.LabelText>
               </Toggle.Item>
             ) : (
-              <Text style={[a.text_md]}>
+              <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
                 <Trans>These are your default settings</Trans>
               </Text>
             )}
