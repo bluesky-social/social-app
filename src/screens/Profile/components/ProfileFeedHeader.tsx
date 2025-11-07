@@ -235,7 +235,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                         style={[
                           a.text_md,
                           a.font_bold,
-                          a.leading_tight,
+                          a.leading_relaxed,
                           gtMobile && a.text_lg,
                         ]}
                         numberOfLines={2}>
@@ -246,7 +246,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                           style={[
                             a.flex_shrink,
                             a.text_sm,
-                            a.leading_snug,
+                            a.leading_tight,
                             t.atoms.text_contrast_medium,
                           ]}
                           numberOfLines={1}>
@@ -264,7 +264,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                           <Text
                             style={[
                               a.text_sm,
-                              a.leading_snug,
+                              a.leading_tight,
                               t.atoms.text_contrast_medium,
                             ]}
                             numberOfLines={1}>
