@@ -442,12 +442,13 @@ function DialogInner({
 
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
-            style={[a.text_2xl, a.font_bold, a.leading_snug]}
-            numberOfLines={2}>
+            style={[a.text_2xl, a.font_bold, a.leading_tight]}
+            numberOfLines={2}
+            emoji>
             {info.displayName}
           </Text>
           <Text
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
+            style={[a.text_sm, a.leading_relaxed, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
             <Trans>
               By{' '}
