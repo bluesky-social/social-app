@@ -9,7 +9,9 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useHaptics} from '#/lib/haptics'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
 import {useGetPost} from '#/state/queries/post'
@@ -269,6 +271,7 @@ export function PostInteractionSettingsForm({
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
+  const playHaptic = useHaptics()
   const [showLists, setShowLists] = useState(false)
   const {
     data: lists,
@@ -501,9 +504,13 @@ export function PostInteractionSettingsForm({
                   accessibilityRole="togglebutton"
                   hitSlop={0}
                   onPress={() => {
-                    LayoutAnimation.configureNext(
-                      LayoutAnimation.Presets.easeInEaseOut,
-                    )
+                    playHaptic('Light')
+                    if (isIOS && !showLists) {
+                      LayoutAnimation.configureNext({
+                        ...LayoutAnimation.Presets.linear,
+                        duration: 175,
+                      })
+                    }
                     setShowLists(s => !s)
                   }}>
                   <Panel.Panel
