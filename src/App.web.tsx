@@ -61,7 +61,6 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
-import {Provider as TooltipProvider} from '#/components/Tooltip'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
@@ -200,11 +199,9 @@ function App() {
                   <DialogStateProvider>
                     <LightboxStateProvider>
                       <PortalProvider>
-                        <TooltipProvider>
-                          <StarterPackProvider>
-                            <InnerApp />
-                          </StarterPackProvider>
-                        </TooltipProvider>
+                        <StarterPackProvider>
+                          <InnerApp />
+                        </StarterPackProvider>
                       </PortalProvider>
                     </LightboxStateProvider>
                   </DialogStateProvider>

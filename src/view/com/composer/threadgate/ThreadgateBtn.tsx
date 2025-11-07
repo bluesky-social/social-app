@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react'
 import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
 import {type AnimatedStyle} from 'react-native-reanimated'
 import {type AppBskyFeedPostgate} from '@atproto/api'
@@ -32,18 +33,32 @@ export function ThreadgateBtn({
 }) {
   const {_} = useLingui()
   const control = Dialog.useDialogControl()
-  const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
+  const [_threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
+  const threadgateNudged = false
+  const [showTooltip, setShowTooltip] = useState(false)
+
+  useEffect(() => {
+    if (!threadgateNudged) {
+      const timeout = setTimeout(() => {
+        setShowTooltip(true)
+      }, 1000)
+      return () => clearTimeout(timeout)
+    }
+  }, [threadgateNudged])
 
   const onDismissTooltip = (visible: boolean) => {
-    console.log('visible', visible)
     if (visible) return
     setThreadgateNudged(true)
+    setShowTooltip(false)
   }
 
   const onPress = () => {
     if (isNative && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
+
+    setShowTooltip(false)
+    setThreadgateNudged(true)
 
     control.open()
   }
@@ -58,17 +73,15 @@ export function ThreadgateBtn({
     ? _(msg`Anybody can interact`)
     : _(msg`Interaction limited`)
 
-  console.log({threadgateNudged})
-
   return (
     <>
       <Tooltip.Outer
-        visible={!threadgateNudged}
+        visible={showTooltip}
         onVisibleChange={onDismissTooltip}
         position="top">
         <Tooltip.Target>
           <Button
-            color={threadgateNudged ? 'secondary' : 'primary_subtle'}
+            color={showTooltip ? 'primary_subtle' : 'secondary'}
             size="small"
             testID="openReplyGateButton"
             onPress={onPress}
