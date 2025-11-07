@@ -380,288 +380,277 @@ export function PostInteractionSettingsForm({
   }
 
   return (
-    <View>
-      <View style={[a.flex_1, a.gap_md]}>
-        <View style={[a.gap_lg]}>
-          {replySettingsDisabled && (
-            <View
-              style={[
-                a.px_md,
-                a.py_sm,
-                a.rounded_sm,
-                a.flex_row,
-                a.align_center,
-                a.gap_sm,
-                t.atoms.bg_contrast_25,
-              ]}>
-              <CircleInfo fill={t.atoms.text_contrast_low.color} />
-              <Text
-                style={[
-                  a.flex_1,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                <Trans>
-                  Reply settings are chosen by the author of the thread
-                </Trans>
-              </Text>
-            </View>
-          )}
-
-          <View style={[a.gap_sm, {opacity: replySettingsDisabled ? 0.3 : 1}]}>
-            <Text style={[a.text_md, a.font_medium]}>
-              <Trans>Who can reply</Trans>
+    <View style={[a.flex_1, a.gap_lg]}>
+      <View style={[a.gap_lg]}>
+        {replySettingsDisabled && (
+          <View
+            style={[
+              a.px_md,
+              a.py_sm,
+              a.rounded_sm,
+              a.flex_row,
+              a.align_center,
+              a.gap_sm,
+              t.atoms.bg_contrast_25,
+            ]}>
+            <CircleInfo fill={t.atoms.text_contrast_low.color} />
+            <Text
+              style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]}>
+              <Trans>
+                Reply settings are chosen by the author of the thread
+              </Trans>
             </Text>
-
-            <Toggle.Group
-              label={_(msg`Set who can reply to your post`)}
-              type="radio"
-              maxSelections={1}
-              disabled={replySettingsDisabled}
-              values={
-                everyoneCanReply
-                  ? ['everyone']
-                  : noOneCanReply
-                    ? ['nobody']
-                    : []
-              }
-              onChange={val => {
-                if (val.includes('everyone')) {
-                  onChangeThreadgateAllowUISettings([{type: 'everybody'}])
-                } else if (val.includes('nobody')) {
-                  onChangeThreadgateAllowUISettings([{type: 'nobody'}])
-                } else {
-                  onChangeThreadgateAllowUISettings([{type: 'mention'}])
-                }
-              }}>
-              <View style={[a.flex_row, a.gap_sm]}>
-                <Toggle.Item
-                  name="everyone"
-                  type="checkbox"
-                  label={_(msg`Allow anybody to reply`)}
-                  style={[a.flex_1]}>
-                  {({selected}) => (
-                    <Panel.Panel active={selected}>
-                      <Toggle.Radio />
-                      <Panel.PanelText>
-                        <Trans>Anyone</Trans>
-                      </Panel.PanelText>
-                    </Panel.Panel>
-                  )}
-                </Toggle.Item>
-                <Toggle.Item
-                  name="nobody"
-                  type="checkbox"
-                  label={_(msg`Disable replies entirely`)}
-                  style={[a.flex_1]}>
-                  {({selected}) => (
-                    <Panel.Panel active={selected}>
-                      <Toggle.Radio />
-                      <Panel.PanelText>
-                        <Trans>Nobody</Trans>
-                      </Panel.PanelText>
-                    </Panel.Panel>
-                  )}
-                </Toggle.Item>
-              </View>
-            </Toggle.Group>
-
-            <Toggle.Group
-              label={_(
-                msg`Set precisely which groups of people can reply to your post`,
-              )}
-              values={toggleGroupValues}
-              onChange={toggleGroupOnChange}
-              disabled={replySettingsDisabled}>
-              <Panel.PanelGroup>
-                <Toggle.Item
-                  name="followers"
-                  type="checkbox"
-                  label={_(msg`Allow your followers to reply`)}
-                  hitSlop={0}>
-                  {({selected}) => (
-                    <Panel.Panel active={selected} adjacent="trailing">
-                      <Toggle.Checkbox />
-                      <Panel.PanelText>
-                        <Trans>Your followers</Trans>
-                      </Panel.PanelText>
-                    </Panel.Panel>
-                  )}
-                </Toggle.Item>
-                <Toggle.Item
-                  name="following"
-                  type="checkbox"
-                  label={_(msg`Allow people you follow to reply`)}
-                  hitSlop={0}>
-                  {({selected}) => (
-                    <Panel.Panel active={selected} adjacent="both">
-                      <Toggle.Checkbox />
-                      <Panel.PanelText>
-                        <Trans>People you follow</Trans>
-                      </Panel.PanelText>
-                    </Panel.Panel>
-                  )}
-                </Toggle.Item>
-                <Toggle.Item
-                  name="mention"
-                  type="checkbox"
-                  label={_(msg`Allow people you mention to reply`)}
-                  hitSlop={0}>
-                  {({selected}) => (
-                    <Panel.Panel active={selected} adjacent="both">
-                      <Toggle.Checkbox />
-                      <Panel.PanelText>
-                        <Trans>People you mention</Trans>
-                      </Panel.PanelText>
-                    </Panel.Panel>
-                  )}
-                </Toggle.Item>
-
-                <Button
-                  label={
-                    showLists
-                      ? _(msg`Hide lists`)
-                      : _(msg`Show lists of users to select from`)
-                  }
-                  accessibilityHint={_(msg`Toggle showing lists`)}
-                  accessibilityRole="togglebutton"
-                  hitSlop={0}
-                  onPress={() => {
-                    playHaptic('Light')
-                    if (isIOS && !showLists) {
-                      LayoutAnimation.configureNext({
-                        ...LayoutAnimation.Presets.linear,
-                        duration: 175,
-                      })
-                    }
-                    setShowLists(s => !s)
-                  }}>
-                  <Panel.Panel
-                    active={numberOfListsSelected > 0}
-                    adjacent={showLists ? 'both' : 'leading'}>
-                    <Panel.PanelText>
-                      {numberOfListsSelected === 0 ? (
-                        <Trans>Select from your lists</Trans>
-                      ) : (
-                        <Trans>
-                          Select from your lists{' '}
-                          <NestedText style={[a.font_normal, a.italic]}>
-                            <Plural
-                              value={numberOfListsSelected}
-                              other="(# selected)"
-                            />
-                          </NestedText>
-                        </Trans>
-                      )}
-                    </Panel.PanelText>
-                    <Panel.PanelIcon
-                      icon={showLists ? ChevronUpIcon : ChevronDownIcon}
-                    />
-                  </Panel.Panel>
-                </Button>
-                {showLists &&
-                  (isListsPending ? (
-                    <Panel.Panel>
-                      <Panel.PanelText>
-                        <Trans>Loading lists...</Trans>
-                      </Panel.PanelText>
-                    </Panel.Panel>
-                  ) : isListsError ? (
-                    <Panel.Panel>
-                      <Panel.PanelText>
-                        <Trans>
-                          An error occurred while loading your lists :/
-                        </Trans>
-                      </Panel.PanelText>
-                    </Panel.Panel>
-                  ) : lists.length === 0 ? (
-                    <Panel.Panel>
-                      <Panel.PanelText>
-                        <Trans>You have no lists yet.</Trans>
-                      </Panel.PanelText>
-                    </Panel.Panel>
-                  ) : (
-                    lists.map((list, i) => (
-                      <Toggle.Item
-                        key={list.uri}
-                        name={`list:${list.uri}`}
-                        type="checkbox"
-                        label={_(msg`Allow users in ${list.name} to reply`)}
-                        hitSlop={0}>
-                        {({selected}) => (
-                          <Panel.Panel
-                            active={selected}
-                            adjacent={
-                              i === lists.length - 1 ? 'leading' : 'both'
-                            }>
-                            <Toggle.Checkbox />
-                            <UserAvatar
-                              size={24}
-                              type="list"
-                              avatar={list.avatar}
-                            />
-                            <Panel.PanelText>{list.name}</Panel.PanelText>
-                          </Panel.Panel>
-                        )}
-                      </Toggle.Item>
-                    ))
-                  ))}
-              </Panel.PanelGroup>
-            </Toggle.Group>
-          </View>
-        </View>
-
-        <Toggle.Item
-          name="quoteposts"
-          type="checkbox"
-          label={
-            quotesEnabled
-              ? _(msg`Disable quote posts of this post.`)
-              : _(msg`Enable quote posts of this post.`)
-          }
-          value={quotesEnabled}
-          onChange={onChangeQuotesEnabled}>
-          {({selected}) => (
-            <Panel.Panel active={selected}>
-              <Panel.PanelText icon={QuoteIcon}>
-                <Trans>Allow quote posts</Trans>
-              </Panel.PanelText>
-              <Toggle.Switch />
-            </Panel.Panel>
-          )}
-        </Toggle.Item>
-
-        {typeof persist !== 'undefined' && (
-          <View style={[{minHeight: 24}, a.justify_center]}>
-            {isDirty ? (
-              <Toggle.Item
-                name="persist"
-                type="checkbox"
-                label={_(msg`Save these options for next time`)}
-                value={persist}
-                onChange={() => onChangePersist?.(!persist)}>
-                <Toggle.Checkbox />
-                <Toggle.LabelText
-                  style={[a.text_md, a.font_normal, t.atoms.text]}>
-                  <Trans>Save these options for next time</Trans>
-                </Toggle.LabelText>
-              </Toggle.Item>
-            ) : (
-              <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-                <Trans>These are your default settings</Trans>
-              </Text>
-            )}
           </View>
         )}
+
+        <View style={[a.gap_sm, {opacity: replySettingsDisabled ? 0.3 : 1}]}>
+          <Text style={[a.text_md, a.font_medium]}>
+            <Trans>Who can reply</Trans>
+          </Text>
+
+          <Toggle.Group
+            label={_(msg`Set who can reply to your post`)}
+            type="radio"
+            maxSelections={1}
+            disabled={replySettingsDisabled}
+            values={
+              everyoneCanReply ? ['everyone'] : noOneCanReply ? ['nobody'] : []
+            }
+            onChange={val => {
+              if (val.includes('everyone')) {
+                onChangeThreadgateAllowUISettings([{type: 'everybody'}])
+              } else if (val.includes('nobody')) {
+                onChangeThreadgateAllowUISettings([{type: 'nobody'}])
+              } else {
+                onChangeThreadgateAllowUISettings([{type: 'mention'}])
+              }
+            }}>
+            <View style={[a.flex_row, a.gap_sm]}>
+              <Toggle.Item
+                name="everyone"
+                type="checkbox"
+                label={_(msg`Allow anybody to reply`)}
+                style={[a.flex_1]}>
+                {({selected}) => (
+                  <Panel.Panel active={selected}>
+                    <Toggle.Radio />
+                    <Panel.PanelText>
+                      <Trans>Anyone</Trans>
+                    </Panel.PanelText>
+                  </Panel.Panel>
+                )}
+              </Toggle.Item>
+              <Toggle.Item
+                name="nobody"
+                type="checkbox"
+                label={_(msg`Disable replies entirely`)}
+                style={[a.flex_1]}>
+                {({selected}) => (
+                  <Panel.Panel active={selected}>
+                    <Toggle.Radio />
+                    <Panel.PanelText>
+                      <Trans>Nobody</Trans>
+                    </Panel.PanelText>
+                  </Panel.Panel>
+                )}
+              </Toggle.Item>
+            </View>
+          </Toggle.Group>
+
+          <Toggle.Group
+            label={_(
+              msg`Set precisely which groups of people can reply to your post`,
+            )}
+            values={toggleGroupValues}
+            onChange={toggleGroupOnChange}
+            disabled={replySettingsDisabled}>
+            <Panel.PanelGroup>
+              <Toggle.Item
+                name="followers"
+                type="checkbox"
+                label={_(msg`Allow your followers to reply`)}
+                hitSlop={0}>
+                {({selected}) => (
+                  <Panel.Panel active={selected} adjacent="trailing">
+                    <Toggle.Checkbox />
+                    <Panel.PanelText>
+                      <Trans>Your followers</Trans>
+                    </Panel.PanelText>
+                  </Panel.Panel>
+                )}
+              </Toggle.Item>
+              <Toggle.Item
+                name="following"
+                type="checkbox"
+                label={_(msg`Allow people you follow to reply`)}
+                hitSlop={0}>
+                {({selected}) => (
+                  <Panel.Panel active={selected} adjacent="both">
+                    <Toggle.Checkbox />
+                    <Panel.PanelText>
+                      <Trans>People you follow</Trans>
+                    </Panel.PanelText>
+                  </Panel.Panel>
+                )}
+              </Toggle.Item>
+              <Toggle.Item
+                name="mention"
+                type="checkbox"
+                label={_(msg`Allow people you mention to reply`)}
+                hitSlop={0}>
+                {({selected}) => (
+                  <Panel.Panel active={selected} adjacent="both">
+                    <Toggle.Checkbox />
+                    <Panel.PanelText>
+                      <Trans>People you mention</Trans>
+                    </Panel.PanelText>
+                  </Panel.Panel>
+                )}
+              </Toggle.Item>
+
+              <Button
+                label={
+                  showLists
+                    ? _(msg`Hide lists`)
+                    : _(msg`Show lists of users to select from`)
+                }
+                accessibilityHint={_(msg`Toggle showing lists`)}
+                accessibilityRole="togglebutton"
+                hitSlop={0}
+                onPress={() => {
+                  playHaptic('Light')
+                  if (isIOS && !showLists) {
+                    LayoutAnimation.configureNext({
+                      ...LayoutAnimation.Presets.linear,
+                      duration: 175,
+                    })
+                  }
+                  setShowLists(s => !s)
+                }}>
+                <Panel.Panel
+                  active={numberOfListsSelected > 0}
+                  adjacent={showLists ? 'both' : 'leading'}>
+                  <Panel.PanelText>
+                    {numberOfListsSelected === 0 ? (
+                      <Trans>Select from your lists</Trans>
+                    ) : (
+                      <Trans>
+                        Select from your lists{' '}
+                        <NestedText style={[a.font_normal, a.italic]}>
+                          <Plural
+                            value={numberOfListsSelected}
+                            other="(# selected)"
+                          />
+                        </NestedText>
+                      </Trans>
+                    )}
+                  </Panel.PanelText>
+                  <Panel.PanelIcon
+                    icon={showLists ? ChevronUpIcon : ChevronDownIcon}
+                  />
+                </Panel.Panel>
+              </Button>
+              {showLists &&
+                (isListsPending ? (
+                  <Panel.Panel>
+                    <Panel.PanelText>
+                      <Trans>Loading lists...</Trans>
+                    </Panel.PanelText>
+                  </Panel.Panel>
+                ) : isListsError ? (
+                  <Panel.Panel>
+                    <Panel.PanelText>
+                      <Trans>
+                        An error occurred while loading your lists :/
+                      </Trans>
+                    </Panel.PanelText>
+                  </Panel.Panel>
+                ) : lists.length === 0 ? (
+                  <Panel.Panel>
+                    <Panel.PanelText>
+                      <Trans>You have no lists yet.</Trans>
+                    </Panel.PanelText>
+                  </Panel.Panel>
+                ) : (
+                  lists.map((list, i) => (
+                    <Toggle.Item
+                      key={list.uri}
+                      name={`list:${list.uri}`}
+                      type="checkbox"
+                      label={_(msg`Allow users in ${list.name} to reply`)}
+                      hitSlop={0}>
+                      {({selected}) => (
+                        <Panel.Panel
+                          active={selected}
+                          adjacent={
+                            i === lists.length - 1 ? 'leading' : 'both'
+                          }>
+                          <Toggle.Checkbox />
+                          <UserAvatar
+                            size={24}
+                            type="list"
+                            avatar={list.avatar}
+                          />
+                          <Panel.PanelText>{list.name}</Panel.PanelText>
+                        </Panel.Panel>
+                      )}
+                    </Toggle.Item>
+                  ))
+                ))}
+            </Panel.PanelGroup>
+          </Toggle.Group>
+        </View>
       </View>
+
+      <Toggle.Item
+        name="quoteposts"
+        type="checkbox"
+        label={
+          quotesEnabled
+            ? _(msg`Disable quote posts of this post.`)
+            : _(msg`Enable quote posts of this post.`)
+        }
+        value={quotesEnabled}
+        onChange={onChangeQuotesEnabled}>
+        {({selected}) => (
+          <Panel.Panel active={selected}>
+            <Panel.PanelText icon={QuoteIcon}>
+              <Trans>Allow quote posts</Trans>
+            </Panel.PanelText>
+            <Toggle.Switch />
+          </Panel.Panel>
+        )}
+      </Toggle.Item>
+
+      {typeof persist !== 'undefined' && (
+        <View style={[{minHeight: 24}, a.justify_center]}>
+          {isDirty ? (
+            <Toggle.Item
+              name="persist"
+              type="checkbox"
+              label={_(msg`Save these options for next time`)}
+              value={persist}
+              onChange={() => onChangePersist?.(!persist)}>
+              <Toggle.Checkbox />
+              <Toggle.LabelText
+                style={[a.text_md, a.font_normal, t.atoms.text]}>
+                <Trans>Save these options for next time</Trans>
+              </Toggle.LabelText>
+            </Toggle.Item>
+          ) : (
+            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+              <Trans>These are your default settings</Trans>
+            </Text>
+          )}
+        </View>
+      )}
 
       <Button
         disabled={!canSave || isSaving}
         label={_(msg`Save`)}
         onPress={onSave}
         color="primary"
-        size="large"
-        style={a.mt_xl}>
+        size="large">
         <ButtonText>{_(msg`Save`)}</ButtonText>
         {isSaving && <ButtonIcon icon={Loader} />}
       </Button>
