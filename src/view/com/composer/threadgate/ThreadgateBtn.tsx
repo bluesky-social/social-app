@@ -4,14 +4,17 @@ import {type AnimatedStyle} from 'react-native-reanimated'
 import {type AppBskyFeedPostgate} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
 import deepEqual from 'lodash.isequal'
 
+import {isNetworkError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
+import {usePostInteractionSettingsMutation} from '#/state/queries/post-interaction-settings'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {
   type ThreadgateAllowUISetting,
+  threadgateAllowUISettingToAllowRecordValue,
   threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -75,9 +78,21 @@ export function ThreadgateBtn({
     postgate,
   ])
 
-  const {mutate: persistChanges} = useMutation({
-    mutationFn: async () => {},
-  })
+  const {mutate: persistChanges, isPending: isSaving} =
+    usePostInteractionSettingsMutation({
+      onError: err => {
+        if (!isNetworkError(err)) {
+          logger.error('Failed to persist threadgate settings', {
+            safeMessage: err,
+          })
+        }
+      },
+      onSettled: () => {
+        control.close(() => {
+          setPersist(false)
+        })
+      },
+    })
 
   const anyoneCanReply =
     threadgateAllowUISettings.length === 1 &&
@@ -108,11 +123,17 @@ export function ThreadgateBtn({
         control={control}
         onSave={() => {
           if (persist) {
-            persistChanges()
+            persistChanges({
+              threadgateAllowRules: threadgateAllowUISettingToAllowRecordValue(
+                threadgateAllowUISettings,
+              ),
+              postgateEmbeddingRules: postgate.embeddingRules ?? [],
+            })
           } else {
             control.close()
           }
         }}
+        isSaving={isSaving}
         postgate={postgate}
         onChangePostgate={onChangePostgate}
         threadgateAllowUISettings={threadgateAllowUISettings}

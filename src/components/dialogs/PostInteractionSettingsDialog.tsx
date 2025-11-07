@@ -651,7 +651,9 @@ export function PostInteractionSettingsForm({
         onPress={onSave}
         color="primary"
         size="large">
-        <ButtonText>{_(msg`Save`)}</ButtonText>
+        <ButtonText>
+          <Trans>Save</Trans>
+        </ButtonText>
         {isSaving && <ButtonIcon icon={Loader} />}
       </Button>
     </View>
