@@ -275,6 +275,7 @@ export type MetricEvents = {
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
+    location?: string
   }
   'suggestedUser:follow': {
     logContext:

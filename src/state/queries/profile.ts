@@ -9,6 +9,7 @@ import {
   type ComAtprotoRepoUploadBlob,
   type Un$Typed,
 } from '@atproto/api'
+import {useNavigationState} from '@react-navigation/native'
 import {
   keepPreviousData,
   type QueryClient,
@@ -20,6 +21,7 @@ import {
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
+import {getCurrentRoute} from '#/lib/routes/helpers'
 import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
@@ -320,6 +322,12 @@ function useProfileFollowMutation(
   const queryClient = useQueryClient()
   const {captureAction} = useProgressGuideControls()
 
+  // Get current route name for automatic location detection
+  const currentRouteName = useNavigationState(state => {
+    const route = getCurrentRoute(state)
+    return route?.name
+  })
+
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
@@ -337,6 +345,8 @@ function useProfileFollowMutation(
             ? toClout(profile.followersCount)
             : undefined,
         followerClout: toClout(ownProfile?.followersCount),
+        // Include location for all profile:follow events when available
+        ...(currentRouteName ? {location: currentRouteName} : {}),
       })
       return await agent.follow(did)
     },
