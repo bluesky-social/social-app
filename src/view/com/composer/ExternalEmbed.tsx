@@ -1,6 +1,7 @@
 import React from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
+import {isInvalidUrlHostIPError} from '#/lib/link-meta/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {
   useResolveGifQuery,
@@ -120,6 +121,11 @@ export const ExternalEmbedLink = ({
       }
     }
   }, [data, uri])
+
+  if (isInvalidUrlHostIPError(error)) {
+    // Don't preview links with IP hosts for security reasons.
+    return null
+  }
 
   if (data?.type === 'record' && hasQuote) {
     // This is not currently supported by the data model so don't preview it.
