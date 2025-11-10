@@ -2,6 +2,8 @@ import {createSinglePathSVG} from './TEMPLATE'
 
 export const Heart2_Stroke1_Corner0_Rounded = createSinglePathSVG({
   viewBox: '0 0 51 46',
+  strokeLinejoin: 'round',
+  strokeWidth: 2,
   path: 'M49 17c0 15.333-22 26.667-24 26.667S1 32.333 1 17C1 6.333 7.667 1 14.333 1S25 5 25 5s4-4 10.667-4S49 6.333 49 17Z',
 })
 

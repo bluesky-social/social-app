@@ -20,7 +20,7 @@ import {type MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {atoms as a, useTheme} from '#/alf'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
-import {EmptyState} from '../util/EmptyState'
+import {Text} from '#/components/Typography'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
 
@@ -51,19 +51,36 @@ export function MyLists({
   const isEmpty = !isFetching && !data?.length
 
   const items = React.useMemo(() => {
-    let listItems: any[] = []
+    let items: any[] = []
     if (isError && isEmpty) {
-      listItems = listItems.concat([ERROR_ITEM])
+      items = items.concat([ERROR_ITEM])
     }
     if ((!isFetched && isFetching) || !moderationOpts) {
-      listItems = listItems.concat([LOADING])
+      items = items.concat([LOADING])
     } else if (isEmpty) {
-      listItems = listItems.concat([EMPTY])
+      items = items.concat([EMPTY])
     } else {
-      listItems = listItems.concat(data)
+      items = items.concat(data)
     }
-    return listItems
+    return items
   }, [isError, isEmpty, isFetched, isFetching, moderationOpts, data])
+
+  let emptyText
+  switch (filter) {
+    case 'curate':
+      emptyText = _(
+        msg`Lists allow you to see content from your favorite people.`,
+      )
+      break
+    case 'mod':
+      emptyText = _(
+        msg`Public, sharable lists of users to mute or block in bulk.`,
+      )
+      break
+    default:
+      emptyText = _(msg`You have no lists.`)
+      break
+  }
 
   // events
   // =
@@ -85,13 +102,33 @@ export function MyLists({
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <EmptyState
-            icon={ListIcon}
-            message={_(
-              msg`Lists allow you to see content from your favorite people.`,
-            )}
-            testID="listsEmpty"
-          />
+          <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_3xl]}>
+            <View
+              style={[
+                a.align_center,
+                a.justify_center,
+                a.rounded_full,
+                {
+                  width: 64,
+                  height: 64,
+                },
+              ]}>
+              <ListIcon size="2xl" fill={t.atoms.text_contrast_medium.color} />
+            </View>
+            <Text
+              style={[
+                a.text_center,
+                a.flex_1,
+                a.text_sm,
+                a.leading_snug,
+                t.atoms.text_contrast_medium,
+                {
+                  maxWidth: 200,
+                },
+              ]}>
+              {emptyText}
+            </Text>
+          </View>
         )
       } else if (item === ERROR_ITEM) {
         return (
@@ -121,7 +158,7 @@ export function MyLists({
         </View>
       )
     },
-    [_, t, renderItem, error, onRefresh],
+    [t, renderItem, error, onRefresh, emptyText],
   )
 
   if (inline) {

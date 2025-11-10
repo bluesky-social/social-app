@@ -428,7 +428,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No posts yet.`)}
+                emptyStateMessage={_(msg`No posts yet`)}
                 emptyStateButton={{
                   label: _(msg`Write a post`),
                   text: _(msg`Write a post`),
@@ -449,7 +449,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No replies yet.`)}
+                emptyStateMessage={_(msg`No replies yet`)}
                 emptyStateIcon={MessageIcon}
               />
             )
@@ -464,7 +464,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No media yet.`)}
+                emptyStateMessage={_(msg`No media yet`)}
                 emptyStateButton={{
                   label: _(msg`Post a photo`),
                   text: _(msg`Post a photo`),
@@ -486,7 +486,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No video posts yet.`)}
+                emptyStateMessage={_(msg`No video posts yet`)}
                 emptyStateButton={{
                   label: _(msg`Post a video`),
                   text: _(msg`Post a video`),
@@ -508,7 +508,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No likes yet.`)}
+                emptyStateMessage={_(msg`No likes yet`)}
                 emptyStateIcon={HeartIcon}
               />
             )

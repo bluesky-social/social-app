@@ -1,7 +1,7 @@
 import {createSinglePathSVG} from './TEMPLATE'
 
 export const PeopleRemove2_Stroke1_Corner0_Rounded = createSinglePathSVG({
-  viewBox: '0 0 65 64',
+  viewBox: '-15 0 65 64',
   strokeWidth: 2,
   strokeLinecap: 'round',
   strokeLinejoin: 'round',

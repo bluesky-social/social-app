@@ -37,7 +37,7 @@ export function EmptyState({
   const {gtMobile} = useBreakpoints()
 
   const placeholderIcon = (
-    <EditIcon size="2xl" fill={t.atoms.text_contrast_low.color} />
+    <EditIcon size="2xl" fill={t.atoms.text_contrast_medium.color} />
   )
 
   const renderIcon = () => {
@@ -57,6 +57,7 @@ export function EmptyState({
       return (
         <IconComponent
           size={iconSize}
+          fill={t.atoms.text_contrast_medium.color}
           style={{color: t.atoms.text_contrast_low.color}}
         />
       )
@@ -78,13 +79,17 @@ export function EmptyState({
           {height: 64, width: 64},
           React.isValidElement(icon)
             ? a.bg_transparent
-            : [isTabletOrDesktop && {width: 100, height: 100, marginTop: 50}],
+            : [isTabletOrDesktop && {marginTop: 50}],
         ]}>
         {renderIcon()}
       </View>
       <Text
         style={[
-          {color: pal.colors.textLight, maxWidth: gtMobile ? '40%' : '60%'},
+          {
+            color: pal.colors.textLight,
+            maxWidth: gtMobile ? '40%' : '60%',
+          },
+          a.pt_xs,
           a.font_medium,
           a.text_md,
           a.leading_snug,

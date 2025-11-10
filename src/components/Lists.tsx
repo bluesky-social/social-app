@@ -150,7 +150,7 @@ let ListMaybePlaceholder = ({
   hideBackButton?: boolean
   sideBorders?: boolean
   topBorder?: boolean
-  emptyStateIcon?: React.ReactElement
+  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
   emptyStateButton?: EmptyStateButtonProps
   useEmptyState?: boolean
 }): React.ReactNode => {
@@ -192,14 +192,7 @@ let ListMaybePlaceholder = ({
 
   if (useEmptyState) {
     return (
-      <View
-        style={[
-          a.h_full_vh,
-          a.align_center,
-          a.justify_center,
-          t.atoms.border_contrast_low,
-          {paddingTop: 175, paddingBottom: 110},
-        ]}>
+      <View style={[t.atoms.border_contrast_low]}>
         <EmptyState
           icon={emptyStateIcon}
           message={
