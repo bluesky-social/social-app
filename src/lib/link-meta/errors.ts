@@ -24,12 +24,3 @@ export class InvalidUrlError extends Error {
     this.name = 'InvalidUrlError'
   }
 }
-
-/**
- * Type guard to check if an error is specifically an InvalidUrlHostIPError
- */
-export function isInvalidUrlHostIPError(
-  error: unknown,
-): error is InvalidUrlHostIPError {
-  return error instanceof InvalidUrlHostIPError
-}

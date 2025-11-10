@@ -1,7 +1,7 @@
 import React from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
-import {isInvalidUrlHostIPError} from '#/lib/link-meta/errors'
+import {InvalidUrlHostIPError} from '#/lib/link-meta/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {
   useResolveGifQuery,
@@ -122,7 +122,7 @@ export const ExternalEmbedLink = ({
     }
   }, [data, uri])
 
-  if (isInvalidUrlHostIPError(error)) {
+  if (error instanceof InvalidUrlHostIPError) {
     // Remove the embed so that the user can try again with a different link
     onRemove()
     // Don't preview links with IP hosts
