@@ -38,7 +38,7 @@ export function Outer({
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
-  headerRef?: React.MutableRefObject<View | null>
+  headerRef?: React.RefObject<View | null>
   sticky?: boolean
 }) {
   const t = useTheme()
