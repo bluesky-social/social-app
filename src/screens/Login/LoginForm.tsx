@@ -1,11 +1,5 @@
 import React, {useRef, useState} from 'react'
-import {
-  ActivityIndicator,
-  Keyboard,
-  LayoutAnimation,
-  type TextInput,
-  View,
-} from 'react-native'
+import {Keyboard, type TextInput, View} from 'react-native'
 import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
@@ -18,10 +12,11 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
@@ -83,7 +78,6 @@ export const LoginForm = ({
   const onPressNext = async () => {
     if (isProcessing) return
     Keyboard.dismiss()
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setError('')
 
     const identifier = identifierValueRef.current.toLowerCase().trim()
@@ -141,7 +135,6 @@ export const LoginForm = ({
       requestNotificationsPermission('Login')
     } catch (e: any) {
       const errMsg = e.toString()
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsProcessing(false)
       if (
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
@@ -178,7 +171,7 @@ export const LoginForm = ({
   }
 
   return (
-    <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
+    <FormContainer testID="loginForm" titleText={<Trans>Log in</Trans>}>
       <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>
@@ -305,25 +298,26 @@ export const LoginForm = ({
         </View>
       )}
       <FormError error={error} />
-      <View style={[a.flex_row, a.align_center, a.pt_md]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>
-            <Trans>Back</Trans>
-          </ButtonText>
-        </Button>
-        <View style={a.flex_1} />
+      <View style={[a.pt_md, web([a.justify_between, a.flex_row])]}>
+        {isWeb && (
+          <>
+            <Button
+              label={_(msg`Back`)}
+              color="secondary"
+              size="large"
+              onPress={onPressBack}>
+              <ButtonText>
+                <Trans>Back</Trans>
+              </ButtonText>
+            </Button>
+          </>
+        )}
         {!serviceDescription && error ? (
           <Button
             testID="loginRetryButton"
             label={_(msg`Retry`)}
             accessibilityHint={_(msg`Retries signing in`)}
-            variant="solid"
-            color="secondary"
+            color="primary_subtle"
             size="large"
             onPress={onPressRetryConnect}>
             <ButtonText>
@@ -331,23 +325,24 @@ export const LoginForm = ({
             </ButtonText>
           </Button>
         ) : !serviceDescription ? (
-          <>
-            <ActivityIndicator />
-            <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
-              <Trans>Connecting...</Trans>
-            </Text>
-          </>
+          <Button
+            label={_(msg`Connecting to service...`)}
+            size="large"
+            color="secondary"
+            disabled>
+            <ButtonIcon icon={Loader} />
+            <ButtonText>Connecting...</ButtonText>
+          </Button>
         ) : (
           <Button
             testID="loginNextButton"
-            label={_(msg`Next`)}
+            label={_(msg`Log in`)}
             accessibilityHint={_(msg`Navigates to the next screen`)}
-            variant="solid"
             color="primary"
             size="large"
             onPress={onPressNext}>
             <ButtonText>
-              <Trans>Next</Trans>
+              <Trans>Log in</Trans>
             </ButtonText>
             {isProcessing && <ButtonIcon icon={Loader} />}
           </Button>
