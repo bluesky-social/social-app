@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
@@ -77,26 +78,30 @@ export const ChooseAccountForm = ({
       titleText={<Trans>Select account</Trans>}
       style={web([a.py_2xl])}>
       <View>
-        <TextField.LabelText>
-          <Trans>Sign in as...</Trans>
-        </TextField.LabelText>
+        {isWeb && (
+          <TextField.LabelText>
+            <Trans>Sign in as...</Trans>
+          </TextField.LabelText>
+        )}
         <AccountList
           onSelectAccount={onSelect}
           onSelectOther={() => onSelectAccount()}
           pendingDid={pendingDid}
         />
       </View>
-      <View style={[a.flex_row]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>{_(msg`Back`)}</ButtonText>
-        </Button>
-        <View style={[a.flex_1]} />
-      </View>
+      {isWeb && (
+        <View style={[a.flex_row]}>
+          <Button
+            label={_(msg`Back`)}
+            variant="solid"
+            color="secondary"
+            size="large"
+            onPress={onPressBack}>
+            <ButtonText>{_(msg`Back`)}</ButtonText>
+          </Button>
+          <View style={[a.flex_1]} />
+        </View>
+      )}
     </FormContainer>
   )
 }
