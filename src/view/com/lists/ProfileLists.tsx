@@ -53,7 +53,7 @@ interface ProfileFeedgensProps {
   setScrollViewTag: (tag: number | null) => void
 }
 
-export function ProfileFeedgens({
+export function ProfileLists({
   ref,
   did,
   scrollElRef,
@@ -250,5 +250,3 @@ export function ProfileFeedgens({
 function keyExtractor(item: any) {
   return item._reactKey || item.uri
 }
-
-export const ProfileLists = ProfileFeedgens
