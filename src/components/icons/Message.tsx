@@ -5,7 +5,7 @@ export const Message_Stroke1_Corner0_Rounded_Filled = createSinglePathSVG({
   strokeWidth: 2,
   strokeLinecap: 'square',
   strokeLinejoin: 'round',
-  path: 'M9.50586 1.66675H41.5059C45.9241 1.66675 49.5059 5.24847 49.5059 9.66675V31.0001C49.5059 35.4184 45.9241 39.0001 41.5059 39.0001H28.1725L14.8392 49.6667V39.0001H9.50586C5.08758 39.0001 1.50586 35.4184 1.50586 31.0001V9.66675C1.50586 5.24847 5.08758 1.66675 9.50586 1.66675Z',
+  path: 'M9 1h32a8 8 0 0 1 8 8v21.333a8 8 0 0 1-8 8H27.667L14.333 49V38.333H9a8 8 0 0 1-8-8V9a8 8 0 0 1 8-8Z',
 })
 
 export const Message_Stroke2_Corner0_Rounded_Filled = createSinglePathSVG({
