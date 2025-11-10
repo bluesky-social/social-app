@@ -12,6 +12,7 @@ import {useWindowDimensions, View} from 'react-native'
 import Animated, {Easing, ZoomIn} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {atoms as a, select, useTheme} from '#/alf'
 import {useOnGesture} from '#/components/hooks/useOnGesture'
@@ -151,6 +152,7 @@ export function Target({children}: {children: React.ReactNode}) {
   const [hasLayedOut, setHasLayedOut] = useState(false)
   const targetRef = useRef<View>(null)
   const containerRef = useContext(TooltipProviderContext)
+  const keyboardIsOpen = useIsKeyboardVisible()
 
   useEffect(() => {
     if (!shouldMeasure || !hasLayedOut) return
@@ -174,7 +176,13 @@ export function Target({children}: {children: React.ReactNode}) {
         }
       })
     }
-  }, [shouldMeasure, setTargetMeasurements, hasLayedOut, containerRef])
+  }, [
+    shouldMeasure,
+    setTargetMeasurements,
+    hasLayedOut,
+    containerRef,
+    keyboardIsOpen,
+  ])
 
   return (
     <View
