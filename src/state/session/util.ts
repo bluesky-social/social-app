@@ -1,7 +1,7 @@
 import {jwtDecode} from 'jwt-decode'
 
+import {isJwtExpired} from '#/lib/jwt'
 import {hasProp} from '#/lib/type-guards'
-import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {type SessionAccount} from './types'
 
@@ -22,16 +22,9 @@ export function isSignupQueued(accessJwt: string | undefined) {
 }
 
 export function isSessionExpired(account: SessionAccount) {
-  try {
-    if (account.accessJwt) {
-      const decoded = jwtDecode(account.accessJwt)
-      if (decoded.exp) {
-        const didExpire = Date.now() >= decoded.exp * 1000
-        return didExpire
-      }
-    }
-  } catch (e) {
-    logger.error(`session: could not decode jwt`)
+  if (account.accessJwt) {
+    return isJwtExpired(account.accessJwt)
+  } else {
+    return true
   }
-  return true
 }
