@@ -14,9 +14,10 @@ import {useLingui} from '@lingui/react'
 import {isFirefox} from '#/lib/browser'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
@@ -26,6 +27,7 @@ import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
+  const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoWeb()
@@ -81,8 +83,11 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         display: 'flex',
         flex: 1,
         cursor: 'default',
+        backgroundColor: t.palette.black,
         backgroundImage: `url(${embed.thumbnail})`,
-        backgroundSize: 'cover',
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
       }}
       onClick={evt => evt.stopPropagation()}>
       <ErrorBoundary renderError={renderError} key={key}>
@@ -111,6 +116,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
           // images use 16 / 9, for reference
           minMobileAspectRatio={14 / 9}>
           {contents}
+          <MediaInsetBorder />
         </ConstrainedImage>
       </ViewportObserver>
     </View>

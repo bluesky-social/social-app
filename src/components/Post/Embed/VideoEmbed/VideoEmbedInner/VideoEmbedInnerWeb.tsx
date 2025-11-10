@@ -7,7 +7,6 @@ import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {Controls} from './web-controls/VideoControls'
 
@@ -57,9 +56,7 @@ export function VideoEmbedInnerWeb({
       style={[a.flex_1, a.rounded_md, a.overflow_hidden]}
       accessibilityLabel={_(msg`Embedded video player`)}
       accessibilityHint="">
-      <div
-        ref={containerRef}
-        style={{height: '100%', width: '100%', backgroundColor: 'black'}}>
+      <div ref={containerRef} style={{height: '100%', width: '100%'}}>
         <figure style={{margin: 0, position: 'absolute', inset: 0}}>
           <video
             ref={videoRef}
@@ -104,7 +101,6 @@ export function VideoEmbedInnerWeb({
           hasSubtitleTrack={hasSubtitleTrack}
         />
       </div>
-      <MediaInsetBorder />
     </View>
   )
 }
