@@ -12,7 +12,6 @@ import {isWeb} from '#/platform/detection'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
-import {useTheme} from '#/alf'
 import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {List} from '../util/List'
@@ -46,7 +45,6 @@ export function ProfileFollows({name}: {name: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
-  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
 
   const onPressFindAccounts = React.useCallback(() => {
@@ -152,14 +150,13 @@ export function ProfileFollows({name}: {name: string}) {
         onRetry={isError ? refetch : undefined}
         sideBorders={false}
         useEmptyState={true}
-        emptyStateIcon={
-          <PeopleRemoveIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
-        }
+        emptyStateIcon={PeopleRemoveIcon}
         emptyStateButton={{
           label: _(msg`See suggested accounts`),
           text: _(msg`See suggested accounts`),
-          variant: 'solid',
           onPress: onPressFindAccounts,
+          size: 'tiny',
+          color: 'primary',
         }}
       />
     )

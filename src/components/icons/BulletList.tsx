@@ -2,6 +2,9 @@ import {createSinglePathSVG} from './TEMPLATE'
 
 export const BulletList_Stroke1_Corner0_Rounded = createSinglePathSVG({
   viewBox: '0 0 47 38',
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+  strokeWidth: 2,
   path: 'M22.333 31.667H45M22.333 6.333H45m-33.333 0A5.333 5.333 0 1 1 1 6.333a5.333 5.333 0 0 1 10.667 0Zm0 25.334a5.333 5.333 0 1 1-10.667 0 5.333 5.333 0 0 1 10.667 0Z',
 })
 

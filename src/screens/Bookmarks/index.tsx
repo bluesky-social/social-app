@@ -7,7 +7,11 @@ import {
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {
+  type NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -21,12 +25,12 @@ import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation
 import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Post} from '#/view/com/post/Post'
+import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {EmptyState} from '#/screens/Bookmarks/components/EmptyState'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {BookmarkFilled} from '#/components/icons/Bookmark'
+import {BookmarkDeleteLarge, BookmarkFilled} from '#/components/icons/Bookmark'
 import {CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon} from '#/components/icons/CircleQuestion'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -259,13 +263,35 @@ function BookmarkNotFound({
   )
 }
 
+function BookmarksEmpty() {
+  const t = useTheme()
+  const {_} = useLingui()
+  const navigation = useNavigation<NavigationProp<CommonNavigatorParams>>()
+
+  return (
+    <EmptyState
+      icon={BookmarkDeleteLarge}
+      message={_(msg`Nothing saved yet`)}
+      textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
+      button={{
+        label: _(msg`Button to go back to the home timeline`),
+        text: _(msg`Go home`),
+        onPress: () => navigation.navigate('Home' as never),
+        size: 'small',
+        color: 'secondary',
+      }}
+      style={[a.pt_3xl]}
+    />
+  )
+}
+
 function renderItem({item, index}: {item: ListItem; index: number}) {
   switch (item.type) {
     case 'loading': {
       return <PostFeedLoadingPlaceholder />
     }
     case 'empty': {
-      return <EmptyState />
+      return <BookmarksEmpty />
     }
     case 'bookmark': {
       return (

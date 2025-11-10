@@ -1,7 +1,10 @@
 import {createSinglePathSVG} from './TEMPLATE'
 
 export const HashtagWide_Stroke1_Corner0_Rounded = createSinglePathSVG({
-  viewBox: '0 0 47 46',
+  viewBox: '0 0 46 46',
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+  strokeWidth: 2,
   path: 'M14.333 1 9 45M37 1l-5.333 44M1 11.667h44m0 22.666H1',
 })
 
