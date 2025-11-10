@@ -112,7 +112,7 @@ function MediaEmbed({
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
           activeStyle={[a.mt_sm]}>
-          <VideoEmbed embed={embed.view} crop="constrained" />
+          <VideoEmbed embed={embed.view} />
         </ContentHider>
       )
     }

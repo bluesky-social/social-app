@@ -14,7 +14,7 @@ import {useLingui} from '@lingui/react'
 import {isFirefox} from '#/lib/browser'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {
@@ -25,14 +25,7 @@ import {
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-export function VideoEmbed({
-  embed,
-  crop,
-}: {
-  embed: AppBskyEmbedVideo.View
-  crop?: 'none' | 'square' | 'constrained'
-}) {
-  const t = useTheme()
+export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const ref = useRef<HTMLDivElement>(null)
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoWeb()
@@ -76,13 +69,10 @@ export function VideoEmbed({
   }
 
   let constrained: number | undefined
-  let max: number | undefined
   if (aspectRatio !== undefined) {
     const ratio = 1 / 2 // max of 1:2 ratio in feeds
     constrained = Math.max(aspectRatio, ratio)
-    max = Math.max(aspectRatio, 0.25) // max of 1:4 in thread
   }
-  const cropDisabled = crop === 'none'
 
   const contents = (
     <div
@@ -114,28 +104,14 @@ export function VideoEmbed({
       <ViewportObserver
         sendPosition={sendPosition}
         isAnyViewActive={currentActiveView !== null}>
-        {cropDisabled ? (
-          <View
-            style={[
-              a.w_full,
-              a.overflow_hidden,
-              {aspectRatio: max ?? 1},
-              a.rounded_md,
-              a.overflow_hidden,
-              t.atoms.bg_contrast_25,
-            ]}>
-            {contents}
-          </View>
-        ) : (
-          <ConstrainedImage
-            fullBleed={crop === 'square'}
-            aspectRatio={constrained || 1}
-            // slightly smaller max height than images
-            // images use 16 / 9, for reference
-            minMobileAspectRatio={14 / 9}>
-            {contents}
-          </ConstrainedImage>
-        )}
+        <ConstrainedImage
+          fullBleed
+          aspectRatio={constrained || 1}
+          // slightly smaller max height than images
+          // images use 16 / 9, for reference
+          minMobileAspectRatio={14 / 9}>
+          {contents}
+        </ConstrainedImage>
       </ViewportObserver>
     </View>
   )
