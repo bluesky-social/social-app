@@ -123,7 +123,9 @@ export const ExternalEmbedLink = ({
   }, [data, uri])
 
   if (isInvalidUrlHostIPError(error)) {
-    // Don't preview links with IP hosts for security reasons.
+    // Remove the embed so that the user can try again with a different link
+    onRemove()
+    // Don't preview links with IP hosts
     return null
   }
 
