@@ -1596,7 +1596,7 @@ msgstr ""
 msgid "By {0}"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:451
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:453
 msgid "By <0>{0}</0>"
 msgstr ""
 
@@ -3703,7 +3703,7 @@ msgstr ""
 msgid "Feed identifier"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:354
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:355
 msgid "Feed menu"
 msgstr ""
 
@@ -4944,7 +4944,7 @@ msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:518
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:515
 msgid "Like"
 msgstr ""
 
@@ -4966,7 +4966,7 @@ msgstr ""
 msgid "Like notifications"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:505
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:502
 msgid "Like this feed"
 msgstr ""
 
@@ -4991,7 +4991,7 @@ msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:96
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:493
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:490
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:290
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:304
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
@@ -6080,8 +6080,8 @@ msgstr ""
 msgid "Open feed info screen"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:291
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:296
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:292
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:297
 msgid "Open feed options menu"
 msgstr ""
 
@@ -6383,8 +6383,8 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:523
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:530
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:520
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:527
 #: src/screens/SavedFeeds.tsx:351
 msgid "Pin feed"
 msgstr ""
@@ -6398,7 +6398,7 @@ msgstr ""
 msgid "Pin to home"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:337
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:338
 msgid "Pin to Home"
 msgstr ""
 
@@ -7077,8 +7077,8 @@ msgstr ""
 msgid "Remove feed?"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:319
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:325
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:320
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:326
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:181
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:184
 #: src/screens/SavedFeeds.tsx:340
@@ -7296,8 +7296,8 @@ msgstr ""
 msgid "Report dialog"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:546
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:552
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:543
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:549
 msgid "Report feed"
 msgstr ""
 
@@ -7582,8 +7582,8 @@ msgstr ""
 msgid "Save QR code"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:320
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:326
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:321
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:327
 msgid "Save to my feeds"
 msgstr ""
 
@@ -8112,7 +8112,7 @@ msgstr ""
 msgid "Share QR code"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:474
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:471
 msgid "Share this feed"
 msgstr ""
 
@@ -8425,7 +8425,7 @@ msgstr ""
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:542
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:539
 msgid "Something wrong? Let us know."
 msgstr ""
 
@@ -8932,7 +8932,7 @@ msgstr ""
 msgid "There was an issue contacting the server"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:418
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:419
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:109
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr ""
@@ -9511,7 +9511,7 @@ msgstr ""
 msgid "Unlabeled, abusive, or non-consensual adult content"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:518
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:515
 msgid "Unlike"
 msgstr ""
 
@@ -9566,8 +9566,8 @@ msgstr ""
 msgid "Unpin"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:523
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:530
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:520
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:527
 #: src/screens/SavedFeeds.tsx:351
 msgid "Unpin feed"
 msgstr ""
@@ -9576,8 +9576,8 @@ msgstr ""
 msgid "Unpin Feed"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:310
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:312
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:311
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:313
 msgid "Unpin from home"
 msgstr ""
 
@@ -9993,7 +9993,7 @@ msgid "View {0}'s avatar"
 msgstr ""
 
 #: src/components/ProfileCard.tsx:124
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:454
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:456
 #: src/screens/Search/components/SearchProfileCard.tsx:36
 #: src/screens/VideoFeed/index.tsx:796
 #: src/view/com/notifications/NotificationFeedItem.tsx:599
@@ -10065,7 +10065,7 @@ msgstr ""
 msgid "View this user's verifications"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:489
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:486
 msgid "View users who like this feed"
 msgstr ""
 
