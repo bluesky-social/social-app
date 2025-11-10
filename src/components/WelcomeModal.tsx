@@ -78,18 +78,16 @@ export function WelcomeModal({control}: WelcomeModalProps) {
       ]}>
       <FocusScope.FocusScope asChild loop trapped>
         <View
-          style={[
-            {
-              maxWidth: 800,
-              maxHeight: 600,
-              width: '90%',
-              height: '90%',
-              backgroundColor: '#C0DCF0',
-            },
-            a.rounded_lg,
-            a.overflow_hidden,
-            a.zoom_in,
-          ]}>
+          style={{
+            maxWidth: 800,
+            maxHeight: 600,
+            width: '90%',
+            height: '90%',
+            backgroundColor: '#C0DCF0',
+            ...(a.rounded_lg || {}),
+            ...(a.overflow_hidden || {}),
+            ...(a.zoom_in || {}),
+          }}>
           <ImageBackground
             source={welcomeModalBg}
             style={[a.flex_1, a.justify_center]}
