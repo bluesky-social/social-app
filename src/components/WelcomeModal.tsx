@@ -8,7 +8,7 @@ import {FocusGuards, FocusScope} from 'radix-ui/internal'
 import {logger} from '#/logger'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useBreakpoints, web} from '#/alf'
+import {atoms as a, flatten, useBreakpoints, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
@@ -78,16 +78,18 @@ export function WelcomeModal({control}: WelcomeModalProps) {
       ]}>
       <FocusScope.FocusScope asChild loop trapped>
         <View
-          style={{
-            maxWidth: 800,
-            maxHeight: 600,
-            width: '90%',
-            height: '90%',
-            backgroundColor: '#C0DCF0',
-            ...(a.rounded_lg || {}),
-            ...(a.overflow_hidden || {}),
-            ...(a.zoom_in || {}),
-          }}>
+          style={flatten([
+            {
+              maxWidth: 800,
+              maxHeight: 600,
+              width: '90%',
+              height: '90%',
+              backgroundColor: '#C0DCF0',
+            },
+            a.rounded_lg,
+            a.overflow_hidden,
+            a.zoom_in,
+          ])}>
           <ImageBackground
             source={welcomeModalBg}
             style={[a.flex_1, a.justify_center]}
