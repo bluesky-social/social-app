@@ -42,11 +42,11 @@ export const LoggedOutLayout = ({
           contentContainerStyle={[
             {paddingBottom: isKeyboardVisible ? 300 : 0},
           ]}>
-          <View style={a.pt_md}>{children}</View>
+          <View style={a.pt_lg}>{children}</View>
         </ScrollView>
       )
     } else {
-      return <View style={a.pt_md}>{children}</View>
+      return <View style={a.pt_lg}>{children}</View>
     }
   }
   return (
