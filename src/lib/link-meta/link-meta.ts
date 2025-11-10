@@ -16,7 +16,6 @@ export enum LikelyType {
 }
 
 export interface LinkMeta {
-  error?: string
   likelyType: LikelyType
   url: string
   title?: string
@@ -51,11 +50,7 @@ export async function getLinkMeta(
     // QUESTION - do we want to follow redirects in other cases? -sfn
     shouldFollowRedirect = urlp.hostname === 'on.soundcloud.com'
   } catch (e) {
-    return {
-      error: 'Invalid URL',
-      likelyType: LikelyType.Other,
-      url,
-    }
+    throw new Error('Invalid URL')
   }
   const likelyType = getLikelyType(urlp)
   const meta: LinkMeta = {
@@ -93,9 +88,8 @@ export async function getLinkMeta(
       meta.url = body.url
     }
   } catch (e) {
-    // failed
-    console.error(e)
-    meta.error = e instanceof Error ? e.toString() : 'Failed to fetch link'
+    // Re-throw the error so React Query can handle it properly
+    throw e instanceof Error ? e : new Error('Failed to fetch link')
   } finally {
     clearTimeout(to)
   }
