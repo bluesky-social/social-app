@@ -77,8 +77,8 @@ export async function getLinkMeta(
 
     const body = await response.json()
 
-    if (body.error !== '') {
-      throw new Error(body.error)
+    if (body.Error !== '') {
+      throw new Error(body.Error)
     }
 
     meta.description = body.description
@@ -87,9 +87,6 @@ export async function getLinkMeta(
     if (shouldFollowRedirect) {
       meta.url = body.url
     }
-  } catch (e) {
-    // Re-throw the error so React Query can handle it properly
-    throw e instanceof Error ? e : new Error('Failed to fetch link')
   } finally {
     clearTimeout(to)
   }
