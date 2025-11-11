@@ -434,21 +434,20 @@ export const Button = React.forwardRef<View, ButtonProps>(
       }
 
       if (shape === 'default') {
-        baseStyles.push(a.rounded_full)
         if (size === 'large') {
-          baseStyles.push({
+          baseStyles.push(a.rounded_full, {
             paddingVertical: 12,
             paddingHorizontal: 25,
             gap: 3,
           })
         } else if (size === 'small') {
-          baseStyles.push({
+          baseStyles.push(a.rounded_full, {
             paddingVertical: 8,
             paddingHorizontal: 13,
             gap: 3,
           })
         } else if (size === 'tiny') {
-          baseStyles.push({
+          baseStyles.push(a.rounded_full, {
             paddingVertical: 5,
             paddingHorizontal: 9,
             gap: 2,
