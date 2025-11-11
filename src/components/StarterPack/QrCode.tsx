@@ -115,12 +115,12 @@ export function QrCodeInner({link}: {link: string}) {
     width: number
     height: number
   }) => {
-    console.log(area)
     setLogoArea(area)
   }
 
   return (
     <View style={{position: 'relative'}}>
+      {/* An SVG version of the logo is placed on top of normal `QRCode` `logo` prop, since the PNG fails to load before the export completes. */}
       {logoArea && (
         <View
           style={{
