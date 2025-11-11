@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {ComAtprotoModerationDefs} from '@atproto/api'
+import {ToolsOzoneReportDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -81,7 +81,7 @@ function DialogInner() {
         throw new Error('No current account, should be unreachable')
       await agent.createModerationReport(
         {
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             did: currentAccount.did,
