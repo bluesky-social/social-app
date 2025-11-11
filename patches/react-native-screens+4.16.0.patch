@@ -1,8 +1,32 @@
 diff --git a/node_modules/react-native-screens/ios/RNSScreen.mm b/node_modules/react-native-screens/ios/RNSScreen.mm
-index b62a2e2..cb469db 100644
+index b62a2e2..57e6da4 100644
 --- a/node_modules/react-native-screens/ios/RNSScreen.mm
 +++ b/node_modules/react-native-screens/ios/RNSScreen.mm
-@@ -729,9 +729,26 @@ - (void)notifyTransitionProgress:(double)progress closing:(BOOL)closing goingFor
+@@ -71,6 +71,7 @@ @implementation RNSScreenView {
+   CGFloat _sheetContentHeight;
+   ContentWrapperBox _contentWrapperBox;
+   bool _sheetHasInitialDetentSet;
++  __weak UIWindow *_previousWindow;
+ #ifdef RCT_NEW_ARCH_ENABLED
+   RCTSurfaceTouchHandler *_touchHandler;
+   react::RNSScreenShadowNode::ConcreteState::Shared _state;
+@@ -672,6 +673,17 @@ - (BOOL)isMountedUnderScreenOrReactRoot
+ 
+ - (void)didMoveToWindow
+ {
++  if (@available(iOS 26, *)) {
++    // If we moved from nil to a window, that means a dismiss gesture was cancelled
++    // Re-enable interactions that were disabled in willMoveToWindow
++    if (self.window != nil && _previousWindow == nil) {
++      self.window.userInteractionEnabled = true;
++    }
++    _previousWindow = nil;
++  }
++
+   // For RN touches to work we need to instantiate and connect RCTTouchHandler. This only applies
+   // for screens that aren't mounted under RCTRootView e.g., modals that are mounted directly to
+   // root application window.
+@@ -729,9 +741,30 @@ - (void)notifyTransitionProgress:(double)progress closing:(BOOL)closing goingFor
  #endif
  }
  
@@ -10,6 +34,9 @@ index b62a2e2..cb469db 100644
 +- (void)willMoveToWindow:(UIWindow *)newWindow
 +{
 +  if (@available(iOS 26, *)) {
++    // Store the current window to detect cancelled transitions in didMoveToWindow
++    _previousWindow = self.window;
++
 +    // In iOS 26, as soon as another screen appears in transition, it is interactable
 +    // To avoid glitches resulting from clicking buttons mid transition, we temporarily disable all interactions
 +    // Disabling interactions for parent navigation controller won't be enough in case of nested stack
@@ -30,7 +57,7 @@ index b62a2e2..cb469db 100644
    // On Paper, we need to call both "cancel" and "reset" here because RN's gesture
    // recognizer does not handle the scenario when it gets cancelled by other top
    // level gesture recognizer. In this case by the modal dismiss gesture.
-@@ -744,8 +761,8 @@ - (void)presentationControllerWillDismiss:(UIPresentationController *)presentati
+@@ -744,8 +777,8 @@ - (void)presentationControllerWillDismiss:(UIPresentationController *)presentati
    // down.
    [_touchHandler cancel];
    [_touchHandler reset];
@@ -40,7 +67,7 @@ index b62a2e2..cb469db 100644
  
  - (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presentationController
  {
-@@ -757,6 +774,10 @@ - (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presenta
+@@ -757,6 +790,10 @@ - (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presenta
  
  - (void)presentationControllerDidAttemptToDismiss:(UIPresentationController *)presentationController
  {
@@ -51,7 +78,7 @@ index b62a2e2..cb469db 100644
    // NOTE(kkafar): We should consider depracating the use of gesture cancel here & align
    // with usePreventRemove API of react-navigation v7.
    [self notifyGestureCancel];
-@@ -767,6 +788,11 @@ - (void)presentationControllerDidAttemptToDismiss:(UIPresentationController *)pr
+@@ -767,6 +804,11 @@ - (void)presentationControllerDidAttemptToDismiss:(UIPresentationController *)pr
  
  - (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController
  {
@@ -63,7 +90,7 @@ index b62a2e2..cb469db 100644
    if ([_reactSuperview respondsToSelector:@selector(presentationControllerDidDismiss:)]) {
      [_reactSuperview performSelector:@selector(presentationControllerDidDismiss:) withObject:presentationController];
    }
-@@ -1518,6 +1544,10 @@ - (void)viewWillDisappear:(BOOL)animated
+@@ -1518,6 +1560,10 @@ - (void)viewWillDisappear:(BOOL)animated
  
  - (void)viewDidAppear:(BOOL)animated
  {
