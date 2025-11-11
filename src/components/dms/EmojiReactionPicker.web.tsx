@@ -134,12 +134,12 @@ function MenuInner({
             accessibilityRole="button"
             role="button"
             onPress={() => setExpanded(true)}
-            style={[
+            style={flatten([
               a.rounded_full,
               {height: 34, width: 34},
               a.justify_center,
               a.align_center,
-            ]}>
+            ])}>
             <DotGridIcon size="lg" style={t.atoms.text_contrast_medium} />
           </Pressable>
         </DropdownMenu.Item>
