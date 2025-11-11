@@ -1,5 +1,13 @@
 import {createSinglePathSVG} from './TEMPLATE'
 
+export const Message_Stroke1_Corner0_Rounded_Filled = createSinglePathSVG({
+  viewBox: '0 0 51 51',
+  strokeWidth: 2,
+  strokeLinecap: 'square',
+  strokeLinejoin: 'round',
+  path: 'M9 1h32a8 8 0 0 1 8 8v21.333a8 8 0 0 1-8 8H27.667L14.333 49V38.333H9a8 8 0 0 1-8-8V9a8 8 0 0 1 8-8Z',
+})
+
 export const Message_Stroke2_Corner0_Rounded_Filled = createSinglePathSVG({
   path: 'M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.968 9.968 0 0 1-4.136-.893l-4.68.876a1 1 0 0 1-1.164-1.184l.931-4.537A9.965 9.965 0 0 1 2 12Zm4.25 0a1.25 1.25 0 1 0 2.5 0 1.25 1.25 0 0 0-2.5 0Zm4.5 0a1.25 1.25 0 1 0 2.5 0 1.25 1.25 0 0 0-2.5 0Zm5.75 1.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Z',
 })

@@ -12,6 +12,7 @@ import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 
 interface SectionRef {
@@ -95,7 +96,7 @@ export function AboutSection({
   const renderEmptyState = useCallback(() => {
     return (
       <View style={[a.gap_xl, a.align_center]}>
-        <EmptyState icon="users-slash" message={_(msg`This list is empty.`)} />
+        <EmptyState icon={ListIcon} message={_(msg`This list is empty.`)} />
         {isOwner && (
           <Button
             testID="emptyStateAddUserBtn"
@@ -111,7 +112,7 @@ export function AboutSection({
         )}
       </View>
     )
-  }, [_, onPressAddUser, isOwner])
+  }, [_, isOwner, onPressAddUser])
 
   return (
     <View>

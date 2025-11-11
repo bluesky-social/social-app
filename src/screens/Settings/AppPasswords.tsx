@@ -26,6 +26,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Admonition, colors} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
@@ -104,7 +105,7 @@ export function AppPasswordsScreen({}: Props) {
                   </View>
                 ) : (
                   <EmptyState
-                    icon="growth"
+                    icon={Growth}
                     message={_(msg`No app passwords yet`)}
                   />
                 )
