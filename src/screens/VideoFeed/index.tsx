@@ -57,6 +57,7 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {
@@ -1044,16 +1045,29 @@ function PlayPauseTapArea({
   const {isPlaying} = useEvent(player, 'playingChange', {
     isPlaying: player.playing,
   })
+  const isMounted = useRef(false)
 
-  const togglePlayPause = () => {
-    if (!player) return
-    doubleTapRef.current = null
-    if (player.playing) {
-      player.pause()
-    } else {
-      player.play()
+  useEffect(() => {
+    isMounted.current = true
+    return () => {
+      isMounted.current = false
     }
-  }
+  }, [])
+
+  const togglePlayPause = useNonReactiveCallback(() => {
+    // gets called after a timeout, so guard against being called after unmount -sfn
+    if (!player || !isMounted.current) return
+    doubleTapRef.current = null
+    try {
+      if (player.playing) {
+        player.pause()
+      } else {
+        player.play()
+      }
+    } catch (err) {
+      logger.error('Could not toggle play/pause', {safeMessage: err})
+    }
+  })
 
   const onPress = () => {
     if (doubleTapRef.current) {
