@@ -118,26 +118,31 @@ export async function fetchConstellationCounts(
  *
  * IMPORTANT: This determines whether fallback should be triggered.
  * We should NOT trigger fallback for intentional blocking/privacy errors.
+ *
+ * SECURITY: We distinguish between:
+ * - AppView failures (suspended users, server errors) → trigger fallback
+ * - Access denials (privacy settings, blocking) → respect AppView decision
  */
 export function isAppViewError(error: any): boolean {
   if (!error) return false
 
   const msg = error.message?.toLowerCase() || ''
 
-  // Do NOT trigger fallback for intentional blocking
-  // "Requester has blocked actor" means the user intentionally blocked someone
-  // This is NOT an AppView outage - it's privacy enforcement
+  // Do NOT trigger fallback for intentional blocking/privacy enforcement
+  // These are NOT AppView outages - they are access control decisions
   if (msg.includes('blocked actor')) return false
   if (msg.includes('requester has blocked')) return false
   if (msg.includes('blocking')) return false
+  if (msg.includes('not available')) return false // Privacy: logged-out visibility
+  if (msg.includes('logged out')) return false // Privacy: requires authentication
+  if (msg.includes('requires auth')) return false // Privacy: authentication required
+  if (msg.includes('unauthorized')) return false // Privacy: access denied
 
-  // Check HTTP status codes
-  if (error.status === 400 || error.status === 404) return true
-
-  // Check error messages for actual AppView issues
-  if (msg.includes('not found')) return true
+  // Trigger fallback for actual AppView failures (suspended users, etc.)
+  // Note: We removed blanket 400/404 handling to avoid bypassing access controls
   if (msg.includes('suspended')) return true
-  if (msg.includes('could not locate')) return true
+  if (msg.includes('could not locate record')) return true
+  if (msg.includes('profile not found')) return true
 
   return false
 }

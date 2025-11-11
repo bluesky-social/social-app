@@ -11,6 +11,7 @@ import {
   type UseQueryResult,
 } from '@tanstack/react-query'
 
+import {useSession} from '#/state/session'
 import {
   buildSyntheticFeedPage,
   buildSyntheticPostView,
@@ -109,6 +110,7 @@ export function useQuery<TData = unknown, TError = Error>(
   } = options
 
   const queryClient = useQueryClient()
+  const {hasSession} = useSession()
 
   // Wrap the original queryFn with fallback logic
   const wrappedQueryFn: typeof queryFn = async context => {
@@ -120,6 +122,15 @@ export function useQuery<TData = unknown, TError = Error>(
     } catch (error: any) {
       // If fallback is disabled or this isn't an AppView error, re-throw
       if (!enableFallback || !isAppViewError(error)) {
+        throw error
+      }
+
+      // SECURITY: Do NOT trigger fallback for logged-out users
+      // This prevents bypassing AppView access controls like logged-out visibility settings
+      if (!hasSession) {
+        console.log(
+          '[Fallback] Skipping fallback for logged-out user (respecting access controls)',
+        )
         throw error
       }
 
@@ -210,6 +221,7 @@ export function useInfiniteQuery<
   } = options
 
   const queryClient = useQueryClient()
+  const {hasSession} = useSession()
 
   // Wrap the original queryFn with fallback logic
   const wrappedQueryFn = async (
@@ -223,6 +235,15 @@ export function useInfiniteQuery<
     } catch (error: any) {
       // If fallback is disabled or this isn't an AppView error, re-throw
       if (!enableFallback || !isAppViewError(error)) {
+        throw error
+      }
+
+      // SECURITY: Do NOT trigger fallback for logged-out users
+      // This prevents bypassing AppView access controls like logged-out visibility settings
+      if (!hasSession) {
+        console.log(
+          '[Fallback] Skipping fallback for logged-out user (respecting access controls)',
+        )
         throw error
       }
 
