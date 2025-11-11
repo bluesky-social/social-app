@@ -1,7 +1,6 @@
 import React from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
-import {InvalidUrlHostIPError} from '#/lib/link-meta/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {
   useResolveGifQuery,
@@ -122,10 +121,10 @@ export const ExternalEmbedLink = ({
     }
   }, [data, uri])
 
-  if (error instanceof InvalidUrlHostIPError) {
+  if (error instanceof Error) {
     // Remove the embed so that the user can try again with a different link
     onRemove()
-    // Don't preview links with IP hosts
+    // Don't preview links that have errors
     return null
   }
 
@@ -138,15 +137,6 @@ export const ExternalEmbedLink = ({
     <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {linkComponent ? (
         <View style={{pointerEvents: 'none'}}>{linkComponent}</View>
-      ) : error ? (
-        <Container style={[a.align_start, a.p_md, a.gap_xs]}>
-          <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
-            {uri}
-          </Text>
-          <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
-            {cleanError(error)}
-          </Text>
-        </Container>
       ) : (
         <Container>
           <Loader size="xl" />
