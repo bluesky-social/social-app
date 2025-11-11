@@ -571,7 +571,6 @@ let NotificationFeedItem = ({
         {padding: 10},
         a.pr_lg,
         t.atoms.border_contrast_low,
-        a.rounded_0,
         item.notification.isRead
           ? undefined
           : {
