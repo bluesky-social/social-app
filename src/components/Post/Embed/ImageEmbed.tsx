@@ -64,7 +64,10 @@ export function ImageEmbed({
     }
     const onPressIn = (_: number) => {
       InteractionManager.runAfterInteractions(() => {
-        Image.prefetch(items.map(i => i.uri))
+        Image.prefetch(
+          items.map(i => i.uri),
+          'memory',
+        )
       })
     }
 

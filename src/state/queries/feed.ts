@@ -637,7 +637,7 @@ export function useFeedInfo(feedUri: string | undefined) {
     queryKey: [feedInfoQueryKeyRoot, feedUri],
     queryFn: async () => {
       if (!feedUri) {
-        return undefined
+        return null
       }
 
       const res = await agent.app.bsky.feed.getFeedGenerator({

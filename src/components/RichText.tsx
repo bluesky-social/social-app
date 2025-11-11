@@ -48,18 +48,14 @@ export function RichText({
     [value],
   )
 
-  const flattenedStyle = flatten(style)
-  const plainStyles = [a.leading_snug, flattenedStyle]
-  const interactiveStyles = [
-    a.leading_snug,
-    flatten(interactiveStyle),
-    flattenedStyle,
-  ]
+  const plainStyles = [a.leading_snug, style]
+  const interactiveStyles = [plainStyles, interactiveStyle]
 
   const {text, facets} = richText
 
   if (!facets?.length) {
     if (isOnlyEmoji(text)) {
+      const flattenedStyle = flatten(style)
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (

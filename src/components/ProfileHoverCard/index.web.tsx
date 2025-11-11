@@ -515,7 +515,12 @@ function Inner({
           <View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
             <Text
               numberOfLines={1}
-              style={[a.text_lg, a.font_semi_bold, a.self_start]}>
+              style={[
+                a.text_lg,
+                a.leading_snug,
+                a.font_semi_bold,
+                a.self_start,
+              ]}>
               {sanitizeDisplayName(
                 profile.displayName || sanitizeHandle(profile.handle),
                 moderation.ui('displayName'),

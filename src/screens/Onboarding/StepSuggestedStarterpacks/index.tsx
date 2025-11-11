@@ -1,11 +1,10 @@
-import {useCallback, useContext} from 'react'
+import {useContext} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useOnboardingSuggestedStarterPacksQuery} from '#/state/queries/useOnboardingSuggestedStarterPacksQuery'
-import {useOnboardingDispatch} from '#/state/shell'
 import {OnboardingControls} from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
 import {atoms as a, useBreakpoints} from '#/alf'
@@ -22,25 +21,17 @@ export function StepSuggestedStarterpacks() {
   const moderationOpts = useModerationOpts()
 
   const {state, dispatch} = useContext(Context)
-  const onboardDispatch = useOnboardingDispatch()
 
   const {
     data: suggestedStarterPacks,
     isLoading,
-    error,
+    isError,
     isRefetching,
     refetch,
   } = useOnboardingSuggestedStarterPacksQuery({
     enabled: true,
     overrideInterests: state.interestsStepResults.selectedInterests,
   })
-
-  const isError = !!error
-
-  const skipOnboarding = useCallback(() => {
-    onboardDispatch({type: 'finish'})
-    dispatch({type: 'finish'})
-  }, [onboardDispatch, dispatch])
 
   return (
     <View style={[a.align_start]} testID="onboardingInterests">
@@ -105,8 +96,8 @@ export function StepSuggestedStarterpacks() {
             <Button
               color="secondary"
               size="large"
-              label={_(msg`Skip this flow`)}
-              onPress={skipOnboarding}>
+              label={_(msg`Skip to next step`)}
+              onPress={() => dispatch({type: 'next'})}>
               <ButtonText>
                 <Trans>Skip</Trans>
               </ButtonText>

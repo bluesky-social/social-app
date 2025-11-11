@@ -119,3 +119,8 @@ src/locale/locales/**/*.js
 
 # ogcard assets
 bskyogcard/src/assets/fonts/noto-*
+
+# bskyweb build output
+bskyweb/static/media/*.webp
+bskyweb/static/media/*.jpg
+bskyweb/static/media/*.png

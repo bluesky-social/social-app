@@ -71,7 +71,6 @@ export function ListsScreen({}: Props) {
           label={_(msg`New list`)}
           testID="newUserListBtn"
           color="secondary"
-          variant="solid"
           size="small"
           onPress={wrappedOnPressNewList}>
           <ButtonIcon icon={PlusIcon} />

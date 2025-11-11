@@ -150,7 +150,7 @@ jobs:
   # GitHub actions are horrible so let's just copy paste this in
   buildIfNecessaryIOS:
     name: Build and Submit iOS
-    runs-on: macos-15
+    runs-on: macos-26
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-ios
       cancel-in-progress: true
@@ -192,7 +192,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.2"
+          xcode-version: "26.0"
 
       - name: ☕️ Setup Cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1

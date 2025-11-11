@@ -50,7 +50,6 @@ export function RecentChats({postUri}: {postUri: string}) {
         style={[a.flex_1, a.pt_2xs, {minHeight: 98}]}
         contentContainerStyle={[a.gap_sm, a.px_md]}
         showsHorizontalScrollIndicator={false}
-        fadingEdgeLength={64}
         nestedScrollEnabled>
         {convos && convos.length > 0 ? (
           convos.map(convo => {

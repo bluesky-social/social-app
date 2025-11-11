@@ -11,7 +11,6 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
 import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
-import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {Logger} from '#/logger'
 import {
   type FeedSourceFeedInfo,
@@ -129,11 +128,7 @@ export function useFeedFeedback(
           },
         },
       )
-      .catch((e: any) => {
-        if (!isNetworkError(e)) {
-          logger.warn('Failed to send feed interactions', {error: e})
-        }
-      })
+      .catch(() => {}) // ignore upstream errors
 
     // Send to Statsig
     if (aggregatedStats.current === null) {
@@ -346,10 +341,14 @@ function flushToStatsig(stats: AggregatedStats | null, feedDescriptor: string) {
   }
 
   if (stats.seenCount > 0) {
-    logger.metric('feed:seen', {
-      count: stats.seenCount,
-      feed: feedDescriptor,
-    })
+    logger.metric(
+      'feed:seen',
+      {
+        count: stats.seenCount,
+        feed: feedDescriptor,
+      },
+      {statsig: false},
+    )
     stats.seenCount = 0
   }
 }

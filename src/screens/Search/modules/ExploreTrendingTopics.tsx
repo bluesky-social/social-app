@@ -97,7 +97,7 @@ export function TrendRow({
       PressableComponent={Pressable}>
       {({hovered, pressed}) => (
         <>
-          <SubtleHover hover={hovered || pressed} />
+          <SubtleHover hover={hovered || pressed} native />
           <View style={[gutters, a.w_full, a.py_lg, a.flex_row, a.gap_2xs]}>
             <View style={[a.flex_1, a.gap_xs]}>
               <View style={[a.flex_row]}>

@@ -196,6 +196,10 @@ export type MetricEvents = {
     count: number
   }
 
+  'feed:discover:emptyError': {
+    userDid: string
+  }
+
   'composer:gif:open': {}
   'composer:gif:select': {}
 
@@ -296,6 +300,14 @@ export type MetricEvents = {
     logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
     recId?: number
     position: number
+  }
+  'suggestedUser:seeMore': {
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'Profile'
+      | 'Onboarding'
   }
   'profile:unfollow': {
     logContext:

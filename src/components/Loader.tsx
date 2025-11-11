@@ -7,7 +7,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import {atoms as a, flatten, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {type Props, useCommonSVGProps} from '#/components/icons/common'
 import {Loader_Stroke2_Corner0_Rounded as Icon} from '#/components/icons/Loader'
 
@@ -37,12 +37,7 @@ export function Loader(props: Props) {
       ]}>
       <Icon
         {...props}
-        style={[
-          a.absolute,
-          a.inset_0,
-          t.atoms.text_contrast_high,
-          flatten(props.style),
-        ]}
+        style={[a.absolute, a.inset_0, t.atoms.text_contrast_high, props.style]}
       />
     </Animated.View>
   )

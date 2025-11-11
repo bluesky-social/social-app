@@ -7,6 +7,7 @@ import debounce from 'lodash.debounce'
 
 import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
 import {logger as notyLogger} from '#/lib/notifications/util'
+import {isNetworkError} from '#/lib/strings/errors'
 import {isNative} from '#/platform/detection'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
@@ -47,7 +48,9 @@ async function _registerPushToken({
 
     notyLogger.debug(`registerPushToken: success`)
   } catch (error) {
-    notyLogger.error(`registerPushToken: failed`, {safeMessage: error})
+    if (!isNetworkError(error)) {
+      notyLogger.error(`registerPushToken: failed`, {safeMessage: error})
+    }
   }
 }
 

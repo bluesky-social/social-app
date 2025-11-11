@@ -96,7 +96,8 @@ export function RichTextTag({
             onLongPress={createStaticClick(menuProps.onPress).onPress}
             accessibilityHint={hint}
             label={label}
-            style={textStyle}>
+            style={textStyle}
+            emoji>
             {isNative ? (
               display
             ) : (

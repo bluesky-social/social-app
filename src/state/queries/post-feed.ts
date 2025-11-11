@@ -30,7 +30,6 @@ import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
-import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {STALE} from '#/state/queries'
@@ -208,44 +207,27 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
-      try {
-        const res = await api.fetch({cursor, limit: fetchLimit})
+      const res = await api.fetch({cursor, limit: fetchLimit})
 
-        /*
-         * If this is a public view, we need to check if posts fail moderation.
-         * If all fail, we throw an error. If only some fail, we continue and let
-         * moderations happen later, which results in some posts being shown and
-         * some not.
-         */
-        if (!agent.session) {
-          assertSomePostsPassModeration(
-            res.feed,
-            preferences?.moderationPrefs ||
-              DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
-          )
-        }
+      /*
+       * If this is a public view, we need to check if posts fail moderation.
+       * If all fail, we throw an error. If only some fail, we continue and let
+       * moderations happen later, which results in some posts being shown and
+       * some not.
+       */
+      if (!agent.session) {
+        assertSomePostsPassModeration(
+          res.feed,
+          preferences?.moderationPrefs ||
+            DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+        )
+      }
 
-        return {
-          api,
-          cursor: res.cursor,
-          feed: res.feed,
-          fetchedAt: Date.now(),
-        }
-      } catch (e) {
-        const feedDescParts = feedDesc.split('|')
-        const feedOwnerDid = new AtUri(feedDescParts[1]).hostname
-
-        if (
-          feedDescParts[0] === 'feedgen' &&
-          BSKY_FEED_OWNER_DIDS.includes(feedOwnerDid)
-        ) {
-          logger.error(`Bluesky feed may be offline: ${feedOwnerDid}`, {
-            feedDesc,
-            jsError: e,
-          })
-        }
-
-        throw e
+      return {
+        api,
+        cursor: res.cursor,
+        feed: res.feed,
+        fetchedAt: Date.now(),
       }
     },
     initialPageParam: undefined,

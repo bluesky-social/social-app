@@ -362,7 +362,7 @@ export function SearchScreenShell({
                     size="large"
                     variant="ghost"
                     color="secondary"
-                    style={[a.px_sm]}
+                    style={[a.px_sm, a.rounded_sm]}
                     onPress={onPressCancelSearch}
                     hitSlop={HITSLOP_10}>
                     <ButtonText>
