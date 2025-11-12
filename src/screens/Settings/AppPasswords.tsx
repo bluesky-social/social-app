@@ -5,7 +5,6 @@ import Animated, {
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
-  StretchOutY,
 } from 'react-native-reanimated'
 import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -14,7 +13,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
-import {isWeb} from '#/platform/detection'
 import {
   useAppPasswordDeleteMutation,
   useAppPasswordsQuery,
@@ -94,7 +92,7 @@ export function AppPasswordsScreen({}: Props) {
                         key={appPassword.name}
                         style={a.w_full}
                         entering={FadeIn}
-                        exiting={isWeb ? FadeOut : StretchOutY}
+                        exiting={FadeOut}
                         layout={LinearTransition.delay(150)}>
                         <SettingsList.Item>
                           <AppPasswordCard appPassword={appPassword} />
@@ -188,6 +186,7 @@ function AppPasswordCard({
           variant="ghost"
           color="negative"
           size="small"
+          shape="square"
           style={[a.bg_transparent]}
           onPress={() => deleteControl.open()}>
           <ButtonIcon icon={TrashIcon} />
