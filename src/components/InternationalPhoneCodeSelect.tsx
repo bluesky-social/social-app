@@ -3,13 +3,14 @@ import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {getCountriesWithTelephoneCodes} from '#/lib/international-telephone-codes'
+import {
+  getCountriesWithTelephoneCodes,
+  getDefaultCountry,
+} from '#/lib/international-telephone-codes'
 import {isWeb} from '#/platform/detection'
 import {useGeolocationStatus} from '#/state/geolocation'
 import {atoms as a, web} from '#/alf'
 import * as Select from '#/components/Select'
-
-export const DEFAULT_PHONE_COUNTRY = 'US'
 
 /**
  * Country picker for a phone number input
@@ -27,7 +28,9 @@ export function InternationalPhoneCodeSelect({
   const {_, i18n} = useLingui()
   const {location} = useGeolocationStatus()
 
-  const defaultCountry = location?.countryCode || DEFAULT_PHONE_COUNTRY
+  const defaultCountry = useMemo(() => {
+    return getDefaultCountry(location)
+  }, [location])
 
   const items = useMemo(() => {
     const telCountryMap = getCountriesWithTelephoneCodes(i18n)
