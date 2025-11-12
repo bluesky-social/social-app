@@ -48,6 +48,7 @@ export function AppLanguageDropdown() {
             })}
             variant="ghost"
             color="secondary"
+            shape="rectangular"
             style={[
               a.pr_xs,
               a.pl_sm,
