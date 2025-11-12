@@ -166,7 +166,7 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/BN.svg'),
     },
     BO: {
-      name: i18n._(msg`Bolivia (Plurinational State of)`),
+      name: i18n._(msg`Bolivia`),
       code: '+591',
       unicodeFlag: '🇧🇴',
       svgFlag: require('../../assets/icons/flags/BO.svg'),
@@ -376,7 +376,7 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/FJ.svg'),
     },
     FM: {
-      name: i18n._(msg`Micronesia (Federated States of)`),
+      name: i18n._(msg`Micronesia`),
       code: '+691',
       unicodeFlag: '🇫🇲',
       svgFlag: require('../../assets/icons/flags/FM.svg'),
@@ -562,7 +562,7 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/IQ.svg'),
     },
     IR: {
-      name: i18n._(msg`Iran (Islamic Republic of)`),
+      name: i18n._(msg`Iran`),
       code: '+98',
       unicodeFlag: '🇮🇷',
       svgFlag: require('../../assets/icons/flags/IR.svg'),
@@ -952,7 +952,7 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/PR.svg'),
     },
     PS: {
-      name: i18n._(msg`Palestine, State of`),
+      name: i18n._(msg`Palestine`),
       code: '+970',
       unicodeFlag: '🇵🇸',
       svgFlag: require('../../assets/icons/flags/PS.svg'),
@@ -1240,7 +1240,7 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/VC.svg'),
     },
     VE: {
-      name: i18n._(msg`Venezuela (Bolivarian Republic of)`),
+      name: i18n._(msg`Venezuela`),
       code: '+58',
       unicodeFlag: '🇻🇪',
       svgFlag: require('../../assets/icons/flags/VE.svg'),
@@ -1408,7 +1408,7 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/CD.svg'),
     },
     BS: {
-      name: i18n._(msg`Commonwealth of The Bahamas`),
+      name: i18n._(msg`The Bahamas`),
       code: '+1 242',
       unicodeFlag: '🇧🇸',
       svgFlag: require('../../assets/icons/flags/BS.svg'),
@@ -1444,7 +1444,7 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/FO.svg'),
     },
     HM: {
-      name: i18n._(msg`Territory of Heard Island and McDonald Islands`),
+      name: i18n._(msg`Heard Island and McDonald Islands`),
       code: '+672',
       unicodeFlag: '🇭🇲',
       svgFlag: require('../../assets/icons/flags/HM.svg'),
@@ -1462,13 +1462,13 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/KY.svg'),
     },
     MH: {
-      name: i18n._(msg`Republic of the Marshall Islands`),
+      name: i18n._(msg`Marshall Islands`),
       code: '+692',
       unicodeFlag: '🇲🇭',
       svgFlag: require('../../assets/icons/flags/MH.svg'),
     },
     MP: {
-      name: i18n._(msg`Commonwealth of the Northern Mariana Islands`),
+      name: i18n._(msg`Northern Mariana Islands`),
       code: '+1 670',
       unicodeFlag: '🇲🇵',
       svgFlag: require('../../assets/icons/flags/MP.svg'),
@@ -1498,7 +1498,7 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/VA.svg'),
     },
     XK: {
-      name: i18n._(msg`Republic of Kosovo`),
+      name: i18n._(msg`Kosovo`),
       code: '+383',
       unicodeFlag: '🇽🇰',
       svgFlag: require('../../assets/icons/flags/XK.svg'),
