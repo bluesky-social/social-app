@@ -500,9 +500,14 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               value={currentAccount?.did ?? ''}
               label={_(msg`Copy DID`)}
               size="large"
-              variant="solid"
+              shape="rectangular"
               color="secondary"
-              style={[a.px_md, a.border, t.atoms.border_contrast_low]}>
+              style={[
+                a.px_md,
+                a.border,
+                t.atoms.border_contrast_low,
+                t.atoms.bg_contrast_25,
+              ]}>
               <Text style={[a.text_md, a.flex_1]}>{currentAccount?.did}</Text>
               <ButtonIcon icon={CopyIcon} />
             </CopyButton>

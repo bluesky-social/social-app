@@ -164,7 +164,7 @@ export function LanguageSettingsScreen({}: Props) {
                 label={_(msg`Select content languages`)}
                 size="small"
                 color="secondary"
-                variant="solid"
+                shape="rectangular"
                 onPress={onPressContentLanguages}
                 style={[a.justify_start, web({maxWidth: 400})]}>
                 <ButtonIcon

@@ -106,7 +106,7 @@ export function Trigger({children, label}: TriggerProps) {
         style={[a.flex_1, a.justify_between]}
         color="secondary"
         size="small"
-        variant="solid">
+        shape="rectangular">
         <>{children}</>
       </Button>
     )
