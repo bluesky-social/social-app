@@ -1047,7 +1047,6 @@ msgid "An illustration showing that Bluesky selects trusted verifiers, and trust
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
-#: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
 msgstr ""
 
@@ -1103,10 +1102,6 @@ msgstr ""
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:37
 msgid "Announcing verification on Bluesky"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:33
-msgid "Anti-Social Behavior"
 msgstr ""
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
@@ -3349,14 +3344,6 @@ msgstr ""
 msgid "Everything else"
 msgstr ""
 
-#: src/lib/moderation/useReportOptions.ts:73
-msgid "Excessive mentions or replies"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:86
-msgid "Excessive or unwanted messages"
-msgstr ""
-
 #: src/components/dialogs/MutedWords.tsx:316
 msgid "Exclude users you follow"
 msgstr ""
@@ -4021,10 +4008,6 @@ msgstr ""
 msgid "Free your feed"
 msgstr ""
 
-#: src/lib/moderation/useReportOptions.ts:54
-msgid "Frequently Posts Unwanted Content"
-msgstr ""
-
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:157
 msgid "From"
 msgstr ""
@@ -4117,10 +4100,6 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:39
-msgid "Glaring violations of law or terms of service"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:142
@@ -4271,10 +4250,6 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:99
 msgid "Harassment or hate"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:34
-msgid "Harassment, trolling, or intolerance"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:189
@@ -4541,10 +4516,6 @@ msgstr ""
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr ""
 
-#: src/lib/moderation/useReportOptions.ts:38
-msgid "Illegal and Urgent"
-msgstr ""
-
 #: src/view/com/util/images/Gallery.tsx:75
 msgid "Image"
 msgstr ""
@@ -4569,14 +4540,6 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:51
 msgid "Impersonation"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:49
-msgid "Impersonation or false claims about identity or affiliation"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:68
-msgid "Impersonation, misinformation, or false claims"
 msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:284
@@ -4605,10 +4568,6 @@ msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:273
 msgid "In-app, Push, People you follow"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:91
-msgid "Inappropriate messages or explicit links"
 msgstr ""
 
 #. Title message shown in chat requests inbox when it's empty
@@ -5317,14 +5276,6 @@ msgstr ""
 msgid "Misleading"
 msgstr ""
 
-#: src/lib/moderation/useReportOptions.ts:47
-msgid "Misleading Account"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:67
-msgid "Misleading Post"
-msgstr ""
-
 #: src/Navigation.tsx:177
 #: src/screens/Moderation/index.tsx:100
 #: src/screens/Settings/Settings.tsx:188
@@ -5528,13 +5479,6 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:399
 msgid "Name"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:59
-#: src/lib/moderation/useReportOptions.ts:98
-#: src/lib/moderation/useReportOptions.ts:106
-#: src/lib/moderation/useReportOptions.ts:114
-msgid "Name or Description Violates Community Standards"
 msgstr ""
 
 #: src/lib/interests.ts:66
@@ -5948,10 +5892,6 @@ msgstr ""
 msgid "Nudity"
 msgstr ""
 
-#: src/lib/moderation/useReportOptions.ts:78
-msgid "Nudity or adult content not labeled as such"
-msgstr ""
-
 #: src/lib/moderation/useLabelBehaviorDescription.ts:14
 #: src/screens/Settings/NotificationSettings/index.tsx:291
 msgid "Off"
@@ -6241,7 +6181,6 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:242
-#: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:185
 msgid "Other"
 msgstr ""
@@ -8448,17 +8387,11 @@ msgid "Source: <0>{sourceName}</0>"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:39
-#: src/lib/moderation/useReportOptions.ts:72
-#: src/lib/moderation/useReportOptions.ts:85
 msgid "Spam"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:36
 msgid "Spam or other inauthentic behavior or deception"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:55
-msgid "Spam; excessive mentions or replies"
 msgstr ""
 
 #: src/lib/interests.ts:72
@@ -8744,13 +8677,6 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:697
 #: src/view/shell/Drawer.tsx:699
 msgid "Terms of Service"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:60
-#: src/lib/moderation/useReportOptions.ts:99
-#: src/lib/moderation/useReportOptions.ts:107
-#: src/lib/moderation/useReportOptions.ts:115
-msgid "Terms used violate community standards"
 msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:271
@@ -9614,11 +9540,6 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:895
 msgid "Unsupported video type: {mimeType}"
-msgstr ""
-
-#: src/lib/moderation/useReportOptions.ts:77
-#: src/lib/moderation/useReportOptions.ts:90
-msgid "Unwanted Sexual Content"
 msgstr ""
 
 #: src/screens/Settings/components/OTAInfo.tsx:58
