@@ -266,11 +266,13 @@ export function Item({children, value, label, style}: ItemProps) {
   )
 }
 
-export function ItemText({children, style}: ItemTextProps) {
+export function ItemText({children, style, emoji}: ItemTextProps) {
   const {selected} = useItemContext()
 
   return (
-    <Text style={[a.text_md, selected && a.font_semi_bold, style]}>
+    <Text
+      style={[a.text_md, selected && a.font_semi_bold, style]}
+      emoji={emoji}>
       {children}
     </Text>
   )

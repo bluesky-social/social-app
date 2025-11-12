@@ -187,6 +187,7 @@ export type ItemProps = {
 export type ItemTextProps = {
   children: React.ReactNode
   style?: StyleProp<TextStyle>
+  emoji?: boolean
 }
 
 export type ItemIndicatorProps = {
