@@ -138,6 +138,12 @@ export type IconProps = TextStyleProp
 
 export type ContentProps<T> = {
   /**
+   * Label at the top of the sheet on native.
+   *
+   * @default "Select an option"
+   */
+  label?: string
+  /**
    * Items to render. Recommended to be in the form {value: string, label: string} - if not,
    * you need to provide a `valueExtractor` function to extract the value from an item and
    * customise the `Select.ValueText` component.
@@ -180,6 +186,7 @@ export type ItemProps = {
 
 export type ItemTextProps = {
   children: React.ReactNode
+  style?: StyleProp<TextStyle>
 }
 
 export type ItemIndicatorProps = {
