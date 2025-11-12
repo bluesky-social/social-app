@@ -51,10 +51,14 @@ export function InternationalPhoneCodeSelect({
     )
   }, [i18n, defaultCountry])
 
+  const selected = useMemo(() => {
+    return items.find(item => item.value === value)
+  }, [value, items])
+
   return (
     <Select.Root value={value} onValueChange={onChange}>
       <Select.Trigger label={_(msg`Select telephone code`)}>
-        <Select.ValueText placeholder="+...">
+        <Select.ValueText placeholder="+..." webOverrideValue={selected}>
           {selected => (
             <>
               <Flag {...selected} />
@@ -80,7 +84,7 @@ export function InternationalPhoneCodeSelect({
                 {item.code}
               </Select.ItemText>
             </Select.Item>
-            {item.value === location?.countryCode && <Select.Separator />}
+            {item.value === defaultCountry && <Select.Separator />}
           </Fragment>
         )}
       />
