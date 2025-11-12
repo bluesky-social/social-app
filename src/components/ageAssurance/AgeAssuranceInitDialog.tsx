@@ -289,6 +289,7 @@ function Inner() {
                   <Trans>Your preferred language</Trans>
                 </TextField.LabelText>
                 <LanguageSelect
+                  label={_(msg`Preferred language`)}
                   value={language}
                   onChange={value => {
                     setLanguage(value)
