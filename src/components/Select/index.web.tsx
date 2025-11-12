@@ -122,10 +122,21 @@ export function Trigger({children, label}: TriggerProps) {
   }
 }
 
-export function ValueText({children: _, style, ...props}: ValueProps) {
+export function ValueText({
+  children,
+  webOverrideValue,
+  style,
+  ...props
+}: ValueProps) {
+  let content
+
+  if (webOverrideValue && children) {
+    content = children(webOverrideValue)
+  }
+
   return (
     <Text style={style}>
-      <RadixSelect.Value {...props} />
+      <RadixSelect.Value {...props}>{content}</RadixSelect.Value>
     </Text>
   )
 }

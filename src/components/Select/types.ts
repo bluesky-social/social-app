@@ -126,6 +126,13 @@ export type ValueProps = {
   children?: (value: any) => React.ReactNode
   placeholder?: string
   style?: StyleProp<TextStyle>
+  /**
+   * By default, web just extracts the component from inside the dropdown and portals it in here.
+   * If you want to override this, pass a value that will then be rendered via `children(value)`
+   *
+   * @platform web
+   */
+  webOverrideValue?: any
 }
 
 /*
