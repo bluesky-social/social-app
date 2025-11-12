@@ -1,15 +1,9 @@
-import {
-  createContext,
-  type CSSProperties,
-  forwardRef,
-  Fragment,
-  useContext,
-  useMemo,
-} from 'react'
+import {createContext, forwardRef, Fragment, useContext, useMemo} from 'react'
 import {View} from 'react-native'
 import {Select as RadixSelect} from 'radix-ui'
 
-import {flatten, useTheme} from '#/alf'
+import {useA11y} from '#/state/a11y'
+import {flatten, useTheme, web} from '#/alf'
 import {atoms as a} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
@@ -105,7 +99,6 @@ export function Trigger({children, label}: TriggerProps) {
           a.flex,
           a.relative,
           t.atoms.bg_contrast_50,
-          a.w_full,
           a.align_center,
           a.gap_sm,
           a.justify_between,
@@ -153,6 +146,7 @@ export function Content<T>({
 }: ContentProps<T>) {
   const t = useTheme()
   const selectedValue = useContext(SelectedValueContext)
+  const {reduceMotionEnabled} = useA11y()
 
   const scrollBtnStyles: React.CSSProperties[] = [
     a.absolute,
@@ -194,8 +188,11 @@ export function Content<T>({
       <RadixSelect.Content
         style={flatten([t.atoms.bg, a.rounded_sm, a.overflow_hidden])}
         position="popper"
+        align="center"
         sideOffset={5}
-        className="radix-select-content">
+        className="radix-select-content"
+        // prevent the keyboard shortcut for opening the composer
+        onKeyDown={evt => evt.stopPropagation()}>
         <View
           style={[
             a.flex_1,
@@ -203,6 +200,7 @@ export function Content<T>({
             t.atoms.border_contrast_low,
             a.rounded_sm,
             a.overflow_hidden,
+            !reduceMotionEnabled && a.zoom_fade_in,
           ]}>
           <RadixSelect.ScrollUpButton style={flatten(up)}>
             <ChevronUpIcon style={[t.atoms.text]} size="xs" />
@@ -269,7 +267,7 @@ export function Item({ref, value, style, children}: ItemProps) {
         t.atoms.text,
         a.relative,
         a.flex,
-        {minHeight: 25, paddingLeft: 30, paddingRight: 35},
+        {minHeight: 25, paddingLeft: 30, paddingRight: 8},
         a.user_select_none,
         a.align_center,
         a.rounded_xs,
@@ -288,8 +286,10 @@ export function Item({ref, value, style, children}: ItemProps) {
 
 export const ItemText = function ItemText({children, style}: ItemTextProps) {
   return (
-    <RadixSelect.ItemText style={flatten(style) as CSSProperties}>
-      {children}
+    <RadixSelect.ItemText asChild>
+      <Text style={flatten([style, web({pointerEvents: 'inherit'})])}>
+        {children}
+      </Text>
     </RadixSelect.ItemText>
   )
 }
