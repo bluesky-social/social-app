@@ -15,6 +15,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {Shield_Stroke2_Corner0_Rounded} from '#/components/icons/Shield'
 import {Text} from '#/components/Typography'
 
@@ -68,6 +69,7 @@ export function LabelsBtn({
             <Trans>Labels</Trans>
           )}
         </ButtonText>
+        <ButtonIcon icon={ChevronDownIcon} size="xs" />
       </Button>
 
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
