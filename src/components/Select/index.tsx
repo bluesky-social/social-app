@@ -122,10 +122,12 @@ export function ValueText({
   const t = useTheme()
 
   let text = value && children(value)
-  if (typeof text !== 'string') text = placeholder
+  if (!text) text = placeholder
 
   return (
-    <ButtonText style={[t.atoms.text, a.font_normal, style]}>{text}</ButtonText>
+    <ButtonText style={[t.atoms.text, a.font_normal, style]} emoji>
+      {text}
+    </ButtonText>
   )
 }
 

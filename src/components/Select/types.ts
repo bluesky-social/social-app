@@ -123,7 +123,7 @@ export type ValueProps = {
   /**
    * Only needed for native. Extracts the label from an item. Defaults to `item => item.label`
    */
-  children?: (value: any) => string
+  children?: (value: any) => React.ReactNode
   placeholder?: string
   style?: StyleProp<TextStyle>
 }
