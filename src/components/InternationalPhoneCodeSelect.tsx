@@ -1,8 +1,10 @@
 import {Fragment, useMemo} from 'react'
+import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {getCountriesWithTelephoneCodes} from '#/lib/international-telephone-codes'
+import {isWeb} from '#/platform/detection'
 import {useGeolocationStatus} from '#/state/geolocation'
 import {atoms as a} from '#/alf'
 import * as Select from '#/components/Select'
@@ -27,11 +29,13 @@ export function InternationalPhoneCodeSelect({
 
     return (
       Object.entries(telCountryMap)
-        .map(([value, {name, code}]) => ({
+        .map(([value, {name, code, unicodeFlag, svgFlag}]) => ({
           value,
           name,
           code,
           label: `${name} ${code}`,
+          unicodeFlag,
+          svgFlag,
         }))
         // boost the default value to the top
         .sort((a, b) =>
@@ -47,7 +51,9 @@ export function InternationalPhoneCodeSelect({
   return (
     <Select.Root value={value} onValueChange={onChange}>
       <Select.Trigger label={_(msg`Select telephone code`)}>
-        <Select.ValueText placeholder={_(msg`Select telephone code`)} />
+        <Select.ValueText placeholder={_(msg`Select telephone code`)}>
+          {item => item.unicodeFlag + ' ' + item.code}
+        </Select.ValueText>
         <Select.Icon />
       </Select.Trigger>
       <Select.Content
@@ -57,7 +63,17 @@ export function InternationalPhoneCodeSelect({
           <Fragment key={item.value}>
             <Select.Item value={item.value} label={item.label}>
               <Select.ItemIndicator />
-              <Select.ItemText style={[a.flex_1]}>{item.name}</Select.ItemText>
+              <Select.ItemText style={[a.flex_1]} emoji>
+                {isWeb ? (
+                  <Image
+                    source={item.svgFlag}
+                    accessibilityIgnoresInvertColors
+                  />
+                ) : (
+                  item.unicodeFlag + ' '
+                )}
+                {item.name}
+              </Select.ItemText>
               <Select.ItemText style={[a.text_right]}>
                 {item.code}
               </Select.ItemText>
