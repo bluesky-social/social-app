@@ -252,7 +252,7 @@ export function Divider({style}: ViewStyleProp) {
     <View
       style={[
         a.border_t,
-        t.atoms.border_contrast_medium,
+        t.atoms.border_contrast_low,
         a.w_full,
         a.my_sm,
         style,
