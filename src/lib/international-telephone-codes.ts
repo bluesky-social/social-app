@@ -1,4 +1,4 @@
-import {type I18n} from '@lingui/core'
+import {type I18n, i18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
 export function getCountriesWithTelephoneCodes(i18n: I18n) {
@@ -1504,4 +1504,18 @@ export function getCountriesWithTelephoneCodes(i18n: I18n) {
       svgFlag: require('../../assets/icons/flags/XK.svg'),
     },
   }
+}
+
+const DEFAULT_PHONE_COUNTRY = 'US'
+
+export function getDefaultCountry(location?: {countryCode?: string}) {
+  const supportedCountries = Object.keys(getCountriesWithTelephoneCodes(i18n)) // ok to use default i18n here because we don't use the name
+
+  if (
+    location?.countryCode &&
+    supportedCountries.includes(location.countryCode.toUpperCase())
+  ) {
+    return location.countryCode.toUpperCase()
+  }
+  return DEFAULT_PHONE_COUNTRY
 }
