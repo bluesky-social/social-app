@@ -112,9 +112,21 @@ export class BottomSheetNativeComponent extends React.Component<
           onStateChange={this.onStateChange}
           extraStyles={extraStyles}
           onLayout={e => {
-            const {height} = e.nativeEvent.layout
-            this.setState({viewHeight: height})
-            this.updateLayout()
+            if (isIOS15) {
+              const {height} = e.nativeEvent.layout
+              this.setState({viewHeight: height})
+            }
+            if (Platform.OS === 'android') {
+              // TEMP HACKFIX: I had to timebox this, but this is Bad.
+              // On Android, if you run updateLayout() immediately,
+              // it will take ages to actually run on the native side.
+              // However, adding literally any delay will fix this, including
+              // a console.log() - just sending the log to the CLI is enough.
+              // TODO: Get to the bottom of this and fix it properly! -sfn
+              setTimeout(() => this.updateLayout())
+            } else {
+              this.updateLayout()
+            }
           }}
         />
       </Portal>

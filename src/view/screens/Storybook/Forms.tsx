@@ -155,6 +155,15 @@ export function Forms() {
           </View>
         </Toggle.Group>
 
+        <Toggle.Item name="d" disabled value label="Click me">
+          <Toggle.Switch />
+          <Toggle.LabelText>Click me</Toggle.LabelText>
+        </Toggle.Item>
+        <Toggle.Item name="d" disabled value isInvalid label="Click me">
+          <Toggle.Switch />
+          <Toggle.LabelText>Click me</Toggle.LabelText>
+        </Toggle.Item>
+
         <Toggle.Group
           label="Toggle"
           type="checkbox"
