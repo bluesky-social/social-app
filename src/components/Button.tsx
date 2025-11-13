@@ -442,20 +442,20 @@ export const Button = React.forwardRef<View, ButtonProps>(
         if (size === 'large') {
           baseStyles.push(a.rounded_full, {
             paddingVertical: 12,
-            paddingHorizontal: 25,
-            gap: 3,
+            paddingHorizontal: 24,
+            gap: 6,
           })
         } else if (size === 'small') {
           baseStyles.push(a.rounded_full, {
             paddingVertical: 8,
-            paddingHorizontal: 13,
-            gap: 3,
+            paddingHorizontal: 14,
+            gap: 5,
           })
         } else if (size === 'tiny') {
           baseStyles.push(a.rounded_full, {
             paddingVertical: 5,
-            paddingHorizontal: 9,
-            gap: 2,
+            paddingHorizontal: 10,
+            gap: 3,
           })
         }
       } else if (shape === 'rectangular') {
@@ -531,9 +531,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
         variant,
         color,
         size,
+        shape,
         disabled: disabled || false,
       }),
-      [state, variant, color, size, disabled],
+      [state, variant, color, size, shape, disabled],
     )
 
     return (
@@ -774,51 +775,67 @@ export function ButtonIcon({
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size: buttonSize} = useButtonContext()
+  const {size: buttonSize, shape: buttonShape} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
-  const {iconSize, iconContainerSize} = React.useMemo(() => {
-    /**
-     * Pre-set icon sizes for different button sizes
-     */
-    const iconSizeShorthand =
-      size ??
-      (({
-        large: 'md',
-        small: 'sm',
-        tiny: 'xs',
-      }[buttonSize || 'small'] || 'sm') as Exclude<
-        SVGIconProps['size'],
-        undefined
-      >)
+  const {iconSize, iconContainerSize, iconNegativeMargin} =
+    React.useMemo(() => {
+      /**
+       * Pre-set icon sizes for different button sizes
+       */
+      const iconSizeShorthand =
+        size ??
+        (({
+          large: 'md',
+          small: 'sm',
+          tiny: 'xs',
+        }[buttonSize || 'small'] || 'sm') as Exclude<
+          SVGIconProps['size'],
+          undefined
+        >)
 
-    /*
-     * Copied here from icons/common.tsx so we can tweak if we need to, but
-     * also so that we can calculate transforms.
-     */
-    const iconSize = {
-      xs: 12,
-      sm: 16,
-      md: 18,
-      lg: 24,
-      xl: 28,
-      '2xl': 32,
-    }[iconSizeShorthand]
+      /*
+       * Copied here from icons/common.tsx so we can tweak if we need to, but
+       * also so that we can calculate transforms.
+       */
+      const iconSize = {
+        xs: 12,
+        sm: 16,
+        md: 18,
+        lg: 24,
+        xl: 28,
+        '2xl': 32,
+      }[iconSizeShorthand]
 
-    /*
-     * Goal here is to match rendered text size so that different size icons
-     * don't increase button size
-     */
-    const iconContainerSize = {
-      large: 20,
-      small: 17,
-      tiny: 15,
-    }[buttonSize || 'small']
+      /*
+       * Goal here is to match rendered text size so that different size icons
+       * don't increase button size
+       */
+      const iconContainerSize = {
+        large: 20,
+        small: 17,
+        tiny: 15,
+      }[buttonSize || 'small']
 
-    return {
-      iconSize,
-      iconContainerSize,
-    }
-  }, [buttonSize, size])
+      /*
+       * The icon needs to be closer to the edge of the button than the text. Therefore
+       * we make the gap slightly too large, and then pull in the sides using negative margins.
+       */
+      let iconNegativeMargin = 0
+
+      if (buttonShape === 'default') {
+        iconNegativeMargin = {
+          large: -2,
+          small: -2,
+          tiny: -1,
+        }[buttonSize || 'small']
+      }
+
+      return {
+        iconSize,
+        iconContainerSize,
+        iconNegativeMargin,
+      }
+    }, [buttonSize, buttonShape, size])
 
   return (
     <View
@@ -827,6 +844,8 @@ export function ButtonIcon({
         {
           width: iconContainerSize,
           height: iconContainerSize,
+          marginLeft: iconNegativeMargin,
+          marginRight: iconNegativeMargin,
         },
       ]}>
       <View
