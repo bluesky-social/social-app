@@ -257,7 +257,7 @@ export function PostInteractionSettingsDialogControlledInner(
           ]}>
           <Loader size="xl" />
           <Text style={[a.italic, a.text_center]}>
-            Loading post interaction settings...
+            <Trans>Loading post interaction settings...</Trans>
           </Text>
         </View>
       ) : (
@@ -429,7 +429,7 @@ export function PostInteractionSettingsForm({
               <Toggle.Item
                 name="everyone"
                 type="checkbox"
-                label={_(msg`Allow anybody to reply`)}
+                label={_(msg`Allow anyone to reply`)}
                 style={[a.flex_1]}>
                 {({selected}) => (
                   <Panel.Panel active={selected}>
@@ -568,7 +568,7 @@ export function PostInteractionSettingsForm({
                 ) : lists.length === 0 ? (
                   <Panel.Panel>
                     <Panel.PanelText>
-                      <Trans>You have no lists yet.</Trans>
+                      <Trans>You don't have any lists yet.</Trans>
                     </Panel.PanelText>
                   </Panel.Panel>
                 ) : (
