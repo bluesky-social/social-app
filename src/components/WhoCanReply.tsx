@@ -30,7 +30,7 @@ import {
   PostInteractionSettingsDialog,
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
+import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon} from '#/components/icons/Chevron'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon} from '#/components/icons/CircleBanSign'
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
@@ -137,7 +137,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
             </Text>
 
             {isThreadAuthor && (
-              <ChevronDownIcon width={12} fill={t.palette.primary_500} />
+              <TinyChevronDownIcon width={8} fill={t.palette.primary_500} />
             )}
           </View>
         )}
