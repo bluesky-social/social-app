@@ -9,7 +9,7 @@ import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PostInteractionSettingsControlledDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
+import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/Chevron'
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 
@@ -61,7 +61,7 @@ export function ThreadgateBtn({
         )}>
         <ButtonIcon icon={anyoneCanInteract ? EarthIcon : GroupIcon} />
         <ButtonText numberOfLines={1}>{label}</ButtonText>
-        <ButtonIcon icon={ChevronDownIcon} size="xs" />
+        <ButtonIcon icon={TinyChevronIcon} size="2xs" />
       </Button>
       <PostInteractionSettingsControlledDialog
         control={control}
