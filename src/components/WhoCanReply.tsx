@@ -1,4 +1,4 @@
-import {Fragment, useMemo} from 'react'
+import {Fragment, useMemo, useRef} from 'react'
 import {
   Keyboard,
   Platform,
@@ -69,6 +69,11 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
     postUri: post.uri,
     rootPostUri: rootUri,
   })
+  const prefetchPromise = useRef<Promise<void>>(Promise.resolve())
+
+  const prefetch = () => {
+    prefetchPromise.current = prefetchPostInteractionSettings()
+  }
 
   const anyoneCanReply =
     settings.length === 1 && settings[0].type === 'everybody'
@@ -84,7 +89,14 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
       Keyboard.dismiss()
     }
     if (isThreadAuthor) {
-      editDialogControl.open()
+      // wait on prefetch if it manages to resolve in under 200ms
+      // otherwise, proceed immediately and show the spinner -sfn
+      Promise.race([
+        prefetchPromise.current,
+        new Promise(res => setTimeout(res, 200)),
+      ]).finally(() => {
+        editDialogControl.open()
+      })
     } else {
       infoDialogControl.open()
     }
@@ -100,10 +112,10 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         {...(isThreadAuthor
           ? Platform.select({
               web: {
-                onHoverIn: prefetchPostInteractionSettings,
+                onHoverIn: prefetch,
               },
               native: {
-                onPressIn: prefetchPostInteractionSettings,
+                onPressIn: prefetch,
               },
             })
           : {})}
