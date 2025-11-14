@@ -202,6 +202,7 @@ export type MetricEvents = {
 
   'composer:gif:open': {}
   'composer:gif:select': {}
+  'postComposer:click': {}
 
   // Data events
   'account:create:begin': {}

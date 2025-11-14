@@ -69,6 +69,7 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
+import {FeedComposerPrompt} from '../feeds/FeedComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -147,6 +148,10 @@ type FeedRow =
     }
   | {
       type: 'ageAssuranceBanner'
+      key: string
+    }
+  | {
+      type: 'composerPrompt'
       key: string
     }
 
@@ -501,6 +506,18 @@ let PostFeed = ({
                           'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
+                    // Add composer prompt for Discover and Following feeds (after trending bar if it exists)
+                    // Feature gate disabled - always show
+                    if (
+                      hasSession &&
+                      (feedUriOrActorDid === DISCOVER_FEED_URI ||
+                        feed === 'following')
+                    ) {
+                      arr.push({
+                        type: 'composerPrompt',
+                        key: 'composerPrompt-' + sliceIndex,
+                      })
+                    }
                   } else if (sliceIndex === 15) {
                     if (areVideoFeedsEnabled && !trendingVideoDisabled) {
                       arr.push({
@@ -622,6 +639,7 @@ let PostFeed = ({
     isEmpty,
     lastFetchedAt,
     data,
+    feed,
     feedType,
     feedUriOrActorDid,
     feedTab,
@@ -726,6 +744,8 @@ let PostFeed = ({
         return <AgeAssuranceDismissibleFeedBanner />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'composerPrompt') {
+        return <FeedComposerPrompt />
       } else if (row.type === 'interstitialTrendingVideos') {
         return <TrendingVideosInterstitial />
       } else if (row.type === 'fallbackMarker') {
