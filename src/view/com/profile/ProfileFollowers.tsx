@@ -16,15 +16,19 @@ import {ProfileCardWithFollowBtn} from './ProfileCard'
 function renderItem({
   item,
   index,
+  contextProfileDid,
 }: {
   item: ActorDefs.ProfileView
   index: number
+  contextProfileDid: string | undefined
 }) {
   return (
     <ProfileCardWithFollowBtn
       key={item.did}
       profile={item}
       noBorder={index === 0}
+      position={index + 1}
+      contextProfileDid={contextProfileDid}
     />
   )
 }
@@ -83,6 +87,12 @@ export function ProfileFollowers({name}: {name: string}) {
     }
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
+  const renderItemWithContext = React.useCallback(
+    ({item, index}: {item: ActorDefs.ProfileView; index: number}) =>
+      renderItem({item, index, contextProfileDid: resolvedDid}),
+    [resolvedDid],
+  )
+
   if (followers.length < 1) {
     return (
       <ListMaybePlaceholder
@@ -104,7 +114,7 @@ export function ProfileFollowers({name}: {name: string}) {
   return (
     <List
       data={followers}
-      renderItem={renderItem}
+      renderItem={renderItemWithContext}
       keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}

@@ -9,10 +9,14 @@ export function ProfileCardWithFollowBtn({
   profile,
   noBorder,
   logContext = 'ProfileCard',
+  position,
+  contextProfileDid,
 }: {
   profile: AppBskyActorDefs.ProfileView
   noBorder?: boolean
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
+  position?: number
+  contextProfileDid?: string
 }) {
   const t = useTheme()
   const moderationOpts = useModerationOpts()
@@ -30,6 +34,8 @@ export function ProfileCardWithFollowBtn({
         profile={profile}
         moderationOpts={moderationOpts}
         logContext={logContext}
+        position={position}
+        contextProfileDid={contextProfileDid}
       />
     </View>
   )
