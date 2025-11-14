@@ -347,8 +347,8 @@ function useProfileFollowMutation(
             : undefined,
         followeeDid: did,
         followerClout: toClout(ownProfile?.followersCount),
-        ...(position !== undefined && {position}),
-        ...(contextProfileDid !== undefined && {contextProfileDid}),
+        position,
+        contextProfileDid,
       })
       return await agent.follow(did)
     },
