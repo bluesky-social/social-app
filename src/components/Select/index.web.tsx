@@ -1,4 +1,4 @@
-import {createContext, forwardRef, useContext, useMemo} from 'react'
+import {createContext, forwardRef, Fragment, useContext, useMemo} from 'react'
 import {View} from 'react-native'
 import {Select as RadixSelect} from 'radix-ui'
 
@@ -138,7 +138,11 @@ export function Icon({style}: IconProps) {
   )
 }
 
-export function Content<T>({items, renderItem}: ContentProps<T>) {
+export function Content<T>({
+  items,
+  renderItem,
+  valueExtractor = defaultItemValueExtractor,
+}: ContentProps<T>) {
   const t = useTheme()
   const selectedValue = useContext(SelectedValueContext)
 
@@ -196,7 +200,11 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
             <ChevronUpIcon style={[t.atoms.text]} size="xs" />
           </RadixSelect.ScrollUpButton>
           <RadixSelect.Viewport style={flatten([a.p_xs])}>
-            {items.map((item, index) => renderItem(item, index, selectedValue))}
+            {items.map((item, index) => (
+              <Fragment key={valueExtractor(item)}>
+                {renderItem(item, index, selectedValue)}
+              </Fragment>
+            ))}
           </RadixSelect.Viewport>
           <RadixSelect.ScrollDownButton style={flatten(down)}>
             <ChevronDownIcon style={[t.atoms.text]} size="xs" />
@@ -205,6 +213,10 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
       </RadixSelect.Content>
     </RadixSelect.Portal>
   )
+}
+
+function defaultItemValueExtractor(item: any) {
+  return item.value
 }
 
 const ItemContext = createContext<{
