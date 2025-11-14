@@ -50,7 +50,7 @@ const InternalContext = createContext<{
  */
 export function Root<T extends string>({
   label,
-  type,
+  type = 'radio',
   size = 'large',
   value,
   onChange,
