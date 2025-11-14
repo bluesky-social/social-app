@@ -11,14 +11,19 @@ import {
 } from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
 
+// Portal Provider on native, but we actually don't need to do anything here
+export function Provider({children}: {children: React.ReactNode}) {
+  return <>{children}</>
+}
+Provider.displayName = 'TooltipProvider'
+
 type TooltipContextType = {
   position: 'top' | 'bottom'
   onVisibleChange: (open: boolean) => void
 }
 
-const TooltipContext = createContext<TooltipContextType>({
+const TooltipContext = createContext<Pick<TooltipContextType, 'position'>>({
   position: 'bottom',
-  onVisibleChange: () => {},
 })
 TooltipContext.displayName = 'TooltipContext'
 
@@ -33,10 +38,7 @@ export function Outer({
   visible: boolean
   onVisibleChange: (visible: boolean) => void
 }) {
-  const ctx = useMemo(
-    () => ({position, onVisibleChange}),
-    [position, onVisibleChange],
-  )
+  const ctx = useMemo(() => ({position}), [position])
   return (
     <Popover.Root open={visible} onOpenChange={onVisibleChange}>
       <TooltipContext.Provider value={ctx}>{children}</TooltipContext.Provider>
@@ -60,7 +62,7 @@ export function Content({
   label: string
 }) {
   const t = useTheme()
-  const {position, onVisibleChange} = useContext(TooltipContext)
+  const {position} = useContext(TooltipContext)
   return (
     <Popover.Portal>
       <Popover.Content
@@ -69,7 +71,11 @@ export function Content({
         side={position}
         sideOffset={4}
         collisionPadding={MIN_EDGE_SPACE}
-        onInteractOutside={() => onVisibleChange(false)}
+        onInteractOutside={evt => {
+          if (evt.type === 'dismissableLayer.focusOutside') {
+            evt.preventDefault()
+          }
+        }}
         style={flatten([
           a.rounded_sm,
           select(t.name, {

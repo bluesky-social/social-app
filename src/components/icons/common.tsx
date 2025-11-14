@@ -13,6 +13,7 @@ export type Props = {
 } & Omit<SvgProps, 'style' | 'size'>
 
 export const sizes = {
+  '2xs': 8,
   xs: 12,
   sm: 16,
   md: 20,

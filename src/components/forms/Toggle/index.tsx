@@ -1,12 +1,20 @@
-import React from 'react'
-import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import Animated, {LinearTransition} from 'react-native-reanimated'
+import {createContext, useCallback, useContext, useMemo} from 'react'
+import {
+  Pressable,
+  type PressableProps,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
 import {isNative} from '#/platform/detection'
 import {
   atoms as a,
   native,
+  platform,
   type TextStyleProp,
   useTheme,
   type ViewStyleProp,
@@ -14,6 +22,8 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
+
+export * from './Panel'
 
 export type ItemState = {
   name: string
@@ -25,7 +35,7 @@ export type ItemState = {
   focused: boolean
 }
 
-const ItemContext = React.createContext<ItemState>({
+const ItemContext = createContext<ItemState>({
   name: '',
   selected: false,
   disabled: false,
@@ -36,7 +46,7 @@ const ItemContext = React.createContext<ItemState>({
 })
 ItemContext.displayName = 'ToggleItemContext'
 
-const GroupContext = React.createContext<{
+const GroupContext = createContext<{
   values: string[]
   disabled: boolean
   type: 'radio' | 'checkbox'
@@ -70,10 +80,11 @@ export type ItemProps = ViewStyleProp & {
   onChange?: (selected: boolean) => void
   isInvalid?: boolean
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
+  hitSlop?: PressableProps['hitSlop']
 }
 
 export function useItemContext() {
-  return React.useContext(ItemContext)
+  return useContext(ItemContext)
 }
 
 export function Group({
@@ -88,9 +99,8 @@ export function Group({
 }: GroupProps) {
   const groupRole = type === 'radio' ? 'radiogroup' : undefined
   const values = type === 'radio' ? providedValues.slice(0, 1) : providedValues
-  const [maxReached, setMaxReached] = React.useState(false)
 
-  const setFieldValue = React.useCallback<
+  const setFieldValue = useCallback<
     (props: {name: string; value: boolean}) => void
   >(
     ({name, value}) => {
@@ -105,25 +115,13 @@ export function Group({
     [type, onChange, values],
   )
 
-  React.useEffect(() => {
-    if (type === 'checkbox') {
-      if (
-        maxSelections &&
-        values.length >= maxSelections &&
-        maxReached === false
-      ) {
-        setMaxReached(true)
-      } else if (
-        maxSelections &&
-        values.length < maxSelections &&
-        maxReached === true
-      ) {
-        setMaxReached(false)
-      }
-    }
-  }, [type, values.length, maxSelections, maxReached, setMaxReached])
+  const maxReached = !!(
+    type === 'checkbox' &&
+    maxSelections &&
+    values.length >= maxSelections
+  )
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       values,
       type,
@@ -170,7 +168,7 @@ export function Item({
     disabled: groupDisabled,
     setFieldValue,
     maxSelectionsReached,
-  } = React.useContext(GroupContext)
+  } = useContext(GroupContext)
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -182,19 +180,21 @@ export function Item({
     onOut: onPressOut,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const playHaptic = useHaptics()
 
   const role = groupType === 'radio' ? 'radio' : type
   const selected = selectedValues.includes(name) || !!value
   const disabled =
     groupDisabled || itemDisabled || (!selected && maxSelectionsReached)
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
+    playHaptic('Light')
     const next = !selected
     setFieldValue({name, value: next})
     onChange?.(next)
-  }, [name, selected, onChange, setFieldValue])
+  }, [playHaptic, name, selected, onChange, setFieldValue])
 
-  const state = React.useMemo(
+  const state = useMemo(
     () => ({
       name,
       selected,
@@ -250,8 +250,8 @@ export function LabelText({
       style={[
         a.font_semi_bold,
         a.leading_tight,
+        a.user_select_none,
         {
-          userSelect: 'none',
           color: disabled
             ? t.atoms.text_contrast_low.color
             : t.atoms.text_contrast_high.color,
@@ -287,21 +287,26 @@ export function createSharedToggleStyles({
 
   if (selected) {
     base.push({
-      backgroundColor: t.palette.primary_25,
+      backgroundColor: t.palette.primary_500,
       borderColor: t.palette.primary_500,
     })
 
     if (hovered) {
       baseHover.push({
-        backgroundColor: t.palette.primary_100,
-        borderColor: t.palette.primary_600,
+        backgroundColor: t.palette.primary_400,
+        borderColor: t.palette.primary_400,
       })
     }
   } else {
+    base.push({
+      backgroundColor: t.palette.contrast_25,
+      borderColor: t.palette.contrast_100,
+    })
+
     if (hovered) {
       baseHover.push({
         backgroundColor: t.palette.contrast_50,
-        borderColor: t.palette.contrast_500,
+        borderColor: t.palette.contrast_200,
       })
     }
   }
@@ -318,6 +323,20 @@ export function createSharedToggleStyles({
         borderColor: t.palette.negative_600,
       })
     }
+
+    if (selected) {
+      base.push({
+        backgroundColor: t.palette.negative_500,
+        borderColor: t.palette.negative_500,
+      })
+
+      if (hovered) {
+        baseHover.push({
+          backgroundColor: t.palette.negative_400,
+          borderColor: t.palette.negative_400,
+        })
+      }
+    }
   }
 
   if (disabled) {
@@ -325,6 +344,13 @@ export function createSharedToggleStyles({
       backgroundColor: t.palette.contrast_100,
       borderColor: t.palette.contrast_400,
     })
+
+    if (selected) {
+      base.push({
+        backgroundColor: t.palette.primary_100,
+        borderColor: t.palette.contrast_400,
+      })
+    }
   }
 
   return {
@@ -350,66 +376,125 @@ export function Checkbox() {
       style={[
         a.justify_center,
         a.align_center,
-        a.rounded_xs,
         t.atoms.border_contrast_high,
+        a.transition_color,
         {
           borderWidth: 1,
           height: 24,
           width: 24,
+          borderRadius: 6,
         },
         baseStyles,
         hovered ? baseHoverStyles : {},
       ]}>
-      {selected ? <Checkmark size="xs" fill={t.palette.primary_500} /> : null}
+      {selected && <Checkmark width={14} fill={t.palette.white} />}
     </View>
   )
 }
 
 export function Switch() {
   const t = useTheme()
-  const {selected, hovered, focused, disabled, isInvalid} = useItemContext()
-  const {baseStyles, baseHoverStyles, indicatorStyles} =
-    createSharedToggleStyles({
-      theme: t,
-      hovered,
-      focused,
-      selected,
-      disabled,
-      isInvalid,
-    })
+  const {selected, hovered, disabled, isInvalid} = useItemContext()
+  const {baseStyles, baseHoverStyles, indicatorStyles} = useMemo(() => {
+    const base: ViewStyle[] = []
+    const baseHover: ViewStyle[] = []
+    const indicator: ViewStyle[] = []
+
+    if (selected) {
+      base.push({
+        backgroundColor: t.palette.primary_500,
+      })
+
+      if (hovered) {
+        baseHover.push({
+          backgroundColor: t.palette.primary_400,
+        })
+      }
+    } else {
+      base.push({
+        backgroundColor: t.palette.contrast_200,
+      })
+
+      if (hovered) {
+        baseHover.push({
+          backgroundColor: t.palette.contrast_100,
+        })
+      }
+    }
+
+    if (isInvalid) {
+      base.push({
+        backgroundColor: t.palette.negative_200,
+      })
+
+      if (hovered) {
+        baseHover.push({
+          backgroundColor: t.palette.negative_100,
+        })
+      }
+
+      if (selected) {
+        base.push({
+          backgroundColor: t.palette.negative_500,
+        })
+
+        if (hovered) {
+          baseHover.push({
+            backgroundColor: t.palette.negative_400,
+          })
+        }
+      }
+    }
+
+    if (disabled) {
+      base.push({
+        backgroundColor: t.palette.contrast_50,
+      })
+
+      if (selected) {
+        base.push({
+          backgroundColor: t.palette.primary_100,
+        })
+      }
+    }
+
+    return {
+      baseStyles: base,
+      baseHoverStyles: disabled ? [] : baseHover,
+      indicatorStyles: indicator,
+    }
+  }, [t, hovered, disabled, selected, isInvalid])
+
   return (
     <View
       style={[
         a.relative,
         a.rounded_full,
         t.atoms.bg,
-        t.atoms.border_contrast_high,
         {
-          borderWidth: 1,
-          height: 24,
-          width: 36,
+          height: 28,
+          width: 48,
           padding: 3,
         },
+        a.transition_color,
         baseStyles,
         hovered ? baseHoverStyles : {},
       ]}>
       <Animated.View
-        layout={LinearTransition.duration(100)}
+        layout={LinearTransition.duration(
+          platform({
+            web: 100,
+            default: 200,
+          }),
+        ).easing(Easing.inOut(Easing.cubic))}
         style={[
           a.rounded_full,
           {
-            height: 16,
-            width: 16,
+            backgroundColor: t.palette.white,
+            height: 22,
+            width: 22,
           },
-          selected
-            ? {
-                backgroundColor: t.palette.primary_500,
-                alignSelf: 'flex-end',
-              }
-            : {
-                backgroundColor: t.palette.contrast_400,
-                alignSelf: 'flex-start',
-              },
+          selected ? {alignSelf: 'flex-end'} : {alignSelf: 'flex-start'},
           indicatorStyles,
         ]}
       />
@@ -420,7 +505,7 @@ export function Switch() {
 export function Radio() {
   const t = useTheme()
   const {selected, hovered, focused, disabled, isInvalid} =
-    React.useContext(ItemContext)
+    useContext(ItemContext)
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,
@@ -437,29 +522,27 @@ export function Radio() {
         a.align_center,
         a.rounded_full,
         t.atoms.border_contrast_high,
+        a.transition_color,
         {
           borderWidth: 1,
-          height: 24,
-          width: 24,
+          height: 25,
+          width: 25,
+          margin: -1,
         },
         baseStyles,
         hovered ? baseHoverStyles : {},
       ]}>
-      {selected ? (
+      {selected && (
         <View
           style={[
             a.absolute,
             a.rounded_full,
-            {height: 16, width: 16},
-            selected
-              ? {
-                  backgroundColor: t.palette.primary_500,
-                }
-              : {},
+            {height: 12, width: 12},
+            {backgroundColor: t.palette.white},
             indicatorStyles,
           ]}
         />
-      ) : null}
+      )}
     </View>
   )
 }
