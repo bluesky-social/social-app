@@ -8,14 +8,7 @@ import {BSKY_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {useSession} from '#/state/session'
-import {
-  android,
-  atoms as a,
-  platform,
-  useBreakpoints,
-  useTheme,
-  web,
-} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -59,7 +52,10 @@ export function ServerInputDialog({
     <Dialog.Outer
       control={control}
       onClose={onClose}
-      nativeOptions={android({minHeight: height / 2})}>
+      nativeOptions={platform({
+        android: {minHeight: height / 2},
+        ios: {preventExpansion: true},
+      })}>
       <Dialog.Handle />
       <DialogInner
         formRef={formRef}
