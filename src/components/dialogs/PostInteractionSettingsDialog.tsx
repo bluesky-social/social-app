@@ -50,7 +50,6 @@ import {
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
 import {Loader} from '#/components/Loader'
-import * as Panel from '#/components/Panel'
 import {Text} from '#/components/Typography'
 
 export type PostInteractionSettingsFormProps = {
@@ -432,12 +431,12 @@ export function PostInteractionSettingsForm({
                 label={_(msg`Allow anyone to reply`)}
                 style={[a.flex_1]}>
                 {({selected}) => (
-                  <Panel.Panel active={selected}>
+                  <Toggle.Panel active={selected}>
                     <Toggle.Radio />
-                    <Panel.PanelText>
+                    <Toggle.PanelText>
                       <Trans>Anyone</Trans>
-                    </Panel.PanelText>
-                  </Panel.Panel>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
                 )}
               </Toggle.Item>
               <Toggle.Item
@@ -446,12 +445,12 @@ export function PostInteractionSettingsForm({
                 label={_(msg`Disable replies entirely`)}
                 style={[a.flex_1]}>
                 {({selected}) => (
-                  <Panel.Panel active={selected}>
+                  <Toggle.Panel active={selected}>
                     <Toggle.Radio />
-                    <Panel.PanelText>
+                    <Toggle.PanelText>
                       <Trans>Nobody</Trans>
-                    </Panel.PanelText>
-                  </Panel.Panel>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
                 )}
               </Toggle.Item>
             </View>
@@ -464,19 +463,19 @@ export function PostInteractionSettingsForm({
             values={toggleGroupValues}
             onChange={toggleGroupOnChange}
             disabled={replySettingsDisabled}>
-            <Panel.PanelGroup>
+            <Toggle.PanelGroup>
               <Toggle.Item
                 name="followers"
                 type="checkbox"
                 label={_(msg`Allow your followers to reply`)}
                 hitSlop={0}>
                 {({selected}) => (
-                  <Panel.Panel active={selected} adjacent="trailing">
+                  <Toggle.Panel active={selected} adjacent="trailing">
                     <Toggle.Checkbox />
-                    <Panel.PanelText>
+                    <Toggle.PanelText>
                       <Trans>Your followers</Trans>
-                    </Panel.PanelText>
-                  </Panel.Panel>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
                 )}
               </Toggle.Item>
               <Toggle.Item
@@ -485,12 +484,12 @@ export function PostInteractionSettingsForm({
                 label={_(msg`Allow people you follow to reply`)}
                 hitSlop={0}>
                 {({selected}) => (
-                  <Panel.Panel active={selected} adjacent="both">
+                  <Toggle.Panel active={selected} adjacent="both">
                     <Toggle.Checkbox />
-                    <Panel.PanelText>
+                    <Toggle.PanelText>
                       <Trans>People you follow</Trans>
-                    </Panel.PanelText>
-                  </Panel.Panel>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
                 )}
               </Toggle.Item>
               <Toggle.Item
@@ -499,12 +498,12 @@ export function PostInteractionSettingsForm({
                 label={_(msg`Allow people you mention to reply`)}
                 hitSlop={0}>
                 {({selected}) => (
-                  <Panel.Panel active={selected} adjacent="both">
+                  <Toggle.Panel active={selected} adjacent="both">
                     <Toggle.Checkbox />
-                    <Panel.PanelText>
+                    <Toggle.PanelText>
                       <Trans>People you mention</Trans>
-                    </Panel.PanelText>
-                  </Panel.Panel>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
                 )}
               </Toggle.Item>
 
@@ -527,10 +526,10 @@ export function PostInteractionSettingsForm({
                   }
                   setShowLists(s => !s)
                 }}>
-                <Panel.Panel
+                <Toggle.Panel
                   active={numberOfListsSelected > 0}
                   adjacent={showLists ? 'both' : 'leading'}>
-                  <Panel.PanelText>
+                  <Toggle.PanelText>
                     {numberOfListsSelected === 0 ? (
                       <Trans>Select from your lists</Trans>
                     ) : (
@@ -544,33 +543,33 @@ export function PostInteractionSettingsForm({
                         </NestedText>
                       </Trans>
                     )}
-                  </Panel.PanelText>
-                  <Panel.PanelIcon
+                  </Toggle.PanelText>
+                  <Toggle.PanelIcon
                     icon={showLists ? ChevronUpIcon : ChevronDownIcon}
                   />
-                </Panel.Panel>
+                </Toggle.Panel>
               </Button>
               {showLists &&
                 (isListsPending ? (
-                  <Panel.Panel>
-                    <Panel.PanelText>
+                  <Toggle.Panel>
+                    <Toggle.PanelText>
                       <Trans>Loading lists...</Trans>
-                    </Panel.PanelText>
-                  </Panel.Panel>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
                 ) : isListsError ? (
-                  <Panel.Panel>
-                    <Panel.PanelText>
+                  <Toggle.Panel>
+                    <Toggle.PanelText>
                       <Trans>
                         An error occurred while loading your lists :/
                       </Trans>
-                    </Panel.PanelText>
-                  </Panel.Panel>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
                 ) : lists.length === 0 ? (
-                  <Panel.Panel>
-                    <Panel.PanelText>
+                  <Toggle.Panel>
+                    <Toggle.PanelText>
                       <Trans>You don't have any lists yet.</Trans>
-                    </Panel.PanelText>
-                  </Panel.Panel>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
                 ) : (
                   lists.map((list, i) => (
                     <Toggle.Item
@@ -580,7 +579,7 @@ export function PostInteractionSettingsForm({
                       label={_(msg`Allow users in ${list.name} to reply`)}
                       hitSlop={0}>
                       {({selected}) => (
-                        <Panel.Panel
+                        <Toggle.Panel
                           active={selected}
                           adjacent={
                             i === lists.length - 1 ? 'leading' : 'both'
@@ -591,13 +590,13 @@ export function PostInteractionSettingsForm({
                             type="list"
                             avatar={list.avatar}
                           />
-                          <Panel.PanelText>{list.name}</Panel.PanelText>
-                        </Panel.Panel>
+                          <Toggle.PanelText>{list.name}</Toggle.PanelText>
+                        </Toggle.Panel>
                       )}
                     </Toggle.Item>
                   ))
                 ))}
-            </Panel.PanelGroup>
+            </Toggle.PanelGroup>
           </Toggle.Group>
         </View>
       </View>
@@ -613,12 +612,12 @@ export function PostInteractionSettingsForm({
         value={quotesEnabled}
         onChange={onChangeQuotesEnabled}>
         {({selected}) => (
-          <Panel.Panel active={selected}>
-            <Panel.PanelText icon={QuoteIcon}>
+          <Toggle.Panel active={selected}>
+            <Toggle.PanelText icon={QuoteIcon}>
               <Trans>Allow quote posts</Trans>
-            </Panel.PanelText>
+            </Toggle.PanelText>
             <Toggle.Switch />
-          </Panel.Panel>
+          </Toggle.Panel>
         )}
       </Toggle.Item>
 

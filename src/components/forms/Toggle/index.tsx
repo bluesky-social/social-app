@@ -23,6 +23,8 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
 
+export * from './Panel'
+
 export type ItemState = {
   name: string
   selected: boolean
