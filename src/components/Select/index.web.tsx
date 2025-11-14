@@ -96,8 +96,7 @@ export function Trigger({children, label}: TriggerProps) {
         style={flatten([
           a.flex,
           a.relative,
-          t.atoms.bg_contrast_25,
-          a.rounded_sm,
+          t.atoms.bg_contrast_50,
           a.w_full,
           a.align_center,
           a.gap_sm,
@@ -106,15 +105,14 @@ export function Trigger({children, label}: TriggerProps) {
           a.px_md,
           a.pointer,
           {
+            borderRadius: 10,
             maxWidth: 400,
             outline: 0,
             borderWidth: 2,
             borderStyle: 'solid',
             borderColor: focused
               ? t.palette.primary_500
-              : hovered
-                ? t.palette.contrast_100
-                : t.palette.contrast_25,
+              : t.palette.contrast_50,
           },
         ])}>
         {children}
