@@ -4,7 +4,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
@@ -109,11 +108,15 @@ export function ProfileFollowers({name}: {name: string}) {
       if (position === 0) {
         return
       }
-      logEvent('profileCard:seen', {
-        profileDid: item.did,
-        position,
-        ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
-      })
+      logger.metric(
+        'profileCard:seen',
+        {
+          profileDid: item.did,
+          position,
+          ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
+        },
+        {statsig: false},
+      )
     },
     [followers, resolvedDid],
   )
