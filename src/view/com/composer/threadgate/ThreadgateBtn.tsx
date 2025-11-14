@@ -75,13 +75,13 @@ export function ThreadgateBtn({
     control.open()
   }
 
-  const defaultThreadgateAllowUISettings = threadgateRecordToAllowUISetting({
+  const prefThreadgateAllowUISettings = threadgateRecordToAllowUISetting({
     $type: 'app.bsky.feed.threadgate',
     post: '',
     createdAt: new Date().toISOString(),
     allow: preferences?.postInteractionSettings.threadgateAllowRules,
   })
-  const defaultPostgate = createPostgateRecord({
+  const prefPostgate = createPostgateRecord({
     post: '',
     embeddingRules:
       preferences?.postInteractionSettings?.postgateEmbeddingRules || [],
@@ -92,13 +92,13 @@ export function ThreadgateBtn({
     return (
       !deepEqual(
         threadgateAllowUISettings,
-        defaultThreadgateAllowUISettings ?? everybody,
+        prefThreadgateAllowUISettings ?? everybody,
       ) ||
-      !deepEqual(postgate.embeddingRules, defaultPostgate?.embeddingRules ?? [])
+      !deepEqual(postgate.embeddingRules, prefPostgate?.embeddingRules ?? [])
     )
   }, [
-    defaultThreadgateAllowUISettings,
-    defaultPostgate,
+    prefThreadgateAllowUISettings,
+    prefPostgate,
     threadgateAllowUISettings,
     postgate,
   ])
