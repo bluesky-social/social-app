@@ -1,5 +1,5 @@
 import React from 'react'
-import {type TextStyle} from 'react-native'
+import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
@@ -21,7 +21,7 @@ export type RichTextProps = TextStyleProp &
     enableTags?: boolean
     authorHandle?: string
     onLinkPress?: LinkProps['onPress']
-    interactiveStyle?: TextStyle
+    interactiveStyle?: StyleProp<TextStyle>
     emojiMultiplier?: number
     shouldProxyLinks?: boolean
   }
@@ -55,7 +55,7 @@ export function RichText({
 
   if (!facets?.length) {
     if (isOnlyEmoji(text)) {
-      const flattenedStyle = flatten(style)
+      const flattenedStyle = flatten(style) ?? {}
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
