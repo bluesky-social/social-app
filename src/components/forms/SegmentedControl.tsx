@@ -9,6 +9,7 @@ import {
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {
   Button,
@@ -157,13 +158,19 @@ export function Item({
   const needsUpdate =
     active &&
     position &&
-    ctx.selectedPosition?.x !== position.x &&
-    ctx.selectedPosition?.width !== position.width
+    (ctx.selectedPosition?.x !== position.x ||
+      ctx.selectedPosition?.width !== position.width)
+
+  // can't wait for `useEffectEvent`
+  const update = useNonReactiveCallback(() => {
+    if (position) ctx.updatePosition(position)
+  })
+
   useLayoutEffect(() => {
     if (needsUpdate) {
-      ctx.updatePosition(position)
+      update()
     }
-  }, [position, ctx, needsUpdate])
+  }, [needsUpdate, update])
 
   const onPress = useCallback(
     (evt: any) => {
