@@ -39,7 +39,7 @@ import {
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
@@ -532,7 +532,6 @@ function ExpandedPostDetails({
   const translate = useTranslate()
   const isRootPost = !('reply' in post.record)
   const langPrefs = useLanguagePrefs()
-  const {gtMobile} = useBreakpoints()
 
   const needsTranslation = useMemo(
     () =>
@@ -571,7 +570,7 @@ function ExpandedPostDetails({
       <BackdatedPostIndicator post={post} />
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt, gtMobile ? 'long' : 'medium')}
+          {niceDate(i18n, post.indexedAt, 'medium')}
         </Text>
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
