@@ -1,4 +1,11 @@
-import {createContext, useCallback, useContext, useMemo, useState} from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 
@@ -147,13 +154,16 @@ export function Item({
   const active = ctx.selectedValue === value
 
   // update position if change was external, and not due to onPress
-  const [prevActive, setPrevActive] = useState(active)
-  if (active !== prevActive) {
-    setPrevActive(active)
-    if (active && position) {
+  const needsUpdate =
+    active &&
+    position &&
+    ctx.selectedPosition?.x !== position.x &&
+    ctx.selectedPosition?.width !== position.width
+  useLayoutEffect(() => {
+    if (needsUpdate) {
       ctx.updatePosition(position)
     }
-  }
+  }, [position, ctx, needsUpdate])
 
   const onPress = useCallback(
     (evt: any) => {
