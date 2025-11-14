@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {
   type AccessibilityProps,
   type TextStyle,
@@ -20,6 +20,9 @@ export type GroupProps = Omit<Toggle.GroupProps, 'style' | 'type'> & {
   multiple?: boolean
 }
 
+/**
+ * @deprecated - use SegmentedControl
+ */
 export function Group({children, multiple, ...props}: GroupProps) {
   const t = useTheme()
   return (
@@ -39,6 +42,9 @@ export function Group({children, multiple, ...props}: GroupProps) {
   )
 }
 
+/**
+ * @deprecated - use SegmentedControl
+ */
 export function Button({children, ...props}: ItemProps) {
   return (
     <Toggle.Item {...props} style={[a.flex_grow, a.flex_1]}>
@@ -51,7 +57,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const state = Toggle.useItemContext()
 
-  const {baseStyles, hoverStyles, activeStyles} = React.useMemo(() => {
+  const {baseStyles, hoverStyles, activeStyles} = useMemo(() => {
     const base: ViewStyle[] = []
     const hover: ViewStyle[] = []
     const active: ViewStyle[] = []
@@ -112,11 +118,14 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
   )
 }
 
+/**
+ * @deprecated - use SegmentedControl
+ */
 export function ButtonText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const state = Toggle.useItemContext()
 
-  const textStyles = React.useMemo(() => {
+  const textStyles = useMemo(() => {
     const text: TextStyle[] = []
     if (state.selected) {
       text.push(t.atoms.text_inverted)
