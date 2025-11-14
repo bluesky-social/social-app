@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -7,15 +7,17 @@ import {
   View,
 } from 'react-native'
 import {
+  BskyAgent,
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {resolveServiceURL} from '#/lib/api/resolve'
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {isNetworkError} from '#/lib/strings/errors'
-import {cleanError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
@@ -66,10 +68,14 @@ export const LoginForm = ({
     useState<boolean>(false)
   const [isAuthFactorTokenValueEmpty, setIsAuthFactorTokenValueEmpty] =
     useState<boolean>(true)
+  const [isDetectingProvider, setIsDetectingProvider] = useState<boolean>(false)
+  const [hasManuallySelectedProvider, setHasManuallySelectedProvider] =
+    useState<boolean>(false)
   const identifierValueRef = useRef<string>(initialHandle || '')
   const passwordValueRef = useRef<string>('')
   const authFactorTokenValueRef = useRef<string>('')
   const passwordRef = useRef<TextInput>(null)
+  const providerDetectionTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const {_} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -78,6 +84,79 @@ export const LoginForm = ({
 
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
+  }, [])
+
+  const onManuallySelectServiceUrl = useCallback(
+    (url: string) => {
+      setServiceUrl(url)
+      setHasManuallySelectedProvider(true)
+    },
+    [setServiceUrl],
+  )
+
+  const detectProviderFromHandle = useCallback(
+    async (handle: string) => {
+      if (!handle || handle.length < 3) return
+
+      // Check if it's an email address (contains @ - emails should not trigger provider detection)
+      const isEmail = handle.includes('@')
+      if (isEmail) return // Don't detect provider for email addresses
+
+      // Check if it looks like a valid handle (domain format with .)
+      const isValidHandle = handle.includes('.') && handle.length > 5
+      if (!isValidHandle) return
+
+      // Check that the domain isn't a bluesky domain.
+      const isBlueskyDomain = handle.endsWith('bsky.social')
+      if (isBlueskyDomain) {
+        // We reset it back to bsky.social, if it isn't already.
+        setServiceUrl(DEFAULT_SERVICE)
+        return
+      }
+
+      // Ignore if the user has manually selected a custom host in this session to prevent unexpected behavior.
+      if (hasManuallySelectedProvider) return
+
+      setIsDetectingProvider(true)
+
+      try {
+        const agent = new BskyAgent({service: DEFAULT_SERVICE})
+        const detectedServiceUrl = await resolveServiceURL(agent, handle)
+        setServiceUrl(detectedServiceUrl)
+      } catch (e) {
+        // If provider cannot be identified, revert to DEFAULT_SERVICE
+        setServiceUrl(DEFAULT_SERVICE)
+      } finally {
+        setIsDetectingProvider(false)
+      }
+    },
+    [hasManuallySelectedProvider, setServiceUrl],
+  )
+
+  const onHandleChange = useCallback(
+    (value: string) => {
+      identifierValueRef.current = value
+
+      // Clear previous timeout
+      if (providerDetectionTimeoutRef.current) {
+        clearTimeout(providerDetectionTimeoutRef.current)
+      }
+
+      // Set up debounced provider detection
+      providerDetectionTimeoutRef.current = setTimeout(() => {
+        detectProviderFromHandle(value.toLowerCase().trim())
+      }, 1000) // 1 second delay
+    },
+    [detectProviderFromHandle],
+  )
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (providerDetectionTimeoutRef.current) {
+        clearTimeout(providerDetectionTimeoutRef.current)
+      }
+    }
   }, [])
 
   const onPressNext = async () => {
@@ -185,8 +264,9 @@ export const LoginForm = ({
         </TextField.LabelText>
         <HostingProvider
           serviceUrl={serviceUrl}
-          onSelectServiceUrl={setServiceUrl}
+          onSelectServiceUrl={onManuallySelectServiceUrl}
           onOpenDialog={onPressSelectService}
+          isDetectingProvider={isDetectingProvider}
         />
       </View>
       <View>
@@ -206,9 +286,7 @@ export const LoginForm = ({
               returnKeyType="next"
               textContentType="username"
               defaultValue={initialHandle || ''}
-              onChangeText={v => {
-                identifierValueRef.current = v
-              }}
+              onChangeText={onHandleChange}
               onSubmitEditing={() => {
                 passwordRef.current?.focus()
               }}
@@ -345,7 +423,8 @@ export const LoginForm = ({
             variant="solid"
             color="primary"
             size="large"
-            onPress={onPressNext}>
+            onPress={onPressNext}
+            disabled={isDetectingProvider}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
