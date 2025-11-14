@@ -86,7 +86,7 @@ export async function shareImageModal({uri}: {uri: string}) {
 
   // we're currently relying on the fact our CDN only serves jpegs
   // -prf
-  const imageUri = await downloadImage(uri, createPath('jpg'), 5e3)
+  const imageUri = await downloadImage(uri, createPath('jpg'), 15e3)
   const imagePath = await moveToPermanentPath(imageUri, '.jpg')
   safeDeleteAsync(imageUri)
   await Sharing.shareAsync(imagePath, {
@@ -103,7 +103,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // assuming JPEG
   // we're currently relying on the fact our CDN only serves jpegs
   // -prf
-  const imageUri = await downloadImage(uri, createPath('jpg'), 5e3)
+  const imageUri = await downloadImage(uri, createPath('jpg'), 15e3)
   const imagePath = await moveToPermanentPath(imageUri, '.jpg')
 
   // save
