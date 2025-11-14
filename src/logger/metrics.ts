@@ -279,6 +279,11 @@ export type MetricEvents = {
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
   }
+  'profileCard:seen': {
+    contextProfileDid?: string
+    profileDid: string
+    position?: number
+  }
   'suggestedUser:follow': {
     logContext:
       | 'Explore'

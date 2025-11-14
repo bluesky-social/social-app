@@ -4,6 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
@@ -93,6 +94,30 @@ export function ProfileFollowers({name}: {name: string}) {
     [resolvedDid],
   )
 
+  // track seen items
+  const seenItemsRef = React.useRef<Set<string>>(new Set())
+  React.useEffect(() => {
+    seenItemsRef.current.clear()
+  }, [followers, resolvedDid])
+  const onItemSeen = React.useCallback(
+    (item: ActorDefs.ProfileView) => {
+      if (seenItemsRef.current.has(item.did)) {
+        return
+      }
+      seenItemsRef.current.add(item.did)
+      const position = followers.findIndex(p => p.did === item.did) + 1
+      if (position === 0) {
+        return
+      }
+      logEvent('profileCard:seen', {
+        profileDid: item.did,
+        position,
+        ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
+      })
+    },
+    [followers, resolvedDid],
+  )
+
   if (followers.length < 1) {
     return (
       <ListMaybePlaceholder
@@ -120,6 +145,7 @@ export function ProfileFollowers({name}: {name: string}) {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
+      onItemSeen={onItemSeen}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
