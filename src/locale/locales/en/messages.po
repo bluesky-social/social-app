@@ -489,7 +489,7 @@ msgstr ""
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:319
+#: src/components/WhoCanReply.tsx:346
 msgid "<0>{0}</0> members"
 msgstr ""
 
@@ -630,6 +630,10 @@ msgstr ""
 msgid "Account options"
 msgstr ""
 
+#: src/components/dialogs/ServerInput.tsx:141
+msgid "Account provider"
+msgstr ""
+
 #: src/screens/Settings/Settings.tsx:662
 msgid "Account removed from quick access"
 msgstr ""
@@ -681,8 +685,8 @@ msgstr ""
 msgid "Add {displayName} to starter pack"
 msgstr ""
 
+#: src/view/com/composer/labels/LabelsBtn.tsx:102
 #: src/view/com/composer/labels/LabelsBtn.tsx:107
-#: src/view/com/composer/labels/LabelsBtn.tsx:112
 msgid "Add a content warning"
 msgstr ""
 
@@ -786,7 +790,7 @@ msgstr ""
 msgid "Add the default feed of only people you follow"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:416
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:417
 msgid "Add the following DNS record to your domain:"
 msgstr ""
 
@@ -830,7 +834,7 @@ msgstr ""
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:159
+#: src/view/com/composer/labels/LabelsBtn.tsx:154
 msgid "Adult"
 msgstr ""
 
@@ -841,7 +845,7 @@ msgstr ""
 #: src/components/moderation/ContentHider.tsx:120
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:149
-#: src/view/com/composer/labels/LabelsBtn.tsx:127
+#: src/view/com/composer/labels/LabelsBtn.tsx:122
 msgid "Adult Content"
 msgstr ""
 
@@ -853,8 +857,8 @@ msgstr ""
 msgid "Adult content is disabled."
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:138
-#: src/view/com/composer/labels/LabelsBtn.tsx:196
+#: src/view/com/composer/labels/LabelsBtn.tsx:133
+#: src/view/com/composer/labels/LabelsBtn.tsx:191
 msgid "Adult Content labels"
 msgstr ""
 
@@ -914,6 +918,10 @@ msgstr ""
 msgid "Allow access to your direct messages"
 msgstr ""
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+msgid "Allow anyone to reply"
+msgstr ""
+
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
 msgid "Allow location access"
@@ -929,12 +937,24 @@ msgstr ""
 msgid "Allow others to be notified of your posts"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+msgid "Allow people you follow to reply"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+msgid "Allow people you mention to reply"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:617
 msgid "Allow quote posts"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:400
-msgid "Allow replies from:"
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:579
+msgid "Allow users in {0} to reply"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+msgid "Allow your followers to reply"
 msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:199
@@ -1014,12 +1034,16 @@ msgstr ""
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:160
+#: src/components/Post/Embed/VideoEmbed/index.tsx:140
 msgid "An error occurred while loading the video. Please try again later."
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:244
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:226
 msgid "An error occurred while loading the video. Please try again."
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:562
+msgid "An error occurred while loading your lists :/"
 msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:75
@@ -1074,7 +1098,7 @@ msgstr ""
 msgid "an unknown labeler"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:340
+#: src/components/WhoCanReply.tsx:367
 msgid "and"
 msgstr ""
 
@@ -1104,8 +1128,12 @@ msgstr ""
 msgid "Announcing verification on Bluesky"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
 msgid "Anybody can interact"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+msgid "Anyone"
 msgstr ""
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
@@ -1188,7 +1216,7 @@ msgid "Appeal this decision"
 msgstr ""
 
 #: src/Navigation.tsx:391
-#: src/screens/Settings/AppearanceSettings.tsx:86
+#: src/screens/Settings/AppearanceSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:212
 #: src/screens/Settings/Settings.tsx:215
 msgid "Appearance"
@@ -1263,7 +1291,7 @@ msgstr ""
 msgid "Art"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:171
+#: src/view/com/composer/labels/LabelsBtn.tsx:166
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
@@ -1346,7 +1374,7 @@ msgstr ""
 msgid "Before you can accept this chat request, you must first verify your email."
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:43
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:56
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
 msgstr ""
 
@@ -1468,8 +1496,8 @@ msgstr ""
 msgid "Blog"
 msgstr ""
 
-#: src/view/com/auth/server-input/index.tsx:136
-#: src/view/com/auth/server-input/index.tsx:137
+#: src/components/dialogs/ServerInput.tsx:147
+#: src/components/dialogs/ServerInput.tsx:149
 msgid "Bluesky"
 msgstr ""
 
@@ -1482,11 +1510,11 @@ msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr ""
 
-#: src/view/com/auth/server-input/index.tsx:212
+#: src/components/dialogs/ServerInput.tsx:217
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
 msgstr ""
 
-#: src/view/com/auth/server-input/index.tsx:149
+#: src/components/dialogs/ServerInput.tsx:165
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
 msgstr ""
 
@@ -1638,6 +1666,7 @@ msgstr ""
 #: src/components/PostControls/RepostButton.tsx:209
 #: src/components/Prompt.tsx:144
 #: src/components/Prompt.tsx:146
+#: src/lib/media/picker.tsx:36
 #: src/screens/Deactivated.tsx:158
 #: src/screens/Profile/Header/EditProfileDialog.tsx:218
 #: src/screens/Profile/Header/EditProfileDialog.tsx:226
@@ -1868,7 +1897,7 @@ msgstr ""
 msgid "Choose this color as your avatar"
 msgstr ""
 
-#: src/view/com/auth/server-input/index.tsx:130
+#: src/components/dialogs/ServerInput.tsx:137
 msgid "Choose your account provider"
 msgstr ""
 
@@ -1917,14 +1946,6 @@ msgstr ""
 msgid "Click here to update your email"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
-msgid "Click to disable quote posts of this post."
-msgstr ""
-
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:349
-msgid "Click to enable quote posts of this post."
-msgstr ""
-
 #: src/components/RichTextTag.tsx:54
 msgid "Click to open tag menu for {tag}"
 msgstr ""
@@ -1969,8 +1990,8 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:202
-#: src/components/WhoCanReply.tsx:209
+#: src/components/WhoCanReply.tsx:229
+#: src/components/WhoCanReply.tsx:236
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:286
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:291
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2064,7 +2085,7 @@ msgid "Collapses list of users for a given notification"
 msgstr ""
 
 #: src/components/dialogs/Embed.tsx:154
-#: src/screens/Settings/AppearanceSettings.tsx:94
+#: src/screens/Settings/AppearanceSettings.tsx:81
 msgid "Color mode"
 msgstr ""
 
@@ -2304,7 +2325,7 @@ msgstr ""
 msgid "Copied to clipboard"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:201
+#: src/components/dialogs/Embed.tsx:202
 #: src/screens/Settings/components/CopyButton.tsx:66
 msgid "Copied!"
 msgstr ""
@@ -2331,18 +2352,18 @@ msgstr ""
 msgid "Copy author DID"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:189
-#: src/components/dialogs/Embed.tsx:206
+#: src/components/dialogs/Embed.tsx:190
+#: src/components/dialogs/Embed.tsx:207
 msgid "Copy code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:501
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:502
 #: src/view/com/profile/ProfileMenu.tsx:447
 #: src/view/com/profile/ProfileMenu.tsx:450
 msgid "Copy DID"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:433
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:434
 msgid "Copy host"
 msgstr ""
 
@@ -2395,7 +2416,7 @@ msgstr ""
 msgid "Copy QR code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:454
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:455
 msgid "Copy TXT record value"
 msgstr ""
 
@@ -2545,17 +2566,13 @@ msgstr ""
 msgid "Culture"
 msgstr ""
 
-#: src/view/com/auth/server-input/index.tsx:142
-#: src/view/com/auth/server-input/index.tsx:143
+#: src/components/dialogs/ServerInput.tsx:155
+#: src/components/dialogs/ServerInput.tsx:157
 msgid "Custom"
 msgstr ""
 
 #: src/components/dialogs/Embed.tsx:144
 msgid "Customization options"
-msgstr ""
-
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:111
-msgid "Customize who can interact with this post."
 msgstr ""
 
 #: src/screens/Onboarding/Layout.tsx:60
@@ -2570,10 +2587,10 @@ msgstr ""
 msgid "Dangerous substances or drug abuse"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:167
-#: src/components/dialogs/Embed.tsx:169
-#: src/screens/Settings/AppearanceSettings.tsx:106
-#: src/screens/Settings/AppearanceSettings.tsx:127
+#: src/components/dialogs/Embed.tsx:168
+#: src/components/dialogs/Embed.tsx:170
+#: src/screens/Settings/AppearanceSettings.tsx:93
+#: src/screens/Settings/AppearanceSettings.tsx:114
 msgid "Dark"
 msgstr ""
 
@@ -2586,7 +2603,7 @@ msgstr ""
 msgid "Dark mode"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:119
+#: src/screens/Settings/AppearanceSettings.tsx:106
 msgid "Dark theme"
 msgstr ""
 
@@ -2612,7 +2629,7 @@ msgstr ""
 msgid "Deepfake adult content"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:169
+#: src/screens/Settings/AppearanceSettings.tsx:156
 msgid "Default"
 msgstr ""
 
@@ -2763,11 +2780,11 @@ msgstr ""
 msgid "Developer options"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:188
+#: src/components/WhoCanReply.tsx:215
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:123
+#: src/screens/Settings/AppearanceSettings.tsx:110
 msgid "Dim"
 msgstr ""
 
@@ -2787,6 +2804,14 @@ msgstr ""
 #: src/screens/Settings/AccessibilitySettings.tsx:89
 #: src/screens/Settings/AccessibilitySettings.tsx:94
 msgid "Disable haptic feedback"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+msgid "Disable quote posts of this post."
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+msgid "Disable replies entirely"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
@@ -2871,8 +2896,8 @@ msgstr ""
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:402
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:404
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:403
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "DNS Panel"
 msgstr ""
 
@@ -2884,7 +2909,7 @@ msgstr ""
 msgid "Does not include nudity."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:522
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:523
 msgid "Domain verified!"
 msgstr ""
 
@@ -2907,19 +2932,20 @@ msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:149
 #: src/components/dialogs/BirthDateSettings.tsx:156
+#: src/components/dialogs/ServerInput.tsx:240
+#: src/components/dialogs/ServerInput.tsx:242
 #: src/components/dms/AfterReportDialog.tsx:142
 #: src/components/forms/DateField/index.tsx:103
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
+#: src/lib/media/picker.tsx:35
 #: src/screens/Onboarding/StepProfile/index.tsx:333
 #: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:214
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:221
-#: src/view/com/auth/server-input/index.tsx:232
-#: src/view/com/auth/server-input/index.tsx:233
-#: src/view/com/composer/labels/LabelsBtn.tsx:223
-#: src/view/com/composer/labels/LabelsBtn.tsx:230
+#: src/view/com/composer/labels/LabelsBtn.tsx:218
+#: src/view/com/composer/labels/LabelsBtn.tsx:225
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:303
 #: src/view/com/composer/videos/SubtitleDialog.tsx:168
 #: src/view/com/composer/videos/SubtitleDialog.tsx:178
@@ -3071,8 +3097,8 @@ msgstr ""
 msgid "Edit People"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:77
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:250
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
 msgid "Edit post interaction settings"
 msgstr ""
 
@@ -3096,7 +3122,7 @@ msgstr ""
 msgid "Edit user list"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:97
+#: src/components/WhoCanReply.tsx:109
 msgid "Edit who can reply"
 msgstr ""
 
@@ -3147,7 +3173,7 @@ msgstr ""
 msgid "Email Verified"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:181
+#: src/components/dialogs/Embed.tsx:182
 msgid "Embed HTML code"
 msgstr ""
 
@@ -3162,7 +3188,7 @@ msgstr ""
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:58
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:57
 msgid "Embedded video player"
 msgstr ""
 
@@ -3201,6 +3227,10 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/index.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:106
 msgid "Enable push notifications"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:610
+msgid "Enable quote posts of this post."
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
@@ -3320,15 +3350,11 @@ msgstr ""
 msgid "Error: {error}"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
-msgid "Everybody"
-msgstr ""
-
-#: src/components/WhoCanReply.tsx:77
+#: src/components/WhoCanReply.tsx:82
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:245
+#: src/components/WhoCanReply.tsx:272
 msgid "Everybody can reply to this post."
 msgstr ""
 
@@ -3477,7 +3503,7 @@ msgstr ""
 msgid "Failed to add to starter pack"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:602
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:603
 msgid "Failed to change handle. Please try again."
 msgstr ""
 
@@ -3949,11 +3975,11 @@ msgstr ""
 msgid "Follows You"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:141
+#: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:161
+#: src/screens/Settings/AppearanceSettings.tsx:148
 msgid "Font size"
 msgstr ""
 
@@ -3974,7 +4000,7 @@ msgstr ""
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:143
+#: src/screens/Settings/AppearanceSettings.tsx:130
 msgid "For the best experience, we recommend using the theme font."
 msgstr ""
 
@@ -4061,7 +4087,7 @@ msgstr ""
 msgid "Get notifications when people repost your posts."
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:77
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:89
 msgid "Get notified about new posts"
 msgstr ""
 
@@ -4077,7 +4103,7 @@ msgstr ""
 msgid "Get notified of this account’s activity"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:70
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:82
 msgid "Get notified when {name} posts"
 msgstr ""
 
@@ -4204,8 +4230,8 @@ msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
-#: src/view/com/composer/labels/LabelsBtn.tsx:201
-#: src/view/com/composer/labels/LabelsBtn.tsx:204
+#: src/view/com/composer/labels/LabelsBtn.tsx:196
+#: src/view/com/composer/labels/LabelsBtn.tsx:199
 msgid "Graphic Media"
 msgstr ""
 
@@ -4231,7 +4257,7 @@ msgstr ""
 msgid "Handle"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:606
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:607
 msgid "Handle already taken. Please try a different one."
 msgstr ""
 
@@ -4240,7 +4266,7 @@ msgstr ""
 msgid "Handle changed!"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:610
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:611
 msgid "Handle too long. Please try a shorter one."
 msgstr ""
 
@@ -4336,6 +4362,10 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:128
 msgid "Hide customization options"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+msgid "Hide lists"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
@@ -4434,7 +4464,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:427
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:428
 msgid "Host:"
 msgstr ""
 
@@ -4508,7 +4538,7 @@ msgstr ""
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
 msgstr ""
 
-#: src/view/com/auth/server-input/index.tsx:208
+#: src/components/dialogs/ServerInput.tsx:213
 msgid "If you're a developer, you can host your own server."
 msgstr ""
 
@@ -4599,7 +4629,7 @@ msgstr ""
 msgid "Input the code which has been emailed to you"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
 msgid "Interaction limited"
 msgstr ""
 
@@ -4620,7 +4650,7 @@ msgstr ""
 msgid "Invalid 2FA confirmation code."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:612
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:613
 msgid "Invalid handle. Please try a different one."
 msgstr ""
 
@@ -4723,12 +4753,12 @@ msgstr ""
 msgid "Labeled by the author."
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:75
+#: src/view/com/composer/labels/LabelsBtn.tsx:69
 #: src/view/screens/Profile.tsx:223
 msgid "Labels"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:73
+#: src/view/com/composer/labels/LabelsBtn.tsx:67
 msgid "Labels added"
 msgstr ""
 
@@ -4754,7 +4784,7 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:173
+#: src/screens/Settings/AppearanceSettings.tsx:160
 msgid "Larger"
 msgstr ""
 
@@ -4794,7 +4824,7 @@ msgstr ""
 msgid "Learn more about Bluesky"
 msgstr ""
 
-#: src/view/com/auth/server-input/index.tsx:218
+#: src/components/dialogs/ServerInput.tsx:223
 msgid "Learn more about self hosting your PDS."
 msgstr ""
 
@@ -4831,8 +4861,8 @@ msgstr ""
 msgid "Learn more in your <0>account settings.</0>"
 msgstr ""
 
+#: src/components/dialogs/ServerInput.tsx:225
 #: src/components/moderation/ContentHider.tsx:247
-#: src/view/com/auth/server-input/index.tsx:220
 msgid "Learn more."
 msgstr ""
 
@@ -4880,9 +4910,9 @@ msgstr ""
 msgid "Let's go!"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:162
-#: src/components/dialogs/Embed.tsx:164
-#: src/screens/Settings/AppearanceSettings.tsx:102
+#: src/components/dialogs/Embed.tsx:163
+#: src/components/dialogs/Embed.tsx:165
+#: src/screens/Settings/AppearanceSettings.tsx:89
 msgid "Light"
 msgstr ""
 
@@ -5099,6 +5129,14 @@ msgstr ""
 msgid "Load new posts"
 msgstr ""
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:556
+msgid "Loading lists..."
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+msgid "Loading post interaction settings..."
+msgstr ""
+
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:61
 msgid "Loading..."
 msgstr ""
@@ -5194,7 +5232,7 @@ msgstr ""
 msgid "Media"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:210
+#: src/view/com/composer/labels/LabelsBtn.tsx:205
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
 
@@ -5202,12 +5240,8 @@ msgstr ""
 msgid "Mention notifications"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:286
+#: src/components/WhoCanReply.tsx:313
 msgid "mentioned users"
-msgstr ""
-
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:434
-msgid "Mentioned users"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:147
@@ -5513,7 +5547,7 @@ msgstr ""
 msgid "Never lose access to your followers or data."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:582
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:583
 msgid "Nevermind, create a handle for me"
 msgstr ""
 
@@ -5660,8 +5694,8 @@ msgstr ""
 msgid "No app passwords yet"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:407
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:409
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:408
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:410
 msgid "No DNS Panel"
 msgstr ""
 
@@ -5711,7 +5745,7 @@ msgstr ""
 msgid "No one"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:269
+#: src/components/WhoCanReply.tsx:296
 msgid "No one but the author can quote this post."
 msgstr ""
 
@@ -5772,7 +5806,7 @@ msgstr ""
 msgid "No thanks"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Nobody"
 msgstr ""
 
@@ -5887,8 +5921,8 @@ msgstr ""
 msgid "Now"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:150
-#: src/view/com/composer/labels/LabelsBtn.tsx:153
+#: src/view/com/composer/labels/LabelsBtn.tsx:145
+#: src/view/com/composer/labels/LabelsBtn.tsx:148
 msgid "Nudity"
 msgstr ""
 
@@ -5955,7 +5989,7 @@ msgstr ""
 msgid "Only .jpg and .png files are supported"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:249
+#: src/components/WhoCanReply.tsx:276
 msgid "Only {0} can reply."
 msgstr ""
 
@@ -6071,8 +6105,8 @@ msgstr ""
 msgid "Opens a dialog to add a content warning to your post"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:61
-msgid "Opens a dialog to choose who can reply to this thread"
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
 #: src/screens/Log.tsx:83
@@ -6151,10 +6185,6 @@ msgstr ""
 msgid "Options:"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:429
-msgid "Or combine these options:"
-msgstr ""
-
 #: src/screens/Deactivated.tsx:200
 msgid "Or, continue with another account."
 msgstr ""
@@ -6181,7 +6211,7 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:242
-#: src/view/com/composer/labels/LabelsBtn.tsx:185
+#: src/view/com/composer/labels/LabelsBtn.tsx:180
 msgid "Other"
 msgstr ""
 
@@ -6293,6 +6323,14 @@ msgstr ""
 msgid "People I follow"
 msgstr ""
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+msgid "People you follow"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+msgid "People you mention"
+msgstr ""
+
 #: src/lib/media/save-image.ts:59
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
 msgstr ""
@@ -6310,7 +6348,7 @@ msgstr ""
 msgid "Photography"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:169
+#: src/view/com/composer/labels/LabelsBtn.tsx:164
 msgid "Pictures meant for adults."
 msgstr ""
 
@@ -6365,7 +6403,7 @@ msgstr ""
 msgid "Play {0}"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:135
+#: src/components/Post/Embed/VideoEmbed/index.tsx:115
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr ""
@@ -6390,7 +6428,7 @@ msgstr ""
 msgid "Plays the video"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:115
+#: src/view/com/composer/labels/LabelsBtn.tsx:110
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr ""
 
@@ -6536,7 +6574,7 @@ msgstr ""
 msgid "Politics"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:156
+#: src/view/com/composer/labels/LabelsBtn.tsx:151
 msgid "Porn"
 msgstr ""
 
@@ -6592,7 +6630,7 @@ msgstr ""
 msgid "Post Hidden by You"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:108
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:666
 msgid "Post interaction settings"
 msgstr ""
 
@@ -6744,6 +6782,10 @@ msgstr ""
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+msgid "Psst! You can edit who can interact with this post."
+msgstr ""
+
 #: src/screens/Onboarding/StepFinished/index.tsx:391
 msgid "Public"
 msgstr ""
@@ -6830,10 +6872,6 @@ msgstr ""
 msgid "Quote posts disabled"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
-msgid "Quote settings"
-msgstr ""
-
 #: src/lib/hooks/useNotificationHandler.ts:154
 #: src/screens/Post/PostQuotes.tsx:41
 #: src/screens/Settings/NotificationSettings/index.tsx:170
@@ -6845,7 +6883,7 @@ msgstr ""
 msgid "Quotes of this post"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:615
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:616
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
 
@@ -7150,11 +7188,11 @@ msgstr ""
 msgid "Replies"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:79
+#: src/components/WhoCanReply.tsx:84
 msgid "Replies disabled"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:247
+#: src/components/WhoCanReply.tsx:274
 msgid "Replies to this post are disabled."
 msgstr ""
 
@@ -7182,11 +7220,7 @@ msgstr ""
 msgid "Reply notifications"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:396
-msgid "Reply settings"
-msgstr ""
-
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:381
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
 msgid "Reply settings are chosen by the author of the thread"
 msgstr ""
 
@@ -7453,7 +7487,7 @@ msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:93
 #: src/screens/ProfileList/components/ErrorScreen.tsx:35
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:574
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:575
 #: src/screens/VideoFeed/index.tsx:1163
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
@@ -7466,8 +7500,8 @@ msgstr ""
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:496
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7511,6 +7545,11 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:196
 msgid "Save QR code"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:636
+msgid "Save these options for next time"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:321
@@ -7763,6 +7802,14 @@ msgstr ""
 msgid "Select from an existing account"
 msgstr ""
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:534
+msgid "Select from your lists"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:536
+msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
+msgstr ""
+
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
 msgstr ""
@@ -7905,7 +7952,7 @@ msgstr ""
 msgid "Sends email with confirmation code for account deletion"
 msgstr ""
 
-#: src/view/com/auth/server-input/index.tsx:167
+#: src/components/dialogs/ServerInput.tsx:177
 msgid "Server address"
 msgstr ""
 
@@ -7921,8 +7968,16 @@ msgstr ""
 msgid "Set new password"
 msgstr ""
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+msgid "Set precisely which groups of people can reply to your post"
+msgstr ""
+
 #: src/screens/Onboarding/Layout.tsx:49
 msgid "Set up your account"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+msgid "Set who can reply to your post"
 msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
@@ -7985,7 +8040,7 @@ msgctxt "toast"
 msgid "Settings saved"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:173
+#: src/view/com/composer/labels/LabelsBtn.tsx:168
 msgid "Sexual activity or erotic nudity."
 msgstr ""
 
@@ -8112,6 +8167,10 @@ msgstr ""
 
 #: src/screens/List/ListHiddenScreen.tsx:186
 msgid "Show list anyway"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+msgid "Show lists of users to select from"
 msgstr ""
 
 #: src/components/Post/ShowMoreTextButton.tsx:51
@@ -8286,7 +8345,7 @@ msgstr ""
 msgid "Skip to next step"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:165
+#: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Smaller"
 msgstr ""
 
@@ -8311,7 +8370,7 @@ msgstr ""
 msgid "Some other feeds you might like"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:80
+#: src/components/WhoCanReply.tsx:85
 msgid "Some people can reply"
 msgstr ""
 
@@ -8544,8 +8603,8 @@ msgstr ""
 msgid "Suggested for you"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:144
-#: src/view/com/composer/labels/LabelsBtn.tsx:147
+#: src/view/com/composer/labels/LabelsBtn.tsx:139
+#: src/view/com/composer/labels/LabelsBtn.tsx:142
 msgid "Suggestive"
 msgstr ""
 
@@ -8585,10 +8644,10 @@ msgstr ""
 msgid "Switch to {0}"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:157
-#: src/components/dialogs/Embed.tsx:159
-#: src/screens/Settings/AppearanceSettings.tsx:98
-#: src/screens/Settings/AppearanceSettings.tsx:148
+#: src/components/dialogs/Embed.tsx:158
+#: src/components/dialogs/Embed.tsx:160
+#: src/screens/Settings/AppearanceSettings.tsx:85
+#: src/screens/Settings/AppearanceSettings.tsx:135
 msgid "System"
 msgstr ""
 
@@ -8701,7 +8760,7 @@ msgstr ""
 msgid "Thanks! You're all set."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:497
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:498
 msgid "That contains the following:"
 msgstr ""
 
@@ -8831,7 +8890,7 @@ msgstr ""
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:152
+#: src/screens/Settings/AppearanceSettings.tsx:139
 msgid "Theme"
 msgstr ""
 
@@ -8908,7 +8967,7 @@ msgstr ""
 msgid "There was an issue! {0}"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:228
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -8929,6 +8988,10 @@ msgstr ""
 
 #: src/screens/SignupQueued.tsx:130
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:641
+msgid "These are your default settings"
 msgstr ""
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:65
@@ -9038,7 +9101,7 @@ msgstr ""
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:608
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:609
 msgid "This handle is reserved. Please try a different one."
 msgstr ""
 
@@ -9087,7 +9150,7 @@ msgstr ""
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:240
+#: src/components/WhoCanReply.tsx:267
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
@@ -9119,7 +9182,7 @@ msgstr ""
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:466
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "This should create a domain record at:"
 msgstr ""
 
@@ -9224,6 +9287,10 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:516
+msgid "Toggle showing lists"
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:398
 msgid "Toggle to enable or disable adult content"
 msgstr ""
@@ -9296,7 +9363,7 @@ msgstr ""
 msgid "Type your message here"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:442
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:443
 msgid "Type:"
 msgstr ""
 
@@ -9558,8 +9625,8 @@ msgstr ""
 msgid "Update email"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:541
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:562
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:542
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:563
 msgid "Update to {domain}"
 msgstr ""
 
@@ -9585,7 +9652,7 @@ msgstr ""
 msgid "Upload a photo instead"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:482
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:483
 msgid "Upload a text file to:"
 msgstr ""
 
@@ -9625,7 +9692,7 @@ msgstr ""
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:573
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:574
 msgid "Use default provider"
 msgstr ""
 
@@ -9720,11 +9787,11 @@ msgstr ""
 msgid "Username or email address"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:303
+#: src/components/WhoCanReply.tsx:330
 msgid "users followed by <0>@{0}</0>"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:290
+#: src/components/WhoCanReply.tsx:317
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
@@ -9733,15 +9800,7 @@ msgstr ""
 msgid "Users I follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:467
-msgid "Users in \"{0}\""
-msgstr ""
-
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:444
-msgid "Users you follow"
-msgstr ""
-
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:448
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:449
 msgid "Value:"
 msgstr ""
 
@@ -9785,8 +9844,8 @@ msgctxt "action"
 msgid "Verify code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:543
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:564
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:544
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Verify DNS Record"
 msgstr ""
 
@@ -9804,8 +9863,8 @@ msgstr ""
 msgid "Verify now"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:544
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:566
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:545
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:567
 msgid "Verify Text File"
 msgstr ""
 
@@ -9867,7 +9926,7 @@ msgstr ""
 msgid "Video is playing"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:237
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:219
 msgid "Video not found."
 msgstr ""
 
@@ -10006,8 +10065,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/view/com/util/images/AutoSizedImage.tsx:207
-#: src/view/com/util/images/AutoSizedImage.tsx:234
+#: src/view/com/util/images/AutoSizedImage.tsx:205
+#: src/view/com/util/images/AutoSizedImage.tsx:232
 msgid "Views full image"
 msgstr ""
 
@@ -10243,11 +10302,12 @@ msgstr ""
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:192
+#: src/components/WhoCanReply.tsx:219
 msgid "Who can interact with this post?"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:97
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
+#: src/components/WhoCanReply.tsx:109
 msgid "Who can reply"
 msgstr ""
 
@@ -10464,10 +10524,6 @@ msgstr ""
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:89
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
-msgstr ""
-
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:137
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
@@ -10484,6 +10540,10 @@ msgstr ""
 
 #: src/screens/Messages/Inbox.tsx:243
 msgid "You don't have any chat requests at the moment."
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:570
+msgid "You don't have any lists yet."
 msgstr ""
 
 #: src/screens/SavedFeeds.tsx:149
@@ -10805,7 +10865,7 @@ msgstr ""
 msgid "Your birth date"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:241
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:223
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr ""
 
@@ -10817,7 +10877,7 @@ msgstr ""
 msgid "Your choice will be remembered for future links. You can change it at any time in settings."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:528
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:529
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr ""
 
@@ -10846,7 +10906,7 @@ msgstr ""
 msgid "Your first like!"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:454
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
 msgid "Your followers"
 msgstr ""
 
