@@ -1,7 +1,7 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import type React from 'react'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useGutters} from '#/alf'
 import {Text} from '#/components/Typography'
 
 export function FormContainer({
@@ -16,15 +16,14 @@ export function FormContainer({
   style?: StyleProp<ViewStyle>
 }) {
   const {gtMobile} = useBreakpoints()
-  const t = useTheme()
+  const gutter = useGutters([0, 'wide'])
+
   return (
     <View
       testID={testID}
-      style={[a.gap_md, a.flex_1, !gtMobile && [a.px_lg, a.py_md], style]}>
+      style={[a.gap_md, a.flex_1, !gtMobile && gutter, style]}>
       {titleText && !gtMobile && (
-        <Text style={[a.text_xl, a.font_semi_bold, t.atoms.text_contrast_high]}>
-          {titleText}
-        </Text>
+        <Text style={[a.text_3xl, a.font_bold]}>{titleText}</Text>
       )}
       {children}
     </View>

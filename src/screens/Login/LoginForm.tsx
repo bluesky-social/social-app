@@ -1,11 +1,5 @@
 import React, {useRef, useState} from 'react'
-import {
-  ActivityIndicator,
-  Keyboard,
-  LayoutAnimation,
-  type TextInput,
-  View,
-} from 'react-native'
+import {Keyboard, type TextInput, View} from 'react-native'
 import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
@@ -18,10 +12,11 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
@@ -61,11 +56,13 @@ export const LoginForm = ({
   onAttemptFailed: () => void
 }) => {
   const t = useTheme()
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
-    useState<boolean>(false)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [errorField, setErrorField] = useState<
+    'none' | 'identifier' | 'password' | '2fa'
+  >('none')
+  const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] = useState(false)
   const [isAuthFactorTokenValueEmpty, setIsAuthFactorTokenValueEmpty] =
-    useState<boolean>(true)
+    useState(true)
   const identifierValueRef = useRef<string>(initialHandle || '')
   const passwordValueRef = useRef<string>('')
   const authFactorTokenValueRef = useRef<string>('')
@@ -83,8 +80,8 @@ export const LoginForm = ({
   const onPressNext = async () => {
     if (isProcessing) return
     Keyboard.dismiss()
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setError('')
+    setErrorField('none')
 
     const identifier = identifierValueRef.current.toLowerCase().trim()
     const password = passwordValueRef.current
@@ -92,11 +89,13 @@ export const LoginForm = ({
 
     if (!identifier) {
       setError(_(msg`Please enter your username`))
+      setErrorField('identifier')
       return
     }
 
     if (!password) {
       setError(_(msg`Please enter your password`))
+      setErrorField('password')
       return
     }
 
@@ -141,7 +140,6 @@ export const LoginForm = ({
       requestNotificationsPermission('Login')
     } catch (e: any) {
       const errMsg = e.toString()
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsProcessing(false)
       if (
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
@@ -154,6 +152,7 @@ export const LoginForm = ({
             error: errMsg,
           })
           setError(_(msg`Invalid 2FA confirmation code.`))
+          setErrorField('2fa')
         } else if (
           errMsg.includes('Authentication Required') ||
           errMsg.includes('Invalid identifier or password')
@@ -178,7 +177,7 @@ export const LoginForm = ({
   }
 
   return (
-    <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
+    <FormContainer testID="loginForm" titleText={<Trans>Log in</Trans>}>
       <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>
@@ -194,7 +193,7 @@ export const LoginForm = ({
           <Trans>Account</Trans>
         </TextField.LabelText>
         <View style={[a.gap_sm]}>
-          <TextField.Root>
+          <TextField.Root isInvalid={errorField === 'identifier'}>
             <TextField.Icon icon={At} />
             <TextField.Input
               testID="loginUsernameInput"
@@ -208,6 +207,7 @@ export const LoginForm = ({
               defaultValue={initialHandle || ''}
               onChangeText={v => {
                 identifierValueRef.current = v
+                if (errorField) setErrorField('none')
               }}
               onSubmitEditing={() => {
                 passwordRef.current?.focus()
@@ -220,7 +220,7 @@ export const LoginForm = ({
             />
           </TextField.Root>
 
-          <TextField.Root>
+          <TextField.Root isInvalid={errorField === 'password'}>
             <TextField.Icon icon={Lock} />
             <TextField.Input
               testID="loginPasswordInput"
@@ -236,6 +236,7 @@ export const LoginForm = ({
               clearButtonMode="while-editing"
               onChangeText={v => {
                 passwordValueRef.current = v
+                if (errorField) setErrorField('none')
               }}
               onSubmitEditing={onPressNext}
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
@@ -267,7 +268,7 @@ export const LoginForm = ({
           <TextField.LabelText>
             <Trans>2FA Confirmation</Trans>
           </TextField.LabelText>
-          <TextField.Root>
+          <TextField.Root isInvalid={errorField === '2fa'}>
             <TextField.Icon icon={Ticket} />
             <TextField.Input
               testID="loginAuthFactorTokenInput"
@@ -282,6 +283,7 @@ export const LoginForm = ({
               onChangeText={v => {
                 setIsAuthFactorTokenValueEmpty(v === '')
                 authFactorTokenValueRef.current = v
+                if (errorField) setErrorField('none')
               }}
               onSubmitEditing={onPressNext}
               editable={!isProcessing}
@@ -305,25 +307,26 @@ export const LoginForm = ({
         </View>
       )}
       <FormError error={error} />
-      <View style={[a.flex_row, a.align_center, a.pt_md]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>
-            <Trans>Back</Trans>
-          </ButtonText>
-        </Button>
-        <View style={a.flex_1} />
+      <View style={[a.pt_md, web([a.justify_between, a.flex_row])]}>
+        {isWeb && (
+          <>
+            <Button
+              label={_(msg`Back`)}
+              color="secondary"
+              size="large"
+              onPress={onPressBack}>
+              <ButtonText>
+                <Trans>Back</Trans>
+              </ButtonText>
+            </Button>
+          </>
+        )}
         {!serviceDescription && error ? (
           <Button
             testID="loginRetryButton"
             label={_(msg`Retry`)}
             accessibilityHint={_(msg`Retries signing in`)}
-            variant="solid"
-            color="secondary"
+            color="primary_subtle"
             size="large"
             onPress={onPressRetryConnect}>
             <ButtonText>
@@ -331,23 +334,24 @@ export const LoginForm = ({
             </ButtonText>
           </Button>
         ) : !serviceDescription ? (
-          <>
-            <ActivityIndicator />
-            <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
-              <Trans>Connecting...</Trans>
-            </Text>
-          </>
+          <Button
+            label={_(msg`Connecting to service...`)}
+            size="large"
+            color="secondary"
+            disabled>
+            <ButtonIcon icon={Loader} />
+            <ButtonText>Connecting...</ButtonText>
+          </Button>
         ) : (
           <Button
             testID="loginNextButton"
-            label={_(msg`Next`)}
+            label={_(msg`Log in`)}
             accessibilityHint={_(msg`Navigates to the next screen`)}
-            variant="solid"
             color="primary"
             size="large"
             onPress={onPressNext}>
             <ButtonText>
-              <Trans>Next</Trans>
+              <Trans>Log in</Trans>
             </ButtonText>
             {isProcessing && <ButtonIcon icon={Loader} />}
           </Button>
