@@ -7,7 +7,7 @@ import {Trans} from '@lingui/macro'
 import {isNative} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {List} from '#/view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
@@ -36,7 +36,7 @@ export function StepProfiles({
     data: topPages,
     fetchNextPage,
     isLoading: isLoadingTopPages,
-  } = useActorSearchPaginated({
+  } = useActorSearch({
     query: encodeURIComponent('*'),
   })
   const topFollowers = topPages?.pages

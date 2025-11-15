@@ -17,7 +17,7 @@ import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {RQKEY_ROOT_PAGINATED as useActorSearchPaginatedQueryKeyRoot} from '#/state/queries/actor-search'
+import {RQKEY_ROOT as useActorSearchQueryKeyRoot} from '#/state/queries/actor-search'
 import {
   type FeedPreviewItem,
   useFeedPreviews,
@@ -308,7 +308,7 @@ export function Explore({
         queryKey: [getSuggestedUsersQueryKeyRoot],
       }),
       qc.resetQueries({
-        queryKey: [useActorSearchPaginatedQueryKeyRoot],
+        queryKey: [useActorSearchQueryKeyRoot],
       }),
       qc.resetQueries({
         queryKey: createGetSuggestedFeedsQueryKey(),
