@@ -1,33 +1,24 @@
-import {useMemo} from 'react'
-import {
-  type ChatBskyConvoLeaveConvo,
-  type ChatBskyConvoListConvos,
-} from '@atproto/api'
-import {
-  useMutation,
-  useMutationState,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {type ChatBskyConvoListConvos} from '@atproto/api'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
 
-const RQKEY_ROOT = 'leave-convo'
-export function RQKEY(convoId: string | undefined) {
-  return [RQKEY_ROOT, convoId]
+export const RQKEY_ROOT = 'leave-convo'
+
+export function RQKEY(convoId: string) {
+  return [RQKEY_ROOT, convoId] as const
 }
 
 export function useLeaveConvo(
-  convoId: string | undefined,
+  convoId: string,
   {
-    onSuccess,
     onMutate,
     onError,
   }: {
     onMutate?: () => void
-    onSuccess?: (data: ChatBskyConvoLeaveConvo.OutputSchema) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -46,7 +37,8 @@ export function useLeaveConvo(
 
       return data
     },
-    onMutate: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries({queryKey: [CONVO_LIST_KEY]})
       let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
       queryClient.setQueryData(
         [CONVO_LIST_KEY],
@@ -70,10 +62,6 @@ export function useLeaveConvo(
       onMutate?.()
       return {prevPages}
     },
-    onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
-      onSuccess?.(data)
-    },
     onError: (error, _, context) => {
       logger.error(error)
       queryClient.setQueryData(
@@ -89,28 +77,12 @@ export function useLeaveConvo(
           }
         },
       )
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
       onError?.(error)
     },
+    onSettled: () => {
+      if (queryClient.isMutating({mutationKey: RQKEY(convoId)}) === 1) {
+        queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      }
+    },
   })
-}
-
-/**
- * Gets currently pending and successful leave convo mutations
- *
- * @returns Array of `convoId`
- */
-export function useLeftConvos() {
-  const pending = useMutationState({
-    filters: {mutationKey: [RQKEY_ROOT], status: 'pending'},
-    select: mutation => mutation.options.mutationKey?.[1] as string | undefined,
-  })
-  const success = useMutationState({
-    filters: {mutationKey: [RQKEY_ROOT], status: 'success'},
-    select: mutation => mutation.options.mutationKey?.[1] as string | undefined,
-  })
-  return useMemo(
-    () => [...pending, ...success].filter(id => id !== undefined),
-    [pending, success],
-  )
 }
