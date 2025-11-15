@@ -389,3 +389,25 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
     opacity: 0;
   }
 }
+
+/*
+ * Sticky headers for `List` component. Add more indices as needed.
+ *
+ * Note — :nth-child is 1-indexed
+ */
+*[data-sticky-header-index-0] > div > div:nth-child(1),
+*[data-sticky-header-index-1] > div > div:nth-child(2),
+*[data-sticky-header-index-2] > div > div:nth-child(3),
+*[data-sticky-header-index-3] > div > div:nth-child(4),
+*[data-sticky-header-index-4] > div > div:nth-child(5),
+*[data-sticky-header-index-5] > div > div:nth-child(6),
+*[data-sticky-header-index-6] > div > div:nth-child(7),
+*[data-sticky-header-index-7] > div > div:nth-child(8),
+*[data-sticky-header-index-8] > div > div:nth-child(9),
+*[data-sticky-header-index-9] > div > div:nth-child(10) {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
