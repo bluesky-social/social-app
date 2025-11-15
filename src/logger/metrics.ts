@@ -373,6 +373,10 @@ export type MetricEvents = {
   }
 
   'feed:interstitial:feedCard:press': {}
+  'desktopFeeds:feed:click': {
+    feedUri: string
+    feedDescriptor: string
+  }
 
   'profile:header:suggestedFollowsCard:press': {}
   'profile:addToStarterPack': {}

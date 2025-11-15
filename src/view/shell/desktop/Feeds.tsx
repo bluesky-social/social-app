@@ -5,6 +5,7 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {type NavigationProp} from '#/lib/routes/types'
+import {logger} from '#/logger'
 import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
@@ -75,6 +76,14 @@ export function DesktopFeeds() {
             key={feedInfo.uri}
             label={feedInfo.displayName}
             {...createStaticClick(() => {
+              logger.metric(
+                'desktopFeeds:feed:click',
+                {
+                  feedUri: feedInfo.uri,
+                  feedDescriptor: feed,
+                },
+                {statsig: false},
+              )
               setSelectedFeed(feed)
               navigation.navigate('Home')
               if (route.name === 'Home' && feed === selectedFeed) {
