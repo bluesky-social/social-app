@@ -513,7 +513,6 @@ export function PostInteractionSettingsForm({
                     ? _(msg`Hide lists`)
                     : _(msg`Show lists of users to select from`)
                 }
-                accessibilityHint={_(msg`Toggle showing lists`)}
                 accessibilityRole="togglebutton"
                 hitSlop={0}
                 onPress={() => {
@@ -606,8 +605,8 @@ export function PostInteractionSettingsForm({
         type="checkbox"
         label={
           quotesEnabled
-            ? _(msg`Disable quote posts of this post.`)
-            : _(msg`Enable quote posts of this post.`)
+            ? _(msg`Disable quote posts of this post`)
+            : _(msg`Enable quote posts of this post`)
         }
         value={quotesEnabled}
         onChange={onChangeQuotesEnabled}>
