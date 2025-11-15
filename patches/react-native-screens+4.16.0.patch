@@ -2,7 +2,7 @@ diff --git a/node_modules/react-native-screens/ios/RNSScreen.mm b/node_modules/r
 index b62a2e2..cb469db 100644
 --- a/node_modules/react-native-screens/ios/RNSScreen.mm
 +++ b/node_modules/react-native-screens/ios/RNSScreen.mm
-@@ -729,9 +729,26 @@ - (void)notifyTransitionProgress:(double)progress closing:(BOOL)closing goingFor
+@@ -729,9 +729,36 @@ - (void)notifyTransitionProgress:(double)progress closing:(BOOL)closing goingFor
  #endif
  }
  
@@ -16,7 +16,17 @@ index b62a2e2..cb469db 100644
 +    // Furthermore, a stack put inside a modal will exist in an entirely different hierarchy
 +    // To be sure, we block interactions on the whole window.
 +    // Note that newWindows is nil when moving from instead of moving to, and Obj-C handles nil correctly
-+    newWindow.userInteractionEnabled = false;
++    if (newWindow != nil) {
++      newWindow.userInteractionEnabled = false;
++
++      // Safety mechanism: Re-enable interactions after a delay to prevent permanent disabling
++      // This helps with fullscreen video transitions that don't trigger viewDidAppear
++      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
++        if (newWindow) {
++          newWindow.userInteractionEnabled = true;
++        }
++      });
++    }
 +  }
 +}
 +
@@ -30,7 +40,7 @@ index b62a2e2..cb469db 100644
    // On Paper, we need to call both "cancel" and "reset" here because RN's gesture
    // recognizer does not handle the scenario when it gets cancelled by other top
    // level gesture recognizer. In this case by the modal dismiss gesture.
-@@ -744,8 +761,8 @@ - (void)presentationControllerWillDismiss:(UIPresentationController *)presentati
+@@ -744,8 +771,8 @@ - (void)presentationControllerWillDismiss:(UIPresentationController *)presentati
    // down.
    [_touchHandler cancel];
    [_touchHandler reset];
@@ -40,7 +50,7 @@ index b62a2e2..cb469db 100644
  
  - (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presentationController
  {
-@@ -757,6 +774,10 @@ - (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presenta
+@@ -757,6 +784,10 @@ - (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presenta
  
  - (void)presentationControllerDidAttemptToDismiss:(UIPresentationController *)presentationController
  {
@@ -51,7 +61,7 @@ index b62a2e2..cb469db 100644
    // NOTE(kkafar): We should consider depracating the use of gesture cancel here & align
    // with usePreventRemove API of react-navigation v7.
    [self notifyGestureCancel];
-@@ -767,6 +788,11 @@ - (void)presentationControllerDidAttemptToDismiss:(UIPresentationController *)pr
+@@ -767,6 +798,11 @@ - (void)presentationControllerDidAttemptToDismiss:(UIPresentationController *)pr
  
  - (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController
  {
@@ -63,7 +73,7 @@ index b62a2e2..cb469db 100644
    if ([_reactSuperview respondsToSelector:@selector(presentationControllerDidDismiss:)]) {
      [_reactSuperview performSelector:@selector(presentationControllerDidDismiss:) withObject:presentationController];
    }
-@@ -1518,6 +1544,10 @@ - (void)viewWillDisappear:(BOOL)animated
+@@ -1518,6 +1554,10 @@ - (void)viewWillDisappear:(BOOL)animated
  
  - (void)viewDidAppear:(BOOL)animated
  {
