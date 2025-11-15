@@ -256,9 +256,12 @@ export type MetricEvents = {
   'bookmarks:view': {}
   'bookmarks:post-clicked': {}
   'profile:follow': {
+    contextProfileDid?: string
     didBecomeMutual: boolean | undefined
     followeeClout: number | undefined
+    followeeDid: string
     followerClout: number | undefined
+    position?: number
     logContext:
       | 'RecommendedFollowsItem'
       | 'PostThreadItem'
@@ -275,6 +278,11 @@ export type MetricEvents = {
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
+  }
+  'profileCard:seen': {
+    contextProfileDid?: string
+    profileDid: string
+    position?: number
   }
   'suggestedUser:follow': {
     logContext:

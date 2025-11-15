@@ -48,11 +48,15 @@ export function Default({
   moderationOpts,
   logContext = 'ProfileCard',
   testID,
+  position,
+  contextProfileDid,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
   testID?: string
+  position?: number
+  contextProfileDid?: string
 }) {
   return (
     <Link testID={testID} profile={profile}>
@@ -60,6 +64,8 @@ export function Default({
         profile={profile}
         moderationOpts={moderationOpts}
         logContext={logContext}
+        position={position}
+        contextProfileDid={contextProfileDid}
       />
     </Link>
   )
@@ -69,10 +75,14 @@ export function Card({
   profile,
   moderationOpts,
   logContext = 'ProfileCard',
+  position,
+  contextProfileDid,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
+  position?: number
+  contextProfileDid?: string
 }) {
   return (
     <Outer>
@@ -83,6 +93,8 @@ export function Card({
           profile={profile}
           moderationOpts={moderationOpts}
           logContext={logContext}
+          position={position}
+          contextProfileDid={contextProfileDid}
         />
       </Header>
 
@@ -437,6 +449,8 @@ export type FollowButtonProps = {
   colorInverted?: boolean
   onFollow?: () => void
   withIcon?: boolean
+  position?: number
+  contextProfileDid?: string
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
@@ -453,6 +467,8 @@ export function FollowButtonInner({
   onFollow,
   colorInverted,
   withIcon = true,
+  position,
+  contextProfileDid,
   ...rest
 }: FollowButtonProps) {
   const {_} = useLingui()
@@ -461,6 +477,8 @@ export function FollowButtonInner({
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     logContext,
+    position,
+    contextProfileDid,
   )
   const isRound = Boolean(rest.shape && rest.shape === 'round')
 
