@@ -77,6 +77,7 @@ export function HomeHeaderLayoutMobile({
               style={[
                 a.justify_center,
                 {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
+                a.bg_transparent,
               ]}>
               <ButtonIcon icon={FeedsIcon} size="lg" />
             </Link>
