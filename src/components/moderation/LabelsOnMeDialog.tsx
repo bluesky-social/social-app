@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {View} from 'react-native'
-import {type ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
+import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
 import {XRPCError} from '@atproto/xrpc'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -239,7 +239,7 @@ function AppealForm({
         : 'com.atproto.admin.defs#repoRef'
       await agent.createModerationReport(
         {
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
           subject: {
             $type,
             ...subject,

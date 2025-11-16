@@ -2,7 +2,6 @@ import {View} from 'react-native'
 
 import {
   atoms as a,
-  flatten,
   type TextStyleProp,
   useTheme,
   type ViewStyleProp,
@@ -33,17 +32,9 @@ export function IconCircle({
           height: size === 'lg' ? 52 : 64,
           backgroundColor: t.palette.primary_50,
         },
-        flatten(style),
+        style,
       ]}>
-      <Icon
-        size={size}
-        style={[
-          {
-            color: t.palette.primary_500,
-          },
-          flatten(iconStyle),
-        ]}
-      />
+      <Icon size={size} style={[{color: t.palette.primary_500}, iconStyle]} />
     </View>
   )
 }

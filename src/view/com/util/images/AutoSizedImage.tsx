@@ -6,13 +6,14 @@ import Animated, {
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
+import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {type Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
@@ -29,18 +30,16 @@ export function ConstrainedImage({
   children: React.ReactNode
 }) {
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   /**
    * Computed as a % value to apply as `paddingTop`, this basically controls
    * the height of the image.
    */
   const outerAspectRatio = React.useMemo<DimensionValue>(() => {
-    const ratio =
-      isNative || !gtMobile
-        ? Math.min(1 / aspectRatio, minMobileAspectRatio ?? 16 / 9) // 9:16 bounding box
-        : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
+    const ratio = isNative
+      ? Math.min(1 / aspectRatio, minMobileAspectRatio ?? 16 / 9) // 9:16 bounding box
+      : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
     return `${ratio * 100}%`
-  }, [aspectRatio, gtMobile, minMobileAspectRatio])
+  }, [aspectRatio, minMobileAspectRatio])
 
   return (
     <View style={[a.w_full]}>
@@ -205,6 +204,10 @@ export function AutoSizedImage({
         accessibilityLabel={image.alt}
         accessibilityHint={_(msg`Views full image`)}
         accessibilityRole="button"
+        android_ripple={{
+          color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
+          foreground: true,
+        }}
         style={[
           a.w_full,
           a.rounded_md,
@@ -228,6 +231,10 @@ export function AutoSizedImage({
           accessibilityLabel={image.alt}
           accessibilityHint={_(msg`Views full image`)}
           accessibilityRole="button"
+          android_ripple={{
+            color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
+            foreground: true,
+          }}
           style={[a.h_full]}>
           {contents}
         </Pressable>

@@ -1,5 +1,4 @@
 import {AccordionAnimation} from '#/lib/custom-animations/AccordionAnimation'
-import {useGate} from '#/lib/statsig/statsig'
 import {isAndroid} from '#/platform/detection'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {ProfileGrid} from '#/components/FeedInterstitials'
@@ -27,7 +26,6 @@ export function AnimatedProfileHeaderSuggestedFollows({
   isExpanded: boolean
   actorDid: string
 }) {
-  const gate = useGate()
   const {isLoading, data, error} = useSuggestedFollowsByActorQuery({
     did: actorDid,
   })
@@ -40,8 +38,6 @@ export function AnimatedProfileHeaderSuggestedFollows({
    * Blocking the ability to scroll on Android is too much of a trade-off for now.
    **/
   if (isAndroid) return null
-
-  if (!gate('post_follow_profile_suggested_accounts')) return null
 
   return (
     <AccordionAnimation isExpanded={isExpanded}>

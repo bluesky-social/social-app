@@ -49,7 +49,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setSort: baseSetSort,
     view,
     setView: baseSetView,
-    prioritizeFollowedUsers,
   } = useThreadPreferences()
   const below = useMemo(() => {
     return view === 'linear'
@@ -63,11 +62,9 @@ export function usePostThread({anchor}: {anchor?: string}) {
     anchor,
     sort,
     view,
-    prioritizeFollowedUsers,
   })
   const postThreadOtherQueryKey = createPostThreadOtherQueryKey({
     anchor,
-    prioritizeFollowedUsers,
   })
 
   const query = useQuery<UsePostThreadQueryResult>({
@@ -79,7 +76,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
         sort: sort,
-        prioritizeFollowedUsers: prioritizeFollowedUsers,
       })
 
       /*
@@ -167,7 +163,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getPostThreadOtherV2({
         anchor: anchor!,
-        prioritizeFollowedUsers,
       })
       return data
     },

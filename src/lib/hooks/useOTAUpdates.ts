@@ -12,7 +12,7 @@ import {
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {IS_TESTFLIGHT} from '#/env'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
@@ -192,6 +192,13 @@ export function useOTAUpdates() {
     if (!isEnabled || currentChannel?.startsWith('pull-request')) {
       return
     }
+
+    // TEMP: disable wake-from-background OTA loading on Android.
+    // This is causing a crash when the thread view is open due to
+    // `maintainVisibleContentPosition`. See repro repo for more details:
+    // https://github.com/mozzius/ota-crash-repro
+    // Old Arch only - re-enable once we're on the New Archictecture! -sfn
+    if (isAndroid) return
 
     const subscription = AppState.addEventListener(
       'change',

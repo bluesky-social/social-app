@@ -362,6 +362,7 @@ export function SearchScreenShell({
                     size="large"
                     variant="ghost"
                     color="secondary"
+                    shape="rectangular"
                     style={[a.px_sm]}
                     onPress={onPressCancelSearch}
                     hitSlop={HITSLOP_10}>

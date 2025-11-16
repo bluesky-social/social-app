@@ -9,6 +9,7 @@ import {useMutation} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
+import {NEW_TO_OLD_REASONS_MAP} from './const'
 import {type ReportState} from './state'
 import {type ParsedReportSubject} from './types'
 
@@ -31,6 +32,26 @@ export function useSubmitReportMutation() {
         throw new Error(_(msg`Please select a moderation service`))
       }
 
+      const labeler = state.selectedLabeler
+      const labelerSupportedReasonTypes = labeler.reasonTypes || []
+
+      let reasonType = state.selectedOption.reason
+      const backwardsCompatibleReasonType = NEW_TO_OLD_REASONS_MAP[reasonType]
+      const supportsNewReasonType =
+        labelerSupportedReasonTypes.includes(reasonType)
+      const supportsOldReasonType = labelerSupportedReasonTypes.includes(
+        backwardsCompatibleReasonType,
+      )
+
+      /*
+       * Only fall back for backwards compatibility if the labeler
+       * does not support the new reason type. If the labeler does not declare
+       * supported reason types, send the new version.
+       */
+      if (supportsOldReasonType && !supportsNewReasonType) {
+        reasonType = backwardsCompatibleReasonType
+      }
+
       let report:
         | ComAtprotoModerationCreateReport.InputSchema
         | (Omit<ComAtprotoModerationCreateReport.InputSchema, 'subject'> & {
@@ -40,7 +61,7 @@ export function useSubmitReportMutation() {
       switch (subject.type) {
         case 'account': {
           report = {
-            reasonType: state.selectedOption.reason,
+            reasonType,
             reason: state.details,
             subject: {
               $type: 'com.atproto.admin.defs#repoRef',
@@ -54,7 +75,7 @@ export function useSubmitReportMutation() {
         case 'feed':
         case 'starterPack': {
           report = {
-            reasonType: state.selectedOption.reason,
+            reasonType,
             reason: state.details,
             subject: {
               $type: 'com.atproto.repo.strongRef',
@@ -64,9 +85,9 @@ export function useSubmitReportMutation() {
           }
           break
         }
-        case 'chatMessage': {
+        case 'convoMessage': {
           report = {
-            reasonType: state.selectedOption.reason,
+            reasonType,
             reason: state.details,
             subject: {
               $type: 'chat.bsky.convo.defs#messageRef',
@@ -82,7 +103,7 @@ export function useSubmitReportMutation() {
       if (__DEV__) {
         logger.info('Submitting report', {
           labeler: {
-            handle: state.selectedLabeler.creator.handle,
+            handle: labeler.creator.handle,
           },
           report,
         })
@@ -90,7 +111,7 @@ export function useSubmitReportMutation() {
         await agent.createModerationReport(report, {
           encoding: 'application/json',
           headers: {
-            'atproto-proxy': `${state.selectedLabeler.creator.did}#atproto_labeler`,
+            'atproto-proxy': `${labeler.creator.did}#atproto_labeler`,
           },
         })
       }

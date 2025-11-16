@@ -5,18 +5,20 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {BSKY_SERVICE} from '#/lib/constants'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {useSession} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
-import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {InlineLinkText} from '#/components/Link'
-import {P, Text} from '#/components/Typography'
+import {Text} from '#/components/Typography'
+
+type SegmentedControlOptions = typeof BSKY_SERVICE | 'custom'
 
 export function ServerInputDialog({
   control,
@@ -29,7 +31,8 @@ export function ServerInputDialog({
   const formRef = useRef<DialogInnerRef>(null)
 
   // persist these options between dialog open/close
-  const [fixedOption, setFixedOption] = useState(BSKY_SERVICE)
+  const [fixedOption, setFixedOption] =
+    useState<SegmentedControlOptions>(BSKY_SERVICE)
   const [previousCustomAddress, setPreviousCustomAddress] = useState('')
 
   const onClose = useCallback(() => {
@@ -40,7 +43,7 @@ export function ServerInputDialog({
         setPreviousCustomAddress(result)
       }
     }
-    logEvent('signin:hostingProviderPressed', {
+    logger.metric('signin:hostingProviderPressed', {
       hostingProviderDidChange: fixedOption !== BSKY_SERVICE,
     })
   }, [onSelect, fixedOption])
@@ -49,7 +52,10 @@ export function ServerInputDialog({
     <Dialog.Outer
       control={control}
       onClose={onClose}
-      nativeOptions={{minHeight: height / 2}}>
+      nativeOptions={platform({
+        android: {minHeight: height / 2},
+        ios: {preventExpansion: true},
+      })}>
       <Dialog.Handle />
       <DialogInner
         formRef={formRef}
@@ -70,8 +76,8 @@ function DialogInner({
   initialCustomAddress,
 }: {
   formRef: React.Ref<DialogInnerRef>
-  fixedOption: string
-  setFixedOption: (opt: string) => void
+  fixedOption: SegmentedControlOptions
+  setFixedOption: (opt: SegmentedControlOptions) => void
   initialCustomAddress: string
 }) {
   const control = Dialog.useDialogContext()
@@ -124,45 +130,49 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       accessibilityDescribedBy="dialog-description"
-      accessibilityLabelledBy="dialog-title">
+      accessibilityLabelledBy="dialog-title"
+      style={web({maxWidth: 500})}>
       <View style={[a.relative, a.gap_md, a.w_full]}>
-        <Text nativeID="dialog-title" style={[a.text_2xl, a.font_semi_bold]}>
+        <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
           <Trans>Choose your account provider</Trans>
         </Text>
-        <ToggleButton.Group
-          label="Preferences"
-          values={[fixedOption]}
-          onChange={values => setFixedOption(values[0])}>
-          <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Bluesky`)}>
-            <ToggleButton.ButtonText>{_(msg`Bluesky`)}</ToggleButton.ButtonText>
-          </ToggleButton.Button>
-          <ToggleButton.Button
+        <SegmentedControl.Root
+          type="tabs"
+          label={_(msg`Account provider`)}
+          value={fixedOption}
+          onChange={setFixedOption}>
+          <SegmentedControl.Item
+            testID="bskyServiceSelectBtn"
+            value={BSKY_SERVICE}
+            label={_(msg`Bluesky`)}>
+            <SegmentedControl.ItemText>
+              {_(msg`Bluesky`)}
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+          <SegmentedControl.Item
             testID="customSelectBtn"
-            name="custom"
+            value="custom"
             label={_(msg`Custom`)}>
-            <ToggleButton.ButtonText>{_(msg`Custom`)}</ToggleButton.ButtonText>
-          </ToggleButton.Button>
-        </ToggleButton.Group>
+            <SegmentedControl.ItemText>
+              {_(msg`Custom`)}
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+        </SegmentedControl.Root>
 
         {fixedOption === BSKY_SERVICE && isFirstTimeUser && (
-          <Admonition type="tip">
-            <Trans>
-              Bluesky is an open network where you can choose your own provider.
-              If you're new here, we recommend sticking with the default Bluesky
-              Social option.
-            </Trans>
-          </Admonition>
+          <View role="tabpanel">
+            <Admonition type="tip">
+              <Trans>
+                Bluesky is an open network where you can choose your own
+                provider. If you're new here, we recommend sticking with the
+                default Bluesky Social option.
+              </Trans>
+            </Admonition>
+          </View>
         )}
 
         {fixedOption === 'custom' && (
-          <View
-            style={[
-              a.border,
-              t.atoms.border_contrast_low,
-              a.rounded_sm,
-              a.px_md,
-              a.py_md,
-            ]}>
+          <View role="tabpanel">
             <TextField.LabelText nativeID="address-input-label">
               <Trans>Server address</Trans>
             </TextField.LabelText>
@@ -197,13 +207,8 @@ function DialogInner({
         )}
 
         <View style={[a.py_xs]}>
-          <P
-            style={[
-              t.atoms.text_contrast_medium,
-              a.text_sm,
-              a.leading_snug,
-              a.flex_1,
-            ]}>
+          <Text
+            style={[t.atoms.text_contrast_medium, a.text_sm, a.leading_snug]}>
             {isFirstTimeUser ? (
               <Trans>
                 If you're a developer, you can host your own server.
@@ -219,18 +224,23 @@ function DialogInner({
               to="https://atproto.com/guides/self-hosting">
               <Trans>Learn more.</Trans>
             </InlineLinkText>
-          </P>
+          </Text>
         </View>
 
         <View style={gtMobile && [a.flex_row, a.justify_end]}>
           <Button
             testID="doneBtn"
-            variant="outline"
+            variant="solid"
             color="primary"
-            size="small"
+            size={platform({
+              native: 'large',
+              web: 'small',
+            })}
             onPress={() => control.close()}
             label={_(msg`Done`)}>
-            <ButtonText>{_(msg`Done`)}</ButtonText>
+            <ButtonText>
+              <Trans>Done</Trans>
+            </ButtonText>
           </Button>
         </View>
       </View>

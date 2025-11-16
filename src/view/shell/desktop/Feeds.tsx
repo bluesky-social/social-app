@@ -27,13 +27,7 @@ export function DesktopFeeds() {
 
   if (isLoading) {
     return (
-      <View
-        style={[
-          {
-            gap: 10,
-            paddingVertical: 2,
-          },
-        ]}>
+      <View style={[{gap: 10}]}>
         {Array(5)
           .fill(0)
           .map((_, i) => (
@@ -60,6 +54,7 @@ export function DesktopFeeds() {
   return (
     <View
       style={[
+        a.flex_1,
         web({
           gap: 10,
           /*
@@ -89,6 +84,7 @@ export function DesktopFeeds() {
             style={[
               a.text_md,
               a.leading_snug,
+              a.flex_shrink_0,
               current
                 ? [a.font_semi_bold, t.atoms.text]
                 : [t.atoms.text_contrast_medium],

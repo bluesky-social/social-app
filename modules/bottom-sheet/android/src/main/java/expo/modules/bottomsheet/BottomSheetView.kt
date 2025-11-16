@@ -243,12 +243,17 @@ class BottomSheetView(
     val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
     bottomSheet?.let {
       val behavior = BottomSheetBehavior.from(it)
+      val currentState = behavior.state
 
-      behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
+      val oldRatio = behavior.halfExpandedRatio
+      var newRatio = getHalfExpandedRatio(contentHeight)
+      behavior.halfExpandedRatio = newRatio
 
       if (contentHeight > this.safeScreenHeight && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
       } else if (contentHeight < this.safeScreenHeight && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
+        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+      } else if (currentState == BottomSheetBehavior.STATE_HALF_EXPANDED && oldRatio != newRatio) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
       }
     }

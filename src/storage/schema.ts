@@ -37,6 +37,7 @@ export type Device = {
   devMode: boolean
   demoMode: boolean
   activitySubscriptionsNudged?: boolean
+  threadgateNudged?: boolean
 
   /**
    * Policy update overlays. New IDs are required for each new announcement.

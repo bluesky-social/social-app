@@ -196,6 +196,10 @@ export type MetricEvents = {
     count: number
   }
 
+  'feed:discover:emptyError': {
+    userDid: string
+  }
+
   'composer:gif:open': {}
   'composer:gif:select': {}
 

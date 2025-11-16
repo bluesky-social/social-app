@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
+import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -26,7 +27,6 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, platform, useTheme} from '#/alf'
-import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -175,14 +175,14 @@ let ProfileHeaderShell = ({
                     style={[
                       a.align_center,
                       a.justify_center,
-                      a.rounded_sm,
+                      a.rounded_full,
                       {
                         width: 31,
                         height: 31,
-                        backgroundColor: transparentifyColor('#000', 0.5),
+                        backgroundColor: utils.alpha('#000', 0.5),
                       },
                       hovered && {
-                        backgroundColor: transparentifyColor('#000', 0.75),
+                        backgroundColor: utils.alpha('#000', 0.75),
                       },
                     ]}>
                     <ArrowLeftIcon size="lg" fill="white" />

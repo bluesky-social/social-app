@@ -1,8 +1,4 @@
-import {
-  type BskyFeedViewPreference,
-  type BskyPreferences,
-  type BskyThreadViewPreference,
-} from '@atproto/api'
+import {type BskyFeedViewPreference, type BskyPreferences} from '@atproto/api'
 
 export type UsePreferencesQueryResponse = Omit<
   BskyPreferences,
@@ -18,10 +14,7 @@ export type UsePreferencesQueryResponse = Omit<
   userAge: number | undefined
 }
 
-export type ThreadViewPreferences = Pick<
-  BskyThreadViewPreference,
-  'prioritizeFollowedUsers'
-> & {
+export type ThreadViewPreferences = {
   sort: 'hotness' | 'oldest' | 'newest' | 'most-likes' | 'random' | string
   lab_treeViewEnabled?: boolean
 }

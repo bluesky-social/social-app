@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -27,8 +27,21 @@ export function SubscribeProfileButton({
   const subscribeDialogControl = useDialogControl()
   const [activitySubscriptionsNudged, setActivitySubscriptionsNudged] =
     useActivitySubscriptionsNudged()
+  const [showTooltip, setShowTooltip] = useState(false)
 
-  const onDismissTooltip = () => {
+  useEffect(() => {
+    if (!activitySubscriptionsNudged) {
+      const timeout = setTimeout(() => {
+        setShowTooltip(true)
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+  }, [activitySubscriptionsNudged])
+
+  const onDismissTooltip = (visible: boolean) => {
+    if (visible) return
+
+    setShowTooltip(false)
     setActivitySubscriptionsNudged(true)
   }
 
@@ -56,7 +69,7 @@ export function SubscribeProfileButton({
   return (
     <>
       <Tooltip.Outer
-        visible={!activitySubscriptionsNudged}
+        visible={showTooltip}
         onVisibleChange={onDismissTooltip}
         position="bottom">
         <Tooltip.Target>
@@ -65,7 +78,6 @@ export function SubscribeProfileButton({
             testID="dmBtn"
             size="small"
             color="secondary"
-            variant="solid"
             shape="round"
             label={_(msg`Get notified when ${name} posts`)}
             onPress={wrappedOnPress}>

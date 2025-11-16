@@ -1,16 +1,17 @@
-import React from 'react'
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {useCallback, useMemo, useState} from 'react'
+import {LayoutAnimation, Text as NestedText, View} from 'react-native'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPostgate,
   AtUri,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
-import isEqual from 'lodash.isequal'
 
+import {useHaptics} from '#/lib/haptics'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
 import {useGetPost} from '#/state/queries/post'
@@ -37,13 +38,17 @@ import {
 } from '#/state/queries/usePostThread'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
+  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
+} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -51,6 +56,10 @@ export type PostInteractionSettingsFormProps = {
   canSave?: boolean
   onSave: () => void
   isSaving?: boolean
+
+  isDirty?: boolean
+  persist?: boolean
+  onChangePersist?: (v: boolean) => void
 
   postgate: AppBskyFeedPostgate.Record
   onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
@@ -61,57 +70,39 @@ export type PostInteractionSettingsFormProps = {
   replySettingsDisabled?: boolean
 }
 
+/**
+ * Threadgate settings dialog. Used in the composer.
+ */
 export function PostInteractionSettingsControlledDialog({
   control,
   ...rest
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
 }) {
-  const t = useTheme()
-  const {_} = useLingui()
-
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer
+      control={control}
+      nativeOptions={{
+        preventExpansion: true,
+        preventDismiss: rest.isDirty && rest.persist,
+      }}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner
-        label={_(msg`Edit post interaction settings`)}
-        style={[{maxWidth: 500}, a.w_full]}>
-        <View style={[a.gap_md]}>
-          <Header />
-          <PostInteractionSettingsForm {...rest} />
-          <Text
-            style={[
-              a.pt_sm,
-              a.text_sm,
-              a.leading_snug,
-              t.atoms.text_contrast_medium,
-            ]}>
-            <Trans>
-              You can set default interaction settings in{' '}
-              <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
-                Settings &rarr; Moderation &rarr; Interaction settings
-              </Text>
-              .
-            </Trans>
-          </Text>
-        </View>
-        <Dialog.Close />
-      </Dialog.ScrollableInner>
+      <DialogInner {...rest} />
     </Dialog.Outer>
   )
 }
 
-export function Header() {
+function DialogInner(props: Omit<PostInteractionSettingsFormProps, 'control'>) {
+  const {_} = useLingui()
+
   return (
-    <View style={[a.gap_md, a.pb_sm]}>
-      <Text style={[a.text_2xl, a.font_semi_bold]}>
-        <Trans>Post interaction settings</Trans>
-      </Text>
-      <Text style={[a.text_md, a.pb_xs]}>
-        <Trans>Customize who can interact with this post.</Trans>
-      </Text>
-      <Divider />
-    </View>
+    <Dialog.ScrollableInner
+      label={_(msg`Edit post interaction settings`)}
+      style={[web({maxWidth: 400}), a.w_full]}>
+      <Header />
+      <PostInteractionSettingsForm {...props} />
+      <Dialog.Close />
+    </Dialog.ScrollableInner>
   )
 }
 
@@ -134,12 +125,17 @@ export type PostInteractionSettingsDialogProps = {
   initialThreadgateView?: AppBskyFeedDefs.ThreadgateView
 }
 
+/**
+ * Threadgate settings dialog. Used in the thread.
+ */
 export function PostInteractionSettingsDialog(
   props: PostInteractionSettingsDialogProps,
 ) {
   const postThreadContext = usePostThreadContext()
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer
+      control={props.control}
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <PostThreadContextProvider context={postThreadContext}>
         <PostInteractionSettingsDialogControlledInner {...props} />
@@ -153,7 +149,7 @@ export function PostInteractionSettingsDialogControlledInner(
 ) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [isSaving, setIsSaving] = React.useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   const {data: threadgateViewLoaded, isLoading: isLoadingThreadgate} =
     useThreadgateViewQuery({postUri: props.rootPostUri})
@@ -165,28 +161,28 @@ export function PostInteractionSettingsDialogControlledInner(
   const {mutateAsync: setThreadgateAllow} = useSetThreadgateAllowMutation()
 
   const [editedPostgate, setEditedPostgate] =
-    React.useState<AppBskyFeedPostgate.Record>()
+    useState<AppBskyFeedPostgate.Record>()
   const [editedAllowUISettings, setEditedAllowUISettings] =
-    React.useState<ThreadgateAllowUISetting[]>()
+    useState<ThreadgateAllowUISetting[]>()
 
   const isLoading = isLoadingThreadgate || isLoadingPostgate
   const threadgateView = threadgateViewLoaded || props.initialThreadgateView
-  const isThreadgateOwnedByViewer = React.useMemo(() => {
+  const isThreadgateOwnedByViewer = useMemo(() => {
     return currentAccount?.did === new AtUri(props.rootPostUri).host
   }, [props.rootPostUri, currentAccount?.did])
 
-  const postgateValue = React.useMemo(() => {
+  const postgateValue = useMemo(() => {
     return (
       editedPostgate || postgate || createPostgateRecord({post: props.postUri})
     )
   }, [postgate, editedPostgate, props.postUri])
-  const allowUIValue = React.useMemo(() => {
+  const allowUIValue = useMemo(() => {
     return (
       editedAllowUISettings || threadgateViewToAllowUISetting(threadgateView)
     )
   }, [threadgateView, editedAllowUISettings])
 
-  const onSave = React.useCallback(async () => {
+  const onSave = useCallback(async () => {
     if (!editedPostgate && !editedAllowUISettings) {
       props.control.close()
       return
@@ -248,15 +244,24 @@ export function PostInteractionSettingsDialogControlledInner(
   return (
     <Dialog.ScrollableInner
       label={_(msg`Edit post interaction settings`)}
-      style={[{maxWidth: 500}, a.w_full]}>
-      <View style={[a.gap_md]}>
-        <Header />
-
-        {isLoading ? (
-          <View style={[a.flex_1, a.py_4xl, a.align_center, a.justify_center]}>
-            <Loader size="xl" />
-          </View>
-        ) : (
+      style={[web({maxWidth: 400}), a.w_full]}>
+      {isLoading ? (
+        <View
+          style={[
+            a.flex_1,
+            a.py_5xl,
+            a.gap_md,
+            a.align_center,
+            a.justify_center,
+          ]}>
+          <Loader size="xl" />
+          <Text style={[a.italic, a.text_center]}>
+            <Trans>Loading post interaction settings...</Trans>
+          </Text>
+        </View>
+      ) : (
+        <>
+          <Header />
           <PostInteractionSettingsForm
             replySettingsDisabled={!isThreadgateOwnedByViewer}
             isSaving={isSaving}
@@ -266,8 +271,9 @@ export function PostInteractionSettingsDialogControlledInner(
             threadgateAllowUISettings={allowUIValue}
             onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
           />
-        )}
-      </View>
+        </>
+      )}
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
@@ -281,11 +287,20 @@ export function PostInteractionSettingsForm({
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
   replySettingsDisabled,
+  isDirty,
+  persist,
+  onChangePersist,
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
-  const {data: lists} = useMyListsQuery('curate')
-  const [quotesEnabled, setQuotesEnabled] = React.useState(
+  const playHaptic = useHaptics()
+  const [showLists, setShowLists] = useState(false)
+  const {
+    data: lists,
+    isPending: isListsPending,
+    isError: isListsError,
+  } = useMyListsQuery('curate')
+  const [quotesEnabled, setQuotesEnabled] = useState(
     !(
       postgate.embeddingRules &&
       postgate.embeddingRules.find(
@@ -294,27 +309,7 @@ export function PostInteractionSettingsForm({
     ),
   )
 
-  const onPressAudience = (setting: ThreadgateAllowUISetting) => {
-    // remove boolean values
-    let newSelected: ThreadgateAllowUISetting[] =
-      threadgateAllowUISettings.filter(
-        v => v.type !== 'nobody' && v.type !== 'everybody',
-      )
-    // toggle
-    const i = newSelected.findIndex(v => isEqual(v, setting))
-    if (i === -1) {
-      newSelected.push(setting)
-    } else {
-      newSelected.splice(i, 1)
-    }
-    if (newSelected.length === 0) {
-      newSelected.push({type: 'everybody'})
-    }
-
-    onChangeThreadgateAllowUISettings(newSelected)
-  }
-
-  const onChangeQuotesEnabled = React.useCallback(
+  const onChangeQuotesEnabled = useCallback(
     (enabled: boolean) => {
       setQuotesEnabled(enabled)
       onChangePostgate(
@@ -330,229 +325,347 @@ export function PostInteractionSettingsForm({
   const noOneCanReply = !!threadgateAllowUISettings.find(
     v => v.type === 'nobody',
   )
+  const everyoneCanReply = !!threadgateAllowUISettings.find(
+    v => v.type === 'everybody',
+  )
+  const numberOfListsSelected = threadgateAllowUISettings.filter(
+    v => v.type === 'list',
+  ).length
+
+  const toggleGroupValues = useMemo(() => {
+    const values: string[] = []
+    for (const setting of threadgateAllowUISettings) {
+      switch (setting.type) {
+        case 'everybody':
+        case 'nobody':
+          // no granularity, early return with nothing
+          return []
+        case 'followers':
+          values.push('followers')
+          break
+        case 'following':
+          values.push('following')
+          break
+        case 'mention':
+          values.push('mention')
+          break
+        case 'list':
+          values.push(`list:${setting.list}`)
+          break
+        default:
+          break
+      }
+    }
+    return values
+  }, [threadgateAllowUISettings])
+
+  const toggleGroupOnChange = (values: string[]) => {
+    const settings: ThreadgateAllowUISetting[] = []
+
+    if (values.length === 0) {
+      settings.push({type: 'everybody'})
+    } else {
+      for (const value of values) {
+        if (value.startsWith('list:')) {
+          const listId = value.slice('list:'.length)
+          settings.push({type: 'list', list: listId})
+        } else {
+          settings.push({type: value as 'followers' | 'following' | 'mention'})
+        }
+      }
+    }
+
+    onChangeThreadgateAllowUISettings(settings)
+  }
 
   return (
-    <View>
-      <View style={[a.flex_1, a.gap_md]}>
-        <View style={[a.gap_lg]}>
-          <View style={[a.gap_sm]}>
-            <Text style={[a.font_semi_bold, a.text_lg]}>
-              <Trans>Quote settings</Trans>
-            </Text>
-
-            <Toggle.Item
-              name="quoteposts"
-              type="checkbox"
-              label={
-                quotesEnabled
-                  ? _(msg`Click to disable quote posts of this post.`)
-                  : _(msg`Click to enable quote posts of this post.`)
-              }
-              value={quotesEnabled}
-              onChange={onChangeQuotesEnabled}
-              style={[a.justify_between, a.pt_xs]}>
-              <Text style={[t.atoms.text_contrast_medium]}>
-                <Trans>Allow quote posts</Trans>
-              </Text>
-              <Toggle.Switch />
-            </Toggle.Item>
-          </View>
-
-          <Divider />
-
-          {replySettingsDisabled && (
-            <View
-              style={[
-                a.px_md,
-                a.py_sm,
-                a.rounded_sm,
-                a.flex_row,
-                a.align_center,
-                a.gap_sm,
-                t.atoms.bg_contrast_25,
-              ]}>
-              <CircleInfo fill={t.atoms.text_contrast_low.color} />
-              <Text
-                style={[
-                  a.flex_1,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                <Trans>
-                  Reply settings are chosen by the author of the thread
-                </Trans>
-              </Text>
-            </View>
-          )}
-
+    <View style={[a.flex_1, a.gap_lg]}>
+      <View style={[a.gap_lg]}>
+        {replySettingsDisabled && (
           <View
             style={[
+              a.px_md,
+              a.py_sm,
+              a.rounded_sm,
+              a.flex_row,
+              a.align_center,
               a.gap_sm,
-              {
-                opacity: replySettingsDisabled ? 0.3 : 1,
-              },
+              t.atoms.bg_contrast_25,
             ]}>
-            <Text style={[a.font_semi_bold, a.text_lg]}>
-              <Trans>Reply settings</Trans>
+            <CircleInfo fill={t.atoms.text_contrast_low.color} />
+            <Text
+              style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]}>
+              <Trans>
+                Reply settings are chosen by the author of the thread
+              </Trans>
             </Text>
-
-            <Text style={[a.pt_sm, t.atoms.text_contrast_medium]}>
-              <Trans>Allow replies from:</Trans>
-            </Text>
-
-            <View style={[a.flex_row, a.gap_sm]}>
-              <Selectable
-                label={_(msg`Everybody`)}
-                isSelected={
-                  !!threadgateAllowUISettings.find(v => v.type === 'everybody')
-                }
-                onPress={() =>
-                  onChangeThreadgateAllowUISettings([{type: 'everybody'}])
-                }
-                style={{flex: 1}}
-                disabled={replySettingsDisabled}
-              />
-              <Selectable
-                label={_(msg`Nobody`)}
-                isSelected={noOneCanReply}
-                onPress={() =>
-                  onChangeThreadgateAllowUISettings([{type: 'nobody'}])
-                }
-                style={{flex: 1}}
-                disabled={replySettingsDisabled}
-              />
-            </View>
-
-            {!noOneCanReply && (
-              <>
-                <Text style={[a.pt_sm, t.atoms.text_contrast_medium]}>
-                  <Trans>Or combine these options:</Trans>
-                </Text>
-
-                <View style={[a.gap_sm]}>
-                  <Selectable
-                    label={_(msg`Mentioned users`)}
-                    isSelected={
-                      !!threadgateAllowUISettings.find(
-                        v => v.type === 'mention',
-                      )
-                    }
-                    onPress={() => onPressAudience({type: 'mention'})}
-                    disabled={replySettingsDisabled}
-                  />
-                  <Selectable
-                    label={_(msg`Users you follow`)}
-                    isSelected={
-                      !!threadgateAllowUISettings.find(
-                        v => v.type === 'following',
-                      )
-                    }
-                    onPress={() => onPressAudience({type: 'following'})}
-                    disabled={replySettingsDisabled}
-                  />
-                  <Selectable
-                    label={_(msg`Your followers`)}
-                    isSelected={
-                      !!threadgateAllowUISettings.find(
-                        v => v.type === 'followers',
-                      )
-                    }
-                    onPress={() => onPressAudience({type: 'followers'})}
-                    disabled={replySettingsDisabled}
-                  />
-                  {lists && lists.length > 0
-                    ? lists.map(list => (
-                        <Selectable
-                          key={list.uri}
-                          label={_(msg`Users in "${list.name}"`)}
-                          isSelected={
-                            !!threadgateAllowUISettings.find(
-                              v => v.type === 'list' && v.list === list.uri,
-                            )
-                          }
-                          onPress={() =>
-                            onPressAudience({type: 'list', list: list.uri})
-                          }
-                          disabled={replySettingsDisabled}
-                        />
-                      ))
-                    : // No loading states to avoid jumps for the common case (no lists)
-                      null}
-                </View>
-              </>
-            )}
           </View>
+        )}
+
+        <View style={[a.gap_sm, {opacity: replySettingsDisabled ? 0.3 : 1}]}>
+          <Text style={[a.text_md, a.font_medium]}>
+            <Trans>Who can reply</Trans>
+          </Text>
+
+          <Toggle.Group
+            label={_(msg`Set who can reply to your post`)}
+            type="radio"
+            maxSelections={1}
+            disabled={replySettingsDisabled}
+            values={
+              everyoneCanReply ? ['everyone'] : noOneCanReply ? ['nobody'] : []
+            }
+            onChange={val => {
+              if (val.includes('everyone')) {
+                onChangeThreadgateAllowUISettings([{type: 'everybody'}])
+              } else if (val.includes('nobody')) {
+                onChangeThreadgateAllowUISettings([{type: 'nobody'}])
+              } else {
+                onChangeThreadgateAllowUISettings([{type: 'mention'}])
+              }
+            }}>
+            <View style={[a.flex_row, a.gap_sm]}>
+              <Toggle.Item
+                name="everyone"
+                type="checkbox"
+                label={_(msg`Allow anyone to reply`)}
+                style={[a.flex_1]}>
+                {({selected}) => (
+                  <Toggle.Panel active={selected}>
+                    <Toggle.Radio />
+                    <Toggle.PanelText>
+                      <Trans>Anyone</Trans>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                )}
+              </Toggle.Item>
+              <Toggle.Item
+                name="nobody"
+                type="checkbox"
+                label={_(msg`Disable replies entirely`)}
+                style={[a.flex_1]}>
+                {({selected}) => (
+                  <Toggle.Panel active={selected}>
+                    <Toggle.Radio />
+                    <Toggle.PanelText>
+                      <Trans>Nobody</Trans>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                )}
+              </Toggle.Item>
+            </View>
+          </Toggle.Group>
+
+          <Toggle.Group
+            label={_(
+              msg`Set precisely which groups of people can reply to your post`,
+            )}
+            values={toggleGroupValues}
+            onChange={toggleGroupOnChange}
+            disabled={replySettingsDisabled}>
+            <Toggle.PanelGroup>
+              <Toggle.Item
+                name="followers"
+                type="checkbox"
+                label={_(msg`Allow your followers to reply`)}
+                hitSlop={0}>
+                {({selected}) => (
+                  <Toggle.Panel active={selected} adjacent="trailing">
+                    <Toggle.Checkbox />
+                    <Toggle.PanelText>
+                      <Trans>Your followers</Trans>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                )}
+              </Toggle.Item>
+              <Toggle.Item
+                name="following"
+                type="checkbox"
+                label={_(msg`Allow people you follow to reply`)}
+                hitSlop={0}>
+                {({selected}) => (
+                  <Toggle.Panel active={selected} adjacent="both">
+                    <Toggle.Checkbox />
+                    <Toggle.PanelText>
+                      <Trans>People you follow</Trans>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                )}
+              </Toggle.Item>
+              <Toggle.Item
+                name="mention"
+                type="checkbox"
+                label={_(msg`Allow people you mention to reply`)}
+                hitSlop={0}>
+                {({selected}) => (
+                  <Toggle.Panel active={selected} adjacent="both">
+                    <Toggle.Checkbox />
+                    <Toggle.PanelText>
+                      <Trans>People you mention</Trans>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                )}
+              </Toggle.Item>
+
+              <Button
+                label={
+                  showLists
+                    ? _(msg`Hide lists`)
+                    : _(msg`Show lists of users to select from`)
+                }
+                accessibilityHint={_(msg`Toggle showing lists`)}
+                accessibilityRole="togglebutton"
+                hitSlop={0}
+                onPress={() => {
+                  playHaptic('Light')
+                  if (isIOS && !showLists) {
+                    LayoutAnimation.configureNext({
+                      ...LayoutAnimation.Presets.linear,
+                      duration: 175,
+                    })
+                  }
+                  setShowLists(s => !s)
+                }}>
+                <Toggle.Panel
+                  active={numberOfListsSelected > 0}
+                  adjacent={showLists ? 'both' : 'leading'}>
+                  <Toggle.PanelText>
+                    {numberOfListsSelected === 0 ? (
+                      <Trans>Select from your lists</Trans>
+                    ) : (
+                      <Trans>
+                        Select from your lists{' '}
+                        <NestedText style={[a.font_normal, a.italic]}>
+                          <Plural
+                            value={numberOfListsSelected}
+                            other="(# selected)"
+                          />
+                        </NestedText>
+                      </Trans>
+                    )}
+                  </Toggle.PanelText>
+                  <Toggle.PanelIcon
+                    icon={showLists ? ChevronUpIcon : ChevronDownIcon}
+                  />
+                </Toggle.Panel>
+              </Button>
+              {showLists &&
+                (isListsPending ? (
+                  <Toggle.Panel>
+                    <Toggle.PanelText>
+                      <Trans>Loading lists...</Trans>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                ) : isListsError ? (
+                  <Toggle.Panel>
+                    <Toggle.PanelText>
+                      <Trans>
+                        An error occurred while loading your lists :/
+                      </Trans>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                ) : lists.length === 0 ? (
+                  <Toggle.Panel>
+                    <Toggle.PanelText>
+                      <Trans>You don't have any lists yet.</Trans>
+                    </Toggle.PanelText>
+                  </Toggle.Panel>
+                ) : (
+                  lists.map((list, i) => (
+                    <Toggle.Item
+                      key={list.uri}
+                      name={`list:${list.uri}`}
+                      type="checkbox"
+                      label={_(msg`Allow users in ${list.name} to reply`)}
+                      hitSlop={0}>
+                      {({selected}) => (
+                        <Toggle.Panel
+                          active={selected}
+                          adjacent={
+                            i === lists.length - 1 ? 'leading' : 'both'
+                          }>
+                          <Toggle.Checkbox />
+                          <UserAvatar
+                            size={24}
+                            type="list"
+                            avatar={list.avatar}
+                          />
+                          <Toggle.PanelText>{list.name}</Toggle.PanelText>
+                        </Toggle.Panel>
+                      )}
+                    </Toggle.Item>
+                  ))
+                ))}
+            </Toggle.PanelGroup>
+          </Toggle.Group>
         </View>
       </View>
+
+      <Toggle.Item
+        name="quoteposts"
+        type="checkbox"
+        label={
+          quotesEnabled
+            ? _(msg`Disable quote posts of this post.`)
+            : _(msg`Enable quote posts of this post.`)
+        }
+        value={quotesEnabled}
+        onChange={onChangeQuotesEnabled}>
+        {({selected}) => (
+          <Toggle.Panel active={selected}>
+            <Toggle.PanelText icon={QuoteIcon}>
+              <Trans>Allow quote posts</Trans>
+            </Toggle.PanelText>
+            <Toggle.Switch />
+          </Toggle.Panel>
+        )}
+      </Toggle.Item>
+
+      {typeof persist !== 'undefined' && (
+        <View style={[{minHeight: 24}, a.justify_center]}>
+          {isDirty ? (
+            <Toggle.Item
+              name="persist"
+              type="checkbox"
+              label={_(msg`Save these options for next time`)}
+              value={persist}
+              onChange={() => onChangePersist?.(!persist)}>
+              <Toggle.Checkbox />
+              <Toggle.LabelText
+                style={[a.text_md, a.font_normal, t.atoms.text]}>
+                <Trans>Save these options for next time</Trans>
+              </Toggle.LabelText>
+            </Toggle.Item>
+          ) : (
+            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+              <Trans>These are your default settings</Trans>
+            </Text>
+          )}
+        </View>
+      )}
 
       <Button
         disabled={!canSave || isSaving}
         label={_(msg`Save`)}
         onPress={onSave}
         color="primary"
-        size="large"
-        variant="solid"
-        style={a.mt_xl}>
-        <ButtonText>{_(msg`Save`)}</ButtonText>
-        {isSaving && <ButtonIcon icon={Loader} position="right" />}
+        size="large">
+        <ButtonText>
+          <Trans>Save</Trans>
+        </ButtonText>
+        {isSaving && <ButtonIcon icon={Loader} />}
       </Button>
     </View>
   )
 }
 
-function Selectable({
-  label,
-  isSelected,
-  onPress,
-  style,
-  disabled,
-}: {
-  label: string
-  isSelected: boolean
-  onPress: () => void
-  style?: StyleProp<ViewStyle>
-  disabled?: boolean
-}) {
-  const t = useTheme()
+function Header() {
   return (
-    <Button
-      disabled={disabled}
-      onPress={onPress}
-      label={label}
-      accessibilityRole="checkbox"
-      aria-checked={isSelected}
-      accessibilityState={{
-        checked: isSelected,
-      }}
-      style={a.flex_1}>
-      {({hovered, focused}) => (
-        <View
-          style={[
-            a.flex_1,
-            a.flex_row,
-            a.align_center,
-            a.justify_between,
-            a.rounded_sm,
-            a.p_md,
-            {minHeight: 40}, // for consistency with checkmark icon visible or not
-            t.atoms.bg_contrast_50,
-            (hovered || focused) && t.atoms.bg_contrast_100,
-            isSelected && {
-              backgroundColor: t.palette.primary_100,
-            },
-            style,
-          ]}>
-          <Text style={[a.text_sm, isSelected && a.font_semi_bold]}>
-            {label}
-          </Text>
-          {isSelected ? (
-            <Check size="sm" fill={t.palette.primary_500} />
-          ) : (
-            <View />
-          )}
-        </View>
-      )}
-    </Button>
+    <View style={[a.pb_lg]}>
+      <Text style={[a.text_2xl, a.font_bold]}>
+        <Trans>Post interaction settings</Trans>
+      </Text>
+    </View>
   )
 }
 
@@ -567,7 +680,7 @@ export function usePrefetchPostInteractionSettings({
   const agent = useAgent()
   const getPost = useGetPost()
 
-  return React.useCallback(async () => {
+  return useCallback(async () => {
     try {
       await Promise.all([
         queryClient.prefetchQuery({

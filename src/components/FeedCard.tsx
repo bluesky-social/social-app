@@ -186,7 +186,7 @@ export function Description({
     return rt
   }, [description])
   if (!rt) return null
-  return <RichText value={rt} style={[a.leading_snug]} disableLinks {...rest} />
+  return <RichText value={rt} disableLinks {...rest} />
 }
 
 export function DescriptionPlaceholder() {

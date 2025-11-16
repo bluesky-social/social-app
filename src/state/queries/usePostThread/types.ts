@@ -25,7 +25,7 @@ export const createPostThreadOtherQueryKey = (
 
 export type PostThreadParams = Pick<
   AppBskyUnspeccedGetPostThreadV2.QueryParams,
-  'sort' | 'prioritizeFollowedUsers'
+  'sort'
 > & {
   anchor?: string
   view: 'tree' | 'linear'

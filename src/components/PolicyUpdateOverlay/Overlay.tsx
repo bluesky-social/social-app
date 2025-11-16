@@ -5,11 +5,11 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
+import {utils} from '@bsky.app/alf'
 
 import {isAndroid, isNative} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
-import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
-import {transparentifyColor} from '#/alf/util/colorGeneration'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {FocusScope} from '#/components/FocusScope'
 import {LockScroll} from '#/components/LockScroll'
 
@@ -47,7 +47,7 @@ export function Overlay({
         ) : (
           <LinearGradient
             colors={[
-              transparentifyColor(t.atoms.bg.backgroundColor, 0),
+              utils.alpha(t.atoms.bg.backgroundColor, 0),
               t.atoms.bg.backgroundColor,
               t.atoms.bg.backgroundColor,
             ]}
@@ -97,7 +97,7 @@ export function Overlay({
               ]}>
               <LinearGradient
                 colors={[
-                  transparentifyColor(t.atoms.bg.backgroundColor, 0),
+                  utils.alpha(t.atoms.bg.backgroundColor, 0),
                   t.atoms.bg.backgroundColor,
                 ]}
                 start={[0.5, 0]}
@@ -113,7 +113,7 @@ export function Overlay({
               role="dialog"
               aria-role="dialog"
               aria-label={label}
-              style={flatten([
+              style={[
                 a.relative,
                 a.w_full,
                 a.p_2xl,
@@ -128,7 +128,7 @@ export function Overlay({
                     maxWidth: 420,
                   }),
                 ],
-              ])}>
+              ]}>
               {children}
             </View>
           </FocusScope>

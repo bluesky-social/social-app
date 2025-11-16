@@ -15,7 +15,6 @@ import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
-import {isNative} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {RQKEY_ROOT_PAGINATED as useActorSearchPaginatedQueryKeyRoot} from '#/state/queries/actor-search'
@@ -924,7 +923,7 @@ export function Explore({
         }
         case 'preview:header': {
           return (
-            <ModuleHeader.Container style={[a.pt_xs]} bottomBorder={isNative}>
+            <ModuleHeader.Container style={[a.pt_xs]} bottomBorder>
               {/* Very non-scientific way to avoid small gap on scroll */}
               <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
               <ModuleHeader.FeedLink feed={item.feed}>

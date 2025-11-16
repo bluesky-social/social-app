@@ -18,7 +18,7 @@ export function parseReportSubject(
 
   if ('convoId' in subject) {
     return {
-      type: 'chatMessage',
+      type: 'convoMessage',
       ...subject,
     }
   }

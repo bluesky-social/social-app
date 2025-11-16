@@ -38,7 +38,7 @@ import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
-import {PostControls} from '#/components/PostControls'
+import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
@@ -177,7 +177,7 @@ const ThreadItemTreePostInnerWrapper = memo(
             paddingTop: OUTER_SPACE / 2,
           },
           item.ui.indent === 1 && [
-            !item.ui.showParentReplyLine && a.pt_lg,
+            !item.ui.showParentReplyLine && {paddingTop: OUTER_SPACE / 1.5},
             !item.ui.showChildReplyLine && a.pb_sm,
           ],
           item.ui.isLastChild &&
@@ -412,11 +412,10 @@ export function ThreadItemTreePostSkeleton({index}: {index: number}) {
     <View
       style={[
         {paddingHorizontal: OUTER_SPACE, paddingVertical: OUTER_SPACE / 1.5},
-        a.gap_md,
         a.border_t,
         t.atoms.border_contrast_low,
       ]}>
-      <Skele.Row style={[a.align_start, a.gap_md]}>
+      <Skele.Row style={[a.align_start, a.gap_xs]}>
         <Skele.Circle size={TREE_AVI_WIDTH} />
 
         <Skele.Col style={[a.gap_xs]}>
@@ -436,13 +435,7 @@ export function ThreadItemTreePostSkeleton({index}: {index: number}) {
             )}
           </Skele.Col>
 
-          <Skele.Row style={[a.justify_between, a.pt_xs]}>
-            <Skele.Pill blend size={16} />
-            <Skele.Pill blend size={16} />
-            <Skele.Pill blend size={16} />
-            <Skele.Circle blend size={16} />
-            <View />
-          </Skele.Row>
+          <PostControlsSkeleton />
         </Skele.Col>
       </Skele.Row>
     </View>

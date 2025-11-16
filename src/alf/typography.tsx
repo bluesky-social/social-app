@@ -25,7 +25,8 @@ export function normalizeTextStyles(
     fontFamily: Alf['fonts']['family']
   } & Pick<Alf, 'flags'>,
 ) {
-  const s = flatten(styles)
+  const s = flatten(styles) ?? {}
+
   // should always be defined on these components
   s.fontSize = (s.fontSize || atoms.text_md.fontSize) * fontScale
 
