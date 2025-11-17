@@ -18,10 +18,11 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
@@ -69,7 +70,9 @@ export const LoginForm = ({
   const identifierValueRef = useRef<string>(initialHandle || '')
   const passwordValueRef = useRef<string>('')
   const authFactorTokenValueRef = useRef<string>('')
+  const identifierRef = useRef<TextInput>(null)
   const passwordRef = useRef<TextInput>(null)
+  const hasFocusedOnce = useRef<boolean>(false)
   const {_} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -198,9 +201,10 @@ export const LoginForm = ({
             <TextField.Icon icon={At} />
             <TextField.Input
               testID="loginUsernameInput"
+              inputRef={identifierRef}
               label={_(msg`Username or email address`)}
               autoCapitalize="none"
-              autoFocus
+              autoFocus={!isIOS}
               autoCorrect={false}
               autoComplete="username"
               returnKeyType="next"
@@ -228,11 +232,10 @@ export const LoginForm = ({
               label={_(msg`Password`)}
               autoCapitalize="none"
               autoCorrect={false}
-              autoComplete="password"
+              autoComplete="current-password"
               returnKeyType="done"
               enablesReturnKeyAutomatically={true}
               secureTextEntry={true}
-              textContentType="password"
               clearButtonMode="while-editing"
               onChangeText={v => {
                 passwordValueRef.current = v
@@ -241,6 +244,16 @@ export const LoginForm = ({
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
               editable={!isProcessing}
               accessibilityHint={_(msg`Enter your password`)}
+              onLayout={ios(() => {
+                if (hasFocusedOnce.current) return
+                hasFocusedOnce.current = true
+                // kinda dumb, but if we use `autoFocus` to focus
+                // the username input, it happens before the password
+                // input gets rendered. this breaks the password autofill
+                // on iOS (it only does the username part). delaying
+                // it until both inputs are rendered fixes the autofill -sfn
+                identifierRef.current?.focus()
+              })}
             />
             <Button
               testID="forgotPasswordButton"
