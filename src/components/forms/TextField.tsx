@@ -266,7 +266,7 @@ export function createInput(Component: typeof TextInput) {
             a.z_10,
             a.absolute,
             a.inset_0,
-            a.rounded_sm,
+            {borderRadius: 10},
             t.atoms.bg_contrast_50,
             {borderColor: 'transparent', borderWidth: 2},
             ctx.hovered ? chromeHover : {},
