@@ -50,6 +50,7 @@ import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
+import {ENV} from '#/env'
 import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
 
@@ -181,7 +182,7 @@ let FeedItemInner = ({
       feedContext,
       reqId,
     })
-    if (gate('feed_reply_button_open_thread')) {
+    if (gate('feed_reply_button_open_thread') && ENV !== 'e2e') {
       navigation.navigate('PostThread', {
         name: post.author.did,
         rkey,
