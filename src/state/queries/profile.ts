@@ -242,12 +242,19 @@ export function useProfileFollowMutationQueue(
   profile: Shadow<bsky.profile.AnyProfileView>,
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:follow']['logContext'],
+  position?: number,
+  contextProfileDid?: string,
 ) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
-  const followMutation = useProfileFollowMutation(logContext, profile)
+  const followMutation = useProfileFollowMutation(
+    logContext,
+    profile,
+    position,
+    contextProfileDid,
+  )
   const unfollowMutation = useProfileUnfollowMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
@@ -314,6 +321,8 @@ export function useProfileFollowMutationQueue(
 function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
   profile: Shadow<bsky.profile.AnyProfileView>,
+  position?: number,
+  contextProfileDid?: string,
 ) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -336,7 +345,10 @@ function useProfileFollowMutation(
           'followersCount' in profile
             ? toClout(profile.followersCount)
             : undefined,
+        followeeDid: did,
         followerClout: toClout(ownProfile?.followersCount),
+        position,
+        contextProfileDid,
       })
       return await agent.follow(did)
     },
