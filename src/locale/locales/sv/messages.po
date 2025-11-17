@@ -494,7 +494,7 @@ msgstr "<0>{0}</0> och<1> </1><2>{1} </2>ingår i ditt startpaket"
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> ingår i ditt startpaket"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> medlemmar"
 
@@ -923,7 +923,7 @@ msgstr "Alla flöden du har sparat, på ett och samma ställe."
 msgid "Allow access to your direct messages"
 msgstr "Tillåt åtkomst till dina direktmeddelanden"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr "Tillåt svar från alla"
 
@@ -942,23 +942,23 @@ msgstr "Tillåt nya meddelanden från"
 msgid "Allow others to be notified of your posts"
 msgstr "Tillåt andra att bli notifierade om dina inlägg"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr "Tillåt svar från personer du följer"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr "Tillåt svar från omnämnda"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Tillåt citatinlägg"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr "Tillåt svar från användare i {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr "Tillåt svar från dina följare"
 
@@ -1047,7 +1047,7 @@ msgstr "Ett fel uppstod under inläsningen av videoklippet. Försök igen senare
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Ett fel uppstod under inläsningen av videoklippet. Försök igen."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr "Ett fel uppstod under inläsningen av dina listor :/"
 
@@ -1105,7 +1105,7 @@ msgstr "En visualisering av en iPhone med Bluesky-appen öppen, där profilen ti
 msgid "an unknown labeler"
 msgstr "en okänd etikettsättare"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "och"
 
@@ -1135,11 +1135,11 @@ msgstr "Meddelande"
 msgid "Announcing verification on Bluesky"
 msgstr "Verifiering införs på Bluesky"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr "Alla"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Galopp 🐴 galopp 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Utvecklarläge aktiverat"
 msgid "Developer options"
 msgstr "Utvecklaralternativ"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Dialogruta: ställ in vem som kan interagera med det här inlägget"
 
@@ -2813,11 +2813,11 @@ msgstr "Inaktivera 2FA via e-post"
 msgid "Disable haptic feedback"
 msgstr "Inaktivera haptisk feedback"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr "Inaktivera svar helt"
 
@@ -3104,8 +3104,8 @@ msgstr "Redigera notiser från {0}"
 msgid "Edit People"
 msgstr "Redigera personer"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "Redigera interaktionsinställningar för inlägg"
 
@@ -3129,7 +3129,7 @@ msgstr "Redigera startpaket"
 msgid "Edit user list"
 msgstr "Redigera användarlista"
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Redigera vem som kan svara"
 
@@ -3236,7 +3236,7 @@ msgstr "Aktivera notiser för ett konto genom att besöka dess profil och trycka
 msgid "Enable push notifications"
 msgstr "Aktivera pushnotiser"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "Fel vid mottagning av captcha-svar."
 msgid "Error: {error}"
 msgstr "Fel: {error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Alla kan svara"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Alla kan svara på det här inlägget."
 
@@ -4377,7 +4377,7 @@ msgstr "Dölj"
 msgid "Hide customization options"
 msgstr "Dölj anpassningsalternativ"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr "Dölj listor"
 
@@ -4642,7 +4642,7 @@ msgstr "Ange lösenord för att radera kontot"
 msgid "Input the code which has been emailed to you"
 msgstr "Ange koden som har skickats till dig via e-post"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "Interaktion begränsad"
 
@@ -5142,11 +5142,11 @@ msgstr "Läs in nya notiser"
 msgid "Load new posts"
 msgstr "Läs in nya inlägg"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr "Läser in listor…"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr "Läser in inläggets interaktionsinställningar…"
 
@@ -5253,7 +5253,7 @@ msgstr "Media som kan vara störande eller olämplig för vissa målgrupper."
 msgid "Mention notifications"
 msgstr "Notiser för omnämnanden"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "omnämnda användare"
 
@@ -5759,7 +5759,7 @@ msgstr "Inga notiser ännu!"
 msgid "No one"
 msgstr "Ingen"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Ingen annan än författaren kan citera detta inlägg."
 
@@ -5820,7 +5820,7 @@ msgstr "Inget sökresultat hittades för ”{search}”."
 msgid "No thanks"
 msgstr "Nej tack"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Ingen"
 
@@ -6003,7 +6003,7 @@ msgstr "Ett eller flera videoklipp saknar alternativtext."
 msgid "Only .jpg and .png files are supported"
 msgstr "Endast .jpg- och .png-filer stöds"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "Endast {0} kan svara."
 
@@ -6119,7 +6119,7 @@ msgstr "Öppna systemlogg"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Öppnar en dialogruta där du kan lägga till en innehållsvarning för ditt inlägg"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr "Öppnar en dialogruta där du kan välja vem som kan interagera med det här inlägget"
 
@@ -6337,11 +6337,11 @@ msgstr "Personer som följer @{0}"
 msgid "People I follow"
 msgstr "Personer jag följer"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr "Personer du följer"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr "Omnämnda"
 
@@ -6644,7 +6644,7 @@ msgstr "Inlägg dolt genom ignorerat ord"
 msgid "Post Hidden by You"
 msgstr "Inlägg dolt av dig"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Interaktionsinställningar för inlägg"
 
@@ -6796,7 +6796,7 @@ msgstr "Profil uppdaterad"
 msgid "Promoting or selling prohibited items or services"
 msgstr "Reklam för eller försäljning av otillåtna varor eller tjänster"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr "Psst! Du kan redigera vilka som kan interagera med det här inlägget."
 
@@ -7202,11 +7202,11 @@ msgstr "Svarade dig"
 msgid "Replies"
 msgstr "Svar"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Svar inaktiverade"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "Svar är inaktiverat för det här inlägget."
 
@@ -7234,7 +7234,7 @@ msgstr "Svaret har dolts av dig"
 msgid "Reply notifications"
 msgstr "Notiser för svar"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Svarsinställningarna sätts av trådens författare"
 
@@ -7514,8 +7514,8 @@ msgstr "Går tillbaka till föregående steg"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Spara nytt användarnamn"
 msgid "Save QR code"
 msgstr "Spara QR-kod"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr "Spara mina val till nästa gång"
 
@@ -7816,11 +7816,11 @@ msgstr "Välj längd"
 msgid "Select from an existing account"
 msgstr "Välj ett befintligt konto"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr "Välj bland dina listor"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr "Välj bland dina listor <0>{numberOfListsSelected, plural, one {(# vald)} other {(# valda)}}</0>"
 
@@ -7982,7 +7982,7 @@ msgstr "Ange födelsedatum"
 msgid "Set new password"
 msgstr "Ange nytt lösenord"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr "Ställ in exakt vilka grupper av människor som kan svara på ditt inlägg"
 
@@ -7990,7 +7990,7 @@ msgstr "Ställ in exakt vilka grupper av människor som kan svara på ditt inlä
 msgid "Set up your account"
 msgstr "Konfigurera ditt konto"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr "Ställ in vem som kan svara på ditt inlägg"
 
@@ -8183,7 +8183,7 @@ msgstr "Visa mindre av sånt här"
 msgid "Show list anyway"
 msgstr "Visa listan ändå"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr "Visa listor över användare att välja mellan"
 
@@ -8384,7 +8384,7 @@ msgstr "Några av dina verifieringar är ogiltiga."
 msgid "Some other feeds you might like"
 msgstr "Några andra flöden som du kanske gillar"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Vissa personer kan svara"
 
@@ -8981,7 +8981,7 @@ msgstr "Ett problem uppstod med att uppdatera dina flöden. Kontrollera din inte
 msgid "There was an issue! {0}"
 msgstr "Ett problem uppstod! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "Ett oväntat problem uppstod i applikationen. Låt oss veta om det drabb
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Det har varit en rusning av nya användare till Bluesky! Vi kommer att aktivera ditt konto så snart vi kan."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr "Det här är dina förvalda inställningar"
 
@@ -9164,7 +9164,7 @@ msgstr "Den här modereringstjänsten är inte tillgänglig. Se nedan för mer i
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Det här inlägget har <0>{0}</0> som angivet skapelsedatum, men registrerades på Bluesky först den <1>{1}</1>."
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Det här inlägget har en okänd typ av trådrestriktion inställd. Din app kan vara inaktuell."
 
@@ -9797,11 +9797,11 @@ msgstr "Användarnamn får endast innehålla bokstäver (a-z), siffror och binde
 msgid "Username or email address"
 msgstr "Användarnamn eller e-postadress"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "användare som <0>@{0}</0> följer"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "användare som följer <0>@{0}</0>"
 
@@ -10312,12 +10312,12 @@ msgstr "När du trycker på bocken ser du vilka organisationer som står bakom v
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Vilka språk skulle du vilja se i dina algoritmiska flöden?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Vem kan interagera med det här inlägget?"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Vem kan svara"
 
@@ -10552,7 +10552,7 @@ msgstr "Du följer inga användare som följer @{name}."
 msgid "You don't have any chat requests at the moment."
 msgstr "Du har inga chattförfrågningar just nu."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr "Du har inga listor ännu."
 
@@ -10916,7 +10916,7 @@ msgstr "Din e-post har inte verifierats än. Se till att verifiera din e-post f�
 msgid "Your first like!"
 msgstr "Din första gillamarkering!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "Dina följare"
 

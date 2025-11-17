@@ -494,7 +494,7 @@ msgstr "<0>{0}</0> i<1> </1><2>{1} </2>są w twoim pakiecie startowym"
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> jest w twoim pakiecie startowym"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> osób"
 
@@ -923,7 +923,7 @@ msgstr "Wszystkie zapisane przez ciebie kanały są w tym miejscu."
 msgid "Allow access to your direct messages"
 msgstr "Zezwalaj na dostęp do wiadomości bezpośrednich"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr ""
 
@@ -942,23 +942,23 @@ msgstr "Zezwalaj na nowe wiadomości od"
 msgid "Allow others to be notified of your posts"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Zezwalaj na cytowanie wpisów"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr ""
 
@@ -1047,7 +1047,7 @@ msgstr "Wystąpił błąd podczas wczytywania wideo. Spróbuj ponownie później
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Wystąpił błąd podczas wczytywania wideo. Spróbuj ponownie."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
@@ -1105,7 +1105,7 @@ msgstr ""
 msgid "an unknown labeler"
 msgstr "nieznana moderacja"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "i"
 
@@ -1135,11 +1135,11 @@ msgstr ""
 msgid "Announcing verification on Bluesky"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Klip 🐴 klop 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Tryb programisty włączony"
 msgid "Developer options"
 msgstr "Ustawienia dla deweloperów"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Okno dialogowe: dostosuj, kto może wchodzić w interakcje z tym wpisem"
 
@@ -2813,11 +2813,11 @@ msgstr "Wyłącz uwierzytelnianie dwuskładnikowe przez email"
 msgid "Disable haptic feedback"
 msgstr "Wyłącz haptykę"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr ""
 
@@ -3104,8 +3104,8 @@ msgstr ""
 msgid "Edit People"
 msgstr "Edytuj osoby"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "Edytuj ustawienia interakcji z wpisem"
 
@@ -3129,7 +3129,7 @@ msgstr "Edytuj pakiet startowy"
 msgid "Edit user list"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Wybierz, kto może komentować"
 
@@ -3236,7 +3236,7 @@ msgstr ""
 msgid "Enable push notifications"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "Błąd podczas odbierania odpowiedzi captcha."
 msgid "Error: {error}"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Każdy może komentować"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Każdy może komentować ten wpis."
 
@@ -4377,7 +4377,7 @@ msgstr "Ukryj"
 msgid "Hide customization options"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr ""
 
@@ -4642,7 +4642,7 @@ msgstr "Wprowadź hasło, aby usunąć konto"
 msgid "Input the code which has been emailed to you"
 msgstr "Wprowadź kod, który został wysłany na twój adres email"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "Interakcje są ograniczone"
 
@@ -5142,11 +5142,11 @@ msgstr "Wczytaj nowe powiadomienia"
 msgid "Load new posts"
 msgstr "Wczytaj nowe wpisy"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -5253,7 +5253,7 @@ msgstr "Materiały, które mogą być niepokojące lub nieodpowiednie dla niekt�
 msgid "Mention notifications"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "wzmianki"
 
@@ -5759,7 +5759,7 @@ msgstr "Brak powiadomień!"
 msgid "No one"
 msgstr "Nikt"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Nikt poza autorem nie może cytować tego wpisu."
 
@@ -5820,7 +5820,7 @@ msgstr "Nie znaleziono żadnych wyników dla \"{search}\"."
 msgid "No thanks"
 msgstr "Nie, dziękuję"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Nikt"
 
@@ -6003,7 +6003,7 @@ msgstr "W co najmniej jednym wideo brakuje tekstu alternatywnego."
 msgid "Only .jpg and .png files are supported"
 msgstr "Obsługiwane są tylko pliki .jpg i .png"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "Tylko {0} mogą komentować."
 
@@ -6119,7 +6119,7 @@ msgstr "Otwórz dziennik systemowy"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Pozwala dodać ostrzeżenie o zawartości do twojego wpisu"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
@@ -6337,11 +6337,11 @@ msgstr "Osoby obserwujące @{0}"
 msgid "People I follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr ""
 
@@ -6644,7 +6644,7 @@ msgstr "Wpis został ukryty przez wyciszone słowo"
 msgid "Post Hidden by You"
 msgstr "Wpis został ukryty przez ciebie"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Ustawienia interakcji wpisu"
 
@@ -6796,7 +6796,7 @@ msgstr "Profil został zaktualizowany"
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr ""
 
@@ -7202,11 +7202,11 @@ msgstr ""
 msgid "Replies"
 msgstr "Komentarze"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Komentarze zostały wyłączone"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "Komentarze do tego wpisu są wyłączone."
 
@@ -7234,7 +7234,7 @@ msgstr "Komentarz został ukryty przez ciebie"
 msgid "Reply notifications"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Ustawienia komentowania są wybierane przez autora wątku"
 
@@ -7514,8 +7514,8 @@ msgstr "Powraca do poprzedniego kroku"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Zapisz nową nazwę"
 msgid "Save QR code"
 msgstr "Zapisz kod QR"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr ""
 
@@ -7816,11 +7816,11 @@ msgstr ""
 msgid "Select from an existing account"
 msgstr "Wybierz istniejące konto"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr ""
 
@@ -7982,7 +7982,7 @@ msgstr "Ustaw datę urodzenia"
 msgid "Set new password"
 msgstr "Ustaw nowe hasło"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr ""
 
@@ -7990,7 +7990,7 @@ msgstr ""
 msgid "Set up your account"
 msgstr "Skonfiguruj konto"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr ""
 
@@ -8183,7 +8183,7 @@ msgstr "Pokazuj mniej podobnych treści"
 msgid "Show list anyway"
 msgstr "Pokaż listę mimo to"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr ""
 
@@ -8384,7 +8384,7 @@ msgstr ""
 msgid "Some other feeds you might like"
 msgstr "Inne kanały, które mogą ci się spodobać"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Niektórzy mogą komentować"
 
@@ -8981,7 +8981,7 @@ msgstr "Wystąpił problem podczas aktualizacji kanałów, sprawdź połączenie
 msgid "There was an issue! {0}"
 msgstr "Wystąpił problem! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "Wystąpił nieoczekiwany błąd w aplikacji. Daj nam znać, jeśli tak s
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Do Bluesky dołączyło wiele nowych osób! Twoje konto zostanie aktywowane tak szybko, jak to możliwe."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr ""
 
@@ -9164,7 +9164,7 @@ msgstr "Ta usługa moderacji jest niedostępna. Więcej informacji znajduje się
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Ten wpis został utworzony <0>{0}</0>, ale po raz pierwszy pojawił się na Bluesky <1>{1}</1>."
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Ten wpis ma nieznany typ wątków. Twoja aplikacja może być nieaktualna."
 
@@ -9797,11 +9797,11 @@ msgstr ""
 msgid "Username or email address"
 msgstr "Nazwa lub adres email"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "obserwowani przez <0>@{0}</0>"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "obserwujący <0>@{0}</0>"
 
@@ -10312,12 +10312,12 @@ msgstr ""
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Które języki chcesz zobaczyć na swoich kanałach?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Kto może wchodzić w interakcje z tym wpisem?"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Kto może komentować"
 
@@ -10552,7 +10552,7 @@ msgstr "Nie obserwujesz nikogo, kto obserwuje @{name}."
 msgid "You don't have any chat requests at the moment."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr ""
 
@@ -10916,7 +10916,7 @@ msgstr ""
 msgid "Your first like!"
 msgstr "Twoje pierwsze polubienie!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "Twoi obserwujący"
 

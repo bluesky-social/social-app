@@ -494,7 +494,7 @@ msgstr "<0>{0}</0> ve <1></1><2>{1}</2> başlangıç paketinizde yer alıyor"
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> başlangıç paketinizde yer alıyor"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> üyeleri"
 
@@ -923,7 +923,7 @@ msgstr "Kaydettiğiniz akışların tümü bir yerde."
 msgid "Allow access to your direct messages"
 msgstr "Doğrudan mesajlarınıza erişime izin verin"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr "Herkesin yanıt vermesine izin ver"
 
@@ -942,23 +942,23 @@ msgstr "Yeni mesajlara izin ver"
 msgid "Allow others to be notified of your posts"
 msgstr "Başkalarına gönderilerinizden bildirim alma izni verin"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr "Takip ettiklerinizin yanıt vermesine izin ver"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr "Bahsettiklerinizin yanıt vermesine izin ver"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Alıntılara izin ver"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr "{0} listesindekilerin yanıt vermesine izin ver"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr "Takipçilerinizin yanıt vermesine izin ver"
 
@@ -1047,7 +1047,7 @@ msgstr "Video yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin."
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Video yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr "Listeleriniz yüklenirken bir hata oluştu :/"
 
@@ -1105,7 +1105,7 @@ msgstr "Bir kurgu iPhone açık Bluesky uygulamasında doğrulanmış bir kullan
 msgid "an unknown labeler"
 msgstr "bilinmeyen bir işaretleyici"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "ve"
 
@@ -1135,11 +1135,11 @@ msgstr "Duyuru"
 msgid "Announcing verification on Bluesky"
 msgstr "Bluesky'da doğrulamayı duyurma"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr "Herkes"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Klip 🐴 klop 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Geliştirici modu devreye alındı"
 msgid "Developer options"
 msgstr "Geliştirici seçenekleri"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Diyalog: kimin bu gönderiyle etkileşebileceğini ayarlayın"
 
@@ -2813,11 +2813,11 @@ msgstr "E-posta ile iki adımlı doğrulamayı devre dışı bırak"
 msgid "Disable haptic feedback"
 msgstr "Dokunsal geribildirimi devre dışı bırak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr "Yanıtları tümden devre dışı bırak"
 
@@ -3104,8 +3104,8 @@ msgstr "{0} kullanıcısından gelen bildirimleri düzenle"
 msgid "Edit People"
 msgstr "Kişileri Düzenle"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "Gönderi etkileşim ayarlarını düzenle"
 
@@ -3129,7 +3129,7 @@ msgstr "Başlangıç paketini düzenle"
 msgid "Edit user list"
 msgstr "Kullanıcı listesini düzenle"
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Kimin yanıtlayabileceğini düzenle"
 
@@ -3236,7 +3236,7 @@ msgstr "Bir hesabın bildirimlerini etkinleştirmek için profilini ziyaret edin
 msgid "Enable push notifications"
 msgstr "Anında bildirimleri etkinleştir"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "Captcha yanıtı alınırken bir hata oldu."
 msgid "Error: {error}"
 msgstr "Hata: {error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Herkes yanıtlayabilir"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Bu gönderiyi herkes yanıtlayabilir."
 
@@ -4377,7 +4377,7 @@ msgstr "Gizle"
 msgid "Hide customization options"
 msgstr "Özelleştirme seçeneklerini gizle"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr "Listeleri gizle"
 
@@ -4642,7 +4642,7 @@ msgstr "Hesap silme için şifre girin"
 msgid "Input the code which has been emailed to you"
 msgstr "Size e-posta olarak gönderilen kodu girin"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "Etkileşim sınırlandırıldı"
 
@@ -5142,11 +5142,11 @@ msgstr "Yeni bildirimleri yükle"
 msgid "Load new posts"
 msgstr "Yeni gönderileri yükle"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr "Listeler yükleniyor..."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr "Gönderi etkileşim ayarları yükleniyor..."
 
@@ -5253,7 +5253,7 @@ msgstr "Bazı gruplar için rahatsız edici ya da uygunsuz olabilecek medya."
 msgid "Mention notifications"
 msgstr "Bahsetme bildirimleri"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "bahsedilen kullanıcılar"
 
@@ -5759,7 +5759,7 @@ msgstr "Henüz bildirim yok!"
 msgid "No one"
 msgstr "Hiç kimse"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Yazarı dışında hiçkimse bu gönderiyi alıntılayamaz."
 
@@ -5820,7 +5820,7 @@ msgstr "\"{search}\" aramanız için sonuç bulunamadı."
 msgid "No thanks"
 msgstr "Teşekkürler"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Hiç kimse"
 
@@ -6003,7 +6003,7 @@ msgstr "Bir veya daha fazla videoda alternatif metin eksik."
 msgid "Only .jpg and .png files are supported"
 msgstr "Yalnızca .jpg ve .png dosyaları desteklenmektedir"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "Yalnızca {0} yanıtlayabilir."
 
@@ -6119,7 +6119,7 @@ msgstr "Sistem günlüğünü aç"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Gönderinize içerik uyarısı ekleme diyaloğunu açar"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr "Bu gönderiyle kimin etkileşebileceğini seçmek için bir diyalog açar"
 
@@ -6337,11 +6337,11 @@ msgstr "@{0} tarafından takip edilenler"
 msgid "People I follow"
 msgstr "Takip ettiklerim"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr "Takip ettiğiniz kişiler"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr "Bahsettiğiniz kişiler"
 
@@ -6644,7 +6644,7 @@ msgstr "Gönderi Sessize Alınmış Kelime Tarafından Gizlenmiş"
 msgid "Post Hidden by You"
 msgstr "Gönderi Sizin Tarafınızdan Gizlenmiş"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Gönderi etkileşim ayarları"
 
@@ -6796,7 +6796,7 @@ msgstr "Profil güncellendi"
 msgid "Promoting or selling prohibited items or services"
 msgstr "Yasaklı madde veya hizmet reklamı ya da satışı"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr "Hişt! Bu gönderiyle kimin etkileşebileceğini düzenleyebilirsiniz."
 
@@ -7202,11 +7202,11 @@ msgstr "Size yanıt"
 msgid "Replies"
 msgstr "Yanıtlar"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Yanıtlara kapalı"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "Bu gönderi yanıtlara kapalı."
 
@@ -7234,7 +7234,7 @@ msgstr "Yanıt Tarafınızdan Gizlenmiş"
 msgid "Reply notifications"
 msgstr "Yanıt bildirimlerini al"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Yanıt ayarları konu yazarı tarafından belirlenir"
 
@@ -7514,8 +7514,8 @@ msgstr "Önceki adıma döner"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Yeni kullanıcı adını kaydet"
 msgid "Save QR code"
 msgstr "QR kodu kaydet"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr "Bu seçimleri sonrası için sakla"
 
@@ -7816,11 +7816,11 @@ msgstr "Süre seçin"
 msgid "Select from an existing account"
 msgstr "Mevcut bir hesaptan seç"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr "Listelerinizden seçin"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr "Listelerinizden seçin <0>{numberOfListsSelected, plural, other {(# seçili)}}</0>"
 
@@ -7982,7 +7982,7 @@ msgstr "Doğum tarihini belirle"
 msgid "Set new password"
 msgstr "Yeni şifre ayarla"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr "Gönderinize hangi kişi gruplarının yanıt verebileceğini net bir şekilde belirleyin"
 
@@ -7990,7 +7990,7 @@ msgstr "Gönderinize hangi kişi gruplarının yanıt verebileceğini net bir ş
 msgid "Set up your account"
 msgstr "Hesabınızı ayarlayın"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr "Gönderinize kimin yanıt verebileceğini belirleyin"
 
@@ -8183,7 +8183,7 @@ msgstr "Bunun gibi daha az göster"
 msgid "Show list anyway"
 msgstr "Yine de listeyi göster"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr "Kullanıcıların seçileceği listeleri göster"
 
@@ -8384,7 +8384,7 @@ msgstr "Doğrulamalarınızdan bazıları geçersiz."
 msgid "Some other feeds you might like"
 msgstr "Beğenebileceğiniz diğer akışlar"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Bazı kişiler yanıtlayabilir"
 
@@ -8981,7 +8981,7 @@ msgstr "Akışlarınızı güncellerken bir sorun oldu, lütfen internet bağlan
 msgid "There was an issue! {0}"
 msgstr "Bir sorun oluştu! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "Uygulamada beklenmeyen bir sorun oluştu. Bu size de olduysa lütfen biz
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Bluesky'e bir dizi yeni kullanıcı geldi! Hesabınızı en kısa sürede etkinleştireceğiz."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr "Bunlar varsayılan ayarlarınız"
 
@@ -9164,7 +9164,7 @@ msgstr "Bu moderasyon hizmeti kullanılamıyor. Daha fazla ayrıntı için aşa�
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Bu gönderi <0>{0}</0> tarihinde oluşturulduğunu beyan ediyor, ancak Bluesky'da ilk olarak <1>{1}</1> tarihinde görüldü."
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Bu gönderide bilinmeyen bir threadgate türü var. Uygulamanız güncel olmayabilir."
 
@@ -9797,11 +9797,11 @@ msgstr "Kullanıcı adı sadece İngilizce harfler (a-z), rakamlar ve tire işar
 msgid "Username or email address"
 msgstr "Kullanıcı adı veya e-posta adresi"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "<0>@{0}</0> tarafından takip edilen kullanıcılar"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "<0>@{0}</0> kullanıcısını takip edenler"
 
@@ -10312,12 +10312,12 @@ msgstr "Bir onay işaretine dokunduğunuzda hangi kuruluşların doğrulama verd
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Algoritmik akışlarınızda hangi dilleri görmek istersiniz?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Bu gönderiyle kim etkileşime geçebilir?"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Kimler yanıtlayabilir"
 
@@ -10552,7 +10552,7 @@ msgstr "@{name} kullanıcısını takip eden hiçbir kullanıcıyı takip etmiyo
 msgid "You don't have any chat requests at the moment."
 msgstr "Şu anda herhangi bir sohbet isteğiniz yok."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr "Henüz bir listeniz yok."
 
@@ -10916,7 +10916,7 @@ msgstr "E-posta adresiniz doğrulanmamış. Lütfen Bluesky'ın tüm özellikler
 msgid "Your first like!"
 msgstr "İlk beğeniniz!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "Takipçileriniz"
 

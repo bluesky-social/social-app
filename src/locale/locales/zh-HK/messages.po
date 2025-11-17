@@ -494,7 +494,7 @@ msgstr "<0>{0}</0> 同<1> </1><2>{1} </2>經已喺你嘅新手包度"
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> 經已喺你嘅新手包度"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> 嘅成員"
 
@@ -923,7 +923,7 @@ msgstr "下低係你儲存咗嘅動態源。"
 msgid "Allow access to your direct messages"
 msgstr "允許取用你嘅私人訊息"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr ""
 
@@ -942,23 +942,23 @@ msgstr "允許呢啲人同你傾偈"
 msgid "Allow others to be notified of your posts"
 msgstr "允許其他人喺你出新帖嗰陣收到通知"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "允許引用帖文"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr ""
 
@@ -1047,7 +1047,7 @@ msgstr "撈緊影片嗰陣發生錯誤。唔該遲啲試多次。"
 msgid "An error occurred while loading the video. Please try again."
 msgstr "撈緊影片嗰陣發生錯誤。唔該試多次。"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
@@ -1105,7 +1105,7 @@ msgstr "一張使用 iPhone 嘅示範圖，顯示住 Bluesky 應用程式開咗�
 msgid "an unknown labeler"
 msgstr "未知嘅標記服務"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "同"
 
@@ -1135,11 +1135,11 @@ msgstr "公告"
 msgid "Announcing verification on Bluesky"
 msgstr "同你介紹 Bluesky 上嘅認證機制"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Clip 🐴 clop 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "開發者模式經已啓用"
 msgid "Developer options"
 msgstr "開發人員選項"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "對話框：調整邊啲人可以喺呢條帖文度互動"
 
@@ -2813,11 +2813,11 @@ msgstr "停用電郵雙重驗證"
 msgid "Disable haptic feedback"
 msgstr "停用觸覺回饋"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr ""
 
@@ -3104,8 +3104,8 @@ msgstr "編輯嚟自 {0} 嘅動態通知"
 msgid "Edit People"
 msgstr "編輯用戶"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "編輯帖文互動設定"
 
@@ -3129,7 +3129,7 @@ msgstr "編輯新手包"
 msgid "Edit user list"
 msgstr "編輯用戶清單"
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "調整邊啲人可以回覆"
 
@@ -3236,7 +3236,7 @@ msgstr "去到該帳號嘅個人檔案，撳<0>鐘仔圖標</0>，即可收到�
 msgid "Enable push notifications"
 msgstr "啓用推播通知"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "接收 CAPTCHA 回覆嗰陣發生錯誤。"
 msgid "Error: {error}"
 msgstr "錯誤：{error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "所有人都可以回覆"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "所有人都可以回覆呢條帖文。"
 
@@ -4377,7 +4377,7 @@ msgstr "隱藏"
 msgid "Hide customization options"
 msgstr "隱藏自訂選項"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr ""
 
@@ -4642,7 +4642,7 @@ msgstr "輸入密碼去刪除帳號"
 msgid "Input the code which has been emailed to you"
 msgstr "輸入電郵到你嘅驗證碼"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "已限制互動"
 
@@ -5142,11 +5142,11 @@ msgstr "撈下新嘅通知"
 msgid "Load new posts"
 msgstr "撈下新嘅帖文"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -5253,7 +5253,7 @@ msgstr "可能會令某啲受眾感到不安或造成不適嘅媒體內容。"
 msgid "Mention notifications"
 msgstr "提及通知"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "提到嘅用戶"
 
@@ -5759,7 +5759,7 @@ msgstr "仲未有通知！"
 msgid "No one"
 msgstr "冇人"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "凈係得作者可以引用呢篇帖文。"
 
@@ -5820,7 +5820,7 @@ msgstr "搵唔到「{search}」嘅搵嘢結果。"
 msgid "No thanks"
 msgstr "唔使，多謝"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "冇人"
 
@@ -6003,7 +6003,7 @@ msgstr "一條或多條影片冇咗替代文字。"
 msgid "Only .jpg and .png files are supported"
 msgstr "淨係支援 .jpg 同 .png 檔圖片"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "淨係得{0}可以回覆。"
 
@@ -6119,7 +6119,7 @@ msgstr "打開系統日誌"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "打開對話框嚟喺你嘅帖文度加入內容警告"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
@@ -6337,11 +6337,11 @@ msgstr "跟緊 @{0} 嘅人"
 msgid "People I follow"
 msgstr "我跟嘅人"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr ""
 
@@ -6644,7 +6644,7 @@ msgstr "帖文因設定嘅靜音字詞所隱藏"
 msgid "Post Hidden by You"
 msgstr "呢條帖文俾你隱藏咗"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "帖文互動設定"
 
@@ -6796,7 +6796,7 @@ msgstr "個人檔案經已更新"
 msgid "Promoting or selling prohibited items or services"
 msgstr "宣傳或售賣違禁物品或服務"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr ""
 
@@ -7202,11 +7202,11 @@ msgstr "覆你"
 msgid "Replies"
 msgstr "回覆"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "回覆經已停用"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "呢條帖文嘅回覆經已關閉。"
 
@@ -7234,7 +7234,7 @@ msgstr "呢個回覆俾你隱藏咗"
 msgid "Reply notifications"
 msgstr "回覆通知"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "回覆設定係由討論串嘅作者所設"
 
@@ -7514,8 +7514,8 @@ msgstr "返去上一步"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "儲存新嘅帳號代碼"
 msgid "Save QR code"
 msgstr "儲存 QR code"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr ""
 
@@ -7816,11 +7816,11 @@ msgstr "揀選時長"
 msgid "Select from an existing account"
 msgstr "喺而家有嘅帳號度揀"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr ""
 
@@ -7982,7 +7982,7 @@ msgstr "設定出世日期"
 msgid "Set new password"
 msgstr "設定新密碼"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr ""
 
@@ -7990,7 +7990,7 @@ msgstr ""
 msgid "Set up your account"
 msgstr "設定你嘅帳號"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr ""
 
@@ -8183,7 +8183,7 @@ msgstr "推少啲噉嘅嘢畀我"
 msgid "Show list anyway"
 msgstr "點都要顯示呢個清單"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr ""
 
@@ -8384,7 +8384,7 @@ msgstr "你目前被授予嘅部分驗證無效。"
 msgid "Some other feeds you might like"
 msgstr "其他可能都會啱你心水嘅動態源"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "淨係得部分人可以回覆"
 
@@ -8981,7 +8981,7 @@ msgstr "更新你嘅動態源嗰陣出咗問題，請檢查你嘅互聯網連線
 msgid "There was an issue! {0}"
 msgstr "{0} 出咗問題！"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "應用程式出現咗一個估都估唔到嘅問題。若然你有呢種
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Bluesky 家陣有一大班人加入！我哋會盡快啓用你嘅帳號。"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr ""
 
@@ -9164,7 +9164,7 @@ msgstr "呢個內容審覈服務用唔到，留意下低瞭解更多資訊。若
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "呢條帖文話係話喺 <0>{0}</0> 發布嘅，但係最先出現喺 Bluesky 嘅時間係喺 <1>{1}</1>。"
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "呢條帖文存在未知嘅內容類型，你 App 嘅版本可能過咗期。"
 
@@ -9797,11 +9797,11 @@ msgstr "用戶名稱只能包含字母（a-z）、數字及連字號（-）。"
 msgid "Username or email address"
 msgstr "用戶名稱或電郵地址"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "<0>@{0}</0> 跟咗嘅用戶"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "跟緊 <0>@{0}</0> 嘅用戶"
 
@@ -10312,12 +10312,12 @@ msgstr "當你撳低認證標記之後，你會睇到邊啲組織授予咗驗證
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "你諗住喺演算法動態源度睇到邊啲語言？"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "邊個可以喺呢篇帖文度互動？"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "邊個可以回覆"
 
@@ -10552,7 +10552,7 @@ msgstr "你未有跟任何跟咗 @{name} 嘅用戶。"
 msgid "You don't have any chat requests at the moment."
 msgstr "你而家未有任何傾偈邀請。"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr ""
 
@@ -10916,7 +10916,7 @@ msgstr "你嘅電郵仲未驗證。請驗證你嘅電郵以便享用所有 Blues
 msgid "Your first like!"
 msgstr "你嘅第一個讚！"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "你嘅擁躉"
 

@@ -494,7 +494,7 @@ msgstr "<0>{0}</0> và<1> </1><2>{1} </2>nằm trong gói khởi đầu của b�
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> nằm trong gói khởi đầu của bạn"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> thành viên"
 
@@ -923,7 +923,7 @@ msgstr "Tất cả bảng tin bạn đã lưu tại cùng một nơi."
 msgid "Allow access to your direct messages"
 msgstr "Cho phép truy cập tin nhắn của bạn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr ""
 
@@ -942,23 +942,23 @@ msgstr "Cho phép tin nhắn mới từ"
 msgid "Allow others to be notified of your posts"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Cho phép trích dẫn bài đăng"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr ""
 
@@ -1047,7 +1047,7 @@ msgstr "Đã có lỗi xảy ra khi đang tải video. Vui lòng thử lại sau
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Đã có lỗi xảy ra khi đang tải video. Vui lòng thử lại."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
@@ -1105,7 +1105,7 @@ msgstr "Phác thảo một iPhone hiển thị ứng dụng Bluesky mở trang h
 msgid "an unknown labeler"
 msgstr "dịch vụ nhãn không xác định"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "và"
 
@@ -1135,11 +1135,11 @@ msgstr ""
 msgid "Announcing verification on Bluesky"
 msgstr "Giới thiệu xác minh trên Bluesky"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Lộp 🐴 cộp 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Đã bật chế độ dành cho nhà phát triển"
 msgid "Developer options"
 msgstr "Lựa chọn phát triển"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Hộp thoại: điều chỉnh ai có thể tương tác với bài đăng này"
 
@@ -2813,11 +2813,11 @@ msgstr "Tắt Email 2FA"
 msgid "Disable haptic feedback"
 msgstr "Tắt phản hồi xúc giác"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr ""
 
@@ -3104,8 +3104,8 @@ msgstr ""
 msgid "Edit People"
 msgstr "Thay đổi người"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "Chỉnh sửa cài đặt tương tác bài đăng"
 
@@ -3129,7 +3129,7 @@ msgstr "Chỉnh sửa gói khởi đầu"
 msgid "Edit user list"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Chỉnh sửa ai có thể trả lời"
 
@@ -3236,7 +3236,7 @@ msgstr ""
 msgid "Enable push notifications"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "Nhận được lỗi phản hồi captcha."
 msgid "Error: {error}"
 msgstr "Lỗi: {error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Mọi người có thể trả lời"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Mọi người có thể trả lời bài đăng này."
 
@@ -4377,7 +4377,7 @@ msgstr "Ẩn"
 msgid "Hide customization options"
 msgstr "Ẩn tùy chọn trùy chỉnh"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr ""
 
@@ -4642,7 +4642,7 @@ msgstr "Nhập mật khẩu cho việc xóa tài khoản"
 msgid "Input the code which has been emailed to you"
 msgstr "Nhập mã đã được gởi đến email của bạn"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "Tương tác bị giới hạn"
 
@@ -5142,11 +5142,11 @@ msgstr "Tải thông báo mới"
 msgid "Load new posts"
 msgstr "Tải bài đăng mới"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -5253,7 +5253,7 @@ msgstr "Phương tiện có thể gây phản cảm cho một số khán giả."
 msgid "Mention notifications"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "người dùng được đề cập"
 
@@ -5759,7 +5759,7 @@ msgstr "Chưa có thông báo nào!"
 msgid "No one"
 msgstr "Không ai"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Không ai ngoài tác giả có thể trích dẫn bài đăng này."
 
@@ -5820,7 +5820,7 @@ msgstr "Không tìm thấy kết quả nào cho \"{search}\"."
 msgid "No thanks"
 msgstr "Không, cảm ơn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Không ai"
 
@@ -6003,7 +6003,7 @@ msgstr "Một hoặc nhiều video thiếu văn bản thay thế"
 msgid "Only .jpg and .png files are supported"
 msgstr "Chỉ hỗ trợ tệp .jpg và .png"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "Chỉ {0} có thể trả lời"
 
@@ -6119,7 +6119,7 @@ msgstr "Mở log hệ thống"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Mở hộp thoại để thêm cảnh báo nội dung cho bài đăng của bạn"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
@@ -6337,11 +6337,11 @@ msgstr "Người đang theo dõi @{0}"
 msgid "People I follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr ""
 
@@ -6644,7 +6644,7 @@ msgstr "Bài đăng bị ẩn do từ cấm"
 msgid "Post Hidden by You"
 msgstr "Bài đăng ẩn bởi bạn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Cài đặt tương tác bài đăng"
 
@@ -6796,7 +6796,7 @@ msgstr "Đã cập nhật hồ sơ"
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr ""
 
@@ -7202,11 +7202,11 @@ msgstr ""
 msgid "Replies"
 msgstr "Trả lời"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Trả lời đã bị tắt"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "Trả lời cho bài đăng này đã bị tắt."
 
@@ -7234,7 +7234,7 @@ msgstr "Trả lời bị ẩn bởi bạn"
 msgid "Reply notifications"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Cài đặt trả lời được chọn bởi tác giả của thảo luận"
 
@@ -7514,8 +7514,8 @@ msgstr "Quay lại bước trước đó"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Lưu tên tài khoản mới"
 msgid "Save QR code"
 msgstr "Lưu mã QR"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr ""
 
@@ -7816,11 +7816,11 @@ msgstr ""
 msgid "Select from an existing account"
 msgstr "Chọn từ một tài khoản đã tồn tại"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr ""
 
@@ -7982,7 +7982,7 @@ msgstr "Đặt ngày sinh"
 msgid "Set new password"
 msgstr "Đặt mất khẩu mới"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr ""
 
@@ -7990,7 +7990,7 @@ msgstr ""
 msgid "Set up your account"
 msgstr "Thiết lập tài khoản của bạn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr ""
 
@@ -8183,7 +8183,7 @@ msgstr "Hiển thị ít bài như thế này hơn"
 msgid "Show list anyway"
 msgstr "Vẫn hiển thị danh sách"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr ""
 
@@ -8384,7 +8384,7 @@ msgstr "Một vài xác minh của bạn không hợp lệ."
 msgid "Some other feeds you might like"
 msgstr "Một số bảng tin khác bạn có thể thích"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Một số người có thể trả lời"
 
@@ -8981,7 +8981,7 @@ msgstr "Có vấn đề cập nhật bảng tin của bạn, vui lòng kiểm tr
 msgid "There was an issue! {0}"
 msgstr "Đã xảy ra vấn đề! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "Đã xảy ra một vấn đề không mong muốn trong ứng dụng. V
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Có một lượng lớn người dùng mới đến Bluesky! Chúng tôi sẽ kích hoạt tài khoản của bạn ngay khi có thể."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr ""
 
@@ -9164,7 +9164,7 @@ msgstr "Dịch vụ kiểm duyệt này không khả dụng. Xem bên dưới đ
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Bài đăng này khai rằng đã được tạo vào <0>{0}</0>, nhưng lần đầu tiên được Bluesky nhìn thấy vào <1>{1}</1>."
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Bài đăng này có loại threadgate không xác định. Ứng dụng của bạn có thể đã lỗi thời."
 
@@ -9797,11 +9797,11 @@ msgstr ""
 msgid "Username or email address"
 msgstr "Tên tài khoản hoặc địa chỉ email"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "người dùng theo dõi bởi <0>@{0}</0>"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "người dùng theo dõi <0>@{0}</0>"
 
@@ -10312,12 +10312,12 @@ msgstr "Khi bạn nhấp vào dấu tích, bạn sẽ thấy tổ chức đã x�
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Bạn muốn thấy ngôn ngữ nào trong bảng tin theo thuật toán của mình?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Ai có thể tương tác với bài đăng này?"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Ai có thể trả lời"
 
@@ -10552,7 +10552,7 @@ msgstr "Bạn không theo dõi người dùng nào theo dõi @{name}."
 msgid "You don't have any chat requests at the moment."
 msgstr "Hiện tại bạn không có yêu cầu trò chuyện nào."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr ""
 
@@ -10916,7 +10916,7 @@ msgstr ""
 msgid "Your first like!"
 msgstr "Lượt thích đầu của bạn!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "Người theo dõi bạn"
 

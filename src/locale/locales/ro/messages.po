@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:10\n"
+"PO-Revision-Date: 2025-11-17 18:30\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -494,7 +494,7 @@ msgstr "<0>{0}</0> și<1> </1><2>{1} </2>sunt incluși în pachetul dvs. de porn
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> este inclus în pachetul dvs. de pornire"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> membri"
 
@@ -923,7 +923,7 @@ msgstr "Toate fluxurile pe care le-ați salvat, într-un singur loc."
 msgid "Allow access to your direct messages"
 msgstr "Permiteți accesul la mesajele dvs. directe"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr "Permiteți oricui să răspundă"
 
@@ -942,23 +942,23 @@ msgstr "Permiteți mesaje noi de la"
 msgid "Allow others to be notified of your posts"
 msgstr "Permiteți celorlalți să fie notificați despre postările dvs."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr "Permiteți persoanelor pe care le urmăriți să răspundă"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr "Permiteți persoanelor pe care le menționați să răspundă"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Permiteți postări citat"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr "Permiteți utilizatorilor din {0} să răspundă"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr "Permiteți urmăritorilor dvs. să răspundă"
 
@@ -1047,7 +1047,7 @@ msgstr "A apărut o eroare la încărcarea videoclipului. Vă rugăm să încerc
 msgid "An error occurred while loading the video. Please try again."
 msgstr "A apărut o eroare la încărcarea videoclipului. Vă rugăm să încercați din nou."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr "A apărut o eroare la încărcarea listelor dvs. :/"
 
@@ -1105,7 +1105,7 @@ msgstr "O machetă a unui iPhone care arată aplicația Bluesky deschisă la pro
 msgid "an unknown labeler"
 msgstr "un etichetator necunoscut"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "și"
 
@@ -1135,11 +1135,11 @@ msgstr "Anunț"
 msgid "Announcing verification on Bluesky"
 msgstr "Anunțăm verificarea pe Bluesky"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr "Oricine"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Clip 🐴 clop 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Mod dezvoltator activat"
 msgid "Developer options"
 msgstr "Opțiuni dezvoltator"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Dialog: ajustați cine poate interacționa cu această postare"
 
@@ -2813,11 +2813,11 @@ msgstr "Dezactivare A2F prin e-mail"
 msgid "Disable haptic feedback"
 msgstr "Dezactivați feedback-ul haptic"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr "Dezactivați răspunsurile în întregime"
 
@@ -3104,8 +3104,8 @@ msgstr "Editați notificările de la {0}"
 msgid "Edit People"
 msgstr "Editare persoane"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "Editați setările de interacțiune ale postărilor"
 
@@ -3129,7 +3129,7 @@ msgstr "Editare pachet de pornire"
 msgid "Edit user list"
 msgstr "Editare listă de utilizatori"
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Editați cine poate răspunde"
 
@@ -3236,7 +3236,7 @@ msgstr "Activați notificările pentru un cont accesând profilul acestuia și a
 msgid "Enable push notifications"
 msgstr "Activare notificări push"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "Eroare la primirea răspunsului captcha."
 msgid "Error: {error}"
 msgstr "Eroare: {error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Toată lumea poate răspunde"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Toată lumea poate răspunde la această postare."
 
@@ -4377,7 +4377,7 @@ msgstr "Ascundere"
 msgid "Hide customization options"
 msgstr "Ascundere opțiuni de personalizare"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr "Ascundere liste"
 
@@ -4642,7 +4642,7 @@ msgstr "Introduceți parola pentru ștergerea contului"
 msgid "Input the code which has been emailed to you"
 msgstr "Introduceți codul care v-a fost trimis prin e-mail"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "Interacțiune limitată"
 
@@ -5142,11 +5142,11 @@ msgstr "Încărcați notificări noi"
 msgid "Load new posts"
 msgstr "Încărcați postări noi"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr "Se încarcă listele..."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr "Se încarcă setările de interacțiune pentru postări..."
 
@@ -5253,7 +5253,7 @@ msgstr "Conținut media care poate fi deranjant sau neadecvat pentru anumite aud
 msgid "Mention notifications"
 msgstr "Notificări pentru mențiuni"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "utilizatori menționați"
 
@@ -5759,7 +5759,7 @@ msgstr "Nu există notificări încă!"
 msgid "No one"
 msgstr "Nimeni"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Nimeni în afară de autor nu poate cita această postare."
 
@@ -5820,7 +5820,7 @@ msgstr "Niciun rezultat găsit pentru „{search}”."
 msgid "No thanks"
 msgstr "Nu, mulțumesc"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Nimeni"
 
@@ -6003,7 +6003,7 @@ msgstr "Unei sau mai multor videoclipuri le lipsește textul alternativ."
 msgid "Only .jpg and .png files are supported"
 msgstr "Doar fișierele .jpg și .png sunt acceptate"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "Doar {0} poate răspunde."
 
@@ -6119,7 +6119,7 @@ msgstr "Deschideți jurnalul sistemului"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Deschide un dialog pentru a adăuga un avertisment de conținut postării dvs."
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr "Deschide un dialog pentru a alege cine poate interacționa cu această postare"
 
@@ -6337,11 +6337,11 @@ msgstr "Persoane care urmăresc @{0}"
 msgid "People I follow"
 msgstr "Persoane pe care le urmăriți"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr "Persoane pe care le urmăriți"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr "Persoane pe care le menționați"
 
@@ -6644,7 +6644,7 @@ msgstr "Postare ascunsă de un cuvânt amuțit"
 msgid "Post Hidden by You"
 msgstr "Postare ascunsă de dvs."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Setări interacțiune postare"
 
@@ -6796,7 +6796,7 @@ msgstr "Profil actualizat"
 msgid "Promoting or selling prohibited items or services"
 msgstr "Promovarea sau vânzarea de articole sau servicii interzise"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr "Psst! Puteți edita cine poate interacționa cu această postare."
 
@@ -7202,11 +7202,11 @@ msgstr "Răspuns la dvs."
 msgid "Replies"
 msgstr "Răspunsuri"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Răspunsuri dezactivate"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "Răspunsurile la această postare sunt dezactivate."
 
@@ -7234,7 +7234,7 @@ msgstr "Răspuns ascuns de dvs."
 msgid "Reply notifications"
 msgstr "Notificări pentru răspunsuri"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Setările pentru răspunsuri sunt alese de autorul firului"
 
@@ -7514,8 +7514,8 @@ msgstr "Revine la pasul anterior"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Salvați noul identificator"
 msgid "Save QR code"
 msgstr "Salvați codul QR"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr "Salvați aceste opțiuni pentru data viitoare"
 
@@ -7601,7 +7601,7 @@ msgstr "Spuneți salut!"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:43
 msgid "Scam"
-msgstr "Scam"
+msgstr "Înșelătorie"
 
 #: src/lib/interests.ts:71
 #: src/screens/Onboarding/index.tsx:64
@@ -7816,11 +7816,11 @@ msgstr "Selectare durată"
 msgid "Select from an existing account"
 msgstr "Selectați dintr-un cont existent"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr "Selectați din listele dvs."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr "Selectați din listele dvs. <0>{numberOfListsSelected, plural, one {} few {(# selectate)}other {(# selectate)}}</0>"
 
@@ -7982,7 +7982,7 @@ msgstr "Setați data nașterii"
 msgid "Set new password"
 msgstr "Setați parola nouă"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr "Stabiliți cu precizie grupurile de persoane care pot răspunde la postarea dvs."
 
@@ -7990,7 +7990,7 @@ msgstr "Stabiliți cu precizie grupurile de persoane care pot răspunde la posta
 msgid "Set up your account"
 msgstr "Configurați-vă contul"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr "Stabiliți cine poate răspunde la postarea dvs."
 
@@ -8183,7 +8183,7 @@ msgstr "Afișați mai puține asemănătoare"
 msgid "Show list anyway"
 msgstr "Afișați lista oricum"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr "Afișați liste de utilizatori din care puteți selecta"
 
@@ -8384,7 +8384,7 @@ msgstr "Unele dintre verificările dvs. sunt invalide."
 msgid "Some other feeds you might like"
 msgstr "Alte fluxuri care v-ar putea plăcea"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Unele persoane pot răspunde"
 
@@ -8981,7 +8981,7 @@ msgstr "A apărut o problemă la actualizarea fluxurilor dvs., vă rugăm să v�
 msgid "There was an issue! {0}"
 msgstr "A apărut o problemă! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "A apărut o problemă neașteptată în aplicație. Vă rugăm să ne sp
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Au fost o grămadă de utilizatori noi pe Bluesky! Vă vom activa contul cât mai curând posibil."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr "Acestea sunt setările dvs. implicite"
 
@@ -9164,7 +9164,7 @@ msgstr "Acest serviciu de moderare nu este disponibil. Consultați mai jos pentr
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Această postare pretinde că a fost creată pe <0>{0}</0>, dar a fost văzută prima dată de Bluesky pe <1>{1}</1>."
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Această postare are un tip necunoscut de threadgate. Este posibil ca aplicația dvs. să nu fie actualizată la zi."
 
@@ -9797,11 +9797,11 @@ msgstr "Numele de utilizator trebuie să conțină doar litere (a-z), cifre și 
 msgid "Username or email address"
 msgstr "Numele de utilizator sau adresa de e-mail"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "utilizatori urmăriți de <0>@{0}</0>"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "utilizatorii care urmăresc pe <0>@{0}</0>"
 
@@ -10312,12 +10312,12 @@ msgstr "Când atingeți o bifă, veți vedea ce organizații au acordat verifica
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Ce limbi ați dori să vedeți în fluxurile dvs. algoritmice?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Cine poate interacționa cu această postare?"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Cine poate răspunde"
 
@@ -10552,7 +10552,7 @@ msgstr "Nu urmăriți niciun utilizator care-l urmărește pe @{name}."
 msgid "You don't have any chat requests at the moment."
 msgstr "Nu aveți nicio cerere de conversație în acest moment."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr "Nu aveți încă nicio listă."
 
@@ -10916,7 +10916,7 @@ msgstr "E-mailul dvs. nu a fost încă verificat. Vă rugăm să vă verificați
 msgid "Your first like!"
 msgstr "Prima dvs. apreciere!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "Urmăritorii dvs."
 

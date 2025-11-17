@@ -494,7 +494,7 @@ msgstr "<0>{0}</0> en<1> </1><2>{1} </2>binne ynbegrepen yn dyn startpakket"
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> is ynbegrepen yn dyn startpakket"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> leden"
 
@@ -923,7 +923,7 @@ msgstr "Alle feeds dy’tsto bewarre hast, byinoar op ien plak."
 msgid "Allow access to your direct messages"
 msgstr "Jou tagong ta dyn priveeberjochten"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr ""
 
@@ -942,23 +942,23 @@ msgstr "Nije priveeberjochten akseptearje fan"
 msgid "Allow others to be notified of your posts"
 msgstr "Stean oaren ta om op de hichte hâlden te wurden fan dyn berjochten"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Sitaatberjochten tastean"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr ""
 
@@ -1047,7 +1047,7 @@ msgstr "Der is in flater bard wylst it laden fan de fideo. Probearje it letter o
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Der is in flater bard wylst it laden fan de fideo. Probearje it nochris."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
@@ -1105,7 +1105,7 @@ msgstr "In mock-up fan in iPhone dy’t de Bluesky-app iepenet nei it profyl fan
 msgid "an unknown labeler"
 msgstr "in ûnbekende labeler"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "en"
 
@@ -1135,11 +1135,11 @@ msgstr "Meidieling"
 msgid "Announcing verification on Bluesky"
 msgstr "Oankundiging fan ferifikaasje op Bluesky"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Klik 🐴 klak 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Untwikkelersmodus ynskeakele"
 msgid "Developer options"
 msgstr "Untwikkelersopsjes"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Dialooch: oanpasse wa’t op dit berjocht reagearje mei"
 
@@ -2813,11 +2813,11 @@ msgstr "E-mail-2FA útskeakelje"
 msgid "Disable haptic feedback"
 msgstr "Fielbere feedback útskeakelje"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr ""
 
@@ -3104,8 +3104,8 @@ msgstr "Meldingen fan {0} bewurkje"
 msgid "Edit People"
 msgstr "Persoanen bewurkje"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "Berjochtynteraksje-ynstellingen bewurkje"
 
@@ -3129,7 +3129,7 @@ msgstr "Startpakket bewurkje"
 msgid "Edit user list"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Wa’t reagearje kin bewurkje"
 
@@ -3236,7 +3236,7 @@ msgstr "Skeakelje meldingen yn foar in account troch harren profyl te besykjen e
 msgid "Enable push notifications"
 msgstr "Pushmeldingen ynskeakelje"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "Flater by ûntfangen fan captcha-antwurd."
 msgid "Error: {error}"
 msgstr "Flater: {error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Elkenien kin reagearje"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Elkenien kin reagearje op dit berjocht."
 
@@ -4377,7 +4377,7 @@ msgstr "Ferstopje"
 msgid "Hide customization options"
 msgstr "Oanpassingsopsjes ferstoppe"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr ""
 
@@ -4642,7 +4642,7 @@ msgstr "Fier wachtwurd yn foar fuortsmiten account"
 msgid "Input the code which has been emailed to you"
 msgstr "Fer de koade yn dy’t nei dy e-maild is"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "Ynteraksje beheind"
 
@@ -5142,11 +5142,11 @@ msgstr "Nije meldingen lade"
 msgid "Load new posts"
 msgstr "Nije berjochten lade"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -5253,7 +5253,7 @@ msgstr "Media dy’t foar bepaalde doelgroepen oanstjitjouwend of ûngepast wêz
 msgid "Mention notifications"
 msgstr "Meldingen fan fermeldingen"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "fermelde brûkers"
 
@@ -5759,7 +5759,7 @@ msgstr "Noch gjin meldingen!"
 msgid "No one"
 msgstr "Net ien"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Allinnich de auteur mei dit berjocht sitearje."
 
@@ -5820,7 +5820,7 @@ msgstr "Gjin resultaten fûn foar ‘{search}’."
 msgid "No thanks"
 msgstr "Nee, tank"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Gjinien"
 
@@ -6003,7 +6003,7 @@ msgstr "Alt-tekst ûntbrekt by ien of mear fideo’s."
 msgid "Only .jpg and .png files are supported"
 msgstr "Allinnich .jpg- en .png-bestannen wurde stipe"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "Allinnich {0} kin reagearje."
 
@@ -6119,7 +6119,7 @@ msgstr "Systeemlochboek iepenje"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Iepenet in dialoochfinster om in ynhâldswarskôging oan dyn berjocht ta te foegjen"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
@@ -6337,11 +6337,11 @@ msgstr "Persoanen dy’t @{0} folgje"
 msgid "People I follow"
 msgstr "Minsken dy’t ik folgje"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr ""
 
@@ -6644,7 +6644,7 @@ msgstr "Berjocht ferstoppe troch negearre wurd"
 msgid "Post Hidden by You"
 msgstr "Berjocht troch dy ferstoppe"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Ynstellingen foar berjochtynteraksje"
 
@@ -6796,7 +6796,7 @@ msgstr "Profyl bywurke"
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr ""
 
@@ -7202,11 +7202,11 @@ msgstr "Antwurde dy"
 msgid "Replies"
 msgstr "Antwurden"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Antwurden útskeakele"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "Antwurden op dit berjocht binne útskeakele."
 
@@ -7234,7 +7234,7 @@ msgstr "Reaksje ferstoppe troch dy"
 msgid "Reply notifications"
 msgstr "Meldingen fan reaksjes"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Reaksjeynstellingen wurde keazen troch de auteur fan it petear"
 
@@ -7514,8 +7514,8 @@ msgstr "Tebek nei de foarige stap"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Nije handle bewarje"
 msgid "Save QR code"
 msgstr "QR-koade bewarje"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr ""
 
@@ -7816,11 +7816,11 @@ msgstr "Doer selektearje"
 msgid "Select from an existing account"
 msgstr "Fan in besteand account selektearje"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr ""
 
@@ -7982,7 +7982,7 @@ msgstr "Bertedatum ynstelle"
 msgid "Set new password"
 msgstr "Nij wachtwurd ynstelle"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr ""
 
@@ -7990,7 +7990,7 @@ msgstr ""
 msgid "Set up your account"
 msgstr "Dyn account ynstelle"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr ""
 
@@ -8183,7 +8183,7 @@ msgstr "Minder hjirfan toane"
 msgid "Show list anyway"
 msgstr "List dochs toane"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr ""
 
@@ -8384,7 +8384,7 @@ msgstr "Guon fan dyn ferifikaasjes binne ûnjildich."
 msgid "Some other feeds you might like"
 msgstr "Inkelde oare feeds dêr’tsto miskien wol oer meist"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Guon minsken kinne reagearje"
 
@@ -8981,7 +8981,7 @@ msgstr "Der is in probleem bard by it bywurkjen fan dyn feeds. Kontrolearje dyn 
 msgid "There was an issue! {0}"
 msgstr "Der is in probleem bard! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "Der is in ûnferwacht probleem bard yn de applikaasje. Lit it ús witte 
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Der is in grutte oanrin fan nije brûkers nei Bluesky! Wy aktivearje dyn account sa gau as mooglik."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr ""
 
@@ -9164,7 +9164,7 @@ msgstr "Dizze moderaasjetsjinst is net beskikber. Sjoch hjirûnder foar mear det
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Dit berjocht beweart makke te wêzen op <0>{0}</0>, mar waard foar it earst sjoen troch Bluesky op <1>{1}</1>."
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Der sit in ûnbekend type reaksjebeheining op dit berjocht. Mooglik is dyn app ferâldere."
 
@@ -9797,11 +9797,11 @@ msgstr "Brûkersnamme mei allinnich letters (a-z), sifers en keppeltekens befets
 msgid "Username or email address"
 msgstr "Brûkersnamme of e-mailadres"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "brûkers folge troch <0>@{0}</0>"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "brûkers dy’t <0>@{0}</0> folgje"
 
@@ -10312,12 +10312,12 @@ msgstr "Asto op in finkje tikkest, silsto sjen hokker organisaasjes ferliene fer
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Hokker talen wolsto yn dyn algoritmyske feeds sjen?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Wa kin reagearje op dit berjocht?"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Wa kin reagearje"
 
@@ -10552,7 +10552,7 @@ msgstr "Do folgest gjin brûkers dy’t @{name} folgje."
 msgid "You don't have any chat requests at the moment."
 msgstr "Do hast op dit stuit gjin chatfersiken."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr ""
 
@@ -10916,7 +10916,7 @@ msgstr "Dyn e-mailadres is noch net ferifiearre. Ferifiearje dyn e-mailadres om 
 msgid "Your first like!"
 msgstr "Dyn earste mei-’k-wol-oer!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "Dyn folgers"
 

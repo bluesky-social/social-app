@@ -494,7 +494,7 @@ msgstr "Tha <0>{0}</0> agus <1> </1><2>{1} </2> gan gabhail a-staigh sa phacaid 
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "Tha <0>{0}</0> ga ghabhail a-staigh sa phacaid tòiseachaidh agad"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "Na buill aig <0>{0}</0>"
 
@@ -923,7 +923,7 @@ msgstr "Gach inbhir a shàbhail thu san aon àite."
 msgid "Allow access to your direct messages"
 msgstr "Ceadaich cead-inntrigidh o na teachdaireachdan dìreach agad"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr ""
 
@@ -942,23 +942,23 @@ msgstr "Ceadaich teachdaireachdan ùra"
 msgid "Allow others to be notified of your posts"
 msgstr "Ceadaich gum faigh daoine eile brathan mu phuist a dh’fhoillsicheas tu"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Ceadaich luaidhean air puist"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr ""
 
@@ -1047,7 +1047,7 @@ msgstr "Dh’èirich mearachd rè luchdadh a’ video. Feuch ris a-rithist an ce
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Dh’èirich mearachd rè luchdadh a’ video. Feuch ris a-rithist."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
@@ -1105,7 +1105,7 @@ msgstr "Dealbh mas fhìor dhe iPhone a tha a’ sealltainn aplacaid Bluesky agus
 msgid "an unknown labeler"
 msgstr "leubailiche neo-aithnichte"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "agus"
 
@@ -1135,11 +1135,11 @@ msgstr "Fios-naidheachd"
 msgid "Announcing verification on Bluesky"
 msgstr "Naidheachd mu dhearbhadh air Bluesky"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Turt 🐴 turt 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Chaidh modh an luchd-leasachaidh a chur an comas"
 msgid "Developer options"
 msgstr "Roghainnean an luchd-leasachaidh"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Còmhradh: co-dhùin cò aig a bheil cead eadar-ghabhail a dhèanamh leis a’ phost seo"
 
@@ -2813,11 +2813,11 @@ msgstr "Cuir dearbhadh 2FA air a’ phost-d à comas"
 msgid "Disable haptic feedback"
 msgstr "Cuir an fhreagairt haptaigeach à comas"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr ""
 
@@ -3104,8 +3104,8 @@ msgstr "Deasaich na brathan o {0}"
 msgid "Edit People"
 msgstr "Deasaich na daoine"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "Deasaich roghainnean eadar-ghabhail a’ phuist"
 
@@ -3129,7 +3129,7 @@ msgstr "Deasaich a’ phacaid tòiseachaidh"
 msgid "Edit user list"
 msgstr "Deasaich liosta an luchd-chleachdaidh"
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Co-dhùin cò aig a bheil cead freagairt"
 
@@ -3236,7 +3236,7 @@ msgstr "Cuir an comas brathan o chunntas le bhith a’ tadhal air a’ phròifil
 msgid "Enable push notifications"
 msgstr "Cuir brathan push an comas"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "Dh’èirich mearachd nuair a bha sinn a’ faighinn freagairt a’ Chap
 msgid "Error: {error}"
 msgstr "Mearachd: {error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Faodaidh duine sam bith freagairt"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Faodaidh duine sam bith am post seo a fhreagairt."
 
@@ -4377,7 +4377,7 @@ msgstr "Falaich"
 msgid "Hide customization options"
 msgstr "Falaich gach roghainn gnàthachaidh"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr ""
 
@@ -4642,7 +4642,7 @@ msgstr "Cuir a-steach am facal-faire airson an cunntas a sguabadh às"
 msgid "Input the code which has been emailed to you"
 msgstr "Cuir a-steach an còd a chuir sinn thugad air a’ phost-d"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "Eadar-ghabhail chuingichte"
 
@@ -5142,11 +5142,11 @@ msgstr "Luchdaich na brathan ùra"
 msgid "Load new posts"
 msgstr "Luchdaich na puist ùra"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -5253,7 +5253,7 @@ msgstr "Meadhanan a chuireadh dragh air cuid a dhaoine no a bhiodh mì-iomchaidh
 msgid "Mention notifications"
 msgstr "Brathan mu iomradh"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "luchd-cleachdaidh air a bheil iomradh"
 
@@ -5759,7 +5759,7 @@ msgstr "Chan eil brath sam bith ann fhathast!"
 msgid "No one"
 msgstr "Na ceadaich iad o dhuine sam bith"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Chan fhaod duine sam bith ach an t-ùghdar luaidh a dhèanamh air a’ phost seo."
 
@@ -5820,7 +5820,7 @@ msgstr "Cha deach toradh a lorg airson “{search}”."
 msgid "No thanks"
 msgstr "Cha chuir, mòran taing"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Chan eil duine sam bith"
 
@@ -6003,7 +6003,7 @@ msgstr "Tha roghainn teacsa a dhìth air co-dhiù aon video."
 msgid "Only .jpg and .png files are supported"
 msgstr "Chan eil taic ach ri faidhlichean .jpg agus .png"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "Chan fhaod ach {0} freagairt."
 
@@ -6119,7 +6119,7 @@ msgstr "Fosgail log an t-siostaim"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Fosglaidh seo còmhradh airson rabhadh a chur ris a’ phost agad mun t-susbaint a th’ ann"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
@@ -6337,11 +6337,11 @@ msgstr "Daoine a leanas ri @{0}"
 msgid "People I follow"
 msgstr "Daoine a tha mi gan leantainn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr ""
 
@@ -6644,7 +6644,7 @@ msgstr "Chaidh am post a chur am falach le facal mùchaidh"
 msgid "Post Hidden by You"
 msgstr "Chaidh am post a chur am falach leat fhèin"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Roghainnean eadar-ghabhail a’ phuist"
 
@@ -6796,7 +6796,7 @@ msgstr "Chaidh a’ phròifil ùrachadh"
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr ""
 
@@ -7202,11 +7202,11 @@ msgstr "Fhreagair iad thu"
 msgid "Replies"
 msgstr "Freagairtean"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Tha na freagairtean à comas"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "Chan urrainnear am post seo a fhreagairt."
 
@@ -7234,7 +7234,7 @@ msgstr "Chaidh an fhreagairt a chur am falach leat-sa"
 msgid "Reply notifications"
 msgstr "Brathan mu fhreagairtean"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "’S e ùghdar an t-snàithlein a thaghas roghainnean nam freagairtean"
 
@@ -7514,8 +7514,8 @@ msgstr "Tillidh seo thu gun cheum roimhe"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Sàbhail an làmhrachan ùr"
 msgid "Save QR code"
 msgstr "Sàbhail an còd QR"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr ""
 
@@ -7816,11 +7816,11 @@ msgstr "Tagh dè cho fada"
 msgid "Select from an existing account"
 msgstr "Tagh cunntas làithreach"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr ""
 
@@ -7982,7 +7982,7 @@ msgstr "Suidhich latha do bhreith"
 msgid "Set new password"
 msgstr "Suidhich facal-faire ùr"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr ""
 
@@ -7990,7 +7990,7 @@ msgstr ""
 msgid "Set up your account"
 msgstr "Suidhich an cunntas agad"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr ""
 
@@ -8183,7 +8183,7 @@ msgstr "Seall nas lugha mar seo"
 msgid "Show list anyway"
 msgstr "Seall an liosta co-dhiù"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr ""
 
@@ -8384,7 +8384,7 @@ msgstr "Tha cuid dhen dearbhadh a rinn thu mì-dhligheach."
 msgid "Some other feeds you might like"
 msgstr "Inbhir eile a chòrdas riut ma dh’fhaoidte"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Faodaidh cuid a dhaoine freagairt"
 
@@ -8981,7 +8981,7 @@ msgstr "Cha b’ urrainn dhuinn na h-inbhirean agad ùrachadh, thoir sùil air a
 msgid "There was an issue! {0}"
 msgstr "Bha duilgheadas ann! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "Dh’èirich duilgheadas ris nach robh dùil san aplacaid. Innis dhuinn 
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Tha sluagh mòr air ùr-thighinn dha Bluesky! Cuiridh sinn an cunntas agad an gnìomh cho luath ’s a ghabhas."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr ""
 
@@ -9164,7 +9164,7 @@ msgstr "Chan eil an t-seirbheis modarataireachd seo ri làimh. Chì thu barrachd
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Tha am post seo a’ cumail a-mach gun deach a chruthachadh <0>{0}</0> ach chunnacas e air Bluesky <1>{1}</1> an toiseach."
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Tha roghainnean smachd air freagairtean an sàs sa phost seo nach aithne dhuinn. Dh’fhaoidte gu bheil an aplacaid agad ro aosta."
 
@@ -9797,11 +9797,11 @@ msgstr "Chan fhaod ach litrichean (a-z), àireamhan is tàthanan a bhith ann an 
 msgid "Username or email address"
 msgstr "Ainm-chleachdaiche no seòladh puist-d"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "luchd-cleachdaidh a tha <0>@{0}</0> gan leantainn"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "luchd-cleachdaidh a leanas ri <0>@{0}</0>"
 
@@ -10312,12 +10312,12 @@ msgstr "Ma bhriogas tu air cromag, chì thu dè na buidhnean a rinn dearbhadh ai
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Dè na cànain a bu toil leat fhaicinn sna h-inbhirean algairimeach agad?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Cò aig a bheil cead eadar-ghabhail a dhèanamh leis a’ phost seo?"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Cò aig a bheil cead freagairt?"
 
@@ -10552,7 +10552,7 @@ msgstr "Chan eil thu a’ leantainn gin dhe na daoine a leanas @{name}."
 msgid "You don't have any chat requests at the moment."
 msgstr "Chan eil iarrtas cabadaich sam bith agad aig an àm seo."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr ""
 
@@ -10916,7 +10916,7 @@ msgstr "Cha deach am post-d agad a dhearbhadh fhathast. Dearbh e ’s faigh làn
 msgid "Your first like!"
 msgstr "A’ chiad “’S toil” agad!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "Na daoine a tha gad leantainn"
 
