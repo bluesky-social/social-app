@@ -14,10 +14,6 @@ export function Content() {
   return null
 }
 
-function Bubble() {
-  return null
-}
-
-export function TextBubble({children}: {children: React.ReactNode}) {
+export function TextBubble() {
   return null
 }
