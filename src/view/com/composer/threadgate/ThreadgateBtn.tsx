@@ -126,7 +126,7 @@ export function ThreadgateBtn({
     !postgate.embeddingRules || postgate.embeddingRules.length === 0
   const anyoneCanInteract = anyoneCanReply && anyoneCanQuote
   const label = anyoneCanInteract
-    ? _(msg`Anybody can interact`)
+    ? _(msg`Anyone can interact`)
     : _(msg`Interaction limited`)
 
   return (
