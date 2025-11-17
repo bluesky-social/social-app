@@ -203,6 +203,16 @@ export type MetricEvents = {
   'composer:gif:open': {}
   'composer:gif:select': {}
 
+  'composer:threadgate:open': {
+    nudged: boolean
+  }
+  'composer:threadgate:save': {
+    replyOptions: string
+    quotesEnabled: boolean
+    persist: boolean
+    hasChanged: boolean
+  }
+
   // Data events
   'account:create:begin': {}
   'account:create:success': {

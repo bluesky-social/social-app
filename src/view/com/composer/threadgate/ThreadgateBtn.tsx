@@ -45,6 +45,7 @@ export function ThreadgateBtn({
   const control = Dialog.useDialogControl()
   const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
   const [showTooltip, setShowTooltip] = useState(false)
+  const [tooltipWasShown] = useState(!threadgateNudged)
 
   useEffect(() => {
     if (!threadgateNudged) {
@@ -65,6 +66,10 @@ export function ThreadgateBtn({
   const [persist, setPersist] = useState(false)
 
   const onPress = () => {
+    logger.metric('composer:threadgate:open', {
+      nudged: tooltipWasShown,
+    })
+
     if (isNative && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
