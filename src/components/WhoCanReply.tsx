@@ -101,7 +101,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         editDialogControl.open()
       })
     } else {
-      logger.metric('thread:click:viewSomeoneElsesThreadgate')
+      logger.metric('thread:click:viewSomeoneElsesThreadgate', {})
 
       infoDialogControl.open()
     }
