@@ -44,14 +44,8 @@ import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type FeedNotification} from '#/state/queries/notifications/feed'
-import {
-  findProfileQueryData,
-  useProfileFollowMutationQueue,
-} from '#/state/queries/profile'
-import {
-  unstableCacheProfileView,
-  useUnstableProfileViewCache,
-} from '#/state/queries/unstable-profile-cache'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useAgent, useSession} from '#/state/session'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {Post} from '#/view/com/post/Post'
@@ -750,42 +744,12 @@ function ExpandListPressable({
 
 function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {_} = useLingui()
-  const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
-  const {getUnstableProfile} = useUnstableProfileViewCache()
-
-  // Get the cached profile object (or use the one passed in)
-  // This ensures we're using the same object reference that the shadow system tracks
-  const cachedProfile = useMemo(() => {
-    // Try to find in query cache first
-    const queryCacheProfile = findProfileQueryData(queryClient, profile.did)
-    if (queryCacheProfile) return queryCacheProfile
-
-    // Try unstable cache
-    const unstableProfile = getUnstableProfile(profile.did)
-    if (unstableProfile) return unstableProfile
-
-    // Fall back to the passed profile, but cache it
-    unstableCacheProfileView(queryClient, profile)
-    return profile
-  }, [queryClient, profile, getUnstableProfile])
-
-  const profileShadow = useProfileShadow(cachedProfile)
+  const profileShadow = useProfileShadow(profile)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profileShadow,
     'ProfileCard',
   )
-
-  // Use local state for optimistic updates, synced with shadow
-  const [isFollowingLocal, setIsFollowingLocal] = useState(() =>
-    Boolean(profile.viewer?.following),
-  )
-
-  // Sync local state with shadow when it changes
-  useEffect(() => {
-    const shadowFollowing = Boolean(profileShadow.viewer?.following)
-    setIsFollowingLocal(shadowFollowing)
-  }, [profileShadow.viewer?.following])
 
   // Don't show button if not logged in or for own profile
   if (!hasSession || profile.did === currentAccount?.did) {
@@ -795,8 +759,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const onPressFollow = async (e: GestureResponderEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    // Optimistic update
-    setIsFollowingLocal(true)
+
     try {
       await queueFollow()
       Toast.show(
@@ -807,8 +770,6 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
         ),
       )
     } catch (err: any) {
-      // Revert on error
-      setIsFollowingLocal(false)
       if (err?.name !== 'AbortError') {
         Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
@@ -818,8 +779,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const onPressUnfollow = async (e: GestureResponderEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    // Optimistic update
-    setIsFollowingLocal(false)
+
     try {
       await queueUnfollow()
       Toast.show(
@@ -830,8 +790,6 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
         ),
       )
     } catch (err: any) {
-      // Revert on error
-      setIsFollowingLocal(true)
       if (err?.name !== 'AbortError') {
         Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
@@ -850,7 +808,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
     return null
   }
 
-  const isFollowing = isFollowingLocal
+  const isFollowing = profileShadow.viewer.following
   const followingLabel = _(
     msg({
       message: 'Following',
@@ -863,12 +821,11 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
       {isFollowing ? (
         <Button
           label={followingLabel}
-          variant="solid"
           color="secondary"
           size="small"
           style={[a.self_start]}
           onPress={onPressUnfollow}>
-          <ButtonIcon icon={CheckIcon} position="left" />
+          <ButtonIcon icon={CheckIcon} />
           <ButtonText>
             <Trans>Following</Trans>
           </ButtonText>
@@ -876,12 +833,11 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
       ) : (
         <Button
           label={_(msg`Follow back`)}
-          variant="solid"
           color="primary"
           size="small"
           style={[a.self_start]}
           onPress={onPressFollow}>
-          <ButtonIcon icon={PlusIcon} position="left" />
+          <ButtonIcon icon={PlusIcon} />
           <ButtonText>
             <Trans>Follow back</Trans>
           </ButtonText>
