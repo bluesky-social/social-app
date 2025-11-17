@@ -97,7 +97,7 @@ export function ProfileFollowers({name}: {name: string}) {
   const seenItemsRef = React.useRef<Set<string>>(new Set())
   React.useEffect(() => {
     seenItemsRef.current.clear()
-  }, [followers, resolvedDid])
+  }, [resolvedDid])
   const onItemSeen = React.useCallback(
     (item: ActorDefs.ProfileView) => {
       if (seenItemsRef.current.has(item.did)) {
