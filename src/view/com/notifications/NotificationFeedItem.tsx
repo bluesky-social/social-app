@@ -42,23 +42,28 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type FeedNotification} from '#/state/queries/notifications/feed'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
+import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/components/icons/Heart2'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
@@ -179,6 +184,32 @@ let NotificationFeedItem = ({
   const firstAuthorName = sanitizeDisplayName(
     firstAuthor.profile.displayName || firstAuthor.profile.handle,
   )
+
+  // Calculate if this is a follow-back notification
+  const isFollowBack = useMemo(() => {
+    if (item.type !== 'follow') return false
+    if (
+      item.notification.author.viewer?.following &&
+      bsky.dangerousIsType<AppBskyGraphFollow.Record>(
+        item.notification.record,
+        AppBskyGraphFollow.isRecord,
+      )
+    ) {
+      let followingTimestamp
+      try {
+        const rkey = new AtUri(item.notification.author.viewer.following).rkey
+        followingTimestamp = TID.fromStr(rkey).timestamp()
+      } catch (e) {
+        return false
+      }
+      if (followingTimestamp) {
+        const followedTimestamp =
+          new Date(item.notification.record.createdAt).getTime() * 1000
+        return followedTimestamp > followingTimestamp
+      }
+    }
+    return false
+  }, [item])
 
   if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
     // don't render anything if the target post was deleted or unfindable
@@ -309,30 +340,6 @@ let NotificationFeedItem = ({
     )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_500}} />
   } else if (item.type === 'follow') {
-    let isFollowBack = false
-
-    if (
-      item.notification.author.viewer?.following &&
-      bsky.dangerousIsType<AppBskyGraphFollow.Record>(
-        item.notification.record,
-        AppBskyGraphFollow.isRecord,
-      )
-    ) {
-      let followingTimestamp
-      try {
-        const rkey = new AtUri(item.notification.author.viewer.following).rkey
-        followingTimestamp = TID.fromStr(rkey).timestamp()
-      } catch (e) {
-        // For some reason the following URI was invalid. Default to it not being a follow back.
-        console.error('Invalid following URI')
-      }
-      if (followingTimestamp) {
-        const followedTimestamp =
-          new Date(item.notification.record.createdAt).getTime() * 1000
-        isFollowBack = followedTimestamp > followingTimestamp
-      }
-    }
-
     if (isFollowBack && !hasMultipleAuthors) {
       /*
        * Follow-backs are ungrouped, grouped follow-backs not supported atm,
@@ -663,6 +670,9 @@ let NotificationFeedItem = ({
                 </TimeElapsed>
               </Text>
             </ExpandListPressable>
+            {item.type === 'follow' && !hasMultipleAuthors && !isFollowBack ? (
+              <FollowBackButton profile={item.notification.author} />
+            ) : null}
             {item.type === 'post-like' ||
             item.type === 'repost' ||
             item.type === 'like-via-repost' ||
@@ -730,6 +740,111 @@ function ExpandListPressable({
   } else {
     return <>{children}</>
   }
+}
+
+function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
+  const {_} = useLingui()
+  const {currentAccount, hasSession} = useSession()
+  const profileShadow = useProfileShadow(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profileShadow,
+    'ProfileCard',
+  )
+
+  // Don't show button if not logged in or for own profile
+  if (!hasSession || profile.did === currentAccount?.did) {
+    return null
+  }
+
+  const onPressFollow = async (e: GestureResponderEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    try {
+      await queueFollow()
+      Toast.show(
+        _(
+          msg`Following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
+        ),
+      )
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+      }
+    }
+  }
+
+  const onPressUnfollow = async (e: GestureResponderEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    try {
+      await queueUnfollow()
+      Toast.show(
+        _(
+          msg`No longer following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
+        ),
+      )
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+      }
+    }
+  }
+
+  // Don't show button if viewer data is missing or user is blocked
+  if (!profileShadow.viewer) {
+    return null
+  }
+  if (
+    profileShadow.viewer.blockedBy ||
+    profileShadow.viewer.blocking ||
+    profileShadow.viewer.blockingByList
+  ) {
+    return null
+  }
+
+  const isFollowing = profileShadow.viewer.following
+  const followingLabel = _(
+    msg({
+      message: 'Following',
+      comment: 'User is following this account, click to unfollow',
+    }),
+  )
+
+  return (
+    <View style={[a.pt_sm]}>
+      {isFollowing ? (
+        <Button
+          label={followingLabel}
+          color="secondary"
+          size="small"
+          style={[a.self_start]}
+          onPress={onPressUnfollow}>
+          <ButtonIcon icon={CheckIcon} />
+          <ButtonText>
+            <Trans>Following</Trans>
+          </ButtonText>
+        </Button>
+      ) : (
+        <Button
+          label={_(msg`Follow back`)}
+          color="primary"
+          size="small"
+          style={[a.self_start]}
+          onPress={onPressFollow}>
+          <ButtonIcon icon={PlusIcon} />
+          <ButtonText>
+            <Trans>Follow back</Trans>
+          </ButtonText>
+        </Button>
+      )}
+    </View>
+  )
 }
 
 function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
