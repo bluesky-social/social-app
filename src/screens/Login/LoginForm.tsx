@@ -232,11 +232,10 @@ export const LoginForm = ({
               label={_(msg`Password`)}
               autoCapitalize="none"
               autoCorrect={false}
-              autoComplete="password"
+              autoComplete="current-password"
               returnKeyType="done"
               enablesReturnKeyAutomatically={true}
               secureTextEntry={true}
-              textContentType="password"
               clearButtonMode="while-editing"
               onChangeText={v => {
                 passwordValueRef.current = v
