@@ -494,7 +494,7 @@ msgstr "Mae <0>{0}</0> a<1> </1><2>{1} </2>wedi eu cynnwys yn eich pecyn cychwyn
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "Mae <0>{0}</0> wedi'i gynnwys yn eich pecyn cychwyn"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> aelod"
 
@@ -923,7 +923,7 @@ msgstr "Yr holl ffrydiau rydych wedi'u cadw, mewn un lle."
 msgid "Allow access to your direct messages"
 msgstr "Caniatáu mynediad i'ch negeseuon uniongyrchol"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr ""
 
@@ -942,23 +942,23 @@ msgstr "Caniatáu negeseuon newydd oddi wrth"
 msgid "Allow others to be notified of your posts"
 msgstr "Caniatáu i eraill gael clywed am eich postiadau"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Caniatáu postiadau dyfynnu"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr ""
 
@@ -1047,7 +1047,7 @@ msgstr "Digwyddodd gwall wrth lwytho'r fideo. Ceisiwch eto yn nes ymlaen."
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Digwyddodd gwall wrth lwytho'r fideo. Ceisiwch eto."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
@@ -1105,7 +1105,7 @@ msgstr "Darlun bras o iPhone yn dangos ap Bluesky ar agor i broffil defnyddiwr d
 msgid "an unknown labeler"
 msgstr "labelwr anhysbys"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "a"
 
@@ -1135,11 +1135,11 @@ msgstr "Cyhoeddiad"
 msgid "Announcing verification on Bluesky"
 msgstr "Mae dilysu nawr ar gael ar Bluesky"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Clip 🐴 clop 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Modd datblygwr wedi'i alluogi"
 msgid "Developer options"
 msgstr "Dewisiadau datblygwr"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Deialog: addaswch pwy all ryngweithio â'r postiad hwn"
 
@@ -2813,11 +2813,11 @@ msgstr "Analluogi E-bost 2FA"
 msgid "Disable haptic feedback"
 msgstr "Analluogi adborth haptig"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr ""
 
@@ -3104,8 +3104,8 @@ msgstr "Golygu hysbysiadau gan {0}"
 msgid "Edit People"
 msgstr "Golygu Pobl"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "Golygu gosodiadau rhyngweithio postiad"
 
@@ -3129,7 +3129,7 @@ msgstr "Golygu pecyn cychwyn"
 msgid "Edit user list"
 msgstr "Golygu rhestr defnyddwyr"
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Golygu pwy all ateb"
 
@@ -3236,7 +3236,7 @@ msgstr "Galluogwch hysbysiadau am gyfrif drwy fynd i'w proffil a phwyso'r <0>eic
 msgid "Enable push notifications"
 msgstr "Galluogi gwthio hysbysiadau"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "Gwall wrth dderbyn ymateb captcha."
 msgid "Error: {error}"
 msgstr "Gwall: {error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Gall pawb ateb"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Gall pawb ateb i'r postiad hwn."
 
@@ -4377,7 +4377,7 @@ msgstr "Cuddio"
 msgid "Hide customization options"
 msgstr "Cuddio dewisiadau cyfaddasu"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr ""
 
@@ -4642,7 +4642,7 @@ msgstr "Mewnbynnu cyfrinair ar gyfer dileu cyfrif"
 msgid "Input the code which has been emailed to you"
 msgstr "Mewnbynnwch y cod sydd wedi'i e-bostio atoch"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "Rhyngweithio yn gyfyngedig"
 
@@ -5142,11 +5142,11 @@ msgstr "Llwytho hysbysiadau newydd"
 msgid "Load new posts"
 msgstr "Llwytho postiadau newydd"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -5253,7 +5253,7 @@ msgstr "Cyfryngau a all fod yn annymunol neu'n amhriodol i rai cynulleidfaoedd."
 msgid "Mention notifications"
 msgstr "Hysbysiadau crybwyll"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "defnyddwyr wedi'u crybwyll"
 
@@ -5759,7 +5759,7 @@ msgstr "Dim hysbysiadau eto!"
 msgid "No one"
 msgstr "Neb"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Gall neb ond yr awdur ddyfynnu'r postiad hon."
 
@@ -5820,7 +5820,7 @@ msgstr "Heb ganfod canlyniadau chwilio \"{search}\"."
 msgid "No thanks"
 msgstr "Dim diolch"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Neb"
 
@@ -6003,7 +6003,7 @@ msgstr "Does dim testun amgen ar un neu fwy o fideos."
 msgid "Only .jpg and .png files are supported"
 msgstr "Dim ond ffeiliau .jpg a .png sy'n cael eu cefnogi"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "Dim ond {0} all ateb."
 
@@ -6119,7 +6119,7 @@ msgstr "Agor cofnod system"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Yn agor deialog i ychwanegu rhybudd cynnwys at eich postiad"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
@@ -6337,11 +6337,11 @@ msgstr "Pobl yn dilyn @{0}"
 msgid "People I follow"
 msgstr "Pobl rwy'n eu dilyn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr ""
 
@@ -6644,7 +6644,7 @@ msgstr "Postiad Wedi'i Guddio gan Air wedi'i Dewi"
 msgid "Post Hidden by You"
 msgstr "Postiad Wedi'i Guddio Gennych Chi"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Gosodiadau rhyngweithio postiadau"
 
@@ -6796,7 +6796,7 @@ msgstr "Proffil wedi'i ddiweddaru"
 msgid "Promoting or selling prohibited items or services"
 msgstr "Hyrwyddo neu werthu eitemau neu wasanaethau wedi'u gwahardd"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr ""
 
@@ -7202,11 +7202,11 @@ msgstr "Mewn ymateb i chi"
 msgid "Replies"
 msgstr "Atebion"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Analluogwyd atebion"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "Mae atebion i'r postiad hwn wedi'u hanalluogi."
 
@@ -7234,7 +7234,7 @@ msgstr "Ateb Wedi'i Guddio Gennych Chi"
 msgid "Reply notifications"
 msgstr "Hysbysiadau ateb"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Mae gosodiadau ateb yn cael eu dewis gan awdur yr edefyn"
 
@@ -7514,8 +7514,8 @@ msgstr "Yn mynd nôl i'r cam blaenorol"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Gadw'r enw dangos newydd"
 msgid "Save QR code"
 msgstr "Cadw cod QR"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr ""
 
@@ -7816,11 +7816,11 @@ msgstr "Dewis hyd"
 msgid "Select from an existing account"
 msgstr "Dewiswch o gyfrif sy'n bodoli"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr ""
 
@@ -7982,7 +7982,7 @@ msgstr "Gosod dyddiad geni"
 msgid "Set new password"
 msgstr "Gosod cyfrinair newydd"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr ""
 
@@ -7990,7 +7990,7 @@ msgstr ""
 msgid "Set up your account"
 msgstr "Gosodwch eich cyfrif"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr ""
 
@@ -8183,7 +8183,7 @@ msgstr "Dangos llai fel hyn"
 msgid "Show list anyway"
 msgstr "Dangos rhestr beth bynnag"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr ""
 
@@ -8384,7 +8384,7 @@ msgstr "Mae rhai o'ch dilysiadau'n annilys."
 msgid "Some other feeds you might like"
 msgstr "Rhai ffrydiau eraill efallai y byddwch yn eu hoffi"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Gall rhai pobl ateb"
 
@@ -8981,7 +8981,7 @@ msgstr "Bu anhawster wrth ddiweddaru'ch ffrydiau, gwiriwch eich cysylltiad rhyng
 msgid "There was an issue! {0}"
 msgstr "Bu anhawster! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "Roedd problem annisgwyl yn y rhaglen. Rhowch wybod i ni os digwyddodd hy
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Mae yna ruthr o ddefnyddwyr newydd wedi bod i Bluesky! Byddwn yn agor eich cyfrif cyn gynted ag y gallwn."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr ""
 
@@ -9164,7 +9164,7 @@ msgstr "Dyw'r gwasanaeth cymedroli hwn ddim ar gael. Gweler isod am ragor o fany
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Mae'r postiad hwn yn honni iddo gael ei greu ar <0>{0}</0>, ond fe'i gwelwyd gyntaf gan Bluesky ar <1>{1}</1>."
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Mae gan y postiad hwn fath anhysbys o adwy edau arno. Mae'n bosibl bod eich ap yn rhy hen."
 
@@ -9797,11 +9797,11 @@ msgstr "Gall enw defnyddiwr gynnwys dim ond llythrennau (a-z), rifau a chyplysno
 msgid "Username or email address"
 msgstr "Enw defnyddiwr neu gyfeiriad e-bost"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "defnyddwyr yn cael eu dilyn gan <0>@{0}</0>"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "defnyddwyr yn dilyn <0>@{0}</0>"
 
@@ -10312,12 +10312,12 @@ msgstr "Pan fyddwch chi'n tapio ar dic, gallwch weld pa sefydliadau sydd wedi rh
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Pa ieithoedd hoffech chi eu gweld yn eich ffrydiau algorithmig?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Pwy all ryngweithio â'r postiad hwn?"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Pwy all ateb"
 
@@ -10552,7 +10552,7 @@ msgstr "Nid ydych yn dilyn unrhyw ddefnyddwyr sy'n dilyn @{name}."
 msgid "You don't have any chat requests at the moment."
 msgstr "Does gennych chi ddim ceisiadau sgyrsio ar hyn o bryd."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr ""
 
@@ -10916,7 +10916,7 @@ msgstr "Dyw eich e-bost heb ei ddilysu eto. Dilyswch eich e-bost er mwyn mwynhau
 msgid "Your first like!"
 msgstr "Eich hoffi cyntaf!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "Eich dilynwyr"
 

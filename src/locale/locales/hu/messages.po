@@ -494,7 +494,7 @@ msgstr "<0>{0}</0> és<1> </1><2>{1} </2>szerepel a kezdőcsomagodban"
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> szerepel a kezdőcsomagodban"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "a(z) <0>{0}</0> lista tagjai"
 
@@ -923,7 +923,7 @@ msgstr "Itt egy helyen megtalálod az összes elmentett hírfolyamot."
 msgid "Allow access to your direct messages"
 msgstr "Hozzáférés megadása a személyes üzenetekhez"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr "Bárki válaszolhat"
 
@@ -942,23 +942,23 @@ msgstr "Bejövő üzenetek fogadása"
 msgid "Allow others to be notified of your posts"
 msgstr "Saját bejegyzésekről szóló értesítések"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr "Az Általad követett személyek közül bárki válaszolhat"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr "Az Általad megemlített személyek közül bárki válaszolhat"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Idézés engedélyezése"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr "A(z) {0} listáról bárki válaszolhat"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr "A követőid közül bárki válaszolhat"
 
@@ -1047,7 +1047,7 @@ msgstr "A videó betöltése meghiúsult. Próbáld újra később."
 msgid "An error occurred while loading the video. Please try again."
 msgstr "A videó betöltése meghiúsult. Próbáld újra."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr "A listák betöltése meghiúsult :/"
 
@@ -1105,7 +1105,7 @@ msgstr "Egy kék pipával rendelkező felhasználó, az iPhone-os Bluesky alkalm
 msgid "an unknown labeler"
 msgstr "ismeretlen feljegyző"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "és"
 
@@ -1135,11 +1135,11 @@ msgstr "Közlemény"
 msgid "Announcing verification on Bluesky"
 msgstr "Hitelesítés a Blueskyon"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr "Bárki"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Kipp 🐴 kopp 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Bekapcsoltad a fejlesztői módot"
 msgid "Developer options"
 msgstr "Fejlesztői beállítások"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Párbeszédablak: A bejegyzés kapcsolatbalépési jogosultságainak testreszabása"
 
@@ -2813,11 +2813,11 @@ msgstr "Kétlépcsős azonosítás kikapcsolása"
 msgid "Disable haptic feedback"
 msgstr "Rezgés letiltása"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr "Válaszadás letiltása"
 
@@ -3104,8 +3104,8 @@ msgstr "{0} értesítéseinek szerkesztése"
 msgid "Edit People"
 msgstr "Személyek szerkesztése"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "A bejegyzés kapcsolatbalépési beállításainak szerkesztése"
 
@@ -3129,7 +3129,7 @@ msgstr "Kezdőcsomag szerkesztése"
 msgid "Edit user list"
 msgstr "Felhasználólista szerkesztése"
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Válaszjogosultsági beállítások szerkesztése"
 
@@ -3236,7 +3236,7 @@ msgstr "Egy fiók értesítéseit a profilján, a <0>harang ikonon</0> <1/> kere
 msgid "Enable push notifications"
 msgstr "Leküldéses értesítések engedélyezése"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "A captcha válaszának fogadása meghiúsult."
 msgid "Error: {error}"
 msgstr "Hiba: {error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Bárki válaszolhat"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Bárki válaszolhat erre a bejegyzésre."
 
@@ -4377,7 +4377,7 @@ msgstr "Elrejtés"
 msgid "Hide customization options"
 msgstr "Testreszabási lehetőségek elrejtése"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr "Listák elrejtése"
 
@@ -4642,7 +4642,7 @@ msgstr "Jelszó megadása a fiók törléséhez"
 msgid "Input the code which has been emailed to you"
 msgstr "E-mailben kapott kód megadása"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "A kapcsolatbalépés korlátozott"
 
@@ -5142,11 +5142,11 @@ msgstr "Új értesítések betöltése"
 msgid "Load new posts"
 msgstr "Új bejegyzések betöltése"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr "Listák betöltése…"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr "Kapcsolatbalépési beállítások betöltése…"
 
@@ -5253,7 +5253,7 @@ msgstr "A nyugalom megzavarására alkalmas vagy felnőtt témákat ábrázoló 
 msgid "Mention notifications"
 msgstr "Megemlítési értesítések"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "a megemlített felhasználók"
 
@@ -5759,7 +5759,7 @@ msgstr "Még nincsenek értesítéseid."
 msgid "No one"
 msgstr "Senkitől"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Ezt a bejegyzést csak a szerző idézheti."
 
@@ -5820,7 +5820,7 @@ msgstr "A(z) „{search}” kifejezésre nincs találat."
 msgid "No thanks"
 msgstr "Köszönöm, nem"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Senki"
 
@@ -6003,7 +6003,7 @@ msgstr "Legalább egy videóról hiányzik a helyettesítő szöveg."
 msgid "Only .jpg and .png files are supported"
 msgstr "Csak a .jpg és a .png formátumok támogatottak"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "Csak {0} válaszolhatnak."
 
@@ -6119,7 +6119,7 @@ msgstr "Rendszernapló megnyitása"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "A tartalomfigyelmeztetések alkalmazására alkalmas párbeszédablak megnyitása"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr "Párbeszédablak megnyitása, ahol megadhatod, hogy ki léphet kapcsolatba a bejegyzéssel"
 
@@ -6337,11 +6337,11 @@ msgstr "Az őt követő személyek: @{0}"
 msgid "People I follow"
 msgstr "Követett személyektől"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr "Az Általad követett személyek"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr "Az Általad megemlített személyek"
 
@@ -6644,7 +6644,7 @@ msgstr "Bejegyzés elrejtve egy elnémított szó által"
 msgid "Post Hidden by You"
 msgstr "Elrejtetted a bejegyzést"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Kapcsolatbalépési beállítások"
 
@@ -6796,7 +6796,7 @@ msgstr "Profil frissítve"
 msgid "Promoting or selling prohibited items or services"
 msgstr "Tiltott eszközök vagy szolgáltatások árusítása"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr "Psszt! Ha szeretnéd, akkor megszabhatod, hogy ki léphet kapcsolatba ezzel a bejegyzéssel."
 
@@ -7202,11 +7202,11 @@ msgstr "Válasz a bejegyzésedre"
 msgid "Replies"
 msgstr "Válaszok"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Válaszadás letiltva"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "A bejegyzés alatti válaszadás le van tiltva."
 
@@ -7234,7 +7234,7 @@ msgstr "Elrejtve Általad"
 msgid "Reply notifications"
 msgstr "Értesítések válaszokról"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "A teljes válaszlánc beállításait az eredeti szerző kezeli"
 
@@ -7514,8 +7514,8 @@ msgstr "Vissza az előző lépéshez"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Felhasználónév mentése"
 msgid "Save QR code"
 msgstr "QR-kód mentése"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr "Beállítások megjegyzése"
 
@@ -7816,11 +7816,11 @@ msgstr "Hossz megadása"
 msgid "Select from an existing account"
 msgstr "Fiók kiválasztása"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr "Listák megadása"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr "Listák megadása <0>{numberOfListsSelected, plural, other {(# kiválasztva)}}</0>"
 
@@ -7982,7 +7982,7 @@ msgstr "Születési dátum megadása"
 msgid "Set new password"
 msgstr "Új jelszó beállítása"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr "A megengedett személyek csoportjainak pontos megszabása"
 
@@ -7990,7 +7990,7 @@ msgstr "A megengedett személyek csoportjainak pontos megszabása"
 msgid "Set up your account"
 msgstr "Fiók beállítása"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr "Add meg, hogy ki léphet kapcsolatba a bejegyzéssel"
 
@@ -8183,7 +8183,7 @@ msgstr "Kevesebb ilyet mutasson"
 msgid "Show list anyway"
 msgstr "Lista megjelenítése mégis"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr "Választható felhasználólisták megjelenítése"
 
@@ -8384,7 +8384,7 @@ msgstr "A hitelesítéseidnek egy része érvénytelen."
 msgid "Some other feeds you might like"
 msgstr "További ajánlott hírfolyamok"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Csak bizonyos személyek válaszolhatnak"
 
@@ -8983,7 +8983,7 @@ msgstr "A hírfolyamok frissítése meghiúsult. Ellenőrizd az internetkapcsola
 msgid "There was an issue! {0}"
 msgstr "Hiba történt! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9006,7 +9006,7 @@ msgstr "Váratlan alkalmazáshiba történt. Kérjük jelentsd!"
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Jelenleg rengeteg új felhasználó csatlakozik a Blueskyhoz. A fiókodat aktiválni fogjuk, amint tudjuk!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr "Ezek az alapértelmezett beállítások"
 
@@ -9166,7 +9166,7 @@ msgstr "Ez a moderálási szolgáltatás jelenleg nem elérhető. A részleteket
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "A bejegyzés adatai szerint az eredeti létrehozási dátuma <0>{0}</0> volt, de először ekkor jelent meg a Blueskyon: <1>{1}</1>"
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Ez a bejegyzés egy ismeretlen válaszkapu-típussal rendelkezik. Lehetséges, hogy az alkalmazás verziója elavult."
 
@@ -9799,11 +9799,11 @@ msgstr "A felhasználónév csak az angol ábécé betűit (A–Z), számokat é
 msgid "Username or email address"
 msgstr "Felhasználónév vagy e-mail-cím"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "a(z) <0>@{0}</0> által követett felhasználók"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "a(z) <0>@{0}</0> személyt követett felhasználók"
 
@@ -10314,12 +10314,12 @@ msgstr "Ha rákoppintasz a jelvényre, akkor megtekintheted egy fiók hitelesít
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Mely nyelveken szeretnél bejegyzéseket látni az algoritmusalapú hírfolyamokban?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Kapcsolatbalépési információ"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Ki válaszolhat?"
 
@@ -10554,7 +10554,7 @@ msgstr "Egy olyan felhasználót sem követsz, aki követné őt: @{name}."
 msgid "You don't have any chat requests at the moment."
 msgstr "Jelenleg nincsenek bejövő csevegési kérelmek."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr "Még egy listával sem rendelkezel."
 
@@ -10918,7 +10918,7 @@ msgstr "A Bluesky teljes funkcionalitásának kihasználásához az e-mail-címe
 msgid "Your first like!"
 msgstr "Az első kedvelésed!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "A Téged követett személyek"
 

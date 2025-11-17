@@ -494,7 +494,7 @@ msgstr "<0>{0}</0> eta<1> </1><2>{1} </2>zure abio multzoan daude"
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> zure abio multzoan dago"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> kide"
 
@@ -923,7 +923,7 @@ msgstr "Gorde dituzun feed guztiak, leku bakar batean."
 msgid "Allow access to your direct messages"
 msgstr "Baimendu sarrera zure mezu zuzenetara"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr ""
 
@@ -942,23 +942,23 @@ msgstr "Baimendu mezu berriak bertatik"
 msgid "Allow others to be notified of your posts"
 msgstr "Utzi besteei zure posten berri izaten"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "Baimendu post aipamenak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr ""
 
@@ -1047,7 +1047,7 @@ msgstr "Errore bat gertatu da bideoa kargatzean. Mesedez, saiatu berriro geroago
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Errore bat gertatu da bideoa kargatzean. Mesedez, saiatu berriro."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
@@ -1105,7 +1105,7 @@ msgstr "Bluesky aplikazioa irekita erakusten duen iPhone baten maketa egiaztatut
 msgid "an unknown labeler"
 msgstr "etiketatzaile ezezaguna"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "eta"
 
@@ -1135,11 +1135,11 @@ msgstr "Iragarpena"
 msgid "Announcing verification on Bluesky"
 msgstr "Bluesky-n egiaztapena iragartzen"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "Klip 🐴 klop 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "Garatzaile modua gaituta"
 msgid "Developer options"
 msgstr "Garatzaile aukerak"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Elkarrizketa: egokitu mezu honekin nork elkarreragin dezakeen"
 
@@ -2813,11 +2813,11 @@ msgstr "Desgaitu 2FA posta elektronikoa"
 msgid "Disable haptic feedback"
 msgstr "Desgaitu feedback haptikoa"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr ""
 
@@ -3104,8 +3104,8 @@ msgstr "Editatu {0}-ren jakinarazpenak"
 msgid "Edit People"
 msgstr "Editatu Jendea"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "Editatu posten interakzio-ezarpenak"
 
@@ -3129,7 +3129,7 @@ msgstr "Editatu abio multzoa"
 msgid "Edit user list"
 msgstr "Editatu erabiltzaile zerrenda"
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "Editatu nork erantzun dezakeen"
 
@@ -3236,7 +3236,7 @@ msgstr "Kontu baten jakinarazpenak gaitzeko, bisitatu haren profila eta sakatu <
 msgid "Enable push notifications"
 msgstr "Gaitu push jakinarazpenak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "Errore bat gertatu da captcha erantzuna jasotzean."
 msgid "Error: {error}"
 msgstr "Errorea: {error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "Denek erantzun dezakete"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "Denek erantzun dezakete post honi."
 
@@ -4377,7 +4377,7 @@ msgstr "Ezkutatu"
 msgid "Hide customization options"
 msgstr "Ezkutatu pertsonalizazio-aukerak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr ""
 
@@ -4642,7 +4642,7 @@ msgstr "Sartu pasahitza kontua ezabatzeko"
 msgid "Input the code which has been emailed to you"
 msgstr "Sartu posta elektronikoz bidali zaizun kodea"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "Elkarrekintza mugatua"
 
@@ -5142,11 +5142,11 @@ msgstr "Kargatu jakinarazpen berriak"
 msgid "Load new posts"
 msgstr "Kargatu post berriak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -5253,7 +5253,7 @@ msgstr "Publiko batzuentzat kezkagarriak edo desegokiak izan daitezkeen multimed
 msgid "Mention notifications"
 msgstr "Aipamen jakinarazpenak"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "aipatutako erabiltzaileak"
 
@@ -5759,7 +5759,7 @@ msgstr "Oraindik ez dago jakinarazpenik!"
 msgid "No one"
 msgstr "Inor ez"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "Egileak beste inork ezin du mezu hau aipatu."
 
@@ -5820,7 +5820,7 @@ msgstr "Ez da aurkitu \"{search}\" bilaketaren emaitzarik."
 msgid "No thanks"
 msgstr "Ez, eskerrik asko"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Inor"
 
@@ -6003,7 +6003,7 @@ msgstr "Bideo bati edo gehiagori aukerazko testua falta zaio."
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpg eta .png fitxategiak soilik onartzen dira"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "{0}-k bakarrik erantzun dezake."
 
@@ -6119,7 +6119,7 @@ msgstr "Ireki sistemaren erregistroa"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Zure postari eduki-abisua gehitzeko elkarrizketa-koadro bat irekitzen du"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
@@ -6337,11 +6337,11 @@ msgstr "@{0}-ri jarraitzen dion jendea"
 msgid "People I follow"
 msgstr "Jarraitzen ditudan pertsonak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr ""
 
@@ -6644,7 +6644,7 @@ msgstr "Post Ezkutua Mutututako Hitz batengatik"
 msgid "Post Hidden by You"
 msgstr "Zuk Ezkututako Posta"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "Postaren elkarrekintza-ezarpenak"
 
@@ -6796,7 +6796,7 @@ msgstr "Profila eguneratu da"
 msgid "Promoting or selling prohibited items or services"
 msgstr "Debekatutako elementuak edo zerbitzuak sustatzea edo saltzea"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr ""
 
@@ -7202,11 +7202,11 @@ msgstr "Zuri erantzunda"
 msgid "Replies"
 msgstr "Erantzunak"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "Erantzunak desgaituta daude"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "Mezu honen erantzunak desgaituta daude."
 
@@ -7234,7 +7234,7 @@ msgstr "Erantzuna Zuk Ezkutatuta"
 msgid "Reply notifications"
 msgstr "Erantzun jakinarazpenak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Erantzun ezarpenak hariaren egileak aukeratzen ditu"
 
@@ -7514,8 +7514,8 @@ msgstr "Aurreko urratsera itzultzen da"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "Gorde handle berria"
 msgid "Save QR code"
 msgstr "Gorde QR kodea"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr ""
 
@@ -7816,11 +7816,11 @@ msgstr "Hautatu iraupena"
 msgid "Select from an existing account"
 msgstr "Aukeratu lehendik dagoen kontu batetik"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr ""
 
@@ -7982,7 +7982,7 @@ msgstr "Ezarri jaiotze-data"
 msgid "Set new password"
 msgstr "Ezarri pasahitz berria"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr ""
 
@@ -7990,7 +7990,7 @@ msgstr ""
 msgid "Set up your account"
 msgstr "Konfiguratu zure kontua"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr ""
 
@@ -8183,7 +8183,7 @@ msgstr "Erakutsi honelako gutxiago"
 msgid "Show list anyway"
 msgstr "Erakutsi zerrenda hala ere"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr ""
 
@@ -8384,7 +8384,7 @@ msgstr "Zure egiaztapenetako batzuk baliogabeak dira."
 msgid "Some other feeds you might like"
 msgstr "Gustatuko litzaizukeen beste feed batzuk"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "Batzuek erantzun dezakete"
 
@@ -8981,7 +8981,7 @@ msgstr "Arazo bat izan da feedak eguneratzean. Egiaztatu Interneteko konexioa et
 msgid "There was an issue! {0}"
 msgstr "Arazo bat egon da! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "Aplikazioan ustekabeko arazo bat egon da. Mesedez, esan iezaguzu hau ger
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Erabiltzaile berri mordoa izan da Blueskyra! Zure kontua aktibatuko dugu ahal bezain laster."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr ""
 
@@ -9164,7 +9164,7 @@ msgstr "Moderazio-zerbitzu hau ez dago erabilgarri. Ikus behean xehetasun gehiag
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Post honek <0>{0}</0>-n sortu dela dio, baina Bluesky-k <1>{1}</1>-n ikusi zuen lehen aldiz."
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Post honek hari mota ezezagun bat du. Baliteke zure aplikazioa zaharkituta egotea."
 
@@ -9797,11 +9797,11 @@ msgstr "Erabiltzaile-izenak letrak (a-z), zenbakiak eta marratxoak bakarrik izan
 msgid "Username or email address"
 msgstr "Erabiltzaile-izena edo helbide elektronikoa"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "<0>@{0}</0>-k jarraitzen dituen erabiltzaileak"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "<0>@{0}</0> erabiltzaileak jarraitzen"
 
@@ -10312,12 +10312,12 @@ msgstr "Egiaztapen-marka bat sakatzen duzunean, egiaztapena zein erakundek eman 
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Zein hizkuntzatan ikusi nahiko zenituzke zure feed algoritmikoak?"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "Nork elkarreragin dezake post honekin?"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "Nork erantzun dezake"
 
@@ -10552,7 +10552,7 @@ msgstr "Ez duzu jarraitzen @{name}-k jarraitzen duen erabiltzailerik."
 msgid "You don't have any chat requests at the moment."
 msgstr "Ez daukazu txateatzeko eskaerarik oraingoz."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr ""
 
@@ -10916,7 +10916,7 @@ msgstr "Zure helbide elektronikoa ez da oraindik egiaztatu. Mesedez, egiaztatu z
 msgid "Your first like!"
 msgstr "Zure lehenengo gogokoa!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "Zure jarraitzaileak"
 

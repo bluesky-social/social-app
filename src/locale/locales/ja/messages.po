@@ -494,7 +494,7 @@ msgstr "<0>{0}</0>と<2>{1}</2>はあなたのスターターパックに含ま�
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0>はあなたのスターターパックに含まれています"
 
-#: src/components/WhoCanReply.tsx:346
+#: src/components/WhoCanReply.tsx:351
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0>のメンバー"
 
@@ -923,7 +923,7 @@ msgstr "保存されたすべてのフィードを1箇所にまとめます。"
 msgid "Allow access to your direct messages"
 msgstr "ダイレクトメッセージへのアクセスを許可"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
 msgstr "誰でも返信を許可"
 
@@ -942,23 +942,23 @@ msgstr "新しいメッセージを誰から受け取れるか："
 msgid "Allow others to be notified of your posts"
 msgstr "他のユーザーにあなたの投稿の通知を許可する"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
 msgstr "フォローしている人に返信を許可"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
 msgstr "メンションした人に返信を許可"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:616
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
 msgstr "引用を許可"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:578
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
 msgstr "{0}のユーザーに返信を許可"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
 msgstr "フォロワーに返信を許可"
 
@@ -1047,7 +1047,7 @@ msgstr "ビデオの読み込み時にエラーが発生しました。時間を
 msgid "An error occurred while loading the video. Please try again."
 msgstr "ビデオの読み込み時にエラーが発生しました。もう一度お試しください。"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
 msgstr "リストの読み込み中にエラーが発生しました :/"
 
@@ -1105,7 +1105,7 @@ msgstr "Blueskyアプリが表示されているiPhoneのモックアップで�
 msgid "an unknown labeler"
 msgstr "不明なラベラー"
 
-#: src/components/WhoCanReply.tsx:367
+#: src/components/WhoCanReply.tsx:372
 msgid "and"
 msgstr "および"
 
@@ -1135,11 +1135,11 @@ msgstr "お知らせ"
 msgid "Announcing verification on Bluesky"
 msgstr "Blueskyでの認証のお知らせ"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
 msgstr "誰でも"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1997,8 +1997,8 @@ msgstr "パカラッ 🐴 パカラッ 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:150
-#: src/components/WhoCanReply.tsx:229
-#: src/components/WhoCanReply.tsx:236
+#: src/components/WhoCanReply.tsx:234
+#: src/components/WhoCanReply.tsx:241
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
@@ -2787,7 +2787,7 @@ msgstr "開発者モードを有効にしました"
 msgid "Developer options"
 msgstr "開発者用オプション"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Dialog: adjust who can interact with this post"
 msgstr "ダイアログ：この投稿に誰が反応できるか調整"
 
@@ -2813,11 +2813,11 @@ msgstr "メールでの2要素認証を無効にする"
 msgid "Disable haptic feedback"
 msgstr "触覚フィードバックを無効化"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:608
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
 msgstr "返信を完全に無効にする"
 
@@ -3104,8 +3104,8 @@ msgstr "{0}からの通知を編集"
 msgid "Edit People"
 msgstr "ユーザーを編集"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:246
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:114
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:260
 msgid "Edit post interaction settings"
 msgstr "投稿への反応の設定を編集"
 
@@ -3129,7 +3129,7 @@ msgstr "スターターパックを編集"
 msgid "Edit user list"
 msgstr "ユーザーリストを編集"
 
-#: src/components/WhoCanReply.tsx:109
+#: src/components/WhoCanReply.tsx:114
 msgid "Edit who can reply"
 msgstr "誰が返信できるのかを編集"
 
@@ -3236,7 +3236,7 @@ msgstr "プロフィールにアクセスして<0>ベルのアイコン</0><1/>�
 msgid "Enable push notifications"
 msgstr "プッシュ通知を有効にする"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:609
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3357,11 +3357,11 @@ msgstr "CAPTCHAレスポンスの受信中にエラーが発生しました。"
 msgid "Error: {error}"
 msgstr "エラー：{error}"
 
-#: src/components/WhoCanReply.tsx:82
+#: src/components/WhoCanReply.tsx:83
 msgid "Everybody can reply"
 msgstr "誰でも返信可能"
 
-#: src/components/WhoCanReply.tsx:272
+#: src/components/WhoCanReply.tsx:277
 msgid "Everybody can reply to this post."
 msgstr "この投稿に全員が返信できる。"
 
@@ -4377,7 +4377,7 @@ msgstr "非表示"
 msgid "Hide customization options"
 msgstr "カスタマイズオプションを非表示"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
 msgstr "リストを非表示にする"
 
@@ -4642,7 +4642,7 @@ msgstr "アカウント削除のためにパスワードを入力"
 msgid "Input the code which has been emailed to you"
 msgstr "メールで送られたコードを入力"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:130
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:135
 msgid "Interaction limited"
 msgstr "反応が制限されています"
 
@@ -5142,11 +5142,11 @@ msgstr "最新の通知を読み込む"
 msgid "Load new posts"
 msgstr "最新の投稿を読み込む"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
 msgstr "リストを読み込み中…"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:259
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
 msgstr "投稿への反応の設定を読み込み中…"
 
@@ -5253,7 +5253,7 @@ msgstr "一部の閲覧者にとっては困惑する、あるいは不適切な
 msgid "Mention notifications"
 msgstr "メンションの通知"
 
-#: src/components/WhoCanReply.tsx:313
+#: src/components/WhoCanReply.tsx:318
 msgid "mentioned users"
 msgstr "メンションされたユーザー"
 
@@ -5759,7 +5759,7 @@ msgstr "お知らせはありません！"
 msgid "No one"
 msgstr "誰も"
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:301
 msgid "No one but the author can quote this post."
 msgstr "投稿者だけがこの投稿を引用できます。"
 
@@ -5820,7 +5820,7 @@ msgstr "「{search}」の検索結果はありません。"
 msgid "No thanks"
 msgstr "結構です"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "返信不可"
 
@@ -6003,7 +6003,7 @@ msgstr "1つもしくは複数のビデオにALTテキストがありません�
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpgと.pngファイルのみに対応しています"
 
-#: src/components/WhoCanReply.tsx:276
+#: src/components/WhoCanReply.tsx:281
 msgid "Only {0} can reply."
 msgstr "{0}のみ返信可能。"
 
@@ -6119,7 +6119,7 @@ msgstr "システムのログを開く"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "自分の投稿にコンテンツの警告を追加するダイアログを開く"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:146
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr "この投稿に誰が反応できるかを選択するダイアログを開く"
 
@@ -6337,11 +6337,11 @@ msgstr "@{0}をフォロー中のユーザー"
 msgid "People I follow"
 msgstr "フォロー中の人"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
 msgstr "フォロー中の人"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
 msgstr "メンションした人"
 
@@ -6644,7 +6644,7 @@ msgstr "ミュートしたワードによって投稿が表示されません"
 msgid "Post Hidden by You"
 msgstr "あなたが非表示にした投稿"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:679
 msgid "Post interaction settings"
 msgstr "投稿への反応の設定"
 
@@ -6796,7 +6796,7 @@ msgstr "プロフィールを更新しました"
 msgid "Promoting or selling prohibited items or services"
 msgstr "禁止品目・サービスの宣伝または販売"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:155
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
 msgstr "ちょっと！この投稿に誰が反応できるか、編集できますよ。"
 
@@ -7202,11 +7202,11 @@ msgstr "あなたへの返信"
 msgid "Replies"
 msgstr "返信"
 
-#: src/components/WhoCanReply.tsx:84
+#: src/components/WhoCanReply.tsx:85
 msgid "Replies disabled"
 msgstr "返信できません"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:279
 msgid "Replies to this post are disabled."
 msgstr "この投稿への返信は無効化されています。"
 
@@ -7234,7 +7234,7 @@ msgstr "返信はあなたによって非表示に"
 msgid "Reply notifications"
 msgstr "返信の通知"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "返信の設定はスレッドの投稿者によって選択されています"
 
@@ -7514,8 +7514,8 @@ msgstr "前のステップに戻る"
 #: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:648
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:653
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:204
@@ -7561,8 +7561,8 @@ msgstr "新しいハンドルを保存"
 msgid "Save QR code"
 msgstr "QRコードを保存"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:629
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:635
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
 msgstr "これらのオプションを次回のために保存する"
 
@@ -7816,11 +7816,11 @@ msgstr "配信の長さを選択"
 msgid "Select from an existing account"
 msgstr "既存のアカウントから選択"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
 msgstr "リストから選択"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:535
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr "<0>{numberOfListsSelected, plural, other {(選んだ#個)}}</0>のリストから選択"
 
@@ -7982,7 +7982,7 @@ msgstr "生年月日を設定"
 msgid "Set new password"
 msgstr "新しいパスワードを設定"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
 msgstr "投稿に返信できるグループを正確に設定します"
 
@@ -7990,7 +7990,7 @@ msgstr "投稿に返信できるグループを正確に設定します"
 msgid "Set up your account"
 msgstr "アカウントを設定する"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:411
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
 msgstr "投稿に誰が返信できるかを設定します"
 
@@ -8183,7 +8183,7 @@ msgstr "このような投稿の表示を減らす"
 msgid "Show list anyway"
 msgstr "とにかくリストを表示"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
 msgstr "選択するユーザーのリストを表示します"
 
@@ -8384,7 +8384,7 @@ msgstr "認証の一部が無効です。"
 msgid "Some other feeds you might like"
 msgstr "お好みかもしれない他のフィード"
 
-#: src/components/WhoCanReply.tsx:85
+#: src/components/WhoCanReply.tsx:86
 msgid "Some people can reply"
 msgstr "一部の人が返信可能"
 
@@ -8981,7 +8981,7 @@ msgstr "フィードの更新中に問題が発生したので、インターネ
 msgid "There was an issue! {0}"
 msgstr "問題が発生しました！ {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -9004,7 +9004,7 @@ msgstr "アプリケーションに予期しない問題が発生しました。
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Blueskyに新規ユーザーが殺到しています！できるだけ早くアカウントを有効にできるよう努めます。"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:640
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
 msgstr "これらはデフォルトの設定です"
 
@@ -9164,7 +9164,7 @@ msgstr "このモデレーションのサービスはご利用できません。
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "<0>{0}</0>に投稿されたと表示されていますが、Blueskyに初めて登場したのは<1>{1}</1>です。"
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:272
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "投稿に対する返信制限のタイプが不明です。アプリが古いかもしれません。"
 
@@ -9797,11 +9797,11 @@ msgstr "ユーザー名はアルファベット(a-z)、数字、ハイフンの�
 msgid "Username or email address"
 msgstr "ユーザー名またはメールアドレス"
 
-#: src/components/WhoCanReply.tsx:330
+#: src/components/WhoCanReply.tsx:335
 msgid "users followed by <0>@{0}</0>"
 msgstr "<0>@{0}</0>にフォローされているユーザー"
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:322
 msgid "users following <0>@{0}</0>"
 msgstr "<0>@{0}</0>をフォローしているユーザー"
 
@@ -10312,12 +10312,12 @@ msgstr "チェックをタップすると、どの組織が認証を与えてい
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "アルゴリズムによるフィードにはどの言語を使用しますか？"
 
-#: src/components/WhoCanReply.tsx:219
+#: src/components/WhoCanReply.tsx:224
 msgid "Who can interact with this post?"
 msgstr "誰がこの投稿に反応できますか？"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:407
-#: src/components/WhoCanReply.tsx:109
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
+#: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
 msgstr "返信できるユーザー"
 
@@ -10552,7 +10552,7 @@ msgstr "@{name}をフォローしているユーザーを誰もフォローし�
 msgid "You don't have any chat requests at the moment."
 msgstr "現在、チャットの要求はありません。"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
 msgstr "リストがまだありません。"
 
@@ -10916,7 +10916,7 @@ msgstr "あなたのメールアドレスはまだ確認されていません。
 msgid "Your first like!"
 msgstr "最初のいいね！"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:476
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:490
 msgid "Your followers"
 msgstr "フォロワー"
 
