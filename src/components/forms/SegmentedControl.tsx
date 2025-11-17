@@ -9,6 +9,7 @@ import {
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 
+import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {
@@ -142,6 +143,7 @@ export function Item({
   onPress: onPressProp,
   ...props
 }: {value: string; children: React.ReactNode} & Omit<ButtonProps, 'children'>) {
+  const playHaptic = useHaptics()
   const [position, setPosition] = useState<{x: number; width: number} | null>(
     null,
   )
@@ -174,10 +176,11 @@ export function Item({
 
   const onPress = useCallback(
     (evt: any) => {
+      playHaptic('Light')
       ctx.onSelectValue(value, position)
       onPressProp?.(evt)
     },
-    [ctx, value, position, onPressProp],
+    [ctx, value, position, onPressProp, playHaptic],
   )
 
   return (
