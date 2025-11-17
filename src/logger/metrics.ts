@@ -524,6 +524,8 @@ export type MetricEvents = {
     [key: string]: any
   }
   'thread:click:headerMenuOpen': {}
+  'thread:click:editOwnThreadgate': {}
+  'thread:click:viewSomeoneElsesThreadgate': {}
   'activitySubscription:enable': {
     setting: 'posts' | 'posts_and_replies'
   }

@@ -17,6 +17,7 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
   type ThreadgateAllowUISetting,
@@ -89,6 +90,8 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
       Keyboard.dismiss()
     }
     if (isThreadAuthor) {
+      logger.metric('thread:click:editOwnThreadgate', {})
+
       // wait on prefetch if it manages to resolve in under 200ms
       // otherwise, proceed immediately and show the spinner -sfn
       Promise.race([
@@ -98,6 +101,8 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         editDialogControl.open()
       })
     } else {
+      logger.metric('thread:click:viewSomeoneElsesThreadgate')
+
       infoDialogControl.open()
     }
   }
