@@ -1,14 +1,39 @@
-import React from 'react'
-import * as Device from 'expo-device'
-import {impactAsync, ImpactFeedbackStyle} from 'expo-haptics'
+import {useCallback, useMemo} from 'react'
+import * as ExpoHaptics from 'expo-haptics'
 
 import {isIOS, isWeb} from '#/platform/detection'
 import {useHapticsDisabled} from '#/state/preferences/disable-haptics'
 
+export function useHapticFeedback() {
+  const isHapticsDisabled = useHapticsDisabled()
+
+  return useMemo(() => {
+    if (isHapticsDisabled || isWeb) {
+      return {impact: () => {}, notification: () => {}}
+    }
+
+    return {
+      impact: (strength: 'Light' | 'Medium' | 'Heavy' = 'Medium') => {
+        // Users said the medium impact was too strong on Android; see APP-537s
+        const style = isIOS
+          ? ExpoHaptics.ImpactFeedbackStyle[strength]
+          : ExpoHaptics.ImpactFeedbackStyle.Light
+        ExpoHaptics.impactAsync(style)
+      },
+      notification: (type: ExpoHaptics.NotificationFeedbackType) => {
+        ExpoHaptics.notificationAsync(type)
+      },
+    }
+  }, [isHapticsDisabled])
+}
+
+/**
+ * @deprecated use `haptics.impact()` from `useHapticFeedback()` instead
+ */
 export function useHaptics() {
   const isHapticsDisabled = useHapticsDisabled()
 
-  return React.useCallback(
+  return useCallback(
     (strength: 'Light' | 'Medium' | 'Heavy' = 'Medium') => {
       if (isHapticsDisabled || isWeb) {
         return
@@ -16,15 +41,9 @@ export function useHaptics() {
 
       // Users said the medium impact was too strong on Android; see APP-537s
       const style = isIOS
-        ? ImpactFeedbackStyle[strength]
-        : ImpactFeedbackStyle.Light
-      impactAsync(style)
-
-      // DEV ONLY - show a toast when a haptic is meant to fire on simulator
-      if (__DEV__ && !Device.isDevice) {
-        // disabled because it's annoying
-        // Toast.show(`Buzzz!`)
-      }
+        ? ExpoHaptics.ImpactFeedbackStyle[strength]
+        : ExpoHaptics.ImpactFeedbackStyle.Light
+      ExpoHaptics.impactAsync(style)
     },
     [isHapticsDisabled],
   )
