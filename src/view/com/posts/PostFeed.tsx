@@ -35,6 +35,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
@@ -363,6 +364,11 @@ let PostFeed = ({
    */
   const [isCurrentFeedAtStartupSelected] = useState(selectedFeed === feed)
 
+  const blockedOrMutedAuthors = usePostAuthorShadowFilter(
+    // author feeds have their own handling
+    feed.startsWith('author|') ? undefined : data?.pages,
+  )
+
   const feedItems: FeedRow[] = useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
     // if the user has pressed show less on it
@@ -423,7 +429,11 @@ let PostFeed = ({
                 // eslint-disable-next-line @typescript-eslint/no-shadow
                 item => item.uri === slice.feedPostUri,
               )
-              if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
+              if (
+                item &&
+                AppBskyEmbedVideo.isView(item.post.embed) &&
+                !blockedOrMutedAuthors.includes(item.post.author.did)
+              ) {
                 videos.push({
                   item,
                   feedContext: slice.feedContext,
@@ -541,6 +551,12 @@ let PostFeed = ({
                   key:
                     'sliceFallbackMarker-' + sliceIndex + '-' + lastFetchedAt,
                 })
+              } else if (
+                slice.items.some(item =>
+                  blockedOrMutedAuthors.includes(item.post.author.did),
+                )
+              ) {
+                // skip
               } else if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
                 const last = slice.items.length - 1
@@ -636,6 +652,7 @@ let PostFeed = ({
     hasPressedShowLessUris,
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
+    blockedOrMutedAuthors,
   ])
 
   // events
