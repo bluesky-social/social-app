@@ -840,12 +840,62 @@ let PostFeed = ({
   const liveNowConfig = useLiveNowConfig()
 
   const seenActorWithStatusRef = useRef<Set<string>>(new Set())
+  const seenPostUrisRef = useRef<Set<string>>(new Set())
+
+  // Helper to calculate position in feed (count only root posts, not interstitials or thread replies)
+  const calculatePostPosition = useCallback(
+    (rowIndex: number): number => {
+      let position = 0
+      for (let i = 0; i < rowIndex && i < feedItems.length; i++) {
+        const row = feedItems[i]
+        if (row.type === 'sliceItem') {
+          // Only count root posts (indexInSlice === 0), not thread replies
+          if (row.indexInSlice === 0) {
+            position++
+          }
+        } else if (row.type === 'videoGridRow') {
+          // Count each video in the grid row
+          position += row.items.length
+        }
+      }
+      return position
+    },
+    [feedItems],
+  )
+
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
-      if (item.type === 'sliceItem') {
-        const actor = item.slice.items[item.indexInSlice].post.author
 
+      // Track post:view events
+      if (item.type === 'sliceItem') {
+        const slice = item.slice
+        const indexInSlice = item.indexInSlice
+        const postItem = slice.items[indexInSlice]
+        const post = postItem.post
+
+        // Only track the root post of each slice (index 0) to avoid double-counting thread items
+        if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
+          seenPostUrisRef.current.add(post.uri)
+
+          // Calculate position: find the row index in feedItems, then calculate position
+          const rowIndex = feedItems.findIndex(
+            row => row.type === 'sliceItem' && row.key === item.key,
+          )
+          const position =
+            rowIndex >= 0 ? calculatePostPosition(rowIndex) : undefined
+
+          logger.metric('post:view', {
+            uri: post.uri,
+            authorDid: post.author.did,
+            logContext: 'FeedItem',
+            feedDescriptor: feedFeedback.feedDescriptor || feed,
+            position,
+          })
+        }
+
+        // Live status tracking (existing code)
+        const actor = post.author
         if (
           actor.status &&
           validateStatus(actor.did, actor.status, liveNowConfig) &&
@@ -863,9 +913,34 @@ let PostFeed = ({
             )
           }
         }
+      } else if (item.type === 'videoGridRow') {
+        // Track each video in the grid row
+        for (let i = 0; i < item.items.length; i++) {
+          const postItem = item.items[i]
+          const post = postItem.post
+
+          if (!seenPostUrisRef.current.has(post.uri)) {
+            seenPostUrisRef.current.add(post.uri)
+
+            // Calculate position: find the row index in feedItems, then calculate position
+            const rowIndex = feedItems.findIndex(
+              row => row.type === 'videoGridRow' && row.key === item.key,
+            )
+            const position =
+              rowIndex >= 0 ? calculatePostPosition(rowIndex) + i : undefined
+
+            logger.metric('post:view', {
+              uri: post.uri,
+              authorDid: post.author.did,
+              logContext: 'FeedItem',
+              feedDescriptor: feedFeedback.feedDescriptor || feed,
+              position,
+            })
+          }
+        }
       }
     },
-    [feedFeedback, feed, liveNowConfig],
+    [feedFeedback, feed, liveNowConfig, feedItems, calculatePostPosition],
   )
 
   return (
