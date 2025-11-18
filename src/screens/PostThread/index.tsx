@@ -1,10 +1,11 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {Trans} from '@lingui/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {logger} from '#/logger'
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {
@@ -72,6 +73,25 @@ export function PostThread({uri}: {uri: string}) {
     }
     return {hasParents}
   }, [thread.data.items])
+
+  // Track post:view event when anchor post is viewed
+  const seenPostUriRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (
+      anchor?.type === 'threadPost' &&
+      anchor.value.post.uri !== seenPostUriRef.current
+    ) {
+      const post = anchor.value.post
+      seenPostUriRef.current = post.uri
+
+      logger.metric('post:view', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext: 'Post',
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+    }
+  }, [anchor, feedFeedback.feedDescriptor])
 
   const {openComposer} = useOpenComposer()
   const optimisticOnPostReply = useCallback(
