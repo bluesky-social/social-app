@@ -885,13 +885,17 @@ let PostFeed = ({
           const position =
             rowIndex >= 0 ? calculatePostPosition(rowIndex) : undefined
 
-          logger.metric('post:view', {
-            uri: post.uri,
-            authorDid: post.author.did,
-            logContext: 'FeedItem',
-            feedDescriptor: feedFeedback.feedDescriptor || feed,
-            position,
-          })
+          logger.metric(
+            'post:view',
+            {
+              uri: post.uri,
+              authorDid: post.author.did,
+              logContext: 'FeedItem',
+              feedDescriptor: feedFeedback.feedDescriptor || feed,
+              position,
+            },
+            {statsig: false},
+          )
         }
 
         // Live status tracking (existing code)
@@ -929,13 +933,17 @@ let PostFeed = ({
             const position =
               rowIndex >= 0 ? calculatePostPosition(rowIndex) + i : undefined
 
-            logger.metric('post:view', {
-              uri: post.uri,
-              authorDid: post.author.did,
-              logContext: 'FeedItem',
-              feedDescriptor: feedFeedback.feedDescriptor || feed,
-              position,
-            })
+            logger.metric(
+              'post:view',
+              {
+                uri: post.uri,
+                authorDid: post.author.did,
+                logContext: 'FeedItem',
+                feedDescriptor: feedFeedback.feedDescriptor || feed,
+                position,
+              },
+              {statsig: false},
+            )
           }
         }
       }

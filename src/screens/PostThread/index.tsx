@@ -84,12 +84,16 @@ export function PostThread({uri}: {uri: string}) {
       const post = anchor.value.post
       seenPostUriRef.current = post.uri
 
-      logger.metric('post:view', {
-        uri: post.uri,
-        authorDid: post.author.did,
-        logContext: 'Post',
-        feedDescriptor: feedFeedback.feedDescriptor,
-      })
+      logger.metric(
+        'post:view',
+        {
+          uri: post.uri,
+          authorDid: post.author.did,
+          logContext: 'Post',
+          feedDescriptor: feedFeedback.feedDescriptor,
+        },
+        {statsig: false},
+      )
     }
   }, [anchor, feedFeedback.feedDescriptor])
 
