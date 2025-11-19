@@ -97,7 +97,7 @@ export function ExploreInterestsCard() {
                     a.top_0,
                     a.right_0,
                     a.bottom_0,
-                    {width: 20},
+                    {width: 30},
                   ]}
                 />
               </View>
