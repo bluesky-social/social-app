@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -49,7 +49,7 @@ jobs:
         run: yarn global add eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
