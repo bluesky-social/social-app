@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: yarn
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
@@ -46,6 +47,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: yarn
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
