@@ -66,7 +66,7 @@ export function ExploreInterestsCard() {
 
           {preferences?.interests?.tags &&
           preferences.interests.tags.length > 0 ? (
-            <View style={[a.flex_row, a.w_full]}>
+            <View style={[a.flex_row, a.w_full, a.gap_xs]}>
               <View style={[a.flex_1, a.flex_row, a.overflow_hidden, {gap: 6}]}>
                 {preferences.interests.tags.map(tag => (
                   <View
