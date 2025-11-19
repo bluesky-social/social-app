@@ -116,13 +116,13 @@ export function ExploreInterestsCard() {
             </View>
           ) : (
             <Link
-              label={_(msg`Edit interests`)}
+              label={_(msg`Add interests`)}
               to="/settings/interests"
-              size="large"
+              size="small"
               color="primary"
               style={[a.justify_center]}>
               <ButtonText>
-                <Trans>Tell us what you're interested in!</Trans>
+                <Trans>Add interests</Trans>
               </ButtonText>
             </Link>
           )}
