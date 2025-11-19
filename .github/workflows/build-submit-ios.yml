@@ -39,7 +39,7 @@ jobs:
         uses: dcarbone/install-jq-action@v2
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         with:
           expo-version: latest
           eas-version: latest
