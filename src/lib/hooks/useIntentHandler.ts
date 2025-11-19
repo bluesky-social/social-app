@@ -24,7 +24,7 @@ const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 let previousIntentUrl = ''
 
 export function useIntentHandler() {
-  const incomingUrl = Linking.useURL()
+  const incomingUrl = Linking.useLinkingURL()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
   const ageAssuranceRedirectDialogControl =
@@ -108,6 +108,7 @@ export function useIntentHandler() {
           } else {
             tryApplyUpdate(channel)
           }
+          return
         }
         default: {
           return
