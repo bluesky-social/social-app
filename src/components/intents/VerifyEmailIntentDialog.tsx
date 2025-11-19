@@ -44,10 +44,9 @@ function Inner({}: {control: DialogControlProps}) {
   })
 
   useEffect(() => {
-    if (!state?.code) {
-      return
+    if (state?.code) {
+      confirmEmail({token: state.code})
     }
-    confirmEmail({token: state.code})
   }, [state?.code, confirmEmail])
 
   const onPressResendEmail = async () => {
