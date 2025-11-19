@@ -57,7 +57,9 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git merge --no-edit $HEAD_REF
           yarn install
-          yarn intl:build
+
+      - name: 🔤 Compile translations
+        uses: ./.github/actions/build-translations
 
       - name: 🔦 Generate stats file for PR
         run: |
@@ -81,7 +83,14 @@ jobs:
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         run: |
           yarn install
-          yarn intl:build
+
+      - name: 🔤 Compile translations (base)
+        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        uses: ./.github/actions/build-translations
+
+      - name: 🔦 Generate base stats
+        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        run: |
           yarn generate-webpack-stats-file
           mv stats.json stats-base.json
 

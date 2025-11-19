@@ -1,0 +1,48 @@
+name: 'Build Translations'
+description: 'Compile translations with caching and optionally check for errors'
+inputs:
+  check-for-errors:
+    description: 'Whether to check for i18n compilation errors'
+    required: false
+    default: 'false'
+runs:
+  using: 'composite'
+  steps:
+    - name: 📝 Extract English source strings
+      shell: bash
+      run: yarn intl:extract
+
+    - name: 🔑 Generate cache key
+      id: cache-key
+      shell: bash
+      run: |
+        EN_HASH=$(cat src/locale/locales/en/messages.po | shasum -a 256 | cut -d' ' -f1)
+        YARN_HASH=$(cat yarn.lock | shasum -a 256 | cut -d' ' -f1)
+        CACHE_KEY="translations-${EN_HASH}-${YARN_HASH}"
+        echo "key=${CACHE_KEY}" >> $GITHUB_OUTPUT
+        echo "Cache key: ${CACHE_KEY}"
+
+    - name: 📦 Restore translations cache
+      id: cache-translations
+      uses: actions/cache@v4
+      with:
+        path: |
+          src/locale/locales/*/messages.po
+          src/locale/locales/*/messages.js
+        key: ${{ steps.cache-key.outputs.key }}
+
+    - name: 🔤 Compile translations
+      if: steps.cache-translations.outputs.cache-hit != 'true'
+      shell: bash
+      run: yarn intl:compile 2>&1 | tee i18n.log
+
+    - name: Check for i18n compilation errors
+      if: inputs.check-for-errors == 'true' && steps.cache-translations.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        if grep -q "invalid syntax" "i18n.log"; then
+          echo -e "\n\nFound compilation errors!\n\n"
+          exit 1
+        else
+          echo -e "\n\nNo compilation errors!\n\n"
+        fi
