@@ -685,7 +685,7 @@ function CategoryCard({
   }, [onSelect, option])
   return (
     <Button
-      testID={`report:option:${option.title}`}
+      testID={`report:category:${option.title}`}
       label={_(msg`Create report for ${option.title}`)}
       onPress={onPress}
       disabled={!onSelect}>

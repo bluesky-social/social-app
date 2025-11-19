@@ -16,15 +16,19 @@ import {ProfileCardWithFollowBtn} from './ProfileCard'
 function renderItem({
   item,
   index,
+  contextProfileDid,
 }: {
   item: ActorDefs.ProfileView
   index: number
+  contextProfileDid: string | undefined
 }) {
   return (
     <ProfileCardWithFollowBtn
       key={item.did}
       profile={item}
       noBorder={index === 0}
+      position={index + 1}
+      contextProfileDid={contextProfileDid}
     />
   )
 }
@@ -83,6 +87,40 @@ export function ProfileFollowers({name}: {name: string}) {
     }
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
+  const renderItemWithContext = React.useCallback(
+    ({item, index}: {item: ActorDefs.ProfileView; index: number}) =>
+      renderItem({item, index, contextProfileDid: resolvedDid}),
+    [resolvedDid],
+  )
+
+  // track seen items
+  const seenItemsRef = React.useRef<Set<string>>(new Set())
+  React.useEffect(() => {
+    seenItemsRef.current.clear()
+  }, [resolvedDid])
+  const onItemSeen = React.useCallback(
+    (item: ActorDefs.ProfileView) => {
+      if (seenItemsRef.current.has(item.did)) {
+        return
+      }
+      seenItemsRef.current.add(item.did)
+      const position = followers.findIndex(p => p.did === item.did) + 1
+      if (position === 0) {
+        return
+      }
+      logger.metric(
+        'profileCard:seen',
+        {
+          profileDid: item.did,
+          position,
+          ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
+        },
+        {statsig: false},
+      )
+    },
+    [followers, resolvedDid],
+  )
+
   if (followers.length < 1) {
     return (
       <ListMaybePlaceholder
@@ -104,12 +142,13 @@ export function ProfileFollowers({name}: {name: string}) {
   return (
     <List
       data={followers}
-      renderItem={renderItem}
+      renderItem={renderItemWithContext}
       keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
+      onItemSeen={onItemSeen}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}

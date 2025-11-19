@@ -84,14 +84,14 @@ export async function shareImageModal({uri}: {uri: string}) {
     return
   }
 
-  // we're currently relying on the fact our CDN only serves pngs
+  // we're currently relying on the fact our CDN only serves jpegs
   // -prf
-  const imageUri = await downloadImage(uri, createPath('png'), 5e3)
-  const imagePath = await moveToPermanentPath(imageUri, '.png')
+  const imageUri = await downloadImage(uri, createPath('jpg'), 15e3)
+  const imagePath = await moveToPermanentPath(imageUri, '.jpg')
   safeDeleteAsync(imageUri)
   await Sharing.shareAsync(imagePath, {
-    mimeType: 'image/png',
-    UTI: 'image/png',
+    mimeType: 'image/jpeg',
+    UTI: 'image/jpeg',
   })
 }
 
@@ -100,11 +100,11 @@ const ALBUM_NAME = 'Bluesky'
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // download the file to cache
   // NOTE
-  // assuming PNG
-  // we're currently relying on the fact our CDN only serves pngs
+  // assuming JPEG
+  // we're currently relying on the fact our CDN only serves jpegs
   // -prf
-  const imageUri = await downloadImage(uri, createPath('png'), 5e3)
-  const imagePath = await moveToPermanentPath(imageUri, '.png')
+  const imageUri = await downloadImage(uri, createPath('jpg'), 15e3)
+  const imagePath = await moveToPermanentPath(imageUri, '.jpg')
 
   // save
   try {

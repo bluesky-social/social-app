@@ -4,6 +4,7 @@ import {type TextInput, View} from 'react-native'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {DateField, LabelText} from '#/components/forms/DateField'
+import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
@@ -15,6 +16,9 @@ export function Forms() {
   const [toggleGroupBValues, setToggleGroupBValues] = React.useState(['a', 'b'])
   const [toggleGroupCValues, setToggleGroupCValues] = React.useState(['a', 'b'])
   const [toggleGroupDValues, setToggleGroupDValues] = React.useState(['warn'])
+  const [segmentedControlValue, setSegmentedControlValue] = React.useState<
+    'hide' | 'warn' | 'show'
+  >('warn')
 
   const [value, setValue] = React.useState('')
   const [date, setDate] = React.useState('2001-01-01')
@@ -155,6 +159,15 @@ export function Forms() {
           </View>
         </Toggle.Group>
 
+        <Toggle.Item name="d" disabled value label="Click me">
+          <Toggle.Switch />
+          <Toggle.LabelText>Click me</Toggle.LabelText>
+        </Toggle.Item>
+        <Toggle.Item name="d" disabled value isInvalid label="Click me">
+          <Toggle.Switch />
+          <Toggle.LabelText>Click me</Toggle.LabelText>
+        </Toggle.Item>
+
         <Toggle.Group
           label="Toggle"
           type="checkbox"
@@ -245,23 +258,26 @@ export function Forms() {
             <ToggleButton.ButtonText>Show</ToggleButton.ButtonText>
           </ToggleButton.Button>
         </ToggleButton.Group>
+      </View>
 
-        <View>
-          <ToggleButton.Group
-            label="Preferences"
-            values={toggleGroupDValues}
-            onChange={setToggleGroupDValues}>
-            <ToggleButton.Button name="hide" label="Hide">
-              <ToggleButton.ButtonText>Hide</ToggleButton.ButtonText>
-            </ToggleButton.Button>
-            <ToggleButton.Button name="warn" label="Warn">
-              <ToggleButton.ButtonText>Warn</ToggleButton.ButtonText>
-            </ToggleButton.Button>
-            <ToggleButton.Button name="show" label="Show">
-              <ToggleButton.ButtonText>Show</ToggleButton.ButtonText>
-            </ToggleButton.Button>
-          </ToggleButton.Group>
-        </View>
+      <View style={[a.gap_md, a.align_start, a.w_full]}>
+        <H3>SegmentedControl</H3>
+
+        <SegmentedControl.Root
+          label="Preferences"
+          type="radio"
+          value={segmentedControlValue}
+          onChange={setSegmentedControlValue}>
+          <SegmentedControl.Item value="hide" label="Hide">
+            <SegmentedControl.ItemText>Hide</SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+          <SegmentedControl.Item value="warn" label="Warn">
+            <SegmentedControl.ItemText>Warn</SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+          <SegmentedControl.Item value="show" label="Show">
+            <SegmentedControl.ItemText>Show</SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+        </SegmentedControl.Root>
       </View>
     </View>
   )

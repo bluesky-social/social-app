@@ -18,7 +18,6 @@
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
-  type AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -36,6 +35,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
+import type * as bsky from '#/types/bsky'
 import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
@@ -309,7 +309,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
+): Generator<bsky.profile.AnyProfileView, void> {
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
     queryKey: [RQKEY_ROOT],
   })
@@ -319,7 +319,9 @@ export function* findAllProfilesInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const item of page.items) {
-        if (
+        if (item.type === 'follow' && item.notification.author.did === did) {
+          yield item.notification.author
+        } else if (
           item.type !== 'starterpack-joined' &&
           item.subject?.author.did === did
         ) {

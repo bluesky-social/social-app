@@ -194,6 +194,7 @@ export function ItemIcon({
    * also so that we can calculate transforms.
    */
   const iconSize = {
+    '2xs': 8,
     xs: 12,
     sm: 16,
     md: 20,

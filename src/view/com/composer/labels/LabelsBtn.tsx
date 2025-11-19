@@ -10,11 +10,12 @@ import {
   type SelfLabel,
 } from '#/lib/moderation'
 import {isWeb} from '#/platform/detection'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/Chevron'
 import {Shield_Stroke2_Corner0_Rounded} from '#/components/icons/Shield'
 import {Text} from '#/components/Typography'
 
@@ -49,7 +50,6 @@ export function LabelsBtn({
   return (
     <>
       <Button
-        variant="solid"
         color="secondary"
         size="small"
         testID="labelsBtn"
@@ -60,13 +60,7 @@ export function LabelsBtn({
         label={_(msg`Content warnings`)}
         accessibilityHint={_(
           msg`Opens a dialog to add a content warning to your post`,
-        )}
-        style={[
-          native({
-            paddingHorizontal: 8,
-            paddingVertical: 6,
-          }),
-        ]}>
+        )}>
         <ButtonIcon icon={hasLabel ? Check : Shield_Stroke2_Corner0_Rounded} />
         <ButtonText numberOfLines={1}>
           {labels.length > 0 ? (
@@ -75,6 +69,7 @@ export function LabelsBtn({
             <Trans>Labels</Trans>
           )}
         </ButtonText>
+        <ButtonIcon icon={TinyChevronIcon} size="2xs" />
       </Button>
 
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>

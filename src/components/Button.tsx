@@ -798,6 +798,7 @@ export function ButtonIcon({
        * also so that we can calculate transforms.
        */
       const iconSize = {
+        '2xs': 8,
         xs: 12,
         sm: 16,
         md: 18,
@@ -842,7 +843,7 @@ export function ButtonIcon({
       style={[
         a.z_20,
         {
-          width: iconContainerSize,
+          width: size === '2xs' ? 10 : iconContainerSize,
           height: iconContainerSize,
           marginLeft: iconNegativeMargin,
           marginRight: iconNegativeMargin,

@@ -211,6 +211,7 @@ function Inner() {
                   secureTextEntry
                   autoCapitalize="none"
                   autoComplete="new-password"
+                  passwordRules="minlength: 8;"
                 />
               </TextField.Root>
             </View>

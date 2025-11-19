@@ -67,7 +67,7 @@ export async function openCropper(opts: OpenCropperOptions) {
 
   return {
     path: item.path,
-    mime: item.mime,
+    mime: item.mimeType,
     size: item.size,
     width: item.width,
     height: item.height,
