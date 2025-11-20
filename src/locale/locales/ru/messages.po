@@ -8,7 +8,7 @@ msgstr ""
 "Language: ru\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:10\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -503,7 +503,7 @@ msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0> в {time}"
 
 #: src/screens/Hashtag.tsx:223
-#: src/screens/Search/SearchResults.tsx:257
+#: src/screens/Search/SearchResults.tsx:292
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "<0>Войдите в свой аккаунт</0><1> или </1><2>создайте аккаунт</2><3>, </3><4> чтобы искать новости, спорт, политику и всё остальное, что происходит на Bluesky.</4>"
 
@@ -519,7 +519,7 @@ msgstr "⚠Недопустимый псевдоним"
 msgid "24 hours"
 msgstr "24 часа"
 
-#: src/screens/Login/LoginForm.tsx:281
+#: src/screens/Login/LoginForm.tsx:278
 msgid "2FA Confirmation"
 msgstr "Подтверждение 2FA"
 
@@ -597,7 +597,7 @@ msgid "Accessibility Settings"
 msgstr "Настройки Доступности"
 
 #: src/Navigation.tsx:399
-#: src/screens/Login/LoginForm.tsx:197
+#: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:51
 #: src/screens/Settings/Settings.tsx:174
 #: src/screens/Settings/Settings.tsx:177
@@ -643,7 +643,8 @@ msgstr ""
 msgid "Account removed from quick access"
 msgstr "Учётная запись удалена из быстрого доступа"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:138
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:84
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:290
 #: src/view/com/profile/ProfileMenu.tsx:156
 msgctxt "toast"
 msgid "Account unblocked"
@@ -1089,8 +1090,8 @@ msgstr "При попытке открыть чат возникла пробл�
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:502
-#: src/components/ProfileCard.tsx:523
+#: src/components/ProfileCard.tsx:513
+#: src/components/ProfileCard.tsx:534
 #: src/view/com/notifications/NotificationFeedItem.tsx:774
 #: src/view/com/notifications/NotificationFeedItem.tsx:794
 msgid "An issue occurred, please try again."
@@ -1336,8 +1337,8 @@ msgstr "Доступен"
 #: src/screens/Login/ChooseAccountForm.tsx:96
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:323
-#: src/screens/Login/LoginForm.tsx:329
+#: src/screens/Login/LoginForm.tsx:313
+#: src/screens/Login/LoginForm.tsx:319
 #: src/screens/Login/SetNewPasswordForm.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Messages/components/ChatDisabled.tsx:145
@@ -1381,7 +1382,7 @@ msgstr "Чтобы создать стартовый набор, необход�
 msgid "Before you can accept this chat request, you must first verify your email."
 msgstr "Чтобы принять этот запрос на чат, необходимо сначала подтвердить свою электронную почту."
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:56
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:58
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
 msgstr "Перед тем, как вы будете получать уведомления о постах пользователя {name}, вы должны подтвердить свой адрес электронной почты."
 
@@ -1410,7 +1411,7 @@ msgid "Birthday"
 msgstr "Дата рождения"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:792
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:336
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
 #: src/view/com/profile/ProfileMenu.tsx:495
 msgid "Block"
 msgstr "Заблокировать"
@@ -1860,7 +1861,7 @@ msgstr "Чаты"
 msgid "Check my status"
 msgstr "Проверить мой статус"
 
-#: src/screens/Login/LoginForm.tsx:314
+#: src/screens/Login/LoginForm.tsx:304
 msgid "Check your email for a sign in code and enter it here."
 msgstr "Проверьте свою электронную почту на наличие кода для входа и введите его здесь."
 
@@ -2185,7 +2186,7 @@ msgid "Confirm your location with GPS. Your location data is not tracked and doe
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
-#: src/screens/Login/LoginForm.tsx:287
+#: src/screens/Login/LoginForm.tsx:284
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:186
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:190
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
@@ -2195,7 +2196,7 @@ msgstr ""
 msgid "Confirmation code"
 msgstr "Код подтверждения"
 
-#: src/screens/Login/LoginForm.tsx:350
+#: src/screens/Login/LoginForm.tsx:340
 msgid "Connecting..."
 msgstr "Соединение..."
 
@@ -2519,7 +2520,7 @@ msgstr "Создать учётную запись"
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 #: src/screens/Hashtag.tsx:232
-#: src/screens/Search/SearchResults.tsx:268
+#: src/screens/Search/SearchResults.tsx:301
 msgid "Create an account"
 msgstr "Создать учётную запись"
 
@@ -3111,13 +3112,13 @@ msgstr "Редактировать настройки взаимодействи
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:268
 #: src/screens/Profile/Header/EditProfileDialog.tsx:274
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:181
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:196
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:292
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:321
 msgid "Edit profile"
 msgstr "Редактировать профиль"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:199
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:323
 msgid "Edit Profile"
 msgstr "Редактировать профиль"
 
@@ -3164,7 +3165,7 @@ msgstr "2FA по электронной почте включена"
 msgid "Email address"
 msgstr "Адрес электронной почты"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:104
+#: src/components/intents/VerifyEmailIntentDialog.tsx:98
 msgid "Email Resent"
 msgstr "Подтверждение отправлено повторно"
 
@@ -3176,7 +3177,7 @@ msgstr "Письмо отправлено!"
 msgid "Email verification complete!"
 msgstr "Подтверждение электронной почты завершено!"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:79
+#: src/components/intents/VerifyEmailIntentDialog.tsx:73
 msgid "Email Verified"
 msgstr "Электронная почта подтверждена"
 
@@ -3299,7 +3300,7 @@ msgstr "Введите домен, который вы хотите исполь
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "Введите адрес электронной почты, который вы использовали для создания учётной записи. Мы вышлем вам \"код подтверждения\", чтобы вы могли установить новый пароль."
 
-#: src/screens/Login/LoginForm.tsx:222
+#: src/screens/Login/LoginForm.tsx:219
 msgid "Enter the username or email address you used when you created your account"
 msgstr "Введите псевдоним или адрес электронной почты, с которым вы создавали учётную запись"
 
@@ -3312,7 +3313,7 @@ msgstr "Введите вашу дату рождения"
 msgid "Enter your email address"
 msgstr "Введите адрес электронной почты"
 
-#: src/screens/Login/LoginForm.tsx:246
+#: src/screens/Login/LoginForm.tsx:243
 msgid "Enter your password"
 msgstr "Введите ваш пароль"
 
@@ -3353,7 +3354,7 @@ msgstr "Произошла ошибка при сохранении файла"
 msgid "Error receiving captcha response."
 msgstr "Ошибка получения ответа Captcha."
 
-#: src/screens/Search/SearchResults.tsx:146
+#: src/screens/Search/SearchResults.tsx:148
 msgid "Error: {error}"
 msgstr "Ошибка: {error}"
 
@@ -3747,7 +3748,7 @@ msgstr ""
 
 #: src/Navigation.tsx:574
 #: src/screens/SavedFeeds.tsx:108
-#: src/screens/Search/SearchResults.tsx:75
+#: src/screens/Search/SearchResults.tsx:77
 #: src/screens/StarterPack/StarterPackScreen.tsx:190
 #: src/view/screens/Feeds.tsx:511
 #: src/view/screens/Profile.tsx:230
@@ -3859,17 +3860,17 @@ msgid "Flexible"
 msgstr "Гибкий"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:542
+#: src/components/ProfileCard.tsx:553
 #: src/components/ProfileHoverCard/index.web.tsx:496
 #: src/components/ProfileHoverCard/index.web.tsx:507
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:258
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:378
 #: src/screens/VideoFeed/index.tsx:857
 msgid "Follow"
 msgstr "Подписаться"
 
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:113
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:243
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:366
 msgid "Follow {0}"
 msgstr "Подписаться на {0}"
 
@@ -3904,9 +3905,9 @@ msgid "Follow all accounts"
 msgstr "Подписаться на все аккаунты"
 
 #. User is not following this account, click to follow back
-#: src/components/ProfileCard.tsx:536
+#: src/components/ProfileCard.tsx:547
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:256
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:376
 #: src/view/com/notifications/NotificationFeedItem.tsx:835
 #: src/view/com/notifications/NotificationFeedItem.tsx:842
 msgid "Follow back"
@@ -3943,11 +3944,11 @@ msgstr "Подписчики, которых вы знаете"
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:529
+#: src/components/ProfileCard.tsx:540
 #: src/components/ProfileHoverCard/index.web.tsx:495
 #: src/components/ProfileHoverCard/index.web.tsx:506
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:254
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:374
 #: src/screens/VideoFeed/index.tsx:855
 #: src/view/com/notifications/NotificationFeedItem.tsx:813
 #: src/view/com/notifications/NotificationFeedItem.tsx:830
@@ -3960,8 +3961,8 @@ msgctxt "feed-name"
 msgid "Following"
 msgstr "Подписки"
 
-#: src/components/ProfileCard.tsx:492
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:96
+#: src/components/ProfileCard.tsx:503
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:244
 #: src/view/com/notifications/NotificationFeedItem.tsx:767
 msgid "Following {0}"
 msgstr "Подписка на {0}"
@@ -4035,11 +4036,11 @@ msgstr "Забудьте о шуме"
 msgid "Forgot Password"
 msgstr "Забыли пароль"
 
-#: src/screens/Login/LoginForm.tsx:261
+#: src/screens/Login/LoginForm.tsx:258
 msgid "Forgot password?"
 msgstr "Забыли пароль?"
 
-#: src/screens/Login/LoginForm.tsx:272
+#: src/screens/Login/LoginForm.tsx:269
 msgid "Forgot?"
 msgstr "Забыли пароль?"
 
@@ -4100,7 +4101,7 @@ msgstr "Получайте уведомления, когда люди репо�
 msgid "Get notifications when people repost your posts."
 msgstr "Получайте уведомления, когда люди репостят ваши посты."
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:89
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:91
 msgid "Get notified about new posts"
 msgstr "Получайте уведомления о новых постах"
 
@@ -4116,7 +4117,7 @@ msgstr ""
 msgid "Get notified of this account’s activity"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:82
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:84
 msgid "Get notified when {name} posts"
 msgstr ""
 
@@ -4482,7 +4483,7 @@ msgid "Host:"
 msgstr "Хост:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:83
-#: src/screens/Login/LoginForm.tsx:187
+#: src/screens/Login/LoginForm.tsx:184
 msgid "Hosting provider"
 msgstr "Хостинг-провайдер"
 
@@ -4618,7 +4619,7 @@ msgstr "В приложении, Push, Люди, на которых вы под
 msgid "Inbox zero!"
 msgstr "Почтовый ящик пуст!"
 
-#: src/screens/Login/LoginForm.tsx:167
+#: src/screens/Login/LoginForm.tsx:164
 msgid "Incorrect username or password"
 msgstr "Неверный псевдоним или пароль"
 
@@ -4638,7 +4639,7 @@ msgstr "Введите новый пароль"
 msgid "Input password for account deletion"
 msgstr "Введите пароль для удаления учётной записи"
 
-#: src/screens/Login/LoginForm.tsx:302
+#: src/screens/Login/LoginForm.tsx:296
 msgid "Input the code which has been emailed to you"
 msgstr "Введите код, который был отправлен вам по электронной почте"
 
@@ -4658,7 +4659,7 @@ msgstr "Представляем уведомления об активност�
 msgid "Introducing saved posts AKA bookmarks"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:159
+#: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "Неверный код подтверждения 2FA."
@@ -4676,7 +4677,7 @@ msgstr ""
 msgid "Invalid report subject"
 msgstr "Недопустимая тема отчета"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:91
+#: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "Invalid Verification Code"
 msgstr "Неверный код подтверждения"
 
@@ -4810,7 +4811,7 @@ msgid "Last initiated just now"
 msgstr "Последнее инициирование только что"
 
 #: src/screens/Hashtag.tsx:101
-#: src/screens/Search/SearchResults.tsx:59
+#: src/screens/Search/SearchResults.tsx:61
 #: src/screens/Topic.tsx:77
 msgid "Latest"
 msgstr "Недавние"
@@ -4960,7 +4961,7 @@ msgstr ""
 msgid "Like this feed"
 msgstr "Лайкнуть эту ленту"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:270
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:146
 msgid "Like this labeler"
 msgstr "Лайкнуть этот маркировщик"
 
@@ -4982,8 +4983,8 @@ msgstr "Понравилось {0, plural, one {# пользователю} othe
 
 #: src/components/LabelingServiceCard/index.tsx:96
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:490
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:290
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:304
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:166
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:180
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Понравилось {likeCount, plural, one {# пользователю} other {# пользователям}}"
 
@@ -5543,7 +5544,7 @@ msgid "Navigate to starter pack"
 msgstr "Перейти к стартовому набору"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:357
+#: src/screens/Login/LoginForm.tsx:347
 msgid "Navigates to the next screen"
 msgstr "Переходит к следующему экрану"
 
@@ -5679,8 +5680,8 @@ msgstr "Новости"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:356
-#: src/screens/Login/LoginForm.tsx:363
+#: src/screens/Login/LoginForm.tsx:346
+#: src/screens/Login/LoginForm.tsx:353
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
 #: src/screens/Onboarding/StepFinished/index.tsx:341
@@ -5733,8 +5734,8 @@ msgstr "Нет изображения"
 msgid "No likes yet"
 msgstr "Пока нет лайков"
 
-#: src/components/ProfileCard.tsx:514
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
+#: src/components/ProfileCard.tsx:525
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:269
 #: src/view/com/notifications/NotificationFeedItem.tsx:787
 msgid "No longer following {0}"
 msgstr "Вы больше не подписаны на {0}"
@@ -5801,11 +5802,9 @@ msgstr "Нет результатов"
 msgid "No results found for \"{query}\""
 msgstr "Ничего не найдено по запросу \"{query}\""
 
-#: src/screens/Search/SearchResults.tsx:313
-#: src/screens/Search/SearchResults.tsx:349
-#: src/screens/Search/SearchResults.tsx:394
-msgid "No results found for {query}"
-msgstr "Ничего не найдено по запросу \"{query}\""
+#: src/screens/Search/SearchResults.tsx:167
+msgid "No results found for \"<0>{query}</0>\"."
+msgstr ""
 
 #: src/screens/Search/Explore.tsx:797
 msgid "No results."
@@ -5952,7 +5951,7 @@ msgid "Oh no!"
 msgstr "О нет!"
 
 #. Confirm button text.
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:347
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:222
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:234
@@ -6182,7 +6181,7 @@ msgstr ""
 msgid "Opens live status dialog"
 msgstr "Открывает диалоговое окно статуса прямого эфира"
 
-#: src/screens/Login/LoginForm.tsx:262
+#: src/screens/Login/LoginForm.tsx:259
 msgid "Opens password reset form"
 msgstr "Открывает форму сброса пароля"
 
@@ -6283,7 +6282,7 @@ msgstr "Страница не найдена"
 msgid "Page Not Found"
 msgstr "Страница не найдена"
 
-#: src/screens/Login/LoginForm.tsx:232
+#: src/screens/Login/LoginForm.tsx:229
 #: src/screens/Settings/AccountSettings.tsx:121
 #: src/screens/Settings/AccountSettings.tsx:125
 #: src/screens/Signup/StepInfo/index.tsx:231
@@ -6319,7 +6318,7 @@ msgid "Pause video"
 msgstr "Приостановить видео"
 
 #: src/screens/ProfileList/index.tsx:166
-#: src/screens/Search/SearchResults.tsx:69
+#: src/screens/Search/SearchResults.tsx:71
 #: src/screens/StarterPack/StarterPackScreen.tsx:189
 msgid "People"
 msgstr "Люди"
@@ -6528,7 +6527,7 @@ msgstr "Пожалуйста, введите код приглашения."
 msgid "Please enter your new email address."
 msgstr "Пожалуйста, введите новый адрес электронной почты."
 
-#: src/screens/Login/LoginForm.tsx:102
+#: src/screens/Login/LoginForm.tsx:99
 msgid "Please enter your password"
 msgstr "Пожалуйста, введите ваш пароль"
 
@@ -6536,7 +6535,7 @@ msgstr "Пожалуйста, введите ваш пароль"
 msgid "Please enter your password as well:"
 msgstr "Пожалуйста, также введите ваш пароль:"
 
-#: src/screens/Login/LoginForm.tsx:97
+#: src/screens/Login/LoginForm.tsx:94
 msgid "Please enter your username"
 msgstr "Пожалуйста, введите ваш псевдоним"
 
@@ -6592,7 +6591,7 @@ msgstr "Политика"
 msgid "Porn"
 msgstr "Порнография"
 
-#: src/screens/PostThread/index.tsx:504
+#: src/screens/PostThread/index.tsx:528
 msgctxt "description"
 msgid "Post"
 msgstr "Пост"
@@ -6916,6 +6915,11 @@ msgstr "Реактивировать свою учётную запись"
 
 #: src/screens/PostThread/components/ThreadItemReadMore.tsx:92
 msgid "Read {0, plural, one {# more reply} other {# more replies}}"
+msgstr ""
+
+#: src/screens/Search/SearchResults.tsx:179
+msgctxt "english-only-resource"
+msgid "read about how to use search filters"
 msgstr ""
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
@@ -7424,11 +7428,11 @@ msgstr "Отправить повторно"
 msgid "Resend email"
 msgstr "Отправить письмо повторно"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:130
+#: src/components/intents/VerifyEmailIntentDialog.tsx:123
 msgid "Resend Email"
 msgstr "Отправить письмо повторно"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:122
+#: src/components/intents/VerifyEmailIntentDialog.tsx:116
 msgid "Resend Verification Email"
 msgstr "Отправить письмо с подтверждением повторно"
 
@@ -7450,7 +7454,7 @@ msgstr "Сбросить состояние входа в систему"
 msgid "Reset password"
 msgstr "Сбросить пароль"
 
-#: src/screens/Login/LoginForm.tsx:337
+#: src/screens/Login/LoginForm.tsx:327
 msgid "Retries signing in"
 msgstr "Повторная попытка входа в систему"
 
@@ -7466,8 +7470,8 @@ msgstr "Повторяет последнее действие, которое �
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:58
 #: src/components/StarterPack/ProfileStarterPacks.tsx:342
-#: src/screens/Login/LoginForm.tsx:336
-#: src/screens/Login/LoginForm.tsx:343
+#: src/screens/Login/LoginForm.tsx:326
+#: src/screens/Login/LoginForm.tsx:333
 #: src/screens/Messages/ChatList.tsx:292
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:219
@@ -7681,7 +7685,7 @@ msgid "Search GIFs"
 msgstr "Поиск GIF-файлов"
 
 #: src/screens/Hashtag.tsx:221
-#: src/screens/Search/SearchResults.tsx:255
+#: src/screens/Search/SearchResults.tsx:290
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
@@ -8261,8 +8265,8 @@ msgstr "Показывает содержимое"
 #: src/screens/Hashtag.tsx:225
 #: src/screens/Login/index.tsx:136
 #: src/screens/Login/index.tsx:157
-#: src/screens/Login/LoginForm.tsx:184
-#: src/screens/Search/SearchResults.tsx:260
+#: src/screens/Login/LoginForm.tsx:181
+#: src/screens/Search/SearchResults.tsx:294
 #: src/view/com/auth/SplashScreen.tsx:81
 #: src/view/com/auth/SplashScreen.tsx:89
 #: src/view/com/auth/SplashScreen.web.tsx:127
@@ -8580,11 +8584,11 @@ msgstr "Подпишитесь на @{0}, чтобы использовать э
 msgid "Subscribe to account activity"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:233
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:343
 msgid "Subscribe to Labeler"
 msgstr "Подписаться на маркировщика"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:199
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
 msgid "Subscribe to this labeler"
 msgstr "Подписаться на этого маркировщика"
 
@@ -8765,7 +8769,7 @@ msgstr "Поле ввода текста"
 msgid "Thank you for your feedback! It has been sent to the feed operator."
 msgstr "Спасибо за ваш отзыв! Он был отправлен оператору ленты."
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:82
+#: src/components/intents/VerifyEmailIntentDialog.tsx:76
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Спасибо, вы успешно подтвердили свой адрес электронной почты. Вы можете закрыть этот диалог."
 
@@ -8799,7 +8803,8 @@ msgstr "Вот и все, ребята!"
 msgid "That's everything!"
 msgstr "Это всё!"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:332
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:391
 #: src/view/com/profile/ProfileMenu.tsx:483
 msgid "The account will be able to interact with you after unblocking."
 msgstr "Учётная запись сможет взаимодействовать с вами после разблокировки."
@@ -8900,7 +8905,7 @@ msgstr "Форма поддержки перемещена. Если вам ну
 msgid "The Terms of Service have been moved to"
 msgstr "Условия Использования перенесены в"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:94
+#: src/components/intents/VerifyEmailIntentDialog.tsx:88
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "Вы ввели неверный код подтверждения. Пожалуйста, убедитесь, что перешли по правильной ссылке подтверждения, или запросите новую."
 
@@ -8924,7 +8929,7 @@ msgid "There was an issue contacting the server"
 msgstr "При соединении с сервером возникла проблема"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:419
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:109
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:98
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "Возникла проблема соединения с сервером, проверьте подключение к Интернету и повторите попытку."
 
@@ -8969,9 +8974,10 @@ msgstr "Возникла проблема при изменении ваших �
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:420
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:90
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:101
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:105
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:128
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:142
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:88
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:253
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:294
 #: src/view/com/profile/ProfileMenu.tsx:136
 #: src/view/com/profile/ProfileMenu.tsx:146
 #: src/view/com/profile/ProfileMenu.tsx:160
@@ -9310,7 +9316,7 @@ msgid "Toggles the sound"
 msgstr "Переключает звук"
 
 #: src/screens/Hashtag.tsx:90
-#: src/screens/Search/SearchResults.tsx:49
+#: src/screens/Search/SearchResults.tsx:51
 #: src/screens/Topic.tsx:71
 msgid "Top"
 msgstr "Лучшее"
@@ -9356,6 +9362,11 @@ msgstr ""
 msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
 msgstr "Доверие рождается в отношениях, сообществах и общем контексте, поэтому мы также вводим <0>доверенных верификаторов</0> — организации, которые могут непосредственно вручать верификацию."
 
+#: src/screens/Search/SearchResults.tsx:175
+msgctxt "english-only-resource"
+msgid "Try a different search term, or <0>read about how to use search filters</0>."
+msgstr ""
+
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
 msgid "Try again"
@@ -9393,7 +9404,7 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:93
-#: src/screens/Login/LoginForm.tsx:172
+#: src/screens/Login/LoginForm.tsx:169
 #: src/screens/Login/SetNewPasswordForm.tsx:81
 #: src/screens/Signup/index.tsx:77
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -9423,15 +9434,16 @@ msgstr "Информация о ленте недоступна"
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:112
 #: src/components/dms/MessagesListBlockedFooter.tsx:119
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:214
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:336
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:334
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:394
 #: src/screens/ProfileList/components/Header.tsx:171
 #: src/screens/ProfileList/components/Header.tsx:178
 #: src/view/com/profile/ProfileMenu.tsx:495
 msgid "Unblock"
 msgstr "Разблокировать"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:219
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:338
 msgctxt "action"
 msgid "Unblock"
 msgstr "Разблокировать"
@@ -9443,7 +9455,8 @@ msgstr "Разблокировать"
 msgid "Unblock account"
 msgstr "Разблокировать учётную запись"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:330
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:389
 #: src/view/com/profile/ProfileMenu.tsx:477
 msgid "Unblock Account?"
 msgstr "Разблокировать учётную запись?"
@@ -9468,7 +9481,7 @@ msgstr "Отменить репост"
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr "Отменить репост ({0, plural, one {# репост} few {# репоста} other {# репостов}})"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:242
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:365
 msgid "Unfollow {0}"
 msgstr "Отписаться от {0}"
 
@@ -9598,7 +9611,7 @@ msgstr ""
 msgid "Unsnooze email reminder"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:231
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:341
 msgid "Unsubscribe"
 msgstr "Отписаться"
 
@@ -9607,7 +9620,7 @@ msgstr "Отписаться"
 msgid "Unsubscribe from list"
 msgstr "Отписаться от списка"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:198
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:308
 msgid "Unsubscribe from this labeler"
 msgstr "Отписаться от этого маркировщика"
 
@@ -9793,7 +9806,7 @@ msgstr ""
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:205
+#: src/screens/Login/LoginForm.tsx:202
 msgid "Username or email address"
 msgstr "Псевдоним или электронная почта"
 
@@ -9864,7 +9877,7 @@ msgstr "Проверка DNS-записи"
 msgid "Verify email code"
 msgstr "Подтвердить код электронной почты"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:67
+#: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
 msgstr "Диалоговое окно подтверждения электронной почты"
 
@@ -9969,7 +9982,7 @@ msgstr ""
 msgid "View {0}'s avatar"
 msgstr "Просмотреть аватар {0}"
 
-#: src/components/ProfileCard.tsx:136
+#: src/components/ProfileCard.tsx:142
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:456
 #: src/screens/Search/components/SearchProfileCard.tsx:36
 #: src/screens/VideoFeed/index.tsx:797
@@ -10152,7 +10165,7 @@ msgstr "Мы оцениваем {estimatedTime} до готовности ваш
 msgid "We have partnered with <0>KWS</0> to verify that you’re an adult. When you click \"Begin\" below, KWS will check if you have previously verified your age using this email address for other games/services powered by KWS technology. If not, KWS will email you instructions for verifying your age. When you’re done, you'll be brought back to continue using Bluesky."
 msgstr ""
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:107
+#: src/components/intents/VerifyEmailIntentDialog.tsx:101
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "Мы повторно отправили письмо с подтверждением на <0>{0}</0>."
 
@@ -10245,7 +10258,8 @@ msgstr "Нам очень жаль, но нам не удалось найти �
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Нам очень жаль, мы не смогли сейчас загрузить ваши игнорируемые слова. Пожалуйста, попробуйте ещё раз."
 
-#: src/screens/Search/SearchResults.tsx:287
+#: src/screens/Search/SearchResults.tsx:320
+#: src/screens/Search/SearchResults.tsx:406
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Нам очень жаль, нам не удалось выполнить поиск по вашему запросу. Пожалуйста, попробуйте ещё раз через несколько минут."
 
@@ -10258,7 +10272,7 @@ msgstr "Нам очень жаль! Пост, на который вы отве�
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Нам очень жаль! Мы не можем найти страницу, которую вы искали."
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:341
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:216
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr "Нам очень жаль! Вы можете подписаться только на двадцать маркировщиков, и вы достигли своего лимита в двадцать."
 
