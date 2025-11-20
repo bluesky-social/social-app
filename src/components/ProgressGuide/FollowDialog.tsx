@@ -8,7 +8,7 @@ import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
 import {useSession} from '#/state/session'
@@ -128,7 +128,7 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
     isFetching: isFetchingSearchResults,
     error: searchResultsError,
     isError: isSearchResultsError,
-  } = useActorSearchPaginated({
+  } = useActorSearch({
     enabled: !!searchText,
     query: searchText,
   })
