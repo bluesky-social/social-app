@@ -57,16 +57,19 @@ export function useActorSearch({
 function select(data: InfiniteData<AppBskyActorSearchActors.OutputSchema>) {
   // enforce uniqueness
   const dids = new Set()
-  for (const page of data.pages) {
-    const actors = []
-    for (const actor of page.actors) {
-      if (dids.has(actor.did)) continue
-      dids.add(actor.did)
-      actors.push(actor)
-    }
-    page.actors = actors
+
+  return {
+    ...data,
+    pages: data.pages.map(page => ({
+      actors: page.actors.filter(actor => {
+        if (dids.has(actor.did)) {
+          return false
+        }
+        dids.add(actor.did)
+        return true
+      }),
+    })),
   }
-  return data
 }
 
 export function* findAllProfilesInQueryData(
