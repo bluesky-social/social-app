@@ -23,6 +23,10 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     ModuleDefinition {
       Name("ExpoReceiveAndroidIntents")
 
+      OnCreate {
+        handleIntent(appContext.currentActivity?.intent)
+      }
+
       OnNewIntent {
         handleIntent(it)
       }
