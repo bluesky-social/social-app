@@ -55,7 +55,7 @@ jobs:
         run: git fetch origin main:main --depth 100
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -86,7 +86,7 @@ jobs:
         run: yarn typecheck
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           expo-version: latest
@@ -172,13 +172,13 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         with:
           expo-version: latest
           eas-version: latest
@@ -188,7 +188,7 @@ jobs:
         run: yarn global add eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -200,7 +200,7 @@ jobs:
           version: 1.16.2
 
       - name: 💾 Cache Pods
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -276,13 +276,13 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         with:
           expo-version: latest
           eas-version: latest
@@ -297,7 +297,7 @@ jobs:
           java-version: "17"
 
       - name: ⚙️ Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: 🔤 Compile translations
         run: yarn intl:build
