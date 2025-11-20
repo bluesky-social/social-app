@@ -8,8 +8,8 @@ import {useRequireAuth} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner3_Rounded as Repost} from '#/components/icons/Repost'
+import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
+import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {Text} from '#/components/Typography'
 import {
@@ -84,7 +84,7 @@ let RepostButton = ({
                 }),
               )
         }>
-        <PostControlButtonIcon icon={Repost} />
+        <PostControlButtonIcon icon={RepostIcon} />
         {typeof repostCount !== 'undefined' && repostCount > 0 && (
           <PostControlButtonText testID="repostCount">
             {formatPostStatCount(repostCount)}
@@ -156,7 +156,7 @@ let RepostButtonDialogInner = ({
             size="large"
             variant="ghost"
             color="primary">
-            <Repost size="lg" fill={t.palette.primary_500} />
+            <RepostIcon size="lg" fill={t.palette.primary_500} />
             <Text style={[a.font_semi_bold, a.text_xl]}>
               {isReposted ? (
                 <Trans>Remove repost</Trans>
@@ -178,7 +178,7 @@ let RepostButtonDialogInner = ({
             size="large"
             variant="ghost"
             color="primary">
-            <Quote
+            <QuoteIcon
               size="lg"
               fill={
                 embeddingDisabled
