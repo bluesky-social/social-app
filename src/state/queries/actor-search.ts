@@ -50,7 +50,23 @@ export function useActorSearch({
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     placeholderData: maintainData ? keepPreviousData : undefined,
+    select,
   })
+}
+
+function select(data: InfiniteData<AppBskyActorSearchActors.OutputSchema>) {
+  // enforce uniqueness
+  const dids = new Set()
+  for (const page of data.pages) {
+    const actors = []
+    for (const actor of page.actors) {
+      if (dids.has(actor.did)) continue
+      dids.add(actor.did)
+      actors.push(actor)
+    }
+    page.actors = actors
+  }
+  return data
 }
 
 export function* findAllProfilesInQueryData(
