@@ -51,7 +51,7 @@ export function BottomBarWeb() {
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {footerHeight} = useShellLayout()
+  const {setFooterHeight} = useShellLayout()
   const hideBorder = useHideBottomBarBorder()
   const iconWidth = 26
 
@@ -83,7 +83,7 @@ export function BottomBarWeb() {
           : t.atoms.border_contrast_low,
         footerMinimalShellTransform,
       ]}
-      onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>
+      onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
       {hasSession ? (
         <>
           <NavItem

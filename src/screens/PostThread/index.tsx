@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
-import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+import {type LayoutChangeEvent, useWindowDimensions, View} from 'react-native'
 import {Trans} from '@lingui/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -56,6 +55,8 @@ export function PostThread({uri}: {uri: string}) {
     anchorPostSource?.feedSourceInfo,
     hasSession,
   )
+
+  const [promptHeight, setPromptHeight] = useState(43)
 
   /*
    * One query to rule them all
@@ -494,6 +495,7 @@ export function PostThread({uri}: {uri: string}) {
   )
 
   const defaultListFooterHeight = hasParents ? windowHeight - 200 : undefined
+  const hasPrompt = !gtMobile && canReply && hasSession
 
   return (
     <PostThreadContextProvider context={thread.context}>
@@ -573,29 +575,37 @@ export function PostThread({uri}: {uri: string}) {
            * Default: 50
            */
           updateCellsBatchingPeriod={100}
+          footerExtensionHeight={hasPrompt ? promptHeight : 0}
         />
       )}
 
-      {!gtMobile && canReply && hasSession && (
-        <MobileComposePrompt onPressReply={onReplyToAnchor} />
+      {hasPrompt && (
+        <MobileComposePrompt
+          onPressReply={onReplyToAnchor}
+          onLayout={evt =>
+            setPromptHeight(Math.round(evt.nativeEvent.layout.height))
+          }
+        />
       )}
     </PostThreadContextProvider>
   )
 }
 
-function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
+function MobileComposePrompt({
+  onPressReply,
+  onLayout,
+}: {
+  onPressReply: () => unknown
+  onLayout?: (event: LayoutChangeEvent) => void
+}) {
   const {footerHeight} = useShellLayout()
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      bottom: footerHeight.get(),
-    }
-  })
-
   return (
-    <Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
+    <View
+      style={[a.fixed, a.left_0, a.right_0, {bottom: footerHeight}]}
+      onLayout={onLayout}>
       <ThreadComposePrompt onPressCompose={onPressReply} />
-    </Animated.View>
+    </View>
   )
 }
 

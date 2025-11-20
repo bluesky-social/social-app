@@ -218,36 +218,35 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <GeolocationProvider>
-      <A11yProvider>
-        <KeyboardControllerProvider>
-          <SessionProvider>
-            <PrefsStateProvider>
-              <I18nProvider>
-                <ShellStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <BottomSheetProvider>
-                            <StarterPackProvider>
-                              <SafeAreaProvider
-                                initialMetrics={initialWindowMetrics}>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <GeolocationProvider>
+        <A11yProvider>
+          <KeyboardControllerProvider>
+            <SessionProvider>
+              <PrefsStateProvider>
+                <I18nProvider>
+                  <ShellStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <BottomSheetProvider>
+                              <StarterPackProvider>
                                 <InnerApp />
-                              </SafeAreaProvider>
-                            </StarterPackProvider>
-                          </BottomSheetProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </ShellStateProvider>
-              </I18nProvider>
-            </PrefsStateProvider>
-          </SessionProvider>
-        </KeyboardControllerProvider>
-      </A11yProvider>
-    </GeolocationProvider>
+                              </StarterPackProvider>
+                            </BottomSheetProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </ShellStateProvider>
+                </I18nProvider>
+              </PrefsStateProvider>
+            </SessionProvider>
+          </KeyboardControllerProvider>
+        </A11yProvider>
+      </GeolocationProvider>
+    </SafeAreaProvider>
   )
 }
 
