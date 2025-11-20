@@ -6,7 +6,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {useAutoplayDisabled} from '#/state/preferences'
+import {useAutoplayDisabledPref} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -32,7 +32,7 @@ export function VideoEmbedInnerNative({
 }) {
   const {_} = useLingui()
   const videoRef = useRef<BlueskyVideoView>(null)
-  const autoplayDisabled = useAutoplayDisabled()
+  const {videoAutoplayState} = useAutoplayDisabledPref()
   const isWithinMessage = useIsWithinMessage()
   const [muted, setMuted] = useVideoMuteState()
 
@@ -54,8 +54,8 @@ export function VideoEmbedInnerNative({
     <View style={[a.flex_1, a.relative]}>
       <BlueskyVideoView
         url={embed.playlist}
-        autoplay={!autoplayDisabled && !isWithinMessage}
-        beginMuted={autoplayDisabled ? false : muted}
+        autoplay={!videoAutoplayState && !isWithinMessage}
+        beginMuted={videoAutoplayState ? false : muted}
         style={[a.rounded_sm]}
         onActiveChange={e => {
           setIsActive(e.nativeEvent.isActive)
