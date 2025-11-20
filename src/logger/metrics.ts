@@ -263,6 +263,13 @@ export type MetricEvents = {
   'post:unbookmark': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
+  'post:view': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
   'bookmarks:view': {}
   'bookmarks:post-clicked': {}
   'profile:follow': {
