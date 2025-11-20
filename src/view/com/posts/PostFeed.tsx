@@ -843,24 +843,30 @@ let PostFeed = ({
   const seenPostUrisRef = useRef<Set<string>>(new Set())
 
   // Helper to calculate position in feed (count only root posts, not interstitials or thread replies)
-  const calculatePostPosition = useCallback(
-    (rowIndex: number): number => {
-      let position = 0
-      for (let i = 0; i < rowIndex && i < feedItems.length; i++) {
-        const row = feedItems[i]
-        if (row.type === 'sliceItem') {
-          // Only count root posts (indexInSlice === 0), not thread replies
-          if (row.indexInSlice === 0) {
-            position++
+  const getPostPosition = useNonReactiveCallback(
+    (type: FeedRow['type'], key: string) => {
+      // Calculate position: find the row index in feedItems, then calculate position
+      const rowIndex = feedItems.findIndex(
+        row => row.type === 'sliceItem' && row.key === key,
+      )
+
+      if (rowIndex >= 0) {
+        let position = 0
+        for (let i = 0; i < rowIndex && i < feedItems.length; i++) {
+          const row = feedItems[i]
+          if (row.type === 'sliceItem') {
+            // Only count root posts (indexInSlice === 0), not thread replies
+            if (row.indexInSlice === 0) {
+              position++
+            }
+          } else if (row.type === 'videoGridRow') {
+            // Count each video in the grid row
+            position += row.items.length
           }
-        } else if (row.type === 'videoGridRow') {
-          // Count each video in the grid row
-          position += row.items.length
         }
+        return position
       }
-      return position
     },
-    [feedItems],
   )
 
   const onItemSeen = useCallback(
@@ -878,12 +884,7 @@ let PostFeed = ({
         if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
           seenPostUrisRef.current.add(post.uri)
 
-          // Calculate position: find the row index in feedItems, then calculate position
-          const rowIndex = feedItems.findIndex(
-            row => row.type === 'sliceItem' && row.key === item.key,
-          )
-          const position =
-            rowIndex >= 0 ? calculatePostPosition(rowIndex) : undefined
+          const position = getPostPosition('sliceItem', item.key)
 
           logger.metric(
             'post:view',
@@ -926,12 +927,7 @@ let PostFeed = ({
           if (!seenPostUrisRef.current.has(post.uri)) {
             seenPostUrisRef.current.add(post.uri)
 
-            // Calculate position: find the row index in feedItems, then calculate position
-            const rowIndex = feedItems.findIndex(
-              row => row.type === 'videoGridRow' && row.key === item.key,
-            )
-            const position =
-              rowIndex >= 0 ? calculatePostPosition(rowIndex) + i : undefined
+            const position = getPostPosition('videoGridRow', item.key)
 
             logger.metric(
               'post:view',
@@ -948,7 +944,7 @@ let PostFeed = ({
         }
       }
     },
-    [feedFeedback, feed, liveNowConfig, feedItems, calculatePostPosition],
+    [feedFeedback, feed, liveNowConfig, getPostPosition],
   )
 
   return (
