@@ -187,6 +187,7 @@ const MinimalHeader = memo(function MinimalHeader({
             <ProfileCard.Name
               profile={profile}
               moderationOpts={moderationOpts}
+              textStyle={[a.font_bold]}
             />
           ) : (
             <ProfileCard.NamePlaceholder />
@@ -203,7 +204,7 @@ const MinimalHeader = memo(function MinimalHeader({
                   profile={profile}
                   moderation={moderation}
                   moderationOpts={moderationOpts}
-                  disableActivityNotificationsHint
+                  minimal
                 />
               </View>
             )

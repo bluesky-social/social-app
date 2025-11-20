@@ -210,14 +210,14 @@ export function HeaderStandardButtons({
   moderationOpts,
   onFollow,
   onUnfollow,
-  disableActivityNotificationsHint,
+  minimal,
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
   moderationOpts: ModerationOpts
   onFollow?: () => void
   onUnfollow?: () => void
-  disableActivityNotificationsHint?: boolean
+  minimal?: boolean
 }) {
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
@@ -271,7 +271,7 @@ export function HeaderStandardButtons({
               moderation.ui('displayName'),
             )}`,
           ),
-          {type: 'error'},
+          {type: 'default'},
         )
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
@@ -318,8 +318,7 @@ export function HeaderStandardButtons({
             size="small"
             color="secondary"
             onPress={editProfileControl.open}
-            label={_(msg`Edit profile`)}
-            style={[a.rounded_full]}>
+            label={_(msg`Edit profile`)}>
             <ButtonText>
               <Trans>Edit Profile</Trans>
             </ButtonText>
@@ -334,8 +333,7 @@ export function HeaderStandardButtons({
             color="secondary"
             label={_(msg`Unblock`)}
             disabled={!hasSession}
-            onPress={() => unblockPromptControl.open()}
-            style={[a.rounded_full]}>
+            onPress={() => unblockPromptControl.open()}>
             <ButtonText>
               <Trans context="action">Unblock</Trans>
             </ButtonText>
@@ -343,39 +341,45 @@ export function HeaderStandardButtons({
         )
       ) : !profile.viewer?.blockedBy ? (
         <>
-          {hasSession && subscriptionsAllowed && (
-            <SubscribeProfileButton
-              profile={profile}
-              moderationOpts={moderationOpts}
-              disableHint={disableActivityNotificationsHint}
-            />
-          )}
-          {hasSession && <MessageProfileButton profile={profile} />}
-
-          <Button
-            testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
-            size="small"
-            color={profile.viewer?.following ? 'secondary' : 'primary'}
-            label={
-              profile.viewer?.following
-                ? _(msg`Unfollow ${profile.handle}`)
-                : _(msg`Follow ${profile.handle}`)
-            }
-            onPress={
-              profile.viewer?.following ? onPressUnfollow : onPressFollow
-            }
-            style={[a.rounded_full]}>
-            {!profile.viewer?.following && <ButtonIcon icon={Plus} />}
-            <ButtonText>
-              {profile.viewer?.following ? (
-                <Trans>Following</Trans>
-              ) : profile.viewer?.followedBy ? (
-                <Trans>Follow back</Trans>
-              ) : (
-                <Trans>Follow</Trans>
+          {hasSession && (!minimal || profile.viewer?.following) && (
+            <>
+              {subscriptionsAllowed && (
+                <SubscribeProfileButton
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  disableHint={minimal}
+                />
               )}
-            </ButtonText>
-          </Button>
+
+              <MessageProfileButton profile={profile} />
+            </>
+          )}
+
+          {(!minimal || !profile.viewer?.following) && (
+            <Button
+              testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
+              size="small"
+              color={profile.viewer?.following ? 'secondary' : 'primary'}
+              label={
+                profile.viewer?.following
+                  ? _(msg`Unfollow ${profile.handle}`)
+                  : _(msg`Follow ${profile.handle}`)
+              }
+              onPress={
+                profile.viewer?.following ? onPressUnfollow : onPressFollow
+              }>
+              {!profile.viewer?.following && <ButtonIcon icon={Plus} />}
+              <ButtonText>
+                {profile.viewer?.following ? (
+                  <Trans>Following</Trans>
+                ) : profile.viewer?.followedBy ? (
+                  <Trans>Follow back</Trans>
+                ) : (
+                  <Trans>Follow</Trans>
+                )}
+              </ButtonText>
+            </Button>
+          )}
         </>
       ) : null}
       <ProfileMenu profile={profile} />
