@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:09\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -566,7 +566,7 @@ msgstr "Om"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:100
 msgid "Abusive or discriminatory behavior"
-msgstr ""
+msgstr "Grov eller diskriminerende adfærd"
 
 #. Accept a chat request
 #: src/screens/Messages/components/RequestButtons.tsx:269
@@ -637,7 +637,7 @@ msgstr "Kontoindstillinger"
 
 #: src/components/dialogs/ServerInput.tsx:141
 msgid "Account provider"
-msgstr ""
+msgstr "Kontoudbyder"
 
 #: src/screens/Settings/Settings.tsx:662
 msgid "Account removed from quick access"
@@ -845,7 +845,7 @@ msgstr "Porno"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:66
 msgid "Adult content"
-msgstr ""
+msgstr "Voksenindhold"
 
 #: src/components/moderation/ContentHider.tsx:120
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
@@ -869,7 +869,7 @@ msgstr "Voksenindholdsmærkater"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:76
 msgid "Adult sexual abuse content"
-msgstr ""
+msgstr "Seksuelt overgrebsmateriale med voksne"
 
 #: src/screens/Moderation/index.tsx:468
 msgid "Advanced"
@@ -925,7 +925,7 @@ msgstr "Tillad adgang til dine direkte beskeder"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
-msgstr ""
+msgstr "Tillad svar fra svar"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
@@ -944,11 +944,11 @@ msgstr "Tillad andre at blive notificeret om dine opslag"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
-msgstr ""
+msgstr "Tillad svar fra personer, du følger"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
-msgstr ""
+msgstr "Tillad svar fra personer, du har omtalt"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
@@ -956,11 +956,11 @@ msgstr "Tillad citatopslag"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
-msgstr ""
+msgstr "Tillad svar fra brugere i {0}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
-msgstr ""
+msgstr "Tillad svar fra dine følgere"
 
 #: src/screens/Settings/AppPasswords.tsx:199
 msgid "Allows access to direct messages"
@@ -1049,7 +1049,7 @@ msgstr "Der opstod en fejl under indlæsning af videoen. Prøv igen senere."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
-msgstr ""
+msgstr "Der opstod en fejl ved indlæsning af dine lister :/"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:75
 msgid "An error occurred while saving the QR code!"
@@ -1111,11 +1111,11 @@ msgstr "og"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:88
 msgid "Animal sexual abuse"
-msgstr ""
+msgstr "Seksuelle overgreb mod dyr"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:130
 msgid "Animal welfare"
-msgstr ""
+msgstr "Dyrevelfærd"
 
 #: src/lib/interests.ts:52
 #: src/screens/Onboarding/index.tsx:60
@@ -1137,11 +1137,11 @@ msgstr "Bluesky introducerer verificerede konti"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
-msgstr ""
+msgstr "Alle"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
-msgstr ""
+msgstr "Alle kan interagere"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
@@ -1356,11 +1356,11 @@ msgstr "Tilbage til Chats"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:216
 msgid "Banned activities or security violations"
-msgstr ""
+msgstr "Forbudte aktiviteter eller sikkerhedsbrud"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:227
 msgid "Banned user returning"
-msgstr ""
+msgstr "Blokeret bruger er vendt tilbage"
 
 #: src/view/screens/Lists.tsx:42
 #: src/view/screens/ModerationModlists.tsx:42
@@ -1463,7 +1463,7 @@ msgstr "Bloker bruger"
 
 #: src/components/dms/AfterReportDialog.tsx:180
 msgid "Block user and/or delete this conversation"
-msgstr ""
+msgstr "Bloker bruger og/eller slet denne samtale"
 
 #: src/components/Post/Embed/index.tsx:186
 msgid "Blocked"
@@ -1569,7 +1569,7 @@ msgstr "Bøger"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:215
 msgid "Breaking site rules"
-msgstr ""
+msgstr "Brud på fællesskabsregler"
 
 #: src/components/FeedInterstitials.tsx:436
 msgid "Browse more accounts on the Explore page"
@@ -1771,7 +1771,7 @@ msgstr "Skift adgangskode-dialog"
 
 #: src/components/moderation/ReportDialog/index.tsx:289
 msgid "Change report category"
-msgstr ""
+msgstr "Skift anmeldelseskategori"
 
 #: src/components/moderation/ReportDialog/index.tsx:369
 msgid "Change report reason"
@@ -1870,11 +1870,11 @@ msgstr "Tjek din indbakke for en e-mail med en bekræftelseskode og indtast den 
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:161
 msgid "Child safety"
-msgstr ""
+msgstr "Sikkerhed for børn"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:165
 msgid "Child Sexual Abuse Material (CSAM)"
-msgstr ""
+msgstr "Seksuelt overgrebsmateriale med børn"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:399
 msgid "Choose domain verification method"
@@ -2255,7 +2255,7 @@ msgstr "Indhold ikke tilgængeligt"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:192
 msgid "Content promoting or depicting self-harm"
-msgstr ""
+msgstr "Opfordring til eller afbildning af selvskade"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:52
 #: src/components/moderation/ScreenHider.tsx:99
@@ -2588,11 +2588,11 @@ msgstr "Tilpas din Bluesky-oplevelse"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:200
 msgid "Dangerous challenges or activities"
-msgstr ""
+msgstr "Farlige udfordringer eller aktiviteter"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:204
 msgid "Dangerous substances or drug abuse"
-msgstr ""
+msgstr "Farlige stoffer eller stofmisbrug"
 
 #: src/components/dialogs/Embed.tsx:168
 #: src/components/dialogs/Embed.tsx:170
@@ -2815,11 +2815,11 @@ msgstr "Deaktiver haptisk feedback"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
-msgstr ""
+msgstr "Deaktiver citatopslag af dette opslag"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
-msgstr ""
+msgstr "Deaktiver svar fuldstændigt"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
 msgid "Disable subtitles"
@@ -2992,7 +2992,7 @@ msgstr "Download CAR-fil"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:115
 msgid "Doxxing"
-msgstr ""
+msgstr "Privatlivskrænkelse"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:375
 msgid "Drop to add images"
@@ -3036,7 +3036,7 @@ msgstr "fx Brugere, der laver for mange reklameopslag."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:196
 msgid "Eating disorders"
-msgstr ""
+msgstr "Spiseforstyrrelser"
 
 #: src/screens/Settings/AccountSettings.tsx:145
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:252
@@ -3238,7 +3238,7 @@ msgstr "Aktiver push-notifikationer"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
-msgstr ""
+msgstr "Tillad citatopslag af dette opslag"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
@@ -3494,7 +3494,7 @@ msgstr "Indstillinger for eksterne medier"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:146
 msgid "Extremist content"
-msgstr ""
+msgstr "Ekstremistisk indhold"
 
 #: src/screens/Messages/components/RequestButtons.tsx:231
 msgctxt "toast"
@@ -3698,11 +3698,11 @@ msgstr "Kunne ikke verificere handle. Prøv igen."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:47
 msgid "Fake account or bot"
-msgstr ""
+msgstr "Falsk konto eller bot"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:55
 msgid "False information about elections"
-msgstr ""
+msgstr "Misinformation om valg"
 
 #: src/Navigation.tsx:291
 msgid "Feed"
@@ -4143,7 +4143,7 @@ msgstr "Sæt ansigt på din profil"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:142
 msgid "Glorification of violence"
-msgstr ""
+msgstr "Forherligelse af vold"
 
 #: src/components/dialogs/LinkWarning.tsx:111
 #: src/components/dialogs/LinkWarning.tsx:117
@@ -4254,11 +4254,11 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:169
 msgid "Grooming or predatory behavior"
-msgstr ""
+msgstr "Grooming eller kontrollerende adfærd"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:219
 msgid "Hacking or system attacks"
-msgstr ""
+msgstr "Hacking eller systemangreb"
 
 #: src/state/shell/progress-guide.tsx:220
 #: src/state/shell/progress-guide.tsx:230
@@ -4289,15 +4289,15 @@ msgstr "Haptisk feedback"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:99
 msgid "Harassment or hate"
-msgstr ""
+msgstr "Chikane eller had"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:189
 msgid "Harmful or high-risk activities"
-msgstr ""
+msgstr "Skadelige eller risikable aktiviteter"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:162
 msgid "Harming or endangering minors"
-msgstr ""
+msgstr "Udsættelse af mindreårige for skade eller fare"
 
 #: src/Navigation.tsx:539
 msgid "Hashtag"
@@ -4309,7 +4309,7 @@ msgstr "Hashtag {tag}"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:111
 msgid "Hate speech"
-msgstr ""
+msgstr "Hadtale"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:198
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:317
@@ -4379,7 +4379,7 @@ msgstr "Skjul tilpasningsindstillinger"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
-msgstr ""
+msgstr "Skjul lister"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:584
@@ -4497,7 +4497,7 @@ msgstr "Hvordan skal vi åbne dette link?"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:150
 msgid "Human trafficking"
-msgstr ""
+msgstr "Menneskehandel"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:133
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
@@ -4583,7 +4583,7 @@ msgstr "Billeder kan ikke gemmes, medmindre du giver adgang til dit fotobibliote
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:51
 msgid "Impersonation"
-msgstr ""
+msgstr "Falsk identitet"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:284
 msgid "In-app"
@@ -5144,11 +5144,11 @@ msgstr "Indlæs nye opslag"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
-msgstr ""
+msgstr "Indlæser lister..."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
-msgstr ""
+msgstr "Indlæser opslagsinteraktionsindstillinger..."
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:61
 msgid "Loading..."
@@ -5160,7 +5160,7 @@ msgstr "Log"
 
 #: src/components/AccountList.tsx:191
 msgid "Logged out"
-msgstr ""
+msgstr "Logget ud"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:106
 msgid "Logged-out visibility"
@@ -5313,7 +5313,7 @@ msgstr "Midnat"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:177
 msgid "Minor harassment or bullying"
-msgstr ""
+msgstr "Mild chikane eller mobning"
 
 #: src/Navigation.tsx:500
 msgid "Miscellaneous notifications"
@@ -5321,7 +5321,7 @@ msgstr "Diverse notifikationer"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:35
 msgid "Misleading"
-msgstr ""
+msgstr "Misvisende"
 
 #: src/Navigation.tsx:177
 #: src/screens/Moderation/index.tsx:100
@@ -6121,7 +6121,7 @@ msgstr "Åbner en dialog, hvor du kan tilføje en indholdsadvarsel til dit opsla
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
-msgstr ""
+msgstr "Åbner en dialog, hvor du kan angive, hvem der kan interagere med dette opslag"
 
 #: src/screens/Log.tsx:83
 msgid "Opens additional details for a debug entry"
@@ -6239,19 +6239,19 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:208
 msgid "Other dangerous content"
-msgstr ""
+msgstr "Andet farligt indhold"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:119
 msgid "Other harassing or hateful content"
-msgstr ""
+msgstr "Andet chikanerende eller hadefuldt indhold"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:59
 msgid "Other misleading content"
-msgstr ""
+msgstr "Andet misvisende indhold"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:231
 msgid "Other network rule-breaking"
-msgstr ""
+msgstr "Anden overtrædelse af fællesskabsregler"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:92
 msgid "Other sexual violence content"
@@ -6259,7 +6259,7 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:154
 msgid "Other violent content"
-msgstr ""
+msgstr "Andet voldeligt indhold"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:50
 msgid "Our blog post"
@@ -6339,11 +6339,11 @@ msgstr "Personer jeg følger"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
-msgstr ""
+msgstr "Personer, du følger"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
-msgstr ""
+msgstr "Personer, du omtaler"
 
 #: src/lib/media/save-image.ts:59
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
@@ -6764,7 +6764,7 @@ msgstr "Privatlivspolitik"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:173
 msgid "Privacy violation of a minor"
-msgstr ""
+msgstr "Privatlivskrænkelse af en mindreårig"
 
 #: src/view/com/composer/Composer.tsx:1892
 msgid "Processing video..."
@@ -6798,7 +6798,7 @@ msgstr ""
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
-msgstr ""
+msgstr "Pst! Du kan redigere, hvem der kan interagere med dette opslag."
 
 #: src/screens/Onboarding/StepFinished/index.tsx:391
 msgid "Public"
@@ -7306,7 +7306,7 @@ msgstr "Anmeldelse afsendt"
 
 #: src/components/moderation/ReportDialog/copy.ts:45
 msgid "Report this conversation"
-msgstr ""
+msgstr "Anmeld denne samtale"
 
 #: src/components/moderation/ReportDialog/copy.ts:31
 msgid "Report this feed"
@@ -7564,7 +7564,7 @@ msgstr "Gem QR-kode"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
-msgstr ""
+msgstr "Gem disse indstillinger til næste gang"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:321
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:327
@@ -7601,7 +7601,7 @@ msgstr "Sig hej!"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:43
 msgid "Scam"
-msgstr ""
+msgstr "Svindel"
 
 #: src/lib/interests.ts:71
 #: src/screens/Onboarding/index.tsx:64
@@ -7778,7 +7778,7 @@ msgstr "Vælg en farve"
 
 #: src/components/moderation/ReportDialog/index.tsx:359
 msgid "Select a reason"
-msgstr ""
+msgstr "Vælg en årsag"
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
@@ -7818,11 +7818,11 @@ msgstr "Vælg en eksisterende konto"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
-msgstr ""
+msgstr "Vælg fra dine lister"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
-msgstr ""
+msgstr "Vælg fra dine lister <0>{numberOfListsSelected, plural, one {}other {(# valgt)}}</0>"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
@@ -7910,7 +7910,7 @@ msgstr "Valg af flere medietyper er ikke understøttet."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:188
 msgid "Self-harm or dangerous behaviors"
-msgstr ""
+msgstr "Selvskade eller farlig adfærd"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -7984,7 +7984,7 @@ msgstr "Angiv ny adgangskode"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
-msgstr ""
+msgstr "Angiv præcist hvilke kategorier af personer, der kan besvare dit opslag"
 
 #: src/screens/Onboarding/Layout.tsx:49
 msgid "Set up your account"
@@ -7992,7 +7992,7 @@ msgstr "Konfigurer din konto"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
-msgstr ""
+msgstr "Angiv, hvem der kan besvare dit opslag"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
@@ -8185,7 +8185,7 @@ msgstr "Vis liste alligevel"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
-msgstr ""
+msgstr "Vis liste over brugere at vælge fra"
 
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
@@ -8704,7 +8704,7 @@ msgstr "Tryk for lukke"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:107
 msgid "Targeted harassment"
-msgstr ""
+msgstr "Målrettet chikane"
 
 #: src/state/shell/progress-guide.tsx:235
 msgid "Task complete - 10 follows!"
@@ -9006,7 +9006,7 @@ msgstr "Der kommer mange nye brugere til Bluesky for tiden! Vi aktiverer din kon
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
-msgstr ""
+msgstr "Dette er dine standardindstillinger"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:65
 msgid "These settings only apply to the Following feed."
@@ -9278,7 +9278,7 @@ msgstr "Trådindstillinger"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:134
 msgid "Threats or incitement"
-msgstr ""
+msgstr "Trusler eller opfordringer til ulovligheder"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
@@ -9495,7 +9495,7 @@ msgstr "Ukendt verifikator"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:72
 msgid "Unlabeled adult content"
-msgstr ""
+msgstr "Umærket voksenindhold"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:68
 msgid "Unlabeled, abusive, or non-consensual adult content"
@@ -10086,11 +10086,11 @@ msgstr "Viser videoen i fuldskærmstilstand"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:126
 msgid "Violence"
-msgstr ""
+msgstr "Vold"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:127
 msgid "Violent or threatening content"
-msgstr ""
+msgstr "Voldeligt eller truende indhold"
 
 #: src/components/dialogs/LinkWarning.tsx:96
 #: src/components/dialogs/LinkWarning.tsx:106
@@ -10342,7 +10342,7 @@ msgstr "Hvorfor ønsker du at klage?"
 
 #: src/components/moderation/ReportDialog/copy.ts:46
 msgid "Why should this conversation be reviewed?"
-msgstr ""
+msgstr "Hvorfor skal denne samtale gennemgås?"
 
 #: src/components/moderation/ReportDialog/copy.ts:32
 msgid "Why should this feed be reviewed?"
@@ -10370,7 +10370,7 @@ msgstr "Hvorfor skal denne bruger gennemgås?"
 
 #: src/components/dms/AfterReportDialog.tsx:49
 msgid "Would you like to block this user and/or delete this conversation?"
-msgstr ""
+msgstr "Vil du blokere denne bruger og/eller slette denne samtale?"
 
 #: src/screens/Messages/components/MessageInput.tsx:154
 #: src/screens/Messages/components/MessageInput.web.tsx:214
@@ -10554,7 +10554,7 @@ msgstr "Du har pt. ingen chatanmodninger."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
-msgstr ""
+msgstr "Du har endnu ingen lister."
 
 #: src/screens/SavedFeeds.tsx:149
 msgid "You don't have any pinned feeds."
@@ -11005,3 +11005,4 @@ msgstr "Dine valgte interesser hjælper os med at vise dig relevant indhold."
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Dine verifikationer"
+

@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:09\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -637,7 +637,7 @@ msgstr "账户选项"
 
 #: src/components/dialogs/ServerInput.tsx:141
 msgid "Account provider"
-msgstr ""
+msgstr "账户提供商"
 
 #: src/screens/Settings/Settings.tsx:662
 msgid "Account removed from quick access"
@@ -925,7 +925,7 @@ msgstr "允许读取你的私信"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
-msgstr ""
+msgstr "允许任何人回复"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
@@ -944,11 +944,11 @@ msgstr "允许其他人在你发帖时收到提醒"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
-msgstr ""
+msgstr "允许你关注的人回复"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
-msgstr ""
+msgstr "允许你提及的人回复"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
@@ -956,11 +956,11 @@ msgstr "允许引用帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
-msgstr ""
+msgstr "允许在 {0} 中的用户回复"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
-msgstr ""
+msgstr "允许你的关注者回复"
 
 #: src/screens/Settings/AppPasswords.tsx:199
 msgid "Allows access to direct messages"
@@ -1049,7 +1049,7 @@ msgstr "播放视频时发生错误，请重试。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
-msgstr ""
+msgstr "加载列表时发生错误 :/"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:75
 msgid "An error occurred while saving the QR code!"
@@ -1137,11 +1137,11 @@ msgstr "为你介绍 Bluesky 上的认证机制"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
-msgstr ""
+msgstr "任何人"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
-msgstr ""
+msgstr "任何人都可以参与互动"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
@@ -2815,11 +2815,11 @@ msgstr "停用触觉反馈"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
-msgstr ""
+msgstr "禁止其他人引用这则帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
-msgstr ""
+msgstr "完全禁用回复"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
 msgid "Disable subtitles"
@@ -3238,7 +3238,7 @@ msgstr "启用推送通知"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
-msgstr ""
+msgstr "允许其他人引用这则帖文"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
@@ -4379,7 +4379,7 @@ msgstr "隐藏自定义选项"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
-msgstr ""
+msgstr "隐藏列表"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:584
@@ -5144,11 +5144,11 @@ msgstr "加载更多帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
-msgstr ""
+msgstr "正在加载列表……"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
-msgstr ""
+msgstr "正在加载帖文互动选项……"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:61
 msgid "Loading..."
@@ -6121,7 +6121,7 @@ msgstr "开启对话框以向你的帖文内容添加警告"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
-msgstr ""
+msgstr "开启对话框来选择哪些人可以与这则帖文产生互动"
 
 #: src/screens/Log.tsx:83
 msgid "Opens additional details for a debug entry"
@@ -6339,11 +6339,11 @@ msgstr "我关注的人"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
-msgstr ""
+msgstr "你关注的人"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
-msgstr ""
+msgstr "你提及的人"
 
 #: src/lib/media/save-image.ts:59
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
@@ -6798,7 +6798,7 @@ msgstr "宣传或销售违法物品或服务"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
-msgstr ""
+msgstr "嘘！你可以设置哪些人可以与这则帖文产生互动。"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:391
 msgid "Public"
@@ -7564,7 +7564,7 @@ msgstr "保存二维码"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
-msgstr ""
+msgstr "保存这些选项以供下次使用"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:321
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:327
@@ -7818,11 +7818,11 @@ msgstr "从现有账户中选择"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
-msgstr ""
+msgstr "从你的列表中选择"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
-msgstr ""
+msgstr "从你的列表中选择<0>{numberOfListsSelected, plural, other {（已选择# 人）}}</0>"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
@@ -7984,7 +7984,7 @@ msgstr "设置新密码"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
-msgstr ""
+msgstr "精确设置哪些范围的人可以回复你的帖文"
 
 #: src/screens/Onboarding/Layout.tsx:49
 msgid "Set up your account"
@@ -7992,7 +7992,7 @@ msgstr "设置你的账户"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
-msgstr ""
+msgstr "设置哪些人可以回复你的帖文"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
@@ -8185,7 +8185,7 @@ msgstr "仍然显示列表"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
-msgstr ""
+msgstr "显示可供选择的用户列表"
 
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
@@ -9006,7 +9006,7 @@ msgstr "Bluesky 目前迎来了大量新用户！我们将尽快启用你的账�
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
-msgstr ""
+msgstr "这些是你的默认设置"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:65
 msgid "These settings only apply to the Following feed."
@@ -10554,7 +10554,7 @@ msgstr "你目前没有任何私信请求。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
-msgstr ""
+msgstr "你还没有任何列表。"
 
 #: src/screens/SavedFeeds.tsx:149
 msgid "You don't have any pinned feeds."
@@ -11005,3 +11005,4 @@ msgstr "你选择的兴趣可帮助我们提供你所关心的内容。"
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "你的认证"
+

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:10\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1141,7 +1141,7 @@ msgstr "誰でも"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
-msgstr ""
+msgstr "誰でも反応可能"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
@@ -2815,7 +2815,7 @@ msgstr "触覚フィードバックを無効化"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
-msgstr ""
+msgstr "この投稿の引用投稿を無効にする"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
@@ -3238,7 +3238,7 @@ msgstr "プッシュ通知を有効にする"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
-msgstr ""
+msgstr "この投稿の引用投稿を有効にする"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
@@ -11005,3 +11005,4 @@ msgstr "「気になること」は興味を引くコンテンツを提供する
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "あなたの認証情報"
+

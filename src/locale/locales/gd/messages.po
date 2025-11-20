@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:10\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -1141,7 +1141,7 @@ msgstr ""
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
-msgstr ""
+msgstr "Faodaidh duine sam bith eadar-ghabhail a dhèanamh"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
@@ -11005,3 +11005,4 @@ msgstr "Ma leigeis tu ris dè na rudan sa bheil ùidh agad, bidh e nas fhasa sus
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "An dearbhadh a rinn thusa"
+

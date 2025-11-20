@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:10\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1141,7 +1141,7 @@ msgstr "Alla"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
-msgstr ""
+msgstr "Alla får interagera"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
@@ -2815,7 +2815,7 @@ msgstr "Inaktivera haptisk feedback"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
-msgstr ""
+msgstr "Inaktivera citatinlägg för det här inlägget"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
@@ -3238,7 +3238,7 @@ msgstr "Aktivera pushnotiser"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
-msgstr ""
+msgstr "Aktivera citatinlägg för det här inlägget"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
@@ -5321,7 +5321,7 @@ msgstr "Övriga notiser"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:35
 msgid "Misleading"
-msgstr "Vilseledande innehåll"
+msgstr "Vilseledning"
 
 #: src/Navigation.tsx:177
 #: src/screens/Moderation/index.tsx:100
@@ -6343,7 +6343,7 @@ msgstr "Personer du följer"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
-msgstr "Omnämnda"
+msgstr "Omnämnda i inlägget"
 
 #: src/lib/media/save-image.ts:59
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
@@ -7236,7 +7236,7 @@ msgstr "Notiser för svar"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Reply settings are chosen by the author of the thread"
-msgstr "Svarsinställningarna sätts av trådens författare"
+msgstr "Svarsinställningarna sätts av trådens skapare"
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:69
 msgid "Reply sorting"
@@ -7984,7 +7984,7 @@ msgstr "Ange nytt lösenord"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
-msgstr "Ställ in exakt vilka grupper av människor som kan svara på ditt inlägg"
+msgstr "Ställ in exakt vilka grupper av människor som får svara på ditt inlägg"
 
 #: src/screens/Onboarding/Layout.tsx:49
 msgid "Set up your account"
@@ -7992,7 +7992,7 @@ msgstr "Konfigurera ditt konto"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
-msgstr "Ställ in vem som kan svara på ditt inlägg"
+msgstr "Ställ in vem som får svara på ditt inlägg"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
@@ -10319,7 +10319,7 @@ msgstr "Vem kan interagera med det här inlägget?"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
 #: src/components/WhoCanReply.tsx:114
 msgid "Who can reply"
-msgstr "Vem kan svara"
+msgstr "Vem får svara?"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:127
 msgid "Who can verify?"
@@ -11005,3 +11005,4 @@ msgstr "Dina valda intressen hjälper oss att visa dig innehåll som du bryr dig
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Dina verifieringar"
+

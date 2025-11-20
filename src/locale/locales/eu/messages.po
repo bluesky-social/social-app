@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:09\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -637,7 +637,7 @@ msgstr "Kontuaren aukerak"
 
 #: src/components/dialogs/ServerInput.tsx:141
 msgid "Account provider"
-msgstr ""
+msgstr "Kontu hornitzailea"
 
 #: src/screens/Settings/Settings.tsx:662
 msgid "Account removed from quick access"
@@ -925,7 +925,7 @@ msgstr "Baimendu sarrera zure mezu zuzenetara"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
-msgstr ""
+msgstr "Utzi edonori erantzuten"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
@@ -944,11 +944,11 @@ msgstr "Utzi besteei zure posten berri izaten"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
-msgstr ""
+msgstr "Utzi jarraitzen dituzun pertsonei erantzuten"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
-msgstr ""
+msgstr "Utzi aipatzen dituzun pertsonei erantzuten"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
@@ -956,11 +956,11 @@ msgstr "Baimendu post aipamenak"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
-msgstr ""
+msgstr "Utzi {0}-ko erabiltzaileei erantzuten"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
-msgstr ""
+msgstr "Utzi zure jarraitzaileei erantzuten"
 
 #: src/screens/Settings/AppPasswords.tsx:199
 msgid "Allows access to direct messages"
@@ -1049,7 +1049,7 @@ msgstr "Errore bat gertatu da bideoa kargatzean. Mesedez, saiatu berriro."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
-msgstr ""
+msgstr "Errore bat gertatu da zure zerrendak kargatzean :/"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:75
 msgid "An error occurred while saving the QR code!"
@@ -1137,11 +1137,11 @@ msgstr "Bluesky-n egiaztapena iragartzen"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
-msgstr ""
+msgstr "Edonor"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
-msgstr ""
+msgstr "Edozeinek elkarreragin dezake"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
@@ -2815,11 +2815,11 @@ msgstr "Desgaitu feedback haptikoa"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
-msgstr ""
+msgstr "Desgaitu post honen aipamen postak"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
-msgstr ""
+msgstr "Desgaitu erantzunak erabat"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
 msgid "Disable subtitles"
@@ -3238,7 +3238,7 @@ msgstr "Gaitu push jakinarazpenak"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
-msgstr ""
+msgstr "Gaitu post honen aipamen postak"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
@@ -4379,7 +4379,7 @@ msgstr "Ezkutatu pertsonalizazio-aukerak"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
-msgstr ""
+msgstr "Ezkutatu zerrendak"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:584
@@ -5144,11 +5144,11 @@ msgstr "Kargatu post berriak"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
-msgstr ""
+msgstr "Zerrendak kargatzen..."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
-msgstr ""
+msgstr "Posten interakzio-ezarpenak kargatzen..."
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:61
 msgid "Loading..."
@@ -6121,7 +6121,7 @@ msgstr "Zure postari eduki-abisua gehitzeko elkarrizketa-koadro bat irekitzen du
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
-msgstr ""
+msgstr "Post honekin nork elkarreragin dezakeen aukeratzeko elkarrizketa-koadro bat irekitzen du"
 
 #: src/screens/Log.tsx:83
 msgid "Opens additional details for a debug entry"
@@ -6339,11 +6339,11 @@ msgstr "Jarraitzen ditudan pertsonak"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
-msgstr ""
+msgstr "Jarraitzen duzun jendea"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
-msgstr ""
+msgstr "Aipatzen duzun jendea"
 
 #: src/lib/media/save-image.ts:59
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
@@ -6798,7 +6798,7 @@ msgstr "Debekatutako elementuak edo zerbitzuak sustatzea edo saltzea"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
-msgstr ""
+msgstr "Psst! Post honekin nork elkarreragin dezakeen edita dezakezu."
 
 #: src/screens/Onboarding/StepFinished/index.tsx:391
 msgid "Public"
@@ -7564,7 +7564,7 @@ msgstr "Gorde QR kodea"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
-msgstr ""
+msgstr "Gorde aukera hauek hurrengo baterako"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:321
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:327
@@ -7818,11 +7818,11 @@ msgstr "Aukeratu lehendik dagoen kontu batetik"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
-msgstr ""
+msgstr "Aukeratu zure zerrendetatik"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
-msgstr ""
+msgstr "Aukeratu zure zerrendetatik <0>{numberOfListsSelected, plural, other {(# hautatuta)}}</0>"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
@@ -7984,7 +7984,7 @@ msgstr "Ezarri pasahitz berria"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
-msgstr ""
+msgstr "Zehazki ezarri zein pertsona taldek erantzun diezaioketen zure postari"
 
 #: src/screens/Onboarding/Layout.tsx:49
 msgid "Set up your account"
@@ -7992,7 +7992,7 @@ msgstr "Konfiguratu zure kontua"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
-msgstr ""
+msgstr "Ezarri nork erantzun diezaiokeen zure postari"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
@@ -8185,7 +8185,7 @@ msgstr "Erakutsi zerrenda hala ere"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
-msgstr ""
+msgstr "Erakutsi aukeran dauden erabiltzaileen zerrendak"
 
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
@@ -9006,7 +9006,7 @@ msgstr "Erabiltzaile berri mordoa izan da Blueskyra! Zure kontua aktibatuko dugu
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
-msgstr ""
+msgstr "Hauek dira zure ezarpen lehenetsiak"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:65
 msgid "These settings only apply to the Following feed."
@@ -10554,7 +10554,7 @@ msgstr "Ez daukazu txateatzeko eskaerarik oraingoz."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
-msgstr ""
+msgstr "Ez duzu zerrendarik oraindik."
 
 #: src/screens/SavedFeeds.tsx:149
 msgid "You don't have any pinned feeds."
@@ -11005,3 +11005,4 @@ msgstr "Aukeratutako interesek gogoko duzun edukia zerbitzatzen laguntzen digute
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Zure egiaztapenak"
+

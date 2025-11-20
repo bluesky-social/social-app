@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:09\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -944,11 +944,11 @@ msgstr "Anderen erlauben, über meine Posts Mitteilungen zu erhalten"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
-msgstr ""
+msgstr "Erlaube Personen, denen du folgst, zu antworten"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
-msgstr ""
+msgstr "Erlaube Personen, die du erwähnst, zu antworten"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
@@ -956,7 +956,7 @@ msgstr "Zitieren dieses Posts erlauben"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
-msgstr ""
+msgstr "Erlaube Nutzern in {0}, zu antworten"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
@@ -1049,7 +1049,7 @@ msgstr "Beim Laden des Videos ist ein Fehler aufgetreten. Bitte versuche es erne
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
-msgstr ""
+msgstr "Beim Laden deiner Listen ist ein Fehler aufgetreten :/"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:75
 msgid "An error occurred while saving the QR code!"
@@ -1137,11 +1137,11 @@ msgstr "Ankündigung der Verifizierung auf Bluesky"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
-msgstr ""
+msgstr "Alle"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
-msgstr ""
+msgstr "Alle können interagieren"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
@@ -2815,7 +2815,7 @@ msgstr "Haptische Rückmeldung deaktivieren"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
-msgstr ""
+msgstr "Zitate dieses Posts deaktivieren"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
@@ -3238,7 +3238,7 @@ msgstr "Push-Mitteilungen aktivieren"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
-msgstr ""
+msgstr "Zitate dieses Posts aktivieren"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
@@ -7822,7 +7822,7 @@ msgstr "Aus deinen Listen auswählen"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
-msgstr ""
+msgstr "Wähle aus deinen Listen <0>{numberOfListsSelected, plural, other {(# ausgewählt)}}</0>"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
@@ -7984,7 +7984,7 @@ msgstr "Neues Passwort festlegen"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
-msgstr ""
+msgstr "Lege genau fest, welche Gruppen von Personen auf deinen Post antworten dürfen"
 
 #: src/screens/Onboarding/Layout.tsx:49
 msgid "Set up your account"
@@ -11005,3 +11005,4 @@ msgstr "Deine ausgewählten Interessen helfen uns dabei, dir Inhalte anzuzeigen,
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Deine Verifizierungen"
+

@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:09\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -1141,7 +1141,7 @@ msgstr "N’importe qui"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
-msgstr ""
+msgstr "N’importe qui peut interagir"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
@@ -2634,7 +2634,7 @@ msgstr "Panneau de débug"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:84
 msgid "Deepfake adult content"
-msgstr "Deepfake de contenu pour adulte"
+msgstr "Deepfake de contenu pour adultes"
 
 #: src/screens/Settings/AppearanceSettings.tsx:156
 msgid "Default"
@@ -2815,7 +2815,7 @@ msgstr "Désactiver le retour haptique"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
-msgstr ""
+msgstr "Empêcher les citations pour ce post"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
@@ -3238,7 +3238,7 @@ msgstr "Activer les alertes (notifs push)"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
-msgstr ""
+msgstr "Autoriser les citations pour ce post"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
@@ -4297,7 +4297,7 @@ msgstr "Activités néfastes ou à haut risque"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:162
 msgid "Harming or endangering minors"
-msgstr "Nuisible ou mettant en danger des mineurs"
+msgstr "Contenu néfaste ou dangereux pour des mineurs"
 
 #: src/Navigation.tsx:539
 msgid "Hashtag"
@@ -9495,11 +9495,11 @@ msgstr "Vérificateur inconnu"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:72
 msgid "Unlabeled adult content"
-msgstr "Contenu pour adultes sans étiquette"
+msgstr "Contenu pour adultes non-étiqueté"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:68
 msgid "Unlabeled, abusive, or non-consensual adult content"
-msgstr "Sans étiquette, abusif ou sans consentement"
+msgstr "Non-étiqueté, abusif ou sans consentement"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:515
 msgid "Unlike"
@@ -11005,3 +11005,4 @@ msgstr "Votre sélection de centres d’intérêt nous aide à vous proposer des
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Vos vérifications"
+

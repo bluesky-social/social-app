@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-17 16:09\n"
+"PO-Revision-Date: 2025-11-20 18:09\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -182,7 +182,7 @@ msgstr "{0} 畀咗個 {1} 反應"
 
 #: src/screens/Messages/components/ChatListItem.tsx:234
 msgid "{0} reacted {1} to {2}"
-msgstr "{0} 對 {2} 畀咗個 {1} 反應"
+msgstr "{0} 向 {2} 畀咗個 {1} 反應"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:187
 msgid "{0}, a feed by {1}, liked by {2}"
@@ -637,7 +637,7 @@ msgstr "帳號設定"
 
 #: src/components/dialogs/ServerInput.tsx:141
 msgid "Account provider"
-msgstr ""
+msgstr "帳號提供者"
 
 #: src/screens/Settings/Settings.tsx:662
 msgid "Account removed from quick access"
@@ -925,7 +925,7 @@ msgstr "允許取用你嘅私人訊息"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
 msgid "Allow anyone to reply"
-msgstr ""
+msgstr "允許任何人回覆"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
@@ -944,11 +944,11 @@ msgstr "允許其他人喺你出新帖嗰陣收到通知"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Allow people you follow to reply"
-msgstr ""
+msgstr "允許你跟嘅人回覆"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
 msgid "Allow people you mention to reply"
-msgstr ""
+msgstr "允許你提及嘅人回覆"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:630
 msgid "Allow quote posts"
@@ -956,11 +956,11 @@ msgstr "允許引用帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:592
 msgid "Allow users in {0} to reply"
-msgstr ""
+msgstr "允許喺 {0} 度嘅用戶回覆"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 msgid "Allow your followers to reply"
-msgstr ""
+msgstr "允許你嘅擁躉回覆"
 
 #: src/screens/Settings/AppPasswords.tsx:199
 msgid "Allows access to direct messages"
@@ -1049,7 +1049,7 @@ msgstr "撈緊影片嗰陣發生錯誤。唔該試多次。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "An error occurred while loading your lists :/"
-msgstr ""
+msgstr "撈緊清單嗰陣發生錯誤 :/"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:75
 msgid "An error occurred while saving the QR code!"
@@ -1137,11 +1137,11 @@ msgstr "同你介紹 Bluesky 上嘅認證機制"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Anyone"
-msgstr ""
+msgstr "任何人"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:134
 msgid "Anyone can interact"
-msgstr ""
+msgstr "任何人都可以參與互動"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
@@ -2815,11 +2815,11 @@ msgstr "停用觸覺回饋"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:622
 msgid "Disable quote posts of this post"
-msgstr ""
+msgstr "拒絕其他人引用呢條帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:459
 msgid "Disable replies entirely"
-msgstr ""
+msgstr "徹底關閉回覆"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
 msgid "Disable subtitles"
@@ -3238,7 +3238,7 @@ msgstr "啓用推播通知"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:623
 msgid "Enable quote posts of this post"
-msgstr ""
+msgstr "允許其他人引用呢條帖文"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
@@ -4379,7 +4379,7 @@ msgstr "隱藏自訂選項"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:527
 msgid "Hide lists"
-msgstr ""
+msgstr "隱藏清單"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:584
@@ -5144,11 +5144,11 @@ msgstr "撈下新嘅帖文"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
 msgid "Loading lists..."
-msgstr ""
+msgstr "撈緊清單……"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:273
 msgid "Loading post interaction settings..."
-msgstr ""
+msgstr "撈緊帖文互動設定……"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:61
 msgid "Loading..."
@@ -5737,7 +5737,7 @@ msgstr "仲未有人讚"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
 #: src/view/com/notifications/NotificationFeedItem.tsx:787
 msgid "No longer following {0}"
-msgstr "唔再跟住 {0}"
+msgstr "經已唔再跟 {0}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:142
 msgid "No messages yet"
@@ -6121,7 +6121,7 @@ msgstr "打開對話框嚟喺你嘅帖文度加入內容警告"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:151
 msgid "Opens a dialog to choose who can interact with this post"
-msgstr ""
+msgstr "打開對話框畀你揀邊啲人可以同呢條帖文互動"
 
 #: src/screens/Log.tsx:83
 msgid "Opens additional details for a debug entry"
@@ -6339,11 +6339,11 @@ msgstr "我跟嘅人"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "People you follow"
-msgstr ""
+msgstr "你跟嘅人"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:518
 msgid "People you mention"
-msgstr ""
+msgstr "你提及嘅人"
 
 #: src/lib/media/save-image.ts:59
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
@@ -6798,7 +6798,7 @@ msgstr "宣傳或售賣違禁物品或服務"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:160
 msgid "Psst! You can edit who can interact with this post."
-msgstr ""
+msgstr "喂喂！話你知你可以揀邊啲人允許同呢條帖文互動。"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:391
 msgid "Public"
@@ -7564,7 +7564,7 @@ msgstr "儲存 QR code"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:643
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:649
 msgid "Save these options for next time"
-msgstr ""
+msgstr "儲存呢啲選項供下次使用"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:321
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:327
@@ -7818,11 +7818,11 @@ msgstr "喺而家有嘅帳號度揀"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:547
 msgid "Select from your lists"
-msgstr ""
+msgstr "喺你嘅清單度揀選"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
-msgstr ""
+msgstr "喺你嘅清單度揀選<0>{numberOfListsSelected, plural, other {（已揀選 # 人）}}</0>"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
@@ -7984,7 +7984,7 @@ msgstr "設定新密碼"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Set precisely which groups of people can reply to your post"
-msgstr ""
+msgstr "準確設定邊啲人羣可以回覆你嘅帖文"
 
 #: src/screens/Onboarding/Layout.tsx:49
 msgid "Set up your account"
@@ -7992,7 +7992,7 @@ msgstr "設定你嘅帳號"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:425
 msgid "Set who can reply to your post"
-msgstr ""
+msgstr "設定邊個可以回覆你嘅帖文"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
@@ -8185,7 +8185,7 @@ msgstr "點都要顯示呢個清單"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:528
 msgid "Show lists of users to select from"
-msgstr ""
+msgstr "顯示有得揀選嘅用戶清單"
 
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
@@ -8394,7 +8394,7 @@ msgstr "有人畀咗個 {0} 反應"
 
 #: src/screens/Messages/components/ChatListItem.tsx:244
 msgid "Someone reacted {0} to {1}"
-msgstr "有人對 {1} 畀咗個 {0} 反應"
+msgstr "有人向 {1} 畀咗個 {0} 反應"
 
 #: src/components/moderation/ReportDialog/index.tsx:84
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
@@ -9006,7 +9006,7 @@ msgstr "Bluesky 家陣有一大班人加入！我哋會盡快啓用你嘅帳號�
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:654
 msgid "These are your default settings"
-msgstr ""
+msgstr "呢啲係你嘅預設設定"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:65
 msgid "These settings only apply to the Following feed."
@@ -10554,7 +10554,7 @@ msgstr "你而家未有任何傾偈邀請。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:583
 msgid "You don't have any lists yet."
-msgstr ""
+msgstr "你而家仲未有任何清單。"
 
 #: src/screens/SavedFeeds.tsx:149
 msgid "You don't have any pinned feeds."
@@ -10730,7 +10730,7 @@ msgstr "你畀咗個 {0} 反應"
 
 #: src/screens/Messages/components/ChatListItem.tsx:221
 msgid "You reacted {0} to {1}"
-msgstr "你對 {1} 畀咗個 {0} 反應"
+msgstr "你向 {1} 畀咗個 {0} 反應"
 
 #: src/screens/Settings/Settings.tsx:286
 #: src/view/shell/desktop/LeftNav.tsx:210
@@ -11005,3 +11005,4 @@ msgstr "你揀選嘅心水主題可以幫我哋提供更多你所關注嘅內容
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "你嘅驗證"
+
