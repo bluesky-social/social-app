@@ -4,6 +4,8 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {urls} from '#/lib/constants'
+import {cleanError} from '#/lib/strings/errors'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
@@ -112,11 +114,11 @@ function Loader() {
 }
 
 function EmptyState({
-  message,
+  messageText,
   error,
   children,
 }: {
-  message: string
+  messageText: React.ReactNode
   error?: string
   children?: React.ReactNode
 }) {
@@ -126,7 +128,7 @@ function EmptyState({
     <Layout.Content>
       <View style={[a.p_xl]}>
         <View style={[t.atoms.bg_contrast_25, a.rounded_sm, a.p_lg]}>
-          <Text style={[a.text_md]}>{message}</Text>
+          <Text style={[a.text_md]}>{messageText}</Text>
 
           {error && (
             <>
@@ -152,6 +154,41 @@ function EmptyState({
         </View>
       </View>
     </Layout.Content>
+  )
+}
+
+function NoResultsText({query}: {query: string}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <>
+      <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
+        <Trans>
+          No results found for "
+          <Text style={[a.text_lg, t.atoms.text, a.font_medium]}>{query}</Text>
+          ".
+        </Trans>
+      </Text>
+      {'\n\n'}
+      <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+        <Trans context="english-only-resource">
+          Try a different search term, or{' '}
+          <InlineLinkText
+            label={_(
+              msg({
+                message: 'read about how to use search filters',
+                context: 'english-only-resource',
+              }),
+            )}
+            to={urls.website.blog.searchTipsAndTricks}
+            style={[a.text_md, a.leading_snug]}>
+            read about how to use search filters
+          </InlineLinkText>
+          .
+        </Trans>
+      </Text>
+    </>
   )
 }
 
@@ -279,10 +316,10 @@ let SearchScreenPostResults = ({
 
   return error ? (
     <EmptyState
-      message={_(
+      messageText={_(
         msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
       )}
-      error={error.toString()}
+      error={cleanError(error)}
     />
   ) : (
     <>
@@ -311,7 +348,7 @@ let SearchScreenPostResults = ({
               }
             />
           ) : (
-            <EmptyState message={_(msg`No results found for ${query}`)} />
+            <EmptyState messageText={<NoResultsText query={query} />} />
           )}
         </>
       ) : (
@@ -365,7 +402,7 @@ let SearchScreenUserResults = ({
   if (error) {
     return (
       <EmptyState
-        message={_(
+        messageText={_(
           msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
         )}
         error={error.toString()}
@@ -392,7 +429,7 @@ let SearchScreenUserResults = ({
           }
         />
       ) : (
-        <EmptyState message={_(msg`No results found for ${query}`)} />
+        <EmptyState messageText={<NoResultsText query={query} />} />
       )}
     </>
   ) : (
@@ -409,7 +446,6 @@ let SearchScreenFeedsResults = ({
   active: boolean
 }): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
 
   const {data: results, isFetched} = usePopularFeedsSearch({
     query,
@@ -437,7 +473,7 @@ let SearchScreenFeedsResults = ({
           ListFooterComponent={<ListFooter />}
         />
       ) : (
-        <EmptyState message={_(msg`No results found for ${query}`)} />
+        <EmptyState messageText={<NoResultsText query={query} />} />
       )}
     </>
   ) : (
