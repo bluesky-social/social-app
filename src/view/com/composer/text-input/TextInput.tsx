@@ -130,7 +130,7 @@ export function TextInput({
       const file = files.find(f => isAcceptedImageMimeType(f.type))
 
       if (file) {
-        onPhotoPasted(file.data)
+        onPhotoPasted(file.data, file.type)
       }
     },
     [onPhotoPasted],
