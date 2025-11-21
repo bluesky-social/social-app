@@ -103,9 +103,15 @@ export function createInitialImages(
 
 export async function pasteImage(
   uri: string,
+  mimeType?: string,
 ): Promise<ComposerImageWithoutTransformation> {
   const {width, height} = await getImageDim(uri)
-  const match = /^data:(.+?);/.exec(uri)
+
+  let mime = mimeType
+  if (!mime) {
+    const match = /^data:(.+?);/.exec(uri)
+    mime = match ? match[1] : 'image/jpeg'
+  }
 
   return {
     alt: '',
@@ -114,7 +120,7 @@ export async function pasteImage(
       path: uri,
       width: width,
       height: height,
-      mime: match ? match[1] : 'image/jpeg',
+      mime,
     },
   }
 }
