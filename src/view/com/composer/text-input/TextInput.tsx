@@ -17,7 +17,7 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {downloadAndResize} from '#/lib/media/manip'
-import {isUriImage} from '#/lib/media/util'
+import {isAcceptedImageMimeType, isUriImage} from '#/lib/media/util'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
 import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isNative} from '#/platform/detection'
@@ -127,13 +127,10 @@ export function TextInput({
     async (evt: NativeSyntheticEvent<TextInputPasteEventData>) => {
       const files = evt.nativeEvent.items
 
-      console.log(files)
+      const file = files.find(f => isAcceptedImageMimeType(f.type))
 
-      const uris = files.filter(f => f.type === 'image').map(f => f.data)
-      const uri = uris.find(isUriImage)
-
-      if (uri) {
-        onPhotoPasted(uri)
+      if (file) {
+        onPhotoPasted(file.data)
       }
     },
     [onPhotoPasted],
