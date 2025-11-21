@@ -1,47 +1,16 @@
-diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
-index 914a249..0deac55 100644
---- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
-+++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
-@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
-  */
- @interface RCTPullToRefreshViewComponentView : RCTViewComponentView <RCTCustomPullToRefreshViewProtocol>
- 
-+- (void)beginRefreshingProgrammatically;
-+
- @end
- 
- NS_ASSUME_NONNULL_END
-diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index d029337..0f63ea3 100644
---- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-+++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -1038,6 +1038,11 @@ - (void)_adjustForMaintainVisibleContentPosition
-   }
- }
- 
-++ (BOOL)shouldBeRecycled
-+{
-+  return NO;
-+}
-+
- @end
- 
- Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
-index e9b330f..ec5f58c 100644
+index e9b330f..5fbb2e0 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
-@@ -15,5 +15,8 @@
+@@ -15,5 +15,6 @@
  @property (nonatomic, copy) NSString *title;
  @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
  @property (nonatomic, weak) UIScrollView *scrollView;
 +@property (nonatomic, copy) UIColor *customTintColor;
-+
-+- (void)forwarderBeginRefreshing;
  
  @end
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
-index 53bfd04..ff1b1ed 100644
+index 53bfd04..e2e0c9f 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 @@ -23,6 +23,7 @@ @implementation RCTRefreshControl {
@@ -65,7 +34,7 @@ index 53bfd04..ff1b1ed 100644
  - (void)didMoveToWindow
  {
    [super didMoveToWindow];
-@@ -221,4 +228,50 @@ - (void)refreshControlValueChanged
+@@ -221,4 +228,16 @@ - (void)refreshControlValueChanged
    }
  }
  
@@ -79,40 +48,6 @@ index 53bfd04..ff1b1ed 100644
 +  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
 +    [super setTintColor:tintColor];
 +  }
-+}
-+
-+// This method is used by Bluesky's ExpoScrollForwarder. This allows other React Native
-+// libraries to perform a refresh of a scrollview and access the refresh control's onRefresh
-+// function.
-+- (void)forwarderBeginRefreshing
-+{
-+  _refreshingProgrammatically = NO;
-+
-+  [self sizeToFit];
-+
-+  if (!self.scrollView) {
-+    return;
-+  }
-+
-+  UIScrollView *scrollView = (UIScrollView *)self.scrollView;
-+
-+  [UIView animateWithDuration:0.3
-+    delay:0
-+    options:UIViewAnimationOptionBeginFromCurrentState
-+    animations:^(void) {
-+      // Whenever we call this method, the scrollview will always be at a position of
-+      // -130 or less. Scrolling back to -65 simulates the default behavior of RCTRefreshControl
-+      [scrollView setContentOffset:CGPointMake(0, -65)];
-+    }
-+    completion:^(__unused BOOL finished) {
-+      [super beginRefreshing];
-+      [self setCurrentRefreshingState:super.refreshing];
-+
-+      if (self->_onRefresh) {
-+        self->_onRefresh(nil);
-+      }
-+    }
-+  ];
 +}
 +
  @end
