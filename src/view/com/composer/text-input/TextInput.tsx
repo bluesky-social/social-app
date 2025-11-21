@@ -8,19 +8,16 @@ import {
 import {
   type NativeSyntheticEvent,
   Text as RNText,
-  type TextInputSelectionChangeEventData,
+  TextInput as RNTextInput,
+  type TextInputPasteEventData,
+  type TextInputSelectionChangeEvent,
   View,
 } from 'react-native'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
-import PasteInput, {
-  type PastedFile,
-  type PasteInputRef, // @ts-expect-error no types when installing from github
-} from '@mattermost/react-native-paste-input'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {downloadAndResize} from '#/lib/media/manip'
 import {isUriImage} from '#/lib/media/util'
-import {cleanError} from '#/lib/strings/errors'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
 import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isNative} from '#/platform/detection'
@@ -46,11 +43,11 @@ export function TextInput({
   setRichText,
   onPhotoPasted,
   onNewLink,
-  onError,
+  onError: _onError,
   ...props
 }: TextInputProps) {
   const {theme: t, fonts} = useAlf()
-  const textInput = useRef<PasteInputRef>(null)
+  const textInput = useRef<RNTextInput>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
@@ -127,23 +124,23 @@ export function TextInput({
   )
 
   const onPaste = useCallback(
-    async (err: string | undefined, files: PastedFile[]) => {
-      if (err) {
-        return onError(cleanError(err))
-      }
+    async (evt: NativeSyntheticEvent<TextInputPasteEventData>) => {
+      const files = evt.nativeEvent.items
 
-      const uris = files.map(f => f.uri)
+      console.log(files)
+
+      const uris = files.filter(f => f.type === 'image').map(f => f.data)
       const uri = uris.find(isUriImage)
 
       if (uri) {
         onPhotoPasted(uri)
       }
     },
-    [onError, onPhotoPasted],
+    [onPhotoPasted],
   )
 
   const onSelectionChange = useCallback(
-    (evt: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
+    (evt: TextInputSelectionChangeEvent) => {
       // NOTE we track the input selection using a ref to avoid excessive renders -prf
       textInputSelection.current = evt.nativeEvent.selection
     },
@@ -215,7 +212,7 @@ export function TextInput({
 
   return (
     <View style={[a.flex_1, a.pl_md, hasRightPadding && a.pr_4xl]}>
-      <PasteInput
+      <RNTextInput
         testID="composerTextInput"
         ref={textInput}
         onChangeText={onChangeText}
@@ -249,7 +246,7 @@ export function TextInput({
           props.style,
         ]}>
         {textDecorated}
-      </PasteInput>
+      </RNTextInput>
       <Autocomplete
         prefix={autocompletePrefix}
         onSelect={onSelectAutocompleteItem}
