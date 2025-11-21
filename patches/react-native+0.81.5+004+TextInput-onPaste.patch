@@ -388,7 +388,7 @@ index 577bebe..bbde7fd 100644
  - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/PasteWatcher.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/PasteWatcher.kt
 new file mode 100644
-index 0000000..4d812f7
+index 0000000..a684b87
 --- /dev/null
 +++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/PasteWatcher.kt
 @@ -0,0 +1,17 @@
@@ -406,11 +406,11 @@ index 0000000..4d812f7
 + * ReactTextEdit This is used by the ReactTextInputManager to forward events
 + * from the EditText to JS
 + */
-+fun interface PasteWatcher {
-+  fun onPaste(type: String, data: String)
++public fun interface PasteWatcher {
++  public fun onPaste(type: String, data: String)
 +}
 diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
-index 42f6e03..d145dd7 100644
+index 42f6e03..2f1a865 100644
 --- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
 +++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
 @@ -8,6 +8,10 @@
@@ -449,7 +449,7 @@ index 42f6e03..d145dd7 100644
      textAttributes = TextAttributes()
  
      applyTextAttributes()
-@@ -356,9 +364,50 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+@@ -356,9 +364,56 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
     * Called when a context menu option for the text view is selected.
     * React Native replaces copy (as rich text) with copy as plain text.
     */
@@ -473,8 +473,14 @@ index 42f6e03..d145dd7 100644
 +          var data: String? = null
 +
 +          if (itemUri != null) {
-+              val cr = getReactContext(this).contentResolver
-+              type = cr.getType(itemUri)
++              // First try to get MIME type from ClipData description (more reliable for FileProvider URIs)
++              type = if (clipData.description.mimeTypeCount > 0) {
++                  clipData.description.getMimeType(0)
++              } else {
++                  // Fall back to ContentResolver
++                  val cr = getReactContext(this).contentResolver
++                  cr.getType(itemUri)
++              }
 +              if (type != null && type != ClipDescription.MIMETYPE_TEXT_PLAIN) {
 +                  data = itemUri.toString()
 +                  if (pasteWatcher != null) {
@@ -503,7 +509,7 @@ index 42f6e03..d145dd7 100644
  
    internal fun clearFocusAndMaybeRefocus() {
      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P || !isInTouchMode) {
-@@ -421,6 +470,10 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+@@ -421,6 +476,10 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
      this.scrollWatcher = scrollWatcher
    }
  
@@ -515,7 +521,7 @@ index 42f6e03..d145dd7 100644
     * Attempt to set a selection or fail silently. Intentionally meant to handle bad inputs.
     * EventCounter is the same one used as with text.
 diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputManager.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputManager.kt
-index 42c13a1..075a206 100644
+index 42c13a1..c39e240 100644
 --- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputManager.kt
 +++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputManager.kt
 @@ -133,6 +133,8 @@ public open class ReactTextInputManager public constructor() :
@@ -553,7 +559,7 @@ index 42c13a1..075a206 100644
 +    private val mSurfaceId: Int
 +
 +    init {
-+      val reactContext = getReactContext(editText)
++      val reactContext = UIManagerHelper.getReactContext(editText)
 +      mEventDispatcher = getEventDispatcher(reactContext, editText)
 +      mSurfaceId = UIManagerHelper.getSurfaceId(reactContext)
 +    }
