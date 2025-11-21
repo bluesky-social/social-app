@@ -884,7 +884,7 @@ let ComposerPost = React.memo(function ComposerPost({
   )
 
   const onPhotoPasted = useCallback(
-    async (uri: string) => {
+    async (uri: string, mimeType?: string) => {
       if (
         uri.startsWith('data:video/') ||
         (isWeb && uri.startsWith('data:image/gif'))
@@ -903,7 +903,8 @@ let ComposerPost = React.memo(function ComposerPost({
           .then(blob => new File([blob], name, {type: mimeType}))
         onSelectVideo(post.id, await getVideoMetadata(file))
       } else {
-        const res = await pasteImage(uri)
+        const res = await pasteImage(uri, mimeType)
+
         onImageAdd([res])
       }
     },
