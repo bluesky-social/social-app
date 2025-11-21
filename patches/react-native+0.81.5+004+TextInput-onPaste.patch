@@ -410,7 +410,7 @@ index 0000000..a684b87
 +  public fun onPaste(type: String, data: String)
 +}
 diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
-index 42f6e03..2f1a865 100644
+index 42f6e03..158e4e4 100644
 --- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
 +++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
 @@ -8,6 +8,10 @@
@@ -424,16 +424,20 @@ index 42f6e03..2f1a865 100644
  import android.content.Context
  import android.content.res.Configuration
  import android.graphics.Canvas
-@@ -15,6 +19,8 @@ import android.graphics.Color
+@@ -15,7 +19,12 @@ import android.graphics.Color
  import android.graphics.Paint
  import android.graphics.Rect
  import android.graphics.drawable.Drawable
 +import android.net.Uri
 +import com.facebook.react.uimanager.UIManagerHelper.getReactContext
  import android.os.Build
++import java.io.File
++import java.io.FileOutputStream
++import java.io.InputStream
  import android.os.Bundle
  import android.text.Editable
-@@ -128,6 +134,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+ import android.text.InputType
+@@ -128,6 +137,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
    private var selectionWatcher: SelectionWatcher? = null
    private var contentSizeWatcher: ContentSizeWatcher? = null
    private var scrollWatcher: ScrollWatcher?
@@ -441,7 +445,7 @@ index 42f6e03..2f1a865 100644
    private var keyListener: InternalKeyListener? = null
    private var detectScrollMovement = false
    private var onKeyPress = false
-@@ -212,6 +219,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+@@ -212,6 +222,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
        keyListener = InternalKeyListener()
      }
      scrollWatcher = null
@@ -449,7 +453,7 @@ index 42f6e03..2f1a865 100644
      textAttributes = TextAttributes()
  
      applyTextAttributes()
-@@ -356,9 +364,56 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+@@ -356,9 +367,57 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
     * Called when a context menu option for the text view is selected.
     * React Native replaces copy (as rich text) with copy as plain text.
     */
@@ -482,8 +486,9 @@ index 42f6e03..2f1a865 100644
 +                  cr.getType(itemUri)
 +              }
 +              if (type != null && type != ClipDescription.MIMETYPE_TEXT_PLAIN) {
-+                  data = itemUri.toString()
-+                  if (pasteWatcher != null) {
++                  // Copy content URI to cache and get file:// URI
++                  data = copyContentUriToCache(itemUri, type)
++                  if (data != null && pasteWatcher != null) {
 +                      pasteWatcher?.onPaste(type, data)
 +                  }
 +                  // Prevents default behavior to avoid inserting raw binary data into the text field
@@ -509,12 +514,47 @@ index 42f6e03..2f1a865 100644
  
    internal fun clearFocusAndMaybeRefocus() {
      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P || !isInTouchMode) {
-@@ -421,6 +476,10 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+@@ -421,6 +480,45 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
      this.scrollWatcher = scrollWatcher
    }
  
 +  public fun setPasteWatcher(pasteWatcher: PasteWatcher?) {
 +    this.pasteWatcher = pasteWatcher
++  }
++
++  /**
++   * Copies a content URI to the cache directory and returns a file:// URI
++   */
++  private fun copyContentUriToCache(contentUri: Uri, mimeType: String?): String? {
++    try {
++      val cr = getReactContext(this).contentResolver
++      val inputStream: InputStream = cr.openInputStream(contentUri) ?: return null
++
++      // Generate filename with appropriate extension
++      val extension = when (mimeType) {
++        "image/jpeg", "image/jpg" -> "jpg"
++        "image/png" -> "png"
++        "image/gif" -> "gif"
++        "image/webp" -> "webp"
++        else -> "jpg"
++      }
++      val fileName = "paste_${System.currentTimeMillis()}.$extension"
++
++      val cacheDir = context.cacheDir
++      val outputFile = File(cacheDir, fileName)
++      val outputStream = FileOutputStream(outputFile)
++
++      inputStream.use { input ->
++        outputStream.use { output ->
++          input.copyTo(output)
++        }
++      }
++
++      return "file://${outputFile.absolutePath}"
++    } catch (e: Exception) {
++      e.printStackTrace()
++      return null
++    }
 +  }
 +
    /**
