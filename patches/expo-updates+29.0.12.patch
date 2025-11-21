@@ -1,5 +1,26 @@
+diff --git a/node_modules/expo-updates/android/src/main/java/expo/modules/updates/loader/LoaderTask.kt b/node_modules/expo-updates/android/src/main/java/expo/modules/updates/loader/LoaderTask.kt
+index e9a8e3d..3c684e0 100644
+--- a/node_modules/expo-updates/android/src/main/java/expo/modules/updates/loader/LoaderTask.kt
++++ b/node_modules/expo-updates/android/src/main/java/expo/modules/updates/loader/LoaderTask.kt
+@@ -296,14 +296,13 @@ class LoaderTask(
+       ) {
+         try {
+           val embeddedLoader = EmbeddedLoader(context, configuration, logger, database, directory)
+-          val result = embeddedLoader.load { updateResponse ->
++          embeddedLoader.load { _ ->
+             Loader.OnUpdateResponseLoadedResult(shouldDownloadManifestIfPresentInResponse = true)
+           }
+-          launcher.launch(database)
+         } catch (e: Exception) {
+           logger.error("Unexpected error copying embedded update", e, UpdatesErrorCode.Unknown)
+-          launcher.launch(database)
+         }
++        launcher.launch(database)
+       } else {
+         launcher.launch(database)
+       }
 diff --git a/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift b/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
-index b85291e..546709d 100644
+index 68086bd..78c7761 100644
 --- a/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
 +++ b/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
 @@ -78,13 +78,20 @@ public final class ExpoUpdatesUpdate: Update {
