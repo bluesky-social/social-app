@@ -62,7 +62,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
   bandcamp: 'Bandcamp',
-  plyr: 'Plyr.fm',
+  plyr: 'plyr.fm',
 }
 
 export interface EmbedPlayerParams {
