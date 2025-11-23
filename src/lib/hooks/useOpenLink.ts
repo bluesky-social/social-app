@@ -12,12 +12,13 @@ import {
   toNiceDomain,
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useInAppBrowser} from '#/state/preferences/in-app-browser'
 import {useTheme} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import * as UrlPrewarm from '../../../modules/url-prewarm'
 
 export function useOpenLink() {
   const enabled = useInAppBrowser()
@@ -80,4 +81,16 @@ export function useOpenLink() {
   )
 
   return openLink
+}
+
+export async function prewarmUrl(url: string, shouldProxy: boolean = true) {
+  if (!isIOS) return
+
+  if (!isBskyAppUrl(url)) {
+    const urls = [url]
+    if (shouldProxy) {
+      urls.push(createProxiedUrl(url))
+    }
+    await UrlPrewarm.prewarmUrlsAsync(urls)
+  }
 }
