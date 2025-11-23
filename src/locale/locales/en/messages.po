@@ -422,7 +422,7 @@ msgstr ""
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:277
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:282
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
