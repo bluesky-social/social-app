@@ -8,6 +8,8 @@ import android.view.ViewStructure
 import android.view.Window
 import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.allViews
 import com.facebook.react.bridge.LifecycleEventListener
@@ -32,6 +34,7 @@ class BottomSheetView(
 
   private lateinit var dialogRootViewGroup: DialogRootViewGroup
   private var eventDispatcher: EventDispatcher? = null
+  private var isKeyboardVisible: Boolean = false
 
   private val screenHeight =
     context.resources.displayMetrics.heightPixels
@@ -238,9 +241,26 @@ class BottomSheetView(
         },
       )
     }
+
     this.isOpening = true
     dialog.show()
     this.dialog = dialog
+
+    ViewCompat.setOnApplyWindowInsetsListener(dialogRootViewGroup) { view, insets ->
+      val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+      val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+      val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
+
+      val wasKeyboardVisible = isKeyboardVisible
+      isKeyboardVisible = imeVisible
+
+      if (imeVisible && behavior?.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+      } else if (!imeVisible && wasKeyboardVisible) {
+        updateLayout()
+      }
+      insets
+    }
   }
 
   fun updateLayout() {
@@ -264,7 +284,11 @@ class BottomSheetView(
       val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
       val shouldBeExpanded = targetHeight >= availableHeight
 
-      if (shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_EXPANDED && !preventExpansion) {
+      if (isKeyboardVisible) {
+        if (behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+          behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+      } else if (shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_EXPANDED && !preventExpansion) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
       } else if (!shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
