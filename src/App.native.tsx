@@ -3,6 +3,7 @@ import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
+import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -14,7 +15,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as Sentry from '@sentry/react-native'
 
-import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
 import {s} from '#/lib/styles'
