@@ -299,11 +299,18 @@ export function MessagesList({
     marginBottom: Math.max(keyboardHeight.get(), footerHeight.get()),
   }))
 
-  const animatedStickyViewStyle = useAnimatedStyle(() => ({
-    transform: [
-      {translateY: -Math.max(keyboardHeight.get(), footerHeight.get())},
-    ],
-  }))
+  const animatedStickyViewStyle = useAnimatedStyle(() => {
+    if (!isNative) {
+      return {
+        transform: [{translateY: 0}],
+      }
+    }
+    return {
+      transform: [
+        {translateY: -Math.max(keyboardHeight.get(), footerHeight.get())},
+      ],
+    }
+  })
 
   // -- Message sending
   const onSendMessage = useCallback(
