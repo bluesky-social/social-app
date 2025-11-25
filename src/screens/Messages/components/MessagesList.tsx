@@ -301,9 +301,7 @@ export function MessagesList({
 
   const animatedStickyViewStyle = useAnimatedStyle(() => {
     if (!isNative) {
-      return {
-        transform: [{translateY: 0}],
-      }
+      return {}
     }
     return {
       transform: [
