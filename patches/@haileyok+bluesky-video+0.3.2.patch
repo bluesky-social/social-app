@@ -1,0 +1,20 @@
+diff --git a/node_modules/@haileyok/bluesky-video/android/build.gradle b/node_modules/@haileyok/bluesky-video/android/build.gradle
+index b988d3f..7743421 100644
+--- a/node_modules/@haileyok/bluesky-video/android/build.gradle
++++ b/node_modules/@haileyok/bluesky-video/android/build.gradle
+@@ -36,6 +36,7 @@ android {
+   defaultConfig {
+     versionCode 1
+     versionName "0.1.0"
++    consumerProguardFiles 'proguard-rules.pro'
+   }
+   lintOptions {
+     abortOnError false
+diff --git a/node_modules/@haileyok/bluesky-video/android/proguard-rules.pro b/node_modules/@haileyok/bluesky-video/android/proguard-rules.pro
+new file mode 100644
+index 0000000..3b5b864
+--- /dev/null
++++ b/node_modules/@haileyok/bluesky-video/android/proguard-rules.pro
+@@ -0,0 +1,2 @@
++# Keep FullscreenActivity from being stripped by R8/ProGuard
++-keep class expo.modules.blueskyvideo.FullscreenActivity { *; }
