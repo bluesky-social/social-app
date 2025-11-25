@@ -138,6 +138,7 @@
     "expo-build-properties": "~1.0.9",
     "expo-camera": "~17.0.9",
     "expo-clipboard": "~8.0.7",
+    "expo-contacts": "^15.0.10",
     "expo-dev-client": "~6.0.16",
     "expo-device": "~8.0.9",
     "expo-file-system": "~19.0.17",
