@@ -33,9 +33,9 @@ import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {DotGrid2x3_Stroke2_Corner0_Rounded as HandleIcon} from '#/components/icons/DotGrid'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
-import {HandleVertical} from '#/components/icons/Handle'
 import {Pin_Filled_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
@@ -307,7 +307,7 @@ function ListItem({
             <Sortable.Handle>
               <View
                 style={[a.justify_center, a.align_center, a.px_sm, a.py_md]}>
-                <HandleVertical fill={t.palette.contrast_400} />
+                <HandleIcon fill={t.palette.contrast_400} />
               </View>
             </Sortable.Handle>
           </View>
