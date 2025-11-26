@@ -30,7 +30,13 @@ import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import * as Toast from '#/view/com/util/Toast'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
-import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
+import {
+  atoms as a,
+  useBreakpoints,
+  useTheme,
+  type ViewStyleProp,
+  web,
+} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DotGrid2x3_Stroke2_Corner0_Rounded as HandleIcon} from '#/components/icons/DotGrid'
@@ -294,7 +300,7 @@ function ListItem({
       ]}>
       {isPinned && (
         <View style={[a.flex_row, a.align_center]}>
-          <Sortable.Handle>
+          <Sortable.Handle style={web({cursor: 'grab', height: '100%'})}>
             <View
               style={[
                 a.justify_center,
