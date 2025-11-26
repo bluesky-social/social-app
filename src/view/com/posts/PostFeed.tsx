@@ -531,6 +531,16 @@ let PostFeed = ({
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                     })
                   }
+                } else if (feedKind === 'following') {
+                  if (sliceIndex === 0) {
+                    // Add composer prompt for Following feed
+                    if (hasSession) {
+                      arr.push({
+                        type: 'composerPrompt',
+                        key: 'composerPrompt-' + sliceIndex,
+                      })
+                    }
+                  }
                 } else if (feedKind === 'profile') {
                   if (sliceIndex === 5) {
                     arr.push({
