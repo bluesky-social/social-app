@@ -301,7 +301,10 @@ function ListItem({
                   opacity: 0.5,
                 },
               ]}>
-              <HandleVertical />
+              <HandleVertical
+                style={{position: 'absolute', top: 0}}
+                fill={t.palette.contrast_400}
+              />
             </View>
           </Sortable.Handle>
         ) : (
