@@ -1,6 +1,10 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import Animated, {LinearTransition} from 'react-native-reanimated'
+import Animated, {
+  LinearTransition,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated'
 import Sortable from 'react-native-sortables'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
@@ -60,6 +64,9 @@ function SavedFeedsInner({
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
+
+  // Contains the id of the currently dragged item
+  const [draggedItem, setDraggedItem] = useState<string | null>(null)
 
   /*
    * Use optimistic data if exists and no error, otherwise fallback to remote
@@ -151,6 +158,9 @@ function SavedFeedsInner({
               data={pinnedFeeds}
               keyExtractor={item => item.id}
               overDrag="vertical"
+              activeItemScale={1.03}
+              onDragStart={item => setDraggedItem(item.key)}
+              onDragEnd={() => setDraggedItem(null)}
               onActiveItemDropped={newOrder => {
                 const newData = [...pinnedFeeds]
                 const movedItem = newData.splice(newOrder.fromIndex, 1)[0]
@@ -166,6 +176,7 @@ function SavedFeedsInner({
                 <ListItem
                   key={item.id}
                   feed={item}
+                  isDragging={draggedItem === item.id}
                   isPinned={true}
                   currentFeeds={currentFeeds}
                   setCurrentFeeds={setCurrentFeeds}
@@ -247,11 +258,13 @@ function SavedFeedsInner({
 function ListItem({
   feed,
   isPinned,
+  isDragging,
   currentFeeds,
   setCurrentFeeds,
 }: {
   feed: AppBskyActorDefs.SavedFeed
   isPinned: boolean
+  isDragging?: boolean
   currentFeeds: AppBskyActorDefs.SavedFeed[]
   setCurrentFeeds: React.Dispatch<AppBskyActorDefs.SavedFeed[]>
   preferences: UsePreferencesQueryResponse
@@ -275,51 +288,74 @@ function ListItem({
     setCurrentFeeds(currentFeeds.filter(f => f.id !== feed.id))
   }
 
+  const borderOpacityStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(isDragging ? 0 : 1, {duration: 200}),
+    transform: [
+      {
+        scale: withTiming(isDragging ? 0.95 : 1, {duration: 250}),
+      },
+    ],
+  }))
+
   return (
-    <Animated.View
-      style={[a.flex_row, a.border_b, t.atoms.border_contrast_low]}
-      layout={LinearTransition.duration(100)}>
-      {feed.type === 'timeline' ? (
-        <FollowingFeedCard />
-      ) : (
-        <FeedSourceCard
-          key={feedUri}
-          feedUri={feedUri}
-          style={[isPinned && a.pr_sm]}
-          showMinimalPlaceholder
-          hideTopBorder={true}
-        />
-      )}
-      <View style={[a.pr_lg, a.flex_row, a.align_center, a.gap_sm]}>
-        {isPinned ? (
-          <Sortable.Handle>
-            <View style={[a.justify_center, a.align_center, a.px_sm, a.py_md]}>
-              <HandleVertical fill={t.palette.contrast_400} />
-            </View>
-          </Sortable.Handle>
-        ) : (
-          <Button
-            testID={`feed-${feedUri}-toggleSave`}
-            label={_(msg`Remove from my feeds`)}
-            onPress={onPressRemove}
-            size="small"
-            color="secondary"
-            variant="ghost"
-            shape="square">
-            <ButtonIcon icon={TrashIcon} />
-          </Button>
+    <>
+      <Animated.View
+        style={[a.flex_row, t.atoms.border_contrast_low]}
+        layout={LinearTransition.duration(100)}>
+        {isPinned && (
+          <View style={[a.flex_row, a.align_center]}>
+            <Sortable.Handle>
+              <View
+                style={[a.justify_center, a.align_center, a.px_sm, a.py_md]}>
+                <HandleVertical fill={t.palette.contrast_400} />
+              </View>
+            </Sortable.Handle>
+          </View>
         )}
-        <Button
-          testID={`feed-${feed.type}-togglePin`}
-          label={isPinned ? _(msg`Unpin feed`) : _(msg`Pin feed`)}
-          onPress={onTogglePinned}
-          size="small"
-          color={isPinned ? 'primary_subtle' : 'secondary'}
-          shape="square">
-          <ButtonIcon icon={PinIcon} />
-        </Button>
-      </View>
-    </Animated.View>
+        {feed.type === 'timeline' ? (
+          <FollowingFeedCard />
+        ) : (
+          <FeedSourceCard
+            key={feedUri}
+            feedUri={feedUri}
+            style={[isPinned && a.pr_sm]}
+            showMinimalPlaceholder
+            hideTopBorder={true}
+          />
+        )}
+        <View style={[a.pr_lg, a.flex_row, a.align_center, a.gap_sm]}>
+          {!isPinned && (
+            <Button
+              testID={`feed-${feedUri}-toggleSave`}
+              label={_(msg`Remove from my feeds`)}
+              onPress={onPressRemove}
+              size="small"
+              color="secondary"
+              variant="ghost"
+              shape="square">
+              <ButtonIcon icon={TrashIcon} />
+            </Button>
+          )}
+          <Button
+            testID={`feed-${feed.type}-togglePin`}
+            label={isPinned ? _(msg`Unpin feed`) : _(msg`Pin feed`)}
+            onPress={onTogglePinned}
+            size="small"
+            color={isPinned ? 'primary_subtle' : 'secondary'}
+            shape="square">
+            <ButtonIcon icon={PinIcon} />
+          </Button>
+        </View>
+      </Animated.View>
+      <Animated.View
+        style={[
+          {height: 1},
+          a.w_full,
+          {backgroundColor: t.palette.contrast_200},
+          borderOpacityStyle,
+        ]}
+      />
+    </>
   )
 }
 
