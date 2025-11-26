@@ -170,9 +170,8 @@ function SavedFeedsInner({
               hapticsEnabled={true}
               customHandle
               renderItem={({item}) => (
-                <DraggableCardWrapper>
+                <DraggableCardWrapper key={item.id}>
                   <ListItem
-                    key={item.id}
                     feed={item}
                     isPinned
                     currentFeeds={currentFeeds}
