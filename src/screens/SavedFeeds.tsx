@@ -2,6 +2,7 @@ import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import Animated, {
   interpolateColor,
+  useAnimatedRef,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import Sortable, {useItemContext} from 'react-native-sortables'
@@ -63,6 +64,7 @@ function SavedFeedsInner({
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
+  const scrollviewAnimRef = useAnimatedRef<Animated.ScrollView>()
 
   /*
    * Use optimistic data if exists and no error, otherwise fallback to remote
@@ -122,7 +124,7 @@ function SavedFeedsInner({
         </Button>
       </Layout.Header.Outer>
 
-      <Layout.Content>
+      <Layout.Content ref={scrollviewAnimRef}>
         {noSavedFeedsOfAnyType && (
           <View style={[t.atoms.border_contrast_low, a.border_b]}>
             <NoSavedFeedsOfAnyType
@@ -155,6 +157,7 @@ function SavedFeedsInner({
               keyExtractor={item => item.id}
               overDrag="vertical"
               activeItemScale={1.03}
+              scrollableRef={scrollviewAnimRef}
               onActiveItemDropped={newOrder => {
                 const hasChanged = newOrder.fromIndex !== newOrder.toIndex
                 if (hasChanged) {
