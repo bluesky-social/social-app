@@ -52,3 +52,8 @@ export function isErrorMaybeAppPasswordPermissions(e: unknown) {
   const str = String(e)
   return str.includes('Bad token scope') || str.includes('Bad token method')
 }
+
+export function isCancelledError(e: unknown) {
+  const str = String(e).toLowerCase()
+  return str.includes('cancel')
+}

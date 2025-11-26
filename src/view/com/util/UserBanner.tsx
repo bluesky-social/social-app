@@ -12,6 +12,7 @@ import {
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
+import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isAndroid, isNative} from '#/platform/detection'
 import {
@@ -87,9 +88,9 @@ export function UserBanner({
         setRawImage(await createComposerImage(items[0]))
         editImageDialogControl.open()
       }
-    } catch (e: any) {
+    } catch (e) {
       // Don't log errors for cancelling selection to sentry on ios or android
-      if (!(e instanceof Error && e.message.includes('cancel'))) {
+      if (!isCancelledError(e)) {
         logger.error('Failed to crop banner', {error: e})
       }
     }

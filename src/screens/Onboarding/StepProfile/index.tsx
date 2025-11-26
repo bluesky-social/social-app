@@ -15,6 +15,7 @@ import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {
@@ -192,7 +193,7 @@ export function StepProfile() {
           aspectRatio: 1 / 1,
         })
       } catch (e) {
-        if (!(e instanceof Error && e.message.includes('cancel'))) {
+        if (!isCancelledError(e)) {
           logger.error('Failed to crop avatar in onboarding', {error: e})
         }
       }
