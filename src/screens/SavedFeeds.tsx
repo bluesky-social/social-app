@@ -1,12 +1,12 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
+import Sortable from 'react-native-sortables'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED} from '#/lib/constants'
@@ -29,12 +29,9 @@ import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {
-  ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon,
-  ArrowTop_Stroke2_Corner0_Rounded as ArrowUpIcon,
-} from '#/components/icons/Arrow'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
+import {HandleVertical} from '#/components/icons/Handle'
 import {Pin_Filled_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
@@ -150,16 +147,31 @@ function SavedFeedsInner({
               </Admonition>
             </View>
           ) : (
-            pinnedFeeds.map(f => (
-              <ListItem
-                key={f.id}
-                feed={f}
-                isPinned
-                currentFeeds={currentFeeds}
-                setCurrentFeeds={setCurrentFeeds}
-                preferences={preferences}
-              />
-            ))
+            <Sortable.Grid
+              data={pinnedFeeds}
+              keyExtractor={item => item.id}
+              overDrag="vertical"
+              onActiveItemDropped={newOrder => {
+                const newData = [...pinnedFeeds]
+                const movedItem = newData.splice(newOrder.fromIndex, 1)[0]
+                newData.splice(newOrder.toIndex, 0, movedItem)
+
+                // Merge back with unpinned feeds
+                const updatedFeeds = [...newData, ...unpinnedFeeds]
+                setCurrentFeeds(updatedFeeds)
+              }}
+              customHandle
+              renderItem={({item}) => (
+                <ListItem
+                  key={item.id}
+                  feed={item}
+                  isPinned={true}
+                  currentFeeds={currentFeeds}
+                  setCurrentFeeds={setCurrentFeeds}
+                  preferences={preferences}
+                />
+              )}
+            />
           )
         ) : (
           <View style={[a.w_full, a.py_2xl, a.align_center]}>
@@ -257,41 +269,6 @@ function ListItem({
     )
   }
 
-  const onPressUp = async () => {
-    if (!isPinned) return
-
-    const nextFeeds = currentFeeds.slice()
-    const ids = currentFeeds.map(f => f.id)
-    const index = ids.indexOf(feed.id)
-    const nextIndex = index - 1
-
-    if (index === -1 || index === 0) return
-    ;[nextFeeds[index], nextFeeds[nextIndex]] = [
-      nextFeeds[nextIndex],
-      nextFeeds[index],
-    ]
-
-    setCurrentFeeds(nextFeeds)
-  }
-
-  const onPressDown = async () => {
-    if (!isPinned) return
-
-    const nextFeeds = currentFeeds.slice()
-    const ids = currentFeeds.map(f => f.id)
-    const index = ids.indexOf(feed.id)
-    const nextIndex = index + 1
-
-    if (index === -1 || index >= nextFeeds.filter(f => f.pinned).length - 1)
-      return
-    ;[nextFeeds[index], nextFeeds[nextIndex]] = [
-      nextFeeds[nextIndex],
-      nextFeeds[index],
-    ]
-
-    setCurrentFeeds(nextFeeds)
-  }
-
   const onPressRemove = async () => {
     playHaptic()
     setCurrentFeeds(currentFeeds.filter(f => f.id !== feed.id))
@@ -314,26 +291,19 @@ function ListItem({
       )}
       <View style={[a.pr_lg, a.flex_row, a.align_center, a.gap_sm]}>
         {isPinned ? (
-          <>
-            <Button
-              testID={`feed-${feed.type}-moveUp`}
-              label={_(msg`Move feed up`)}
-              onPress={onPressUp}
-              size="small"
-              color="secondary"
-              shape="square">
-              <ButtonIcon icon={ArrowUpIcon} />
-            </Button>
-            <Button
-              testID={`feed-${feed.type}-moveDown`}
-              label={_(msg`Move feed down`)}
-              onPress={onPressDown}
-              size="small"
-              color="secondary"
-              shape="square">
-              <ButtonIcon icon={ArrowDownIcon} />
-            </Button>
-          </>
+          <Sortable.Handle>
+            <View
+              style={[
+                a.p_sm,
+                a.justify_center,
+                a.align_center,
+                {
+                  opacity: 0.5,
+                },
+              ]}>
+              <HandleVertical />
+            </View>
+          </Sortable.Handle>
         ) : (
           <Button
             testID={`feed-${feedUri}-toggleSave`}
