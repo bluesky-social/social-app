@@ -88,7 +88,8 @@ export function UserBanner({
         editImageDialogControl.open()
       }
     } catch (e: any) {
-      if (!String(e).includes('Canceled')) {
+      // Don't log errors for cancelling selection to sentry on ios or android
+      if (!(e instanceof Error && e.message.includes('cancel'))) {
         logger.error('Failed to crop banner', {error: e})
       }
     }

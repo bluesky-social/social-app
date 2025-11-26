@@ -15,6 +15,7 @@ import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {
   DescriptionText,
@@ -184,11 +185,17 @@ export function StepProfile() {
     if (!image) return
 
     if (!isWeb) {
-      image = await openCropper({
-        imageUri: image.path,
-        shape: 'circle',
-        aspectRatio: 1 / 1,
-      })
+      try {
+        image = await openCropper({
+          imageUri: image.path,
+          shape: 'circle',
+          aspectRatio: 1 / 1,
+        })
+      } catch (e) {
+        if (!(e instanceof Error && e.message.includes('cancel'))) {
+          logger.error('Failed to crop avatar in onboarding', {error: e})
+        }
+      }
     }
     image = await compressIfNeeded(image, 1000000)
 

@@ -143,7 +143,7 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
       },
     }
   } catch (e) {
-    if (e instanceof Error && e.message.includes('User cancelled')) {
+    if (!(e instanceof Error && e.message.includes('cancel'))) {
       return img
     }
 

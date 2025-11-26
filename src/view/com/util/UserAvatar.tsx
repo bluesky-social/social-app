@@ -409,8 +409,8 @@ let EditableUserAvatar = ({
       }
     } catch (e: any) {
       // Don't log errors for cancelling selection to sentry on ios or android
-      if (!String(e).toLowerCase().includes('cancel')) {
-        logger.error('Failed to crop banner', {error: e})
+      if (!(e instanceof Error && e.message.includes('cancel'))) {
+        logger.error('Failed to crop avatar', {error: e})
       }
     }
   }, [
