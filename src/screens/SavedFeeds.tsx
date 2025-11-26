@@ -160,6 +160,7 @@ function SavedFeedsInner({
                 const updatedFeeds = [...newData, ...unpinnedFeeds]
                 setCurrentFeeds(updatedFeeds)
               }}
+              hapticsEnabled={true}
               customHandle
               renderItem={({item}) => (
                 <ListItem
@@ -292,19 +293,8 @@ function ListItem({
       <View style={[a.pr_lg, a.flex_row, a.align_center, a.gap_sm]}>
         {isPinned ? (
           <Sortable.Handle>
-            <View
-              style={[
-                a.p_sm,
-                a.justify_center,
-                a.align_center,
-                {
-                  opacity: 0.5,
-                },
-              ]}>
-              <HandleVertical
-                style={{position: 'absolute', top: 0}}
-                fill={t.palette.contrast_400}
-              />
+            <View style={[a.justify_center, a.align_center, a.px_sm, a.py_md]}>
+              <HandleVertical fill={t.palette.contrast_400} />
             </View>
           </Sortable.Handle>
         ) : (
