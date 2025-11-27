@@ -5,5 +5,5 @@ export const getVideoMetadata = (_file: File): Promise<ImagePickerAsset> => {
 }
 
 export function hasWebCodecs(): boolean {
-  throw new Error("hasWebCodecs is web only (also, no it doesn't)")
+  return false
 }

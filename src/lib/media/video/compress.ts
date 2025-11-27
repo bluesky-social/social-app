@@ -7,10 +7,6 @@ import {extToMime} from './util'
 
 const MIN_SIZE_FOR_COMPRESSION = 25 // 25mb
 
-export function hasWebCodecs(): boolean {
-  throw new Error('Native does not have WebCodecs.')
-}
-
 export async function compressVideo(
   file: ImagePickerAsset,
   opts?: {

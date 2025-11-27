@@ -245,16 +245,24 @@ async function doCompression(
   }
 
   if (signal) {
-    signal.addEventListener('abort', () => {
-      logger.debug('compress: cancelled')
-      conversion.cancel()
-    })
+    signal.addEventListener(
+      'abort',
+      () => {
+        logger.debug('compress: cancelled')
+        conversion.cancel()
+      },
+      {once: true},
+    )
   }
 
   logger.debug('compress: starting conversion')
   const startTime = performance.now()
 
-  await conversion.execute()
+  try {
+    await conversion.execute()
+  } finally {
+    input.dispose()
+  }
 
   const elapsed = performance.now() - startTime
   const bytes = target.buffer

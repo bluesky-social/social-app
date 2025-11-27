@@ -22,14 +22,14 @@ export async function getVideoMetadata(file: File): Promise<ImagePickerAsset> {
   if (hasWebCodecs()) {
     try {
       const result = await getMetadataWithWebCodecs(file, blobUrl)
-      logger.debug('metadata: MediaBunny succeeded', {
+      logger.debug('metadata: WebCodecs succeeded', {
         width: result.width,
         height: result.height,
         duration: result.duration,
       })
       return result
     } catch (e) {
-      logger.warn('metadata: MediaBunny failed, using fallback', {
+      logger.warn('metadata: WebCodecs failed, using fallback', {
         safeMessage: e,
       })
     }
