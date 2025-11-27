@@ -158,6 +158,7 @@
     "expo-notifications": "~0.32.12",
     "expo-screen-orientation": "~9.0.7",
     "expo-sharing": "~14.0.7",
+    "expo-sms": "^14.0.7",
     "expo-splash-screen": "~31.0.10",
     "expo-system-ui": "~6.0.8",
     "expo-task-manager": "~14.0.8",
