@@ -130,6 +130,7 @@ import {
   StarterPackScreenShort,
 } from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
+import {SyncContactsFlowScreen} from '#/screens/SyncContactsFlowScreen'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
 import {type Theme, useTheme} from '#/alf'
@@ -615,6 +616,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => BookmarksScreen}
         options={{
           title: title(msg`Saved Posts`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="SyncContactsFlow"
+        getComponent={() => SyncContactsFlowScreen}
+        options={{
+          title: title(msg`Sync Contacts`),
           requireAuth: true,
         }}
       />

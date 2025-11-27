@@ -208,14 +208,16 @@ export function SettingsScreen({}: Props) {
               <Trans>Content and media</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            to="/settings/sync-contacts"
-            label={_(msg`Sync contacts`)}>
-            <SettingsList.ItemIcon icon={ContactsIcon} />
-            <SettingsList.ItemText>
-              <Trans>Sync contacts</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
+          {isNative && (
+            <SettingsList.LinkItem
+              to="/settings/sync-contacts"
+              label={_(msg`Sync contacts`)}>
+              <SettingsList.ItemIcon icon={ContactsIcon} />
+              <SettingsList.ItemText>
+                <Trans>Sync contacts</Trans>
+              </SettingsList.ItemText>
+            </SettingsList.LinkItem>
+          )}
           <SettingsList.LinkItem
             to="/settings/appearance"
             label={_(msg`Appearance`)}>
