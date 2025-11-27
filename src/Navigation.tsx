@@ -18,7 +18,9 @@ import {
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
+import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   getNotificationPayload,
   type NotificationPayload,
@@ -45,10 +47,12 @@ import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {
   shouldRequestEmailConfirmation,
   snoozeEmailConfirmationPrompt,
 } from '#/state/shell/reminders'
+import {useCloseAllActiveElements} from '#/state/util'
 import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
 import {DebugModScreen} from '#/view/screens/DebugMod'
@@ -119,6 +123,7 @@ import {RepostNotificationSettingsScreen} from '#/screens/Settings/NotificationS
 import {RepostsOnRepostsNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
 import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from '#/screens/Settings/Settings'
+import {SyncContactsSettingsScreen} from '#/screens/Settings/SyncContactsSettings'
 import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
 import {
   StarterPackScreen,
@@ -134,10 +139,6 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
-import {useAccountSwitcher} from './lib/hooks/useAccountSwitcher'
-import {useNonReactiveCallback} from './lib/hooks/useNonReactiveCallback'
-import {useLoggedOutViewControls} from './state/shell/logged-out'
-import {useCloseAllActiveElements} from './state/util'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -413,6 +414,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => ActivityPrivacySettingsScreen}
         options={{
           title: title(msg`Privacy and Security`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="SyncContactsSettings"
+        getComponent={() => SyncContactsSettingsScreen}
+        options={{
+          title: title(msg`Sync contacts`),
           requireAuth: true,
         }}
       />
