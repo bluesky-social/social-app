@@ -2,13 +2,17 @@ import React from 'react'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
+import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
@@ -41,6 +45,16 @@ export function ProfileFollows({name}: {name: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPressFindAccounts = React.useCallback(() => {
+    if (isWeb) {
+      navigation.navigate('Search', {})
+    } else {
+      navigation.navigate('SearchTab')
+      navigation.popToTop()
+    }
+  }, [navigation])
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
@@ -129,12 +143,21 @@ export function ProfileFollows({name}: {name: string}) {
         emptyType="results"
         emptyMessage={
           isMe
-            ? _(msg`You are not following anyone.`)
+            ? _(msg`You are not following anyone yet`)
             : _(msg`This user isn't following anyone.`)
         }
         errorMessage={cleanError(resolveError || error)}
         onRetry={isError ? refetch : undefined}
         sideBorders={false}
+        useEmptyState={true}
+        emptyStateIcon={PeopleRemoveIcon}
+        emptyStateButton={{
+          label: _(msg`See suggested accounts`),
+          text: _(msg`See suggested accounts`),
+          onPress: onPressFindAccounts,
+          size: 'tiny',
+          color: 'primary',
+        }}
       />
     )
   }

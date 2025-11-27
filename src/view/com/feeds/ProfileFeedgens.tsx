@@ -15,6 +15,7 @@ import {
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -29,6 +30,7 @@ import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
+import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import {ListFooter} from '#/components/Lists'
 
 const LOADING = {_reactKey: '__loading__'}
@@ -78,6 +80,7 @@ export function ProfileFeedgens({
   } = useProfileFeedgensQuery(did, opts)
   const isEmpty = !isPending && !data?.pages[0]?.feeds.length
   const {data: preferences} = usePreferencesQuery()
+  const navigation = useNavigation()
 
   const items = useMemo(() => {
     let items: any[] = []
@@ -147,9 +150,17 @@ export function ProfileFeedgens({
       if (item === EMPTY) {
         return (
           <EmptyState
-            icon="hashtag"
-            message={_(msg`You have no feeds.`)}
-            testID="listsEmpty"
+            style={{width: '100%'}}
+            icon={HashtagWideIcon}
+            message={_(msg`You haven't made any custom feeds yet.`)}
+            textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
+            button={{
+              label: _(msg`Browse custom feeds`),
+              text: _(msg`Browse custom feeds`),
+              onPress: () => navigation.navigate('Feeds' as never),
+              size: 'small',
+              color: 'secondary',
+            }}
           />
         )
       } else if (item === ERROR_ITEM) {
@@ -183,7 +194,7 @@ export function ProfileFeedgens({
       }
       return null
     },
-    [_, t, error, refetch, onPressRetryLoadMore, preferences],
+    [_, t, error, refetch, onPressRetryLoadMore, preferences, navigation],
   )
 
   useEffect(() => {
