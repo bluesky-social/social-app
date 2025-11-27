@@ -11,6 +11,7 @@ import {
 
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
+import {isWeb} from '#/platform/detection'
 import {
   android,
   applyFonts,
@@ -105,7 +106,7 @@ export function Root({children, isInvalid = false, style}: RootProps) {
           a.align_center,
           a.relative,
           a.w_full,
-          !hasMultiline && a.px_md,
+          !(hasMultiline && isWeb) && a.px_md,
           style,
         ]}
         {...web({
