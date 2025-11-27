@@ -1,4 +1,4 @@
-import {createContext, useContext, useMemo, useRef} from 'react'
+import React, {createContext, useContext, useMemo, useRef} from 'react'
 import {
   type AccessibilityProps,
   StyleSheet,
@@ -83,6 +83,20 @@ export function Root({children, isInvalid = false, style}: RootProps) {
     ],
   )
 
+  // Check if any child has multiline prop
+  const hasMultiline = useMemo(() => {
+    let found = false
+    React.Children.forEach(children, child => {
+      if (
+        React.isValidElement(child) &&
+        (child.props as {multiline?: boolean})?.multiline
+      ) {
+        found = true
+      }
+    })
+    return found
+  }, [children])
+
   return (
     <Context.Provider value={context}>
       <View
@@ -91,7 +105,7 @@ export function Root({children, isInvalid = false, style}: RootProps) {
           a.align_center,
           a.relative,
           a.w_full,
-          a.px_md,
+          !hasMultiline && a.px_md,
           style,
         ]}
         {...web({
@@ -222,6 +236,13 @@ export function createInput(Component: typeof TextInput) {
         marginTop: 2,
         marginBottom: 2,
       }),
+      rest.multiline &&
+        web({
+          resize: 'vertical',
+          fieldSizing: 'content',
+          paddingLeft: 16,
+          paddingRight: 16,
+        }),
       style,
     ])
 
