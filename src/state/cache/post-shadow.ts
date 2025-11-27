@@ -25,6 +25,9 @@ export interface PostShadow {
   embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined
   pinned: boolean
   optimisticReplyCount: number | undefined
+  optimisticLikeCount: number | undefined
+  optimisticRepostCount: number | undefined
+  optimisticBookmarkCount: number | undefined
   bookmarked: boolean | undefined
 }
 
@@ -82,6 +85,10 @@ function mergeShadow(
   }
 
   let likeCount = post.likeCount ?? 0
+
+  likeCount = shadow.optimisticLikeCount ?? likeCount
+
+  console.log({likeCount, optimisticLikeCount: shadow.optimisticLikeCount})
   if ('likeUri' in shadow) {
     const wasLiked = !!post.viewer?.like
     const isLiked = !!shadow.likeUri
@@ -94,6 +101,8 @@ function mergeShadow(
   }
 
   let bookmarkCount = post.bookmarkCount ?? 0
+
+  bookmarkCount = shadow.optimisticBookmarkCount ?? bookmarkCount
   if ('bookmarked' in shadow) {
     const wasBookmarked = !!post.viewer?.bookmarked
     const isBookmarked = !!shadow.bookmarked
@@ -106,6 +115,8 @@ function mergeShadow(
   }
 
   let repostCount = post.repostCount ?? 0
+
+  repostCount = shadow.optimisticRepostCount ?? repostCount
   if ('repostUri' in shadow) {
     const wasReposted = !!post.viewer?.repost
     const isReposted = !!shadow.repostUri
