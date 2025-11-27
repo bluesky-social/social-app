@@ -66,7 +66,7 @@ module.exports = function (_config) {
             'Used for profile pictures, posts, and other kinds of content',
           CFBundleSpokenName: 'Blue Sky',
           contactsPermission:
-            '$(PRODUCT_NAME) will use your contacts to help you find your friends.',
+            'Your contacts will be securely uploaded to $(PRODUCT_NAME)’s servers to help you find friends who are on $(PRODUCT_NAME).',
           CFBundleLocalizations: [
             'en',
             'an',
