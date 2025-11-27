@@ -154,7 +154,7 @@ import {
   type VideoState,
 } from './state/video'
 import {type TextInputRef} from './text-input/TextInput.types'
-import {getVideoMetadata} from './videos/pickVideo'
+import {getVideoMetadata} from './videos/metadata'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
