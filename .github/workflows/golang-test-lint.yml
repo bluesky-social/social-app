@@ -19,7 +19,7 @@ jobs:
       - name: Set up Go tooling
         uses: actions/setup-go@v3
         with:
-          go-version: "1.23"
+          go-version: "1.25"
       - name: Dummy Static Files
         run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
       - name: Check
@@ -36,7 +36,7 @@ jobs:
       - name: Set up Go tooling
         uses: actions/setup-go@v3
         with:
-          go-version: "1.23"
+          go-version: "1.25"
       - name: Dummy Static Files
         run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
       - name: Lint

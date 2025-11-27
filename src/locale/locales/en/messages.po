@@ -996,7 +996,7 @@ msgstr ""
 msgid "Alt Text"
 msgstr ""
 
-#: src/view/com/composer/photos/Gallery.tsx:260
+#: src/view/com/composer/photos/Gallery.tsx:261
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr ""
 

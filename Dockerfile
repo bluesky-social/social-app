@@ -1,4 +1,4 @@
-FROM golang:1.24.5-bullseye AS build-env
+FROM golang:1.25-bookworm AS build-env
 
 WORKDIR /usr/src/social-app
 
@@ -89,7 +89,7 @@ RUN cd bskyweb/ && \
     -o /bskyweb \
     ./cmd/bskyweb
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 ENV GODEBUG=netdns=go
 ENV TZ=Etc/UTC
