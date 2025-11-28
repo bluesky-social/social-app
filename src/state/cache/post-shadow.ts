@@ -27,7 +27,6 @@ export interface PostShadow {
   optimisticReplyCount: number | undefined
   optimisticLikeCount: number | undefined
   optimisticRepostCount: number | undefined
-  optimisticBookmarkCount: number | undefined
   bookmarked: boolean | undefined
 }
 
@@ -89,11 +88,6 @@ function mergeShadow(
     likeCount = shadow.optimisticLikeCount ?? likeCount
   }
 
-  let bookmarkCount = post.bookmarkCount ?? 0
-  if ('optimisticBookmarkCount' in shadow) {
-    bookmarkCount = shadow.optimisticBookmarkCount ?? bookmarkCount
-  }
-
   let repostCount = post.repostCount ?? 0
   if ('optimisticRepostCount' in shadow) {
     repostCount = shadow.optimisticRepostCount ?? repostCount
@@ -122,7 +116,6 @@ function mergeShadow(
     likeCount: likeCount,
     repostCount: repostCount,
     replyCount: replyCount,
-    bookmarkCount: bookmarkCount,
     viewer: {
       ...(post.viewer || {}),
       like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,

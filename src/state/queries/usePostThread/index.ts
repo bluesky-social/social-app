@@ -82,10 +82,10 @@ export function usePostThread({anchor}: {anchor?: string}) {
 
       /*
        * Sync fresh thread data back to feed cache
-       * Find the anchor post and update its shadow with fresh counts
+       * Find the anchor post and update its shadow with fresh
+       * like and repost counts.
        */
       const anchorItem = data.thread?.find(item => item.depth === 0)
-      console.log({anchorItem})
 
       if (
         anchorItem &&
@@ -95,8 +95,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
         updatePostShadow(qc, post.uri, {
           optimisticLikeCount: post.likeCount,
           optimisticRepostCount: post.repostCount,
-          optimisticBookmarkCount: post.bookmarkCount,
-          optimisticReplyCount: post.replyCount,
         })
       }
 
