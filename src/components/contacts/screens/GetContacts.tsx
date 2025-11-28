@@ -21,7 +21,7 @@ export function GetContacts({
 
   const gutters = useGutters([0, 'wide'])
 
-  const style = [a.text_md, a.leading_snug, a.mt_sm]
+  const style = [a.text_md, a.leading_snug, a.mt_md]
 
   return (
     <View style={[a.h_full]}>
@@ -36,7 +36,7 @@ export function GetContacts({
             numbers and letters that can’t be decoded with a key.
           </Trans>
         </Text>
-        <Text style={style}>
+        <Text style={[style, a.mt_lg]}>
           &bull; <Trans>We only suggest follows if both people consent</Trans>
         </Text>
         <Text style={style}>
@@ -49,7 +49,7 @@ export function GetContacts({
         <Text style={style}>
           &bull; <Trans>You can always opt out</Trans>
         </Text>
-        <Text style={style}>
+        <Text style={[style, a.mt_lg]}>
           <Trans>
             We apply the highest privacy standards just in case just in case
             your contacts include minors. We never share, or sell your contact
