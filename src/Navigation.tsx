@@ -625,6 +625,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Sync Contacts`),
           requireAuth: true,
+          gestureEnabled: false,
         }}
       />
     </>
