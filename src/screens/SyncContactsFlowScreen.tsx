@@ -1,14 +1,15 @@
-import {useCallback} from 'react'
-import {BackHandler} from 'react-native'
+import {useCallback, useLayoutEffect} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {usePreventRemove} from '@react-navigation/native'
 
+import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {useSyncContactsFlowState} from '#/components/contacts/state'
 import {SyncContactsFlow} from '#/components/contacts/SyncContactsFlow'
@@ -22,31 +23,28 @@ export function SyncContactsFlowScreen({navigation}: Props) {
 
   const overrideGoBack = state.step === '2: verify number'
 
-  useFocusEffect(
-    useCallback(() => {
-      if (overrideGoBack) {
-        navigation.setOptions({
-          gestureEnabled: false,
-        })
+  usePreventRemove(overrideGoBack, () => {
+    dispatch({type: 'BACK'})
+  })
 
-        const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-          dispatch({type: 'BACK'})
-          return true
-        })
-        return () => {
-          navigation.setOptions({
-            gestureEnabled: true,
-          })
-          sub.remove()
-        }
-      }
-    }, [overrideGoBack, dispatch, navigation]),
-  )
+  useEnableKeyboardControllerScreen(true)
+
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const effect = useCallback(() => {
+    setMinimalShellMode(true)
+    return () => setMinimalShellMode(false)
+  }, [setMinimalShellMode])
+  useLayoutEffect(effect)
 
   return (
     <Layout.Screen>
       {isNative ? (
-        <SyncContactsFlow state={state} dispatch={dispatch} />
+        <SyncContactsFlow
+          state={state}
+          dispatch={dispatch}
+          onSkip={() => navigation.goBack()}
+          context="Standalone"
+        />
       ) : (
         <ErrorScreen
           title={_(msg`Not available on this platform.`)}
