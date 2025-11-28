@@ -60,7 +60,12 @@ export function VerifyNumber({
     },
     onSuccess: async () => {
       await wait(2e3, () => {})
-      dispatch({type: 'VERIFY_PHONE_NUMBER_SUCCESS'})
+      dispatch({
+        type: 'VERIFY_PHONE_NUMBER_SUCCESS',
+        payload: {
+          token: 'example_token',
+        },
+      })
     },
     onMutate: () => setError(null),
     onError: err => {
