@@ -88,6 +88,18 @@ function mergeShadow(
     likeCount = shadow.optimisticLikeCount ?? likeCount
   }
 
+  let bookmarkCount = post.bookmarkCount ?? 0
+  if ('bookmarked' in shadow) {
+    const wasBookmarked = !!post.viewer?.bookmarked
+    const isBookmarked = !!shadow.bookmarked
+    if (wasBookmarked && !isBookmarked) {
+      bookmarkCount--
+    } else if (!wasBookmarked && isBookmarked) {
+      bookmarkCount++
+    }
+    bookmarkCount = Math.max(0, bookmarkCount)
+  }
+
   let repostCount = post.repostCount ?? 0
   if ('optimisticRepostCount' in shadow) {
     repostCount = shadow.optimisticRepostCount ?? repostCount
@@ -116,6 +128,7 @@ function mergeShadow(
     likeCount: likeCount,
     repostCount: repostCount,
     replyCount: replyCount,
+    bookmarkCount: bookmarkCount,
     viewer: {
       ...(post.viewer || {}),
       like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
