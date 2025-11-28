@@ -7,7 +7,7 @@ export type Contact = ExistingContact
 
 // TODO: replace with lexicon type
 export type Match = {
-  index: number
+  index?: number
   profile: bsky.profile.AnyProfileView
 }
 
@@ -66,6 +66,12 @@ export type Action =
   | {
       type: 'BACK'
     }
+  | {
+      type: 'DISMISS_MATCH'
+      payload: {
+        did: string
+      }
+    }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -112,6 +118,15 @@ function reducer(state: State, action: Action): State {
         step: '4: view matches',
         contacts: state.contacts ?? [],
         matches: action.payload.matches,
+      }
+    }
+    case 'DISMISS_MATCH': {
+      assertCurrentStep(state, '4: view matches')
+      return {
+        ...state,
+        matches: state.matches.filter(
+          match => match.profile.did !== action.payload.did,
+        ),
       }
     }
   }
