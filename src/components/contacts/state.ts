@@ -1,16 +1,9 @@
 import {useReducer} from 'react'
+import {type ExistingContact} from 'expo-contacts'
 
 import type * as bsky from '#/types/bsky'
 
-export type Contact = {
-  /**
-   * Generate ourselves - should be random or sequential
-   */
-  id: string
-  firstName?: string
-  lastName?: string
-  phone?: string[]
-}
+export type Contact = ExistingContact
 
 // TODO: replace with lexicon type
 export type Match = {
@@ -32,6 +25,7 @@ export type State =
     }
   | {
       step: '3: get contacts'
+      token: string
       contacts?: Contact[]
     }
   | {
@@ -53,6 +47,9 @@ export type Action =
     }
   | {
       type: 'VERIFY_PHONE_NUMBER_SUCCESS'
+      payload: {
+        token: string
+      }
     }
   | {
       type: 'GET_CONTACTS_SUCCESS'
@@ -91,6 +88,7 @@ function reducer(state: State, action: Action): State {
       assertCurrentStep(state, '2: verify number')
       return {
         step: '3: get contacts',
+        token: action.payload.token,
       }
     }
     case 'BACK': {
