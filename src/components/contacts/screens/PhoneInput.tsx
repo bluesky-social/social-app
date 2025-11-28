@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
@@ -7,18 +7,17 @@ import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {getDefaultCountry} from '#/lib/international-telephone-codes'
-import {isNetworkError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
 import {useGeolocationStatus} from '#/state/geolocation'
-import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
+import {android, atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {InternationalPhoneCodeSelect} from '#/components/InternationalPhoneCodeSelect'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {P, Text} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 import {type Action, type State} from '../state'
 
 export function PhoneInput({
@@ -35,8 +34,8 @@ export function PhoneInput({
   const {_} = useLingui()
   const t = useTheme()
   const {location} = useGeolocationStatus()
-  const [phoneCode, setPhoneCode] = useState(
-    () => state.phoneCode ?? getDefaultCountry(location),
+  const [countryCode, setCountryCode] = useState(
+    () => state.phoneCountryCode ?? getDefaultCountry(location),
   )
   const [phoneNumber, setPhoneNumber] = useState(state.phoneNumber ?? '')
   const gutters = useGutters([0, 'wide'])
@@ -44,29 +43,37 @@ export function PhoneInput({
   const [error, setError] = useState('')
 
   const {mutate: submit, isPending} = useMutation({
-    mutationFn: async ({}: {phoneCode: string; phoneNumber: string}) => {
+    mutationFn: async ({}: {countryCode: string; phoneNumber: string}) => {
       // get otp
       await new Promise(resolve => {
         setTimeout(resolve, 1000)
       })
     },
-    onSuccess: (_data, {phoneCode, phoneNumber}) => {
-      dispatch({type: 'VERIFY_PHONE', payload: {phoneCode, phoneNumber}})
+    onSuccess: (_data, {countryCode, phoneNumber}) => {
+      dispatch({
+        type: 'SUBMIT_PHONE_NUMBER',
+        payload: {phoneCountryCode: countryCode, phoneNumber},
+      })
     },
-    onMutate: () => setError(''),
+    onMutate: () => {
+      Keyboard.dismiss()
+      setError('')
+    },
     onError: err => {
       if (isNetworkError(err)) {
         setError(
           _(
-            msg`A network error occurred. Please check your internet connection.`,
+            msg`A network error occurred. Please check your internet connection`,
           ),
         )
       } else {
         logger.error('Verify phone number failed', {safeMessage: err})
-        setError(_(msg`An error occurred. Please try again later.`))
+        setError(_(msg`An error occurred. ${cleanError(err)}`))
       }
     },
   })
+
+  const paddingBottom = Math.max(insets.bottom, tokens.space.xl)
 
   return (
     <View style={[a.h_full]}>
@@ -88,7 +95,9 @@ export function PhoneInput({
           <Layout.Header.Slot />
         )}
       </Layout.Header.Outer>
-      <Layout.Content contentContainerStyle={[gutters, a.pt_sm, a.flex_1]}>
+      <Layout.Content
+        contentContainerStyle={[gutters, a.pt_sm, a.flex_1]}
+        keyboardShouldPersistTaps="handled">
         <Text style={[a.font_bold, a.text_3xl]}>
           <Trans>Verify phone number</Trans>
         </Text>
@@ -112,8 +121,8 @@ export function PhoneInput({
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             <View>
               <InternationalPhoneCodeSelect
-                value={phoneCode}
-                onChange={value => setPhoneCode(value)}
+                value={countryCode}
+                onChange={value => setCountryCode(value)}
               />
             </View>
             <View style={[a.flex_1]}>
@@ -124,7 +133,9 @@ export function PhoneInput({
                   onChangeText={setPhoneNumber}
                   placeholder={null}
                   keyboardType="phone-pad"
-                  autoComplete={isAndroid ? 'tel-national' : 'tel'}
+                  autoComplete="tel"
+                  returnKeyType={android('next')}
+                  onSubmitEditing={() => submit({countryCode, phoneNumber})}
                 />
               </TextField.Root>
             </View>
@@ -147,14 +158,14 @@ export function PhoneInput({
       </Layout.Content>
       <KeyboardAvoidingView
         behavior="padding"
-        keyboardVerticalOffset={insets.top - insets.bottom + tokens.space.xl}>
-        <View style={[gutters, {paddingBottom: insets.bottom}]}>
+        keyboardVerticalOffset={insets.top - paddingBottom + tokens.space.xl}>
+        <View style={[gutters, {paddingBottom}]}>
           <Button
             disabled={!phoneNumber || isPending}
             label={_(msg`Next`)}
             size="large"
             color="primary"
-            onPress={() => submit({phoneCode, phoneNumber})}>
+            onPress={() => submit({countryCode, phoneNumber})}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
@@ -174,24 +185,24 @@ function LegalDisclaimer() {
 
   return (
     <View style={[a.gap_xs]}>
-      <P style={[style, a.font_medium]}>
+      <Text style={[style, a.font_medium]}>
         <Trans>How we use your number:</Trans>
-      </P>
-      <P style={style}>
+      </Text>
+      <Text style={style}>
         &bull; <Trans>Sent to a trusted third party for verification</Trans>
-      </P>
-      <P style={style}>
+      </Text>
+      <Text style={style}>
         &bull; <Trans>Deleted by the verifier after verification</Trans>
-      </P>
-      <P style={style}>
+      </Text>
+      <Text style={style}>
         &bull;{' '}
         <Trans>Held by Bluesky for 7 days to prevent abuse, then deleted</Trans>
-      </P>
-      <P style={style}>
+      </Text>
+      <Text style={style}>
         &bull;{' '}
         <Trans>Stored as part of a secret code for matching with others</Trans>
-      </P>
-      <P style={[style, a.mt_xs]}>
+      </Text>
+      <Text style={[style, a.mt_xs]}>
         <Trans>
           By continuing, you consent to this use. You may change your mind any
           time by visiting settings.{' '}
@@ -202,7 +213,7 @@ function LegalDisclaimer() {
             TODO: Learn more
           </InlineLinkText>
         </Trans>
-      </P>
+      </Text>
     </View>
   )
 }
