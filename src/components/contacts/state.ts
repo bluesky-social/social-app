@@ -22,12 +22,12 @@ export type State =
   | {
       step: '1: phone input'
       phoneCode?: string
-      phone?: string
+      phoneNumber?: string
     }
   | {
       step: '2: verify number'
       phoneCode: string
-      phone: string
+      phoneNumber: string
       lastSentAt: Date
       error?: string
     }
@@ -46,7 +46,7 @@ export type Action =
       type: 'VERIFY_PHONE'
       payload: {
         phoneCode: string
-        phone: string
+        phoneNumber: string
       }
     }
   | {
@@ -101,7 +101,7 @@ function reducer(state: State, action: Action): State {
       assertCurrentStep(state, '2: verify number')
       return {
         step: '1: phone input',
-        phone: state.phone,
+        phoneNumber: state.phoneNumber,
         phoneCode: state.phoneCode,
       }
     }
