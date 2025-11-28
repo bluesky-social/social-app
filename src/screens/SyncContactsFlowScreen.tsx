@@ -1,4 +1,5 @@
 import {useCallback, useLayoutEffect, useState} from 'react'
+import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {usePreventRemove} from '@react-navigation/native'
@@ -48,20 +49,22 @@ export function SyncContactsFlowScreen({navigation}: Props) {
   return (
     <Layout.Screen>
       {isNative ? (
-        <ScreenTransition key={state.step} direction={transitionDirection}>
-          <SyncContactsFlow
-            state={state}
-            dispatch={dispatch}
-            onCancel={() =>
-              navigation.canGoBack()
-                ? navigation.goBack()
-                : navigation.navigate('SyncContactsFlow', undefined, {
-                    pop: true,
-                  })
-            }
-            context="Standalone"
-          />
-        </ScreenTransition>
+        <LayoutAnimationConfig skipEntering skipExiting>
+          <ScreenTransition key={state.step} direction={transitionDirection}>
+            <SyncContactsFlow
+              state={state}
+              dispatch={dispatch}
+              onCancel={() =>
+                navigation.canGoBack()
+                  ? navigation.goBack()
+                  : navigation.navigate('SyncContactsFlow', undefined, {
+                      pop: true,
+                    })
+              }
+              context="Standalone"
+            />
+          </ScreenTransition>
+        </LayoutAnimationConfig>
       ) : (
         <ErrorScreen
           title={_(msg`Not available on this platform.`)}
