@@ -21,15 +21,14 @@ export type Match = {
 export type State =
   | {
       step: '1: phone input'
-      phoneCode?: string
+      phoneCountryCode?: string
       phoneNumber?: string
     }
   | {
       step: '2: verify number'
-      phoneCode: string
+      phoneCountryCode: string
       phoneNumber: string
       lastSentAt: Date
-      error?: string
     }
   | {
       step: '3: get contacts'
@@ -43,20 +42,14 @@ export type State =
 
 export type Action =
   | {
-      type: 'VERIFY_PHONE'
+      type: 'SUBMIT_PHONE_NUMBER'
       payload: {
-        phoneCode: string
+        phoneCountryCode: string
         phoneNumber: string
       }
     }
   | {
-      type: 'VERIFY_OTP_ERROR'
-      payload: {
-        error: string
-      }
-    }
-  | {
-      type: 'VERIFY_OTP_SUCCESS'
+      type: 'VERIFY_PHONE_NUMBER_SUCCESS'
     }
   | {
       type: 'GET_CONTACTS_SUCCESS'
@@ -76,7 +69,7 @@ export type Action =
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'VERIFY_PHONE': {
+    case 'SUBMIT_PHONE_NUMBER': {
       assertCurrentStep(state, '1: phone input')
       return {
         step: '2: verify number',
@@ -84,14 +77,7 @@ function reducer(state: State, action: Action): State {
         lastSentAt: new Date(),
       }
     }
-    case 'VERIFY_OTP_ERROR': {
-      assertCurrentStep(state, '2: verify number')
-      return {
-        ...state,
-        error: action.payload.error,
-      }
-    }
-    case 'VERIFY_OTP_SUCCESS': {
+    case 'VERIFY_PHONE_NUMBER_SUCCESS': {
       assertCurrentStep(state, '2: verify number')
       return {
         step: '3: get contacts',
@@ -102,7 +88,7 @@ function reducer(state: State, action: Action): State {
       return {
         step: '1: phone input',
         phoneNumber: state.phoneNumber,
-        phoneCode: state.phoneCode,
+        phoneCountryCode: state.phoneCountryCode,
       }
     }
     case 'GET_CONTACTS_SUCCESS': {

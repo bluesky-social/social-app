@@ -1,6 +1,3 @@
-import {useState} from 'react'
-
-import {ScreenTransition} from '#/components/ScreenTransition'
 import {GetContacts} from './screens/GetContacts'
 import {PhoneInput} from './screens/PhoneInput'
 import {VerifyNumber} from './screens/VerifyNumber'
@@ -10,37 +7,38 @@ import {type Action, type State} from './state'
 export function SyncContactsFlow({
   state,
   dispatch,
-  onSkip,
+  onCancel,
   context = 'Standalone',
 }: {
   state: State
   dispatch: React.Dispatch<Action>
-  onSkip: () => void
+  onCancel: () => void
   context: 'Onboarding' | 'Standalone'
 }) {
-  const [transitionDirection, _setTransitionDirection] = useState<
-    'Forward' | 'Backward'
-  >('Forward')
-
   return (
-    <ScreenTransition direction={transitionDirection} key={state.step}>
+    <>
       {state.step === '1: phone input' && (
         <PhoneInput
           state={state}
           dispatch={dispatch}
           showSkipButton={context === 'Onboarding'}
-          onSkip={onSkip}
+          onSkip={onCancel}
         />
       )}
       {state.step === '2: verify number' && (
-        <VerifyNumber state={state} dispatch={dispatch} />
+        <VerifyNumber
+          state={state}
+          dispatch={dispatch}
+          showSkipButton={context === 'Onboarding'}
+          onSkip={onCancel}
+        />
       )}
       {state.step === '3: get contacts' && (
-        <GetContacts state={state} dispatch={dispatch} />
+        <GetContacts state={state} dispatch={dispatch} onCancel={onCancel} />
       )}
       {state.step === '4: view matches' && (
         <ViewMatches state={state} dispatch={dispatch} />
       )}
-    </ScreenTransition>
+    </>
   )
 }
