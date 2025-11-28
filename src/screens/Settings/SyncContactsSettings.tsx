@@ -1,5 +1,7 @@
+import * as Contacts from 'expo-contacts'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQuery} from '@tanstack/react-query'
 
 import {
   type AllNavigatorParams,
@@ -19,6 +21,11 @@ type Props = NativeStackScreenProps<AllNavigatorParams, 'SyncContactsSettings'>
 export function SyncContactsSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
+
+  const {data: isAvailable} = useQuery({
+    queryKey: ['contacts-available'],
+    queryFn: async () => await Contacts.isAvailableAsync(),
+  })
 
   return (
     <Layout.Screen>
@@ -59,18 +66,20 @@ export function SyncContactsSettingsScreen({}: Props) {
                 </Trans>
               </Text>
             </SettingsList.Item>
-            <SettingsList.Item>
-              <Link
-                to={{screen: 'SyncContactsFlow'}}
-                label={_(msg`Upload contacts`)}
-                size="large"
-                color="primary"
-                style={[a.flex_1, a.justify_center]}>
-                <ButtonText>
-                  <Trans>Upload contacts</Trans>
-                </ButtonText>
-              </Link>
-            </SettingsList.Item>
+            {isAvailable && (
+              <SettingsList.Item>
+                <Link
+                  to={{screen: 'SyncContactsFlow'}}
+                  label={_(msg`Upload contacts`)}
+                  size="large"
+                  color="primary"
+                  style={[a.flex_1, a.justify_center]}>
+                  <ButtonText>
+                    <Trans>Upload contacts</Trans>
+                  </ButtonText>
+                </Link>
+              </SettingsList.Item>
+            )}
           </SettingsList.Container>
         </Layout.Content>
       ) : (
