@@ -49,6 +49,9 @@ export type Action =
       }
     }
   | {
+      type: 'RESEND_VERIFICATION_CODE'
+    }
+  | {
       type: 'VERIFY_PHONE_NUMBER_SUCCESS'
     }
   | {
@@ -74,6 +77,13 @@ function reducer(state: State, action: Action): State {
       return {
         step: '2: verify number',
         ...action.payload,
+        lastSentAt: new Date(),
+      }
+    }
+    case 'RESEND_VERIFICATION_CODE': {
+      assertCurrentStep(state, '2: verify number')
+      return {
+        ...state,
         lastSentAt: new Date(),
       }
     }

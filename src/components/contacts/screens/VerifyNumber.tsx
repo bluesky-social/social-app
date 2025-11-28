@@ -1,11 +1,12 @@
-import {useMemo, useState} from 'react'
-import {View} from 'react-native'
+import {useEffect, useMemo, useState} from 'react'
+import {Text as NestedText, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
 import {getPhoneCodeFromCountryCode} from '#/lib/international-telephone-codes'
+import {clamp} from '#/lib/numbers'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {atoms as a, useGutters, useTheme} from '#/alf'
@@ -15,6 +16,7 @@ import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/componen
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {OTPInput} from '../components/OTPInput'
@@ -88,11 +90,14 @@ export function VerifyNumber({
     },
   })
 
-  const {mutate: resendCode} = useMutation({
+  const {mutate: resendCode, isPending: isResendingCode} = useMutation({
     mutationFn: async () => {
       await new Promise(resolve => setTimeout(resolve, 2000))
     },
-    onSuccess: () => Toast.show(_(msg`Code resent`)),
+    onSuccess: () => {
+      dispatch({type: 'RESEND_VERIFICATION_CODE'})
+      Toast.show(_(msg`Code resent`))
+    },
     onMutate: () => {
       setError(null)
     },
@@ -164,9 +169,11 @@ export function VerifyNumber({
           <OTPStatus
             error={error}
             isPending={isPending}
+            isResendingCode={isResendingCode}
             isSuccess={isSuccess}
             onResend={() => resendCode()}
             onRetry={() => verifyNumber(otpCode)}
+            lastCodeSentAt={state.lastSentAt}
           />
         </View>
       </Layout.Content>
@@ -181,9 +188,11 @@ export function VerifyNumber({
 function OTPStatus({
   error,
   isPending,
+  isResendingCode,
   isSuccess,
   onResend,
   onRetry,
+  lastCodeSentAt,
 }: {
   error: {
     retryable: boolean
@@ -191,12 +200,28 @@ function OTPStatus({
     message: string
   } | null
   isPending: boolean
+  isResendingCode: boolean
   isSuccess: boolean
   onResend: () => void
   onRetry: () => void
+  lastCodeSentAt: Date | null
 }) {
   const {_} = useLingui()
   const t = useTheme()
+
+  const [time, setTime] = useState(Date.now())
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(Date.now())
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const timeUntilCanResend = Math.max(
+    0,
+    30000 - (time - (lastCodeSentAt?.getTime() ?? 0)),
+  )
+  const isWaiting = timeUntilCanResend > 0
 
   let Icon: React.ComponentType<SVGIconProps> | null = null
   let text = ''
@@ -209,7 +234,8 @@ function OTPStatus({
     text = _(msg`Phone verified`)
     textColor = t.palette.positive_500
   } else if (isPending) {
-    text = _(msg`Wait a moment...`)
+    Icon = Loader
+    text = _(msg`Verifying...`)
   } else if (error) {
     Icon = WarningIcon
     text = error.message
@@ -226,7 +252,7 @@ function OTPStatus({
   }
 
   return (
-    <View style={[a.w_full, a.gap_2xl, a.align_center]}>
+    <View style={[a.w_full, a.align_center]}>
       {text && (
         <View style={[a.gap_xs, a.flex_row, a.align_center]}>
           {Icon && <Icon size="xs" color={textColor} />}
@@ -247,7 +273,8 @@ function OTPStatus({
           size="small"
           color="secondary_inverted"
           label={_(msg`Retry`)}
-          onPress={onRetry}>
+          onPress={onRetry}
+          style={[a.mt_2xl]}>
           <ButtonIcon icon={RetryIcon} />
           <ButtonText>
             <Trans>Retry</Trans>
@@ -257,13 +284,28 @@ function OTPStatus({
 
       {showResendButton && (
         <Button
-          size="small"
+          size="large"
           color="secondary"
           variant="ghost"
           label={_(msg`Resend code`)}
-          onPress={onResend}>
+          disabled={isResendingCode || isWaiting}
+          onPress={onResend}
+          style={[a.mt_2xl]}>
+          {isResendingCode && <ButtonIcon icon={Loader} />}
           <ButtonText>
-            <Trans>Resend code</Trans>
+            {isWaiting ? (
+              <Trans>
+                Resend code in{' '}
+                <NestedText style={{fontVariant: ['tabular-nums']}}>
+                  00:
+                  {String(
+                    clamp(Math.round(timeUntilCanResend / 1000), 0, 30),
+                  ).padStart(2, '0')}
+                </NestedText>
+              </Trans>
+            ) : (
+              <Trans>Resend code</Trans>
+            )}
           </ButtonText>
         </Button>
       )}
