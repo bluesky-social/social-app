@@ -9,14 +9,6 @@ import {
   type ComAtprotoRepoUploadBlob,
   type Un$Typed,
 } from '@atproto/api'
-import {
-  keepPreviousData,
-  prefetchQueryWithFallback,
-  type QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from './useQueryWithFallback'
 
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
@@ -42,6 +34,14 @@ import {
 import {RQKEY_ROOT as RQKEY_LIST_CONVOS} from './messages/list-conversations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
+import {
+  keepPreviousData,
+  prefetchQueryWithFallback,
+  type QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from './useQueryWithFallback'
 
 export * from '#/state/queries/unstable-profile-cache'
 /**
@@ -354,10 +354,20 @@ function useProfileUnfollowMutation(
   logContext: LogEvents['profile:unfollow']['logContext'],
 ) {
   const agent = useAgent()
+  const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
       logEvent('profile:unfollow', {logContext})
       return await agent.deleteFollow(followUri)
+    },
+    onSuccess(_, {did}) {
+      // Invalidate profile and feed caches to reflect unfollow
+      resetProfilePostsQueries(queryClient, did, 1000)
+
+      // Add delay to handle AppView indexing lag
+      setTimeout(() => {
+        queryClient.invalidateQueries({queryKey: RQKEY(did)})
+      }, 500)
     },
   })
 }
@@ -418,8 +428,21 @@ function useProfileMuteMutation() {
     mutationFn: async ({did}) => {
       await agent.mute(did)
     },
-    onSuccess() {
+    onSuccess(_, {did}) {
+      // Invalidate mute list cache
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
+
+      // Invalidate profile and feed caches to reflect mute
+      resetProfilePostsQueries(queryClient, did, 1000)
+      queryClient.invalidateQueries({queryKey: RQKEY(did)})
+
+      // Invalidate feeds that might contain muted user's posts
+      queryClient.invalidateQueries({queryKey: ['post-feed']})
+
+      // Add delay to handle AppView indexing lag
+      setTimeout(() => {
+        queryClient.invalidateQueries({queryKey: RQKEY(did)})
+      }, 500)
     },
   })
 }
@@ -431,8 +454,21 @@ function useProfileUnmuteMutation() {
     mutationFn: async ({did}) => {
       await agent.unmute(did)
     },
-    onSuccess() {
+    onSuccess(_, {did}) {
+      // Invalidate mute list cache
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
+
+      // Invalidate profile and feed caches to reflect unmute
+      resetProfilePostsQueries(queryClient, did, 1000)
+      queryClient.invalidateQueries({queryKey: RQKEY(did)})
+
+      // Invalidate feeds that might contain unmuted user's posts
+      queryClient.invalidateQueries({queryKey: ['post-feed']})
+
+      // Add delay to handle AppView indexing lag
+      setTimeout(() => {
+        queryClient.invalidateQueries({queryKey: RQKEY(did)})
+      }, 500)
     },
   })
 }
