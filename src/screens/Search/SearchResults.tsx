@@ -307,7 +307,7 @@ let SearchScreenPostResults = ({
             <Text> </Text>
             <Text style={t.atoms.text_contrast_medium}>
               to search for news, sports, politics, and everything else
-              happening on Bluesky.
+              happening on Blacksky.
             </Text>
           </Trans>
         </Text>

@@ -57,7 +57,9 @@ let RepostButton = ({
       <PostControlButton
         testID="repostBtn"
         active={isReposted}
-        activeColor={t.palette.positive_500}
+        activeColor={
+          t.scheme === 'light' ? t.palette.positive_600 : t.palette.positive_300
+        }
         big={big}
         onPress={onPress}
         onLongPress={onLongPress}

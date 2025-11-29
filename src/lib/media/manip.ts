@@ -96,7 +96,7 @@ export async function shareImageModal({uri}: {uri: string}) {
   })
 }
 
-const ALBUM_NAME = 'Bluesky'
+const ALBUM_NAME = 'Blacksky'
 
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // download the file to cache
