@@ -97,7 +97,7 @@ function SubtitleDialogInner({
   return (
     <Dialog.ScrollableInner label={_(msg`Video settings`)}>
       <View style={a.gap_md}>
-        <Text style={[a.text_xl, a.font_bold, a.leading_tight]}>
+        <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
           <Trans>Alt text</Trans>
         </Text>
         <TextField.Root>
@@ -128,7 +128,7 @@ function SubtitleDialogInner({
                 a.my_md,
               ]}
             />
-            <Text style={[a.text_xl, a.font_bold, a.leading_tight]}>
+            <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
               <Trans>Captions (.vtt)</Trans>
             </Text>
             <SubtitleFilePicker
@@ -235,7 +235,7 @@ function SubtitleFileRow({
             <PageTextIcon style={[t.atoms.text, a.flex_shrink_0]} size="sm" />
           )}
           <Text
-            style={[a.flex_1, a.leading_snug, a.font_bold, a.mb_2xs]}
+            style={[a.flex_1, a.leading_snug, a.font_semi_bold, a.mb_2xs]}
             numberOfLines={1}>
             {file.name}
           </Text>

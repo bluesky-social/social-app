@@ -1,4 +1,4 @@
-import React from 'react'
+import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
@@ -8,16 +8,18 @@ import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {atoms as a, useBreakpoints} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {FloppyDisk_Stroke2_Corner0_Rounded as FloppyDiskIcon} from '#/components/icons/FloppyDisk'
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
+import * as Toast from '#/components/Toast'
 import * as bsky from '#/types/bsky'
 
 export function QrCodeDialog({
@@ -30,9 +32,11 @@ export function QrCodeDialog({
   control: DialogControlProps
 }) {
   const {_} = useLingui()
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const {gtMobile} = useBreakpoints()
+  const [isSaveProcessing, setIsSaveProcessing] = useState(false)
+  const [isCopyProcessing, setIsCopyProcessing] = useState(false)
 
-  const ref = React.useRef<ViewShot>(null)
+  const ref = useRef<ViewShot>(null)
 
   const getCanvas = (base64: string): Promise<HTMLCanvasElement> => {
     return new Promise(resolve => {
@@ -68,15 +72,14 @@ export function QrCodeDialog({
         try {
           await createAssetAsync(`file://${uri}`)
         } catch (e: unknown) {
-          Toast.show(
-            _(msg`An error occurred while saving the QR code!`),
-            'xmark',
-          )
+          Toast.show(_(msg`An error occurred while saving the QR code!`), {
+            type: 'error',
+          })
           logger.error('Failed to save QR code', {error: e})
           return
         }
       } else {
-        setIsProcessing(true)
+        setIsSaveProcessing(true)
 
         if (
           !bsky.validate(
@@ -101,12 +104,12 @@ export function QrCodeDialog({
         link.click()
       }
 
-      logEvent('starterPack:share', {
+      logger.metric('starterPack:share', {
         starterPack: starterPack.uri,
         shareType: 'qrcode',
         qrShareType: 'save',
       })
-      setIsProcessing(false)
+      setIsSaveProcessing(false)
       Toast.show(
         isWeb
           ? _(msg`QR code has been downloaded!`)
@@ -117,7 +120,7 @@ export function QrCodeDialog({
   }
 
   const onCopyPress = async () => {
-    setIsProcessing(true)
+    setIsCopyProcessing(true)
     ref.current?.capture?.().then(async (uri: string) => {
       const canvas = await getCanvas(uri)
       // @ts-expect-error web only
@@ -126,13 +129,13 @@ export function QrCodeDialog({
         navigator.clipboard.write([item])
       })
 
-      logEvent('starterPack:share', {
+      logger.metric('starterPack:share', {
         starterPack: starterPack.uri,
         shareType: 'qrcode',
         qrShareType: 'copy',
       })
       Toast.show(_(msg`QR code copied to your clipboard!`))
-      setIsProcessing(false)
+      setIsCopyProcessing(false)
       control.close()
     })
   }
@@ -142,7 +145,7 @@ export function QrCodeDialog({
       control.close(() => {
         Sharing.shareAsync(uri, {mimeType: 'image/png', UTI: 'image/png'}).then(
           () => {
-            logEvent('starterPack:share', {
+            logger.metric('starterPack:share', {
               starterPack: starterPack.uri,
               shareType: 'qrcode',
               qrShareType: 'share',
@@ -154,49 +157,57 @@ export function QrCodeDialog({
   }
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Create a QR code for a starter pack`)}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
-          <React.Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading />}>
             {!link ? (
               <Loading />
             ) : (
               <>
                 <QrCode starterPack={starterPack} link={link} ref={ref} />
-                {isProcessing ? (
-                  <View>
-                    <Loader size="xl" />
-                  </View>
-                ) : (
-                  <View
-                    style={[a.w_full, a.gap_md, isWeb && [a.flex_row_reverse]]}>
-                    <Button
-                      label={_(msg`Copy QR code`)}
-                      variant="solid"
-                      color="secondary"
-                      size="small"
-                      onPress={isWeb ? onCopyPress : onSharePress}>
-                      <ButtonText>
-                        {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
-                      </ButtonText>
-                    </Button>
-                    <Button
-                      label={_(msg`Save QR code`)}
-                      variant="solid"
-                      color="secondary"
-                      size="small"
-                      onPress={onSavePress}>
-                      <ButtonText>
-                        <Trans>Save</Trans>
-                      </ButtonText>
-                    </Button>
-                  </View>
-                )}
+                <View
+                  style={[
+                    a.w_full,
+                    a.gap_md,
+                    gtMobile && [a.flex_row, a.justify_center, a.flex_wrap],
+                  ]}>
+                  <Button
+                    label={_(msg`Copy QR code`)}
+                    color="primary_subtle"
+                    size="large"
+                    onPress={isWeb ? onCopyPress : onSharePress}>
+                    <ButtonIcon
+                      icon={
+                        isCopyProcessing
+                          ? Loader
+                          : isWeb
+                            ? ChainLinkIcon
+                            : ShareIcon
+                      }
+                    />
+                    <ButtonText>
+                      {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
+                    </ButtonText>
+                  </Button>
+                  <Button
+                    label={_(msg`Save QR code`)}
+                    color="secondary"
+                    size="large"
+                    onPress={onSavePress}>
+                    <ButtonIcon
+                      icon={isSaveProcessing ? Loader : FloppyDiskIcon}
+                    />
+                    <ButtonText>
+                      <Trans>Save</Trans>
+                    </ButtonText>
+                  </Button>
+                </View>
               </>
             )}
-          </React.Suspense>
+          </Suspense>
         </View>
         <Dialog.Close />
       </Dialog.ScrollableInner>
@@ -206,7 +217,7 @@ export function QrCodeDialog({
 
 function Loading() {
   return (
-    <View style={[a.align_center, a.p_xl]}>
+    <View style={[a.align_center, a.justify_center, {minHeight: 400}]}>
       <Loader size="xl" />
     </View>
   )

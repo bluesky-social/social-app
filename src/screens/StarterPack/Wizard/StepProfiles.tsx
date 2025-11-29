@@ -1,22 +1,22 @@
 import {useState} from 'react'
-import {ListRenderItemInfo, View} from 'react-native'
+import {type ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
+import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {isNative} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {List} from '#/view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {Loader} from '#/components/Loader'
-import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
+import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
   return item?.did ?? ''
@@ -36,7 +36,7 @@ export function StepProfiles({
     data: topPages,
     fetchNextPage,
     isLoading: isLoadingTopPages,
-  } = useActorSearchPaginated({
+  } = useActorSearch({
     query: encodeURIComponent('*'),
   })
   const topFollowers = topPages?.pages
@@ -64,7 +64,10 @@ export function StepProfiles({
   }
 
   return (
-    <ScreenTransition style={[a.flex_1]} direction={state.transitionDirection}>
+    <ScreenTransition
+      style={[a.flex_1]}
+      direction={state.transitionDirection}
+      enabledWeb>
       <View style={[a.border_b, t.atoms.border_contrast_medium]}>
         <View style={[a.py_sm, a.px_md, {height: 60}]}>
           <SearchInput
@@ -95,7 +98,7 @@ export function StepProfiles({
             ) : (
               <Text
                 style={[
-                  a.font_bold,
+                  a.font_semi_bold,
                   a.text_lg,
                   a.text_center,
                   a.mt_lg,

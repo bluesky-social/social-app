@@ -31,7 +31,6 @@ const FEED_PARAMS: {
 }
 
 export function ExploreTrendingVideos() {
-  const {_} = useLingui()
   const gutters = useGutters([0, 'base'])
   const {data, isLoading, error} = usePostFeedQuery(FEED_DESC, FEED_PARAMS)
 

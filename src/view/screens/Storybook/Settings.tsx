@@ -106,7 +106,7 @@ export function Settings() {
           color={t.palette.primary_500}
         />
         <SettingsList.ItemText
-          style={[{color: t.palette.primary_500}, a.font_bold]}>
+          style={[{color: t.palette.primary_500}, a.font_semi_bold]}>
           Protect your account
         </SettingsList.ItemText>
         <SettingsList.Chevron color={t.palette.primary_500} />

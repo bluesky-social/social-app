@@ -229,7 +229,7 @@ function LandingScreenLoaded({
           <View style={[a.gap_3xl]}>
             {Boolean(listItemsSample?.length) && (
               <View style={[a.gap_md]}>
-                <Text style={[a.font_heavy, a.text_lg]}>
+                <Text style={[a.font_bold, a.text_lg]}>
                   {listItemsCount <= 8 ? (
                     <Trans>You'll follow these people right away</Trans>
                   ) : (
@@ -270,7 +270,7 @@ function LandingScreenLoaded({
             )}
             {feeds?.length ? (
               <View style={[a.gap_md]}>
-                <Text style={[a.font_heavy, a.text_lg]}>
+                <Text style={[a.font_bold, a.text_lg]}>
                   <Trans>You'll stay updated with these feeds</Trans>
                 </Text>
 

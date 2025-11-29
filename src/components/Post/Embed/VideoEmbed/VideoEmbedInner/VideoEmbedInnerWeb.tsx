@@ -7,7 +7,6 @@ import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {Controls} from './web-controls/VideoControls'
 
@@ -102,7 +101,6 @@ export function VideoEmbedInnerWeb({
           hasSubtitleTrack={hasSubtitleTrack}
         />
       </div>
-      <MediaInsetBorder />
     </View>
   )
 }
@@ -139,7 +137,7 @@ function useHLS({
   playlist: string
   setHasSubtitleTrack: (v: boolean) => void
   setError: (v: Error | null) => void
-  videoRef: React.RefObject<HTMLVideoElement>
+  videoRef: React.RefObject<HTMLVideoElement | null>
   setHlsLoading: (v: boolean) => void
 }) {
   const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(

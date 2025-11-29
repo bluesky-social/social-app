@@ -128,7 +128,7 @@ export function TitleAndByline({
     <View style={[a.flex_1]}>
       <Text
         emoji
-        style={[a.text_md, a.font_bold, a.leading_snug]}
+        style={[a.text_md, a.font_semi_bold, a.leading_snug]}
         numberOfLines={1}>
         {title}
       </Text>
@@ -186,7 +186,7 @@ export function Description({
     return rt
   }, [description])
   if (!rt) return null
-  return <RichText value={rt} style={[a.leading_snug]} disableLinks {...rest} />
+  return <RichText value={rt} disableLinks {...rest} />
 }
 
 export function DescriptionPlaceholder() {
@@ -214,7 +214,7 @@ export function DescriptionPlaceholder() {
 export function Likes({count}: {count: number}) {
   const t = useTheme()
   return (
-    <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.font_bold]}>
+    <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.font_semi_bold]}>
       <Trans>
         Liked by <Plural value={count || 0} one="# user" other="# users" />
       </Trans>

@@ -1,4 +1,11 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {
+  type JSX,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'

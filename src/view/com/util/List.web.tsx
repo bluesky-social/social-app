@@ -1,4 +1,10 @@
-import React, {isValidElement, memo, startTransition, useRef} from 'react'
+import React, {
+  isValidElement,
+  type JSX,
+  memo,
+  startTransition,
+  useRef,
+} from 'react'
 import {
   type FlatListProps,
   StyleSheet,
@@ -202,6 +208,7 @@ function ListImpl<ItemT>(
             behavior: animated ? 'smooth' : 'instant',
           })
         },
+
         scrollToEnd({animated = true}: {animated?: boolean}) {
           const element = getScrollableNode()
           element?.scrollTo({
@@ -382,10 +389,10 @@ function EdgeVisibility({
   containerRef,
   onVisibleChange,
 }: {
-  root?: React.RefObject<HTMLDivElement> | null
+  root?: React.RefObject<HTMLDivElement | null> | null
   topMargin?: string
   bottomMargin?: string
-  containerRef: React.RefObject<Element>
+  containerRef: React.RefObject<Element | null>
   onVisibleChange: (isVisible: boolean) => void
 }) {
   const [containerHeight, setContainerHeight] = React.useState(0)
@@ -404,7 +411,7 @@ function EdgeVisibility({
 }
 
 function useResizeObserver(
-  ref: React.RefObject<Element>,
+  ref: React.RefObject<Element | null>,
   onResize: undefined | ((w: number, h: number) => void),
 ) {
   const handleResize = useNonReactiveCallback(onResize ?? (() => {}))
@@ -509,7 +516,7 @@ let Visibility = ({
   onVisibleChange,
   style,
 }: {
-  root?: React.RefObject<HTMLDivElement> | null
+  root?: React.RefObject<HTMLDivElement | null> | null
   topMargin?: string
   bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
@@ -551,7 +558,7 @@ Visibility = React.memo(Visibility)
 
 export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
   props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
-) => React.ReactElement
+) => React.ReactElement<any>
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser
 

@@ -12,9 +12,11 @@ import {useWindowDimensions, View} from 'react-native'
 import Animated, {Easing, ZoomIn} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
+import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {atoms as a, select, useTheme} from '#/alf'
 import {useOnGesture} from '#/components/hooks/useOnGesture'
-import {Portal} from '#/components/Portal'
+import {createPortalGroup, Portal as RootPortal} from '#/components/Portal'
 import {
   ARROW_HALF_SIZE,
   ARROW_SIZE,
@@ -22,6 +24,33 @@ import {
   MIN_EDGE_SPACE,
 } from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
+
+const TooltipPortal = createPortalGroup()
+const TooltipProviderContext =
+  createContext<React.RefObject<View | null> | null>(null)
+
+/**
+ * Provider for Tooltip component. Only needed when you need to position the tooltip relative to a container,
+ * such as in the composer sheet.
+ *
+ * Only really necessary on iOS but can work on Android.
+ */
+export function SheetCompatProvider({children}: {children: React.ReactNode}) {
+  const ref = useRef<View | null>(null)
+  return (
+    <GlobalGestureEventsProvider style={[a.flex_1]}>
+      <TooltipPortal.Provider>
+        <View ref={ref} collapsable={false} style={[a.flex_1]}>
+          <TooltipProviderContext value={ref}>
+            {children}
+          </TooltipProviderContext>
+        </View>
+        <TooltipPortal.Outlet />
+      </TooltipPortal.Provider>
+    </GlobalGestureEventsProvider>
+  )
+}
+SheetCompatProvider.displayName = 'TooltipSheetCompatProvider'
 
 /**
  * These are native specific values, not shared with web
@@ -120,22 +149,46 @@ export function Outer({
 
 export function Target({children}: {children: React.ReactNode}) {
   const {shouldMeasure, setTargetMeasurements} = useContext(TargetContext)
+  const [hasLayedOut, setHasLayedOut] = useState(false)
   const targetRef = useRef<View>(null)
+  const containerRef = useContext(TooltipProviderContext)
+  const keyboardIsOpen = useIsKeyboardVisible()
 
   useEffect(() => {
-    if (!shouldMeasure) return
+    if (!shouldMeasure || !hasLayedOut) return
     /*
      * Once opened, measure the dimensions and position of the target
      */
-    targetRef.current?.measure((_x, _y, width, height, pageX, pageY) => {
-      if (pageX !== undefined && pageY !== undefined && width && height) {
-        setTargetMeasurements({x: pageX, y: pageY, width, height})
-      }
-    })
-  }, [shouldMeasure, setTargetMeasurements])
+
+    if (containerRef?.current) {
+      targetRef.current?.measureLayout(
+        containerRef.current,
+        (x, y, width, height) => {
+          if (x !== undefined && y !== undefined && width && height) {
+            setTargetMeasurements({x, y, width, height})
+          }
+        },
+      )
+    } else {
+      targetRef.current?.measure((_x, _y, width, height, x, y) => {
+        if (x !== undefined && y !== undefined && width && height) {
+          setTargetMeasurements({x, y, width, height})
+        }
+      })
+    }
+  }, [
+    shouldMeasure,
+    setTargetMeasurements,
+    hasLayedOut,
+    containerRef,
+    keyboardIsOpen,
+  ])
 
   return (
-    <View collapsable={false} ref={targetRef}>
+    <View
+      collapsable={false}
+      ref={targetRef}
+      onLayout={() => setHasLayedOut(true)}>
       {children}
     </View>
   )
@@ -150,11 +203,14 @@ export function Content({
 }) {
   const {position, visible, onVisibleChange} = useContext(TooltipContext)
   const {targetMeasurements} = useContext(TargetContext)
+  const isWithinProvider = !!useContext(TooltipProviderContext)
   const requestClose = useCallback(() => {
     onVisibleChange(false)
   }, [onVisibleChange])
 
   if (!visible || !targetMeasurements) return null
+
+  const Portal = isWithinProvider ? TooltipPortal.Portal : RootPortal
 
   return (
     <Portal>

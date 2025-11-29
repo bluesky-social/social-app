@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {type JSX, useCallback} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -28,11 +28,10 @@ import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
@@ -50,6 +49,7 @@ import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
+import {Text} from '#/components/Typography'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
@@ -396,6 +396,8 @@ function Btn({
   accessibilityHint,
   accessibilityLabel,
 }: BtnProps) {
+  const t = useTheme()
+
   return (
     <PressableScale
       testID={testID}
@@ -405,11 +407,18 @@ function Btn({
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      targetScale={0.8}>
+      targetScale={0.8}
+      accessibilityLargeContentTitle={accessibilityLabel}
+      accessibilityShowsLargeContentViewer>
       {icon}
       {notificationCount ? (
-        <View style={[styles.notificationCount, a.rounded_full]}>
-          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
+        <View
+          style={[
+            styles.notificationCount,
+            a.rounded_full,
+            {backgroundColor: t.palette.primary_500},
+          ]}>
+          <Text style={styles.notificationCountLabel}>1</Text>
         </View>
       ) : hasNew ? (
         <View style={[styles.hasNewBadge, a.rounded_full]} />

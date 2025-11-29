@@ -20,7 +20,7 @@ import {
   checkHandleAvailability,
   useHandleAvailabilityQuery,
 } from '#/state/queries/handle-availability'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
+import {ScreenTransition} from '#/components/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -177,7 +177,7 @@ export function StepHandle() {
   }
 
   return (
-    <ScreenTransition>
+    <ScreenTransition direction={state.screenTransitionDirection}>
       <View style={[a.gap_sm, a.pt_lg, a.z_10]}>
         <View>
           <TextField.Root isInvalid={textFieldInvalid}>

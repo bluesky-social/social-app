@@ -223,7 +223,7 @@ func serve(cctx *cli.Context) error {
 		e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	}
 
-	e.GET("/iframe/youtube.html", echo.WrapHandler(staticHandler))
+	e.GET("/iframe/*", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			c.Response().Before(func() {
@@ -313,7 +313,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/known-followers", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/search", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/lists/:rkey", server.WebGeneric)
-	e.GET("/profile/:handleOrDID/feed/:rkey", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/feed/:rkey", server.WebFeed)
 	e.GET("/profile/:handleOrDID/feed/:rkey/liked-by", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/labeler/liked-by", server.WebGeneric)
 
@@ -394,6 +394,7 @@ func (srv *Server) Shutdown() error {
 func (srv *Server) NewTemplateContext() pongo2.Context {
 	return pongo2.Context{
 		"staticCDNHost": srv.cfg.staticCDNHost,
+		"favicon":       fmt.Sprintf("%s/static/favicon.png", srv.cfg.staticCDNHost),
 	}
 }
 
@@ -457,6 +458,18 @@ func (srv *Server) WebHome(c echo.Context) error {
 	return c.Render(http.StatusOK, "home.html", data)
 }
 
+// Posts that include these labels will not have embeds passed to the metadata
+// template.
+var hideEmbedLabels = map[string]bool{
+	"nudity":            true,
+	"porn":              true,
+	"sexual":            true,
+	"sexual-figurative": true,
+	"graphic-media":     true,
+	"self-harm":         true,
+	"sensitive":         true,
+}
+
 func (srv *Server) WebPost(c echo.Context) error {
 	ctx := c.Request().Context()
 	data := srv.NewTemplateContext()
@@ -488,36 +501,38 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
+	req := c.Request()
 	if !unauthedViewingOkay {
+		// Provide minimal OpenGraph data for auth-required posts
+		data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+		data["requiresAuth"] = true
+		data["profileHandle"] = pv.Handle
+		if pv.DisplayName != nil {
+			data["profileDisplayName"] = *pv.DisplayName
+		}
 		return c.Render(http.StatusOK, "post.html", data)
 	}
-	did := pv.Did
-	data["did"] = did
 
 	// then fetch the post thread (with extra context)
-	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", pv.Did, rkey)
 	tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, 0, uri)
 	if err != nil {
 		log.Warnf("failed to fetch post: %s\t%v", uri, err)
 		return c.Render(http.StatusOK, "post.html", data)
 	}
-	req := c.Request()
+
 	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
 	data["postView"] = postView
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-	if postView.Embed != nil {
-		if postView.Embed.EmbedImages_View != nil {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
-			}
-			data["imgThumbUrls"] = thumbUrls
-		} else if postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
-			}
-			data["imgThumbUrls"] = thumbUrls
+
+	// If any undesirable labels are set, the embed will not be included in
+	// metadata
+	isEmbedHidden := false
+	for _, label := range postView.Labels {
+		isNeg := label.Neg != nil && *label.Neg
+		if hideEmbedLabels[label.Val] && !isNeg {
+			isEmbedHidden = true
+			break
 		}
 	}
 
@@ -525,6 +540,34 @@ func (srv *Server) WebPost(c echo.Context) error {
 		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
 		if ok {
 			data["postText"] = ExpandPostText(postRecord)
+
+			if !isEmbedHidden && postRecord.Labels != nil && postRecord.Labels.LabelDefs_SelfLabels != nil {
+				for _, label := range postRecord.Labels.LabelDefs_SelfLabels.Values {
+					if hideEmbedLabels[label.Val] {
+						isEmbedHidden = true
+						break
+					}
+				}
+			}
+		}
+	}
+
+	if postView.Embed != nil && !isEmbedHidden {
+		hasImages := postView.Embed.EmbedImages_View != nil
+		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
+
+		if hasImages {
+			var thumbUrls []string
+			for i := range postView.Embed.EmbedImages_View.Images {
+				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
+			}
+			data["imgThumbUrls"] = thumbUrls
+		} else if hasMedia {
+			var thumbUrls []string
+			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
+				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
+			}
+			data["imgThumbUrls"] = thumbUrls
 		}
 	}
 
@@ -593,14 +636,68 @@ func (srv *Server) WebProfile(c echo.Context) error {
 			unauthedViewingOkay = false
 		}
 	}
-	if !unauthedViewingOkay {
-		return c.Render(http.StatusOK, "profile.html", data)
-	}
+
 	req := c.Request()
 	data["profileView"] = pv
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	data["requestHost"] = req.Host
+
+	if !unauthedViewingOkay {
+		data["requiresAuth"] = true
+	}
+
 	return c.Render(http.StatusOK, "profile.html", data)
+}
+
+func (srv *Server) WebFeed(c echo.Context) error {
+	ctx := c.Request().Context()
+	data := srv.NewTemplateContext()
+
+	// sanity check arguments. don't 4xx, just let app handle if not expected format
+	rkeyParam := c.Param("rkey")
+	rkey, err := syntax.ParseRecordKey(rkeyParam)
+	if err != nil {
+		return c.Render(http.StatusOK, "feed.html", data)
+	}
+	handleOrDIDParam := c.Param("handleOrDID")
+	handleOrDID, err := syntax.ParseAtIdentifier(handleOrDIDParam)
+	if err != nil {
+		return c.Render(http.StatusOK, "feed.html", data)
+	}
+
+	identifier := handleOrDID.Normalize().String()
+
+	// requires two fetches: first fetch profile to get DID
+	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, identifier)
+	if err != nil {
+		log.Warnf("failed to fetch profile for: %s\t%v", identifier, err)
+		return c.Render(http.StatusOK, "feed.html", data)
+	}
+	unauthedViewingOkay := true
+	for _, label := range pv.Labels {
+		if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
+			unauthedViewingOkay = false
+		}
+	}
+
+	if !unauthedViewingOkay {
+		return c.Render(http.StatusOK, "feed.html", data)
+	}
+	did := pv.Did
+	data["did"] = did
+
+	// then fetch the feed generator
+	feedURI := fmt.Sprintf("at://%s/app.bsky.feed.generator/%s", did, rkey)
+	fgv, err := appbsky.FeedGetFeedGenerator(ctx, srv.xrpcc, feedURI)
+	if err != nil {
+		log.Warnf("failed to fetch feed generator: %s\t%v", feedURI, err)
+		return c.Render(http.StatusOK, "feed.html", data)
+	}
+	req := c.Request()
+	data["feedView"] = fgv.View
+	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+
+	return c.Render(http.StatusOK, "feed.html", data)
 }
 
 type IPCCRequest struct {

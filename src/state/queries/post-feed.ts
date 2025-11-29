@@ -15,7 +15,7 @@ import {
   type QueryClient,
   type QueryKey,
   useInfiniteQuery,
-} from './useQueryWithFallback'
+} from '@tanstack/react-query'
 
 import {AuthorFeedAPI} from '#/lib/api/feed/author'
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
@@ -495,23 +495,23 @@ function createApi({
       }
     }
   } else if (feedDesc.startsWith('author')) {
-    const [_, actor, filter] = feedDesc.split('|')
+    const [_a, actor, filter] = feedDesc.split('|')
     return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
-    const [_, actor] = feedDesc.split('|')
+    const [_l, actor] = feedDesc.split('|')
     return new LikesFeedAPI({agent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
-    const [_, feed] = feedDesc.split('|')
+    const [_f, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
       agent,
       feedParams: {feed},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
-    const [_, list] = feedDesc.split('|')
+    const [_li, list] = feedDesc.split('|')
     return new ListFeedAPI({agent, feedParams: {list}})
   } else if (feedDesc.startsWith('posts')) {
-    const [_, uriList] = feedDesc.split('|')
+    const [_p, uriList] = feedDesc.split('|')
     return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
   } else if (feedDesc === 'demo') {
     return new DemoFeedAPI({agent})

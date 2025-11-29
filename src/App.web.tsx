@@ -3,7 +3,6 @@ import '#/view/icons'
 import './style.css'
 
 import React, {useEffect, useState} from 'react'
-import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,7 +19,6 @@ import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
-import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
 import {Provider as ModalStateProvider} from '#/state/modals'
@@ -100,9 +98,8 @@ function InnerApp() {
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
-          <RootSiblingParent>
-            <VideoVolumeProvider>
-              <ActiveVideoProvider>
+          <VideoVolumeProvider>
+            <ActiveVideoProvider>
                 <React.Fragment
                   // Resets the entire tree below when it changes:
                   key={currentAccount?.did}>
@@ -149,9 +146,8 @@ function InnerApp() {
                     </ComposerProvider>
                   </QueryProvider>
                 </React.Fragment>
-              </ActiveVideoProvider>
-            </VideoVolumeProvider>
-          </RootSiblingParent>
+            </ActiveVideoProvider>
+          </VideoVolumeProvider>
         </ContextMenuProvider>
       </ThemeProvider>
     </Alf>
@@ -179,19 +175,17 @@ function App() {
         <PrefsStateProvider>
           <I18nProvider>
             <ShellStateProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <PortalProvider>
-                        <StarterPackProvider>
-                          <InnerApp />
-                        </StarterPackProvider>
-                      </PortalProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
+              <ModalStateProvider>
+                <DialogStateProvider>
+                  <LightboxStateProvider>
+                    <PortalProvider>
+                      <StarterPackProvider>
+                        <InnerApp />
+                      </StarterPackProvider>
+                    </PortalProvider>
+                  </LightboxStateProvider>
+                </DialogStateProvider>
+              </ModalStateProvider>
             </ShellStateProvider>
           </I18nProvider>
         </PrefsStateProvider>

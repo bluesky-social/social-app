@@ -8,7 +8,6 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'

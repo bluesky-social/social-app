@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextInput, View} from 'react-native'
+import {type TextInput, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

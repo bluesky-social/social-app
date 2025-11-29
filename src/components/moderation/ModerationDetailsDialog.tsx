@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {ModerationCause} from '@atproto/api'
+import {type ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,7 +12,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
-import {AppModerationCause} from '#/components/Pills'
+import {type AppModerationCause} from '#/components/Pills'
 import {Text} from '#/components/Typography'
 
 export {useDialogControl as useModerationDetailsDialogControl} from '#/components/Dialog'
@@ -24,7 +24,9 @@ export interface ModerationDetailsDialogProps {
 
 export function ModerationDetailsDialog(props: ModerationDetailsDialogProps) {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer
+      control={props.control}
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <ModerationDetailsDialogInner {...props} />
     </Dialog.Outer>
@@ -142,7 +144,7 @@ function ModerationDetailsDialogInner({
         paddingBottom: 0,
       }}>
       <View style={[xGutters, a.pb_lg]}>
-        <Text emoji style={[t.atoms.text, a.text_2xl, a.font_heavy, a.mb_sm]}>
+        <Text emoji style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
           {name}
         </Text>
         <Text style={[t.atoms.text, a.text_sm, a.leading_snug]}>

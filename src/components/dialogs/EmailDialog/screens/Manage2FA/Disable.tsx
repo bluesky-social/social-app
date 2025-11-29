@@ -153,7 +153,7 @@ export function Disable() {
 
   return (
     <View style={[a.gap_sm]}>
-      <Text style={[a.text_xl, a.font_heavy, a.leading_snug]}>
+      <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
         <Trans>Disable email 2FA</Trans>
       </Text>
 
@@ -163,7 +163,7 @@ export function Disable() {
             style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>
               To disable your email 2FA method, please verify your access to{' '}
-              <Span style={[a.font_bold]}>{currentAccount?.email}</Span>
+              <Span style={[a.font_semi_bold]}>{currentAccount?.email}</Span>
             </Trans>
           </Text>
 
@@ -214,7 +214,7 @@ export function Disable() {
             style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>
               To disable your email 2FA method, please verify your access to{' '}
-              <Span style={[a.font_bold]}>{currentAccount?.email}</Span>
+              <Span style={[a.font_semi_bold]}>{currentAccount?.email}</Span>
             </Trans>
           </Text>
 

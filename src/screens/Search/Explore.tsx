@@ -10,14 +10,14 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
-import {isNative} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {RQKEY_ROOT_PAGINATED as useActorSearchPaginatedQueryKeyRoot} from '#/state/queries/actor-search'
+import {RQKEY_ROOT as useActorSearchQueryKeyRoot} from '#/state/queries/actor-search'
 import {
   type FeedPreviewItem,
   useFeedPreviews,
@@ -41,10 +41,6 @@ import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
 import {List} from '#/view/com/util/List'
 import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
 import {
   StarterPackCard,
   StarterPackCardSkeleton,
@@ -312,7 +308,7 @@ export function Explore({
         queryKey: [getSuggestedUsersQueryKeyRoot],
       }),
       qc.resetQueries({
-        queryKey: [useActorSearchPaginatedQueryKeyRoot],
+        queryKey: [useActorSearchQueryKeyRoot],
       }),
       qc.resetQueries({
         queryKey: createGetSuggestedFeedsQueryKey(),
@@ -726,7 +722,12 @@ export function Explore({
                 <ModuleHeader.SearchButton
                   {...item.searchButton}
                   onPress={() =>
-                    focusSearchInput(item.searchButton?.tab || 'user')
+                    focusSearchInput(
+                      (item.searchButton?.tab || 'user') as
+                        | 'user'
+                        | 'profile'
+                        | 'feed',
+                    )
                   }
                 />
               )}
@@ -743,7 +744,12 @@ export function Explore({
                   <ModuleHeader.SearchButton
                     {...item.searchButton}
                     onPress={() =>
-                      focusSearchInput(item.searchButton?.tab || 'user')
+                      focusSearchInput(
+                        (item.searchButton?.tab || 'user') as
+                          | 'user'
+                          | 'profile'
+                          | 'feed',
+                      )
                     }
                   />
                 )}
@@ -885,7 +891,7 @@ export function Explore({
                 ]}>
                 <CircleInfo size="md" fill={t.palette.negative_400} />
                 <View style={[a.flex_1, a.gap_sm]}>
-                  <Text style={[a.font_bold, a.leading_snug]}>
+                  <Text style={[a.font_semi_bold, a.leading_snug]}>
                     {item.message}
                   </Text>
                   <Text
@@ -917,12 +923,12 @@ export function Explore({
         }
         case 'preview:header': {
           return (
-            <ModuleHeader.Container style={[a.pt_xs]} bottomBorder={isNative}>
+            <ModuleHeader.Container style={[a.pt_xs]} bottomBorder>
               {/* Very non-scientific way to avoid small gap on scroll */}
               <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
               <ModuleHeader.FeedLink feed={item.feed}>
                 <ModuleHeader.FeedAvatar feed={item.feed} />
-                <View style={[a.flex_1, a.gap_xs]}>
+                <View style={[a.flex_1, a.gap_2xs]}>
                   <ModuleHeader.TitleText style={[a.text_lg]}>
                     {item.feed.displayName}
                   </ModuleHeader.TitleText>
@@ -1072,12 +1078,26 @@ export function Explore({
       windowSize={platform({android: 11})}
       /**
        * Default: 10
+       *
+       * NOTE: This was 1 on Android. Unfortunately this leads to the list totally freaking out
+       * when the sticky headers changed. I made a minimal reproduction and yeah, it's this prop.
+       * Totally fine when the sticky headers are static, but when they're dynamic, it's a mess.
+       *
+       * Repro: https://github.com/mozzius/stickyindices-repro
+       *
+       * I then found doubling this prop on iOS also reduced it freaking out there as well.
+       *
+       * Trades off seeing more blank space due to it having to render more items before it can show anything.
+       * -sfn
        */
-      maxToRenderPerBatch={platform({android: 1})}
+      maxToRenderPerBatch={platform({android: 10, ios: 20})}
       /**
        * Default: 50
+       *
+       * NOTE: This was 25 on Android. However, due to maxToRenderPerBatch being set to 10,
+       * the lower batching period is no longer necessary (?)
        */
-      updateCellsBatchingPeriod={platform({android: 25})}
+      updateCellsBatchingPeriod={50}
       refreshing={isPTR}
       onRefresh={onPTR}
     />

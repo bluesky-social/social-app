@@ -51,7 +51,7 @@ export function EmojiPopup({
               a.border_b,
               t.atoms.border_contrast_low,
             ]}>
-            <Text style={[a.font_bold, a.text_md]}>
+            <Text style={[a.font_semi_bold, a.text_md]}>
               <Trans>Add Reaction</Trans>
             </Text>
             <Button

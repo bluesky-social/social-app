@@ -1,15 +1,15 @@
 import React, {useState} from 'react'
 import {ScrollView, View} from 'react-native'
+import {Dimensions} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Context} from '#/screens/Onboarding/state'
 import {
   atoms as a,
-  flatten,
   native,
   type TextStyleProp,
   tokens,
@@ -17,7 +17,6 @@ import {
   useTheme,
   web,
 } from '#/alf'
-import {leading} from '#/alf/typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {HEADER_SLOT_SIZE} from '#/components/Layout'
@@ -59,13 +58,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       aria-label={dialogLabel}
       accessibilityLabel={dialogLabel}
       accessibilityHint={_(msg`Customizes your Bluesky experience`)}
-      style={[
-        // @ts-ignore web only -prf
-        isWeb ? a.fixed : a.absolute,
-        a.inset_0,
-        a.flex_1,
-        t.atoms.bg,
-      ]}>
+      style={[isWeb ? a.fixed : a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
       {__DEV__ && (
         <Button
           variant="ghost"
@@ -78,10 +71,10 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             a.absolute,
             a.z_10,
             {
-              left: '50%',
+              left: isWeb ? '50%' : Dimensions.get('window').width / 2 - 45,
               top: insets.top + 2,
-              transform: [{translateX: '-50%'}],
             },
+            web({transform: [{translateX: '-50%'}]}),
           ]}>
           <ButtonText>[DEV] Clear</ButtonText>
         </Button>
@@ -135,7 +128,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       <ScrollView
         ref={scrollview}
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
-        contentContainerStyle={{borderWidth: 0}}
+        contentContainerStyle={{borderWidth: 0, minHeight: '100%'}}
+        showsVerticalScrollIndicator={!isAndroid}
         scrollIndicatorInsets={{bottom: footerHeight - insets.bottom}}
         // @ts-expect-error web only --prf
         dataSet={{'stable-gutters': 1}}>
@@ -173,7 +167,9 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               </View>
             </View>
 
-            <View style={[a.w_full, a.mb_5xl, a.pt_md]}>{children}</View>
+            <View style={[a.w_full, a.h_full, a.mb_5xl, a.pt_md]}>
+              {children}
+            </View>
 
             <View style={{height: 100 + footerHeight}} />
           </View>
@@ -231,15 +227,7 @@ export function TitleText({
 }: React.PropsWithChildren<TextStyleProp>) {
   return (
     <Text
-      style={[
-        a.pb_sm,
-        a.text_4xl,
-        a.font_bold,
-        {
-          lineHeight: leading(a.text_4xl, a.leading_tight),
-        },
-        flatten(style),
-      ]}>
+      style={[a.pb_sm, a.text_4xl, a.font_semi_bold, a.leading_tight, style]}>
       {children}
     </Text>
   )
@@ -250,7 +238,5 @@ export function DescriptionText({
   style,
 }: React.PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
-  return (
-    <P style={[t.atoms.text_contrast_medium, flatten(style)]}>{children}</P>
-  )
+  return <P style={[t.atoms.text_contrast_medium, style]}>{children}</P>
 }

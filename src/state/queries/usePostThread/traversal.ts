@@ -135,11 +135,11 @@ export function sortAndAnnotateThreadItems(
       } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
         if (parentMetadata) {
           /*
-           * Set this value before incrementing the parent's repliesSeenCounter
+           * Set this value before incrementing the `repliesSeenCounter` later
+           * on, since `repliesSeenCounter` is 1-indexed and `replyIndex` is
+           * 0-indexed.
            */
-          metadata!.replyIndex = parentMetadata.repliesIndexCounter
-          // Increment the parent's repliesIndexCounter
-          parentMetadata.repliesIndexCounter += 1
+          metadata!.replyIndex = parentMetadata.repliesSeenCounter
         }
 
         const post = views.threadPost({
@@ -193,11 +193,12 @@ export function sortAndAnnotateThreadItems(
                 storeTraversalMetadata(metadatas, childMetadata)
                 if (childParentMetadata) {
                   /*
-                   * Set this value before incrementing the parent's repliesIndexCounter
+                   * Set this value before incrementing the
+                   * `repliesSeenCounter` later on, since `repliesSeenCounter`
+                   * is 1-indexed and `replyIndex` is 0-indexed.
                    */
                   childMetadata!.replyIndex =
-                    childParentMetadata.repliesIndexCounter
-                  childParentMetadata.repliesIndexCounter += 1
+                    childParentMetadata.repliesSeenCounter
                 }
 
                 const childPost = views.threadPost({
@@ -264,14 +265,13 @@ export function sortAndAnnotateThreadItems(
             if (nextItem?.type === 'threadPost')
               metadata.nextItemDepth = nextItem?.depth
 
-            /*
-             * Item is the last "sibling" if we know for sure we're out of
-             * replies on the parent (even though this item itself may have its
-             * own reply branches).
+            /**
+             * Item is also the last "sibling" if its index matches the total
+             * number of replies we're actually able to render to the page.
              */
-            const isLastSiblingByCounts =
+            const isLastSiblingDueToMissingReplies =
               metadata.replyIndex ===
-              metadata.parentMetadata.repliesIndexCounter - 1
+              metadata.parentMetadata.repliesSeenCounter - 1
 
             /*
              * Item can also be the last "sibling" if we know we don't have a
@@ -287,7 +287,7 @@ export function sortAndAnnotateThreadItems(
              * Ok now we can set the last sibling state.
              */
             metadata.isLastSibling =
-              isLastSiblingByCounts || isImplicitlyLastSibling
+              isImplicitlyLastSibling || isLastSiblingDueToMissingReplies
 
             /*
              * Item is the last "child" in a branch if there is no next item,

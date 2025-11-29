@@ -23,8 +23,6 @@ export type ThreadPreferences = {
   setSort: (sort: string) => void
   view: ThreadViewOption
   setView: (view: ThreadViewOption) => void
-  prioritizeFollowedUsers: boolean
-  setPrioritizeFollowedUsers: (prioritize: boolean) => void
 }
 
 export function useThreadPreferences({
@@ -43,9 +41,6 @@ export function useThreadPreferences({
       treeViewEnabled: !!serverPrefs?.lab_treeViewEnabled,
     }),
   )
-  const [prioritizeFollowedUsers, setPrioritizeFollowedUsers] = useState(
-    !!serverPrefs?.prioritizeFollowedUsers,
-  )
 
   /**
    * If we get a server update, update local state
@@ -59,7 +54,6 @@ export function useThreadPreferences({
      * Update
      */
     setSort(normalizeSort(serverPrefs.sort))
-    setPrioritizeFollowedUsers(serverPrefs.prioritizeFollowedUsers)
     setView(
       normalizeView({
         treeViewEnabled: !!serverPrefs.lab_treeViewEnabled,
@@ -70,7 +64,6 @@ export function useThreadPreferences({
       logger.metric('thread:preferences:load', {
         sort: serverPrefs.sort,
         view: serverPrefs.lab_treeViewEnabled ? 'tree' : 'linear',
-        prioritizeFollowedUsers: serverPrefs.prioritizeFollowedUsers,
       })
     })
   }
@@ -86,7 +79,6 @@ export function useThreadPreferences({
         logger.metric('thread:preferences:update', {
           sort: prefs.sort,
           view: prefs.lab_treeViewEnabled ? 'tree' : 'linear',
-          prioritizeFollowedUsers: prefs.prioritizeFollowedUsers,
         })
       } catch (e) {
         logger.error('useThreadPreferences failed to save', {
@@ -101,7 +93,6 @@ export function useThreadPreferences({
   if (save && userUpdatedPrefs.current) {
     savePrefs({
       sort,
-      prioritizeFollowedUsers,
       lab_treeViewEnabled: view === 'tree',
     })
     userUpdatedPrefs.current = false
@@ -121,13 +112,6 @@ export function useThreadPreferences({
     },
     [setView],
   )
-  const setPrioritizeFollowedUsersWrapped = useCallback(
-    (next: boolean) => {
-      userUpdatedPrefs.current = true
-      setPrioritizeFollowedUsers(next)
-    },
-    [setPrioritizeFollowedUsers],
-  )
 
   return useMemo(
     () => ({
@@ -137,19 +121,8 @@ export function useThreadPreferences({
       setSort: setSortWrapped,
       view,
       setView: setViewWrapped,
-      prioritizeFollowedUsers,
-      setPrioritizeFollowedUsers: setPrioritizeFollowedUsersWrapped,
     }),
-    [
-      isLoaded,
-      isSaving,
-      sort,
-      setSortWrapped,
-      view,
-      setViewWrapped,
-      prioritizeFollowedUsers,
-      setPrioritizeFollowedUsersWrapped,
-    ],
+    [isLoaded, isSaving, sort, setSortWrapped, view, setViewWrapped],
   )
 }
 

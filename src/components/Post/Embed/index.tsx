@@ -23,7 +23,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import * as bsky from '#/types/bsky'
 import {
   type Embed as TEmbed,
@@ -284,7 +284,7 @@ export function QuoteEmbed({
         childContainerStyle={[a.pt_sm]}>
         {({active}) => (
           <>
-            {!active && <SubtleWebHover hover={hover} style={[a.rounded_md]} />}
+            {!active && <SubtleHover hover={hover} style={[a.rounded_md]} />}
             <Link
               style={[!active && a.p_md]}
               hoverStyle={{borderColor: pal.colors.borderLinkHover}}

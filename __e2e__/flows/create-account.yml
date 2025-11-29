@@ -3,7 +3,7 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: ""
+      SERVER_PATH: ""
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
@@ -25,16 +25,25 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "passwordInput"
 - inputText: "hunter22"
-- hideKeyboard
+- tapOn:
+    # hideKeyboard on ios is borked
+    # https://docs.maestro.dev/troubleshooting/known-issues#hidekeyboard-command-is-flaky
+    text: "Your account"
 - tapOn:
     id: "nextBtn"
+- waitForAnimationToEnd
 - tapOn:
-    text: "Not Now"
-    optional: true
+    # save password thing no longer seems to be in hierarchy
+    # tap on something else instead
+    point: 20%,20%
+    repeat: 2
+    delay: 1000
+- tapOn:
+    id: "handleInput"
 - inputText: "e2e-test"
 - extendedWaitUntil:
     visible:
-        id: "handleAvailableCheck"
+      id: "handleAvailableCheck"
 - tapOn:
     id: "nextBtn"
 - assertVisible: "Give your profile a face"

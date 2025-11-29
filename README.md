@@ -107,6 +107,8 @@ promptly.
 
 ---
 
+Bluesky Social PBC has committed to a software patent non-aggression pledge. For details see [the original announcement](https://bsky.social/about/blog/10-01-2025-patent-pledge).
+
 ## P.S.
 
 Blacksky exists because of contributors like *you*.  

@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {type JSX, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -161,7 +161,7 @@ function ProfileCard() {
                           },
                         ]}>
                         <Text
-                          style={[a.font_heavy, a.text_sm, a.leading_snug]}
+                          style={[a.font_bold, a.text_sm, a.leading_snug]}
                           numberOfLines={1}>
                           {sanitizeDisplayName(
                             profile.displayName || profile.handle,
@@ -434,7 +434,6 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         style={[
           a.align_center,
           a.justify_center,
-          a.z_10,
           {
             width: 24,
             height: 24,
@@ -465,10 +464,11 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
               style={[
                 a.absolute,
                 a.text_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 a.rounded_full,
                 a.text_center,
                 a.leading_tight,
+                a.z_20,
                 {
                   top: '-10%',
                   left: count.length === 1 ? 12 : 8,
@@ -494,6 +494,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
             style={[
               a.absolute,
               a.rounded_full,
+              a.z_20,
               {
                 backgroundColor: t.palette.primary_500,
                 width: 8,
@@ -510,7 +511,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         ) : null}
       </View>
       {!leftNavMinimal && (
-        <Text style={[a.text_xl, isCurrent ? a.font_heavy : a.font_normal]}>
+        <Text style={[a.text_xl, isCurrent ? a.font_bold : a.font_normal]}>
           {label}
         </Text>
       )}

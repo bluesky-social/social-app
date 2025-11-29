@@ -50,7 +50,7 @@ function Inner() {
               fill={t.palette.primary_500}
               style={{marginLeft: -2}}
             />
-            <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>
+            <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
               <Trans>Recommended</Trans>
             </Text>
           </View>

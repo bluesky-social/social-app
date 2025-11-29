@@ -1,7 +1,7 @@
 import {View} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -62,7 +62,7 @@ export function ErrorScreen({
             />
           </View>
         </View>
-        <Text style={[a.text_center, a.font_heavy, a.text_2xl, a.mb_md]}>
+        <Text style={[a.text_center, a.font_bold, a.text_2xl, a.mb_md]}>
           {title}
         </Text>
         <Text style={[a.text_center, a.text_md, a.mb_xl]}>{message}</Text>

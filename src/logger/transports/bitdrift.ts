@@ -1,5 +1,5 @@
 import {debug, error, info, warn} from '#/logger/bitdrift/lib'
-import {LogLevel, Transport} from '#/logger/types'
+import {LogLevel, type Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 
 const logFunctions = {

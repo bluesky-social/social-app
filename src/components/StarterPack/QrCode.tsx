@@ -1,4 +1,4 @@
-import React from 'react'
+import {lazy} from 'react'
 import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
@@ -15,20 +15,20 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 
-const LazyViewShot = React.lazy(
+const LazyViewShot = lazy(
   // @ts-expect-error dynamic import
   () => import('react-native-view-shot/src/index'),
 )
 
-interface Props {
+export function QrCode({
+  starterPack,
+  link,
+  ref,
+}: {
   starterPack: AppBskyGraphDefs.StarterPackView
   link: string
-}
-
-export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
-  {starterPack, link},
-  ref,
-) {
+  ref: React.Ref<ViewShot>
+}) {
   const {record} = starterPack
 
   if (
@@ -54,14 +54,19 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
         ]}>
         <View style={[a.gap_sm]}>
           <Text
-            style={[a.font_bold, a.text_3xl, a.text_center, {color: 'white'}]}>
+            style={[
+              a.font_semi_bold,
+              a.text_3xl,
+              a.text_center,
+              {color: 'white'},
+            ]}>
             {record.name}
           </Text>
         </View>
         <View style={[a.gap_xl, a.align_center]}>
           <Text
             style={[
-              a.font_bold,
+              a.font_semi_bold,
               a.text_center,
               {color: 'white', fontSize: 18},
             ]}>
@@ -76,7 +81,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
               a.flex,
               a.flex_row,
               a.align_center,
-              a.font_bold,
+              a.font_semi_bold,
               {color: 'white', fontSize: 18, gap: 6},
             ]}>
             <Trans>
@@ -93,7 +98,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
       </LinearGradientBackground>
     </LazyViewShot>
   )
-})
+}
 
 export function QrCodeInner({link}: {link: string}) {
   const t = useTheme()

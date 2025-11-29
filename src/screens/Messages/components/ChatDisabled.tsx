@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {ComAtprotoModerationDefs} from '@atproto/api'
+import {ToolsOzoneReportDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -22,7 +22,12 @@ export function ChatDisabled() {
       <View
         style={[a.align_start, a.p_xl, a.rounded_md, t.atoms.bg_contrast_25]}>
         <Text
-          style={[a.text_md, a.font_bold, a.pb_sm, t.atoms.text_contrast_high]}>
+          style={[
+            a.text_md,
+            a.font_semi_bold,
+            a.pb_sm,
+            t.atoms.text_contrast_high,
+          ]}>
           <Trans>Your chats have been disabled</Trans>
         </Text>
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -76,7 +81,7 @@ function DialogInner() {
         throw new Error('No current account, should be unreachable')
       await agent.createModerationReport(
         {
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             did: currentAccount.did,
@@ -104,7 +109,7 @@ function DialogInner() {
 
   return (
     <Dialog.ScrollableInner label={_(msg`Appeal this decision`)}>
-      <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
+      <Text style={[a.text_2xl, a.font_semi_bold, a.pb_xs, a.leading_tight]}>
         <Trans>Appeal this decision</Trans>
       </Text>
       <Text style={[a.text_md, a.leading_snug]}>

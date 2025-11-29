@@ -116,6 +116,11 @@ let ProfileMenu = ({
     })
   }, [queryClient, profile.did])
 
+  const onPressAddToStarterPacks = React.useCallback(() => {
+    logger.metric('profile:addToStarterPack', {})
+    addToStarterPacksDialogControl.open()
+  }, [addToStarterPacksDialogControl])
+
   const onPressShare = React.useCallback(() => {
     shareUrl(toShareUrl(makeProfileLink(profile)))
   }, [profile])
@@ -317,7 +322,7 @@ let ProfileMenu = ({
                 <Menu.Item
                   testID="profileHeaderDropdownStarterPackAddRemoveBtn"
                   label={_(msg`Add to starter packs`)}
-                  onPress={addToStarterPacksDialogControl.open}>
+                  onPress={onPressAddToStarterPacks}>
                   <Menu.ItemText>
                     <Trans>Add to starter packs</Trans>
                   </Menu.ItemText>

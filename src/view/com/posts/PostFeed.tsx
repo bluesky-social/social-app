@@ -1,4 +1,12 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {
+  type JSX,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   AppState,
   Dimensions,
@@ -23,6 +31,7 @@ import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logEvent} from '#/lib/statsig/statsig'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
@@ -273,7 +282,9 @@ let PostFeed = ({
         }
       }
     } catch (e) {
-      logger.error('Poll latest failed', {feed, message: String(e)})
+      if (!isNetworkError(e)) {
+        logger.error('Poll latest failed', {feed, message: String(e)})
+      }
     }
   })
 
@@ -787,12 +798,67 @@ let PostFeed = ({
   const liveNowConfig = useLiveNowConfig()
 
   const seenActorWithStatusRef = useRef<Set<string>>(new Set())
+  const seenPostUrisRef = useRef<Set<string>>(new Set())
+
+  // Helper to calculate position in feed (count only root posts, not interstitials or thread replies)
+  const getPostPosition = useNonReactiveCallback(
+    (type: FeedRow['type'], key: string) => {
+      // Calculate position: find the row index in feedItems, then calculate position
+      const rowIndex = feedItems.findIndex(
+        row => row.type === 'sliceItem' && row.key === key,
+      )
+
+      if (rowIndex >= 0) {
+        let position = 0
+        for (let i = 0; i < rowIndex && i < feedItems.length; i++) {
+          const row = feedItems[i]
+          if (row.type === 'sliceItem') {
+            // Only count root posts (indexInSlice === 0), not thread replies
+            if (row.indexInSlice === 0) {
+              position++
+            }
+          } else if (row.type === 'videoGridRow') {
+            // Count each video in the grid row
+            position += row.items.length
+          }
+        }
+        return position
+      }
+    },
+  )
+
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
-      if (item.type === 'sliceItem') {
-        const actor = item.slice.items[item.indexInSlice].post.author
 
+      // Track post:view events
+      if (item.type === 'sliceItem') {
+        const slice = item.slice
+        const indexInSlice = item.indexInSlice
+        const postItem = slice.items[indexInSlice]
+        const post = postItem.post
+
+        // Only track the root post of each slice (index 0) to avoid double-counting thread items
+        if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
+          seenPostUrisRef.current.add(post.uri)
+
+          const position = getPostPosition('sliceItem', item.key)
+
+          logger.metric(
+            'post:view',
+            {
+              uri: post.uri,
+              authorDid: post.author.did,
+              logContext: 'FeedItem',
+              feedDescriptor: feedFeedback.feedDescriptor || feed,
+              position,
+            },
+            {statsig: false},
+          )
+        }
+
+        // Live status tracking (existing code)
+        const actor = post.author
         if (
           actor.status &&
           validateStatus(actor.did, actor.status, liveNowConfig) &&
@@ -810,9 +876,33 @@ let PostFeed = ({
             )
           }
         }
+      } else if (item.type === 'videoGridRow') {
+        // Track each video in the grid row
+        for (let i = 0; i < item.items.length; i++) {
+          const postItem = item.items[i]
+          const post = postItem.post
+
+          if (!seenPostUrisRef.current.has(post.uri)) {
+            seenPostUrisRef.current.add(post.uri)
+
+            const position = getPostPosition('videoGridRow', item.key)
+
+            logger.metric(
+              'post:view',
+              {
+                uri: post.uri,
+                authorDid: post.author.did,
+                logContext: 'FeedItem',
+                feedDescriptor: feedFeedback.feedDescriptor || feed,
+                position,
+              },
+              {statsig: false},
+            )
+          }
+        }
       }
     },
-    [feedFeedback, feed, liveNowConfig],
+    [feedFeedback, feed, liveNowConfig, getPostPosition],
   )
 
   return (

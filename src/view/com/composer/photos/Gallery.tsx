@@ -19,7 +19,7 @@ import {colors, s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {type ComposerImage, cropImage} from '#/state/gallery'
 import {Text} from '#/view/com/util/text/Text'
-import {useTheme} from '#/alf'
+import {tokens, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {type PostAction} from '../state/composer'
@@ -230,6 +230,7 @@ const GalleryItem = ({
         accessibilityIgnoresInvertColors
         cachePolicy="none"
         autoplay={false}
+        contentFit="cover"
       />
 
       <MediaInsetBorder />
@@ -274,13 +275,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   image: {
-    resizeMode: 'cover',
-    borderRadius: 8,
+    borderRadius: tokens.borderRadius.md,
   },
   imageControl: {
     width: 24,
     height: 24,
-    borderRadius: 12,
+    borderRadius: tokens.borderRadius.md,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     alignItems: 'center',
     justifyContent: 'center',

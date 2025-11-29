@@ -1,5 +1,6 @@
+import {type Palette, type Theme} from '@bsky.app/alf'
+
 import {atoms} from '#/alf/atoms'
-import {type Palette, type Theme} from '#/alf/types'
 import {
   BLUE_HUE,
   defaultScale,
@@ -36,7 +37,7 @@ export const BRAND = {
   negative: '#F40B42',
 } as const
 
-const themes = createThemes({
+export const themes = createThemes({
   hues: {
     primary: BLUE_HUE,
     negative: RED_HUE,
@@ -164,6 +165,7 @@ export function createThemes({
     black: BRAND.black,
     like: color.like,
 
+    contrast_0: color.gray_0,
     contrast_25: color.gray_25,
     contrast_50: color.gray_50,
     contrast_100: color.gray_100,
@@ -177,6 +179,7 @@ export function createThemes({
     contrast_900: color.gray_900,
     contrast_950: color.gray_950,
     contrast_975: color.gray_975,
+    contrast_1000: color.gray_1000,
 
     primary_25: BRAND.primaryLightTint,
     primary_50: color.primary_50,
@@ -226,6 +229,7 @@ export function createThemes({
     black: BRAND.black,
     like: color.like,
 
+    contrast_0: color.gray_1000,
     contrast_25: color.gray_975,
     contrast_50: color.gray_950,
     contrast_100: color.gray_900,
@@ -239,6 +243,7 @@ export function createThemes({
     contrast_900: color.gray_100,
     contrast_950: color.gray_50,
     contrast_975: color.gray_25,
+    contrast_1000: color.gray_0,
 
     primary_25: BRAND.primaryDarkTint,
     primary_50: color.primary_950,
@@ -288,6 +293,7 @@ export function createThemes({
     black: BRAND.twilight,
     like: color.like,
 
+    contrast_0: `hsl(${hues.primary}, 28%, ${dimScale[0]}%)`,
     contrast_25: `hsl(${hues.primary}, 28%, ${dimScale[1]}%)`,
     contrast_50: `hsl(${hues.primary}, 28%, ${dimScale[2]}%)`,
     contrast_100: `hsl(${hues.primary}, 28%, ${dimScale[3]}%)`,
@@ -301,6 +307,7 @@ export function createThemes({
     contrast_900: `hsl(${hues.primary}, 20%, ${dimScale[11]}%)`,
     contrast_950: `hsl(${hues.primary}, 20%, ${dimScale[12]}%)`,
     contrast_975: `hsl(${hues.primary}, 20%, ${dimScale[13]}%)`,
+    contrast_1000: `hsl(${hues.primary}, 20%, ${dimScale[14]}%)`,
 
     primary_25: `hsl(240, 15%, ${dimScale[1]}%)`,
     primary_50: `hsl(240, 18%, ${dimScale[2]}%)`,

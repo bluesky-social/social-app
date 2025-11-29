@@ -106,7 +106,7 @@ export function Trigger({children, label}: TriggerProps) {
         style={[a.flex_1, a.justify_between]}
         color="secondary"
         size="small"
-        variant="solid">
+        shape="rectangular">
         <>{children}</>
       </Button>
     )
@@ -280,7 +280,7 @@ export function ItemText({children}: ItemTextProps) {
   // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
   return (
     <View style={[a.flex_1, a.py_md, a.border_b, t.atoms.border_contrast_low]}>
-      <Text style={[a.text_md, selected && a.font_bold]}>{children}</Text>
+      <Text style={[a.text_md, selected && a.font_semi_bold]}>{children}</Text>
     </View>
   )
 }

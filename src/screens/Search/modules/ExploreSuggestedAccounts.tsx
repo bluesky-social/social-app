@@ -5,13 +5,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type InfiniteData} from '@tanstack/react-query'
 
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'

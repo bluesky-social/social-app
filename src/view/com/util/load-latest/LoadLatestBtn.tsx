@@ -14,7 +14,7 @@ import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 
 export function LoadLatestBtn({
   onPress,
@@ -91,7 +91,7 @@ export function LoadLatestBtn({
         targetScale={0.9}
         onPointerEnter={onHoverIn}
         onPointerLeave={onHoverOut}>
-        <SubtleWebHover hover={hovered} style={[a.rounded_full]} />
+        <SubtleHover hover={hovered} style={[a.rounded_full]} />
         <ArrowIcon
           size="md"
           style={[

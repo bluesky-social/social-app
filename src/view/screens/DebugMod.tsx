@@ -276,7 +276,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
       <moderationOptsOverrideContext.Provider value={modOpts}>
         <ScrollView>
           <CenteredView style={[t.atoms.bg, a.px_lg, a.py_lg]}>
-            <H1 style={[a.text_5xl, a.font_bold, a.pb_lg]}>
+            <H1 style={[a.text_5xl, a.font_semi_bold, a.pb_lg]}>
               Moderation states
             </H1>
 
@@ -397,7 +397,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                       <View style={[a.mt_md]}>
                         <Text
                           style={[
-                            a.font_bold,
+                            a.font_semi_bold,
                             a.text_xs,
                             t.atoms.text,
                             a.pb_sm,
@@ -439,7 +439,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                   <View>
                     <Text
                       style={[
-                        a.font_bold,
+                        a.font_semi_bold,
                         a.text_xs,
                         t.atoms.text,
                         a.pl_md,
@@ -597,7 +597,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
 function Heading({title, subtitle}: {title: string; subtitle?: string}) {
   const t = useTheme()
   return (
-    <H3 style={[a.text_3xl, a.font_bold, a.pb_md]}>
+    <H3 style={[a.text_3xl, a.font_semi_bold, a.pb_md]}>
       {title}{' '}
       {!!subtitle && (
         <H3 style={[t.atoms.text_contrast_medium, a.text_lg]}>{subtitle}</H3>
@@ -628,7 +628,8 @@ function CustomLabelForm({
         a.mt_md,
       ]}>
       <View>
-        <Text style={[a.font_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
+        <Text
+          style={[a.font_semi_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
           Blurs
         </Text>
         <View
@@ -663,7 +664,8 @@ function CustomLabelForm({
         </View>
       </View>
       <View>
-        <Text style={[a.font_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
+        <Text
+          style={[a.font_semi_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
           Severity
         </Text>
         <View
@@ -790,7 +792,7 @@ function ModerationUIView({
           const ui = mod.ui(key as keyof ModerationBehavior)
           return (
             <View key={key} style={[a.flex_row, a.gap_md]}>
-              <Text style={[a.font_bold, {width: 100}]}>{key}</Text>
+              <Text style={[a.font_semi_bold, {width: 100}]}>{key}</Text>
               <Flag v={ui.filter} label="Filter" />
               <Flag v={ui.blur} label="Blur" />
               <Flag v={ui.alert} label="Alert" />

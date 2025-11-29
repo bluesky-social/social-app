@@ -15,6 +15,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Prompt from '#/components/Prompt'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -50,6 +51,7 @@ export function PostFeedErrorMessage({
     () => detectKnownError(feedDesc, error),
     [feedDesc, error],
   )
+
   if (
     typeof knownError !== 'undefined' &&
     knownError !== KnownError.Unknown &&
@@ -68,7 +70,8 @@ export function PostFeedErrorMessage({
   if (knownError === KnownError.Block) {
     return (
       <EmptyState
-        icon="ban"
+        icon={WarningIcon}
+        iconSize="2xl"
         message={_l(msgLingui`Posts hidden`)}
         style={{paddingVertical: 40}}
       />
@@ -126,7 +129,7 @@ function FeedgenErrorMessage({
       })[knownError],
     [_l, knownError],
   )
-  const [_, uri] = feedDesc.split('|')
+  const [__, uri] = feedDesc.split('|')
   const [ownerDid] = safeParseFeedgenUri(uri)
   const removePromptControl = Prompt.usePromptControl()
   const {mutateAsync: removeFeed} = useRemoveFeedMutation()

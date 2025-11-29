@@ -4,19 +4,16 @@ import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
 import {useSession} from '#/state/session'
 import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
 import {type ListMethods} from '#/view/com/util/List'
-import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
 import {
   atoms as a,
   native,
@@ -131,7 +128,7 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
     isFetching: isFetchingSearchResults,
     error: searchResultsError,
     isError: isSearchResultsError,
-  } = useActorSearchPaginated({
+  } = useActorSearch({
     enabled: !!searchText,
     query: searchText,
   })
@@ -293,8 +290,8 @@ let Header = ({
   interestsDisplayNames,
 }: {
   guide: Follow10ProgressGuide
-  inputRef: React.RefObject<TextInput>
-  listRef: React.RefObject<ListMethods>
+  inputRef: React.RefObject<TextInput | null>
+  listRef: React.RefObject<ListMethods | null>
   onSelectTab: (v: string) => void
   searchText: string
   setHeaderHeight: (v: number) => void
@@ -360,7 +357,7 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
         style={[
           a.z_10,
           a.text_lg,
-          a.font_heavy,
+          a.font_bold,
           a.leading_tight,
           t.atoms.text_contrast_high,
         ]}>
@@ -565,7 +562,7 @@ function SearchInput({
 }: {
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput>
+  inputRef: React.RefObject<TextInput | null>
   defaultValue: string
 }) {
   const t = useTheme()

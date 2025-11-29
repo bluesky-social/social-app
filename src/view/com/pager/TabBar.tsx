@@ -30,6 +30,7 @@ export interface TabBarProps {
   onPressSelected?: (index: number) => void
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
+  transparent?: boolean
 }
 
 const ITEM_PADDING = 10
@@ -46,6 +47,7 @@ export function TabBar({
   onPressSelected,
   dragProgress,
   dragState,
+  transparent,
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useAnimatedRef<ScrollView>()
@@ -313,7 +315,7 @@ export function TabBar({
   return (
     <View
       testID={testID}
-      style={[t.atoms.bg, a.flex_row]}
+      style={[!transparent && t.atoms.bg, a.flex_row]}
       accessibilityRole="tablist">
       <BlockDrawerGesture>
         <ScrollView
@@ -431,7 +433,7 @@ function TabBarItem({
           <Text
             emoji
             testID={testID ? `${testID}-${item}` : undefined}
-            style={[styles.itemText, t.atoms.text, a.text_md, a.font_bold]}
+            style={[styles.itemText, t.atoms.text, a.text_md, a.font_semi_bold]}
             onLayout={handleTextLayout}>
             {item}
           </Text>

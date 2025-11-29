@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import {useMemo, useRef} from 'react'
 import {
   type AppBskyActorDefs,
   AppBskyFeedDefs,
@@ -127,6 +127,16 @@ export function useFeedPreviews(
   const moderationOpts = useModerationOpts()
   const enabled = feeds.length > 0 && isEnabled
 
+  const processedPageCache = useRef(
+    new Map<
+      {
+        feed: AppBskyFeedDefs.GeneratorView
+        posts: AppBskyFeedDefs.FeedViewPost[]
+      },
+      FeedPreviewItem[]
+    >(),
+  )
+
   const query = useInfiniteQuery({
     enabled,
     queryKey: RQKEY(uris),
@@ -181,6 +191,13 @@ export function useFeedPreviews(
         } else if (data) {
           for (let pageIndex = 0; pageIndex < data.pages.length; pageIndex++) {
             const page = data.pages[pageIndex]
+
+            const cachedPage = processedPageCache.current.get(page)
+            if (cachedPage) {
+              items.push(...cachedPage)
+              continue
+            }
+
             // default feed tuner - we just want it to slice up the feed
             const tuner = new FeedTuner([])
             const slices: FeedPreviewItem[] = []
@@ -280,8 +297,10 @@ export function useFeedPreviews(
               rowIndex++
             }
 
+            let processedPage: FeedPreviewItem[]
+
             if (slices.length > 0) {
-              items.push(
+              processedPage = [
                 {
                   type: 'preview:header',
                   key: `header-${page.feed.uri}`,
@@ -292,8 +311,13 @@ export function useFeedPreviews(
                   type: 'preview:footer',
                   key: `footer-${page.feed.uri}`,
                 },
-              )
+              ]
+            } else {
+              processedPage = []
             }
+
+            processedPageCache.current.set(page, processedPage)
+            items.push(...processedPage)
           }
         } else if (isError && !isEmpty) {
           items.push({

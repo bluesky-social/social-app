@@ -1,15 +1,17 @@
 import {useCallback} from 'react'
 import * as MediaLibrary from 'expo-media-library'
-import {t} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 import {saveImageToMediaLibrary} from './manip'
 
 /**
  * Same as `saveImageToMediaLibrary`, but also handles permissions and toasts
  */
 export function useSaveImageToMediaLibrary() {
+  const {_} = useLingui()
   const [permissionResponse, requestPermission, getPermission] =
     MediaLibrary.usePermissions({
       granularPermissions: ['photo'],
@@ -23,9 +25,12 @@ export function useSaveImageToMediaLibrary() {
       async function save() {
         try {
           await saveImageToMediaLibrary({uri})
-          Toast.show(t`Image saved`)
+
+          Toast.show(_(msg`Image saved`))
         } catch (e: any) {
-          Toast.show(t`Failed to save image: ${String(e)}`, 'xmark')
+          Toast.show(_(msg`Failed to save image: ${String(e)}`), {
+            type: 'error',
+          })
         }
       }
 
@@ -42,18 +47,22 @@ export function useSaveImageToMediaLibrary() {
           } else {
             // since we've been explicitly denied, show a toast.
             Toast.show(
-              t`Images cannot be saved unless permission is granted to access your photo library.`,
-              'xmark',
+              _(
+                msg`Images cannot be saved unless permission is granted to access your photo library.`,
+              ),
+              {type: 'error'},
             )
           }
         } else {
           Toast.show(
-            t`Permission to access your photo library was denied. Please enable it in your system settings.`,
-            'xmark',
+            _(
+              msg`Permission to access your photo library was denied. Please enable it in your system settings.`,
+            ),
+            {type: 'error'},
           )
         }
       }
     },
-    [permissionResponse, requestPermission, getPermission],
+    [permissionResponse, requestPermission, getPermission, _],
   )
 }

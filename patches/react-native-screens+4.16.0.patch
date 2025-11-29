@@ -1,0 +1,326 @@
+diff --git a/node_modules/react-native-screens/ios/RNSScreen.mm b/node_modules/react-native-screens/ios/RNSScreen.mm
+index b62a2e2..cb469db 100644
+--- a/node_modules/react-native-screens/ios/RNSScreen.mm
++++ b/node_modules/react-native-screens/ios/RNSScreen.mm
+@@ -729,9 +729,26 @@ - (void)notifyTransitionProgress:(double)progress closing:(BOOL)closing goingFor
+ #endif
+ }
+ 
+-#if !RCT_NEW_ARCH_ENABLED
++- (void)willMoveToWindow:(UIWindow *)newWindow
++{
++  if (@available(iOS 26, *)) {
++    // In iOS 26, as soon as another screen appears in transition, it is interactable
++    // To avoid glitches resulting from clicking buttons mid transition, we temporarily disable all interactions
++    // Disabling interactions for parent navigation controller won't be enough in case of nested stack
++    // Furthermore, a stack put inside a modal will exist in an entirely different hierarchy
++    // To be sure, we block interactions on the whole window.
++    // Note that newWindows is nil when moving from instead of moving to, and Obj-C handles nil correctly
++    newWindow.userInteractionEnabled = false;
++  }
++}
++
+ - (void)presentationControllerWillDismiss:(UIPresentationController *)presentationController
+ {
++  if (@available(iOS 26, *)) {
++    // Disable interactions to disallow multiple modals dismissed at once; see willMoveToWindow
++    presentationController.containerView.window.userInteractionEnabled = false;
++  }
++#if !RCT_NEW_ARCH_ENABLED
+   // On Paper, we need to call both "cancel" and "reset" here because RN's gesture
+   // recognizer does not handle the scenario when it gets cancelled by other top
+   // level gesture recognizer. In this case by the modal dismiss gesture.
+@@ -744,8 +761,8 @@ - (void)presentationControllerWillDismiss:(UIPresentationController *)presentati
+   // down.
+   [_touchHandler cancel];
+   [_touchHandler reset];
+-}
+ #endif // !RCT_NEW_ARCH_ENABLED
++}
+ 
+ - (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presentationController
+ {
+@@ -757,6 +774,10 @@ - (BOOL)presentationControllerShouldDismiss:(UIPresentationController *)presenta
+ 
+ - (void)presentationControllerDidAttemptToDismiss:(UIPresentationController *)presentationController
+ {
++  if (@available(iOS 26, *)) {
++    // Reenable interactions; see presentationControllerWillDismiss
++    presentationController.containerView.window.userInteractionEnabled = true;
++  }
+   // NOTE(kkafar): We should consider depracating the use of gesture cancel here & align
+   // with usePreventRemove API of react-navigation v7.
+   [self notifyGestureCancel];
+@@ -767,6 +788,11 @@ - (void)presentationControllerDidAttemptToDismiss:(UIPresentationController *)pr
+ 
+ - (void)presentationControllerDidDismiss:(UIPresentationController *)presentationController
+ {
++  if (@available(iOS 26, *)) {
++    // Reenable interactions; see presentationControllerWillDismiss
++    // Dismissed screen doesn't hold a reference to window, but presentingViewController.view does
++    presentationController.presentingViewController.view.window.userInteractionEnabled = true;
++  }
+   if ([_reactSuperview respondsToSelector:@selector(presentationControllerDidDismiss:)]) {
+     [_reactSuperview performSelector:@selector(presentationControllerDidDismiss:) withObject:presentationController];
+   }
+@@ -1518,6 +1544,10 @@ - (void)viewWillDisappear:(BOOL)animated
+ 
+ - (void)viewDidAppear:(BOOL)animated
+ {
++  if (@available(iOS 26, *)) {
++    // Reenable interactions, see willMoveToWindow
++    self.view.window.userInteractionEnabled = true;
++  }
+   [super viewDidAppear:animated];
+   if (!_isSwiping || _shouldNotify) {
+     // we are going forward or dismissing without swipe
+diff --git a/node_modules/react-native-screens/ios/RNSScreenStack.mm b/node_modules/react-native-screens/ios/RNSScreenStack.mm
+index 229dc58..10b365b 100644
+--- a/node_modules/react-native-screens/ios/RNSScreenStack.mm
++++ b/node_modules/react-native-screens/ios/RNSScreenStack.mm
+@@ -62,26 +62,6 @@ @interface RNSScreenStackView () <
+ 
+ @implementation RNSNavigationController
+ 
+-#if RNS_IPHONE_OS_VERSION_AVAILABLE(26_0)
+-- (void)viewDidLoad
+-{
+-  // iOS 26 introduces new gesture recognizer which replaces our RNSPanGestureRecognizer.
+-  // The problem is that we are not able to handle it here for various reasons:
+-  // - the new recognizer comes with its own delegate and our current approach is to wire
+-  //   all recognizers to RNSScreenStackView; to be 100% sure we don't break the logic,
+-  //   we would have to decorate its delegate and call it after our code, which would
+-  //   break other recognizers that the stack view is the delegate for
+-  // - when RNSScreenStackView.setupGestureHandler method is called, the recognizer hasn't been
+-  //   loaded yet and there is no other place to configure in a not "hacky" way
+-  // - the official docs warn us to not use it for anything other than "setting up failure requirements with it"
+-  // - we expose fullScreenGestureEnabled prop to enable/disable the feature,
+-  //   so we need control over the delegate
+-  if (@available(iOS 26.0, *)) {
+-    self.interactiveContentPopGestureRecognizer.enabled = NO;
+-  }
+-}
+-#endif // iOS 26
+-
+ #if !TARGET_OS_TV
+ - (UIViewController *)childViewControllerForStatusBarStyle
+ {
+@@ -219,50 +199,6 @@ - (bool)onRepeatedTabSelectionOfTabScreenController:(RNSTabsScreenViewController
+   return false;
+ }
+ 
+-#pragma mark - UINavigationBarDelegate
+-
+-#if RNS_IPHONE_OS_VERSION_AVAILABLE(26_0)
+-- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item
+-{
+-  if (@available(iOS 26, *)) {
+-    // To prevent popping multiple screens when back button is pressed repeatedly,
+-    // We allow for pop operation to proceed only if no transition is in progress,
+-    // which we check indirectly by checking if transitionCoordinator is set.
+-    // If it's not, we are safe to proceed.
+-    if (self.transitionCoordinator == nil) {
+-      // We still need to disable interactions for back button so click effects are not applied,
+-      // and there is unfortunately no better place for it currently
+-      UIView *button = [navigationBar rnscreens_findBackButtonWrapperView];
+-      if (button != nil) {
+-        button.userInteractionEnabled = false;
+-      }
+-
+-      return true;
+-    }
+-
+-    return false;
+-  }
+-
+-  return true;
+-}
+-
+-- (void)navigationBar:(UINavigationBar *)navigationBar didPopItem:(UINavigationItem *)item
+-{
+-  if (@available(iOS 26, *)) {
+-    // Reset interactions on back button -> see navigationBar:shouldPopItem
+-    // IMPORTANT: This reset won't execute when preventNativeDismiss is on.
+-    // However, on iOS 26, unlike in previous versions, the back button instance changes
+-    // when handling preventNativeDismiss and userIteractionEnabled is reset.
+-    // The instance also changes when regular screen pop happens, but in that case
+-    // the value of userInteractionEnabled is carried on, and we reset it here.
+-    UIView *button = [navigationBar rnscreens_findBackButtonWrapperView];
+-    if (button != nil) {
+-      button.userInteractionEnabled = true;
+-    }
+-  }
+-}
+-#endif // Check for iOS >= 26
+-
+ #pragma mark - RNSFrameCorrectionProvider
+ 
+ #ifdef RNS_GAMMA_ENABLED
+@@ -327,7 +263,7 @@ @implementation RNSScreenStackView {
+   UINavigationController *_controller;
+   NSMutableArray<RNSScreenView *> *_reactSubviews;
+   BOOL _invalidated;
+-  BOOL _isFullWidthSwiping;
++  BOOL _isFullWidthSwipingWithPanGesture; // used only for content swipe with RNSPanGestureRecognizer
+   RNSPercentDrivenInteractiveTransition *_interactionController;
+   __weak RNSScreenStackManager *_manager;
+   BOOL _updateScheduled;
+@@ -522,6 +458,11 @@ - (void)reactAddControllerToClosestParent:(UIViewController *)controller
+         [self addSubview:controller.view];
+ #if !TARGET_OS_TV
+         _controller.interactivePopGestureRecognizer.delegate = self;
++        #if RNS_IPHONE_OS_VERSION_AVAILABLE(26_0)
++        if (@available(iOS 26, *)) {
++          _controller.interactiveContentPopGestureRecognizer.delegate = self;
++        }
++#endif // Check for iOS >= 26.0
+ #endif
+         [controller didMoveToParentViewController:parentView.reactViewController];
+         // On iOS pre 12 we observed that `willShowViewController` delegate method does not always
+@@ -943,7 +884,7 @@ - (void)dismissOnReload
+       // when preventing the native dismiss with back button, we have to return the animator.
+       // Also, we need to return the animator when full width swiping even if the animation is not custom,
+       // otherwise the screen will be just popped immediately due to no animation
+-      ((operation == UINavigationControllerOperationPop && shouldCancelDismiss) || _isFullWidthSwiping ||
++      ((operation == UINavigationControllerOperationPop && shouldCancelDismiss) || _isFullWidthSwipingWithPanGesture ||
+        [RNSScreenStackAnimator isCustomAnimation:screen.stackAnimation] || _customAnimation)) {
+     return [[RNSScreenStackAnimator alloc] initWithOperation:operation];
+   }
+@@ -967,23 +908,39 @@ - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+   }
+   RNSScreenView *topScreen = _reactSubviews.lastObject;
+ 
++  BOOL customAnimationOnSwipePropSetAndSelectedAnimationIsCustom =
++      topScreen.customAnimationOnSwipe && [RNSScreenStackAnimator isCustomAnimation:topScreen.stackAnimation];
++
+ #if TARGET_OS_TV || TARGET_OS_VISION
+   [self cancelTouchesInParent];
+   return YES;
+ #else
+-  // RNSPanGestureRecognizer will receive events iff topScreen.fullScreenSwipeEnabled == YES;
+-  // Events are filtered in gestureRecognizer:shouldReceivePressOrTouchEvent: method
+   if ([gestureRecognizer isKindOfClass:[RNSPanGestureRecognizer class]]) {
+-    if ([self isInGestureResponseDistance:gestureRecognizer topScreen:topScreen]) {
+-      _isFullWidthSwiping = YES;
+-      [self cancelTouchesInParent];
+-      return YES;
++    // On iOS < 26, we have a custom full screen swipe recognizer that functions similarily
++    // to interactiveContentPopGestureRecognizer introduced in iOS 26.
++    // On iOS >= 26, we want to use the native one, but we are unable to handle custom animations
++    // with native interactiveContentPopGestureRecognizer, so we have to fallback to the old implementation.
++    // In this case, the old one should behave as close as the new native one, having only the difference
++    // in animation, and without any customization that is exclusive for it (e.g. gestureResponseDistance).
++    if (@available(iOS 26, *)) {
++      if (customAnimationOnSwipePropSetAndSelectedAnimationIsCustom) {
++        _isFullWidthSwipingWithPanGesture = YES;
++        [self cancelTouchesInParent];
++        return YES;
++      }
++      return NO;
++    } else {
++      if ([self isInGestureResponseDistance:gestureRecognizer topScreen:topScreen]) {
++        _isFullWidthSwipingWithPanGesture = YES;
++        [self cancelTouchesInParent];
++        return YES;
++      }
++      return NO;
+     }
+-    return NO;
+   }
+ 
+   // Now we're dealing with RNSScreenEdgeGestureRecognizer (or _UIParallaxTransitionPanGestureRecognizer)
+-  if (topScreen.customAnimationOnSwipe && [RNSScreenStackAnimator isCustomAnimation:topScreen.stackAnimation]) {
++  if (customAnimationOnSwipePropSetAndSelectedAnimationIsCustom) {
+     if ([gestureRecognizer isKindOfClass:[RNSScreenEdgeGestureRecognizer class]]) {
+       UIRectEdge edges = ((RNSScreenEdgeGestureRecognizer *)gestureRecognizer).edges;
+       BOOL isRTL = _controller.view.semanticContentAttribute == UISemanticContentAttributeForceRightToLeft;
+@@ -1028,7 +985,9 @@ - (void)setupGestureHandlers
+   rightEdgeSwipeGestureRecognizer.delegate = self;
+   [self addGestureRecognizer:rightEdgeSwipeGestureRecognizer];
+ 
+-  // gesture recognizer for full width swipe gesture
++  // Starting from iOS 26, RNSPanGestureRecognizer has been mostly replaced by native
++  // interactiveContentPopGestureRecognizer. It still needs to handle custom dismiss animations,
++  // which we are not able to handle with the latter.
+   RNSPanGestureRecognizer *panRecognizer = [[RNSPanGestureRecognizer alloc] initWithTarget:self
+                                                                                     action:@selector(handleSwipe:)];
+   panRecognizer.delegate = self;
+@@ -1091,7 +1050,7 @@ - (void)handleSwipe:(UIPanGestureRecognizer *)gestureRecognizer
+         [_interactionController cancelInteractiveTransition];
+       }
+       _interactionController = nil;
+-      _isFullWidthSwiping = NO;
++      _isFullWidthSwipingWithPanGesture = NO;
+     }
+     default: {
+       break;
+@@ -1225,14 +1184,6 @@ - (BOOL)isScrollViewPanGestureRecognizer:(UIGestureRecognizer *)gestureRecognize
+ // Be careful when adding another type of gesture recognizer.
+ - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceivePressOrTouchEvent:(NSObject *)event
+ {
+-  if (@available(iOS 26, *)) {
+-    // in iOS 26, you can swipe to pop screen before the previous one finished transitioning;
+-    // this prevents from registering the second gesture
+-    if ([self isTransitionInProgress]) {
+-      return NO;
+-    }
+-  }
+-
+   RNSScreenView *topScreen = _reactSubviews.lastObject;
+ 
+   for (RNSScreenView *s in _reactSubviews.reverseObjectEnumerator) {
+@@ -1249,10 +1200,30 @@ - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceive
+     return NO;
+   }
+ 
++  BOOL customAnimationOnSwipePropSetAndSelectedAnimationIsCustom =
++      topScreen.customAnimationOnSwipe && [RNSScreenStackAnimator isCustomAnimation:topScreen.stackAnimation];
++#if RNS_IPHONE_OS_VERSION_AVAILABLE(26_0)
++  if (@available(iOS 26, *)) {
++    // On iOS 26, fullScreenSwipeEnabled takes no effect, and depending on whether custom animations are on,
++    // we select either interactiveContentPopGestureRecognizer or RNSPanGestureRecognizer
++    if (([gestureRecognizer isKindOfClass:[RNSPanGestureRecognizer class]] &&
++         !customAnimationOnSwipePropSetAndSelectedAnimationIsCustom) ||
++        (gestureRecognizer == _controller.interactiveContentPopGestureRecognizer &&
++         customAnimationOnSwipePropSetAndSelectedAnimationIsCustom)) {
++      return NO;
++    }
++  } else {
++    // We want to pass events to RNSPanGestureRecognizer iff full screen swipe is enabled.
++    if ([gestureRecognizer isKindOfClass:[RNSPanGestureRecognizer class]]) {
++      return topScreen.fullScreenSwipeEnabled;
++    }
++  }
++#else // check for iOS >= 26
+   // We want to pass events to RNSPanGestureRecognizer iff full screen swipe is enabled.
+   if ([gestureRecognizer isKindOfClass:[RNSPanGestureRecognizer class]]) {
+     return topScreen.fullScreenSwipeEnabled;
+   }
++#endif // check for iOS >= 26
+ 
+   // RNSScreenEdgeGestureRecognizer || _UIParallaxTransitionPanGestureRecognizer
+   return YES;
+@@ -1268,15 +1239,6 @@ - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceive
+   return [self gestureRecognizer:gestureRecognizer shouldReceivePressOrTouchEvent:touch];
+ }
+ 
+-- (BOOL)isTransitionInProgress
+-{
+-  if (_controller.transitionCoordinator != nil) {
+-    return YES;
+-  }
+-
+-  return NO;
+-}
+-
+ - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+     shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+ {
+@@ -1289,7 +1251,6 @@ - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+     if (gestureRecognizer.state == UIGestureRecognizerStateBegan || isBackGesture) {
+       return NO;
+     }
+-
+     return YES;
+   }
+   return NO;

@@ -68,7 +68,6 @@ import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -616,9 +615,8 @@ let NotificationFeedItem = ({
           onToggleAuthorsExpanded()
         }
       }}>
-      {({hovered}) => (
+      {({hovered: _hovered}) => (
         <>
-          <SubtleWebHover hover={hovered} />
           <View style={[styles.layoutIcon, a.pr_sm]}>
             {/* TODO: Prevent conditional rendering and move toward composable
           notifications for clearer accessibility labeling */}

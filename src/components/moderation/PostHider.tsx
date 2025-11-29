@@ -34,6 +34,7 @@ interface Props extends ComponentProps<typeof Link> {
   modui: ModerationUI
   profile: AppBskyActorDefs.ProfileViewBasic
   interpretFilterAsBlur?: boolean
+  hiderStyle?: StyleProp<ViewStyle>
 }
 
 export function PostHider({
@@ -42,6 +43,7 @@ export function PostHider({
   disabled,
   modui,
   style,
+  hiderStyle,
   children,
   iconSize,
   iconStyles,
@@ -100,6 +102,7 @@ export function PostHider({
         },
         override ? {paddingBottom: 0} : undefined,
         t.atoms.bg,
+        hiderStyle,
       ]}>
       <ModerationDetailsDialog control={control} modcause={blur} />
       <Pressable

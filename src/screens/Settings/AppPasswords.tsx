@@ -5,7 +5,6 @@ import Animated, {
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
-  StretchOutY,
 } from 'react-native-reanimated'
 import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -14,7 +13,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
-import {isWeb} from '#/platform/detection'
 import {
   useAppPasswordDeleteMutation,
   useAppPasswordsQuery,
@@ -26,6 +24,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Admonition, colors} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
@@ -94,7 +93,7 @@ export function AppPasswordsScreen({}: Props) {
                         key={appPassword.name}
                         style={a.w_full}
                         entering={FadeIn}
-                        exiting={isWeb ? FadeOut : StretchOutY}
+                        exiting={FadeOut}
                         layout={LinearTransition.delay(150)}>
                         <SettingsList.Item>
                           <AppPasswordCard appPassword={appPassword} />
@@ -104,7 +103,7 @@ export function AppPasswordsScreen({}: Props) {
                   </View>
                 ) : (
                   <EmptyState
-                    icon="growth"
+                    icon={Growth}
                     message={_(msg`No app passwords yet`)}
                   />
                 )
@@ -167,7 +166,7 @@ function AppPasswordCard({
           a.gap_sm,
         ]}>
         <View style={[a.gap_xs]}>
-          <Text style={[t.atoms.text, a.text_md, a.font_bold]}>
+          <Text style={[t.atoms.text, a.text_md, a.font_semi_bold]}>
             {appPassword.name}
           </Text>
           <Text style={[t.atoms.text_contrast_medium]}>
@@ -188,6 +187,7 @@ function AppPasswordCard({
           variant="ghost"
           color="negative"
           size="small"
+          shape="square"
           style={[a.bg_transparent]}
           onPress={() => deleteControl.open()}>
           <ButtonIcon icon={TrashIcon} />
@@ -195,7 +195,7 @@ function AppPasswordCard({
       </View>
       {appPassword.privileged && (
         <View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
-          <WarningIcon style={[{color: colors.warning[t.scheme]}]} />
+          <WarningIcon style={[{color: colors.warning}]} />
           <Text style={t.atoms.text_contrast_high}>
             <Trans>Allows access to direct messages</Trans>
           </Text>

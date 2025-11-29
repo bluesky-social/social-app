@@ -1,4 +1,4 @@
-import {memo, useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -25,9 +25,10 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, flatten, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
+import * as Skele from '#/components/Skeleton'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
@@ -188,11 +189,11 @@ let PostControls = ({
     })
   }
 
-  const secondaryControlSpacingStyles = flatten([
-    {gap: 0}, // default, we want `gap` to be defined on the resulting object
-    variant !== 'compact' && a.gap_xs,
-    (big || gtPhone) && a.gap_sm,
-  ])
+  const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({
+    variant,
+    big,
+    gtPhone,
+  })
 
   return (
     <View
@@ -210,7 +211,7 @@ let PostControls = ({
             a.flex_1,
             a.align_start,
             {marginLeft: big ? -2 : -6},
-            replyDisabled ? {opacity: 0.5} : undefined,
+            replyDisabled ? {opacity: 0.6} : undefined,
           ]}>
           <PostControlButton
             testID="replyBtn"
@@ -336,3 +337,77 @@ let PostControls = ({
 }
 PostControls = memo(PostControls)
 export {PostControls}
+
+export function PostControlsSkeleton({
+  big,
+  style,
+  variant,
+}: {
+  big?: boolean
+  style?: StyleProp<ViewStyle>
+  variant?: 'compact' | 'normal' | 'large'
+}) {
+  const {gtPhone} = useBreakpoints()
+
+  const rowHeight = big ? 32 : 28
+  const padding = 4
+  const size = rowHeight - padding * 2
+
+  const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({
+    variant,
+    big,
+    gtPhone,
+  })
+
+  const itemStyles = {
+    padding,
+  }
+
+  return (
+    <Skele.Row
+      style={[a.flex_row, a.justify_between, a.align_center, a.gap_md, style]}>
+      <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
+        <View
+          style={[itemStyles, a.flex_1, a.align_start, {marginLeft: -padding}]}>
+          <Skele.Pill blend size={size} />
+        </View>
+
+        <View style={[itemStyles, a.flex_1, a.align_start]}>
+          <Skele.Pill blend size={size} />
+        </View>
+
+        <View style={[itemStyles, a.flex_1, a.align_start]}>
+          <Skele.Pill blend size={size} />
+        </View>
+      </View>
+      <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
+      </View>
+    </Skele.Row>
+  )
+}
+
+function useSecondaryControlSpacingStyles({
+  variant,
+  big,
+  gtPhone,
+}: {
+  variant?: 'compact' | 'normal' | 'large'
+  big?: boolean
+  gtPhone: boolean
+}) {
+  return useMemo(() => {
+    let gap = 0 // default, we want `gap` to be defined on the resulting object
+    if (variant !== 'compact') gap = a.gap_xs.gap
+    if (big || gtPhone) gap = a.gap_sm.gap
+    return {gap}
+  }, [variant, big, gtPhone])
+}

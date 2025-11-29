@@ -165,7 +165,7 @@ function Inner() {
       style={web({maxWidth: 400})}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_heavy, a.text_2xl]}>
+          <Text style={[a.font_bold, a.text_2xl]}>
             {uiStrings[stage].title}
           </Text>
           {error ? (
@@ -211,6 +211,7 @@ function Inner() {
                   secureTextEntry
                   autoCapitalize="none"
                   autoComplete="new-password"
+                  passwordRules="minlength: 8;"
                 />
               </TextField.Root>
             </View>

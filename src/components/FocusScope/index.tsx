@@ -2,8 +2,6 @@ import {
   Children,
   cloneElement,
   isValidElement,
-  type ReactElement,
-  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -26,7 +24,7 @@ import {useA11y} from '#/state/a11y'
  * screen reader support is enabled. THIS SHOULD BE USED SPARINGLY, only when
  * no better option is available.
  */
-export function FocusScope({children}: {children: ReactNode}) {
+export function FocusScope({children}: {children: React.ReactNode}) {
   const {screenReaderEnabled} = useA11y()
 
   return screenReaderEnabled ? <FocusTrap>{children}</FocusTrap> : children
@@ -41,7 +39,7 @@ export function FocusScope({children}: {children: ReactNode}) {
  * they have reached the start or end of the content and tell them how to
  * remain within the active content section.
  */
-function FocusTrap({children}: {children: ReactNode}) {
+function FocusTrap({children}: {children: React.ReactNode}) {
   const {_} = useLingui()
   const child = useRef<View>(null)
 
@@ -53,7 +51,7 @@ function FocusTrap({children}: {children: ReactNode}) {
   const decoratedChildren = useMemo(() => {
     return Children.toArray(children).map((node, i) => {
       if (i === 0 && isValidElement(node)) {
-        const n = node as ReactElement<any>
+        const n = node as React.ReactElement<any>
         if (n.props.ref !== undefined) {
           throw new Error(
             'FocusScope needs to override the ref on its first child.',

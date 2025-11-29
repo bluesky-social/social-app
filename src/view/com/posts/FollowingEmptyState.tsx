@@ -2,14 +2,14 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
 import {Button} from '../util/forms/Button'

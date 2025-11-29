@@ -58,7 +58,12 @@ export function ThreadError({
           ]}>
           <View style={[a.gap_xs]}>
             <Text
-              style={[a.text_center, a.text_lg, a.font_bold, a.leading_snug]}>
+              style={[
+                a.text_center,
+                a.text_lg,
+                a.font_semi_bold,
+                a.leading_snug,
+              ]}>
               {title}
             </Text>
             <Text

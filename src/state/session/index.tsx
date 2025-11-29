@@ -14,7 +14,7 @@ import {
   createAgentAndResume,
   sessionAccountToSession,
 } from './agent'
-import {getInitialState, reducer} from './reducer'
+import {type Action, getInitialState, reducer, type State} from './reducer'
 
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
@@ -46,13 +46,51 @@ const ApiContext = React.createContext<SessionApiContext>({
 })
 ApiContext.displayName = 'SessionApiContext'
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const cancelPendingTask = useOneTaskAtATime()
-  const [state, dispatch] = React.useReducer(reducer, null, () => {
+class SessionStore {
+  private state: State
+  private listeners = new Set<() => void>()
+
+  constructor() {
+    // Careful: By the time this runs, `persisted` needs to already be filled.
     const initialState = getInitialState(persisted.get('session').accounts)
     addSessionDebugLog({type: 'reducer:init', state: initialState})
-    return initialState
-  })
+    this.state = initialState
+  }
+
+  getState = (): State => {
+    return this.state
+  }
+
+  subscribe = (listener: () => void) => {
+    this.listeners.add(listener)
+    return () => {
+      this.listeners.delete(listener)
+    }
+  }
+
+  dispatch = (action: Action) => {
+    const nextState = reducer(this.state, action)
+    this.state = nextState
+    // Persist synchronously without waiting for the React render cycle.
+    if (nextState.needsPersist) {
+      nextState.needsPersist = false
+      const persistedData = {
+        accounts: nextState.accounts,
+        currentAccount: nextState.accounts.find(
+          a => a.did === nextState.currentAgentState.did,
+        ),
+      }
+      addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
+      persisted.write('session', persistedData)
+    }
+    this.listeners.forEach(listener => listener())
+  }
+}
+
+export function Provider({children}: React.PropsWithChildren<{}>) {
+  const cancelPendingTask = useOneTaskAtATime()
+  const [store] = React.useState(() => new SessionStore())
+  const state = React.useSyncExternalStore(store.subscribe, store.getState)
 
   const onAgentSessionChange = React.useCallback(
     (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
@@ -60,7 +98,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
         emitSessionDropped()
       }
-      dispatch({
+      store.dispatch({
         type: 'received-agent-event',
         agent,
         refreshedAccount,
@@ -68,7 +106,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         sessionEvent,
       })
     },
-    [],
+    [store],
   )
 
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
@@ -84,7 +122,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (signal.aborted) {
         return
       }
-      dispatch({
+      store.dispatch({
         type: 'switched-to-account',
         newAgent: agent,
         newAccount: account,
@@ -92,7 +130,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logger.metric('account:create:success', metrics, {statsig: true})
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
@@ -107,7 +145,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (signal.aborted) {
         return
       }
-      dispatch({
+      store.dispatch({
         type: 'switched-to-account',
         newAgent: agent,
         newAccount: account,
@@ -119,7 +157,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const logoutCurrentAccount = React.useCallback<
@@ -128,7 +166,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     logContext => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
-      dispatch({
+      store.dispatch({
         type: 'logged-out-current-account',
       })
       logger.metric(
@@ -138,7 +176,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
     },
-    [cancelPendingTask],
+    [store, cancelPendingTask],
   )
 
   const logoutEveryAccount = React.useCallback<
@@ -147,7 +185,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     logContext => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
-      dispatch({
+      store.dispatch({
         type: 'logged-out-every-account',
       })
       logger.metric(
@@ -157,7 +195,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
     },
-    [cancelPendingTask],
+    [store, cancelPendingTask],
   )
 
   const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
@@ -176,14 +214,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (signal.aborted) {
         return
       }
-      dispatch({
+      store.dispatch({
         type: 'switched-to-account',
         newAgent: agent,
         newAccount: account,
       })
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const partialRefreshSession = React.useCallback<
@@ -193,7 +231,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     const signal = cancelPendingTask()
     const {data} = await agent.com.atproto.server.getSession()
     if (signal.aborted) return
-    dispatch({
+    store.dispatch({
       type: 'partial-refresh-session',
       accountDid: agent.session!.did,
       patch: {
@@ -201,7 +239,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         emailAuthFactor: data.emailAuthFactor,
       },
     })
-  }, [state, cancelPendingTask])
+  }, [store, state, cancelPendingTask])
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
     account => {
@@ -211,34 +249,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account,
       })
       cancelPendingTask()
-      dispatch({
+      store.dispatch({
         type: 'removed-account',
         accountDid: account.did,
       })
       addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
     },
-    [cancelPendingTask],
+    [store, cancelPendingTask],
   )
-
-  React.useEffect(() => {
-    if (state.needsPersist) {
-      state.needsPersist = false
-      const persistedData = {
-        accounts: state.accounts,
-        currentAccount: state.accounts.find(
-          a => a.did === state.currentAgentState.did,
-        ),
-      }
-      addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
-      persisted.write('session', persistedData)
-    }
-  }, [state])
-
   React.useEffect(() => {
     return persisted.onUpdate('session', nextSession => {
       const synced = nextSession
       addSessionDebugLog({type: 'persisted:receive', data: synced})
-      dispatch({
+      store.dispatch({
         type: 'synced-accounts',
         syncedAccounts: synced.accounts,
         syncedCurrentDid: synced.currentAccount?.did,
@@ -262,7 +285,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     })
-  }, [state, resumeSession])
+  }, [store, state, resumeSession])
 
   const stateContext = React.useMemo(
     () => ({

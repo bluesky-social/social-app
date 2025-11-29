@@ -14,7 +14,6 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
-import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {Tree_Stroke2_Corner0_Rounded as TreeIcon} from '#/components/icons/Tree'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
@@ -24,14 +23,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export function ThreadPreferencesScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
-  const {
-    sort,
-    setSort,
-    view,
-    setView,
-    prioritizeFollowedUsers,
-    setPrioritizeFollowedUsers,
-  } = useThreadPreferences({save: true})
+  const {sort, setSort, view, setView} = useThreadPreferences({save: true})
 
   return (
     <Layout.Screen testID="threadPreferencesScreen">
@@ -86,27 +78,6 @@ export function ThreadPreferencesScreen({}: Props) {
                 </View>
               </Toggle.Group>
             </View>
-          </SettingsList.Group>
-
-          <SettingsList.Group contentContainerStyle={{minHeight: 0}}>
-            <SettingsList.ItemIcon icon={PersonGroupIcon} />
-            <SettingsList.ItemText>
-              <Trans>Prioritize your Follows</Trans>
-            </SettingsList.ItemText>
-            <Toggle.Item
-              type="checkbox"
-              name="prioritize-follows"
-              label={_(msg`Prioritize your Follows`)}
-              value={prioritizeFollowedUsers}
-              onChange={value => setPrioritizeFollowedUsers(value)}
-              style={[a.w_full, a.gap_md]}>
-              <Toggle.LabelText style={[a.flex_1]}>
-                <Trans>
-                  Show replies by people you follow before all other replies
-                </Trans>
-              </Toggle.LabelText>
-              <Toggle.Platform />
-            </Toggle.Item>
           </SettingsList.Group>
 
           <SettingsList.Group>

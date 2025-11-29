@@ -4,7 +4,7 @@ import {isSafari} from '#/lib/browser'
 import {logger} from '#/logger'
 import {useVideoVolumeState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 
-export function useVideoElement(ref: RefObject<HTMLVideoElement>) {
+export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)

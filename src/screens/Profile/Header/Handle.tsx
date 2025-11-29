@@ -27,7 +27,7 @@ export function ProfileHeaderHandle({
       pointerEvents={disableTaps ? 'none' : isIOS ? 'auto' : 'box-none'}>
       <NewskieDialog profile={profile} disabled={disableTaps} />
       {profile.viewer?.followedBy && !blockHide ? (
-        <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.px_sm, a.py_xs]}>
+        <View style={[t.atoms.bg_contrast_50, a.rounded_xs, a.px_sm, a.py_xs]}>
           <Text style={[t.atoms.text, a.text_sm]}>
             <Trans>Follows you</Trans>
           </Text>

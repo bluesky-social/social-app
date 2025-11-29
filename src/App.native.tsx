@@ -4,7 +4,6 @@ import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
-import {RootSiblingParent} from 'react-native-root-siblings'
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -32,7 +31,6 @@ import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
-import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
 import {Provider as ModalStateProvider} from '#/state/modals'
@@ -122,8 +120,7 @@ function InnerApp() {
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
           <Splash isReady={isReady && hasCheckedReferrer}>
-            <RootSiblingParent>
-              <VideoVolumeProvider>
+            <VideoVolumeProvider>
                 <React.Fragment
                   // Resets the entire tree below when it changes:
                   key={currentAccount?.did}>
@@ -174,8 +171,7 @@ function InnerApp() {
                     </ComposerProvider>
                   </QueryProvider>
                 </React.Fragment>
-              </VideoVolumeProvider>
-            </RootSiblingParent>
+            </VideoVolumeProvider>
           </Splash>
         </ContextMenuProvider>
       </ThemeProvider>
@@ -205,24 +201,22 @@ function App() {
           <PrefsStateProvider>
             <I18nProvider>
               <ShellStateProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <BottomSheetProvider>
-                            <StarterPackProvider>
-                              <SafeAreaProvider
-                                initialMetrics={initialWindowMetrics}>
-                                <InnerApp />
-                              </SafeAreaProvider>
-                            </StarterPackProvider>
-                          </BottomSheetProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </InvitesStateProvider>
+                <ModalStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
+                      <PortalProvider>
+                        <BottomSheetProvider>
+                          <StarterPackProvider>
+                            <SafeAreaProvider
+                              initialMetrics={initialWindowMetrics}>
+                              <InnerApp />
+                            </SafeAreaProvider>
+                          </StarterPackProvider>
+                        </BottomSheetProvider>
+                      </PortalProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
+                </ModalStateProvider>
               </ShellStateProvider>
             </I18nProvider>
           </PrefsStateProvider>

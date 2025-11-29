@@ -234,11 +234,12 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                       <Text
                         style={[
                           a.text_md,
-                          a.font_heavy,
-                          a.leading_tight,
+                          a.font_bold,
+                          a.leading_snug,
                           gtMobile && a.text_lg,
                         ]}
-                        numberOfLines={2}>
+                        numberOfLines={2}
+                        emoji>
                         {info.displayName}
                       </Text>
                       <View style={[a.flex_row, {gap: 6}]}>
@@ -441,12 +442,13 @@ function DialogInner({
 
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
-            style={[a.text_2xl, a.font_heavy, a.leading_tight]}
-            numberOfLines={2}>
+            style={[a.text_2xl, a.font_bold, a.leading_tight]}
+            numberOfLines={2}
+            emoji>
             {info.displayName}
           </Text>
           <Text
-            style={[a.text_sm, a.leading_tight, t.atoms.text_contrast_medium]}
+            style={[a.text_sm, a.leading_relaxed, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
             <Trans>
               By{' '}
@@ -456,12 +458,7 @@ function DialogInner({
                   did: info.creatorDid,
                   handle: info.creatorHandle,
                 })}
-                style={[
-                  a.text_sm,
-                  a.leading_tight,
-                  a.underline,
-                  t.atoms.text_contrast_medium,
-                ]}
+                style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}
                 numberOfLines={1}
                 onPress={() => control.close()}>
                 {sanitizeHandle(info.creatorHandle, '@')}
@@ -481,7 +478,7 @@ function DialogInner({
         </Button>
       </View>
 
-      <RichText value={rt} style={[a.text_md, a.leading_snug]} />
+      <RichText value={rt} style={[a.text_md]} />
 
       <View style={[a.flex_row, a.gap_sm, a.align_center]}>
         {typeof likeCount === 'number' && (

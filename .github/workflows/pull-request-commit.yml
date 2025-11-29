@@ -29,7 +29,7 @@ jobs:
           fetch-depth: 0
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -82,9 +82,9 @@ jobs:
         id: get-diff
         uses: NejcZdovc/bundle-size-diff@v1
         with:
-          base_path: 'stats-base.json'
-          pr_path: '../stats-new.json'
-          excluded_assets: '(.+).chunk.js|(.+).js.map|(.+).json|(.+).png'
+          base_path: "stats-base.json"
+          pr_path: "../stats-new.json"
+          excluded_assets: "(.+).chunk.js|(.+).js.map|(.+).json|(.+).png"
 
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
@@ -110,7 +110,7 @@ jobs:
         if: github.event_name == 'pull_request'
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn

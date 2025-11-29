@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react'
 
-type Component = React.ReactElement
+type Component = React.ReactElement<any>
 
 type ContextType = {
   outlet: Component | null

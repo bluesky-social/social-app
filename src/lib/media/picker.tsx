@@ -1,5 +1,6 @@
 import ExpoImageCropTool, {type OpenCropperOptions} from 'expo-image-crop-tool'
 import {type ImagePickerOptions, launchCameraAsync} from 'expo-image-picker'
+import {t} from '@lingui/macro'
 
 export {
   openPicker,
@@ -31,13 +32,15 @@ export async function openCamera(customOpts: ImagePickerOptions) {
 
 export async function openCropper(opts: OpenCropperOptions) {
   const item = await ExpoImageCropTool.openCropperAsync({
+    doneButtonText: t`Done`,
+    cancelButtonText: t`Cancel`,
     ...opts,
     format: 'jpeg',
   })
 
   return {
     path: item.path,
-    mime: item.mime,
+    mime: item.mimeType,
     size: item.size,
     width: item.width,
     height: item.height,

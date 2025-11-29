@@ -108,7 +108,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   <Text
                     style={[
                       a.text_2xl,
-                      a.font_bold,
+                      a.font_semi_bold,
                       a.user_select_none,
                       {color: '#354358', letterSpacing: -0.5},
                     ]}>
@@ -127,7 +127,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 <Text
                   style={[
                     gtMobile ? a.text_4xl : a.text_3xl,
-                    a.font_bold,
+                    a.font_semi_bold,
                     a.text_center,
                     {color: '#354358'},
                     web({

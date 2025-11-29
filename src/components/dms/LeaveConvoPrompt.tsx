@@ -2,11 +2,11 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import * as Toast from '#/view/com/util/Toast'
-import {DialogOuterProps} from '#/components/Dialog'
+import {type DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 
 export function LeaveConvoPrompt({

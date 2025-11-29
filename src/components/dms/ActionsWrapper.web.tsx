@@ -3,7 +3,6 @@ import {Pressable, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {useConvoActive} from '#/state/messages/convo'
 import {useSession} from '#/state/session'
@@ -73,9 +72,9 @@ export function ActionsWrapper({
 
   return (
     <View
-      // @ts-expect-error web only
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      // @ts-expect-error web only
       onFocus={onFocus}
       onBlur={onMouseLeave}
       style={[a.flex_1, isFromSelf ? a.flex_row : a.flex_row_reverse]}

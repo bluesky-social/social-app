@@ -16,6 +16,7 @@ export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://blacksky.community/download'
 export const STARTER_PACK_MAX_SIZE = 150
+export const CARD_ASPECT_RATIO = 1200 / 630
 
 // HACK
 // Yes, this is exactly what it looks like. It's a hard-coded constant
@@ -189,6 +190,7 @@ export const urls = {
   website: {
     blog: {
       initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
+      searchTipsAndTricks: 'https://bsky.social/about/blog/05-31-2024-search',
     },
   },
 }

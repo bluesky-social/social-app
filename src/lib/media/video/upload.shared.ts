@@ -1,5 +1,5 @@
-import {BskyAgent} from '@atproto/api'
-import {I18n} from '@lingui/core'
+import {type BskyAgent} from '@atproto/api'
+import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
 import {VIDEO_SERVICE_DID} from '#/lib/constants'

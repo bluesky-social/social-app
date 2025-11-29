@@ -1,14 +1,18 @@
 import React from 'react'
-import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
+import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
@@ -16,15 +20,19 @@ import {ProfileCardWithFollowBtn} from './ProfileCard'
 function renderItem({
   item,
   index,
+  contextProfileDid,
 }: {
   item: ActorDefs.ProfileView
   index: number
+  contextProfileDid: string | undefined
 }) {
   return (
     <ProfileCardWithFollowBtn
       key={item.did}
       profile={item}
       noBorder={index === 0}
+      position={index + 1}
+      contextProfileDid={contextProfileDid}
     />
   )
 }
@@ -37,6 +45,16 @@ export function ProfileFollows({name}: {name: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPressFindAccounts = React.useCallback(() => {
+    if (isWeb) {
+      navigation.navigate('Search', {})
+    } else {
+      navigation.navigate('SearchTab')
+      navigation.popToTop()
+    }
+  }, [navigation])
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
@@ -83,6 +101,40 @@ export function ProfileFollows({name}: {name: string}) {
     }
   }, [error, fetchNextPage, hasNextPage, isFetchingNextPage])
 
+  const renderItemWithContext = React.useCallback(
+    ({item, index}: {item: ActorDefs.ProfileView; index: number}) =>
+      renderItem({item, index, contextProfileDid: resolvedDid}),
+    [resolvedDid],
+  )
+
+  // track seen items
+  const seenItemsRef = React.useRef<Set<string>>(new Set())
+  React.useEffect(() => {
+    seenItemsRef.current.clear()
+  }, [resolvedDid])
+  const onItemSeen = React.useCallback(
+    (item: ActorDefs.ProfileView) => {
+      if (seenItemsRef.current.has(item.did)) {
+        return
+      }
+      seenItemsRef.current.add(item.did)
+      const position = follows.findIndex(p => p.did === item.did) + 1
+      if (position === 0) {
+        return
+      }
+      logger.metric(
+        'profileCard:seen',
+        {
+          profileDid: item.did,
+          position,
+          ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
+        },
+        {statsig: false},
+      )
+    },
+    [follows, resolvedDid],
+  )
+
   if (follows.length < 1) {
     return (
       <ListMaybePlaceholder
@@ -91,12 +143,21 @@ export function ProfileFollows({name}: {name: string}) {
         emptyType="results"
         emptyMessage={
           isMe
-            ? _(msg`You are not following anyone.`)
+            ? _(msg`You are not following anyone yet`)
             : _(msg`This user isn't following anyone.`)
         }
         errorMessage={cleanError(resolveError || error)}
         onRetry={isError ? refetch : undefined}
         sideBorders={false}
+        useEmptyState={true}
+        emptyStateIcon={PeopleRemoveIcon}
+        emptyStateButton={{
+          label: _(msg`See suggested accounts`),
+          text: _(msg`See suggested accounts`),
+          onPress: onPressFindAccounts,
+          size: 'tiny',
+          color: 'primary',
+        }}
       />
     )
   }
@@ -104,12 +165,13 @@ export function ProfileFollows({name}: {name: string}) {
   return (
     <List
       data={follows}
-      renderItem={renderItem}
+      renderItem={renderItemWithContext}
       keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
+      onItemSeen={onItemSeen}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}

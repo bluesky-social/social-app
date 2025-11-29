@@ -62,7 +62,7 @@ function InAppBrowserConsentInner({href}: {href?: string}) {
     <Dialog.ScrollableInner label={_(msg`How should we open this link?`)}>
       <View style={[a.gap_2xl]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_heavy, a.text_2xl]}>
+          <Text style={[a.font_bold, a.text_2xl]}>
             <Trans>How should we open this link?</Trans>
           </Text>
           <Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_md]}>

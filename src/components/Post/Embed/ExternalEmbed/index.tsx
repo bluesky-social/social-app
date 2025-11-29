@@ -97,9 +97,7 @@ export const ExternalEmbed = ({
           ]}>
           {imageUri && !embedPlayerParams ? (
             <Image
-              style={{
-                aspectRatio: 1.91,
-              }}
+              style={[a.aspect_card]}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
             />
@@ -126,7 +124,7 @@ export const ExternalEmbed = ({
                 <Text
                   emoji
                   numberOfLines={3}
-                  style={[a.text_md, a.font_bold, a.leading_snug]}>
+                  style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
                   {link.title || link.uri}
                 </Text>
               )}

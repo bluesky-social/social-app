@@ -12,11 +12,11 @@ import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} fro
 import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '#/state/queries/messages/list-conversations'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '#/state/queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '#/state/queries/my-muted-accounts'
+import {findAllProfilesInQueryData as findAllProfilesInNotifsQueryData} from '#/state/queries/notifications/feed'
 import {findAllProfilesInQueryData as findAllProfilesInFeedsQueryData} from '#/state/queries/post-feed'
 import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '#/state/queries/post-liked-by'
 import {findAllProfilesInQueryData as findAllProfilesInPostQuotesQueryData} from '#/state/queries/post-quotes'
 import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '#/state/queries/post-reposted-by'
-import {findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData} from '#/state/queries/post-thread'
 import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '#/state/queries/profile'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '#/state/queries/profile-followers'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '#/state/queries/profile-follows'
@@ -175,9 +175,9 @@ function* findProfilesInCache(
   yield* findAllProfilesInActorSearchQueryData(queryClient, did)
   yield* findAllProfilesInListConvosQueryData(queryClient, did)
   yield* findAllProfilesInFeedsQueryData(queryClient, did)
-  yield* findAllProfilesInPostThreadQueryData(queryClient, did)
   yield* findAllProfilesInPostThreadV2QueryData(queryClient, did)
   yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
   yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did)
   yield* findAllProfilesInActivitySubscriptionsQueryData(queryClient, did)
+  yield* findAllProfilesInNotifsQueryData(queryClient, did)
 }

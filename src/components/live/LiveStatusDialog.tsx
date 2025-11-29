@@ -102,7 +102,7 @@ export function LiveStatus({
           style={[
             t.atoms.bg_contrast_25,
             a.w_full,
-            {aspectRatio: 1.91},
+            a.aspect_card,
             android([
               a.overflow_hidden,
               {
@@ -137,7 +137,7 @@ export function LiveStatus({
         <View style={[a.w_full, a.justify_center, a.gap_2xs]}>
           <Text
             numberOfLines={3}
-            style={[a.leading_snug, a.font_bold, a.text_xl]}>
+            style={[a.leading_snug, a.font_semi_bold, a.text_xl]}>
             {embed.external.title || embed.external.uri}
           </Text>
           <View style={[a.flex_row, a.align_center, a.gap_2xs]}>

@@ -1,13 +1,9 @@
-import React, {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react'
+import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {
   findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -25,6 +21,10 @@ import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
+import {
+  EmptyState,
+  type EmptyStateButtonProps,
+} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
@@ -42,6 +42,7 @@ interface SectionRef {
 }
 
 interface ProfileFeedgensProps {
+  ref?: React.Ref<SectionRef>
   scrollElRef: ListRef
   did: string
   headerOffset: number
@@ -50,30 +51,32 @@ interface ProfileFeedgensProps {
   testID?: string
   setScrollViewTag: (tag: number | null) => void
   isMe: boolean
+  emptyStateMessage?: string
+  emptyStateButton?: EmptyStateButtonProps
+  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
 }
 
 function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
   return item.uri
 }
 
-export const ProfileStarterPacks = React.forwardRef<
-  SectionRef,
-  ProfileFeedgensProps
->(function ProfileFeedgensImpl(
-  {
-    scrollElRef,
-    did,
-    headerOffset,
-    enabled,
-    style,
-    testID,
-    setScrollViewTag,
-    isMe,
-  },
+export function ProfileStarterPacks({
   ref,
-) {
+  scrollElRef,
+  did,
+  headerOffset,
+  enabled,
+  style,
+  testID,
+  setScrollViewTag,
+  isMe,
+  emptyStateMessage,
+  emptyStateButton,
+  emptyStateIcon,
+}: ProfileFeedgensProps) {
   const t = useTheme()
   const bottomBarOffset = useBottomBarOffset(100)
+  const {height} = useWindowDimensions()
   const [isPTRing, setIsPTRing] = useState(false)
   const {
     data,
@@ -86,6 +89,28 @@ export const ProfileStarterPacks = React.forwardRef<
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
+  const {_} = useLingui()
+
+  const EmptyComponent = useCallback(() => {
+    if (emptyStateMessage || emptyStateButton || emptyStateIcon) {
+      return (
+        <View style={[a.px_lg, a.align_center, a.justify_center]}>
+          <EmptyState
+            icon={emptyStateIcon}
+            iconSize="3xl"
+            message={
+              emptyStateMessage ??
+              _(
+                'Starter packs let you share your favorite feeds and people with your friends.',
+              )
+            }
+            button={emptyStateButton}
+          />
+        </View>
+      )
+    }
+    return <Empty />
+  }, [_, emptyStateMessage, emptyStateButton, emptyStateIcon])
 
   useImperativeHandle(ref, () => ({
     scrollToTop: () => {},
@@ -101,7 +126,7 @@ export const ProfileStarterPacks = React.forwardRef<
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -144,13 +169,16 @@ export const ProfileStarterPacks = React.forwardRef<
         refreshing={isPTRing}
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
-        contentContainerStyle={{paddingBottom: headerOffset + bottomBarOffset}}
+        contentContainerStyle={{
+          minHeight: height + headerOffset,
+          paddingBottom: bottomBarOffset,
+        }}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}
         onRefresh={onRefresh}
         ListEmptyComponent={
-          data ? (isMe ? Empty : undefined) : FeedLoadingPlaceholder
+          data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
         }
         ListFooterComponent={
           !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
@@ -158,7 +186,7 @@ export const ProfileStarterPacks = React.forwardRef<
       />
     </View>
   )
-})
+}
 
 function CreateAnother() {
   const {_} = useLingui()
@@ -259,7 +287,7 @@ function Empty() {
         {marginTop: a.border.borderWidth},
       ]}>
       <View style={[a.gap_xs]}>
-        <Text style={[a.font_bold, a.text_lg, {color: 'white'}]}>
+        <Text style={[a.font_semi_bold, a.text_lg, {color: 'white'}]}>
           <Trans>You haven't created a starter pack yet!</Trans>
         </Text>
         <Text style={[a.text_md, {color: 'white'}]}>

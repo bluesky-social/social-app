@@ -1,4 +1,4 @@
-import {AppBskyRichtextFacet, RichText, UnicodeString} from '@atproto/api'
+import {AppBskyRichtextFacet, type RichText, UnicodeString} from '@atproto/api'
 
 import {toShortUrl} from './url-helpers'
 

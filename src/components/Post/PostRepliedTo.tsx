@@ -57,7 +57,9 @@ export function PostRepliedTo({
         size="xs"
         style={[t.atoms.text_contrast_medium, {top: -1}]}
       />
-      <Text style={textStyle}>{label}</Text>
+      <Text style={[a.flex_1, textStyle]} numberOfLines={1}>
+        {label}
+      </Text>
     </View>
   )
 }

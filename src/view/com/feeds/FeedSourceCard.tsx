@@ -139,7 +139,7 @@ export function FeedSourceCardLoaded({
         <View style={[a.flex_1]}>
           <Text
             emoji
-            style={[a.text_sm, a.font_bold, a.leading_snug]}
+            style={[a.text_sm, a.font_semi_bold, a.leading_snug]}
             numberOfLines={1}>
             {feed.displayName}
           </Text>
@@ -165,7 +165,7 @@ export function FeedSourceCardLoaded({
         <Text
           style={[
             a.text_sm,
-            a.font_bold,
+            a.font_semi_bold,
             t.atoms.text_contrast_medium,
             a.leading_snug,
           ]}>

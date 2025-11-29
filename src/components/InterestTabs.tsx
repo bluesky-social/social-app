@@ -83,7 +83,12 @@ export function InterestTabs({
   function handleTabLayout(index: number, x: number, width: number) {
     if (!tabOffsets.length) {
       pendingTabOffsets.current[index] = {x, width}
-      if (pendingTabOffsets.current.length === interests.length) {
+      // not only do we check if the length is equal to the number of interests,
+      // but we also need to ensure that the array isn't sparse. `.filter()`
+      // removes any empty slots from the array
+      if (
+        pendingTabOffsets.current.filter(o => !!o).length === interests.length
+      ) {
         setTabOffsets(pendingTabOffsets.current)
       }
     }
@@ -205,7 +210,7 @@ export function InterestTabs({
         showsHorizontalScrollIndicator={false}
         decelerationRate="fast"
         snapToOffsets={
-          tabOffsets.length === interests.length
+          tabOffsets.filter(o => !!o).length === interests.length
             ? tabOffsets.map(o => o.x - tokens.space.xl)
             : undefined
         }
@@ -258,7 +263,7 @@ export function InterestTabs({
               t.atoms.border_contrast_low,
               t.atoms.bg,
               a.h_full,
-              {aspectRatio: 1},
+              a.aspect_square,
               a.rounded_full,
             ]}>
             <ButtonIcon icon={ArrowLeft} />
@@ -292,7 +297,7 @@ export function InterestTabs({
               t.atoms.border_contrast_low,
               t.atoms.bg,
               a.h_full,
-              {aspectRatio: 1},
+              a.aspect_square,
               a.rounded_full,
             ]}>
             <ButtonIcon icon={ArrowRight} />

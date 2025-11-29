@@ -284,7 +284,7 @@ export function SearchablePeopleList({
             style={[
               a.z_10,
               a.text_lg,
-              a.font_heavy,
+              a.font_bold,
               a.leading_tight,
               t.atoms.text_contrast_high,
             ]}>
@@ -484,7 +484,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput>
+  inputRef: React.RefObject<TextInput | null>
 }) {
   const t = useTheme()
   const {_} = useLingui()

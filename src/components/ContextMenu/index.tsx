@@ -119,7 +119,8 @@ export function Root({children}: {children: React.ReactNode}) {
   const hoverablesSV = useSharedValue<
     Record<string, {id: string; rect: Measurement}>
   >({})
-  const syncHoverablesThrottleRef = useRef<ReturnType<typeof setTimeout>>()
+  const syncHoverablesThrottleRef =
+    useRef<ReturnType<typeof setTimeout>>(undefined)
   const [hoveredMenuItem, setHoveredMenuItem] = useState<string | null>(null)
 
   const onHoverableTouchUp = useCallback((id: string) => {
@@ -795,7 +796,7 @@ export function ItemText({children, style}: ItemTextProps) {
       style={[
         a.flex_1,
         a.text_md,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_high,
         {paddingTop: 3},
         style,
@@ -854,7 +855,11 @@ export function LabelText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
     <Text
-      style={[a.font_bold, t.atoms.text_contrast_medium, {marginBottom: -8}]}>
+      style={[
+        a.font_semi_bold,
+        t.atoms.text_contrast_medium,
+        {marginBottom: -8},
+      ]}>
       {children}
     </Text>
   )

@@ -106,7 +106,9 @@ export function TabBar({
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
-              ref={node => (itemRefs.current[i] = node as any)}
+              ref={node => {
+                itemRefs.current[i] = node as any
+              }}
               style={styles.item}
               hoverStyle={t.atoms.bg_contrast_25}
               onPress={() => onPressItem(i)}
@@ -119,7 +121,7 @@ export function TabBar({
                     styles.itemText,
                     selected ? t.atoms.text : t.atoms.text_contrast_medium,
                     a.text_md,
-                    a.font_bold,
+                    a.font_semi_bold,
                     {lineHeight: 20},
                   ]}>
                   {item}

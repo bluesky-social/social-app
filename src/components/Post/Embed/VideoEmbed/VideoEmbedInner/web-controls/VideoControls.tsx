@@ -46,14 +46,14 @@ export function Controls({
   hlsLoading,
   hasSubtitleTrack,
 }: {
-  videoRef: React.RefObject<HTMLVideoElement>
-  hlsRef: React.RefObject<Hls | undefined>
+  videoRef: React.RefObject<HTMLVideoElement | null>
+  hlsRef: React.RefObject<Hls | undefined | null>
   active: boolean
   setActive: () => void
   focused: boolean
   setFocused: (focused: boolean) => void
   onScreen: boolean
-  fullscreenRef: React.RefObject<HTMLDivElement>
+  fullscreenRef: React.RefObject<HTMLDivElement | null>
   hlsLoading: boolean
   hasSubtitleTrack: boolean
 }) {
@@ -232,7 +232,7 @@ export function Controls({
   }, [onSeek, videoRef])
 
   const [showCursor, setShowCursor] = useState(true)
-  const cursorTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const cursorTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const onPointerMoveEmptySpace = useCallback(() => {
     setShowCursor(true)
     if (cursorTimeoutRef.current) {
@@ -264,7 +264,7 @@ export function Controls({
     [hovered],
   )
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const onHoverWithTimeout = useCallback(() => {
     onHover()

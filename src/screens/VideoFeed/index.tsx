@@ -57,6 +57,7 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {
@@ -93,6 +94,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/i
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
 import {Leaf_Stroke2_Corner0_Rounded as LeafIcon} from '#/components/icons/Leaf'
+import {KeepAwake} from '#/components/KeepAwake'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
@@ -150,6 +152,7 @@ export function VideoFeed({}: NativeStackScreenProps<
   return (
     <ThemeProvider theme="dark">
       <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
+        <KeepAwake />
         <SystemBars style={{statusBar: 'light', navigationBar: 'light'}} />
         <View
           style={[
@@ -202,7 +205,7 @@ function Feed() {
   }, [params])
   const feedUri = params.type === 'feedgen' ? params.uri : undefined
   const {data: feedInfo} = useFeedInfo(feedUri)
-  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo ?? undefined, hasSession)
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
     usePostFeedQuery(
       feedDesc,
@@ -524,7 +527,7 @@ let VideoItem = ({
           <Text
             style={[
               a.text_2xl,
-              a.font_heavy,
+              a.font_bold,
               a.text_center,
               a.leading_tight,
               a.mx_xl,
@@ -670,7 +673,7 @@ function ModerationOverlay({
                 <Text
                   style={[
                     a.text_sm,
-                    a.font_bold,
+                    a.font_semi_bold,
                     a.text_center,
                     {opacity: pressed ? 0.5 : 1},
                   ]}>
@@ -807,7 +810,7 @@ function Overlay({
                   />
                   <View style={[a.flex_1]}>
                     <Text
-                      style={[a.text_md, a.font_heavy]}
+                      style={[a.text_md, a.font_bold]}
                       emoji
                       numberOfLines={1}>
                       {sanitizeDisplayName(
@@ -953,7 +956,7 @@ function ExpandableRichTextView({
       ]}>
       <RichText
         value={value}
-        style={[a.text_sm, a.flex_1, a.leading_normal]}
+        style={[a.text_sm, a.flex_1, a.leading_relaxed]}
         authorHandle={authorHandle}
         enableTags
         numberOfLines={
@@ -1042,16 +1045,29 @@ function PlayPauseTapArea({
   const {isPlaying} = useEvent(player, 'playingChange', {
     isPlaying: player.playing,
   })
+  const isMounted = useRef(false)
 
-  const togglePlayPause = () => {
-    if (!player) return
-    doubleTapRef.current = null
-    if (player.playing) {
-      player.pause()
-    } else {
-      player.play()
+  useEffect(() => {
+    isMounted.current = true
+    return () => {
+      isMounted.current = false
     }
-  }
+  }, [])
+
+  const togglePlayPause = useNonReactiveCallback(() => {
+    // gets called after a timeout, so guard against being called after unmount -sfn
+    if (!player || !isMounted.current) return
+    doubleTapRef.current = null
+    try {
+      if (player.playing) {
+        player.pause()
+      } else {
+        player.play()
+      }
+    } catch (err) {
+      logger.error('Could not toggle play/pause', {safeMessage: err})
+    }
+  })
 
   const onPress = () => {
     if (doubleTapRef.current) {
@@ -1115,7 +1131,7 @@ function EndMessage() {
         <LeafIcon width={64} fill="black" />
       </View>
       <View style={[a.w_full, a.gap_md]}>
-        <Text style={[a.text_3xl, a.text_center, a.font_heavy]}>
+        <Text style={[a.text_3xl, a.text_center, a.font_bold]}>
           <Trans>That's everything!</Trans>
         </Text>
         <Text

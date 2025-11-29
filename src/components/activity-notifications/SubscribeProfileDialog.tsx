@@ -219,7 +219,7 @@ function DialogInner({
       label={_(msg`Get notified of new posts from ${name}`)}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_xs]}>
-          <Text style={[a.font_heavy, a.text_2xl]}>
+          <Text style={[a.font_bold, a.text_2xl]}>
             <Trans>Keep me posted</Trans>
           </Text>
           <Text style={[t.atoms.text_contrast_medium, a.text_md]}>

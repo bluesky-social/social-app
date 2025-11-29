@@ -180,6 +180,7 @@ export function Inner({
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
+        // note: flatten is required for some reason -sfn
         style={flatten([
           a.relative,
           a.rounded_md,
@@ -244,7 +245,7 @@ export const InnerFlatList = React.forwardRef<
       contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
-        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
+        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, style]}
         {...props}
       />
       {footer}

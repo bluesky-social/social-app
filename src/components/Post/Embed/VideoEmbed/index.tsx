@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
@@ -17,11 +17,9 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 interface Props {
   embed: AppBskyEmbedVideo.View
-  crop?: 'none' | 'square' | 'constrained'
 }
 
-export function VideoEmbed({embed, crop}: Props) {
-  const t = useTheme()
+export function VideoEmbed({embed}: Props) {
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -41,13 +39,10 @@ export function VideoEmbed({embed, crop}: Props) {
   }
 
   let constrained: number | undefined
-  let max: number | undefined
   if (aspectRatio !== undefined) {
     const ratio = 1 / 2 // max of 1:2 ratio in feeds
     constrained = Math.max(aspectRatio, ratio)
-    max = Math.max(aspectRatio, 0.25) // max of 1:4 in thread
   }
-  const cropDisabled = crop === 'none'
 
   const contents = (
     <ErrorBoundary renderError={renderError} key={key}>
@@ -57,25 +52,13 @@ export function VideoEmbed({embed, crop}: Props) {
 
   return (
     <View style={[a.pt_xs]}>
-      {cropDisabled ? (
-        <View
-          style={[
-            a.w_full,
-            a.overflow_hidden,
-            {aspectRatio: max ?? 1},
-            a.rounded_md,
-            a.overflow_hidden,
-            t.atoms.bg_contrast_25,
-          ]}>
-          {contents}
-        </View>
-      ) : (
-        <ConstrainedImage
-          fullBleed={crop === 'square'}
-          aspectRatio={constrained || 1}>
-          {contents}
-        </ConstrainedImage>
-      )}
+      <ConstrainedImage
+        aspectRatio={constrained || 1}
+        // slightly smaller max height than images
+        // images use 16 / 9, for reference
+        minMobileAspectRatio={14 / 9}>
+        {contents}
+      </ConstrainedImage>
     </View>
   )
 }

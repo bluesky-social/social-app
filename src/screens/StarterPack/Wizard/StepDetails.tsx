@@ -8,7 +8,7 @@ import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
+import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 
 export function StepDetails() {

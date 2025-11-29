@@ -12,6 +12,8 @@ export type Device = {
   devMode: boolean
   demoMode: boolean
   activitySubscriptionsNudged?: boolean
+  blackskyGateCache?: string
+  threadgateNudged?: boolean
 }
 
 export type Account = {

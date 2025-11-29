@@ -336,7 +336,7 @@ function ProfilePreview({
             a.pt_sm,
             t.atoms.text,
             gtMobile ? a.text_4xl : a.text_3xl,
-            a.font_heavy,
+            a.font_bold,
           ]}>
           {displayName}
         </Text>

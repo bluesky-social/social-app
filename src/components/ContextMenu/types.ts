@@ -5,7 +5,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type SharedValue} from 'react-native-reanimated'
-import type React from 'react'
 
 import type * as Dialog from '#/components/Dialog'
 import {

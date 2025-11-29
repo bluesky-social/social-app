@@ -11,6 +11,7 @@ import {
   TREE_VIEW_BELOW_DESKTOP,
   TREE_VIEW_BF,
 } from '#/state/queries/usePostThread/const'
+import {type PostThreadContextType} from '#/state/queries/usePostThread/context'
 import {
   createCacheMutator,
   getThreadPlaceholder,
@@ -31,6 +32,8 @@ import {useAgent, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useBreakpoints} from '#/alf'
 
+export * from '#/state/queries/usePostThread/context'
+export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
 export * from '#/state/queries/usePostThread/types'
 
 export function usePostThread({anchor}: {anchor?: string}) {
@@ -46,7 +49,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setSort: baseSetSort,
     view,
     setView: baseSetView,
-    prioritizeFollowedUsers,
   } = useThreadPreferences()
   const below = useMemo(() => {
     return view === 'linear'
@@ -60,11 +62,9 @@ export function usePostThread({anchor}: {anchor?: string}) {
     anchor,
     sort,
     view,
-    prioritizeFollowedUsers,
   })
   const postThreadOtherQueryKey = createPostThreadOtherQueryKey({
     anchor,
-    prioritizeFollowedUsers,
   })
 
   const query = useQuery<UsePostThreadQueryResult>({
@@ -76,7 +76,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
         sort: sort,
-        prioritizeFollowedUsers: prioritizeFollowedUsers,
       })
 
       /*
@@ -167,7 +166,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getPostThreadOtherV2({
         anchor: anchor!,
-        prioritizeFollowedUsers,
       })
       return data
     },
@@ -280,8 +278,13 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setOtherItemsVisible,
   ])
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    const context: PostThreadContextType = {
+      postThreadQueryKey,
+      postThreadOtherQueryKey,
+    }
+    return {
+      context,
       state: {
         /*
          * Copy in any query state that is useful
@@ -312,17 +315,18 @@ export function usePostThread({anchor}: {anchor?: string}) {
         setSort,
         setView,
       },
-    }),
-    [
-      query,
-      mutator.insertReplies,
-      otherItemsVisible,
-      sort,
-      view,
-      setSort,
-      setView,
-      threadgate,
-      items,
-    ],
-  )
+    }
+  }, [
+    query,
+    mutator.insertReplies,
+    otherItemsVisible,
+    sort,
+    view,
+    setSort,
+    setView,
+    threadgate,
+    items,
+    postThreadQueryKey,
+    postThreadOtherQueryKey,
+  ])
 }
