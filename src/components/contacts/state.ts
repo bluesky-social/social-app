@@ -32,6 +32,9 @@ export type State =
       step: '4: view matches'
       contacts: Contact[]
       matches: Match[]
+      // rather than mutating `matches`, we keep track of dismissed matches
+      // so we can roll back optimistic updates
+      dismissedMatches: string[]
     }
 
 export type Action =
@@ -68,6 +71,12 @@ export type Action =
     }
   | {
       type: 'DISMISS_MATCH'
+      payload: {
+        did: string
+      }
+    }
+  | {
+      type: 'DISMISS_MATCH_FAILED'
       payload: {
         did: string
       }
@@ -118,14 +127,25 @@ function reducer(state: State, action: Action): State {
         step: '4: view matches',
         contacts: state.contacts ?? [],
         matches: action.payload.matches,
+        dismissedMatches: [],
       }
     }
     case 'DISMISS_MATCH': {
       assertCurrentStep(state, '4: view matches')
       return {
         ...state,
-        matches: state.matches.filter(
-          match => match.profile.did !== action.payload.did,
+        dismissedMatches: [
+          ...new Set(state.dismissedMatches),
+          action.payload.did,
+        ],
+      }
+    }
+    case 'DISMISS_MATCH_FAILED': {
+      assertCurrentStep(state, '4: view matches')
+      return {
+        ...state,
+        dismissedMatches: state.dismissedMatches.filter(
+          did => did !== action.payload.did,
         ),
       }
     }

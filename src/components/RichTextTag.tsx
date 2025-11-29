@@ -12,7 +12,7 @@ import {
   useRemoveMutedWordsMutation,
   useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import {

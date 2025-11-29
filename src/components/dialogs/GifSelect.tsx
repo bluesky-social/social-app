@@ -29,7 +29,7 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
 export function GifSelectDialog({

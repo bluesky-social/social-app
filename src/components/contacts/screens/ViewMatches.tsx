@@ -1,22 +1,36 @@
-import {useMemo, useState} from 'react'
+import {useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import * as SMS from 'expo-sms'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {wait} from '#/lib/async/wait'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {
+  updateProfileShadow,
+  useProfileShadow,
+} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
-import {List} from '#/view/com/util/List'
+import {useProfilesQuery} from '#/state/queries/profile'
+import {useAgent, useSession} from '#/state/session'
+import {List, type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Envelope_Stroke2_Corner0_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
+import {MagnifyingGlassX_Stroke2_Corner0_Rounded_Large as SearchFailedIcon} from '#/components/icons/MagnifyingGlass'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -26,6 +40,7 @@ import {type Action, type Contact, type State} from '../state'
 type Item =
   | {
       type: 'matches header'
+      count: number
     }
   | {
       type: 'match'
@@ -43,6 +58,7 @@ type Item =
     }
   | {
       type: 'search empty state'
+      query: string
     }
 // we could use Contacts.presentAccessPickerAsync() if we get limited permissions?
 // | {
@@ -51,6 +67,7 @@ type Item =
 
 export function ViewMatches({
   state,
+  dispatch,
 }: {
   state: Extract<State, {step: '4: view matches'}>
   dispatch: React.Dispatch<Action>
@@ -58,37 +75,165 @@ export function ViewMatches({
   const {_} = useLingui()
   const gutter = useGutters([0, 'wide'])
   const moderationOpts = useModerationOpts()
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+  const listRef = useRef<ListMethods>(null)
+
+  // TEMP!!!
+  const {data: profiles} = useProfilesQuery({
+    handles: ['pfrazee.com', 'internet.bsky.social', 'darrin.bsky.team'],
+  })
+  state.matches = profiles?.profiles?.map(profile => ({profile})) ?? []
 
   const [search, setSearch] = useState('')
+  const {
+    state: searchFocused,
+    onIn: onFocus,
+    onOut: onBlur,
+  } = useInteractionState()
+
+  const followableDids = state.matches
+    .map(match => match.profile.did)
+    .filter(did => !state.dismissedMatches.includes(did))
+  const [didFollowAll, setDidFollowAll] = useState(followableDids.length === 0)
+
+  const {mutate: followAll, isPending: isFollowingAll} = useMutation({
+    mutationFn: async () => {
+      for (const did of followableDids) {
+        updateProfileShadow(queryClient, did, {
+          followingUri: 'pending',
+        })
+      }
+
+      const uris = await wait(500, bulkWriteFollows(agent, followableDids))
+
+      for (const did of followableDids) {
+        const uri = uris.get(did)
+        updateProfileShadow(queryClient, did, {
+          followingUri: uri,
+        })
+      }
+      return followableDids
+    },
+    onSuccess: () => {
+      setDidFollowAll(true)
+      Toast.show(_(msg`All friends followed!`), {type: 'success'})
+    },
+    onError: _err => {
+      Toast.show(_(msg`Failed to follow all your friends, please try again`), {
+        type: 'error',
+      })
+      for (const did of followableDids) {
+        updateProfileShadow(queryClient, did, {
+          followingUri: undefined,
+        })
+      }
+    },
+  })
 
   const items = useMemo(() => {
     const all: Item[] = []
 
-    if (state.matches.length > 0) {
-      all.push({type: 'matches header'})
+    if (searchFocused || search.length > 0) {
       for (const match of state.matches) {
         const profile = match.profile
-        all.push({type: 'match', profile})
-      }
-      all.push({type: 'contacts header'})
-    } else {
-      all.push({type: 'no matches header'})
-    }
 
-    for (const contact of state.contacts) {
-      all.push({type: 'contact', contact})
+        if (state.dismissedMatches.includes(profile.did)) continue
+
+        if (
+          search.length === 0 ||
+          (profile.displayName ?? '')
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase()) ||
+          profile.handle
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase())
+        ) {
+          all.push({type: 'match', profile})
+        }
+      }
+
+      for (const contact of state.contacts) {
+        if (
+          search.length === 0 ||
+          [contact.firstName, contact.lastName]
+            .filter(Boolean)
+            .join(' ')
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase())
+        ) {
+          all.push({type: 'contact', contact})
+        }
+      }
+
+      if (all.length === 0) {
+        all.push({type: 'search empty state', query: search})
+      }
+    } else {
+      const matches = state.matches.filter(
+        match => !state.dismissedMatches.includes(match.profile.did),
+      )
+
+      if (matches.length > 0) {
+        all.push({type: 'matches header', count: matches.length})
+        for (const match of matches) {
+          const profile = match.profile
+          all.push({type: 'match', profile})
+        }
+        all.push({type: 'contacts header'})
+      } else {
+        all.push({type: 'no matches header'})
+      }
+
+      for (const contact of state.contacts) {
+        all.push({type: 'contact', contact})
+      }
     }
 
     return all
-  }, [state.matches, state.contacts])
+  }, [
+    state.matches,
+    state.contacts,
+    state.dismissedMatches,
+    search,
+    searchFocused,
+  ])
 
-  const numMatches = state.matches.length
+  const {mutate: dimissMatch} = useMutation({
+    mutationFn: async (_did: string) => {
+      await new Promise(resolve => setTimeout(resolve, 500))
+    },
+    onMutate: did => {
+      dispatch({type: 'DISMISS_MATCH', payload: {did}})
+    },
+    onError: (err, did) => {
+      dispatch({type: 'DISMISS_MATCH_FAILED', payload: {did}})
+      if (isNetworkError(err)) {
+        Toast.show(
+          _(
+            msg`Failed to hide suggestion, please check your internet connection`,
+          ),
+          {type: 'error'},
+        )
+      } else {
+        logger.error('Dismissing match failed', {safeMessage: err})
+        Toast.show(
+          _(msg`An error occurred while hiding suggestion. ${cleanError(err)}`),
+          {type: 'error'},
+        )
+      }
+    },
+  })
 
   const renderItem = ({item}: {item: Item}) => {
     switch (item.type) {
       case 'match':
         return (
-          <MatchItem profile={item.profile} moderationOpts={moderationOpts} />
+          <MatchItem
+            profile={item.profile}
+            moderationOpts={moderationOpts}
+            onRemoveSuggestion={dimissMatch}
+          />
         )
       case 'contact':
         return <ContactItem contact={item.contact} />
@@ -97,17 +242,27 @@ export function ViewMatches({
           <Header
             titleText={
               <Plural
-                value={numMatches}
+                value={item.count}
                 one="# friend found!"
                 other="# friends found!"
               />
             }>
-            {numMatches > 1 && (
+            {item.count > 1 && (
               <Button
                 label={_(msg`Follow all`)}
                 size="small"
-                color="primary_subtle">
-                <ButtonIcon icon={PlusIcon} />
+                color="primary_subtle"
+                onPress={() => followAll()}
+                disabled={isFollowingAll || didFollowAll}>
+                <ButtonIcon
+                  icon={
+                    isFollowingAll
+                      ? Loader
+                      : !didFollowAll
+                        ? PlusIcon
+                        : CheckIcon
+                  }
+                />
                 <ButtonText>
                   <Trans>Follow all</Trans>
                 </ButtonText>
@@ -127,9 +282,11 @@ export function ViewMatches({
           />
         )
       case 'search empty state':
-        return null
+        return <SearchEmptyState query={item.query} />
     }
   }
+
+  const isEmpty = items?.[0]?.type === 'search empty state'
 
   return (
     <View style={[a.h_full]}>
@@ -138,31 +295,60 @@ export function ViewMatches({
         <Layout.Header.Content />
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <View style={[gutter, a.mb_xs]}>
+      <View style={[gutter, a.mb_md]}>
         <SearchInput
           placeholder={_(msg`Search contacts`)}
           value={search}
-          onChangeText={setSearch}
+          onFocus={() => {
+            onFocus()
+            listRef.current?.scrollToOffset({offset: 0, animated: false})
+          }}
+          onBlur={() => {
+            onBlur()
+            listRef.current?.scrollToOffset({offset: 0, animated: false})
+          }}
+          onChangeText={text => {
+            setSearch(text)
+            listRef.current?.scrollToOffset({offset: 0, animated: false})
+          }}
+          onClearText={() => setSearch('')}
         />
       </View>
       <List
+        ref={listRef}
         data={items}
         renderItem={renderItem}
-        ListFooterComponent={<ListFooter />}
+        ListFooterComponent={!isEmpty ? <ListFooter /> : null}
+        keyExtractor={keyExtractor}
       />
     </View>
   )
 }
 
+function keyExtractor(item: Item) {
+  switch (item.type) {
+    case 'contact':
+      return item.contact.id
+    case 'match':
+      return item.profile.did
+    default:
+      return item.type
+  }
+}
+
 function MatchItem({
   profile,
   moderationOpts,
+  onRemoveSuggestion,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts?: ModerationOpts
+  onRemoveSuggestion: (did: string) => void
 }) {
   const gutter = useGutters([0, 'wide'])
   const t = useTheme()
+  const {_} = useLingui()
+  const shadow = useProfileShadow(profile)
 
   if (!moderationOpts) return null
 
@@ -179,6 +365,17 @@ function MatchItem({
           moderationOpts={moderationOpts}
           logContext="SyncContacts"
         />
+        {!shadow.viewer?.following && (
+          <Button
+            color="secondary"
+            variant="ghost"
+            label={_(msg`Remove suggestion`)}
+            onPress={() => onRemoveSuggestion(profile.did)}
+            hoverStyle={[a.bg_transparent, {opacity: 0.5}]}
+            hitSlop={8}>
+            <ButtonIcon icon={XIcon} />
+          </Button>
+        )}
       </ProfileCard.Header>
     </View>
   )
@@ -292,6 +489,34 @@ function Header({
           {subtitleText}
         </Text>
       )}
+    </View>
+  )
+}
+
+function SearchEmptyState({query}: {query: string}) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.flex_1,
+        a.flex_col,
+        a.align_center,
+        a.justify_center,
+        a.gap_lg,
+        a.pt_5xl,
+        a.px_5xl,
+      ]}>
+      <SearchFailedIcon width={64} style={[t.atoms.text_contrast_low]} />
+      <Text
+        style={[
+          a.text_md,
+          a.leading_snug,
+          t.atoms.text_contrast_medium,
+          a.text_center,
+        ]}>
+        <Trans>No contacts with the name “{query}” found</Trans>
+      </Text>
     </View>
   )
 }
