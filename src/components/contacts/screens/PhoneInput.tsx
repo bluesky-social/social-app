@@ -46,7 +46,7 @@ export function PhoneInput({
     mutationFn: async ({}: {countryCode: string; phoneNumber: string}) => {
       // get otp
       await new Promise(resolve => {
-        setTimeout(resolve, 1000)
+        setTimeout(resolve, 500)
       })
     },
     onSuccess: (_data, {countryCode, phoneNumber}) => {
