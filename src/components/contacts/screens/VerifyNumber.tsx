@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
-import {wait} from '#/lib/async/wait'
 import {getPhoneCodeFromCountryCode} from '#/lib/international-telephone-codes'
 import {clamp} from '#/lib/numbers'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
@@ -55,11 +54,10 @@ export function VerifyNumber({
     isSuccess,
   } = useMutation({
     mutationFn: async (_code: string) => {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 500))
       return 'success'
     },
     onSuccess: async () => {
-      await wait(2e3, () => {})
       dispatch({
         type: 'VERIFY_PHONE_NUMBER_SUCCESS',
         payload: {
@@ -239,7 +237,6 @@ function OTPStatus({
     text = _(msg`Phone verified`)
     textColor = t.palette.positive_500
   } else if (isPending) {
-    Icon = Loader
     text = _(msg`Verifying...`)
   } else if (error) {
     Icon = WarningIcon

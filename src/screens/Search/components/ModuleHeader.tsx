@@ -10,7 +10,7 @@ import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {sizes as iconSizes} from '#/components/icons/common'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 import {Link} from '#/components/Link'
 import {Text, type TextProps} from '#/components/Typography'
 
