@@ -296,6 +296,26 @@ export type MetricEvents = {
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
   }
+  'profile:followers:view': {
+    contextProfileDid: string
+    isOwnProfile: boolean
+    logContext?: 'ProfileHeader'
+  }
+  'profile:followers:paginate': {
+    contextProfileDid: string
+    itemCount: number
+    page: number
+  }
+  'profile:following:view': {
+    contextProfileDid: string
+    isOwnProfile: boolean
+    logContext?: 'ProfileHeader'
+  }
+  'profile:following:paginate': {
+    contextProfileDid: string
+    itemCount: number
+    page: number
+  }
   'profileCard:seen': {
     contextProfileDid?: string
     profileDid: string
