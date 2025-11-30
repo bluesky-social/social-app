@@ -12,9 +12,7 @@ import {
 import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {createComposerImage} from '#/state/gallery'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {useComposerControls} from '#/state/shell/composer'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
@@ -25,11 +23,10 @@ import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Ima
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 
-export function FeedComposerPrompt() {
+export function ComposerPrompt() {
   const {_} = useLingui()
   const t = useTheme()
   const {openComposer} = useOpenComposer()
-  const {closeComposer} = useComposerControls()
   const profile = useCurrentAccountProfile()
   const [hover, setHover] = useState(false)
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -38,167 +35,101 @@ export function FeedComposerPrompt() {
   const sheetWrapper = useSheetWrapper()
 
   const onPress = React.useCallback(() => {
-    logger.metric('postComposer:click', {})
+    logger.metric('composerPrompt:press', {})
     openComposer({})
   }, [openComposer])
 
   const onPressImage = useCallback(async () => {
-    logger.metric('postComposer:click', {})
+    logger.metric('composerPrompt:gallery:press', {})
 
-    // Open the composer first so it's ready
-    openComposer({})
+    // On web, open the composer with the gallery picker auto-opening
+    if (!isNative) {
+      openComposer({openGallery: true})
+      return
+    }
 
-    // Use a small delay to ensure composer starts rendering before opening picker
-    setTimeout(async () => {
-      try {
-        if (isNative) {
-          const [photoAccess, videoAccess] = await Promise.all([
-            requestPhotoAccessIfNeeded(),
-            requestVideoAccessIfNeeded(),
-          ])
+    try {
+      const [photoAccess, videoAccess] = await Promise.all([
+        requestPhotoAccessIfNeeded(),
+        requestVideoAccessIfNeeded(),
+      ])
 
-          if (!photoAccess && !videoAccess) {
-            return
-          }
-        }
+      if (!photoAccess && !videoAccess) {
+        return
+      }
 
-        if (isNative && Keyboard.isVisible()) {
-          Keyboard.dismiss()
-        }
+      if (Keyboard.isVisible()) {
+        Keyboard.dismiss()
+      }
 
-        const selectionCountRemaining = MAX_IMAGES
-        const {assets, canceled} = await sheetWrapper(
-          openUnifiedPicker({selectionCountRemaining}),
-        )
+      const selectionCountRemaining = MAX_IMAGES
+      const {assets, canceled} = await sheetWrapper(
+        openUnifiedPicker({selectionCountRemaining}),
+      )
 
-        if (canceled) return
+      if (canceled) {
+        return
+      }
 
-        if (assets.length > 0) {
-          // Process images and add them to the composer
-          const images = await Promise.all(
-            assets
-              .filter(asset => asset.mimeType?.startsWith('image/'))
-              .slice(0, MAX_IMAGES)
-              .map(async image => {
-                try {
-                  return await createComposerImage({
-                    path: image.uri,
-                    width: image.width,
-                    height: image.height,
-                    mime: image.mimeType!,
-                  })
-                } catch (e) {
-                  logger.error(`createComposerImage failed`, {
-                    safeMessage: e instanceof Error ? e.message : String(e),
-                  })
-                  return null
-                }
-              }),
-          )
+      if (assets.length > 0) {
+        const imageUris = assets
+          .filter(asset => asset.mimeType?.startsWith('image/'))
+          .slice(0, MAX_IMAGES)
+          .map(asset => ({
+            uri: asset.uri,
+            width: asset.width,
+            height: asset.height,
+          }))
 
-          const validImages = images.filter(
-            (img): img is NonNullable<typeof img> => img !== null,
-          )
-
-          if (validImages.length > 0) {
-            // Convert to imageUris format for the composer
-            // createComposerImage returns ComposerImageWithoutTransformation which always has source
-            const imageUris = validImages.map(img => {
-              const source = img.source
-              return {
-                uri: source.path,
-                width: source.width,
-                height: source.height,
-                altText: img.alt,
-              }
-            })
-
-            // Close the composer first (if it was opened), then reopen with images
-            // This ensures the composer state is reset and can accept the new imageUris
-            closeComposer()
-            // Wait a bit for the picker to fully close and composer to close, then reopen with images
-            // This follows the same pattern as useIntentHandler
-            setTimeout(() => {
-              openComposer({
-                imageUris: isNative ? imageUris : undefined,
-              })
-            }, 100)
-          }
-        }
-      } catch (err: any) {
-        if (!String(err).toLowerCase().includes('cancel')) {
-          logger.warn('Error opening image picker', {error: err})
+        if (imageUris.length > 0) {
+          openComposer({imageUris})
         }
       }
-    }, 100)
+    } catch (err: any) {
+      if (!String(err).toLowerCase().includes('cancel')) {
+        logger.warn('Error opening image picker', {error: err})
+      }
+    }
   }, [
     openComposer,
-    closeComposer,
     requestPhotoAccessIfNeeded,
     requestVideoAccessIfNeeded,
     sheetWrapper,
   ])
 
   const onPressCamera = useCallback(async () => {
-    logger.metric('postComposer:click', {})
+    logger.metric('composerPrompt:camera:press', {})
 
-    // Open the composer first so it's ready
-    openComposer({})
-
-    // Use a small delay to ensure composer starts rendering before opening camera
-    setTimeout(async () => {
-      try {
-        if (!(await requestCameraAccessIfNeeded())) {
-          return
-        }
-
-        if (isNative && Keyboard.isVisible()) {
-          Keyboard.dismiss()
-        }
-
-        const image = await openCamera({
-          mediaTypes: 'images',
-        })
-
-        // Process the image
-        try {
-          const composerImage = await createComposerImage({
-            path: image.path,
-            width: image.width,
-            height: image.height,
-            mime: image.mime,
-          })
-
-          // Convert to imageUris format for the composer
-          const source = composerImage.source
-          const imageUris = [
-            {
-              uri: source.path,
-              width: source.width,
-              height: source.height,
-              altText: composerImage.alt,
-            },
-          ]
-
-          // Close the composer first (if it was opened), then reopen with image
-          closeComposer()
-          setTimeout(() => {
-            openComposer({
-              imageUris: isNative ? imageUris : undefined,
-            })
-          }, 100)
-        } catch (e) {
-          logger.error(`createComposerImage failed`, {
-            safeMessage: e instanceof Error ? e.message : String(e),
-          })
-        }
-      } catch (err: any) {
-        if (!String(err).toLowerCase().includes('cancel')) {
-          logger.warn('Error opening camera', {error: err})
-        }
+    try {
+      if (!(await requestCameraAccessIfNeeded())) {
+        return
       }
-    }, 100)
-  }, [openComposer, closeComposer, requestCameraAccessIfNeeded])
+
+      if (isNative && Keyboard.isVisible()) {
+        Keyboard.dismiss()
+      }
+
+      const image = await openCamera({
+        mediaTypes: 'images',
+      })
+
+      const imageUris = [
+        {
+          uri: image.path,
+          width: image.width,
+          height: image.height,
+        },
+      ]
+
+      openComposer({
+        imageUris: isNative ? imageUris : undefined,
+      })
+    } catch (err: any) {
+      if (!String(err).toLowerCase().includes('cancel')) {
+        logger.warn('Error opening camera', {error: err})
+      }
+    }
+  }, [openComposer, requestCameraAccessIfNeeded])
 
   if (!profile) {
     return null
@@ -264,8 +195,8 @@ export function FeedComposerPrompt() {
               {
                 lineHeight: a.text_md.fontSize,
                 includeFontPadding: false,
-                top: 1,
               },
+              native({top: 1}),
             ]}>
             {_(msg`What's up?`)}
           </Text>

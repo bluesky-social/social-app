@@ -55,6 +55,7 @@ export function Composer({winHeight}: {winHeight: number}) {
         text={state.text}
         imageUris={state.imageUris}
         videoUri={state.videoUri}
+        openGallery={state.openGallery}
       />
     </Animated.View>
   )

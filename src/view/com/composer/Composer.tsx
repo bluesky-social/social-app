@@ -172,6 +172,7 @@ export const ComposePost = ({
   text: initText,
   imageUris: initImageUris,
   videoUri: initVideoUri,
+  openGallery,
   cancelRef,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef | null>
@@ -721,6 +722,7 @@ export const ComposePost = ({
         }}
         currentLanguages={currentLanguages}
         onSelectLanguage={onSelectLanguage}
+        openGallery={openGallery}
       />
     </>
   )
@@ -1334,6 +1336,7 @@ function ComposerFooter({
   onAddPost,
   currentLanguages,
   onSelectLanguage,
+  openGallery,
 }: {
   post: PostDraft
   dispatch: (action: PostAction) => void
@@ -1344,6 +1347,7 @@ function ComposerFooter({
   onAddPost: () => void
   currentLanguages: string[]
   onSelectLanguage?: (language: string) => void
+  openGallery?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -1463,6 +1467,7 @@ function ComposerFooter({
                 allowedAssetTypes={selectedAssetsType}
                 selectedAssetsCount={selectedAssetsCount}
                 onSelectAssets={onSelectAssets}
+                autoOpen={openGallery}
               />
               <OpenCameraBtn
                 disabled={media?.type === 'images' ? isMaxImages : !!media}
