@@ -322,7 +322,11 @@ export type MetricEvents = {
     position: number
   }
   'suggestedUser:seen': {
-    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'ProfileHeader'
     recId?: number
     position: number
   }
