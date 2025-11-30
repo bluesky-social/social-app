@@ -258,11 +258,13 @@ export function FeedComposerPrompt() {
           ]}>
           <Text
             style={[
-              t.atoms.text_contrast_medium,
+              t.atoms.text_contrast_low,
               a.text_md,
+              a.pl_xs,
               {
                 lineHeight: a.text_md.fontSize,
                 includeFontPadding: false,
+                top: 1,
               },
             ]}>
             {_(msg`What's up?`)}
