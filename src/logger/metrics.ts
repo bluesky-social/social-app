@@ -299,7 +299,6 @@ export type MetricEvents = {
   'profile:followers:view': {
     contextProfileDid: string
     isOwnProfile: boolean
-    logContext?: 'ProfileHeader'
   }
   'profile:followers:paginate': {
     contextProfileDid: string
@@ -309,7 +308,6 @@ export type MetricEvents = {
   'profile:following:view': {
     contextProfileDid: string
     isOwnProfile: boolean
-    logContext?: 'ProfileHeader'
   }
   'profile:following:paginate': {
     contextProfileDid: string

@@ -128,7 +128,6 @@ export function ProfileFollowers({name}: {name: string}) {
       logger.metric('profile:followers:view', {
         contextProfileDid: resolvedDid,
         isOwnProfile: isMe,
-        logContext: 'ProfileHeader',
       })
     }
   }, [resolvedDid, isMe])
