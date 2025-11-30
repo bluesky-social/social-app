@@ -3,7 +3,6 @@ import {
   TextInput,
   useWindowDimensions,
   View,
-  type ViewabilityConfig,
   type ViewToken,
 } from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
@@ -235,14 +234,17 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
 
   // Track seen profiles
   const seenProfilesRef = useRef<Set<string>>(new Set())
-  const onViewableItemsChanged = useCallback(
+  const itemsRef = useRef(items)
+  itemsRef.current = items
+
+  const onViewableItemsChanged = useRef(
     ({viewableItems}: {viewableItems: ViewToken[]}) => {
       for (const viewableItem of viewableItems) {
         const item = viewableItem.item as Item
         if (item.type === 'profile') {
           if (!seenProfilesRef.current.has(item.profile.did)) {
             seenProfilesRef.current.add(item.profile.did)
-            const position = items.findIndex(
+            const position = itemsRef.current.findIndex(
               i => i.type === 'profile' && i.profile.did === item.profile.did,
             )
             logger.metric(
@@ -258,14 +260,10 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
         }
       }
     },
-    [items],
-  )
-  const viewabilityConfig: ViewabilityConfig = useMemo(
-    () => ({
-      itemVisiblePercentThreshold: 50,
-    }),
-    [],
-  )
+  ).current
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current
 
   const onSelectTab = useCallback(
     (interest: string) => {
