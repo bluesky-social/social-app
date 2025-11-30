@@ -266,7 +266,17 @@ export type MetricEvents = {
   'post:view': {
     uri: string
     authorDid: string
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    logContext:
+      | 'FeedItem'
+      | 'PostThreadItem'
+      | 'Post'
+      | 'ImmersiveVideo'
+      | 'SearchResults'
+      | 'Bookmarks'
+      | 'Notifications'
+      | 'Hashtag'
+      | 'Topic'
+      | 'PostQuotes'
     feedDescriptor?: string
     position?: number
   }

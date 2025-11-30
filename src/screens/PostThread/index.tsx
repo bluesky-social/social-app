@@ -5,6 +5,7 @@ import {Trans} from '@lingui/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {logger} from '#/logger'
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
@@ -96,6 +97,9 @@ export function PostThread({uri}: {uri: string}) {
       )
     }
   }, [anchor, feedFeedback.feedDescriptor])
+
+  // Track post:view events for parent posts and replies (non-anchor posts)
+  const trackThreadItemView = usePostViewTracking('PostThreadItem')
 
   const {openComposer} = useOpenComposer()
   const optimisticOnPostReply = useCallback(
@@ -557,6 +561,12 @@ export function PostThread({uri}: {uri: string}) {
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
           onStartReachedThreshold={1}
+          onItemSeen={item => {
+            // Track post:view for parent posts and replies (non-anchor posts)
+            if (item.type === 'threadPost' && item.depth !== 0) {
+              trackThreadItemView(item.value.post)
+            }
+          }}
           /**
            * NATIVE ONLY
            * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}

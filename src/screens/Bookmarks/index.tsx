@@ -15,6 +15,7 @@ import {
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -94,6 +95,7 @@ function BookmarksInner() {
   const initialNumToRender = useInitialNumToRender()
   const cleanError = useCleanError()
   const [isPTRing, setIsPTRing] = useState(false)
+  const trackPostView = usePostViewTracking('Bookmarks')
   const {
     data,
     isLoading,
@@ -176,6 +178,11 @@ function BookmarksInner() {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
+      onItemSeen={item => {
+        if (item.type === 'bookmark') {
+          trackPostView(item.bookmark.item)
+        }
+      }}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
