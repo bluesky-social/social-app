@@ -31,7 +31,7 @@ import {isStatusStillActive, validateStatus} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -229,6 +229,7 @@ let PostFeed = ({
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
+  const gate = useGate()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -506,9 +507,9 @@ let PostFeed = ({
                           'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
-                    // Add composer prompt for Discover and Following feeds (after trending bar if it exists)
-                    // Feature gate disabled - always show
+                    // Show composer prompt for Discover and Following feeds
                     if (
+                      gate('show_composer_prompt') &&
                       hasSession &&
                       (feedUriOrActorDid === DISCOVER_FEED_URI ||
                         feed === 'following')
@@ -533,8 +534,8 @@ let PostFeed = ({
                   }
                 } else if (feedKind === 'following') {
                   if (sliceIndex === 0) {
-                    // Add composer prompt for Following feed
-                    if (hasSession) {
+                    // Show composer prompt for Following feed
+                    if (gate('show_composer_prompt') && hasSession) {
                       arr.push({
                         type: 'composerPrompt',
                         key: 'composerPrompt-' + sliceIndex,
@@ -664,6 +665,7 @@ let PostFeed = ({
     hasPressedShowLessUris,
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
+    gate,
   ])
 
   // events
