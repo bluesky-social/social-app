@@ -1,4 +1,4 @@
-import {useContext, useMemo, useState} from 'react'
+import {useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -122,6 +122,27 @@ export function StepSuggestedAccounts() {
   })
 
   const canFollowAll = followableDids.length > 0 && !isFollowingAll
+
+  // Track seen profiles
+  const seenProfilesRef = useRef<Set<string>>(new Set())
+  useEffect(() => {
+    if (isLoading || !moderationOpts || !suggestedUsers?.actors.length) return
+
+    suggestedUsers.actors.forEach((profile, index) => {
+      if (!seenProfilesRef.current.has(profile.did)) {
+        seenProfilesRef.current.add(profile.did)
+        logger.metric(
+          'suggestedUser:seen',
+          {
+            logContext: 'Onboarding',
+            recId: undefined,
+            position: index,
+          },
+          {statsig: true},
+        )
+      }
+    })
+  }, [isLoading, moderationOpts, suggestedUsers])
 
   return (
     <View style={[a.align_start]} testID="onboardingInterests">
