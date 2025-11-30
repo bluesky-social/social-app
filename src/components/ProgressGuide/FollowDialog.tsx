@@ -422,7 +422,7 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
           style={[
             a.absolute,
             a.z_20,
-            web({right: -4}),
+            web({right: 8}),
             native({right: 0}),
             native({height: 32, width: 32, borderRadius: 16}),
           ]}
