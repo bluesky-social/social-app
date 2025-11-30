@@ -223,8 +223,8 @@ export function FeedComposerPrompt() {
         },
         a.py_md,
         native({
-          paddingTop: 15,
-          paddingBottom: 15,
+          paddingTop: 10,
+          paddingBottom: 10,
         }),
         {
           borderTopWidth: StyleSheet.hairlineWidth,
@@ -267,7 +267,7 @@ export function FeedComposerPrompt() {
             ]}>
             {_(msg`What's up?`)}
           </Text>
-          <View style={[a.flex_row, a.gap_xs]}>
+          <View style={[a.flex_row, a.gap_md, a.mr_xs]}>
             {isNative && (
               <Button
                 onPress={e => {
@@ -278,7 +278,16 @@ export function FeedComposerPrompt() {
                 accessibilityHint={_(msg`Opens device camera`)}
                 variant="ghost"
                 shape="round">
-                <CameraIcon size="lg" />
+                {({hovered}) => (
+                  <CameraIcon
+                    size="md"
+                    style={{
+                      color: hovered
+                        ? t.palette.primary_500
+                        : t.palette.contrast_300,
+                    }}
+                  />
+                )}
               </Button>
             )}
             <Button
@@ -292,11 +301,11 @@ export function FeedComposerPrompt() {
               shape="round">
               {({hovered}) => (
                 <ImageIcon
-                  size="lg"
+                  size="md"
                   style={{
                     color: hovered
                       ? t.palette.primary_500
-                      : t.palette.contrast_400,
+                      : t.palette.contrast_300,
                   }}
                 />
               )}
