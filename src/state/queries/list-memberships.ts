@@ -29,6 +29,7 @@ import {
 import {STALE} from '#/state/queries'
 import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
+import type * as bsky from '#/types/bsky'
 import {RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY} from './actor-starter-packs'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
@@ -101,9 +102,14 @@ export function getMembership(
 }
 
 export function useListMembershipAddMutation({
+  subject,
   onSuccess,
   onError,
 }: {
+  /**
+   * Needed for optimistic update of starter pack query
+   */
+  subject?: bsky.profile.AnyProfileView
   onSuccess?: (data: {uri: string; cid: string}) => void
   onError?: (error: Error) => void
 } = {}) {
@@ -133,7 +139,7 @@ export function useListMembershipAddMutation({
       // -prf
       return res
     },
-    onSuccess: async (data, variables) => {
+    onSuccess: (data, variables) => {
       // manually update the cache; a refetch is too expensive
       let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY())
       if (memberships) {
@@ -163,10 +169,6 @@ export function useListMembershipAddMutation({
       }, 1e3)
 
       // update WITH_MEMBERSHIPS query
-      const subject = await agent
-        .getProfile({actor: variables.actorDid})
-        .then(res => res.data)
-        .catch(() => undefined)
 
       if (subject) {
         queryClient.setQueryData<
