@@ -178,10 +178,32 @@ export function useListMembershipAddMutation({
             pages: old.pages.map(page => ({
               ...page,
               starterPacksWithMembership: page.starterPacksWithMembership.map(
-                list => {
-                  if (list.starterPack.list?.uri === variables.listUri) {
+                spWithMembership => {
+                  if (
+                    spWithMembership.starterPack.list?.uri === variables.listUri
+                  ) {
                     return {
-                      ...list,
+                      ...spWithMembership,
+                      starterPack: {
+                        ...spWithMembership.starterPack,
+                        listItemsSample: [
+                          {
+                            uri: data.uri,
+                            subject: subject as AppBskyActorDefs.ProfileView,
+                          },
+                          ...(spWithMembership.starterPack.listItemsSample?.filter(
+                            item => item.subject.did !== variables.actorDid,
+                          ) ?? []),
+                        ],
+                        list: spWithMembership.starterPack.list
+                          ? {
+                              ...spWithMembership.starterPack.list,
+                              listItemCount:
+                                (spWithMembership.starterPack.list
+                                  .listItemCount ?? 0) + 1,
+                            }
+                          : undefined,
+                      },
                       listItem: {
                         uri: data.uri,
                         subject: subject as AppBskyActorDefs.ProfileView,
@@ -189,7 +211,7 @@ export function useListMembershipAddMutation({
                     }
                   }
 
-                  return list
+                  return spWithMembership
                 },
               ),
             })),
@@ -263,15 +285,34 @@ export function useListMembershipRemoveMutation({
           pages: old.pages.map(page => ({
             ...page,
             starterPacksWithMembership: page.starterPacksWithMembership.map(
-              list => {
-                if (list.starterPack.list?.uri === variables.listUri) {
+              spWithMembership => {
+                if (
+                  spWithMembership.starterPack.list?.uri === variables.listUri
+                ) {
                   return {
-                    ...list,
+                    ...spWithMembership,
+                    starterPack: {
+                      ...spWithMembership.starterPack,
+                      listItemsSample:
+                        spWithMembership.starterPack.listItemsSample?.filter(
+                          item => item.subject.did !== variables.actorDid,
+                        ),
+                      list: spWithMembership.starterPack.list
+                        ? {
+                            ...spWithMembership.starterPack.list,
+                            listItemCount: Math.max(
+                              0,
+                              (spWithMembership.starterPack.list
+                                .listItemCount ?? 1) - 1,
+                            ),
+                          }
+                        : undefined,
+                    },
                     listItem: undefined,
                   }
                 }
 
-                return list
+                return spWithMembership
               },
             ),
           })),
