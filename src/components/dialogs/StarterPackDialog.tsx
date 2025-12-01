@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyGraphGetStarterPacksWithMembership,
@@ -7,14 +7,12 @@ import {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
-import {
-  invalidateActorStarterPacksWithMembershipQuery,
-  useActorStarterPacksWithMembershipsQuery,
-} from '#/state/queries/actor-starter-packs'
+import {isNetworkError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {useActorStarterPacksWithMembershipsQuery} from '#/state/queries/actor-starter-packs'
 import {
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
@@ -253,50 +251,37 @@ function StarterPackItem({
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
-  const queryClient = useQueryClient()
 
   const starterPack = starterPackWithMembership.starterPack
   const isInPack = !!starterPackWithMembership.listItem
 
-  const [isPendingRefresh, setIsPendingRefresh] = useState(false)
+  const {mutate: addMembership, isPending: isPendingAdd} =
+    useListMembershipAddMutation({
+      onSuccess: () => {
+        Toast.show(_(msg`Added to starter pack`))
+      },
+      onError: err => {
+        if (!isNetworkError(err)) {
+          logger.error('Failed to remove from starter pack', {safeMessage: err})
+        }
+        Toast.show(_(msg`Failed to add to starter pack`), {type: 'error'})
+      },
+    })
 
-  const {mutate: addMembership} = useListMembershipAddMutation({
-    onSuccess: () => {
-      Toast.show(_(msg`Added to starter pack`))
-      // Use a timeout to wait for the appview to update, matching the pattern
-      // in list-memberships.ts
-      setTimeout(() => {
-        invalidateActorStarterPacksWithMembershipQuery({
-          queryClient,
-          did: targetDid,
-        })
-        setIsPendingRefresh(false)
-      }, 1e3)
-    },
-    onError: () => {
-      Toast.show(_(msg`Failed to add to starter pack`), 'xmark')
-      setIsPendingRefresh(false)
-    },
-  })
+  const {mutate: removeMembership, isPending: isPendingRemove} =
+    useListMembershipRemoveMutation({
+      onSuccess: () => {
+        Toast.show(_(msg`Removed from starter pack`))
+      },
+      onError: err => {
+        if (!isNetworkError(err)) {
+          logger.error('Failed to remove from starter pack', {safeMessage: err})
+        }
+        Toast.show(_(msg`Failed to remove from starter pack`), {type: 'error'})
+      },
+    })
 
-  const {mutate: removeMembership} = useListMembershipRemoveMutation({
-    onSuccess: () => {
-      Toast.show(_(msg`Removed from starter pack`))
-      // Use a timeout to wait for the appview to update, matching the pattern
-      // in list-memberships.ts
-      setTimeout(() => {
-        invalidateActorStarterPacksWithMembershipQuery({
-          queryClient,
-          did: targetDid,
-        })
-        setIsPendingRefresh(false)
-      }, 1e3)
-    },
-    onError: () => {
-      Toast.show(_(msg`Failed to remove from starter pack`), 'xmark')
-      setIsPendingRefresh(false)
-    },
-  })
+  const isPending = isPendingAdd || isPendingRemove
 
   const handleToggleMembership = () => {
     if (!starterPack.list?.uri || isPending) return
@@ -313,7 +298,6 @@ function StarterPackItem({
     } else {
       if (!starterPackWithMembership.listItem?.uri) {
         console.error('Cannot remove: missing membership URI')
-        setIsPendingRefresh(false)
         return
       }
       removeMembership({
@@ -379,8 +363,9 @@ function StarterPackItem({
         label={isInPack ? _(msg`Remove`) : _(msg`Add`)}
         color={isInPack ? 'secondary' : 'primary_subtle'}
         size="tiny"
-        disabled={isPendingRefresh}
+        disabled={isPending}
         onPress={handleToggleMembership}>
+        {isPending && <ButtonIcon icon={Loader} />}
         <ButtonText>
           {isInPack ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
         </ButtonText>
