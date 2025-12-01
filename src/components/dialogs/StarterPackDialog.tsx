@@ -254,7 +254,7 @@ function StarterPackItem({
 }: {
   starterPackWithMembership: StarterPackWithMembership
   targetDid: string
-  subject: bsky.profile.AnyProfileView
+  subject?: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
   const ax = useAnalytics()
