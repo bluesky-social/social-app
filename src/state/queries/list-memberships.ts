@@ -14,12 +14,22 @@
  * -prf
  */
 
-import {AtUri} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  type AppBskyActorDefs,
+  type AppBskyGraphGetStarterPacksWithMembership,
+  AtUri,
+} from '@atproto/api'
+import {
+  type InfiniteData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
+import {RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY} from './actor-starter-packs'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
 const SANITY_PAGE_LIMIT = 1000
@@ -123,7 +133,7 @@ export function useListMembershipAddMutation({
       // -prf
       return res
     },
-    onSuccess: (data, variables) => {
+    onSuccess: async (data, variables) => {
       // manually update the cache; a refetch is too expensive
       let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY())
       if (memberships) {
@@ -151,6 +161,42 @@ export function useListMembershipAddMutation({
           queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
         })
       }, 1e3)
+
+      // update WITH_MEMBERSHIPS query
+      const subject = await agent
+        .getProfile({actor: variables.actorDid})
+        .then(res => res.data)
+
+      if (subject) {
+        queryClient.setQueryData<
+          InfiniteData<AppBskyGraphGetStarterPacksWithMembership.OutputSchema>
+        >(STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid), old => {
+          if (!old) return old
+
+          return {
+            ...old,
+            pages: old.pages.map(page => ({
+              ...page,
+              starterPacksWithMembership: page.starterPacksWithMembership.map(
+                list => {
+                  if (list.starterPack.list?.uri === variables.listUri) {
+                    return {
+                      ...list,
+                      listItem: {
+                        uri: data.uri,
+                        subject: subject as AppBskyActorDefs.ProfileView,
+                      },
+                    }
+                  }
+
+                  return list
+                },
+              ),
+            })),
+          }
+        })
+      }
+
       onSuccess?.(data)
     },
     onError,
@@ -206,6 +252,32 @@ export function useListMembershipRemoveMutation({
           queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
         })
       }, 1e3)
+
+      queryClient.setQueryData<
+        InfiniteData<AppBskyGraphGetStarterPacksWithMembership.OutputSchema>
+      >(STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid), old => {
+        if (!old) return old
+
+        return {
+          ...old,
+          pages: old.pages.map(page => ({
+            ...page,
+            starterPacksWithMembership: page.starterPacksWithMembership.map(
+              list => {
+                if (list.starterPack.list?.uri === variables.listUri) {
+                  return {
+                    ...list,
+                    listItem: undefined,
+                  }
+                }
+
+                return list
+              },
+            ),
+          })),
+        }
+      })
+
       onSuccess?.(data)
     },
     onError,
