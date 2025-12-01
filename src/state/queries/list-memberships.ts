@@ -166,6 +166,7 @@ export function useListMembershipAddMutation({
       const subject = await agent
         .getProfile({actor: variables.actorDid})
         .then(res => res.data)
+        .catch(() => undefined)
 
       if (subject) {
         queryClient.setQueryData<
