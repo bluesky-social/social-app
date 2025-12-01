@@ -6,13 +6,13 @@ import {useLingui} from '@lingui/react'
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function ExportCarDialog({
@@ -44,7 +44,7 @@ export function ExportCarDialog({
       }
     } catch (e) {
       logger.error('Error occurred while downloading CAR file', {message: e})
-      Toast.show(_(msg`Error occurred while saving file`), 'xmark')
+      Toast.show(_(msg`Error occurred while saving file`), {type: 'error'})
     } finally {
       setLoading(false)
       control.close()
