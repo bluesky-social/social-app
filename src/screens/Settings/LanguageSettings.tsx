@@ -3,12 +3,12 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {atoms as a, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -16,7 +16,7 @@ import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {LanguageSelectDialog} from '#/components/dialogs/LanguageSelectDialog'
 import * as Toggle from '#/components/forms/Toggle'
-import {PlusLarge_Stroke2_Corner0_Rounded} from '#/components/icons/Plus'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
@@ -198,9 +198,7 @@ export function LanguageSettingsScreen({}: Props) {
                       label={_(msg`Add more languages...`)}
                       onPress={contentLanguagePrefsControl.open}>
                       <Toggle.Panel adjacent="leading">
-                        <Toggle.PanelIcon
-                          icon={PlusLarge_Stroke2_Corner0_Rounded}
-                        />
+                        <Toggle.PanelIcon icon={PlusIcon} />
                         <Toggle.PanelText>
                           Add more languages...
                         </Toggle.PanelText>
