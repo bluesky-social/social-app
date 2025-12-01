@@ -1373,7 +1373,7 @@ export const INTERNATIONAL_TELEPHONE_CODES = {
     svgFlag: require('../../assets/icons/flags/LA.svg'),
   },
   TW: {
-    name: (i18n: I18n) => i18n._(msg`Taiwan, Province of China`),
+    name: (i18n: I18n) => i18n._(msg`Taiwan`),
     code: '+886',
     unicodeFlag: '🇹🇼',
     svgFlag: require('../../assets/icons/flags/TW.svg'),
