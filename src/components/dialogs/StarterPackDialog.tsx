@@ -19,8 +19,7 @@ import {
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -29,6 +28,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/
 import {StarterPack} from '#/components/icons/StarterPack'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
@@ -168,9 +168,11 @@ function StarterPackList({
     <>
       <View
         style={[
-          {justifyContent: 'space-between', flexDirection: 'row'},
-          IS_WEB ? a.mb_2xl : a.my_lg,
+          a.justify_between,
           a.align_center,
+          a.flex_row,
+          a.pb_lg,
+          native(a.pt_lg),
         ]}>
         <Text style={[a.text_lg, a.font_semi_bold]}>
           <Trans>Add to starter packs</Trans>
@@ -181,7 +183,8 @@ function StarterPackList({
           variant="ghost"
           color="secondary"
           size="small"
-          shape="round">
+          shape="round"
+          style={{margin: -8}}>
           <ButtonIcon icon={XIcon} />
         </Button>
       </View>
@@ -232,7 +235,10 @@ function StarterPackList({
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
-      style={IS_WEB ? [a.px_md, {minHeight: 500}] : [a.px_2xl, a.pt_lg]}
+      style={platform({
+        web: [a.px_2xl, {minHeight: 500}],
+        native: [a.px_2xl, a.pt_lg],
+      })}
     />
   )
 }
@@ -293,12 +299,10 @@ function StarterPackItem({
   })
 
   const handleToggleMembership = () => {
-    if (!starterPack.list?.uri || isPendingRefresh) return
+    if (!starterPack.list?.uri || isPending) return
 
     const listUri = starterPack.list.uri
     const starterPackUri = starterPack.uri
-
-    setIsPendingRefresh(true)
 
     if (!isInPack) {
       addMembership({
@@ -344,7 +348,7 @@ function StarterPackItem({
             starterPack.listItemsSample.length > 0 && (
               <>
                 <AvatarStack
-                  size={32}
+                  size={24}
                   profiles={starterPack.listItemsSample
                     ?.slice(0, 4)
                     .map(p => p.subject)}
