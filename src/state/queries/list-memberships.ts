@@ -180,6 +180,7 @@ export function useListMembershipAddMutation({
               starterPacksWithMembership: page.starterPacksWithMembership.map(
                 spWithMembership => {
                   if (
+                    spWithMembership.starterPack.list &&
                     spWithMembership.starterPack.list?.uri === variables.listUri
                   ) {
                     return {
@@ -195,14 +196,12 @@ export function useListMembershipAddMutation({
                             item => item.subject.did !== variables.actorDid,
                           ) ?? []),
                         ],
-                        list: spWithMembership.starterPack.list
-                          ? {
-                              ...spWithMembership.starterPack.list,
-                              listItemCount:
-                                (spWithMembership.starterPack.list
-                                  .listItemCount ?? 0) + 1,
-                            }
-                          : undefined,
+                        list: {
+                          ...spWithMembership.starterPack.list,
+                          listItemCount:
+                            (spWithMembership.starterPack.list.listItemCount ??
+                              0) + 1,
+                        },
                       },
                       listItem: {
                         uri: data.uri,
@@ -287,7 +286,8 @@ export function useListMembershipRemoveMutation({
             starterPacksWithMembership: page.starterPacksWithMembership.map(
               spWithMembership => {
                 if (
-                  spWithMembership.starterPack.list?.uri === variables.listUri
+                  spWithMembership.starterPack.list &&
+                  spWithMembership.starterPack.list.uri === variables.listUri
                 ) {
                   return {
                     ...spWithMembership,
@@ -297,16 +297,14 @@ export function useListMembershipRemoveMutation({
                         spWithMembership.starterPack.listItemsSample?.filter(
                           item => item.subject.did !== variables.actorDid,
                         ),
-                      list: spWithMembership.starterPack.list
-                        ? {
-                            ...spWithMembership.starterPack.list,
-                            listItemCount: Math.max(
-                              0,
-                              (spWithMembership.starterPack.list
-                                .listItemCount ?? 1) - 1,
-                            ),
-                          }
-                        : undefined,
+                      list: {
+                        ...spWithMembership.starterPack.list,
+                        listItemCount: Math.max(
+                          0,
+                          (spWithMembership.starterPack.list.listItemCount ??
+                            1) - 1,
+                        ),
+                      },
                     },
                     listItem: undefined,
                   }
