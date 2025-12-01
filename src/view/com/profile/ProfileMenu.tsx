@@ -329,15 +329,17 @@ let ProfileMenu = ({
                     )}
                   </>
                 )}
-                <Menu.Item
-                  testID="profileHeaderDropdownStarterPackAddRemoveBtn"
-                  label={_(msg`Add to starter packs`)}
-                  onPress={onPressAddToStarterPacks}>
-                  <Menu.ItemText>
-                    <Trans>Add to starter packs</Trans>
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={StarterPack} />
-                </Menu.Item>
+                {!isSelf && (
+                  <Menu.Item
+                    testID="profileHeaderDropdownStarterPackAddRemoveBtn"
+                    label={_(msg`Add to starter packs`)}
+                    onPress={onPressAddToStarterPacks}>
+                    <Menu.ItemText>
+                      <Trans>Add to starter packs</Trans>
+                    </Menu.ItemText>
+                    <Menu.ItemIcon icon={StarterPack} />
+                  </Menu.Item>
+                )}
                 <Menu.Item
                   testID="profileHeaderDropdownListAddRemoveBtn"
                   label={_(msg`Add to lists`)}
