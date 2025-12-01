@@ -4,8 +4,8 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {
-  getCountriesWithTelephoneCodes,
   getDefaultCountry,
+  INTERNATIONAL_TELEPHONE_CODES,
 } from '#/lib/international-telephone-codes'
 import {isWeb} from '#/platform/detection'
 import {useGeolocationStatus} from '#/state/geolocation'
@@ -33,15 +33,13 @@ export function InternationalPhoneCodeSelect({
   }, [location])
 
   const items = useMemo(() => {
-    const telCountryMap = getCountriesWithTelephoneCodes(i18n)
-
     return (
-      Object.entries(telCountryMap)
+      Object.entries(INTERNATIONAL_TELEPHONE_CODES)
         .map(([value, {name, code, unicodeFlag, svgFlag}]) => ({
           value,
-          name,
+          name: name(i18n),
           code,
-          label: `${name} ${code}`,
+          label: `${name(i18n)} ${code}`,
           unicodeFlag,
           svgFlag,
         }))
