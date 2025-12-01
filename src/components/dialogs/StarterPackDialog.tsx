@@ -18,6 +18,7 @@ import {
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
+import {useProfileQuery} from '#/state/queries/profile'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -128,6 +129,7 @@ function StarterPackList({
 }) {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
+  const {data: subject} = useProfileQuery({did: targetDid})
 
   const {
     data,
@@ -152,9 +154,13 @@ function StarterPackList({
 
   const renderItem = useCallback(
     ({item}: {item: StarterPackWithMembership}) => (
-      <StarterPackItem starterPackWithMembership={item} targetDid={targetDid} />
+      <StarterPackItem
+        starterPackWithMembership={item}
+        targetDid={targetDid}
+        subject={subject}
+      />
     ),
-    [targetDid],
+    [targetDid, subject],
   )
 
   const onClose = useCallback(() => {
@@ -243,9 +249,11 @@ function StarterPackList({
 function StarterPackItem({
   starterPackWithMembership,
   targetDid,
+  subject,
 }: {
   starterPackWithMembership: StarterPackWithMembership
   targetDid: string
+  subject: bsky.profile.AnyProfileView
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -255,6 +263,7 @@ function StarterPackItem({
 
   const {mutate: addMembership, isPending: isPendingAdd} =
     useListMembershipAddMutation({
+      subject,
       onSuccess: () => {
         Toast.show(_(msg`Added to starter pack`))
       },
