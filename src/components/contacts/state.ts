@@ -1,6 +1,7 @@
 import {useReducer} from 'react'
 import {type ExistingContact} from 'expo-contacts'
 
+import {type CountryCode} from '#/lib/international-telephone-codes'
 import type * as bsky from '#/types/bsky'
 
 export type Contact = ExistingContact
@@ -14,12 +15,12 @@ export type Match = {
 export type State =
   | {
       step: '1: phone input'
-      phoneCountryCode?: string
+      phoneCountryCode?: CountryCode
       phoneNumber?: string
     }
   | {
       step: '2: verify number'
-      phoneCountryCode: string
+      phoneCountryCode: CountryCode
       phoneNumber: string
       lastSentAt: Date
     }
@@ -41,7 +42,7 @@ export type Action =
   | {
       type: 'SUBMIT_PHONE_NUMBER'
       payload: {
-        phoneCountryCode: string
+        phoneCountryCode: CountryCode
         phoneNumber: string
       }
     }

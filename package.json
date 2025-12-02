@@ -171,6 +171,7 @@
     "js-sha256": "^0.9.0",
     "jwt-decode": "^4.0.0",
     "lande": "^1.0.10",
+    "libphonenumber-js": "^1.12.30",
     "lodash.chunk": "^4.2.0",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",

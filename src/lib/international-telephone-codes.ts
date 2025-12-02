@@ -1,3 +1,14 @@
+import {type CountryCode as LibPhoneNumberJsCountryCode} from 'libphonenumber-js'
+
+// Exclude Ascension Island and Tristan da Cunha - merged into `SH` in 2009
+export type CountryCode = Exclude<LibPhoneNumberJsCountryCode, 'AC' | 'TA'>
+
+/**
+ * Note: data is from Wikipedia, but some have been removed to match `libphonenumber-js`
+ * Mostly tiny British overseas territories + Antarctica, all of which
+ * share codes with a larger country. If you've one of the 10 people from these
+ * places, you probably know what to do.
+ */
 export const INTERNATIONAL_TELEPHONE_CODES = {
   AD: {
     code: '+376',
@@ -34,11 +45,13 @@ export const INTERNATIONAL_TELEPHONE_CODES = {
     unicodeFlag: '🇦🇴',
     svgFlag: require('../../assets/icons/flags/AO.svg'),
   },
-  AQ: {
-    code: '+672',
-    unicodeFlag: '🇦🇶',
-    svgFlag: require('../../assets/icons/flags/AQ.svg'),
-  },
+  // sorry penguins :(
+  // same as Norfolk Island
+  // AQ: {
+  //   code: '+672',
+  //   unicodeFlag: '🇦🇶',
+  //   svgFlag: require('../../assets/icons/flags/AQ.svg'),
+  // },
   AR: {
     code: '+54',
     unicodeFlag: '🇦🇷',
@@ -154,11 +167,12 @@ export const INTERNATIONAL_TELEPHONE_CODES = {
     unicodeFlag: '🇧🇹',
     svgFlag: require('../../assets/icons/flags/BT.svg'),
   },
-  BV: {
-    code: '+47',
-    unicodeFlag: '🇧🇻',
-    svgFlag: require('../../assets/icons/flags/BV.svg'),
-  },
+  // same as Norway
+  // BV: {
+  //   code: '+47',
+  //   unicodeFlag: '🇧🇻',
+  //   svgFlag: require('../../assets/icons/flags/BV.svg'),
+  // },
   BW: {
     code: '+267',
     unicodeFlag: '🇧🇼',
@@ -379,11 +393,12 @@ export const INTERNATIONAL_TELEPHONE_CODES = {
     unicodeFlag: '🇬🇷',
     svgFlag: require('../../assets/icons/flags/GR.svg'),
   },
-  GS: {
-    code: '+500',
-    unicodeFlag: '🇬🇸',
-    svgFlag: require('../../assets/icons/flags/GS.svg'),
-  },
+  // same as Falkland Islands
+  // GS: {
+  //   code: '+500',
+  //   unicodeFlag: '🇬🇸',
+  //   svgFlag: require('../../assets/icons/flags/GS.svg'),
+  // },
   GT: {
     code: '+502',
     unicodeFlag: '🇬🇹',
@@ -779,11 +794,12 @@ export const INTERNATIONAL_TELEPHONE_CODES = {
     unicodeFlag: '🇵🇲',
     svgFlag: require('../../assets/icons/flags/PM.svg'),
   },
-  PN: {
-    code: '+64',
-    unicodeFlag: '🇵🇳',
-    svgFlag: require('../../assets/icons/flags/PN.svg'),
-  },
+  // same as New Zealand
+  // PN: {
+  //   code: '+64',
+  //   unicodeFlag: '🇵🇳',
+  //   svgFlag: require('../../assets/icons/flags/PN.svg'),
+  // },
   PR: {
     code: '+1',
     unicodeFlag: '🇵🇷',
@@ -1199,11 +1215,12 @@ export const INTERNATIONAL_TELEPHONE_CODES = {
     unicodeFlag: '🇫🇴',
     svgFlag: require('../../assets/icons/flags/FO.svg'),
   },
-  HM: {
-    code: '+672',
-    unicodeFlag: '🇭🇲',
-    svgFlag: require('../../assets/icons/flags/HM.svg'),
-  },
+  // same as Norfolk Island
+  // HM: {
+  //   code: '+672',
+  //   unicodeFlag: '🇭🇲',
+  //   svgFlag: require('../../assets/icons/flags/HM.svg'),
+  // },
   KM: {
     code: '+269',
     unicodeFlag: '🇰🇲',
@@ -1229,16 +1246,18 @@ export const INTERNATIONAL_TELEPHONE_CODES = {
     unicodeFlag: '🇹🇨',
     svgFlag: require('../../assets/icons/flags/TC.svg'),
   },
-  TF: {
-    code: '+672',
-    unicodeFlag: '🇹🇫',
-    svgFlag: require('../../assets/icons/flags/TF.svg'),
-  },
-  UM: {
-    code: '+1',
-    unicodeFlag: '🇺🇲',
-    svgFlag: require('../../assets/icons/flags/UM.svg'),
-  },
+  // same as Norfolk Island
+  // TF: {
+  //   code: '+672',
+  //   unicodeFlag: '🇹🇫',
+  //   svgFlag: require('../../assets/icons/flags/TF.svg'),
+  // },
+  // same as US mainland
+  // UM: {
+  //   code: '+1',
+  //   unicodeFlag: '🇺🇲',
+  //   svgFlag: require('../../assets/icons/flags/UM.svg'),
+  // },
   VA: {
     code: '+39',
     unicodeFlag: '🇻🇦',
@@ -1249,27 +1268,32 @@ export const INTERNATIONAL_TELEPHONE_CODES = {
     unicodeFlag: '🇽🇰',
     svgFlag: require('../../assets/icons/flags/XK.svg'),
   },
-}
+} satisfies Record<
+  CountryCode,
+  {
+    code: string
+    unicodeFlag: string
+    svgFlag: any
+  }
+>
 
-const DEFAULT_PHONE_COUNTRY = 'US'
+const DEFAULT_PHONE_COUNTRY = 'US' as const
 
-export function getDefaultCountry(location?: {countryCode?: string}) {
+export function getDefaultCountry(location?: {
+  countryCode?: string
+}): CountryCode {
   const supportedCountries = Object.keys(INTERNATIONAL_TELEPHONE_CODES)
 
-  if (
-    location?.countryCode &&
-    supportedCountries.includes(location.countryCode.toUpperCase())
-  ) {
-    return location.countryCode.toUpperCase()
+  const locationCountryCode = location?.countryCode?.toUpperCase()
+  if (locationCountryCode && supportedCountries.includes(locationCountryCode)) {
+    return locationCountryCode as CountryCode
   }
   return DEFAULT_PHONE_COUNTRY
 }
 
 export function getPhoneCodeFromCountryCode(countryCode: string) {
   const country =
-    INTERNATIONAL_TELEPHONE_CODES[
-      countryCode.toUpperCase() as keyof typeof INTERNATIONAL_TELEPHONE_CODES
-    ]
+    INTERNATIONAL_TELEPHONE_CODES[countryCode.toUpperCase() as CountryCode]
   if (!country) throw new Error(`Country ${countryCode} not found`)
   return country.code
 }
