@@ -6,7 +6,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
-import {getDefaultCountry} from '#/lib/international-telephone-codes'
+import {
+  type CountryCode,
+  getDefaultCountry,
+} from '#/lib/international-telephone-codes'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useGeolocationStatus} from '#/state/geolocation'
@@ -18,6 +21,10 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {
+  getCountryCodeFromPastedNumber,
+  processPhoneNumber,
+} from '../phone-number'
 import {type Action, type State} from '../state'
 
 export function PhoneInput({
@@ -40,24 +47,31 @@ export function PhoneInput({
   const [phoneNumber, setPhoneNumber] = useState(state.phoneNumber ?? '')
   const gutters = useGutters([0, 'wide'])
   const insets = useSafeAreaInsets()
+  // for API/generic errors
   const [error, setError] = useState('')
+  // for issues with parsing the number
+  const [formatError, setFormatError] = useState('')
 
   const {mutate: submit, isPending} = useMutation({
-    mutationFn: async ({}: {countryCode: string; phoneNumber: string}) => {
+    mutationFn: async ({}: {
+      phoneCountryCode: CountryCode
+      phoneNumber: string
+    }) => {
       // get otp
       await new Promise(resolve => {
         setTimeout(resolve, 500)
       })
     },
-    onSuccess: (_data, {countryCode, phoneNumber}) => {
+    onSuccess: (_data, {phoneCountryCode, phoneNumber}) => {
       dispatch({
         type: 'SUBMIT_PHONE_NUMBER',
-        payload: {phoneCountryCode: countryCode, phoneNumber},
+        payload: {phoneCountryCode, phoneNumber},
       })
     },
     onMutate: () => {
       Keyboard.dismiss()
       setError('')
+      setFormatError('')
     },
     onError: err => {
       if (isNetworkError(err)) {
@@ -72,6 +86,16 @@ export function PhoneInput({
       }
     },
   })
+
+  const onSubmitNumber = () => {
+    const result = processPhoneNumber(phoneNumber, countryCode)
+    if (result.valid) {
+      setPhoneNumber(result.formatted)
+      submit({phoneCountryCode: countryCode, phoneNumber: result.formatted})
+    } else {
+      setFormatError(result.reason ?? _(msg`Invalid phone number`))
+    }
+  }
 
   const paddingBottom = Math.max(insets.bottom, tokens.space.xl)
 
@@ -126,32 +150,38 @@ export function PhoneInput({
               />
             </View>
             <View style={[a.flex_1]}>
-              <TextField.Root>
+              <TextField.Root isInvalid={!!formatError}>
                 <TextField.Input
                   label={_(msg`Phone number`)}
                   value={phoneNumber}
-                  onChangeText={setPhoneNumber}
+                  onChangeText={text => {
+                    if (formatError) setFormatError('')
+                    if (Math.abs(text.length - phoneNumber.length) > 1) {
+                      // possibly pasted/autocompleted? auto-switch
+                      // country code if possible
+                      const result = getCountryCodeFromPastedNumber(text)
+                      if (result) {
+                        setCountryCode(result.countryCode)
+                        setPhoneNumber(result.rest)
+                        return
+                      }
+                    }
+                    setPhoneNumber(text)
+                  }}
                   placeholder={null}
-                  keyboardType="phone-pad"
+                  keyboardType="number-pad" // we don't want people entering +() etc
                   autoComplete="tel"
                   returnKeyType={android('next')}
-                  onSubmitEditing={() => submit({countryCode, phoneNumber})}
+                  onSubmitEditing={onSubmitNumber}
                 />
               </TextField.Root>
             </View>
           </View>
         </View>
-        {error && (
-          <Text
-            style={[
-              a.text_md,
-              t.atoms.text_contrast_medium,
-              a.leading_snug,
-              a.mt_xl,
-            ]}>
-            {error}
-          </Text>
-        )}
+
+        {error && <ErrorText>{error}</ErrorText>}
+        {formatError && <ErrorText>{formatError}</ErrorText>}
+
         <View style={[a.mt_auto, a.py_xl]}>
           <LegalDisclaimer />
         </View>
@@ -165,7 +195,7 @@ export function PhoneInput({
             label={_(msg`Next`)}
             size="large"
             color="primary"
-            onPress={() => submit({countryCode, phoneNumber})}>
+            onPress={onSubmitNumber}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
@@ -215,5 +245,20 @@ function LegalDisclaimer() {
         </Trans>
       </Text>
     </View>
+  )
+}
+
+function ErrorText({children}: {children: string}) {
+  const t = useTheme()
+  return (
+    <Text
+      style={[
+        a.text_md,
+        {color: t.palette.negative_500},
+        a.leading_snug,
+        a.mt_md,
+      ]}>
+      {children}
+    </Text>
   )
 }
