@@ -17,6 +17,7 @@ import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
+import {isCancelledError} from '#/lib/strings/errors'
 import {isNative} from '#/platform/detection'
 
 export type ImageTransformation = {
@@ -143,7 +144,7 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
       },
     }
   } catch (e) {
-    if (e instanceof Error && e.message.includes('User cancelled')) {
+    if (!isCancelledError(e)) {
       return img
     }
 

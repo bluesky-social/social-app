@@ -26,6 +26,7 @@ import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {isCancelledError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
@@ -407,10 +408,10 @@ let EditableUserAvatar = ({
         setRawImage(await createComposerImage(item))
         editImageDialogControl.open()
       }
-    } catch (e: any) {
+    } catch (e) {
       // Don't log errors for cancelling selection to sentry on ios or android
-      if (!String(e).toLowerCase().includes('cancel')) {
-        logger.error('Failed to crop banner', {error: e})
+      if (!isCancelledError(e)) {
+        logger.error('Failed to crop avatar', {error: e})
       }
     }
   }, [
