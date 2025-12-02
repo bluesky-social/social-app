@@ -128,6 +128,11 @@ msgstr ""
 msgid "{0, plural, other {+# more}}"
 msgstr ""
 
+#: src/lib/strings/time.ts:13
+msgctxt "date and time formatted like this: [time] · [date]"
+msgid "{0} · {1}"
+msgstr ""
+
 #: src/components/moderation/ContentHider.tsx:89
 msgid "{0} (Account)"
 msgstr ""
