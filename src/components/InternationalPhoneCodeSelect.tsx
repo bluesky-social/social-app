@@ -63,7 +63,7 @@ export function InternationalPhoneCodeSelect({
   }, [value, items])
 
   return (
-    <Select.Root value={value} onValueChange={onChange}>
+    <Select.Root value={value} onValueChange={onChange as (v: string) => void}>
       <Select.Trigger label={_(msg`Select telephone code`)}>
         <Select.ValueText placeholder="+..." webOverrideValue={selected}>
           {selected => (
