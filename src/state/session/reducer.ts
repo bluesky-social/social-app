@@ -1,8 +1,11 @@
-import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
+import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
 
+import {unregisterPushToken} from '#/lib/notifications/notifications'
+import {logger} from '#/lib/notifications/util'
 import {createPublicAgent} from './agent'
 import {wrapSessionReducerForLogging} from './logging'
 import {type SessionAccount} from './types'
+import {createTemporaryAgentsAndResume} from './util'
 
 // A hack so that the reducer can't read anything from the agent.
 // From the reducer's point of view, it should be a completely opaque object.
@@ -137,6 +140,23 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'removed-account': {
       const {accountDid} = action
+
+      // side effect
+      const account = state.accounts.find(a => a.did === accountDid)
+      if (account) {
+        createTemporaryAgentsAndResume([account])
+          .then(agents => unregisterPushToken(agents))
+          .then(() =>
+            logger.debug('Push token unregistered', {did: accountDid}),
+          )
+          .catch(err => {
+            logger.error('Failed to unregister push token', {
+              did: accountDid,
+              error: err,
+            })
+          })
+      }
+
       return {
         accounts: state.accounts.filter(a => a.did !== accountDid),
         currentAgentState:
@@ -148,9 +168,26 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'logged-out-current-account': {
       const {currentAgentState} = state
+      const accountDid = currentAgentState.did
+      // side effect
+      const account = state.accounts.find(a => a.did === accountDid)
+      if (account && accountDid) {
+        createTemporaryAgentsAndResume([account])
+          .then(agents => unregisterPushToken(agents))
+          .then(() =>
+            logger.debug('Push token unregistered', {did: accountDid}),
+          )
+          .catch(err => {
+            logger.error('Failed to unregister push token', {
+              did: accountDid,
+              error: err,
+            })
+          })
+      }
+
       return {
         accounts: state.accounts.map(a =>
-          a.did === currentAgentState.did
+          a.did === accountDid
             ? {
                 ...a,
                 refreshJwt: undefined,
@@ -163,6 +200,15 @@ let reducer = (state: State, action: Action): State => {
       }
     }
     case 'logged-out-every-account': {
+      createTemporaryAgentsAndResume(state.accounts)
+        .then(agents => unregisterPushToken(agents))
+        .then(() => logger.debug('Push token unregistered'))
+        .catch(err => {
+          logger.error('Failed to unregister push token', {
+            error: err,
+          })
+        })
+
       return {
         accounts: state.accounts.map(a => ({
           ...a,
@@ -187,7 +233,7 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'partial-refresh-session': {
       const {accountDid, patch} = action
-      const agent = state.currentAgentState.agent as BskyAgent
+      const agent = state.currentAgentState.agent as AtpAgent
 
       /*
        * Only mutating values that are safe. Be very careful with this.
