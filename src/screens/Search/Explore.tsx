@@ -1050,6 +1050,8 @@ export function Explore({
               logContext: 'Explore',
               recId: item.recId,
               position: position !== -1 ? position - 1 : 0, // -1 to account for header
+              suggestedDid: item.profile.did,
+              category: null,
             },
             {statsig: true},
           )

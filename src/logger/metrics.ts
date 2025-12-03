@@ -311,6 +311,8 @@ export type MetricEvents = {
     location: 'Card' | 'Profile'
     recId?: number
     position: number
+    suggestedDid: string
+    category: string | null
   }
   'suggestedUser:press': {
     logContext:
@@ -320,6 +322,8 @@ export type MetricEvents = {
       | 'Onboarding'
     recId?: number
     position: number
+    suggestedDid: string
+    category: string | null
   }
   'suggestedUser:seen': {
     logContext:
@@ -331,6 +335,8 @@ export type MetricEvents = {
       | 'ProgressGuide'
     recId?: number
     position: number
+    suggestedDid: string
+    category: string | null
   }
   'suggestedUser:seeMore': {
     logContext:

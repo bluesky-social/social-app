@@ -1,4 +1,11 @@
-import {useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -123,26 +130,27 @@ export function StepSuggestedAccounts() {
 
   const canFollowAll = followableDids.length > 0 && !isFollowingAll
 
-  // Track seen profiles
+  // Track seen profiles - shared ref across all cards
   const seenProfilesRef = useRef<Set<string>>(new Set())
-  useEffect(() => {
-    if (isLoading || !moderationOpts || !suggestedUsers?.actors.length) return
-
-    suggestedUsers.actors.forEach((profile, index) => {
-      if (!seenProfilesRef.current.has(profile.did)) {
-        seenProfilesRef.current.add(profile.did)
+  const onProfileSeen = useCallback(
+    (did: string, position: number) => {
+      if (!seenProfilesRef.current.has(did)) {
+        seenProfilesRef.current.add(did)
         logger.metric(
           'suggestedUser:seen',
           {
             logContext: 'Onboarding',
             recId: undefined,
-            position: index,
+            position,
+            suggestedDid: did,
+            category: selectedInterest,
           },
           {statsig: true},
         )
       }
-    })
-  }, [isLoading, moderationOpts, suggestedUsers])
+    },
+    [selectedInterest],
+  )
 
   return (
     <View style={[a.align_start]} testID="onboardingInterests">
@@ -214,6 +222,8 @@ export function StepSuggestedAccounts() {
                 profile={user}
                 moderationOpts={moderationOpts}
                 position={index}
+                category={selectedInterest}
+                onSeen={onProfileSeen}
               />
             ))}
           </View>
@@ -324,14 +334,52 @@ function SuggestedProfileCard({
   profile,
   moderationOpts,
   position,
+  category,
+  onSeen,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   position: number
+  category: string | null
+  onSeen: (did: string, position: number) => void
 }) {
   const t = useTheme()
+  const cardRef = useRef<View>(null)
+  const hasTrackedRef = useRef(false)
+
+  useEffect(() => {
+    const node = cardRef.current
+    if (!node || hasTrackedRef.current) return
+
+    if (isWeb && typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver(
+        entries => {
+          if (entries[0]?.isIntersecting && !hasTrackedRef.current) {
+            hasTrackedRef.current = true
+            onSeen(profile.did, position)
+            observer.disconnect()
+          }
+        },
+        {threshold: 0.5},
+      )
+      // @ts-ignore - web only
+      observer.observe(node)
+      return () => observer.disconnect()
+    } else {
+      // Native: use a short delay to account for initial layout
+      const timeout = setTimeout(() => {
+        if (!hasTrackedRef.current) {
+          hasTrackedRef.current = true
+          onSeen(profile.did, position)
+        }
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+  }, [onSeen, profile.did, position])
+
   return (
     <View
+      ref={cardRef}
       style={[
         a.flex_1,
         a.w_full,
@@ -364,6 +412,8 @@ function SuggestedProfileCard({
                   location: 'Card',
                   recId: undefined,
                   position,
+                  suggestedDid: profile.did,
+                  category,
                 },
                 {statsig: true},
               )

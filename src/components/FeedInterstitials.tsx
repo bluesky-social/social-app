@@ -288,6 +288,8 @@ export function ProfileGrid({
             logContext,
             recId,
             position: index,
+            suggestedDid: profile.did,
+            category: null,
           },
           {statsig: true},
         )
@@ -368,6 +370,8 @@ export function ProfileGrid({
                   : 'InterstitialProfile',
                 recId,
                 position: index,
+                suggestedDid: profile.did,
+                category: null,
               })
             }}
             style={[
@@ -428,6 +432,8 @@ export function ProfileGrid({
                         location: 'Card',
                         recId,
                         position: index,
+                        suggestedDid: profile.did,
+                        category: null,
                       })
                     }}
                   />

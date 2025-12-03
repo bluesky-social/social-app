@@ -236,6 +236,8 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
   const seenProfilesRef = useRef<Set<string>>(new Set())
   const itemsRef = useRef(items)
   itemsRef.current = items
+  const selectedInterestRef = useRef(selectedInterest)
+  selectedInterestRef.current = selectedInterest
 
   const onViewableItemsChanged = useRef(
     ({viewableItems}: {viewableItems: ViewToken[]}) => {
@@ -253,6 +255,8 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
                 logContext: 'ProgressGuide',
                 recId: undefined,
                 position: position !== -1 ? position : 0,
+                suggestedDid: item.profile.did,
+                category: selectedInterestRef.current,
               },
               {statsig: true},
             )
