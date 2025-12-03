@@ -23,6 +23,11 @@ import {
 import {useDialogContext} from '#/components/Dialog'
 import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
+import {
+  List as BaseList,
+  type ListItem,
+  type ListProps,
+} from '#/components/List'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
@@ -223,3 +228,15 @@ const WebCenterBorders = memo(function LayoutWebCenterBorders() {
     />
   ) : null
 })
+
+export function List<Item extends ListItem>(props: ListProps<Item>) {
+  return (
+    <BaseList<Item>
+      {...props}
+      renderItem={item => {
+        return <Center>{props.renderItem!(item)}</Center>
+      }}
+      style={[a.h_full_vh, props.style]}
+    />
+  )
+}
