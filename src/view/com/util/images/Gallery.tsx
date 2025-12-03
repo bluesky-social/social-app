@@ -1,6 +1,6 @@
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
-import {Image, type ImageStyle} from 'expo-image'
+import {type ImageStyle} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/macro'
@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {LazyImage} from '#/view/com/util/images/LazyImage'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
@@ -74,7 +75,7 @@ export function GalleryItem({
         accessibilityRole="button"
         accessibilityLabel={image.alt || _(msg`Image`)}
         accessibilityHint="">
-        <Image
+        <LazyImage
           source={{uri: image.thumb}}
           style={[a.flex_1]}
           accessible={true}
@@ -82,6 +83,7 @@ export function GalleryItem({
           accessibilityHint=""
           accessibilityIgnoresInvertColors
           onLoad={e => {
+            // eslint-disable-next-line react-compiler/react-compiler
             thumbDimsRef.current[index] = {
               width: e.source.width,
               height: e.source.height,

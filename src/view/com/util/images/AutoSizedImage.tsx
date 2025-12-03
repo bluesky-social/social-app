@@ -4,7 +4,6 @@ import Animated, {
   type AnimatedRef,
   useAnimatedRef,
 } from 'react-native-reanimated'
-import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/macro'
@@ -13,6 +12,7 @@ import {useLingui} from '@lingui/react'
 import {type Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {LazyImage} from '#/view/com/util/images/LazyImage'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
@@ -111,7 +111,7 @@ export function AutoSizedImage({
 
   const contents = (
     <Animated.View ref={containerRef} collapsable={false} style={{flex: 1}}>
-      <Image
+      <LazyImage
         contentFit={isContain ? 'contain' : 'cover'}
         style={[a.w_full, a.h_full]}
         source={image.thumb}
