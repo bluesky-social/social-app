@@ -109,7 +109,7 @@ export function VerifyNumber({
     },
     onSuccess: () => {
       dispatch({type: 'RESEND_VERIFICATION_CODE'})
-      Toast.show(_(msg`Code resent`))
+      Toast.show(_(msg`A new code has been sent`))
     },
     onMutate: () => {
       setError(null)
