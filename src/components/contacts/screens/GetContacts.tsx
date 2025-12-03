@@ -1,20 +1,26 @@
 import {Alert, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as Contacts from 'expo-contacts'
+import * as Device from 'expo-device'
 import {msg, t, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
-import {wait} from '#/lib/async/wait'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useAgent} from '#/state/session'
 import {atoms as a, tokens, useGutters} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {filterMatchedNumbers, normalizeContactBook} from '../contacts'
+import {constructFullPhoneNumber} from '../phone-number'
 import {type Action, type State} from '../state'
 
 export function GetContacts({
+  state,
   dispatch,
   onCancel,
 }: {
@@ -23,20 +29,55 @@ export function GetContacts({
   onCancel: () => void
 }) {
   const {_} = useLingui()
+  const agent = useAgent()
   const insets = useSafeAreaInsets()
   const gutters = useGutters([0, 'wide'])
 
   const {mutate: uploadContacts, isPending: isUploadPending} = useMutation({
-    mutationFn: async (_contacts: Contacts.ExistingContact[]) => {
-      await wait(2e3, () => {})
+    mutationFn: async (contacts: Contacts.ExistingContact[]) => {
+      const {phoneNumbers, indexToContactId} = normalizeContactBook(
+        contacts,
+        state.phoneCountryCode,
+        constructFullPhoneNumber(state.phoneCountryCode, state.phoneNumber),
+      )
+      const res = await agent.app.bsky.contact.importContacts({
+        token: state.token,
+        contacts: phoneNumbers,
+        deviceName: Device.deviceName || undefined,
+      })
+
+      return {
+        matches: res.data.matchesAndContactIndexes,
+        indexToContactId,
+      }
     },
-    onSuccess: () => {
+    onSuccess: (result, contacts) => {
       dispatch({
         type: 'SYNC_CONTACTS_SUCCESS',
         payload: {
-          matches: [],
+          matches: result.matches.map(match => match.match),
+          contacts: filterMatchedNumbers(
+            contacts,
+            result.matches,
+            result.indexToContactId,
+          ),
         },
       })
+    },
+    onError: err => {
+      if (isNetworkError(err)) {
+        Toast.show(
+          _(
+            msg`There was a problem with your internet connection, please try again`,
+          ),
+          {type: 'error'},
+        )
+      } else {
+        logger.error('Error uploading contacts', {safeMessage: err})
+        Toast.show(_(msg`Could not upload contacts. ${cleanError(err)}`), {
+          type: 'error',
+        })
+      }
     },
   })
 
