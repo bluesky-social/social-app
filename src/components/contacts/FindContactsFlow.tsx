@@ -4,7 +4,7 @@ import {VerifyNumber} from './screens/VerifyNumber'
 import {ViewMatches} from './screens/ViewMatches'
 import {type Action, type State} from './state'
 
-export function SyncContactsFlow({
+export function FindContactsFlow({
   state,
   dispatch,
   onCancel,

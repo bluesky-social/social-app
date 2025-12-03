@@ -171,7 +171,7 @@ function assertCurrentStep<S extends State['step']>(
   }
 }
 
-export function useSyncContactsFlowState(
+export function useFindContactsFlowState(
   initialState: State = {step: '1: phone input'},
 ) {
   return useReducer(reducer, initialState)

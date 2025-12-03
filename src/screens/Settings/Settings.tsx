@@ -210,11 +210,11 @@ export function SettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           {isNative && (
             <SettingsList.LinkItem
-              to="/settings/sync-contacts"
-              label={_(msg`Sync contacts`)}>
+              to="/settings/find-contacts"
+              label={_(msg`Find contacts`)}>
               <SettingsList.ItemIcon icon={ContactsIcon} />
               <SettingsList.ItemText>
-                <Trans>Sync contacts</Trans>
+                <Trans>Find contacts</Trans>
               </SettingsList.ItemText>
             </SettingsList.LinkItem>
           )}

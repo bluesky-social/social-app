@@ -309,7 +309,7 @@ export type MetricEvents = {
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
-      | 'SyncContacts'
+      | 'FindContacts'
   }
   'profile:followers:view': {
     contextProfileDid: string
@@ -397,7 +397,7 @@ export type MetricEvents = {
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
-      | 'SyncContacts'
+      | 'FindContacts'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
