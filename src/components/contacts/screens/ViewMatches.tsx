@@ -363,7 +363,7 @@ function MatchItem({
         <ProfileCard.FollowButton
           profile={profile}
           moderationOpts={moderationOpts}
-          logContext="SyncContacts"
+          logContext="FindContacts"
         />
         {!shadow.viewer?.following && (
           <Button

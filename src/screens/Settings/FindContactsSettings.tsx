@@ -11,14 +11,14 @@ import {isNative} from '#/platform/detection'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonText} from '#/components/Button'
-import {Contacts_Stroke2_Corner2_Rounded as SyncContactsIcon} from '#/components/icons/Contacts'
+import {Contacts_Stroke2_Corner2_Rounded as FindContactsIcon} from '#/components/icons/Contacts'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import * as SettingsList from './components/SettingsList'
 
-type Props = NativeStackScreenProps<AllNavigatorParams, 'SyncContactsSettings'>
-export function SyncContactsSettingsScreen({}: Props) {
+type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsSettings'>
+export function FindContactsSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
 
@@ -33,7 +33,7 @@ export function SyncContactsSettingsScreen({}: Props) {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Sync contacts</Trans>
+            <Trans>Find contacts</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
@@ -42,9 +42,9 @@ export function SyncContactsSettingsScreen({}: Props) {
         <Layout.Content>
           <SettingsList.Container>
             <SettingsList.Item>
-              <SettingsList.ItemIcon icon={SyncContactsIcon} />
+              <SettingsList.ItemIcon icon={FindContactsIcon} />
               <SettingsList.ItemText>
-                <Trans>Sync Contacts</Trans>
+                <Trans>Find Contacts</Trans>
               </SettingsList.ItemText>
             </SettingsList.Item>
             <SettingsList.Item style={[a.pt_0]}>
@@ -69,7 +69,7 @@ export function SyncContactsSettingsScreen({}: Props) {
             {isAvailable && (
               <SettingsList.Item>
                 <Link
-                  to={{screen: 'SyncContactsFlow'}}
+                  to={{screen: 'FindContactsFlow'}}
                   label={_(msg`Upload contacts`)}
                   size="large"
                   color="primary"

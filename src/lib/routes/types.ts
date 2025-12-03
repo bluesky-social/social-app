@@ -67,7 +67,7 @@ export type CommonNavigatorParams = {
   InterestsSettings: undefined
   AboutSettings: undefined
   AppIconSettings: undefined
-  SyncContactsSettings: undefined
+  FindContactsSettings: undefined
   Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
   Hashtag: {tag: string; author?: string}
   Topic: {topic: string}
@@ -88,7 +88,7 @@ export type CommonNavigatorParams = {
   StarterPackEdit: {rkey?: string}
   VideoFeed: VideoFeedSourceContext
   Bookmarks: undefined
-  SyncContactsFlow: undefined
+  FindContactsFlow: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
