@@ -12,16 +12,16 @@ import {
 import {isNative} from '#/platform/detection'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {useSyncContactsFlowState} from '#/components/contacts/state'
-import {SyncContactsFlow} from '#/components/contacts/SyncContactsFlow'
+import {FindContactsFlow} from '#/components/contacts/FindContactsFlow'
+import {useFindContactsFlowState} from '#/components/contacts/state'
 import * as Layout from '#/components/Layout'
 import {ScreenTransition} from '#/components/ScreenTransition'
 
-type Props = NativeStackScreenProps<AllNavigatorParams, 'SyncContactsFlow'>
-export function SyncContactsFlowScreen({navigation}: Props) {
+type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsFlow'>
+export function FindContactsFlowScreen({navigation}: Props) {
   const {_} = useLingui()
 
-  const [state, dispatch] = useSyncContactsFlowState()
+  const [state, dispatch] = useFindContactsFlowState()
 
   const [transitionDirection, setTransitionDirection] = useState<
     'Forward' | 'Backward'
@@ -51,13 +51,13 @@ export function SyncContactsFlowScreen({navigation}: Props) {
       {isNative ? (
         <LayoutAnimationConfig skipEntering skipExiting>
           <ScreenTransition key={state.step} direction={transitionDirection}>
-            <SyncContactsFlow
+            <FindContactsFlow
               state={state}
               dispatch={dispatch}
               onCancel={() =>
                 navigation.canGoBack()
                   ? navigation.goBack()
-                  : navigation.navigate('SyncContactsFlow', undefined, {
+                  : navigation.navigate('FindContactsFlow', undefined, {
                       pop: true,
                     })
               }
