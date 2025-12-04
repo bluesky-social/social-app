@@ -14,8 +14,6 @@ import {
   AgeAssuranceStatus,
 } from '#/ageAssurance/types'
 
-export {logger} from '#/ageAssurance/logger'
-// TODO just import from file
 export {
   prefetchConfig as prefetchAgeAssuranceConfig,
   prefetchAgeAssuranceData,
@@ -23,6 +21,7 @@ export {
   usePatchOtherRequiredData as usePatchAgeAssuranceOtherRequiredData,
   usePatchServerState as usePatchAgeAssuranceServerState,
 } from '#/ageAssurance/data'
+export {logger} from '#/ageAssurance/logger'
 
 const AgeAssuranceStateContext = createContext<{
   Access: typeof AgeAssuranceAccess
@@ -38,6 +37,11 @@ const AgeAssuranceStateContext = createContext<{
   },
 })
 
+/**
+ * THE MAIN AGE ASSURANCE CONTEXT HOOK
+ *
+ * Prefer this to using any of the lower-level data-provider hooks.
+ */
 export function useAgeAssurance() {
   return useContext(AgeAssuranceStateContext)
 }

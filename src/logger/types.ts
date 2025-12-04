@@ -13,10 +13,8 @@ export enum LogContext {
   FeedFeedback = 'feed-feedback',
   PostSource = 'post-source',
   AgeAssurance = 'age-assurance',
-  AgeAssuranceV2 = 'age-assurance-v2',
   PolicyUpdate = 'policy-update',
   Geolocation = 'geolocation',
-  GeolocationV2 = 'geolocation-v2',
 
   /**
    * METRIC IS FOR INTERNAL USE ONLY, don't create any other loggers using this

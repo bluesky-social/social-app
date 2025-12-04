@@ -63,7 +63,7 @@ export function AgeAssuranceRedirectDialog() {
   const {_} = useLingui()
   const control = useAgeAssuranceRedirectDialogControl()
 
-  // TODO for testing
+  // for testing
   // Dialog.useAutoOpen(control.control, 3e3)
 
   return (
@@ -105,7 +105,6 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           if (!agent.session) return
           if (unmounted.current) return
 
-          // TODO test
           const data = await refetchAgeAssuranceServerState({agent})
 
           if (data?.state.status !== 'assured') {

@@ -323,7 +323,6 @@ function AccessSection() {
               <DeviceLocationRequestDialog
                 control={locationControl}
                 onLocationAcquired={props => {
-                  // TODO test this
                   const access = computeAgeAssuranceRegionAccess(
                     props.geolocation,
                   )

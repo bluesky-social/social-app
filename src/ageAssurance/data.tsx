@@ -163,7 +163,7 @@ export function createServerStateQueryKey({did}: {did: string}) {
 export async function getServerState({agent}: {agent: AtpAgent}) {
   if (debug.enabled && debug.serverState)
     return debug.resolve(debug.serverState)
-  const geolocation = device.get(['mergedGeolocation']) // TODO can I improve this, dislike reading from storage
+  const geolocation = device.get(['mergedGeolocation'])
   if (!geolocation || !geolocation.countryCode) {
     logger.error(`getServerState: missing geolocation countryCode`)
     return
@@ -273,6 +273,7 @@ export function useServerStateQuery() {
    */
   useEffect(() => {
     return focusManager.subscribe(() => {
+      // logged out
       if (!did) return
 
       const isFocused = focusManager.isFocused()
@@ -290,6 +291,7 @@ export function useServerStateQuery() {
           }),
       )
 
+      // only refetch when needed
       if (isAssured || !isAArequired) return
 
       refetch()
@@ -417,7 +419,8 @@ export function useOtherRequiredDataQuery() {
  * Helper to prefetch all age assurance data.
  */
 export function prefetchAgeAssuranceData({agent}: {agent: AtpAgent}) {
-  return Promise.all([
+  return Promise.allSettled([
+    // config fetch initiated at the top of the App.platform.tsx files, awaited here
     configPrefetchPromise,
     prefetchServerState({agent}),
     prefetchOtherRequiredData({agent}),

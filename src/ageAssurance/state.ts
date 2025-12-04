@@ -20,11 +20,17 @@ export function useAgeAssuranceState(): AgeAssuranceState {
   const {config, state, data} = useAgeAssuranceDataContext()
 
   return useMemo(() => {
+    /**
+     * This is where we control logged-out moderation prefs. It's all
+     * downstream of AA now.
+     */
     if (!hasSession)
       return {
         status: AgeAssuranceStatus.Unknown,
         access: AgeAssuranceAccess.Safe,
       }
+
+    // should never happen, but need to guard
     if (!config) {
       logger.warn('useAgeAssuranceState: missing config')
       return {

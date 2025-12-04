@@ -38,7 +38,10 @@ export type SessionApiContext = {
   logoutEveryAccount: (
     logContext: LogEvents['account:loggedOut']['logContext'],
   ) => void
-  resumeSession: (account: SessionAccount) => Promise<void>
+  resumeSession: (
+    account: SessionAccount,
+    isSwitchingAccounts?: boolean,
+  ) => Promise<void>
   removeAccount: (account: SessionAccount) => void
   /**
    * Calls `getSession` and updates select fields on the current account and

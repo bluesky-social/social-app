@@ -185,6 +185,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (prevState.currentAgentState.did) {
         clearAgeAssuranceDataForDid({did: prevState.currentAgentState.did})
       }
+      // reset onboarding flow on logout
       onboardingDispatch({type: 'skip'})
     },
     [store, cancelPendingTask, onboardingDispatch],
@@ -206,13 +207,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
       clearAgeAssuranceData()
+      // reset onboarding flow on logout
       onboardingDispatch({type: 'skip'})
     },
     [store, cancelPendingTask, onboardingDispatch],
   )
 
   const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
-    async storedAccount => {
+    async (storedAccount, isSwitchingAccounts = false) => {
       addSessionDebugLog({
         type: 'method:start',
         method: 'resumeSession',
@@ -233,7 +235,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAccount: account,
       })
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
-      onboardingDispatch({type: 'skip'})
+      if (isSwitchingAccounts) {
+        // reset onboarding flow on switch account
+        onboardingDispatch({type: 'skip'})
+      }
     },
     [store, onAgentSessionChange, cancelPendingTask, onboardingDispatch],
   )

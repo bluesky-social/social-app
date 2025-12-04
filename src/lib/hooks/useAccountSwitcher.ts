@@ -36,7 +36,7 @@ export function useAccountSwitcher() {
             // So we change the URL ourselves. The navigator will pick it up on remount.
             history.pushState(null, '', '/')
           }
-          await resumeSession(account)
+          await resumeSession(account, true)
           logEvent('account:loggedIn', {logContext, withPassword: false})
           Toast.show(_(msg`Signed in as @${account.handle}`))
         } else {

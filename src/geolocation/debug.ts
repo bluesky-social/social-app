@@ -2,7 +2,7 @@ import * as aaDebug from '#/ageAssurance/debug'
 import {IS_DEV} from '#/env'
 import {type Geolocation} from '#/geolocation/types'
 
-const localEnabled = true
+const localEnabled = false
 export const enabled = IS_DEV && (localEnabled || aaDebug.geolocation)
 export const geolocation: Geolocation = aaDebug.geolocation ?? {
   countryCode: 'AU',

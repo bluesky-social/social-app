@@ -74,17 +74,23 @@ export function BirthDateSettingsDialog({
         </Dialog.ScrollableInner>
       ) : (
         <Dialog.ScrollableInner
-          label={_(msg`My Birthday`)}
+          label={_(msg`You recently changed your birthday`)}
           style={web({maxWidth: 400})}>
           <View style={[a.gap_sm]}>
-            <Text style={[a.text_xl, a.font_semi_bold]}>
+            <Text
+              style={[
+                a.text_xl,
+                a.font_semi_bold,
+                a.leading_snug,
+                {paddingRight: 32},
+              ]}>
               <Trans>You recently changed your birthday</Trans>
             </Text>
             <Text
               style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>
-                There is a limit to how often you can change your birth date.
-                You may need to wait a day or two before updating it again.
+                There is a limit to how often you can change your birthday. You
+                may need to wait a day or two before updating it again.
               </Trans>
             </Text>
           </View>
