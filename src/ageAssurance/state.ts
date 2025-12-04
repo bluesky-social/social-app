@@ -1,4 +1,4 @@
-import {useMemo, useRef} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {computeAgeAssuranceRegionAccess} from '@atproto/api'
 
 import {useSession} from '#/state/session'
@@ -81,11 +81,14 @@ export function useOnAgeAssuranceAccessUpdate(
   cb: (state: AgeAssuranceState) => void,
 ) {
   const state = useAgeAssuranceState()
-  const prevState = useRef<AgeAssuranceAccess | null>(null)
+  // start with null to ensure callback is called on first render
+  const [prevAccess, setPrevAccess] = useState<AgeAssuranceAccess | null>(null)
 
-  if (prevState.current !== state.access) {
-    prevState.current = state.access
-    cb(state)
-    logger.debug(`useOnAgeAssuranceAccessUpdate`, {state})
-  }
+  useEffect(() => {
+    if (prevAccess !== state.access) {
+      setPrevAccess(state.access)
+      cb(state)
+      logger.debug(`useOnAgeAssuranceAccessUpdate`, {state})
+    }
+  }, [cb, state, prevAccess])
 }

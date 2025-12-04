@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useMemo} from 'react'
+import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
@@ -56,15 +56,19 @@ function InnerProvider({children}: {children: React.ReactNode}) {
   const state = useAgeAssuranceState()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
+  const handleAccessUpdate = useCallback(
+    (s: AgeAssuranceState) => {
+      getAndRegisterPushToken({
+        isAgeRestricted: s.access !== AgeAssuranceAccess.Full,
+      })
+    },
+    [getAndRegisterPushToken],
+  )
+  useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
+
   useEffect(() => {
     logger.debug(`useAgeAssuranceState`, {state})
   }, [state])
-
-  useOnAgeAssuranceAccessUpdate(state => {
-    getAndRegisterPushToken({
-      isAgeRestricted: state.access !== AgeAssuranceAccess.Full,
-    })
-  })
 
   return (
     <AgeAssuranceStateContext.Provider
