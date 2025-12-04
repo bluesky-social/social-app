@@ -12,6 +12,7 @@ import {
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
+import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
@@ -21,7 +22,9 @@ import {
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button} from '#/components/Button'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Divider} from '#/components/Divider'
@@ -164,6 +167,8 @@ export function ModerationScreenInner({
     error: labelersError,
   } = useMyLabelersQuery()
   const aa = useAgeAssurance()
+  const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
+  const aaCopy = useAgeAssuranceCopy()
 
   useFocusEffect(
     useCallback(() => {
@@ -173,10 +178,17 @@ export function ModerationScreenInner({
 
   const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =
     usePreferencesSetAdultContentMutation()
-  const adultContentEnabled = !!(
+  let adultContentEnabled = !!(
     (optimisticAdultContent && optimisticAdultContent.enabled) ||
     (!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled)
   )
+  const adultContentUIDisabledOnIOS = isIOS && !adultContentEnabled
+  let adultContentUIDisabled = adultContentUIDisabledOnIOS
+
+  if (aa.flags.adultContentDisabled) {
+    adultContentEnabled = false
+    adultContentUIDisabled = true
+  }
 
   const onToggleAdultContentEnabled = useCallback(
     async (selected: boolean) => {
@@ -193,10 +205,26 @@ export function ModerationScreenInner({
     [setAdultContentPref],
   )
 
-  const disabledOnIOS = isIOS && !adultContentEnabled
-
   return (
     <View style={[a.pt_2xl, a.px_lg, gtMobile && a.px_2xl]}>
+      {aa.flags.adultContentDisabled && isBirthdateUpdateAllowed && (
+        <View style={[a.pb_2xl]}>
+          <Admonition type="tip" style={[a.pb_md]}>
+            <Trans>
+              Your declared age is under 18. Some settings below may be
+              disabled. If this was a mistake, you may edit your birthdate in
+              your{' '}
+              <InlineLinkText
+                to="/settings/account"
+                label={_(msg`Go to account settings`)}>
+                account settings
+              </InlineLinkText>
+              .
+            </Trans>
+          </Admonition>
+        </View>
+      )}
+
       <Text
         style={[
           a.text_md,
@@ -317,9 +345,7 @@ export function ModerationScreenInner({
       </Text>
 
       <AgeAssuranceAdmonition style={[a.pb_md]}>
-        <Trans>
-          You must complete age assurance in order to access content filters.
-        </Trans>
+        {aaCopy.notice}
       </AgeAssuranceAdmonition>
 
       <View style={[a.gap_md]}>
@@ -339,14 +365,14 @@ export function ModerationScreenInner({
                   a.flex_row,
                   a.align_center,
                   a.justify_between,
-                  disabledOnIOS && {opacity: 0.5},
+                  adultContentUIDisabled && {opacity: 0.5},
                 ]}>
                 <Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
                   <Trans>Enable adult content</Trans>
                 </Text>
                 <Toggle.Item
                   label={_(msg`Toggle to enable or disable adult content`)}
-                  disabled={disabledOnIOS}
+                  disabled={adultContentUIDisabled}
                   name="adultContent"
                   value={adultContentEnabled}
                   onChange={onToggleAdultContentEnabled}>
@@ -362,7 +388,7 @@ export function ModerationScreenInner({
                   </View>
                 </Toggle.Item>
               </View>
-              {disabledOnIOS && (
+              {adultContentUIDisabledOnIOS && (
                 <View style={[a.pb_lg, a.px_lg]}>
                   <Text>
                     <Trans>
