@@ -45,7 +45,7 @@ export const ChooseAccountForm = ({
       }
       try {
         setPendingDid(account.did)
-        await resumeSession(account)
+        await resumeSession(account, true)
         logEvent('account:loggedIn', {
           logContext: 'ChooseAccountForm',
           withPassword: false,

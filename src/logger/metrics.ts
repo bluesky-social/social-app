@@ -22,6 +22,7 @@ export type MetricEvents = {
       | 'SignupQueued'
       | 'Deactivated'
       | 'Takendown'
+      | 'AgeAssuranceNoAccessScreen'
     scope: 'current' | 'every'
   }
   'notifications:openApp': {

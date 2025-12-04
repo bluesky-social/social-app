@@ -10,8 +10,6 @@ import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
-import {makeAgeRestrictedModerationPrefs} from '#/state/ageAssurance/const'
 import {STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
@@ -24,6 +22,7 @@ import {
 } from '#/state/queries/preferences/types'
 import {useAgent} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
+import {useAgeAssurance} from '#/ageAssurance'
 
 export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
@@ -34,7 +33,7 @@ export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
   const agent = useAgent()
-  const {isAgeRestricted} = useAgeAssuranceContext()
+  const aa = useAgeAssurance()
 
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
@@ -75,18 +74,19 @@ export function usePreferencesQuery() {
     },
     select: useCallback(
       (data: UsePreferencesQueryResponse) => {
-        const isUnderage = (data.userAge || 0) < 18
-        if (isUnderage || isAgeRestricted) {
+        /**
+         * Prefs are all downstream of age assurance now. For logged-out
+         * users, we override moderation prefs based on AA state.
+         */
+        if (aa.state.access !== aa.Access.Full) {
           data = {
             ...data,
-            moderationPrefs: makeAgeRestrictedModerationPrefs(
-              data.moderationPrefs,
-            ),
+            moderationPrefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
           }
         }
         return data
       },
-      [isAgeRestricted],
+      [aa],
     ),
   })
 }
@@ -160,21 +160,6 @@ export function usePreferencesSetAdultContentMutation() {
   return useMutation<void, unknown, {enabled: boolean}>({
     mutationFn: async ({enabled}) => {
       await agent.setAdultContentEnabled(enabled)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
-export function usePreferencesSetBirthDateMutation() {
-  const queryClient = useQueryClient()
-  const agent = useAgent()
-
-  return useMutation<void, unknown, {birthDate: Date}>({
-    mutationFn: async ({birthDate}: {birthDate: Date}) => {
-      await agent.setPersonalDetails({birthDate: birthDate.toISOString()})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

@@ -10,6 +10,9 @@ jest.mock('jwt-decode', () => ({
   },
 }))
 
+jest.mock('../../birthdate')
+jest.mock('../../../ageAssurance/data')
+
 describe('session', () => {
   it('can log in and out', () => {
     let state = getInitialState([])

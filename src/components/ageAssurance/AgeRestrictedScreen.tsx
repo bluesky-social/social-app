@@ -2,8 +2,6 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
-import {logger} from '#/state/ageAssurance/util'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -13,6 +11,8 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
+import {logger} from '#/ageAssurance'
 
 export function AgeRestrictedScreen({
   children,
@@ -27,22 +27,9 @@ export function AgeRestrictedScreen({
 }) {
   const {_} = useLingui()
   const copy = useAgeAssuranceCopy()
-  const {isReady, isAgeRestricted} = useAgeAssurance()
+  const aa = useAgeAssurance()
 
-  if (!isReady) {
-    return (
-      <Layout.Screen>
-        <Layout.Header.Outer>
-          <Layout.Header.Content>
-            <Layout.Header.TitleText> </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
-        <Layout.Content />
-      </Layout.Screen>
-    )
-  }
-  if (!isAgeRestricted) return children
+  if (aa.state.access === aa.Access.Full) return children
 
   return (
     <Layout.Screen>

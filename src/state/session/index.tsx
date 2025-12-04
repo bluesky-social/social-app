@@ -24,6 +24,11 @@ import {
   type SessionApiContext,
   type SessionStateContext,
 } from '#/state/session/types'
+import {useOnboardingDispatch} from '#/state/shell/onboarding'
+import {
+  clearAgeAssuranceData,
+  clearAgeAssuranceDataForDid,
+} from '#/ageAssurance/data'
 
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],
@@ -91,6 +96,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const cancelPendingTask = useOneTaskAtATime()
   const [store] = React.useState(() => new SessionStore())
   const state = React.useSyncExternalStore(store.subscribe, store.getState)
+  const onboardingDispatch = useOnboardingDispatch()
 
   const onAgentSessionChange = React.useCallback(
     (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
@@ -166,6 +172,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     logContext => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
+      const prevState = store.getState()
       store.dispatch({
         type: 'logged-out-current-account',
       })
@@ -175,8 +182,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         {statsig: true},
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
+      if (prevState.currentAgentState.did) {
+        clearAgeAssuranceDataForDid({did: prevState.currentAgentState.did})
+      }
+      // reset onboarding flow on logout
+      onboardingDispatch({type: 'skip'})
     },
-    [store, cancelPendingTask],
+    [store, cancelPendingTask, onboardingDispatch],
   )
 
   const logoutEveryAccount = React.useCallback<
@@ -194,12 +206,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         {statsig: true},
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
+      clearAgeAssuranceData()
+      // reset onboarding flow on logout
+      onboardingDispatch({type: 'skip'})
     },
-    [store, cancelPendingTask],
+    [store, cancelPendingTask, onboardingDispatch],
   )
 
   const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
-    async storedAccount => {
+    async (storedAccount, isSwitchingAccounts = false) => {
       addSessionDebugLog({
         type: 'method:start',
         method: 'resumeSession',
@@ -220,8 +235,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAccount: account,
       })
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
+      if (isSwitchingAccounts) {
+        // reset onboarding flow on switch account
+        onboardingDispatch({type: 'skip'})
+      }
     },
-    [store, onAgentSessionChange, cancelPendingTask],
+    [store, onAgentSessionChange, cancelPendingTask, onboardingDispatch],
   )
 
   const partialRefreshSession = React.useCallback<
@@ -254,6 +273,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         accountDid: account.did,
       })
       addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
+      clearAgeAssuranceDataForDid({did: account.did})
     },
     [store, cancelPendingTask],
   )
