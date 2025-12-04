@@ -68,6 +68,7 @@ module.exports = function (_config) {
           CFBundleLocalizations: [
             'en',
             'an',
+            'ar',
             'ast',
             'ca',
             'cy',
