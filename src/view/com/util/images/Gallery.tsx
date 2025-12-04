@@ -87,6 +87,7 @@ export function GalleryItem({
               height: e.source.height,
             }
           }}
+          loading="lazy"
         />
         <MediaInsetBorder style={insetBorderStyle} />
       </Pressable>
