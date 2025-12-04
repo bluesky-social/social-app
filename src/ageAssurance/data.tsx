@@ -19,7 +19,7 @@ import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
-import {isLegacyBirthdateBug, isUserUnderMinimumAge} from '#/ageAssurance/util'
+import {isLegacyBirthdateBug} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
@@ -334,11 +334,7 @@ export async function getOtherRequiredData({
    * If the user is under the minimum age, and the birthdate is not due to
    * the legacy bug, snooze further birthdate updates for this user.
    */
-  if (
-    data.birthdate &&
-    isUserUnderMinimumAge(data.birthdate) &&
-    !isLegacyBirthdateBug(data.birthdate)
-  ) {
+  if (data.birthdate && !isLegacyBirthdateBug(data.birthdate)) {
     snoozeBirthdateUpdateAllowedForDid(did!)
   }
 

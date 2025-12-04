@@ -54,6 +54,8 @@ export function NoAccessScreen() {
   const {logoutCurrentAccount} = useSessionApi()
   const createSupportLink = useCreateSupportLink()
 
+  const aa = useAgeAssurance()
+  const isBlocked = aa.state.status === aa.Status.Blocked
   const isAARegion = !!region
   const hasDeclaredAge = data?.declaredAge !== undefined
   const canUpdateBirthday =
@@ -79,7 +81,7 @@ export function NoAccessScreen() {
   const birthdateUpdateText = canUpdateBirthday ? (
     <Text style={[textStyles]}>
       <Trans>
-        If your birthdate is not accurate, you can update it by{' '}
+        If you believe your birthdate is incorrect, you can update it by{' '}
         <SimpleInlineLinkText
           label={_(msg`Click here to update your birthdate`)}
           style={[textStyles]}
@@ -94,7 +96,7 @@ export function NoAccessScreen() {
   ) : (
     <Text style={[textStyles]}>
       <Trans>
-        If you accidentally typed an incorrect birthdate, please{' '}
+        If you believe your birthdate is incorrect, please{' '}
         <SimpleInlineLinkText
           to={createSupportLink({code: SupportCode.AA_BIRTHDATE})}
           label={_(msg`Click here to contact our support team`)}
@@ -145,7 +147,7 @@ export function NoAccessScreen() {
                       </Trans>
                     </Text>
 
-                    {birthdateUpdateText}
+                    {!isBlocked && birthdateUpdateText}
                   </View>
 
                   <AccessSection />
