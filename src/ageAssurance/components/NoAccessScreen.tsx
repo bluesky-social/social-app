@@ -4,6 +4,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {
+  SupportCode,
+  useCreateSupportLink,
+} from '#/lib/hooks/useCreateSupportLink'
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -47,6 +51,7 @@ export function NoAccessScreen() {
   const region = useAgeAssuranceRegionConfig()
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {logoutCurrentAccount} = useSessionApi()
+  const createSupportLink = useCreateSupportLink()
 
   const isAARegion = !!region
   const hasDeclaredAge = data?.declaredAge !== undefined
@@ -93,7 +98,20 @@ export function NoAccessScreen() {
         .
       </Trans>
     </Text>
-  ) : null
+  ) : (
+    <Text style={[textStyles]}>
+      <Trans>
+        If you accidentally typed an incorrect birthdate, please{' '}
+        <SimpleInlineLinkText
+          to={createSupportLink({code: SupportCode.AA_BIRTHDATE})}
+          label={_(msg`Click here to contact our support team`)}
+          style={[textStyles]}>
+          contact our support team.
+        </SimpleInlineLinkText>
+        .
+      </Trans>
+    </Text>
+  )
 
   return (
     <>
