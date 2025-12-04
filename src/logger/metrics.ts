@@ -334,6 +334,10 @@ export type MetricEvents = {
       | 'Profile'
       | 'Onboarding'
   }
+  'suggestedUser:dismiss': {
+    logContext: 'InterstitialDiscover' | 'InterstitialProfile'
+    position: number
+  }
   'profile:unfollow': {
     logContext:
       | 'RecommendedFollowsItem'
