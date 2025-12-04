@@ -129,11 +129,12 @@ let ProfileHeaderShell = ({
     } else {
       const modui = moderation.ui('avatar')
       const avatar = profile.avatar
+      const type = profile.associated?.labeler ? 'image' : 'circle-avi'
       if (avatar && !(modui.blur && modui.noOverride)) {
         runOnUI(() => {
           'worklet'
           const rect = measure(aviRef)
-          runOnJS(_openLightbox)(avatar, rect)
+          runOnJS(_openLightbox)(avatar, rect, type)
         })()
       }
     }
