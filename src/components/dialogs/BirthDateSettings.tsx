@@ -40,11 +40,11 @@ export function BirthDateSettingsDialog({
       <Dialog.Handle />
       {isBirthdateUpdateAllowed ? (
         <Dialog.ScrollableInner
-          label={_(msg`My Birthday`)}
+          label={_(msg`My Birthdate`)}
           style={web({maxWidth: 400})}>
           <View style={[a.gap_md]}>
             <Text style={[a.text_xl, a.font_semi_bold]}>
-              <Trans>My Birthday</Trans>
+              <Trans>My Birthdate</Trans>
             </Text>
             <Text
               style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -60,7 +60,7 @@ export function BirthDateSettingsDialog({
                 message={
                   error?.toString() ||
                   _(
-                    msg`We were unable to load your birth date preferences. Please try again.`,
+                    msg`We were unable to load your birthdate preferences. Please try again.`,
                   )
                 }
                 style={[a.rounded_sm]}
@@ -74,7 +74,7 @@ export function BirthDateSettingsDialog({
         </Dialog.ScrollableInner>
       ) : (
         <Dialog.ScrollableInner
-          label={_(msg`You recently changed your birthday`)}
+          label={_(msg`You recently changed your birthdate`)}
           style={web({maxWidth: 400})}>
           <View style={[a.gap_sm]}>
             <Text
@@ -84,12 +84,12 @@ export function BirthDateSettingsDialog({
                 a.leading_snug,
                 {paddingRight: 32},
               ]}>
-              <Trans>You recently changed your birthday</Trans>
+              <Trans>You recently changed your birthdate</Trans>
             </Text>
             <Text
               style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>
-                There is a limit to how often you can change your birthday. You
+                There is a limit to how often you can change your birthdate. You
                 may need to wait a day or two before updating it again.
               </Trans>
             </Text>
@@ -144,8 +144,8 @@ function BirthdayInner({
           testID="birthdayInput"
           value={date}
           onChangeDate={newDate => setDate(new Date(newDate))}
-          label={_(msg`Birthday`)}
-          accessibilityHint={_(msg`Enter your birth date`)}
+          label={_(msg`Birthdate`)}
+          accessibilityHint={_(msg`Enter your birthdate`)}
         />
       </View>
 
@@ -178,7 +178,7 @@ function BirthdayInner({
 
       <View style={isWeb && [a.flex_row, a.justify_end]}>
         <Button
-          label={hasChanged ? _(msg`Save birthday`) : _(msg`Done`)}
+          label={hasChanged ? _(msg`Save birthdate`) : _(msg`Done`)}
           size="large"
           onPress={onSave}
           variant="solid"
