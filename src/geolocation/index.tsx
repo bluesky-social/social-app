@@ -1,4 +1,10 @@
-import {createContext, type ReactNode, useContext, useMemo} from 'react'
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react'
 
 import {useSyncDeviceGeolocationOnStartup} from '#/geolocation/device'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
@@ -35,10 +41,12 @@ export function Provider({children}: {children: ReactNode}) {
     'deviceGeolocation',
   ])
   const geolocation = useMemo(() => {
-    const merged = mergeGeolocations(deviceGeolocation, geolocationService)
-    device.set(['mergedGeolocation'], merged)
-    return merged
+    return mergeGeolocations(deviceGeolocation, geolocationService)
   }, [deviceGeolocation, geolocationService])
+
+  useEffect(() => {
+    device.set(['mergedGeolocation'], geolocation)
+  }, [geolocation])
 
   useSyncDeviceGeolocationOnStartup(setDeviceGeolocation)
 
