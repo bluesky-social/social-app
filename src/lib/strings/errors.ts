@@ -52,3 +52,15 @@ export function isErrorMaybeAppPasswordPermissions(e: unknown) {
   const str = String(e)
   return str.includes('Bad token scope') || str.includes('Bad token method')
 }
+
+/**
+ * Intended to capture "User cancelled" or "Crop cancelled" errors
+ * that we often get from expo modules such expo-image-crop-tool
+ *
+ * The exact name has changed in the past so let's just see if the string
+ * contains "cancel"
+ */
+export function isCancelledError(e: unknown) {
+  const str = String(e).toLowerCase()
+  return str.includes('cancel')
+}

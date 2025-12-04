@@ -41,7 +41,8 @@ export function makeRecordUri(
   collection: string,
   rkey: string,
 ) {
-  const urip = new AtUri('at://host/')
+  const urip = new AtUri('at://placeholder.placeholder/')
+  // @ts-expect-error TODO new-sdk-migration
   urip.host = didOrName
   urip.collection = collection
   urip.rkey = rkey

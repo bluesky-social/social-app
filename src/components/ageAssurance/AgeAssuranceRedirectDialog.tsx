@@ -6,8 +6,6 @@ import {useLingui} from '@lingui/react'
 import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
 import {isNative} from '#/platform/detection'
-import {useAgeAssuranceAPIContext} from '#/state/ageAssurance'
-import {logger} from '#/state/ageAssurance/util'
 import {useAgent} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -18,6 +16,8 @@ import {CheckThick_Stroke2_Corner0_Rounded as SuccessIcon} from '#/components/ic
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {refetchAgeAssuranceServerState} from '#/ageAssurance'
+import {logger} from '#/ageAssurance'
 
 export type AgeAssuranceRedirectDialogState = {
   result: 'success' | 'unknown'
@@ -63,7 +63,7 @@ export function AgeAssuranceRedirectDialog() {
   const {_} = useLingui()
   const control = useAgeAssuranceRedirectDialogControl()
 
-  // TODO for testing
+  // for testing
   // Dialog.useAutoOpen(control.control, 3e3)
 
   return (
@@ -88,7 +88,6 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
   const control = useAgeAssuranceRedirectDialogControl()
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
-  const {refetch: refreshAgeAssuranceState} = useAgeAssuranceAPIContext()
 
   useEffect(() => {
     if (polling.current) return
@@ -106,9 +105,9 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           if (!agent.session) return
           if (unmounted.current) return
 
-          const {data} = await agent.app.bsky.unspecced.getAgeAssuranceState()
+          const data = await refetchAgeAssuranceServerState({agent})
 
-          if (data.status !== 'assured') {
+          if (data?.state.status !== 'assured') {
             throw new Error(
               `Polling for age assurance state did not receive assured status`,
             )
@@ -124,9 +123,6 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
         if (!agent.session) return
         if (unmounted.current) return
 
-        // success! update state
-        await refreshAgeAssuranceState()
-
         setSuccess(true)
 
         logger.metric('ageAssurance:redirectDialogSuccess', {})
@@ -134,15 +130,13 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
       .catch(() => {
         if (unmounted.current) return
         setError(true)
-        // try a refetch anyway
-        refreshAgeAssuranceState()
         logger.metric('ageAssurance:redirectDialogFail', {})
       })
 
     return () => {
       unmounted.current = true
     }
-  }, [agent, control, refreshAgeAssuranceState])
+  }, [agent, control])
 
   if (success) {
     return (

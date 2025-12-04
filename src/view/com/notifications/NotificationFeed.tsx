@@ -19,6 +19,7 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListProps, type ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {Bell_Stroke2_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
 import {NotificationFeedItem} from './NotificationFeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -118,7 +119,7 @@ export function NotificationFeed({
       if (item === EMPTY_FEED_ITEM) {
         return (
           <EmptyState
-            icon="bell"
+            icon={BellIcon}
             message={_(msg`No notifications yet!`)}
             style={styles.emptyState}
           />

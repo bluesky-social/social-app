@@ -312,7 +312,6 @@ function SuggestedProfileCard({
   return (
     <View
       style={[
-        a.flex_1,
         a.w_full,
         a.py_lg,
         a.px_xl,

@@ -1,5 +1,11 @@
 import {useMemo} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
+import {
+  type GestureResponderEvent,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {
   moderateProfile,
   type ModerationOpts,
@@ -283,9 +289,13 @@ function InlineNameAndHandle({
 export function Name({
   profile,
   moderationOpts,
+  style,
+  textStyle,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  style?: StyleProp<ViewStyle>
+  textStyle?: StyleProp<TextStyle>
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
@@ -294,7 +304,7 @@ export function Name({
   )
   const verification = useSimpleVerificationState({profile})
   return (
-    <View style={[a.flex_row, a.align_center, a.max_w_full]}>
+    <View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
       <Text
         emoji
         style={[
@@ -303,6 +313,7 @@ export function Name({
           a.leading_snug,
           a.self_start,
           a.flex_shrink,
+          textStyle,
         ]}
         numberOfLines={1}>
         {name}

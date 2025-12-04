@@ -14,9 +14,6 @@ import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useTLDs} from '#/lib/hooks/useTLDs'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {type AppLanguage} from '#/locale/languages'
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
-import {useInitAgeAssurance} from '#/state/ageAssurance/useInitAgeAssurance'
-import {logger} from '#/state/ageAssurance/util'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -30,9 +27,12 @@ import {Divider} from '#/components/Divider'
 import * as TextField from '#/components/forms/TextField'
 import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {LanguageSelect} from '#/components/LanguageSelect'
-import {InlineLinkText} from '#/components/Link'
+import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {logger} from '#/ageAssurance'
+import {useAgeAssurance} from '#/ageAssurance'
+import {useBeginAgeAssurance} from '#/ageAssurance/useBeginAgeAssurance'
 
 export {useDialogControl} from '#/components/Dialog/context'
 
@@ -69,7 +69,8 @@ function Inner() {
   const langPrefs = useLanguagePrefs()
   const cleanError = useCleanError()
   const {close} = Dialog.useDialogContext()
-  const {lastInitiatedAt} = useAgeAssuranceContext()
+  const aa = useAgeAssurance()
+  const lastInitiatedAt = aa.state.lastInitiatedAt
   const getTimeAgo = useGetTimeAgo()
   const tlds = useTLDs()
   const createSupportLink = useCreateSupportLink()
@@ -88,7 +89,7 @@ function Inner() {
   )
   const [error, setError] = useState<React.ReactNode>(null)
 
-  const {mutateAsync: init, isPending} = useInitAgeAssurance()
+  const {mutateAsync: begin, isPending} = useBeginAgeAssurance()
 
   const runEmailValidation = () => {
     if (validateEmail(email)) {
@@ -127,7 +128,7 @@ function Inner() {
         return
       }
 
-      await init({
+      await begin({
         email,
         language,
       })
@@ -150,11 +151,11 @@ function Inner() {
               <Trans>
                 We're having issues initializing the age assurance process for
                 your account. Please{' '}
-                <InlineLinkText
+                <SimpleInlineLinkText
                   to={createSupportLink({code: SupportCode.AA_DID, email})}
                   label={_(msg`Contact support`)}>
                   contact support
-                </InlineLinkText>{' '}
+                </SimpleInlineLinkText>{' '}
                 for assistance.
               </Trans>
             </>
@@ -195,14 +196,12 @@ function Inner() {
               <Text style={[a.text_sm, a.leading_snug]}>
                 <Trans>
                   We have partnered with{' '}
-                  <InlineLinkText
-                    overridePresentation
-                    disableMismatchWarning
+                  <SimpleInlineLinkText
                     label={_(msg`KWS website`)}
                     to={urls.kwsHome}
                     style={[a.text_sm, a.leading_snug]}>
                     KWS
-                  </InlineLinkText>{' '}
+                  </SimpleInlineLinkText>{' '}
                   to verify that you’re an adult. When you click "Begin" below,
                   KWS will check if you have previously verified your age using
                   this email address for other games/services powered by KWS
@@ -328,24 +327,20 @@ function Inner() {
               style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>
                 By continuing, you agree to the{' '}
-                <InlineLinkText
-                  overridePresentation
-                  disableMismatchWarning
+                <SimpleInlineLinkText
                   label={_(msg`KWS Terms of Use`)}
                   to={urls.kwsTermsOfUse}
                   style={[a.text_xs, a.leading_snug]}>
                   KWS Terms of Use
-                </InlineLinkText>{' '}
+                </SimpleInlineLinkText>{' '}
                 and acknowledge that KWS will store your verified status with
                 your hashed email address in accordance with the{' '}
-                <InlineLinkText
-                  overridePresentation
-                  disableMismatchWarning
+                <SimpleInlineLinkText
                   label={_(msg`KWS Privacy Policy`)}
                   to={urls.kwsPrivacyPolicy}
                   style={[a.text_xs, a.leading_snug]}>
                   KWS Privacy Policy
-                </InlineLinkText>
+                </SimpleInlineLinkText>
                 . This means you won’t need to verify again the next time you
                 use this email for other apps, games, and services powered by
                 KWS technology.

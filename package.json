@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.110.0",
+  "version": "1.111.0",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -72,7 +72,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.18.0",
+    "@atproto/api": "^0.18.4",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.5",
@@ -103,7 +103,7 @@
     "@react-navigation/native-stack": "^7.3.13",
     "@sentry/react-native": "~6.20.0",
     "@tanstack/query-async-storage-persister": "^5.25.0",
-    "@tanstack/react-query": "^5.8.1",
+    "@tanstack/react-query": "5.25.0",
     "@tanstack/react-query-persist-client": "^5.25.0",
     "@tiptap/core": "^2.9.1",
     "@tiptap/extension-document": "^2.9.1",
@@ -176,7 +176,7 @@
     "multiformats": "9.9.0",
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
-    "patch-package": "^6.5.1",
+    "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
     "psl": "^1.9.0",
     "radix-ui": "^1.4.3",

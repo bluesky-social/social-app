@@ -570,7 +570,7 @@ function ExpandedPostDetails({
       <BackdatedPostIndicator post={post} />
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt, 'medium')}
+          {niceDate(i18n, post.indexedAt, 'dot separated')}
         </Text>
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
@@ -655,7 +655,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
               ]}>
-              <Trans>Archived from {niceDate(i18n, createdAt)}</Trans>
+              <Trans>Archived from {niceDate(i18n, createdAt, 'medium')}</Trans>
             </Text>
           </View>
         )}

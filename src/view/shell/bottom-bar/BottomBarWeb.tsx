@@ -236,6 +236,7 @@ const NavItem: React.FC<{
   hasNew?: boolean
   notificationCount?: string
 }> = ({children, href, routeName, hasNew, notificationCount}) => {
+  const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
@@ -272,7 +273,11 @@ const NavItem: React.FC<{
       {children({isActive})}
       {notificationCount ? (
         <View
-          style={[styles.notificationCount, styles.notificationCountWeb]}
+          style={[
+            styles.notificationCount,
+            styles.notificationCountWeb,
+            {backgroundColor: t.palette.primary_500},
+          ]}
           aria-label={_(
             msg`${plural(notificationCount, {
               one: '# unread item',

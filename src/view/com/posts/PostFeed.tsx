@@ -35,6 +35,7 @@ import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
@@ -369,6 +370,11 @@ let PostFeed = ({
    */
   const [isCurrentFeedAtStartupSelected] = useState(selectedFeed === feed)
 
+  const blockedOrMutedAuthors = usePostAuthorShadowFilter(
+    // author feeds have their own handling
+    feed.startsWith('author|') ? undefined : data?.pages,
+  )
+
   const feedItems: FeedRow[] = useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
     // if the user has pressed show less on it
@@ -429,7 +435,11 @@ let PostFeed = ({
                 // eslint-disable-next-line @typescript-eslint/no-shadow
                 item => item.uri === slice.feedPostUri,
               )
-              if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
+              if (
+                item &&
+                AppBskyEmbedVideo.isView(item.post.embed) &&
+                !blockedOrMutedAuthors.includes(item.post.author.did)
+              ) {
                 videos.push({
                   item,
                   feedContext: slice.feedContext,
@@ -569,6 +579,12 @@ let PostFeed = ({
                   key:
                     'sliceFallbackMarker-' + sliceIndex + '-' + lastFetchedAt,
                 })
+              } else if (
+                slice.items.some(item =>
+                  blockedOrMutedAuthors.includes(item.post.author.did),
+                )
+              ) {
+                // skip
               } else if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
                 const last = slice.items.length - 1
@@ -666,6 +682,7 @@ let PostFeed = ({
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
     gate,
+    blockedOrMutedAuthors,
   ])
 
   // events
@@ -872,12 +889,67 @@ let PostFeed = ({
   const liveNowConfig = useLiveNowConfig()
 
   const seenActorWithStatusRef = useRef<Set<string>>(new Set())
+  const seenPostUrisRef = useRef<Set<string>>(new Set())
+
+  // Helper to calculate position in feed (count only root posts, not interstitials or thread replies)
+  const getPostPosition = useNonReactiveCallback(
+    (type: FeedRow['type'], key: string) => {
+      // Calculate position: find the row index in feedItems, then calculate position
+      const rowIndex = feedItems.findIndex(
+        row => row.type === 'sliceItem' && row.key === key,
+      )
+
+      if (rowIndex >= 0) {
+        let position = 0
+        for (let i = 0; i < rowIndex && i < feedItems.length; i++) {
+          const row = feedItems[i]
+          if (row.type === 'sliceItem') {
+            // Only count root posts (indexInSlice === 0), not thread replies
+            if (row.indexInSlice === 0) {
+              position++
+            }
+          } else if (row.type === 'videoGridRow') {
+            // Count each video in the grid row
+            position += row.items.length
+          }
+        }
+        return position
+      }
+    },
+  )
+
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
-      if (item.type === 'sliceItem') {
-        const actor = item.slice.items[item.indexInSlice].post.author
 
+      // Track post:view events
+      if (item.type === 'sliceItem') {
+        const slice = item.slice
+        const indexInSlice = item.indexInSlice
+        const postItem = slice.items[indexInSlice]
+        const post = postItem.post
+
+        // Only track the root post of each slice (index 0) to avoid double-counting thread items
+        if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
+          seenPostUrisRef.current.add(post.uri)
+
+          const position = getPostPosition('sliceItem', item.key)
+
+          logger.metric(
+            'post:view',
+            {
+              uri: post.uri,
+              authorDid: post.author.did,
+              logContext: 'FeedItem',
+              feedDescriptor: feedFeedback.feedDescriptor || feed,
+              position,
+            },
+            {statsig: false},
+          )
+        }
+
+        // Live status tracking (existing code)
+        const actor = post.author
         if (
           actor.status &&
           validateStatus(actor.did, actor.status, liveNowConfig) &&
@@ -895,9 +967,33 @@ let PostFeed = ({
             )
           }
         }
+      } else if (item.type === 'videoGridRow') {
+        // Track each video in the grid row
+        for (let i = 0; i < item.items.length; i++) {
+          const postItem = item.items[i]
+          const post = postItem.post
+
+          if (!seenPostUrisRef.current.has(post.uri)) {
+            seenPostUrisRef.current.add(post.uri)
+
+            const position = getPostPosition('videoGridRow', item.key)
+
+            logger.metric(
+              'post:view',
+              {
+                uri: post.uri,
+                authorDid: post.author.did,
+                logContext: 'FeedItem',
+                feedDescriptor: feedFeedback.feedDescriptor || feed,
+                position,
+              },
+              {statsig: false},
+            )
+          }
+        }
       }
     },
-    [feedFeedback, feed, liveNowConfig],
+    [feedFeedback, feed, liveNowConfig, getPostPosition],
   )
 
   return (

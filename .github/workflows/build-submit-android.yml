@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -39,7 +39,7 @@ jobs:
         uses: dcarbone/install-jq-action@v2
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         with:
           expo-version: latest
           eas-version: latest
@@ -54,7 +54,7 @@ jobs:
           java-version: "17"
 
       - name: ⚙️ Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: 🔤 Compile translations
         run: yarn intl:build 2>&1 | tee i18n.log

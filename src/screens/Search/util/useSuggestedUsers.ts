@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 
 import {useInterestsDisplayNames} from '#/lib/interests'
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
 
 /**
@@ -31,7 +31,7 @@ export function useSuggestedUsers({
     category,
     overrideInterests,
   })
-  const searched = useActorSearchPaginated({
+  const searched = useActorSearch({
     enabled: !!search,
     // use user's app language translation for this value
     query: category ? interestsDisplayNames[category] : '',

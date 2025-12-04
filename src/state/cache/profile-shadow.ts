@@ -13,7 +13,10 @@ import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '#/state/queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '#/state/queries/my-muted-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInNotifsQueryData} from '#/state/queries/notifications/feed'
-import {findAllProfilesInQueryData as findAllProfilesInFeedsQueryData} from '#/state/queries/post-feed'
+import {
+  type FeedPage,
+  findAllProfilesInQueryData as findAllProfilesInFeedsQueryData,
+} from '#/state/queries/post-feed'
 import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '#/state/queries/post-liked-by'
 import {findAllProfilesInQueryData as findAllProfilesInPostQuotesQueryData} from '#/state/queries/post-quotes'
 import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '#/state/queries/post-reposted-by'
@@ -108,6 +111,81 @@ export function useMaybeProfileShadow<
       return castAsShadow(profile)
     }
   }, [profile, shadow])
+}
+
+/**
+ * Takes a list of posts, and returns a list of DIDs that should be filtered out
+ *
+ * Note: it doesn't retroactively scan the cache, but only listens to new updates.
+ * The use case here is intended for removing a post from a feed after you mute the author
+ */
+export function usePostAuthorShadowFilter(data?: FeedPage[]) {
+  const [trackedDids, setTrackedDids] = useState<string[]>(
+    () =>
+      data?.flatMap(page =>
+        page.slices.flatMap(slice =>
+          slice.items.map(item => item.post.author.did),
+        ),
+      ) ?? [],
+  )
+  const [authors, setAuthors] = useState(
+    new Map<string, {muted: boolean; blocked: boolean}>(),
+  )
+
+  const [prevData, setPrevData] = useState(data)
+  if (data !== prevData) {
+    const newAuthors = new Set(trackedDids)
+    let hasNew = false
+    for (const slice of data?.flatMap(page => page.slices) ?? []) {
+      for (const item of slice.items) {
+        const author = item.post.author
+        if (!newAuthors.has(author.did)) {
+          hasNew = true
+          newAuthors.add(author.did)
+        }
+      }
+    }
+    if (hasNew) setTrackedDids([...newAuthors])
+    setPrevData(data)
+  }
+
+  useEffect(() => {
+    const unsubs: Array<() => void> = []
+
+    for (const did of trackedDids) {
+      function onUpdate(value: Partial<ProfileShadow>) {
+        setAuthors(prev => {
+          const prevValue = prev.get(did)
+          const next = new Map(prev)
+          next.set(did, {
+            blocked: Boolean(value.blockingUri ?? prevValue?.blocked ?? false),
+            muted: Boolean(value.muted ?? prevValue?.muted ?? false),
+          })
+          return next
+        })
+      }
+      emitter.addListener(did, onUpdate)
+      unsubs.push(() => {
+        emitter.removeListener(did, onUpdate)
+      })
+    }
+
+    return () => {
+      unsubs.map(fn => fn())
+    }
+  }, [trackedDids])
+
+  return useMemo(() => {
+    const dids: Array<string> = []
+
+    for (const [did, value] of authors.entries()) {
+      if (value.blocked || value.muted) {
+        dids.push(did)
+      }
+    }
+
+    return dids
+  }, [authors])
 }
 
 export function updateProfileShadow(
