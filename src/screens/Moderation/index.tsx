@@ -24,6 +24,7 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button} from '#/components/Button'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Divider} from '#/components/Divider'
@@ -167,6 +168,7 @@ export function ModerationScreenInner({
   } = useMyLabelersQuery()
   const aa = useAgeAssurance()
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
+  const aaCopy = useAgeAssuranceCopy()
 
   useFocusEffect(
     useCallback(() => {
@@ -343,9 +345,7 @@ export function ModerationScreenInner({
       </Text>
 
       <AgeAssuranceAdmonition style={[a.pb_md]}>
-        <Trans>
-          You must complete age assurance in order to access content filters.
-        </Trans>
+        {aaCopy.notice}
       </AgeAssuranceAdmonition>
 
       <View style={[a.gap_md]}>
