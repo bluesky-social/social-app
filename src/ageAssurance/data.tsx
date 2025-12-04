@@ -43,7 +43,6 @@ const persister = createAsyncStoragePersister({
   key: 'age-assurance-query-client',
 })
 const [, cacheHydrationPromise] = persistQueryClient({
-  // @ts-ignore TODO
   queryClient: qc,
   persister,
 })
