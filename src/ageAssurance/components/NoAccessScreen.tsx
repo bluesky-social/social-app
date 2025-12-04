@@ -41,6 +41,8 @@ import {
 } from '#/ageAssurance/util'
 import {useDeviceGeolocationApi} from '#/geolocation'
 
+const textStyles = [a.text_md, a.leading_snug]
+
 export function NoAccessScreen() {
   const t = useTheme()
   const {_} = useLingui()
@@ -62,14 +64,6 @@ export function NoAccessScreen() {
     // just counting overall hits here
     logger.metric(`blockedGeoOverlay:shown`, {})
   }, [])
-
-  const textStyles = [a.text_md, a.leading_normal]
-
-  const blocks = [
-    _(
-      msg`You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app.`,
-    ),
-  ]
 
   const onPressLogout = useCallback(() => {
     if (isWeb) {
@@ -144,11 +138,13 @@ export function NoAccessScreen() {
               {isAARegion ? (
                 <>
                   <View style={[a.gap_lg]}>
-                    {blocks.map((block, index) => (
-                      <Text key={index} style={[textStyles]}>
-                        {block}
-                      </Text>
-                    ))}
+                    <Text style={[textStyles]}>
+                      <Trans>
+                        You are accessing Bluesky from a region that legally
+                        requires us to verify your age before allowing you to
+                        access the app.
+                      </Trans>
+                    </Text>
 
                     {birthdateUpdateText}
                   </View>
