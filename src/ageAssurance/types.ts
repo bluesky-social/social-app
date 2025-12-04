@@ -40,16 +40,12 @@ export function parseAccessFromString(raw: string) {
   switch (raw) {
     case 'unknown':
       return AgeAssuranceAccess.Unknown
-      break
     case 'none':
       return AgeAssuranceAccess.None
-      break
     case 'safe':
       return AgeAssuranceAccess.Safe
-      break
     case 'full':
       return AgeAssuranceAccess.Full
-      break
     default:
       logger.error(`parseAccessFromString: unknown access value: ${raw}`)
       return AgeAssuranceAccess.Full
