@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react'
-import {Keyboard, Pressable, StyleSheet, View} from 'react-native'
+import {Keyboard, Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -148,6 +148,8 @@ export function ComposerPrompt() {
         a.relative,
         a.flex_row,
         a.align_start,
+        a.border_t,
+        t.atoms.border_contrast_low,
         {
           paddingLeft: 18,
           paddingRight: 15,
@@ -157,10 +159,6 @@ export function ComposerPrompt() {
           paddingTop: 10,
           paddingBottom: 10,
         }),
-        {
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderColor: t.atoms.border_contrast_low.borderColor,
-        },
         web({
           cursor: 'pointer',
           outline: 'none',
@@ -179,13 +177,13 @@ export function ComposerPrompt() {
             a.flex_1,
             a.flex_row,
             a.align_center,
+            a.justify_between,
             a.px_md,
+            a.rounded_full,
+            t.atoms.bg_contrast_50,
             {
               height: 40,
-              borderRadius: 20,
-              justifyContent: 'space-between',
             },
-            t.atoms.bg_contrast_50,
           ]}>
           <Text
             style={[
@@ -193,10 +191,8 @@ export function ComposerPrompt() {
               a.text_md,
               a.pl_xs,
               {
-                lineHeight: a.text_md.fontSize,
                 includeFontPadding: false,
               },
-              native({top: 1}),
             ]}>
             {_(msg`What's up?`)}
           </Text>
