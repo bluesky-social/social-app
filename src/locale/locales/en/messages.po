@@ -855,7 +855,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:368
+#: src/screens/Moderation/index.tsx:394
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr ""
 
@@ -872,7 +872,7 @@ msgstr ""
 msgid "Adult sexual abuse content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:413
+#: src/screens/Moderation/index.tsx:439
 msgid "Advanced"
 msgstr ""
 
@@ -1470,7 +1470,7 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:283
+#: src/screens/Moderation/index.tsx:311
 msgid "Blocked accounts"
 msgstr ""
 
@@ -2251,7 +2251,7 @@ msgstr ""
 msgid "Content Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:316
+#: src/screens/Moderation/index.tsx:344
 msgid "Content filters"
 msgstr ""
 
@@ -2856,7 +2856,7 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
 #: src/screens/Messages/Settings.tsx:144
 #: src/screens/Messages/Settings.tsx:147
-#: src/screens/Moderation/index.tsx:358
+#: src/screens/Moderation/index.tsx:384
 msgid "Disabled"
 msgstr ""
 
@@ -2959,7 +2959,7 @@ msgstr ""
 msgid "Don't show again"
 msgstr ""
 
-#: src/components/ageAssurance/useAgeAssuranceCopy.ts:25
+#: src/components/ageAssurance/useAgeAssuranceCopy.ts:17
 msgid "Don't worry! All existing messages and settings are saved and will be available after you verify you're an adult."
 msgstr ""
 
@@ -3024,7 +3024,7 @@ msgstr ""
 msgid "Drop to add images"
 msgstr ""
 
-#: src/components/ageAssurance/useAgeAssuranceCopy.ts:16
+#: src/components/ageAssurance/useAgeAssuranceCopy.ts:11
 msgid "Due to laws in your region, certain features on Bluesky are currently restricted until you're able to verify you're an adult."
 msgstr ""
 
@@ -3239,7 +3239,7 @@ msgstr ""
 msgid "Enable {0} only"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:345
+#: src/screens/Moderation/index.tsx:371
 msgid "Enable adult content"
 msgstr ""
 
@@ -3290,7 +3290,7 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:135
 #: src/screens/Messages/Settings.tsx:138
-#: src/screens/Moderation/index.tsx:356
+#: src/screens/Moderation/index.tsx:382
 msgid "Enabled"
 msgstr ""
 
@@ -4244,6 +4244,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:87
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:64
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
+#: src/screens/Moderation/index.tsx:219
 msgid "Go to account settings"
 msgstr ""
 
@@ -4485,7 +4486,7 @@ msgstr ""
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:57
+#: src/screens/Moderation/index.tsx:60
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr ""
 
@@ -4682,7 +4683,7 @@ msgstr ""
 msgid "Interaction limited"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:223
+#: src/screens/Moderation/index.tsx:251
 msgid "Interaction settings"
 msgstr ""
 
@@ -5260,7 +5261,7 @@ msgstr ""
 msgid "Manage saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:293
+#: src/screens/Moderation/index.tsx:321
 msgid "Manage verification settings"
 msgstr ""
 
@@ -5372,7 +5373,7 @@ msgid "Misleading"
 msgstr ""
 
 #: src/Navigation.tsx:177
-#: src/screens/Moderation/index.tsx:96
+#: src/screens/Moderation/index.tsx:99
 #: src/screens/Settings/Settings.tsx:188
 #: src/screens/Settings/Settings.tsx:191
 msgid "Moderation"
@@ -5406,7 +5407,7 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:253
+#: src/screens/Moderation/index.tsx:281
 msgid "Moderation lists"
 msgstr ""
 
@@ -5423,7 +5424,7 @@ msgstr ""
 msgid "Moderation states"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:207
+#: src/screens/Moderation/index.tsx:235
 msgid "Moderation tools"
 msgstr ""
 
@@ -5538,7 +5539,7 @@ msgstr ""
 msgid "Mute words & tags"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:268
+#: src/screens/Moderation/index.tsx:296
 msgid "Muted accounts"
 msgstr ""
 
@@ -5555,7 +5556,7 @@ msgstr ""
 msgid "Muted by \"{0}\""
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:238
+#: src/screens/Moderation/index.tsx:266
 msgid "Muted words & tags"
 msgstr ""
 
@@ -6143,7 +6144,7 @@ msgstr ""
 msgid "Open moderation debug page"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:234
+#: src/screens/Moderation/index.tsx:262
 msgid "Open muted words and tags settings"
 msgstr ""
 
@@ -8486,7 +8487,7 @@ msgstr ""
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:108
+#: src/screens/Moderation/index.tsx:111
 #: src/screens/Profile/Sections/Labels.tsx:183
 msgid "Something went wrong, please try again."
 msgstr ""
@@ -8898,7 +8899,7 @@ msgstr ""
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:371
+#: src/screens/Moderation/index.tsx:397
 msgid "The Bluesky web application"
 msgstr ""
 
@@ -8938,11 +8939,7 @@ msgstr ""
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
 msgstr ""
 
-#: src/components/ageAssurance/useAgeAssuranceCopy.ts:19
-msgid "The laws in your location require you to verify you're an adult before accessing certain features on Bluesky, like adult content and direct messaging."
-msgstr ""
-
-#: src/components/ageAssurance/useAgeAssuranceCopy.ts:22
+#: src/components/ageAssurance/useAgeAssuranceCopy.ts:14
 msgid "The laws in your location require you to verify you're an adult to access certain features. Tap to learn more."
 msgstr ""
 
@@ -9394,7 +9391,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:348
+#: src/screens/Moderation/index.tsx:374
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
@@ -9918,7 +9915,7 @@ msgstr ""
 msgid "Verification failed, please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:298
+#: src/screens/Moderation/index.tsx:326
 msgid "Verification settings"
 msgstr ""
 
@@ -10155,11 +10152,11 @@ msgstr ""
 msgid "View video"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:278
+#: src/screens/Moderation/index.tsx:306
 msgid "View your blocked accounts"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:218
+#: src/screens/Moderation/index.tsx:246
 msgid "View your default post interaction settings"
 msgstr ""
 
@@ -10168,11 +10165,11 @@ msgstr ""
 msgid "View your feeds and explore more"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:248
+#: src/screens/Moderation/index.tsx:276
 msgid "View your moderation lists"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:263
+#: src/screens/Moderation/index.tsx:291
 msgid "View your muted accounts"
 msgstr ""
 
@@ -10285,7 +10282,7 @@ msgstr ""
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:423
+#: src/screens/Moderation/index.tsx:449
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
@@ -10802,10 +10799,6 @@ msgstr ""
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:320
-msgid "You must complete age assurance in order to access content filters."
-msgstr ""
-
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:53
 msgid "You must complete age assurance in order to access this screen."
 msgstr ""
@@ -11005,6 +10998,10 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:529
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
+msgstr ""
+
+#: src/screens/Moderation/index.tsx:213
+msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your birthdate in your <0>account settings</0>."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:252
