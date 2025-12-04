@@ -14,16 +14,10 @@ import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
-import {Provider as AgeAssuranceProvider} from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
-import {
-  beginResolveGeolocationConfig,
-  ensureGeolocationConfigIsResolved,
-  Provider as GeolocationProvider,
-} from '#/state/geolocation'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -44,6 +38,7 @@ import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
+import {Provider as OnboardingProvider} from '#/state/shell/onboarding'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
@@ -61,13 +56,18 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
+import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
+import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
+import * as Geo from '#/geolocation'
+import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 /**
  * Begin geolocation ASAP
  */
-beginResolveGeolocationConfig()
+Geo.resolve()
+prefetchAgeAssuranceConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -104,7 +104,7 @@ function InnerApp() {
   }, [_])
 
   // wait for session to resume
-  if (!isReady || !hasCheckedReferrer) return null
+  if (!isReady || !hasCheckedReferrer) return <Splash isReady />
 
   return (
     <Alf theme={theme}>
@@ -118,7 +118,7 @@ function InnerApp() {
                 <QueryProvider currentDid={currentAccount?.did}>
                   <PolicyUpdateOverlayProvider>
                     <StatsigProvider>
-                      <AgeAssuranceProvider>
+                      <AgeAssuranceV2Provider>
                         <ComposerProvider>
                           <MessagesProvider>
                             {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
@@ -157,7 +157,7 @@ function InnerApp() {
                             </LabelDefsProvider>
                           </MessagesProvider>
                         </ComposerProvider>
-                      </AgeAssuranceProvider>
+                      </AgeAssuranceV2Provider>
                     </StatsigProvider>
                   </PolicyUpdateOverlayProvider>
                 </QueryProvider>
@@ -174,14 +174,13 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([
-      initPersistedState(),
-      ensureGeolocationConfigIsResolved(),
-    ]).then(() => setReady(true))
+    Promise.all([initPersistedState(), Geo.resolve()]).then(() =>
+      setReady(true),
+    )
   }, [])
 
   if (!isReady) {
-    return null
+    return <Splash isReady />
   }
 
   /*
@@ -189,29 +188,31 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <GeolocationProvider>
+    <Geo.Provider>
       <A11yProvider>
-        <SessionProvider>
-          <PrefsStateProvider>
-            <I18nProvider>
-              <ShellStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <PortalProvider>
-                        <StarterPackProvider>
-                          <InnerApp />
-                        </StarterPackProvider>
-                      </PortalProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </ShellStateProvider>
-            </I18nProvider>
-          </PrefsStateProvider>
-        </SessionProvider>
+        <OnboardingProvider>
+          <SessionProvider>
+            <PrefsStateProvider>
+              <I18nProvider>
+                <ShellStateProvider>
+                  <ModalStateProvider>
+                    <DialogStateProvider>
+                      <LightboxStateProvider>
+                        <PortalProvider>
+                          <StarterPackProvider>
+                            <InnerApp />
+                          </StarterPackProvider>
+                        </PortalProvider>
+                      </LightboxStateProvider>
+                    </DialogStateProvider>
+                  </ModalStateProvider>
+                </ShellStateProvider>
+              </I18nProvider>
+            </PrefsStateProvider>
+          </SessionProvider>
+        </OnboardingProvider>
       </A11yProvider>
-    </GeolocationProvider>
+    </Geo.Provider>
   )
 }
 

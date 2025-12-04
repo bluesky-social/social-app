@@ -4,14 +4,11 @@ import * as Linking from 'expo-linking'
 import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {logger} from '#/logger'
 import {isIOS, isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
-import {
-  parseAgeAssuranceRedirectDialogState,
-  useAgeAssuranceRedirectDialogControl,
-} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
@@ -27,8 +24,6 @@ export function useIntentHandler() {
   const incomingUrl = Linking.useLinkingURL()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
-  const ageAssuranceRedirectDialogControl =
-    useAgeAssuranceRedirectDialogControl()
   const {currentAccount} = useSession()
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
@@ -47,17 +42,8 @@ export function useIntentHandler() {
           hostname: referrerInfo?.hostname,
         })
       }
-
-      // We want to be able to support bluesky:// deeplinks. It's unnatural for someone to use a deeplink with three
-      // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care
-      // of two cases when parsing the url. If we ensure there is a third slash, we can always ensure the first
-      // path parameter is in pathname rather than in hostname.
-      if (url.startsWith('bluesky://') && !url.startsWith('bluesky:///')) {
-        url = url.replace('bluesky://', 'bluesky:///')
-      }
-
-      const urlp = new URL(url)
-      const [__, intent, intentType] = urlp.pathname.split('/')
+      const urlp = parseLinkingUrl(url)
+      const [, intent, intentType] = urlp.pathname.split('/')
 
       // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
       // intent check. On web, we have to check the first part of the path since we have an actual hostname
@@ -82,23 +68,7 @@ export function useIntentHandler() {
           return
         }
         case 'age-assurance': {
-          const state = parseAgeAssuranceRedirectDialogState({
-            result: params.get('result') ?? undefined,
-            actorDid: params.get('actorDid') ?? undefined,
-          })
-
-          /*
-           * If we don't have an account or the account doesn't match, do
-           * nothing. By the time the user switches to their other account, AA
-           * state should be ready for them.
-           */
-          if (
-            state &&
-            currentAccount &&
-            state.actorDid === currentAccount.did
-          ) {
-            ageAssuranceRedirectDialogControl.open(state)
-          }
+          // Handled in `#/ageAssurance/components/RedirectOverlay.tsx`
           return
         }
         case 'apply-ota': {
@@ -127,7 +97,6 @@ export function useIntentHandler() {
     incomingUrl,
     composeIntent,
     verifyEmailIntent,
-    ageAssuranceRedirectDialogControl,
     currentAccount,
     tryApplyUpdate,
   ])

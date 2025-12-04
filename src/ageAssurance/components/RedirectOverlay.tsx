@@ -1,17 +1,27 @@
-import {useEffect, useRef, useState} from 'react'
-import {View} from 'react-native'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {Dimensions, View} from 'react-native'
+import * as Linking from 'expo-linking'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
-import {isNative} from '#/platform/detection'
-import {useAgent} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
+import {isWeb} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
+import {useAgent, useSession} from '#/state/session'
+import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {Button, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {CheckThick_Stroke2_Corner0_Rounded as SuccessIcon} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
@@ -19,7 +29,7 @@ import {Text} from '#/components/Typography'
 import {refetchAgeAssuranceServerState} from '#/ageAssurance'
 import {logger} from '#/ageAssurance'
 
-export type AgeAssuranceRedirectDialogState = {
+export type RedirectOverlayState = {
   result: 'success' | 'unknown'
   actorDid: string
 }
@@ -28,13 +38,13 @@ export type AgeAssuranceRedirectDialogState = {
  * Validate and parse the query parameters returned from the age assurance
  * redirect. If not valid, returns `undefined` and the dialog will not open.
  */
-export function parseAgeAssuranceRedirectDialogState(
+export function parseRedirectOverlayState(
   state: {
     result?: string
     actorDid?: string
   } = {},
-): AgeAssuranceRedirectDialogState | undefined {
-  let result: AgeAssuranceRedirectDialogState['result'] = 'unknown'
+): RedirectOverlayState | undefined {
+  let result: RedirectOverlayState['result'] = 'unknown'
   const actorDid = state.actorDid
 
   switch (state.result) {
@@ -55,39 +65,122 @@ export function parseAgeAssuranceRedirectDialogState(
   }
 }
 
-export function useAgeAssuranceRedirectDialogControl() {
-  return useGlobalDialogsControlContext().ageAssuranceRedirectDialogControl
+const Context = createContext<{
+  isOpen: boolean
+  open: (state: RedirectOverlayState) => void
+  close: () => void
+}>({
+  isOpen: false,
+  open: () => {},
+  close: () => {},
+})
+
+export function useRedirectOverlayContext() {
+  return useContext(Context)
 }
 
-export function AgeAssuranceRedirectDialog() {
-  const {_} = useLingui()
-  const control = useAgeAssuranceRedirectDialogControl()
+export function Provider({children}: {children?: React.ReactNode}) {
+  const {currentAccount} = useSession()
+  const incomingUrl = Linking.useLinkingURL()
+  const [state, setState] = useState<RedirectOverlayState | null>(() => {
+    if (!incomingUrl) return null
+    const url = parseLinkingUrl(incomingUrl)
+    if (url.pathname !== '/intent/age-assurance') return null
+    const params = url.searchParams
+    const state = parseRedirectOverlayState({
+      result: params.get('result') ?? undefined,
+      actorDid: params.get('actorDid') ?? undefined,
+    })
 
-  // TODO for testing
-  // Dialog.useAutoOpen(control.control, 3e3)
+    if (isWeb) {
+      // Clear the URL parameters so they don't re-trigger
+      history.pushState(null, '', '/')
+    }
+
+    /*
+     * If we don't have an account or the account doesn't match, do
+     * nothing. By the time the user switches to their other account, AA
+     * state should be ready for them.
+     */
+    if (state && currentAccount && state.actorDid === currentAccount.did) {
+      return state
+    }
+
+    return null
+  })
+  const open = useCallback((state: RedirectOverlayState) => {
+    setState(state)
+  }, [])
+  const close = useCallback(() => {
+    setState(null)
+  }, [])
 
   return (
-    <Dialog.Outer control={control.control} onClose={() => control.clear()}>
-      <Dialog.Handle />
-
-      <Dialog.ScrollableInner
-        label={_(msg`Verifying your age assurance status`)}
-        style={[web({maxWidth: 400})]}>
-        <Inner optimisticState={control.value} />
-      </Dialog.ScrollableInner>
-    </Dialog.Outer>
+    <Context.Provider
+      value={useMemo(
+        () => ({
+          isOpen: state !== null,
+          open,
+          close,
+        }),
+        [state, open, close],
+      )}>
+      {children}
+    </Context.Provider>
   )
 }
 
-export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
+export function RedirectOverlay() {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {isOpen} = useRedirectOverlayContext()
+  const {gtMobile} = useBreakpoints()
+
+  return isOpen ? (
+    <FullWindowOverlay>
+      <View
+        style={[
+          a.fixed,
+          a.inset_0,
+          // setting a zIndex when using FullWindowOverlay on iOS
+          // means the taps pass straight through to the underlying content (???)
+          // so don't set it on iOS. FullWindowOverlay already does the job.
+          !isIOS && {zIndex: 9999},
+          t.atoms.bg,
+          gtMobile ? a.p_2xl : a.p_xl,
+          a.align_center,
+          // @ts-ignore
+          platform({
+            web: {
+              paddingTop: '35vh',
+            },
+            default: {
+              paddingTop: Dimensions.get('window').height * 0.35,
+            },
+          }),
+        ]}>
+        <View
+          role="dialog"
+          aria-role="dialog"
+          aria-label={_(msg`Verifying your age assurance status`)}>
+          <View style={[a.pb_3xl, {width: 300}]}>
+            <Inner />
+          </View>
+        </View>
+      </View>
+    </FullWindowOverlay>
+  ) : null
+}
+
+function Inner() {
   const t = useTheme()
   const {_} = useLingui()
   const agent = useAgent()
   const polling = useRef(false)
   const unmounted = useRef(false)
-  const control = useAgeAssuranceRedirectDialogControl()
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
+  const {close} = useRedirectOverlayContext()
 
   useEffect(() => {
     if (polling.current) return
@@ -105,7 +198,6 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           if (!agent.session) return
           if (unmounted.current) return
 
-          // TODO test
           const data = await refetchAgeAssuranceServerState({agent})
 
           if (data?.state.status !== 'assured') {
@@ -137,7 +229,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
     return () => {
       unmounted.current = true
     }
-  }, [agent, control])
+  }, [agent])
 
   if (success) {
     return (
@@ -155,7 +247,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
               a.pb_md,
             ]}>
             <SuccessIcon size="sm" fill={t.palette.positive_500} />
-            <Text style={[a.text_xl, a.font_bold]}>
+            <Text style={[a.text_3xl, a.font_bold]}>
               <Trans>Success</Trans>
             </Text>
           </View>
@@ -167,23 +259,19 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
             </Trans>
           </Text>
 
-          {isNative && (
-            <View style={[a.w_full, a.pt_lg]}>
-              <Button
-                label={_(msg`Close`)}
-                size="large"
-                variant="solid"
-                color="secondary"
-                onPress={() => control.control.close()}>
-                <ButtonText>
-                  <Trans>Close</Trans>
-                </ButtonText>
-              </Button>
-            </View>
-          )}
+          <View style={[a.w_full, a.pt_lg]}>
+            <Button
+              label={_(msg`Close`)}
+              size="large"
+              variant="solid"
+              color="secondary"
+              onPress={() => close()}>
+              <ButtonText>
+                <Trans>Close</Trans>
+              </ButtonText>
+            </Button>
+          </View>
         </View>
-
-        <Dialog.Close />
       </>
     )
   }
@@ -202,16 +290,16 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
             a.pt_lg,
             a.pb_md,
           ]}>
-          {error && <ErrorIcon size="md" fill={t.palette.negative_500} />}
+          {error && <ErrorIcon size="lg" fill={t.palette.negative_500} />}
 
-          <Text style={[a.text_xl, a.font_bold]}>
+          <Text style={[a.text_3xl, a.font_bold]}>
             {error ? <Trans>Connection issue</Trans> : <Trans>Verifying</Trans>}
           </Text>
 
-          {!error && <Loader size="md" />}
+          {!error && <Loader size="lg" />}
         </View>
 
-        <Text style={[a.text_md, a.leading_snug]}>
+        <Text style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
           {error ? (
             <Trans>
               We were unable to receive the verification due to a connection
@@ -226,14 +314,14 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           )}
         </Text>
 
-        {error && isNative && (
+        {error && (
           <View style={[a.w_full, a.pt_lg]}>
             <Button
               label={_(msg`Close`)}
               size="large"
               variant="solid"
               color="secondary"
-              onPress={() => control.control.close()}>
+              onPress={() => close()}>
               <ButtonText>
                 <Trans>Close</Trans>
               </ButtonText>
@@ -241,8 +329,6 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           </View>
         )}
       </View>
-
-      {error && <Dialog.Close />}
     </>
   )
 }

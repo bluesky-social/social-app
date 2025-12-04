@@ -41,7 +41,7 @@ export function makeRecordUri(
   collection: string,
   rkey: string,
 ) {
-  const urip = new AtUri('at://host/')
+  const urip = new AtUri('at://placeholder.placeholder/')
   urip.host = didOrName
   urip.collection = collection
   urip.rkey = rkey

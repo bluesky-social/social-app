@@ -421,6 +421,7 @@ export function SimpleInlineLinkText({
   label,
   disableUnderline,
   shouldProxy,
+  onPress: outerOnPress,
   ...rest
 }: Omit<
   InlineLinkProps,
@@ -428,7 +429,6 @@ export function SimpleInlineLinkText({
   | 'action'
   | 'disableMismatchWarning'
   | 'overridePresentation'
-  | 'onPress'
   | 'onLongPress'
   | 'shareOnLongPress'
 > & {
@@ -448,7 +448,9 @@ export function SimpleInlineLinkText({
     href = createProxiedUrl(href)
   }
 
-  const onPress = () => {
+  const onPress = (e: GestureResponderEvent) => {
+    const exitEarlyIfFalse = outerOnPress?.(e)
+    if (exitEarlyIfFalse === false) return
     Linking.openURL(href)
   }
 
@@ -517,7 +519,7 @@ export function WebOnlyInlineLinkText({
 export function createStaticClick(
   onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>,
 ): {
-  to: BaseLinkProps['to']
+  to: string
   onPress: Exclude<BaseLinkProps['onPress'], undefined>
 } {
   return {

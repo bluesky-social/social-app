@@ -3,12 +3,15 @@ import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {Sentry} from '#/logger/sentry/lib'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
+import {
+  useDeviceGeolocationApi,
+  useRequestDeviceGeolocation,
+} from '#/geolocation'
 import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
@@ -45,6 +48,8 @@ function StorybookInner() {
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const [showContainedList, setShowContainedList] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
+  const requestDeviceGeolocation = useRequestDeviceGeolocation()
+  const {setDeviceGeolocation} = useDeviceGeolocationApi()
 
   return (
     <>
@@ -97,11 +102,17 @@ function StorybookInner() {
               <ButtonText>Open Shared Prefs Tester</ButtonText>
             </Button>
             <Button
-              color="negative"
+              color="primary_subtle"
               size="large"
-              onPress={() => Sentry.nativeCrash()}
+              onPress={() =>
+                requestDeviceGeolocation().then(req => {
+                  if (req.granted && req.location) {
+                    setDeviceGeolocation(req.location)
+                  }
+                })
+              }
               label="crash">
-              <ButtonText>Sentry Crash</ButtonText>
+              <ButtonText>Get GPS Location</ButtonText>
             </Button>
 
             <ThemeProvider theme="light">

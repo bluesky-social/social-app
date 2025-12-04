@@ -8,9 +8,12 @@ import {getAge, getDateAgo} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
+  useBirthDateMutation,
+  useIsBirthDateUpdateAllowed,
+} from '#/state/birthDate'
+import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,
-  usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -18,7 +21,7 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DateField} from '#/components/forms/DateField'
-import {InlineLinkText} from '#/components/Link'
+import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -30,42 +33,65 @@ export function BirthDateSettingsDialog({
   const t = useTheme()
   const {_} = useLingui()
   const {isLoading, error, data: preferences} = usePreferencesQuery()
+  const isBirthdateUpdateAllowed = useIsBirthDateUpdateAllowed()
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner
-        label={_(msg`My Birthday`)}
-        style={web({maxWidth: 400})}>
-        <View style={[a.gap_sm]}>
-          <Text style={[a.text_xl, a.font_semi_bold]}>
-            <Trans>My Birthday</Trans>
-          </Text>
-          <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
-            <Trans>
-              This information is private and not shared with other users.
-            </Trans>
-          </Text>
+      {isBirthdateUpdateAllowed ? (
+        <Dialog.ScrollableInner
+          label={_(msg`My Birthday`)}
+          style={web({maxWidth: 400})}>
+          <View style={[a.gap_md]}>
+            <Text style={[a.text_xl, a.font_semi_bold]}>
+              <Trans>My Birthday</Trans>
+            </Text>
+            <Text
+              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+              <Trans>
+                This information is private and not shared with other users.
+              </Trans>
+            </Text>
 
-          {isLoading ? (
-            <Loader size="xl" />
-          ) : error || !preferences ? (
-            <ErrorMessage
-              message={
-                error?.toString() ||
-                _(
-                  msg`We were unable to load your birth date preferences. Please try again.`,
-                )
-              }
-              style={[a.rounded_sm]}
-            />
-          ) : (
-            <BirthdayInner control={control} preferences={preferences} />
-          )}
-        </View>
+            {isLoading ? (
+              <Loader size="xl" />
+            ) : error || !preferences ? (
+              <ErrorMessage
+                message={
+                  error?.toString() ||
+                  _(
+                    msg`We were unable to load your birth date preferences. Please try again.`,
+                  )
+                }
+                style={[a.rounded_sm]}
+              />
+            ) : (
+              <BirthdayInner control={control} preferences={preferences} />
+            )}
+          </View>
 
-        <Dialog.Close />
-      </Dialog.ScrollableInner>
+          <Dialog.Close />
+        </Dialog.ScrollableInner>
+      ) : (
+        <Dialog.ScrollableInner
+          label={_(msg`My Birthday`)}
+          style={web({maxWidth: 400})}>
+          <View style={[a.gap_sm]}>
+            <Text style={[a.text_xl, a.font_semi_bold]}>
+              <Trans>You recently changed your birthday</Trans>
+            </Text>
+            <Text
+              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+              <Trans>
+                There is a limit to how often you can change your birth date.
+                You may need to wait a day or two before updating it again.
+              </Trans>
+            </Text>
+          </View>
+
+          <Dialog.Close />
+        </Dialog.ScrollableInner>
+      )}
     </Dialog.Outer>
   )
 }
@@ -86,7 +112,7 @@ function BirthdayInner({
     isError,
     error,
     mutateAsync: setBirthDate,
-  } = usePreferencesSetBirthDateMutation()
+  } = useBirthDateMutation()
   const hasChanged = date !== preferences.birthDate
 
   const age = getAge(new Date(date))
@@ -130,11 +156,11 @@ function BirthdayInner({
         <Admonition type="error">
           <Trans>
             You must be at least 13 years old to use Bluesky. Read our{' '}
-            <InlineLinkText
+            <SimpleInlineLinkText
               to="https://bsky.social/about/support/tos"
               label={_(msg`Terms of Service`)}>
               Terms of Service
-            </InlineLinkText>{' '}
+            </SimpleInlineLinkText>{' '}
             for more information.
           </Trans>
         </Admonition>
