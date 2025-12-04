@@ -1,3 +1,9 @@
+/*
+ * This is a reimplementation of what exists in our HTML template files
+ * already. Once the React tree mounts, this is what gets rendered first, until
+ * the app is ready to go.
+ */
+
 import {View} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 
