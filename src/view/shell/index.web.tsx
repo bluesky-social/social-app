@@ -61,6 +61,7 @@ function ShellInner() {
   }, [showDrawer, showDrawerDelayedExit])
 
   useComposerKeyboardShortcut()
+  useIntentHandler()
 
   useEffect(() => {
     const unsubscribe = navigator.addListener('state', () => {
@@ -140,7 +141,6 @@ function ShellInner() {
 export function Shell() {
   const t = useTheme()
   const aa = useAgeAssurance()
-  useIntentHandler()
   return (
     <View style={[a.util_screen_outer, t.atoms.bg]}>
       {aa.state.access === aa.Access.None ? (
