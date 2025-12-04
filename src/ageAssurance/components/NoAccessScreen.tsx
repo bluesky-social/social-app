@@ -19,7 +19,6 @@ import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {AgeAssuranceInitDialog} from '#/components/ageAssurance/AgeAssuranceInitDialog'
-import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as Dialog from '#/components/Dialog'
@@ -204,7 +203,6 @@ export function NoAccessScreen() {
       </ScrollView>
 
       <BirthDateSettingsDialog control={birthdateControl} />
-      <AgeAssuranceRedirectDialog />
 
       {/*
        * While this blocking overlay is up, other dialogs in the shell
