@@ -106,7 +106,7 @@ export function NoAccessScreen() {
           to={createSupportLink({code: SupportCode.AA_BIRTHDATE})}
           label={_(msg`Click here to contact our support team`)}
           style={[textStyles]}>
-          contact our support team.
+          contact our support team
         </SimpleInlineLinkText>
         .
       </Trans>
