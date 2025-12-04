@@ -154,8 +154,8 @@ export function NoAccessScreen() {
             <View style={[a.gap_lg]}>
               <Text style={[textStyles]}>
                 <Trans>
-                  Looks like you haven't added your birthdate. You must provide
-                  an accurate date of birth to use Bluesky.
+                  It looks like you haven't added your birthdate. You must
+                  provide an accurate date of birth to use Bluesky.
                 </Trans>
               </Text>
               <Button
@@ -173,15 +173,17 @@ export function NoAccessScreen() {
           <View style={[a.pt_lg, a.gap_xl]}>
             <Logo width={120} textFill={t.atoms.text.color} />
             <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-              To log out,{' '}
-              <SimpleInlineLinkText
-                label={_(msg`Click here to log out`)}
-                {...createStaticClick(() => {
-                  onPressLogout()
-                })}>
-                click here
-              </SimpleInlineLinkText>
-              .
+              <Trans>
+                To log out,{' '}
+                <SimpleInlineLinkText
+                  label={_(msg`Click here to log out`)}
+                  {...createStaticClick(() => {
+                    onPressLogout()
+                  })}>
+                  click here
+                </SimpleInlineLinkText>
+                .
+              </Trans>
             </Text>
           </View>
         </View>
