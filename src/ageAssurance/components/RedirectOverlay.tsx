@@ -57,7 +57,7 @@ export function parseRedirectOverlayState(
       break
   }
 
-  if (result && actorDid) {
+  if (actorDid) {
     return {
       result,
       actorDid,
