@@ -43,23 +43,21 @@ export function parseStatusFromString(raw: string) {
 }
 
 export function parseAccessFromString(raw: string) {
-  let access = AgeAssuranceAccess.Full
   switch (raw) {
     case 'unknown':
-      access = AgeAssuranceAccess.Unknown
+      return AgeAssuranceAccess.Unknown
       break
     case 'none':
-      access = AgeAssuranceAccess.None
+      return AgeAssuranceAccess.None
       break
     case 'safe':
-      access = AgeAssuranceAccess.Safe
+      return AgeAssuranceAccess.Safe
       break
     case 'full':
-      access = AgeAssuranceAccess.Full
+      return AgeAssuranceAccess.Full
       break
     default:
       logger.error(`parseAccessFromString: unknown access value: ${raw}`)
-      access = AgeAssuranceAccess.Full
+      return AgeAssuranceAccess.Full
   }
-  return access
 }
