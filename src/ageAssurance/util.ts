@@ -82,3 +82,7 @@ export function isLegacyBirthdateBug(birthDate: string) {
 export function isUserUnderMinimumAge(birthDate: string) {
   return getAge(new Date(birthDate)) < DEFAULT_MIN_AGE
 }
+
+export function isUserUnderAdultAge(birthDate: string) {
+  return getAge(new Date(birthDate)) < 18
+}

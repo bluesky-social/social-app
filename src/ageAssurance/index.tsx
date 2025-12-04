@@ -3,6 +3,7 @@ import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
 import {AgeAssuranceDataProvider} from '#/ageAssurance/data'
+import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
 import {
   useAgeAssuranceState,
@@ -13,6 +14,7 @@ import {
   type AgeAssuranceState,
   AgeAssuranceStatus,
 } from '#/ageAssurance/types'
+import {isUserUnderAdultAge} from '#/ageAssurance/util'
 
 export {
   prefetchConfig as prefetchAgeAssuranceConfig,
@@ -27,6 +29,10 @@ const AgeAssuranceStateContext = createContext<{
   Access: typeof AgeAssuranceAccess
   Status: typeof AgeAssuranceStatus
   state: AgeAssuranceState
+  flags: {
+    adultContentDisabled: boolean
+    chatDisabled: boolean
+  }
 }>({
   Access: AgeAssuranceAccess,
   Status: AgeAssuranceStatus,
@@ -34,6 +40,10 @@ const AgeAssuranceStateContext = createContext<{
     lastInitiatedAt: undefined,
     status: AgeAssuranceStatus.Unknown,
     access: AgeAssuranceAccess.Full,
+  },
+  flags: {
+    adultContentDisabled: false,
+    chatDisabled: false,
   },
 })
 
@@ -58,6 +68,7 @@ export function Provider({children}: {children: React.ReactNode}) {
 
 function InnerProvider({children}: {children: React.ReactNode}) {
   const state = useAgeAssuranceState()
+  const {data} = useAgeAssuranceDataContext()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
   const handleAccessUpdate = useCallback(
@@ -76,14 +87,23 @@ function InnerProvider({children}: {children: React.ReactNode}) {
 
   return (
     <AgeAssuranceStateContext.Provider
-      value={useMemo(
-        () => ({
+      value={useMemo(() => {
+        const chatDisabled = state.access !== AgeAssuranceAccess.Full
+        const isUnderage = data?.birthdate
+          ? isUserUnderAdultAge(data.birthdate)
+          : true
+        const adultContentDisabled =
+          state.access !== AgeAssuranceAccess.Full || isUnderage
+        return {
           Access: AgeAssuranceAccess,
           Status: AgeAssuranceStatus,
           state,
-        }),
-        [state],
-      )}>
+          flags: {
+            adultContentDisabled,
+            chatDisabled,
+          },
+        }
+      }, [state, data])}>
       {children}
     </AgeAssuranceStateContext.Provider>
   )
