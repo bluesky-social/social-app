@@ -8,7 +8,7 @@ import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {isNative} from '#/platform/detection'
-import {useIsBirthDateUpdateAllowed} from '#/state/birthDate'
+import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useSessionApi} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -42,10 +42,10 @@ export function NoAccessScreen() {
   const {_} = useLingui()
   const {gtPhone} = useBreakpoints()
   const insets = useSafeAreaInsets()
-  const birthdayControl = useDialogControl()
+  const birthdateControl = useDialogControl()
   const {data} = useAgeAssuranceDataContext()
   const region = useAgeAssuranceRegionConfig()
-  const isBirthdateUpdateAllowed = useIsBirthDateUpdateAllowed()
+  const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {logoutCurrentAccount} = useSessionApi()
 
   const isAARegion = !!region
@@ -78,15 +78,15 @@ export function NoAccessScreen() {
     logoutCurrentAccount('AgeAssuranceNoAccessScreen')
   }, [logoutCurrentAccount])
 
-  const birthdayUpdateText = canUpdateBirthday ? (
+  const birthdateUpdateText = canUpdateBirthday ? (
     <Text style={[textStyles]}>
       <Trans>
-        If your birth date is not accurate, you can update it by{' '}
+        If your birthdate is not accurate, you can update it by{' '}
         <SimpleInlineLinkText
-          label={_(msg`Click here to update your birthday`)}
+          label={_(msg`Click here to update your birthdate`)}
           style={[textStyles]}
           {...createStaticClick(() => {
-            birthdayControl.open()
+            birthdateControl.open()
           })}>
           clicking here
         </SimpleInlineLinkText>
@@ -132,7 +132,7 @@ export function NoAccessScreen() {
                       </Text>
                     ))}
 
-                    {birthdayUpdateText}
+                    {birthdateUpdateText}
                   </View>
 
                   <AccessSection />
@@ -141,12 +141,12 @@ export function NoAccessScreen() {
                 <View style={[a.gap_lg]}>
                   <Text style={[textStyles]}>
                     <Trans>
-                      Unfortunately, the birth date you have saved to your
+                      Unfortunately, the birthdate you have saved to your
                       profile makes you too young to access Bluesky.
                     </Trans>
                   </Text>
 
-                  {birthdayUpdateText}
+                  {birthdateUpdateText}
                 </View>
               )}
             </>
@@ -154,17 +154,17 @@ export function NoAccessScreen() {
             <View style={[a.gap_lg]}>
               <Text style={[textStyles]}>
                 <Trans>
-                  Looks like you haven't added your birth date. You must provide
+                  Looks like you haven't added your birthdate. You must provide
                   an accurate date of birth to use Bluesky.
                 </Trans>
               </Text>
               <Button
                 color="primary"
                 size="large"
-                label={_(msg`Click here to update your birthday`)}
-                onPress={() => birthdayControl.open()}>
+                label={_(msg`Click here to update your birthdate`)}
+                onPress={() => birthdateControl.open()}>
                 <ButtonText>
-                  <Trans>Add your birth date</Trans>
+                  <Trans>Add your birthdate</Trans>
                 </ButtonText>
               </Button>
             </View>
@@ -187,7 +187,7 @@ export function NoAccessScreen() {
         </View>
       </ScrollView>
 
-      <BirthDateSettingsDialog control={birthdayControl} />
+      <BirthDateSettingsDialog control={birthdateControl} />
       <AgeAssuranceRedirectDialog />
 
       {/*

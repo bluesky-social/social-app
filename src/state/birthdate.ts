@@ -16,21 +16,21 @@ const BIRTHDATE_DELAY_HOURS = IS_DEV ? 0.001 : 48
  *
  * Use {@link useIsBirthDateUpdateAllowed} to check if an update is allowed.
  */
-export function snoozeBirthDateUpdateAllowedForDid(did: string) {
-  account.set([did, 'birthDateLastUpdatedAt'], new Date().toISOString())
+export function snoozeBirthdateUpdateAllowedForDid(did: string) {
+  account.set([did, 'birthdateLastUpdatedAt'], new Date().toISOString())
 }
 
 /**
  * Returns whether a birthdate update is currently allowed, based on the
  * last update timestamp stored locally.
  */
-export function useIsBirthDateUpdateAllowed() {
+export function useIsBirthdateUpdateAllowed() {
   const {currentAccount} = useSession()
   return useMemo(() => {
     if (!currentAccount) return false
     const lastUpdated = account.get([
       currentAccount.did,
-      'birthDateLastUpdatedAt',
+      'birthdateLastUpdatedAt',
     ])
     if (!lastUpdated) return true
     const lastUpdatedDate = new Date(lastUpdated)
@@ -40,7 +40,7 @@ export function useIsBirthDateUpdateAllowed() {
   }, [currentAccount])
 }
 
-export function useBirthDateMutation() {
+export function useBirthdateMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const patchOtherRequiredData = usePatchAgeAssuranceOtherRequiredData()
@@ -58,7 +58,7 @@ export function useBirthDateMutation() {
        * birthdate, which may change the user's age assurance access level.
        */
       patchOtherRequiredData({birthdate: bday})
-      snoozeBirthDateUpdateAllowedForDid(agent.sessionManager.did!)
+      snoozeBirthdateUpdateAllowedForDid(agent.sessionManager.did!)
     },
   })
 }

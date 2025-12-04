@@ -8,9 +8,9 @@ import {getAge, getDateAgo} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
-  useBirthDateMutation,
-  useIsBirthDateUpdateAllowed,
-} from '#/state/birthDate'
+  useBirthdateMutation,
+  useIsBirthdateUpdateAllowed,
+} from '#/state/birthdate'
 import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,
@@ -33,7 +33,7 @@ export function BirthDateSettingsDialog({
   const t = useTheme()
   const {_} = useLingui()
   const {isLoading, error, data: preferences} = usePreferencesQuery()
-  const isBirthdateUpdateAllowed = useIsBirthDateUpdateAllowed()
+  const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -112,7 +112,7 @@ function BirthdayInner({
     isError,
     error,
     mutateAsync: setBirthDate,
-  } = useBirthDateMutation()
+  } = useBirthdateMutation()
   const hasChanged = date !== preferences.birthDate
 
   const age = getAge(new Date(date))

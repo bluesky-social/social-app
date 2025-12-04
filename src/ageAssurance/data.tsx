@@ -15,7 +15,7 @@ import debounce from 'lodash.debounce'
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {getAge} from '#/lib/strings/time'
-import {snoozeBirthDateUpdateAllowedForDid} from '#/state/birthDate'
+import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
@@ -337,7 +337,7 @@ export async function getOtherRequiredData({
     isUserUnderMinimumAge(data.birthdate) &&
     !isLegacyBirthdateBug(data.birthdate)
   ) {
-    snoozeBirthDateUpdateAllowedForDid(did!)
+    snoozeBirthdateUpdateAllowedForDid(did!)
   }
 
   return data

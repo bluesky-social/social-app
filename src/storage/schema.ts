@@ -60,7 +60,8 @@ export type Account = {
   searchAccountHistory?: string[]
 
   /**
-   * The ISO string of the user's birthday as last set locally.
+   * The ISO date string of when this account's birthdate was last updated on
+   * this device.
    */
-  birthDateLastUpdatedAt?: string
+  birthdateLastUpdatedAt?: string
 }

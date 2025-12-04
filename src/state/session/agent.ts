@@ -25,7 +25,7 @@ import {
 import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {snoozeBirthDateUpdateAllowedForDid} from '#/state/birthDate'
+import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {
   prefetchAgeAssuranceData,
@@ -185,7 +185,7 @@ export async function createAgentAndCreateAccount(
    */
   setCreatedAtForDid({did: account.did, createdAt})
   setBirthdateForDid({did: account.did, birthdate})
-  snoozeBirthDateUpdateAllowedForDid(account.did)
+  snoozeBirthdateUpdateAllowedForDid(account.did)
   // do this last
   const aa = prefetchAgeAssuranceData({agent})
 
