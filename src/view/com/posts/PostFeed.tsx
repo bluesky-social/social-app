@@ -509,10 +509,10 @@ let PostFeed = ({
                     }
                     // Show composer prompt for Discover and Following feeds
                     if (
-                      gate('show_composer_prompt') &&
                       hasSession &&
                       (feedUriOrActorDid === DISCOVER_FEED_URI ||
-                        feed === 'following')
+                        feed === 'following') &&
+                      gate('show_composer_prompt')
                     ) {
                       arr.push({
                         type: 'composerPrompt',
@@ -535,7 +535,7 @@ let PostFeed = ({
                 } else if (feedKind === 'following') {
                   if (sliceIndex === 0) {
                     // Show composer prompt for Following feed
-                    if (gate('show_composer_prompt') && hasSession) {
+                    if (hasSession && gate('show_composer_prompt')) {
                       arr.push({
                         type: 'composerPrompt',
                         key: 'composerPrompt-' + sliceIndex,
