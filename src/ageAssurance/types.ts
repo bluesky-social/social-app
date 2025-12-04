@@ -21,25 +21,19 @@ export type AgeAssuranceState = {
 }
 
 export function parseStatusFromString(raw: string) {
-  let status = AgeAssuranceStatus.Unknown
   switch (raw) {
     case 'unknown':
-      status = AgeAssuranceStatus.Unknown
-      break
+      return AgeAssuranceStatus.Unknown
     case 'pending':
-      status = AgeAssuranceStatus.Pending
-      break
+      return AgeAssuranceStatus.Pending
     case 'assured':
-      status = AgeAssuranceStatus.Assured
-      break
+      return AgeAssuranceStatus.Assured
     case 'blocked':
-      status = AgeAssuranceStatus.Blocked
-      break
+      return AgeAssuranceStatus.Blocked
     default:
       logger.error(`parseStatusFromString: unknown status value: ${raw}`)
-      status = AgeAssuranceStatus.Unknown
+      return AgeAssuranceStatus.Unknown
   }
-  return status
 }
 
 export function parseAccessFromString(raw: string) {
