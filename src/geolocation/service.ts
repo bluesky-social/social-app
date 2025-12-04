@@ -101,7 +101,6 @@ export async function resolve() {
         )
           .then(config => {
             cacheResponseOrThrow(config)
-            success = true
           })
           .catch((e: any) => {
             // complete fail closed
