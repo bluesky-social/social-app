@@ -45,6 +45,10 @@ export function Provider({children}: {children: ReactNode}) {
   }, [deviceGeolocation, geolocationService])
 
   useEffect(() => {
+    /**
+     * Save this for out-of-band-reads during future cold starts of the app.
+     * Needs to be available for the data prefetching we do on boot.
+     */
     device.set(['mergedGeolocation'], geolocation)
   }, [geolocation])
 
