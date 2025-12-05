@@ -25,16 +25,10 @@ import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
-import {Provider as AgeAssuranceProvider} from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
-import {
-  beginResolveGeolocationConfig,
-  ensureGeolocationConfigIsResolved,
-  Provider as GeolocationProvider,
-} from '#/state/geolocation'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
@@ -56,6 +50,7 @@ import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
+import {Provider as OnboardingProvider} from '#/state/shell/onboarding'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
@@ -73,6 +68,9 @@ import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdate
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
+import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
+import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
+import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -93,7 +91,8 @@ if (isAndroid) {
 /**
  * Begin geolocation ASAP
  */
-beginResolveGeolocationConfig()
+Geo.resolve()
+prefetchAgeAssuranceConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -143,7 +142,7 @@ function InnerApp() {
                 <QueryProvider currentDid={currentAccount?.did}>
                   <PolicyUpdateOverlayProvider>
                     <StatsigProvider>
-                      <AgeAssuranceProvider>
+                      <AgeAssuranceV2Provider>
                         <ComposerProvider>
                           <MessagesProvider>
                             {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
@@ -186,7 +185,7 @@ function InnerApp() {
                             </LabelDefsProvider>
                           </MessagesProvider>
                         </ComposerProvider>
-                      </AgeAssuranceProvider>
+                      </AgeAssuranceV2Provider>
                     </StatsigProvider>
                   </PolicyUpdateOverlayProvider>
                 </QueryProvider>
@@ -203,10 +202,9 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([
-      initPersistedState(),
-      ensureGeolocationConfigIsResolved(),
-    ]).then(() => setReady(true))
+    Promise.all([initPersistedState(), Geo.resolve()]).then(() =>
+      setReady(true),
+    )
   }, [])
 
   if (!isReady) {
@@ -218,36 +216,38 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <GeolocationProvider>
+    <Geo.Provider>
       <A11yProvider>
         <KeyboardControllerProvider>
-          <SessionProvider>
-            <PrefsStateProvider>
-              <I18nProvider>
-                <ShellStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <BottomSheetProvider>
-                            <StarterPackProvider>
-                              <SafeAreaProvider
-                                initialMetrics={initialWindowMetrics}>
-                                <InnerApp />
-                              </SafeAreaProvider>
-                            </StarterPackProvider>
-                          </BottomSheetProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </ShellStateProvider>
-              </I18nProvider>
-            </PrefsStateProvider>
-          </SessionProvider>
+          <OnboardingProvider>
+            <SessionProvider>
+              <PrefsStateProvider>
+                <I18nProvider>
+                  <ShellStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <BottomSheetProvider>
+                              <StarterPackProvider>
+                                <SafeAreaProvider
+                                  initialMetrics={initialWindowMetrics}>
+                                  <InnerApp />
+                                </SafeAreaProvider>
+                              </StarterPackProvider>
+                            </BottomSheetProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </ShellStateProvider>
+                </I18nProvider>
+              </PrefsStateProvider>
+            </SessionProvider>
+          </OnboardingProvider>
         </KeyboardControllerProvider>
       </A11yProvider>
-    </GeolocationProvider>
+    </Geo.Provider>
   )
 }
 

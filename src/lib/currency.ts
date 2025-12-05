@@ -1,8 +1,8 @@
 import React from 'react'
 
 import {deviceLocales} from '#/locale/deviceLocales'
-import {useGeolocationStatus} from '#/state/geolocation'
 import {useLanguagePrefs} from '#/state/preferences'
+import {useGeolocation} from '#/geolocation'
 
 /**
  * From react-native-localize
@@ -275,7 +275,7 @@ export const countryCodeToCurrency: Record<string, string> = {
 export function useFormatCurrency(
   options?: Parameters<typeof Intl.NumberFormat>[1],
 ) {
-  const {location: geolocation} = useGeolocationStatus()
+  const geolocation = useGeolocation()
   const {appLanguage} = useLanguagePrefs()
   return React.useMemo(() => {
     const locale = deviceLocales.at(0)

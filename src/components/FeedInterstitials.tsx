@@ -27,13 +27,15 @@ import {
   web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-import {InlineLinkText, Link} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {FollowDialogWithoutGuide} from './ProgressGuide/FollowDialog'
 import {ProgressGuideList} from './ProgressGuide/List'
 
 const MOBILE_CARD_WIDTH = 165
@@ -253,6 +255,7 @@ export function ProfileGrid({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
+  const followDialogControl = useDialogControl()
 
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
@@ -474,18 +477,33 @@ export function ProfileGrid({
           )}
         </Text>
         {!isProfileHeaderContext && (
-          <InlineLinkText
-            label={_(msg`See more suggested profiles on the Explore page`)}
-            to="/search"
+          <Button
+            label={_(msg`See more suggested profiles`)}
             onPress={() => {
-              logger.metric('suggestedUser:seeMore', {
+              followDialogControl.open()
+              logEvent('suggestedUser:seeMore', {
                 logContext: isFeedContext ? 'Explore' : 'Profile',
               })
             }}>
-            <Trans>See more</Trans>
-          </InlineLinkText>
+            {({hovered}) => (
+              <Text
+                style={[
+                  a.text_sm,
+                  {color: t.palette.primary_500},
+                  hovered &&
+                    web({
+                      textDecorationLine: 'underline',
+                      textDecorationColor: t.palette.primary_500,
+                    }),
+                ]}>
+                <Trans>See more</Trans>
+              </Text>
+            )}
+          </Button>
         )}
       </View>
+
+      <FollowDialogWithoutGuide control={followDialogControl} />
 
       {gtMobile ? (
         <View style={[a.p_lg, a.pt_md]}>
@@ -503,7 +521,16 @@ export function ProfileGrid({
             decelerationRate="fast">
             {content}
 
-            {!isProfileHeaderContext && <SeeMoreSuggestedProfilesCard />}
+            {!isProfileHeaderContext && (
+              <SeeMoreSuggestedProfilesCard
+                onPress={() => {
+                  followDialogControl.open()
+                  logger.metric('suggestedUser:seeMore', {
+                    logContext: 'Explore',
+                  })
+                }}
+              />
+            )}
           </ScrollView>
         </BlockDrawerGesture>
       )}
@@ -511,20 +538,14 @@ export function ProfileGrid({
   )
 }
 
-function SeeMoreSuggestedProfilesCard() {
+function SeeMoreSuggestedProfilesCard({onPress}: {onPress: () => void}) {
   const t = useTheme()
   const {_} = useLingui()
 
   return (
-    <Link
-      to="/search"
-      color="primary"
-      label={_(msg`Browse more accounts on the Explore page`)}
-      onPress={() => {
-        logger.metric('suggestedUser:seeMore', {
-          logContext: 'Explore',
-        })
-      }}
+    <Button
+      label={_(msg`Browse more accounts`)}
+      onPress={onPress}
       style={[
         a.flex_col,
         a.align_center,
@@ -540,7 +561,7 @@ function SeeMoreSuggestedProfilesCard() {
         style={[a.text_md, a.font_medium, a.leading_snug, a.text_center]}>
         <Trans>See more</Trans>
       </ButtonText>
-    </Link>
+    </Button>
   )
 }
 

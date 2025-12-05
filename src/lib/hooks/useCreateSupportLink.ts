@@ -9,6 +9,7 @@ export const ZENDESK_SUPPORT_URL =
 
 export enum SupportCode {
   AA_DID = 'AA_DID',
+  AA_BIRTHDATE = 'AA_BIRTHDATE',
 }
 
 /**

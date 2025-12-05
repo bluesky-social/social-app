@@ -43,6 +43,7 @@ export interface ComposerOpts {
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
   videoUri?: {uri: string; width: number; height: number}
+  openGallery?: boolean
 }
 
 type StateContext = ComposerOpts | undefined

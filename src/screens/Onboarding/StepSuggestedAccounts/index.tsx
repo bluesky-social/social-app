@@ -381,7 +381,6 @@ function SuggestedProfileCard({
     <View
       ref={cardRef}
       style={[
-        a.flex_1,
         a.w_full,
         a.py_lg,
         a.px_xl,

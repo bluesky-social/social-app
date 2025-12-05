@@ -82,6 +82,32 @@ export function ProfileFollows({name}: {name: string}) {
     return []
   }, [data])
 
+  // Track pagination events - fire for page 3+ (pages 1-2 may auto-load)
+  const paginationTrackingRef = React.useRef<{
+    did: string | undefined
+    page: number
+  }>({did: undefined, page: 0})
+  React.useEffect(() => {
+    const currentPageCount = data?.pages?.length || 0
+    // Reset tracking when profile changes
+    if (paginationTrackingRef.current.did !== resolvedDid) {
+      paginationTrackingRef.current = {did: resolvedDid, page: currentPageCount}
+      return
+    }
+    if (
+      resolvedDid &&
+      currentPageCount >= 3 &&
+      currentPageCount > paginationTrackingRef.current.page
+    ) {
+      logger.metric('profile:following:paginate', {
+        contextProfileDid: resolvedDid,
+        itemCount: follows.length,
+        page: currentPageCount,
+      })
+    }
+    paginationTrackingRef.current.page = currentPageCount
+  }, [data?.pages?.length, resolvedDid, follows.length])
+
   const onRefresh = React.useCallback(async () => {
     setIsPTRing(true)
     try {
@@ -99,13 +125,23 @@ export function ProfileFollows({name}: {name: string}) {
     } catch (err) {
       logger.error('Failed to load more follows', {error: err})
     }
-  }, [error, fetchNextPage, hasNextPage, isFetchingNextPage])
+  }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
   const renderItemWithContext = React.useCallback(
     ({item, index}: {item: ActorDefs.ProfileView; index: number}) =>
       renderItem({item, index, contextProfileDid: resolvedDid}),
     [resolvedDid],
   )
+
+  // track pageview
+  React.useEffect(() => {
+    if (resolvedDid) {
+      logger.metric('profile:following:view', {
+        contextProfileDid: resolvedDid,
+        isOwnProfile: isMe,
+      })
+    }
+  }, [resolvedDid, isMe])
 
   // track seen items
   const seenItemsRef = React.useRef<Set<string>>(new Set())

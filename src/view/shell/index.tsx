@@ -13,7 +13,6 @@ import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
-import {useGeolocationStatus} from '#/state/geolocation'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
@@ -27,7 +26,6 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
-import {BlockedGeoOverlay} from '#/components/BlockedGeoOverlay'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
@@ -38,6 +36,9 @@ import {
   usePolicyUpdateContext,
 } from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {useAgeAssurance} from '#/ageAssurance'
+import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
+import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
@@ -193,7 +194,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
 
 export function Shell() {
   const t = useTheme()
-  const {status: geolocation} = useGeolocationStatus()
+  const aa = useAgeAssurance()
   const fullyExpandedCount = useDialogFullyExpandedCountContext()
 
   useIntentHandler()
@@ -213,13 +214,15 @@ export function Shell() {
           navigationBar: t.name !== 'light' ? 'light' : 'dark',
         }}
       />
-      {geolocation?.isAgeBlockedGeo ? (
-        <BlockedGeoOverlay />
+      {aa.state.access === aa.Access.None ? (
+        <NoAccessScreen />
       ) : (
         <RoutesContainer>
           <ShellInner />
         </RoutesContainer>
       )}
+
+      <RedirectOverlay />
     </View>
   )
 }

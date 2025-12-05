@@ -71,6 +71,32 @@ export function ProfileFollowers({name}: {name: string}) {
     return []
   }, [data])
 
+  // Track pagination events - fire for page 3+ (pages 1-2 may auto-load)
+  const paginationTrackingRef = React.useRef<{
+    did: string | undefined
+    page: number
+  }>({did: undefined, page: 0})
+  React.useEffect(() => {
+    const currentPageCount = data?.pages?.length || 0
+    // Reset tracking when profile changes
+    if (paginationTrackingRef.current.did !== resolvedDid) {
+      paginationTrackingRef.current = {did: resolvedDid, page: currentPageCount}
+      return
+    }
+    if (
+      resolvedDid &&
+      currentPageCount >= 3 &&
+      currentPageCount > paginationTrackingRef.current.page
+    ) {
+      logger.metric('profile:followers:paginate', {
+        contextProfileDid: resolvedDid,
+        itemCount: followers.length,
+        page: currentPageCount,
+      })
+    }
+    paginationTrackingRef.current.page = currentPageCount
+  }, [data?.pages?.length, resolvedDid, followers.length])
+
   const onRefresh = React.useCallback(async () => {
     setIsPTRing(true)
     try {
@@ -95,6 +121,16 @@ export function ProfileFollowers({name}: {name: string}) {
       renderItem({item, index, contextProfileDid: resolvedDid}),
     [resolvedDid],
   )
+
+  // track pageview
+  React.useEffect(() => {
+    if (resolvedDid) {
+      logger.metric('profile:followers:view', {
+        contextProfileDid: resolvedDid,
+        isOwnProfile: isMe,
+      })
+    }
+  }, [resolvedDid, isMe])
 
   // track seen items
   const seenItemsRef = React.useRef<Set<string>>(new Set())
