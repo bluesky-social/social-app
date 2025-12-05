@@ -26,6 +26,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -117,7 +118,7 @@ function Intro() {
 }
 
 function Status() {
-  const {data: matches} = useProfilesQuery({
+  const {data: matches, isPending} = useProfilesQuery({
     handles: ['hailey.at', 'pfrazee.com', 'esb.lol'],
   })
   const moderationOpts = useModerationOpts()
@@ -142,7 +143,9 @@ function Status() {
     <List
       data={matches?.profiles ?? []}
       renderItem={renderItem}
-      ListHeaderComponent={<StatusHeader numMatches={numMatches} />}
+      ListHeaderComponent={
+        <StatusHeader numMatches={numMatches} isPending={isPending} />
+      }
       ListFooterComponent={<StatusFooter />}
     />
   )
@@ -214,8 +217,22 @@ function MatchItem({
   )
 }
 
-function StatusHeader({numMatches}: {numMatches: number}) {
+function StatusHeader({
+  numMatches,
+  isPending,
+}: {
+  numMatches: number
+  isPending: boolean
+}) {
   const t = useTheme()
+
+  if (isPending) {
+    return (
+      <View style={[a.w_full, a.py_5xl, a.align_center]}>
+        <Loader size="xl" />
+      </View>
+    )
+  }
 
   return (
     <SettingsList.Item
