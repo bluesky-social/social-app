@@ -21,6 +21,15 @@ export function snoozeBirthdateUpdateAllowedForDid(did: string) {
 }
 
 /**
+ * Checks if we've already snoozed bday updates. In some cases, if one is
+ * present, we don't need to set another, such as in AA when reading initial
+ * data on load.
+ */
+export function hasSnoozedBirthdateUpdateForDid(did: string) {
+  return !!account.get([did, 'birthdateLastUpdatedAt'])
+}
+
+/**
  * Returns whether a birthdate update is currently allowed, based on the
  * last update timestamp stored locally.
  */
