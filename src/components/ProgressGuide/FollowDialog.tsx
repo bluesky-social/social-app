@@ -1,11 +1,17 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {TextInput, useWindowDimensions, View} from 'react-native'
+import {
+  TextInput,
+  useWindowDimensions,
+  View,
+  type ViewToken,
+} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearch} from '#/state/queries/actor-search'
@@ -243,6 +249,43 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
     [moderationOpts],
   )
 
+  // Track seen profiles
+  const seenProfilesRef = useRef<Set<string>>(new Set())
+  const itemsRef = useRef(items)
+  itemsRef.current = items
+  const selectedInterestRef = useRef(selectedInterest)
+  selectedInterestRef.current = selectedInterest
+
+  const onViewableItemsChanged = useRef(
+    ({viewableItems}: {viewableItems: ViewToken[]}) => {
+      for (const viewableItem of viewableItems) {
+        const item = viewableItem.item as Item
+        if (item.type === 'profile') {
+          if (!seenProfilesRef.current.has(item.profile.did)) {
+            seenProfilesRef.current.add(item.profile.did)
+            const position = itemsRef.current.findIndex(
+              i => i.type === 'profile' && i.profile.did === item.profile.did,
+            )
+            logger.metric(
+              'suggestedUser:seen',
+              {
+                logContext: 'ProgressGuide',
+                recId: undefined,
+                position: position !== -1 ? position : 0,
+                suggestedDid: item.profile.did,
+                category: selectedInterestRef.current,
+              },
+              {statsig: true},
+            )
+          }
+        }
+      }
+    },
+  ).current
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current
+
   const onSelectTab = useCallback(
     (interest: string) => {
       setSelectedInterest(interest)
@@ -290,6 +333,8 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
       scrollIndicatorInsets={{top: headerHeight}}
       initialNumToRender={8}
       maxToRenderPerBatch={8}
+      onViewableItemsChanged={onViewableItemsChanged}
+      viewabilityConfig={viewabilityConfig}
     />
   )
 }
@@ -400,7 +445,7 @@ function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
           style={[
             a.absolute,
             a.z_20,
-            web({right: -4}),
+            web({right: 8}),
             native({right: 0}),
             native({height: 32, width: 32, borderRadius: 16}),
           ]}

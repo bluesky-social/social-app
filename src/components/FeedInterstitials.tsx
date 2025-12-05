@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useEffect, useRef} from 'react'
 import {ScrollView, View} from 'react-native'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -8,6 +8,7 @@ import {useNavigation} from '@react-navigation/native'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {type MetricEvents} from '#/logger/metrics'
 import {isIOS} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
@@ -241,12 +242,14 @@ export function ProfileGrid({
   profiles,
   recId,
   viewContext = 'feed',
+  isVisible = true,
 }: {
   isSuggestionsLoading: boolean
   profiles: bsky.profile.AnyProfileView[]
   recId?: number
   error: Error | null
   viewContext: 'profile' | 'profileHeader' | 'feed'
+  isVisible?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -260,6 +263,84 @@ export function ProfileGrid({
 
   const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6
   const minLength = gtMobile ? 3 : 4
+
+  // Track seen profiles
+  const seenProfilesRef = useRef<Set<string>>(new Set())
+  const containerRef = useRef<View>(null)
+  const hasTrackedRef = useRef(false)
+  const logContext: MetricEvents['suggestedUser:seen']['logContext'] =
+    isFeedContext
+      ? 'InterstitialDiscover'
+      : isProfileHeaderContext
+        ? 'Profile'
+        : 'InterstitialProfile'
+
+  // Callback to fire seen events
+  const fireSeen = useCallback(() => {
+    if (isLoading || error || !profiles.length) return
+    if (hasTrackedRef.current) return
+    hasTrackedRef.current = true
+
+    const profilesToShow = profiles.slice(0, maxLength)
+    profilesToShow.forEach((profile, index) => {
+      if (!seenProfilesRef.current.has(profile.did)) {
+        seenProfilesRef.current.add(profile.did)
+        logger.metric(
+          'suggestedUser:seen',
+          {
+            logContext,
+            recId,
+            position: index,
+            suggestedDid: profile.did,
+            category: null,
+          },
+          {statsig: true},
+        )
+      }
+    })
+  }, [isLoading, error, profiles, maxLength, logContext, recId])
+
+  // For profile header, fire when isVisible becomes true
+  useEffect(() => {
+    if (isProfileHeaderContext) {
+      if (!isVisible) {
+        hasTrackedRef.current = false
+        return
+      }
+      fireSeen()
+    }
+  }, [isVisible, isProfileHeaderContext, fireSeen])
+
+  // For feed interstitials, use IntersectionObserver to detect actual visibility
+  useEffect(() => {
+    if (isProfileHeaderContext) return // handled above
+    if (isLoading || error || !profiles.length) return
+
+    const node = containerRef.current
+    if (!node) return
+
+    // Use IntersectionObserver on web to detect when actually visible
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver(
+        entries => {
+          if (entries[0]?.isIntersecting) {
+            fireSeen()
+            observer.disconnect()
+          }
+        },
+        {threshold: 0.5},
+      )
+      // @ts-ignore - web only
+      observer.observe(node)
+      return () => observer.disconnect()
+    } else {
+      // On native, delay slightly to account for layout shifts during hydration
+      const timeout = setTimeout(() => {
+        fireSeen()
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+  }, [isProfileHeaderContext, isLoading, error, profiles.length, fireSeen])
 
   const content = isLoading
     ? Array(maxLength)
@@ -292,6 +373,8 @@ export function ProfileGrid({
                   : 'InterstitialProfile',
                 recId,
                 position: index,
+                suggestedDid: profile.did,
+                category: null,
               })
             }}
             style={[
@@ -352,6 +435,8 @@ export function ProfileGrid({
                         location: 'Card',
                         recId,
                         position: index,
+                        suggestedDid: profile.did,
+                        category: null,
                       })
                     }}
                   />
@@ -368,6 +453,7 @@ export function ProfileGrid({
 
   return (
     <View
+      ref={containerRef}
       style={[
         !isProfileHeaderContext && a.border_t,
         t.atoms.border_contrast_low,

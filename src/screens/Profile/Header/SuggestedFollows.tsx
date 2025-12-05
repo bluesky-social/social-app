@@ -47,6 +47,7 @@ export function AnimatedProfileHeaderSuggestedFollows({
         recId={data.recId}
         error={error}
         viewContext="profileHeader"
+        isVisible={isExpanded}
       />
     </AccordionAnimation>
   )

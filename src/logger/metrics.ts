@@ -334,6 +334,8 @@ export type MetricEvents = {
     location: 'Card' | 'Profile'
     recId?: number
     position: number
+    suggestedDid: string
+    category: string | null
   }
   'suggestedUser:press': {
     logContext:
@@ -343,11 +345,21 @@ export type MetricEvents = {
       | 'Onboarding'
     recId?: number
     position: number
+    suggestedDid: string
+    category: string | null
   }
   'suggestedUser:seen': {
-    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'Profile'
+      | 'Onboarding'
+      | 'ProgressGuide'
     recId?: number
     position: number
+    suggestedDid: string
+    category: string | null
   }
   'suggestedUser:seeMore': {
     logContext:
