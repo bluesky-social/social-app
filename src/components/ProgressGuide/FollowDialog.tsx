@@ -84,11 +84,28 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
   )
 }
 
+/**
+ * Same as {@link FollowDialog} but without a progress guide.
+ */
+export function FollowDialogWithoutGuide({
+  control,
+}: {
+  control: Dialog.DialogOuterProps['control']
+}) {
+  const {height: minHeight} = useWindowDimensions()
+  return (
+    <Dialog.Outer control={control} nativeOptions={{minHeight}}>
+      <Dialog.Handle />
+      <DialogInner />
+    </Dialog.Outer>
+  )
+}
+
 // Fine to keep this top-level.
 let lastSelectedInterest = ''
 let lastSearchText = ''
 
-function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
+function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
@@ -289,7 +306,7 @@ let Header = ({
   selectedInterest,
   interestsDisplayNames,
 }: {
-  guide: Follow10ProgressGuide
+  guide?: Follow10ProgressGuide
   inputRef: React.RefObject<TextInput | null>
   listRef: React.RefObject<ListMethods | null>
   onSelectTab: (v: string) => void
@@ -340,7 +357,7 @@ let Header = ({
 }
 Header = memo(Header)
 
-function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
+function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
@@ -363,14 +380,16 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
         ]}>
         <Trans>Find people to follow</Trans>
       </Text>
-      <View style={isWeb && {paddingRight: 36}}>
-        <ProgressGuideTask
-          current={guide.numFollows + 1}
-          total={10 + 1}
-          title={`${guide.numFollows} / 10`}
-          tabularNumsTitle
-        />
-      </View>
+      {guide && (
+        <View style={isWeb && {paddingRight: 36}}>
+          <ProgressGuideTask
+            current={guide.numFollows + 1}
+            total={10 + 1}
+            title={`${guide.numFollows} / 10`}
+            tabularNumsTitle
+          />
+        </View>
+      )}
       {isWeb ? (
         <Button
           label={_(msg`Close`)}
