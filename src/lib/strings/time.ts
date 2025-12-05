@@ -12,7 +12,7 @@ export function niceDate(
     return i18n._(
       msg({
         context: 'date and time formatted like this: [time] · [date]',
-        message: `${i18n.date(d, {timeStyle: 'short'})} · ${i18n.date(d, {day: 'numeric', month: 'numeric', year: '2-digit'})}`,
+        message: `${i18n.date(d, {timeStyle: 'short'})} · ${i18n.date(d, {dateStyle: 'medium'})}`,
       }),
     )
   }
