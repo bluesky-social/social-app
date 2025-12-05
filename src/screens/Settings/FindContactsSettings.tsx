@@ -170,7 +170,7 @@ function MatchItem({
           a.p_md,
           a.border_t,
           a.border_x,
-          t.atoms.border_contrast_low,
+          t.atoms.border_contrast_medium,
           isFirst && [
             a.curve_continuous,
             {borderTopLeftRadius: tokens.borderRadius.lg},
