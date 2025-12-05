@@ -19,6 +19,7 @@ import {useProfilesQuery} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {OnboardingPosition} from '#/screens/Onboarding/Layout'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -304,7 +305,13 @@ export function ViewMatches({
           <Layout.Header.Slot />
         </Layout.Header.Outer>
       )}
-      <View style={[gutter, a.mb_md, context === 'Onboarding' && a.mt_sm]}>
+      <View
+        style={[
+          gutter,
+          a.mb_md,
+          context === 'Onboarding' && [a.mt_sm, a.gap_sm],
+        ]}>
+        {context === 'Onboarding' && <OnboardingPosition />}
         <SearchInput
           placeholder={_(msg`Search contacts`)}
           value={search}
