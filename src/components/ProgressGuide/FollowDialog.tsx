@@ -54,7 +54,7 @@ type Item =
       key: string
     }
 
-export function FollowDialog({guide}: {guide?: Follow10ProgressGuide}) {
+export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
   const {_} = useLingui()
   const control = Dialog.useDialogControl()
   const {gtMobile} = useBreakpoints()
