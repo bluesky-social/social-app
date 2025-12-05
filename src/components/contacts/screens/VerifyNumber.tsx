@@ -170,7 +170,7 @@ export function VerifyNumber({
             )}
             value={otpCode}
             onChange={setOtpCode}
-            onComplete={() => verifyNumber(otpCode)}
+            onComplete={code => verifyNumber(code)}
           />
         </View>
         <View style={[a.mt_sm]}>
@@ -262,7 +262,7 @@ function OTPStatus({
     <View style={[a.w_full, a.align_center]}>
       {text && (
         <View style={[a.gap_xs, a.flex_row, a.align_center]}>
-          {Icon && <Icon size="xs" color={textColor} />}
+          {Icon && <Icon size="xs" style={{color: textColor}} />}
           <Text
             style={[
               {color: textColor},
