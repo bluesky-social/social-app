@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {isAndroid, isWeb} from '#/platform/detection'
 import {useOnboardingDispatch} from '#/state/shell'
-import {Context} from '#/screens/Onboarding/state'
+import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {
   atoms as a,
   native,
@@ -34,7 +34,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const onboardDispatch = useOnboardingDispatch()
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch} = useOnboardingInternalState()
   const scrollview = React.useRef<ScrollView>(null)
   const prevActiveStep = React.useRef<string>(state.activeStep)
 
@@ -104,7 +104,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               a.justify_between,
               {maxWidth: ONBOARDING_COL_WIDTH},
             ]}>
-            {state.hasPrev ? (
+            {state.canGoBack ? (
               <Button
                 key={state.activeStep} // remove focus state on nav
                 color="secondary"
@@ -157,7 +157,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                         t.atoms.bg_contrast_50,
                         {
                           backgroundColor:
-                            i + 1 <= state.activeStepIndex
+                            i <= state.activeStepIndex
                               ? t.palette.primary_500
                               : t.palette.contrast_100,
                         },
@@ -200,7 +200,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             gtMobile && [a.flex_row, a.justify_between, a.align_center],
           ]}>
           {gtMobile &&
-            (state.hasPrev ? (
+            (state.canGoBack ? (
               <Button
                 key={state.activeStep} // remove focus state on nav
                 color="secondary"

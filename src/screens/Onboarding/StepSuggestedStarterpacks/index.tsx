@@ -1,4 +1,3 @@
-import {useContext} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -6,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useOnboardingSuggestedStarterPacksQuery} from '#/state/queries/useOnboardingSuggestedStarterPacksQuery'
 import {OnboardingControls} from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -20,7 +19,7 @@ export function StepSuggestedStarterpacks() {
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
 
-  const {state, dispatch} = useContext(Context)
+  const {state, dispatch} = useOnboardingInternalState()
 
   const {
     data: suggestedStarterPacks,

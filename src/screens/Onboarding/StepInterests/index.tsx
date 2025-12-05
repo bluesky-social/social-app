@@ -12,7 +12,7 @@ import {
   OnboardingControls,
   TitleText,
 } from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -26,7 +26,7 @@ export function StepInterests() {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
 
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch} = useOnboardingInternalState()
   const [saving, setSaving] = React.useState(false)
   const [selectedInterests, setSelectedInterests] = React.useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
