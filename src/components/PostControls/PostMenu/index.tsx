@@ -11,7 +11,7 @@ import {useLingui} from '@lingui/react'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
