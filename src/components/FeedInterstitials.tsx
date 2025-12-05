@@ -26,6 +26,7 @@ import {
   web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
@@ -33,7 +34,7 @@ import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {useFollowDialogControl} from './ProgressGuide/FollowDialog'
+import {FollowDialogWithoutGuide} from './ProgressGuide/FollowDialog'
 import {ProgressGuideList} from './ProgressGuide/List'
 
 const MOBILE_CARD_WIDTH = 165
@@ -251,7 +252,7 @@ export function ProfileGrid({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
-  const followDialog = useFollowDialogControl()
+  const followDialogControl = useDialogControl()
 
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
@@ -393,7 +394,7 @@ export function ProfileGrid({
           <Button
             label={_(msg`See more suggested profiles`)}
             onPress={() => {
-              followDialog.control.open()
+              followDialogControl.open()
               logEvent('suggestedUser:seeMore', {
                 logContext: isFeedContext ? 'Explore' : 'Profile',
               })
@@ -416,7 +417,7 @@ export function ProfileGrid({
         )}
       </View>
 
-      <followDialog.Dialog />
+      <FollowDialogWithoutGuide control={followDialogControl} />
 
       {gtMobile ? (
         <View style={[a.p_lg, a.pt_md]}>
@@ -437,7 +438,7 @@ export function ProfileGrid({
             {!isProfileHeaderContext && (
               <SeeMoreSuggestedProfilesCard
                 onPress={() => {
-                  followDialog.control.open()
+                  followDialogControl.open()
                   logger.metric('suggestedUser:seeMore', {
                     logContext: 'Explore',
                   })

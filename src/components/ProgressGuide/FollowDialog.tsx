@@ -84,19 +84,21 @@ export function FollowDialog({guide}: {guide?: Follow10ProgressGuide}) {
   )
 }
 
-export function useFollowDialogControl() {
-  const control = Dialog.useDialogControl()
+/**
+ * Same as {@link FollowDialog} but without a progress guide.
+ */
+export function FollowDialogWithoutGuide({
+  control,
+}: {
+  control: Dialog.DialogOuterProps['control']
+}) {
   const {height: minHeight} = useWindowDimensions()
-
-  return {
-    control,
-    Dialog: ({guide}: {guide?: Follow10ProgressGuide}) => (
-      <Dialog.Outer control={control} nativeOptions={{minHeight}}>
-        <Dialog.Handle />
-        <DialogInner guide={guide} />
-      </Dialog.Outer>
-    ),
-  }
+  return (
+    <Dialog.Outer control={control} nativeOptions={{minHeight}}>
+      <Dialog.Handle />
+      <DialogInner />
+    </Dialog.Outer>
+  )
 }
 
 // Fine to keep this top-level.
