@@ -12,7 +12,6 @@ import {
 } from '#/lib/international-telephone-codes'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {useGeolocationStatus} from '#/state/geolocation'
 import {android, atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
@@ -21,6 +20,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useGeolocation} from '#/geolocation'
 import {
   getCountryCodeFromPastedNumber,
   processPhoneNumber,
@@ -40,7 +40,7 @@ export function PhoneInput({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {location} = useGeolocationStatus()
+  const location = useGeolocation()
   const [countryCode, setCountryCode] = useState(
     () => state.phoneCountryCode ?? getDefaultCountry(location),
   )
