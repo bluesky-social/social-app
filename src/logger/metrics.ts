@@ -203,7 +203,6 @@ export type MetricEvents = {
 
   'composer:gif:open': {}
   'composer:gif:select': {}
-  'postComposer:click': {}
   'composerPrompt:press': {}
   'composerPrompt:camera:press': {}
   'composerPrompt:gallery:press': {}
