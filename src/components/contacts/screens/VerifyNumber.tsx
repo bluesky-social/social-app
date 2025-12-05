@@ -8,6 +8,7 @@ import {getPhoneCodeFromCountryCode} from '#/lib/international-telephone-codes'
 import {clamp} from '#/lib/numbers'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {OnboardingPosition} from '#/screens/Onboarding/Layout'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
@@ -20,15 +21,16 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {OTPInput} from '../components/OTPInput'
 import {type Action, type State, useOnPressBackButton} from '../state'
+
 export function VerifyNumber({
   state,
   dispatch,
-  showSkipButton,
+  context,
   onSkip,
 }: {
   state: Extract<State, {step: '2: verify number'}>
   dispatch: React.Dispatch<Action>
-  showSkipButton: boolean
+  context: 'Onboarding' | 'Standalone'
   onSkip: () => void
 }) {
   const t = useTheme()
@@ -128,7 +130,7 @@ export function VerifyNumber({
       <Layout.Header.Outer noBottomBorder>
         <Layout.Header.BackButton onPress={onPressBack} />
         <Layout.Header.Content />
-        {showSkipButton ? (
+        {context === 'Onboarding' ? (
           <Button
             size="small"
             color="secondary"
@@ -146,6 +148,7 @@ export function VerifyNumber({
       <Layout.Content
         contentContainerStyle={[gutters, a.pt_sm, a.flex_1]}
         keyboardShouldPersistTaps="always">
+        {context === 'Onboarding' && <OnboardingPosition />}
         <Text style={[a.font_bold, a.text_3xl]}>
           <Trans>Verify phone number</Trans>
         </Text>

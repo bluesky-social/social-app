@@ -12,6 +12,7 @@ import {
 } from '#/lib/international-telephone-codes'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {OnboardingPosition} from '#/screens/Onboarding/Layout'
 import {android, atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
@@ -30,12 +31,12 @@ import {type Action, type State, useOnPressBackButton} from '../state'
 export function PhoneInput({
   state,
   dispatch,
-  showSkipButton,
+  context,
   onSkip,
 }: {
   state: Extract<State, {step: '1: phone input'}>
   dispatch: React.Dispatch<Action>
-  showSkipButton: boolean
+  context: 'Onboarding' | 'Standalone'
   onSkip: () => void
 }) {
   const {_} = useLingui()
@@ -106,7 +107,7 @@ export function PhoneInput({
       <Layout.Header.Outer noBottomBorder>
         <Layout.Header.BackButton onPress={onPressBack} />
         <Layout.Header.Content />
-        {showSkipButton ? (
+        {context === 'Onboarding' ? (
           <Button
             size="small"
             color="secondary"
@@ -124,6 +125,7 @@ export function PhoneInput({
       <Layout.Content
         contentContainerStyle={[gutters, a.pt_sm, a.flex_1]}
         keyboardShouldPersistTaps="handled">
+        {context === 'Onboarding' && <OnboardingPosition />}
         <Text style={[a.font_bold, a.text_3xl]}>
           <Trans>Verify phone number</Trans>
         </Text>

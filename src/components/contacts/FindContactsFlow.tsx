@@ -23,7 +23,7 @@ export function FindContactsFlow({
         <PhoneInput
           state={state}
           dispatch={dispatch}
-          showSkipButton={context === 'Onboarding'}
+          context={context}
           onSkip={onCancel}
         />
       )}
@@ -31,7 +31,7 @@ export function FindContactsFlow({
         <VerifyNumber
           state={state}
           dispatch={dispatch}
-          showSkipButton={context === 'Onboarding'}
+          context={context}
           onSkip={onCancel}
         />
       )}
