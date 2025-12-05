@@ -44,7 +44,7 @@ export function PhoneInput({
   onSkip,
 }: {
   state: Extract<State, {step: '1: phone input'}>
-  dispatch: React.Dispatch<Action>
+  dispatch: React.ActionDispatch<[Action]>
   showSkipButton: boolean
   onSkip: () => void
 }) {

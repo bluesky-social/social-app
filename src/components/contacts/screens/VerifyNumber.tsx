@@ -29,7 +29,7 @@ export function VerifyNumber({
   onSkip,
 }: {
   state: Extract<State, {step: '2: verify number'}>
-  dispatch: React.Dispatch<Action>
+  dispatch: React.ActionDispatch<[Action]>
   showSkipButton: boolean
   onSkip: () => void
 }) {
