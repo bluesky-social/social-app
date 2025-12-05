@@ -94,6 +94,7 @@ export function PhoneInput({
   })
 
   const onSubmitNumber = () => {
+    if (!phoneNumber) return
     const result = processPhoneNumber(phoneNumber, countryCode)
     if (result.valid) {
       setPhoneNumber(result.formatted)

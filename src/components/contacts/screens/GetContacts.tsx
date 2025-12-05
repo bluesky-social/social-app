@@ -1,7 +1,6 @@
 import {Alert, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as Contacts from 'expo-contacts'
-import * as Device from 'expo-device'
 import {msg, t, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -43,7 +42,6 @@ export function GetContacts({
       const res = await agent.app.bsky.contact.importContacts({
         token: state.token,
         contacts: phoneNumbers,
-        deviceName: Device.deviceName || undefined,
       })
 
       return {

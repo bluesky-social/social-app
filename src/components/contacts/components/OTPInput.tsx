@@ -27,7 +27,7 @@ export function OTPInput({
   onChange: (text: string) => void
   ref?: React.Ref<TextInput>
   numberOfDigits?: number
-  onComplete?: () => void
+  onComplete?: (code: string) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -41,7 +41,7 @@ export function OTPInput({
     text = text.slice(0, numberOfDigits)
     onChange(text)
     if (text.length === numberOfDigits) {
-      onComplete?.()
+      onComplete?.(text)
       innerRef.current?.blur()
     }
   }
