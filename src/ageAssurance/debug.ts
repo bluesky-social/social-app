@@ -5,10 +5,10 @@ import {
 } from '@atproto/api'
 
 import {type OtherRequiredData} from '#/ageAssurance/data'
-import {IS_DEV} from '#/env'
+import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
 
-export const enabled = IS_DEV && false
+export const enabled = (IS_DEV && false) || IS_E2E
 
 export const geolocation: Geolocation | undefined = enabled
   ? {
@@ -31,28 +31,8 @@ export const config: AppBskyAgeassuranceDefs.Config = {
       regionCode: undefined,
       rules: [
         {
-          $type: ids.IfAccountNewerThan,
-          date: '2025-12-01T00:00:00Z',
-          access: 'none',
-        },
-        {
-          $type: ids.IfAssuredOverAge,
-          age: 18,
-          access: 'full',
-        },
-        {
-          $type: ids.IfAssuredOverAge,
-          age: 16,
-          access: 'safe',
-        },
-        {
-          $type: ids.IfDeclaredUnderAge,
-          age: 16,
-          access: 'none',
-        },
-        {
           $type: ids.Default,
-          access: 'safe',
+          access: 'full',
         },
       ],
     },
@@ -68,17 +48,17 @@ export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
   serverStateEnabled
     ? {
         state: {
-          lastInitiatedAt: new Date(2023, 5, 1).toISOString(),
+          lastInitiatedAt: new Date(2025, 1, 1).toISOString(),
           status: 'assured',
-          access: 'safe',
+          access: 'full',
         },
         metadata: {
-          accountCreatedAt: new Date(2023, 11, 1).toISOString(),
+          accountCreatedAt: new Date(2023, 1, 1).toISOString(),
         },
       }
     : undefined
 
 export async function resolve<T>(data: T) {
-  await new Promise(y => setTimeout(y, 2000)) // simulate network
+  await new Promise(y => setTimeout(y, 500)) // simulate network
   return data
 }
