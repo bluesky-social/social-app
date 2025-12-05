@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {cleanError} from '#/lib/strings/errors'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
@@ -215,6 +216,7 @@ let SearchScreenPostResults = ({
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
+  const trackPostView = usePostViewTracking('SearchResults')
 
   const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -339,6 +341,11 @@ let SearchScreenPostResults = ({
               refreshing={isPTR}
               onRefresh={onPullToRefresh}
               onEndReached={onEndReached}
+              onItemSeen={item => {
+                if (item.type === 'post') {
+                  trackPostView(item.post)
+                }
+              }}
               desktopFixedHeight
               ListFooterComponent={
                 <ListFooter
