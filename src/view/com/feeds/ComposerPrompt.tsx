@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -34,7 +34,7 @@ export function ComposerPrompt() {
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     logger.metric('composerPrompt:press', {})
     openComposer({})
   }, [openComposer])
@@ -203,13 +203,14 @@ export function ComposerPrompt() {
               accessibilityHint={_(msg`Opens device camera`)}
               variant="ghost"
               shape="round">
-              {({hovered}) => (
+              {({hovered, pressed, focused}) => (
                 <CameraIcon
                   size="md"
                   style={{
-                    color: hovered
-                      ? t.palette.primary_500
-                      : t.palette.contrast_300,
+                    color:
+                      hovered || pressed || focused
+                        ? t.palette.primary_500
+                        : t.palette.contrast_300,
                   }}
                 />
               )}
@@ -224,13 +225,14 @@ export function ComposerPrompt() {
             accessibilityHint={_(msg`Opens image picker`)}
             variant="ghost"
             shape="round">
-            {({hovered}) => (
+            {({hovered, pressed, focused}) => (
               <ImageIcon
                 size="md"
                 style={{
-                  color: hovered
-                    ? t.palette.primary_500
-                    : t.palette.contrast_300,
+                  color:
+                    hovered || pressed || focused
+                      ? t.palette.primary_500
+                      : t.palette.contrast_300,
                 }}
               />
             )}
