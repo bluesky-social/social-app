@@ -8,9 +8,9 @@ import {
   INTERNATIONAL_TELEPHONE_CODES,
 } from '#/lib/international-telephone-codes'
 import {isWeb} from '#/platform/detection'
-import {useGeolocationStatus} from '#/state/geolocation'
 import {atoms as a, web} from '#/alf'
 import * as Select from '#/components/Select'
+import {useGeolocation} from '#/geolocation'
 
 /**
  * Country picker for a phone number input
@@ -26,7 +26,7 @@ export function InternationalPhoneCodeSelect({
   onChange: (value: string) => void
 }) {
   const {_, i18n} = useLingui()
-  const {location} = useGeolocationStatus()
+  const location = useGeolocation()
 
   const defaultCountry = useMemo(() => {
     return getDefaultCountry(location)
