@@ -4,13 +4,18 @@ import {useLingui} from '@lingui/react'
 import * as bcp47Match from 'bcp-47-match'
 
 import {useGate} from '#/lib/statsig/statsig'
+import {isNative} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
 import {
   Layout,
   OnboardingControls,
   OnboardingHeaderSlot,
 } from '#/screens/Onboarding/Layout'
-import {Context, initialState, reducer} from '#/screens/Onboarding/state'
+import {
+  Context,
+  createInitialOnboardingState,
+  reducer,
+} from '#/screens/Onboarding/state'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
@@ -36,15 +41,16 @@ export function Onboarding() {
     probablySpeaksEnglish &&
     gate('onboarding_suggested_starterpacks')
 
-  const [state, dispatch] = useReducer(reducer, {
-    ...initialState,
-    totalSteps: 4 + (showSuggestedStarterpacks ? 1 : 0),
-    experiments: {
-      onboarding_suggested_accounts: true,
-      onboarding_value_prop: true,
-      onboarding_suggested_starterpacks: showSuggestedStarterpacks,
+  const showFindContacts = isNative && !gate('disable_onboarding_find_contacts')
+
+  const [state, dispatch] = useReducer(
+    reducer,
+    {
+      starterPacksStepEnabled: showSuggestedStarterpacks,
+      findContactsStepEnabled: showFindContacts,
     },
-  })
+    createInitialOnboardingState,
+  )
 
   const interestsDisplayNames = useMemo(() => {
     return {
@@ -94,6 +100,7 @@ export function Onboarding() {
                 {state.activeStep === 'suggested-starterpacks' && (
                   <StepSuggestedStarterpacks />
                 )}
+                {state.activeStep === 'find-contacts' && null}
                 {state.activeStep === 'finished' && <StepFinished />}
               </ScreenTransition>
             </Layout>
