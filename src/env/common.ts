@@ -31,6 +31,11 @@ export const IS_TESTFLIGHT = ENV === 'testflight'
 export const IS_DEV = __DEV__
 
 /**
+ * Indicates whether the app is running in a test environment
+ */
+export const IS_E2E = ENV === 'e2e'
+
+/**
  * Indicates whether the app is `__DEV__` or TestFlight
  */
 export const IS_INTERNAL = IS_DEV || IS_TESTFLIGHT

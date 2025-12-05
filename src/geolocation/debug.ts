@@ -14,6 +14,6 @@ export const deviceGeolocation: Geolocation = aaDebug.deviceGeolocation ?? {
 }
 
 export async function resolve<T>(data: T) {
-  await new Promise(y => setTimeout(y, 2000)) // simulate network
+  await new Promise(y => setTimeout(y, 500)) // simulate network
   return data
 }
