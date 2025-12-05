@@ -9,23 +9,19 @@ import {
 } from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useGutters, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {ButtonText} from '#/components/Button'
-import {Contacts_Stroke2_Corner2_Rounded as FindContactsIcon} from '#/components/icons/Contacts'
+import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsSettings'>
 export function FindContactsSettingsScreen({}: Props) {
-  const t = useTheme()
   const {_} = useLingui()
 
-  const {data: isAvailable} = useQuery({
-    queryKey: ['contacts-available'],
-    queryFn: async () => await Contacts.isAvailableAsync(),
-  })
+  const hasInitiated = false
 
   return (
     <Layout.Screen>
@@ -39,49 +35,11 @@ export function FindContactsSettingsScreen({}: Props) {
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       {isNative ? (
-        <Layout.Content>
-          <SettingsList.Container>
-            <SettingsList.Item>
-              <SettingsList.ItemIcon icon={FindContactsIcon} />
-              <SettingsList.ItemText>
-                <Trans>Find Contacts</Trans>
-              </SettingsList.ItemText>
-            </SettingsList.Item>
-            <SettingsList.Item style={[a.pt_0]}>
-              <Text
-                style={[
-                  a.text_sm,
-                  t.atoms.text_contrast_medium,
-                  a.leading_snug,
-                ]}>
-                <Trans>
-                  Contacts from your address book will be uploaded to Bluesky on
-                  an ongoing basis to help connect you with your friends and
-                  personalize content, such as making suggestions for you and
-                  others. Turning off syncing will not remove previously
-                  uploaded contacts.{' '}
-                  <InlineLinkText to="#" label="todo">
-                    TODO: Add learn more link
-                  </InlineLinkText>
-                </Trans>
-              </Text>
-            </SettingsList.Item>
-            {isAvailable && (
-              <SettingsList.Item>
-                <Link
-                  to={{screen: 'FindContactsFlow'}}
-                  label={_(msg`Upload contacts`)}
-                  size="large"
-                  color="primary"
-                  style={[a.flex_1, a.justify_center]}>
-                  <ButtonText>
-                    <Trans>Upload contacts</Trans>
-                  </ButtonText>
-                </Link>
-              </SettingsList.Item>
-            )}
-          </SettingsList.Container>
-        </Layout.Content>
+        !hasInitiated ? (
+          <Intro />
+        ) : (
+          <Status />
+        )
       ) : (
         <ErrorScreen
           title={_(msg`Not available on this platform.`)}
@@ -91,4 +49,59 @@ export function FindContactsSettingsScreen({}: Props) {
       )}
     </Layout.Screen>
   )
+}
+
+function Intro() {
+  const gutter = useGutters(['base'])
+  const t = useTheme()
+  const {_} = useLingui()
+
+  const {data: isAvailable, isSuccess} = useQuery({
+    queryKey: ['contacts-available'],
+    queryFn: async () => await Contacts.isAvailableAsync(),
+  })
+
+  return (
+    <Layout.Content contentContainerStyle={[gutter, a.gap_lg]}>
+      <ContactsHeroImage />
+      <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+        <Trans>
+          Find your friends on Bluesky by verifying your phone number and
+          matching with your contacts. We protect your information and you
+          control what happens next.{' '}
+          <InlineLinkText
+            to="#"
+            label={_(msg`Learn more`)}
+            style={[a.text_md, a.leading_snug]}>
+            TODO: Learn more
+          </InlineLinkText>
+        </Trans>
+      </Text>
+      {isAvailable ? (
+        <Link
+          to={{screen: 'FindContactsFlow'}}
+          label={_(msg`Upload contacts`)}
+          size="large"
+          color="primary"
+          style={[a.flex_1, a.justify_center]}>
+          <ButtonText>
+            <Trans>Upload contacts</Trans>
+          </ButtonText>
+        </Link>
+      ) : (
+        isSuccess && (
+          <Admonition type="error">
+            <Trans>
+              Contact sync is not available on this device, as the app is unable
+              to access your contacts.
+            </Trans>
+          </Admonition>
+        )
+      )}
+    </Layout.Content>
+  )
+}
+
+function Status() {
+  return null
 }
