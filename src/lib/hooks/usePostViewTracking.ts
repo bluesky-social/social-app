@@ -2,7 +2,7 @@ import {useCallback, useRef} from 'react'
 import {type AppBskyFeedDefs} from '@atproto/api'
 
 import {logger} from '#/logger'
-import {type LogEvents} from '#/logger/metrics'
+import {type MetricEvents} from '#/logger/metrics'
 
 /**
  * Hook that returns a callback to track post:view events.
@@ -12,7 +12,7 @@ import {type LogEvents} from '#/logger/metrics'
  * @returns A callback that accepts a post and logs the view event
  */
 export function usePostViewTracking(
-  logContext: LogEvents['post:view']['logContext'],
+  logContext: MetricEvents['post:view']['logContext'],
 ) {
   const seenUrisRef = useRef(new Set<string>())
 
