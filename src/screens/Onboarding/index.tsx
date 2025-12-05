@@ -1,8 +1,8 @@
 import {useMemo, useReducer} from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {View} from 'react-native'
 import * as bcp47Match from 'bcp-47-match'
 
+import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -19,15 +19,17 @@ import {
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
+import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {ENV} from '#/env'
+import {StepFindContacts} from './StepFindContacts'
 import {StepSuggestedAccounts} from './StepSuggestedAccounts'
 import {StepSuggestedStarterpacks} from './StepSuggestedStarterpacks'
 
 export function Onboarding() {
-  const {_} = useLingui()
   const gate = useGate()
+  const t = useTheme()
 
   const {contentLanguages} = useLanguagePrefs()
   const probablySpeaksEnglish = useMemo(() => {
@@ -52,61 +54,39 @@ export function Onboarding() {
     createInitialOnboardingState,
   )
 
-  const interestsDisplayNames = useMemo(() => {
-    return {
-      news: _(msg`News`),
-      journalism: _(msg`Journalism`),
-      nature: _(msg`Nature`),
-      art: _(msg`Art`),
-      comics: _(msg`Comics`),
-      writers: _(msg`Writers`),
-      culture: _(msg`Culture`),
-      sports: _(msg`Sports`),
-      pets: _(msg`Pets`),
-      animals: _(msg`Animals`),
-      books: _(msg`Books`),
-      education: _(msg`Education`),
-      climate: _(msg`Climate`),
-      science: _(msg`Science`),
-      politics: _(msg`Politics`),
-      fitness: _(msg`Fitness`),
-      tech: _(msg`Tech`),
-      dev: _(msg`Software Dev`),
-      comedy: _(msg`Comedy`),
-      gaming: _(msg`Video Games`),
-      food: _(msg`Food`),
-      cooking: _(msg`Cooking`),
-    }
-  }, [_])
+  useEnableKeyboardControllerScreen(true)
 
   return (
     <Portal>
-      <OnboardingControls.Provider>
-        <OnboardingHeaderSlot.Provider>
-          <Context.Provider
-            value={useMemo(
-              () => ({state, dispatch, interestsDisplayNames}),
-              [state, dispatch, interestsDisplayNames],
-            )}>
-            <Layout>
+      <View style={[a.absolute, a.inset_0, t.atoms.bg]}>
+        <OnboardingControls.Provider>
+          <OnboardingHeaderSlot.Provider>
+            <Context.Provider
+              value={useMemo(() => ({state, dispatch}), [state, dispatch])}>
               <ScreenTransition
                 key={state.activeStep}
-                direction={state.stepTransitionDirection}>
-                {state.activeStep === 'profile' && <StepProfile />}
-                {state.activeStep === 'interests' && <StepInterests />}
-                {state.activeStep === 'suggested-accounts' && (
-                  <StepSuggestedAccounts />
+                direction={state.stepTransitionDirection}
+                style={a.flex_1}>
+                {state.activeStep === 'find-contacts' ? (
+                  <StepFindContacts />
+                ) : (
+                  <Layout>
+                    {state.activeStep === 'profile' && <StepProfile />}
+                    {state.activeStep === 'interests' && <StepInterests />}
+                    {state.activeStep === 'suggested-accounts' && (
+                      <StepSuggestedAccounts />
+                    )}
+                    {state.activeStep === 'suggested-starterpacks' && (
+                      <StepSuggestedStarterpacks />
+                    )}
+                    {state.activeStep === 'finished' && <StepFinished />}
+                  </Layout>
                 )}
-                {state.activeStep === 'suggested-starterpacks' && (
-                  <StepSuggestedStarterpacks />
-                )}
-                {state.activeStep === 'find-contacts' && null}
-                {state.activeStep === 'finished' && <StepFinished />}
               </ScreenTransition>
-            </Layout>
-          </Context.Provider>
-        </OnboardingHeaderSlot.Provider>
-      </OnboardingControls.Provider>
+            </Context.Provider>
+          </OnboardingHeaderSlot.Provider>
+        </OnboardingControls.Provider>
+      </View>
     </Portal>
   )
 }
