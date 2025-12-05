@@ -11,6 +11,7 @@ type OnboardingScreen =
   | 'interests'
   | 'suggested-accounts'
   | 'suggested-starterpacks'
+  | 'find-contacts-intro'
   | 'find-contacts'
   | 'finished'
 
@@ -48,6 +49,9 @@ export type OnboardingAction =
       type: 'prev'
     }
   | {
+      type: 'skip-contacts'
+    }
+  | {
       type: 'finish'
     }
   | {
@@ -82,6 +86,7 @@ export function createInitialOnboardingState(
     interests: true,
     'suggested-accounts': true,
     'suggested-starterpacks': starterPacksStepEnabled,
+    'find-contacts-intro': findContactsStepEnabled,
     'find-contacts': findContactsStepEnabled,
     finished: true,
   }
@@ -130,9 +135,22 @@ export function reducer(
       const prevIndex = stepOrder.indexOf(next.activeStep) - 1
       const prevStep = stepOrder[prevIndex]
       if (prevStep) {
-        next.activeStep = prevStep
+        // override back behaviour for the find contacts screen
+        // so returning to the flow takes you to the intro screen
+        if (prevStep === 'find-contacts') {
+          next.activeStep = 'find-contacts-intro'
+        } else {
+          next.activeStep = prevStep
+        }
       }
       next.stepTransitionDirection = 'Backward'
+      break
+    }
+    case 'skip-contacts': {
+      const nextIndex = stepOrder.indexOf('find-contacts') + 1
+      const nextStep = stepOrder[nextIndex] ?? 'finished'
+      next.activeStep = nextStep
+      next.stepTransitionDirection = 'Forward'
       break
     }
     case 'finish': {
@@ -187,6 +205,7 @@ function getStepOrder(s: OnboardingState): OnboardingScreen[] {
     s.screens.interests && ('interests' as const),
     s.screens['suggested-accounts'] && ('suggested-accounts' as const),
     s.screens['suggested-starterpacks'] && ('suggested-starterpacks' as const),
+    s.screens['find-contacts-intro'] && ('find-contacts-intro' as const),
     s.screens['find-contacts'] && ('find-contacts' as const),
     s.screens.finished && ('finished' as const),
   ].filter(x => !!x)

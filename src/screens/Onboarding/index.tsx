@@ -24,6 +24,7 @@ import {Portal} from '#/components/Portal'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {ENV} from '#/env'
 import {StepFindContacts} from './StepFindContacts'
+import {StepFindContactsIntro} from './StepFindContactsIntro'
 import {StepSuggestedAccounts} from './StepSuggestedAccounts'
 import {StepSuggestedStarterpacks} from './StepSuggestedStarterpacks'
 
@@ -67,6 +68,7 @@ export function Onboarding() {
                 key={state.activeStep}
                 direction={state.stepTransitionDirection}
                 style={a.flex_1}>
+                {/* FindContactsFlow cannot be nested in Layout */}
                 {state.activeStep === 'find-contacts' ? (
                   <StepFindContacts />
                 ) : (
@@ -78,6 +80,9 @@ export function Onboarding() {
                     )}
                     {state.activeStep === 'suggested-starterpacks' && (
                       <StepSuggestedStarterpacks />
+                    )}
+                    {state.activeStep === 'find-contacts-intro' && (
+                      <StepFindContactsIntro />
                     )}
                     {state.activeStep === 'finished' && <StepFinished />}
                   </Layout>
