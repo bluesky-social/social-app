@@ -11,7 +11,6 @@ import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
-import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -24,6 +23,7 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
+import {useAgeAssurance} from '#/ageAssurance'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {RecentChats} from './RecentChats'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
@@ -37,7 +37,7 @@ let ShareMenuItems = ({
   const navigation = useNavigation<NavigationProp>()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
-  const {isAgeRestricted} = useAgeAssurance()
+  const aa = useAgeAssurance()
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
@@ -91,7 +91,7 @@ let ShareMenuItems = ({
   return (
     <>
       <Menu.Outer>
-        {hasSession && !isAgeRestricted && (
+        {hasSession && aa.state.access === aa.Access.Full && (
           <Menu.Group>
             <Menu.ContainerItem>
               <RecentChats postUri={postUri} />

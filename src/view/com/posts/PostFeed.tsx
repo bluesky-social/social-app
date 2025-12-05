@@ -31,10 +31,11 @@ import {isStatusStillActive, validateStatus} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
@@ -69,6 +70,7 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
+import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -149,6 +151,10 @@ type FeedRow =
       type: 'ageAssuranceBanner'
       key: string
     }
+  | {
+      type: 'composerPrompt'
+      key: string
+    }
 
 export function getItemsForFeedback(feedRow: FeedRow): {
   item: FeedPostSliceItem
@@ -224,6 +230,7 @@ let PostFeed = ({
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
+  const gate = useGate()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -363,6 +370,11 @@ let PostFeed = ({
    */
   const [isCurrentFeedAtStartupSelected] = useState(selectedFeed === feed)
 
+  const blockedOrMutedAuthors = usePostAuthorShadowFilter(
+    // author feeds have their own handling
+    feed.startsWith('author|') ? undefined : data?.pages,
+  )
+
   const feedItems: FeedRow[] = useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
     // if the user has pressed show less on it
@@ -423,7 +435,11 @@ let PostFeed = ({
                 // eslint-disable-next-line @typescript-eslint/no-shadow
                 item => item.uri === slice.feedPostUri,
               )
-              if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
+              if (
+                item &&
+                AppBskyEmbedVideo.isView(item.post.embed) &&
+                !blockedOrMutedAuthors.includes(item.post.author.did)
+              ) {
                 videos.push({
                   item,
                   feedContext: slice.feedContext,
@@ -501,6 +517,18 @@ let PostFeed = ({
                           'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
+                    // Show composer prompt for Discover and Following feeds
+                    if (
+                      hasSession &&
+                      (feedUriOrActorDid === DISCOVER_FEED_URI ||
+                        feed === 'following') &&
+                      gate('show_composer_prompt')
+                    ) {
+                      arr.push({
+                        type: 'composerPrompt',
+                        key: 'composerPrompt-' + sliceIndex,
+                      })
+                    }
                   } else if (sliceIndex === 15) {
                     if (areVideoFeedsEnabled && !trendingVideoDisabled) {
                       arr.push({
@@ -513,6 +541,16 @@ let PostFeed = ({
                       type: 'interstitialFollows',
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                     })
+                  }
+                } else if (feedKind === 'following') {
+                  if (sliceIndex === 0) {
+                    // Show composer prompt for Following feed
+                    if (hasSession && gate('show_composer_prompt')) {
+                      arr.push({
+                        type: 'composerPrompt',
+                        key: 'composerPrompt-' + sliceIndex,
+                      })
+                    }
                   }
                 } else if (feedKind === 'profile') {
                   if (sliceIndex === 5) {
@@ -541,6 +579,12 @@ let PostFeed = ({
                   key:
                     'sliceFallbackMarker-' + sliceIndex + '-' + lastFetchedAt,
                 })
+              } else if (
+                slice.items.some(item =>
+                  blockedOrMutedAuthors.includes(item.post.author.did),
+                )
+              ) {
+                // skip
               } else if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
                 const last = slice.items.length - 1
@@ -622,6 +666,7 @@ let PostFeed = ({
     isEmpty,
     lastFetchedAt,
     data,
+    feed,
     feedType,
     feedUriOrActorDid,
     feedTab,
@@ -636,6 +681,8 @@ let PostFeed = ({
     hasPressedShowLessUris,
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
+    gate,
+    blockedOrMutedAuthors,
   ])
 
   // events
@@ -726,6 +773,8 @@ let PostFeed = ({
         return <AgeAssuranceDismissibleFeedBanner />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'composerPrompt') {
+        return <ComposerPrompt />
       } else if (row.type === 'interstitialTrendingVideos') {
         return <TrendingVideosInterstitial />
       } else if (row.type === 'fallbackMarker') {

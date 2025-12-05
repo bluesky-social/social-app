@@ -22,6 +22,7 @@ export type MetricEvents = {
       | 'SignupQueued'
       | 'Deactivated'
       | 'Takendown'
+      | 'AgeAssuranceNoAccessScreen'
     scope: 'current' | 'every'
   }
   'notifications:openApp': {
@@ -202,6 +203,10 @@ export type MetricEvents = {
 
   'composer:gif:open': {}
   'composer:gif:select': {}
+  'postComposer:click': {}
+  'composerPrompt:press': {}
+  'composerPrompt:camera:press': {}
+  'composerPrompt:gallery:press': {}
 
   'composer:threadgate:open': {
     nudged: boolean

@@ -8,7 +8,6 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
-import {useGeolocationStatus} from '#/state/geolocation'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -17,7 +16,6 @@ import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
-import {BlockedGeoOverlay} from '#/components/BlockedGeoOverlay'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
@@ -29,6 +27,9 @@ import {
 } from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {WelcomeModal} from '#/components/WelcomeModal'
+import {useAgeAssurance} from '#/ageAssurance'
+import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
+import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer.web'
 import {DrawerContent} from './Drawer'
@@ -139,16 +140,18 @@ function ShellInner() {
 
 export function Shell() {
   const t = useTheme()
-  const {status: geolocation} = useGeolocationStatus()
+  const aa = useAgeAssurance()
   return (
     <View style={[a.util_screen_outer, t.atoms.bg]}>
-      {geolocation?.isAgeBlockedGeo ? (
-        <BlockedGeoOverlay />
+      {aa.state.access === aa.Access.None ? (
+        <NoAccessScreen />
       ) : (
         <RoutesContainer>
           <ShellInner />
         </RoutesContainer>
       )}
+
+      <RedirectOverlay />
     </View>
   )
 }

@@ -45,6 +45,7 @@ export function Composer({}: {winHeight: number}) {
             text={state?.text}
             imageUris={state?.imageUris}
             videoUri={state?.videoUri}
+            openGallery={state?.openGallery}
           />
         </TooltipSheetCompatProvider>
       </View>

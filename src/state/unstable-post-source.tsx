@@ -81,6 +81,7 @@ export function useUnstablePostSource(key: string) {
  */
 export function buildPostSourceKey(key: string, handle: string) {
   const urip = new AtUri(key)
+  // @ts-expect-error TODO new-sdk-migration
   urip.host = handle
   return urip.toString()
 }
