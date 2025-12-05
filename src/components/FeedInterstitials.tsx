@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -429,12 +429,14 @@ export function ProfileGrid({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const gate = useGate()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
 
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
   const isFeedContext = viewContext === 'feed'
+  const showDismissButton = gate('suggested_users_dismiss') && onDismiss
 
   const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6
   const minLength = gtMobile ? 3 : 4
@@ -494,40 +496,39 @@ export function ProfileGrid({
                     (hovered || pressed) && t.atoms.border_contrast_high,
                   ]}>
                   <ProfileCard.Outer>
-                    {onDismiss && (
+                    {showDismissButton && (
                       <Button
                         label={_(msg`Dismiss this suggestion`)}
                         onPress={e => {
                           e.preventDefault()
-                          onDismiss(profile.did)
+                          onDismiss!(profile.did)
                           logEvent('suggestedUser:dismiss', {
                             logContext: isFeedContext
                               ? 'InterstitialDiscover'
                               : 'InterstitialProfile',
                             position: index,
+                            suggestedDid: profile.did,
+                            recId,
                           })
                         }}
-                        hitSlop={6}
-                        style={[a.absolute, a.z_10, {top: -6, right: -6}]}>
+                        style={[
+                          a.absolute,
+                          a.z_10,
+                          a.p_xs,
+                          {top: -4, right: -4},
+                        ]}>
                         {({
                           hovered: dismissHovered,
                           pressed: dismissPressed,
                         }) => (
-                          <View
-                            style={[
-                              a.justify_center,
-                              a.align_center,
-                              a.rounded_full,
-                              t.atoms.bg_contrast_50,
-                              {width: 20, height: 20},
-                              (dismissHovered || dismissPressed) &&
-                                t.atoms.bg_contrast_100,
-                            ]}>
-                            <X
-                              size="xs"
-                              fill={t.atoms.text_contrast_medium.color}
-                            />
-                          </View>
+                          <X
+                            size="xs"
+                            fill={
+                              dismissHovered || dismissPressed
+                                ? t.atoms.text.color
+                                : t.atoms.text_contrast_medium.color
+                            }
+                          />
                         )}
                       </Button>
                     )}

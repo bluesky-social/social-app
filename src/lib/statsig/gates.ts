@@ -9,5 +9,6 @@ export type Gate =
   | 'onboarding_add_video_feed'
   | 'onboarding_suggested_starterpacks'
   | 'remove_show_latest_button'
+  | 'suggested_users_dismiss'
   | 'test_gate_1'
   | 'test_gate_2'

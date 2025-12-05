@@ -336,7 +336,9 @@ export type MetricEvents = {
   }
   'suggestedUser:dismiss': {
     logContext: 'InterstitialDiscover' | 'InterstitialProfile'
+    recId?: number
     position: number
+    suggestedDid: string
   }
   'profile:unfollow': {
     logContext:
