@@ -173,6 +173,7 @@
     "lodash.isequal": "^4.5.0",
     "lodash.shuffle": "^4.2.0",
     "lodash.throttle": "^4.1.1",
+    "mediabunny": "^1.25.3",
     "multiformats": "9.9.0",
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
