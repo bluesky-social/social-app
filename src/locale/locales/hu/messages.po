@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-20 18:09\n"
+"PO-Revision-Date: 2025-12-05 22:12\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -133,6 +133,11 @@ msgstr "{0, plural, one {}other {#}} személy regisztrált ezzel a kezdőcsomagg
 msgid "{0, plural, other {+# more}}"
 msgstr "{0, plural, other {+# további}}"
 
+#: src/lib/strings/time.ts:13
+msgctxt "date and time formatted like this: [time] · [date]"
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
 #: src/components/moderation/ContentHider.tsx:89
 msgid "{0} (Account)"
 msgstr "{0} (fiók)"
@@ -192,8 +197,8 @@ msgstr "{0} – szerző: {1}; {2} kedveli"
 msgid "{0}, a list by {1}"
 msgstr "{0} – szerző: {1}"
 
-#: src/view/com/util/UserAvatar.tsx:577
-#: src/view/com/util/UserAvatar.tsx:595
+#: src/view/com/util/UserAvatar.tsx:578
+#: src/view/com/util/UserAvatar.tsx:596
 msgid "{0}'s avatar"
 msgstr "{0} profilképe"
 
@@ -427,7 +432,7 @@ msgstr "{joinedAllTimeCount, plural, other {#}} felhasználó csatlakozott ezzel
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, one {# perc} other {# perc}}"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:277
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:282
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr "{notificationCount, plural, one {# olvasatlan értesítés} other {# olvasatlan értesítés}}"
 
@@ -502,8 +507,8 @@ msgstr "a(z) <0>{0}</0> lista tagjai"
 msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0>, {time}"
 
-#: src/screens/Hashtag.tsx:223
-#: src/screens/Search/SearchResults.tsx:292
+#: src/screens/Hashtag.tsx:225
+#: src/screens/Search/SearchResults.tsx:294
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "<0>Jelentkezz be</0><1> vagy </1><2>regisztrálj</2><3>, </3><4>ha szeretnél a Blueskyon híreket, sport- és politikai bejegyzéseket, vagy bármi mást keresni!</4>"
 
@@ -543,10 +548,6 @@ msgstr "(üres üzenet)"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:91
 msgid "A new form of verification"
 msgstr "A hitelesítés egy új formája"
-
-#: src/components/BlockedGeoOverlay.tsx:50
-msgid "A new Mississippi law requires us to implement age verification for all users before they can access Bluesky. We think this law creates challenges that go beyond its child safety goals, and creates significant barriers that limit free speech and disproportionately harm smaller platforms and emerging technologies."
-msgstr "Egy új mississippi jogszabály megköveteli, hogy minden felhasználó életkorát ellenőrizzük, mielőtt hozzáférhetnének a Blueskyhoz. Szerintünk ez a törvény olyasféle kihívásokat idéz elő, amelyek túlnyúlnak a jogos gyermekvédelmi eszméken, jelentős korlátokat emel a szólásszabadsággal szemben és aránytalanul megnehezíti a kisebb platformok és a fejlődő technológiák létezését."
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
@@ -700,8 +701,8 @@ msgstr "Tartalomfigyelmeztetés felvétele"
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
 msgstr "Lehetőséged van egy ideiglenes állapot beállítására. Így, ha valaki rákattint a profilképedre, akkor megtekintheti az élő adásod részleteit."
 
-#: src/screens/ProfileList/AboutSection.tsx:62
-#: src/screens/ProfileList/AboutSection.tsx:80
+#: src/screens/ProfileList/AboutSection.tsx:63
+#: src/screens/ProfileList/AboutSection.tsx:81
 msgid "Add a user to this list"
 msgstr "Felhasználó felvétele a listára"
 
@@ -731,11 +732,11 @@ msgstr "Helyettesítő szöveg hozzáadása (nem kötelező)"
 msgid "Add another account"
 msgstr "Fiók felvétele a listára"
 
-#: src/view/com/composer/Composer.tsx:854
+#: src/view/com/composer/Composer.tsx:856
 msgid "Add another post"
 msgstr "Válaszlánc folytatása"
 
-#: src/view/com/composer/Composer.tsx:1491
+#: src/view/com/composer/Composer.tsx:1496
 msgid "Add another post to thread"
 msgstr "Válaszlánc bővítése"
 
@@ -743,8 +744,8 @@ msgstr "Válaszlánc bővítése"
 msgid "Add app password"
 msgstr "Alkalmazásjelszó létrehozása"
 
-#: src/screens/Settings/AppPasswords.tsx:73
-#: src/screens/Settings/AppPasswords.tsx:81
+#: src/screens/Settings/AppPasswords.tsx:74
+#: src/screens/Settings/AppPasswords.tsx:82
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:111
 msgid "Add App Password"
 msgstr "Alkalmazásjelszó létrehozása"
@@ -753,8 +754,12 @@ msgstr "Alkalmazásjelszó létrehozása"
 msgid "Add emoji reaction"
 msgstr "Emoji-reakció hozzáfűzése"
 
+#: src/view/com/feeds/ComposerPrompt.tsx:224
+msgid "Add image"
+msgstr "Kép csatolása"
+
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:468
+#: src/view/com/composer/SelectMediaButton.tsx:481
 msgid "Add media to post"
 msgstr "Médiatartalom csatolása a bejegyzéshez"
 
@@ -771,8 +776,8 @@ msgstr "Szó elnémítása a megadott beállításokkal"
 msgid "Add muted words and tags"
 msgstr "Elnémított szavak és címkék felvétele"
 
-#: src/screens/ProfileList/AboutSection.tsx:70
-#: src/screens/ProfileList/AboutSection.tsx:88
+#: src/screens/ProfileList/AboutSection.tsx:71
+#: src/screens/ProfileList/AboutSection.tsx:89
 msgid "Add people"
 msgstr "Személyek felvétele"
 
@@ -823,6 +828,10 @@ msgstr "Felvétel kezdőcsomagba"
 msgid "Add user to list"
 msgstr "Személy felvétele a listára"
 
+#: src/ageAssurance/components/NoAccessScreen.tsx:182
+msgid "Add your birthdate"
+msgstr "Születési dátum megadása"
+
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:109
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
 msgid "Added to list"
@@ -855,7 +864,7 @@ msgstr "Felnőtt tartalom"
 msgid "Adult Content"
 msgstr "Felnőtt tartalom"
 
-#: src/screens/Moderation/index.tsx:418
+#: src/screens/Moderation/index.tsx:394
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "A felnőtt tartalmakat csak böngészőből, a <0>bsky.app</0> honlapon engedélyezheted."
 
@@ -872,7 +881,7 @@ msgstr "Felnőtt tartalmi feljegyzések"
 msgid "Adult sexual abuse content"
 msgstr "Felnőttek szexuális kizsákmányolása"
 
-#: src/screens/Moderation/index.tsx:468
+#: src/screens/Moderation/index.tsx:439
 msgid "Advanced"
 msgstr "Haladó beállítások"
 
@@ -889,7 +898,8 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "Az életkor-igazolási kérelem küldése sikeresen megtörtént"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:193
+#: src/ageAssurance/components/NoAccessScreen.tsx:302
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Age assurance only takes a few minutes"
 msgstr "Az életkor-igazolás általában csupán néhány percet vesz igénybe"
 
@@ -898,7 +908,7 @@ msgid "alice@example.com"
 msgstr "janos@pelda.hu"
 
 #. the default tab in the interests tab bar
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:175
 #: src/view/screens/Notifications.tsx:88
 msgid "All"
 msgstr "Mind"
@@ -913,7 +923,7 @@ msgstr "Mostantól mindegyik fiókot követed!"
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:101
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:238
 msgid "All languages"
-msgstr "Bármilyen nyelven"
+msgstr "Minden nyelv"
 
 #: src/view/screens/Feeds.tsx:707
 msgid "All the feeds you've saved, right in one place."
@@ -928,8 +938,8 @@ msgstr "Hozzáférés megadása a személyes üzenetekhez"
 msgid "Allow anyone to reply"
 msgstr "Bárki válaszolhat"
 
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:139
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:145
 msgid "Allow location access"
 msgstr "Tartózkodási hely megosztása"
 
@@ -963,7 +973,7 @@ msgstr "A(z) {0} listáról bárki válaszolhat"
 msgid "Allow your followers to reply"
 msgstr "A követőid közül bárki válaszolhat"
 
-#: src/screens/Settings/AppPasswords.tsx:199
+#: src/screens/Settings/AppPasswords.tsx:200
 msgid "Allows access to direct messages"
 msgstr "Megengedi a személyes üzenetekhez való hozzáférést"
 
@@ -1001,7 +1011,7 @@ msgstr "Helyettesítő szöveg"
 msgid "Alt Text"
 msgstr "Helyettesítő szöveg"
 
-#: src/view/com/composer/photos/Gallery.tsx:260
+#: src/view/com/composer/photos/Gallery.tsx:261
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "A helyettesítő szöveg segít leírni egy képet vak vagy gyengén látó felhasználók számára, és mindenki számára további információval szolgál."
 
@@ -1027,7 +1037,7 @@ msgstr "Hiba történt"
 msgid "An error occurred while compressing the video."
 msgstr "A videó tömörítése meghiúsult."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:168
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:197
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:66
 msgid "An error occurred while fetching suggested accounts."
 msgstr "Hiba történt a javasolt fiókok lekérése közben."
@@ -1036,7 +1046,7 @@ msgstr "Hiba történt a javasolt fiókok lekérése közben."
 msgid "An error occurred while fetching the feed."
 msgstr "A hírfolyam lekérdezése meghiúsult."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:339
+#: src/components/StarterPack/ProfileStarterPacks.tsx:371
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "A kezdőcsomag létrehozása meghiúsult. Szeretnéd újra megpróbálni?"
 
@@ -1127,7 +1137,6 @@ msgstr "Állatok"
 msgid "Animated GIF"
 msgstr "Animált GIF"
 
-#: src/components/BlockedGeoOverlay.tsx:104
 #: src/components/PolicyUpdateOverlay/Badge.tsx:33
 msgid "Announcement"
 msgstr "Közlemény"
@@ -1165,7 +1174,7 @@ msgstr "Alkalmazás nyelve"
 msgid "App Password"
 msgstr "Alkalmazásjelszó"
 
-#: src/screens/Settings/AppPasswords.tsx:145
+#: src/screens/Settings/AppPasswords.tsx:146
 msgctxt "toast"
 msgid "App password deleted"
 msgstr "Alkalmazásjelszó törölve"
@@ -1188,7 +1197,7 @@ msgid "App passwords"
 msgstr "Alkalmazásjelszók"
 
 #: src/Navigation.tsx:351
-#: src/screens/Settings/AppPasswords.tsx:49
+#: src/screens/Settings/AppPasswords.tsx:50
 msgid "App Passwords"
 msgstr "Alkalmazásjelszók"
 
@@ -1249,7 +1258,7 @@ msgstr "Archiválás dátuma: {0}"
 msgid "Archived post"
 msgstr "Archivált bejegyzés"
 
-#: src/screens/Settings/AppPasswords.tsx:208
+#: src/screens/Settings/AppPasswords.tsx:209
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "Biztosan törölni akarod a(z) „{0}” nevű alkalmazásjelszót?"
 
@@ -1278,11 +1287,11 @@ msgstr "Biztosan el akarod hagyni ezt a csevegést? Már nem fogsz tudni hozzáf
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Biztosan el akarod távolítani ezt a hírfolyamgyűjteményedből?"
 
-#: src/view/com/composer/Composer.tsx:803
+#: src/view/com/composer/Composer.tsx:805
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Biztosan el akarod vetni ezt a piszkozatot?"
 
-#: src/view/com/composer/Composer.tsx:993
+#: src/view/com/composer/Composer.tsx:995
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Biztosan el akarod vetni ezt a bejegyzést?"
 
@@ -1302,10 +1311,6 @@ msgstr "Művészet"
 #: src/view/com/composer/labels/LabelsBtn.tsx:166
 msgid "Artistic or non-erotic nudity."
 msgstr "Művészi- vagy nem erotikus meztelenség"
-
-#: src/components/BlockedGeoOverlay.tsx:53
-msgid "As a small team, we cannot justify building the expensive infrastructure this requirement demands while legal challenges to this law are pending."
-msgstr "A jogi kihívások feloldódásáig, kis csapatként nem tudjuk kiépíteni az ehhez szükséges infrastruktúrát."
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:529
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:531
@@ -1373,8 +1378,9 @@ msgid "Before creating a post or replying, you must first verify your email."
 msgstr "A bejegyzés- vagy válaszírás előtt ellenőriznünk kell az e-mail-címedet."
 
 #: src/components/dialogs/StarterPackDialog.tsx:71
-#: src/components/StarterPack/ProfileStarterPacks.tsx:231
-#: src/components/StarterPack/ProfileStarterPacks.tsx:241
+#: src/components/StarterPack/ProfileStarterPacks.tsx:263
+#: src/components/StarterPack/ProfileStarterPacks.tsx:273
+#: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr "A kezdőcsomag létrehozása előtt ellenőriznünk kell az e-mail-címedet."
 
@@ -1393,11 +1399,11 @@ msgstr "A feliratkozás előtt vissza kell igazolnod az e-mail-címedet."
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Az üzenetküldés előtt ellenőriznünk kell az e-mail-címedet."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:318
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:317
 msgid "Begin"
 msgstr "Indítás"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:312
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:311
 msgid "Begin age assurance process"
 msgstr "Életkor-igazolási folyamat indítása"
 
@@ -1405,7 +1411,10 @@ msgstr "Életkor-igazolási folyamat indítása"
 msgid "Begin the age assurance process by completing the fields below."
 msgstr "Az életkor-igazolási folyamat megkezdéséhez töltsd ki az alábbi mezőket."
 
-#: src/components/dialogs/BirthDateSettings.tsx:115
+#: src/components/dialogs/BirthDateSettings.tsx:147
+msgid "Birthdate"
+msgstr "Születési dáum"
+
 #: src/screens/Settings/AccountSettings.tsx:142
 msgid "Birthday"
 msgstr "Születésnap"
@@ -1470,7 +1479,7 @@ msgstr "A másik fél letiltása és/vagy a beszélgetés törlése"
 msgid "Blocked"
 msgstr "Letiltva"
 
-#: src/screens/Moderation/index.tsx:306
+#: src/screens/Moderation/index.tsx:311
 msgid "Blocked accounts"
 msgstr "Letiltott fiókok"
 
@@ -1535,7 +1544,7 @@ msgstr "A Bluesky ismerősökkel még jobb!"
 msgid "Bluesky Social Terms of Service"
 msgstr "A Bluesky felhasználási feltételei"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:306
+#: src/components/StarterPack/ProfileStarterPacks.tsx:338
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "A Bluesky egy javasolt felhasználócsoportot fog kijelölni a hálózatodon."
 
@@ -1572,20 +1581,25 @@ msgstr "Könyvek"
 msgid "Breaking site rules"
 msgstr "A Bluesky szabályzatának megszegése"
 
-#: src/components/FeedInterstitials.tsx:436
-msgid "Browse more accounts on the Explore page"
-msgstr "További fiókokat a Felfedezés oldalon találsz"
+#: src/view/com/feeds/ProfileFeedgens.tsx:158
+#: src/view/com/feeds/ProfileFeedgens.tsx:159
+msgid "Browse custom feeds"
+msgstr "Egyéni hírfolyamok böngészése"
 
-#: src/components/FeedInterstitials.tsx:569
+#: src/components/FeedInterstitials.tsx:547
+msgid "Browse more accounts"
+msgstr "További fiókok böngészése"
+
+#: src/components/FeedInterstitials.tsx:676
 msgid "Browse more feeds on the Explore page"
 msgstr "További hírfolyamokat a Felfedezés oldalon találsz"
 
-#: src/components/FeedInterstitials.tsx:550
-#: src/components/FeedInterstitials.tsx:553
+#: src/components/FeedInterstitials.tsx:657
+#: src/components/FeedInterstitials.tsx:660
 msgid "Browse more suggestions"
 msgstr "További javaslatok"
 
-#: src/components/FeedInterstitials.tsx:578
+#: src/components/FeedInterstitials.tsx:685
 msgid "Browse more suggestions on the Explore page"
 msgstr "További javaslatokat a Felfedezés oldalon találsz"
 
@@ -1618,6 +1632,10 @@ msgstr "A(z) „{displayName}” témakör böngészése"
 msgid "Business"
 msgstr "Honlap"
 
+#: src/screens/Bookmarks/index.tsx:284
+msgid "Button to go back to the home timeline"
+msgstr "Gomb a kezdőoldali idővonalra ugráshoz"
+
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:834
 #: src/screens/Search/components/StarterPackCard.tsx:106
@@ -1633,7 +1651,7 @@ msgstr "Szerző: <0>{0}</0>"
 msgid "By clicking \"Continue\" you acknowledge that you understand and agree to these updates."
 msgstr "A Folytatás gomb megnyomásával megerősíted, hogy a fentieket tudomásul vetted és elfogadod a változásokat."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:329
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:328
 msgid "By continuing, you agree to the <0>KWS Terms of Use</0> and acknowledge that KWS will store your verified status with your hashed email address in accordance with the <1>KWS Privacy Policy</1>. This means you won’t need to verify again the next time you use this email for other apps, games, and services powered by KWS technology."
 msgstr "A folytatással elfogadod a <0>KWS felhasználási feltételeit</0> és tudomásul veszed, hogy a KWS – az <1>adatvédelmi irányelvei</1> függvényében – eltárolja az ellenőrzésed állapotát és az e-mail-címed kivonatát. Ennek köszönhetően legközelebb, ha egy ugyancsak a KWS-t használó alkalmazásba, játékba vagy szolgáltatásba jelentkezel be, már nem kell majd ismét igazolnod az életkorodat."
 
@@ -1660,8 +1678,8 @@ msgstr "Kamera"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:206
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:128
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:134
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:159
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:164
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:157
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:125
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:131
 #: src/components/dialogs/InAppBrowserConsent.tsx:98
@@ -1688,8 +1706,8 @@ msgstr "Kamera"
 #: src/screens/Settings/Settings.tsx:289
 #: src/screens/Takendown.tsx:108
 #: src/screens/Takendown.tsx:111
-#: src/view/com/composer/Composer.tsx:1048
-#: src/view/com/composer/Composer.tsx:1059
+#: src/view/com/composer/Composer.tsx:1050
+#: src/view/com/composer/Composer.tsx:1061
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:52
 #: src/view/shell/desktop/LeftNav.tsx:213
@@ -1722,7 +1740,7 @@ msgstr "Keresés megszakítása"
 #: src/components/PostControls/index.tsx:106
 #: src/components/PostControls/index.tsx:137
 #: src/components/PostControls/index.tsx:165
-#: src/state/shell/composer/index.tsx:94
+#: src/state/shell/composer/index.tsx:95
 msgid "Cannot interact with a blocked user"
 msgstr "Egy letiltott felhasználóval nem léphetsz kapcsolatba"
 
@@ -1885,7 +1903,7 @@ msgstr "Tartományhitelesítési módszer"
 msgid "Choose Feeds"
 msgstr "Hírfolyamok böngészése"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:314
+#: src/components/StarterPack/ProfileStarterPacks.tsx:346
 msgid "Choose for me"
 msgstr "Létrehozás automatikusan"
 
@@ -1946,9 +1964,22 @@ msgstr "További információ"
 msgid "click here"
 msgstr "kattints ide"
 
+#: src/ageAssurance/components/NoAccessScreen.tsx:102
+msgid "Click here to contact our support team"
+msgstr "Kattints ide az ügyfélszolgálattal történő kapcsolatfelvételhez"
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:194
+msgid "Click here to log out"
+msgstr "Kattints ide a kijelentkezéshez"
+
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:383
 msgid "Click here to restart the verification process."
 msgstr "Hitelesítés most."
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:86
+#: src/ageAssurance/components/NoAccessScreen.tsx:179
+msgid "Click here to update your birthdate"
+msgstr "Kattints ide a születési dáumod frissítéséhez"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:275
 msgid "Click here to update your email"
@@ -1970,10 +2001,14 @@ msgstr "Éghajlat"
 msgid "Clip 🐴 clop 🐴"
 msgstr "Kipp 🐴 kopp 🐴"
 
+#: src/ageAssurance/components/RedirectOverlay.tsx:264
+#: src/ageAssurance/components/RedirectOverlay.tsx:270
+#: src/ageAssurance/components/RedirectOverlay.tsx:320
+#: src/ageAssurance/components/RedirectOverlay.tsx:326
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:172
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:178
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:184
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:231
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:237
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:243
 #: src/components/dialogs/GifSelect.tsx:269
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:158
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
@@ -1993,7 +2028,7 @@ msgstr "Kipp 🐴 kopp 🐴"
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
-#: src/components/ProgressGuide/FollowDialog.tsx:376
+#: src/components/ProgressGuide/FollowDialog.tsx:440
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
@@ -2021,8 +2056,8 @@ msgstr "Figyelmeztetés bezárása"
 msgid "Close bottom drawer"
 msgstr "Alsó kinyíló menü bezárása"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:224
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:230
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:223
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:229
 #: src/components/dialogs/GifSelect.tsx:263
 #: src/components/verification/VerificationsDialog.tsx:136
 #: src/components/verification/VerifierDialog.tsx:142
@@ -2032,7 +2067,7 @@ msgstr "Alsó kinyíló menü bezárása"
 msgid "Close dialog"
 msgstr "Párbeszédablak bezárása"
 
-#: src/view/shell/index.web.tsx:107
+#: src/view/shell/index.web.tsx:108
 msgid "Close drawer menu"
 msgstr "Oldalsó menü bezárása"
 
@@ -2071,7 +2106,7 @@ msgstr "Köszöntő-párbeszédablak bezárása"
 msgid "Closes password update alert"
 msgstr "Jelszófrissítési figyelmeztetés bezárása"
 
-#: src/view/com/composer/Composer.tsx:1056
+#: src/view/com/composer/Composer.tsx:1058
 msgid "Closes post composer and discards post draft"
 msgstr "A bejegyzésíró bezárása és a piszkozat elvetése"
 
@@ -2126,11 +2161,12 @@ msgstr "Regisztrációs varázsló befejezése és a Bluesky használatának meg
 msgid "Complete the challenge"
 msgstr "Biztonsági kihívás"
 
+#: src/view/com/feeds/ComposerPrompt.tsx:143
 #: src/view/shell/desktop/LeftNav.tsx:573
 msgid "Compose new post"
 msgstr "Új bejegyzés írása"
 
-#: src/view/com/composer/Composer.tsx:957
+#: src/view/com/composer/Composer.tsx:959
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "Egy bejegyzés legfeljebb {0, plural, other{#}} karakter hosszú lehet"
 
@@ -2138,7 +2174,7 @@ msgstr "Egy bejegyzés legfeljebb {0, plural, other{#}} karakter hosszú lehet"
 msgid "Compose reply"
 msgstr "Válaszírás"
 
-#: src/view/com/composer/Composer.tsx:1886
+#: src/view/com/composer/Composer.tsx:1891
 msgid "Compressing video..."
 msgstr "Videó tömörítése folyamatban…"
 
@@ -2165,25 +2201,12 @@ msgstr "Tartalomnyelvi beállítások megerősítése"
 msgid "Confirm delete account"
 msgstr "Fiók törlésének megerősítése"
 
-#: src/screens/Moderation/index.tsx:356
-msgid "Confirm your age:"
-msgstr "Életkor megerősítése:"
-
-#: src/screens/Moderation/index.tsx:347
-msgid "Confirm your birthdate"
-msgstr "Születési dátum megerősítése"
-
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:89
-#: src/components/BlockedGeoOverlay.tsx:140
-#: src/components/BlockedGeoOverlay.tsx:146
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:45
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:112
+#: src/ageAssurance/components/NoAccessScreen.tsx:316
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
 msgid "Confirm your location"
 msgstr "Tartózkodási hely megerősítése"
-
-#: src/components/BlockedGeoOverlay.tsx:134
-msgid "Confirm your location with GPS. Your location data is not tracked and does not leave your device."
-msgstr "GPS-szel kell megerősítened a tartózkodási helyedet. Ezt az információt nem tároljuk és nem fogja elhagyni az eszközödet."
 
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
 #: src/screens/Login/LoginForm.tsx:284
@@ -2200,16 +2223,18 @@ msgstr "Megerősítőkód"
 msgid "Connecting..."
 msgstr "Csatlakozás folyamatban…"
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:213
+#: src/ageAssurance/components/RedirectOverlay.tsx:296
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:207
 msgid "Connection issue"
 msgstr "Megszakadt a kapcsolat"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:132
+#: src/ageAssurance/components/NoAccessScreen.tsx:253
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
 msgstr "Kapcsolatfelvétel a moderálási csapattal"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:155
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:156
 #: src/screens/Signup/index.tsx:222
 #: src/screens/Signup/index.tsx:225
 msgid "Contact support"
@@ -2236,7 +2261,7 @@ msgstr "Tartalom és média"
 msgid "Content Blocked"
 msgstr "Letiltottad a tartalmat"
 
-#: src/screens/Moderation/index.tsx:340
+#: src/screens/Moderation/index.tsx:344
 msgid "Content filters"
 msgstr "Tartalomszűrés"
 
@@ -2276,8 +2301,8 @@ msgstr "A környezetérzékeny menü háttere. Kattints ide a menü bezárásáh
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:94
-#: src/screens/Onboarding/StepProfile/index.tsx:280
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
+#: src/screens/Onboarding/StepProfile/index.tsx:288
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 msgid "Continue"
 msgstr "Folytatás"
@@ -2295,8 +2320,8 @@ msgid "Continue thread..."
 msgstr "Válaszlánc folytatása…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:91
-#: src/screens/Onboarding/StepProfile/index.tsx:277
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
+#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:274
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:111
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2452,7 +2477,7 @@ msgstr "Ez a profil nem található"
 msgid "Could not leave chat"
 msgstr "A csevegés elhagyása meghiúsult"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:83
+#: src/screens/Profile/ProfileFeed/index.tsx:84
 msgid "Could not load feed"
 msgstr "A hírfolyam betöltése meghiúsult"
 
@@ -2482,21 +2507,31 @@ msgstr "Az értesítési beállítások frissítése meghiúsult"
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:112
 #: src/components/dialogs/StarterPackDialog.tsx:201
-#: src/components/StarterPack/ProfileStarterPacks.tsx:296
+#: src/components/StarterPack/ProfileStarterPacks.tsx:328
 msgid "Create"
 msgstr "Létrehozás"
+
+#: src/view/com/lists/ProfileLists.tsx:159
+#: src/view/com/lists/ProfileLists.tsx:160
+msgid "Create a list"
+msgstr "Lista létrehozása"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:163
 msgid "Create a QR code for a starter pack"
 msgstr "QR-kód létrehozása egy kezdőcsomaghoz"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:174
-#: src/components/StarterPack/ProfileStarterPacks.tsx:283
+#: src/components/StarterPack/ProfileStarterPacks.tsx:206
+#: src/components/StarterPack/ProfileStarterPacks.tsx:315
 #: src/Navigation.tsx:589
 msgid "Create a starter pack"
 msgstr "Kezdőcsomag létrehozása"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:270
+#: src/view/screens/Profile.tsx:542
+#: src/view/screens/Profile.tsx:543
+msgid "Create a Starter Pack"
+msgstr "Kezdőcsomag létrehozása"
+
+#: src/components/StarterPack/ProfileStarterPacks.tsx:302
 msgid "Create a starter pack for me"
 msgstr "Automatikus létrehozás"
 
@@ -2519,8 +2554,8 @@ msgstr "Regisztráció"
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
-#: src/screens/Hashtag.tsx:232
-#: src/screens/Search/SearchResults.tsx:301
+#: src/screens/Hashtag.tsx:234
+#: src/screens/Search/SearchResults.tsx:303
 msgid "Create an account"
 msgstr "Regisztráció"
 
@@ -2529,11 +2564,11 @@ msgstr "Regisztráció"
 msgid "Create an account without using this starter pack"
 msgstr "Fiók létrehozása a kezdőcsomag igénybevétele nélkül"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:295
+#: src/screens/Onboarding/StepProfile/index.tsx:303
 msgid "Create an avatar instead"
 msgstr "Profilkép létrehozása"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:181
+#: src/components/StarterPack/ProfileStarterPacks.tsx:213
 msgid "Create another"
 msgstr "Másik létrehozása"
 
@@ -2561,7 +2596,7 @@ msgstr "Kezdőcsomag létrehozása"
 msgid "Create user list"
 msgstr "Felhasználólista létrehozása"
 
-#: src/screens/Settings/AppPasswords.tsx:172
+#: src/screens/Settings/AppPasswords.tsx:173
 msgid "Created {0}"
 msgstr "Létrehozás dátuma: {0}"
 
@@ -2607,7 +2642,7 @@ msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr "Lekapcsolt"
 
-#: src/view/screens/Debug.tsx:68
+#: src/view/screens/Debug.tsx:69
 msgid "Dark mode"
 msgstr "Sötét mód"
 
@@ -2629,7 +2664,7 @@ msgstr "Fiók deaktiválása"
 msgid "Debug Moderation"
 msgstr "Moderálási hibakeresés"
 
-#: src/view/screens/Debug.tsx:88
+#: src/view/screens/Debug.tsx:89
 msgid "Debug panel"
 msgstr "Hibakeresési panel"
 
@@ -2649,7 +2684,7 @@ msgstr "Alapértelmezett ikonok"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:736
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:280
-#: src/screens/Settings/AppPasswords.tsx:211
+#: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:601
 #: src/screens/StarterPack/StarterPackScreen.tsx:690
 #: src/screens/StarterPack/StarterPackScreen.tsx:762
@@ -2665,11 +2700,11 @@ msgstr "Fiók törlése"
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
 msgstr "<0>\"</0><1>{0}</1><2>\"</2> fiókjának törlése"
 
-#: src/screens/Settings/AppPasswords.tsx:185
+#: src/screens/Settings/AppPasswords.tsx:186
 msgid "Delete app password"
 msgstr "Alkalmazásjelszó törlése"
 
-#: src/screens/Settings/AppPasswords.tsx:206
+#: src/screens/Settings/AppPasswords.tsx:207
 msgid "Delete app password?"
 msgstr "Alkalmazásjelszó törlése"
 
@@ -2716,7 +2751,7 @@ msgstr "Fiók törlése"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:717
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:719
-#: src/view/com/composer/Composer.tsx:967
+#: src/view/com/composer/Composer.tsx:969
 msgid "Delete post"
 msgstr "Bejegyzés törlése"
 
@@ -2831,14 +2866,14 @@ msgstr "Feliratok letiltása"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
 #: src/screens/Messages/Settings.tsx:144
 #: src/screens/Messages/Settings.tsx:147
-#: src/screens/Moderation/index.tsx:408
+#: src/screens/Moderation/index.tsx:384
 msgid "Disabled"
 msgstr "Letiltva"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:92
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
-#: src/view/com/composer/Composer.tsx:805
-#: src/view/com/composer/Composer.tsx:1000
+#: src/view/com/composer/Composer.tsx:807
+#: src/view/com/composer/Composer.tsx:1002
 msgid "Discard"
 msgstr "Elvetés"
 
@@ -2847,11 +2882,11 @@ msgstr "Elvetés"
 msgid "Discard changes?"
 msgstr "Változtatások elvetése"
 
-#: src/view/com/composer/Composer.tsx:802
+#: src/view/com/composer/Composer.tsx:804
 msgid "Discard draft?"
 msgstr "Piszkozat elvetése"
 
-#: src/view/com/composer/Composer.tsx:992
+#: src/view/com/composer/Composer.tsx:994
 msgid "Discard post?"
 msgstr "Bejegyzés elvetése"
 
@@ -2874,7 +2909,7 @@ msgstr "Új hírfolyamok felfedezése"
 msgid "Dismiss"
 msgstr "Bezárás"
 
-#: src/view/com/composer/Composer.tsx:1810
+#: src/view/com/composer/Composer.tsx:1815
 msgid "Dismiss error"
 msgstr "Hiba bezárása"
 
@@ -2929,8 +2964,8 @@ msgstr "Ha nem rendelkezel kóddal vagy újra van szükséged, <0>kattints ide</
 msgid "Don't see an email? <0>Click here to resend.</0>"
 msgstr "Ha nem kaptad meg, <0>kattints ide</0> egy új e-mail küldéséhez."
 
-#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:113
-#: src/components/ageAssurance/AgeAssuranceDismissibleNotice.tsx:36
+#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:103
+#: src/components/ageAssurance/AgeAssuranceDismissibleNotice.tsx:33
 msgid "Don't show again"
 msgstr "Ne mutassa többet"
 
@@ -2938,8 +2973,8 @@ msgstr "Ne mutassa többet"
 msgid "Don't worry! All existing messages and settings are saved and will be available after you verify you're an adult."
 msgstr "Ne aggódj! A korábbi üzeneteid és beállításaid nem vesztek el és, miután igazoltad, hogy felnőtt vagy, ismét elérhetővé válnak."
 
-#: src/components/dialogs/BirthDateSettings.tsx:149
-#: src/components/dialogs/BirthDateSettings.tsx:156
+#: src/components/dialogs/BirthDateSettings.tsx:181
+#: src/components/dialogs/BirthDateSettings.tsx:188
 #: src/components/dialogs/ServerInput.tsx:240
 #: src/components/dialogs/ServerInput.tsx:242
 #: src/components/dms/AfterReportDialog.tsx:142
@@ -2948,8 +2983,8 @@ msgstr "Ne aggódj! A korábbi üzeneteid és beállításaid nem vesztek el és
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
 #: src/lib/media/picker.tsx:35
-#: src/screens/Onboarding/StepProfile/index.tsx:333
-#: src/screens/Onboarding/StepProfile/index.tsx:336
+#: src/screens/Onboarding/StepProfile/index.tsx:341
+#: src/screens/Onboarding/StepProfile/index.tsx:344
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:214
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:221
 #: src/view/com/composer/labels/LabelsBtn.tsx:218
@@ -2978,7 +3013,7 @@ msgstr "Koppints kétszer vagy tartsd lenyomva az üzenetet egy reakció hozzáf
 msgid "Double tap to close the dialog"
 msgstr "Koppints kétszer a párbeszédablak bezárásához"
 
-#: src/screens/VideoFeed/index.tsx:1101
+#: src/screens/VideoFeed/index.tsx:1123
 msgid "Double tap to like"
 msgstr "Koppints kétszer a kedveléshez"
 
@@ -2998,6 +3033,10 @@ msgstr "Személyes információ kiszivárogtatása"
 #: src/view/com/composer/text-input/TextInput.web.tsx:375
 msgid "Drop to add images"
 msgstr "A csatoláshoz húzd ide a képet."
+
+#: src/components/ageAssurance/useAgeAssuranceCopy.ts:11
+msgid "Due to laws in your region, certain features on Bluesky are currently restricted until you're able to verify you're an adult."
+msgstr "Helyi törvények miatt a Bluesky bizonyos funkciói jelenleg korlátozás alatt állnak, amíg be nem bizonyítod, hogy felnőtt vagy."
 
 #: src/components/dialogs/MutedWords.tsx:158
 msgid "Duration:"
@@ -3053,8 +3092,8 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Szerkesztés"
 
-#: src/view/com/util/UserAvatar.tsx:439
-#: src/view/com/util/UserBanner.tsx:119
+#: src/view/com/util/UserAvatar.tsx:440
+#: src/view/com/util/UserBanner.tsx:121
 msgid "Edit avatar"
 msgstr "Profilkép szerkesztése"
 
@@ -3210,7 +3249,7 @@ msgstr "Engedélyezés"
 msgid "Enable {0} only"
 msgstr "Csak a(z) {0} engedélyezése"
 
-#: src/screens/Moderation/index.tsx:395
+#: src/screens/Moderation/index.tsx:371
 msgid "Enable adult content"
 msgstr "Felnőtt tartalmak megjelenítése"
 
@@ -3261,11 +3300,11 @@ msgstr "Felkapott videók megjelenítése a Követett hírfolyamon"
 
 #: src/screens/Messages/Settings.tsx:135
 #: src/screens/Messages/Settings.tsx:138
-#: src/screens/Moderation/index.tsx:406
+#: src/screens/Moderation/index.tsx:382
 msgid "Enabled"
 msgstr "Engedélyezve"
 
-#: src/screens/Profile/Sections/Feed.tsx:109
+#: src/screens/Profile/Sections/Feed.tsx:131
 msgid "End of feed"
 msgstr "A hírfolyam véget ért"
 
@@ -3304,9 +3343,9 @@ msgstr "Add meg a regisztrációkor használt e-mail-címedet. Küldeni fogunk e
 msgid "Enter the username or email address you used when you created your account"
 msgstr "Add meg a fiók létrehozásakor használt felhasználónevet vagy e-mail-címet."
 
-#: src/components/dialogs/BirthDateSettings.tsx:116
-msgid "Enter your birth date"
-msgstr "Add meg a születési dátumod"
+#: src/components/dialogs/BirthDateSettings.tsx:148
+msgid "Enter your birthdate"
+msgstr "Születési dátum megadása"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 #: src/screens/Signup/StepInfo/index.tsx:216
@@ -3329,7 +3368,7 @@ msgstr "Teljes képernyős mód"
 msgid "Entertainment"
 msgstr "Szórakozás"
 
-#: src/view/com/composer/Composer.tsx:1895
+#: src/view/com/composer/Composer.tsx:1900
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Hiba"
@@ -3354,7 +3393,7 @@ msgstr "A fájl mentése meghiúsult"
 msgid "Error receiving captcha response."
 msgstr "A captcha válaszának fogadása meghiúsult."
 
-#: src/screens/Search/SearchResults.tsx:148
+#: src/screens/Search/SearchResults.tsx:149
 msgid "Error: {error}"
 msgstr "Hiba: {error}"
 
@@ -3414,7 +3453,7 @@ msgstr "A válasz forrásaként származó bejegyzés kibontása/összecsukása"
 msgid "Expand post text"
 msgstr "Továbbiak"
 
-#: src/screens/VideoFeed/index.tsx:973
+#: src/screens/VideoFeed/index.tsx:995
 msgid "Expands or collapses post text"
 msgstr "Bejegyzés teljes szövegének kibontása/összecsukása"
 
@@ -3546,7 +3585,7 @@ msgstr "A bejegyzés törlése meghiúsult. Próbáld újra."
 msgid "Failed to delete starter pack"
 msgstr "A kezdőcsomag törlése meghiúsult"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:118
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:125
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "A javasolt fiókok automatikus követése meghiúsult. Próbáld újra"
 
@@ -3621,7 +3660,7 @@ msgstr "A kezdőcsomagról levétel meghiúsult"
 msgid "Failed to remove verification"
 msgstr "A hitelesítés eltávolítása meghiúsult"
 
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:87
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:80
 msgid "Failed to resolve location. Please try again."
 msgstr "A tartózkodási hely megállapítása meghiúsult. Próbáld újra."
 
@@ -3748,10 +3787,10 @@ msgstr "Elküldtük a visszajelzést az üzemeltetőnek"
 
 #: src/Navigation.tsx:574
 #: src/screens/SavedFeeds.tsx:108
-#: src/screens/Search/SearchResults.tsx:77
+#: src/screens/Search/SearchResults.tsx:78
 #: src/screens/StarterPack/StarterPackScreen.tsx:190
 #: src/view/screens/Feeds.tsx:511
-#: src/view/screens/Profile.tsx:230
+#: src/view/screens/Profile.tsx:239
 #: src/view/shell/desktop/LeftNav.tsx:728
 #: src/view/shell/Drawer.tsx:530
 msgid "Feeds"
@@ -3818,9 +3857,9 @@ msgstr "Pénzügy"
 msgid "Find accounts to follow"
 msgstr "Követendő fiókok felfedezése"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:66
-#: src/components/ProgressGuide/FollowDialog.tsx:76
-#: src/components/ProgressGuide/FollowDialog.tsx:364
+#: src/components/ProgressGuide/FollowDialog.tsx:72
+#: src/components/ProgressGuide/FollowDialog.tsx:82
+#: src/components/ProgressGuide/FollowDialog.tsx:426
 msgid "Find people to follow"
 msgstr "Követendő személyek felfedezése"
 
@@ -3865,7 +3904,7 @@ msgstr "Rugalmas"
 #: src/components/ProfileHoverCard/index.web.tsx:507
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:378
-#: src/screens/VideoFeed/index.tsx:857
+#: src/screens/VideoFeed/index.tsx:879
 msgid "Follow"
 msgstr "Követés"
 
@@ -3874,7 +3913,7 @@ msgstr "Követés"
 msgid "Follow {0}"
 msgstr "{0} követése"
 
-#: src/screens/VideoFeed/index.tsx:834
+#: src/screens/VideoFeed/index.tsx:856
 msgid "Follow {handle}"
 msgstr "{handle} követése"
 
@@ -3892,7 +3931,7 @@ msgstr "Kövess 7 fiókot!"
 msgid "Follow account"
 msgstr "Fiók követése"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:235
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:266
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
 #: src/screens/StarterPack/StarterPackScreen.tsx:438
@@ -3900,7 +3939,7 @@ msgstr "Fiók követése"
 msgid "Follow all"
 msgstr "Összes követése"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:232
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:263
 msgid "Follow all accounts"
 msgstr "Összes fiók követése"
 
@@ -3913,7 +3952,7 @@ msgstr "Összes fiók követése"
 msgid "Follow back"
 msgstr "Követés kölcsönzése"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:113
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:120
 msgid "Followed all accounts!"
 msgstr "Mostantól követed az összes fiókot!"
 
@@ -3949,7 +3988,7 @@ msgstr "Ismert követők"
 #: src/components/ProfileHoverCard/index.web.tsx:506
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:374
-#: src/screens/VideoFeed/index.tsx:855
+#: src/screens/VideoFeed/index.tsx:877
 #: src/view/com/notifications/NotificationFeedItem.tsx:813
 #: src/view/com/notifications/NotificationFeedItem.tsx:830
 msgid "Following"
@@ -3967,7 +4006,7 @@ msgstr "Követett"
 msgid "Following {0}"
 msgstr "Mostantól követed: {0}"
 
-#: src/screens/VideoFeed/index.tsx:833
+#: src/screens/VideoFeed/index.tsx:855
 msgid "Following {handle}"
 msgstr "Mostantól követed: {handle}"
 
@@ -4002,10 +4041,6 @@ msgstr "Betűméret"
 msgid "Food"
 msgstr "Étel-ital"
 
-#: src/components/BlockedGeoOverlay.tsx:56
-msgid "For now, we have made the difficult decision to block access to Bluesky in the state of Mississippi."
-msgstr "A jelenlegi állás szerint úgy döntöttünk, hogy egyelőre nem vagyunk képesek továbbra is nyújtani a Bluesky szolgáltatását Mississippi államban."
-
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "Biztonsági okokból egy ellenőrzőkódot fogunk küldeni az e-mail-címedre."
@@ -4018,7 +4053,7 @@ msgstr "Biztonsági okokból ezt többé nem tekintheted meg. Ha elveszted ezt a
 msgid "For the best experience, we recommend using the theme font."
 msgstr "A legjobb élmény érdekében a témabetűtípus használatát javasoljuk."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:293
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:324
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:91
 msgid "For You"
 msgstr "Javasolt"
@@ -4052,7 +4087,7 @@ msgstr "Szabadítsd fel a hírfolyamodat!"
 msgid "From"
 msgstr "Forrás"
 
-#: src/screens/Hashtag.tsx:126
+#: src/screens/Hashtag.tsx:127
 msgid "From @{sanitizedAuthor}"
 msgstr "Forrás: @{sanitizedAuthor}"
 
@@ -4061,7 +4096,7 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "A(z) <0/> hírfolyamból"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:303
+#: src/components/StarterPack/ProfileStarterPacks.tsx:335
 msgid "Generate a starter pack"
 msgstr "Kezdőcsomag létrehozása"
 
@@ -4138,7 +4173,7 @@ msgstr "Gyorstalpaló"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:235
+#: src/screens/Onboarding/StepProfile/index.tsx:243
 msgid "Give your profile a face"
 msgstr "Adj arcot a profilodnak!"
 
@@ -4152,13 +4187,15 @@ msgstr "Az erőszak népszerűsítése"
 #: src/components/moderation/ScreenHider.tsx:160
 #: src/components/moderation/ScreenHider.tsx:169
 #: src/screens/Messages/Inbox.tsx:251
-#: src/screens/Profile/ProfileFeed/index.tsx:92
+#: src/screens/Profile/ProfileFeed/index.tsx:93
 #: src/screens/ProfileList/components/ErrorScreen.tsx:34
 #: src/screens/ProfileList/components/ErrorScreen.tsx:40
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1162
-#: src/screens/VideoFeed/index.tsx:1166
+#: src/screens/VideoFeed/index.tsx:1184
+#: src/screens/VideoFeed/index.tsx:1188
 #: src/view/com/auth/LoggedOut.tsx:72
+#: src/view/com/profile/ProfileFollowers.tsx:180
+#: src/view/com/profile/ProfileFollowers.tsx:181
 #: src/view/screens/NotFound.tsx:57
 msgid "Go back"
 msgstr "Vissza"
@@ -4167,7 +4204,7 @@ msgstr "Vissza"
 #: src/screens/List/ListHiddenScreen.tsx:224
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/Profile/ProfileFeed/index.tsx:97
+#: src/screens/Profile/ProfileFeed/index.tsx:98
 #: src/screens/StarterPack/StarterPackScreen.tsx:775
 #: src/view/screens/NotFound.tsx:56
 msgid "Go Back"
@@ -4185,6 +4222,7 @@ msgctxt "Button to go back to the home timeline"
 msgid "Go home"
 msgstr "Ugrás a kezdőoldalra"
 
+#: src/screens/Bookmarks/index.tsx:285
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
 msgstr "Ugrás a kezdőoldalra"
@@ -4213,10 +4251,10 @@ msgstr "Élő adás indítása az alábbi időintervallumra:"
 msgid "Go to {firstAuthorName}'s profile"
 msgstr "{firstAuthorName} profiljának megnyitása"
 
-#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:89
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:77
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:86
-#: src/screens/Moderation/index.tsx:214
+#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:87
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:64
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
+#: src/screens/Moderation/index.tsx:219
 msgid "Go to account settings"
 msgstr "Ugrás a fiókbeállításokhoz"
 
@@ -4329,7 +4367,7 @@ msgstr "Problémába ütköztél?"
 msgid "Help"
 msgstr "Súgó"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:238
+#: src/screens/Onboarding/StepProfile/index.tsx:246
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Segíts másoknak megbizonyosodni arról, hogy valódi személy vagy egy profilkép létrehozásával!"
 
@@ -4347,7 +4385,7 @@ msgstr "Szervusz! 👋"
 msgid "Hidden"
 msgstr "Rejtett tartalom"
 
-#: src/screens/VideoFeed/index.tsx:631
+#: src/screens/VideoFeed/index.tsx:653
 msgid "Hidden by your moderation settings."
 msgstr "Elrejtve a moderálási beállítások alapján."
 
@@ -4438,23 +4476,23 @@ msgstr "Hitelesítési jelvények elrejtése"
 msgid "Hides the content"
 msgstr "Tartalom elrejtése"
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:121
+#: src/view/com/posts/PostFeedErrorMessage.tsx:124
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr "Hmm… Hiba történt a hírfolyamkiszolgálóval történő kapcsolatfelvétel közben. Kérjük, értesítsd erről a hírfolyam tulajdonosát!"
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:109
+#: src/view/com/posts/PostFeedErrorMessage.tsx:112
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
 msgstr "Hmm… Úgy tűnik, hogy a hírfolyamkiszolgáló nincs helyesen beállítva. Kérjük, értesítsd erről a hírfolyam tulajdonosát!"
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:115
+#: src/view/com/posts/PostFeedErrorMessage.tsx:118
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
 msgstr "Hmm… Úgy tűnik, hogy a hírfolyamkiszolgáló nem elérhető. Kérjük, értesítsd erről a hírfolyam tulajdonosát!"
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:112
+#: src/view/com/posts/PostFeedErrorMessage.tsx:115
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
 msgstr "Hmm… Úgy tűnik, hogy a hírfolyamkiszolgáló helytelen választ adott. Kérjük, értesítsd erről a hírfolyam tulajdonosát!"
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:106
+#: src/view/com/posts/PostFeedErrorMessage.tsx:109
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "Hmm… A hírfolyam felkeresése meghiúsult. Lehetséges, hogy már nem létezik."
 
@@ -4522,6 +4560,14 @@ msgstr "Hosszabb helyettesítő szövegek megjelenítése/levágása"
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Ha még nem töltötted be az országod által meghatározott nagykorúsági életkort, akkor az alábbi feltételeket a szülődnek vagy törvényes gondviselődnek kell elolvasnia."
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:98
+msgid "If you believe your birthdate is incorrect, please <0>contact our support team</0>."
+msgstr "Ha úgy véled, hogy ez a születési dátum helytelen, akkor <0>vedd fel a kapcsolatot az ügyfélszolgálattal</0>."
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:83
+msgid "If you believe your birthdate is incorrect, you can update it by <0>clicking here</0>."
+msgstr "Ha úgy véled, hogy ez a születési dátum helytelen, akkor <0>kattints ide</0> a szerkesztéshez."
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:277
 msgid "If you delete this list, you won't be able to recover it."
@@ -4647,7 +4693,7 @@ msgstr "E-mailben kapott kód megadása"
 msgid "Interaction limited"
 msgstr "A kapcsolatbalépés korlátozott"
 
-#: src/screens/Moderation/index.tsx:246
+#: src/screens/Moderation/index.tsx:251
 msgid "Interaction settings"
 msgstr "Kapcsolatbalépési beállítások"
 
@@ -4701,9 +4747,14 @@ msgstr "Könnyen oszd meg a barátaiddal a kedvenc hírfolyamaidat és személye
 msgid "Invites, but personal"
 msgstr "Olyan, mint egy meghívó, csak személyesebb"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:86
+#: src/ageAssurance/components/NoAccessScreen.tsx:313
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "Helytelenül állapítottuk meg a tartózkodási helyedet? <0>Koppints ide a megerősítéshez.</0>"
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:171
+msgid "It looks like you haven't added your birthdate. You must provide an accurate date of birth to use Bluesky."
+msgstr "Úgy tűnik, hogy még nem adtad meg a születési dátumodat. Ez szükséges a Bluesky használatához."
 
 #: src/screens/Signup/StepInfo/index.tsx:292
 msgid "It's correct"
@@ -4717,7 +4768,7 @@ msgstr "Még csak <0>{0}</0> személy szerepel a kezdőcsomagban. A fenti keres�
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Még csak Te szerepelsz a kezdőcsomagban. A fenti keresővel másokat is hozzáadhatsz."
 
-#: src/view/com/composer/Composer.tsx:1829
+#: src/view/com/composer/Composer.tsx:1834
 msgid "Job ID: {0}"
 msgstr "Állásazonosító: {0}"
 
@@ -4747,15 +4798,15 @@ msgstr "Sajtó"
 msgid "Keep me posted"
 msgstr "Feliratkozás értesítésekre"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:344
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:339
 msgid "KWS Privacy Policy"
 msgstr "A KWS adatvédelmi irányelvei"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:334
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:331
 msgid "KWS Terms of Use"
 msgstr "A KWS felhasználási feltételei"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:201
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:200
 msgid "KWS website"
 msgstr "A KWS honlapja"
 
@@ -4768,7 +4819,7 @@ msgid "Labeled by the author."
 msgstr "Feljegyezte a szerző."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:69
-#: src/view/screens/Profile.tsx:223
+#: src/view/screens/Profile.tsx:232
 msgid "Labels"
 msgstr "Feljegyzések"
 
@@ -4802,17 +4853,19 @@ msgstr "Nyelvek"
 msgid "Larger"
 msgstr "Nagyobb"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:187
+#: src/ageAssurance/components/NoAccessScreen.tsx:296
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated {timeAgo} ago"
 msgstr "Legutóbbi kérelem: {timeAgo}"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
+#: src/ageAssurance/components/NoAccessScreen.tsx:294
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
 msgid "Last initiated just now"
 msgstr "Legutóbbi kérelem: épp most"
 
-#: src/screens/Hashtag.tsx:101
-#: src/screens/Search/SearchResults.tsx:61
-#: src/screens/Topic.tsx:77
+#: src/screens/Hashtag.tsx:102
+#: src/screens/Search/SearchResults.tsx:62
+#: src/screens/Topic.tsx:78
 msgid "Latest"
 msgstr "Legújabb"
 
@@ -4830,7 +4883,7 @@ msgstr "További információ"
 msgid "Learn More"
 msgstr "További információ"
 
-#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:74
+#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:64
 msgid "Learn more about age assurance"
 msgstr "További információ az életkor-igazolásról"
 
@@ -4871,7 +4924,7 @@ msgstr "További információ a Blueskyos hitelesítésől"
 msgid "Learn more about what is public on Bluesky."
 msgstr "További információ a Bluesky-tartalmak nyilvánosságáról."
 
-#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:86
+#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:84
 msgid "Learn more in your <0>account settings.</0>"
 msgstr "További információ a <0>fiókbeállításokban</0>."
 
@@ -4910,7 +4963,7 @@ msgstr "A Bluesky elhagyása"
 msgid "left to go."
 msgstr "maradt."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:319
+#: src/components/StarterPack/ProfileStarterPacks.tsx:351
 msgid "Let me choose"
 msgstr "Fiókok választása kézileg"
 
@@ -4991,7 +5044,7 @@ msgstr "{likeCount, plural, one {#} other {#}} felhasználó kedveli"
 #: src/lib/hooks/useNotificationHandler.ts:126
 #: src/screens/Settings/NotificationSettings/index.tsx:126
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:41
-#: src/view/screens/Profile.tsx:229
+#: src/view/screens/Profile.tsx:238
 msgid "Likes"
 msgstr "Kedvelések"
 
@@ -5096,12 +5149,17 @@ msgstr "Feloldottad a listán szereplő személyek némítását"
 
 #: src/Navigation.tsx:172
 #: src/view/screens/Lists.tsx:67
-#: src/view/screens/Profile.tsx:224
-#: src/view/screens/Profile.tsx:232
+#: src/view/screens/Profile.tsx:233
+#: src/view/screens/Profile.tsx:241
 #: src/view/shell/desktop/LeftNav.tsx:746
 #: src/view/shell/Drawer.tsx:545
 msgid "Lists"
 msgstr "Listák"
+
+#: src/view/com/lists/MyLists.tsx:72
+#: src/view/com/lists/ProfileLists.tsx:155
+msgid "Lists allow you to see content from your favorite people."
+msgstr "Egy lista segítségével megtekintheted csak a kedvenc felhasználóid tartalmait."
 
 #: src/components/dms/BlockedByListDialog.tsx:39
 msgid "Lists blocking this user:"
@@ -5136,9 +5194,9 @@ msgstr "További javasolt hírfolyamok"
 msgid "Load new notifications"
 msgstr "Új értesítések betöltése"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:224
-#: src/screens/Profile/Sections/Feed.tsx:94
-#: src/screens/ProfileList/FeedSection.tsx:105
+#: src/screens/Profile/ProfileFeed/index.tsx:231
+#: src/screens/Profile/Sections/Feed.tsx:116
+#: src/screens/ProfileList/FeedSection.tsx:112
 #: src/view/com/feeds/FeedPage.tsx:169
 msgid "Load new posts"
 msgstr "Új bejegyzések betöltése"
@@ -5200,7 +5258,7 @@ msgstr "Úgy tűnik, hogy hiányzik a Követett hírfolyamod. <0>Kattints ide, h
 msgid "Make adjustments to email settings for your account"
 msgstr "A fiók e-mail-beállításainak testreszabása"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:278
+#: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Make one for me"
 msgstr "Automatikus létrehozás"
 
@@ -5213,7 +5271,7 @@ msgstr "Ellenőrizd, hogy biztosan ide akarsz-e menni!"
 msgid "Manage saved feeds"
 msgstr "Mentett hírfolyamok kezelése"
 
-#: src/screens/Moderation/index.tsx:316
+#: src/screens/Moderation/index.tsx:321
 msgid "Manage verification settings"
 msgstr "Hitelesítési beállítások"
 
@@ -5242,7 +5300,7 @@ msgstr "Összes üzenet megjelölve olvasottként"
 msgid "Maybe later"
 msgstr "Talán később"
 
-#: src/view/screens/Profile.tsx:227
+#: src/view/screens/Profile.tsx:236
 msgid "Media"
 msgstr "Média"
 
@@ -5286,7 +5344,7 @@ msgstr "Törölt üzenet"
 msgid "Message from @{0}: {1}"
 msgstr "@{0} üzenete: {1}"
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:205
+#: src/view/com/posts/PostFeedErrorMessage.tsx:208
 msgid "Message from server: {0}"
 msgstr "A kiszolgáló üzenete: {0}"
 
@@ -5325,7 +5383,7 @@ msgid "Misleading"
 msgstr "Félrevezető tartalom"
 
 #: src/Navigation.tsx:177
-#: src/screens/Moderation/index.tsx:100
+#: src/screens/Moderation/index.tsx:99
 #: src/screens/Settings/Settings.tsx:188
 #: src/screens/Settings/Settings.tsx:191
 msgid "Moderation"
@@ -5359,7 +5417,7 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr "Moderálólista frissítve"
 
-#: src/screens/Moderation/index.tsx:276
+#: src/screens/Moderation/index.tsx:281
 msgid "Moderation lists"
 msgstr "Moderálólisták"
 
@@ -5376,7 +5434,7 @@ msgstr "moderálási beállítások"
 msgid "Moderation states"
 msgstr "Moderálási állapotok"
 
-#: src/screens/Moderation/index.tsx:230
+#: src/screens/Moderation/index.tsx:235
 msgid "Moderation tools"
 msgstr "Moderálási eszközök"
 
@@ -5491,7 +5549,7 @@ msgstr "Válaszlánc elnémítása"
 msgid "Mute words & tags"
 msgstr "Szavak és címkék elnémítása"
 
-#: src/screens/Moderation/index.tsx:291
+#: src/screens/Moderation/index.tsx:296
 msgid "Muted accounts"
 msgstr "Elnémított fiókok"
 
@@ -5508,7 +5566,7 @@ msgstr "Egy elnémított fiók nem fog megjelenni a hírfolyamaidban és nem kap
 msgid "Muted by \"{0}\""
 msgstr "Némítás forrása: {0}"
 
-#: src/screens/Moderation/index.tsx:261
+#: src/screens/Moderation/index.tsx:266
 msgid "Muted words & tags"
 msgstr "Elnémított szavak és címkék"
 
@@ -5516,10 +5574,10 @@ msgstr "Elnémított szavak és címkék"
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Egy fiók elnémítása nem nyilvános. Egy elnémított felhasználó képes a fiókoddal kapcsolatba lépni, de ezekről a történésekről nem fogsz értesítéseket kapni és az összes bejegyzésük el lesz rejtve a számodra."
 
-#: src/components/dialogs/BirthDateSettings.tsx:38
-#: src/components/dialogs/BirthDateSettings.tsx:42
-msgid "My Birthday"
-msgstr "Születésnap megadása"
+#: src/components/dialogs/BirthDateSettings.tsx:43
+#: src/components/dialogs/BirthDateSettings.tsx:47
+msgid "My Birthdate"
+msgstr "Saját születési dátum"
 
 #: src/view/screens/Feeds.tsx:704
 msgid "My Feeds"
@@ -5630,12 +5688,12 @@ msgstr "Új üzenetek"
 msgid "New password"
 msgstr "Új jelszó"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:241
+#: src/screens/Profile/ProfileFeed/index.tsx:248
 #: src/screens/ProfileList/index.tsx:246
 #: src/screens/ProfileList/index.tsx:284
 #: src/view/screens/Feeds.tsx:552
 #: src/view/screens/Notifications.tsx:167
-#: src/view/screens/Profile.tsx:510
+#: src/view/screens/Profile.tsx:571
 msgid "New post"
 msgstr "Új bejegyzés"
 
@@ -5704,7 +5762,7 @@ msgstr "Következő kép"
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
 msgstr "Ilyen egy közösségi oldal hirdetések, magánéletsértő nyomonkövetés és visszarángatás nélkül. A Bluesky tiszteletben tartja az idődet és a figyelmedet."
 
-#: src/screens/Settings/AppPasswords.tsx:106
+#: src/screens/Settings/AppPasswords.tsx:107
 msgid "No app passwords yet"
 msgstr "Még nem hoztál létre alkalmazásjelszót"
 
@@ -5725,12 +5783,17 @@ msgstr "A kiemelt GIF-ek lekérése meghiúsult. Lehetséges, hogy ez a Tenor hi
 msgid "No feeds found. Try searching for something else."
 msgstr "Nincs találat. Próbálj megadni egy másik keresési kifejezést."
 
+#: src/view/com/profile/ProfileFollowers.tsx:171
+msgid "No followers yet"
+msgstr "Még nincsenek követők"
+
 #: src/components/live/LinkPreview.tsx:63
 msgid "No image"
 msgstr "Nincs előnézet"
 
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
+#: src/view/screens/Profile.tsx:511
 msgid "No likes yet"
 msgstr "Még nincsenek kedvelések"
 
@@ -5740,6 +5803,10 @@ msgstr "Még nincsenek kedvelések"
 msgid "No longer following {0}"
 msgstr "Abbahagytad {0} követését"
 
+#: src/view/screens/Profile.tsx:467
+msgid "No media yet"
+msgstr "Még nincsenek médiatartalmak"
+
 #: src/screens/Messages/components/ChatListItem.tsx:142
 msgid "No messages yet"
 msgstr "Még nincsenek üzenetek"
@@ -5748,7 +5815,7 @@ msgstr "Még nincsenek üzenetek"
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr "Vess véget a szeméttel teli hírfolyamok örökös görgetésének! Inkább találj olyan tartalmakat, amelyek érted és nem ellened dolgoznak!"
 
-#: src/view/com/notifications/NotificationFeed.tsx:122
+#: src/view/com/notifications/NotificationFeed.tsx:125
 msgid "No notifications yet!"
 msgstr "Még nincsenek értesítéseid."
 
@@ -5764,17 +5831,22 @@ msgstr "Senkitől"
 msgid "No one but the author can quote this post."
 msgstr "Ezt a bejegyzést csak a szerző idézheti."
 
-#: src/screens/Notifications/ActivityList.tsx:38
+#: src/screens/Notifications/ActivityList.tsx:42
 msgid "No posts here"
 msgstr "Még nincsenek bejegyzések"
 
-#: src/screens/Profile/Sections/Feed.tsx:62
-msgid "No posts yet."
-msgstr "Még nincsenek bejegyzések."
+#: src/screens/Profile/Sections/Feed.tsx:80
+#: src/view/screens/Profile.tsx:431
+msgid "No posts yet"
+msgstr "Még nincsenek bejegyzések"
 
-#: src/view/com/post-thread/PostQuotes.tsx:105
+#: src/view/com/post-thread/PostQuotes.tsx:107
 msgid "No quotes yet"
 msgstr "Még nincsenek idézések"
+
+#: src/view/screens/Profile.tsx:452
+msgid "No replies yet"
+msgstr "Még nincsenek válaszok"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:90
 msgid "No reposts yet"
@@ -5786,7 +5858,7 @@ msgid "No result"
 msgstr "Nincs találat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:223
-#: src/components/ProgressGuide/FollowDialog.tsx:201
+#: src/components/ProgressGuide/FollowDialog.tsx:224
 msgid "No results"
 msgstr "Nincs találat"
 
@@ -5794,7 +5866,8 @@ msgstr "Nincs találat"
 msgid "No results for \"{0}\"."
 msgstr "A(z) „{0}” kifejezésre nincs találat."
 
-#: src/components/Lists.tsx:189
+#: src/components/Lists.tsx:201
+#: src/components/Lists.tsx:216
 msgid "No results found"
 msgstr "Nincs találat"
 
@@ -5802,9 +5875,9 @@ msgstr "Nincs találat"
 msgid "No results found for \"{query}\""
 msgstr "A(z) „{query}” kifejezésre nincs találat"
 
-#: src/screens/Search/SearchResults.tsx:167
+#: src/screens/Search/SearchResults.tsx:168
 msgid "No results found for \"<0>{query}</0>\"."
-msgstr ""
+msgstr "A(z) „<0>{query}</0>” kifejezésre nincs találat."
 
 #: src/screens/Search/Explore.tsx:797
 msgid "No results."
@@ -5819,6 +5892,10 @@ msgstr "A(z) „{search}” kifejezésre nincs találat."
 msgid "No thanks"
 msgstr "Köszönöm, nem"
 
+#: src/view/screens/Profile.tsx:489
+msgid "No video posts yet"
+msgstr "Még nincsenek videós bejegyzések"
+
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Nobody"
 msgstr "Senki"
@@ -5828,7 +5905,7 @@ msgstr "Senki"
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "Ezt a tartalmat még senki sem kedvelte. Talán Te lehetnél az első!"
 
-#: src/view/com/post-thread/PostQuotes.tsx:107
+#: src/view/com/post-thread/PostQuotes.tsx:109
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
 msgstr "Ezt a tartalmat még senki sem idézte. Talán Te lehetnél az első!"
 
@@ -5857,13 +5934,9 @@ msgid "Not followed by anyone you're following"
 msgstr "Nincsenek ismert követők"
 
 #: src/Navigation.tsx:167
-#: src/view/screens/Profile.tsx:125
+#: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr "Ez a tartalom nem található"
-
-#: src/components/BlockedGeoOverlay.tsx:125
-msgid "Not in Mississippi?"
-msgstr "Nem Mississippiben tartódkodsz?"
 
 #: src/view/com/profile/ProfileMenu.tsx:502
 msgid "Note about sharing"
@@ -5882,6 +5955,7 @@ msgid "Nothing here"
 msgstr "Nincs itt semmi"
 
 #: src/screens/Bookmarks/components/EmptyState.tsx:35
+#: src/screens/Bookmarks/index.tsx:281
 msgid "Nothing saved yet"
 msgstr "Még nincsenek mentett bejegyzések"
 
@@ -5901,7 +5975,7 @@ msgstr "Értesítési hangok"
 
 #: src/Navigation.tsx:564
 #: src/Navigation.tsx:764
-#: src/screens/Notifications/ActivityList.tsx:29
+#: src/screens/Notifications/ActivityList.tsx:30
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:90
 #: src/screens/Settings/NotificationSettings/index.tsx:92
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:30
@@ -5978,27 +6052,27 @@ msgstr "ekkor:<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "Regisztrációs varázslót alaphelyzetbe állítva"
 
-#: src/view/com/composer/Composer.tsx:397
+#: src/view/com/composer/Composer.tsx:398
 msgid "One or more GIFs is missing alt text."
 msgstr "Legalább egy GIF-ről hiányzik a helyettesítő szöveg."
 
-#: src/view/com/composer/Composer.tsx:394
+#: src/view/com/composer/Composer.tsx:395
 msgid "One or more images is missing alt text."
 msgstr "Legalább egy képről hiányzik a helyettesítő szöveg."
 
-#: src/view/com/composer/SelectMediaButton.tsx:387
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "One or more of your selected files are not supported."
 msgstr "A kiválasztott fájlok közül legalább egy nem támogatott formátumú."
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:416
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "A kiválasztott fájlok közül legalább egy túl nagy. A korlát 100 MB."
 
-#: src/view/com/composer/Composer.tsx:404
+#: src/view/com/composer/Composer.tsx:405
 msgid "One or more videos is missing alt text."
 msgstr "Legalább egy videóról hiányzik a helyettesítő szöveg."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:118
+#: src/screens/Onboarding/StepProfile/index.tsx:120
 msgid "Only .jpg and .png files are supported"
 msgstr "Csak a .jpg és a .png formátumok támogatottak"
 
@@ -6020,16 +6094,16 @@ msgstr "Csak a képfájlok támogatottak"
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr "Csak a WebVTT (.vtt) formátum támogatott"
 
-#: src/components/Lists.tsx:94
+#: src/components/Lists.tsx:98
 msgid "Oops, something went wrong!"
 msgstr "Hoppá! Valami balul sült el!"
 
-#: src/components/Lists.tsx:173
-#: src/components/StarterPack/ProfileStarterPacks.tsx:328
-#: src/components/StarterPack/ProfileStarterPacks.tsx:337
-#: src/screens/Settings/AppPasswords.tsx:57
+#: src/components/Lists.tsx:183
+#: src/components/StarterPack/ProfileStarterPacks.tsx:360
+#: src/components/StarterPack/ProfileStarterPacks.tsx:369
+#: src/screens/Settings/AppPasswords.tsx:58
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:106
-#: src/view/screens/Profile.tsx:125
+#: src/view/screens/Profile.tsx:132
 msgid "Oops!"
 msgstr "Hoppá!"
 
@@ -6037,9 +6111,13 @@ msgstr "Hoppá!"
 msgid "Open"
 msgstr "Megnyitás"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:297
 msgid "Open avatar creator"
 msgstr "Profilképkészítő megnyitása"
+
+#: src/view/com/feeds/ComposerPrompt.tsx:202
+msgid "Open camera"
+msgstr "Kamera megnyitása"
 
 #: src/screens/Messages/components/ChatListItem.tsx:374
 #: src/screens/Messages/components/ChatListItem.tsx:378
@@ -6051,7 +6129,7 @@ msgid "Open drawer menu"
 msgstr "Oldalsó menü megnyitása"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1476
+#: src/view/com/composer/Composer.tsx:1481
 msgid "Open emoji picker"
 msgstr "Emojiválasztó megnyitása"
 
@@ -6080,7 +6158,7 @@ msgstr "Üzenetlehetőségek megnyitása"
 msgid "Open moderation debug page"
 msgstr "Moderálási hibakeresési oldal megnyitása"
 
-#: src/screens/Moderation/index.tsx:257
+#: src/screens/Moderation/index.tsx:262
 msgid "Open muted words and tags settings"
 msgstr "Elnémított szavak és címkék beállításainak megnyitása"
 
@@ -6146,12 +6224,16 @@ msgstr "Felhasználónév-megváltoztatási párbeszédablak megnyitása"
 msgid "Opens composer"
 msgstr "Bejegyzésíró megnyitása"
 
+#: src/view/com/feeds/ComposerPrompt.tsx:203
+msgid "Opens device camera"
+msgstr "A készülék kamerájának megnyitása"
+
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:474
+#: src/view/com/composer/SelectMediaButton.tsx:487
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "A készülék galériájának megnyitása. A bejegyzéshez legfeljebb {MAX_IMAGES, plural, other {# kép}}, vagy egy videó vagy GIF csatolható."
 
-#: src/view/com/composer/Composer.tsx:1477
+#: src/view/com/composer/Composer.tsx:1482
 msgid "Opens emoji picker"
 msgstr "Emojiválasztó megnyitása"
 
@@ -6173,11 +6255,15 @@ msgstr "GIF-választó párbeszédablak megnyitása"
 msgid "Opens helpdesk in browser"
 msgstr "Támogatási hivatkozás megnyitása böngészőben"
 
+#: src/view/com/feeds/ComposerPrompt.tsx:225
+msgid "Opens image picker"
+msgstr "Fényképválasztó megnyitása"
+
 #: src/components/dialogs/LinkWarning.tsx:97
 msgid "Opens link {0}"
 msgstr "A(z) „{0}” hivatkozás megnyitása"
 
-#: src/view/com/util/UserAvatar.tsx:581
+#: src/view/com/util/UserAvatar.tsx:582
 msgid "Opens live status dialog"
 msgstr "Élőadásos állapoti párbeszédablak megnyitása"
 
@@ -6189,8 +6275,12 @@ msgstr "Jelszóvisszaállítási űrlap megnyitása"
 msgid "Opens post language settings"
 msgstr "Bejegyzések nyelvi beállításainak megnyitása"
 
+#: src/view/com/feeds/ComposerPrompt.tsx:144
+msgid "Opens the post composer"
+msgstr "Bejegyzésíró felület megnyitása"
+
 #: src/view/com/notifications/NotificationFeedItem.tsx:1021
-#: src/view/com/util/UserAvatar.tsx:599
+#: src/view/com/util/UserAvatar.tsx:600
 msgid "Opens this profile"
 msgstr "Saját profil megnyitása"
 
@@ -6273,7 +6363,8 @@ msgstr "Megkaptuk a jelentésedet."
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "A fiókod ellen jelentések érkeztek, és miután a moderátoraink felülvizsgálták őket, úgy döntöttek, hogy megfosztanak a csevegési jogosultságoktól a Blueskyon."
 
-#: src/components/Lists.tsx:190
+#: src/components/Lists.tsx:202
+#: src/components/Lists.tsx:217
 #: src/view/screens/NotFound.tsx:47
 msgid "Page not found"
 msgstr "Az oldal nem található"
@@ -6318,7 +6409,7 @@ msgid "Pause video"
 msgstr "Videó szüneteltetése"
 
 #: src/screens/ProfileList/index.tsx:166
-#: src/screens/Search/SearchResults.tsx:71
+#: src/screens/Search/SearchResults.tsx:72
 #: src/screens/StarterPack/StarterPackScreen.tsx:189
 msgid "People"
 msgstr "Személyek"
@@ -6389,7 +6480,7 @@ msgstr "Kitűzés a kezdőoldalra"
 msgid "Pin to your profile"
 msgstr "Kitűzés a profilodra"
 
-#: src/view/com/posts/PostFeedReason.tsx:126
+#: src/view/com/posts/PostFeedReason.tsx:115
 msgid "Pinned"
 msgstr "Kitűzve"
 
@@ -6445,7 +6536,7 @@ msgstr "Videó lejátszása"
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr "Jelöld ki a releváns tartalomfigyelmeztetési kategóriákat."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:188
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:189
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "A következő lépéseket e-mailben fogod megkapni. Lehetséges, hogy csak egy–két perc múlva érkezik meg."
 
@@ -6466,7 +6557,7 @@ msgstr "Kérjük, kattints a tőlünk kapott e-mailben található hivatkozásra
 msgid "Please complete the verification captcha."
 msgstr "Végezd el a captchás ellenőrzést."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:101
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:102
 #: src/screens/Signup/StepInfo/index.tsx:111
 msgid "Please double-check that you have entered your email address correctly."
 msgstr "Kérjük ellenőrizd, hogy az e-mail-cím helyesen van megadva."
@@ -6489,7 +6580,7 @@ msgstr "Nevezd el egyedien az alkalmazásjelszót vagy használd a véletlenszer
 msgid "Please enter a valid code."
 msgstr "A megadott kód érvénytelen."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:110
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:111
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:148
 msgid "Please enter a valid email address."
 msgstr "A megadott e-mail-cím érvénytelen."
@@ -6498,7 +6589,7 @@ msgstr "A megadott e-mail-cím érvénytelen."
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "Adj meg egy érvényes elnémítandó szót, címkét vagy kifejezést."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:144
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:145
 msgid "Please enter a valid, non-temporary email address. You may need to access this email in the future."
 msgstr "Kérjük, egy érvényes és nem átmeneti e-mail-címet adj meg. Lehetséges, hogy a jövőben is szükséged lesz rá."
 
@@ -6556,7 +6647,7 @@ msgstr "Az aktív tartalom elejére ugráshoz aktiváld ezt az elemet vagy nyomd
 msgid "Please provide any additional details you feel moderators may need in order to properly assess your Age Assurance status."
 msgstr "Ha van bármi olyan információ, amire a moderátoroknak szüksége lehet a helyes életkor-igazoláshoz, kérjük add meg."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:303
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:302
 msgid "Please select a language"
 msgstr "Válassz ki egy nyelvet."
 
@@ -6577,7 +6668,7 @@ msgstr "Jelentkezz be, mint @{0}."
 msgid "Please verify your email"
 msgstr "E-mail-cím visszaigazolása"
 
-#: src/lib/hooks/useCreateSupportLink.ts:28
+#: src/lib/hooks/useCreateSupportLink.ts:29
 msgid "Please write your message below:"
 msgstr "Üzenet megadása:"
 
@@ -6591,17 +6682,27 @@ msgstr "Politika"
 msgid "Porn"
 msgstr "Pornó"
 
-#: src/screens/PostThread/index.tsx:528
+#: src/screens/PostThread/index.tsx:532
 msgctxt "description"
 msgid "Post"
 msgstr "Bejegyzés"
 
-#: src/view/com/composer/Composer.tsx:1119
+#: src/view/com/composer/Composer.tsx:1121
 msgctxt "action"
 msgid "Post"
 msgstr "Közzététel"
 
-#: src/view/com/composer/Composer.tsx:1117
+#: src/view/screens/Profile.tsx:469
+#: src/view/screens/Profile.tsx:470
+msgid "Post a photo"
+msgstr "Fénykép közzététele"
+
+#: src/view/screens/Profile.tsx:491
+#: src/view/screens/Profile.tsx:492
+msgid "Post a video"
+msgstr "Videó közzététele"
+
+#: src/view/com/composer/Composer.tsx:1119
 msgctxt "action"
 msgid "Post All"
 msgstr "Összes közzététele"
@@ -6629,7 +6730,7 @@ msgstr "A bejegyzés közzététele meghiúsult. Ellenőrizd az internetkapcsola
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:134
 #: src/screens/PostThread/components/ThreadItemPost.tsx:112
 #: src/screens/PostThread/components/ThreadItemTreePost.tsx:108
-#: src/screens/VideoFeed/index.tsx:535
+#: src/screens/VideoFeed/index.tsx:557
 msgid "Post has been deleted"
 msgstr "Ezt a bejegyzést törölték."
 
@@ -6681,7 +6782,7 @@ msgstr "Bejegyzés kitűzése felolva"
 #: src/screens/ProfileList/index.tsx:166
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:191
-#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:234
 msgid "Posts"
 msgstr "Bejegyzések"
 
@@ -6689,7 +6790,7 @@ msgstr "Bejegyzések"
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
 msgstr "A különböző bejegyzéseket a szövegük, címkéik vagy mindkettő által is elnémíthatod. Javasoljuk a gyakori szavak kerülését, mivel ez bizonyos esetekben az összes bejegyzés elrejtését is eredményezheti."
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:72
+#: src/view/com/posts/PostFeedErrorMessage.tsx:75
 msgid "Posts hidden"
 msgstr "Elrejtetted a bejegyzéseket"
 
@@ -6710,7 +6811,7 @@ msgid "Press to attempt reconnection"
 msgstr "Az újracsatlakozáshoz kattints ide."
 
 #: src/components/Error.tsx:60
-#: src/components/Lists.tsx:99
+#: src/components/Lists.tsx:103
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:47
 msgid "Press to retry"
@@ -6765,7 +6866,7 @@ msgstr "Adatvédelmi irányelvek"
 msgid "Privacy violation of a minor"
 msgstr "Kiskorúak személyes jogainak megsértése"
 
-#: src/view/com/composer/Composer.tsx:1892
+#: src/view/com/composer/Composer.tsx:1897
 msgid "Processing video..."
 msgstr "Videó feldolgozása folyamatban…"
 
@@ -6775,7 +6876,7 @@ msgid "Processing..."
 msgstr "Feldolgozás folyamatban…"
 
 #: src/view/screens/DebugMod.tsx:936
-#: src/view/screens/Profile.tsx:364
+#: src/view/screens/Profile.tsx:384
 msgid "profile"
 msgstr "profil"
 
@@ -6807,27 +6908,23 @@ msgstr "Nyilvános"
 msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Nyilvános, megosztható fióklisták a tömeges elnémításhoz vagy letiltáshoz."
 
-#: src/view/com/lists/MyLists.tsx:72
-msgid "Public, sharable lists which can be used to drive feeds."
-msgstr "Nyilvános, megosztható listák, amelyek hírfolyamként üzemelhetnek."
-
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1099
+#: src/view/com/composer/Composer.tsx:1101
 msgid "Publish post"
 msgstr "Bejegyzés közzététele"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1092
+#: src/view/com/composer/Composer.tsx:1094
 msgid "Publish posts"
 msgstr "Bejegyzések közzététele"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1077
+#: src/view/com/composer/Composer.tsx:1079
 msgid "Publish replies"
 msgstr "Válaszok közzététele"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1084
+#: src/view/com/composer/Composer.tsx:1086
 msgid "Publish reply"
 msgstr "Válasz közzététele"
 
@@ -6917,21 +7014,21 @@ msgstr "Fiók újraaktiválása"
 msgid "Read {0, plural, one {# more reply} other {# more replies}}"
 msgstr "{0, plural, other {# további válasz}} megtekintése"
 
-#: src/screens/Search/SearchResults.tsx:179
+#: src/screens/Search/SearchResults.tsx:180
 msgctxt "english-only-resource"
 msgid "read about how to use search filters"
-msgstr ""
+msgstr "További információ a keresésszűrőkről (angol nyelven)"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:173
 msgid "Read blog post"
 msgstr "Blogbejegyzés megtekintése (angolul)"
 
-#: src/screens/VideoFeed/index.tsx:974
+#: src/screens/VideoFeed/index.tsx:996
 msgid "Read less"
 msgstr "Kevesebb"
 
-#: src/screens/VideoFeed/index.tsx:974
+#: src/screens/VideoFeed/index.tsx:996
 msgid "Read more"
 msgstr "Több"
 
@@ -6939,7 +7036,6 @@ msgstr "Több"
 msgid "Read more replies"
 msgstr "További válaszok megjelenítése"
 
-#: src/components/BlockedGeoOverlay.tsx:40
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:112
 msgid "Read our blog post"
 msgstr "Blogbejegyzés megtekintése"
@@ -7016,10 +7112,10 @@ msgstr "Beszélgetések újratöltése"
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:105
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:112
-#: src/screens/Bookmarks/index.tsx:255
+#: src/screens/Bookmarks/index.tsx:266
 #: src/screens/Settings/Settings.tsx:664
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
-#: src/view/com/posts/PostFeedErrorMessage.tsx:217
+#: src/view/com/posts/PostFeedErrorMessage.tsx:220
 msgid "Remove"
 msgstr "Eltávolítás"
 
@@ -7040,13 +7136,13 @@ msgstr "Fiók eltávolítása"
 msgid "Remove attachment"
 msgstr "Melléklet eltávolítása"
 
-#: src/view/com/util/UserAvatar.tsx:498
-#: src/view/com/util/UserAvatar.tsx:501
+#: src/view/com/util/UserAvatar.tsx:499
+#: src/view/com/util/UserAvatar.tsx:502
 msgid "Remove Avatar"
 msgstr "Profilkép eltávolítása"
 
-#: src/view/com/util/UserBanner.tsx:186
-#: src/view/com/util/UserBanner.tsx:189
+#: src/view/com/util/UserBanner.tsx:188
+#: src/view/com/util/UserBanner.tsx:191
 msgid "Remove Banner"
 msgstr "Borítókép eltávolítása"
 
@@ -7056,11 +7152,11 @@ msgstr "Beágyazott tartalom eltávolítása"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:116
 #: src/view/com/posts/FeedShutdownMsg.tsx:120
-#: src/view/com/posts/PostFeedErrorMessage.tsx:173
+#: src/view/com/posts/PostFeedErrorMessage.tsx:176
 msgid "Remove feed"
 msgstr "Hírfolyam eltávolítása"
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:214
+#: src/view/com/posts/PostFeedErrorMessage.tsx:217
 msgid "Remove feed?"
 msgstr "Hírfolyam eltávolítása"
 
@@ -7082,7 +7178,7 @@ msgid "Remove from saved feeds"
 msgstr "Eltávolítás a mentett hírfolyamok közül"
 
 #: src/components/PostControls/BookmarkButton.tsx:128
-#: src/screens/Bookmarks/index.tsx:249
+#: src/screens/Bookmarks/index.tsx:260
 msgid "Remove from saved posts"
 msgstr "Eltávolítás a mentett bejegyzések közül"
 
@@ -7116,7 +7212,7 @@ msgstr "Megosztott bejegyzés eltávolítása"
 msgid "Remove subtitle file"
 msgstr "Feliratfájl eltávolítása"
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:215
+#: src/view/com/posts/PostFeedErrorMessage.tsx:218
 msgid "Remove this feed from your saved feeds"
 msgstr "Eltávolítás a mentett hírfolyamok közül"
 
@@ -7153,7 +7249,7 @@ msgid "Removed from saved feeds"
 msgstr "Eltávolítva a mentett hírfolyamok közül"
 
 #: src/components/PostControls/BookmarkButton.tsx:94
-#: src/screens/Bookmarks/index.tsx:207
+#: src/screens/Bookmarks/index.tsx:218
 msgid "Removed from saved posts"
 msgstr "Eltávolítva a mentett bejegyzések közül"
 
@@ -7202,7 +7298,7 @@ msgstr "Válasz a bejegyzésedre"
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:148
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:41
-#: src/view/screens/Profile.tsx:226
+#: src/view/screens/Profile.tsx:235
 msgid "Replies"
 msgstr "Válaszok"
 
@@ -7214,7 +7310,7 @@ msgstr "Válaszadás letiltva"
 msgid "Replies to this post are disabled."
 msgstr "A bejegyzés alatti válaszadás le van tiltva."
 
-#: src/view/com/composer/Composer.tsx:1115
+#: src/view/com/composer/Composer.tsx:1117
 msgctxt "action"
 msgid "Reply"
 msgstr "Válasz közzététele"
@@ -7365,15 +7461,12 @@ msgid "Reposted By"
 msgstr "Megosztók"
 
 #: src/view/com/posts/PostFeedReason.tsx:77
+#: src/view/com/posts/PostFeedReason.tsx:96
 msgid "Reposted by {reposter}"
 msgstr "{reposter} megosztotta"
 
-#: src/view/com/posts/PostFeedReason.tsx:91
-msgid "Reposted by <0><1>{reposter}</1></0>"
-msgstr "<0><1>{reposter}</1></0> megosztotta"
-
 #: src/view/com/posts/PostFeedReason.tsx:77
-#: src/view/com/posts/PostFeedReason.tsx:89
+#: src/view/com/posts/PostFeedReason.tsx:94
 msgid "Reposted by you"
 msgstr "Megosztottad"
 
@@ -7465,18 +7558,18 @@ msgstr "A legutóbb meghiúsult folyamat újrapróbálása"
 
 #: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
-#: src/components/Lists.tsx:110
+#: src/components/Lists.tsx:114
 #: src/components/moderation/ReportDialog/index.tsx:274
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:58
-#: src/components/StarterPack/ProfileStarterPacks.tsx:342
+#: src/components/StarterPack/ProfileStarterPacks.tsx:374
 #: src/screens/Login/LoginForm.tsx:326
 #: src/screens/Login/LoginForm.tsx:333
 #: src/screens/Messages/ChatList.tsx:292
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:219
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:209
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:212
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:240
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:89
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:92
 #: src/screens/PostThread/components/ThreadError.tsx:80
@@ -7503,10 +7596,10 @@ msgstr "Vissza az előző oldalra"
 msgid "Returns to home page"
 msgstr "Vissza a kezdőoldalra"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:93
+#: src/screens/Profile/ProfileFeed/index.tsx:94
 #: src/screens/ProfileList/components/ErrorScreen.tsx:35
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:575
-#: src/screens/VideoFeed/index.tsx:1163
+#: src/screens/VideoFeed/index.tsx:1185
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr "Vissza az előző oldalra"
@@ -7515,7 +7608,7 @@ msgstr "Vissza az előző oldalra"
 msgid "Returns to the previous step"
 msgstr "Vissza az előző lépéshez"
 
-#: src/components/dialogs/BirthDateSettings.tsx:156
+#: src/components/dialogs/BirthDateSettings.tsx:188
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
@@ -7541,9 +7634,9 @@ msgctxt "action"
 msgid "Save"
 msgstr "Mentés"
 
-#: src/components/dialogs/BirthDateSettings.tsx:149
-msgid "Save birthday"
-msgstr "Születésnap elmentése"
+#: src/components/dialogs/BirthDateSettings.tsx:181
+msgid "Save birthdate"
+msgstr "Születési dátum mentése"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:191
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:200
@@ -7587,7 +7680,7 @@ msgstr "Mentett hírfolyamok"
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:143
 #: src/Navigation.tsx:608
-#: src/screens/Bookmarks/index.tsx:55
+#: src/screens/Bookmarks/index.tsx:60
 msgid "Saved Posts"
 msgstr "Mentett bejegyzések"
 
@@ -7620,7 +7713,7 @@ msgstr "Görgetés balra"
 msgid "Scroll right"
 msgstr "Görgetés jobbra"
 
-#: src/screens/ProfileList/AboutSection.tsx:130
+#: src/screens/ProfileList/AboutSection.tsx:131
 msgid "Scroll to top"
 msgstr "Vissza a tetejére"
 
@@ -7638,7 +7731,7 @@ msgstr "Keresés"
 msgid "Search @{0}'s posts"
 msgstr "Keresés @{0} bejegyzései között"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:592
+#: src/components/ProgressGuide/FollowDialog.tsx:656
 msgid "Search by name or interest"
 msgstr "Keresés név vagy érdeklődési kör alapján"
 
@@ -7647,12 +7740,12 @@ msgid "Search feeds"
 msgstr "Profilok keresése"
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.
-#: src/components/ProgressGuide/FollowDialog.tsx:422
+#: src/components/ProgressGuide/FollowDialog.tsx:486
 msgid "Search for \"{interestsDisplayName}\""
 msgstr "Keresés: {interestsDisplayName}"
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
-#: src/components/ProgressGuide/FollowDialog.tsx:415
+#: src/components/ProgressGuide/FollowDialog.tsx:479
 msgid "Search for \"{interestsDisplayName}\" (active)"
 msgstr "Keresés: {interestsDisplayName} (aktív)"
 
@@ -7684,8 +7777,8 @@ msgstr "Bejegyzések, fiókok és hírfolyamok keresése"
 msgid "Search GIFs"
 msgstr "GIF-ek keresése"
 
-#: src/screens/Hashtag.tsx:221
-#: src/screens/Search/SearchResults.tsx:290
+#: src/screens/Hashtag.tsx:223
+#: src/screens/Search/SearchResults.tsx:292
 msgid "Search is currently unavailable when logged out"
 msgstr "A kereséshez jelenleg bejelentkezés szükséges"
 
@@ -7704,7 +7797,7 @@ msgid "Search posts"
 msgstr "Keresés a bejegyzések között"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:534
-#: src/components/ProgressGuide/FollowDialog.tsx:611
+#: src/components/ProgressGuide/FollowDialog.tsx:675
 msgid "Search profiles"
 msgstr "Profilok keresése"
 
@@ -7717,7 +7810,7 @@ msgid "Search..."
 msgstr "Keresés…"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:535
-#: src/components/ProgressGuide/FollowDialog.tsx:612
+#: src/components/ProgressGuide/FollowDialog.tsx:676
 msgid "Searches for profiles"
 msgstr "Profilok keresése"
 
@@ -7745,14 +7838,19 @@ msgstr "A felhasználó #{tag} címkével ellátott bejegyzéseinek megtekintés
 msgid "See jobs at Bluesky"
 msgstr "Állások a Blueskynál"
 
-#: src/components/FeedInterstitials.tsx:399
-#: src/components/FeedInterstitials.tsx:455
+#: src/components/FeedInterstitials.tsx:499
+#: src/components/FeedInterstitials.tsx:562
 msgid "See more"
 msgstr "Továbbiak"
 
-#: src/components/FeedInterstitials.tsx:392
-msgid "See more suggested profiles on the Explore page"
-msgstr "A Felfedezés oldalon további javasolt fiókok tekinthetőek meg"
+#: src/components/FeedInterstitials.tsx:481
+msgid "See more suggested profiles"
+msgstr "További javasolt profilok megjelenítése"
+
+#: src/view/com/profile/ProfileFollows.tsx:191
+#: src/view/com/profile/ProfileFollows.tsx:192
+msgid "See suggested accounts"
+msgstr "Javasolt fiókok megtekintése"
 
 #: src/screens/SavedFeeds.tsx:220
 msgid "See this guide"
@@ -7908,7 +8006,7 @@ msgstr "Add meg, hogy milyen nyelvre szeretnéd lefordítani a bejegyzéseket."
 msgid "Select your preferred notification channels"
 msgstr "Kívánt értesítési csatornák megadása"
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:396
 msgid "Selecting multiple media types is not supported."
 msgstr "Egy bejegyzéshez csak egyféle médiatartalom csatolható."
 
@@ -7977,10 +8075,6 @@ msgstr "Kiszolgáló címe"
 #: src/screens/Settings/AppIconSettings/index.tsx:178
 msgid "Set app icon to {0}"
 msgstr "Alkalmazásikon megváltoztatása erre: {0}"
-
-#: src/screens/Moderation/index.tsx:359
-msgid "Set birthdate"
-msgstr "Születési dátum megadása"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:106
 msgid "Set new password"
@@ -8067,9 +8161,9 @@ msgid "Sexually Suggestive"
 msgstr "Szexuális tartalom"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:192
-#: src/screens/Hashtag.tsx:132
+#: src/screens/Hashtag.tsx:133
 #: src/screens/StarterPack/StarterPackScreen.tsx:433
-#: src/screens/Topic.tsx:102
+#: src/screens/Topic.tsx:103
 msgid "Share"
 msgstr "Továbbítás"
 
@@ -8160,8 +8254,8 @@ msgstr "Helyettesítő szöveg megjelenítése"
 #: src/components/moderation/ScreenHider.tsx:178
 #: src/components/moderation/ScreenHider.tsx:181
 #: src/screens/List/ListHiddenScreen.tsx:190
-#: src/screens/VideoFeed/index.tsx:634
-#: src/screens/VideoFeed/index.tsx:640
+#: src/screens/VideoFeed/index.tsx:656
+#: src/screens/VideoFeed/index.tsx:662
 msgid "Show anyway"
 msgstr "Megjelenítés mégis"
 
@@ -8262,11 +8356,11 @@ msgstr "Tartalom megjelenítése"
 #: src/components/dialogs/Signin.tsx:99
 #: src/components/WelcomeModal.tsx:194
 #: src/components/WelcomeModal.tsx:206
-#: src/screens/Hashtag.tsx:225
+#: src/screens/Hashtag.tsx:227
 #: src/screens/Login/index.tsx:136
 #: src/screens/Login/index.tsx:157
 #: src/screens/Login/LoginForm.tsx:181
-#: src/screens/Search/SearchResults.tsx:294
+#: src/screens/Search/SearchResults.tsx:296
 #: src/view/com/auth/SplashScreen.tsx:81
 #: src/view/com/auth/SplashScreen.tsx:89
 #: src/view/com/auth/SplashScreen.web.tsx:127
@@ -8341,13 +8435,13 @@ msgstr "Bejelentkezés szükséges"
 msgid "Signed in as @{0}"
 msgstr "Bejelentkezve, mint @{0}"
 
-#: src/components/FeedInterstitials.tsx:387
+#: src/components/FeedInterstitials.tsx:476
 msgid "Similar accounts"
 msgstr "Hasonló fiókok"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:306
 #: src/screens/Onboarding/StepFinished/index.tsx:328
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:222
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:253
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:102
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Skip"
@@ -8358,7 +8452,7 @@ msgstr "Kihagyás"
 msgid "Skip introduction and start using your account"
 msgstr "Bevezető kihagyása és fiók használatának megkezdése"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:250
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:99
 msgid "Skip to next step"
 msgstr "Lépés kihagyása"
@@ -8384,7 +8478,7 @@ msgstr "Szoftverfejlesztő"
 msgid "Some of your verifications are invalid."
 msgstr "A hitelesítéseidnek egy része érvénytelen."
 
-#: src/components/FeedInterstitials.tsx:532
+#: src/components/FeedInterstitials.tsx:639
 msgid "Some other feeds you might like"
 msgstr "További ajánlott hírfolyamok"
 
@@ -8408,7 +8502,7 @@ msgstr "Valami nem stimmel a beküldendő adatokkal. Vedd fel a kapcsolatot az �
 msgid "Something went wrong"
 msgstr "Valami balul sült el"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:138
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:139
 #: src/components/moderation/ReportDialog/index.tsx:266
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
@@ -8416,12 +8510,12 @@ msgstr "Valami balul sült el"
 msgid "Something went wrong, please try again"
 msgstr "Valami balul sült el. Próbáld újra"
 
-#: src/screens/Moderation/index.tsx:112
+#: src/screens/Moderation/index.tsx:111
 #: src/screens/Profile/Sections/Labels.tsx:183
 msgid "Something went wrong, please try again."
 msgstr "Valami balul sült el. Próbáld újra."
 
-#: src/components/Lists.tsx:174
+#: src/components/Lists.tsx:184
 msgid "Something went wrong!"
 msgstr "Valami balul sült el!"
 
@@ -8437,11 +8531,11 @@ msgstr "Valami balul sült el. Próbáld újra."
 msgid "Something wrong? Let us know."
 msgstr "Valami nem stimmel? Vedd fel velünk a kapcsolatot!"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:205
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "Sajnáljuk, de a javasolt fiókok betöltése meghiúsult."
 
-#: src/App.native.tsx:128
+#: src/App.native.tsx:127
 #: src/App.web.tsx:100
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Sajnáljuk, de lejárt a munkameneted. Jelentkezz be újra."
@@ -8465,7 +8559,7 @@ msgstr "Forrás: <0>{sourceName}</0>"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:39
 msgid "Spam"
-msgstr "Spam"
+msgstr "Kéretlen tartalom"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:36
 msgid "Spam or other inauthentic behavior or deception"
@@ -8485,13 +8579,13 @@ msgstr "A megkezdett beszélgetések itt fognak megjelenni."
 msgid "Start a new chat"
 msgstr "Új csevegés indítása"
 
-#: src/screens/ProfileList/AboutSection.tsx:102
-#: src/screens/ProfileList/FeedSection.tsx:74
+#: src/screens/ProfileList/AboutSection.tsx:103
+#: src/screens/ProfileList/FeedSection.tsx:81
 msgid "Start adding people"
 msgstr "Személyek felvétele"
 
-#: src/screens/ProfileList/AboutSection.tsx:108
-#: src/screens/ProfileList/FeedSection.tsx:80
+#: src/screens/ProfileList/AboutSection.tsx:109
+#: src/screens/ProfileList/FeedSection.tsx:87
 msgid "Start adding people!"
 msgstr "Vegyél fel személyeket!"
 
@@ -8523,13 +8617,17 @@ msgid "Starter pack is invalid"
 msgstr "Ez a kezdőcsomag érvénytelen"
 
 #: src/screens/Search/Explore.tsx:625
-#: src/view/screens/Profile.tsx:231
+#: src/view/screens/Profile.tsx:240
 msgid "Starter Packs"
 msgstr "Kezdőcsomagok"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:262
+#: src/components/StarterPack/ProfileStarterPacks.tsx:294
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "A kezdőcsomagokkal könnyen megoszthatod a kedvenc hírfolyamaidat és személyeidet."
+
+#: src/view/screens/Profile.tsx:539
+msgid "Starter packs let you share your favorite feeds and people with your friends."
+msgstr "Egy kezdőcsomag segítségével megoszthatod a kedvenc hírfolyamaidat és személyeidet."
 
 #: src/screens/Settings/AboutSettings.tsx:100
 #: src/screens/Settings/AboutSettings.tsx:103
@@ -8596,11 +8694,12 @@ msgstr "Feliratkozás a feljegyzőre"
 msgid "Subscribe to this list"
 msgstr "Feliratkozás a listára"
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:164
+#: src/ageAssurance/components/RedirectOverlay.tsx:251
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:158
 msgid "Success"
 msgstr "Siker"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:182
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:183
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:286
 msgid "Success!"
 msgstr "Siker!"
@@ -8615,8 +8714,8 @@ msgstr "Javasolt fiókok"
 
 #. Accounts suggested to the user for them to follow
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:385
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:129
+#: src/components/FeedInterstitials.tsx:474
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:158
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:39
 msgid "Suggested for you"
 msgstr "Számodra javasolt"
@@ -8680,7 +8779,7 @@ msgstr "Rendszernapló"
 msgid "Tags only"
 msgstr "Csak címkék"
 
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:116
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:109
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
 msgstr "Koppints az alábbi gombra, hogy hozzáférést biztosíts a Blueskynak a tartózkodási helyedhez. Ezzel az információval automatikusan és pontosan meghatározhatjuk a régiódban megjeleníthető tartalmakat és beállításokat."
 
@@ -8746,7 +8845,7 @@ msgstr "További részletek"
 msgid "Terms"
 msgstr "Feltételek"
 
-#: src/components/dialogs/BirthDateSettings.tsx:135
+#: src/components/dialogs/BirthDateSettings.tsx:167
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:30
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:97
 #: src/Navigation.tsx:336
@@ -8775,8 +8874,8 @@ msgstr "Köszönjük! A hírfolyam üzemeltetője megkapta a visszajelzést."
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Köszönjük! Visszaigazoltad az e-mail-címedet – most már bezárhatod ezt az ablakot."
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:115
-#: src/components/BlockedGeoOverlay.tsx:168
+#: src/ageAssurance/components/NoAccessScreen.tsx:342
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
 msgid "Thanks! You're all set."
 msgstr "Köszönjük! Most már minden kész."
 
@@ -8797,11 +8896,11 @@ msgstr "Ez a kezdőcsomag nem található."
 msgid "That username is already taken"
 msgstr "Ez a felhasználónév már foglalt"
 
-#: src/view/com/post-thread/PostQuotes.tsx:132
+#: src/view/com/post-thread/PostQuotes.tsx:135
 msgid "That's all, folks!"
 msgstr "Ez van, srácok!"
 
-#: src/screens/VideoFeed/index.tsx:1135
+#: src/screens/VideoFeed/index.tsx:1157
 msgid "That's everything!"
 msgstr "Ez minden!"
 
@@ -8821,11 +8920,11 @@ msgstr "A beállítások érvénybeléptetése érdekében az alkalmazás újra 
 msgid "The author of this thread has hidden this reply."
 msgstr "A válaszlánc szerzője elrejtette ezt a választ."
 
-#: src/components/dialogs/BirthDateSettings.tsx:122
+#: src/components/dialogs/BirthDateSettings.tsx:154
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr "A megadott születési dátum szerint még nem vagy felnőttkorú. Ez azt jelenti, hogy a Bluesky bizonyos tartalmai és funkciói nem lesznek elérhetőek Számodra."
 
-#: src/screens/Moderation/index.tsx:421
+#: src/screens/Moderation/index.tsx:397
 msgid "The Bluesky web application"
 msgstr "A Bluesky webalkalmazás"
 
@@ -8864,10 +8963,6 @@ msgstr "Az alábbi feljegyzéseket alkalmazták a tartalmadra."
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
 msgstr "Új bejegyzéseknél az alábbi beállítások lesznek az alapértelmezettek. Ezeket az egyes bejegyzések írása közben felülírhatod."
-
-#: src/components/ageAssurance/useAgeAssuranceCopy.ts:11
-msgid "The laws in your location require you to verify you're an adult before accessing certain features on Bluesky, like adult content and direct messaging."
-msgstr "A tartózkodási helyeden érvényes törvények szerint igazolnod kell a felnőttlétedet, mielőtt hozzáférhetnél a Bluesky bizonyos funkcióihoz, mint a felnőtt tartalmak és a személyes üzenetek."
 
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:14
 msgid "The laws in your location require you to verify you're an adult to access certain features. Tap to learn more."
@@ -8915,6 +9010,10 @@ msgstr "A megadott ellenőrzőkód érvénytelen. Nézd meg, hogy helyes kódot 
 msgid "Theme"
 msgstr "Téma"
 
+#: src/components/dialogs/BirthDateSettings.tsx:91
+msgid "There is a limit to how often you can change your birthdate. You may need to wait a day or two before updating it again."
+msgstr "A születési dátum szerkesztésének gyakorisága korlátozott. Lehetséges, hogy várnod kell egy pár napot, mielőtt ismét szerkeszthetnéd."
+
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "A fiók deaktiválásához nem tartozik időkorlát. Bármikor visszajöhetsz."
@@ -8935,12 +9034,12 @@ msgstr "Megszakadt a kapcsolat a kiszolgálóval"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "Megszakadt a kapcsolat a kiszolgálóval. Ellenőrizd az internetkapcsolatot, majd próbáld újra."
 
-#: src/view/com/notifications/NotificationFeed.tsx:130
+#: src/view/com/notifications/NotificationFeed.tsx:133
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Az értesítések frissítése meghiúsult. Koppints ide az újrapróbálkozáshoz."
 
 #: src/screens/Search/Explore.tsx:992
-#: src/view/com/posts/PostFeed.tsx:712
+#: src/view/com/posts/PostFeed.tsx:759
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "A bejegyzések lekérése meghiúsult. Koppints ide az újrapróbálkozáshoz."
 
@@ -8948,12 +9047,12 @@ msgstr "A bejegyzések lekérése meghiúsult. Koppints ide az újrapróbálkoz�
 msgid "There was an issue fetching the list. Tap here to try again."
 msgstr "A lista lekérése meghiúsult. Koppints ide az újrapróbálkozáshoz."
 
-#: src/screens/Settings/AppPasswords.tsx:58
+#: src/screens/Settings/AppPasswords.tsx:59
 msgid "There was an issue fetching your app passwords"
 msgstr "Hiba történt az alkalmazásjelszavak lekérése közben"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:163
-#: src/view/com/lists/ProfileLists.tsx:161
+#: src/view/com/feeds/ProfileFeedgens.tsx:174
+#: src/view/com/lists/ProfileLists.tsx:175
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "A listák lekérése meghiúsult. Koppints ide az újrapróbálkozáshoz."
 
@@ -8961,7 +9060,7 @@ msgstr "A listák lekérése meghiúsult. Koppints ide az újrapróbálkozáshoz
 msgid "There was an issue fetching your service info"
 msgstr "A kiszolgálód adatainak lekérése meghiúsult"
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:149
+#: src/view/com/posts/PostFeedErrorMessage.tsx:152
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr "A hírfolyam eltávolítása meghiúsult. Ellenőrizd az internetkapcsolatot, majd próbáld újra."
 
@@ -9077,7 +9176,7 @@ msgstr "Ezt a tartalmat a(z) {0} üzemelteti. Szeretnéd engedélyezni a külső
 msgid "This content is not available because one of the users involved has blocked the other."
 msgstr "Ez a tartalom jelenleg nem elérhető, mert az egyik kapcsolódó felhasználó letiltotta a másikat."
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:118
+#: src/view/com/posts/PostFeedErrorMessage.tsx:121
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Ezt a tartalmat bejelentkezés nélkül nem tekintheted meg."
 
@@ -9105,7 +9204,7 @@ msgstr "Jelenleg egy alkalmazásjelszóval vagy bejelentkezve. A funkció haszn�
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Jelenleg egy alkalmazásjelszóval vagy bejelentkezve. A funkció használatához a valódi jelszavaddal kell bejelentkezned."
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:124
+#: src/view/com/posts/PostFeedErrorMessage.tsx:127
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "Ez a hírfolyam jelenleg rengeteg bejövő forgalmat tapasztal, ezért átmenetileg nem elérhető. Próbáld újra később."
 
@@ -9113,9 +9212,9 @@ msgstr "Ez a hírfolyam jelenleg rengeteg bejövő forgalmat tapasztal, ezért �
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "Ez a hírfolyam üres. Lehetséges, hogy nem követsz elég felhasználót vagy rosszul van beállítva a hírfolyam."
 
-#: src/components/StarterPack/Main/PostsList.tsx:36
-#: src/screens/Profile/ProfileFeed/index.tsx:192
-#: src/screens/ProfileList/FeedSection.tsx:71
+#: src/components/StarterPack/Main/PostsList.tsx:41
+#: src/screens/Profile/ProfileFeed/index.tsx:197
+#: src/screens/ProfileList/FeedSection.tsx:77
 msgid "This feed is empty."
 msgstr "Ez a hírfolyam üres."
 
@@ -9127,9 +9226,13 @@ msgstr "Ez a hírfolyam már nem elérhető. Helyette a <0>Felfedezés</0> hírf
 msgid "This handle is reserved. Please try a different one."
 msgstr "Ez a felhasználónév le van foglalva. Adj meg egy másikat."
 
-#: src/components/dialogs/BirthDateSettings.tsx:45
+#: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "This information is private and not shared with other users."
 msgstr "Ez az információ privát és nem osztjuk meg más felhasználókkal."
+
+#: src/view/screens/Debug.tsx:343
+msgid "This is an empty state"
+msgstr "Üres állapot"
 
 #: src/components/live/EditLiveDialog.tsx:189
 #: src/components/live/GoLiveDialog.tsx:157
@@ -9160,7 +9263,7 @@ msgstr "Ennek a(z) <0>{0}</0> által létrehozott listának a címe vagy leírá
 msgid "This list – created by you – contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "Ennek az Általad létrehozott listának a címe vagy leírása lehetséges, hogy megsérti a Bluesky közösségi irányelveit."
 
-#: src/screens/ProfileList/AboutSection.tsx:98
+#: src/screens/ProfileList/AboutSection.tsx:99
 msgid "This list is empty."
 msgstr "Ez a lista üres."
 
@@ -9180,7 +9283,7 @@ msgstr "Ez a bejegyzés egy ismeretlen válaszkapu-típussal rendelkezik. Lehets
 msgid "This post is only visible to logged-in users."
 msgstr "Ez a bejegyzés csak a bejelentkezett felhasználók számára látható."
 
-#: src/screens/Bookmarks/index.tsx:245
+#: src/screens/Bookmarks/index.tsx:256
 msgid "This post was deleted by its author"
 msgstr "Ezt a bejegyzést törölte a szerző"
 
@@ -9188,7 +9291,7 @@ msgstr "Ezt a bejegyzést törölte a szerző"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Ez a bejegyzés el lesz rejtve a hírfolyamokból és a válaszláncokból. Ez a művelet nem vonható vissza."
 
-#: src/view/com/composer/Composer.tsx:513
+#: src/view/com/composer/Composer.tsx:514
 msgid "This post's author has disabled quote posts."
 msgstr "A szerző letiltotta az idézést."
 
@@ -9208,7 +9311,7 @@ msgstr "Ez a szolgáltatás nem osztotta meg a felhasználási feltételeit vagy
 msgid "This should create a domain record at:"
 msgstr "Ez az alábbi helyen fog tartományrekordot létrehozni:"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:215
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:214
 msgid "This should only take a few minutes."
 msgstr "Ez a folyamat csupán néhány percet vesz igénybe."
 
@@ -9216,7 +9319,7 @@ msgstr "Ez a folyamat csupán néhány percet vesz igénybe."
 msgid "This user does not have a display name, and therefore cannot be verified."
 msgstr "Ez a felhasználó nem rendelkezik megjelenítendő névvel, ezért nem hitelesíthető."
 
-#: src/view/com/profile/ProfileFollowers.tsx:133
+#: src/view/com/profile/ProfileFollowers.tsx:172
 msgid "This user doesn't have any followers."
 msgstr "Ezt a felhasználót még senki sem követi."
 
@@ -9245,7 +9348,7 @@ msgstr "Ez a felhasználó szerepel a(z) <0>{0}</0> c. listán, amit elnémítot
 msgid "This user is new here. Press for more info about when they joined."
 msgstr "Ez a felhasználó nemrég regisztrált. További információért koppints ide."
 
-#: src/view/com/profile/ProfileFollows.tsx:133
+#: src/view/com/profile/ProfileFollows.tsx:183
 msgid "This user isn't following anyone."
 msgstr "Ez a felhasználó még senkit sem követ."
 
@@ -9301,6 +9404,10 @@ msgstr "A kétlépcsős azonosítás kikapcsolásához vissza kell igazolnod az 
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "A kétlépcsős azonosítás kikapcsolásához vissza kell igazolnod az e-mail-címedet: <0>{0}</0>"
 
+#: src/ageAssurance/components/NoAccessScreen.tsx:191
+msgid "To log out, <0>click here</0>."
+msgstr "A kijelentkezéshez <0>kattints ide</0>."
+
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "Ha egy beszélgetést szeretnél jelenteni, kérjük egy konkrét üzenetet jelents a csevegési képernyőről. Ez segít a moderátorainknak megérteni a probléma szókörnyezetét."
@@ -9309,7 +9416,7 @@ msgstr "Ha egy beszélgetést szeretnél jelenteni, kérjük egy konkrét üzene
 msgid "Today"
 msgstr "Ma"
 
-#: src/screens/Moderation/index.tsx:398
+#: src/screens/Moderation/index.tsx:374
 msgid "Toggle to enable or disable adult content"
 msgstr "Felnőtt tartalmak ki-/bekapcsolása"
 
@@ -9317,9 +9424,9 @@ msgstr "Felnőtt tartalmak ki-/bekapcsolása"
 msgid "Toggles the sound"
 msgstr "Hang némítása"
 
-#: src/screens/Hashtag.tsx:90
-#: src/screens/Search/SearchResults.tsx:51
-#: src/screens/Topic.tsx:71
+#: src/screens/Hashtag.tsx:91
+#: src/screens/Search/SearchResults.tsx:52
+#: src/screens/Topic.tsx:72
 msgid "Top"
 msgstr "Felkapott"
 
@@ -9364,10 +9471,10 @@ msgstr "Provokálás („trollkodás”)"
 msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
 msgstr "A bizalom kapcsolatok, közösségek és egy megosztott környezet útján alakul ki, ezért bevezetjük a <0>megbízható hitelesítők</0> rendszerét is – ezek olyan egyesületek, amelyek közvetlenül is képesek hitelesíteni másokat."
 
-#: src/screens/Search/SearchResults.tsx:175
+#: src/screens/Search/SearchResults.tsx:176
 msgctxt "english-only-resource"
 msgid "Try a different search term, or <0>read about how to use search filters</0>."
-msgstr ""
+msgstr "Próbálkozz másmilyen kifejezésekkel. <0>További információ a keresésszűrőkről (angol nyelven)</0>."
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -9390,7 +9497,7 @@ msgstr "Üzenet megadása"
 msgid "Type:"
 msgstr "Típus:"
 
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:92
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:85
 msgid "Unable to access location. You'll need to visit your system settings to enable location services for Bluesky."
 msgstr "Nincs hozzáférésünk a tartózkodási helyedhez. Engedélyezned kell a Bluesky helyelérését a rendszerbeállításokban."
 
@@ -9424,7 +9531,7 @@ msgstr "Lekéréses kérelem alkalmazásának visszavonása"
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Lekéréses kérelem alkalmazásának visszavonása ({currentChannel})"
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:53
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:40
 msgid "Unavailable"
 msgstr "Nem elérhető"
 
@@ -9492,17 +9599,17 @@ msgstr "{0} követésének megszüntetése"
 msgid "Unfollow account"
 msgstr "Fiók követésének megszüntetése"
 
-#: src/screens/VideoFeed/index.tsx:838
+#: src/screens/VideoFeed/index.tsx:860
 msgid "Unfollows the user"
 msgstr "Követés megszüntetése"
-
-#: src/components/BlockedGeoOverlay.tsx:48
-msgid "Unfortunately, Bluesky is unavailable in Mississippi right now."
-msgstr "A Bluesky sajnos jelenleg nem elérhető Mississippiben."
 
 #: src/components/moderation/ReportDialog/index.tsx:471
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "A feljegyzőid közül egyik sem támogatja ezt a jelentési típust."
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:158
+msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
+msgstr "A megadott születési dátum szerint sajnos túl fiatal vagy a Bluesky használatához."
 
 #: src/components/verification/VerificationsDialog.tsx:211
 msgid "Unknown verifier"
@@ -9630,7 +9737,7 @@ msgstr "Leiratkozás a feljegyzőről"
 msgid "Unsubscribed from list"
 msgstr "Leiratkoztál a listáról"
 
-#: src/view/com/composer/Composer.tsx:895
+#: src/view/com/composer/Composer.tsx:897
 msgid "Unsupported video type: {mimeType}"
 msgstr "Nem támogatott videóformátum: {mimeType}"
 
@@ -9673,7 +9780,7 @@ msgstr "A válasz láthatóságának frissítése meghiúsult"
 msgid "Updating..."
 msgstr "Frissítés folyamatban…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:301
 msgid "Upload a photo instead"
 msgstr "Fénykép feltöltése"
 
@@ -9681,22 +9788,22 @@ msgstr "Fénykép feltöltése"
 msgid "Upload a text file to:"
 msgstr "Tölts fel ide egy szöveges fájlt:"
 
-#: src/view/com/util/UserAvatar.tsx:469
-#: src/view/com/util/UserAvatar.tsx:472
-#: src/view/com/util/UserBanner.tsx:157
-#: src/view/com/util/UserBanner.tsx:160
+#: src/view/com/util/UserAvatar.tsx:470
+#: src/view/com/util/UserAvatar.tsx:473
+#: src/view/com/util/UserBanner.tsx:159
+#: src/view/com/util/UserBanner.tsx:162
 msgid "Upload from Camera"
 msgstr "Feltöltés a kamerából"
 
-#: src/view/com/util/UserAvatar.tsx:486
-#: src/view/com/util/UserBanner.tsx:174
+#: src/view/com/util/UserAvatar.tsx:487
+#: src/view/com/util/UserBanner.tsx:176
 msgid "Upload from Files"
 msgstr "Feltöltés a fájlkezelőből"
 
-#: src/view/com/util/UserAvatar.tsx:480
-#: src/view/com/util/UserAvatar.tsx:484
-#: src/view/com/util/UserBanner.tsx:168
-#: src/view/com/util/UserBanner.tsx:172
+#: src/view/com/util/UserAvatar.tsx:481
+#: src/view/com/util/UserAvatar.tsx:485
+#: src/view/com/util/UserBanner.tsx:170
+#: src/view/com/util/UserBanner.tsx:174
 msgid "Upload from Library"
 msgstr "Feltöltés a galériából"
 
@@ -9709,11 +9816,11 @@ msgstr "Képek feltöltése folyamatban…"
 msgid "Uploading link thumbnail..."
 msgstr "Hivatkozás indexképének feltöltése folyamatban…"
 
-#: src/view/com/composer/Composer.tsx:1889
+#: src/view/com/composer/Composer.tsx:1894
 msgid "Uploading video..."
 msgstr "Videó feltöltése folyamatban…"
 
-#: src/screens/Settings/AppPasswords.tsx:65
+#: src/screens/Settings/AppPasswords.tsx:66
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
 msgstr "Egy alkalmazásjelszó használatával bármely egyéb Bluesky-kliensbe bejelentkezhetsz, anélkül hogy teljes hozzáférést biztosítanál a fiókodhoz vagy a valódi jelszavadhoz."
 
@@ -9744,7 +9851,7 @@ msgstr "Javasolt beállítások használata"
 msgid "Use this to sign in to the other app along with your handle."
 msgstr "A másik alkalmazásba a felhasználóneveddel és ezzel jelentkezhetsz be."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:279
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:278
 msgid "Use your account email address, or another real email address you control, in case KWS or Bluesky needs to contact you."
 msgstr "Add meg a fiókod e-mail-címét vagy egy másik, tulajdonodat képző e-mail-címet, arra az esetre, ha a jövőben a KWS-nek vagy a Blueskynak fel kell vennie Veled a kapcsolatot."
 
@@ -9833,7 +9940,7 @@ msgstr "Érték:"
 msgid "Verification failed, please try again."
 msgstr "A hitelesítés meghiúsult. Próbáld újra."
 
-#: src/screens/Moderation/index.tsx:321
+#: src/screens/Moderation/index.tsx:326
 msgid "Verification settings"
 msgstr "Hitelesítési beállítások"
 
@@ -9857,7 +9964,8 @@ msgstr "Hitelesítő:"
 msgid "Verify account"
 msgstr "Fiók hitelesítése"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
+#: src/ageAssurance/components/NoAccessScreen.tsx:279
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
 msgid "Verify again"
 msgstr "Igazolás ismét"
 
@@ -9883,8 +9991,10 @@ msgstr "E-mailes kód megerősítése"
 msgid "Verify email dialog"
 msgstr "E-mail-cím-visszaigazoló párbeszédablak"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:158
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:172
+#: src/ageAssurance/components/NoAccessScreen.tsx:267
+#: src/ageAssurance/components/NoAccessScreen.tsx:281
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify now"
 msgstr "Igazolás most"
 
@@ -9897,7 +10007,7 @@ msgstr "Szöveges fájl ellenőrzése"
 msgid "Verify this account?"
 msgstr "Fiók hitelesítése"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:182
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:183
 msgid "Verify your age"
 msgstr "Életkor igazolása"
 
@@ -9907,10 +10017,12 @@ msgstr "Életkor igazolása"
 msgid "Verify your email"
 msgstr "E-mail-cím visszaigazolása"
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:213
+#: src/ageAssurance/components/RedirectOverlay.tsx:296
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:207
 msgid "Verifying"
 msgstr "Igazolás folyamatban"
 
+#: src/ageAssurance/components/RedirectOverlay.tsx:165
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:74
 msgid "Verifying your age assurance status"
 msgstr "Életkor-igazolási állapot ellenőrzése"
@@ -9943,11 +10055,11 @@ msgstr "{0} videója: {text}"
 msgid "Video Games"
 msgstr "Videojátékok"
 
-#: src/screens/VideoFeed/index.tsx:1093
+#: src/screens/VideoFeed/index.tsx:1115
 msgid "Video is paused"
 msgstr "Videó szüneteltetve"
 
-#: src/screens/VideoFeed/index.tsx:1093
+#: src/screens/VideoFeed/index.tsx:1115
 msgid "Video is playing"
 msgstr "Videó lejátszása folyamatban"
 
@@ -9959,7 +10071,7 @@ msgstr "A videó nem található."
 msgid "Video settings"
 msgstr "Videóbeállítások"
 
-#: src/view/com/composer/Composer.tsx:1899
+#: src/view/com/composer/Composer.tsx:1904
 msgid "Video uploaded"
 msgstr "A videó feltöltése sikeresen befejeződött"
 
@@ -9967,15 +10079,15 @@ msgstr "A videó feltöltése sikeresen befejeződött"
 msgid "Video: {0}"
 msgstr "Videó: {0}"
 
-#: src/view/screens/Profile.tsx:228
+#: src/view/screens/Profile.tsx:237
 msgid "Videos"
 msgstr "Videók"
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "Videos must be less than 3 minutes long."
 msgstr "A videónak 3 percnél rövidebbnek kell lennie."
 
-#: src/view/com/composer/Composer.tsx:585
+#: src/view/com/composer/Composer.tsx:586
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "Megtekintés"
@@ -9987,7 +10099,7 @@ msgstr "{0} profilképének megtekintése"
 #: src/components/ProfileCard.tsx:142
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:456
 #: src/screens/Search/components/SearchProfileCard.tsx:36
-#: src/screens/VideoFeed/index.tsx:797
+#: src/screens/VideoFeed/index.tsx:819
 #: src/view/com/notifications/NotificationFeedItem.tsx:606
 msgid "View {0}'s profile"
 msgstr "{0} profiljának megtekintése"
@@ -10008,8 +10120,8 @@ msgstr "További részleteket a blogbejegyzésben olvashatsz (angolul)"
 msgid "View debug entry"
 msgstr "Hibakeresési bejegyzés megtekintése"
 
-#: src/screens/VideoFeed/index.tsx:662
-#: src/screens/VideoFeed/index.tsx:680
+#: src/screens/VideoFeed/index.tsx:684
+#: src/screens/VideoFeed/index.tsx:702
 msgid "View details"
 msgstr "Részletek"
 
@@ -10032,14 +10144,14 @@ msgstr "Továbbiak megtekintése"
 msgid "View more trending videos"
 msgstr "További felkapott videók megtekintése"
 
-#: src/view/com/composer/Composer.tsx:580
+#: src/view/com/composer/Composer.tsx:581
 msgid "View post"
 msgstr "Bejegyzés megtekintése"
 
 #: src/components/ProfileHoverCard/index.web.tsx:466
 #: src/components/ProfileHoverCard/index.web.tsx:486
 #: src/components/ProfileHoverCard/index.web.tsx:513
-#: src/view/com/posts/PostFeedErrorMessage.tsx:179
+#: src/view/com/posts/PostFeedErrorMessage.tsx:182
 #: src/view/com/util/PostMeta.tsx:90
 #: src/view/com/util/PostMeta.tsx:127
 msgid "View profile"
@@ -10065,11 +10177,11 @@ msgstr "A hírfolyamot kedvelő felhasználók megtekintése"
 msgid "View video"
 msgstr "Videó megtekintése"
 
-#: src/screens/Moderation/index.tsx:301
+#: src/screens/Moderation/index.tsx:306
 msgid "View your blocked accounts"
 msgstr "Letiltott felhasználók megtekintése"
 
-#: src/screens/Moderation/index.tsx:241
+#: src/screens/Moderation/index.tsx:246
 msgid "View your default post interaction settings"
 msgstr "Alapértelmezett kapcsolatbalépési beállítások megtekintése"
 
@@ -10078,11 +10190,11 @@ msgstr "Alapértelmezett kapcsolatbalépési beállítások megtekintése"
 msgid "View your feeds and explore more"
 msgstr "Hírfolyamgyűjtemény megnyitása és további hírfolyamok felfedezése"
 
-#: src/screens/Moderation/index.tsx:271
+#: src/screens/Moderation/index.tsx:276
 msgid "View your moderation lists"
 msgstr "Moderálólisták megtekintése"
 
-#: src/screens/Moderation/index.tsx:286
+#: src/screens/Moderation/index.tsx:291
 msgid "View your muted accounts"
 msgstr "Elnémított fiókok megjelenítése"
 
@@ -10147,11 +10259,11 @@ msgstr "A hírfolyam szolgáltatójával történő kapcsolódás meghiúsult. L
 msgid "We could not find this list. It was probably deleted."
 msgstr "A lista nem található. Lehetséges, hogy törölték."
 
-#: src/screens/Hashtag.tsx:256
+#: src/screens/Hashtag.tsx:258
 msgid "We couldn't find any results for that hashtag."
 msgstr "Erre a címkére nincs találat."
 
-#: src/screens/Topic.tsx:178
+#: src/screens/Topic.tsx:180
 msgid "We couldn't find any results for that topic."
 msgstr "Erre a témakörre nincs találat."
 
@@ -10163,7 +10275,7 @@ msgstr "Ez a beszélgetés nem található"
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "A fiókod elkészültéig becsült hátralévő idő: {estimatedTime}"
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:196
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:197
 msgid "We have partnered with <0>KWS</0> to verify that you’re an adult. When you click \"Begin\" below, KWS will check if you have previously verified your age using this email address for other games/services powered by KWS technology. If not, KWS will email you instructions for verifying your age. When you’re done, you'll be brought back to continue using Bluesky."
 msgstr "A felnőttléted igazolásához a <0>KWS</0> szolgáltatását használjuk. Ha rákattintasz az alábbi indítás-gombra, a KWS ellenőrzi, hogy az e-mail-címed már szerepel-e az adatbázisukban. Ha nem, akkor kapni fogsz tőlük egy e-mailt, ami további utasításokat tartalmaz. Amint végeztél, vissza leszel irányítva a Blueskyra."
 
@@ -10191,15 +10303,16 @@ msgstr "Küldtünk egy e-mailt a(z) <0>{0}</0> címre. Kattints rá a benne tal�
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "A videófeltöltési jogosultságod ellenőrzése meghiúsult. Próbáld újra."
 
-#: src/components/dialogs/BirthDateSettings.tsx:57
-msgid "We were unable to load your birth date preferences. Please try again."
+#: src/components/dialogs/BirthDateSettings.tsx:63
+msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr "A születési dátumod beállításainak betöltése meghiúsult. Próbáld újra."
 
-#: src/screens/Moderation/index.tsx:478
+#: src/screens/Moderation/index.tsx:449
 msgid "We were unable to load your configured labelers at this time."
 msgstr "A feljegyzőid betöltése meghiúsult."
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:221
+#: src/ageAssurance/components/RedirectOverlay.tsx:304
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:215
 msgid "We were unable to receive the verification due to a connection issue. It may arrive later. If it does, your account will update automatically."
 msgstr "Egy kapcsolódási hiba miatt nem kaptuk meg a visszaigazolást. Lehetséges, hogy később megérkezik – ebben az esetben a fiókod állapota automatikusan frissítve lesz."
 
@@ -10223,16 +10336,17 @@ msgstr "Mindemellett a <0>közösségi irányelveket</0> is frissíteni fogjuk �
 msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025."
 msgstr "Mindemellett a közösségi irányelveket is frissíteni fogjuk és ehhez szívesen fogadnánk visszajelzéseket – ezek a változtatások 2025. október 15-én lépnek hatályba."
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
+#: src/ageAssurance/components/RedirectOverlay.tsx:310
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:221
 msgid "We're confirming your age assurance status with our servers. This should only take a few seconds."
 msgstr "Életkor-igazolási állapotellenőrzés folyamatban. Ez valószínűleg csak néhány másodpercet vesz igénybe."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:150
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:151
 msgid "We're having issues initializing the age assurance process for your account. Please <0>contact support</0> for assistance."
 msgstr "Hiba történt az életkor-igazolási folyamat elindítása közben. Ha segítségre van szükséged, vedd fel a kapcsolatot az <0>ügyfélszolgálattal</0>."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:107
-#: src/components/ProgressGuide/FollowDialog.tsx:161
+#: src/components/ProgressGuide/FollowDialog.tsx:184
 msgid "We're having network issues, try again"
 msgstr "Hálózati hiba történt. Próbáld újra."
 
@@ -10244,13 +10358,10 @@ msgstr "Bevezetjük a hitelesítés egy új formáját: egy könnyen látható j
 msgid "We're so excited to have you join us!"
 msgstr "Örvendünk, hogy megismerhetünk!"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:105
+#: src/ageAssurance/components/NoAccessScreen.tsx:335
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "Sajnáljuk, de az eszközöd szerint jelenleg egy olyan régióban tartózkodsz, ahol kötelező az életkor-igazolás."
-
-#: src/components/BlockedGeoOverlay.tsx:158
-msgid "We're sorry, but based on your device's location, you are currently located in a region where we cannot provide access at this time."
-msgstr "Sajnáljuk, de az eszközöd szerint jelenleg egy olyan régióban tartózkodsz, ahol nem vagyunk képesek hozzáférést biztosítani a Blueskyhoz."
 
 #: src/screens/ProfileList/index.tsx:87
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
@@ -10260,16 +10371,16 @@ msgstr "Sajnáljuk, de a lista lekérése meghiúsult. Ha a probléma fennáll, 
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Sajnáljuk, de az elnémított szavak listájának betöltése meghiúsult. Próbáld újra."
 
-#: src/screens/Search/SearchResults.tsx:320
-#: src/screens/Search/SearchResults.tsx:406
+#: src/screens/Search/SearchResults.tsx:322
+#: src/screens/Search/SearchResults.tsx:413
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Sajnáljuk, de a keresés meghiúsult. Próbáld újra egy pár percen belül."
 
-#: src/view/com/composer/Composer.tsx:510
+#: src/view/com/composer/Composer.tsx:511
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Sajnáljuk, de törölték a bejegyzést, amire válaszolnál."
 
-#: src/components/Lists.tsx:194
+#: src/components/Lists.tsx:221
 #: src/view/screens/NotFound.tsx:50
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Sajnáljuk, de a keresett oldal nem található."
@@ -10294,7 +10405,8 @@ msgstr "Frissítettük a felhasználási feltételeket, adatvédelmi irányelvek
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
 msgstr "Frissítettük a felhasználási feltételeket, adatvédelmi irányelveket és a szerzői jogi irányelveket – ezek a változtatások 2025. szeptember 15-én lépnek hatályba. Mindemellett a közösségi irányelveket is frissíteni fogjuk és ehhez szívesen fogadnánk visszajelzéseket – ezek a változtatások 2025. október 15-én lépnek hatályba. A változtatásokról és a visszajelzés mikéntjéről a blogbejegyzésünkben olvashatsz (angol nyelven)."
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
+#: src/ageAssurance/components/RedirectOverlay.tsx:256
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:163
 msgid "We've confirmed your age assurance status. You can now close this dialog."
 msgstr "Az ellenőrzés sikeresen befejeződött. Bezárhatod ezt a párbeszédablakot."
 
@@ -10316,7 +10428,8 @@ msgstr "Milyen címet adnál a kezdőcsomagodnak?"
 
 #: src/view/com/auth/SplashScreen.tsx:51
 #: src/view/com/auth/SplashScreen.web.tsx:103
-#: src/view/com/composer/Composer.tsx:855
+#: src/view/com/composer/Composer.tsx:857
+#: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr "Mi a helyzet?"
 
@@ -10393,12 +10506,17 @@ msgstr "Szeretnéd letiltani ezt a felhasználót és/vagy törölni a beszélge
 msgid "Write a message"
 msgstr "Üzenet írása"
 
-#: src/view/com/composer/Composer.tsx:955
+#: src/view/screens/Profile.tsx:433
+#: src/view/screens/Profile.tsx:434
+msgid "Write a post"
+msgstr "Bejegyzés írása"
+
+#: src/view/com/composer/Composer.tsx:957
 msgid "Write post"
 msgstr "Bejegyzés írása"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:90
-#: src/view/com/composer/Composer.tsx:853
+#: src/view/com/composer/Composer.tsx:855
 msgid "Write your reply"
 msgstr "Válasz írása"
 
@@ -10449,11 +10567,16 @@ msgstr "Tegnap"
 msgid "You are a trusted verifier"
 msgstr "Megbítzható hitelesítő vagy"
 
+#: src/ageAssurance/components/NoAccessScreen.tsx:143
+msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
+msgstr "A helyi törvények szerint a Bluesky haszálata előtt igazolnod kell az életkorodat."
+
 #: src/components/forms/HostingProvider.tsx:45
 msgid "You are creating an account on"
 msgstr "Ez a fiók az alábbi tárhelyszolgáltatónál lesz létrehozva:"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:128
+#: src/ageAssurance/components/NoAccessScreen.tsx:249
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "Jelenleg nincs hozzáférésed az életkor-igazolási folyamathoz. Ha úgy gondolod, hogy ez hibás megállapítás, vedd fel a kapcsolatot a <0>moderálási csapatunkkal</0>."
 
@@ -10478,9 +10601,9 @@ msgstr "Nincs jogosultságod élő adások elindításához"
 msgid "You are not allowed to upload videos."
 msgstr "Nincs jogosultságod a videófeltöltésre."
 
-#: src/view/com/profile/ProfileFollows.tsx:132
-msgid "You are not following anyone."
-msgstr "Még senkit sem követsz."
+#: src/view/com/profile/ProfileFollows.tsx:182
+msgid "You are not following anyone yet"
+msgstr "Még senkit sem követsz"
 
 #: src/components/live/queries.ts:156
 msgid "You are now live!"
@@ -10533,11 +10656,11 @@ msgstr "Mostantól feliratkozhatsz egyes személyek tevékenységeire. Ha van ol
 msgid "You can now sign in with your new password."
 msgstr "Mostantól bejelentkezhetsz az új jelszóval."
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:413
 msgid "You can only select one GIF at a time."
 msgstr "Egy bejegyzéshez csak egy GIF csatolható."
 
-#: src/view/com/composer/SelectMediaButton.tsx:401
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one video at a time."
 msgstr "Egy bejegyzéshez csak egy videó csatolható."
 
@@ -10546,7 +10669,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "A bejelentkezés folytatásához újraaktiválhatod a fiókodat. Ezek után a profilod és a bejegyzéseid ismét láthatóak lesznek más felhasználók számára."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:399
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "Egy bejegyzéshez csak {MAX_IMAGES, plural, other {# kép}} csatolható."
 
@@ -10555,10 +10678,6 @@ msgstr "Egy bejegyzéshez csak {MAX_IMAGES, plural, other {# kép}} csatolható.
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "You can update this later from your settings."
 msgstr "Ezt a beállítást később is módosíthatod."
-
-#: src/view/com/profile/ProfileFollowers.tsx:132
-msgid "You do not have any followers."
-msgstr "Még nincsenek követőid."
 
 #: src/screens/Profile/KnownFollowers.tsx:112
 msgid "You don't follow any users who follow @{name}."
@@ -10621,12 +10740,7 @@ msgstr "Elnémítottad ezt a felhasználót"
 msgid "You have no conversations yet. Start one!"
 msgstr "Még senkivel sem kezdtél el beszélgetni. Hajrá!"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:151
-msgid "You have no feeds."
-msgstr "A nyilvános hírfolyamgyűjteményed üres."
-
 #: src/view/com/lists/MyLists.tsx:81
-#: src/view/com/lists/ProfileLists.tsx:149
 msgid "You have no lists."
 msgstr "Még nincsenek listáid."
 
@@ -10642,7 +10756,7 @@ msgstr "Még egy fiókot sem tiltottál le. Ha szeretnél egy fiókot letiltani,
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "Még egy fiókot sem némítottál el. Ha szeretnél egy fiókot elnémítani, akkor nyisd meg a profilját és a menüből válaszd ki a „Fiók elnémítása” lehetőséget."
 
-#: src/components/Lists.tsx:57
+#: src/components/Lists.tsx:61
 msgid "You have reached the end"
 msgstr "Elérted a hírfolyam végét"
 
@@ -10654,9 +10768,13 @@ msgstr "Visszaigazoltad az e-mail-címedet – most már bezárhatod ezt az abla
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Átmenetileg elérted a videófeltöltési korlátot. Próbáld újra később."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:259
+#: src/components/StarterPack/ProfileStarterPacks.tsx:291
 msgid "You haven't created a starter pack yet!"
 msgstr "Még egy kezdőcsomagot sem hoztál létre."
+
+#: src/view/com/feeds/ProfileFeedgens.tsx:155
+msgid "You haven't made any custom feeds yet."
+msgstr "Még egy egyéni hírfolyamot sem hoztál létre."
 
 #: src/components/dialogs/MutedWords.tsx:403
 msgid "You haven't muted any words or tags yet"
@@ -10667,7 +10785,7 @@ msgstr "Még egy szót vagy címkét sem némítottál el"
 msgid "You hid this reply."
 msgstr "Elrejtetted ezt a választ."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:241
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:240
 msgid "You initiated this flow already, {0} ago. It may take up to 5 minutes for emails to reach your inbox. Please consider waiting a few minutes before trying again."
 msgstr "Az életkor-igazolási folyamatot már {0} ezelőtt megkezdted. Az e-mailek célba érése akár 5 percig is eltarthat. Várj pár percet, mielőtt újra próbálkoznál."
 
@@ -10699,19 +10817,15 @@ msgstr "Legfeljebb 3 hírfolyamot jelölhetsz ki."
 msgid "You must be 13 years of age or older to create an account."
 msgstr "A regisztrációhoz legalább 13 évesnek kell lenned."
 
-#: src/components/dialogs/BirthDateSettings.tsx:131
+#: src/components/dialogs/BirthDateSettings.tsx:163
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr "A Bluesky használatához be kell töltened a 13. életévedet. További információért olvasd el a <0>felhasználási feltételeket</0>."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:330
+#: src/components/StarterPack/ProfileStarterPacks.tsx:362
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "Egy kezdőcsomag létrehozásához legalább hét különböző személyt követned kell."
 
-#: src/screens/Moderation/index.tsx:368
-msgid "You must complete age assurance in order to access the settings below."
-msgstr "Az alábbi beállítások módosításához életkor-igazolás szükséges."
-
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:66
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:53
 msgid "You must complete age assurance in order to access this screen."
 msgstr "A hozzáféréshez életkor-igazolás szükséges."
 
@@ -10724,7 +10838,7 @@ msgstr "A QR-kód mentéséhez először hozzáférést kell biztosítanod a fé
 msgid "You must sign in to view this post."
 msgstr "A bejegyzés megtekintéséhez be kell jelentkezned."
 
-#: src/view/com/composer/SelectMediaButton.tsx:436
+#: src/view/com/composer/SelectMediaButton.tsx:442
 msgid "You need to allow access to your media library."
 msgstr "A galériához hozzáférés szükséges."
 
@@ -10747,6 +10861,11 @@ msgstr "{0} emojival reagáltál"
 #: src/screens/Messages/components/ChatListItem.tsx:221
 msgid "You reacted {0} to {1}"
 msgstr "{0} emojival reagáltál erre: {1}"
+
+#: src/components/dialogs/BirthDateSettings.tsx:77
+#: src/components/dialogs/BirthDateSettings.tsx:87
+msgid "You recently changed your birthdate"
+msgstr "Nemrég megváltoztattad a születési dátumodat"
 
 #: src/screens/Settings/Settings.tsx:286
 #: src/view/shell/desktop/LeftNav.tsx:210
@@ -10855,7 +10974,7 @@ msgstr "Elérted a napi videófeltöltési korlátot (bájthatár meghaladva)"
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Elérted a napi videófeltöltési korlátot (videómennyiség meghaladva)"
 
-#: src/screens/VideoFeed/index.tsx:1144
+#: src/screens/VideoFeed/index.tsx:1166
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Kifogytunk a videókból. Mit szólnál egy kis szünethez?"
 
@@ -10907,13 +11026,13 @@ msgstr "Ez a választás tartós, de a jövőben bármikor megváltoztathatod az
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr "Lefoglaljuk a jelenlegi felhasználónevedet (<0>{0}</0>), így bármikor visszaválthatsz rá."
 
-#: src/screens/Moderation/index.tsx:208
+#: src/screens/Moderation/index.tsx:213
 msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your birthdate in your <0>account settings</0>."
 msgstr "A saját állításod szerint kiskorú vagy, ezért az alábbi lehetőségek némelyike zárolva lehet. Ha ez tévedésből történt, akkor a <0>fiókbeállításokban</0> módosíthatod a születési dátumodat."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:253
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:252
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:256
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:257
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:258
 msgid "Your email"
 msgstr "Saját e-mail-cím"
 
@@ -10961,7 +11080,7 @@ msgstr "Érdeklődési körök frissítve"
 msgid "Your interests help us find what you like!"
 msgstr "Az érdeklődési köreid megadásával javíthatod az élményedet!"
 
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:130
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:123
 msgid "Your location data is not tracked and does not leave your device."
 msgstr "A tartózkodási helyedet nem tároljuk és nem fogja elhagyni az eszközödet."
 
@@ -10977,11 +11096,11 @@ msgstr "A jelszóváltoztatás sikeresen megtörtént. A legközelebbi bejelentk
 msgid "Your password must be at least 8 characters long."
 msgstr "A jelszónak legalább 8 karakter hosszúnak kell lennie."
 
-#: src/view/com/composer/Composer.tsx:576
+#: src/view/com/composer/Composer.tsx:577
 msgid "Your post was sent"
 msgstr "Bejegyzés elküldve"
 
-#: src/view/com/composer/Composer.tsx:573
+#: src/view/com/composer/Composer.tsx:574
 msgid "Your posts were sent"
 msgstr "Bejegyzések elküldve"
 
@@ -10989,7 +11108,7 @@ msgstr "Bejegyzések elküldve"
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "A bejegyzéseid, kedveléseid és letiltásaid nyilvánosak. Az elnémítások nem."
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:290
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:289
 msgid "Your preferred language"
 msgstr "Az előnyben részesített nyelved"
 
@@ -11006,7 +11125,7 @@ msgstr "A saját profilképed más fiókok profilképeivel körülvéve, többr�
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "A profilod, bejegyzéseid, hírfolyamaid és listáid mostantól el vannak rejtve a többi Bluesky-felhasználó elől. A fiókod újraaktiválásához jelentkezz be."
 
-#: src/view/com/composer/Composer.tsx:575
+#: src/view/com/composer/Composer.tsx:576
 msgid "Your reply was sent"
 msgstr "Válasz elküldve"
 

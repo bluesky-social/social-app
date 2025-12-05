@@ -749,7 +749,7 @@ msgstr ""
 msgid "Add emoji reaction"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:227
+#: src/view/com/feeds/ComposerPrompt.tsx:224
 msgid "Add image"
 msgstr ""
 
@@ -6110,7 +6110,7 @@ msgstr ""
 msgid "Open avatar creator"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:206
+#: src/view/com/feeds/ComposerPrompt.tsx:202
 msgid "Open camera"
 msgstr ""
 
@@ -6219,7 +6219,7 @@ msgstr ""
 msgid "Opens composer"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:207
+#: src/view/com/feeds/ComposerPrompt.tsx:203
 msgid "Opens device camera"
 msgstr ""
 
@@ -6250,7 +6250,7 @@ msgstr ""
 msgid "Opens helpdesk in browser"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:228
+#: src/view/com/feeds/ComposerPrompt.tsx:225
 msgid "Opens image picker"
 msgstr ""
 
@@ -10422,7 +10422,7 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:51
 #: src/view/com/auth/SplashScreen.web.tsx:103
 #: src/view/com/composer/Composer.tsx:857
-#: src/view/com/feeds/ComposerPrompt.tsx:197
+#: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr ""
 
