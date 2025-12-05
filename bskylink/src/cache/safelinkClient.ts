@@ -8,7 +8,7 @@ import {ExpiredTokenError} from '@atproto/api/dist/client/types/com/atproto/serv
 import {MINUTE} from '@atproto/common'
 import {LRUCache} from 'lru-cache'
 
-import {type ServiceConfig} from '../config.js'
+import {type AppContext} from '../context.js'
 import type Database from '../db/index.js'
 import {type SafelinkRule} from '../db/schema.js'
 import {redirectLogger} from '../logger.js'
@@ -21,13 +21,12 @@ export class SafelinkClient {
   private domainCache: LRUCache<string, SafelinkRule | 'ok'>
   private urlCache: LRUCache<string, SafelinkRule | 'ok'>
 
-  private db: Database
+  private ctx: AppContext
 
   private ozoneAgent: OzoneAgent
-
   private cursor?: string
 
-  constructor({cfg, db}: {cfg: ServiceConfig; db: Database}) {
+  constructor(ctx: AppContext) {
     this.domainCache = new LRUCache<string, SafelinkRule | 'ok'>({
       max: 10000,
     })
@@ -36,16 +35,27 @@ export class SafelinkClient {
       max: 25000,
     })
 
-    this.db = db
+    this.ctx = ctx
 
     this.ozoneAgent = new OzoneAgent(
-      cfg.safelinkPdsUrl!,
-      cfg.safelinkAgentIdentifier!,
-      cfg.safelinkAgentPass!,
+      this.ctx.cfg.service.safelinkPdsUrl!,
+      this.ctx.cfg.service.safelinkAgentIdentifier!,
+      this.ctx.cfg.service.safelinkAgentPass!,
     )
   }
 
   public async tryFindRule(link: string): Promise<SafelinkRule | 'ok'> {
+    const start = process.hrtime.bigint()
+    const addMetrics = (status: 'ok' | 'error', cached: boolean) => {
+      const end = process.hrtime.bigint()
+      const respTimeMs = Number(end - start) / 1_000_000 // ns to ms :3
+
+      this.ctx.safeLinkLookups.labels(status, cached ? 'yes' : 'no').inc()
+      this.ctx.safeLinkLookupDuration
+        .labels(status, cached ? 'yes' : 'no')
+        .observe(respTimeMs)
+    }
+
     let url: string
     let domain: string
     try {
@@ -56,6 +66,7 @@ export class SafelinkClient {
         {error: e, inputUrl: link},
         'failed to normalize looked up link',
       )
+      addMetrics('error', false)
       // fail open
       return 'ok'
     }
@@ -65,31 +76,38 @@ export class SafelinkClient {
     // _and_ it is not 'ok'.
     const urlRule = this.urlCache.get(url)
     if (urlRule && urlRule !== 'ok') {
+      addMetrics('ok', true)
       return urlRule
     }
 
     // If we find a domain rule of _any_ kind, including 'ok', we can now return that rule.
     const domainRule = this.domainCache.get(domain)
     if (domainRule) {
+      addMetrics('ok', true)
       return domainRule
     }
 
     try {
-      const maybeUrlRule = await this.getRule(this.db, url, 'url')
+      const maybeUrlRule = await this.getRule(this.ctx.db, url, 'url')
       this.urlCache.set(url, maybeUrlRule)
+
+      addMetrics('ok', false)
       return maybeUrlRule
     } catch (e) {
       this.urlCache.set(url, 'ok')
     }
 
     try {
-      const maybeDomainRule = await this.getRule(this.db, domain, 'domain')
+      const maybeDomainRule = await this.getRule(this.ctx.db, domain, 'domain')
       this.domainCache.set(domain, maybeDomainRule)
+
+      addMetrics('ok', false)
       return maybeDomainRule
     } catch (e) {
       this.domainCache.set(domain, 'ok')
     }
 
+    addMetrics('ok', false)
     return 'ok'
   }
 
@@ -219,7 +237,7 @@ export class SafelinkClient {
       redirectLogger.info('received no new safelink events from ozone')
       setTimeout(() => this.runFetchEvents(), SAFELINK_MAX_FETCH_INTERVAL)
     } else {
-      await this.db.transaction(async db => {
+      await this.ctx.db.transaction(async db => {
         for (const rule of res.data.events) {
           switch (rule.eventType) {
             case 'removeRule':
@@ -247,7 +265,7 @@ export class SafelinkClient {
 
   private async getCursor() {
     if (this.cursor === '') {
-      const res = await this.db.db
+      const res = await this.ctx.db.db
         .selectFrom('safelink_cursor')
         .selectAll()
         .where('id', '=', 1)
@@ -263,7 +281,7 @@ export class SafelinkClient {
   private async setCursor(cursor: string) {
     const updatedAt = new Date()
     try {
-      await this.db.db
+      await this.ctx.db.db
         .insertInto('safelink_cursor')
         .values({
           id: 1,
