@@ -1,3 +1,5 @@
+import {type InitialState} from '@react-navigation/native'
+
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
 import {type Geolocation} from '#/geolocation/types'
 
@@ -66,6 +68,11 @@ export type Device = {
    */
   policyUpdateDebugOverride?: boolean
   [PolicyUpdate202508]?: boolean
+
+  navigationState?: {
+    did: string
+    state: InitialState
+  }
 }
 
 export type Account = {

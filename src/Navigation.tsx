@@ -1,4 +1,4 @@
-import {type JSX, useCallback, useRef} from 'react'
+import {type JSX, useCallback, useRef, useState} from 'react'
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
@@ -14,6 +14,7 @@ import {
   DefaultTheme,
   type LinkingOptions,
   NavigationContainer,
+  type NavigationState,
   StackActions,
 } from '@react-navigation/native'
 
@@ -140,6 +141,7 @@ import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
+import {device} from '#/storage'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -886,6 +888,39 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const closeAllActiveElements = useCloseAllActiveElements()
   const linkingUrl = Linking.useLinkingURL()
 
+  const [initialState] = useState(() => {
+    if (!IS_NATIVE) return
+
+    const previousNavState = device.get(['navigationState'])
+    if (previousNavState) {
+      // we want to clear it asap - even if we don't use it
+      // if they're opening it via an intent, we obviously prioritize the intent
+      // but also the *subsequent* open after that, it would be weird if it restored to the
+      // nav state *before* that, hence the aggressive clearing -sfn
+      device.remove(['navigationState'])
+
+      // we only want to use it if the current state is more-or-less where they left off:
+      // - logged in to the same account
+      // - no intent
+      // - not handling a notification
+      if (linkingUrl) return
+      if (notificationResponse) return
+      if (previousNavState.did !== currentAccount?.did) {
+        return
+      }
+
+      return previousNavState.state
+    }
+  })
+
+  const persistState = (state?: NavigationState) => {
+    if (!IS_NATIVE) return
+    if (!currentAccount) return
+    if (!state) return
+
+    device.set(['navigationState'], {did: currentAccount.did, state})
+  }
+
   /**
    * Handle navigation to a conversation, or prepares for account switch.
    *
@@ -1012,10 +1047,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
   return (
     <NavigationContainer
+      initialState={initialState}
       ref={navigationRef}
       linking={LINKING}
       theme={theme}
-      onStateChange={() => {
+      onStateChange={state => {
         const currentScreen = getCurrentRouteName()
         // do this before metric
         setNavigationMetadata({
@@ -1024,6 +1060,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         })
         ax.metric('router:navigate', {from: previousScreen.current})
         previousScreen.current = currentScreen
+        persistState(state)
       }}
       onReady={onNavigationReady}
       // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
