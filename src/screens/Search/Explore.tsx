@@ -682,15 +682,16 @@ export function Explore({
     // Dynamic module ordering
 
     i.push(topBorder)
-    i.push(...interestsNuxModule)
 
     if (useFullExperience) {
       i.push(trendingTopicsModule)
+      i.push(...interestsNuxModule)
       i.push(...suggestedFeedsModule)
       i.push(...suggestedFollowsModule)
       i.push(...suggestedStarterPacksModule)
       i.push(...feedPreviewsModule)
     } else {
+      i.push(...interestsNuxModule)
       i.push(...suggestedFollowsModule)
     }
 
