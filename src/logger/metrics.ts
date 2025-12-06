@@ -556,6 +556,7 @@ export type MetricEvents = {
   'live:card:openProfile': {subject: string}
   'live:view:profile': {subject: string}
   'live:view:post': {subject: string; feed?: string}
+  'live:linkValidation:error': {error: string; url?: string}
 
   'share:open': {context: 'feed' | 'thread'}
   'share:press:copyLink': {}

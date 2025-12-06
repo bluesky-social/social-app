@@ -31,7 +31,13 @@ export function useLiveLinkMetaQuery(url: string | null) {
       if (!url) return undefined
 
       if (allowedDomains.length === 0) {
-        throw new Error(_(msg`You are not allowed to go live`))
+        const error = _(msg`You are not allowed to go live`)
+        logger.metric(
+          'live:linkValidation:error',
+          {error, url},
+          {statsig: true},
+        )
+        throw new Error(error)
       }
 
       const urlp = new URL(url)
@@ -41,11 +47,21 @@ export function useLiveLinkMetaQuery(url: string | null) {
           domain.includes('twitch'),
         )
         if (isTwitchAttempt && !urlp.hostname.includes('twitch')) {
-          throw new Error(
-            _(msg`Only Twitch links are supported during the beta`),
+          const error = _(msg`Only Twitch links are supported during the beta`)
+          logger.metric(
+            'live:linkValidation:error',
+            {error, url},
+            {statsig: true},
           )
+          throw new Error(error)
         }
-        throw new Error(_(msg`${urlp.hostname} is not a valid URL`))
+        const error = _(msg`${urlp.hostname} is not a valid URL`)
+        logger.metric(
+          'live:linkValidation:error',
+          {error, url},
+          {statsig: true},
+        )
+        throw new Error(error)
       }
 
       return await getLinkMeta(agent, url)

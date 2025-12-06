@@ -95,7 +95,7 @@ export function useLiveNowConfig() {
 
 export function useCanGoLive(did?: string) {
   const gate = useGate()
-  const isInBeta = __DEV__ ? true : gate('live_now_beta')
+  const isInBeta = gate('live_now_beta')
 
   if (!isInBeta || !did) {
     return false
@@ -112,7 +112,7 @@ export function useCanGoLive(did?: string) {
 export function useAllowedLiveDomains(did?: string): string[] {
   const config = useLiveNowConfig()
   const gate = useGate()
-  const isInBeta = __DEV__ ? true : gate('live_now_beta')
+  const isInBeta = gate('live_now_beta')
 
   if (!isInBeta || !did) {
     return []
