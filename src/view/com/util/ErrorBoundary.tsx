@@ -4,6 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {device} from '#/storage'
 import {ErrorScreen} from './error/ErrorScreen'
 import {CenteredView} from './Views'
 
@@ -30,6 +31,9 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     logger.error(error, {errorInfo})
+
+    // ensure the app doesn't re-open to the same screen, in case the screen is borked
+    device.remove(['navigationState'])
   }
 
   public render() {
