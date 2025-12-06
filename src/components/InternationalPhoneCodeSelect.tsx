@@ -7,6 +7,7 @@ import {
   getDefaultCountry,
   INTERNATIONAL_TELEPHONE_CODES,
 } from '#/lib/international-telephone-codes'
+import {regionName} from '#/locale/helpers'
 import {isWeb} from '#/platform/detection'
 import {atoms as a, web} from '#/alf'
 import * as Select from '#/components/Select'
@@ -35,14 +36,18 @@ export function InternationalPhoneCodeSelect({
   const items = useMemo(() => {
     return (
       Object.entries(INTERNATIONAL_TELEPHONE_CODES)
-        .map(([value, {name, code, unicodeFlag, svgFlag}]) => ({
-          value,
-          name: name(i18n),
-          code,
-          label: `${name(i18n)} ${code}`,
-          unicodeFlag,
-          svgFlag,
-        }))
+        .map(([value, {code, unicodeFlag, svgFlag}]) => {
+          const name = regionName(value, i18n.locale)
+
+          return {
+            value,
+            name,
+            code,
+            label: `${name} ${code}`,
+            unicodeFlag,
+            svgFlag,
+          }
+        })
         // boost the default value to the top, then sort by name
         .sort((a, b) => {
           if (a.value === defaultCountry) return -1
@@ -50,7 +55,7 @@ export function InternationalPhoneCodeSelect({
           return a.name.localeCompare(b.name)
         })
     )
-  }, [i18n, defaultCountry])
+  }, [i18n.locale, defaultCountry])
 
   const selected = useMemo(() => {
     return items.find(item => item.value === value)

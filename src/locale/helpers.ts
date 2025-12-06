@@ -57,7 +57,7 @@ function getLocalizedLanguage(
 
 export function languageName(language: Language, appLang: string): string {
   // if Intl.DisplayNames is unavailable on the target, display the English name
-  if (!(Intl as any).DisplayNames) {
+  if (!Intl.DisplayNames) {
     return language.name
   }
 
@@ -278,4 +278,45 @@ export function findSupportedAppLanguage(languageTags: (string | undefined)[]) {
     }
   }
   return AppLanguage.en
+}
+
+/**
+ * Gets region name for a given country code and language.
+ *
+ * Falls back to English if unavailable/error, and if that fails, returns the country code.
+ *
+ * Intl.DisplayNames is widely available + has been polyfilled on native
+ */
+export function regionName(countryCode: string, appLang: string): string {
+  const translatedName = getLocalizedRegionName(countryCode, appLang)
+
+  if (translatedName) {
+    return translatedName
+  }
+
+  // Fallback: get English name. Needed for i.e. Esperanto
+  const englishName = getLocalizedRegionName(countryCode, 'en')
+  if (englishName) {
+    return englishName
+  }
+
+  // Final fallback: return country code
+  return countryCode
+}
+
+function getLocalizedRegionName(
+  countryCode: string,
+  appLang: string,
+): string | undefined {
+  try {
+    const allNames = new Intl.DisplayNames([appLang], {
+      type: 'region',
+      fallback: 'none',
+    })
+
+    return allNames.of(countryCode)
+  } catch (err) {
+    console.warn('Error getting localized region name:', err)
+    return undefined
+  }
 }
