@@ -100,6 +100,7 @@ export function LanguageSettingsScreen({}: Props) {
                   <Select.Icon />
                 </Select.Trigger>
                 <Select.Content
+                  label={_(msg`App language`)}
                   renderItem={({label, value}) => (
                     <Select.Item value={value} label={label}>
                       <Select.ItemIndicator />
@@ -133,6 +134,7 @@ export function LanguageSettingsScreen({}: Props) {
                   <Select.Icon />
                 </Select.Trigger>
                 <Select.Content
+                  label={_(msg`Primary language`)}
                   renderItem={({label, value}) => (
                     <Select.Item value={value} label={label}>
                       <Select.ItemIndicator />

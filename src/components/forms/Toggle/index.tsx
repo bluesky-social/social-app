@@ -503,9 +503,23 @@ export function Switch() {
 }
 
 export function Radio() {
+  const props = useContext(ItemContext)
+
+  return <BaseRadio {...props} />
+}
+
+export function BaseRadio({
+  hovered,
+  focused,
+  selected,
+  disabled,
+  isInvalid,
+}: Pick<
+  ItemState,
+  'hovered' | 'focused' | 'selected' | 'disabled' | 'isInvalid'
+>) {
   const t = useTheme()
-  const {selected, hovered, focused, disabled, isInvalid} =
-    useContext(ItemContext)
+
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,
@@ -515,6 +529,7 @@ export function Radio() {
       disabled,
       isInvalid,
     })
+
   return (
     <View
       style={[

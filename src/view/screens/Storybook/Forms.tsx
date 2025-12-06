@@ -1,6 +1,7 @@
 import React from 'react'
 import {type TextInput, View} from 'react-native'
 
+import {getDefaultCountry} from '#/lib/international-telephone-codes'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {DateField, LabelText} from '#/components/forms/DateField'
@@ -9,7 +10,9 @@ import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {InternationalPhoneCodeSelect} from '#/components/InternationalPhoneCodeSelect'
 import {H1, H3} from '#/components/Typography'
+import {useGeolocation} from '#/geolocation'
 
 export function Forms() {
   const [toggleGroupAValues, setToggleGroupAValues] = React.useState(['a'])
@@ -22,6 +25,11 @@ export function Forms() {
 
   const [value, setValue] = React.useState('')
   const [date, setDate] = React.useState('2001-01-01')
+
+  const location = useGeolocation()
+  const [telCode, setTelCode] = React.useState(() =>
+    getDefaultCountry(location),
+  )
 
   const inputRef = React.useRef<TextInput>(null)
 
@@ -118,6 +126,20 @@ export function Forms() {
             }}
             label="Input"
           />
+        </View>
+
+        <H3>InternationalPhoneCodeSelect</H3>
+
+        <View style={[a.flex_row, a.gap_sm, a.align_center]}>
+          <View>
+            <InternationalPhoneCodeSelect
+              value={telCode}
+              onChange={setTelCode}
+            />
+          </View>
+          <View style={[a.flex_1]}>
+            <TextField.Input label="Phone number" />
+          </View>
         </View>
       </View>
 

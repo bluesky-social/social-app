@@ -13,10 +13,12 @@ export function LanguageSelect({
     label: l.name,
     value: l.code2,
   })),
+  label,
 }: {
   value?: string
   onChange: (value: string) => void
   items?: {label: string; value: string}[]
+  label?: string
 }) {
   const {_} = useLingui()
 
@@ -37,6 +39,7 @@ export function LanguageSelect({
         <Select.Icon />
       </Select.Trigger>
       <Select.Content
+        label={label}
         renderItem={({label, value}) => (
           <Select.Item value={value} label={label}>
             <Select.ItemIndicator />
