@@ -192,7 +192,9 @@ let ListMaybePlaceholder = ({
 
   if (useEmptyState) {
     return (
-      <View style={[t.atoms.border_contrast_low]}>
+      <CenteredView
+        style={[t.atoms.border_contrast_low]}
+        sideBorders={sideBorders ?? gtMobile}>
         <EmptyState
           icon={emptyStateIcon}
           message={
@@ -203,7 +205,7 @@ let ListMaybePlaceholder = ({
           }
           button={emptyStateButton}
         />
-      </View>
+      </CenteredView>
     )
   }
 
