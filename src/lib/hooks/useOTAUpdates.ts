@@ -85,7 +85,7 @@ async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync('channel', channel)
 }
 
-async function updateTestflight(t: 'light' | 'dark') {
+async function updateTestflight(scheme: 'light' | 'dark') {
   await setExtraParams()
 
   const res = await checkForUpdateAsync()
@@ -104,7 +104,7 @@ async function updateTestflight(t: 'light' | 'dark') {
           style: 'default',
           onPress: async () => {
             await reloadAsync({
-              reloadScreenOptions: splash(t),
+              reloadScreenOptions: splash(scheme),
             })
           },
         },
