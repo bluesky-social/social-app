@@ -154,6 +154,7 @@ import {
   type VideoState,
 } from './state/video'
 import {type TextInputRef} from './text-input/TextInput.types'
+import {useComposerDraft} from './useComposerDraft'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
@@ -236,6 +237,48 @@ export const ComposePost = ({
     setReplyToLanguages([])
   }
 
+  // Check for draft before initializing composer
+  const draftKey = currentAccount
+    ? `composer-draft:${currentAccount.did}:${replyTo ? `reply:${replyTo.uri}` : 'default'}`
+    : null
+
+  const loadInitialDraft = useCallback(() => {
+    if (!isWeb || !draftKey) return null
+
+    const hasInitialContent =
+      initText ||
+      initMention ||
+      initImageUris?.length ||
+      initQuote ||
+      initVideoUri
+
+    if (hasInitialContent) return null
+
+    try {
+      const stored = localStorage.getItem(draftKey)
+      if (!stored) return null
+
+      const parsed = JSON.parse(stored)
+      if (parsed.version !== 1) return null
+
+      // Check age
+      const age = Date.now() - parsed.timestamp
+      if (age > 7 * 24 * 60 * 60 * 1000) {
+        localStorage.removeItem(draftKey)
+        return null
+      }
+
+      logger.info('Composer: loading initial draft', {
+        textLength: parsed.thread.posts[0]?.text.length || 0,
+      })
+
+      return parsed
+    } catch (e) {
+      logger.error('Failed to load initial draft', {error: e})
+      return null
+    }
+  }, [draftKey, initText, initMention, initImageUris, initQuote, initVideoUri])
+
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {
@@ -244,8 +287,15 @@ export const ComposePost = ({
       initText,
       initMention,
       initInteractionSettings: preferences?.postInteractionSettings,
+      initDraft: loadInitialDraft(),
     },
     createComposerState,
+  )
+
+  // Draft persistence
+  const {clearDraft} = useComposerDraft(
+    composerState,
+    replyTo ? `reply:${replyTo.uri}` : 'default',
   )
 
   const thread = composerState.thread
@@ -322,9 +372,10 @@ export const ComposePost = ({
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const onClose = useCallback(() => {
+    clearDraft()
     closeComposer()
     clearThumbnailCache(queryClient)
-  }, [closeComposer, queryClient])
+  }, [clearDraft, closeComposer, queryClient])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
@@ -1409,7 +1460,7 @@ function ComposerFooter({
 
       if (assets.length) {
         if (type === 'image') {
-          const images: ComposerImage[] = []
+          const composerImages: ComposerImage[] = []
 
           await Promise.all(
             assets.map(async image => {
@@ -1419,7 +1470,7 @@ function ComposerFooter({
                 height: image.height,
                 mime: image.mimeType!,
               })
-              images.push(composerImage)
+              composerImages.push(composerImage)
             }),
           ).catch(e => {
             logger.error(`createComposerImage failed`, {
@@ -1427,7 +1478,7 @@ function ComposerFooter({
             })
           })
 
-          onImageAdd(images)
+          onImageAdd(composerImages)
         } else if (type === 'video') {
           onSelectVideo(post.id, assets[0])
         } else if (type === 'gif') {
