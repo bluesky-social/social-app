@@ -506,7 +506,7 @@ export function createComposerState({
       mutableNeedsFocusActive: false,
       thread: {
         posts: initDraft.thread.posts.map((post: any) => {
-          let media: ImagesMedia | GifMedia | undefined
+          let media: ImagesMedia | GifMedia | VideoMedia | undefined
 
           if (post.embed?.images?.length) {
             media = {
@@ -527,6 +527,35 @@ export function createComposerState({
               type: 'gif',
               gif: post.embed.gif,
               alt: post.embed.gif.alt || '',
+            }
+          } else if (post.embed?.video) {
+            // Restore video from draft (already uploaded to server)
+            const abortController = new AbortController()
+            abortController.abort() // Can't resume, already uploaded
+            const videoUri = post.embed.video.uri || '' // URL constructed from blobRef in Composer.tsx
+            media = {
+              type: 'video',
+              video: {
+                status: 'done',
+                progress: 100,
+                abortController,
+                asset: {
+                  uri: videoUri,
+                  width: post.embed.video.width,
+                  height: post.embed.video.height,
+                  mimeType: post.embed.video.mimeType,
+                },
+                video: {
+                  uri: videoUri,
+                  mimeType: post.embed.video.mimeType,
+                  size: 0,
+                },
+                pendingPublish: {
+                  blobRef: post.embed.video.blobRef,
+                },
+                altText: post.embed.video.altText || '',
+                captions: [],
+              },
             }
           }
 

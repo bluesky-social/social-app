@@ -18,6 +18,14 @@ type SerializedImage = {
   mime: string
 }
 
+type SerializedVideo = {
+  blobRef: any // BlobRef from @atproto/api (server reference)
+  width: number
+  height: number
+  mimeType: string
+  altText: string
+}
+
 type SerializedDraft = {
   version: 1
   timestamp: number
@@ -37,8 +45,7 @@ type SerializedDraft = {
           title: string
           alt: string
         }
-        // Note: Videos are complex with compression/upload state
-        // For now we skip videos in drafts
+        video?: SerializedVideo
       }
     }>
     postgate: any
@@ -63,6 +70,8 @@ function serializeDraft(state: ComposerState): SerializedDraft {
           | {id: string; media_formats: any; title: string; alt: string}
           | undefined
 
+        let video: SerializedVideo | undefined
+
         if (media?.type === 'images') {
           // Serialize images with their local paths
           // Note: These may not be available if the app was closed and cache was cleared
@@ -81,8 +90,34 @@ function serializeDraft(state: ComposerState): SerializedDraft {
             title: media.gif.title,
             alt: media.alt,
           }
+        } else if (media?.type === 'video') {
+          logger.debug('Draft: Video found in post', {
+            status: media.video.status,
+            hasAsset: !!media.video.asset,
+            hasPendingPublish: !!(media.video as any).pendingPublish,
+          })
+          if (media.video.status === 'done') {
+            // Only serialize videos that are fully uploaded
+            // Don't save the asset.uri - it's local data and can be huge
+            // The blobRef is all we need since the video is on the server
+            video = {
+              blobRef: media.video.pendingPublish.blobRef,
+              width: media.video.asset.width,
+              height: media.video.asset.height,
+              mimeType: media.video.asset.mimeType || 'video/mp4',
+              altText: media.video.altText,
+            }
+            logger.debug('Draft: Serialized video', {
+              hasBlobRef: !!video.blobRef,
+              dimensions: `${video.width}x${video.height}`,
+            })
+          } else {
+            logger.debug('Draft: Skipping video (not done)', {
+              status: media.video.status,
+            })
+          }
         }
-        // Videos are skipped for now due to complexity
+        // Videos in other states (compressing, uploading, processing) are skipped
 
         return {
           id: post.id,
@@ -93,6 +128,7 @@ function serializeDraft(state: ComposerState): SerializedDraft {
             linkUri: post.embed.link?.uri,
             images,
             gif,
+            video,
           },
         }
       }),
@@ -110,6 +146,7 @@ function deserializeDraft(data: SerializedDraft): Partial<ComposerState> {
         let media:
           | {type: 'images'; images: any[]}
           | {type: 'gif'; gif: any; alt: string}
+          | {type: 'video'; video: any}
           | undefined
 
         // Reconstruct images if available
@@ -135,12 +172,45 @@ function deserializeDraft(data: SerializedDraft): Partial<ComposerState> {
             gif: post.embed.gif,
             alt: post.embed.gif.alt,
           }
+        } else if (post.embed.video) {
+          // Reconstruct video (already uploaded to server)
+          logger.debug('Draft: Restoring video from draft', {
+            hasVideo: !!post.embed.video,
+            hasBlobRef: !!post.embed.video.blobRef,
+          })
+          const abortController = new AbortController()
+          abortController.abort() // Already uploaded, can't resume
+          media = {
+            type: 'video',
+            video: {
+              status: 'done',
+              progress: 100,
+              abortController,
+              asset: {
+                uri: '', // Placeholder - video is on server, we have the blobRef
+                width: post.embed.video.width,
+                height: post.embed.video.height,
+                mimeType: post.embed.video.mimeType,
+              },
+              video: {
+                uri: '', // Placeholder - not needed for posting
+                mimeType: post.embed.video.mimeType,
+                size: 0,
+              },
+              pendingPublish: {
+                blobRef: post.embed.video.blobRef,
+              },
+              altText: post.embed.video.altText,
+              captions: [],
+            },
+          }
         }
 
+        const rt = new RichText({text: post.text})
         return {
           id: post.id,
-          richtext: new RichText({text: post.text}),
-          shortenedGraphemeLength: post.text.length, // Will be recalculated
+          richtext: rt,
+          shortenedGraphemeLength: rt.graphemeLength,
           labels: post.labels,
           embed: {
             quote: post.embed.quoteUri
@@ -197,7 +267,15 @@ export function useComposerDraft(
         try {
           if (hasContent(state)) {
             const serialized = serializeDraft(state)
-            localStorage.setItem(draftKey, JSON.stringify(serialized))
+            logger.debug('Draft serialized successfully', {
+              hasPosts: serialized.thread.posts.length > 0,
+              hasVideo: !!serialized.thread.posts[0]?.embed?.video,
+            })
+            const jsonString = JSON.stringify(serialized)
+            logger.debug('Draft JSON stringified', {
+              size: jsonString.length,
+            })
+            localStorage.setItem(draftKey, jsonString)
             logger.info('Composer draft saved', {
               key: draftKey,
               textLength: state.thread.posts[0]?.richtext.text.length || 0,
@@ -208,7 +286,11 @@ export function useComposerDraft(
             logger.debug('Empty draft removed', {key: draftKey})
           }
         } catch (e) {
-          logger.error('Failed to save composer draft', {error: e})
+          logger.error('Failed to save composer draft', {
+            error: e,
+            message: e instanceof Error ? e.message : String(e),
+            stack: e instanceof Error ? e.stack : undefined,
+          })
         }
       }, AUTOSAVE_DELAY_MS)
     },
