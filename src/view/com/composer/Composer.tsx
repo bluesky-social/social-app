@@ -272,12 +272,32 @@ export const ComposePost = ({
         textLength: parsed.thread.posts[0]?.text.length || 0,
       })
 
+      // Construct video URLs from blobRefs if we have videos in the draft
+      if (currentAccount && parsed.thread?.posts) {
+        parsed.thread.posts = parsed.thread.posts.map((post: any) => {
+          if (post.embed?.video?.blobRef?.ref?.$link) {
+            const cid = post.embed.video.blobRef.ref.$link
+            // Use the video.bsky.app CDN with HLS playlist
+            post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(currentAccount.did)}/${cid}/playlist.m3u8`
+          }
+          return post
+        })
+      }
+
       return parsed
     } catch (e) {
       logger.error('Failed to load initial draft', {error: e})
       return null
     }
-  }, [draftKey, initText, initMention, initImageUris, initQuote, initVideoUri])
+  }, [
+    currentAccount,
+    draftKey,
+    initText,
+    initMention,
+    initImageUris,
+    initQuote,
+    initVideoUri,
+  ])
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
