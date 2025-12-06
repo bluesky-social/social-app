@@ -64,4 +64,6 @@ export type Account = {
    * this device.
    */
   birthdateLastUpdatedAt?: string
+
+  lastSelectedHomeFeed?: string
 }
