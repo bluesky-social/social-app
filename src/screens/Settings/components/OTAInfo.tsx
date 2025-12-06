@@ -3,7 +3,9 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
+import {splash} from '#/lib/hooks/useOTAUpdates'
 import * as Toast from '#/view/com/util/Toast'
+import {useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
 import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
@@ -12,6 +14,7 @@ import * as SettingsList from '../components/SettingsList'
 
 export function OTAInfo() {
   const {_} = useLingui()
+  const t = useTheme()
   const {
     data: isAvailable,
     isPending: isPendingInfo,
@@ -30,7 +33,9 @@ export function OTAInfo() {
     useMutation({
       mutationFn: async () => {
         await Updates.fetchUpdateAsync()
-        await Updates.reloadAsync()
+        await Updates.reloadAsync({
+          reloadScreenOptions: splash(t.scheme),
+        })
       },
       onError: error =>
         Toast.show(`Failed to update: ${error.message}`, 'xmark'),
