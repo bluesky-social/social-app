@@ -22,15 +22,15 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
+import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
-import * as FeedCard from '#/components/FeedCard'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
+import * as ListCard from '#/components/ListCard'
 import {ListFooter} from '#/components/Lists'
 
 const LOADING = {_reactKey: '__loading__'}
@@ -42,7 +42,7 @@ interface SectionRef {
   scrollToTop: () => void
 }
 
-interface ProfileFeedgensProps {
+interface ProfileListsProps {
   ref?: React.Ref<SectionRef>
   did: string
   scrollElRef: ListRef
@@ -62,7 +62,7 @@ export function ProfileLists({
   style,
   testID,
   setScrollViewTag,
-}: ProfileFeedgensProps) {
+}: ProfileListsProps) {
   const {_} = useLingui()
   const t = useTheme()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -77,8 +77,8 @@ export function ProfileLists({
     isError,
     error,
     refetch,
-  } = useProfileFeedgensQuery(did, opts)
-  const isEmpty = !isPending && !data?.pages[0]?.feeds.length
+  } = useProfileListsQuery(did, opts)
+  const isEmpty = !isPending && !data?.pages[0]?.lists.length
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation()
 
@@ -93,7 +93,7 @@ export function ProfileLists({
       items = items.concat([EMPTY])
     } else if (data?.pages) {
       for (const page of data?.pages) {
-        items = items.concat(page.feeds)
+        items = items.concat(page.lists)
       }
     } else if (isError && !isEmpty) {
       items = items.concat([LOAD_MORE_ERROR_ITEM])
@@ -123,7 +123,7 @@ export function ProfileLists({
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh feeds', {message: err})
+      logger.error('Failed to refresh lists', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -134,7 +134,7 @@ export function ProfileLists({
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more feeds', {message: err})
+      logger.error('Failed to load more lists', {message: err})
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
@@ -189,7 +189,7 @@ export function ProfileLists({
               a.px_lg,
               a.py_lg,
             ]}>
-            <FeedCard.Default view={item} />
+            <ListCard.Default view={item} />
           </View>
         )
       }
@@ -205,7 +205,7 @@ export function ProfileLists({
     }
   }, [enabled, scrollElRef, setScrollViewTag])
 
-  const ProfileFeedgensFooter = useCallback(() => {
+  const ProfileListsFooter = useCallback(() => {
     if (isEmpty) return null
     return (
       <ListFooter
@@ -233,7 +233,7 @@ export function ProfileLists({
         data={items}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
-        ListFooterComponent={ProfileFeedgensFooter}
+        ListFooterComponent={ProfileListsFooter}
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
