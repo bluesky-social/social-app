@@ -12,6 +12,7 @@ import {
 } from '#/lib/international-telephone-codes'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useAgent} from '#/state/session'
 import {android, atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
@@ -22,6 +23,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useGeolocation} from '#/geolocation'
 import {
+  constructFullPhoneNumber,
   getCountryCodeFromPastedNumber,
   processPhoneNumber,
 } from '../phone-number'
@@ -40,6 +42,7 @@ export function PhoneInput({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const agent = useAgent()
   const location = useGeolocation()
   const [countryCode, setCountryCode] = useState(
     () => state.phoneCountryCode ?? getDefaultCountry(location),
@@ -53,13 +56,16 @@ export function PhoneInput({
   const [formatError, setFormatError] = useState('')
 
   const {mutate: submit, isPending} = useMutation({
-    mutationFn: async ({}: {
+    mutationFn: async ({
+      phoneCountryCode,
+      phoneNumber,
+    }: {
       phoneCountryCode: CountryCode
       phoneNumber: string
     }) => {
-      // get otp
-      await new Promise(resolve => {
-        setTimeout(resolve, 500)
+      // sends a onetime code to the user's phone number
+      await agent.app.bsky.contact.startPhoneVerification({
+        phone: constructFullPhoneNumber(phoneCountryCode, phoneNumber),
       })
     },
     onSuccess: (_data, {phoneCountryCode, phoneNumber}) => {
@@ -88,6 +94,7 @@ export function PhoneInput({
   })
 
   const onSubmitNumber = () => {
+    if (!phoneNumber) return
     const result = processPhoneNumber(phoneNumber, countryCode)
     if (result.valid) {
       setPhoneNumber(result.formatted)
