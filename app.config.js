@@ -65,6 +65,8 @@ module.exports = function (_config) {
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
           CFBundleSpokenName: 'Blue Sky',
+          contactsPermission:
+            'Your contacts will be securely uploaded to $(PRODUCT_NAME)’s servers to help you find friends who are on $(PRODUCT_NAME).',
           CFBundleLocalizations: [
             'en',
             'an',
