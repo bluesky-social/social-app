@@ -5,6 +5,7 @@ export type Gate =
   | 'debug_subscriptions'
   | 'explore_show_suggested_feeds'
   | 'feed_reply_button_open_thread'
+  | 'live_now_beta'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
   | 'onboarding_suggested_starterpacks'

@@ -150,7 +150,7 @@ function DialogInner({
             <TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
               <TextField.Input
                 label={_(msg`Live link`)}
-                placeholder={_(msg`www.mylivestream.tv`)}
+                placeholder={_(msg`twitch.tv/username`)}
                 value={liveLink}
                 onChangeText={setLiveLink}
                 onFocus={() => setLiveLinkError('')}

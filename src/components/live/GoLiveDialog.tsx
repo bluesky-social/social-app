@@ -123,7 +123,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             <TextField.Root isInvalid={isSourceInvalid}>
               <TextField.Input
                 label={_(msg`Live link`)}
-                placeholder={_(msg`www.mylivestream.tv`)}
+                placeholder={_(msg`twitch.tv/username`)}
                 value={liveLink}
                 onChangeText={setLiveLink}
                 onFocus={() => setLiveLinkError('')}

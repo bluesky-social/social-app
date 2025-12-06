@@ -1,5 +1,6 @@
 import {createContext, useContext, useMemo} from 'react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useServiceConfigQuery} from '#/state/queries/service-config'
 import {device} from '#/storage'
@@ -93,8 +94,38 @@ export function useLiveNowConfig() {
 }
 
 export function useCanGoLive(did?: string) {
+  const gate = useGate()
+  const isInBeta = __DEV__ ? true : gate('live_now_beta')
+
+  if (!isInBeta || !did) {
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Returns the allowed livestream domains for a given user.
+ * - VIP users (in config) get their custom domains
+ * - All other users get default Twitch domains
+ */
+export function useAllowedLiveDomains(did?: string): string[] {
   const config = useLiveNowConfig()
-  return !!config.find(cfg => cfg.did === did)
+  const gate = useGate()
+  const isInBeta = __DEV__ ? true : gate('live_now_beta')
+
+  if (!isInBeta || !did) {
+    return []
+  }
+
+  // Check if user is a VIP with custom domains
+  const vipConfig = config.find(cfg => cfg.did === did)
+  if (vipConfig) {
+    return vipConfig.domains
+  }
+
+  // Default: Twitch only for all beta users
+  return ['twitch.tv', 'www.twitch.tv']
 }
 
 export function useCheckEmailConfirmed() {

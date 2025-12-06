@@ -14,14 +14,13 @@ import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {useLiveNowConfig} from '#/state/service-config'
+import {useAllowedLiveDomains} from '#/state/service-config'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {useDialogContext} from '#/components/Dialog'
 
 export function useLiveLinkMetaQuery(url: string | null) {
-  const liveNowConfig = useLiveNowConfig()
-  const {currentAccount} = useSession()
+  const allowedDomains = useAllowedLiveDomains(useSession().currentAccount?.did)
   const {_} = useLingui()
 
   const agent = useAgent()
@@ -30,12 +29,22 @@ export function useLiveLinkMetaQuery(url: string | null) {
     queryKey: ['link-meta', url],
     queryFn: async () => {
       if (!url) return undefined
-      const config = liveNowConfig.find(cfg => cfg.did === currentAccount?.did)
 
-      if (!config) throw new Error(_(msg`You are not allowed to go live`))
+      if (allowedDomains.length === 0) {
+        throw new Error(_(msg`You are not allowed to go live`))
+      }
 
       const urlp = new URL(url)
-      if (!config.domains.includes(urlp.hostname)) {
+      if (!allowedDomains.includes(urlp.hostname)) {
+        // Check if this is a non-Twitch domain for better error message
+        const isTwitchAttempt = allowedDomains.some(domain =>
+          domain.includes('twitch'),
+        )
+        if (isTwitchAttempt && !urlp.hostname.includes('twitch')) {
+          throw new Error(
+            _(msg`Only Twitch links are supported during the beta`),
+          )
+        }
         throw new Error(_(msg`${urlp.hostname} is not a valid URL`))
       }
 

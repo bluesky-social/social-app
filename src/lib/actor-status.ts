@@ -7,14 +7,14 @@ import {
 import {isAfter, parseISO} from 'date-fns'
 
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
-import {useLiveNowConfig} from '#/state/service-config'
+import {useAllowedLiveDomains} from '#/state/service-config'
 import {useTickEveryMinute} from '#/state/shell'
 import type * as bsky from '#/types/bsky'
 
 export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
   const shadowed = useMaybeProfileShadow(actor)
   const tick = useTickEveryMinute()
-  const config = useLiveNowConfig()
+  const allowedDomains = useAllowedLiveDomains(shadowed?.did)
 
   return useMemo(() => {
     tick! // revalidate every minute
@@ -23,7 +23,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
       shadowed &&
       'status' in shadowed &&
       shadowed.status &&
-      validateStatus(shadowed.did, shadowed.status, config) &&
+      validateStatus(shadowed.status, allowedDomains) &&
       isStatusStillActive(shadowed.status.expiresAt)
     ) {
       return {
@@ -40,7 +40,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
         record: {},
       } satisfies AppBskyActorDefs.StatusView
     }
-  }, [shadowed, config, tick])
+  }, [shadowed, allowedDomains, tick])
 }
 
 export function isStatusStillActive(timeStr: string | undefined) {
@@ -52,19 +52,17 @@ export function isStatusStillActive(timeStr: string | undefined) {
 }
 
 export function validateStatus(
-  did: string,
   status: AppBskyActorDefs.StatusView,
-  config: {did: string; domains: string[]}[],
+  allowedDomains: string[],
 ) {
   if (status.status !== 'app.bsky.actor.status#live') return false
-  const sources = config.find(cfg => cfg.did === did)
-  if (!sources) {
+  if (allowedDomains.length === 0) {
     return false
   }
   try {
     if (AppBskyEmbedExternal.isView(status.embed)) {
       const url = new URL(status.embed.external.uri)
-      return sources.domains.includes(url.hostname)
+      return allowedDomains.includes(url.hostname)
     } else {
       return false
     }

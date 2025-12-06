@@ -17,9 +17,14 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {android, atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '../icons/CircleInfo'
 import {Globe_Stroke2_Corner0_Rounded} from '../icons/Globe'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon} from '../icons/SquareArrowTopRight'
 import {LiveIndicator} from './LiveIndicator'
@@ -205,16 +210,64 @@ export function LiveStatus({
             </Button>
           </ProfileCard.Header>
         )}
-        <Text
-          style={[
-            a.w_full,
-            a.text_center,
-            t.atoms.text_contrast_low,
-            a.text_sm,
-          ]}>
-          <Trans>Live feature is in beta testing</Trans>
-        </Text>
+        <BetaTestingFooter profile={profile} />
       </View>
+    </>
+  )
+}
+
+function BetaTestingFooter({profile}: {profile: bsky.profile.AnyProfileView}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const reportControl = useReportDialogControl()
+
+  return (
+    <>
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
+          a.w_full,
+          a.pt_md,
+        ]}>
+        <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+          <CircleInfoIcon size="sm" style={[t.atoms.text_contrast_low]} />
+          <Text
+            style={[
+              a.flex_1,
+              t.atoms.text_contrast_low,
+              a.text_sm,
+              a.text_left,
+            ]}>
+            <Trans>Live feature is in beta</Trans>
+          </Text>
+        </View>
+        <Button
+          label={_(msg`Report`)}
+          size="tiny"
+          variant="ghost"
+          color="secondary"
+          onPress={() => {
+            logger.metric(
+              'live:report',
+              {subject: profile.did},
+              {statsig: true},
+            )
+            reportControl.open()
+          }}>
+          <ButtonText style={[t.atoms.text_contrast_medium]}>
+            <Trans>Report</Trans>
+          </ButtonText>
+        </Button>
+      </View>
+      <ReportDialog
+        control={reportControl}
+        subject={{
+          ...profile,
+          $type: 'app.bsky.actor.defs#profileViewDetailed',
+        }}
+      />
     </>
   )
 }
