@@ -488,6 +488,7 @@ export function createComposerState({
   initImageUris,
   initQuoteUri,
   initInteractionSettings,
+  initDraft,
 }: {
   initText: string | undefined
   initMention: string | undefined
@@ -496,7 +497,77 @@ export function createComposerState({
   initInteractionSettings:
     | BskyPreferences['postInteractionSettings']
     | undefined
+  initDraft?: any
 }): ComposerState {
+  // If we have a draft, use it instead of init values
+  if (initDraft?.thread?.posts?.[0]) {
+    return {
+      activePostIndex: initDraft.activePostIndex || 0,
+      mutableNeedsFocusActive: false,
+      thread: {
+        posts: initDraft.thread.posts.map((post: any) => {
+          let media: ImagesMedia | GifMedia | undefined
+
+          if (post.embed?.images?.length) {
+            media = {
+              type: 'images',
+              images: post.embed.images.map((img: any) => ({
+                alt: img.alt,
+                source: {
+                  id: `restored-${Date.now()}-${Math.random()}`,
+                  path: img.path,
+                  width: img.width,
+                  height: img.height,
+                  mime: img.mime,
+                },
+              })),
+            }
+          } else if (post.embed?.gif) {
+            media = {
+              type: 'gif',
+              gif: post.embed.gif,
+              alt: post.embed.gif.alt || '',
+            }
+          }
+
+          return {
+            id: nanoid(),
+            richtext: new RichText({text: post.text || ''}),
+            shortenedGraphemeLength: getShortenedLength(
+              new RichText({text: post.text || ''}),
+            ),
+            labels: post.labels || [],
+            embed: {
+              quote: post.embed?.quoteUri
+                ? {type: 'link', uri: post.embed.quoteUri}
+                : undefined,
+              media,
+              link: post.embed?.linkUri
+                ? {type: 'link', uri: post.embed.linkUri}
+                : undefined,
+            },
+          }
+        }),
+        postgate:
+          initDraft.thread.postgate ||
+          createPostgateRecord({
+            post: '',
+            embeddingRules:
+              initInteractionSettings?.postgateEmbeddingRules || [],
+          }),
+        threadgate:
+          initDraft.thread.threadgate ||
+          threadgateRecordToAllowUISetting({
+            $type: 'app.bsky.feed.threadgate',
+            post: '',
+            createdAt: new Date().toString(),
+            allow: initInteractionSettings?.threadgateAllowRules,
+          }),
+      },
+    }
+  }
+
+  // Otherwise use normal initialization
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
     media = {
