@@ -21,6 +21,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useGeolocation} from '#/geolocation'
+import {isFindContactsFeatureEnabled} from '../country-whitelist'
 import {
   getCountryCodeFromPastedNumber,
   processPhoneNumber,
@@ -87,7 +88,10 @@ export function PhoneInput({
     },
   })
 
+  const isFeatureEnabled = isFindContactsFeatureEnabled(countryCode)
+
   const onSubmitNumber = () => {
+    if (!isFeatureEnabled) return
     const result = processPhoneNumber(phoneNumber, countryCode)
     if (result.valid) {
       setPhoneNumber(result.formatted)
@@ -150,7 +154,7 @@ export function PhoneInput({
               />
             </View>
             <View style={[a.flex_1]}>
-              <TextField.Root isInvalid={!!formatError}>
+              <TextField.Root isInvalid={!!formatError || !isFeatureEnabled}>
                 <TextField.Input
                   label={_(msg`Phone number`)}
                   value={phoneNumber}
@@ -179,6 +183,14 @@ export function PhoneInput({
           </View>
         </View>
 
+        {!isFeatureEnabled && (
+          <ErrorText>
+            <Trans>
+              Support for this feature in your country has not been enabled yet!
+              Please check back later.
+            </Trans>
+          </ErrorText>
+        )}
         {error && <ErrorText>{error}</ErrorText>}
         {formatError && <ErrorText>{formatError}</ErrorText>}
 
@@ -248,7 +260,7 @@ function LegalDisclaimer() {
   )
 }
 
-function ErrorText({children}: {children: string}) {
+function ErrorText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
     <Text
