@@ -3,12 +3,25 @@ import {RichText} from '@atproto/api'
 
 import {type SelfLabel} from '#/lib/moderation'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
+import {account, type ComposerDraft} from '#/storage'
 import {type ComposerState} from './state/composer'
 
-const DRAFT_KEY_PREFIX = 'composer-draft'
 const AUTOSAVE_DELAY_MS = 1000 // 1 second debounce
+const MAX_DRAFT_AGE_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
+
+function removeDraftContext(
+  allDrafts: Record<string, ComposerDraft>,
+  contextToRemove: string,
+): Record<string, ComposerDraft> | null {
+  const result: Record<string, ComposerDraft> = {}
+  for (const key of Object.keys(allDrafts)) {
+    if (key !== contextToRemove) {
+      result[key] = allDrafts[key]
+    }
+  }
+  return Object.keys(result).length > 0 ? result : null
+}
 
 type SerializedImage = {
   alt: string
@@ -19,44 +32,14 @@ type SerializedImage = {
 }
 
 type SerializedVideo = {
-  blobRef: any // BlobRef from @atproto/api (server reference)
+  blobRef: unknown // BlobRef from @atproto/api (server reference)
   width: number
   height: number
   mimeType: string
   altText: string
 }
 
-type SerializedDraft = {
-  version: 1
-  timestamp: number
-  thread: {
-    posts: Array<{
-      id: string
-      text: string
-      labels: SelfLabel[]
-      embed: {
-        quoteUri?: string
-        linkUri?: string
-        // Media
-        images?: SerializedImage[]
-        gif?: {
-          id: string
-          media_formats: any
-          title: string
-          alt: string
-        }
-        video?: SerializedVideo
-      }
-    }>
-    postgate: any
-    threadgate: any
-  }
-  activePostIndex: number
-}
-
-function getDraftKey(accountDid: string, context: string = 'default'): string {
-  return `${DRAFT_KEY_PREFIX}:${accountDid}:${context}`
-}
+type SerializedDraft = ComposerDraft
 
 function serializeDraft(state: ComposerState): SerializedDraft {
   return {
@@ -67,7 +50,7 @@ function serializeDraft(state: ComposerState): SerializedDraft {
         const media = post.embed.media
         let images: SerializedImage[] | undefined
         let gif:
-          | {id: string; media_formats: any; title: string; alt: string}
+          | {id: string; media_formats: unknown; title: string; alt: string}
           | undefined
 
         let video: SerializedVideo | undefined
@@ -211,7 +194,7 @@ function deserializeDraft(data: SerializedDraft): Partial<ComposerState> {
           id: post.id,
           richtext: rt,
           shortenedGraphemeLength: rt.graphemeLength,
-          labels: post.labels,
+          labels: post.labels as SelfLabel[],
           embed: {
             quote: post.embed.quoteUri
               ? {type: 'link' as const, uri: post.embed.quoteUri}
@@ -223,8 +206,9 @@ function deserializeDraft(data: SerializedDraft): Partial<ComposerState> {
           },
         }
       }),
-      postgate: data.thread.postgate,
-      threadgate: data.thread.threadgate,
+      // These are already properly typed when saved, cast back to their types
+      postgate: data.thread.postgate as any,
+      threadgate: data.thread.threadgate as any,
     },
     activePostIndex: data.activePostIndex,
   }
@@ -235,11 +219,11 @@ export function useComposerDraft(
   context: string = 'default',
 ) {
   const {currentAccount} = useSession()
-  const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  )
 
-  const draftKey = currentAccount
-    ? getDraftKey(currentAccount.did, context)
-    : null
+  const accountDid = currentAccount?.did
 
   // Check if draft has any content worth saving
   const hasContent = useCallback((state: ComposerState) => {
@@ -252,10 +236,10 @@ export function useComposerDraft(
     )
   }, [])
 
-  // Save draft to localStorage (debounced)
+  // Save draft to storage (debounced)
   const saveDraft = useCallback(
     (state: ComposerState) => {
-      if (!isWeb || !draftKey) return
+      if (!accountDid) return
 
       // Clear any pending save
       if (saveTimeoutRef.current) {
@@ -265,25 +249,36 @@ export function useComposerDraft(
       // Debounce the save
       saveTimeoutRef.current = setTimeout(() => {
         try {
+          const allDrafts = account.get([accountDid, 'composerDraft']) ?? {}
+
           if (hasContent(state)) {
             const serialized = serializeDraft(state)
             logger.debug('Draft serialized successfully', {
               hasPosts: serialized.thread.posts.length > 0,
               hasVideo: !!serialized.thread.posts[0]?.embed?.video,
             })
-            const jsonString = JSON.stringify(serialized)
-            logger.debug('Draft JSON stringified', {
-              size: jsonString.length,
+
+            // Update the draft for this context
+            account.set([accountDid, 'composerDraft'], {
+              ...allDrafts,
+              [context]: serialized,
             })
-            localStorage.setItem(draftKey, jsonString)
+
             logger.info('Composer draft saved', {
-              key: draftKey,
+              context,
               textLength: state.thread.posts[0]?.richtext.text.length || 0,
             })
           } else {
-            // If no content, remove any existing draft
-            localStorage.removeItem(draftKey)
-            logger.debug('Empty draft removed', {key: draftKey})
+            // If no content, remove this context's draft
+            if (allDrafts[context]) {
+              const remainingDrafts = removeDraftContext(allDrafts, context)
+              if (remainingDrafts) {
+                account.set([accountDid, 'composerDraft'], remainingDrafts)
+              } else {
+                account.remove([accountDid, 'composerDraft'])
+              }
+              logger.debug('Empty draft removed', {context})
+            }
           }
         } catch (e) {
           logger.error('Failed to save composer draft', {
@@ -294,63 +289,83 @@ export function useComposerDraft(
         }
       }, AUTOSAVE_DELAY_MS)
     },
-    [draftKey, hasContent],
+    [accountDid, context, hasContent],
   )
 
-  // Load draft from localStorage
+  // Load draft from storage
   const loadDraft = useCallback((): Partial<ComposerState> | null => {
-    if (!isWeb || !draftKey) return null
+    if (!accountDid) return null
 
     try {
-      const stored = localStorage.getItem(draftKey)
-      if (!stored) return null
+      const allDrafts = account.get([accountDid, 'composerDraft'])
+      if (!allDrafts) return null
 
-      const parsed: SerializedDraft = JSON.parse(stored)
+      const draft = allDrafts[context]
+      if (!draft) return null
 
       // Check version compatibility
-      if (parsed.version !== 1) {
+      if (draft.version !== 1) {
         logger.warn('Incompatible draft version, discarding', {
-          version: parsed.version,
+          version: draft.version,
         })
-        localStorage.removeItem(draftKey)
+        // Remove this context's draft
+        const remainingDrafts = removeDraftContext(allDrafts, context)
+        if (remainingDrafts) {
+          account.set([accountDid, 'composerDraft'], remainingDrafts)
+        } else {
+          account.remove([accountDid, 'composerDraft'])
+        }
         return null
       }
 
-      // Check if draft is too old (e.g., more than 7 days)
-      const age = Date.now() - parsed.timestamp
-      const MAX_AGE = 7 * 24 * 60 * 60 * 1000 // 7 days
-      if (age > MAX_AGE) {
+      // Check if draft is too old
+      const age = Date.now() - draft.timestamp
+      if (age > MAX_DRAFT_AGE_MS) {
         logger.debug('Draft too old, discarding', {age})
-        localStorage.removeItem(draftKey)
+        // Remove this context's draft
+        const remainingDrafts = removeDraftContext(allDrafts, context)
+        if (remainingDrafts) {
+          account.set([accountDid, 'composerDraft'], remainingDrafts)
+        } else {
+          account.remove([accountDid, 'composerDraft'])
+        }
         return null
       }
 
       logger.info('Composer draft loaded', {
-        key: draftKey,
-        textLength: parsed.thread.posts[0]?.text.length || 0,
+        context,
+        textLength: draft.thread.posts[0]?.text.length || 0,
       })
-      return deserializeDraft(parsed)
+      return deserializeDraft(draft)
     } catch (e) {
       logger.error('Failed to load composer draft', {error: e})
-      // Remove corrupted draft
+      // Remove corrupted drafts
       try {
-        localStorage.removeItem(draftKey)
+        account.remove([accountDid, 'composerDraft'])
       } catch {}
       return null
     }
-  }, [draftKey])
+  }, [accountDid, context])
 
-  // Clear draft from localStorage
+  // Clear draft from storage
   const clearDraft = useCallback(() => {
-    if (!isWeb || !draftKey) return
+    if (!accountDid) return
 
     try {
-      localStorage.removeItem(draftKey)
-      logger.debug('Composer draft cleared', {key: draftKey})
+      const allDrafts = account.get([accountDid, 'composerDraft'])
+      if (allDrafts && allDrafts[context]) {
+        const remainingDrafts = removeDraftContext(allDrafts, context)
+        if (remainingDrafts) {
+          account.set([accountDid, 'composerDraft'], remainingDrafts)
+        } else {
+          account.remove([accountDid, 'composerDraft'])
+        }
+        logger.debug('Composer draft cleared', {context})
+      }
     } catch (e) {
       logger.error('Failed to clear composer draft', {error: e})
     }
-  }, [draftKey])
+  }, [accountDid, context])
 
   // Auto-save on state changes
   useEffect(() => {
@@ -367,13 +382,14 @@ export function useComposerDraft(
   }, [])
 
   const checkHasStoredDraft = useCallback(() => {
-    if (!isWeb || !draftKey) return false
+    if (!accountDid) return false
     try {
-      return localStorage.getItem(draftKey) !== null
+      const allDrafts = account.get([accountDid, 'composerDraft'])
+      return allDrafts ? !!allDrafts[context] : false
     } catch {
       return false
     }
-  }, [draftKey])
+  }, [accountDid, context])
 
   return {
     loadDraft,
