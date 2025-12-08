@@ -111,9 +111,8 @@ export function GetContacts({
         </Text>
         <Text style={[style, a.mt_lg]}>
           <Trans>
-            We apply the highest privacy standards just in case just in case
-            your contacts include minors. We never share, or sell your contact
-            information.
+            We apply the highest privacy standards just in case your contacts
+            include minors. We never share, or sell your contact information.
           </Trans>
         </Text>
       </Layout.Content>
