@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {cleanError} from '#/lib/strings/errors'
+import {useCleanError} from '#/lib/hooks/useCleanError'
 import {getAge, getDateAgo} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
@@ -110,16 +110,18 @@ function BirthdayInner({
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
+  const cleanError = useCleanError()
   const [date, setDate] = React.useState(
     preferences.birthDate || getDateAgo(18),
   )
-  const {
-    isPending,
-    isError,
-    error,
-    mutateAsync: setBirthDate,
-  } = useBirthdateMutation()
+  const {isPending, error, mutateAsync: setBirthDate} = useBirthdateMutation()
   const hasChanged = date !== preferences.birthDate
+  const errorMessage = React.useMemo(() => {
+    if (error) {
+      const {raw, clean} = cleanError(error)
+      return clean || raw || error.toString()
+    }
+  }, [error, cleanError])
 
   const age = getAge(new Date(date))
   const isUnder13 = age < 13
@@ -172,8 +174,8 @@ function BirthdayInner({
         </Admonition>
       )}
 
-      {isError ? (
-        <ErrorMessage message={cleanError(error)} style={[a.rounded_sm]} />
+      {errorMessage ? (
+        <ErrorMessage message={errorMessage} style={[a.rounded_sm]} />
       ) : undefined}
 
       <View style={isWeb && [a.flex_row, a.justify_end]}>
