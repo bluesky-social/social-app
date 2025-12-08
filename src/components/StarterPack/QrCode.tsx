@@ -120,8 +120,8 @@ export function QrCodeInner({link}: {link: string}) {
 
   return (
     <View style={{position: 'relative'}}>
-      {/* An SVG version of the logo is placed on top of normal `QRCode` `logo` prop, since the PNG fails to load before the export completes. */}
-      {logoArea && (
+      {/* An SVG version of the logo is placed on top of normal `QRCode` `logo` prop, since the PNG fails to load before the export completes on web. */}
+      {isWeb && logoArea && (
         <View
           style={{
             position: 'absolute',
@@ -141,7 +141,6 @@ export function QrCodeInner({link}: {link: string}) {
         ]}
         pieceSize={isWeb ? 8 : 6}
         padding={20}
-        // pieceLiquidRadius={2}
         pieceBorderRadius={isWeb ? 4.5 : 3.5}
         outerEyesOptions={{
           topLeft: {
@@ -160,8 +159,14 @@ export function QrCodeInner({link}: {link: string}) {
         innerEyesOptions={{borderRadius: 3}}
         logo={{
           href: require('../../../assets/logo.png'),
-          onChange: onLogoAreaChange,
-          padding: 28,
+          ...(isWeb && {
+            onChange: onLogoAreaChange,
+            padding: 28,
+          }),
+          ...(!isWeb && {
+            padding: 2,
+            scale: 0.95,
+          }),
           hidePieces: true,
         }}
       />
