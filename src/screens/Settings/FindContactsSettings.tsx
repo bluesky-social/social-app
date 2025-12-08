@@ -95,12 +95,12 @@ function Intro() {
       {isAvailable ? (
         <Link
           to={{screen: 'FindContactsFlow'}}
-          label={_(msg`Upload contacts`)}
+          label={_(msg`Import contacts`)}
           size="large"
           color="primary"
           style={[a.flex_1, a.justify_center]}>
           <ButtonText>
-            <Trans>Upload contacts</Trans>
+            <Trans>Import contacts</Trans>
           </ButtonText>
         </Link>
       ) : (
