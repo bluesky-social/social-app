@@ -1,10 +1,11 @@
 import {useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
+import * as Contacts from 'expo-contacts'
 import * as SMS from 'expo-sms'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
@@ -26,6 +27,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Envelope_Stroke2_Corner0_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
 import {MagnifyingGlassX_Stroke2_Corner0_Rounded_Large as SearchFailedIcon} from '#/components/icons/MagnifyingGlass'
+import {PersonX_Stroke2_Corner0_Rounded_Large as PersonXIcon} from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
@@ -60,17 +62,16 @@ type Item =
       type: 'search empty state'
       query: string
     }
-// we could use Contacts.presentAccessPickerAsync() if we get limited permissions?
-// | {
-//     type: 'request more contacts'
-//   }
+  | {
+      type: 'totally empty state'
+    }
 
 export function ViewMatches({
   state,
   dispatch,
 }: {
   state: Extract<State, {step: '4: view matches'}>
-  dispatch: React.Dispatch<Action>
+  dispatch: React.ActionDispatch<[Action]>
 }) {
   const {_} = useLingui()
   const gutter = useGutters([0, 'wide'])
@@ -84,6 +85,7 @@ export function ViewMatches({
     handles: ['pfrazee.com', 'internet.bsky.social', 'darrin.bsky.team'],
   })
   state.matches = profiles?.profiles?.map(profile => ({profile})) ?? []
+  // state.contacts = []
 
   const [search, setSearch] = useState('')
   const {
@@ -180,13 +182,20 @@ export function ViewMatches({
           const profile = match.profile
           all.push({type: 'match', profile})
         }
-        all.push({type: 'contacts header'})
-      } else {
+
+        if (state.contacts.length > 0) {
+          all.push({type: 'contacts header'})
+        }
+      } else if (state.contacts.length > 0) {
         all.push({type: 'no matches header'})
       }
 
       for (const contact of state.contacts) {
         all.push({type: 'contact', contact})
+      }
+
+      if (all.length === 0) {
+        all.push({type: 'totally empty state'})
       }
     }
 
@@ -276,6 +285,7 @@ export function ViewMatches({
         return (
           <Header
             titleText={_(msg`You got here first`)}
+            largeTitle
             subtitleText={_(
               msg`Bluesky is more fun with friends. Do you want to invite some of yours?`,
             )}
@@ -283,10 +293,15 @@ export function ViewMatches({
         )
       case 'search empty state':
         return <SearchEmptyState query={item.query} />
+      case 'totally empty state':
+        return <TotallyEmptyState dispatch={dispatch} />
     }
   }
 
-  const isEmpty = items?.[0]?.type === 'search empty state'
+  const isSearchEmpty = items?.[0]?.type === 'search empty state'
+  const isTotallyEmpty = items?.[0]?.type === 'totally empty state'
+
+  const isEmpty = isSearchEmpty || isTotallyEmpty
 
   return (
     <View style={[a.h_full]}>
@@ -295,25 +310,27 @@ export function ViewMatches({
         <Layout.Header.Content />
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <View style={[gutter, a.mb_md]}>
-        <SearchInput
-          placeholder={_(msg`Search contacts`)}
-          value={search}
-          onFocus={() => {
-            onFocus()
-            listRef.current?.scrollToOffset({offset: 0, animated: false})
-          }}
-          onBlur={() => {
-            onBlur()
-            listRef.current?.scrollToOffset({offset: 0, animated: false})
-          }}
-          onChangeText={text => {
-            setSearch(text)
-            listRef.current?.scrollToOffset({offset: 0, animated: false})
-          }}
-          onClearText={() => setSearch('')}
-        />
-      </View>
+      {!isTotallyEmpty && (
+        <View style={[gutter, a.mb_md]}>
+          <SearchInput
+            placeholder={_(msg`Search contacts`)}
+            value={search}
+            onFocus={() => {
+              onFocus()
+              listRef.current?.scrollToOffset({offset: 0, animated: false})
+            }}
+            onBlur={() => {
+              onBlur()
+              listRef.current?.scrollToOffset({offset: 0, animated: false})
+            }}
+            onChangeText={text => {
+              setSearch(text)
+              listRef.current?.scrollToOffset({offset: 0, animated: false})
+            }}
+            onClearText={() => setSearch('')}
+          />
+        </View>
+      )}
       <List
         ref={listRef}
         data={items}
@@ -458,11 +475,13 @@ function ContactItem({contact}: {contact: Contact}) {
 
 function Header({
   titleText,
+  largeTitle,
   subtitleText,
   children,
   hasContentAbove,
 }: {
   titleText: React.ReactNode
+  largeTitle?: boolean
   subtitleText?: React.ReactNode
   children?: React.ReactNode
   hasContentAbove?: boolean
@@ -481,7 +500,9 @@ function Header({
           : a.pt_md,
       ]}>
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
-        <Text style={[a.text_3xl, a.font_bold]}>{titleText}</Text>
+        <Text style={[largeTitle ? a.text_3xl : a.text_xl, a.font_bold]}>
+          {titleText}
+        </Text>
         {children}
       </View>
       {subtitleText && (
@@ -517,6 +538,115 @@ function SearchEmptyState({query}: {query: string}) {
         ]}>
         <Trans>No contacts with the name “{query}” found</Trans>
       </Text>
+    </View>
+  )
+}
+
+function TotallyEmptyState({
+  dispatch,
+}: {
+  dispatch: React.ActionDispatch<[Action]>
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  const {data} = useQuery({
+    queryKey: ['contacts-permissions'],
+    queryFn: async () => await Contacts.getPermissionsAsync(),
+  })
+
+  const {mutate: uploadContacts, isPending: isUploadPending} = useMutation({
+    mutationFn: async (_contacts: Contacts.ExistingContact[]) => {
+      await wait(2e3, () => {})
+    },
+    onSuccess: () => {
+      dispatch({
+        type: 'SYNC_CONTACTS_SUCCESS',
+        payload: {
+          matches: [],
+        },
+      })
+    },
+  })
+
+  const {mutate: addMore, isPending: isAddMorePending} = useMutation({
+    mutationFn: async () => {
+      await Contacts.presentAccessPickerAsync()
+
+      const contacts = await Contacts.getContactsAsync({
+        fields: [
+          Contacts.Fields.FirstName,
+          Contacts.Fields.LastName,
+          Contacts.Fields.PhoneNumbers,
+          Contacts.Fields.Image,
+        ],
+      })
+
+      return contacts.data
+    },
+    onSuccess: contacts => {
+      dispatch({
+        type: 'GET_CONTACTS_SUCCESS',
+        payload: {contacts},
+      })
+      uploadContacts(contacts)
+    },
+    onError: err => {
+      logger.error('Add more contacts failed', {safeMessage: err})
+      Toast.show(_(msg`Could not add more contacts. ${cleanError(err)}`))
+    },
+  })
+
+  const isPending = isAddMorePending || isUploadPending
+
+  const isLimited = data?.accessPrivileges === 'limited'
+
+  return (
+    <View
+      style={[
+        a.flex_1,
+        a.flex_col,
+        a.align_center,
+        a.justify_center,
+        a.gap_xs,
+        {paddingTop: 140},
+        a.px_5xl,
+      ]}>
+      <PersonXIcon width={64} style={[t.atoms.text_contrast_low]} />
+      <Text
+        style={[
+          a.text_xl,
+          a.font_bold,
+          a.leading_snug,
+          a.text_center,
+          a.mt_md,
+        ]}>
+        <Trans>No contacts found</Trans>
+      </Text>
+      {isLimited && (
+        <>
+          <Text
+            style={[
+              a.text_md,
+              t.atoms.text_contrast_medium,
+              a.leading_snug,
+              a.text_center,
+            ]}>
+            <Trans>Would you like to try again?</Trans>
+          </Text>
+          <Button
+            label={_(msg`Try adding more contacts`)}
+            onPress={() => addMore()}
+            disabled={isPending}
+            color="secondary"
+            size="small"
+            style={[a.mt_md]}>
+            <ButtonText>
+              <Trans>Try adding more contacts</Trans>
+            </ButtonText>
+          </Button>
+        </>
+      )}
     </View>
   )
 }
