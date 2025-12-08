@@ -1,11 +1,10 @@
 import {useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import * as Contacts from 'expo-contacts'
 import * as SMS from 'expo-sms'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
@@ -294,7 +293,7 @@ export function ViewMatches({
       case 'search empty state':
         return <SearchEmptyState query={item.query} />
       case 'totally empty state':
-        return <TotallyEmptyState dispatch={dispatch} />
+        return <TotallyEmptyState />
     }
   }
 
@@ -542,64 +541,8 @@ function SearchEmptyState({query}: {query: string}) {
   )
 }
 
-function TotallyEmptyState({
-  dispatch,
-}: {
-  dispatch: React.ActionDispatch<[Action]>
-}) {
+function TotallyEmptyState() {
   const t = useTheme()
-  const {_} = useLingui()
-
-  const {data} = useQuery({
-    queryKey: ['contacts-permissions'],
-    queryFn: async () => await Contacts.getPermissionsAsync(),
-  })
-
-  const {mutate: uploadContacts, isPending: isUploadPending} = useMutation({
-    mutationFn: async (_contacts: Contacts.ExistingContact[]) => {
-      await wait(2e3, () => {})
-    },
-    onSuccess: () => {
-      dispatch({
-        type: 'SYNC_CONTACTS_SUCCESS',
-        payload: {
-          matches: [],
-        },
-      })
-    },
-  })
-
-  const {mutate: addMore, isPending: isAddMorePending} = useMutation({
-    mutationFn: async () => {
-      await Contacts.presentAccessPickerAsync()
-
-      const contacts = await Contacts.getContactsAsync({
-        fields: [
-          Contacts.Fields.FirstName,
-          Contacts.Fields.LastName,
-          Contacts.Fields.PhoneNumbers,
-          Contacts.Fields.Image,
-        ],
-      })
-
-      return contacts.data
-    },
-    onSuccess: contacts => {
-      dispatch({
-        type: 'GET_CONTACTS_SUCCESS',
-        payload: {contacts},
-      })
-      uploadContacts(contacts)
-    },
-    onError: err => {
-      logger.error('Add more contacts failed', {safeMessage: err})
-      Toast.show(_(msg`Could not add more contacts. ${cleanError(err)}`))
-    },
-  })
-
-  const isPending = isAddMorePending || isUploadPending
-
-  const isLimited = data?.accessPrivileges === 'limited'
 
   return (
     <View
@@ -608,45 +551,14 @@ function TotallyEmptyState({
         a.flex_col,
         a.align_center,
         a.justify_center,
-        a.gap_xs,
+        a.gap_lg,
         {paddingTop: 140},
         a.px_5xl,
       ]}>
       <PersonXIcon width={64} style={[t.atoms.text_contrast_low]} />
-      <Text
-        style={[
-          a.text_xl,
-          a.font_bold,
-          a.leading_snug,
-          a.text_center,
-          a.mt_md,
-        ]}>
+      <Text style={[a.text_xl, a.font_bold, a.leading_snug, a.text_center]}>
         <Trans>No contacts found</Trans>
       </Text>
-      {isLimited && (
-        <>
-          <Text
-            style={[
-              a.text_md,
-              t.atoms.text_contrast_medium,
-              a.leading_snug,
-              a.text_center,
-            ]}>
-            <Trans>Would you like to try again?</Trans>
-          </Text>
-          <Button
-            label={_(msg`Try adding more contacts`)}
-            onPress={() => addMore()}
-            disabled={isPending}
-            color="secondary"
-            size="small"
-            style={[a.mt_md]}>
-            <ButtonText>
-              <Trans>Try adding more contacts</Trans>
-            </ButtonText>
-          </Button>
-        </>
-      )}
     </View>
   )
 }
