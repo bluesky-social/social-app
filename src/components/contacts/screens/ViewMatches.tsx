@@ -15,7 +15,6 @@ import {
   useProfileShadow,
 } from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useProfilesQuery} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -85,13 +84,6 @@ export function ViewMatches({
   const agent = useAgent()
   const insets = useSafeAreaInsets()
   const listRef = useRef<ListMethods>(null)
-
-  // TEMP!!!
-  const {data: profiles} = useProfilesQuery({
-    handles: ['pfrazee.com', 'internet.bsky.social', 'darrin.bsky.team'],
-  })
-  state.matches = profiles?.profiles ?? []
-  // state.contacts = []
 
   const [search, setSearch] = useState('')
   const {
