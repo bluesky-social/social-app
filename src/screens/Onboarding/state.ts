@@ -135,13 +135,7 @@ export function reducer(
       const prevIndex = stepOrder.indexOf(next.activeStep) - 1
       const prevStep = stepOrder[prevIndex]
       if (prevStep) {
-        // override back behaviour for the find contacts screen
-        // so returning to the flow takes you to the intro screen
-        if (prevStep === 'find-contacts') {
-          next.activeStep = 'find-contacts-intro'
-        } else {
-          next.activeStep = prevStep
-        }
+        next.activeStep = prevStep
       }
       next.stepTransitionDirection = 'Backward'
       break

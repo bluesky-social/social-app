@@ -1,37 +1,50 @@
-import {useCallback} from 'react'
+import {useCallback, useState} from 'react'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {FindContactsFlow} from '#/components/contacts/FindContactsFlow'
-import {useFindContactsFlowState} from '#/components/contacts/state'
+import {type Action, type State} from '#/components/contacts/state'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {useOnboardingInternalState} from '../state'
 
-export function StepFindContacts() {
-  const [fcfState, fcfDispatch] = useFindContactsFlowState()
+export function StepFindContacts({
+  flowState,
+  flowDispatch,
+}: {
+  flowState: State
+  flowDispatch: React.ActionDispatch<[Action]>
+}) {
   const {dispatch} = useOnboardingInternalState()
+
+  const [transitionDirection, setTransitionDirection] = useState<
+    'Forward' | 'Backward'
+  >('Forward')
 
   const onSkip = useCallback(() => {
     dispatch({type: 'next'})
   }, [dispatch])
 
-  const canGoBack = fcfState.step === '2: verify number'
+  const canGoBack = flowState.step === '2: verify number'
   const onBack = useCallback(() => {
     if (canGoBack) {
-      fcfDispatch({type: 'BACK'})
+      setTransitionDirection('Backward')
+      flowDispatch({type: 'BACK'})
+      setTimeout(() => {
+        setTransitionDirection('Forward')
+      })
     } else {
       dispatch({type: 'prev'})
     }
-  }, [dispatch, fcfDispatch, canGoBack])
+  }, [dispatch, flowDispatch, canGoBack])
 
   return (
     <SafeAreaView edges={['left', 'top', 'right']}>
       <LayoutAnimationConfig skipEntering skipExiting>
-        <ScreenTransition key={fcfState.step} direction="Forward">
+        <ScreenTransition key={flowState.step} direction={transitionDirection}>
           <FindContactsFlow
             context="Onboarding"
-            state={fcfState}
-            dispatch={fcfDispatch}
+            state={flowState}
+            dispatch={flowDispatch}
             onCancel={onSkip}
             onBack={onBack}
           />

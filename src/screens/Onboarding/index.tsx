@@ -20,6 +20,7 @@ import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {atoms as a, useTheme} from '#/alf'
+import {useFindContactsFlowState} from '#/components/contacts/state'
 import {Portal} from '#/components/Portal'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {ENV} from '#/env'
@@ -54,6 +55,7 @@ export function Onboarding() {
     },
     createInitialOnboardingState,
   )
+  const [contactsFlowState, contactsFlowDispatch] = useFindContactsFlowState()
 
   useEnableKeyboardControllerScreen(true)
 
@@ -70,7 +72,10 @@ export function Onboarding() {
                 style={a.flex_1}>
                 {/* FindContactsFlow cannot be nested in Layout */}
                 {state.activeStep === 'find-contacts' ? (
-                  <StepFindContacts />
+                  <StepFindContacts
+                    flowState={contactsFlowState}
+                    flowDispatch={contactsFlowDispatch}
+                  />
                 ) : (
                   <Layout>
                     {state.activeStep === 'profile' && <StepProfile />}

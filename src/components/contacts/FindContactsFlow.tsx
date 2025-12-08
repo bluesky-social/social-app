@@ -12,7 +12,7 @@ export function FindContactsFlow({
   context = 'Standalone',
 }: {
   state: State
-  dispatch: React.Dispatch<Action>
+  dispatch: React.ActionDispatch<[Action]>
   onBack?: () => void
   onCancel: () => void
   context: 'Onboarding' | 'Standalone'
