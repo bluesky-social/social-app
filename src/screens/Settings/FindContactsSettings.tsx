@@ -319,7 +319,7 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
       await agent.app.bsky.contact.removeData({})
     },
     onSuccess: () => {
-      Toast.show(_(msg`Data removed successfully`), {type: 'success'})
+      Toast.show(_(msg`Contacts removed`))
       queryClient.setQueryData<AppBskyContactGetSyncStatus.OutputSchema>(
         findContactsStatusQueryKey,
         {syncStatus: undefined},
