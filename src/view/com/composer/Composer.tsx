@@ -130,6 +130,7 @@ import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
+import {account} from '#/storage'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
@@ -238,12 +239,10 @@ export const ComposePost = ({
   }
 
   // Check for draft before initializing composer
-  const draftKey = currentAccount
-    ? `composer-draft:${currentAccount.did}:${replyTo ? `reply:${replyTo.uri}` : 'default'}`
-    : null
+  const draftContext = replyTo ? `reply:${replyTo.uri}` : 'default'
 
   const loadInitialDraft = useCallback(() => {
-    if (!isWeb || !draftKey) return null
+    if (!currentAccount) return null
 
     const hasInitialContent =
       initText ||
@@ -255,25 +254,36 @@ export const ComposePost = ({
     if (hasInitialContent) return null
 
     try {
-      const stored = localStorage.getItem(draftKey)
-      if (!stored) return null
+      const allDrafts = account.get([currentAccount.did, 'composerDraft'])
+      if (!allDrafts) return null
 
-      const parsed = JSON.parse(stored)
-      if (parsed.version !== 1) return null
+      const draft = allDrafts[draftContext]
+      if (!draft) return null
+
+      if (draft.version !== 1) return null
 
       // Check age
-      const age = Date.now() - parsed.timestamp
+      const age = Date.now() - draft.timestamp
       if (age > 7 * 24 * 60 * 60 * 1000) {
-        localStorage.removeItem(draftKey)
+        // Remove old draft
+        const remainingDrafts = Object.fromEntries(
+          Object.entries(allDrafts).filter(([key]) => key !== draftContext),
+        )
+        if (Object.keys(remainingDrafts).length > 0) {
+          account.set([currentAccount.did, 'composerDraft'], remainingDrafts)
+        } else {
+          account.remove([currentAccount.did, 'composerDraft'])
+        }
         return null
       }
 
       logger.info('Composer: loading initial draft', {
-        textLength: parsed.thread.posts[0]?.text.length || 0,
+        textLength: draft.thread.posts[0]?.text.length || 0,
       })
 
       // Construct video URLs from blobRefs if we have videos in the draft
-      if (currentAccount && parsed.thread?.posts) {
+      const parsed = JSON.parse(JSON.stringify(draft)) // Deep clone
+      if (parsed.thread?.posts) {
         parsed.thread.posts = parsed.thread.posts.map((post: any) => {
           if (post.embed?.video?.blobRef?.ref?.$link) {
             const cid = post.embed.video.blobRef.ref.$link
@@ -291,7 +301,7 @@ export const ComposePost = ({
     }
   }, [
     currentAccount,
-    draftKey,
+    draftContext,
     initText,
     initMention,
     initImageUris,
