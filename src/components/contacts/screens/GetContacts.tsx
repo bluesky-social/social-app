@@ -3,10 +3,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as Contacts from 'expo-contacts'
 import {msg, t, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {findContactsStatusQueryKey} from '#/state/queries/find-contacts'
 import {useAgent} from '#/state/session'
 import {atoms as a, tokens, useGutters} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -31,6 +32,7 @@ export function GetContacts({
   const agent = useAgent()
   const insets = useSafeAreaInsets()
   const gutters = useGutters([0, 'wide'])
+  const queryClient = useQueryClient()
 
   const {mutate: uploadContacts, isPending: isUploadPending} = useMutation({
     mutationFn: async (contacts: Contacts.ExistingContact[]) => {
@@ -60,6 +62,9 @@ export function GetContacts({
             result.indexToContactId,
           ),
         },
+      })
+      queryClient.invalidateQueries({
+        queryKey: findContactsStatusQueryKey,
       })
     },
     onError: err => {

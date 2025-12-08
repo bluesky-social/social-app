@@ -1,19 +1,30 @@
-import {useCallback} from 'react'
+import {useCallback, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import * as Contacts from 'expo-contacts'
-import {type ModerationOpts} from '@atproto/api'
+import {
+  type AppBskyContactDefs,
+  type AppBskyContactGetSyncStatus,
+  type ModerationOpts,
+} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQuery} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useProfilesQuery} from '#/state/queries/profile'
+import {
+  findContactsStatusQueryKey,
+  useContactsMatchesQuery,
+  useContactsSyncStatusQuery,
+} from '#/state/queries/find-contacts'
+import {useAgent} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
@@ -28,6 +39,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import * as SettingsList from './components/SettingsList'
@@ -36,7 +48,7 @@ type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsSettings'>
 export function FindContactsSettingsScreen({}: Props) {
   const {_} = useLingui()
 
-  const hasInitiated = true
+  const {data, error, refetch} = useContactsSyncStatusQuery()
 
   return (
     <Layout.Screen>
@@ -50,16 +62,27 @@ export function FindContactsSettingsScreen({}: Props) {
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       {isNative ? (
-        !hasInitiated ? (
-          <Intro />
+        data ? (
+          !data.syncStatus ? (
+            <Intro />
+          ) : (
+            <SyncStatus info={data.syncStatus} refetch={refetch} />
+          )
+        ) : error ? (
+          <ErrorScreen
+            title={_(msg`Error getting the latest data.`)}
+            message={cleanError(error)}
+            onPressTryAgain={refetch}
+          />
         ) : (
-          <Status />
+          <View style={[a.flex_1, a.justify_center, a.align_center]}>
+            <Loader size="xl" />
+          </View>
         )
       ) : (
         <ErrorScreen
           title={_(msg`Not available on this platform.`)}
           message={_(msg`Please use the native app to sync your contacts.`)}
-          showHeader
         />
       )}
     </Layout.Screen>
@@ -117,14 +140,29 @@ function Intro() {
   )
 }
 
-function Status() {
-  const {data: matches, isPending} = useProfilesQuery({
-    handles: ['hailey.at', 'pfrazee.com', 'esb.lol'],
-  })
+function SyncStatus({
+  info,
+  refetch,
+}: {
+  info: AppBskyContactDefs.SyncStatus
+  refetch: () => Promise<any>
+}) {
+  const {data, isPending, hasNextPage, fetchNextPage, isFetchingNextPage} =
+    useContactsMatchesQuery()
   const moderationOpts = useModerationOpts()
 
-  const numMatches = matches?.profiles.length ?? 0
+  const [isPTR, setIsPTR] = useState(false)
 
+  const onRefresh = () => {
+    setIsPTR(true)
+    refetch().finally(() => {
+      setIsPTR(false)
+    })
+  }
+
+  const profiles = data?.pages?.flatMap(page => page.matches) ?? []
+
+  const numProfiles = profiles.length
   const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<bsky.profile.AnyProfileView>) => {
       if (!moderationOpts) return null
@@ -132,21 +170,30 @@ function Status() {
         <MatchItem
           profile={item}
           isFirst={index === 0}
-          isLast={index === numMatches - 1}
+          isLast={index === numProfiles - 1}
           moderationOpts={moderationOpts}
         />
       )
     },
-    [numMatches, moderationOpts],
+    [numProfiles, moderationOpts],
   )
+
+  const onEndReached = () => {
+    if (!hasNextPage || isFetchingNextPage) return
+    fetchNextPage()
+  }
+
   return (
     <List
-      data={matches?.profiles ?? []}
+      data={profiles}
       renderItem={renderItem}
       ListHeaderComponent={
-        <StatusHeader numMatches={numMatches} isPending={isPending} />
+        <StatusHeader numMatches={info.matchesCount} isPending={isPending} />
       }
-      ListFooterComponent={<StatusFooter />}
+      ListFooterComponent={<StatusFooter syncedAt={info.syncedAt} />}
+      onRefresh={onRefresh}
+      refreshing={isPTR}
+      onEndReached={onEndReached}
     />
   )
 }
@@ -261,9 +308,39 @@ function StatusHeader({
   )
 }
 
-function StatusFooter() {
+function StatusFooter({syncedAt}: {syncedAt: string}) {
   const {_, i18n} = useLingui()
   const t = useTheme()
+  const agent = useAgent()
+  const queryClient = useQueryClient()
+
+  const {mutate: removeData, isPending} = useMutation({
+    mutationFn: async () => {
+      await agent.app.bsky.contact.removeData({})
+    },
+    onSuccess: () => {
+      Toast.show(_(msg`Data removed successfully`), {type: 'success'})
+      queryClient.setQueryData<AppBskyContactGetSyncStatus.OutputSchema>(
+        findContactsStatusQueryKey,
+        {syncStatus: undefined},
+      )
+    },
+    onError: err => {
+      if (isNetworkError(err)) {
+        Toast.show(
+          _(
+            msg`Failed to remove data due to a network error, please check your internet connection.`,
+          ),
+          {type: 'error'},
+        )
+      } else {
+        logger.error('Remove data failed', {safeMessage: err})
+        Toast.show(_(msg`Failed to remove data. ${cleanError(err)}`), {
+          type: 'error',
+        })
+      }
+    },
+  })
 
   return (
     <View style={[a.px_xl, a.py_xl, a.gap_4xl]}>
@@ -281,7 +358,7 @@ function StatusFooter() {
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
             Contacts last uploaded on{' '}
-            {i18n.date(new Date(), {
+            {i18n.date(new Date(syncedAt), {
               dateStyle: 'long',
             })}
           </Trans>
@@ -291,9 +368,11 @@ function StatusFooter() {
       <View style={[a.gap_sm, a.align_start]}>
         <Button
           label={_(msg`Remove all contacts`)}
+          onPress={() => removeData()}
           size="small"
-          color="negative_subtle">
-          <ButtonIcon icon={TrashIcon} />
+          color="negative_subtle"
+          disabled={isPending}>
+          <ButtonIcon icon={isPending ? Loader : TrashIcon} />
           <ButtonText>
             <Trans>Remove all contacts</Trans>
           </ButtonText>
