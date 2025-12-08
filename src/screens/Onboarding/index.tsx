@@ -20,6 +20,7 @@ import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {atoms as a, useTheme} from '#/alf'
+import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-whitelist'
 import {useFindContactsFlowState} from '#/components/contacts/state'
 import {Portal} from '#/components/Portal'
 import {ScreenTransition} from '#/components/ScreenTransition'
@@ -45,7 +46,10 @@ export function Onboarding() {
     probablySpeaksEnglish &&
     gate('onboarding_suggested_starterpacks')
 
-  const showFindContacts = isNative && !gate('disable_onboarding_find_contacts')
+  const findContactsEnabled =
+    useIsFindContactsFeatureEnabledBasedOnGeolocation()
+  const showFindContacts =
+    isNative && findContactsEnabled && !gate('disable_onboarding_find_contacts')
 
   const [state, dispatch] = useReducer(
     reducer,
