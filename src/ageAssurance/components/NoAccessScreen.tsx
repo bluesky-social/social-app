@@ -177,7 +177,7 @@ export function NoAccessScreen() {
               <Text style={[textStyles]}>
                 <Trans>
                   In order to provide an age-appropriate experience, we need to
-                  know your age. This is a one-time thing, and your birthdate
+                  know your birthdate. This is a one-time thing, and your data
                   will be kept private.
                 </Trans>
               </Text>
