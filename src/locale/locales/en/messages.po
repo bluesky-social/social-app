@@ -1406,7 +1406,7 @@ msgstr ""
 msgid "Begin the age assurance process by completing the fields below."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:147
+#: src/components/dialogs/BirthDateSettings.tsx:149
 msgid "Birthdate"
 msgstr ""
 
@@ -2968,8 +2968,8 @@ msgstr ""
 msgid "Don't worry! All existing messages and settings are saved and will be available after you verify you're an adult."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:181
-#: src/components/dialogs/BirthDateSettings.tsx:188
+#: src/components/dialogs/BirthDateSettings.tsx:183
+#: src/components/dialogs/BirthDateSettings.tsx:190
 #: src/components/dialogs/ServerInput.tsx:240
 #: src/components/dialogs/ServerInput.tsx:242
 #: src/components/dms/AfterReportDialog.tsx:142
@@ -3338,7 +3338,7 @@ msgstr ""
 msgid "Enter the username or email address you used when you created your account"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:148
+#: src/components/dialogs/BirthDateSettings.tsx:150
 msgid "Enter your birthdate"
 msgstr ""
 
@@ -5861,8 +5861,8 @@ msgstr ""
 msgid "No results for \"{0}\"."
 msgstr ""
 
-#: src/components/Lists.tsx:201
-#: src/components/Lists.tsx:216
+#: src/components/Lists.tsx:203
+#: src/components/Lists.tsx:218
 msgid "No results found"
 msgstr ""
 
@@ -6358,8 +6358,8 @@ msgstr ""
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr ""
 
-#: src/components/Lists.tsx:202
-#: src/components/Lists.tsx:217
+#: src/components/Lists.tsx:204
+#: src/components/Lists.tsx:219
 #: src/view/screens/NotFound.tsx:47
 msgid "Page not found"
 msgstr ""
@@ -7603,7 +7603,7 @@ msgstr ""
 msgid "Returns to the previous step"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:188
+#: src/components/dialogs/BirthDateSettings.tsx:190
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
@@ -7629,7 +7629,7 @@ msgctxt "action"
 msgid "Save"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:181
+#: src/components/dialogs/BirthDateSettings.tsx:183
 msgid "Save birthdate"
 msgstr ""
 
@@ -8838,7 +8838,7 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:167
+#: src/components/dialogs/BirthDateSettings.tsx:169
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:30
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:97
 #: src/Navigation.tsx:336
@@ -8913,7 +8913,7 @@ msgstr ""
 msgid "The author of this thread has hidden this reply."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:154
+#: src/components/dialogs/BirthDateSettings.tsx:156
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr ""
 
@@ -9189,11 +9189,11 @@ msgstr ""
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr ""
 
-#: src/lib/hooks/useCleanError.ts:49
+#: src/lib/hooks/useCleanError.ts:64
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr ""
 
-#: src/lib/strings/errors.ts:22
+#: src/lib/strings/errors.ts:31
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr ""
 
@@ -10373,7 +10373,7 @@ msgstr ""
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
-#: src/components/Lists.tsx:221
+#: src/components/Lists.tsx:223
 #: src/view/screens/NotFound.tsx:50
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
@@ -10672,6 +10672,11 @@ msgstr ""
 msgid "You can update this later from your settings."
 msgstr ""
 
+#: src/lib/hooks/useCleanError.ts:55
+#: src/lib/strings/errors.ts:28
+msgid "You cannot update your birthdate while using an app password. Please sign in with your main password to update your birthdate."
+msgstr ""
+
 #: src/screens/Profile/KnownFollowers.tsx:112
 msgid "You don't follow any users who follow @{name}."
 msgstr ""
@@ -10810,7 +10815,7 @@ msgstr ""
 msgid "You must be 13 years of age or older to create an account."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:163
+#: src/components/dialogs/BirthDateSettings.tsx:165
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr ""
 
@@ -10951,7 +10956,7 @@ msgstr ""
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr ""
 
-#: src/lib/hooks/useCleanError.ts:58
+#: src/lib/hooks/useCleanError.ts:73
 msgid "You've reached the maximum number of requests allowed. Please try again later."
 msgstr ""
 
