@@ -200,7 +200,7 @@ export function NoAccessScreen() {
               {isUsingAppPassword && (
                 <Admonition type="info">
                   <Trans>
-                    Hmmm, looks like you're logged in with an{' '}
+                    Hmm, it looks like you're logged in with an{' '}
                     <Span style={[a.italic]}>App Password</Span>. To set a
                     birthdate, you'll need to log in with your main account
                     password, or ask whomever controls this account to do so.
