@@ -201,7 +201,7 @@ export function NoAccessScreen() {
                 <Admonition type="info">
                   <Trans>
                     Hmm, it looks like you're logged in with an{' '}
-                    <Span style={[a.italic]}>App Password</Span>. To set a
+                    <Span style={[a.italic]}>App Password</Span>. To set your
                     birthdate, you'll need to log in with your main account
                     password, or ask whomever controls this account to do so.
                   </Trans>
