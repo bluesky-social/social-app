@@ -9,11 +9,12 @@ import {
   useCreateSupportLink,
 } from '#/lib/hooks/useCreateSupportLink'
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {isAppPassword} from '#/lib/jwt'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {isNative} from '#/platform/detection'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
-import {useSessionApi} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -29,7 +30,7 @@ import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/ic
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import * as Toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
+import {Span, Text} from '#/components/Typography'
 import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
@@ -53,6 +54,9 @@ export function NoAccessScreen() {
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {logoutCurrentAccount} = useSessionApi()
   const createSupportLink = useCreateSupportLink()
+
+  const {currentAccount} = useSession()
+  const isUsingAppPassword = isAppPassword(currentAccount?.accessJwt || '')
 
   const aa = useAgeAssurance()
   const isBlocked = aa.state.status === aa.Status.Blocked
@@ -140,6 +144,9 @@ export function NoAccessScreen() {
                 <>
                   <View style={[a.gap_lg]}>
                     <Text style={[textStyles]}>
+                      <Trans>Hey there!</Trans>
+                    </Text>
+                    <Text style={[textStyles]}>
                       <Trans>
                         You are accessing Bluesky from a region that legally
                         requires us to verify your age before allowing you to
@@ -168,9 +175,19 @@ export function NoAccessScreen() {
           ) : (
             <View style={[a.gap_lg]}>
               <Text style={[textStyles]}>
+                <Trans>Hi there!</Trans>
+              </Text>
+              <Text style={[textStyles]}>
                 <Trans>
-                  It looks like you haven't added your birthdate. You must
-                  provide an accurate date of birth to use Bluesky.
+                  In order to provide an age-appropriate experience, we need to
+                  know your birthdate. This is a one-time thing, and your data
+                  will be kept private.
+                </Trans>
+              </Text>
+              <Text style={[textStyles]}>
+                <Trans>
+                  Set your birthdate below and we'll get you back to posting and
+                  exploring in no time!
                 </Trans>
               </Text>
               <Button
@@ -182,6 +199,17 @@ export function NoAccessScreen() {
                   <Trans>Add your birthdate</Trans>
                 </ButtonText>
               </Button>
+
+              {isUsingAppPassword && (
+                <Admonition type="info">
+                  <Trans>
+                    Hmm, it looks like you're logged in with an{' '}
+                    <Span style={[a.italic]}>App Password</Span>. To set your
+                    birthdate, you'll need to log in with your main account
+                    password, or ask whomever controls this account to do so.
+                  </Trans>
+                </Admonition>
+              )}
             </View>
           )}
 
