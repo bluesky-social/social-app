@@ -22,7 +22,10 @@ import {
 import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
-import {isLegacyBirthdateBug} from '#/ageAssurance/util'
+import {
+  getBirthdateStringFromAge,
+  isLegacyBirthdateBug,
+} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
@@ -327,15 +330,16 @@ export async function getOtherRequiredData({
 
   /**
    * If we can't read a birthdate, it may be due to the user accessing the
-   * account via an app password. In that case, fall-back to
-   * `isDeclaredOverAgeMinimum` and other flags.
+   * account via an app password. In that case, fall-back to declared age
+   * flags.
    */
   if (!data.birthdate) {
-    if (prefs.isDeclaredOverAgeMinimum) {
-      const approx = new Date()
-      approx.setFullYear(approx.getFullYear() - 13)
-      approx.setDate(approx.getDate() - 1) // ensure we're past
-      data.birthdate = approx.toISOString()
+    if (prefs.declaredAge?.isOverAge18) {
+      data.birthdate = getBirthdateStringFromAge(18)
+    } else if (prefs.declaredAge?.isOverAge16) {
+      data.birthdate = getBirthdateStringFromAge(16)
+    } else if (prefs.declaredAge?.isOverAge13) {
+      data.birthdate = getBirthdateStringFromAge(13)
     }
   }
 

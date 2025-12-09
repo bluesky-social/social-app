@@ -86,3 +86,12 @@ export function isUserUnderMinimumAge(birthDate: string) {
 export function isUserUnderAdultAge(birthDate: string) {
   return getAge(new Date(birthDate)) < 18
 }
+
+export function getBirthdateStringFromAge(age: number) {
+  const today = new Date()
+  return new Date(
+    today.getFullYear() - age,
+    today.getMonth(),
+    today.getDate() - 1, // set to day before to ensure age is reached
+  ).toISOString()
+}
