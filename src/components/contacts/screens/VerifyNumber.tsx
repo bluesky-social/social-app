@@ -77,6 +77,7 @@ export function VerifyNumber({
     },
     onMutate: () => setError(null),
     onError: err => {
+      setOtpCode('')
       if (isNetworkError(err)) {
         setError({
           retryable: true,
@@ -112,6 +113,7 @@ export function VerifyNumber({
       Toast.show(_(msg`A new code has been sent`))
     },
     onMutate: () => {
+      setOtpCode('')
       setError(null)
     },
     onError: err => {
