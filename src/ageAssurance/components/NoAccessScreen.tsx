@@ -144,6 +144,9 @@ export function NoAccessScreen() {
                 <>
                   <View style={[a.gap_lg]}>
                     <Text style={[textStyles]}>
+                      <Trans>Hey there!</Trans>
+                    </Text>
+                    <Text style={[textStyles]}>
                       <Trans>
                         You are accessing Bluesky from a region that legally
                         requires us to verify your age before allowing you to
