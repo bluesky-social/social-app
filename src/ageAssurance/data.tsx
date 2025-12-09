@@ -324,6 +324,21 @@ export async function getOtherRequiredData({
   const data: OtherRequiredData = {
     birthdate: prefs.birthDate ? prefs.birthDate.toISOString() : undefined,
   }
+
+  /**
+   * If we can't read a birthdate, it may be due to the user accessing the
+   * account via an app password. In that case, fall-back to
+   * `isDeclaredOverAgeMinimum` and other flags.
+   */
+  if (!data.birthdate) {
+    if (prefs.isDeclaredOverAgeMinimum) {
+      const approx = new Date()
+      approx.setFullYear(approx.getFullYear() - 13)
+      approx.setDate(approx.getDate() - 1) // ensure we're past
+      data.birthdate = approx.toISOString()
+    }
+  }
+
   const did = getDidFromAgentSession(agent)
   if (data && did && birthdateCache.has(did)) {
     /*
