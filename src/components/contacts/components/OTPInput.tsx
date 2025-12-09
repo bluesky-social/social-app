@@ -108,11 +108,7 @@ export function OTPInput({
           ios: 'one-time-code',
         })}
         autoFocus
-        onFocus={() => {
-          onChangeText('')
-          setSelection({start: 0, end: 0})
-          onFocus()
-        }}
+        onFocus={onFocus}
         onBlur={onBlur}
         maxLength={numberOfDigits}
         style={[
