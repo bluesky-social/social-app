@@ -44,9 +44,9 @@ const queuedNuxs: {
   {
     id: Nux.FindContactsAnnouncement,
     enabled: ({currentProfile}) => {
-      return isExistingUserAsOf(
-        '2025-12-16T00:00:00.000Z',
-        currentProfile.createdAt,
+      return (
+        isNative &&
+        isExistingUserAsOf('2025-12-16T00:00:00.000Z', currentProfile.createdAt)
       )
     },
   },
@@ -188,9 +188,9 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.FindContactsAnnouncement &&
-        // Note: native only!
-        isNative && <FindContactsAnnouncement />}
+      {activeNux === Nux.FindContactsAnnouncement && (
+        <FindContactsAnnouncement />
+      )}
     </Context.Provider>
   )
 }
