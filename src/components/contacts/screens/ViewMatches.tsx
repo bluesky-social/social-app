@@ -24,7 +24,6 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {Envelope_Stroke2_Corner0_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
 import {MagnifyingGlassX_Stroke2_Corner0_Rounded_Large as SearchFailedIcon} from '#/components/icons/MagnifyingGlass'
 import {PersonX_Stroke2_Corner0_Rounded_Large as PersonXIcon} from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -461,7 +460,6 @@ function ContactItem({contact}: {contact: Contact}) {
                 logger.error('Could not launch SMS', {safeMessage: err})
               }
             }}>
-            <ButtonIcon icon={EnvelopeIcon} />
             <ButtonText>
               <Trans>Invite</Trans>
             </ButtonText>
