@@ -452,7 +452,7 @@ function ContactItem({contact}: {contact: Contact}) {
                 await SMS.sendSMSAsync(
                   [phoneNumber],
                   _(
-                    msg`I joined Bluesky as ${currentAccount.handle} - come find me! https://bsky.app/download`,
+                    msg`I'm on Bluesky as ${currentAccount.handle} - come find me! https://bsky.app/download`,
                   ),
                 )
               } catch (err) {
