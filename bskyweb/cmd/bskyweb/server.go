@@ -815,9 +815,9 @@ func (srv *Server) serveSitemapRequest(c echo.Context, url, sitemapType string) 
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
 	}
 
+	c.Response().Header().Set("Content-Type", "application/xml")
+	c.Response().Header().Set("Content-Encoding", "gzip")
 	c.Response().WriteHeader(resp.StatusCode)
-	c.Response().Header().Add("Content-Type", "application/xml")
-	c.Response().Header().Add("Content-Encoding", "gzip")
 
 	if _, err = io.Copy(c.Response().Writer, resp.Body); err != nil {
 		slog.Error("failed to copy sitemap response body to client", "err", err, "type", sitemapType)
