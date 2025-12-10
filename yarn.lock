@@ -82,10 +82,10 @@
     "@atproto/xrpc" "^0.7.6"
     "@atproto/xrpc-server" "^0.10.0"
 
-"@atproto/api@^0.18.5":
-  version "0.18.5"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.5.tgz#e88bf4cc86ee695ef8ac6a20a27b8c0f285353cf"
-  integrity sha512-MdB+7AUchJM7g76LUjlsPp2SSiE7t+glS6f6wKK9ouvjoda66IV3GUexPbDjLifDdu/C/zuRc7AniKvGvK82tg==
+"@atproto/api@^0.18.5", "@atproto/api@^0.18.7":
+  version "0.18.7"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.7.tgz#3175ec8f1909ddcae488183a2180de234e7acce4"
+  integrity sha512-vUluqN1XU5AX5tgfSJjjjUzALCMq8DjdI0jlIhRYyn2Chb0ZOCU8k0ZTpUAcuDFE2FoxxW4S3kvtlHwLMtN5dQ==
   dependencies:
     "@atproto/common-web" "^0.4.7"
     "@atproto/lexicon" "^0.6.0"
@@ -96,10 +96,10 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
-"@atproto/api@^0.18.6", "@atproto/api@^0.18.7":
-  version "0.18.7"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.7.tgz#3175ec8f1909ddcae488183a2180de234e7acce4"
-  integrity sha512-vUluqN1XU5AX5tgfSJjjjUzALCMq8DjdI0jlIhRYyn2Chb0ZOCU8k0ZTpUAcuDFE2FoxxW4S3kvtlHwLMtN5dQ==
+"@atproto/api@^0.18.6":
+  version "0.18.6"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.6.tgz#04c26b97bda01cbe276dea523de6e4a184894c18"
+  integrity sha512-dkzy2OHSAGgzG9GExvOiwRY73EzVD2AiD3nksng+V6erG0kwLfbmVYjoP9mq9Y16BCXr/7q9lekfogthqU614Q==
   dependencies:
     "@atproto/common-web" "^0.4.7"
     "@atproto/lexicon" "^0.6.0"
@@ -11465,10 +11465,10 @@ expo-device@~8.0.10:
   dependencies:
     ua-parser-js "^0.7.33"
 
-expo-eas-client@~1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/expo-eas-client/-/expo-eas-client-1.0.7.tgz#9c9c7909d7bb9b6ceb4bef6875f1b9119ef22a8c"
-  integrity sha512-Q/b1X0fM+3beqqvffok14pjxMF600NxopdSr9WJY61fF4xllcVnALS0kEudffp9ihMOfcb5xWYqzKj6jMqYDIw==
+expo-eas-client@~1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/expo-eas-client/-/expo-eas-client-1.0.8.tgz#f1fa7cbc6b6000046119466c6ded8a77e5a4b1f8"
+  integrity sha512-5or11NJhSeDoHHI6zyvQDW2cz/yFyE+1Cz8NTs5NK8JzC7J0JrkUgptWtxyfB6Xs/21YRNifd3qgbBN3hfKVgA==
 
 expo-file-system@~19.0.20:
   version "19.0.20"
@@ -11556,7 +11556,7 @@ expo-location@~19.0.8:
   resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-19.0.8.tgz#1805393151b1286021c1ad36246b6fd095d09b55"
   integrity sha512-H/FI75VuJ1coodJbbMu82pf+Zjess8X8Xkiv9Bv58ZgPKS/2ztjC1YO1/XMcGz7+s9DrbLuMIw22dFuP4HqneA==
 
-expo-manifests@~1.0.10, expo-manifests@~1.0.9:
+expo-manifests@~1.0.10:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/expo-manifests/-/expo-manifests-1.0.10.tgz#5dfb3db1cdf6b46fee349f1d68a25edf5e087994"
   integrity sha512-oxDUnURPcL4ZsOBY6X1DGWGuoZgVAFzp6PISWV7lPP2J0r8u1/ucuChBgpK7u1eLGFp6sDIPwXyEUCkI386XSQ==
@@ -11663,18 +11663,18 @@ expo-updates-interface@~2.0.0:
   integrity sha512-pTzAIufEZdVPKql6iMi5ylVSPqV1qbEopz9G6TSECQmnNde2nwq42PxdFBaUEd8IZJ/fdJLQnOT3m6+XJ5s7jg==
 
 expo-updates@~29.0.14:
-  version "29.0.14"
-  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-29.0.14.tgz#520a78a728eb0ff89037366df6f5cb5e887eaf04"
-  integrity sha512-VgXtjczQ4A/r4Jy/XEj+jWimk0vSd+GdDsYfLzl3CG/9fyQ6NXDP20PgiGfeF+A9rfA4IU3VyWdNJFBPyPPIgg==
+  version "29.0.15"
+  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-29.0.15.tgz#a135ed0915500f0e30f6d09a9e13318e99a9c651"
+  integrity sha512-6Qj+g56nnCksKKnEPQFm19dfWvYB5EggQNN3SaLbIj4LI40k/pjQwqYStEuwTU+Ow+PG0AqxIhQ3NvgVPEzLvg==
   dependencies:
     "@expo/code-signing-certificates" "0.0.5"
-    "@expo/plist" "^0.4.7"
+    "@expo/plist" "^0.4.8"
     "@expo/spawn-async" "^1.7.2"
     arg "4.1.0"
     chalk "^4.1.2"
     debug "^4.3.4"
-    expo-eas-client "~1.0.7"
-    expo-manifests "~1.0.9"
+    expo-eas-client "~1.0.8"
+    expo-manifests "~1.0.10"
     expo-structured-headers "~5.0.0"
     expo-updates-interface "~2.0.0"
     getenv "^2.0.0"
@@ -14346,10 +14346,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libphonenumber-js@^1.12.30:
-  version "1.12.30"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.12.30.tgz#8f37c6d0546e89a399085d329214a583642e611a"
-  integrity sha512-KxH7uIJFD6+cR6nhdh+wY6prFiH26A3W/W1gTMXnng2PXSwVfi5MhYkdq3Z2Y7vhBVa1/5VJgpNtI76UM2njGA==
+libphonenumber-js@^1.12.31:
+  version "1.12.31"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.12.31.tgz#3cdb45641c6b77228dd1238f3d810c3bb5d91199"
+  integrity sha512-Z3IhgVgrqO1S5xPYM3K5XwbkDasU67/Vys4heW+lfSBALcUZjeIIzI8zCLifY+OCzSq+fpDdywMDa7z+4srJPQ==
 
 lighthouse-logger@^1.0.0:
   version "1.4.2"
