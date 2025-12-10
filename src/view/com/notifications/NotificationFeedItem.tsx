@@ -110,7 +110,7 @@ let NotificationFeedItem = ({
         break
       }
       case 'follow':
-      case 'contact-joined':
+      case 'contact-match':
       case 'verified':
       case 'unverified': {
         return makeProfileLink(item.notification.author)
