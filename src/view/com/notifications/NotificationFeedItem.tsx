@@ -814,6 +814,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   }
 
   const isFollowing = profileShadow.viewer.following
+  const isFollowedBy = profileShadow.viewer.followedBy
   const followingLabel = _(
     msg({
       message: 'Following',
@@ -837,14 +838,14 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
         </Button>
       ) : (
         <Button
-          label={_(msg`Follow back`)}
+          label={isFollowedBy ? _(msg`Follow back`) : _(msg`Follow`)}
           color="primary"
           size="small"
           style={[a.self_start]}
           onPress={onPressFollow}>
           <ButtonIcon icon={PlusIcon} />
           <ButtonText>
-            <Trans>Follow back</Trans>
+            {isFollowedBy ? <Trans>Follow back</Trans> : <Trans>Follow</Trans>}
           </ButtonText>
         </Button>
       )}
