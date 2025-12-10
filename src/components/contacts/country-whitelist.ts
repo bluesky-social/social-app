@@ -2,7 +2,7 @@ import {type CountryCode} from '#/lib/international-telephone-codes'
 import {IS_DEV} from '#/env'
 import {useGeolocation} from '#/geolocation'
 
-const FIND_CONTACTS_FEATURE_COUNTRY_WHITELIST = [
+const FIND_CONTACTS_FEATURE_COUNTRY_ALLOWLIST = [
   'US',
   'GB',
   'JP',
@@ -19,7 +19,7 @@ const FIND_CONTACTS_FEATURE_COUNTRY_WHITELIST = [
 ] satisfies CountryCode[] as string[]
 
 export function isFindContactsFeatureEnabled(countryCode: string): boolean {
-  return FIND_CONTACTS_FEATURE_COUNTRY_WHITELIST.includes(
+  return FIND_CONTACTS_FEATURE_COUNTRY_ALLOWLIST.includes(
     countryCode.toUpperCase(),
   )
 }
