@@ -368,10 +368,10 @@ let NotificationFeedItem = ({
       )
     }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
-  } else if (item.type === 'contact-joined') {
-    a11yLabel = _(msg`Your contact ${firstAuthorName} joined Bluesky`)
+  } else if (item.type === 'contact-match') {
+    a11yLabel = _(msg`Your contact ${firstAuthorName} is on Bluesky`)
     notificationContent = (
-      <Trans>Your contact {firstAuthorLink} joined Bluesky</Trans>
+      <Trans>Your contact {firstAuthorLink} is on Bluesky</Trans>
     )
     icon = (
       <ContactsIconFilled size="xl" style={{color: t.palette.primary_500}} />
