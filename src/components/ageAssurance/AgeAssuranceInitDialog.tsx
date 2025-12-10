@@ -202,11 +202,11 @@ function Inner() {
                     style={[a.text_sm, a.leading_snug]}>
                     KWS
                   </SimpleInlineLinkText>{' '}
-                  to verify that you’re an adult. When you click "Begin" below,
-                  KWS will check if you have previously verified your age using
-                  this email address for other games/services powered by KWS
-                  technology. If not, KWS will email you instructions for
-                  verifying your age. When you’re done, you'll be brought back
+                  to handle age verification. When you click "Begin" below, KWS
+                  will email you instructions to complete the verification
+                  process. If your email address has already been used to verify
+                  your age for another game or service that uses KWS, you won’t
+                  need to do it again. When you’re done, you'll be brought back
                   to continue using Bluesky.
                 </Trans>
               </Text>
