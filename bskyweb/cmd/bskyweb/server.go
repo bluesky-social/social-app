@@ -9,7 +9,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
+	"log/slog"
+	"maps"
 	"net/http"
 	"net/netip"
 	"net/url"
@@ -336,6 +339,10 @@ func serve(cctx *cli.Context) error {
 
 	// ipcc
 	e.GET("/ipcc", server.WebIpCC)
+
+	// sitemap handlers
+	e.GET("/sitemap/users.xml.gz", server.handleSitemapUsersIndex)
+	e.GET("/sitemap/users/*", server.handleSitemapUsersSubpage)
 
 	if linkHost != "" {
 		linkUrl, err := url.Parse(linkHost)
@@ -752,4 +759,56 @@ func (srv *Server) WebIpCC(c echo.Context) error {
 		return c.JSON(500, IPCCResponse{})
 	}
 	return c.JSON(200, outResponse)
+}
+
+func (srv *Server) handleSitemapUsersIndex(c echo.Context) error {
+	url := fmt.Sprintf("%s/external/sitemap/users.xml.gz", srv.cfg.appviewHost)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		slog.Error("failed to construct sitemap user index request", "err", err)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		slog.Error("failed to send sitemap user index request to appview", "err", err)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+	defer resp.Body.Close()
+
+	maps.Copy(c.Response().Header(), resp.Header)
+	c.Response().WriteHeader(resp.StatusCode)
+
+	if _, err = io.Copy(c.Response().Writer, resp.Body); err != nil {
+		slog.Error("failed to copy sitemap user index response body to client", "err", err)
+	}
+
+	return nil
+}
+
+func (srv *Server) handleSitemapUsersSubpage(c echo.Context) error {
+	path := c.Param("*")
+	url := fmt.Sprintf("%s/external/sitemap/users/%s", srv.cfg.appviewHost, path)
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		slog.Error("failed to construct sitemap user subpage request", "err", err)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		slog.Error("failed to send sitemap user subpage request to appview", "err", err)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+	defer resp.Body.Close()
+
+	maps.Copy(c.Response().Header(), resp.Header)
+	c.Response().WriteHeader(resp.StatusCode)
+
+	if _, err = io.Copy(c.Response().Writer, resp.Body); err != nil {
+		slog.Error("failed to copy sitemap user subpage response body to client", "err", err)
+	}
+
+	return nil
 }
