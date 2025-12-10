@@ -550,9 +550,9 @@ function ProfileScreenLoaded({
                 emptyStateMessage={
                   isMe
                     ? _(
-                        msg`Starter packs let you share your favorite feeds and people with your friends.`,
+                        msg`Starter Packs let you share your favorite feeds and people with your friends.`,
                       )
-                    : _(msg`No starter packs yet`)
+                    : _(msg`No Starter Packs yet`)
                 }
                 emptyStateButton={
                   isMe
