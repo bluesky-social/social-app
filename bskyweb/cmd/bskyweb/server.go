@@ -43,6 +43,11 @@ type Server struct {
 	cfg   *Config
 
 	ipccClient http.Client
+
+	// sitemapClient is used for fetching sitemaps from the appview. It has
+	// DisableCompression set to true so that gzipped responses are passed
+	// through without being decompressed.
+	sitemapClient http.Client
 }
 
 type Config struct {
@@ -117,6 +122,16 @@ func serve(cctx *cli.Context) error {
 				TLSClientConfig: &tls.Config{
 					InsecureSkipVerify: true,
 				},
+			},
+		},
+		sitemapClient: http.Client{
+			Transport: &http.Transport{
+				MaxIdleConns:        100,
+				MaxIdleConnsPerHost: 10,
+				IdleConnTimeout:     90 * time.Second,
+				TLSHandshakeTimeout: 10 * time.Second,
+				ForceAttemptHTTP2:   true,
+				DisableCompression:  true,
 			},
 		},
 	}
@@ -769,7 +784,7 @@ func (srv *Server) handleSitemapUsersIndex(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := srv.sitemapClient.Do(req)
 	if err != nil {
 		slog.Error("failed to send sitemap user index request to appview", "err", err)
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
@@ -796,7 +811,7 @@ func (srv *Server) handleSitemapUsersSubpage(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := srv.sitemapClient.Do(req)
 	if err != nil {
 		slog.Error("failed to send sitemap user subpage request to appview", "err", err)
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
