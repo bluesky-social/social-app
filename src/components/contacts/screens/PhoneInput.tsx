@@ -231,7 +231,8 @@ function LegalDisclaimer() {
         <Trans>How we use your number:</Trans>
       </Text>
       <Text style={style}>
-        &bull; <Trans>Sent to a trusted third party for verification</Trans>
+        &bull;{' '}
+        <Trans>Sent to our phone number verification provider Plivo</Trans>
       </Text>
       <Text style={style}>
         &bull; <Trans>Deleted by the verifier after verification</Trans>
@@ -242,7 +243,7 @@ function LegalDisclaimer() {
       </Text>
       <Text style={style}>
         &bull;{' '}
-        <Trans>Stored as part of a secret code for matching with others</Trans>
+        <Trans>Stored as part of a secure code for matching with others</Trans>
       </Text>
       <Text style={[style, a.mt_xs]}>
         <Trans>

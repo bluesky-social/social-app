@@ -422,7 +422,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="FindContactsSettings"
         getComponent={() => FindContactsSettingsScreen}
         options={{
-          title: title(msg`Find contacts`),
+          title: title(msg`Find Contacts`),
           requireAuth: true,
         }}
       />

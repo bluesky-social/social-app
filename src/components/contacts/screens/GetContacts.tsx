@@ -91,9 +91,8 @@ export function GetContacts({
         </Text>
         <Text style={style}>
           <Trans>
-            Bluesky helps friends find each other by creating “hashes” of number
-            combinations and looking for matching hashes. Hashes are sets of
-            numbers and letters that can’t be decoded with a key.
+            Bluesky helps friends find each other by creating an encoded digital
+            fingerprint, called a "hash," and then looking for matching hashes.
           </Trans>
         </Text>
         <Text style={[style, a.mt_lg]}>
@@ -112,7 +111,7 @@ export function GetContacts({
         <Text style={[style, a.mt_lg]}>
           <Trans>
             We apply the highest privacy standards just in case your contacts
-            include minors. We never share, or sell your contact information.
+            include minors. We never share or sell your contact information.
           </Trans>
         </Text>
       </Layout.Content>

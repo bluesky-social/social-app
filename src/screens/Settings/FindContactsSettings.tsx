@@ -44,7 +44,7 @@ export function FindContactsSettingsScreen({}: Props) {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Find contacts</Trans>
+            <Trans>Find Contacts</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
