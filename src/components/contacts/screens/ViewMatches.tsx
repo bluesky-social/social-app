@@ -35,6 +35,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {InviteInfo} from '../components/InviteInfo'
 import {type Action, type Contact, type State} from '../state'
 
 type Item =
@@ -71,6 +72,7 @@ export function ViewMatches({
   state: Extract<State, {step: '4: view matches'}>
   dispatch: React.ActionDispatch<[Action]>
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const gutter = useGutters([0, 'wide'])
   const moderationOpts = useModerationOpts()
@@ -278,15 +280,32 @@ export function ViewMatches({
           </Header>
         )
       case 'contacts header':
-        return <Header titleText={_(msg`Invite friends`)} hasContentAbove />
+        return (
+          <Header
+            titleText={
+              <Trans>
+                Invite friends{' '}
+                <InviteInfo iconStyle={t.atoms.text} iconOffset={1} />
+              </Trans>
+            }
+            hasContentAbove
+          />
+        )
       case 'no matches header':
         return (
           <Header
             titleText={_(msg`You got here first`)}
             largeTitle
-            subtitleText={_(
-              msg`Bluesky is more fun with friends. Do you want to invite some of yours?`,
-            )}
+            subtitleText={
+              <Trans>
+                Bluesky is more fun with friends. Do you want to invite some of
+                yours?{' '}
+                <InviteInfo
+                  iconStyle={t.atoms.text_contrast_medium}
+                  iconOffset={2}
+                />
+              </Trans>
+            }
           />
         )
       case 'search empty state':
@@ -402,7 +421,7 @@ function ContactItem({contact}: {contact: Contact}) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
 
-  const name = contact.firstName ?? contact.lastName
+  const name = contact.firstName ?? contact.lastName ?? contact.name
   const phone =
     contact.phoneNumbers?.find(phone => phone.isPrimary) ??
     contact.phoneNumbers?.[0]
