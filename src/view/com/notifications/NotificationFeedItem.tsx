@@ -674,7 +674,7 @@ let NotificationFeedItem = ({
               </Text>
             </ExpandListPressable>
             {(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
-            (item.type === 'contact-joined' &&
+            (item.type === 'contact-match' &&
               !item.notification.author.viewer?.following) ? (
               <FollowBackButton profile={item.notification.author} />
             ) : null}
