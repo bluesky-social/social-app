@@ -10,6 +10,7 @@ import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
 import {STALE} from '#/state/queries'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {
@@ -187,9 +188,9 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.FindContactsAnnouncement && (
-        <FindContactsAnnouncement />
-      )}
+      {activeNux === Nux.FindContactsAnnouncement &&
+        // Note: native only!
+        isNative && <FindContactsAnnouncement />}
     </Context.Provider>
   )
 }
