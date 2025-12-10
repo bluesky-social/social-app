@@ -38,7 +38,7 @@ export function Outer({
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
-  headerRef?: React.MutableRefObject<View | null>
+  headerRef?: React.RefObject<View | null>
   sticky?: boolean
 }) {
   const t = useTheme()
@@ -183,7 +183,7 @@ export function TitleText({
     <Text
       style={[
         a.text_lg,
-        a.font_bold,
+        a.font_semi_bold,
         a.leading_tight,
         isIOS && align === 'platform' && a.text_center,
         gtMobile && a.text_xl,

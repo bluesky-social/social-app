@@ -3739,10 +3739,10 @@
   resolved "https://registry.yarnpkg.com/@braintree/sanitize-url/-/sanitize-url-6.0.4.tgz#923ca57e173c6b232bbbb07347b1be982f03e783"
   integrity sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==
 
-"@bsky.app/alf@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@bsky.app/alf/-/alf-0.1.5.tgz#8de3e128a3a490625fa24dae89f8febfe4a668b2"
-  integrity sha512-1FGsLTUxv4UpbO3tW/oXIEzR8If/FPkFwWkTOBvpcA9cfR73QZiXXitUojCZbiXEIl0WiL+8j3zHjpNaaxiOAA==
+"@bsky.app/alf@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@bsky.app/alf/-/alf-0.1.6.tgz#256dac988702f076b98f1963c9d594141bc74a10"
+  integrity sha512-8DdAOP+qRVgme+5WwqhxU20qzHXvEkEzr60SIBvDEVblCkyEiPZ36YznbpbmpT23qXbfbUFf9mb5IXYJqd8ELQ==
   dependencies:
     react-responsive "^10.0.1"
 
@@ -14231,9 +14231,9 @@ levn@^0.4.1:
     type-check "~0.4.0"
 
 libphonenumber-js@^1.12.30:
-  version "1.12.31"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.12.31.tgz#3cdb45641c6b77228dd1238f3d810c3bb5d91199"
-  integrity sha512-Z3IhgVgrqO1S5xPYM3K5XwbkDasU67/Vys4heW+lfSBALcUZjeIIzI8zCLifY+OCzSq+fpDdywMDa7z+4srJPQ==
+  version "1.12.30"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.12.30.tgz#8f37c6d0546e89a399085d329214a583642e611a"
+  integrity sha512-KxH7uIJFD6+cR6nhdh+wY6prFiH26A3W/W1gTMXnng2PXSwVfi5MhYkdq3Z2Y7vhBVa1/5VJgpNtI76UM2njGA==
 
 lighthouse-logger@^1.0.0:
   version "1.4.2"
