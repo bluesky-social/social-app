@@ -45,7 +45,6 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
     }
   }, [state])
 
-  const paddingTop = gtMobile ? a.py_5xl : a.py_lg
   const dialogLabel = _(msg`Set up your account`)
 
   const [headerHeight, setHeaderHeight] = useState(0)
@@ -73,7 +72,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             a.justify_center,
             a.z_20,
             a.px_xl,
-            {paddingTop: (web(paddingTop.paddingTop) ?? 0) + insets.top},
+            {paddingTop: (web(tokens.space.lg) ?? 0) + insets.top},
             native([t.atoms.bg, a.pb_xs, {minHeight: 48}]),
             web(a.pointer_events_box_none),
           ]}
@@ -123,17 +122,18 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
 
       <ScrollView
         ref={scrollview}
-        style={[a.h_full, a.w_full, {paddingTop: isWeb ? insets.top : 0}]}
+        style={[a.h_full, a.w_full]}
         contentContainerStyle={{
           borderWidth: 0,
           minHeight: '100%',
-          paddingTop: headerHeight,
+          paddingTop: gtMobile ? 40 : headerHeight,
           paddingBottom: footerHeight,
         }}
         showsVerticalScrollIndicator={!isAndroid}
         scrollIndicatorInsets={{bottom: footerHeight - insets.bottom}}
         // @ts-expect-error web only --prf
-        dataSet={{'stable-gutters': 1}}>
+        dataSet={{'stable-gutters': 1}}
+        centerContent={gtMobile}>
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
           <View style={[a.flex_1, web({maxWidth: ONBOARDING_COL_WIDTH})]}>

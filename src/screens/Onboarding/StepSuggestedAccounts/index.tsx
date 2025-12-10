@@ -22,7 +22,7 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
@@ -161,7 +161,9 @@ export function StepSuggestedAccounts() {
         style={[
           a.overflow_hidden,
           a.mt_sm,
-          isWeb ? a.max_w_full : {marginHorizontal: tokens.space.xl * -1},
+          isWeb
+            ? [a.max_w_full, web({minHeight: '100vh'})]
+            : {marginHorizontal: tokens.space.xl * -1},
           a.flex_1,
           a.justify_start,
         ]}>
