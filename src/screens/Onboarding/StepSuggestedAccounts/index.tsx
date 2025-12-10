@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -23,7 +16,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {OnboardingControls} from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -47,7 +40,7 @@ export function StepSuggestedAccounts() {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
 
-  const {state, dispatch} = useContext(Context)
+  const {state, dispatch} = useOnboardingInternalState()
 
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
   // keeping track of who was followed via the follow all button

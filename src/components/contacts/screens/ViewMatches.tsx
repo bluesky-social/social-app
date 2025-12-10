@@ -1,5 +1,6 @@
 import {useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as SMS from 'expo-sms'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
@@ -19,7 +20,7 @@ import {useAgent, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
-import {atoms as a, useGutters, useTheme} from '#/alf'
+import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -68,9 +69,13 @@ type Item =
 export function ViewMatches({
   state,
   dispatch,
+  context,
+  onNext,
 }: {
   state: Extract<State, {step: '4: view matches'}>
   dispatch: React.ActionDispatch<[Action]>
+  context: 'Onboarding' | 'Standalone'
+  onNext: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -78,6 +83,7 @@ export function ViewMatches({
   const moderationOpts = useModerationOpts()
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const insets = useSafeAreaInsets()
   const listRef = useRef<ListMethods>(null)
 
   // TEMP!!!
@@ -322,13 +328,15 @@ export function ViewMatches({
 
   return (
     <View style={[a.h_full]}>
-      <Layout.Header.Outer noBottomBorder>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content />
-        <Layout.Header.Slot />
-      </Layout.Header.Outer>
+      {context === 'Standalone' && (
+        <Layout.Header.Outer noBottomBorder>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content />
+          <Layout.Header.Slot />
+        </Layout.Header.Outer>
+      )}
       {!isTotallyEmpty && (
-        <View style={[gutter, a.mb_md]}>
+        <View style={[gutter, a.mb_md, context === 'Onboarding' && a.mt_sm]}>
           <SearchInput
             placeholder={_(msg`Search contacts`)}
             value={search}
@@ -355,6 +363,31 @@ export function ViewMatches({
         ListFooterComponent={!isEmpty ? <ListFooter /> : null}
         keyExtractor={keyExtractor}
       />
+      <View
+        style={[
+          t.atoms.bg,
+          t.atoms.border_contrast_low,
+          a.border_t,
+          a.align_center,
+          a.align_stretch,
+          gutter,
+          a.pt_md,
+          {paddingBottom: insets.bottom + tokens.space.md},
+        ]}>
+        <Button
+          label={context === 'Onboarding' ? _(msg`Next`) : _(msg`Done`)}
+          onPress={onNext}
+          size="large"
+          color="primary">
+          <ButtonText>
+            {context === 'Onboarding' ? (
+              <Trans>Next</Trans>
+            ) : (
+              <Trans>Done</Trans>
+            )}
+          </ButtonText>
+        </Button>
+      </View>
     </View>
   )
 }

@@ -2,21 +2,23 @@ import {GetContacts} from './screens/GetContacts'
 import {PhoneInput} from './screens/PhoneInput'
 import {VerifyNumber} from './screens/VerifyNumber'
 import {ViewMatches} from './screens/ViewMatches'
-import {type Action, type State} from './state'
+import {type Action, FindContactsGoBackContext, type State} from './state'
 
 export function FindContactsFlow({
   state,
   dispatch,
+  onBack,
   onCancel,
   context = 'Standalone',
 }: {
   state: State
-  dispatch: React.Dispatch<Action>
+  dispatch: React.ActionDispatch<[Action]>
+  onBack?: () => void
   onCancel: () => void
   context: 'Onboarding' | 'Standalone'
 }) {
   return (
-    <>
+    <FindContactsGoBackContext value={onBack}>
       {state.step === '1: phone input' && (
         <PhoneInput
           state={state}
@@ -37,8 +39,13 @@ export function FindContactsFlow({
         <GetContacts state={state} dispatch={dispatch} onCancel={onCancel} />
       )}
       {state.step === '4: view matches' && (
-        <ViewMatches state={state} dispatch={dispatch} />
+        <ViewMatches
+          state={state}
+          dispatch={dispatch}
+          context={context}
+          onNext={onCancel}
+        />
       )}
-    </>
+    </FindContactsGoBackContext>
   )
 }

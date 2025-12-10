@@ -19,7 +19,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {OTPInput} from '../components/OTPInput'
-import {type Action, type State} from '../state'
+import {type Action, type State, useOnPressBackButton} from '../state'
 export function VerifyNumber({
   state,
   dispatch,
@@ -121,10 +121,12 @@ export function VerifyNumber({
     [state.phoneCountryCode],
   )
 
+  const onPressBack = useOnPressBackButton()
+
   return (
     <View style={[a.h_full]}>
       <Layout.Header.Outer noBottomBorder>
-        <Layout.Header.BackButton />
+        <Layout.Header.BackButton onPress={onPressBack} />
         <Layout.Header.Content />
         {showSkipButton ? (
           <Button
