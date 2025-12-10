@@ -214,10 +214,10 @@ export function SettingsScreen({}: Props) {
           {isNative && findContactsEnabled && (
             <SettingsList.LinkItem
               to="/settings/find-contacts"
-              label={_(msg`Find contacts`)}>
+              label={_(msg`Find friends from contacts`)}>
               <SettingsList.ItemIcon icon={ContactsIcon} />
               <SettingsList.ItemText>
-                <Trans>Find contacts</Trans>
+                <Trans>Find friends from contacts</Trans>
               </SettingsList.ItemText>
             </SettingsList.LinkItem>
           )}

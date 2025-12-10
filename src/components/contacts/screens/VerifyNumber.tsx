@@ -155,7 +155,7 @@ export function VerifyNumber({
             a.mt_sm,
           ]}>
           <Trans>
-            Enter the 6 digit code sent to {phoneCode} {state.phoneNumber}
+            Enter the 6-digit code sent to {phoneCode} {state.phoneNumber}
           </Trans>
         </Text>
         <View style={[a.mt_2xl]}>
