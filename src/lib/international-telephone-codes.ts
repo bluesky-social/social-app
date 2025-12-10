@@ -1291,10 +1291,3 @@ export function getDefaultCountry(location?: {
   }
   return DEFAULT_PHONE_COUNTRY
 }
-
-export function getPhoneCodeFromCountryCode(countryCode: string) {
-  const country =
-    INTERNATIONAL_TELEPHONE_CODES[countryCode.toUpperCase() as CountryCode]
-  if (!country) throw new Error(`Country ${countryCode} not found`)
-  return country.code
-}

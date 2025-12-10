@@ -72,7 +72,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.18.6",
+    "@atproto/api": "^0.18.7",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.6",
@@ -171,7 +171,7 @@
     "js-sha256": "^0.9.0",
     "jwt-decode": "^4.0.0",
     "lande": "^1.0.10",
-    "libphonenumber-js": "^1.12.30",
+    "libphonenumber-js": "^1.12.31",
     "lodash.chunk": "^4.2.0",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",

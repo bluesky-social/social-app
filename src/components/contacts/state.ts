@@ -7,12 +7,6 @@ import type * as bsky from '#/types/bsky'
 
 export type Contact = ExistingContact
 
-// TODO: replace with lexicon type
-export type Match = {
-  index?: number
-  profile: bsky.profile.AnyProfileView
-}
-
 export type State =
   | {
       step: '1: phone input'
@@ -27,13 +21,15 @@ export type State =
     }
   | {
       step: '3: get contacts'
+      phoneCountryCode: CountryCode
+      phoneNumber: string
       token: string
       contacts?: Contact[]
     }
   | {
       step: '4: view matches'
       contacts: Contact[]
-      matches: Match[]
+      matches: bsky.profile.AnyProfileView[]
       // rather than mutating `matches`, we keep track of dismissed matches
       // so we can roll back optimistic updates
       dismissedMatches: string[]
@@ -65,7 +61,9 @@ export type Action =
   | {
       type: 'SYNC_CONTACTS_SUCCESS'
       payload: {
-        matches: Match[]
+        matches: bsky.profile.AnyProfileView[]
+        // filter out matched contacts
+        contacts: Contact[]
       }
     }
   | {
@@ -106,6 +104,8 @@ function reducer(state: State, action: Action): State {
       return {
         step: '3: get contacts',
         token: action.payload.token,
+        phoneCountryCode: state.phoneCountryCode,
+        phoneNumber: state.phoneNumber,
       }
     }
     case 'BACK': {
@@ -127,7 +127,7 @@ function reducer(state: State, action: Action): State {
       assertCurrentStep(state, '3: get contacts')
       return {
         step: '4: view matches',
-        contacts: state.contacts ?? [],
+        contacts: action.payload.contacts,
         matches: action.payload.matches,
         dismissedMatches: [],
       }

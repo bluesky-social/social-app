@@ -15,7 +15,6 @@ import {
   useProfileShadow,
 } from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useProfilesQuery} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -86,13 +85,6 @@ export function ViewMatches({
   const insets = useSafeAreaInsets()
   const listRef = useRef<ListMethods>(null)
 
-  // TEMP!!!
-  const {data: profiles} = useProfilesQuery({
-    handles: ['pfrazee.com', 'internet.bsky.social', 'darrin.bsky.team'],
-  })
-  state.matches = profiles?.profiles?.map(profile => ({profile})) ?? []
-  // state.contacts = []
-
   const [search, setSearch] = useState('')
   const {
     state: searchFocused,
@@ -101,7 +93,7 @@ export function ViewMatches({
   } = useInteractionState()
 
   const followableDids = state.matches
-    .map(match => match.profile.did)
+    .map(match => match.did)
     .filter(did => !state.dismissedMatches.includes(did))
   const [didFollowAll, setDidFollowAll] = useState(followableDids.length === 0)
 
@@ -144,20 +136,16 @@ export function ViewMatches({
 
     if (searchFocused || search.length > 0) {
       for (const match of state.matches) {
-        const profile = match.profile
-
-        if (state.dismissedMatches.includes(profile.did)) continue
+        if (state.dismissedMatches.includes(match.did)) continue
 
         if (
           search.length === 0 ||
-          (profile.displayName ?? '')
+          (match.displayName ?? '')
             .toLocaleLowerCase()
             .includes(search.toLocaleLowerCase()) ||
-          profile.handle
-            .toLocaleLowerCase()
-            .includes(search.toLocaleLowerCase())
+          match.handle.toLocaleLowerCase().includes(search.toLocaleLowerCase())
         ) {
-          all.push({type: 'match', profile})
+          all.push({type: 'match', profile: match})
         }
       }
 
@@ -179,14 +167,13 @@ export function ViewMatches({
       }
     } else {
       const matches = state.matches.filter(
-        match => !state.dismissedMatches.includes(match.profile.did),
+        match => !state.dismissedMatches.includes(match.did),
       )
 
       if (matches.length > 0) {
         all.push({type: 'matches header', count: matches.length})
         for (const match of matches) {
-          const profile = match.profile
-          all.push({type: 'match', profile})
+          all.push({type: 'match', profile: match})
         }
 
         if (state.contacts.length > 0) {

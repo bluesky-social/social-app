@@ -4,10 +4,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
-import {getPhoneCodeFromCountryCode} from '#/lib/international-telephone-codes'
 import {clamp} from '#/lib/numbers'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useAgent} from '#/state/session'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
@@ -19,7 +19,9 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {OTPInput} from '../components/OTPInput'
+import {constructFullPhoneNumber, prettyPhoneNumber} from '../phone-number'
 import {type Action, type State, useOnPressBackButton} from '../state'
+
 export function VerifyNumber({
   state,
   dispatch,
@@ -33,6 +35,7 @@ export function VerifyNumber({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const agent = useAgent()
   const gutters = useGutters([0, 'wide'])
 
   const [otpCode, setOtpCode] = useState('')
@@ -48,25 +51,36 @@ export function VerifyNumber({
     setError(null)
   }
 
+  const phone = useMemo(
+    () => constructFullPhoneNumber(state.phoneCountryCode, state.phoneNumber),
+    [state.phoneCountryCode, state.phoneNumber],
+  )
+
+  const prettyNumber = useMemo(() => prettyPhoneNumber(phone), [phone])
+
   const {
     mutate: verifyNumber,
     isPending,
     isSuccess,
   } = useMutation({
-    mutationFn: async (_code: string) => {
-      await new Promise(resolve => setTimeout(resolve, 500))
-      return 'success'
+    mutationFn: async (code: string) => {
+      const res = await agent.app.bsky.contact.verifyPhone({code, phone})
+      return res.data.token
     },
-    onSuccess: async () => {
-      dispatch({
-        type: 'VERIFY_PHONE_NUMBER_SUCCESS',
-        payload: {
-          token: 'example_token',
-        },
-      })
+    onSuccess: async token => {
+      // let the success state show for a moment
+      setTimeout(() => {
+        dispatch({
+          type: 'VERIFY_PHONE_NUMBER_SUCCESS',
+          payload: {
+            token,
+          },
+        })
+      }, 1000)
     },
     onMutate: () => setError(null),
     onError: err => {
+      setOtpCode('')
       if (isNetworkError(err)) {
         setError({
           retryable: true,
@@ -95,13 +109,14 @@ export function VerifyNumber({
 
   const {mutate: resendCode, isPending: isResendingCode} = useMutation({
     mutationFn: async () => {
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await agent.app.bsky.contact.startPhoneVerification({phone: phone})
     },
     onSuccess: () => {
       dispatch({type: 'RESEND_VERIFICATION_CODE'})
-      Toast.show(_(msg`Code resent`))
+      Toast.show(_(msg`A new code has been sent`))
     },
     onMutate: () => {
+      setOtpCode('')
       setError(null)
     },
     onError: err => {
@@ -115,11 +130,6 @@ export function VerifyNumber({
       }
     },
   })
-
-  const phoneCode = useMemo(
-    () => getPhoneCodeFromCountryCode(state.phoneCountryCode),
-    [state.phoneCountryCode],
-  )
 
   const onPressBack = useOnPressBackButton()
 
@@ -156,9 +166,7 @@ export function VerifyNumber({
             a.leading_snug,
             a.mt_sm,
           ]}>
-          <Trans>
-            Enter the 6-digit code sent to {phoneCode} {state.phoneNumber}
-          </Trans>
+          <Trans>Enter the 6-digit code sent to {prettyNumber}</Trans>
         </Text>
         <View style={[a.mt_2xl]}>
           <OTPInput
@@ -167,7 +175,7 @@ export function VerifyNumber({
             )}
             value={otpCode}
             onChange={setOtpCode}
-            onComplete={() => verifyNumber(otpCode)}
+            onComplete={code => verifyNumber(code)}
           />
         </View>
         <View style={[a.mt_sm]}>
@@ -259,7 +267,7 @@ function OTPStatus({
     <View style={[a.w_full, a.align_center]}>
       {text && (
         <View style={[a.gap_xs, a.flex_row, a.align_center]}>
-          {Icon && <Icon size="xs" color={textColor} />}
+          {Icon && <Icon size="xs" style={{color: textColor}} />}
           <Text
             style={[
               {color: textColor},
