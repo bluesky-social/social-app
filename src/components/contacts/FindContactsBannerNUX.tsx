@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import Animated, {FadeOut} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
@@ -23,9 +22,7 @@ export function FindContactsBannerNUX() {
   if (!visible) return null
 
   return (
-    <Animated.View
-      style={[a.w_full, a.p_lg, a.border_b, t.atoms.border_contrast_low]}
-      exiting={FadeOut.duration(150)}>
+    <View style={[a.w_full, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       <View style={a.w_full}>
         <Link
           to={{screen: 'FindContactsFlow'}}
@@ -78,7 +75,7 @@ export function FindContactsBannerNUX() {
           <XIcon size="xs" style={[t.atoms.text_contrast_low]} />
         </Button>
       </View>
-    </Animated.View>
+    </View>
   )
 }
 function useInternalState() {
