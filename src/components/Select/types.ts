@@ -123,9 +123,16 @@ export type ValueProps = {
   /**
    * Only needed for native. Extracts the label from an item. Defaults to `item => item.label`
    */
-  children?: (value: any) => string
+  children?: (value: any) => React.ReactNode
   placeholder?: string
   style?: StyleProp<TextStyle>
+  /**
+   * By default, web just extracts the component from inside the dropdown and portals it in here.
+   * If you want to override this, pass a value that will then be rendered via `children(value)`
+   *
+   * @platform web
+   */
+  webOverrideValue?: any
 }
 
 /*
@@ -137,6 +144,12 @@ export type ValueProps = {
 export type IconProps = TextStyleProp
 
 export type ContentProps<T> = {
+  /**
+   * Label at the top of the sheet on native.
+   *
+   * @default "Select an option"
+   */
+  label?: string
   /**
    * Items to render. Recommended to be in the form {value: string, label: string} - if not,
    * you need to provide a `valueExtractor` function to extract the value from an item and
@@ -180,6 +193,8 @@ export type ItemProps = {
 
 export type ItemTextProps = {
   children: React.ReactNode
+  style?: StyleProp<TextStyle>
+  emoji?: boolean
 }
 
 export type ItemIndicatorProps = {
