@@ -79,7 +79,6 @@ export function ViewMatches({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const t = useTheme()
   const gutter = useGutters([0, 'wide'])
   const moderationOpts = useModerationOpts()
   const queryClient = useQueryClient()
@@ -364,29 +363,31 @@ export function ViewMatches({
         ListFooterComponent={!isEmpty ? <ListFooter /> : null}
         keyExtractor={keyExtractor}
       />
-      {context === 'Onboarding' && (
-        <View
-          style={[
-            t.atoms.bg,
-            t.atoms.border_contrast_low,
-            a.border_t,
-            a.align_center,
-            a.align_stretch,
-            gutter,
-            a.pt_md,
-            {paddingBottom: insets.bottom + tokens.space.md},
-          ]}>
-          <Button
-            label={_(msg`Next`)}
-            onPress={onNext}
-            size="large"
-            color="primary">
-            <ButtonText>
+      <View
+        style={[
+          t.atoms.bg,
+          t.atoms.border_contrast_low,
+          a.border_t,
+          a.align_center,
+          a.align_stretch,
+          gutter,
+          a.pt_md,
+          {paddingBottom: insets.bottom + tokens.space.md},
+        ]}>
+        <Button
+          label={context === 'Onboarding' ? _(msg`Next`) : _(msg`Done`)}
+          onPress={onNext}
+          size="large"
+          color="primary">
+          <ButtonText>
+            {context === 'Onboarding' ? (
               <Trans>Next</Trans>
-            </ButtonText>
-          </Button>
-        </View>
-      )}
+            ) : (
+              <Trans>Done</Trans>
+            )}
+          </ButtonText>
+        </Button>
+      </View>
     </View>
   )
 }
