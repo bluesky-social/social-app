@@ -23,7 +23,7 @@ import {
   OnboardingControls,
   TitleText,
 } from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {AvatarCircle} from '#/screens/Onboarding/StepProfile/AvatarCircle'
 import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
 import {AvatarCreatorItems} from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
@@ -78,7 +78,7 @@ export function StepProfile() {
   const creatorControl = Dialog.useDialogControl()
   const [error, setError] = React.useState('')
 
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch} = useOnboardingInternalState()
   const [avatar, setAvatar] = React.useState<Avatar>({
     image: state.profileStepResults?.image,
     placeholder: state.profileStepResults.creatorState?.emoji || emojiItems.at,

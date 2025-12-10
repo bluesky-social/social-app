@@ -26,7 +26,7 @@ import {
   getCountryCodeFromPastedNumber,
   processPhoneNumber,
 } from '../phone-number'
-import {type Action, type State} from '../state'
+import {type Action, type State, useOnPressBackButton} from '../state'
 
 export function PhoneInput({
   state,
@@ -103,10 +103,12 @@ export function PhoneInput({
 
   const paddingBottom = Math.max(insets.bottom, tokens.space.xl)
 
+  const onPressBack = useOnPressBackButton()
+
   return (
     <View style={[a.h_full]}>
       <Layout.Header.Outer noBottomBorder>
-        <Layout.Header.BackButton />
+        <Layout.Header.BackButton onPress={onPressBack} />
         <Layout.Header.Content />
         {showSkipButton ? (
           <Button
@@ -204,12 +206,12 @@ export function PhoneInput({
         <View style={[gutters, {paddingBottom}]}>
           <Button
             disabled={!phoneNumber || isPending}
-            label={_(msg`Next`)}
+            label={_(msg`Send code`)}
             size="large"
             color="primary"
             onPress={onSubmitNumber}>
             <ButtonText>
-              <Trans>Next</Trans>
+              <Trans>Send code</Trans>
             </ButtonText>
             {isPending && <ButtonIcon icon={Loader} />}
           </Button>

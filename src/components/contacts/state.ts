@@ -1,4 +1,5 @@
-import {useReducer} from 'react'
+import {createContext, useContext, useReducer} from 'react'
+import {type GestureResponderEvent} from 'react-native'
 import {type ExistingContact} from 'expo-contacts'
 
 import {type CountryCode} from '#/lib/international-telephone-codes'
@@ -175,4 +176,18 @@ export function useFindContactsFlowState(
   initialState: State = {step: '1: phone input'},
 ) {
   return useReducer(reducer, initialState)
+}
+
+export const FindContactsGoBackContext = createContext<
+  (() => void) | undefined
+>(undefined)
+export function useOnPressBackButton() {
+  const goBack = useContext(FindContactsGoBackContext)
+  if (!goBack) {
+    return undefined
+  }
+  return (evt: GestureResponderEvent) => {
+    evt.preventDefault()
+    goBack()
+  }
 }
