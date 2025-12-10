@@ -1254,11 +1254,9 @@ export const INTERNATIONAL_TELEPHONE_CODES = {
 const DEFAULT_PHONE_COUNTRY = 'US'
 
 export function getDefaultCountry(location?: {countryCode?: string}) {
-  const supportedCountries = Object.keys(INTERNATIONAL_TELEPHONE_CODES)
-
   if (
     location?.countryCode &&
-    supportedCountries.includes(location.countryCode.toUpperCase())
+    location.countryCode.toUpperCase() in INTERNATIONAL_TELEPHONE_CODES
   ) {
     return location.countryCode.toUpperCase()
   }
