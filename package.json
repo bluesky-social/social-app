@@ -75,7 +75,7 @@
     "@atproto/api": "^0.18.6",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
-    "@bsky.app/alf": "^0.1.5",
+    "@bsky.app/alf": "^0.1.6",
     "@bsky.app/react-native-mmkv": "2.12.5",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
