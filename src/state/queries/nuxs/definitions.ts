@@ -55,6 +55,10 @@ export type AppNux = BaseNux<
       data: undefined
     }
   | {
+      id: Nux.FindContactsAnnouncement
+      data: undefined
+    }
+  | {
       id: Nux.FindContactsDismissibleBanner
       data: undefined
     }
