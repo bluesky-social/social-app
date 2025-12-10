@@ -68,12 +68,15 @@ export function VerifyNumber({
       return res.data.token
     },
     onSuccess: async token => {
-      dispatch({
-        type: 'VERIFY_PHONE_NUMBER_SUCCESS',
-        payload: {
-          token,
-        },
-      })
+      // let the success state show for a moment
+      setTimeout(() => {
+        dispatch({
+          type: 'VERIFY_PHONE_NUMBER_SUCCESS',
+          payload: {
+            token,
+          },
+        })
+      }, 1000)
     },
     onMutate: () => setError(null),
     onError: err => {
