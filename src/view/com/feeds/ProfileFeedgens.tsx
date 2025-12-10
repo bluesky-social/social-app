@@ -158,7 +158,7 @@ export function ProfileFeedgens({
             message={
               isSelf
                 ? _(msg`You haven't made any custom feeds yet.`)
-                : _(msg`No custom feeds`)
+                : _(msg`No custom feeds yet`)
             }
             textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
             button={
