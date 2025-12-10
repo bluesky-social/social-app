@@ -22,7 +22,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useGeolocation} from '#/geolocation'
-import {isFindContactsFeatureEnabled} from '../country-whitelist'
+import {isFindContactsFeatureEnabled} from '../country-allowlist'
 import {
   constructFullPhoneNumber,
   getCountryCodeFromPastedNumber,

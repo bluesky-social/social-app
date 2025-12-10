@@ -30,7 +30,7 @@ export function useIsFindContactsFeatureEnabledBasedOnGeolocation() {
   if (IS_DEV) return true
 
   // they can try, by they'll need a phone number
-  // from one of the whitelisted countries
+  // from one of the allowlisted countries
   if (!location.countryCode) return true
 
   return isFindContactsFeatureEnabled(location.countryCode)
