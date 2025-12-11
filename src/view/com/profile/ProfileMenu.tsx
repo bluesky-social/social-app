@@ -33,7 +33,7 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
 import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
