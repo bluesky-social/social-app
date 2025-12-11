@@ -128,14 +128,14 @@
     multiformats "^9.9.0"
     uint8arrays "3.0.0"
 
-"@atproto/bsky@^0.0.201":
-  version "0.0.201"
-  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.201.tgz#b97fe2690c147ac4b0a20a4d970c6ca0dd9da791"
-  integrity sha512-74QIjyhBRQyTt/GICMSMnuKc+ltDt+A2OoLxY7rkwuf1M0+PXj0pS8yA42j0pUM/mvKi5wxCV6d0+0GUUKQXUw==
+"@atproto/bsky@^0.0.202":
+  version "0.0.202"
+  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.202.tgz#7b4376dba273a4c1b810846074974d1b11a58e5c"
+  integrity sha512-QE0T/Vr/WdPZ1lUAZNtNqkH9D+Ii7+95oUR0Q2EYyr0J9G3hlLTvc/FJog91aSe6fzZludRB/n1sRUfdMRePdg==
   dependencies:
     "@atproto-labs/fetch-node" "0.2.0"
     "@atproto-labs/xrpc-utils" "0.0.24"
-    "@atproto/api" "^0.18.6"
+    "@atproto/api" "^0.18.7"
     "@atproto/common" "^0.5.3"
     "@atproto/crypto" "^0.4.5"
     "@atproto/did" "^0.2.3"
@@ -285,13 +285,13 @@
     "@noble/hashes" "^1.6.1"
     uint8arrays "3.0.0"
 
-"@atproto/dev-env@^0.3.195":
-  version "0.3.195"
-  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.195.tgz#6cbcff3845747448bc5bf1573f1b670655ea1750"
-  integrity sha512-jcwQuflQZSAABAJEgA7/dgCHsUmg7ll3Rmrse0vaciIa2Eg2m7H7adBw94n5TxyR8NdplsLAs7tsymrFL9/w8Q==
+"@atproto/dev-env@^0.3.196":
+  version "0.3.196"
+  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.196.tgz#e98d3f3e7a7cee874425b01bfc164e22d1111664"
+  integrity sha512-65LrDGcGIFrZ+JnQlW38ZFO9jYO1Sp9fHc2rRq6bZzfAGT6c7K3EWHhXhNDtQ4oL3DYAT9+p56Pcv68XMaSipA==
   dependencies:
-    "@atproto/api" "^0.18.6"
-    "@atproto/bsky" "^0.0.201"
+    "@atproto/api" "^0.18.7"
+    "@atproto/bsky" "^0.0.202"
     "@atproto/bsync" "^0.0.23"
     "@atproto/common-web" "^0.4.7"
     "@atproto/crypto" "^0.4.5"

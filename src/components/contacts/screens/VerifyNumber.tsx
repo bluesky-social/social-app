@@ -81,6 +81,7 @@ export function VerifyNumber({
     onMutate: () => setError(null),
     onError: err => {
       setOtpCode('')
+      console.log(err)
       if (isNetworkError(err)) {
         setError({
           retryable: true,
