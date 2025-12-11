@@ -97,7 +97,7 @@ export function constructFullPhoneNumber(
  */
 export function prettyPhoneNumber(phoneNumber: string) {
   const result = parsePhoneNumber(phoneNumber)
-  return result.formatInternational()
+  return result.formatNational()
 }
 
 /**
