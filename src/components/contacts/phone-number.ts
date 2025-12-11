@@ -53,7 +53,6 @@ export function processPhoneNumber(
       formatted: formatInternationalWithoutCountryCode(phoneNumber),
     }
   } catch (error) {
-    console.log(error)
     if (error instanceof ParseError) {
       return {valid: false, reason: error.message}
     } else {
