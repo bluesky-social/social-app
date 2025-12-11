@@ -1,16 +1,18 @@
-import {useCallback, useMemo} from 'react'
+import {lazy, Suspense, useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {shareUrl} from '#/lib/sharing'
-import {isPossiblyAUrl, splitApexDomain} from '#/lib/strings/url-helpers'
+import {isPossiblyAUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
-import {useGlobalDialogsControlContext} from './Context'
+import {useGlobalDialogsControlContext} from '../Context'
+
+const LinkBox = lazy(() => import('./LinkBox.tsx'))
 
 export function LinkWarningDialog() {
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
@@ -93,7 +95,11 @@ function LinkWarningDialogInner({
           <Text style={[t.atoms.text_contrast_high, a.text_md, a.leading_snug]}>
             <Trans>This link is taking you to the following website:</Trans>
           </Text>
-          {link && <LinkBox href={link.href} />}
+          {link && (
+            <Suspense fallback={<FallbackLinkBox href={link.href} />}>
+              <LinkBox href={link.href} />
+            </Suspense>
+          )}
           {potentiallyMisleading && (
             <Text
               style={[t.atoms.text_contrast_high, a.text_md, a.leading_snug]}>
@@ -112,7 +118,6 @@ function LinkWarningDialogInner({
             accessibilityHint={_(msg`Opens link ${link?.href ?? ''}`)}
             onPress={onPressVisit}
             size="large"
-            variant="solid"
             color={potentiallyMisleading ? 'secondary_inverted' : 'primary'}>
             <ButtonText>
               {link?.share ? (
@@ -139,15 +144,19 @@ function LinkWarningDialogInner({
   )
 }
 
-function LinkBox({href}: {href: string}) {
+/**
+ * Same as LinkBox but does not split the apex domain from the subdomain.
+ * This shows while we lazy load the LinkBox component, so that we can
+ * split `psl` out of the main bundle.
+ */
+function FallbackLinkBox({href}: {href: string}) {
   const t = useTheme()
   const [scheme, hostname, rest] = useMemo(() => {
     try {
       const urlp = new URL(href)
-      const [subdomain, apexdomain] = splitApexDomain(urlp.hostname)
       return [
-        urlp.protocol + '//' + subdomain,
-        apexdomain,
+        urlp.protocol + '//',
+        urlp.hostname,
         urlp.pathname.replace(/\/$/, '') + urlp.search + urlp.hash,
       ]
     } catch {
