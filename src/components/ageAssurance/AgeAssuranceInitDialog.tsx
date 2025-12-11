@@ -16,7 +16,7 @@ import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {type AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {urls} from '#/components/ageAssurance/const'
@@ -63,7 +63,6 @@ export function AgeAssuranceInitDialog({
 }
 
 function Inner() {
-  const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const langPrefs = useLanguagePrefs()
@@ -323,30 +322,6 @@ function Inner() {
                 />
               </Button>
             </View>
-
-            <Text
-              style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
-              <Trans>
-                By continuing, you agree to the{' '}
-                <SimpleInlineLinkText
-                  label={_(msg`KWS Terms of Use`)}
-                  to={urls.kwsTermsOfUse}
-                  style={[a.text_xs, a.leading_snug]}>
-                  KWS Terms of Use
-                </SimpleInlineLinkText>{' '}
-                and acknowledge that KWS will store your verified status with
-                your hashed email address in accordance with the{' '}
-                <SimpleInlineLinkText
-                  label={_(msg`KWS Privacy Policy`)}
-                  to={urls.kwsPrivacyPolicy}
-                  style={[a.text_xs, a.leading_snug]}>
-                  KWS Privacy Policy
-                </SimpleInlineLinkText>
-                . This means you won’t need to verify again the next time you
-                use this email for other apps, games, and services powered by
-                KWS technology.
-              </Trans>
-            </Text>
           </>
         )}
       </View>
