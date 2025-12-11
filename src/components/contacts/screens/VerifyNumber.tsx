@@ -92,8 +92,8 @@ export function VerifyNumber({
         // TODO: Check error with invalid code error!!
       } else if (true) {
         setError({
-          retryable: false,
-          isResendError: false,
+          retryable: true,
+          isResendError: true,
           message: _(msg`This code is invalid. Resend to get a new code.`),
         })
       } else {
