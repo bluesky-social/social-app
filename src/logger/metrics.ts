@@ -598,6 +598,11 @@ export type MetricEvents = {
     hasInitiatedPreviously: boolean
   }
   'ageAssurance:initDialogSubmit': {}
+  'ageAssurance:api:begin': {
+    platform: string
+    countryCode: string
+    regionCode?: string
+  }
   'ageAssurance:initDialogError': {
     code: string
   }
