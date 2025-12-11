@@ -59,7 +59,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       accessibilityLabel={dialogLabel}
       accessibilityHint={_(msg`Customizes your Bluesky experience`)}
       style={[isWeb ? a.fixed : a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
-      {!gtMobile && (
+      {!gtMobile ? (
         <View
           style={[
             web(a.fixed),
@@ -118,6 +118,28 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             </HeaderSlot>
           </View>
         </View>
+      ) : (
+        <>
+          {IS_INTERNAL && (
+            <View
+              style={[
+                a.absolute,
+                a.align_center,
+                a.z_10,
+                {top: 0, left: 0, right: 0},
+              ]}>
+              <Button
+                variant="ghost"
+                color="negative"
+                size="tiny"
+                onPress={() => onboardDispatch({type: 'skip'})}
+                // DEV ONLY
+                label="Clear onboarding state">
+                <ButtonText>[DEV] Clear</ButtonText>
+              </Button>
+            </View>
+          )}
+        </>
       )}
 
       <ScrollView
