@@ -133,7 +133,7 @@ export function GetContacts({
         contentContainerStyle={[gutters, a.flex_1, a.pt_xl]}
         bounces={false}>
         <Text style={[a.font_bold, a.text_3xl]}>
-          <Trans>Share Your Contacts to Find Friends</Trans>
+          <Trans>Share your contacts to find friends</Trans>
         </Text>
         <Text style={style}>
           <Trans>
@@ -141,23 +141,22 @@ export function GetContacts({
             fingerprint, called a "hash," and then looking for matching hashes.
           </Trans>
         </Text>
-        <Text style={[style, a.mt_lg]}>
-          &bull; <Trans>We only suggest follows if both people consent</Trans>
-        </Text>
         <Text style={style}>
           &bull; <Trans>We never store plain phone numbers</Trans>
         </Text>
         <Text style={style}>
-          &bull;{' '}
-          <Trans>We save only non-matching hashes for future matching</Trans>
+          &bull; <Trans>We delete hashes after matches are made</Trans>
         </Text>
         <Text style={style}>
-          &bull; <Trans>You can always opt out</Trans>
+          &bull; <Trans>We only suggest follows if both people consent</Trans>
+        </Text>
+        <Text style={style}>
+          &bull; <Trans>You can always opt out and delete your data</Trans>
         </Text>
         <Text style={[style, a.mt_lg]}>
           <Trans>
-            We apply the highest privacy standards just in case your contacts
-            include minors. We never share or sell your contact information.
+            We apply the highest privacy standards, and never share or sell your
+            contact information.
           </Trans>
         </Text>
       </Layout.Content>
