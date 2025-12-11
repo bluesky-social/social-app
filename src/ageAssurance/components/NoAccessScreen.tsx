@@ -69,7 +69,7 @@ export function NoAccessScreen() {
     // just counting overall hits here
     logger.metric(`blockedGeoOverlay:shown`, {})
     logger.metric(`ageAssurance:noAccessScreen:shown`, {
-      accountCreatedAt: data?.accountCreatedAt,
+      accountCreatedAt: data?.accountCreatedAt || 'unknown',
       isAARegion,
       hasDeclaredAge,
       canUpdateBirthday,

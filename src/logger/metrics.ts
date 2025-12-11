@@ -607,7 +607,7 @@ export type MetricEvents = {
   'ageAssurance:appealDialogOpen': {}
   'ageAssurance:appealDialogSubmit': {}
   'ageAssurance:noAccessScreen:shown': {
-    accountCreatedAt?: string
+    accountCreatedAt: string
     isAARegion: boolean
     hasDeclaredAge: boolean
     canUpdateBirthday: boolean
