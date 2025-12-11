@@ -23,6 +23,7 @@ import {
 import {useAgent} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
 import {useAgeAssurance} from '#/ageAssurance'
+import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
 
 export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
@@ -81,7 +82,9 @@ export function usePreferencesQuery() {
         if (aa.state.access !== aa.Access.Full) {
           data = {
             ...data,
-            moderationPrefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+            moderationPrefs: makeAgeRestrictedModerationPrefs(
+              data.moderationPrefs,
+            ),
           }
         }
         return data

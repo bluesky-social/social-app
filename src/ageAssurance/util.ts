@@ -3,9 +3,11 @@ import {
   ageAssuranceRuleIDs as ids,
   type AppBskyAgeassuranceDefs,
   getAgeAssuranceRegionConfig,
+  type ModerationPrefs,
 } from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
+import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
 import {AgeAssuranceAccess} from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
@@ -95,3 +97,11 @@ export function getBirthdateStringFromAge(age: number) {
     today.getDate() - 1, // set to day before to ensure age is reached
   ).toISOString()
 }
+
+export const makeAgeRestrictedModerationPrefs = (
+  prefs: ModerationPrefs,
+): ModerationPrefs => ({
+  ...prefs,
+  adultContentEnabled: false,
+  labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
+})
