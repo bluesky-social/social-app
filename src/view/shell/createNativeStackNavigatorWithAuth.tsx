@@ -35,10 +35,8 @@ import {
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {LoggedOut} from '#/view/com/auth/LoggedOut'
-import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
-import {Takendown} from '#/screens/Takendown'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {PolicyUpdateOverlay} from '#/components/PolicyUpdateOverlay'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
@@ -119,14 +117,8 @@ function NativeStackNavigator({
   if (hasSession && currentAccount?.signupQueued) {
     return <SignupQueued />
   }
-  if (hasSession && currentAccount?.status === 'takendown') {
-    return <Takendown />
-  }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
-  }
-  if (currentAccount?.status === 'deactivated') {
-    return <Deactivated />
   }
   if (onboardingState.isActive) {
     return <Onboarding />
