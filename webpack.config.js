@@ -23,6 +23,7 @@ module.exports = async function (env, argv) {
   config = withAlias(config, {
     'react-native$': 'react-native-web',
     'react-native-webview': 'react-native-web-webview',
+    '@sentry-internal/replay': false, // not used, ~300kb of dead weight
   })
   config.module.rules = [
     ...(config.module.rules || []),
