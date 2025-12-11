@@ -214,7 +214,7 @@ class PermissionDeniedError extends Error {
 function showPermissionDeniedAlert() {
   Alert.alert(
     t`You've denied access to your contacts`,
-    t`You'll need to go to the app's settings and give permission if you want to use this feature.`,
+    t`You'll need to go to the System Settings for Bluesky and give permission if you want to use this feature.`,
     [
       {
         text: t`OK`,
