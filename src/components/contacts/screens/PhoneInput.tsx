@@ -13,7 +13,14 @@ import {
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
-import {android, atoms as a, tokens, useGutters, useTheme} from '#/alf'
+import {
+  android,
+  atoms as a,
+  platform,
+  tokens,
+  useGutters,
+  useTheme,
+} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {InternationalPhoneCodeSelect} from '#/components/InternationalPhoneCodeSelect'
@@ -102,7 +109,14 @@ export function PhoneInput({
     const result = processPhoneNumber(phoneNumber, countryCode)
     if (result.valid) {
       setPhoneNumber(result.formatted)
-      submit({phoneCountryCode: countryCode, phoneNumber: result.formatted})
+      setCountryCode(result.countryCode)
+
+      if (!isFindContactsFeatureEnabled(result.countryCode)) return
+
+      submit({
+        phoneCountryCode: result.countryCode,
+        phoneNumber: result.formatted,
+      })
     } else {
       setFormatError(result.reason ?? _(msg`Invalid phone number`))
     }
@@ -182,7 +196,10 @@ export function PhoneInput({
                     setPhoneNumber(text)
                   }}
                   placeholder={null}
-                  keyboardType="number-pad" // we don't want people entering +() etc
+                  keyboardType={platform({
+                    ios: 'number-pad',
+                    android: 'phone-pad',
+                  })}
                   autoComplete="tel"
                   returnKeyType={android('next')}
                   onSubmitEditing={onSubmitNumber}

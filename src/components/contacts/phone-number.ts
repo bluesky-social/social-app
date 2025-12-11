@@ -19,6 +19,7 @@ export function processPhoneNumber(
   | {
       valid: true
       formatted: string
+      countryCode: CountryCode
     }
   | {
       valid: false
@@ -42,15 +43,18 @@ export function processPhoneNumber(
         reason: t`Number should be a mobile number`,
       }
     }
-    if (phoneNumber.country !== country) {
-      return {
-        valid: false,
-        reason: t`Country code does not match`,
+    let countryCode = country
+    if (phoneNumber.country && phoneNumber.country !== country) {
+      if (phoneNumber.country === 'AC' || phoneNumber.country === 'TA') {
+        countryCode = 'SH'
+      } else {
+        countryCode = phoneNumber.country
       }
     }
     return {
       valid: true,
-      formatted: formatInternationalWithoutCountryCode(phoneNumber),
+      formatted: formatE164lWithoutCountryCode(phoneNumber),
+      countryCode,
     }
   } catch (error) {
     if (error instanceof ParseError) {
@@ -65,8 +69,8 @@ export function processPhoneNumber(
  * Format a phone number as the international format with the prefix
  * removed.
  */
-function formatInternationalWithoutCountryCode(phoneNumber: PhoneNumber) {
-  const intl = phoneNumber.formatInternational()
+function formatE164lWithoutCountryCode(phoneNumber: PhoneNumber) {
+  const intl = phoneNumber.format('E.164')
   const prefix = '+' + phoneNumber.countryCallingCode
   return intl.replace(prefix, '').trim()
 }
@@ -113,7 +117,7 @@ export function getCountryCodeFromPastedNumber(
     if (countryCode && countryCode !== 'AC' && countryCode !== 'TA') {
       return {
         countryCode,
-        rest: formatInternationalWithoutCountryCode(phoneNumber),
+        rest: formatE164lWithoutCountryCode(phoneNumber),
       }
     } else {
       return undefined
