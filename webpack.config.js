@@ -23,6 +23,7 @@ module.exports = async function (env, argv) {
   config = withAlias(config, {
     'react-native$': 'react-native-web',
     'react-native-webview': 'react-native-web-webview',
+    '@sentry-internal/replay': false, // not used, ~300kb of dead weight
   })
   config.module.rules = [
     ...(config.module.rules || []),
@@ -56,12 +57,6 @@ module.exports = async function (env, argv) {
           // fallback needed for Render.com deployments
           name: process.env.SENTRY_RELEASE || version,
           dist: process.env.SENTRY_DIST,
-        },
-        bundleSizeOptimizations: {
-          excludeDebugStatements: true,
-          excludeReplayShadowDom: true,
-          excludeReplayIframe: true,
-          excludeReplayWorker: true,
         },
       }),
     )
