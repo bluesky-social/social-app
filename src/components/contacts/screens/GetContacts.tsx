@@ -129,7 +129,9 @@ export function GetContacts({
 
   return (
     <View style={[a.h_full]}>
-      <Layout.Content contentContainerStyle={[gutters, a.flex_1, a.pt_xl]}>
+      <Layout.Content
+        contentContainerStyle={[gutters, a.flex_1, a.pt_xl]}
+        bounces={false}>
         <Text style={[a.font_bold, a.text_3xl]}>
           <Trans>Share Your Contacts to Find Friends</Trans>
         </Text>
