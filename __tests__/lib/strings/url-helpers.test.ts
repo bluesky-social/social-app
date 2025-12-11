@@ -171,7 +171,7 @@ describe('isTrustedUrl', () => {
     ['https://docs.google.com', false],
     ['https://google.com/#', false],
     ['https://blueskywebxzendesk.com', false],
-  ]
+  ] as [string, boolean][]
 
   it.each(cases)('given input uri %p, returns %p', (str, expected) => {
     const output = isTrustedUrl(str)
