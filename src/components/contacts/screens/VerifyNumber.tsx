@@ -267,7 +267,13 @@ function OTPStatus({
   return (
     <View style={[a.w_full, a.align_center]}>
       {text && (
-        <View style={[a.gap_xs, a.flex_row, a.align_center]}>
+        <View
+          style={[
+            a.gap_xs,
+            a.flex_row,
+            a.align_center,
+            (isSuccess || isPending) && a.mt_lg,
+          ]}>
           {Icon && <Icon size="xs" style={{color: textColor}} />}
           <Text
             style={[
