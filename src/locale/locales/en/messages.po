@@ -1161,6 +1161,10 @@ msgstr ""
 msgid "App Icon"
 msgstr ""
 
+#: src/screens/Settings/LanguageSettings.tsx:103
+msgid "App language"
+msgstr ""
+
 #: src/screens/Settings/LanguageSettings.tsx:87
 msgid "App Language"
 msgstr ""
@@ -1394,11 +1398,11 @@ msgstr ""
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:317
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:318
 msgid "Begin"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:311
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:312
 msgid "Begin age assurance process"
 msgstr ""
 
@@ -1646,7 +1650,7 @@ msgstr ""
 msgid "By clicking \"Continue\" you acknowledge that you understand and agree to these updates."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:328
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:329
 msgid "By continuing, you agree to the <0>KWS Terms of Use</0> and acknowledge that KWS will store your verified status with your hashed email address in accordance with the <1>KWS Privacy Policy</1>. This means you won’t need to verify again the next time you use this email for other apps, games, and services powered by KWS technology."
 msgstr ""
 
@@ -2264,7 +2268,7 @@ msgstr ""
 msgid "Content from across the network we think you might like."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:153
+#: src/screens/Settings/LanguageSettings.tsx:155
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
 msgid "Content Languages"
 msgstr ""
@@ -2496,6 +2500,10 @@ msgstr ""
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
+msgstr ""
+
+#: src/components/InternationalPhoneCodeSelect.tsx:78
+msgid "Country code"
 msgstr ""
 
 #. Text on button to create a new starter pack
@@ -2975,8 +2983,6 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:142
 #: src/components/forms/DateField/index.tsx:103
 #: src/components/forms/DateField/index.tsx:109
-#: src/components/Select/index.tsx:185
-#: src/components/Select/index.tsx:192
 #: src/lib/media/picker.tsx:35
 #: src/screens/Onboarding/StepProfile/index.tsx:341
 #: src/screens/Onboarding/StepProfile/index.tsx:344
@@ -3016,8 +3022,8 @@ msgstr ""
 msgid "Download Bluesky"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:78
-#: src/screens/Settings/components/ExportCarDialog.tsx:83
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr ""
 
@@ -3503,7 +3509,7 @@ msgstr ""
 msgid "Export my data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:62
+#: src/screens/Settings/components/ExportCarDialog.tsx:63
 msgid "Export My Data"
 msgstr ""
 
@@ -4805,11 +4811,11 @@ msgstr ""
 msgid "Keep me posted"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:339
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:340
 msgid "KWS Privacy Policy"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:331
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:332
 msgid "KWS Terms of Use"
 msgstr ""
 
@@ -6654,7 +6660,7 @@ msgstr ""
 msgid "Please provide any additional details you feel moderators may need in order to properly assess your Age Assurance status."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:302
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:303
 msgid "Please select a language"
 msgstr ""
 
@@ -6813,6 +6819,10 @@ msgstr ""
 msgid "Potentially misleading link warning"
 msgstr ""
 
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:292
+msgid "Preferred language"
+msgstr ""
+
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
 msgstr ""
@@ -6832,7 +6842,11 @@ msgstr ""
 msgid "Previous image"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:120
+#: src/screens/Settings/LanguageSettings.tsx:137
+msgid "Primary language"
+msgstr ""
+
+#: src/screens/Settings/LanguageSettings.tsx:121
 msgid "Primary Language"
 msgstr ""
 
@@ -7905,7 +7919,7 @@ msgstr ""
 msgid "Select an emoji"
 msgstr ""
 
-#: src/components/Select/index.tsx:206
+#: src/components/Select/index.tsx:199
 msgid "Select an option"
 msgstr ""
 
@@ -7913,7 +7927,7 @@ msgstr ""
 msgid "Select app language"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:164
+#: src/screens/Settings/LanguageSettings.tsx:166
 msgid "Select content languages"
 msgstr ""
 
@@ -7945,8 +7959,9 @@ msgstr ""
 msgid "Select how long to mute this word for."
 msgstr ""
 
-#: src/components/LanguageSelect.tsx:35
-#: src/components/LanguageSelect.tsx:36
+#: src/components/AppLanguageDropdown.tsx:69
+#: src/components/LanguageSelect.tsx:37
+#: src/components/LanguageSelect.tsx:38
 msgid "Select language"
 msgstr ""
 
@@ -7954,7 +7969,7 @@ msgstr ""
 msgid "Select language..."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:178
+#: src/screens/Settings/LanguageSettings.tsx:180
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:248
 msgid "Select languages"
 msgstr ""
@@ -7967,13 +7982,17 @@ msgstr ""
 msgid "Select post language"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:131
+#: src/screens/Settings/LanguageSettings.tsx:132
 msgid "Select primary language"
 msgstr ""
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:60
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:67
 msgid "Select subtitle file (.vtt)"
+msgstr ""
+
+#: src/components/InternationalPhoneCodeSelect.tsx:66
+msgid "Select telephone code"
 msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
@@ -7992,7 +8011,7 @@ msgstr ""
 msgid "Select which language to use for the app's user interface."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:157
+#: src/screens/Settings/LanguageSettings.tsx:159
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
@@ -8005,7 +8024,7 @@ msgstr ""
 msgid "Select your interests from the options below"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:124
+#: src/screens/Settings/LanguageSettings.tsx:125
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
@@ -9201,7 +9220,7 @@ msgstr ""
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:95
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr ""
 
@@ -10121,7 +10140,7 @@ msgstr ""
 msgid "View blocked user's profile"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:99
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr ""
 
@@ -10285,7 +10304,7 @@ msgid "We estimate {estimatedTime} until your account is ready."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:197
-msgid "We have partnered with <0>KWS</0> to verify that you’re an adult. When you click \"Begin\" below, KWS will check if you have previously verified your age using this email address for other games/services powered by KWS technology. If not, KWS will email you instructions for verifying your age. When you’re done, you'll be brought back to continue using Bluesky."
+msgid "We have partnered with <0>KWS</0> to handle age verification. When you click \"Begin\" below, KWS will email you instructions to complete the verification process. If your email address has already been used to verify your age for another game or service that uses KWS, you won’t need to do it again. When you’re done, you'll be brought back to continue using Bluesky."
 msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:101
@@ -11008,7 +11027,7 @@ msgstr ""
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:67
+#: src/screens/Settings/components/ExportCarDialog.tsx:68
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
