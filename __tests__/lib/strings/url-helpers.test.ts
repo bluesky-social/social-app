@@ -1,7 +1,6 @@
 import {describe, expect, it} from '@jest/globals'
 
-// co-located with LinkBox.tsx so we can lazy load PSL
-import {splitApexDomain} from '../../../src/components/dialogs/LinkWarning/LinkBox'
+import {splitApexDomain} from '../../../src/lib/strings/url-apex-split'
 import {
   isPossiblyAUrl,
   isTrustedUrl,

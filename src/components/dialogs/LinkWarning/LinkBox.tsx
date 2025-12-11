@@ -1,20 +1,9 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import psl from 'psl'
 
+import {splitApexDomain} from '#/lib/strings/url-apex-split'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
-
-export function splitApexDomain(hostname: string): [string, string] {
-  const hostnamep = psl.parse(hostname)
-  if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
-    return ['', hostname]
-  }
-  return [
-    hostnamep.subdomain ? `${hostnamep.subdomain}.` : '',
-    hostnamep.domain,
-  ]
-}
 
 export default function LinkBox({href}: {href: string}) {
   const t = useTheme()
