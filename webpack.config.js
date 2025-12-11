@@ -28,6 +28,7 @@ module.exports = async function (env, argv) {
       .resolve('unicode-segmenter/grapheme')
       .replace(/\.cjs$/, '.js'),
     'react-native-gesture-handler': false, // RNGH should not be used on web, so let's cause a build error if it sneaks in
+    '@sentry-internal/replay': false, // not used, ~300kb of dead weight
   })
   config.module.rules = [
     ...(config.module.rules || []),
@@ -61,12 +62,6 @@ module.exports = async function (env, argv) {
           // fallback needed for Render.com deployments
           name: process.env.SENTRY_RELEASE || version,
           dist: process.env.SENTRY_DIST,
-        },
-        bundleSizeOptimizations: {
-          excludeDebugStatements: true,
-          excludeReplayShadowDom: true,
-          excludeReplayIframe: true,
-          excludeReplayWorker: true,
         },
       }),
     )
