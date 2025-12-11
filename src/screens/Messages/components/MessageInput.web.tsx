@@ -4,7 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
-import {countGraphemes} from 'unicode-segmenter'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {isSafari, isTouchDevice} from '#/lib/browser'
 import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'

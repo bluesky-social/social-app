@@ -6,7 +6,7 @@ import {type ComAtprotoAdminDefs, ToolsOzoneReportDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
-import {countGraphemes} from 'unicode-segmenter'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {
   BLUESKY_MOD_SERVICE_HEADERS,

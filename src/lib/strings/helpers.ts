@@ -1,5 +1,5 @@
 import {type RichText} from '@atproto/api'
-import {countGraphemes} from 'unicode-segmenter'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {shortenLinks} from './rich-text-manip'
 
