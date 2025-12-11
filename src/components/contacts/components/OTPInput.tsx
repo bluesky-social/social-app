@@ -9,8 +9,8 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {mergeRefs} from '#/lib/merge-refs'
-import {isIOS} from '#/platform/detection'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {isAndroid, isIOS} from '#/platform/detection'
+import {atoms as a, ios, platform, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
 
@@ -93,6 +93,9 @@ export function OTPInput({
         })}
       </View>
       <TextInput
+        // SMS autofill is borked on iOS if you open the keyboard immediately -sfn
+        onLayout={ios(() => setTimeout(() => innerRef.current?.focus(), 100))}
+        autoFocus={isAndroid}
         accessible
         accessibilityLabel={label}
         accessibilityHint=""
@@ -102,12 +105,13 @@ export function OTPInput({
         onChangeText={onChangeText}
         onSelectionChange={onSelectionChange}
         keyboardAppearance={t.scheme}
+        inputMode="numeric"
         keyboardType="number-pad"
+        textContentType="oneTimeCode"
         autoComplete={platform({
           android: 'sms-otp',
           ios: 'one-time-code',
         })}
-        autoFocus
         onFocus={onFocus}
         onBlur={onBlur}
         maxLength={numberOfDigits}
