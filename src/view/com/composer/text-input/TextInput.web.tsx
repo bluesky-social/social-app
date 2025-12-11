@@ -20,7 +20,7 @@ import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {Fragment, Node, Slice} from '@tiptap/pm/model'
 import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
-import {splitGraphemes} from 'unicode-segmenter'
+import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
