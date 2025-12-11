@@ -27,7 +27,7 @@ export function StepFindContactsIntro() {
     <View style={[a.w_full, a.gap_lg]}>
       <ContactsHeroImage />
       <Text style={[a.text_3xl, a.leading_snug, a.font_bold]}>
-        <Trans>Bluesky is more fun with Friends</Trans>
+        <Trans>Bluesky is more fun with friends</Trans>
       </Text>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         <Trans>
