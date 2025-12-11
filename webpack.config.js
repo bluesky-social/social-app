@@ -23,6 +23,7 @@ module.exports = async function (env, argv) {
   config = withAlias(config, {
     'react-native$': 'react-native-web',
     'react-native-webview': 'react-native-web-webview',
+    'react-native-gesture-handler': "🚨 RNGH used on web! Don't do that!",
   })
   config.module.rules = [
     ...(config.module.rules || []),
