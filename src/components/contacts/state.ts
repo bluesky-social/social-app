@@ -17,7 +17,7 @@ export type State =
       step: '2: verify number'
       phoneCountryCode: CountryCode
       phoneNumber: string
-      lastSentAt: Date
+      lastSentAt: Date | null
     }
   | {
       step: '3: get contacts'
@@ -89,7 +89,7 @@ function reducer(state: State, action: Action): State {
       return {
         step: '2: verify number',
         ...action.payload,
-        lastSentAt: new Date(),
+        lastSentAt: null,
       }
     }
     case 'RESEND_VERIFICATION_CODE': {
