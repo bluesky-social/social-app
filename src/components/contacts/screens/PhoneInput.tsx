@@ -13,6 +13,7 @@ import {
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
+import {OnboardingPosition} from '#/screens/Onboarding/Layout'
 import {
   android,
   atoms as a,
@@ -21,7 +22,6 @@ import {
   useGutters,
   useTheme,
 } from '#/alf'
-import {OnboardingPosition} from '#/screens/Onboarding/Layout'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {InternationalPhoneCodeSelect} from '#/components/InternationalPhoneCodeSelect'
