@@ -25,7 +25,7 @@ export function GetContacts({
   onCancel,
 }: {
   state: Extract<State, {step: '3: get contacts'}>
-  dispatch: React.Dispatch<Action>
+  dispatch: React.ActionDispatch<[Action]>
   onCancel: () => void
 }) {
   const {_} = useLingui()

@@ -224,13 +224,23 @@ export function useOnboardingInternalState() {
 
   return {
     state: useMemo(() => {
-      const stepOrder = getStepOrder(state)
+      const stepOrder = getStepOrder(state).filter(
+        x => x !== 'find-contacts' && x !== 'finished',
+      ) as string[]
       const canGoBack = state.activeStep !== stepOrder[0]
       return {
         ...state,
         canGoBack,
+        /**
+         * Note: for *display* purposes only, do not lean on this
+         * for navigation purposes! we merge certain steps!
+         */
+        activeStepIndex: stepOrder.indexOf(
+          state.activeStep === 'find-contacts'
+            ? 'find-contacts-intro'
+            : state.activeStep,
+        ),
         totalSteps: stepOrder.length,
-        activeStepIndex: stepOrder.indexOf(state.activeStep),
       }
     }, [state]),
     dispatch,

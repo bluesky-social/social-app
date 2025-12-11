@@ -4,18 +4,21 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
 import {InlineLinkText} from '#/components/Link'
-import {Text} from '#/components/Typography'
-import {OnboardingControls} from '../Layout'
+import {
+  OnboardingControls,
+  OnboardingDescriptionText,
+  OnboardingPosition,
+  OnboardingTitleText,
+} from '../Layout'
 import {useOnboardingInternalState} from '../state'
 
 export function StepFindContactsIntro() {
   const {_} = useLingui()
-  const t = useTheme()
   const {dispatch} = useOnboardingInternalState()
 
   const {data: isAvailable, isSuccess} = useQuery({
@@ -24,12 +27,13 @@ export function StepFindContactsIntro() {
   })
 
   return (
-    <View style={[a.w_full, a.gap_lg]}>
+    <View style={[a.w_full, a.gap_sm]}>
+      <OnboardingPosition />
       <ContactsHeroImage />
-      <Text style={[a.text_3xl, a.leading_snug, a.font_bold]}>
+      <OnboardingTitleText style={[a.mt_sm]}>
         <Trans>Bluesky is more fun with friends</Trans>
-      </Text>
-      <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+      </OnboardingTitleText>
+      <OnboardingDescriptionText>
         <Trans>
           Find your friends on Bluesky by verifying your phone number and
           matching with your contacts. We protect your information and you
@@ -41,7 +45,7 @@ export function StepFindContactsIntro() {
             TODO: Learn more
           </InlineLinkText>
         </Trans>
-      </Text>
+      </OnboardingDescriptionText>
       {!isAvailable && isSuccess && (
         <Admonition type="error">
           <Trans>
@@ -57,7 +61,8 @@ export function StepFindContactsIntro() {
             onPress={() => dispatch({type: 'next'})}
             label={_(msg`Import contacts`)}
             size="large"
-            color="primary">
+            color="primary"
+            disabled={!isAvailable}>
             <ButtonText>
               <Trans>Import contacts</Trans>
             </ButtonText>

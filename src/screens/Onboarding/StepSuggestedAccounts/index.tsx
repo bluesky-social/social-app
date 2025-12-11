@@ -15,10 +15,14 @@ import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
-import {OnboardingControls} from '#/screens/Onboarding/Layout'
+import {
+  OnboardingControls,
+  OnboardingPosition,
+  OnboardingTitleText,
+} from '#/screens/Onboarding/Layout'
 import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
@@ -27,7 +31,6 @@ import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../util'
 
@@ -146,18 +149,21 @@ export function StepSuggestedAccounts() {
   )
 
   return (
-    <View style={[a.align_start]} testID="onboardingInterests">
-      <Text style={[a.font_bold, a.text_3xl]}>
+    <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
+      <OnboardingPosition />
+      <OnboardingTitleText>
         <Trans comment="Accounts suggested to the user for them to follow">
           Suggested for you
         </Trans>
-      </Text>
+      </OnboardingTitleText>
 
       <View
         style={[
           a.overflow_hidden,
-          a.mt_lg,
-          isWeb ? a.max_w_full : {marginHorizontal: tokens.space.xl * -1},
+          a.mt_sm,
+          isWeb
+            ? [a.max_w_full, web({minHeight: '100vh'})]
+            : {marginHorizontal: tokens.space.xl * -1},
           a.flex_1,
           a.justify_start,
         ]}>
