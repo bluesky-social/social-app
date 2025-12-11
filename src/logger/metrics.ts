@@ -606,6 +606,13 @@ export type MetricEvents = {
   'ageAssurance:redirectDialogFail': {}
   'ageAssurance:appealDialogOpen': {}
   'ageAssurance:appealDialogSubmit': {}
+  'ageAssurance:noAccessScreen:shown': {
+    accountCreatedAt: string
+    isAARegion: boolean
+    hasDeclaredAge: boolean
+    canUpdateBirthday: boolean
+  }
+  'ageAssurance:noAccessScreen:openBirthdateDialog': {}
 
   /*
    * Specifically for the `BlockedGeoOverlay`

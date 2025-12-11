@@ -68,6 +68,13 @@ export function NoAccessScreen() {
   useEffect(() => {
     // just counting overall hits here
     logger.metric(`blockedGeoOverlay:shown`, {})
+    logger.metric(`ageAssurance:noAccessScreen:shown`, {
+      accountCreatedAt: data?.accountCreatedAt || 'unknown',
+      isAARegion,
+      hasDeclaredAge,
+      canUpdateBirthday,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onPressLogout = useCallback(() => {
@@ -90,6 +97,7 @@ export function NoAccessScreen() {
           label={_(msg`Click here to update your birthdate`)}
           style={[textStyles]}
           {...createStaticClick(() => {
+            logger.metric('ageAssurance:noAccessScreen:openBirthdateDialog', {})
             birthdateControl.open()
           })}>
           clicking here
