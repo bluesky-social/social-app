@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react'
+import {useState} from 'react'
 import {Modal, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
@@ -7,7 +7,7 @@ import {type ComAtprotoAdminDefs, ToolsOzoneReportDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
-import Graphemer from 'graphemer'
+import {countGraphemes} from 'unicode-segmenter'
 
 import {
   BLUESKY_MOD_SERVICE_HEADERS,
@@ -38,11 +38,10 @@ export function Takendown() {
   const agent = useAgent()
   const [isAppealling, setIsAppealling] = useState(false)
   const [reason, setReason] = useState('')
-  const graphemer = useMemo(() => new Graphemer(), [])
 
-  const reasonGraphemeLength = useMemo(() => {
-    return graphemer.countGraphemes(reason)
-  }, [graphemer, reason])
+  const reasonGraphemeLength = countGraphemes(reason)
+  const isOverMaxLength =
+    reasonGraphemeLength > MAX_REPORT_REASON_GRAPHEME_LENGTH
 
   const {
     mutate: submitAppeal,
@@ -73,14 +72,11 @@ export function Takendown() {
   const primaryBtn =
     isAppealling && !isSuccess ? (
       <Button
-        variant="solid"
         color="primary"
         size="large"
         label={_(msg`Submit appeal`)}
         onPress={() => submitAppeal(reason)}
-        disabled={
-          isPending || reasonGraphemeLength > MAX_REPORT_REASON_GRAPHEME_LENGTH
-        }>
+        disabled={isPending || isOverMaxLength}>
         <ButtonText>
           <Trans>Submit Appeal</Trans>
         </ButtonText>
@@ -88,7 +84,6 @@ export function Takendown() {
       </Button>
     ) : (
       <Button
-        variant="solid"
         size="large"
         color="secondary_inverted"
         label={_(msg`Sign out`)}
@@ -210,7 +205,7 @@ export function Takendown() {
                   <Text
                     style={[
                       a.text_md,
-                      a.leading_normal,
+                      a.leading_snug,
                       {color: t.palette.negative_500},
                       a.mt_lg,
                     ]}>
@@ -225,7 +220,7 @@ export function Takendown() {
                   <InlineLinkText
                     label={_(msg`Bluesky Social Terms of Service`)}
                     to="https://bsky.social/about/support/tos"
-                    style={[a.text_md, a.leading_normal]}
+                    style={[a.text_md, a.leading_snug]}
                     overridePresentation>
                     Bluesky Social Terms of Service
                   </InlineLinkText>

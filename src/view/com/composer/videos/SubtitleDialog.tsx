@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
-import {useEnforceMaxGraphemeCount} from '#/lib/strings/helpers'
+import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {isWeb} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -72,7 +72,6 @@ function SubtitleDialogInner({
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
   const t = useTheme()
-  const enforceLen = useEnforceMaxGraphemeCount()
   const {primaryLanguage} = useLanguagePrefs()
 
   const [altText, setAltText] = useState(defaultAltText)
@@ -94,18 +93,23 @@ function SubtitleDialogInner({
 
   const subtitleMissingLanguage = captions.some(sub => sub.lang === '')
 
+  const isOverMaxLength = isOverMaxGraphemeCount({
+    text: altText,
+    maxCount: MAX_ALT_TEXT,
+  })
+
   return (
     <Dialog.ScrollableInner label={_(msg`Video settings`)}>
       <View style={a.gap_md}>
         <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
           <Trans>Alt text</Trans>
         </Text>
-        <TextField.Root>
+        <TextField.Root isInvalid={isOverMaxLength}>
           <Dialog.Input
             label={_(msg`Alt text`)}
             placeholder={_(msg`Add alt text (optional)`)}
             value={altText}
-            onChangeText={evt => setAltText(enforceLen(evt, MAX_ALT_TEXT))}
+            onChangeText={setAltText}
             maxLength={MAX_ALT_TEXT * 10}
             multiline
             style={{maxHeight: 300}}
@@ -117,6 +121,18 @@ function SubtitleDialogInner({
             }}
           />
         </TextField.Root>
+
+        {isOverMaxLength && (
+          <Text
+            style={[
+              a.text_md,
+              {color: t.palette.negative_500},
+              a.leading_snug,
+              a.mt_md,
+            ]}>
+            <Trans>Alt text must be less than {MAX_ALT_TEXT} characters.</Trans>
+          </Text>
+        )}
 
         {isWeb && (
           <>
@@ -173,7 +189,8 @@ function SubtitleDialogInner({
               saveAltText(altText)
               control.close()
             }}
-            style={a.mt_lg}>
+            style={a.mt_lg}
+            disabled={isOverMaxLength}>
             <ButtonText>
               <Trans>Done</Trans>
             </ButtonText>

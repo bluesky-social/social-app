@@ -5,7 +5,7 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
-import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
+import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
@@ -259,11 +259,11 @@ function DialogInner({
     _,
   ])
 
-  const displayNameTooLong = useWarnMaxGraphemeCount({
+  const displayNameTooLong = isOverMaxGraphemeCount({
     text: displayName,
     maxCount: DISPLAY_NAME_MAX_GRAPHEMES,
   })
-  const descriptionTooLong = useWarnMaxGraphemeCount({
+  const descriptionTooLong = isOverMaxGraphemeCount({
     text: descriptionRt,
     maxCount: DESCRIPTION_MAX_GRAPHEMES,
   })
