@@ -244,7 +244,7 @@ function LegalDisclaimer() {
         <Trans>Sent to our phone number verification provider Plivo</Trans>
       </Text>
       <Text style={style}>
-        &bull; <Trans>Deleted by the verifier after verification</Trans>
+        &bull; <Trans>Deleted by Plivo after verification</Trans>
       </Text>
       <Text style={style}>
         &bull;{' '}

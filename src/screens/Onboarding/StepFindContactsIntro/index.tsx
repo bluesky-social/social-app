@@ -55,11 +55,11 @@ export function StepFindContactsIntro() {
         <View style={[a.gap_md]}>
           <Button
             onPress={() => dispatch({type: 'next'})}
-            label={_(msg`Upload contacts`)}
+            label={_(msg`Import contacts`)}
             size="large"
             color="primary">
             <ButtonText>
-              <Trans>Upload contacts</Trans>
+              <Trans>Import contacts</Trans>
             </ButtonText>
           </Button>
           <Button

@@ -52,7 +52,7 @@ export function OTPInput({
 
   return (
     <Pressable
-      accessibilityLabel={_(msg`Focus OTP input`)}
+      accessibilityLabel={_(msg`Focus code input`)}
       accessibilityRole="button"
       accessibilityHint=""
       style={[a.w_full, a.relative]}

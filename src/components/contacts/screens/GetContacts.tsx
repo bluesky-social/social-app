@@ -217,7 +217,7 @@ function showPermissionDeniedAlert() {
     t`You'll need to go to the app's settings and give permission if you want to use this feature.`,
     [
       {
-        text: t`Ok`,
+        text: t`OK`,
         style: 'default',
       },
     ],

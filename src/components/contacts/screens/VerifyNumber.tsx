@@ -244,7 +244,7 @@ function OTPStatus({
 
   if (isSuccess) {
     Icon = CircleCheckIcon
-    text = _(msg`Phone verified`)
+    text = _(msg`Phone number verified`)
     textColor = t.palette.positive_500
   } else if (isPending) {
     text = _(msg`Verifying...`)
