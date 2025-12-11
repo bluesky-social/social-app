@@ -57,6 +57,12 @@ module.exports = async function (env, argv) {
           name: process.env.SENTRY_RELEASE || version,
           dist: process.env.SENTRY_DIST,
         },
+        bundleSizeOptimizations: {
+          excludeDebugStatements: true,
+          excludeReplayShadowDom: true,
+          excludeReplayIframe: true,
+          excludeReplayWorker: true,
+        },
       }),
     )
   }
