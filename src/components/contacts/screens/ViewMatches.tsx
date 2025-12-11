@@ -349,6 +349,7 @@ export function ViewMatches({
         renderItem={renderItem}
         ListFooterComponent={!isEmpty ? <ListFooter /> : null}
         keyExtractor={keyExtractor}
+        keyboardDismissMode="interactive"
       />
       <View
         style={[
