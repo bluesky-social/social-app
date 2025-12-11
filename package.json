@@ -222,6 +222,7 @@
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "tldts": "^6.1.46",
+    "unicode-segmenter": "^0.14.1",
     "zod": "^3.20.2"
   },
   "devDependencies": {

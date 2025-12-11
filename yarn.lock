@@ -19511,10 +19511,10 @@ unicode-property-aliases-ecmascript@^2.0.0:
   resolved "https://registry.yarnpkg.com/unicode-property-aliases-ecmascript/-/unicode-property-aliases-ecmascript-2.1.0.tgz#43d41e3be698bd493ef911077c9b131f827e8ccd"
   integrity sha512-6t3foTQI9qne+OZoVQB/8x8rk2k1eVy1gRXhV3oFQ5T6R1dqQ1xtin3XqSlx3+ATBkliTaR/hHyJBm+LVPNM8w==
 
-unicode-segmenter@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/unicode-segmenter/-/unicode-segmenter-0.14.0.tgz#090128182bcc710327a1b7e4af4f5834444eaa61"
-  integrity sha512-AH4lhPCJANUnSLEKnM4byboctePJzltF4xj8b+NbNiYeAkAXGh7px2K/4NANFp7dnr6+zB3e6HLu8Jj8SKyvYg==
+unicode-segmenter@^0.14.0, unicode-segmenter@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/unicode-segmenter/-/unicode-segmenter-0.14.1.tgz#2220f56418fc6356f47cd38f379b9187b0a18c3b"
+  integrity sha512-yHedxlEpUyD+u1UE8qAuCMXVdMLn7yUdlmd8WN7FGmO1ICnpE7LJfnmuXBB+T0zkie3qHsy8fSucqceI/MylOg==
 
 unimodules-app-loader@~6.0.8:
   version "6.0.8"
