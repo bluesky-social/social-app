@@ -23,6 +23,8 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
+import {Deactivated} from '#/screens/Deactivated'
+import {Takendown} from '#/screens/Takendown'
 import {atoms as a, select, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
@@ -195,6 +197,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
 export function Shell() {
   const t = useTheme()
   const aa = useAgeAssurance()
+  const {currentAccount} = useSession()
   const fullyExpandedCount = useDialogFullyExpandedCountContext()
 
   useIntentHandler()
@@ -214,15 +217,23 @@ export function Shell() {
           navigationBar: t.name !== 'light' ? 'light' : 'dark',
         }}
       />
-      {aa.state.access === aa.Access.None ? (
-        <NoAccessScreen />
+      {currentAccount?.status === 'takendown' ? (
+        <Takendown />
+      ) : currentAccount?.status === 'deactivated' ? (
+        <Deactivated />
       ) : (
-        <RoutesContainer>
-          <ShellInner />
-        </RoutesContainer>
-      )}
+        <>
+          {aa.state.access === aa.Access.None ? (
+            <NoAccessScreen />
+          ) : (
+            <RoutesContainer>
+              <ShellInner />
+            </RoutesContainer>
+          )}
 
-      <RedirectOverlay />
+          <RedirectOverlay />
+        </>
+      )}
     </View>
   )
 }
