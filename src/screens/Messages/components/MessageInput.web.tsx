@@ -2,9 +2,9 @@ import React from 'react'
 import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import Graphemer from 'graphemer'
 import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {isSafari, isTouchDevice} from '#/lib/browser'
 import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
@@ -56,7 +56,7 @@ export function MessageInput({
     if (!hasEmbed && message.trim() === '') {
       return
     }
-    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+    if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
