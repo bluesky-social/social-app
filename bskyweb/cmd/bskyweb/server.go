@@ -9,7 +9,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
+	"log/slog"
 	"net/http"
 	"net/netip"
 	"net/url"
@@ -40,6 +42,11 @@ type Server struct {
 	cfg   *Config
 
 	ipccClient http.Client
+
+	// sitemapClient is used for fetching sitemaps from the appview. It has
+	// DisableCompression set to true so that gzipped responses are passed
+	// through without being decompressed.
+	sitemapClient http.Client
 }
 
 type Config struct {
@@ -114,6 +121,16 @@ func serve(cctx *cli.Context) error {
 				TLSClientConfig: &tls.Config{
 					InsecureSkipVerify: true,
 				},
+			},
+		},
+		sitemapClient: http.Client{
+			Transport: &http.Transport{
+				MaxIdleConns:        100,
+				MaxIdleConnsPerHost: 10,
+				IdleConnTimeout:     90 * time.Second,
+				TLSHandshakeTimeout: 10 * time.Second,
+				ForceAttemptHTTP2:   true,
+				DisableCompression:  true,
 			},
 		},
 	}
@@ -336,6 +353,10 @@ func serve(cctx *cli.Context) error {
 
 	// ipcc
 	e.GET("/ipcc", server.WebIpCC)
+
+	// sitemap handlers
+	e.GET("/sitemap/users.xml.gz", server.handleSitemapUsersIndex)
+	e.GET("/sitemap/users/*", server.handleSitemapUsersSubpage)
 
 	if linkHost != "" {
 		linkUrl, err := url.Parse(linkHost)
@@ -752,4 +773,55 @@ func (srv *Server) WebIpCC(c echo.Context) error {
 		return c.JSON(500, IPCCResponse{})
 	}
 	return c.JSON(200, outResponse)
+}
+
+func (srv *Server) handleSitemapUsersIndex(c echo.Context) error {
+	url := fmt.Sprintf("%s/external/sitemap/users.xml.gz", srv.cfg.appviewHost)
+	return srv.serveSitemapRequest(c, url, "user index")
+}
+
+func (srv *Server) handleSitemapUsersSubpage(c echo.Context) error {
+	path := c.Param("*")
+	url := fmt.Sprintf("%s/external/sitemap/users/%s", srv.cfg.appviewHost, path)
+	return srv.serveSitemapRequest(c, url, "user subpage")
+}
+
+func (srv *Server) serveSitemapRequest(c echo.Context, url, sitemapType string) error {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		slog.Error("failed to construct sitemap request", "err", err, "type", sitemapType)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	resp, err := srv.sitemapClient.Do(req)
+	if err != nil {
+		slog.Error("failed to send sitemap request to appview", "err", err, "type", sitemapType)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		buf, err := io.ReadAll(resp.Body)
+		if err != nil {
+			slog.Error("failed to read sitemap error response body", "err", err)
+		}
+
+		slog.Error("invalid sitemap response code",
+			"err", err,
+			"type", sitemapType,
+			"code", resp.StatusCode,
+			"body", string(buf),
+		)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	c.Response().Header().Set("Content-Type", "application/xml")
+	c.Response().Header().Set("Content-Encoding", "gzip")
+	c.Response().WriteHeader(resp.StatusCode)
+
+	if _, err = io.Copy(c.Response().Writer, resp.Body); err != nil {
+		slog.Error("failed to copy sitemap response body to client", "err", err, "type", sitemapType)
+	}
+
+	return nil
 }
