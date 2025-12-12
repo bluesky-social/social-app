@@ -389,6 +389,13 @@ module.exports = function (_config) {
         ],
         ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
         ['expo-location'],
+        [
+          'expo-contacts',
+          {
+            contactsPermission:
+              'I agree to allow Bluesky to use my contacts for friend discovery until I opt out.',
+          },
+        ],
       ].filter(Boolean),
       extra: {
         eas: {

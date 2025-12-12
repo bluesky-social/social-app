@@ -309,6 +309,7 @@ export type MetricEvents = {
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
+      | 'FindContacts'
   }
   'profile:followers:view': {
     contextProfileDid: string
@@ -396,6 +397,7 @@ export type MetricEvents = {
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
+      | 'FindContacts'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -625,4 +627,91 @@ export type MetricEvents = {
   'blockedGeoOverlay:shown': {}
 
   'geo:debug': {}
+
+  /*
+   * Find Contacts stuff
+   */
+
+  // user presses the button on the new feature NUX
+  'contacts:nux:ctaPressed': {}
+  // user presses the banner NUX
+  'contacts:nux:bannerPressed': {}
+  // user dismisses the banner
+  'contacts:nux:bannerDismissed': {}
+
+  // user lands on the contacts step
+  'onboarding:contacts:presented': {}
+  // user pressed "Import Contacts" button to begin flow
+  'onboarding:contacts:begin': {}
+  // skips the step entirely
+  'onboarding:contacts:skipPressed': {}
+  // user shared their contacts
+  'onboarding:contacts:contactsShared': {}
+  // user leaves the matches page
+  'onboarding:contacts:nextPressed': {
+    matchCount: number
+    followCount: number
+    dismissedMatchCount: number
+  }
+
+  // user entered a number
+  'contacts:phone:phoneEntered': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  // user entered the correct one-time-code
+  'contacts:phone:phoneVerified': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  // user responded to the contacts permission prompt
+  'contacts:permission:request': {
+    status: 'granted' | 'denied'
+    accessLevelIOS?: 'all' | 'limited' | 'none'
+  }
+  // contacts were successfully imported and matched
+  'contacts:import:success': {
+    contactCount: number
+    matchCount: number
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  // contacts import failed
+  'contacts:import:failure': {
+    reason: 'noValidNumbers' | 'networkError' | 'unknown'
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  // user followed a single match
+  'contacts:matches:follow': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  // user pressed "Follow All" on matches
+  'contacts:matches:followAll': {
+    followCount: number
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  // user dismissed a match
+  'contacts:matches:dismiss': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  // user pressed invite to send an SMS to a non-match
+  'contacts:matches:invite': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  // user opened the Find Contacts settings screen
+  'contacts:settings:presented': {
+    hasPreviouslySynced: boolean
+    matchCount?: number
+  }
+  // user followed a single match from settings
+  'contacts:settings:follow': {}
+  // user pressed "Follow All" from settings
+  'contacts:settings:followAll': {
+    followCount: number
+  }
+  // user dismissed a match from settings
+  'contacts:settings:dismiss': {}
+  // user re-entered the flow via the resync button
+  'contacts:settings:resync': {
+    daysSinceLastSync: number
+  }
+  // user pressed the remove all data button
+  'contacts:settings:removeData': {}
 }
