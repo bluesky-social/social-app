@@ -696,10 +696,10 @@ export type MetricEvents = {
   }
   // user dismissed a match from settings
   'contacts:settings:dismiss': {}
-  // user resynced their contacts from settings
+  // user re-entered the flow via the resync button
   'contacts:settings:resync': {
     daysSinceLastSync: number
   }
-  // user removed their contact data from settings
+  // user pressed the remove all data button
   'contacts:settings:removeData': {}
 }
