@@ -6,6 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, useTheme} from '#/alf'
@@ -27,6 +28,9 @@ export function FindContactsBannerNUX() {
         <Link
           to={{screen: 'FindContactsFlow'}}
           label={_(msg`Import contacts to find your friends`)}
+          onPress={() => {
+            logger.metric('contacts:nux:bannerPressed', {})
+          }}
           style={[
             a.w_full,
             a.rounded_xl,
@@ -96,6 +100,7 @@ function useInternalState() {
       completed: true,
       data: undefined,
     })
+    logger.metric('contacts:nux:bannerDismissed', {})
   }
 
   return {visible, close}

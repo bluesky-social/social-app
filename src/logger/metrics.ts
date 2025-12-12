@@ -615,4 +615,78 @@ export type MetricEvents = {
   'blockedGeoOverlay:shown': {}
 
   'geo:debug': {}
+
+  /*
+   * Find Contacts stuff
+   */
+
+  // user presses the button on the new feature NUX
+  'contacts:nux:ctaPressed': {}
+  // user presses the banner NUX
+  'contacts:nux:bannerPressed': {}
+  // user dismisses the banner
+  'contacts:nux:bannerDismissed': {}
+
+  // user lands on the contacts step
+  'onboarding:contacts:presented': {}
+  // user pressed "Import Contacts" button to begin flow
+  'onboarding:contacts:begin': {}
+  // skips the step entirely
+  'onboarding:contacts:skipPressed': {}
+  // user shared their contacts
+  'onboarding:contacts:contactsShared': {}
+  // user leaves the matches page
+  'onboarding:contacts:nextPressed': {
+    matchCount: number
+    followCount: number
+    dismissedMatchCount: number
+  }
+
+  // user entered a number
+  'contacts:phone:phoneEntered': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  // user entered the correct one-time-code
+  'contacts:phone:phoneVerified': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  'contacts:permission:request': {
+    status: 'granted' | 'denied'
+    accessLevelIOS?: 'all' | 'limited' | 'none'
+  }
+  'contacts:import:success': {
+    contactCount: number
+    matchCount: number
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  'contacts:import:failure': {
+    reason: 'noValidNumbers' | 'networkError' | 'unknown'
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  'contacts:matches:follow': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  'contacts:matches:followAll': {
+    followCount: number
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  'contacts:matches:dismiss': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  'contacts:matches:invite': {
+    entryPoint: 'Onboarding' | 'Standalone'
+  }
+  'contacts:settings:presented': {
+    hasPreviouslySynced: boolean
+    matchCount?: number
+  }
+  'contacts:settings:follow': {}
+  'contacts:settings:followAll': {
+    followCount: number
+  }
+  'contacts:settings:dismiss': {}
+  'contacts:settings:resync': {
+    daysSinceLastSync: number
+  }
+  'contacts:settings:removeData': {}
 }

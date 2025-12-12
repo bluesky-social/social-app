@@ -1,4 +1,4 @@
-import {useMemo, useRef, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as SMS from 'expo-sms'
@@ -98,6 +98,12 @@ export function ViewMatches({
     .filter(did => !state.dismissedMatches.includes(did))
   const [didFollowAll, setDidFollowAll] = useState(followableDids.length === 0)
 
+  const cumulativeFollowCount = useRef(0)
+  const onFollow = useCallback(() => {
+    logger.metric('contacts:matches:follow', {entryPoint: context})
+    cumulativeFollowCount.current += 1
+  }, [context])
+
   const {mutate: followAll, isPending: isFollowingAll} = useMutation({
     mutationFn: async () => {
       for (const did of followableDids) {
@@ -116,9 +122,15 @@ export function ViewMatches({
       }
       return followableDids
     },
+    onMutate: () =>
+      logger.metric('contacts:matches:followAll', {
+        followCount: followableDids.length,
+        entryPoint: context,
+      }),
     onSuccess: () => {
       setDidFollowAll(true)
       Toast.show(_(msg`All friends followed!`), {type: 'success'})
+      cumulativeFollowCount.current += followableDids.length
     },
     onError: _err => {
       Toast.show(_(msg`Failed to follow all your friends, please try again`), {
@@ -207,6 +219,7 @@ export function ViewMatches({
       await agent.app.bsky.contact.dismissMatch({subject: did})
     },
     onMutate: did => {
+      logger.metric('contacts:matches:dismiss', {entryPoint: context})
       dispatch({type: 'DISMISS_MATCH', payload: {did}})
     },
     onError: (err, did) => {
@@ -236,10 +249,11 @@ export function ViewMatches({
             profile={item.profile}
             moderationOpts={moderationOpts}
             onRemoveSuggestion={dismissMatch}
+            onFollow={onFollow}
           />
         )
       case 'contact':
-        return <ContactItem contact={item.contact} />
+        return <ContactItem contact={item.contact} context={context} />
       case 'matches header':
         return (
           <Header
@@ -371,7 +385,16 @@ export function ViewMatches({
         ]}>
         <Button
           label={context === 'Onboarding' ? _(msg`Next`) : _(msg`Done`)}
-          onPress={onNext}
+          onPress={() => {
+            if (context === 'Onboarding') {
+              logger.metric('onboarding:contacts:nextPressed', {
+                matchCount: state.matches.length,
+                followCount: cumulativeFollowCount.current,
+                dismissedMatchCount: state.dismissedMatches.length,
+              })
+            }
+            onNext()
+          }}
           size="large"
           color="primary">
           <ButtonText>
@@ -402,10 +425,12 @@ function MatchItem({
   profile,
   moderationOpts,
   onRemoveSuggestion,
+  onFollow,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts?: ModerationOpts
   onRemoveSuggestion: (did: string) => void
+  onFollow: () => void
 }) {
   const gutter = useGutters([0, 'wide'])
   const t = useTheme()
@@ -426,6 +451,7 @@ function MatchItem({
           profile={profile}
           moderationOpts={moderationOpts}
           logContext="FindContacts"
+          onFollow={onFollow}
         />
         {!shadow.viewer?.following && (
           <Button
@@ -443,7 +469,13 @@ function MatchItem({
   )
 }
 
-function ContactItem({contact}: {contact: Contact}) {
+function ContactItem({
+  contact,
+  context,
+}: {
+  contact: Contact
+  context: 'Onboarding' | 'Standalone'
+}) {
   const gutter = useGutters([0, 'wide'])
   const t = useTheme()
   const {_} = useLingui()
@@ -495,6 +527,9 @@ function ContactItem({contact}: {contact: Contact}) {
             color="secondary"
             size="small"
             onPress={async () => {
+              logger.metric('contacts:matches:invite', {
+                entryPoint: context,
+              })
               try {
                 await SMS.sendSMSAsync(
                   [phoneNumber],

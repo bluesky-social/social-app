@@ -78,6 +78,8 @@ export function VerifyNumber({
           },
         })
       }, 1000)
+
+      logger.metric('contacts:phone:phoneVerified', {entryPoint: context})
     },
     onMutate: () => setError(null),
     onError: err => {

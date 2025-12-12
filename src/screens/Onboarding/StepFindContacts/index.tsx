@@ -2,6 +2,7 @@ import {useCallback, useState} from 'react'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {logger} from '#/logger'
 import {FindContactsFlow} from '#/components/contacts/FindContactsFlow'
 import {type Action, type State} from '#/components/contacts/state'
 import {ScreenTransition} from '#/components/ScreenTransition'
@@ -20,9 +21,13 @@ export function StepFindContacts({
     'Forward' | 'Backward'
   >('Forward')
 
+  const isFinalStep = flowState.step === '4: view matches'
   const onSkip = useCallback(() => {
+    if (!isFinalStep) {
+      logger.metric('onboarding:contacts:skipPressed', {})
+    }
     dispatch({type: 'next'})
-  }, [dispatch])
+  }, [dispatch, isFinalStep])
 
   const canGoBack = flowState.step === '2: verify number'
   const onBack = useCallback(() => {

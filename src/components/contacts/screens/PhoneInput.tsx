@@ -82,6 +82,8 @@ export function PhoneInput({
         type: 'SUBMIT_PHONE_NUMBER',
         payload: {phoneCountryCode, phoneNumber},
       })
+
+      logger.metric('contacts:phone:phoneEntered', {entryPoint: context})
     },
     onMutate: () => {
       Keyboard.dismiss()

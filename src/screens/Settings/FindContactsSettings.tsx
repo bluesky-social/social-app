@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import * as Contacts from 'expo-contacts'
 import {
@@ -8,6 +8,7 @@ import {
 } from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useIsFocused} from '@react-navigation/native'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
@@ -55,6 +56,16 @@ export function FindContactsSettingsScreen({}: Props) {
   const {_} = useLingui()
 
   const {data, error, refetch} = useContactsSyncStatusQuery()
+
+  const isFocused = useIsFocused()
+  useEffect(() => {
+    if (data && isFocused) {
+      logger.metric('contacts:settings:presented', {
+        hasPreviouslySynced: !!data.syncStatus,
+        matchCount: data.syncStatus?.matchesCount,
+      })
+    }
+  }, [data, isFocused])
 
   return (
     <Layout.Screen>
@@ -175,6 +186,7 @@ function SyncStatus({
       await agent.app.bsky.contact.dismissMatch({subject: did})
     },
     onMutate: async (did: string) => {
+      logger.metric('contacts:settings:dismiss', {})
       optimisticRemoveMatch(queryClient, did)
     },
     onError: err => {
@@ -291,6 +303,7 @@ function MatchItem({
             profile={profile}
             moderationOpts={moderationOpts}
             logContext="FindContacts"
+            onFollow={() => logger.metric('contacts:settings:follow', {})}
           />
           {!shadow.viewer?.following && (
             <Button
@@ -349,6 +362,10 @@ function StatusHeader({
           }
         }
       } while (cursor)
+
+      logger.metric('contacts:settings:followAll', {
+        followCount: didsToFollow.length,
+      })
 
       const uris = await wait(500, bulkWriteFollows(agent, didsToFollow))
 
@@ -438,6 +455,7 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
     mutationFn: async () => {
       await agent.app.bsky.contact.removeData({})
     },
+    onMutate: () => logger.metric('contacts:settings:removeData', {}),
     onSuccess: () => {
       Toast.show(_(msg`Contacts removed`))
       queryClient.setQueryData<AppBskyContactGetSyncStatus.OutputSchema>(
@@ -486,6 +504,15 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
         <Link
           label={_(msg`Resync contacts`)}
           to={{screen: 'FindContactsFlow'}}
+          onPress={() => {
+            const daysSinceLastSync = Math.floor(
+              (Date.now() - new Date(syncedAt).getTime()) /
+                (1000 * 60 * 60 * 24),
+            )
+            logger.metric('contacts:settings:resync', {
+              daysSinceLastSync,
+            })
+          }}
           size="small"
           color="primary_subtle"
           style={[a.mt_xs]}>

@@ -36,7 +36,12 @@ export function FindContactsFlow({
         />
       )}
       {state.step === '3: get contacts' && (
-        <GetContacts state={state} dispatch={dispatch} onCancel={onCancel} />
+        <GetContacts
+          state={state}
+          dispatch={dispatch}
+          onCancel={onCancel}
+          context={context}
+        />
       )}
       {state.step === '4: view matches' && (
         <ViewMatches

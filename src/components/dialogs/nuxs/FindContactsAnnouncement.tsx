@@ -5,6 +5,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -96,6 +97,7 @@ export function FindContactsAnnouncement() {
             size="large"
             color="primary"
             onPress={() => {
+              logger.metric('contacts:nux:ctaPressed', {})
               control.close(() => {
                 navigate('FindContactsFlow')
               })

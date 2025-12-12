@@ -9,7 +9,7 @@ import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {findContactsStatusQueryKey} from '#/state/queries/find-contacts'
 import {useAgent} from '#/state/session'
-import {atoms as a, tokens, useGutters} from '#/alf'
+import {atoms as a, ios, tokens, useGutters} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
@@ -23,10 +23,12 @@ export function GetContacts({
   state,
   dispatch,
   onCancel,
+  context,
 }: {
   state: Extract<State, {step: '3: get contacts'}>
   dispatch: React.ActionDispatch<[Action]>
   onCancel: () => void
+  context: 'Onboarding' | 'Standalone'
 }) {
   const {_} = useLingui()
   const agent = useAgent()
@@ -41,17 +43,40 @@ export function GetContacts({
         state.phoneCountryCode,
         constructFullPhoneNumber(state.phoneCountryCode, state.phoneNumber),
       )
-      const res = await agent.app.bsky.contact.importContacts({
-        token: state.token,
-        contacts: phoneNumbers,
-      })
 
-      return {
-        matches: res.data.matchesAndContactIndexes,
-        indexToContactId,
+      if (phoneNumbers.length > 0) {
+        const res = await agent.app.bsky.contact.importContacts({
+          token: state.token,
+          contacts: phoneNumbers,
+        })
+
+        return {
+          matches: res.data.matchesAndContactIndexes,
+          indexToContactId,
+        }
+      } else {
+        return {
+          matches: [],
+          indexToContactId,
+        }
       }
     },
     onSuccess: (result, contacts) => {
+      if (context === 'Onboarding') {
+        logger.metric('onboarding:contacts:contactsShared', {})
+      }
+      if (result.matches.length > 0) {
+        logger.metric('contacts:import:success', {
+          contactCount: contacts.length,
+          matchCount: result.matches.length,
+          entryPoint: context,
+        })
+      } else {
+        logger.metric('contacts:import:failure', {
+          reason: 'noValidNumbers',
+          entryPoint: context,
+        })
+      }
       dispatch({
         type: 'SYNC_CONTACTS_SUCCESS',
         payload: {
@@ -68,6 +93,10 @@ export function GetContacts({
       })
     },
     onError: err => {
+      logger.metric('contacts:import:failure', {
+        reason: isNetworkError(err) ? 'networkError' : 'unknown',
+        entryPoint: context,
+      })
       if (isNetworkError(err)) {
         Toast.show(
           _(
@@ -91,6 +120,11 @@ export function GetContacts({
       if (!permissions.granted && permissions.canAskAgain) {
         permissions = await Contacts.requestPermissionsAsync()
       }
+
+      logger.metric('contacts:permission:request', {
+        status: permissions.granted ? 'granted' : 'denied',
+        accessLevelIOS: ios(permissions.accessPrivileges),
+      })
 
       if (!permissions.granted) {
         throw new PermissionDeniedError()
