@@ -11397,6 +11397,15 @@ expo-blur@~15.0.7:
   resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-15.0.7.tgz#a11466e697fbf2b272444a38722065e60d0ecbe5"
   integrity sha512-SugQQbQd+zRPy8z2G5qDD4NqhcD7srBF7fN7O7yq6q7ZFK59VWvpDxtMoUkmSfdxgqONsrBN/rLdk00USADrMg==
 
+expo-build-disk-cache@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/expo-build-disk-cache/-/expo-build-disk-cache-0.7.0.tgz#64ea2675c3253bc4c456792686d349cb961395b9"
+  integrity sha512-I3ml8YwdUFbpF5+/ipYFtRnuyXMndk8qUCQgvGEODaDWPeFMrbD8md2dQDrcbcGqRNb+vIxWd32NS/1A80nsUA==
+  dependencies:
+    cosmiconfig "^9.0.0"
+    env-paths "^2.2.1"
+    zod "^4.0.0"
+
 expo-build-properties@~1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/expo-build-properties/-/expo-build-properties-1.0.9.tgz#71f0ce813a8431937a3db25a91f1bb4b1a6214ae"
@@ -20391,7 +20400,17 @@ zod-validation-error@^3.0.3:
   resolved "https://registry.yarnpkg.com/zod-validation-error/-/zod-validation-error-3.3.0.tgz#2cfe81b62d044e0453d1aa3ae7c32a2f36dde9af"
   integrity sha512-Syib9oumw1NTqEv4LT0e6U83Td9aVRk9iTXPUQr1otyV1PuXQKOvOwhMNqZIq5hluzHP2pMgnOmHEo7kPdI2mw==
 
-zod@3.23.8, zod@^3.14.2, zod@^3.20.2, zod@^3.22.4, zod@^3.23.8, zod@^3.25.76:
+zod@3.23.8, zod@^3.14.2, zod@^3.20.2, zod@^3.22.4, zod@^3.23.8:
   version "3.23.8"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.8.tgz#e37b957b5d52079769fb8097099b592f0ef4067d"
   integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==
+
+zod@^3.25.76:
+  version "3.25.76"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.76.tgz#26841c3f6fd22a6a2760e7ccb719179768471e34"
+  integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==
+
+zod@^4.0.0:
+  version "4.1.12"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-4.1.12.tgz#64f1ea53d00eab91853195653b5af9eee68970f0"
+  integrity sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==
