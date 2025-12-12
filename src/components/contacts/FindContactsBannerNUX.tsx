@@ -14,13 +14,15 @@ import {Button} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import {Link} from '../Link'
+import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from './country-allowlist'
 
 export function FindContactsBannerNUX() {
   const t = useTheme()
   const {_} = useLingui()
   const {visible, close} = useInternalState()
+  const isFeatureEnabled = useIsFindContactsFeatureEnabledBasedOnGeolocation()
 
-  if (!visible) return null
+  if (!visible || isFeatureEnabled) return null
 
   return (
     <View style={[a.w_full, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>

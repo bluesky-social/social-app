@@ -9,12 +9,23 @@ import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Text} from '#/components/Typography'
 import {navigate} from '#/Navigation'
 
 export function FindContactsAnnouncement() {
+  const isFeatureEnabled = useIsFindContactsFeatureEnabledBasedOnGeolocation()
+
+  if (!isFeatureEnabled) {
+    return null
+  }
+
+  return <Inner />
+}
+
+function Inner() {
   const t = useTheme()
   const {_} = useLingui()
   const nuxDialogs = useNuxDialogContext()
