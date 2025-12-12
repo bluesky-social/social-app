@@ -7,6 +7,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {urls} from '#/lib/constants'
 import {
   type CountryCode,
   getDefaultCountry,
@@ -294,7 +295,7 @@ function LegalDisclaimer() {
           By continuing, you consent to this use. You may change your mind any
           time by visiting settings.{' '}
           <InlineLinkText
-            to="#"
+            to={urls.website.support.findFriendsPrivacyPolicy}
             label={_(
               msg({
                 message: `Learn more about importing contacts`,

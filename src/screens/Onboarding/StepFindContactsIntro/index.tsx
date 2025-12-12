@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
 
+import {urls} from '#/lib/constants'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
@@ -39,7 +40,7 @@ export function StepFindContactsIntro() {
           matching with your contacts. We protect your information and you
           control what happens next.{' '}
           <InlineLinkText
-            to="#"
+            to={urls.website.blog.findFriendsAnnouncement}
             label={_(
               msg({
                 message: `Learn more about importing contacts`,
