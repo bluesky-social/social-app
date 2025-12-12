@@ -11,6 +11,7 @@ import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {isIOS} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSimilarAccountsDisabled} from '#/state/preferences/similar-accounts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
@@ -257,6 +258,7 @@ export function ProfileGrid({
   const {gtMobile} = useBreakpoints()
   const followDialogControl = useDialogControl()
 
+  const disabledSimilarAccounts = useSimilarAccountsDisabled()
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
   const isFeedContext = viewContext === 'feed'
@@ -445,6 +447,10 @@ export function ProfileGrid({
             )}
           </ProfileCard.Link>
         ))
+
+  if (disabledSimilarAccounts == true) {
+    return null
+  }
 
   if (error || (!isLoading && profiles.length < minLength)) {
     logger.debug(`Not enough profiles to show suggested follows`)
