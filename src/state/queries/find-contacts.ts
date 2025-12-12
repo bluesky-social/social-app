@@ -10,6 +10,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
+import {STALE} from '.'
 
 const RQ_KEY_ROOT = 'find-contacts'
 export const findContactsStatusQueryKey = [RQ_KEY_ROOT, 'sync-status']
@@ -23,6 +24,7 @@ export function useContactsSyncStatusQuery() {
       const status = await agent.app.bsky.contact.getSyncStatus()
       return status.data
     },
+    staleTime: STALE.SECONDS.THIRTY,
   })
 }
 
@@ -41,7 +43,25 @@ export function useContactsMatchesQuery() {
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    staleTime: STALE.MINUTES.ONE,
   })
+}
+
+export function optimisticRemoveMatch(queryClient: QueryClient, did: string) {
+  queryClient.setQueryData<InfiniteData<AppBskyContactGetMatches.OutputSchema>>(
+    findContactsGetMatchesQueryKey,
+    old => {
+      if (!old) return old
+
+      return {
+        ...old,
+        pages: old.pages.map(page => ({
+          ...page,
+          matches: page.matches.filter(match => match.did !== did),
+        })),
+      }
+    },
+  )
 }
 
 export function* findAllProfilesInQueryData(
@@ -51,7 +71,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyContactGetMatches.OutputSchema>
   >({
-    queryKey: findContactsStatusQueryKey,
+    queryKey: findContactsGetMatchesQueryKey,
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

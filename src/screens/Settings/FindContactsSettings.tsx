@@ -10,6 +10,9 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {wait} from '#/lib/async/wait'
+import {HITSLOP_10} from '#/lib/constants'
+import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
@@ -17,14 +20,18 @@ import {
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {
+  updateProfileShadow,
+  useProfileShadow,
+} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   findContactsStatusQueryKey,
+  optimisticRemoveMatch,
   useContactsMatchesQuery,
   useContactsSyncStatusQuery,
 } from '#/state/queries/find-contacts'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
@@ -32,7 +39,6 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
 import {ArrowRotateClockwise_Stroke2_Corner0_Rounded as ResyncIcon} from '#/components/icons/ArrowRotate'
-import {Contacts_Stroke2_Corner2_Rounded as FindContactsIcon} from '#/components/icons/Contacts'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
@@ -42,7 +48,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import * as SettingsList from './components/SettingsList'
+import {bulkWriteFollows} from '../Onboarding/util'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsSettings'>
 export function FindContactsSettingsScreen({}: Props) {
@@ -56,7 +62,7 @@ export function FindContactsSettingsScreen({}: Props) {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Find Contacts</Trans>
+            <Trans>Find Friends</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
@@ -147,9 +153,13 @@ function SyncStatus({
   info: AppBskyContactDefs.SyncStatus
   refetch: () => Promise<any>
 }) {
+  const agent = useAgent()
+  const queryClient = useQueryClient()
+  const {_} = useLingui()
+  const moderationOpts = useModerationOpts()
+
   const {data, isPending, hasNextPage, fetchNextPage, isFetchingNextPage} =
     useContactsMatchesQuery()
-  const moderationOpts = useModerationOpts()
 
   const [isPTR, setIsPTR] = useState(false)
 
@@ -160,9 +170,36 @@ function SyncStatus({
     })
   }
 
+  const {mutate: dismissMatch} = useMutation({
+    mutationFn: async (did: string) => {
+      await agent.app.bsky.contact.dismissMatch({subject: did})
+    },
+    onMutate: async (did: string) => {
+      optimisticRemoveMatch(queryClient, did)
+    },
+    onError: err => {
+      refetch()
+      if (isNetworkError(err)) {
+        Toast.show(
+          _(
+            msg`Could not follow all matches - please check your network connection.`,
+          ),
+          {type: 'error'},
+        )
+      } else {
+        logger.error('Failed to follow all matches', {safeMessage: err})
+        Toast.show(_(msg`Could not follow all matches. ${cleanError(err)}`), {
+          type: 'error',
+        })
+      }
+    },
+  })
+
   const profiles = data?.pages?.flatMap(page => page.matches) ?? []
 
   const numProfiles = profiles.length
+  const isAnyUnfollowed = profiles.some(profile => !profile.viewer?.following)
+
   const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<bsky.profile.AnyProfileView>) => {
       if (!moderationOpts) return null
@@ -172,10 +209,11 @@ function SyncStatus({
           isFirst={index === 0}
           isLast={index === numProfiles - 1}
           moderationOpts={moderationOpts}
+          dismissMatch={dismissMatch}
         />
       )
     },
-    [numProfiles, moderationOpts],
+    [numProfiles, moderationOpts, dismissMatch],
   )
 
   const onEndReached = () => {
@@ -188,7 +226,11 @@ function SyncStatus({
       data={profiles}
       renderItem={renderItem}
       ListHeaderComponent={
-        <StatusHeader numMatches={info.matchesCount} isPending={isPending} />
+        <StatusHeader
+          numMatches={info.matchesCount}
+          isPending={isPending}
+          isAnyUnfollowed={isAnyUnfollowed}
+        />
       }
       ListFooterComponent={<StatusFooter syncedAt={info.syncedAt} />}
       onRefresh={onRefresh}
@@ -203,11 +245,13 @@ function MatchItem({
   isFirst,
   isLast,
   moderationOpts,
+  dismissMatch,
 }: {
   profile: bsky.profile.AnyProfileView
   isFirst: boolean
   isLast: boolean
   moderationOpts: ModerationOpts
+  dismissMatch: (did: string) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -231,6 +275,7 @@ function MatchItem({
             a.curve_continuous,
             {borderBottomLeftRadius: tokens.borderRadius.lg},
             {borderBottomRightRadius: tokens.borderRadius.lg},
+            a.mb_sm,
           ],
         ]}>
         <ProfileCard.Header>
@@ -252,7 +297,7 @@ function MatchItem({
               color="secondary"
               variant="ghost"
               label={_(msg`Remove suggestion`)}
-              // onPress={() => onRemoveSuggestion(profile.did)}
+              onPress={() => dismissMatch(profile.did)}
               hoverStyle={[a.bg_transparent, {opacity: 0.5}]}
               hitSlop={8}>
               <ButtonIcon icon={XIcon} />
@@ -267,45 +312,120 @@ function MatchItem({
 function StatusHeader({
   numMatches,
   isPending,
+  isAnyUnfollowed,
 }: {
   numMatches: number
   isPending: boolean
+  isAnyUnfollowed: boolean
 }) {
-  const t = useTheme()
+  const {_} = useLingui()
+  const agent = useAgent()
+  const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
 
-  if (isPending) {
+  const {
+    mutate: onFollowAll,
+    isPending: isFollowingAll,
+    isSuccess: hasFollowedAll,
+  } = useMutation({
+    mutationFn: async () => {
+      const didsToFollow = []
+
+      let cursor: string | undefined
+      do {
+        const page = await agent.app.bsky.contact.getMatches({
+          limit: 100,
+          cursor,
+        })
+        cursor = page.data.cursor
+        for (const profile of page.data.matches) {
+          if (
+            profile.did !== currentAccount?.did &&
+            !isBlockedOrBlocking(profile) &&
+            !isMuted(profile) &&
+            !profile.viewer?.following
+          ) {
+            didsToFollow.push(profile.did)
+          }
+        }
+      } while (cursor)
+
+      const uris = await wait(500, bulkWriteFollows(agent, didsToFollow))
+
+      for (const did of didsToFollow) {
+        const uri = uris.get(did)
+        updateProfileShadow(queryClient, did, {
+          followingUri: uri,
+        })
+      }
+    },
+    onSuccess: () => {
+      Toast.show(_(msg`Followed all matches`), {type: 'success'})
+    },
+    onError: err => {
+      if (isNetworkError(err)) {
+        Toast.show(
+          _(
+            msg`Could not follow all matches - please check your network connection.`,
+          ),
+          {type: 'error'},
+        )
+      } else {
+        logger.error('Failed to follow all matches', {safeMessage: err})
+        Toast.show(_(msg`Could not follow all matches. ${cleanError(err)}`), {
+          type: 'error',
+        })
+      }
+    },
+  })
+
+  if (numMatches > 0) {
+    if (isPending) {
+      return (
+        <View style={[a.w_full, a.py_3xl, a.align_center]}>
+          <Loader size="xl" />
+        </View>
+      )
+    }
+
     return (
-      <View style={[a.w_full, a.py_5xl, a.align_center]}>
-        <Loader size="xl" />
+      <View
+        style={[
+          a.pt_xl,
+          a.px_xl,
+          a.pb_md,
+          a.flex_row,
+          a.justify_between,
+          a.align_center,
+        ]}>
+        <Text style={[a.text_md, a.font_semi_bold]}>
+          <Plural
+            value={numMatches}
+            one="1 contact found"
+            other="# contacts found"
+          />
+        </Text>
+        {isAnyUnfollowed && (
+          <Button
+            label={_(msg`Follow all`)}
+            color="primary"
+            size="small"
+            variant="ghost"
+            onPress={() => onFollowAll()}
+            disabled={isFollowingAll || hasFollowedAll}
+            hitSlop={HITSLOP_10}
+            style={[a.px_0, a.py_0, a.rounded_0]}
+            hoverStyle={[a.bg_transparent, {opacity: 0.5}]}>
+            <ButtonText>
+              <Trans>Follow all</Trans>
+            </ButtonText>
+          </Button>
+        )}
       </View>
     )
   }
 
-  return (
-    <SettingsList.Item
-      style={[a.pt_xl, a.pb_md, numMatches === 0 && a.align_start]}>
-      <SettingsList.ItemIcon icon={FindContactsIcon} />
-      {numMatches > 1 ? (
-        <SettingsList.ItemText>
-          <Plural
-            value={numMatches}
-            one="# contact found"
-            other="# contacts found"
-          />
-        </SettingsList.ItemText>
-      ) : (
-        <View style={[a.flex_1, a.gap_2xs]}>
-          <SettingsList.ItemText>
-            <Trans>Waiting for your friends to join</Trans>
-          </SettingsList.ItemText>
-          <Text
-            style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
-            <Trans>We will notify you when your contacts sign up.</Trans>
-          </Text>
-        </View>
-      )}
-    </SettingsList.Item>
-  )
+  return null
 }
 
 function StatusFooter({syncedAt}: {syncedAt: string}) {
@@ -344,45 +464,60 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
 
   return (
     <View style={[a.px_xl, a.py_xl, a.gap_4xl]}>
-      <View style={[a.gap_sm, a.align_start]}>
+      <View style={[a.gap_xs, a.align_start]}>
+        <Text style={[a.text_md, a.font_semi_bold]}>
+          <Trans>Contacts uploaded</Trans>
+        </Text>
+        <View style={[a.gap_2xs]}>
+          <Text
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+            <Trans>We will notify you when we find your friends.</Trans>
+          </Text>
+          <Text
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+            <Trans>
+              Uploaded on{' '}
+              {i18n.date(new Date(syncedAt), {
+                dateStyle: 'long',
+              })}
+            </Trans>
+          </Text>
+        </View>
         <Link
           label={_(msg`Resync contacts`)}
           to={{screen: 'FindContactsFlow'}}
           size="small"
-          color="primary_subtle">
+          color="primary_subtle"
+          style={[a.mt_xs]}>
           <ButtonIcon icon={ResyncIcon} />
           <ButtonText>
             <Trans>Resync contacts</Trans>
           </ButtonText>
         </Link>
-        <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-          <Trans>
-            Contacts last uploaded on{' '}
-            {i18n.date(new Date(syncedAt), {
-              dateStyle: 'long',
-            })}
-          </Trans>
-        </Text>
       </View>
 
-      <View style={[a.gap_sm, a.align_start]}>
+      <View style={[a.gap_xs, a.align_start]}>
+        <Text style={[a.text_md, a.font_semi_bold]}>
+          <Trans>Delete contacts</Trans>
+        </Text>
+        <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+          <Trans>
+            Bluesky stores your contacts as encoded data. Removing your contacts
+            will immediately delete this data.
+          </Trans>
+        </Text>
         <Button
           label={_(msg`Remove all contacts`)}
           onPress={() => removeData()}
           size="small"
           color="negative_subtle"
-          disabled={isPending}>
+          disabled={isPending}
+          style={[a.mt_xs]}>
           <ButtonIcon icon={isPending ? Loader : TrashIcon} />
           <ButtonText>
             <Trans>Remove all contacts</Trans>
           </ButtonText>
         </Button>
-        <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-          <Trans>
-            Deleting your contact matching data will remove you from future
-            friend suggestions and immediately delete all non-matching data.
-          </Trans>
-        </Text>
       </View>
     </View>
   )

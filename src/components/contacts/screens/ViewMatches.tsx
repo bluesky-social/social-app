@@ -202,9 +202,9 @@ export function ViewMatches({
     searchFocused,
   ])
 
-  const {mutate: dimissMatch} = useMutation({
-    mutationFn: async (_did: string) => {
-      await new Promise(resolve => setTimeout(resolve, 500))
+  const {mutate: dismissMatch} = useMutation({
+    mutationFn: async (did: string) => {
+      await agent.app.bsky.contact.dismissMatch({subject: did})
     },
     onMutate: did => {
       dispatch({type: 'DISMISS_MATCH', payload: {did}})
@@ -235,7 +235,7 @@ export function ViewMatches({
           <MatchItem
             profile={item.profile}
             moderationOpts={moderationOpts}
-            onRemoveSuggestion={dimissMatch}
+            onRemoveSuggestion={dismissMatch}
           />
         )
       case 'contact':
