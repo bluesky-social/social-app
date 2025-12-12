@@ -15,7 +15,11 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {filterMatchedNumbers, normalizeContactBook} from '../contacts'
+import {
+  filterMatchedNumbers,
+  getMatchedContacts,
+  normalizeContactBook,
+} from '../contacts'
 import {constructFullPhoneNumber} from '../phone-number'
 import {type Action, type State} from '../state'
 
@@ -80,7 +84,11 @@ export function GetContacts({
       dispatch({
         type: 'SYNC_CONTACTS_SUCCESS',
         payload: {
-          matches: result.matches.map(match => match.match),
+          matches: getMatchedContacts(
+            contacts,
+            result.matches,
+            result.indexToContactId,
+          ),
           contacts: filterMatchedNumbers(
             contacts,
             result.matches,

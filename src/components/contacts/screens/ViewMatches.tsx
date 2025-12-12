@@ -41,7 +41,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import {InviteInfo} from '../components/InviteInfo'
-import {type Action, type Contact, type State} from '../state'
+import {type Action, type Contact, type Match, type State} from '../state'
 
 type Item =
   | {
@@ -50,7 +50,7 @@ type Item =
     }
   | {
       type: 'match'
-      profile: bsky.profile.AnyProfileView
+      match: Match
     }
   | {
       type: 'contacts header'
@@ -101,10 +101,12 @@ export function ViewMatches({
   // a query to get it into the shadow state
   const allMatches = useMatchesPassthroughQuery(state.matches)
   const matches = allMatches.filter(
-    match => !state.dismissedMatches.includes(match.did),
+    match => !state.dismissedMatches.includes(match.profile.did),
   )
 
-  const followableDids = matches.map(match => match.did)
+  console.log(matches)
+
+  const followableDids = matches.map(match => match.profile.did)
   const [didFollowAll, setDidFollowAll] = useState(followableDids.length === 0)
 
   const cumulativeFollowCount = useRef(0)
@@ -160,12 +162,14 @@ export function ViewMatches({
       for (const match of matches) {
         if (
           search.length === 0 ||
-          (match.displayName ?? '')
+          (match.profile.displayName ?? '')
             .toLocaleLowerCase()
             .includes(search.toLocaleLowerCase()) ||
-          match.handle.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+          match.profile.handle
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase())
         ) {
-          all.push({type: 'match', profile: match})
+          all.push({type: 'match', match})
         }
       }
 
@@ -189,7 +193,7 @@ export function ViewMatches({
       if (matches.length > 0) {
         all.push({type: 'matches header', count: matches.length})
         for (const match of matches) {
-          all.push({type: 'match', profile: match})
+          all.push({type: 'match', match})
         }
 
         if (state.contacts.length > 0) {
@@ -247,7 +251,8 @@ export function ViewMatches({
       case 'match':
         return (
           <MatchItem
-            profile={item.profile}
+            profile={item.match.profile}
+            contact={item.match.contact}
             moderationOpts={moderationOpts}
             onRemoveSuggestion={dismissMatch}
             onFollow={onFollow}
@@ -417,7 +422,7 @@ function keyExtractor(item: Item) {
     case 'contact':
       return item.contact.id
     case 'match':
-      return item.profile.did
+      return item.match.profile.did
     default:
       return item.type
   }
@@ -425,11 +430,13 @@ function keyExtractor(item: Item) {
 
 function MatchItem({
   profile,
+  contact,
   moderationOpts,
   onRemoveSuggestion,
   onFollow,
 }: {
   profile: bsky.profile.AnyProfileView
+  contact?: Contact
   moderationOpts?: ModerationOpts
   onRemoveSuggestion: (did: string) => void
   onFollow: () => void
@@ -439,16 +446,46 @@ function MatchItem({
   const {_} = useLingui()
   const shadow = useProfileShadow(profile)
 
+  const contactName = useMemo(() => {
+    if (!contact) return null
+
+    const name = contact.firstName ?? contact.lastName ?? contact.name
+    if (name) return _(msg`Your contact ${name}`)
+    const phone =
+      contact.phoneNumbers?.find(p => p.isPrimary) ?? contact.phoneNumbers?.[0]
+    if (phone?.number) return phone.number
+    return null
+  }, [contact, _])
+
   if (!moderationOpts) return null
 
   return (
     <View style={[gutter, a.py_md, a.border_t, t.atoms.border_contrast_low]}>
       <ProfileCard.Header>
-        <ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} />
-        <ProfileCard.NameAndHandle
+        <ProfileCard.Avatar
           profile={profile}
           moderationOpts={moderationOpts}
+          size={48}
         />
+        <View style={[a.flex_1]}>
+          <ProfileCard.Name
+            profile={profile}
+            moderationOpts={moderationOpts}
+            textStyle={[a.leading_tight]}
+          />
+          <ProfileCard.Handle
+            profile={profile}
+            textStyle={[contactName && a.text_xs]}
+          />
+          {contactName && (
+            <Text
+              emoji
+              style={[a.leading_snug, t.atoms.text_contrast_medium, a.text_xs]}
+              numberOfLines={1}>
+              {contactName}
+            </Text>
+          )}
+        </View>
         <ProfileCard.FollowButton
           profile={profile}
           moderationOpts={moderationOpts}

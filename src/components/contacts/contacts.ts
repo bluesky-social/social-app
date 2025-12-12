@@ -2,7 +2,7 @@ import {type AppBskyContactDefs} from '@atproto/api'
 
 import {type CountryCode} from '#/lib/international-telephone-codes'
 import {normalizePhoneNumber} from './phone-number'
-import {type Contact} from './state'
+import {type Contact, type Match} from './state'
 
 /**
  * Takes the raw contact book and returns a plain list of numbers in E.164 format, along
@@ -70,4 +70,20 @@ export function filterMatchedNumbers(
   }
 
   return contacts.filter(contact => !filteredIds.has(contact.id))
+}
+
+export function getMatchedContacts(
+  contacts: Contact[],
+  results: AppBskyContactDefs.MatchAndContactIndex[],
+  mapping: Map<number, Contact['id']>,
+): Array<Match> {
+  const contactsById = new Map(contacts.map(c => [c.id, c]))
+
+  return results.map(result => {
+    const id = mapping.get(result.contactIndex)
+    const contact = id !== undefined ? contactsById.get(id) : undefined
+
+    console.log(result.contactIndex, id, contact)
+    return {profile: result.match, contact}
+  })
 }

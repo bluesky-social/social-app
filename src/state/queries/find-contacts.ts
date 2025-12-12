@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
+import {type Match} from '#/components/contacts/state'
 import type * as bsky from '#/types/bsky'
 import {STALE} from '.'
 
@@ -78,10 +79,8 @@ export const findContactsMatchesPassthroughQueryKey = (dids: string[]) => [
  * In lieu of any better ideas, I'm just going to take the contacts we have and
  * "launder" them through a dummy query. This will then return "shadow-able" profiles.
  */
-export function useMatchesPassthroughQuery(
-  matches: bsky.profile.AnyProfileView[],
-) {
-  const dids = matches.map(match => match.did)
+export function useMatchesPassthroughQuery(matches: Match[]) {
+  const dids = matches.map(match => match.profile.did)
   const {data} = useQuery({
     queryKey: findContactsMatchesPassthroughQueryKey(dids),
     queryFn: () => {
@@ -113,9 +112,7 @@ export function* findAllProfilesInQueryData(
     }
   }
 
-  const passthroughQueryDatas = queryClient.getQueriesData<
-    bsky.profile.AnyProfileView[]
-  >({
+  const passthroughQueryDatas = queryClient.getQueriesData<Match[]>({
     queryKey: [RQ_KEY_ROOT, 'passthrough'],
   })
   for (const [_queryKey, queryData] of passthroughQueryDatas) {
@@ -123,8 +120,8 @@ export function* findAllProfilesInQueryData(
       continue
     }
     for (const match of queryData) {
-      if (match.did === did) {
-        yield match
+      if (match.profile.did === did) {
+        yield match.profile
       }
     }
   }

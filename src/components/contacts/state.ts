@@ -7,6 +7,11 @@ import type * as bsky from '#/types/bsky'
 
 export type Contact = ExistingContact
 
+export type Match = {
+  profile: bsky.profile.AnyProfileView
+  contact?: Contact
+}
+
 export type State =
   | {
       step: '1: phone input'
@@ -29,7 +34,7 @@ export type State =
   | {
       step: '4: view matches'
       contacts: Contact[]
-      matches: bsky.profile.AnyProfileView[]
+      matches: Match[]
       // rather than mutating `matches`, we keep track of dismissed matches
       // so we can roll back optimistic updates
       dismissedMatches: string[]
@@ -61,7 +66,7 @@ export type Action =
   | {
       type: 'SYNC_CONTACTS_SUCCESS'
       payload: {
-        matches: bsky.profile.AnyProfileView[]
+        matches: Match[]
         // filter out matched contacts
         contacts: Contact[]
       }
