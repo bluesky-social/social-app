@@ -22,7 +22,7 @@ export function FindContactsBannerNUX() {
   const {visible, close} = useInternalState()
   const isFeatureEnabled = useIsFindContactsFeatureEnabledBasedOnGeolocation()
 
-  if (!visible || isFeatureEnabled) return null
+  if (!visible || !isFeatureEnabled) return null
 
   return (
     <View style={[a.w_full, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
