@@ -12,7 +12,7 @@ import {useIsFocused} from '@react-navigation/native'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_10, urls} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {
   type AllNavigatorParams,
@@ -125,7 +125,7 @@ function Intro() {
           matching with your contacts. We protect your information and you
           control what happens next.{' '}
           <InlineLinkText
-            to="#"
+            to={urls.website.blog.findFriendsAnnouncement}
             label={_(
               msg({
                 message: `Learn more about importing contacts`,
