@@ -16,6 +16,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {
+  contactsWithPhoneNumbersOnly,
   filterMatchedNumbers,
   getMatchedContacts,
   normalizeContactBook,
@@ -147,7 +148,7 @@ export function GetContacts({
         ],
       })
 
-      return contacts.data
+      return contactsWithPhoneNumbersOnly(contacts.data)
     },
     onSuccess: contacts => {
       dispatch({

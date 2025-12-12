@@ -5,6 +5,15 @@ import {normalizePhoneNumber} from './phone-number'
 import {type Contact, type Match} from './state'
 
 /**
+ * Filters out contacts that do not have any associated phone numbers.
+ */
+export function contactsWithPhoneNumbersOnly(contacts: Contact[]) {
+  return contacts.filter(
+    contact => contact.phoneNumbers && contact.phoneNumbers.length > 0,
+  )
+}
+
+/**
  * Takes the raw contact book and returns a plain list of numbers in E.164 format, along
  * with a mapping to retrieve the contact ID when we get the results back.
  *
