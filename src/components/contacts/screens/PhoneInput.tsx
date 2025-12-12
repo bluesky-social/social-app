@@ -295,7 +295,7 @@ function LegalDisclaimer() {
           By continuing, you consent to this use. You may change your mind any
           time by visiting settings.{' '}
           <InlineLinkText
-            to={urls.website.blog.findFriendsAnnouncement}
+            to={urls.website.support.findFriendsPrivacyPolicy}
             label={_(
               msg({
                 message: `Learn more about importing contacts`,
