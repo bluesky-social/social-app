@@ -208,6 +208,10 @@ export const urls = {
       initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
       searchTipsAndTricks: 'https://bsky.social/about/blog/05-31-2024-search',
     },
+    support: {
+      findFriendsPrivacyPolicy:
+        'https://bsky.social/about/support/find-friends-privacy-policy',
+    },
   },
 }
 
