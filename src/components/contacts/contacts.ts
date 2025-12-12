@@ -5,11 +5,15 @@ import {normalizePhoneNumber} from './phone-number'
 import {type Contact, type Match} from './state'
 
 /**
- * Filters out contacts that do not have any associated phone numbers.
+ * Filters out contacts that do not have any associated phone numbers,
+ * as well as businesses
  */
 export function contactsWithPhoneNumbersOnly(contacts: Contact[]) {
   return contacts.filter(
-    contact => contact.phoneNumbers && contact.phoneNumbers.length > 0,
+    contact =>
+      contact.phoneNumbers &&
+      contact.phoneNumbers.length > 0 &&
+      contact.contactType !== 'company',
   )
 }
 
