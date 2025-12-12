@@ -83,7 +83,7 @@ export function FindContactsSettingsScreen({}: Props) {
           !data.syncStatus ? (
             <Intro />
           ) : (
-            <SyncStatus info={data.syncStatus} refetch={refetch} />
+            <SyncStatus info={data.syncStatus} refetchStatus={refetch} />
           )
         ) : error ? (
           <ErrorScreen
@@ -159,24 +159,30 @@ function Intro() {
 
 function SyncStatus({
   info,
-  refetch,
+  refetchStatus,
 }: {
   info: AppBskyContactDefs.SyncStatus
-  refetch: () => Promise<any>
+  refetchStatus: () => Promise<any>
 }) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
 
-  const {data, isPending, hasNextPage, fetchNextPage, isFetchingNextPage} =
-    useContactsMatchesQuery()
+  const {
+    data,
+    isPending,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch: refetchMatches,
+  } = useContactsMatchesQuery()
 
   const [isPTR, setIsPTR] = useState(false)
 
   const onRefresh = () => {
     setIsPTR(true)
-    refetch().finally(() => {
+    Promise.all([refetchStatus(), refetchMatches()]).finally(() => {
       setIsPTR(false)
     })
   }
@@ -190,7 +196,7 @@ function SyncStatus({
       optimisticRemoveMatch(queryClient, did)
     },
     onError: err => {
-      refetch()
+      refetchMatches()
       if (isNetworkError(err)) {
         Toast.show(
           _(

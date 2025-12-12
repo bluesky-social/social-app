@@ -15,6 +15,7 @@ import {
   useProfileShadow,
 } from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {optimisticRemoveMatch} from '#/state/queries/find-contacts'
 import {useAgent, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -221,6 +222,10 @@ export function ViewMatches({
     onMutate: did => {
       logger.metric('contacts:matches:dismiss', {entryPoint: context})
       dispatch({type: 'DISMISS_MATCH', payload: {did}})
+    },
+    onSuccess: (_res, did) => {
+      // for the other screen
+      optimisticRemoveMatch(queryClient, did)
     },
     onError: (err, did) => {
       dispatch({type: 'DISMISS_MATCH_FAILED', payload: {did}})
