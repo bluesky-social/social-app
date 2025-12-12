@@ -7,6 +7,7 @@ import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllProfilesInQueryData as findAllProfilesInActivitySubscriptionsQueryData} from '#/state/queries/activity-subscriptions'
 import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '#/state/queries/actor-search'
 import {findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
+import {findAllProfilesInQueryData as findAllProfilesInContactMatchesQueryData} from '#/state/queries/find-contacts'
 import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '#/state/queries/known-followers'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '#/state/queries/list-members'
 import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '#/state/queries/messages/list-conversations'
@@ -256,4 +257,5 @@ function* findProfilesInCache(
   yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did)
   yield* findAllProfilesInActivitySubscriptionsQueryData(queryClient, did)
   yield* findAllProfilesInNotifsQueryData(queryClient, did)
+  yield* findAllProfilesInContactMatchesQueryData(queryClient, did)
 }

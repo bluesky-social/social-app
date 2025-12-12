@@ -1,4 +1,13 @@
-import {useInfiniteQuery, useQuery} from '@tanstack/react-query'
+import {
+  type AppBskyActorDefs,
+  type AppBskyContactGetMatches,
+} from '@atproto/api'
+import {
+  type InfiniteData,
+  type QueryClient,
+  useInfiniteQuery,
+  useQuery,
+} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
 
@@ -33,4 +42,27 @@ export function useContactsMatchesQuery() {
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyContactGetMatches.OutputSchema>
+  >({
+    queryKey: findContactsStatusQueryKey,
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const match of page.matches) {
+        if (match.did === did) {
+          yield match
+        }
+      }
+    }
+  }
 }
