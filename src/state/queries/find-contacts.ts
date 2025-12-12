@@ -1,7 +1,4 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyContactGetMatches,
-} from '@atproto/api'
+import {type AppBskyContactGetMatches} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -10,6 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
+import type * as bsky from '#/types/bsky'
 import {STALE} from '.'
 
 const RQ_KEY_ROOT = 'find-contacts'
@@ -64,10 +62,39 @@ export function optimisticRemoveMatch(queryClient: QueryClient, did: string) {
   )
 }
 
+export const findContactsMatchesPassthroughQueryKey = (dids: string[]) => [
+  RQ_KEY_ROOT,
+  'passthrough',
+  dids,
+]
+
+/**
+ * DIRTY HACK WARNING!
+ *
+ * The only way to get shadow state to work is to put it into React Query.
+ * However, when we get the matches it's via a POST, not a GET, so we use a mutation,
+ * which means we can't use shadowing!
+ *
+ * In lieu of any better ideas, I'm just going to take the contacts we have and
+ * "launder" them through a dummy query. This will then return "shadow-able" profiles.
+ */
+export function useMatchesPassthroughQuery(
+  matches: bsky.profile.AnyProfileView[],
+) {
+  const dids = matches.map(match => match.did)
+  const {data} = useQuery({
+    queryKey: findContactsMatchesPassthroughQueryKey(dids),
+    queryFn: () => {
+      return matches
+    },
+  })
+  return data ?? matches
+}
+
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<bsky.profile.AnyProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyContactGetMatches.OutputSchema>
   >({
@@ -82,6 +109,22 @@ export function* findAllProfilesInQueryData(
         if (match.did === did) {
           yield match
         }
+      }
+    }
+  }
+
+  const passthroughQueryDatas = queryClient.getQueriesData<
+    bsky.profile.AnyProfileView[]
+  >({
+    queryKey: [RQ_KEY_ROOT, 'passthrough'],
+  })
+  for (const [_queryKey, queryData] of passthroughQueryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (const match of queryData) {
+      if (match.did === did) {
+        yield match
       }
     }
   }

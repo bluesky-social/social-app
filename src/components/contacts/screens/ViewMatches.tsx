@@ -15,7 +15,10 @@ import {
   useProfileShadow,
 } from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {optimisticRemoveMatch} from '#/state/queries/find-contacts'
+import {
+  optimisticRemoveMatch,
+  useMatchesPassthroughQuery,
+} from '#/state/queries/find-contacts'
 import {useAgent, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -94,9 +97,14 @@ export function ViewMatches({
     onOut: onBlur,
   } = useInteractionState()
 
-  const followableDids = state.matches
-    .map(match => match.did)
-    .filter(did => !state.dismissedMatches.includes(did))
+  // HACK: Although we already have the match data, we need to pass it through
+  // a query to get it into the shadow state
+  const allMatches = useMatchesPassthroughQuery(state.matches)
+  const matches = allMatches.filter(
+    match => !state.dismissedMatches.includes(match.did),
+  )
+
+  const followableDids = matches.map(match => match.did)
   const [didFollowAll, setDidFollowAll] = useState(followableDids.length === 0)
 
   const cumulativeFollowCount = useRef(0)
@@ -149,9 +157,7 @@ export function ViewMatches({
     const all: Item[] = []
 
     if (searchFocused || search.length > 0) {
-      for (const match of state.matches) {
-        if (state.dismissedMatches.includes(match.did)) continue
-
+      for (const match of matches) {
         if (
           search.length === 0 ||
           (match.displayName ?? '')
@@ -180,10 +186,6 @@ export function ViewMatches({
         all.push({type: 'search empty state', query: search})
       }
     } else {
-      const matches = state.matches.filter(
-        match => !state.dismissedMatches.includes(match.did),
-      )
-
       if (matches.length > 0) {
         all.push({type: 'matches header', count: matches.length})
         for (const match of matches) {
@@ -207,13 +209,7 @@ export function ViewMatches({
     }
 
     return all
-  }, [
-    state.matches,
-    state.contacts,
-    state.dismissedMatches,
-    search,
-    searchFocused,
-  ])
+  }, [matches, state.contacts, search, searchFocused])
 
   const {mutate: dismissMatch} = useMutation({
     mutationFn: async (did: string) => {
@@ -393,7 +389,7 @@ export function ViewMatches({
           onPress={() => {
             if (context === 'Onboarding') {
               logger.metric('onboarding:contacts:nextPressed', {
-                matchCount: state.matches.length,
+                matchCount: allMatches.length,
                 followCount: cumulativeFollowCount.current,
                 dismissedMatchCount: state.dismissedMatches.length,
               })
