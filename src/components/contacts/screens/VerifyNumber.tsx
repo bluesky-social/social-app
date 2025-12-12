@@ -1,5 +1,9 @@
 import {useEffect, useMemo, useState} from 'react'
 import {Text as NestedText, View} from 'react-native'
+import {
+  AppBskyContactStartPhoneVerification,
+  AppBskyContactVerifyPhone,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -84,7 +88,6 @@ export function VerifyNumber({
     onMutate: () => setError(null),
     onError: err => {
       setOtpCode('')
-      console.log(err)
       if (isNetworkError(err)) {
         setError({
           retryable: true,
@@ -93,12 +96,29 @@ export function VerifyNumber({
             msg`A network error occurred. Please check your internet connection.`,
           ),
         })
-        // TODO: Check error with invalid code error!!
-      } else if (true) {
+      } else if (err instanceof AppBskyContactVerifyPhone.InvalidCodeError) {
         setError({
           retryable: true,
           isResendError: true,
           message: _(msg`This code is invalid. Resend to get a new code.`),
+        })
+      } else if (err instanceof AppBskyContactVerifyPhone.InvalidPhoneError) {
+        setError({
+          retryable: false,
+          isResendError: false,
+          message: _(
+            msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
+          ),
+        })
+      } else if (
+        err instanceof AppBskyContactVerifyPhone.RateLimitExceededError
+      ) {
+        setError({
+          retryable: true,
+          isResendError: false,
+          message: _(
+            msg`Too many attempts. Please wait a few minutes and try again.`,
+          ),
         })
       } else {
         logger.error('Verify phone number failed', {safeMessage: err})
@@ -124,13 +144,42 @@ export function VerifyNumber({
       setError(null)
     },
     onError: err => {
-      setError({
-        retryable: true,
-        isResendError: true,
-        message: _(msg`An error occurred while resending the code.`),
-      })
-      if (!isNetworkError(err)) {
-        logger.error('Resend code failed', {safeMessage: err})
+      if (isNetworkError(err)) {
+        setError({
+          retryable: true,
+          isResendError: true,
+          message: _(
+            msg`A network error occurred. Please check your internet connection.`,
+          ),
+        })
+      } else if (
+        err instanceof AppBskyContactStartPhoneVerification.InvalidPhoneError
+      ) {
+        setError({
+          retryable: false,
+          isResendError: true,
+          message: _(
+            msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
+          ),
+        })
+      } else if (
+        err instanceof
+        AppBskyContactStartPhoneVerification.RateLimitExceededError
+      ) {
+        setError({
+          retryable: true,
+          isResendError: true,
+          message: _(
+            msg`Too many codes sent. Please wait a few minutes and try again.`,
+          ),
+        })
+      } else {
+        logger.error('Resend failed', {safeMessage: err})
+        setError({
+          retryable: true,
+          isResendError: true,
+          message: _(msg`An error occurred. ${cleanError(err)}`),
+        })
       }
     },
   })

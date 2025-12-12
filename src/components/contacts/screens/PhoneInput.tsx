@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {AppBskyContactStartPhoneVerification} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -95,6 +96,19 @@ export function PhoneInput({
         setError(
           _(
             msg`A network error occurred. Please check your internet connection`,
+          ),
+        )
+      } else if (
+        err instanceof
+        AppBskyContactStartPhoneVerification.RateLimitExceededError
+      ) {
+        setError(_(msg`Rate limit exceeded. Please try again later.`))
+      } else if (
+        err instanceof AppBskyContactStartPhoneVerification.InvalidPhoneError
+      ) {
+        setError(
+          _(
+            msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
           ),
         )
       } else {

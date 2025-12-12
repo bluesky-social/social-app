@@ -1,6 +1,7 @@
 import {Alert, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as Contacts from 'expo-contacts'
+import {AppBskyContactImportContacts} from '@atproto/api'
 import {msg, t, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
@@ -23,6 +24,8 @@ import {
 } from '../contacts'
 import {constructFullPhoneNumber} from '../phone-number'
 import {type Action, type State} from '../state'
+
+const MAX_UPLOAD_COUNT = 1000
 
 export function GetContacts({
   state,
@@ -52,7 +55,7 @@ export function GetContacts({
       if (phoneNumbers.length > 0) {
         const res = await agent.app.bsky.contact.importContacts({
           token: state.token,
-          contacts: phoneNumbers,
+          contacts: phoneNumbers.slice(0, MAX_UPLOAD_COUNT),
         })
 
         return {
@@ -110,6 +113,24 @@ export function GetContacts({
         Toast.show(
           _(
             msg`There was a problem with your internet connection, please try again`,
+          ),
+          {type: 'error'},
+        )
+      } else if (
+        err instanceof AppBskyContactImportContacts.TooManyContactsError
+      ) {
+        Toast.show(
+          _(
+            msg`Too many contacts - you've exceeded the number of contacts you can import to find your friends`,
+          ),
+          {type: 'error'},
+        )
+      } else if (
+        err instanceof AppBskyContactImportContacts.InvalidTokenError
+      ) {
+        Toast.show(
+          _(
+            msg`Could not upload contacts. You need to re-verify your phone number to proceed`,
           ),
           {type: 'error'},
         )
