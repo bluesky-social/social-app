@@ -95,8 +95,6 @@ export function getMatchedContacts(
   return results.map(result => {
     const id = mapping.get(result.contactIndex)
     const contact = id !== undefined ? contactsById.get(id) : undefined
-
-    console.log(result.contactIndex, id, contact)
     return {profile: result.match, contact}
   })
 }
