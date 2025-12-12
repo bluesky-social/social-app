@@ -650,43 +650,56 @@ export type MetricEvents = {
   'contacts:phone:phoneVerified': {
     entryPoint: 'Onboarding' | 'Standalone'
   }
+  // user responded to the contacts permission prompt
   'contacts:permission:request': {
     status: 'granted' | 'denied'
     accessLevelIOS?: 'all' | 'limited' | 'none'
   }
+  // contacts were successfully imported and matched
   'contacts:import:success': {
     contactCount: number
     matchCount: number
     entryPoint: 'Onboarding' | 'Standalone'
   }
+  // contacts import failed
   'contacts:import:failure': {
     reason: 'noValidNumbers' | 'networkError' | 'unknown'
     entryPoint: 'Onboarding' | 'Standalone'
   }
+  // user followed a single match
   'contacts:matches:follow': {
     entryPoint: 'Onboarding' | 'Standalone'
   }
+  // user pressed "Follow All" on matches
   'contacts:matches:followAll': {
     followCount: number
     entryPoint: 'Onboarding' | 'Standalone'
   }
+  // user dismissed a match
   'contacts:matches:dismiss': {
     entryPoint: 'Onboarding' | 'Standalone'
   }
+  // user pressed invite to send an SMS to a non-match
   'contacts:matches:invite': {
     entryPoint: 'Onboarding' | 'Standalone'
   }
+  // user opened the Find Contacts settings screen
   'contacts:settings:presented': {
     hasPreviouslySynced: boolean
     matchCount?: number
   }
+  // user followed a single match from settings
   'contacts:settings:follow': {}
+  // user pressed "Follow All" from settings
   'contacts:settings:followAll': {
     followCount: number
   }
+  // user dismissed a match from settings
   'contacts:settings:dismiss': {}
+  // user resynced their contacts from settings
   'contacts:settings:resync': {
     daysSinceLastSync: number
   }
+  // user removed their contact data from settings
   'contacts:settings:removeData': {}
 }
