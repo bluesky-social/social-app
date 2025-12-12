@@ -161,11 +161,10 @@ export function StepFinished() {
             }
 
             next.displayName = ''
-            // HACKFIX
-            // creating a bunch of identical profile objects is breaking the relay
-            // tossing this unspecced field onto it to reduce the size of the problem
-            // -prf
-            next.createdAt = new Date().toISOString()
+
+            if (!next.createdAt) {
+              next.createdAt = new Date().toISOString()
+            }
             return next
           })
 

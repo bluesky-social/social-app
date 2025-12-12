@@ -1,15 +1,27 @@
+import {useContext} from 'react'
 import {Alert, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as Contacts from 'expo-contacts'
-import {AppBskyContactImportContacts} from '@atproto/api'
+import type AtpAgent from '@atproto/api'
+import {
+  type AppBskyActorProfile,
+  AppBskyContactImportContacts,
+  type Un$Typed,
+} from '@atproto/api'
 import {msg, t, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {uploadBlob} from '#/lib/api'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {findContactsStatusQueryKey} from '#/state/queries/find-contacts'
 import {useAgent} from '#/state/session'
+import {
+  Context as OnboardingContext,
+  type OnboardingAction,
+  type OnboardingState,
+} from '#/screens/Onboarding/state'
 import {atoms as a, ios, tokens, useGutters} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
@@ -43,9 +55,26 @@ export function GetContacts({
   const insets = useSafeAreaInsets()
   const gutters = useGutters([0, 'wide'])
   const queryClient = useQueryClient()
+  const maybeOnboardingContext = useContext(OnboardingContext)
 
   const {mutate: uploadContacts, isPending: isUploadPending} = useMutation({
     mutationFn: async (contacts: Contacts.ExistingContact[]) => {
+      /**
+       * `importContacts` triggers a notification for the people you match with,
+       * however we prevent notifications coming from users without profiles.
+       * If you're using this as the onboarding flow, we need to create a profile
+       * record before this.
+       *
+       * When you finish onboarding, we'll upsert again - bit wasteful but fine.
+       */
+      if (context === 'Onboarding' && maybeOnboardingContext) {
+        try {
+          await createProfileRecord(agent, maybeOnboardingContext)
+        } catch (error) {
+          logger.debug('Error creating profile record:', {safeMessage: error})
+        }
+      }
+
       const {phoneNumbers, indexToContactId} = normalizeContactBook(
         contacts,
         state.phoneCountryCode,
@@ -202,11 +231,11 @@ export function GetContacts({
         <Text style={style}>
           <Trans>
             Bluesky helps friends find each other by creating an encoded digital
-            fingerprint, called a "hash," and then looking for matching hashes.
+            fingerprint, called a "hash", and then looking for matching hashes.
           </Trans>
         </Text>
         <Text style={style}>
-          &bull; <Trans>We never store plain phone numbers</Trans>
+          &bull; <Trans>We never keep plain phone numbers</Trans>
         </Text>
         <Text style={style}>
           &bull; <Trans>We delete hashes after matches are made</Trans>
@@ -287,4 +316,36 @@ function showPermissionDeniedAlert() {
       },
     ],
   )
+}
+
+/**
+ * Copied from `#/screens/Onboarding/StepFinished/index.tsx`
+ */
+async function createProfileRecord(
+  agent: AtpAgent,
+  onboardingContext: {
+    state: OnboardingState
+    dispatch: React.Dispatch<OnboardingAction>
+  },
+) {
+  const profileStepResults = onboardingContext.state.profileStepResults
+  const {imageUri, imageMime} = profileStepResults
+  const blobPromise =
+    imageUri && imageMime ? uploadBlob(agent, imageUri, imageMime) : undefined
+
+  await agent.upsertProfile(async existing => {
+    let next: Un$Typed<AppBskyActorProfile.Record> = existing ?? {}
+
+    if (blobPromise) {
+      const res = await blobPromise
+      if (res.data.blob) {
+        next.avatar = res.data.blob
+      }
+    }
+
+    next.displayName = ''
+
+    next.createdAt = new Date().toISOString()
+    return next
+  })
 }
