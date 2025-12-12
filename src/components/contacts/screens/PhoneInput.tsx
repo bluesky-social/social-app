@@ -295,9 +295,14 @@ function LegalDisclaimer() {
           time by visiting settings.{' '}
           <InlineLinkText
             to="#"
-            label={_(msg`Learn more`)}
+            label={_(
+              msg({
+                message: `Learn more about importing contacts`,
+                context: `english-only-resource`,
+              }),
+            )}
             style={[a.text_xs, a.leading_snug]}>
-            TODO: Learn more
+            <Trans context="english-only-resource">Learn more</Trans>
           </InlineLinkText>
         </Trans>
       </Text>

@@ -40,9 +40,14 @@ export function StepFindContactsIntro() {
           control what happens next.{' '}
           <InlineLinkText
             to="#"
-            label={_(msg`Learn more`)}
+            label={_(
+              msg({
+                message: `Learn more about importing contacts`,
+                context: `english-only-resource`,
+              }),
+            )}
             style={[a.text_md, a.leading_snug]}>
-            TODO: Learn more
+            <Trans context="english-only-resource">Learn more</Trans>
           </InlineLinkText>
         </Trans>
       </OnboardingDescriptionText>
