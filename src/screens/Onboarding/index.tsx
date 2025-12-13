@@ -49,7 +49,10 @@ export function Onboarding() {
   const findContactsEnabled =
     useIsFindContactsFeatureEnabledBasedOnGeolocation()
   const showFindContacts =
-    isNative && findContactsEnabled && !gate('disable_onboarding_find_contacts')
+    ENV !== 'e2e' &&
+    isNative &&
+    findContactsEnabled &&
+    !gate('disable_onboarding_find_contacts')
 
   const [state, dispatch] = useReducer(
     reducer,
