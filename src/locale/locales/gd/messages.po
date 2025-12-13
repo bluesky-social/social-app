@@ -11579,4 +11579,3 @@ msgstr "Ma leigeis tu ris dè na rudan sa bheil ùidh agad, bidh e nas fhasa sus
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "An dearbhadh a rinn thusa"
-

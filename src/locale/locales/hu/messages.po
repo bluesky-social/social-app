@@ -9175,7 +9175,8 @@ msgstr "Feladat teljesítve – 10 kedvelés!"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
-msgstr "Tanítsd meg az algoritmusnak,\n"
+msgstr ""
+"Tanítsd meg az algoritmusnak,\n"
 "hogy mit szeretnél látni!"
 
 #: src/lib/interests.ts:73
@@ -11580,4 +11581,3 @@ msgstr "Az érdeklődési köreid megadásával személyre szabhatod a javasolt 
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Saját hitelesítések"
-

@@ -11579,4 +11579,3 @@ msgstr "Aukeratutako interesek gogoko duzun edukia zerbitzatzen laguntzen digute
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Zure egiaztapenak"
-

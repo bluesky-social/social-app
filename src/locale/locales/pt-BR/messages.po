@@ -11579,4 +11579,3 @@ msgstr "Seus interesses escolhidos nos ajudam a entregar o conteúdo que interes
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Suas verificações"
-

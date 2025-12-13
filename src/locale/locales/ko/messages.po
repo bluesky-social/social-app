@@ -11579,4 +11579,3 @@ msgstr "선택한 관심 주제는 사용자가 관심 있는 콘텐츠를 제�
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "내 인증"
-

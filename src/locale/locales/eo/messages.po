@@ -11579,4 +11579,3 @@ msgstr "Viaj elektitaj interesoj helpas nin havigi al vi enhavon, kiu gravas al 
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Viaj konfirmoj"
-
