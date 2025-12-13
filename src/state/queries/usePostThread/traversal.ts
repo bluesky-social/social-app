@@ -9,6 +9,7 @@ import {
 } from '#/state/queries/usePostThread/types'
 import {
   getPostRecord,
+  getReadMoreUI,
   getThreadPostNoUnauthenticatedUI,
   getThreadPostUI,
   getTraversalMetadata,
@@ -151,6 +152,18 @@ export function sortAndAnnotateThreadItems(
         })
 
         if (!post.isBlurred || skipModerationHandling) {
+          const skip =
+            parentMetadata?.isPartOfOPThreadFromRoot &&
+            !parentMetadata.isEndOfOPThreadFromRoot &&
+            !metadata?.isPartOfOPThreadFromRoot
+
+          if (skip) {
+            const branch = getBranch(thread, i, item.depth)
+            // could insert tombstone
+            i = branch.end
+            continue traversal
+          }
+
           /*
            * Not moderated, need to insert it
            */
@@ -280,6 +293,7 @@ export function sortAndAnnotateThreadItems(
              * item).
              */
             const isImplicitlyLastSibling =
+              nextItem === undefined ||
               metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth < metadata.depth
 
@@ -296,6 +310,7 @@ export function sortAndAnnotateThreadItems(
              * of this item)
              */
             metadata.isLastChild =
+              nextItem === undefined ||
               metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth <= metadata.depth
 
@@ -350,19 +365,25 @@ export function sortAndAnnotateThreadItems(
             ])
 
             /**
-             * If this is the last sibling, and the parent has no unhydrated
-             * replies, then we know we can skip an indent line.
+             * If the parent has no unhydrated replies that may require a
+             * `readMore`, we may be able to skip some of the indent lines.
              */
-            if (
-              metadata.parentMetadata.repliesUnhydrated <= 0 &&
-              metadata.isLastSibling
-            ) {
-              /**
-               * Depth is 2 more than the 0-index of the indent calculation
-               * bc of how we render these. So instead of handling that in the
-               * component, we just adjust that back to 0-index here.
-               */
-              metadata.skippedIndentIndices.add(item.depth - 2)
+            if (metadata.parentMetadata.repliesUnhydrated <= 0) {
+              if (metadata.isLastSibling) {
+                /**
+                 * We should definitely have a "last sibling" at this point.
+                 *
+                 * Note: depth is 2 more than the 0-index of the indent
+                 * calculation bc of how we render these. So instead of
+                 * handling that in the component, we just adjust that back to
+                 * 0-index here.
+                 */
+                metadata.skippedIndentIndices.add(item.depth - 2)
+              } else if (metadata.parentMetadata?.isEndOfOPThreadFromRoot) {
+                metadata.skippedIndentIndices.delete(
+                  metadata.parentMetadata.indent - 1,
+                )
+              }
             }
           }
 
@@ -372,7 +393,9 @@ export function sortAndAnnotateThreadItems(
            */
           if (metadata.repliesUnhydrated > 0 && metadata.isLastChild) {
             metadata.precedesChildReadMore = true
-            subset.splice(i + 1, 0, views.readMore(metadata))
+            const view = views.readMore(metadata)
+            view.ui = getReadMoreUI(metadata)
+            subset.splice(i + 1, 0, view)
             i++ // skip next iteration
           }
 
@@ -395,11 +418,9 @@ export function sortAndAnnotateThreadItems(
             (metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth <= metadata.upcomingParentReadMore.depth)
           ) {
-            subset.splice(
-              i + 1,
-              0,
-              views.readMore(metadata.upcomingParentReadMore),
-            )
+            const view = views.readMore(metadata.upcomingParentReadMore)
+            view.ui = getReadMoreUI(metadata.upcomingParentReadMore)
+            subset.splice(i + 1, 0, view)
             i++
           }
 
