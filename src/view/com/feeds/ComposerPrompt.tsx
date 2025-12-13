@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -168,7 +168,7 @@ export function ComposerPrompt() {
       <SubtleHover hover={hover} />
       <UserAvatar
         avatar={profile.avatar}
-        size={40}
+        size={42}
         type={profile.associated?.labeler ? 'labeler' : 'user'}
       />
       <View
@@ -184,13 +184,11 @@ export function ComposerPrompt() {
         ]}>
         <Text
           style={[
-            t.atoms.text_contrast_low,
+            t.atoms.text_contrast_medium,
             a.text_md,
-            {
-              includeFontPadding: false,
-            },
+            {includeFontPadding: false},
           ]}>
-          {_(msg`What's up?`)}
+          <Trans>What's up?</Trans>
         </Text>
         <View style={[a.flex_row, a.gap_md]}>
           {isNative && (
