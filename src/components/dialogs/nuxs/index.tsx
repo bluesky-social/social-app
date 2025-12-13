@@ -21,6 +21,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
+import {ENV} from '#/env'
 /*
  * NUXs
  */
@@ -46,6 +47,7 @@ const queuedNuxs: {
     enabled: ({currentProfile}) => {
       return (
         isNative &&
+        ENV !== 'e2e' &&
         isExistingUserAsOf('2025-12-16T00:00:00.000Z', currentProfile.createdAt)
       )
     },
