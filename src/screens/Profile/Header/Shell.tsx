@@ -86,13 +86,13 @@ let ProfileHeaderShell = ({
               width: 1000,
             },
             thumbDimensions: null,
-            type: 'circle-avi',
+            type: profile.associated?.labeler ? 'rect-avi' : 'circle-avi',
           },
         ],
         index: 0,
       })
     },
-    [openLightbox],
+    [openLightbox, profile.associated?.labeler],
   )
 
   const isMe = useMemo(
