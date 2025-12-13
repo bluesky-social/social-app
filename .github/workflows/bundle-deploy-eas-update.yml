@@ -150,7 +150,7 @@ jobs:
   # GitHub actions are horrible so let's just copy paste this in
   buildIfNecessaryIOS:
     name: Build and Submit iOS
-    runs-on: macos-26
+    runs-on: macos-26-large
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-ios
       cancel-in-progress: true
@@ -253,7 +253,7 @@ jobs:
 
   buildIfNecessaryAndroid:
     name: Build and Submit Android
-    runs-on: ubuntu-latest
+    runs-on: Linux-x64-32core
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-android
       cancel-in-progress: false
