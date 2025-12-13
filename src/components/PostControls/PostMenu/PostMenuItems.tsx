@@ -27,6 +27,7 @@ import {
   type NavigationProp,
 } from '#/lib/routes/types'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {isNetworkError} from '#/lib/strings/errors'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
@@ -54,7 +55,6 @@ import {
 } from '#/state/queries/threadgate'
 import {useRequireAuth, useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import * as Toast from '#/view/com/util/Toast'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {
@@ -87,6 +87,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
 import {IS_INTERNAL} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -201,7 +202,9 @@ let PostMenuItems = ({
       },
       e => {
         logger.error('Failed to delete post', {message: e})
-        Toast.show(_(msg`Failed to delete post, please try again`), 'xmark')
+        Toast.show(_(msg`Failed to delete post, please try again`), {
+          type: 'error',
+        })
       },
     )
   }
@@ -220,10 +223,9 @@ let PostMenuItems = ({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to toggle thread mute', {message: e})
-        Toast.show(
-          _(msg`Failed to toggle thread mute, please try again`),
-          'xmark',
-        )
+        Toast.show(_(msg`Failed to toggle thread mute, please try again`), {
+          type: 'error',
+        })
       }
     }
   }
@@ -232,7 +234,7 @@ let PostMenuItems = ({
     const str = richTextToString(richText, true)
 
     Clipboard.setStringAsync(str)
-    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+    Toast.show(_(msg`Copied to clipboard`))
   }
 
   const onPressTranslate = () => {
@@ -394,7 +396,7 @@ let PostMenuItems = ({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to block account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
+        Toast.show(_(msg`There was an issue! ${e.toString()}`), {type: 'error'})
       }
     }
   }
@@ -405,9 +407,11 @@ let PostMenuItems = ({
         await queueUnmute()
         Toast.show(_(msg({message: 'Account unmuted', context: 'toast'})))
       } catch (e: any) {
-        if (e?.name !== 'AbortError') {
-          logger.error('Failed to unmute account', {message: e})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
+        if (!isNetworkError(e)) {
+          logger.error('Failed to unmute account', {safeMessage: e})
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), {
+            type: 'error',
+          })
         }
       }
     } else {
@@ -415,9 +419,11 @@ let PostMenuItems = ({
         await queueMute()
         Toast.show(_(msg({message: 'Account muted', context: 'toast'})))
       } catch (e: any) {
-        if (e?.name !== 'AbortError') {
-          logger.error('Failed to mute account', {message: e})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
+        if (!isNetworkError(e)) {
+          logger.error('Failed to mute account', {safeMessage: e})
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), {
+            type: 'error',
+          })
         }
       }
     }
