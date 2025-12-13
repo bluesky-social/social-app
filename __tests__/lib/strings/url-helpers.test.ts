@@ -1,10 +1,10 @@
 import {describe, expect, it} from '@jest/globals'
 
+import {splitApexDomain} from '../../../src/lib/strings/url-apex-split'
 import {
   isPossiblyAUrl,
   isTrustedUrl,
   linkRequiresWarning,
-  splitApexDomain,
 } from '../../../src/lib/strings/url-helpers'
 
 describe('linkRequiresWarning', () => {
@@ -146,7 +146,8 @@ describe('splitApexDomain', () => {
 })
 
 describe('isTrustedUrl', () => {
-  const cases = [
+  type Case = [string, boolean]
+  const cases: Case[] = [
     ['#', true],
     ['#profile', true],
     ['/', true],
