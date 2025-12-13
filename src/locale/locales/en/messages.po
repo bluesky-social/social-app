@@ -548,7 +548,7 @@ msgstr ""
 msgid "a message"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:98
+#: src/components/contacts/screens/PhoneInput.tsx:99
 msgid "A network error occurred. Please check your internet connection"
 msgstr ""
 
@@ -1101,14 +1101,14 @@ msgstr ""
 msgid "An error occurred while uploading the video."
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:116
+#: src/components/contacts/screens/PhoneInput.tsx:117
 #: src/components/contacts/screens/VerifyNumber.tsx:128
 #: src/components/contacts/screens/VerifyNumber.tsx:181
 msgid "An error occurred. {0}"
 msgstr ""
 
 #: src/components/contacts/components/HeroImage.tsx:28
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:60
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:71
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
 msgstr ""
 
@@ -1564,8 +1564,8 @@ msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:203
-msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash,\" and then looking for matching hashes."
+#: src/components/contacts/screens/GetContacts.tsx:232
+msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
 msgstr ""
 
 #: src/components/dialogs/ServerInput.tsx:217
@@ -1581,11 +1581,11 @@ msgstr ""
 msgid "Bluesky is better with friends!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:34
+#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:35
 msgid "Bluesky is more fun with friends"
 msgstr ""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:88
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:99
 msgid "Bluesky is more fun with friends! Import your contacts to see who’s already here."
 msgstr ""
 
@@ -1707,7 +1707,7 @@ msgstr ""
 msgid "By clicking \"Continue\" you acknowledge that you understand and agree to these updates."
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:293
+#: src/components/contacts/screens/PhoneInput.tsx:294
 msgid "By continuing, you consent to this use. You may change your mind any time by visiting settings. <0>Learn more</0>"
 msgstr ""
 
@@ -1734,8 +1734,8 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:206
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:128
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:134
-#: src/components/contacts/screens/GetContacts.tsx:260
-#: src/components/contacts/screens/GetContacts.tsx:265
+#: src/components/contacts/screens/GetContacts.tsx:289
+#: src/components/contacts/screens/GetContacts.tsx:294
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:157
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:125
@@ -2204,7 +2204,7 @@ msgstr ""
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:329
+#: src/screens/Onboarding/StepFinished/index.tsx:328
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
@@ -2291,7 +2291,7 @@ msgstr ""
 msgid "Contact support"
 msgstr ""
 
-#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:56
+#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:57
 #: src/screens/Settings/FindContactsSettings.tsx:154
 msgid "Contact sync is not available on this device, as the app is unable to access your contacts."
 msgstr ""
@@ -2573,11 +2573,11 @@ msgstr ""
 msgid "Could not update notification settings"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:139
+#: src/components/contacts/screens/GetContacts.tsx:168
 msgid "Could not upload contacts. {0}"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:133
+#: src/components/contacts/screens/GetContacts.tsx:162
 msgid "Could not upload contacts. You need to re-verify your phone number to proceed"
 msgstr ""
 
@@ -2866,7 +2866,7 @@ msgstr ""
 msgid "Deleted Account"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:282
+#: src/components/contacts/screens/PhoneInput.tsx:283
 msgid "Deleted by Plivo after verification"
 msgstr ""
 
@@ -2998,7 +2998,7 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: src/components/contacts/FindContactsBannerNUX.tsx:74
+#: src/components/contacts/FindContactsBannerNUX.tsx:76
 msgid "Dismiss banner"
 msgstr ""
 
@@ -3964,7 +3964,7 @@ msgstr ""
 msgid "Filter who you receive notifications from"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:335
+#: src/screens/Onboarding/StepFinished/index.tsx:334
 msgid "Finalizing"
 msgstr ""
 
@@ -3996,8 +3996,8 @@ msgstr ""
 msgid "Find friends from contacts"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:241
-#: src/components/contacts/screens/GetContacts.tsx:255
+#: src/components/contacts/screens/GetContacts.tsx:270
+#: src/components/contacts/screens/GetContacts.tsx:284
 msgid "Find my friends"
 msgstr ""
 
@@ -4013,11 +4013,11 @@ msgstr ""
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:78
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:89
 msgid "Find your friends"
 msgstr ""
 
-#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:37
+#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:38
 #: src/screens/Settings/FindContactsSettings.tsx:123
 msgid "Find your friends on Bluesky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
 msgstr ""
@@ -4026,7 +4026,7 @@ msgstr ""
 msgid "Find your people"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:249
+#: src/components/contacts/screens/GetContacts.tsx:278
 msgid "Finding friends..."
 msgstr ""
 
@@ -4523,7 +4523,7 @@ msgstr ""
 msgid "Having trouble?"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:286
+#: src/components/contacts/screens/PhoneInput.tsx:287
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr ""
 
@@ -4718,7 +4718,7 @@ msgstr ""
 msgid "How should we open this link?"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:275
+#: src/components/contacts/screens/PhoneInput.tsx:276
 msgid "How we use your number:"
 msgstr ""
 
@@ -4726,7 +4726,7 @@ msgstr ""
 msgid "Human trafficking"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:235
+#: src/components/contacts/screens/GetContacts.tsx:264
 msgid "I consent to Bluesky using my contacts for mutual friend discovery and to retain hashed data for matching until I opt out."
 msgstr ""
 
@@ -4828,20 +4828,20 @@ msgstr ""
 msgid "Impersonation"
 msgstr ""
 
-#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:67
-#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:72
+#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:68
+#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:73
 #: src/screens/Settings/FindContactsSettings.tsx:143
 #: src/screens/Settings/FindContactsSettings.tsx:148
 msgid "Import contacts"
 msgstr ""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:96
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:107
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:118
 msgid "Import Contacts"
 msgstr ""
 
-#: src/components/contacts/FindContactsBannerNUX.tsx:30
-#: src/components/contacts/FindContactsBannerNUX.tsx:68
+#: src/components/contacts/FindContactsBannerNUX.tsx:32
+#: src/components/contacts/FindContactsBannerNUX.tsx:70
 msgid "Import contacts to find your friends"
 msgstr ""
 
@@ -4918,7 +4918,7 @@ msgstr ""
 msgid "Introducing activity notifications"
 msgstr ""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:37
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:48
 msgid "Introducing finding friends via contacts"
 msgstr ""
 
@@ -4941,7 +4941,7 @@ msgid "Invalid interaction settings."
 msgstr ""
 
 #: src/components/contacts/phone-number.ts:33
-#: src/components/contacts/screens/PhoneInput.tsx:138
+#: src/components/contacts/screens/PhoneInput.tsx:139
 msgid "Invalid phone number"
 msgstr ""
 
@@ -5129,8 +5129,8 @@ msgstr ""
 msgid "Learn more about how inviting friends works"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:299
-#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:44
+#: src/components/contacts/screens/PhoneInput.tsx:300
+#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:45
 #: src/screens/Settings/FindContactsSettings.tsx:130
 msgctxt "english-only-resource"
 msgid "Learn more about importing contacts"
@@ -5217,7 +5217,7 @@ msgstr ""
 msgid "Let's get your password reset!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:337
+#: src/screens/Onboarding/StepFinished/index.tsx:336
 msgid "Let's go!"
 msgstr ""
 
@@ -5982,8 +5982,8 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:353
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
-#: src/screens/Onboarding/StepFinished/index.tsx:330
-#: src/screens/Onboarding/StepFinished/index.tsx:339
+#: src/screens/Onboarding/StepFinished/index.tsx:329
+#: src/screens/Onboarding/StepFinished/index.tsx:338
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -6286,7 +6286,7 @@ msgid "Oh no!"
 msgstr ""
 
 #. Confirm button text.
-#: src/components/contacts/screens/GetContacts.tsx:285
+#: src/components/contacts/screens/GetContacts.tsx:314
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:222
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:48
@@ -6709,8 +6709,8 @@ msgstr ""
 msgid "Pets"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:188
-#: src/components/contacts/screens/PhoneInput.tsx:200
+#: src/components/contacts/screens/PhoneInput.tsx:189
+#: src/components/contacts/screens/PhoneInput.tsx:201
 msgid "Phone number"
 msgstr ""
 
@@ -7275,7 +7275,7 @@ msgstr ""
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:105
+#: src/components/contacts/screens/PhoneInput.tsx:106
 msgid "Rate limit exceeded. Please try again later."
 msgstr ""
 
@@ -8334,8 +8334,8 @@ msgstr ""
 msgid "Send a neat website!"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:251
-#: src/components/contacts/screens/PhoneInput.tsx:256
+#: src/components/contacts/screens/PhoneInput.tsx:252
+#: src/components/contacts/screens/PhoneInput.tsx:257
 msgid "Send code"
 msgstr ""
 
@@ -8393,7 +8393,7 @@ msgstr ""
 msgid "Sends email with confirmation code for account deletion"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:279
+#: src/components/contacts/screens/PhoneInput.tsx:280
 msgid "Sent to our phone number verification provider Plivo"
 msgstr ""
 
@@ -8566,7 +8566,7 @@ msgstr ""
 msgid "Share via..."
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:200
+#: src/components/contacts/screens/GetContacts.tsx:229
 msgid "Share your contacts to find friends"
 msgstr ""
 
@@ -8776,25 +8776,25 @@ msgstr ""
 msgid "Similar accounts"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:159
+#: src/components/contacts/screens/PhoneInput.tsx:160
 #: src/components/contacts/screens/VerifyNumber.tsx:202
-#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:77
-#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:81
-#: src/screens/Onboarding/StepFinished/index.tsx:295
-#: src/screens/Onboarding/StepFinished/index.tsx:317
+#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:78
+#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:82
+#: src/screens/Onboarding/StepFinished/index.tsx:294
+#: src/screens/Onboarding/StepFinished/index.tsx:316
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:252
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:104
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Skip"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:156
+#: src/components/contacts/screens/PhoneInput.tsx:157
 #: src/components/contacts/screens/VerifyNumber.tsx:199
 msgid "Skip contact sharing and continue to the app"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:288
-#: src/screens/Onboarding/StepFinished/index.tsx:314
+#: src/screens/Onboarding/StepFinished/index.tsx:287
+#: src/screens/Onboarding/StepFinished/index.tsx:313
 msgid "Skip introduction and start using your account"
 msgstr ""
 
@@ -8987,7 +8987,7 @@ msgstr ""
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:290
+#: src/components/contacts/screens/PhoneInput.tsx:291
 msgid "Stored as part of a secure code for matching with others"
 msgstr ""
 
@@ -9088,7 +9088,7 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:232
+#: src/components/contacts/screens/PhoneInput.tsx:233
 msgid "Support for this feature in your country has not been enabled yet! Please check back later."
 msgstr ""
 
@@ -9354,7 +9354,7 @@ msgstr ""
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:111
+#: src/components/contacts/screens/PhoneInput.tsx:112
 #: src/components/contacts/screens/VerifyNumber.tsx:110
 #: src/components/contacts/screens/VerifyNumber.tsx:162
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
@@ -9372,7 +9372,7 @@ msgstr ""
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:115
+#: src/components/contacts/screens/GetContacts.tsx:144
 msgid "There was a problem with your internet connection, please try again"
 msgstr ""
 
@@ -9794,7 +9794,7 @@ msgstr ""
 msgid "Too many codes sent. Please wait a few minutes and try again."
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:124
+#: src/components/contacts/screens/GetContacts.tsx:153
 msgid "Too many contacts - you've exceeded the number of contacts you can import to find your friends"
 msgstr ""
 
@@ -10376,7 +10376,7 @@ msgstr ""
 msgid "Verify now"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:171
+#: src/components/contacts/screens/PhoneInput.tsx:172
 #: src/components/contacts/screens/VerifyNumber.tsx:214
 msgid "Verify phone number"
 msgstr ""
@@ -10637,7 +10637,7 @@ msgstr ""
 msgid "Watch now"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:221
+#: src/components/contacts/screens/GetContacts.tsx:250
 msgid "We apply the highest privacy standards, and never share or sell your contact information."
 msgstr ""
 
@@ -10661,7 +10661,7 @@ msgstr ""
 msgid "We couldn't load this conversation"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:212
+#: src/components/contacts/screens/GetContacts.tsx:241
 msgid "We delete hashes after matches are made"
 msgstr ""
 
@@ -10681,15 +10681,15 @@ msgstr ""
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:180
+#: src/components/contacts/screens/PhoneInput.tsx:181
 msgid "We need to verify your number before we can look for your friends. A verification code will be sent to this number."
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:209
-msgid "We never store plain phone numbers"
+#: src/components/contacts/screens/GetContacts.tsx:238
+msgid "We never keep plain phone numbers"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:215
+#: src/components/contacts/screens/GetContacts.tsx:244
 msgid "We only suggest follows if both people consent"
 msgstr ""
 
@@ -11043,7 +11043,7 @@ msgstr ""
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:218
+#: src/components/contacts/screens/GetContacts.tsx:247
 msgid "You can always opt out and delete your data"
 msgstr ""
 
@@ -11338,7 +11338,7 @@ msgstr ""
 msgid "You'll follow these people right away"
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:282
+#: src/components/contacts/screens/GetContacts.tsx:311
 msgid "You'll need to go to the System Settings for Bluesky and give permission if you want to use this feature."
 msgstr ""
 
@@ -11368,7 +11368,7 @@ msgstr ""
 msgid "You've chosen to hide a word or tag within this post."
 msgstr ""
 
-#: src/components/contacts/screens/GetContacts.tsx:281
+#: src/components/contacts/screens/GetContacts.tsx:310
 msgid "You've denied access to your contacts"
 msgstr ""
 
