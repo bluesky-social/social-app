@@ -103,9 +103,9 @@ export function Trigger({children, label}: TriggerProps) {
       <Button
         label={label}
         onPress={control.open}
-        style={[a.flex_1, a.justify_between]}
+        style={[a.flex_1, a.justify_between, a.pl_lg, a.pr_md]}
         color="secondary"
-        size="small"
+        size="large"
         shape="rectangular">
         <>{children}</>
       </Button>
