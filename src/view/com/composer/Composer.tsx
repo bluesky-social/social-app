@@ -130,6 +130,7 @@ import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
+import {account} from '#/storage'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
@@ -154,6 +155,7 @@ import {
   type VideoState,
 } from './state/video'
 import {type TextInputRef} from './text-input/TextInput.types'
+import {useComposerDraft} from './useComposerDraft'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
@@ -236,6 +238,77 @@ export const ComposePost = ({
     setReplyToLanguages([])
   }
 
+  // Check for draft before initializing composer
+  const draftContext = replyTo ? `reply:${replyTo.uri}` : 'default'
+
+  const loadInitialDraft = useCallback(() => {
+    if (!currentAccount) return null
+
+    const hasInitialContent =
+      initText ||
+      initMention ||
+      initImageUris?.length ||
+      initQuote ||
+      initVideoUri
+
+    if (hasInitialContent) return null
+
+    try {
+      const allDrafts = account.get([currentAccount.did, 'composerDraft'])
+      if (!allDrafts) return null
+
+      const draft = allDrafts[draftContext]
+      if (!draft) return null
+
+      if (draft.version !== 1) return null
+
+      // Check age
+      const age = Date.now() - draft.timestamp
+      if (age > 7 * 24 * 60 * 60 * 1000) {
+        // Remove old draft
+        const remainingDrafts = Object.fromEntries(
+          Object.entries(allDrafts).filter(([key]) => key !== draftContext),
+        )
+        if (Object.keys(remainingDrafts).length > 0) {
+          account.set([currentAccount.did, 'composerDraft'], remainingDrafts)
+        } else {
+          account.remove([currentAccount.did, 'composerDraft'])
+        }
+        return null
+      }
+
+      logger.info('Composer: loading initial draft', {
+        textLength: draft.thread.posts[0]?.text.length || 0,
+      })
+
+      // Construct video URLs from blobRefs if we have videos in the draft
+      const parsed = JSON.parse(JSON.stringify(draft)) // Deep clone
+      if (parsed.thread?.posts) {
+        parsed.thread.posts = parsed.thread.posts.map((post: any) => {
+          if (post.embed?.video?.blobRef?.ref?.$link) {
+            const cid = post.embed.video.blobRef.ref.$link
+            // Use the video.bsky.app CDN with HLS playlist
+            post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(currentAccount.did)}/${cid}/playlist.m3u8`
+          }
+          return post
+        })
+      }
+
+      return parsed
+    } catch (e) {
+      logger.error('Failed to load initial draft', {error: e})
+      return null
+    }
+  }, [
+    currentAccount,
+    draftContext,
+    initText,
+    initMention,
+    initImageUris,
+    initQuote,
+    initVideoUri,
+  ])
+
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {
@@ -244,8 +317,15 @@ export const ComposePost = ({
       initText,
       initMention,
       initInteractionSettings: preferences?.postInteractionSettings,
+      initDraft: loadInitialDraft(),
     },
     createComposerState,
+  )
+
+  // Draft persistence
+  const {clearDraft} = useComposerDraft(
+    composerState,
+    replyTo ? `reply:${replyTo.uri}` : 'default',
   )
 
   const thread = composerState.thread
@@ -322,9 +402,10 @@ export const ComposePost = ({
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const onClose = useCallback(() => {
+    clearDraft()
     closeComposer()
     clearThumbnailCache(queryClient)
-  }, [closeComposer, queryClient])
+  }, [clearDraft, closeComposer, queryClient])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
@@ -1409,7 +1490,7 @@ function ComposerFooter({
 
       if (assets.length) {
         if (type === 'image') {
-          const images: ComposerImage[] = []
+          const composerImages: ComposerImage[] = []
 
           await Promise.all(
             assets.map(async image => {
@@ -1419,7 +1500,7 @@ function ComposerFooter({
                 height: image.height,
                 mime: image.mimeType!,
               })
-              images.push(composerImage)
+              composerImages.push(composerImage)
             }),
           ).catch(e => {
             logger.error(`createComposerImage failed`, {
@@ -1427,7 +1508,7 @@ function ComposerFooter({
             })
           })
 
-          onImageAdd(images)
+          onImageAdd(composerImages)
         } else if (type === 'video') {
           onSelectVideo(post.id, assets[0])
         } else if (type === 'gif') {

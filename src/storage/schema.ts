@@ -66,4 +66,51 @@ export type Account = {
    * this device.
    */
   birthdateLastUpdatedAt?: string
+
+  /**
+   * Composer draft, saved when the user has unsent content in the post composer.
+   * Keyed by context (e.g., 'default', reply URI, etc.)
+   */
+  composerDraft?: {
+    [context: string]: ComposerDraft
+  }
+}
+
+export type ComposerDraft = {
+  version: 1
+  timestamp: number
+  thread: {
+    posts: Array<{
+      id: string
+      text: string
+      labels: string[]
+      embed: {
+        quoteUri?: string
+        linkUri?: string
+        images?: Array<{
+          alt: string
+          path: string
+          width: number
+          height: number
+          mime: string
+        }>
+        gif?: {
+          id: string
+          media_formats: unknown
+          title: string
+          alt: string
+        }
+        video?: {
+          blobRef: unknown
+          width: number
+          height: number
+          mimeType: string
+          altText: string
+        }
+      }
+    }>
+    postgate: unknown
+    threadgate: unknown
+  }
+  activePostIndex: number
 }
