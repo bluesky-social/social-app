@@ -120,6 +120,15 @@ export function NoAccessScreen() {
     </Text>
   )
 
+  const orgAdmonition = (
+    <Admonition type="tip">
+      <Trans>
+        For organizational accounts, use the birthdate of the person who is
+        responsible for the account.
+      </Trans>
+    </Admonition>
+  )
+
   return (
     <>
       <View style={[a.util_screen_outer, a.flex_1]}>
@@ -166,6 +175,8 @@ export function NoAccessScreen() {
                       </Text>
 
                       {!isBlocked && birthdateUpdateText}
+
+                      {orgAdmonition}
                     </View>
 
                     <AccessSection />
@@ -180,6 +191,8 @@ export function NoAccessScreen() {
                     </Text>
 
                     {birthdateUpdateText}
+
+                    {orgAdmonition}
                   </View>
                 )}
               </>
@@ -211,7 +224,7 @@ export function NoAccessScreen() {
                   </ButtonText>
                 </Button>
 
-                {isUsingAppPassword && (
+                {isUsingAppPassword ? (
                   <Admonition type="info">
                     <Trans>
                       Hmm, it looks like you're logged in with an{' '}
@@ -220,6 +233,8 @@ export function NoAccessScreen() {
                       password, or ask whomever controls this account to do so.
                     </Trans>
                   </Admonition>
+                ) : (
+                  orgAdmonition
                 )}
               </View>
             )}
