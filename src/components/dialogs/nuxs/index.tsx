@@ -10,7 +10,6 @@ import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {STALE} from '#/state/queries'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {
@@ -20,13 +19,13 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
+import {
+  enabled as isFindContactsAnnouncementEnabled,
+  FindContactsAnnouncement,
+} from '#/components/dialogs/nuxs/FindContactsAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-import {ENV} from '#/env'
-/*
- * NUXs
- */
-import {FindContactsAnnouncement} from './FindContactsAnnouncement'
-import {isExistingUserAsOf} from './utils'
+import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
+import {useGeolocation} from '#/geolocation'
 
 type Context = {
   activeNux: Nux | undefined
@@ -35,22 +34,11 @@ type Context = {
 
 const queuedNuxs: {
   id: Nux
-  enabled?: (props: {
-    gate: ReturnType<typeof useGate>
-    currentAccount: SessionAccount
-    currentProfile: AppBskyActorDefs.ProfileViewDetailed
-    preferences: UsePreferencesQueryResponse
-  }) => boolean
+  enabled?: (props: EnabledCheckProps) => boolean
 }[] = [
   {
     id: Nux.FindContactsAnnouncement,
-    enabled: ({currentProfile}) => {
-      return (
-        isNative &&
-        ENV !== 'e2e' &&
-        isExistingUserAsOf('2025-12-16T00:00:00.000Z', currentProfile.createdAt)
-      )
-    },
+    enabled: isFindContactsAnnouncementEnabled,
   },
 ]
 
@@ -101,6 +89,7 @@ function Inner({
   preferences: UsePreferencesQueryResponse
 }) {
   const gate = useGate()
+  const geolocation = useGeolocation()
   const {nuxs} = useNuxs()
   const [snoozed, setSnoozed] = useState(() => {
     return isSnoozed()
@@ -143,7 +132,13 @@ function Inner({
       // then check gate (track exposure)
       if (
         enabled &&
-        !enabled({gate, currentAccount, currentProfile, preferences})
+        !enabled({
+          gate,
+          currentAccount,
+          currentProfile,
+          preferences,
+          geolocation,
+        })
       ) {
         continue
       }
@@ -178,6 +173,7 @@ function Inner({
     currentAccount,
     currentProfile,
     preferences,
+    geolocation,
   ])
 
   const ctx = useMemo(() => {
