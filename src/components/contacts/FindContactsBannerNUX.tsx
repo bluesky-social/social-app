@@ -6,6 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
@@ -20,9 +21,8 @@ export function FindContactsBannerNUX() {
   const t = useTheme()
   const {_} = useLingui()
   const {visible, close} = useInternalState()
-  const isFeatureEnabled = useIsFindContactsFeatureEnabledBasedOnGeolocation()
 
-  if (!visible || !isFeatureEnabled) return null
+  if (!visible) return null
 
   return (
     <View style={[a.w_full, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
@@ -88,13 +88,17 @@ function useInternalState() {
   const {nux} = useNux(Nux.FindContactsDismissibleBanner)
   const {mutate: save, variables} = useSaveNux()
   const hidden = !!variables
+  const isFeatureEnabled = useIsFindContactsFeatureEnabledBasedOnGeolocation()
+  const gate = useGate()
 
   const visible = useMemo(() => {
     if (isWeb) return false
     if (hidden) return false
     if (nux && nux.completed) return false
+    if (!isFeatureEnabled) return false
+    if (gate('disable_settings_find_contacts')) return false
     return true
-  }, [hidden, nux])
+  }, [hidden, nux, isFeatureEnabled, gate])
 
   const close = () => {
     save({
