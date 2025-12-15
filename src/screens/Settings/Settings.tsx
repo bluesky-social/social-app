@@ -215,7 +215,7 @@ export function SettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           {isNative &&
             findContactsEnabled &&
-            gate('disable_settings_find_contacts') && (
+            !gate('disable_settings_find_contacts') && (
               <SettingsList.LinkItem
                 to="/settings/find-contacts"
                 label={_(msg`Find friends from contacts`)}>
