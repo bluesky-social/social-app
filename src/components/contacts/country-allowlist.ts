@@ -18,7 +18,16 @@ const FIND_CONTACTS_FEATURE_COUNTRY_ALLOWLIST = [
   'IT',
 ] satisfies CountryCode[] as string[]
 
-export function isFindContactsFeatureEnabled(countryCode: string): boolean {
+export function isFindContactsFeatureEnabled(countryCode?: string): boolean {
+  if (IS_DEV) return true
+
+  /*
+   * This should never happen unless geolocation fails entirely. In that
+   * case, let the user try, since it should work as long as they have a
+   * phone number from one of the allow-listed countries.
+   */
+  if (!countryCode) return true
+
   return FIND_CONTACTS_FEATURE_COUNTRY_ALLOWLIST.includes(
     countryCode.toUpperCase(),
   )
@@ -26,12 +35,5 @@ export function isFindContactsFeatureEnabled(countryCode: string): boolean {
 
 export function useIsFindContactsFeatureEnabledBasedOnGeolocation() {
   const location = useGeolocation()
-
-  if (IS_DEV) return true
-
-  // they can try, by they'll need a phone number
-  // from one of the allowlisted countries
-  if (!location.countryCode) return true
-
   return isFindContactsFeatureEnabled(location.countryCode)
 }

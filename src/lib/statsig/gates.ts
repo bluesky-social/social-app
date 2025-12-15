@@ -4,6 +4,7 @@ export type Gate =
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'
   | 'disable_onboarding_find_contacts'
+  | 'disable_settings_find_contacts'
   | 'explore_show_suggested_feeds'
   | 'feed_reply_button_open_thread'
   | 'old_postonboarding'

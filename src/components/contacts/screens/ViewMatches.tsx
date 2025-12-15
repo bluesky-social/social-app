@@ -104,8 +104,6 @@ export function ViewMatches({
     match => !state.dismissedMatches.includes(match.profile.did),
   )
 
-  console.log(matches)
-
   const followableDids = matches.map(match => match.profile.did)
   const [didFollowAll, setDidFollowAll] = useState(followableDids.length === 0)
 
@@ -449,7 +447,7 @@ function MatchItem({
   const contactName = useMemo(() => {
     if (!contact) return null
 
-    const name = contact.firstName ?? contact.lastName ?? contact.name
+    const name = contact.name ?? contact.firstName ?? contact.lastName
     if (name) return _(msg`Your contact ${name}`)
     const phone =
       contact.phoneNumbers?.find(p => p.isPrimary) ?? contact.phoneNumbers?.[0]
@@ -520,7 +518,7 @@ function ContactItem({
   const {_} = useLingui()
   const {currentAccount} = useSession()
 
-  const name = contact.firstName ?? contact.lastName ?? contact.name
+  const name = contact.name ?? contact.firstName ?? contact.lastName
   const phone =
     contact.phoneNumbers?.find(phone => phone.isPrimary) ??
     contact.phoneNumbers?.[0]
