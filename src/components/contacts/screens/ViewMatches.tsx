@@ -104,8 +104,6 @@ export function ViewMatches({
     match => !state.dismissedMatches.includes(match.profile.did),
   )
 
-  console.log(matches)
-
   const followableDids = matches.map(match => match.profile.did)
   const [didFollowAll, setDidFollowAll] = useState(followableDids.length === 0)
 
