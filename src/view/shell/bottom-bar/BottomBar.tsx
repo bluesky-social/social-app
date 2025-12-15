@@ -418,7 +418,7 @@ function Btn({
             a.rounded_full,
             {backgroundColor: t.palette.primary_500},
           ]}>
-          <Text style={styles.notificationCountLabel}>1</Text>
+          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : hasNew ? (
         <View style={[styles.hasNewBadge, a.rounded_full]} />
