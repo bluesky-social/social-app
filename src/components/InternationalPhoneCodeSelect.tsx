@@ -1,4 +1,5 @@
 import {Fragment, useMemo} from 'react'
+import {Text as RNText} from 'react-native'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -113,5 +114,5 @@ function Flag({unicodeFlag, svgFlag}: {unicodeFlag: string; svgFlag: any}) {
       />
     )
   }
-  return unicodeFlag + ' '
+  return <RNText style={[{lineHeight: 21}]}>{unicodeFlag + ' '}</RNText>
 }
