@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-13 19:06\n"
+"PO-Revision-Date: 2025-12-15 20:45\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -43,7 +43,7 @@ msgstr "{0, plural, other {# 팔로워}}"
 msgid "{0, plural, one {# following} other {# following}}"
 msgstr "{0, plural, other {# 팔로우 중}}"
 
-#: src/components/contacts/screens/ViewMatches.tsx:267
+#: src/components/contacts/screens/ViewMatches.tsx:265
 msgid "{0, plural, one {# friend found!} other {# friends found!}}"
 msgstr "{0, plural, other {친구 #명을}} 찾았습니다!"
 
@@ -581,8 +581,8 @@ msgstr "팔로우 버튼 옆에 새 활동 알림 기능을 나타내는 종 모
 
 #: src/Navigation.tsx:534
 #: src/screens/Settings/AboutSettings.tsx:75
-#: src/screens/Settings/Settings.tsx:258
-#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:262
+#: src/screens/Settings/Settings.tsx:265
 msgid "About"
 msgstr "정보"
 
@@ -609,8 +609,8 @@ msgid "Accept this language suggestion"
 msgstr "이 언어 제안 수락하기"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:44
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Accessibility"
 msgstr "접근성"
 
@@ -621,8 +621,8 @@ msgstr "접근성 설정"
 #: src/Navigation.tsx:401
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:51
-#: src/screens/Settings/Settings.tsx:178
-#: src/screens/Settings/Settings.tsx:181
+#: src/screens/Settings/Settings.tsx:180
+#: src/screens/Settings/Settings.tsx:183
 msgid "Account"
 msgstr "계정"
 
@@ -653,7 +653,7 @@ msgstr "계정 뮤트됨"
 msgid "Account Muted by List"
 msgstr "리스트로 계정 뮤트됨"
 
-#: src/screens/Settings/Settings.tsx:640
+#: src/screens/Settings/Settings.tsx:644
 msgid "Account options"
 msgstr "계정 옵션"
 
@@ -661,7 +661,7 @@ msgstr "계정 옵션"
 msgid "Account provider"
 msgstr "계정 제공자"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:680
 msgid "Account removed from quick access"
 msgstr "빠른 액세스에서 계정 제거"
 
@@ -746,8 +746,8 @@ msgstr "대체 텍스트 추가"
 msgid "Add alt text (optional)"
 msgstr "대체 텍스트 추가 (선택 사항)"
 
-#: src/screens/Settings/Settings.tsx:580
-#: src/screens/Settings/Settings.tsx:583
+#: src/screens/Settings/Settings.tsx:584
+#: src/screens/Settings/Settings.tsx:587
 #: src/view/shell/desktop/LeftNav.tsx:262
 #: src/view/shell/desktop/LeftNav.tsx:266
 msgid "Add another account"
@@ -849,7 +849,7 @@ msgstr "스타터 팩에 추가"
 msgid "Add user to list"
 msgstr "리스트에 사용자 추가"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:210
+#: src/ageAssurance/components/NoAccessScreen.tsx:223
 msgid "Add your birthdate"
 msgstr "생년월일 추가"
 
@@ -919,7 +919,7 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "연령 확인 요청을 제출했습니다"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:342
+#: src/ageAssurance/components/NoAccessScreen.tsx:357
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Age assurance only takes a few minutes"
 msgstr "연령 확인은 몇 분이면 완료됩니다"
@@ -939,7 +939,7 @@ msgstr "모두"
 msgid "All accounts have been followed!"
 msgstr "모든 계정을 팔로우했습니다"
 
-#: src/components/contacts/screens/ViewMatches.tsx:143
+#: src/components/contacts/screens/ViewMatches.tsx:141
 msgid "All friends followed!"
 msgstr "모든 친구들을 팔로우했습니다!"
 
@@ -1075,7 +1075,7 @@ msgstr "피드를 가져오는 동안 오류가 발생했습니다."
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "스타터 팩을 만드는 동안 오류가 발생했습니다. 다시 시도하시겠습니까?"
 
-#: src/components/contacts/screens/ViewMatches.tsx:242
+#: src/components/contacts/screens/ViewMatches.tsx:240
 msgid "An error occurred while hiding suggestion. {0}"
 msgstr "추천을 숨기는 동안 오류가 발생했습니다. {0}"
 
@@ -1113,7 +1113,7 @@ msgid "An error occurred. {0}"
 msgstr "오류가 발생했습니다. {0}"
 
 #: src/components/contacts/components/HeroImage.tsx:28
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:71
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:78
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
 msgstr "연락처에서 Bluesky 앱으로 사용자 아바타가 흘러들어 가는 모습을 묘사한 삽화"
 
@@ -1277,8 +1277,8 @@ msgstr "이 결정에 이의신청"
 
 #: src/Navigation.tsx:393
 #: src/screens/Settings/AppearanceSettings.tsx:73
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:230
+#: src/screens/Settings/Settings.tsx:233
 msgid "Appearance"
 msgstr "모양"
 
@@ -1287,8 +1287,8 @@ msgstr "모양"
 msgid "Apply default recommended feeds"
 msgstr "기본 추천 피드 적용하기"
 
-#: src/screens/Settings/Settings.tsx:512
-#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:518
 msgid "Apply Pull Request"
 msgstr "풀 리퀘스트 적용"
 
@@ -1590,11 +1590,11 @@ msgstr "Bluesky는 친구와 함께하면 더 좋답니다!"
 msgid "Bluesky is more fun with friends"
 msgstr "Bluesky는 친구들과 함께하면 더욱 즐거워집니다"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:99
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:106
 msgid "Bluesky is more fun with friends! Import your contacts to see who’s already here."
 msgstr "Bluesky는 친구들과 함께하면 더욱 즐거워집니다! 연락처를 가져와서 누가 이미 Bluesky에 있는지 확인해 보세요."
 
-#: src/components/contacts/screens/ViewMatches.tsx:314
+#: src/components/contacts/screens/ViewMatches.tsx:312
 msgid "Bluesky is more fun with friends. Do you want to invite some of yours? <0/>"
 msgstr "Bluesky는 친구들과 함께하면 더욱 즐거워집니다. 친구들을 초대해 볼까요? <0/>"
 
@@ -1766,7 +1766,7 @@ msgstr "카메라"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:85
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:247
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:253
-#: src/screens/Settings/Settings.tsx:303
+#: src/screens/Settings/Settings.tsx:307
 #: src/screens/Takendown.tsx:107
 #: src/screens/Takendown.tsx:110
 #: src/view/com/composer/Composer.tsx:1050
@@ -2002,11 +2002,11 @@ msgstr "비밀번호를 입력하세요"
 msgid "Choose your username"
 msgstr "사용자 이름 선택"
 
-#: src/screens/Settings/Settings.tsx:504
+#: src/screens/Settings/Settings.tsx:508
 msgid "Clear all storage data"
 msgstr "모든 스토리지 데이터 지우기"
 
-#: src/screens/Settings/Settings.tsx:506
+#: src/screens/Settings/Settings.tsx:510
 msgid "Clear all storage data (restart after this)"
 msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
 
@@ -2031,7 +2031,7 @@ msgstr "이곳을 클릭"
 msgid "Click here to contact our support team"
 msgstr "고객 지원팀에 문의하려면 이곳을 클릭하세요"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:233
+#: src/ageAssurance/components/NoAccessScreen.tsx:248
 msgid "Click here to log out"
 msgstr "로그아웃하려면 클릭하세요"
 
@@ -2040,7 +2040,7 @@ msgid "Click here to restart the verification process."
 msgstr "인증 절차를 다시 시작하려면 이곳을 클릭하세요."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:97
-#: src/ageAssurance/components/NoAccessScreen.tsx:207
+#: src/ageAssurance/components/NoAccessScreen.tsx:220
 msgid "Click here to update your birthdate"
 msgstr "생일을 추가하려면 클릭하세요"
 
@@ -2257,7 +2257,7 @@ msgstr "콘텐츠 언어 설정 확인"
 msgid "Confirm delete account"
 msgstr "계정 삭제 확인"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:356
+#: src/ageAssurance/components/NoAccessScreen.tsx:371
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
@@ -2284,7 +2284,7 @@ msgstr "연결 중…"
 msgid "Connection issue"
 msgstr "연결 오류"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:293
+#: src/ageAssurance/components/NoAccessScreen.tsx:308
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
@@ -2317,8 +2317,8 @@ msgstr "연락처를 업로드했습니다"
 msgid "Content & Media"
 msgstr "콘텐츠 및 미디어"
 
-#: src/screens/Settings/Settings.tsx:208
-#: src/screens/Settings/Settings.tsx:211
+#: src/screens/Settings/Settings.tsx:210
+#: src/screens/Settings/Settings.tsx:213
 msgid "Content and media"
 msgstr "콘텐츠 및 미디어"
 
@@ -2586,7 +2586,7 @@ msgstr "연락처를 업로드할 수 없습니다. {0}"
 msgid "Could not upload contacts. You need to re-verify your phone number to proceed"
 msgstr "연락처를 업로드할 수 없습니다. 계속 진행하려면 전화번호를 다시 인증해야 합니다"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:79
+#: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
 msgstr "국가 코드"
 
@@ -2746,7 +2746,7 @@ msgstr "생년월일"
 msgid "Deactivate account"
 msgstr "계정 비활성화"
 
-#: src/screens/Settings/Settings.tsx:469
+#: src/screens/Settings/Settings.tsx:473
 msgid "Debug Moderation"
 msgstr "검토 디버그"
 
@@ -2799,7 +2799,7 @@ msgstr "앱 비밀번호를 삭제하시겠습니까?"
 msgid "Delete chat"
 msgstr "대화 삭제"
 
-#: src/screens/Settings/Settings.tsx:476
+#: src/screens/Settings/Settings.tsx:480
 msgid "Delete chat declaration record"
 msgstr "대화 신고 기록 삭제"
 
@@ -2912,8 +2912,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "개발자 모드를 활성화했습니다"
 
-#: src/screens/Settings/Settings.tsx:285
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:289
+#: src/screens/Settings/Settings.tsx:292
 msgid "Developer options"
 msgstr "개발자 옵션"
 
@@ -3060,7 +3060,7 @@ msgstr "코드가 없거나 새 코드가 필요한가요? <0>이곳을 클릭�
 
 #: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:37
 msgid "Don't see an email? <0>Click here to resend.</0>"
-msgstr "이메일이 보이지 않나요? <0>다시 보내려면 이곳을 클릭하세요.</0>"
+msgstr "이메일이 보이지 않나요? <0>다시 전송하려면 이곳을 클릭하세요.</0>"
 
 #: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:103
 #: src/components/ageAssurance/AgeAssuranceDismissibleNotice.tsx:33
@@ -3073,8 +3073,8 @@ msgstr "걱정 마세요! 모든 기존 메시지와 설정은 저장되며 성�
 
 #: src/components/contacts/components/InviteInfo.tsx:72
 #: src/components/contacts/components/InviteInfo.tsx:78
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:411
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:409
 #: src/components/dialogs/BirthDateSettings.tsx:183
 #: src/components/dialogs/BirthDateSettings.tsx:190
 #: src/components/dialogs/ServerInput.tsx:240
@@ -3444,7 +3444,7 @@ msgstr "사용할 도메인 입력"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "계정을 만들 때 사용한 이메일을 입력하세요. 새 비밀번호를 설정할 수 있도록 ‘재설정 코드’를 보내 드립니다."
+msgstr "계정을 만들 때 사용한 이메일을 입력하세요. 새 비밀번호를 설정할 수 있도록 ‘재설정 코드’를 전송합니다."
 
 #: src/screens/Login/LoginForm.tsx:219
 msgid "Enter the username or email address you used when you created your account"
@@ -3700,15 +3700,15 @@ msgstr "스타터 팩을 삭제하지 못했습니다"
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "모든 추천 계정을 팔로우하지 못했습니다. 다시 시도해 주세요"
 
-#: src/components/contacts/screens/ViewMatches.tsx:147
+#: src/components/contacts/screens/ViewMatches.tsx:145
 msgid "Failed to follow all your friends, please try again"
 msgstr "모든 친구를 팔로우하지 못했습니다. 다시 시도해 주세요"
 
-#: src/components/contacts/screens/ViewMatches.tsx:235
+#: src/components/contacts/screens/ViewMatches.tsx:233
 msgid "Failed to hide suggestion, please check your internet connection"
 msgstr "추천을 숨기지 못했습니다. 인터넷 연결을 확인해 주세요"
 
-#: src/components/contacts/screens/ViewMatches.tsx:580
+#: src/components/contacts/screens/ViewMatches.tsx:578
 msgid "Failed to launch SMS app"
 msgstr "메시지 앱을 열지 못했습니다"
 
@@ -3816,7 +3816,7 @@ msgstr "전송 실패"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:122
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:136
 msgid "Failed to send email, please try again."
-msgstr "이메일을 보내지 못했습니다. 다시 시도해 주세요."
+msgstr "이메일을 전송하지 못했습니다. 다시 시도해 주세요."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 #: src/screens/Messages/components/ChatDisabled.tsx:99
@@ -3996,8 +3996,8 @@ msgstr "연락처 찾기"
 msgid "Find Friends"
 msgstr "친구 찾기"
 
-#: src/screens/Settings/Settings.tsx:217
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Settings/Settings.tsx:221
+#: src/screens/Settings/Settings.tsx:224
 msgid "Find friends from contacts"
 msgstr "연락처에서 친구 찾기"
 
@@ -4018,7 +4018,7 @@ msgstr "팔로우할 사용자 찾아보기"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Bluesky에서 게시물, 사용자, 피드 찾기"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:89
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:96
 msgid "Find your friends"
 msgstr "친구들을 찾아보세요"
 
@@ -4093,8 +4093,8 @@ msgstr "7개 계정 팔로우하기"
 msgid "Follow account"
 msgstr "계정 팔로우"
 
-#: src/components/contacts/screens/ViewMatches.tsx:275
-#: src/components/contacts/screens/ViewMatches.tsx:290
+#: src/components/contacts/screens/ViewMatches.tsx:273
+#: src/components/contacts/screens/ViewMatches.tsx:288
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:265
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
@@ -4210,9 +4210,13 @@ msgstr "글꼴 크기"
 msgid "Food"
 msgstr "음식"
 
+#: src/ageAssurance/components/NoAccessScreen.tsx:125
+msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
+msgstr ""
+
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
-msgstr "보안상의 이유로 이메일 주소로 인증 코드를 보내야 합니다."
+msgstr "보안상의 이유로 이메일 주소로 인증 코드를 전송해야 합니다."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:208
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
@@ -4532,8 +4536,8 @@ msgstr "문제가 있나요?"
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr "Bluesky에서는 악용 방지를 위해 7일간 보관 후 삭제됩니다"
 
-#: src/screens/Settings/Settings.tsx:250
 #: src/screens/Settings/Settings.tsx:254
+#: src/screens/Settings/Settings.tsx:258
 #: src/view/shell/desktop/RightNav.tsx:123
 #: src/view/shell/desktop/RightNav.tsx:124
 #: src/view/shell/Drawer.tsx:381
@@ -4553,11 +4557,11 @@ msgstr "앱 비밀번호를 만들었습니다!"
 msgid "Hey there 👋"
 msgstr "안녕하세요 👋"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:158
+#: src/ageAssurance/components/NoAccessScreen.tsx:167
 msgid "Hey there!"
 msgstr "안녕하세요!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:189
+#: src/ageAssurance/components/NoAccessScreen.tsx:202
 msgid "Hi there!"
 msgstr "안녕하세요!"
 
@@ -4657,7 +4661,7 @@ msgstr "인증 배지 숨기기"
 msgid "Hides the content"
 msgstr "콘텐츠를 숨깁니다"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:216
+#: src/ageAssurance/components/NoAccessScreen.tsx:229
 msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
 msgstr "<0>앱 비밀번호</0>로 로그인한 것 같습니다. 생년월일을 설정하려면 기본 계정 비밀번호로 로그인하거나 이 계정을 관리하는 사람에게 요청하세요."
 
@@ -4750,7 +4754,7 @@ msgstr "내 도메인을 가지고 있습니다"
 msgid "I understand"
 msgstr "확인"
 
-#: src/components/contacts/screens/ViewMatches.tsx:576
+#: src/components/contacts/screens/ViewMatches.tsx:574
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "저는 블루스카이에서 {0}(으)로 활동하고 있어요. 와서 저를 찾아보세요! https://bsky.app/download"
 
@@ -4792,7 +4796,7 @@ msgstr "이메일 주소를 변경하면 이메일 2단계 인증이 비활성�
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:59
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "비밀번호를 변경하려면 본인 계정 확인을 위해 인증 코드를 보내 드립니다."
+msgstr "비밀번호를 변경하려면 본인 계정 확인을 위해 인증 코드를 전송해야 합니다."
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:157
 #: src/view/screens/Storybook/Admonitions.tsx:89
@@ -4840,8 +4844,8 @@ msgstr "사칭"
 msgid "Import contacts"
 msgstr "연락처 가져오기"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:107
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:118
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:114
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:125
 msgid "Import Contacts"
 msgstr "연락처 가져오기"
 
@@ -4850,7 +4854,7 @@ msgstr "연락처 가져오기"
 msgid "Import contacts to find your friends"
 msgstr "연락처를 가져오고 친구들을 찾아보세요"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:192
+#: src/ageAssurance/components/NoAccessScreen.tsx:205
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "연령에 적합한 경험을 제공하기 위해 생년월일이 필요합니다. 생년월일은 한 번만 입력하면 되며 비공개로 안전하게 보관됩니다."
 
@@ -4923,7 +4927,7 @@ msgstr "상호작용 설정"
 msgid "Introducing activity notifications"
 msgstr "활동 알림 소개"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:48
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
 msgstr "연락처를 통한 친구 찾기 기능 소개"
 
@@ -4958,13 +4962,13 @@ msgstr "잘못된 신고 항목"
 msgid "Invalid Verification Code"
 msgstr "잘못된 인증 코드"
 
-#: src/components/contacts/screens/ViewMatches.tsx:585
+#: src/components/contacts/screens/ViewMatches.tsx:583
 msgid "Invite"
 msgstr "초대"
 
-#: src/components/contacts/screens/ViewMatches.tsx:565
+#: src/components/contacts/screens/ViewMatches.tsx:563
 msgid "Invite {name} to join Bluesky"
-msgstr "{name}(을)를 Bluesky로 초대하기"
+msgstr "{name} 님을 Bluesky로 초대하기"
 
 #: src/screens/Signup/StepInfo/index.tsx:166
 msgid "Invite code"
@@ -4979,7 +4983,7 @@ msgstr "초대 코드가 올바르지 않습니다. 코드를 올바르게 입�
 msgid "Invite Friends"
 msgstr "친구 초대하기"
 
-#: src/components/contacts/screens/ViewMatches.tsx:300
+#: src/components/contacts/screens/ViewMatches.tsx:298
 msgid "Invite friends <0/>"
 msgstr "친구 초대하기 <0/>"
 
@@ -4995,14 +4999,14 @@ msgstr "친구를 초대하여 좋아하는 피드와 사용자를 팔로우할 
 msgid "Invites, but personal"
 msgstr "개인적인 초대"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:353
+#: src/ageAssurance/components/NoAccessScreen.tsx:368
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "현재 위치가 정확하지 않나요? <0>여기를 탭하여 위치를 다시 확인하세요.</0>"
 
 #: src/components/contacts/components/InviteInfo.tsx:46
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
-msgstr "일부 연락처에 있는 친구들은 아직 Bluesky에서 나를 찾아보지 않은 것 같습니다. 저희가 제공하는 메시지 초안을 수정하여 직접 친구들을 초대해 보세요."
+msgstr "일부 연락처에 있는 친구는 아직 Bluesky에서 나를 찾아보지 않은 것 같습니다. 저희가 제공하는 메시지 초안을 수정하여 직접 친구들을 초대해 보세요."
 
 #: src/screens/Signup/StepInfo/index.tsx:292
 msgid "It's correct"
@@ -5083,8 +5087,8 @@ msgid "Language Settings"
 msgstr "언어 설정"
 
 #: src/screens/Settings/LanguageSettings.tsx:78
-#: src/screens/Settings/Settings.tsx:242
-#: src/screens/Settings/Settings.tsx:245
+#: src/screens/Settings/Settings.tsx:246
+#: src/screens/Settings/Settings.tsx:249
 msgid "Languages"
 msgstr "언어"
 
@@ -5092,12 +5096,12 @@ msgstr "언어"
 msgid "Larger"
 msgstr "큼"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:336
+#: src/ageAssurance/components/NoAccessScreen.tsx:351
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated {timeAgo} ago"
 msgstr "{timeAgo} 전 시작함"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:334
+#: src/ageAssurance/components/NoAccessScreen.tsx:349
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
 msgid "Last initiated just now"
 msgstr "방금 시작함"
@@ -5633,8 +5637,8 @@ msgstr "오해 소지"
 
 #: src/Navigation.tsx:179
 #: src/screens/Moderation/index.tsx:99
-#: src/screens/Settings/Settings.tsx:192
-#: src/screens/Settings/Settings.tsx:195
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Moderation"
 msgstr "검토"
 
@@ -5979,8 +5983,8 @@ msgstr "새로운 순"
 msgid "News"
 msgstr "뉴스"
 
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:409
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:407
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:346
@@ -6011,11 +6015,11 @@ msgstr "광고, 사생활 침해 트래킹, 참여 유도 함정이 없습니다
 msgid "No app passwords yet"
 msgstr "앱 비밀번호 없음"
 
-#: src/components/contacts/screens/ViewMatches.tsx:679
+#: src/components/contacts/screens/ViewMatches.tsx:677
 msgid "No contacts found"
 msgstr "연락처를 찾을 수 없습니다"
 
-#: src/components/contacts/screens/ViewMatches.tsx:657
+#: src/components/contacts/screens/ViewMatches.tsx:655
 msgid "No contacts with the name “{query}” found"
 msgstr "‘{query}’라는 이름을 가진 연락처를 찾을 수 없습니다"
 
@@ -6068,7 +6072,7 @@ msgstr "아직 메시지가 없습니다"
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr "더 이상 쓰레기 같은 정보만 보여주는 알고리즘에 끌려다니지 마세요. 나를 방해하는 피드가 아닌 나를 위한 피드를 찾아보세요."
 
-#: src/components/contacts/screens/ViewMatches.tsx:561
+#: src/components/contacts/screens/ViewMatches.tsx:559
 msgid "No name"
 msgstr "이름 없음"
 
@@ -6249,8 +6253,8 @@ msgstr "알림음"
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:200
-#: src/screens/Settings/Settings.tsx:203
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:205
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:709
@@ -6315,7 +6319,7 @@ msgstr "오래된 순"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:402
+#: src/screens/Settings/Settings.tsx:406
 msgid "Onboarding reset"
 msgstr "온보딩 재설정"
 
@@ -6417,7 +6421,7 @@ msgstr "{niceUrl} 링크 열기"
 msgid "Open message options"
 msgstr "메시지 옵션 열기"
 
-#: src/screens/Settings/Settings.tsx:467
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open moderation debug page"
 msgstr "검토 디버그 페이지 열기"
 
@@ -6446,12 +6450,12 @@ msgstr "공유 메뉴 열기"
 msgid "Open starter pack menu"
 msgstr "스타터 팩 메뉴 열기"
 
-#: src/screens/Settings/Settings.tsx:460
-#: src/screens/Settings/Settings.tsx:474
+#: src/screens/Settings/Settings.tsx:464
+#: src/screens/Settings/Settings.tsx:478
 msgid "Open storybook page"
 msgstr "스토리북 페이지 열기"
 
-#: src/screens/Settings/Settings.tsx:453
+#: src/screens/Settings/Settings.tsx:457
 msgid "Open system log"
 msgstr "시스템 로그 열기"
 
@@ -6514,7 +6518,7 @@ msgstr "존재하는 Bluesky 계정에 로그인하는 화면을 엽니다"
 msgid "Opens GIF select dialog"
 msgstr "GIF 선택 대화 상자를 엽니다"
 
-#: src/screens/Settings/Settings.tsx:251
+#: src/screens/Settings/Settings.tsx:255
 msgid "Opens helpdesk in browser"
 msgstr "브라우저에서 지원 문서를 엽니다"
 
@@ -7121,8 +7125,8 @@ msgstr "주 언어"
 msgid "Privacy"
 msgstr "개인정보"
 
-#: src/screens/Settings/Settings.tsx:186
-#: src/screens/Settings/Settings.tsx:189
+#: src/screens/Settings/Settings.tsx:188
+#: src/screens/Settings/Settings.tsx:191
 msgid "Privacy and security"
 msgstr "개인정보 및 보안"
 
@@ -7400,7 +7404,7 @@ msgstr "대화 다시 불러오기"
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:105
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:112
 #: src/screens/Bookmarks/index.tsx:266
-#: src/screens/Settings/Settings.tsx:678
+#: src/screens/Settings/Settings.tsx:682
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:220
 msgid "Remove"
@@ -7414,8 +7418,8 @@ msgstr "스타터 팩에서 {displayName} 제거"
 msgid "Remove {historyItem}"
 msgstr "{historyItem} 제거"
 
-#: src/screens/Settings/Settings.tsx:657
-#: src/screens/Settings/Settings.tsx:660
+#: src/screens/Settings/Settings.tsx:661
+#: src/screens/Settings/Settings.tsx:664
 msgid "Remove account"
 msgstr "계정 제거"
 
@@ -7460,7 +7464,7 @@ msgstr "피드를 제거하시겠습니까?"
 msgid "Remove from my feeds"
 msgstr "내 피드에서 제거"
 
-#: src/screens/Settings/Settings.tsx:670
+#: src/screens/Settings/Settings.tsx:674
 msgid "Remove from quick access?"
 msgstr "빠른 액세스에서 제거하시겠습니까?"
 
@@ -7504,7 +7508,7 @@ msgstr "재게시 취소"
 msgid "Remove subtitle file"
 msgstr "자막 파일 제거"
 
-#: src/components/contacts/screens/ViewMatches.tsx:499
+#: src/components/contacts/screens/ViewMatches.tsx:497
 #: src/screens/Settings/FindContactsSettings.tsx:323
 msgid "Remove suggestion"
 msgstr "추천 제거하기"
@@ -7811,16 +7815,16 @@ msgstr "내 지역에서 필수"
 
 #: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:40
 msgid "Resend"
-msgstr "다시 보내기"
+msgstr "다시 전송"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:362
 #: src/components/contacts/screens/VerifyNumber.tsx:379
 msgid "Resend code"
-msgstr "코드 다시 보내기"
+msgstr "코드 다시 전송"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:369
 msgid "Resend code in <0>00:{0}</0>"
-msgstr "<0>00:{0}</0> 후에 코드 다시 보내기"
+msgstr "<0>00:{0}</0> 후에 코드 다시 전송"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
@@ -7835,8 +7839,8 @@ msgstr "이메일 다시 전송"
 msgid "Resend Verification Email"
 msgstr "인증 이메일 다시 전송하기"
 
-#: src/screens/Settings/Settings.tsx:496
-#: src/screens/Settings/Settings.tsx:498
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Reset activity subscription nudge"
 msgstr "활동 구독 미세 조정 초기화"
 
@@ -7844,8 +7848,8 @@ msgstr "활동 구독 미세 조정 초기화"
 msgid "Reset code"
 msgstr "재설정 코드"
 
-#: src/screens/Settings/Settings.tsx:481
-#: src/screens/Settings/Settings.tsx:483
+#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:487
 msgid "Reset onboarding state"
 msgstr "온보딩 상태 초기화"
 
@@ -8047,7 +8051,7 @@ msgstr "@{0} 님의 게시물 검색"
 msgid "Search by name or interest"
 msgstr "이름 또는 관심 주제로 검색"
 
-#: src/components/contacts/screens/ViewMatches.tsx:355
+#: src/components/contacts/screens/ViewMatches.tsx:353
 msgid "Search contacts"
 msgstr "연락처 검색"
 
@@ -8286,7 +8290,7 @@ msgstr "주 언어 선택"
 msgid "Select subtitle file (.vtt)"
 msgstr "자막 파일(.vtt) 선택"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:67
+#: src/components/InternationalPhoneCodeSelect.tsx:68
 msgid "Select telephone code"
 msgstr "국가 코드 선택"
 
@@ -8342,19 +8346,19 @@ msgstr "멋진 웹사이트 링크를 보내 보세요!"
 #: src/components/contacts/screens/PhoneInput.tsx:252
 #: src/components/contacts/screens/PhoneInput.tsx:257
 msgid "Send code"
-msgstr "코드 보내기"
+msgstr "코드 전송"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:181
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:302
 #: src/view/com/modals/DeleteAccount.tsx:145
 msgid "Send email"
-msgstr "이메일 보내기"
+msgstr "이메일 전송"
 
 #: src/view/com/modals/DeleteAccount.tsx:158
 msgctxt "action"
 msgid "Send Email"
-msgstr "이메일 보내기"
+msgstr "이메일 전송"
 
 #: src/view/shell/Drawer.tsx:361
 msgid "Send feedback"
@@ -8385,7 +8389,7 @@ msgstr "휴대폰에서 메시지 전송하기"
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:123
 msgid "Send verification email"
-msgstr "인증 이메일 보내기"
+msgstr "인증 이메일 전송"
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:101
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:107
@@ -8400,7 +8404,7 @@ msgstr "계정 삭제를 위한 확인 코드가 포함된 이메일을 전송�
 
 #: src/components/contacts/screens/PhoneInput.tsx:280
 msgid "Sent to our phone number verification provider Plivo"
-msgstr "전화번호 인증 서비스 제공업체인 Plivo로 보냅니다"
+msgstr "전화번호 인증 서비스 제공업체인 Plivo로 전송합니다"
 
 #: src/components/dialogs/ServerInput.tsx:177
 msgid "Server address"
@@ -8426,7 +8430,7 @@ msgstr "계정 설정하기"
 msgid "Set who can reply to your post"
 msgstr "내 게시물에 답글을 달 수 있는 사용자 설정하기"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:199
+#: src/ageAssurance/components/NoAccessScreen.tsx:212
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr "아래에서 생년월일을 설정하고 바로 게시물을 올리거나 탐색을 시작하세요!"
 
@@ -8435,7 +8439,7 @@ msgid "Sets email for password reset"
 msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 
 #: src/Navigation.tsx:215
-#: src/screens/Settings/Settings.tsx:103
+#: src/screens/Settings/Settings.tsx:105
 #: src/view/shell/desktop/LeftNav.tsx:805
 #: src/view/shell/Drawer.tsx:609
 msgid "Settings"
@@ -8685,7 +8689,7 @@ msgstr "경고 표시 및 피드에서 필터링"
 msgid "Shows information about when this post was created"
 msgstr "이 게시물이 언제 작성되었는지에 대한 정보를 표시합니다"
 
-#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:131
 msgid "Shows other accounts you can switch to"
 msgstr "전환할 수 있는 다른 계정을 표시합니다"
 
@@ -8746,9 +8750,9 @@ msgstr "Bluesky에 로그인하거나 새 계정 만들기"
 msgid "Sign in to view post"
 msgstr "로그인하여 게시물 보기"
 
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:270
-#: src/screens/Settings/Settings.tsx:302
+#: src/screens/Settings/Settings.tsx:272
+#: src/screens/Settings/Settings.tsx:274
+#: src/screens/Settings/Settings.tsx:306
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:93
@@ -8762,7 +8766,7 @@ msgstr "로그아웃"
 msgid "Sign Out"
 msgstr "로그아웃"
 
-#: src/screens/Settings/Settings.tsx:299
+#: src/screens/Settings/Settings.tsx:303
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Sign out?"
 msgstr "로그아웃하시겠습니까?"
@@ -8988,7 +8992,7 @@ msgstr "상태 페이지"
 msgid "Step {0} of {1}"
 msgstr "{1}단계 중 {0}단계"
 
-#: src/screens/Settings/Settings.tsx:407
+#: src/screens/Settings/Settings.tsx:411
 msgid "Storage cleared, you need to restart the app now."
 msgstr "스토리지가 지워졌으며 지금 앱을 다시 시작해야 합니다."
 
@@ -8997,7 +9001,7 @@ msgid "Stored as part of a secure code for matching with others"
 msgstr "다른 사용자와 번호를 대조하는 보안 코드의 일부로 저장됩니다"
 
 #: src/Navigation.tsx:308
-#: src/screens/Settings/Settings.tsx:462
+#: src/screens/Settings/Settings.tsx:466
 msgid "Storybook"
 msgstr "스토리북"
 
@@ -9097,9 +9101,9 @@ msgstr "지원"
 msgid "Support for this feature in your country has not been enabled yet! Please check back later."
 msgstr "회원님의 국가에서는 아직 이 기능이 지원되지 않습니다! 나중에 다시 확인해 주세요."
 
-#: src/screens/Settings/Settings.tsx:127
-#: src/screens/Settings/Settings.tsx:141
-#: src/screens/Settings/Settings.tsx:620
+#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:624
 #: src/view/shell/desktop/LeftNav.tsx:247
 msgid "Switch account"
 msgstr "계정 전환"
@@ -9127,7 +9131,7 @@ msgstr "시스템"
 #: src/screens/Log.tsx:58
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:455
+#: src/screens/Settings/Settings.tsx:459
 msgid "System log"
 msgstr "시스템 로그"
 
@@ -9227,7 +9231,7 @@ msgstr "피드백을 보내주셔서 감사합니다! 피드 운영자에게 전
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "이메일 주소를 성공적으로 인증했습니다. 이 대화 상자를 닫아도 됩니다."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:382
+#: src/ageAssurance/components/NoAccessScreen.tsx:397
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
 msgid "Thanks! You're all set."
 msgstr "감사합니다! 모든 준비가 완료되었습니다."
@@ -9508,11 +9512,11 @@ msgstr "이 작업은 언제든지 취소할 수 있습니다."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:284
 msgid "This appeal will be sent to <0>{sourceName}</0>."
-msgstr "이 이의신청을 <0>{sourceName}</0>에게 보냅니다."
+msgstr "이 이의신청을 <0>{sourceName}</0>에게 전송합니다."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:116
 msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr "이 이의신청을 Bluesky Moderation Service에게 보냅니다."
+msgstr "이 이의신청을 Bluesky Moderation Service에게 전송합니다."
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -9520,7 +9524,7 @@ msgstr "이 대화는 연결이 끊어졌습니다"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:103
 msgid "This code is invalid. Resend to get a new code."
-msgstr "이 코드는 유효하지 않습니다. 새 코드를 받으려면 다시 보내세요."
+msgstr "이 코드는 유효하지 않습니다. 새 코드를 받으려면 다시 전송하세요."
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:144
 msgid "This confirmation code is not valid. Please try again."
@@ -9723,7 +9727,7 @@ msgstr "이 사용자는 아무도 팔로우하지 않았습니다."
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "뮤트한 단어에서 ‘{0}’(을)를 삭제합니다. 나중에 언제든지 다시 추가할 수 있습니다."
 
-#: src/screens/Settings/Settings.tsx:672
+#: src/screens/Settings/Settings.tsx:676
 msgid "This will remove @{0} from the quick access list."
 msgstr "빠른 액세스 목록에서 @{0}(을)를 제거합니다."
 
@@ -9771,7 +9775,7 @@ msgstr "이메일 2단계 인증을 비활성화하려면 이메일 주소에 �
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "이메일 2단계 인증을 비활성화하려면 <0>{0}</0>에 대한 접근 권한을 인증해 주세요."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:230
+#: src/ageAssurance/components/NoAccessScreen.tsx:245
 msgid "To log out, <0>click here</0>."
 msgstr "로그아웃하려면 <0>이곳을 클릭하세요</0>."
 
@@ -9902,11 +9906,11 @@ msgstr "서비스에 연결할 수 없습니다. 인터넷 연결을 확인하�
 msgid "Unable to delete"
 msgstr "삭제할 수 없음"
 
-#: src/screens/Settings/Settings.tsx:521
+#: src/screens/Settings/Settings.tsx:525
 msgid "Unapply Pull Request"
 msgstr "풀 리퀘스트 적용 취소"
 
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:527
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "풀 리퀘스트 {currentChannel} 적용 취소"
 
@@ -9986,7 +9990,7 @@ msgstr "사용자를 언팔로우합니다"
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "죄송합니다. 구독하는 라벨러 중 이 신고 유형을 지원하는 라벨러가 없습니다."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:176
+#: src/ageAssurance/components/NoAccessScreen.tsx:187
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr "죄송합니다. 프로필에 저장된 생년월일이 Bluesky 이용 연령 제한에 해당되어 접속할 수 없습니다."
 
@@ -10094,8 +10098,8 @@ msgstr "내 피드에서 고정 해제했습니다"
 msgid "Unpinned list"
 msgstr "리스트를 고정 해제했습니다"
 
-#: src/screens/Settings/Settings.tsx:488
-#: src/screens/Settings/Settings.tsx:490
+#: src/screens/Settings/Settings.tsx:492
+#: src/screens/Settings/Settings.tsx:494
 msgid "Unsnooze email reminder"
 msgstr "이메일 알림 켜기"
 
@@ -10347,7 +10351,7 @@ msgstr "인증자:"
 msgid "Verify account"
 msgstr "계정 인증"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:319
+#: src/ageAssurance/components/NoAccessScreen.tsx:334
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
 msgid "Verify again"
 msgstr "다시 인증하기"
@@ -10374,8 +10378,8 @@ msgstr "이메일 코드 인증하기"
 msgid "Verify email dialog"
 msgstr "이메일 인증 대화 상자"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:307
-#: src/ageAssurance/components/NoAccessScreen.tsx:321
+#: src/ageAssurance/components/NoAccessScreen.tsx:322
+#: src/ageAssurance/components/NoAccessScreen.tsx:336
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify now"
@@ -10737,7 +10741,7 @@ msgstr "친구들을 찾으면 알림을 보내겠습니다."
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:249
 msgid "We'll send an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
-msgstr "링크가 포함된 이메일을 <0>{0}</0>(으)로 보냅니다. 이메일 인증 절차를 완료하려면 해당 링크를 클릭하세요."
+msgstr "링크가 포함된 이메일을 <0>{0}</0>(으)로 전송합니다. 이메일 인증 절차를 완료하려면 해당 링크를 클릭하세요."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:60
 msgid "We'll use this to help customize your experience."
@@ -10773,7 +10777,7 @@ msgstr "Bluesky에 인증을 쉽게 확인할 수 있는 체크 표시를 도입
 msgid "We're so excited to have you join us!"
 msgstr "함께하게 되어 정말 기뻐요!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:375
+#: src/ageAssurance/components/NoAccessScreen.tsx:390
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "죄송하지만 기기 위치상 회원님은 현재 연령 확인이 필요한 지역에 있습니다."
@@ -10981,7 +10985,7 @@ msgstr "어제"
 msgid "You are a trusted verifier"
 msgstr "나는 신뢰할 수 있는 인증자입니다"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:161
+#: src/ageAssurance/components/NoAccessScreen.tsx:170
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr "회원님이 접속하신 지역은 앱 접근 전 법적으로 연령 확인이 필요한 곳입니다."
 
@@ -10989,7 +10993,7 @@ msgstr "회원님이 접속하신 지역은 앱 접근 전 법적으로 연령 �
 msgid "You are creating an account on"
 msgstr "호스팅 제공자:"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:289
+#: src/ageAssurance/components/NoAccessScreen.tsx:304
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "현재 Bluesky의 연령 확인 절차를 이용할 수 없습니다. 오류라고 생각되면 <0>운영팀에 문의</0>해 주세요."
@@ -11122,7 +11126,7 @@ msgstr "고정한 피드가 없습니다."
 msgid "You don't have any saved feeds."
 msgstr "저장된 피드가 없습니다."
 
-#: src/components/contacts/screens/ViewMatches.tsx:311
+#: src/components/contacts/screens/ViewMatches.tsx:309
 msgid "You got here first"
 msgstr "제일 먼저 오셨네요"
 
@@ -11277,7 +11281,7 @@ msgstr "이메일 2단계 인증을 사용하려면 이메일 주소를 인증�
 msgid "You previously deactivated @{0}."
 msgstr "이전에 @{0}(을)를 비활성화했습니다."
 
-#: src/screens/Settings/Settings.tsx:418
+#: src/screens/Settings/Settings.tsx:422
 msgid "You probably want to restart the app now."
 msgstr "앱을 다시 시작해야 할 수 있습니다."
 
@@ -11294,7 +11298,7 @@ msgstr "내가 {1}에 {0}(으)로 반응함"
 msgid "You recently changed your birthdate"
 msgstr "최근 생년월일을 변경했습니다"
 
-#: src/screens/Settings/Settings.tsx:300
+#: src/screens/Settings/Settings.tsx:304
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "You will be signed out of all your accounts."
 msgstr "모든 계정에서 로그아웃됩니다."
@@ -11431,11 +11435,11 @@ msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 ‘CA
 
 #: src/screens/Takendown.tsx:217
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
-msgstr "귀하의 계정이 <0>Bluesky Social 서비스 이용약관</0>을 위반한 것으로 확인되었습니다. 구체적인 위반 사항과 정지 기간(해당하는 경우)이 명시된 이메일을 보내드렸습니다. 이 결정이 잘못되었다고 생각되면 이의를 신청할 수 있습니다."
+msgstr "귀하의 계정이 <0>Bluesky Social 서비스 이용약관</0>을 위반한 것으로 확인되었습니다. 구체적인 위반 사항과 정지 기간(해당하는 경우)이 명시된 이메일을 전송했습니다. 이 결정이 잘못되었다고 생각되면 이의를 신청할 수 있습니다."
 
 #: src/screens/Takendown.tsx:157
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
-msgstr "이의신청을 제출했습니다. 이의신청이 받아들여지면 이메일을 보내 드립니다."
+msgstr "이의신청을 제출했습니다. 이의신청이 받아들여지면 이메일을 전송하겠습니다."
 
 #: src/screens/Signup/StepInfo/index.tsx:260
 msgid "Your birth date"
@@ -11461,7 +11465,7 @@ msgstr "연락처에 있는 {firstAuthorLink} 님이 Bluesky에 있습니다"
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr "연락처에 있는 {firstAuthorName} 님이 Bluesky에 있습니다"
 
-#: src/components/contacts/screens/ViewMatches.tsx:453
+#: src/components/contacts/screens/ViewMatches.tsx:451
 msgid "Your contact {name}"
 msgstr "연락처에 있는 {name} 님"
 
@@ -11570,7 +11574,7 @@ msgstr "답글을 보냈습니다"
 
 #: src/components/moderation/ReportDialog/index.tsx:498
 msgid "Your report will be sent to <0>{0}</0>."
-msgstr "신고를 <0>{0}</0>에게 보냅니다."
+msgstr "신고를 <0>{0}</0>에게 전송합니다."
 
 #: src/screens/Settings/InterestsSettings.tsx:60
 msgid "Your selected interests help us serve you content you care about."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-13 19:06\n"
+"PO-Revision-Date: 2025-12-15 20:45\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -43,9 +43,9 @@ msgstr "{0, plural, one {# 個擁躉} other {# 個擁躉}}"
 msgid "{0, plural, one {# following} other {# following}}"
 msgstr "{0, plural, one {# 個跟緊} other {# 個跟緊}}"
 
-#: src/components/contacts/screens/ViewMatches.tsx:267
+#: src/components/contacts/screens/ViewMatches.tsx:265
 msgid "{0, plural, one {# friend found!} other {# friends found!}}"
-msgstr ""
+msgstr "{0, plural, other {搵到 # 個朋友！}}"
 
 #: src/lib/hooks/useTimeAgo.ts:159
 msgid "{0, plural, one {# hour} other {# hours}}"
@@ -442,7 +442,7 @@ msgstr "{notificationCount, plural, one {# 條未讀} other {# 條未讀}}"
 
 #: src/screens/Settings/FindContactsSettings.tsx:430
 msgid "{numMatches, plural, one {1 contact found} other {# contacts found}}"
-msgstr ""
+msgstr "{numMatches, plural, other {搵到 # 個聯絡人}}"
 
 #: src/components/NewskieDialog.tsx:113
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
@@ -555,16 +555,16 @@ msgstr "一條訊息"
 
 #: src/components/contacts/screens/PhoneInput.tsx:99
 msgid "A network error occurred. Please check your internet connection"
-msgstr ""
+msgstr "發生網絡錯誤，請檢查你嘅網絡連線"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:96
 #: src/components/contacts/screens/VerifyNumber.tsx:152
 msgid "A network error occurred. Please check your internet connection."
-msgstr ""
+msgstr "發生網絡錯誤，請檢查你嘅網絡連線。"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:140
 msgid "A new code has been sent"
-msgstr ""
+msgstr "新代碼經已傳送"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:91
 msgid "A new form of verification"
@@ -581,8 +581,8 @@ msgstr "呢張係個人檔案頁面嘅截圖，「跟佢」掣隔籬有隻鐘仔
 
 #: src/Navigation.tsx:534
 #: src/screens/Settings/AboutSettings.tsx:75
-#: src/screens/Settings/Settings.tsx:258
-#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:262
+#: src/screens/Settings/Settings.tsx:265
 msgid "About"
 msgstr "關於"
 
@@ -609,8 +609,8 @@ msgid "Accept this language suggestion"
 msgstr "套用此建議語言"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:44
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Accessibility"
 msgstr "無障礙"
 
@@ -621,8 +621,8 @@ msgstr "無障礙設定"
 #: src/Navigation.tsx:401
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:51
-#: src/screens/Settings/Settings.tsx:178
-#: src/screens/Settings/Settings.tsx:181
+#: src/screens/Settings/Settings.tsx:180
+#: src/screens/Settings/Settings.tsx:183
 msgid "Account"
 msgstr "帳號"
 
@@ -653,7 +653,7 @@ msgstr "帳號經已靜音"
 msgid "Account Muted by List"
 msgstr "帳號經已被清單靜音"
 
-#: src/screens/Settings/Settings.tsx:640
+#: src/screens/Settings/Settings.tsx:644
 msgid "Account options"
 msgstr "帳號設定"
 
@@ -661,7 +661,7 @@ msgstr "帳號設定"
 msgid "Account provider"
 msgstr "帳號提供者"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:680
 msgid "Account removed from quick access"
 msgstr "帳號經已喺快速存取度移除"
 
@@ -746,8 +746,8 @@ msgstr "新增替代文字"
 msgid "Add alt text (optional)"
 msgstr "新增替代文字（可選）"
 
-#: src/screens/Settings/Settings.tsx:580
-#: src/screens/Settings/Settings.tsx:583
+#: src/screens/Settings/Settings.tsx:584
+#: src/screens/Settings/Settings.tsx:587
 #: src/view/shell/desktop/LeftNav.tsx:262
 #: src/view/shell/desktop/LeftNav.tsx:266
 msgid "Add another account"
@@ -849,7 +849,7 @@ msgstr "加到新手包"
 msgid "Add user to list"
 msgstr "加入用戶到清單"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:210
+#: src/ageAssurance/components/NoAccessScreen.tsx:223
 msgid "Add your birthdate"
 msgstr "加入你嘅出世日期"
 
@@ -919,7 +919,7 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "年齡驗證資訊經已提交"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:342
+#: src/ageAssurance/components/NoAccessScreen.tsx:357
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Age assurance only takes a few minutes"
 msgstr "淨係用幾分鐘就攪掂年齡認證"
@@ -939,9 +939,9 @@ msgstr "所有"
 msgid "All accounts have been followed!"
 msgstr "你經已跟晒所有帳號喇！"
 
-#: src/components/contacts/screens/ViewMatches.tsx:143
+#: src/components/contacts/screens/ViewMatches.tsx:141
 msgid "All friends followed!"
-msgstr ""
+msgstr "成功跟晒所有朋友！"
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:64
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:99
@@ -1075,9 +1075,9 @@ msgstr "攞緊動態源嗰陣發生錯誤。"
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "幫手砌緊你嘅新手包嗰陣發生錯誤。使唔使試多次？"
 
-#: src/components/contacts/screens/ViewMatches.tsx:242
+#: src/components/contacts/screens/ViewMatches.tsx:240
 msgid "An error occurred while hiding suggestion. {0}"
-msgstr ""
+msgstr "隱藏建議嗰陣發生錯誤。{0}"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:140
 msgid "An error occurred while loading the video. Please try again later."
@@ -1110,12 +1110,12 @@ msgstr "上載影片嗰陣發生錯誤。"
 #: src/components/contacts/screens/VerifyNumber.tsx:128
 #: src/components/contacts/screens/VerifyNumber.tsx:181
 msgid "An error occurred. {0}"
-msgstr ""
+msgstr "發生錯誤。{0}"
 
 #: src/components/contacts/components/HeroImage.tsx:28
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:71
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:78
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
-msgstr ""
+msgstr "一張插圖，展示用戶頭像從通訊錄湧入去 Bluesky App 度"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:35
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
@@ -1207,7 +1207,7 @@ msgstr "App 圖標"
 
 #: src/screens/Settings/LanguageSettings.tsx:103
 msgid "App language"
-msgstr ""
+msgstr "應用程式語言"
 
 #: src/screens/Settings/LanguageSettings.tsx:87
 msgid "App Language"
@@ -1277,8 +1277,8 @@ msgstr "對此決定提出申訴"
 
 #: src/Navigation.tsx:393
 #: src/screens/Settings/AppearanceSettings.tsx:73
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:230
+#: src/screens/Settings/Settings.tsx:233
 msgid "Appearance"
 msgstr "外觀"
 
@@ -1287,8 +1287,8 @@ msgstr "外觀"
 msgid "Apply default recommended feeds"
 msgstr "使用預設嘅推薦動態源"
 
-#: src/screens/Settings/Settings.tsx:512
-#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:518
 msgid "Apply Pull Request"
 msgstr "套用 Pull Request"
 
@@ -1571,7 +1571,7 @@ msgstr "Bluesky Classic™"
 
 #: src/components/contacts/screens/GetContacts.tsx:232
 msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
-msgstr ""
+msgstr "Bluesky 透過建立加密稱爲「雜湊值」嘅數碼指模，透過比對指模去搵返彼此朋友。"
 
 #: src/components/dialogs/ServerInput.tsx:217
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -1588,15 +1588,15 @@ msgstr "Bluesky 係要同多啲天友玩先正！"
 
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:35
 msgid "Bluesky is more fun with friends"
-msgstr ""
+msgstr "同你班 Friend 一齊玩 Bluesky 先過癮"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:99
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:106
 msgid "Bluesky is more fun with friends! Import your contacts to see who’s already here."
-msgstr ""
+msgstr "同你班 Friend 一齊玩 Bluesky 先過癮！匯入你嘅聯絡人睇吓邊個喺度用緊。"
 
-#: src/components/contacts/screens/ViewMatches.tsx:314
+#: src/components/contacts/screens/ViewMatches.tsx:312
 msgid "Bluesky is more fun with friends. Do you want to invite some of yours? <0/>"
-msgstr ""
+msgstr "同你班 Friend 一齊玩 Bluesky 先過癮。你想邀請啲朋友加入嗎？<0/>"
 
 #: src/screens/Takendown.tsx:220
 msgid "Bluesky Social Terms of Service"
@@ -1604,7 +1604,7 @@ msgstr "Bluesky Social 服務條款"
 
 #: src/screens/Settings/FindContactsSettings.tsx:542
 msgid "Bluesky stores your contacts as encoded data. Removing your contacts will immediately delete this data."
-msgstr ""
+msgstr "Bluesky 將你嘅聯絡人儲存為加密資訊。刪除聯絡人亦都會即係刪除此資訊。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:338
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1714,7 +1714,7 @@ msgstr "撳「繼續」當你瞭解兼同意呢啲更新。"
 
 #: src/components/contacts/screens/PhoneInput.tsx:294
 msgid "By continuing, you consent to this use. You may change your mind any time by visiting settings. <0>Learn more</0>"
-msgstr ""
+msgstr "繼續即表示您同意使用此資料，你可以去到設定隨時變更選項。<0>想知多啲</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -1766,7 +1766,7 @@ msgstr "相機"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:85
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:247
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:253
-#: src/screens/Settings/Settings.tsx:303
+#: src/screens/Settings/Settings.tsx:307
 #: src/screens/Takendown.tsx:107
 #: src/screens/Takendown.tsx:110
 #: src/view/com/composer/Composer.tsx:1050
@@ -1984,7 +1984,7 @@ msgstr "用呢隻色做你嘅頭像背景"
 
 #: src/components/contacts/components/InviteInfo.tsx:56
 msgid "Choose who to invite"
-msgstr ""
+msgstr "揀選要邀請嘅人"
 
 #: src/components/dialogs/ServerInput.tsx:137
 msgid "Choose your account provider"
@@ -2002,11 +2002,11 @@ msgstr "設定你嘅密碼"
 msgid "Choose your username"
 msgstr "設定你嘅用戶名稱"
 
-#: src/screens/Settings/Settings.tsx:504
+#: src/screens/Settings/Settings.tsx:508
 msgid "Clear all storage data"
 msgstr "剷走所有儲存資料"
 
-#: src/screens/Settings/Settings.tsx:506
+#: src/screens/Settings/Settings.tsx:510
 msgid "Clear all storage data (restart after this)"
 msgstr "剷走所有儲存資料（跟住重啓）"
 
@@ -2031,7 +2031,7 @@ msgstr "撳呢度"
 msgid "Click here to contact our support team"
 msgstr "撳呢度聯絡我哋嘅支援團隊"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:233
+#: src/ageAssurance/components/NoAccessScreen.tsx:248
 msgid "Click here to log out"
 msgstr "撳呢度登出"
 
@@ -2040,7 +2040,7 @@ msgid "Click here to restart the verification process."
 msgstr "撳呢度重新開始驗證流程。"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:97
-#: src/ageAssurance/components/NoAccessScreen.tsx:207
+#: src/ageAssurance/components/NoAccessScreen.tsx:220
 msgid "Click here to update your birthdate"
 msgstr "撳呢度更新你嘅出世日期"
 
@@ -2257,7 +2257,7 @@ msgstr "確認內容語言設定"
 msgid "Confirm delete account"
 msgstr "確認刪除帳號"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:356
+#: src/ageAssurance/components/NoAccessScreen.tsx:371
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
@@ -2284,7 +2284,7 @@ msgstr "連緊線……"
 msgid "Connection issue"
 msgstr "連線問題"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:293
+#: src/ageAssurance/components/NoAccessScreen.tsx:308
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
@@ -2299,7 +2299,7 @@ msgstr "聯絡支援"
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:57
 #: src/screens/Settings/FindContactsSettings.tsx:154
 msgid "Contact sync is not available on this device, as the app is unable to access your contacts."
-msgstr ""
+msgstr "事緣呢隻 App 取用唔到你嘅聯絡人資訊，呢部裝置嘅聯絡人同步功能用唔到。"
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:93
 msgid "Contact us"
@@ -2307,18 +2307,18 @@ msgstr "聯絡我哋"
 
 #: src/screens/Settings/FindContactsSettings.tsx:471
 msgid "Contacts removed"
-msgstr ""
+msgstr "聯絡人經已刪除"
 
 #: src/screens/Settings/FindContactsSettings.tsx:498
 msgid "Contacts uploaded"
-msgstr ""
+msgstr "聯絡人經已更新"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Content & Media"
 msgstr "內容同媒體"
 
-#: src/screens/Settings/Settings.tsx:208
-#: src/screens/Settings/Settings.tsx:211
+#: src/screens/Settings/Settings.tsx:210
+#: src/screens/Settings/Settings.tsx:213
 msgid "Content and media"
 msgstr "內容同媒體"
 
@@ -2540,12 +2540,12 @@ msgstr "搵唔到個人檔案"
 #: src/screens/Settings/FindContactsSettings.tsx:208
 #: src/screens/Settings/FindContactsSettings.tsx:397
 msgid "Could not follow all matches - please check your network connection."
-msgstr ""
+msgstr "跟唔到所有確認嘅聯絡人 - 請檢查你嘅網絡連線狀態。"
 
 #: src/screens/Settings/FindContactsSettings.tsx:214
 #: src/screens/Settings/FindContactsSettings.tsx:403
 msgid "Could not follow all matches. {0}"
-msgstr ""
+msgstr "跟唔到所有確認嘅聯絡人。{0}"
 
 #: src/components/dms/AfterReportDialog.tsx:138
 #: src/components/dms/LeaveConvoPrompt.tsx:35
@@ -2580,15 +2580,15 @@ msgstr "更新唔到通知設定"
 
 #: src/components/contacts/screens/GetContacts.tsx:168
 msgid "Could not upload contacts. {0}"
-msgstr ""
+msgstr "上載唔到聯絡人。{0}"
 
 #: src/components/contacts/screens/GetContacts.tsx:162
 msgid "Could not upload contacts. You need to re-verify your phone number to proceed"
-msgstr ""
+msgstr "上載唔到聯絡人，你需要重新驗證電話號碼先得"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:79
+#: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
-msgstr ""
+msgstr "國家代碼"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
@@ -2746,7 +2746,7 @@ msgstr "出世日期"
 msgid "Deactivate account"
 msgstr "停用帳號"
 
-#: src/screens/Settings/Settings.tsx:469
+#: src/screens/Settings/Settings.tsx:473
 msgid "Debug Moderation"
 msgstr "內容審覈偵錯"
 
@@ -2799,13 +2799,13 @@ msgstr "係咪要刪咗呢個 App 嘅密碼？"
 msgid "Delete chat"
 msgstr "刪除傾偈"
 
-#: src/screens/Settings/Settings.tsx:476
+#: src/screens/Settings/Settings.tsx:480
 msgid "Delete chat declaration record"
 msgstr "刪除傾偈申報記錄"
 
 #: src/screens/Settings/FindContactsSettings.tsx:539
 msgid "Delete contacts"
-msgstr ""
+msgstr "刪除聯絡人"
 
 #: src/components/dms/AfterReportDialog.tsx:190
 #: src/components/dms/AfterReportDialog.tsx:193
@@ -2873,7 +2873,7 @@ msgstr "刪除咗嘅帳號"
 
 #: src/components/contacts/screens/PhoneInput.tsx:283
 msgid "Deleted by Plivo after verification"
-msgstr ""
+msgstr "驗證後由 Plivo 刪除"
 
 #: src/view/com/feeds/MissingFeed.tsx:42
 #: src/view/com/feeds/MissingFeed.tsx:75
@@ -2912,8 +2912,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "開發者模式經已啓用"
 
-#: src/screens/Settings/Settings.tsx:285
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:289
+#: src/screens/Settings/Settings.tsx:292
 msgid "Developer options"
 msgstr "開發人員選項"
 
@@ -3005,7 +3005,7 @@ msgstr "跳過"
 
 #: src/components/contacts/FindContactsBannerNUX.tsx:76
 msgid "Dismiss banner"
-msgstr ""
+msgstr "忽略提示"
 
 #: src/view/com/composer/Composer.tsx:1815
 msgid "Dismiss error"
@@ -3073,8 +3073,8 @@ msgstr "唔使驚！你所有現存嘅訊息同設定都經已儲存，只要驗
 
 #: src/components/contacts/components/InviteInfo.tsx:72
 #: src/components/contacts/components/InviteInfo.tsx:78
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:411
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:409
 #: src/components/dialogs/BirthDateSettings.tsx:183
 #: src/components/dialogs/BirthDateSettings.tsx:190
 #: src/components/dialogs/ServerInput.tsx:240
@@ -3413,7 +3413,7 @@ msgstr "請確保你幫每個字幕檔案到揀選過一種語言。"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:228
 msgid "Enter 6-digit code that was sent to your phone number"
-msgstr ""
+msgstr "輸入傳送到你電話號碼嘅 6 位數代碼"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:147
 msgid "Enter a password"
@@ -3436,7 +3436,7 @@ msgstr "進入全螢幕"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:223
 msgid "Enter the 6-digit code sent to {prettyNumber}"
-msgstr ""
+msgstr "輸入傳送到 {prettyNumber} 嘅 6 位數代碼"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:380
 msgid "Enter the domain you want to use"
@@ -3482,7 +3482,7 @@ msgstr "錯誤"
 
 #: src/screens/Settings/FindContactsSettings.tsx:90
 msgid "Error getting the latest data."
-msgstr ""
+msgstr "攞緊最新資料嗰陣發生錯誤。"
 
 #: src/screens/PostThread/components/ThreadError.tsx:26
 msgid "Error loading post"
@@ -3700,17 +3700,17 @@ msgstr "刪唔到新手包"
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "跟唔到所有建議嘅帳號，唔該試多次"
 
-#: src/components/contacts/screens/ViewMatches.tsx:147
+#: src/components/contacts/screens/ViewMatches.tsx:145
 msgid "Failed to follow all your friends, please try again"
-msgstr ""
+msgstr "跟唔到你所有嘅朋友，唔該試多次"
 
-#: src/components/contacts/screens/ViewMatches.tsx:235
+#: src/components/contacts/screens/ViewMatches.tsx:233
 msgid "Failed to hide suggestion, please check your internet connection"
-msgstr ""
+msgstr "隱藏唔到建議，請檢查你嘅網絡連線"
 
-#: src/components/contacts/screens/ViewMatches.tsx:580
+#: src/components/contacts/screens/ViewMatches.tsx:578
 msgid "Failed to launch SMS app"
-msgstr ""
+msgstr "開唔到短訊 App"
 
 #: src/screens/Messages/ChatList.tsx:282
 #: src/screens/Messages/Inbox.tsx:209
@@ -3772,11 +3772,11 @@ msgstr "固定唔到帖文"
 
 #: src/screens/Settings/FindContactsSettings.tsx:481
 msgid "Failed to remove data due to a network error, please check your internet connection."
-msgstr ""
+msgstr "事緣網絡錯誤導致刪唔到資料，請檢查你嘅網絡連線。"
 
 #: src/screens/Settings/FindContactsSettings.tsx:487
 msgid "Failed to remove data. {0}"
-msgstr ""
+msgstr "刪唔到資料。{0}"
 
 #: src/components/dms/ActionsWrapper.web.tsx:60
 #: src/components/dms/MessageContextMenu.tsx:95
@@ -3990,21 +3990,21 @@ msgstr "去跟更多帳號"
 #: src/Navigation.tsx:425
 #: src/Navigation.tsx:626
 msgid "Find Contacts"
-msgstr ""
+msgstr "尋找聯絡人"
 
 #: src/screens/Settings/FindContactsSettings.tsx:76
 msgid "Find Friends"
-msgstr ""
+msgstr "尋找朋友"
 
-#: src/screens/Settings/Settings.tsx:217
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Settings/Settings.tsx:221
+#: src/screens/Settings/Settings.tsx:224
 msgid "Find friends from contacts"
-msgstr ""
+msgstr "從聯絡人尋找朋友"
 
 #: src/components/contacts/screens/GetContacts.tsx:270
 #: src/components/contacts/screens/GetContacts.tsx:284
 msgid "Find my friends"
-msgstr ""
+msgstr "尋找我嘅朋友"
 
 #. Starter packs suggested to the user for them to follow
 #: src/components/ProgressGuide/FollowDialog.tsx:72
@@ -4018,14 +4018,14 @@ msgstr "睇吓跟啲乜人好"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "喺 Bluesky 度搵帖文、用戶同埋動態源"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:89
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:96
 msgid "Find your friends"
-msgstr ""
+msgstr "尋找你嘅朋友"
 
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:38
 #: src/screens/Settings/FindContactsSettings.tsx:123
 msgid "Find your friends on Bluesky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
-msgstr ""
+msgstr "透過驗證你嘅電話號碼兼匹配聯絡人，即可尋找你 Bluesky 上嘅朋友。我哋保護你嘅資料，後續操作你話事。<0>想知多啲</0>"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:21
 msgid "Find your people"
@@ -4033,7 +4033,7 @@ msgstr "搵到同聲同氣嘅人"
 
 #: src/components/contacts/screens/GetContacts.tsx:278
 msgid "Finding friends..."
-msgstr ""
+msgstr "尋找緊朋友……"
 
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Finish"
@@ -4056,7 +4056,7 @@ msgstr "啞白"
 
 #: src/components/contacts/components/OTPInput.tsx:55
 msgid "Focus code input"
-msgstr ""
+msgstr "聚焦代碼欄位"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:559
@@ -4093,8 +4093,8 @@ msgstr "跟 7 個人"
 msgid "Follow account"
 msgstr "跟佢"
 
-#: src/components/contacts/screens/ViewMatches.tsx:275
-#: src/components/contacts/screens/ViewMatches.tsx:290
+#: src/components/contacts/screens/ViewMatches.tsx:273
+#: src/components/contacts/screens/ViewMatches.tsx:288
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:265
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
@@ -4124,7 +4124,7 @@ msgstr "跟晒所有帳號！"
 
 #: src/screens/Settings/FindContactsSettings.tsx:391
 msgid "Followed all matches"
-msgstr ""
+msgstr "跟晒所有確認嘅聯絡人"
 
 #: src/components/KnownFollowers.tsx:238
 msgid "Followed by <0>{0}</0>"
@@ -4209,6 +4209,10 @@ msgstr "字型大細"
 #: src/lib/interests.ts:61
 msgid "Food"
 msgstr "食物"
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:125
+msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -4530,10 +4534,10 @@ msgstr "遇到問題？"
 
 #: src/components/contacts/screens/PhoneInput.tsx:287
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
-msgstr ""
+msgstr "由 Bluesky 保留 7 天以防濫用，隨後刪除"
 
-#: src/screens/Settings/Settings.tsx:250
 #: src/screens/Settings/Settings.tsx:254
+#: src/screens/Settings/Settings.tsx:258
 #: src/view/shell/desktop/RightNav.tsx:123
 #: src/view/shell/desktop/RightNav.tsx:124
 #: src/view/shell/Drawer.tsx:381
@@ -4553,13 +4557,13 @@ msgstr "呢個係你嘅 App 專用密碼！"
 msgid "Hey there 👋"
 msgstr "哈佬 👋"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:158
+#: src/ageAssurance/components/NoAccessScreen.tsx:167
 msgid "Hey there!"
-msgstr ""
+msgstr "哈佬！"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:189
+#: src/ageAssurance/components/NoAccessScreen.tsx:202
 msgid "Hi there!"
-msgstr ""
+msgstr "哈佬！"
 
 #: src/components/VideoPostCard.tsx:178
 #: src/components/VideoPostCard.tsx:462
@@ -4657,9 +4661,9 @@ msgstr "隱藏認證標記"
 msgid "Hides the content"
 msgstr "隱藏內容"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:216
+#: src/ageAssurance/components/NoAccessScreen.tsx:229
 msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
-msgstr ""
+msgstr "咦，睇嚟你用緊 <0>App 專用密碼</0> 登入。想設定出世日期嘅話，你需要用主帳號密碼登入，抑或搵帳號控制人幫手去攪。"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:124
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -4716,7 +4720,7 @@ msgstr "熱門"
 
 #: src/components/contacts/components/InviteInfo.tsx:53
 msgid "How it works:"
-msgstr ""
+msgstr "功能說明："
 
 #: src/components/dialogs/InAppBrowserConsent.tsx:62
 #: src/components/dialogs/InAppBrowserConsent.tsx:66
@@ -4725,7 +4729,7 @@ msgstr "我哋應該點樣打開呢條連結？"
 
 #: src/components/contacts/screens/PhoneInput.tsx:276
 msgid "How we use your number:"
-msgstr ""
+msgstr "我哋會點用你嘅電話號碼："
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:150
 msgid "Human trafficking"
@@ -4733,7 +4737,7 @@ msgstr "人口販賣"
 
 #: src/components/contacts/screens/GetContacts.tsx:264
 msgid "I consent to Bluesky using my contacts for mutual friend discovery and to retain hashed data for matching until I opt out."
-msgstr ""
+msgstr "我同意 Bluesky 使用我嘅聯絡人尋找朋友，兼保留雜湊值，直到我選擇退出。"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:133
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
@@ -4750,9 +4754,9 @@ msgstr "我有自己嘅網域"
 msgid "I understand"
 msgstr "我明"
 
-#: src/components/contacts/screens/ViewMatches.tsx:576
+#: src/components/contacts/screens/ViewMatches.tsx:574
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
-msgstr ""
+msgstr "我喺 Bluesky 嘅帳號係 {0} - 快啲陪我一齊玩啦！https://bsky.app/download"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:187
 msgid "If alt text is long, toggles alt text expanded state"
@@ -4838,21 +4842,21 @@ msgstr "冒充身份"
 #: src/screens/Settings/FindContactsSettings.tsx:143
 #: src/screens/Settings/FindContactsSettings.tsx:148
 msgid "Import contacts"
-msgstr ""
+msgstr "匯入聯絡人"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:107
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:118
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:114
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:125
 msgid "Import Contacts"
-msgstr ""
+msgstr "匯入聯絡人"
 
 #: src/components/contacts/FindContactsBannerNUX.tsx:32
 #: src/components/contacts/FindContactsBannerNUX.tsx:70
 msgid "Import contacts to find your friends"
-msgstr ""
+msgstr "匯入聯絡人去尋找你嘅朋友"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:192
+#: src/ageAssurance/components/NoAccessScreen.tsx:205
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
-msgstr ""
+msgstr "爲咗提供適合你年齡嘅內容體驗，我哋需要知道你嘅出世日期。只需提供一次，相關資料會絕對保密。"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:284
 msgid "In-app"
@@ -4923,9 +4927,9 @@ msgstr "互動設定"
 msgid "Introducing activity notifications"
 msgstr "同你介紹動態通知"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:48
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
-msgstr ""
+msgstr "同你介紹透過聯絡人尋找朋友"
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:37
 msgid "Introducing saved posts AKA bookmarks"
@@ -4948,7 +4952,7 @@ msgstr "無效嘅互動設定。"
 #: src/components/contacts/phone-number.ts:33
 #: src/components/contacts/screens/PhoneInput.tsx:139
 msgid "Invalid phone number"
-msgstr ""
+msgstr "無效嘅電話號碼"
 
 #: src/components/moderation/ReportDialog/index.tsx:81
 msgid "Invalid report subject"
@@ -4958,13 +4962,13 @@ msgstr "無效嘅擧報內容"
 msgid "Invalid Verification Code"
 msgstr "無效嘅驗證碼"
 
-#: src/components/contacts/screens/ViewMatches.tsx:585
+#: src/components/contacts/screens/ViewMatches.tsx:583
 msgid "Invite"
-msgstr ""
+msgstr "邀請"
 
-#: src/components/contacts/screens/ViewMatches.tsx:565
+#: src/components/contacts/screens/ViewMatches.tsx:563
 msgid "Invite {name} to join Bluesky"
-msgstr ""
+msgstr "邀請 {name} 加入 Bluesky"
 
 #: src/screens/Signup/StepInfo/index.tsx:166
 msgid "Invite code"
@@ -4977,11 +4981,11 @@ msgstr "邀請碼無效。請檢查你輸入嘅驗證碼啱定唔啱，跟住試
 #: src/components/contacts/components/InviteInfo.tsx:41
 #: src/components/contacts/components/InviteInfo.tsx:43
 msgid "Invite Friends"
-msgstr ""
+msgstr "邀請朋友"
 
-#: src/components/contacts/screens/ViewMatches.tsx:300
+#: src/components/contacts/screens/ViewMatches.tsx:298
 msgid "Invite friends <0/>"
-msgstr ""
+msgstr "邀請朋友 <0/>"
 
 #: src/components/StarterPack/ShareDialog.tsx:81
 msgid "Invite people to this starter pack!"
@@ -4995,14 +4999,14 @@ msgstr "邀請你嘅朋友去跟返你最鍾意嘅動態源同用戶"
 msgid "Invites, but personal"
 msgstr "邀請朋友加入，同時保持個人化"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:353
+#: src/ageAssurance/components/NoAccessScreen.tsx:368
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "你嘅位置資訊唔啱？<0>撳呢度重新確認你嘅位置。</0>"
 
 #: src/components/contacts/components/InviteInfo.tsx:46
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
-msgstr ""
+msgstr "睇落你有啲聯絡人未喺度試過搵你。你可以執執我哋準備嘅草稿去傳送邀請佢哋。"
 
 #: src/screens/Signup/StepInfo/index.tsx:292
 msgid "It's correct"
@@ -5083,8 +5087,8 @@ msgid "Language Settings"
 msgstr "語言設定"
 
 #: src/screens/Settings/LanguageSettings.tsx:78
-#: src/screens/Settings/Settings.tsx:242
-#: src/screens/Settings/Settings.tsx:245
+#: src/screens/Settings/Settings.tsx:246
+#: src/screens/Settings/Settings.tsx:249
 msgid "Languages"
 msgstr "語言"
 
@@ -5092,12 +5096,12 @@ msgstr "語言"
 msgid "Larger"
 msgstr "大啲"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:336
+#: src/ageAssurance/components/NoAccessScreen.tsx:351
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated {timeAgo} ago"
 msgstr "最後一次請求喺 {timeAgo} 前"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:334
+#: src/ageAssurance/components/NoAccessScreen.tsx:349
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
 msgid "Last initiated just now"
 msgstr "最後一次請求喺冇幾耐前"
@@ -5132,14 +5136,14 @@ msgstr "想知多啲 Bluesky"
 
 #: src/components/contacts/components/InviteInfo.tsx:32
 msgid "Learn more about how inviting friends works"
-msgstr ""
+msgstr "想知多啲邀請朋友功能"
 
 #: src/components/contacts/screens/PhoneInput.tsx:300
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:45
 #: src/screens/Settings/FindContactsSettings.tsx:130
 msgctxt "english-only-resource"
 msgid "Learn more about importing contacts"
-msgstr ""
+msgstr "想知多啲匯入聯絡人功能"
 
 #: src/components/dialogs/ServerInput.tsx:223
 msgid "Learn more about self hosting your PDS."
@@ -5633,8 +5637,8 @@ msgstr "誤導"
 
 #: src/Navigation.tsx:179
 #: src/screens/Moderation/index.tsx:99
-#: src/screens/Settings/Settings.tsx:192
-#: src/screens/Settings/Settings.tsx:195
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Moderation"
 msgstr "內容審覈"
 
@@ -5979,8 +5983,8 @@ msgstr "最新回覆行先"
 msgid "News"
 msgstr "新聞"
 
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:409
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:407
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:346
@@ -6011,13 +6015,13 @@ msgstr "冇廣告，冇侵入式追踪，當然亦冇成癮性設計。 Bluesky 
 msgid "No app passwords yet"
 msgstr "仲未有 App 專用密碼"
 
-#: src/components/contacts/screens/ViewMatches.tsx:679
+#: src/components/contacts/screens/ViewMatches.tsx:677
 msgid "No contacts found"
-msgstr ""
+msgstr "搵唔到聯絡人"
 
-#: src/components/contacts/screens/ViewMatches.tsx:657
+#: src/components/contacts/screens/ViewMatches.tsx:655
 msgid "No contacts with the name “{query}” found"
-msgstr ""
+msgstr "搵唔度個名包含「{query}」嘅聯絡人"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:408
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:410
@@ -6068,9 +6072,9 @@ msgstr "仲未有訊息"
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr "告別無謂杞人憂天嘅垃圾資訊演算法，搵啲益你而非害你嘅動態源。"
 
-#: src/components/contacts/screens/ViewMatches.tsx:561
+#: src/components/contacts/screens/ViewMatches.tsx:559
 msgid "No name"
-msgstr ""
+msgstr "冇名"
 
 #: src/view/com/notifications/NotificationFeed.tsx:125
 msgid "No notifications yet!"
@@ -6189,7 +6193,7 @@ msgstr "冇"
 #: src/screens/FindContactsFlowScreen.tsx:70
 #: src/screens/Settings/FindContactsSettings.tsx:101
 msgid "Not available on this platform."
-msgstr ""
+msgstr "此功能喺呢個平臺用唔到。"
 
 #: src/components/KnownFollowers.tsx:259
 msgid "Not followed by anyone you're following"
@@ -6249,8 +6253,8 @@ msgstr "通知音效"
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:200
-#: src/screens/Settings/Settings.tsx:203
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:205
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:709
@@ -6277,7 +6281,7 @@ msgstr "裸體"
 
 #: src/components/contacts/phone-number.ts:43
 msgid "Number should be a mobile number"
-msgstr ""
+msgstr "必須使用電話號碼"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:14
 #: src/screens/Settings/NotificationSettings/index.tsx:291
@@ -6315,7 +6319,7 @@ msgstr "最舊回覆行先"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "喺<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:402
+#: src/screens/Settings/Settings.tsx:406
 msgid "Onboarding reset"
 msgstr "重新開始引導流程"
 
@@ -6417,7 +6421,7 @@ msgstr "打開去 {niceUrl} 嘅連結"
 msgid "Open message options"
 msgstr "打開訊息選項"
 
-#: src/screens/Settings/Settings.tsx:467
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open moderation debug page"
 msgstr "開啓內容審覈偵錯頁面"
 
@@ -6446,12 +6450,12 @@ msgstr "打開分享選單"
 msgid "Open starter pack menu"
 msgstr "打開新手包選單"
 
-#: src/screens/Settings/Settings.tsx:460
-#: src/screens/Settings/Settings.tsx:474
+#: src/screens/Settings/Settings.tsx:464
+#: src/screens/Settings/Settings.tsx:478
 msgid "Open storybook page"
 msgstr "打開故仔書頁面"
 
-#: src/screens/Settings/Settings.tsx:453
+#: src/screens/Settings/Settings.tsx:457
 msgid "Open system log"
 msgstr "打開系統日誌"
 
@@ -6514,7 +6518,7 @@ msgstr "打開流程去登入你現有嘅 Bluesky 帳號"
 msgid "Opens GIF select dialog"
 msgstr "打開揀選 GIF 對話框"
 
-#: src/screens/Settings/Settings.tsx:251
+#: src/screens/Settings/Settings.tsx:255
 msgid "Opens helpdesk in browser"
 msgstr "喺瀏覽器度打開說明中心"
 
@@ -6708,7 +6712,7 @@ msgstr "切換用戶"
 
 #: src/components/contacts/components/InviteInfo.tsx:59
 msgid "Personalize the message"
-msgstr ""
+msgstr "自訂訊息"
 
 #: src/lib/interests.ts:68
 msgid "Pets"
@@ -6717,11 +6721,11 @@ msgstr "寵物"
 #: src/components/contacts/screens/PhoneInput.tsx:189
 #: src/components/contacts/screens/PhoneInput.tsx:201
 msgid "Phone number"
-msgstr ""
+msgstr "電話號碼"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:301
 msgid "Phone number verified"
-msgstr ""
+msgstr "電話號碼經已驗證"
 
 #: src/lib/interests.ts:69
 msgid "Photography"
@@ -6942,7 +6946,7 @@ msgstr "請用 @{0} 身份登入"
 #: src/screens/FindContactsFlowScreen.tsx:71
 #: src/screens/Settings/FindContactsSettings.tsx:102
 msgid "Please use the native app to sync your contacts."
-msgstr ""
+msgstr "請使用應用程式去同步你嘅聯絡人。"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:62
 msgid "Please verify your email"
@@ -7087,7 +7091,7 @@ msgstr "潛在誤導性連結警告"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:291
 msgid "Preferred language"
-msgstr ""
+msgstr "偏好語言"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -7110,7 +7114,7 @@ msgstr "上一張圖片"
 
 #: src/screens/Settings/LanguageSettings.tsx:137
 msgid "Primary language"
-msgstr ""
+msgstr "慣用語言"
 
 #: src/screens/Settings/LanguageSettings.tsx:121
 msgid "Primary Language"
@@ -7121,8 +7125,8 @@ msgstr "慣用語言"
 msgid "Privacy"
 msgstr "私隱"
 
-#: src/screens/Settings/Settings.tsx:186
-#: src/screens/Settings/Settings.tsx:189
+#: src/screens/Settings/Settings.tsx:188
+#: src/screens/Settings/Settings.tsx:191
 msgid "Privacy and security"
 msgstr "私隱同保安"
 
@@ -7282,7 +7286,7 @@ msgstr "超過咗速率限制——你喺短時間內改過帳號代碼太多，
 
 #: src/components/contacts/screens/PhoneInput.tsx:106
 msgid "Rate limit exceeded. Please try again later."
-msgstr ""
+msgstr "超出速率限制，唔該陣間試多次。"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
@@ -7400,7 +7404,7 @@ msgstr "撈多次對話"
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:105
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:112
 #: src/screens/Bookmarks/index.tsx:266
-#: src/screens/Settings/Settings.tsx:678
+#: src/screens/Settings/Settings.tsx:682
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:220
 msgid "Remove"
@@ -7414,15 +7418,15 @@ msgstr "喺新手包度刪除 {displayName}"
 msgid "Remove {historyItem}"
 msgstr "刪除 {historyItem}"
 
-#: src/screens/Settings/Settings.tsx:657
-#: src/screens/Settings/Settings.tsx:660
+#: src/screens/Settings/Settings.tsx:661
+#: src/screens/Settings/Settings.tsx:664
 msgid "Remove account"
 msgstr "移除帳號"
 
 #: src/screens/Settings/FindContactsSettings.tsx:548
 #: src/screens/Settings/FindContactsSettings.tsx:556
 msgid "Remove all contacts"
-msgstr ""
+msgstr "刪除所有聯絡人"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:19
 msgid "Remove attachment"
@@ -7460,7 +7464,7 @@ msgstr "係咪要刪除動態源？"
 msgid "Remove from my feeds"
 msgstr "喺我嘅動態源度刪除"
 
-#: src/screens/Settings/Settings.tsx:670
+#: src/screens/Settings/Settings.tsx:674
 msgid "Remove from quick access?"
 msgstr "係咪要喺快速存取中刪除？"
 
@@ -7504,10 +7508,10 @@ msgstr "刪除轉發"
 msgid "Remove subtitle file"
 msgstr "移除字幕檔案"
 
-#: src/components/contacts/screens/ViewMatches.tsx:499
+#: src/components/contacts/screens/ViewMatches.tsx:497
 #: src/screens/Settings/FindContactsSettings.tsx:323
 msgid "Remove suggestion"
-msgstr ""
+msgstr "刪除建議"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:218
 msgid "Remove this feed from your saved feeds"
@@ -7816,11 +7820,11 @@ msgstr "重新傳送"
 #: src/components/contacts/screens/VerifyNumber.tsx:362
 #: src/components/contacts/screens/VerifyNumber.tsx:379
 msgid "Resend code"
-msgstr ""
+msgstr "重新傳送代碼"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:369
 msgid "Resend code in <0>00:{0}</0>"
-msgstr ""
+msgstr "<0>00:{0}</0> 後重新傳送代碼"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
@@ -7835,8 +7839,8 @@ msgstr "重新傳送電郵"
 msgid "Resend Verification Email"
 msgstr "重新傳送驗證郵件"
 
-#: src/screens/Settings/Settings.tsx:496
-#: src/screens/Settings/Settings.tsx:498
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Reset activity subscription nudge"
 msgstr "重設動態訂閱通知提示"
 
@@ -7844,8 +7848,8 @@ msgstr "重設動態訂閱通知提示"
 msgid "Reset code"
 msgstr "重設驗證碼"
 
-#: src/screens/Settings/Settings.tsx:481
-#: src/screens/Settings/Settings.tsx:483
+#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:487
 msgid "Reset onboarding state"
 msgstr "去返引導流程重設個人檔案"
 
@@ -7856,7 +7860,7 @@ msgstr "重設密碼"
 #: src/screens/Settings/FindContactsSettings.tsx:516
 #: src/screens/Settings/FindContactsSettings.tsx:532
 msgid "Resync contacts"
-msgstr ""
+msgstr "重新同步聯絡人"
 
 #: src/screens/Login/LoginForm.tsx:327
 msgid "Retries signing in"
@@ -8047,9 +8051,9 @@ msgstr "搵 @{0} 嘅帖文"
 msgid "Search by name or interest"
 msgstr "用名稱或興趣去搵"
 
-#: src/components/contacts/screens/ViewMatches.tsx:355
+#: src/components/contacts/screens/ViewMatches.tsx:353
 msgid "Search contacts"
-msgstr ""
+msgstr "搵聯絡人"
 
 #: src/view/screens/Feeds.tsx:444
 msgid "Search feeds"
@@ -8286,9 +8290,9 @@ msgstr "揀選慣用語言"
 msgid "Select subtitle file (.vtt)"
 msgstr "揀份字幕檔案（.vtt）"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:67
+#: src/components/InternationalPhoneCodeSelect.tsx:68
 msgid "Select telephone code"
-msgstr ""
+msgstr "揀選國家代碼"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
@@ -8342,7 +8346,7 @@ msgstr "傳送個趣緻嘅網站！"
 #: src/components/contacts/screens/PhoneInput.tsx:252
 #: src/components/contacts/screens/PhoneInput.tsx:257
 msgid "Send code"
-msgstr ""
+msgstr "傳送代碼"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:181
@@ -8379,7 +8383,7 @@ msgstr "將擧報提交到 {title}"
 
 #: src/components/contacts/components/InviteInfo.tsx:62
 msgid "Send the message from your phone"
-msgstr ""
+msgstr "從你嘅電話傳送呢條訊息"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:295
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
@@ -8400,7 +8404,7 @@ msgstr "傳送包含刪除帳號確認碼嘅電郵"
 
 #: src/components/contacts/screens/PhoneInput.tsx:280
 msgid "Sent to our phone number verification provider Plivo"
-msgstr ""
+msgstr "傳送到我哋嘅電話號碼驗證提供者 Plivo"
 
 #: src/components/dialogs/ServerInput.tsx:177
 msgid "Server address"
@@ -8426,16 +8430,16 @@ msgstr "設定你嘅帳號"
 msgid "Set who can reply to your post"
 msgstr "設定邊個可以回覆你嘅帖文"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:199
+#: src/ageAssurance/components/NoAccessScreen.tsx:212
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
-msgstr ""
+msgstr "喺下低設定好出世日期，我哋即刻畀你繼續出 Post 同探索㗎喇！"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
 msgstr "設定電郵嚟重設密碼"
 
 #: src/Navigation.tsx:215
-#: src/screens/Settings/Settings.tsx:103
+#: src/screens/Settings/Settings.tsx:105
 #: src/view/shell/desktop/LeftNav.tsx:805
 #: src/view/shell/Drawer.tsx:609
 msgid "Settings"
@@ -8573,7 +8577,7 @@ msgstr "分享到……"
 
 #: src/components/contacts/screens/GetContacts.tsx:229
 msgid "Share your contacts to find friends"
-msgstr ""
+msgstr "分享你嘅聯絡人去尋找朋友"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -8685,7 +8689,7 @@ msgstr "顯示警告兼且喺動態源度篩選"
 msgid "Shows information about when this post was created"
 msgstr "顯示關於呢條帖文嘅建立時間資訊"
 
-#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:131
 msgid "Shows other accounts you can switch to"
 msgstr "顯示其他你切換得到嘅帳號"
 
@@ -8746,9 +8750,9 @@ msgstr "登入 Bluesky 或整個新帳號"
 msgid "Sign in to view post"
 msgstr "登入以檢視帖文"
 
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:270
-#: src/screens/Settings/Settings.tsx:302
+#: src/screens/Settings/Settings.tsx:272
+#: src/screens/Settings/Settings.tsx:274
+#: src/screens/Settings/Settings.tsx:306
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:93
@@ -8762,7 +8766,7 @@ msgstr "登出"
 msgid "Sign Out"
 msgstr "登出"
 
-#: src/screens/Settings/Settings.tsx:299
+#: src/screens/Settings/Settings.tsx:303
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Sign out?"
 msgstr "係咪要登出？"
@@ -8796,7 +8800,7 @@ msgstr "跳過"
 #: src/components/contacts/screens/PhoneInput.tsx:157
 #: src/components/contacts/screens/VerifyNumber.tsx:199
 msgid "Skip contact sharing and continue to the app"
-msgstr ""
+msgstr "跳過分享聯絡人兼繼續使用呢隻 App"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:287
 #: src/screens/Onboarding/StepFinished/index.tsx:313
@@ -8988,16 +8992,16 @@ msgstr "狀態頁面"
 msgid "Step {0} of {1}"
 msgstr "第 {0} 步（共 {1} 步）"
 
-#: src/screens/Settings/Settings.tsx:407
+#: src/screens/Settings/Settings.tsx:411
 msgid "Storage cleared, you need to restart the app now."
 msgstr "儲存資料經已剷走，你而家需要重啓隻 App 令佢即刻生效。"
 
 #: src/components/contacts/screens/PhoneInput.tsx:291
 msgid "Stored as part of a secure code for matching with others"
-msgstr ""
+msgstr "儲存為安全代碼嘅一部分，去匹配其他人"
 
 #: src/Navigation.tsx:308
-#: src/screens/Settings/Settings.tsx:462
+#: src/screens/Settings/Settings.tsx:466
 msgid "Storybook"
 msgstr "故仔書"
 
@@ -9095,11 +9099,11 @@ msgstr "支援"
 
 #: src/components/contacts/screens/PhoneInput.tsx:233
 msgid "Support for this feature in your country has not been enabled yet! Please check back later."
-msgstr ""
+msgstr "您所在國家而家未支援呢個功能！唔該遲啲過嚟睇睇。"
 
-#: src/screens/Settings/Settings.tsx:127
-#: src/screens/Settings/Settings.tsx:141
-#: src/screens/Settings/Settings.tsx:620
+#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:624
 #: src/view/shell/desktop/LeftNav.tsx:247
 msgid "Switch account"
 msgstr "切換帳號"
@@ -9127,7 +9131,7 @@ msgstr "系統"
 #: src/screens/Log.tsx:58
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:455
+#: src/screens/Settings/Settings.tsx:459
 msgid "System log"
 msgstr "系統日誌"
 
@@ -9227,7 +9231,7 @@ msgstr "多謝你嘅意見！意見經已轉達畀相關動態源維護者。"
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "多謝，你經已成功驗證你嘅電郵地址。而家你可以閂咗呢個對話框。"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:382
+#: src/ageAssurance/components/NoAccessScreen.tsx:397
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
 msgid "Thanks! You're all set."
 msgstr "唔該晒！攪掂喇。"
@@ -9363,7 +9367,7 @@ msgstr "你提供嘅驗證碼無效。請確保你用咗正確嘅驗證連結，
 #: src/components/contacts/screens/VerifyNumber.tsx:110
 #: src/components/contacts/screens/VerifyNumber.tsx:162
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
-msgstr ""
+msgstr "驗證服務提供者傳送唔到代碼去你嘅電話號碼度。請檢查您的電話號碼跟住試多次。"
 
 #: src/screens/Settings/AppearanceSettings.tsx:139
 msgid "Theme"
@@ -9379,7 +9383,7 @@ msgstr "帳號停用冇時間限制，幾時用返你話事。"
 
 #: src/components/contacts/screens/GetContacts.tsx:144
 msgid "There was a problem with your internet connection, please try again"
-msgstr ""
+msgstr "你嘅網絡連線出咗問題，唔該試多次"
 
 #: src/components/dialogs/GifSelect.tsx:214
 msgid "There was an issue connecting to Tenor."
@@ -9520,7 +9524,7 @@ msgstr "傾偈經已中斷連線"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:103
 msgid "This code is invalid. Resend to get a new code."
-msgstr ""
+msgstr "呢個代碼無效，重新傳送去取得新嘅代碼。"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:144
 msgid "This confirmation code is not valid. Please try again."
@@ -9723,7 +9727,7 @@ msgstr "呢個用戶未有跟過任何人。"
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "噉做會喺你要靜音嘅字詞度刪咗「{0}」去，你鍾意嘅話幾時加返佢都得。"
 
-#: src/screens/Settings/Settings.tsx:672
+#: src/screens/Settings/Settings.tsx:676
 msgid "This will remove @{0} from the quick access list."
 msgstr "噉樣會喺快速存取清單度移除 @{0}。"
 
@@ -9771,7 +9775,7 @@ msgstr "若然停用電郵雙重驗證，請驗證你嘅電郵地址。"
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "要停用電郵雙重驗證，請驗證你電郵地址 <0>{0}</0>"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:230
+#: src/ageAssurance/components/NoAccessScreen.tsx:245
 msgid "To log out, <0>click here</0>."
 msgstr "<0>撳呢度</0>登出。"
 
@@ -9793,15 +9797,15 @@ msgstr "切換聲音"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:120
 msgid "Too many attempts. Please wait a few minutes and try again."
-msgstr ""
+msgstr "重試次數過多，唔該等幾分鐘後試多次。"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:173
 msgid "Too many codes sent. Please wait a few minutes and try again."
-msgstr ""
+msgstr "傳送代碼次數過多，唔該等幾分鐘後試多次。"
 
 #: src/components/contacts/screens/GetContacts.tsx:153
 msgid "Too many contacts - you've exceeded the number of contacts you can import to find your friends"
-msgstr ""
+msgstr "聯絡人過多 - 你匯入嘅聯絡人數量經已超過尋找朋友上限"
 
 #: src/screens/Hashtag.tsx:91
 #: src/screens/Search/SearchResults.tsx:52
@@ -9902,11 +9906,11 @@ msgstr "連線唔到服務，請檢查你嘅互聯網連線。"
 msgid "Unable to delete"
 msgstr "刪唔到"
 
-#: src/screens/Settings/Settings.tsx:521
+#: src/screens/Settings/Settings.tsx:525
 msgid "Unapply Pull Request"
 msgstr "唔再套用 Pull Request"
 
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:527
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "唔再套用 Pull Request {currentChannel}"
 
@@ -9986,7 +9990,7 @@ msgstr "唔再跟呢位用戶"
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "唔好意思，你訂閱嘅標記服務冇一個係支援呢個擧報類型。"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:176
+#: src/ageAssurance/components/NoAccessScreen.tsx:187
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr "唔好意思，事緣你個人檔案嘅出世日期顯示你年紀太細，暫時用唔到 Bluesky 住。"
 
@@ -10094,8 +10098,8 @@ msgstr "經已唔再固定喺你嘅動態源度"
 msgid "Unpinned list"
 msgstr "經已唔再固定清單"
 
-#: src/screens/Settings/Settings.tsx:488
-#: src/screens/Settings/Settings.tsx:490
+#: src/screens/Settings/Settings.tsx:492
+#: src/screens/Settings/Settings.tsx:494
 msgid "Unsnooze email reminder"
 msgstr "唔再暫停電郵提醒"
 
@@ -10188,7 +10192,7 @@ msgstr "喺相片圖庫度上載"
 
 #: src/screens/Settings/FindContactsSettings.tsx:507
 msgid "Uploaded on {0}"
-msgstr ""
+msgstr "更新於 {0}"
 
 #: src/lib/api/index.ts:302
 msgid "Uploading images..."
@@ -10347,7 +10351,7 @@ msgstr "驗證者："
 msgid "Verify account"
 msgstr "驗證帳號"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:319
+#: src/ageAssurance/components/NoAccessScreen.tsx:334
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
 msgid "Verify again"
 msgstr "重新驗證"
@@ -10374,8 +10378,8 @@ msgstr "驗證電郵碼"
 msgid "Verify email dialog"
 msgstr "驗證電郵對話框"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:307
-#: src/ageAssurance/components/NoAccessScreen.tsx:321
+#: src/ageAssurance/components/NoAccessScreen.tsx:322
+#: src/ageAssurance/components/NoAccessScreen.tsx:336
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify now"
@@ -10384,7 +10388,7 @@ msgstr "即刻驗證"
 #: src/components/contacts/screens/PhoneInput.tsx:172
 #: src/components/contacts/screens/VerifyNumber.tsx:214
 msgid "Verify phone number"
-msgstr ""
+msgstr "驗證電話號碼"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:545
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:567
@@ -10417,7 +10421,7 @@ msgstr "確認緊你嘅年齡驗證狀態"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:304
 msgid "Verifying..."
-msgstr ""
+msgstr "驗證緊……"
 
 #: src/screens/Settings/AboutSettings.tsx:126
 #: src/screens/Settings/AboutSettings.tsx:155
@@ -10644,7 +10648,7 @@ msgstr "即刻去睇"
 
 #: src/components/contacts/screens/GetContacts.tsx:250
 msgid "We apply the highest privacy standards, and never share or sell your contact information."
-msgstr ""
+msgstr "我們秉持最高私隱標準，絕不分享或出售你的聯絡資訊。"
 
 #: src/view/com/feeds/MissingFeed.tsx:140
 msgid "We could not connect to the service that provides this custom feed. It may be temporarily unavailable and experiencing issues, or permanently unavailable."
@@ -10668,11 +10672,11 @@ msgstr "我哋撈唔到呢個對話"
 
 #: src/components/contacts/screens/GetContacts.tsx:241
 msgid "We delete hashes after matches are made"
-msgstr ""
+msgstr "我哋會喺確認聯絡人後刪除雜湊值"
 
 #: src/components/contacts/components/InviteInfo.tsx:66
 msgid "We don't store your friends' phone numbers or send any messages"
-msgstr ""
+msgstr "我哋唔會儲存你朋友嘅電話號碼或傳送任何訊息"
 
 #: src/screens/SignupQueued.tsx:160
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -10680,7 +10684,7 @@ msgstr "我哋估計仲要 {estimatedTime} 先至可以攪掂你個帳號。"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:196
 msgid "We have partnered with <0>KWS</0> to handle age verification. When you click \"Begin\" below, KWS will email you instructions to complete the verification process. If your email address has already been used to verify your age for another game or service that uses KWS, you won’t need to do it again. When you’re done, you'll be brought back to continue using Bluesky."
-msgstr ""
+msgstr "我哋同 <0>KWS</0> 合作處理年齡驗證。當你撳下低「開始」後，KWS 就會傳送電郵畀你，話你知點樣做驗證。若然你個電郵之前已經喺其他用 KWS 嘅遊戲或者服務度驗證過年齡，就唔使再做多次。攪掂之後，就會帶你返嚟去繼續用 Bluesky。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:101
 msgid "We have sent another verification email to <0>{0}</0>."
@@ -10688,15 +10692,15 @@ msgstr "我哋傳送咗另一封驗證電郵去到 <0>{0}</0> 度。"
 
 #: src/components/contacts/screens/PhoneInput.tsx:181
 msgid "We need to verify your number before we can look for your friends. A verification code will be sent to this number."
-msgstr ""
+msgstr "喺開始尋找你嘅朋友之前我哋需要驗證你嘅號碼，驗證代碼將傳送到呢個號碼。"
 
 #: src/components/contacts/screens/GetContacts.tsx:238
 msgid "We never keep plain phone numbers"
-msgstr ""
+msgstr "我哋永遠唔會用明文儲存你嘅電話號碼"
 
 #: src/components/contacts/screens/GetContacts.tsx:244
 msgid "We only suggest follows if both people consent"
-msgstr ""
+msgstr "我哋只會喺雙方皆同意嘅情況下顯示跟隨建議"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -10733,7 +10737,7 @@ msgstr "我哋會喺攪掂你嘅帳號嗰陣通知你。"
 
 #: src/screens/Settings/FindContactsSettings.tsx:503
 msgid "We will notify you when we find your friends."
-msgstr ""
+msgstr "我哋會喺搵到你朋友嗰陣通知你。"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:249
 msgid "We'll send an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
@@ -10773,7 +10777,7 @@ msgstr "同你介紹 Bluesky 嘅全新驗證機制 —— 驗證標記。"
 msgid "We're so excited to have you join us!"
 msgstr "我哋好高興你可以加入 Bluesky！"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:375
+#: src/ageAssurance/components/NoAccessScreen.tsx:390
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "對唔住，根據你裝置嘅位置資訊，你而家身處嘅地區需要完成年齡驗證。"
@@ -10981,7 +10985,7 @@ msgstr "尋日"
 msgid "You are a trusted verifier"
 msgstr "你係受信任嘅認證者"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:161
+#: src/ageAssurance/components/NoAccessScreen.tsx:170
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr "你身處嘅地區法例要求我哋允許你使用 Bluesky 之前需要驗證你嘅年齡。"
 
@@ -10989,7 +10993,7 @@ msgstr "你身處嘅地區法例要求我哋允許你使用 Bluesky 之前需要
 msgid "You are creating an account on"
 msgstr "你嘅帳號將建立於"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:289
+#: src/ageAssurance/components/NoAccessScreen.tsx:304
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "你而家取用唔到 Bluesky 嘅年齡驗證流程。若然你覺得係系統誤判，請<0>聯絡我哋嘅支援團隊</0>。"
@@ -11050,7 +11054,7 @@ msgstr "你亦都可以暫時停用你嘅帳號，重新啓用嘅話幾時都得
 
 #: src/components/contacts/screens/GetContacts.tsx:247
 msgid "You can always opt out and delete your data"
-msgstr ""
+msgstr "你可以隨時選擇退出兼且刪除你嘅資料"
 
 #: src/lib/hooks/useNotificationHandler.ts:101
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
@@ -11100,7 +11104,7 @@ msgstr "你可以遲啲喺設定度改返。"
 #: src/lib/hooks/useCleanError.ts:55
 #: src/lib/strings/errors.ts:28
 msgid "You cannot update your birthdate while using an app password. Please sign in with your main password to update your birthdate."
-msgstr ""
+msgstr "用緊 App 專用密碼嗰陣，係改唔到出世日期嘅。請用主密碼登入再去變更你嘅出世日期。"
 
 #: src/screens/Profile/KnownFollowers.tsx:112
 msgid "You don't follow any users who follow @{name}."
@@ -11122,9 +11126,9 @@ msgstr "你仲未有任何固定咗嘅動態源。"
 msgid "You don't have any saved feeds."
 msgstr "你仲未有任何儲存咗嘅動態源。"
 
-#: src/components/contacts/screens/ViewMatches.tsx:311
+#: src/components/contacts/screens/ViewMatches.tsx:309
 msgid "You got here first"
-msgstr ""
+msgstr "你係第一個抵達呢度嘅人"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 msgid "You have blocked this user"
@@ -11277,7 +11281,7 @@ msgstr "你需要驗證你個電郵地址先至啓用到電郵雙重驗證。"
 msgid "You previously deactivated @{0}."
 msgstr "你之前停用咗 @{0}。"
 
-#: src/screens/Settings/Settings.tsx:418
+#: src/screens/Settings/Settings.tsx:422
 msgid "You probably want to restart the app now."
 msgstr "你家陣可能要重新啓用個 App。"
 
@@ -11294,7 +11298,7 @@ msgstr "你向 {1} 畀咗個 {0} 反應"
 msgid "You recently changed your birthdate"
 msgstr "你近排變更咗出世日期"
 
-#: src/screens/Settings/Settings.tsx:300
+#: src/screens/Settings/Settings.tsx:304
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "You will be signed out of all your accounts."
 msgstr "你將會登出所有帳號。"
@@ -11345,7 +11349,7 @@ msgstr "你會即刻跟住呢啲人"
 
 #: src/components/contacts/screens/GetContacts.tsx:311
 msgid "You'll need to go to the System Settings for Bluesky and give permission if you want to use this feature."
-msgstr ""
+msgstr "若然你想使用呢個功能，請去到系統設定兼授予 Bluesky 相關權限。"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
 msgid "You'll start receiving notifications for {0}!"
@@ -11375,7 +11379,7 @@ msgstr "你揀咗喺呢條帖文度隱藏字詞或標籤。"
 
 #: src/components/contacts/screens/GetContacts.tsx:310
 msgid "You've denied access to your contacts"
-msgstr ""
+msgstr "你揀咗拒絕取用聯絡人"
 
 #: src/state/shell/progress-guide.tsx:236
 msgid "You've found some people to follow"
@@ -11455,15 +11459,15 @@ msgstr "系統會記住你嘅選擇，之後開啓連結嗰陣會用返佢。你
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:374
 msgid "Your contact {firstAuthorLink} is on Bluesky"
-msgstr ""
+msgstr "你嘅聯絡人 {firstAuthorLink} 加入咗 Bluesky"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:372
 msgid "Your contact {firstAuthorName} is on Bluesky"
-msgstr ""
+msgstr "你嘅聯絡人 {firstAuthorName} 加入咗 Bluesky"
 
-#: src/components/contacts/screens/ViewMatches.tsx:453
+#: src/components/contacts/screens/ViewMatches.tsx:451
 msgid "Your contact {name}"
-msgstr ""
+msgstr "你嘅聯絡人 {name}"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:529
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."

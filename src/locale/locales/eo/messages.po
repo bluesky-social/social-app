@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-13 19:06\n"
+"PO-Revision-Date: 2025-12-15 20:45\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -43,7 +43,7 @@ msgstr "{0, plural, one {# sekvanto} other {# sekvantoj}}"
 msgid "{0, plural, one {# following} other {# following}}"
 msgstr "{0, plural, one {# sekvata} other {# sekvataj}}"
 
-#: src/components/contacts/screens/ViewMatches.tsx:267
+#: src/components/contacts/screens/ViewMatches.tsx:265
 msgid "{0, plural, one {# friend found!} other {# friends found!}}"
 msgstr "{0, plural, one {# amiko trovita!} other {# amikoj trovitaj!}}"
 
@@ -581,8 +581,8 @@ msgstr "Ekrankopio montranta paĝon kun sonorila piktogramo apud la sekvi-butono
 
 #: src/Navigation.tsx:534
 #: src/screens/Settings/AboutSettings.tsx:75
-#: src/screens/Settings/Settings.tsx:258
-#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:262
+#: src/screens/Settings/Settings.tsx:265
 msgid "About"
 msgstr "Pri"
 
@@ -609,8 +609,8 @@ msgid "Accept this language suggestion"
 msgstr "Akcepti tiun sugeston de lingvo"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:44
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Accessibility"
 msgstr "Alirebleco"
 
@@ -621,8 +621,8 @@ msgstr "Alireblecaj agordoj"
 #: src/Navigation.tsx:401
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:51
-#: src/screens/Settings/Settings.tsx:178
-#: src/screens/Settings/Settings.tsx:181
+#: src/screens/Settings/Settings.tsx:180
+#: src/screens/Settings/Settings.tsx:183
 msgid "Account"
 msgstr "Konto"
 
@@ -653,7 +653,7 @@ msgstr "Konto silentigita"
 msgid "Account Muted by List"
 msgstr "Konto silentigita de listo"
 
-#: src/screens/Settings/Settings.tsx:640
+#: src/screens/Settings/Settings.tsx:644
 msgid "Account options"
 msgstr "Kontaj opcioj"
 
@@ -661,7 +661,7 @@ msgstr "Kontaj opcioj"
 msgid "Account provider"
 msgstr "Konta provizanto"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:680
 msgid "Account removed from quick access"
 msgstr "Konto forigita el la rapidatingo"
 
@@ -746,8 +746,8 @@ msgstr "Aldoni alternativan tekston"
 msgid "Add alt text (optional)"
 msgstr "Aldoni alternativan tekston (nedeviga)"
 
-#: src/screens/Settings/Settings.tsx:580
-#: src/screens/Settings/Settings.tsx:583
+#: src/screens/Settings/Settings.tsx:584
+#: src/screens/Settings/Settings.tsx:587
 #: src/view/shell/desktop/LeftNav.tsx:262
 #: src/view/shell/desktop/LeftNav.tsx:266
 msgid "Add another account"
@@ -849,7 +849,7 @@ msgstr "Aldoni al startpakoj"
 msgid "Add user to list"
 msgstr "Aldoni uzanton al la listo"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:210
+#: src/ageAssurance/components/NoAccessScreen.tsx:223
 msgid "Add your birthdate"
 msgstr "Aldoni vian naskiĝdaton"
 
@@ -919,7 +919,7 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "Informpeto de garantio pri aĝo estis sendita"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:342
+#: src/ageAssurance/components/NoAccessScreen.tsx:357
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Age assurance only takes a few minutes"
 msgstr "Garantio pri aĝo daŭros nur kelkajn minutojn"
@@ -939,7 +939,7 @@ msgstr "Ĉiuj"
 msgid "All accounts have been followed!"
 msgstr "Ĉiuj kontoj estas sekvataj!"
 
-#: src/components/contacts/screens/ViewMatches.tsx:143
+#: src/components/contacts/screens/ViewMatches.tsx:141
 msgid "All friends followed!"
 msgstr "Ĉiuj amikoj sekvataj!"
 
@@ -1075,7 +1075,7 @@ msgstr "Eraro okazis dum ŝargado de la fluo."
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "Eraro okazis dum generado de via startpako. Ĉu vi volas reprovi?"
 
-#: src/components/contacts/screens/ViewMatches.tsx:242
+#: src/components/contacts/screens/ViewMatches.tsx:240
 msgid "An error occurred while hiding suggestion. {0}"
 msgstr ""
 
@@ -1113,7 +1113,7 @@ msgid "An error occurred. {0}"
 msgstr "Eraro okazis. {0}"
 
 #: src/components/contacts/components/HeroImage.tsx:28
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:71
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:78
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
 msgstr ""
 
@@ -1277,8 +1277,8 @@ msgstr "Apelacii pri ĉi tiu decido"
 
 #: src/Navigation.tsx:393
 #: src/screens/Settings/AppearanceSettings.tsx:73
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:230
+#: src/screens/Settings/Settings.tsx:233
 msgid "Appearance"
 msgstr "Aspekto"
 
@@ -1287,8 +1287,8 @@ msgstr "Aspekto"
 msgid "Apply default recommended feeds"
 msgstr "Apliki defaŭltajn rekomenditajn fluojn"
 
-#: src/screens/Settings/Settings.tsx:512
-#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:518
 msgid "Apply Pull Request"
 msgstr "Apliki tirpeton"
 
@@ -1590,11 +1590,11 @@ msgstr "Bluesky pli bonas kun amikoj!"
 msgid "Bluesky is more fun with friends"
 msgstr "Bluesky estas pli feliĉiga kun amikoj"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:99
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:106
 msgid "Bluesky is more fun with friends! Import your contacts to see who’s already here."
 msgstr "Bluesky estas pli feliĉiga kun amikoj! Importu viajn kontaktojn por vidi kiu jam estas ĉi tie."
 
-#: src/components/contacts/screens/ViewMatches.tsx:314
+#: src/components/contacts/screens/ViewMatches.tsx:312
 msgid "Bluesky is more fun with friends. Do you want to invite some of yours? <0/>"
 msgstr "Bluesky estas pli feliĉiga kun amikoj! Ĉu vi volas inviti iujn el viaj? <0/>"
 
@@ -1766,7 +1766,7 @@ msgstr "Fotilo"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:85
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:247
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:253
-#: src/screens/Settings/Settings.tsx:303
+#: src/screens/Settings/Settings.tsx:307
 #: src/screens/Takendown.tsx:107
 #: src/screens/Takendown.tsx:110
 #: src/view/com/composer/Composer.tsx:1050
@@ -2002,11 +2002,11 @@ msgstr "Elektu vian pasvorton"
 msgid "Choose your username"
 msgstr "Elektu vian uzantnomon"
 
-#: src/screens/Settings/Settings.tsx:504
+#: src/screens/Settings/Settings.tsx:508
 msgid "Clear all storage data"
 msgstr "Forigi ĉiujn konservitajn datumojn"
 
-#: src/screens/Settings/Settings.tsx:506
+#: src/screens/Settings/Settings.tsx:510
 msgid "Clear all storage data (restart after this)"
 msgstr "Forigi ĉiujn konservitajn datumojn (restartigu poste)"
 
@@ -2031,7 +2031,7 @@ msgstr "klaku ĉi tie"
 msgid "Click here to contact our support team"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:233
+#: src/ageAssurance/components/NoAccessScreen.tsx:248
 msgid "Click here to log out"
 msgstr "Klaku ĉi tie por elsaluti"
 
@@ -2040,7 +2040,7 @@ msgid "Click here to restart the verification process."
 msgstr "Klaku ĉi tie por restarti la konfimadan procezon."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:97
-#: src/ageAssurance/components/NoAccessScreen.tsx:207
+#: src/ageAssurance/components/NoAccessScreen.tsx:220
 msgid "Click here to update your birthdate"
 msgstr "Klaku ĉi tie por ĝisdatigi vian naskiĝdaton"
 
@@ -2257,7 +2257,7 @@ msgstr "Konfirmi lingvajn agordojn de enhavo"
 msgid "Confirm delete account"
 msgstr "Konfirmu kontan forigon"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:356
+#: src/ageAssurance/components/NoAccessScreen.tsx:371
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
@@ -2284,7 +2284,7 @@ msgstr "Konektado..."
 msgid "Connection issue"
 msgstr "Konekta problemo"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:293
+#: src/ageAssurance/components/NoAccessScreen.tsx:308
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
@@ -2317,8 +2317,8 @@ msgstr "Kontaktoj alŝutitaj"
 msgid "Content & Media"
 msgstr "Enhavo kaj aŭdvidaĵoj"
 
-#: src/screens/Settings/Settings.tsx:208
-#: src/screens/Settings/Settings.tsx:211
+#: src/screens/Settings/Settings.tsx:210
+#: src/screens/Settings/Settings.tsx:213
 msgid "Content and media"
 msgstr "Enhavo kaj aŭdvidaĵoj"
 
@@ -2586,7 +2586,7 @@ msgstr ""
 msgid "Could not upload contacts. You need to re-verify your phone number to proceed"
 msgstr ""
 
-#: src/components/InternationalPhoneCodeSelect.tsx:79
+#: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
 msgstr "Landkodo"
 
@@ -2746,7 +2746,7 @@ msgstr "Naskiĝdato"
 msgid "Deactivate account"
 msgstr "Malaktivigi konton"
 
-#: src/screens/Settings/Settings.tsx:469
+#: src/screens/Settings/Settings.tsx:473
 msgid "Debug Moderation"
 msgstr "Sencimiga kontrolo"
 
@@ -2799,7 +2799,7 @@ msgstr "Ĉu forigi apan pasvorton?"
 msgid "Delete chat"
 msgstr "Forigi babilejon"
 
-#: src/screens/Settings/Settings.tsx:476
+#: src/screens/Settings/Settings.tsx:480
 msgid "Delete chat declaration record"
 msgstr "Forigi babilan deklaro-rikordon"
 
@@ -2912,8 +2912,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "Programista reĝimo ŝaltita"
 
-#: src/screens/Settings/Settings.tsx:285
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:289
+#: src/screens/Settings/Settings.tsx:292
 msgid "Developer options"
 msgstr "Programistaj opcioj"
 
@@ -3073,8 +3073,8 @@ msgstr "Ne maltrankvilu! Ĉiuj ekzistantaj mesaĝoj kaj agordoj estas konservita
 
 #: src/components/contacts/components/InviteInfo.tsx:72
 #: src/components/contacts/components/InviteInfo.tsx:78
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:411
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:409
 #: src/components/dialogs/BirthDateSettings.tsx:183
 #: src/components/dialogs/BirthDateSettings.tsx:190
 #: src/components/dialogs/ServerInput.tsx:240
@@ -3700,15 +3700,15 @@ msgstr "Malsukcesis forigi startpakon"
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "Malsukcesis sekvi ĉiujn proponitajn kontojn, bonvolu reprovi"
 
-#: src/components/contacts/screens/ViewMatches.tsx:147
+#: src/components/contacts/screens/ViewMatches.tsx:145
 msgid "Failed to follow all your friends, please try again"
 msgstr ""
 
-#: src/components/contacts/screens/ViewMatches.tsx:235
+#: src/components/contacts/screens/ViewMatches.tsx:233
 msgid "Failed to hide suggestion, please check your internet connection"
 msgstr ""
 
-#: src/components/contacts/screens/ViewMatches.tsx:580
+#: src/components/contacts/screens/ViewMatches.tsx:578
 msgid "Failed to launch SMS app"
 msgstr ""
 
@@ -3996,8 +3996,8 @@ msgstr "Trovi kontaktojn"
 msgid "Find Friends"
 msgstr "Trovi amikojn"
 
-#: src/screens/Settings/Settings.tsx:217
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Settings/Settings.tsx:221
+#: src/screens/Settings/Settings.tsx:224
 msgid "Find friends from contacts"
 msgstr ""
 
@@ -4018,7 +4018,7 @@ msgstr "Trovi homojn por sekvi"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Trovi afiŝojn, uzantojn kaj fluojn ĉe Bluesky"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:89
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:96
 msgid "Find your friends"
 msgstr "Trovu viajn amikojn"
 
@@ -4093,8 +4093,8 @@ msgstr "Eksekvu 7 kontojn"
 msgid "Follow account"
 msgstr "Sekvi konton"
 
-#: src/components/contacts/screens/ViewMatches.tsx:275
-#: src/components/contacts/screens/ViewMatches.tsx:290
+#: src/components/contacts/screens/ViewMatches.tsx:273
+#: src/components/contacts/screens/ViewMatches.tsx:288
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:265
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
@@ -4209,6 +4209,10 @@ msgstr "Tipara grando"
 #: src/lib/interests.ts:61
 msgid "Food"
 msgstr "Manĝaĵo"
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:125
+msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -4532,8 +4536,8 @@ msgstr "Ĉu vi havas problemon?"
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:250
 #: src/screens/Settings/Settings.tsx:254
+#: src/screens/Settings/Settings.tsx:258
 #: src/view/shell/desktop/RightNav.tsx:123
 #: src/view/shell/desktop/RightNav.tsx:124
 #: src/view/shell/Drawer.tsx:381
@@ -4553,11 +4557,11 @@ msgstr "Jen via apa pasvorto!"
 msgid "Hey there 👋"
 msgstr "Ho, sal 👋"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:158
+#: src/ageAssurance/components/NoAccessScreen.tsx:167
 msgid "Hey there!"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:189
+#: src/ageAssurance/components/NoAccessScreen.tsx:202
 msgid "Hi there!"
 msgstr ""
 
@@ -4657,7 +4661,7 @@ msgstr "Kaŝi konfirmajn ŝildojn"
 msgid "Hides the content"
 msgstr "Kaŝas la enhavon"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:216
+#: src/ageAssurance/components/NoAccessScreen.tsx:229
 msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
 msgstr ""
 
@@ -4750,7 +4754,7 @@ msgstr "Mi havas mian propran domajnon"
 msgid "I understand"
 msgstr "Mi komprenas"
 
-#: src/components/contacts/screens/ViewMatches.tsx:576
+#: src/components/contacts/screens/ViewMatches.tsx:574
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "Mi estas ĉe Bluesky kiel {0} - venu trovi min! https://bsky.app/download"
 
@@ -4840,8 +4844,8 @@ msgstr "Identoprunto"
 msgid "Import contacts"
 msgstr "Importi kontaktojn"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:107
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:118
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:114
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:125
 msgid "Import Contacts"
 msgstr "Importi kontaktojn"
 
@@ -4850,7 +4854,7 @@ msgstr "Importi kontaktojn"
 msgid "Import contacts to find your friends"
 msgstr "Importu kontaktojn por trovi viajn amikojn"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:192
+#: src/ageAssurance/components/NoAccessScreen.tsx:205
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr ""
 
@@ -4923,7 +4927,7 @@ msgstr "Agordoj pri interagado"
 msgid "Introducing activity notifications"
 msgstr "Ni prezentas \"agadaj sciigoj\""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:48
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
 msgstr ""
 
@@ -4958,11 +4962,11 @@ msgstr "Nevalida temlinio de raporto"
 msgid "Invalid Verification Code"
 msgstr "Nevalida aŭtentikig-kodo"
 
-#: src/components/contacts/screens/ViewMatches.tsx:585
+#: src/components/contacts/screens/ViewMatches.tsx:583
 msgid "Invite"
 msgstr "Inviti"
 
-#: src/components/contacts/screens/ViewMatches.tsx:565
+#: src/components/contacts/screens/ViewMatches.tsx:563
 msgid "Invite {name} to join Bluesky"
 msgstr "Invitu {name} por aliĝi Bluesky"
 
@@ -4979,7 +4983,7 @@ msgstr "Invita kodo neakceptita. Kontrolu ĉu vi entajpis ĝin ĝuste kaj reprov
 msgid "Invite Friends"
 msgstr "Inviti amikojn"
 
-#: src/components/contacts/screens/ViewMatches.tsx:300
+#: src/components/contacts/screens/ViewMatches.tsx:298
 msgid "Invite friends <0/>"
 msgstr "Inviti amikojn <0/>"
 
@@ -4995,7 +4999,7 @@ msgstr "Invitu viajn amikojn, por ke ili sekvu viajn plej ŝatatajn fluojn kaj h
 msgid "Invites, but personal"
 msgstr "Invitoj sed personaj"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:353
+#: src/ageAssurance/components/NoAccessScreen.tsx:368
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "Ĉu via loko ne estas ĝusta? <0>Tuŝetu ĉi tie por konfirmi vian lokon.</0>"
@@ -5083,8 +5087,8 @@ msgid "Language Settings"
 msgstr "Lingvaj agordoj"
 
 #: src/screens/Settings/LanguageSettings.tsx:78
-#: src/screens/Settings/Settings.tsx:242
-#: src/screens/Settings/Settings.tsx:245
+#: src/screens/Settings/Settings.tsx:246
+#: src/screens/Settings/Settings.tsx:249
 msgid "Languages"
 msgstr "Lingvoj"
 
@@ -5092,12 +5096,12 @@ msgstr "Lingvoj"
 msgid "Larger"
 msgstr "Pli granda"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:336
+#: src/ageAssurance/components/NoAccessScreen.tsx:351
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated {timeAgo} ago"
 msgstr "Laste iniciatita antaŭ {timeAgo}"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:334
+#: src/ageAssurance/components/NoAccessScreen.tsx:349
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
 msgid "Last initiated just now"
 msgstr "Laste iniciatita ĝuste nun"
@@ -5633,8 +5637,8 @@ msgstr ""
 
 #: src/Navigation.tsx:179
 #: src/screens/Moderation/index.tsx:99
-#: src/screens/Settings/Settings.tsx:192
-#: src/screens/Settings/Settings.tsx:195
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Moderation"
 msgstr "Kontrolado"
 
@@ -5979,8 +5983,8 @@ msgstr "La plej novaj respondoj unue"
 msgid "News"
 msgstr "Novaĵoj"
 
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:409
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:407
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:346
@@ -6011,11 +6015,11 @@ msgstr "Sen reklamoj, sen enpenetra spurado, sen okupo-kaptiloj. Bluesky respekt
 msgid "No app passwords yet"
 msgstr "Ankoraŭ ne estas apaj pasvortoj"
 
-#: src/components/contacts/screens/ViewMatches.tsx:679
+#: src/components/contacts/screens/ViewMatches.tsx:677
 msgid "No contacts found"
 msgstr "Neniu kontakto trovita"
 
-#: src/components/contacts/screens/ViewMatches.tsx:657
+#: src/components/contacts/screens/ViewMatches.tsx:655
 msgid "No contacts with the name “{query}” found"
 msgstr "Neniu kontakto kun la nomo \"{query}\" trovita"
 
@@ -6068,7 +6072,7 @@ msgstr "Ankoraŭ neniu mesaĝo"
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr "Ne plu da eterna rulumado tra aĉaĵo-plenaj algoritmoj. Trovu fluojn kiuj funkcias por vi, ne kontraŭ vi."
 
-#: src/components/contacts/screens/ViewMatches.tsx:561
+#: src/components/contacts/screens/ViewMatches.tsx:559
 msgid "No name"
 msgstr ""
 
@@ -6249,8 +6253,8 @@ msgstr "Sciigaj sonoj"
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:200
-#: src/screens/Settings/Settings.tsx:203
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:205
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:709
@@ -6315,7 +6319,7 @@ msgstr "La plej malnovaj respondoj unue"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "ĉe<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:402
+#: src/screens/Settings/Settings.tsx:406
 msgid "Onboarding reset"
 msgstr "Restarigi la lernilon"
 
@@ -6417,7 +6421,7 @@ msgstr "Malfermi ligilon al {niceUrl}"
 msgid "Open message options"
 msgstr "Malfermi opciojn de mesaĝoj"
 
-#: src/screens/Settings/Settings.tsx:467
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open moderation debug page"
 msgstr "Malfermi la paĝon de kontrolada sencimigo"
 
@@ -6446,12 +6450,12 @@ msgstr "Malfermi konigadan menuon"
 msgid "Open starter pack menu"
 msgstr "Malfermi menuon de startpako"
 
-#: src/screens/Settings/Settings.tsx:460
-#: src/screens/Settings/Settings.tsx:474
+#: src/screens/Settings/Settings.tsx:464
+#: src/screens/Settings/Settings.tsx:478
 msgid "Open storybook page"
 msgstr "Malfermi la historiopaĝon"
 
-#: src/screens/Settings/Settings.tsx:453
+#: src/screens/Settings/Settings.tsx:457
 msgid "Open system log"
 msgstr "Malfermi sisteman protokolon"
 
@@ -6514,7 +6518,7 @@ msgstr "Malfermas procezon de ensalutado al via ekzistanta Bluesky-konto"
 msgid "Opens GIF select dialog"
 msgstr "Malfermas GIF-elektilan dialogujon"
 
-#: src/screens/Settings/Settings.tsx:251
+#: src/screens/Settings/Settings.tsx:255
 msgid "Opens helpdesk in browser"
 msgstr "Malfermas la helpocentron en retumilo"
 
@@ -7121,8 +7125,8 @@ msgstr "Ĉefa lingvo"
 msgid "Privacy"
 msgstr "Privateco"
 
-#: src/screens/Settings/Settings.tsx:186
-#: src/screens/Settings/Settings.tsx:189
+#: src/screens/Settings/Settings.tsx:188
+#: src/screens/Settings/Settings.tsx:191
 msgid "Privacy and security"
 msgstr "Privateco kaj sekureco"
 
@@ -7400,7 +7404,7 @@ msgstr "Reŝargi konversaciojn"
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:105
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:112
 #: src/screens/Bookmarks/index.tsx:266
-#: src/screens/Settings/Settings.tsx:678
+#: src/screens/Settings/Settings.tsx:682
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:220
 msgid "Remove"
@@ -7414,8 +7418,8 @@ msgstr "Forigi {displayName} el la startpako"
 msgid "Remove {historyItem}"
 msgstr "Forigi {historyItem}"
 
-#: src/screens/Settings/Settings.tsx:657
-#: src/screens/Settings/Settings.tsx:660
+#: src/screens/Settings/Settings.tsx:661
+#: src/screens/Settings/Settings.tsx:664
 msgid "Remove account"
 msgstr "Forigi konton"
 
@@ -7460,7 +7464,7 @@ msgstr "Ĉu forigi fluon?"
 msgid "Remove from my feeds"
 msgstr "Forigi el miaj fluoj"
 
-#: src/screens/Settings/Settings.tsx:670
+#: src/screens/Settings/Settings.tsx:674
 msgid "Remove from quick access?"
 msgstr "Ĉu forigi el la rapitatingo?"
 
@@ -7504,7 +7508,7 @@ msgstr "Forigi reafiŝon"
 msgid "Remove subtitle file"
 msgstr "Forigi subtekstan dosieron"
 
-#: src/components/contacts/screens/ViewMatches.tsx:499
+#: src/components/contacts/screens/ViewMatches.tsx:497
 #: src/screens/Settings/FindContactsSettings.tsx:323
 msgid "Remove suggestion"
 msgstr ""
@@ -7835,8 +7839,8 @@ msgstr "Resendi retmesaĝon"
 msgid "Resend Verification Email"
 msgstr "Resendi konfirman retmesaĝon"
 
-#: src/screens/Settings/Settings.tsx:496
-#: src/screens/Settings/Settings.tsx:498
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Reset activity subscription nudge"
 msgstr "Restarigi kubutumon pri agada abono"
 
@@ -7844,8 +7848,8 @@ msgstr "Restarigi kubutumon pri agada abono"
 msgid "Reset code"
 msgstr "Restariga kodo"
 
-#: src/screens/Settings/Settings.tsx:481
-#: src/screens/Settings/Settings.tsx:483
+#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:487
 msgid "Reset onboarding state"
 msgstr "Restarigi staton de la lernilo"
 
@@ -8047,7 +8051,7 @@ msgstr "Serĉi afiŝojn de @{0}"
 msgid "Search by name or interest"
 msgstr "Serĉi per nomo aŭ intereso"
 
-#: src/components/contacts/screens/ViewMatches.tsx:355
+#: src/components/contacts/screens/ViewMatches.tsx:353
 msgid "Search contacts"
 msgstr "Serĉi kontaktojn"
 
@@ -8286,7 +8290,7 @@ msgstr "Elektu ĉefan lingvon"
 msgid "Select subtitle file (.vtt)"
 msgstr "Elektu subtekst-dosieron (.vtt)"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:67
+#: src/components/InternationalPhoneCodeSelect.tsx:68
 msgid "Select telephone code"
 msgstr "Elektu telefonkodon"
 
@@ -8426,7 +8430,7 @@ msgstr "Agordu vian konton"
 msgid "Set who can reply to your post"
 msgstr "Agordi kiu povas respondi al via afiŝo"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:199
+#: src/ageAssurance/components/NoAccessScreen.tsx:212
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr ""
 
@@ -8435,7 +8439,7 @@ msgid "Sets email for password reset"
 msgstr "Agordas retpoŝtadreson por restarigi pasvorton"
 
 #: src/Navigation.tsx:215
-#: src/screens/Settings/Settings.tsx:103
+#: src/screens/Settings/Settings.tsx:105
 #: src/view/shell/desktop/LeftNav.tsx:805
 #: src/view/shell/Drawer.tsx:609
 msgid "Settings"
@@ -8685,7 +8689,7 @@ msgstr "Montri averton kaj elfiltri el fluoj"
 msgid "Shows information about when this post was created"
 msgstr "Montri informojn pri kiam ĉi tiu afiŝo estis kreita"
 
-#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:131
 msgid "Shows other accounts you can switch to"
 msgstr "Montras aliajn kontojn al kiuj vi povas ŝanĝi"
 
@@ -8746,9 +8750,9 @@ msgstr "Ensalutu al Bluesky aŭ kreu novan konton"
 msgid "Sign in to view post"
 msgstr "Ensalutu por vidi la afiŝon"
 
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:270
-#: src/screens/Settings/Settings.tsx:302
+#: src/screens/Settings/Settings.tsx:272
+#: src/screens/Settings/Settings.tsx:274
+#: src/screens/Settings/Settings.tsx:306
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:93
@@ -8762,7 +8766,7 @@ msgstr "Elsaluti"
 msgid "Sign Out"
 msgstr "Elsaluti"
 
-#: src/screens/Settings/Settings.tsx:299
+#: src/screens/Settings/Settings.tsx:303
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Sign out?"
 msgstr "Ĉu elsaluti?"
@@ -8988,7 +8992,7 @@ msgstr "Paĝo pri stato"
 msgid "Step {0} of {1}"
 msgstr "Paŝo {0} el {1}"
 
-#: src/screens/Settings/Settings.tsx:407
+#: src/screens/Settings/Settings.tsx:411
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Konservejo vakigita, nun relanĉu la apon."
 
@@ -8997,7 +9001,7 @@ msgid "Stored as part of a secure code for matching with others"
 msgstr ""
 
 #: src/Navigation.tsx:308
-#: src/screens/Settings/Settings.tsx:462
+#: src/screens/Settings/Settings.tsx:466
 msgid "Storybook"
 msgstr "Historio de agoj"
 
@@ -9097,9 +9101,9 @@ msgstr "Subteno"
 msgid "Support for this feature in your country has not been enabled yet! Please check back later."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:127
-#: src/screens/Settings/Settings.tsx:141
-#: src/screens/Settings/Settings.tsx:620
+#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:624
 #: src/view/shell/desktop/LeftNav.tsx:247
 msgid "Switch account"
 msgstr "Ŝanĝi konton"
@@ -9127,7 +9131,7 @@ msgstr "Sistema"
 #: src/screens/Log.tsx:58
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:455
+#: src/screens/Settings/Settings.tsx:459
 msgid "System log"
 msgstr "Sistema protokolo"
 
@@ -9227,7 +9231,7 @@ msgstr "Dankon pro via prikomentado! Ĝi estis sendita al la operatoro de la flu
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Dankon, vi sukcese konfirmis vian retpoŝtadreson. Vi povas fermi ĉi tiun dialogujon."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:382
+#: src/ageAssurance/components/NoAccessScreen.tsx:397
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
 msgid "Thanks! You're all set."
 msgstr "Dankon! Ĉio agordita."
@@ -9723,7 +9727,7 @@ msgstr "Ĉi tiu uzanto sekvas neniun."
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Ĉi tio forigos \"{0}\" de viaj silentigitaj vortoj. Vi ĉiam povos realdoni ĝin poste."
 
-#: src/screens/Settings/Settings.tsx:672
+#: src/screens/Settings/Settings.tsx:676
 msgid "This will remove @{0} from the quick access list."
 msgstr "Ĉi tio forigos @{0} el la listo de rapidatingo."
 
@@ -9771,7 +9775,7 @@ msgstr "Por malŝalti la retpoŝtan 2FA-metodon, bonvolu konfirmi vian atingon a
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "Por malŝalti vian retpoŝtan 2FA-metodon, bonvolu konfirmi vian atingon al <0>{0}</0>"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:230
+#: src/ageAssurance/components/NoAccessScreen.tsx:245
 msgid "To log out, <0>click here</0>."
 msgstr "Por elsaluti <0>klaku ĉi tie</0>."
 
@@ -9902,11 +9906,11 @@ msgstr "Ne eblas kontakti vian servon. Bonvolu kontroli vian interretan konekton
 msgid "Unable to delete"
 msgstr "Ne eblas forigi"
 
-#: src/screens/Settings/Settings.tsx:521
+#: src/screens/Settings/Settings.tsx:525
 msgid "Unapply Pull Request"
 msgstr "Malapliki tirpeton"
 
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:527
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Malapliki tirpeton {currentChannel}"
 
@@ -9986,7 +9990,7 @@ msgstr "Ĉesas sekvi la uzanton"
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "Bedaŭrinde, neniu el viaj abonitaj etikediloj subtenas ĉi tiun tipon de raporto."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:176
+#: src/ageAssurance/components/NoAccessScreen.tsx:187
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr ""
 
@@ -10094,8 +10098,8 @@ msgstr "Depinglita de viaj fadenoj"
 msgid "Unpinned list"
 msgstr "Listo depinglita"
 
-#: src/screens/Settings/Settings.tsx:488
-#: src/screens/Settings/Settings.tsx:490
+#: src/screens/Settings/Settings.tsx:492
+#: src/screens/Settings/Settings.tsx:494
 msgid "Unsnooze email reminder"
 msgstr "Maldormeti retmesaĝan sciigon"
 
@@ -10347,7 +10351,7 @@ msgstr "Konfirmita de:"
 msgid "Verify account"
 msgstr "Konfirmi konton"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:319
+#: src/ageAssurance/components/NoAccessScreen.tsx:334
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
 msgid "Verify again"
 msgstr "Konfirmi denove"
@@ -10374,8 +10378,8 @@ msgstr "Konfirmi retmesaĝan kodon"
 msgid "Verify email dialog"
 msgstr "Dialogujo pri retpoŝtadresa konfirmo"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:307
-#: src/ageAssurance/components/NoAccessScreen.tsx:321
+#: src/ageAssurance/components/NoAccessScreen.tsx:322
+#: src/ageAssurance/components/NoAccessScreen.tsx:336
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify now"
@@ -10773,7 +10777,7 @@ msgstr "Ni prezentas novan tavolon de konfirmado ĉe Bluesky — facile videbla 
 msgid "We're so excited to have you join us!"
 msgstr "Ni ege feliĉas ke vi aliĝas nin!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:375
+#: src/ageAssurance/components/NoAccessScreen.tsx:390
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "Bedaŭrinde, sed laŭ la loko de via aparato vi nune estas poziciita en regiono, kiu devigas aĝan garantion."
@@ -10981,7 +10985,7 @@ msgstr "Hieraŭ"
 msgid "You are a trusted verifier"
 msgstr "Vi estas fidata konfirmanto"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:161
+#: src/ageAssurance/components/NoAccessScreen.tsx:170
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr ""
 
@@ -10989,7 +10993,7 @@ msgstr ""
 msgid "You are creating an account on"
 msgstr "Vi kreas konton ĉe"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:289
+#: src/ageAssurance/components/NoAccessScreen.tsx:304
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "Vi nune ne eblas aliri procezon de Garantio pri aĝo de Bluesky. Bonvolu <0>kontakti nian kontrolad-teamon</0> se vi kredas, ke tio estas eraro."
@@ -11122,7 +11126,7 @@ msgstr "Vi havas neniujn alpinglitajn fadenojn."
 msgid "You don't have any saved feeds."
 msgstr "Vi havas neniun konservitan fluon."
 
-#: src/components/contacts/screens/ViewMatches.tsx:311
+#: src/components/contacts/screens/ViewMatches.tsx:309
 msgid "You got here first"
 msgstr ""
 
@@ -11277,7 +11281,7 @@ msgstr "Vi konfirmu vian retpoŝtadreson, antaŭ ol vi povos ŝalti retpoŝtan 2
 msgid "You previously deactivated @{0}."
 msgstr "Vi antaŭe malaktivigis @{0}."
 
-#: src/screens/Settings/Settings.tsx:418
+#: src/screens/Settings/Settings.tsx:422
 msgid "You probably want to restart the app now."
 msgstr "Vi volu nun relanĉi la apon."
 
@@ -11294,7 +11298,7 @@ msgstr "Vi reagis per {0} al {1}"
 msgid "You recently changed your birthdate"
 msgstr "Vi lastatempe ŝanĝis vian naskiĝdaton"
 
-#: src/screens/Settings/Settings.tsx:300
+#: src/screens/Settings/Settings.tsx:304
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "You will be signed out of all your accounts."
 msgstr "Vi elsalutos el ĉiuj viaj kontoj."
@@ -11461,7 +11465,7 @@ msgstr "Via kontakto {firstAuthorLink} estas ĉe Bluesky"
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr "Via kontakto {firstAuthorName} estas ĉe Bluesky"
 
-#: src/components/contacts/screens/ViewMatches.tsx:453
+#: src/components/contacts/screens/ViewMatches.tsx:451
 msgid "Your contact {name}"
 msgstr "Via kontakto {name}"
 

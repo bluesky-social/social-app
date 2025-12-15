@@ -43,7 +43,7 @@ msgstr "{0, plural, one {# seguidor} other {# seguidores}}"
 msgid "{0, plural, one {# following} other {# following}}"
 msgstr "{0, plural, one {# seguindo} other {# seguindo}}"
 
-#: src/components/contacts/screens/ViewMatches.tsx:267
+#: src/components/contacts/screens/ViewMatches.tsx:265
 msgid "{0, plural, one {# friend found!} other {# friends found!}}"
 msgstr ""
 
@@ -581,8 +581,8 @@ msgstr "Uma captura de tela de uma página de perfil com um ícone de sino ao la
 
 #: src/Navigation.tsx:534
 #: src/screens/Settings/AboutSettings.tsx:75
-#: src/screens/Settings/Settings.tsx:258
-#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:262
+#: src/screens/Settings/Settings.tsx:265
 msgid "About"
 msgstr "Sobre"
 
@@ -609,8 +609,8 @@ msgid "Accept this language suggestion"
 msgstr "Aceitar esta sugestão de idioma"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:44
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Accessibility"
 msgstr "Acessibilidade"
 
@@ -621,8 +621,8 @@ msgstr "Acessibilidade"
 #: src/Navigation.tsx:401
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:51
-#: src/screens/Settings/Settings.tsx:178
-#: src/screens/Settings/Settings.tsx:181
+#: src/screens/Settings/Settings.tsx:180
+#: src/screens/Settings/Settings.tsx:183
 msgid "Account"
 msgstr "Conta"
 
@@ -653,7 +653,7 @@ msgstr "Conta silenciada"
 msgid "Account Muted by List"
 msgstr "Conta silenciada pela lista"
 
-#: src/screens/Settings/Settings.tsx:640
+#: src/screens/Settings/Settings.tsx:644
 msgid "Account options"
 msgstr "Opções da conta"
 
@@ -661,7 +661,7 @@ msgstr "Opções da conta"
 msgid "Account provider"
 msgstr "Provedor de conta"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:680
 msgid "Account removed from quick access"
 msgstr "Conta removida do acesso rápido"
 
@@ -746,8 +746,8 @@ msgstr "Adicionar texto alternativo"
 msgid "Add alt text (optional)"
 msgstr "Adicionar texto alternativo (opcional)"
 
-#: src/screens/Settings/Settings.tsx:580
-#: src/screens/Settings/Settings.tsx:583
+#: src/screens/Settings/Settings.tsx:584
+#: src/screens/Settings/Settings.tsx:587
 #: src/view/shell/desktop/LeftNav.tsx:262
 #: src/view/shell/desktop/LeftNav.tsx:266
 msgid "Add another account"
@@ -849,7 +849,7 @@ msgstr "Adicionar aos pacotes iniciais"
 msgid "Add user to list"
 msgstr "Adicionar usuário à lista"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:210
+#: src/ageAssurance/components/NoAccessScreen.tsx:223
 msgid "Add your birthdate"
 msgstr ""
 
@@ -919,7 +919,7 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "A solicitação de verificação de idade foi submetida"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:342
+#: src/ageAssurance/components/NoAccessScreen.tsx:357
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Age assurance only takes a few minutes"
 msgstr "A verificação de idade leva apenas alguns minutos"
@@ -939,7 +939,7 @@ msgstr "Tudo"
 msgid "All accounts have been followed!"
 msgstr "Todas as contas foram seguidas!"
 
-#: src/components/contacts/screens/ViewMatches.tsx:143
+#: src/components/contacts/screens/ViewMatches.tsx:141
 msgid "All friends followed!"
 msgstr ""
 
@@ -1075,7 +1075,7 @@ msgstr "Ocorreu um erro ao recuperar o feed."
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "Ocorreu um erro ao gerar seu pacote inicial. Tentar novamente?"
 
-#: src/components/contacts/screens/ViewMatches.tsx:242
+#: src/components/contacts/screens/ViewMatches.tsx:240
 msgid "An error occurred while hiding suggestion. {0}"
 msgstr ""
 
@@ -1113,7 +1113,7 @@ msgid "An error occurred. {0}"
 msgstr ""
 
 #: src/components/contacts/components/HeroImage.tsx:28
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:71
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:78
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
 msgstr ""
 
@@ -1277,8 +1277,8 @@ msgstr "Recorrer desta decisão"
 
 #: src/Navigation.tsx:393
 #: src/screens/Settings/AppearanceSettings.tsx:73
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:230
+#: src/screens/Settings/Settings.tsx:233
 msgid "Appearance"
 msgstr "Aparência"
 
@@ -1287,8 +1287,8 @@ msgstr "Aparência"
 msgid "Apply default recommended feeds"
 msgstr "Utilizar feeds recomendados"
 
-#: src/screens/Settings/Settings.tsx:512
-#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:518
 msgid "Apply Pull Request"
 msgstr "Aplicar Pull Request"
 
@@ -1590,11 +1590,11 @@ msgstr "O Bluesky é bem melhor com amigos!"
 msgid "Bluesky is more fun with friends"
 msgstr ""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:99
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:106
 msgid "Bluesky is more fun with friends! Import your contacts to see who’s already here."
 msgstr ""
 
-#: src/components/contacts/screens/ViewMatches.tsx:314
+#: src/components/contacts/screens/ViewMatches.tsx:312
 msgid "Bluesky is more fun with friends. Do you want to invite some of yours? <0/>"
 msgstr ""
 
@@ -1766,7 +1766,7 @@ msgstr "Câmera"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:85
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:247
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:253
-#: src/screens/Settings/Settings.tsx:303
+#: src/screens/Settings/Settings.tsx:307
 #: src/screens/Takendown.tsx:107
 #: src/screens/Takendown.tsx:110
 #: src/view/com/composer/Composer.tsx:1050
@@ -2002,11 +2002,11 @@ msgstr "Escolha sua senha"
 msgid "Choose your username"
 msgstr "Seu nome de usuário"
 
-#: src/screens/Settings/Settings.tsx:504
+#: src/screens/Settings/Settings.tsx:508
 msgid "Clear all storage data"
 msgstr "Limpar dados de armazenamento"
 
-#: src/screens/Settings/Settings.tsx:506
+#: src/screens/Settings/Settings.tsx:510
 msgid "Clear all storage data (restart after this)"
 msgstr "Limpar dados de armazenamento (e então reiniciar)"
 
@@ -2031,7 +2031,7 @@ msgstr "clique aqui"
 msgid "Click here to contact our support team"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:233
+#: src/ageAssurance/components/NoAccessScreen.tsx:248
 msgid "Click here to log out"
 msgstr ""
 
@@ -2040,7 +2040,7 @@ msgid "Click here to restart the verification process."
 msgstr "Clique aqui para reiniciar o processo de verificação."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:97
-#: src/ageAssurance/components/NoAccessScreen.tsx:207
+#: src/ageAssurance/components/NoAccessScreen.tsx:220
 msgid "Click here to update your birthdate"
 msgstr ""
 
@@ -2257,7 +2257,7 @@ msgstr "Confirmar ajustes de idioma de conteúdo"
 msgid "Confirm delete account"
 msgstr "Confirmar exclusão da conta"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:356
+#: src/ageAssurance/components/NoAccessScreen.tsx:371
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
@@ -2284,7 +2284,7 @@ msgstr "Conectando..."
 msgid "Connection issue"
 msgstr "Problema de conexão"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:293
+#: src/ageAssurance/components/NoAccessScreen.tsx:308
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
@@ -2317,8 +2317,8 @@ msgstr ""
 msgid "Content & Media"
 msgstr "Conteúdo e mídia"
 
-#: src/screens/Settings/Settings.tsx:208
-#: src/screens/Settings/Settings.tsx:211
+#: src/screens/Settings/Settings.tsx:210
+#: src/screens/Settings/Settings.tsx:213
 msgid "Content and media"
 msgstr "Conteúdo e mídia"
 
@@ -2586,7 +2586,7 @@ msgstr ""
 msgid "Could not upload contacts. You need to re-verify your phone number to proceed"
 msgstr ""
 
-#: src/components/InternationalPhoneCodeSelect.tsx:79
+#: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
 msgstr ""
 
@@ -2746,7 +2746,7 @@ msgstr "Data de nascimento"
 msgid "Deactivate account"
 msgstr "Desativar conta"
 
-#: src/screens/Settings/Settings.tsx:469
+#: src/screens/Settings/Settings.tsx:473
 msgid "Debug Moderation"
 msgstr "Depurar moderação"
 
@@ -2799,7 +2799,7 @@ msgstr "Excluir senha do app?"
 msgid "Delete chat"
 msgstr "Excluir conversa"
 
-#: src/screens/Settings/Settings.tsx:476
+#: src/screens/Settings/Settings.tsx:480
 msgid "Delete chat declaration record"
 msgstr "Excluir registro da conversa"
 
@@ -2912,8 +2912,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "Modo de desenvolvedor ativado"
 
-#: src/screens/Settings/Settings.tsx:285
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:289
+#: src/screens/Settings/Settings.tsx:292
 msgid "Developer options"
 msgstr "Opções do desenvolvedor"
 
@@ -3073,8 +3073,8 @@ msgstr "Não se preocupe! Todas as mensagens e configurações existentes estão
 
 #: src/components/contacts/components/InviteInfo.tsx:72
 #: src/components/contacts/components/InviteInfo.tsx:78
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:411
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:409
 #: src/components/dialogs/BirthDateSettings.tsx:183
 #: src/components/dialogs/BirthDateSettings.tsx:190
 #: src/components/dialogs/ServerInput.tsx:240
@@ -3700,15 +3700,15 @@ msgstr "Falha ao excluir o pacote inicial"
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "Não foi possível seguir todas as contas sugeridas, por favor tente novamente"
 
-#: src/components/contacts/screens/ViewMatches.tsx:147
+#: src/components/contacts/screens/ViewMatches.tsx:145
 msgid "Failed to follow all your friends, please try again"
 msgstr ""
 
-#: src/components/contacts/screens/ViewMatches.tsx:235
+#: src/components/contacts/screens/ViewMatches.tsx:233
 msgid "Failed to hide suggestion, please check your internet connection"
 msgstr ""
 
-#: src/components/contacts/screens/ViewMatches.tsx:580
+#: src/components/contacts/screens/ViewMatches.tsx:578
 msgid "Failed to launch SMS app"
 msgstr ""
 
@@ -3996,8 +3996,8 @@ msgstr ""
 msgid "Find Friends"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:217
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Settings/Settings.tsx:221
+#: src/screens/Settings/Settings.tsx:224
 msgid "Find friends from contacts"
 msgstr ""
 
@@ -4018,7 +4018,7 @@ msgstr "Encontre pessoas para seguir"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Encontre postagens, usuários e feeds no Bluesky"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:89
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:96
 msgid "Find your friends"
 msgstr ""
 
@@ -4093,8 +4093,8 @@ msgstr "Seguir 7 contas"
 msgid "Follow account"
 msgstr "Seguir conta"
 
-#: src/components/contacts/screens/ViewMatches.tsx:275
-#: src/components/contacts/screens/ViewMatches.tsx:290
+#: src/components/contacts/screens/ViewMatches.tsx:273
+#: src/components/contacts/screens/ViewMatches.tsx:288
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:265
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
@@ -4209,6 +4209,10 @@ msgstr "Tamanho da fonte"
 #: src/lib/interests.ts:61
 msgid "Food"
 msgstr "Comida"
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:125
+msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -4532,8 +4536,8 @@ msgstr "Precisa de ajuda?"
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:250
 #: src/screens/Settings/Settings.tsx:254
+#: src/screens/Settings/Settings.tsx:258
 #: src/view/shell/desktop/RightNav.tsx:123
 #: src/view/shell/desktop/RightNav.tsx:124
 #: src/view/shell/Drawer.tsx:381
@@ -4553,11 +4557,11 @@ msgstr "Aqui está a sua senha de aplicativo!"
 msgid "Hey there 👋"
 msgstr "Olá 👋"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:158
+#: src/ageAssurance/components/NoAccessScreen.tsx:167
 msgid "Hey there!"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:189
+#: src/ageAssurance/components/NoAccessScreen.tsx:202
 msgid "Hi there!"
 msgstr ""
 
@@ -4657,7 +4661,7 @@ msgstr "Ocultar insígnias de verificação"
 msgid "Hides the content"
 msgstr "Oculta o conteúdo"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:216
+#: src/ageAssurance/components/NoAccessScreen.tsx:229
 msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
 msgstr ""
 
@@ -4750,7 +4754,7 @@ msgstr "Eu tenho meu próprio domínio"
 msgid "I understand"
 msgstr "Entendi"
 
-#: src/components/contacts/screens/ViewMatches.tsx:576
+#: src/components/contacts/screens/ViewMatches.tsx:574
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr ""
 
@@ -4840,8 +4844,8 @@ msgstr "Falsa identidade/imitação"
 msgid "Import contacts"
 msgstr ""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:107
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:118
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:114
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:125
 msgid "Import Contacts"
 msgstr ""
 
@@ -4850,7 +4854,7 @@ msgstr ""
 msgid "Import contacts to find your friends"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:192
+#: src/ageAssurance/components/NoAccessScreen.tsx:205
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr ""
 
@@ -4923,7 +4927,7 @@ msgstr "Ajustes de interação"
 msgid "Introducing activity notifications"
 msgstr "Apresentando as notificações de atividade"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:48
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
 msgstr ""
 
@@ -4958,11 +4962,11 @@ msgstr "Assunto da denúncia inválido"
 msgid "Invalid Verification Code"
 msgstr "Código de Verificação Inválido"
 
-#: src/components/contacts/screens/ViewMatches.tsx:585
+#: src/components/contacts/screens/ViewMatches.tsx:583
 msgid "Invite"
 msgstr ""
 
-#: src/components/contacts/screens/ViewMatches.tsx:565
+#: src/components/contacts/screens/ViewMatches.tsx:563
 msgid "Invite {name} to join Bluesky"
 msgstr ""
 
@@ -4979,7 +4983,7 @@ msgstr "Convite inválido. Verifique se você o inseriu corretamente e tente nov
 msgid "Invite Friends"
 msgstr ""
 
-#: src/components/contacts/screens/ViewMatches.tsx:300
+#: src/components/contacts/screens/ViewMatches.tsx:298
 msgid "Invite friends <0/>"
 msgstr ""
 
@@ -4995,7 +4999,7 @@ msgstr "Convide seus amigos para seguir seus feeds e pessoas favoritas"
 msgid "Invites, but personal"
 msgstr "Convites, mas pessoais"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:353
+#: src/ageAssurance/components/NoAccessScreen.tsx:368
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "A sua localização não está correta? <0>Toque aqui para confirmar a sua localização.</0>"
@@ -5083,8 +5087,8 @@ msgid "Language Settings"
 msgstr "Configurações de Idiomas"
 
 #: src/screens/Settings/LanguageSettings.tsx:78
-#: src/screens/Settings/Settings.tsx:242
-#: src/screens/Settings/Settings.tsx:245
+#: src/screens/Settings/Settings.tsx:246
+#: src/screens/Settings/Settings.tsx:249
 msgid "Languages"
 msgstr "Idiomas"
 
@@ -5092,12 +5096,12 @@ msgstr "Idiomas"
 msgid "Larger"
 msgstr "Maior"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:336
+#: src/ageAssurance/components/NoAccessScreen.tsx:351
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated {timeAgo} ago"
 msgstr "Iniciado pela última vez {timeAgo} atrás"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:334
+#: src/ageAssurance/components/NoAccessScreen.tsx:349
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
 msgid "Last initiated just now"
 msgstr "Iniciado pela última vez agora mesmo"
@@ -5633,8 +5637,8 @@ msgstr "Enganoso"
 
 #: src/Navigation.tsx:179
 #: src/screens/Moderation/index.tsx:99
-#: src/screens/Settings/Settings.tsx:192
-#: src/screens/Settings/Settings.tsx:195
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Moderation"
 msgstr "Moderação"
 
@@ -5979,8 +5983,8 @@ msgstr "Respostas mais recentes primeiro"
 msgid "News"
 msgstr "Notícias"
 
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:409
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:407
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:346
@@ -6011,11 +6015,11 @@ msgstr "Sem anúncios, sem rastreamento invasivo, sem armadilhas de engajamento.
 msgid "No app passwords yet"
 msgstr "Sem senhas de aplicativo no momento"
 
-#: src/components/contacts/screens/ViewMatches.tsx:679
+#: src/components/contacts/screens/ViewMatches.tsx:677
 msgid "No contacts found"
 msgstr ""
 
-#: src/components/contacts/screens/ViewMatches.tsx:657
+#: src/components/contacts/screens/ViewMatches.tsx:655
 msgid "No contacts with the name “{query}” found"
 msgstr ""
 
@@ -6068,7 +6072,7 @@ msgstr "Nenhuma mensagem ainda"
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr "Chega de algoritmos de rolagem eterna cheios de lixo. Encontre feeds que trabalham para você, não contra você."
 
-#: src/components/contacts/screens/ViewMatches.tsx:561
+#: src/components/contacts/screens/ViewMatches.tsx:559
 msgid "No name"
 msgstr ""
 
@@ -6249,8 +6253,8 @@ msgstr "Sons de Notificação"
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:200
-#: src/screens/Settings/Settings.tsx:203
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:205
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:709
@@ -6315,7 +6319,7 @@ msgstr "Respostas mais antigas primeiro"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "no<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:402
+#: src/screens/Settings/Settings.tsx:406
 msgid "Onboarding reset"
 msgstr "Resetar tutoriais"
 
@@ -6417,7 +6421,7 @@ msgstr "Abrir link para {niceUrl}"
 msgid "Open message options"
 msgstr "Abrir opções de mensagem"
 
-#: src/screens/Settings/Settings.tsx:467
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open moderation debug page"
 msgstr "Abrir página de debug da moderação"
 
@@ -6446,12 +6450,12 @@ msgstr "Abrir menu de compartilhamento"
 msgid "Open starter pack menu"
 msgstr "Abrir o menu do pacote inicial"
 
-#: src/screens/Settings/Settings.tsx:460
-#: src/screens/Settings/Settings.tsx:474
+#: src/screens/Settings/Settings.tsx:464
+#: src/screens/Settings/Settings.tsx:478
 msgid "Open storybook page"
 msgstr "Abrir página do storybook"
 
-#: src/screens/Settings/Settings.tsx:453
+#: src/screens/Settings/Settings.tsx:457
 msgid "Open system log"
 msgstr "Abrir registros do sistema"
 
@@ -6514,7 +6518,7 @@ msgstr "Abre a tela para entrar com uma conta Bluesky existente"
 msgid "Opens GIF select dialog"
 msgstr "Abre a janela de seleção de GIFs"
 
-#: src/screens/Settings/Settings.tsx:251
+#: src/screens/Settings/Settings.tsx:255
 msgid "Opens helpdesk in browser"
 msgstr "Abre a central de ajuda no navegador"
 
@@ -7121,8 +7125,8 @@ msgstr "Idioma Principal"
 msgid "Privacy"
 msgstr "Privacidade"
 
-#: src/screens/Settings/Settings.tsx:186
-#: src/screens/Settings/Settings.tsx:189
+#: src/screens/Settings/Settings.tsx:188
+#: src/screens/Settings/Settings.tsx:191
 msgid "Privacy and security"
 msgstr "Privacidade e segurança"
 
@@ -7400,7 +7404,7 @@ msgstr "Recarregar conversas"
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:105
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:112
 #: src/screens/Bookmarks/index.tsx:266
-#: src/screens/Settings/Settings.tsx:678
+#: src/screens/Settings/Settings.tsx:682
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:220
 msgid "Remove"
@@ -7414,8 +7418,8 @@ msgstr "Remover {displayName} do pacote inicial"
 msgid "Remove {historyItem}"
 msgstr "Remover {historyItem}"
 
-#: src/screens/Settings/Settings.tsx:657
-#: src/screens/Settings/Settings.tsx:660
+#: src/screens/Settings/Settings.tsx:661
+#: src/screens/Settings/Settings.tsx:664
 msgid "Remove account"
 msgstr "Remover conta"
 
@@ -7460,7 +7464,7 @@ msgstr "Remover feed?"
 msgid "Remove from my feeds"
 msgstr "Remover dos meus feeds"
 
-#: src/screens/Settings/Settings.tsx:670
+#: src/screens/Settings/Settings.tsx:674
 msgid "Remove from quick access?"
 msgstr "Remover do acesso rápido?"
 
@@ -7504,7 +7508,7 @@ msgstr "Desfazer repostagem"
 msgid "Remove subtitle file"
 msgstr "Remover arquivo de legenda"
 
-#: src/components/contacts/screens/ViewMatches.tsx:499
+#: src/components/contacts/screens/ViewMatches.tsx:497
 #: src/screens/Settings/FindContactsSettings.tsx:323
 msgid "Remove suggestion"
 msgstr ""
@@ -7835,8 +7839,8 @@ msgstr "Reenviar E-mail"
 msgid "Resend Verification Email"
 msgstr "Reenviar E-mail de Verificação"
 
-#: src/screens/Settings/Settings.tsx:496
-#: src/screens/Settings/Settings.tsx:498
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Reset activity subscription nudge"
 msgstr "Redefinir lembrete de inscrição de atividade"
 
@@ -7844,8 +7848,8 @@ msgstr "Redefinir lembrete de inscrição de atividade"
 msgid "Reset code"
 msgstr "Código de redefinição"
 
-#: src/screens/Settings/Settings.tsx:481
-#: src/screens/Settings/Settings.tsx:483
+#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:487
 msgid "Reset onboarding state"
 msgstr "Redefinir tutoriais"
 
@@ -8047,7 +8051,7 @@ msgstr "Pesquisar postagens de @{0}"
 msgid "Search by name or interest"
 msgstr "Pesquisar por nome ou interesse"
 
-#: src/components/contacts/screens/ViewMatches.tsx:355
+#: src/components/contacts/screens/ViewMatches.tsx:353
 msgid "Search contacts"
 msgstr ""
 
@@ -8286,7 +8290,7 @@ msgstr "Selecionar idioma principal"
 msgid "Select subtitle file (.vtt)"
 msgstr "Selecione o arquivo de legenda (.vtt)"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:67
+#: src/components/InternationalPhoneCodeSelect.tsx:68
 msgid "Select telephone code"
 msgstr ""
 
@@ -8426,7 +8430,7 @@ msgstr "Configure sua conta"
 msgid "Set who can reply to your post"
 msgstr "Definir quem pode responder à sua postagem"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:199
+#: src/ageAssurance/components/NoAccessScreen.tsx:212
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr ""
 
@@ -8435,7 +8439,7 @@ msgid "Sets email for password reset"
 msgstr "Configura o e-mail para recuperação de senha"
 
 #: src/Navigation.tsx:215
-#: src/screens/Settings/Settings.tsx:103
+#: src/screens/Settings/Settings.tsx:105
 #: src/view/shell/desktop/LeftNav.tsx:805
 #: src/view/shell/Drawer.tsx:609
 msgid "Settings"
@@ -8685,7 +8689,7 @@ msgstr "Mostrar aviso e filtrar dos feeds"
 msgid "Shows information about when this post was created"
 msgstr "Mostra informações sobre quando esta postagem foi criada"
 
-#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:131
 msgid "Shows other accounts you can switch to"
 msgstr "Exibe suas outras contas que você pode acessar"
 
@@ -8746,9 +8750,9 @@ msgstr "Registre-se no Bluesky ou crie uma conta"
 msgid "Sign in to view post"
 msgstr "Faça login para ver a postagem"
 
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:270
-#: src/screens/Settings/Settings.tsx:302
+#: src/screens/Settings/Settings.tsx:272
+#: src/screens/Settings/Settings.tsx:274
+#: src/screens/Settings/Settings.tsx:306
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:93
@@ -8762,7 +8766,7 @@ msgstr "Sair"
 msgid "Sign Out"
 msgstr "Sair"
 
-#: src/screens/Settings/Settings.tsx:299
+#: src/screens/Settings/Settings.tsx:303
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Sign out?"
 msgstr "Sair?"
@@ -8988,7 +8992,7 @@ msgstr "Página de status"
 msgid "Step {0} of {1}"
 msgstr "Etapa {0} de {1}"
 
-#: src/screens/Settings/Settings.tsx:407
+#: src/screens/Settings/Settings.tsx:411
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Armazenamento limpo, você precisa reiniciar o aplicativo agora."
 
@@ -8997,7 +9001,7 @@ msgid "Stored as part of a secure code for matching with others"
 msgstr ""
 
 #: src/Navigation.tsx:308
-#: src/screens/Settings/Settings.tsx:462
+#: src/screens/Settings/Settings.tsx:466
 msgid "Storybook"
 msgstr "Storybook"
 
@@ -9097,9 +9101,9 @@ msgstr "Suporte"
 msgid "Support for this feature in your country has not been enabled yet! Please check back later."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:127
-#: src/screens/Settings/Settings.tsx:141
-#: src/screens/Settings/Settings.tsx:620
+#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:624
 #: src/view/shell/desktop/LeftNav.tsx:247
 msgid "Switch account"
 msgstr "Alterar conta"
@@ -9127,7 +9131,7 @@ msgstr "Sistema"
 #: src/screens/Log.tsx:58
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:455
+#: src/screens/Settings/Settings.tsx:459
 msgid "System log"
 msgstr "Log do sistema"
 
@@ -9227,7 +9231,7 @@ msgstr "Obrigado por seu comentário! Ele foi enviado ao operador."
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Obrigado, você verificou seu endereço de e-mail com sucesso. Você pode fechar esta janela."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:382
+#: src/ageAssurance/components/NoAccessScreen.tsx:397
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
 msgid "Thanks! You're all set."
 msgstr "Obrigado! Está tudo pronto."
@@ -9723,7 +9727,7 @@ msgstr "Este usuário não segue ninguém ainda."
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Isso excluirá \"{0}\" das suas palavras silenciadas. Você sempre pode adicioná-lo novamente mais tarde."
 
-#: src/screens/Settings/Settings.tsx:672
+#: src/screens/Settings/Settings.tsx:676
 msgid "This will remove @{0} from the quick access list."
 msgstr "Isso removerá @{0} da lista de acesso rápido."
 
@@ -9771,7 +9775,7 @@ msgstr "Para desabilitar o 2FA via e-mail, por favor verifique seu acesso a este
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "Para desabilitar o 2FA via email, por favor verifique que você tem acesso a <0>{0}</0>"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:230
+#: src/ageAssurance/components/NoAccessScreen.tsx:245
 msgid "To log out, <0>click here</0>."
 msgstr ""
 
@@ -9902,11 +9906,11 @@ msgstr "Não foi possível entrar em contato com seu serviço. Por favor, verifi
 msgid "Unable to delete"
 msgstr "Não foi possível excluir"
 
-#: src/screens/Settings/Settings.tsx:521
+#: src/screens/Settings/Settings.tsx:525
 msgid "Unapply Pull Request"
 msgstr "Remover Pull Request"
 
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:527
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Remover Pull Request {currentChannel}"
 
@@ -9986,7 +9990,7 @@ msgstr "Para de seguir o usuário"
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "Infelizmente, nenhum dos rotuladores em que você se inscreveu suporta esse tipo de denúncia."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:176
+#: src/ageAssurance/components/NoAccessScreen.tsx:187
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr ""
 
@@ -10094,8 +10098,8 @@ msgstr "Desafixado dos seus feeds"
 msgid "Unpinned list"
 msgstr "Lista desafixada"
 
-#: src/screens/Settings/Settings.tsx:488
-#: src/screens/Settings/Settings.tsx:490
+#: src/screens/Settings/Settings.tsx:492
+#: src/screens/Settings/Settings.tsx:494
 msgid "Unsnooze email reminder"
 msgstr "Reativar lembretes de email"
 
@@ -10347,7 +10351,7 @@ msgstr "Verificado por:"
 msgid "Verify account"
 msgstr "Verificar conta"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:319
+#: src/ageAssurance/components/NoAccessScreen.tsx:334
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
 msgid "Verify again"
 msgstr "Verificar novamente"
@@ -10374,8 +10378,8 @@ msgstr "Código para verificar o email"
 msgid "Verify email dialog"
 msgstr "Caixa de diálogo da verificação de e-mail"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:307
-#: src/ageAssurance/components/NoAccessScreen.tsx:321
+#: src/ageAssurance/components/NoAccessScreen.tsx:322
+#: src/ageAssurance/components/NoAccessScreen.tsx:336
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify now"
@@ -10773,7 +10777,7 @@ msgstr "Estamos introduzindo uma nova camada de verificação no Bluesky — uma
 msgid "We're so excited to have you join us!"
 msgstr "Estamos muito felizes em receber você!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:375
+#: src/ageAssurance/components/NoAccessScreen.tsx:390
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "Lamentamos, mas com base na localização do seu dispositivo, você está localizado em uma região que requer verificação de idade."
@@ -10981,7 +10985,7 @@ msgstr "Ontem"
 msgid "You are a trusted verifier"
 msgstr "Você é um verificador confiável"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:161
+#: src/ageAssurance/components/NoAccessScreen.tsx:170
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr ""
 
@@ -10989,7 +10993,7 @@ msgstr ""
 msgid "You are creating an account on"
 msgstr "Você está criando uma conta em"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:289
+#: src/ageAssurance/components/NoAccessScreen.tsx:304
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "No momento você não pode acessar o fluxo de verificação de idade do Bluesky. Por favor <0>entre em contato com nossa equipe de moderação</0> se você acredita que isto é um erro."
@@ -11122,7 +11126,7 @@ msgstr "Você não tem feeds fixados."
 msgid "You don't have any saved feeds."
 msgstr "Você não tem feeds salvos."
 
-#: src/components/contacts/screens/ViewMatches.tsx:311
+#: src/components/contacts/screens/ViewMatches.tsx:309
 msgid "You got here first"
 msgstr ""
 
@@ -11277,7 +11281,7 @@ msgstr "Você precisa verificar seu endereço de e-mail antes de poder habilitar
 msgid "You previously deactivated @{0}."
 msgstr "Você desativou @{0} anteriormente."
 
-#: src/screens/Settings/Settings.tsx:418
+#: src/screens/Settings/Settings.tsx:422
 msgid "You probably want to restart the app now."
 msgstr "Talvez você queira reiniciar o app agora."
 
@@ -11294,7 +11298,7 @@ msgstr "Você reagiu com {0} a {1}"
 msgid "You recently changed your birthdate"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:300
+#: src/screens/Settings/Settings.tsx:304
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "You will be signed out of all your accounts."
 msgstr "Você será desconectado de todas as suas contas."
@@ -11461,7 +11465,7 @@ msgstr ""
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr ""
 
-#: src/components/contacts/screens/ViewMatches.tsx:453
+#: src/components/contacts/screens/ViewMatches.tsx:451
 msgid "Your contact {name}"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-13 19:06\n"
+"PO-Revision-Date: 2025-12-15 20:45\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -43,9 +43,9 @@ msgstr "{0, plural, one {# seguidor} other {# seguidors}}"
 msgid "{0, plural, one {# following} other {# following}}"
 msgstr "{0, plural, one {# seguint} other {# seguint}}"
 
-#: src/components/contacts/screens/ViewMatches.tsx:267
+#: src/components/contacts/screens/ViewMatches.tsx:265
 msgid "{0, plural, one {# friend found!} other {# friends found!}}"
-msgstr ""
+msgstr "{0, plural, one {# amic trobat!} other {# amics trobats!}}"
 
 #: src/lib/hooks/useTimeAgo.ts:159
 msgid "{0, plural, one {# hour} other {# hours}}"
@@ -442,7 +442,7 @@ msgstr "{notificationCount, plural, one {# element sense llegir} other {# elemen
 
 #: src/screens/Settings/FindContactsSettings.tsx:430
 msgid "{numMatches, plural, one {1 contact found} other {# contacts found}}"
-msgstr ""
+msgstr "{numMatches, plural, one {1 contacte trobat} other {# contactes trobats}}"
 
 #: src/components/NewskieDialog.tsx:113
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
@@ -555,16 +555,16 @@ msgstr "un missatge"
 
 #: src/components/contacts/screens/PhoneInput.tsx:99
 msgid "A network error occurred. Please check your internet connection"
-msgstr ""
+msgstr "S'ha produït un error de xarxa. Si us plau, comprova la connexió a Internet"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:96
 #: src/components/contacts/screens/VerifyNumber.tsx:152
 msgid "A network error occurred. Please check your internet connection."
-msgstr ""
+msgstr "S'ha produït un error de xarxa. Si us plau, comprova la connexió a Internet."
 
 #: src/components/contacts/screens/VerifyNumber.tsx:140
 msgid "A new code has been sent"
-msgstr ""
+msgstr "S'ha enviat un codi nou"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:91
 msgid "A new form of verification"
@@ -581,8 +581,8 @@ msgstr "Una captura de pantalla d'una pàgina de perfil amb una icona de campana
 
 #: src/Navigation.tsx:534
 #: src/screens/Settings/AboutSettings.tsx:75
-#: src/screens/Settings/Settings.tsx:258
-#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:262
+#: src/screens/Settings/Settings.tsx:265
 msgid "About"
 msgstr "Sobre"
 
@@ -609,8 +609,8 @@ msgid "Accept this language suggestion"
 msgstr "Accepta aquest suggeriment d'idioma"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:44
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Accessibility"
 msgstr "Accessibilitat"
 
@@ -621,8 +621,8 @@ msgstr "Configuració d'accessibilitat"
 #: src/Navigation.tsx:401
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:51
-#: src/screens/Settings/Settings.tsx:178
-#: src/screens/Settings/Settings.tsx:181
+#: src/screens/Settings/Settings.tsx:180
+#: src/screens/Settings/Settings.tsx:183
 msgid "Account"
 msgstr "Compte"
 
@@ -653,7 +653,7 @@ msgstr "Compte silenciat"
 msgid "Account Muted by List"
 msgstr "Compte silenciat per una llista"
 
-#: src/screens/Settings/Settings.tsx:640
+#: src/screens/Settings/Settings.tsx:644
 msgid "Account options"
 msgstr "Opcions del compte"
 
@@ -661,7 +661,7 @@ msgstr "Opcions del compte"
 msgid "Account provider"
 msgstr "Proveïdor de comptes"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:680
 msgid "Account removed from quick access"
 msgstr "Compte eliminat de l'accés ràpid"
 
@@ -746,8 +746,8 @@ msgstr "Afegeix text alternatiu"
 msgid "Add alt text (optional)"
 msgstr "Afegeix text alternatiu (opcional)"
 
-#: src/screens/Settings/Settings.tsx:580
-#: src/screens/Settings/Settings.tsx:583
+#: src/screens/Settings/Settings.tsx:584
+#: src/screens/Settings/Settings.tsx:587
 #: src/view/shell/desktop/LeftNav.tsx:262
 #: src/view/shell/desktop/LeftNav.tsx:266
 msgid "Add another account"
@@ -849,7 +849,7 @@ msgstr "Afegeix als starter packs"
 msgid "Add user to list"
 msgstr "Afegeix usuaris a la llista"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:210
+#: src/ageAssurance/components/NoAccessScreen.tsx:223
 msgid "Add your birthdate"
 msgstr "Afegeix la teva data de naixement"
 
@@ -919,7 +919,7 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "S'ha enviat la sol·licitud de garantia d'edat"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:342
+#: src/ageAssurance/components/NoAccessScreen.tsx:357
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Age assurance only takes a few minutes"
 msgstr "La garantia d'edat només triga uns minuts"
@@ -939,9 +939,9 @@ msgstr "Totes"
 msgid "All accounts have been followed!"
 msgstr "S'han seguit tots els comptes!"
 
-#: src/components/contacts/screens/ViewMatches.tsx:143
+#: src/components/contacts/screens/ViewMatches.tsx:141
 msgid "All friends followed!"
-msgstr ""
+msgstr "Segueixes a tots els amics!"
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:64
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:99
@@ -1075,9 +1075,9 @@ msgstr "S'ha produït un error en anar a buscar el canal."
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "S'ha produït un error en generar el teu starter pack. Vols tornar-ho a provar?"
 
-#: src/components/contacts/screens/ViewMatches.tsx:242
+#: src/components/contacts/screens/ViewMatches.tsx:240
 msgid "An error occurred while hiding suggestion. {0}"
-msgstr ""
+msgstr "S'ha produït un error en ocultar el suggeriment. {0}"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:140
 msgid "An error occurred while loading the video. Please try again later."
@@ -1110,12 +1110,12 @@ msgstr "Hi ha hagut un error mentre es pujava el vídeo."
 #: src/components/contacts/screens/VerifyNumber.tsx:128
 #: src/components/contacts/screens/VerifyNumber.tsx:181
 msgid "An error occurred. {0}"
-msgstr ""
+msgstr "S'ha produït un error. {0}"
 
 #: src/components/contacts/components/HeroImage.tsx:28
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:71
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:78
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
-msgstr ""
+msgstr "Una il·lustració que representa els avatars d'usuari que flueixen des d'una llibreta de contactes fins a l'aplicació Bluesky"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:35
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
@@ -1277,8 +1277,8 @@ msgstr "Apel·la aquesta decisió"
 
 #: src/Navigation.tsx:393
 #: src/screens/Settings/AppearanceSettings.tsx:73
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:230
+#: src/screens/Settings/Settings.tsx:233
 msgid "Appearance"
 msgstr "Aparença"
 
@@ -1287,8 +1287,8 @@ msgstr "Aparença"
 msgid "Apply default recommended feeds"
 msgstr "Aplica els canals recomanats per defecte"
 
-#: src/screens/Settings/Settings.tsx:512
-#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:518
 msgid "Apply Pull Request"
 msgstr "Aplica la petició d'integració Pull Request"
 
@@ -1571,7 +1571,7 @@ msgstr "Bluesky Classic™"
 
 #: src/components/contacts/screens/GetContacts.tsx:232
 msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
-msgstr ""
+msgstr "Bluesky ajuda els amics a trobar-se creant una empremta digital codificada, anomenada \"hash\", i després buscant hashes coincidents."
 
 #: src/components/dialogs/ServerInput.tsx:217
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -1588,15 +1588,15 @@ msgstr "Bluesky és millor amb col·legues!"
 
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:35
 msgid "Bluesky is more fun with friends"
-msgstr ""
+msgstr "Bluesky és més divertit amb amics! Importa els teus contactes per veure qui ja hi és"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:99
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:106
 msgid "Bluesky is more fun with friends! Import your contacts to see who’s already here."
-msgstr ""
+msgstr "Bluesky és més divertit amb amics! Importa els teus contactes per veure qui ja hi és."
 
-#: src/components/contacts/screens/ViewMatches.tsx:314
+#: src/components/contacts/screens/ViewMatches.tsx:312
 msgid "Bluesky is more fun with friends. Do you want to invite some of yours? <0/>"
-msgstr ""
+msgstr "Bluesky és més divertit amb amics. Vols convidar-ne alguns? <0/>"
 
 #: src/screens/Takendown.tsx:220
 msgid "Bluesky Social Terms of Service"
@@ -1604,7 +1604,7 @@ msgstr "Condicions del servei de Bluesky Social"
 
 #: src/screens/Settings/FindContactsSettings.tsx:542
 msgid "Bluesky stores your contacts as encoded data. Removing your contacts will immediately delete this data."
-msgstr ""
+msgstr "Bluesky emmagatzema els contactes com a dades codificades. Si els elimines, aquestes dades s'eliminaran immediatament."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:338
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1714,7 +1714,7 @@ msgstr "En fer clic a \"Continua\", reconeixes que entens i acceptes aquestes ac
 
 #: src/components/contacts/screens/PhoneInput.tsx:294
 msgid "By continuing, you consent to this use. You may change your mind any time by visiting settings. <0>Learn more</0>"
-msgstr ""
+msgstr "En continuar, dones el teu consentiment per a aquest ús. Pots canviar d'opinió en qualsevol moment visitant la configuració. <0>Més informació</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -1766,7 +1766,7 @@ msgstr "Càmera"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:85
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:247
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:253
-#: src/screens/Settings/Settings.tsx:303
+#: src/screens/Settings/Settings.tsx:307
 #: src/screens/Takendown.tsx:107
 #: src/screens/Takendown.tsx:110
 #: src/view/com/composer/Composer.tsx:1050
@@ -1984,7 +1984,7 @@ msgstr "Tria aquest color com el teu avatar"
 
 #: src/components/contacts/components/InviteInfo.tsx:56
 msgid "Choose who to invite"
-msgstr ""
+msgstr "Tria a qui vols convidar"
 
 #: src/components/dialogs/ServerInput.tsx:137
 msgid "Choose your account provider"
@@ -2002,11 +2002,11 @@ msgstr "Tria la teva contrasenya"
 msgid "Choose your username"
 msgstr "El teu identificador d'usuari"
 
-#: src/screens/Settings/Settings.tsx:504
+#: src/screens/Settings/Settings.tsx:508
 msgid "Clear all storage data"
 msgstr "Esborra totes les dades emmagatzemades"
 
-#: src/screens/Settings/Settings.tsx:506
+#: src/screens/Settings/Settings.tsx:510
 msgid "Clear all storage data (restart after this)"
 msgstr "Esborra totes les dades emmagatzemades (i després reinicia)"
 
@@ -2031,7 +2031,7 @@ msgstr "clica aquí"
 msgid "Click here to contact our support team"
 msgstr "Fes clic aquí per contactar amb el nostre equip d'assistència"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:233
+#: src/ageAssurance/components/NoAccessScreen.tsx:248
 msgid "Click here to log out"
 msgstr "Fes clic aquí per tancar sessió"
 
@@ -2040,7 +2040,7 @@ msgid "Click here to restart the verification process."
 msgstr "Fes clic aquí per reiniciar el procés de verificació."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:97
-#: src/ageAssurance/components/NoAccessScreen.tsx:207
+#: src/ageAssurance/components/NoAccessScreen.tsx:220
 msgid "Click here to update your birthdate"
 msgstr "Fes clic aquí per actualitzar la teva data de naixement"
 
@@ -2257,7 +2257,7 @@ msgstr "Confirma la configuració de l'idioma del contingut"
 msgid "Confirm delete account"
 msgstr "Confirma l'eliminació del compte"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:356
+#: src/ageAssurance/components/NoAccessScreen.tsx:371
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
@@ -2284,7 +2284,7 @@ msgstr "Connectant…"
 msgid "Connection issue"
 msgstr "Problema de connexió"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:293
+#: src/ageAssurance/components/NoAccessScreen.tsx:308
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
@@ -2299,7 +2299,7 @@ msgstr "Contacta amb suport"
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:57
 #: src/screens/Settings/FindContactsSettings.tsx:154
 msgid "Contact sync is not available on this device, as the app is unable to access your contacts."
-msgstr ""
+msgstr "La sincronització de contactes no està disponible en aquest dispositiu, ja que l'aplicació no pot accedir als teus contactes."
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:93
 msgid "Contact us"
@@ -2307,18 +2307,18 @@ msgstr "Contacteu-nos"
 
 #: src/screens/Settings/FindContactsSettings.tsx:471
 msgid "Contacts removed"
-msgstr ""
+msgstr "Contactes eliminats"
 
 #: src/screens/Settings/FindContactsSettings.tsx:498
 msgid "Contacts uploaded"
-msgstr ""
+msgstr "Contactes carregats"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Content & Media"
 msgstr "Contingut i multimèdia"
 
-#: src/screens/Settings/Settings.tsx:208
-#: src/screens/Settings/Settings.tsx:211
+#: src/screens/Settings/Settings.tsx:210
+#: src/screens/Settings/Settings.tsx:213
 msgid "Content and media"
 msgstr "Contingut i multimèdia"
 
@@ -2540,12 +2540,12 @@ msgstr "No s'ha pogut trobar el perfil"
 #: src/screens/Settings/FindContactsSettings.tsx:208
 #: src/screens/Settings/FindContactsSettings.tsx:397
 msgid "Could not follow all matches - please check your network connection."
-msgstr ""
+msgstr "No s'han pogut seguir totes les coincidències; comprova la connexió de xarxa."
 
 #: src/screens/Settings/FindContactsSettings.tsx:214
 #: src/screens/Settings/FindContactsSettings.tsx:403
 msgid "Could not follow all matches. {0}"
-msgstr ""
+msgstr "No s'han pogut seguir totes les coincidències. {0}"
 
 #: src/components/dms/AfterReportDialog.tsx:138
 #: src/components/dms/LeaveConvoPrompt.tsx:35
@@ -2580,13 +2580,13 @@ msgstr "No s'ha pogut actualitzar la configuració de notificacions"
 
 #: src/components/contacts/screens/GetContacts.tsx:168
 msgid "Could not upload contacts. {0}"
-msgstr ""
+msgstr "No s'han pogut carregar els contactes. {0}"
 
 #: src/components/contacts/screens/GetContacts.tsx:162
 msgid "Could not upload contacts. You need to re-verify your phone number to proceed"
-msgstr ""
+msgstr "No s'han pogut carregar els contactes. Cal que tornis a verificar el teu número de telèfon per continuar"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:79
+#: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
 msgstr "Codi de país"
 
@@ -2746,7 +2746,7 @@ msgstr "Data de naixement"
 msgid "Deactivate account"
 msgstr "Desactiva el compte"
 
-#: src/screens/Settings/Settings.tsx:469
+#: src/screens/Settings/Settings.tsx:473
 msgid "Debug Moderation"
 msgstr "Moderació de depuració"
 
@@ -2799,13 +2799,13 @@ msgstr "Vols eliminar la contrasenya d'aplicació?"
 msgid "Delete chat"
 msgstr "Elimina el xat"
 
-#: src/screens/Settings/Settings.tsx:476
+#: src/screens/Settings/Settings.tsx:480
 msgid "Delete chat declaration record"
 msgstr "Suprimeix el registre de declaració de xat"
 
 #: src/screens/Settings/FindContactsSettings.tsx:539
 msgid "Delete contacts"
-msgstr ""
+msgstr "Suprimeix contactes"
 
 #: src/components/dms/AfterReportDialog.tsx:190
 #: src/components/dms/AfterReportDialog.tsx:193
@@ -2873,7 +2873,7 @@ msgstr "Compte eliminat"
 
 #: src/components/contacts/screens/PhoneInput.tsx:283
 msgid "Deleted by Plivo after verification"
-msgstr ""
+msgstr "Eliminat per Plivo després de la verificació"
 
 #: src/view/com/feeds/MissingFeed.tsx:42
 #: src/view/com/feeds/MissingFeed.tsx:75
@@ -2912,8 +2912,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "Mode desenvolupador habilitat"
 
-#: src/screens/Settings/Settings.tsx:285
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:289
+#: src/screens/Settings/Settings.tsx:292
 msgid "Developer options"
 msgstr "Opcions de desenvolupador"
 
@@ -3005,7 +3005,7 @@ msgstr "Descarta"
 
 #: src/components/contacts/FindContactsBannerNUX.tsx:76
 msgid "Dismiss banner"
-msgstr ""
+msgstr "Ignora el bàner"
 
 #: src/view/com/composer/Composer.tsx:1815
 msgid "Dismiss error"
@@ -3073,8 +3073,8 @@ msgstr "No pateixis! Tots els missatges i la configuració existents es desen i 
 
 #: src/components/contacts/components/InviteInfo.tsx:72
 #: src/components/contacts/components/InviteInfo.tsx:78
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:411
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:409
 #: src/components/dialogs/BirthDateSettings.tsx:183
 #: src/components/dialogs/BirthDateSettings.tsx:190
 #: src/components/dialogs/ServerInput.tsx:240
@@ -3413,7 +3413,7 @@ msgstr "Assegura't que has seleccionat un idioma per a cada fitxer de subtítols
 
 #: src/components/contacts/screens/VerifyNumber.tsx:228
 msgid "Enter 6-digit code that was sent to your phone number"
-msgstr ""
+msgstr "Introdueix el codi de 6 dígits que s'ha enviat al teu número de telèfon"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:147
 msgid "Enter a password"
@@ -3436,7 +3436,7 @@ msgstr "Entra a pantalla completa"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:223
 msgid "Enter the 6-digit code sent to {prettyNumber}"
-msgstr ""
+msgstr "Introdueix el codi de 6 dígits que t'han enviat a {prettyNumber}"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:380
 msgid "Enter the domain you want to use"
@@ -3482,7 +3482,7 @@ msgstr "Error"
 
 #: src/screens/Settings/FindContactsSettings.tsx:90
 msgid "Error getting the latest data."
-msgstr ""
+msgstr "Error en obtenir les dades més recents."
 
 #: src/screens/PostThread/components/ThreadError.tsx:26
 msgid "Error loading post"
@@ -3700,17 +3700,17 @@ msgstr "No s'ha pogut eliminar l'starter pack"
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "No s'han pogut seguir tots els comptes suggerits. Torna-ho a provar"
 
-#: src/components/contacts/screens/ViewMatches.tsx:147
+#: src/components/contacts/screens/ViewMatches.tsx:145
 msgid "Failed to follow all your friends, please try again"
-msgstr ""
+msgstr "No has pogut seguir tots els teus amics. Torna-ho a provar"
 
-#: src/components/contacts/screens/ViewMatches.tsx:235
+#: src/components/contacts/screens/ViewMatches.tsx:233
 msgid "Failed to hide suggestion, please check your internet connection"
-msgstr ""
+msgstr "No s'ha pogut amagar el suggeriment. Comprova la connexió a Internet"
 
-#: src/components/contacts/screens/ViewMatches.tsx:580
+#: src/components/contacts/screens/ViewMatches.tsx:578
 msgid "Failed to launch SMS app"
-msgstr ""
+msgstr "No s'ha pogut iniciar l'aplicació d'SMS"
 
 #: src/screens/Messages/ChatList.tsx:282
 #: src/screens/Messages/Inbox.tsx:209
@@ -3772,11 +3772,11 @@ msgstr "No s'ha pogut fixar la publicació"
 
 #: src/screens/Settings/FindContactsSettings.tsx:481
 msgid "Failed to remove data due to a network error, please check your internet connection."
-msgstr ""
+msgstr "No s'han pogut eliminar les dades a causa d'un error de xarxa. Comprova la connexió a Internet."
 
 #: src/screens/Settings/FindContactsSettings.tsx:487
 msgid "Failed to remove data. {0}"
-msgstr ""
+msgstr "No s'han pogut eliminar les dades. {0}"
 
 #: src/components/dms/ActionsWrapper.web.tsx:60
 #: src/components/dms/MessageContextMenu.tsx:95
@@ -3990,21 +3990,21 @@ msgstr "Troba comptes per a seguir"
 #: src/Navigation.tsx:425
 #: src/Navigation.tsx:626
 msgid "Find Contacts"
-msgstr ""
+msgstr "Troba contactes"
 
 #: src/screens/Settings/FindContactsSettings.tsx:76
 msgid "Find Friends"
-msgstr ""
+msgstr "Troba amics"
 
-#: src/screens/Settings/Settings.tsx:217
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Settings/Settings.tsx:221
+#: src/screens/Settings/Settings.tsx:224
 msgid "Find friends from contacts"
-msgstr ""
+msgstr "Troba amics a partir dels contactes"
 
 #: src/components/contacts/screens/GetContacts.tsx:270
 #: src/components/contacts/screens/GetContacts.tsx:284
 msgid "Find my friends"
-msgstr ""
+msgstr "Troba els meus amics"
 
 #. Starter packs suggested to the user for them to follow
 #: src/components/ProgressGuide/FollowDialog.tsx:72
@@ -4018,14 +4018,14 @@ msgstr "Troba gent per seguir"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Troba publicacions, usuaris i canals a Bluesky"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:89
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:96
 msgid "Find your friends"
-msgstr ""
+msgstr "Troba els teus amics"
 
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:38
 #: src/screens/Settings/FindContactsSettings.tsx:123
 msgid "Find your friends on Bluesky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
-msgstr ""
+msgstr "Troba els teus amics a Bluesky verificant el teu número de telèfon i fent-lo coincidir amb els teus contactes. Nosaltres protegim la teva informació i tu controles què passa després. <0>Més informació</0>"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:21
 msgid "Find your people"
@@ -4033,7 +4033,7 @@ msgstr "Troba la teva gent"
 
 #: src/components/contacts/screens/GetContacts.tsx:278
 msgid "Finding friends..."
-msgstr ""
+msgstr "Cercant amics..."
 
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Finish"
@@ -4056,7 +4056,7 @@ msgstr "Blanc pla"
 
 #: src/components/contacts/components/OTPInput.tsx:55
 msgid "Focus code input"
-msgstr ""
+msgstr "Entrada de codi"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:559
@@ -4093,8 +4093,8 @@ msgstr "Segueix 7 comptes"
 msgid "Follow account"
 msgstr "Segueix el compte"
 
-#: src/components/contacts/screens/ViewMatches.tsx:275
-#: src/components/contacts/screens/ViewMatches.tsx:290
+#: src/components/contacts/screens/ViewMatches.tsx:273
+#: src/components/contacts/screens/ViewMatches.tsx:288
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:265
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
@@ -4124,7 +4124,7 @@ msgstr "Has seguit tots els comptes!"
 
 #: src/screens/Settings/FindContactsSettings.tsx:391
 msgid "Followed all matches"
-msgstr ""
+msgstr "Has seguit totes les coincidències"
 
 #: src/components/KnownFollowers.tsx:238
 msgid "Followed by <0>{0}</0>"
@@ -4209,6 +4209,10 @@ msgstr "Mida de la lletra"
 #: src/lib/interests.ts:61
 msgid "Food"
 msgstr "Menjar"
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:125
+msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -4530,10 +4534,10 @@ msgstr "Tens problemes?"
 
 #: src/components/contacts/screens/PhoneInput.tsx:287
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
-msgstr ""
+msgstr "Retingut per Bluesky durant 7 dies per evitar abusos, i després eliminat"
 
-#: src/screens/Settings/Settings.tsx:250
 #: src/screens/Settings/Settings.tsx:254
+#: src/screens/Settings/Settings.tsx:258
 #: src/view/shell/desktop/RightNav.tsx:123
 #: src/view/shell/desktop/RightNav.tsx:124
 #: src/view/shell/Drawer.tsx:381
@@ -4553,11 +4557,11 @@ msgstr "Aquí tens la teva contrasenya d'aplicació!"
 msgid "Hey there 👋"
 msgstr "Hola 👋"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:158
+#: src/ageAssurance/components/NoAccessScreen.tsx:167
 msgid "Hey there!"
 msgstr "Ep!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:189
+#: src/ageAssurance/components/NoAccessScreen.tsx:202
 msgid "Hi there!"
 msgstr "Ep!"
 
@@ -4657,7 +4661,7 @@ msgstr "Amaga les insígnies de verificació"
 msgid "Hides the content"
 msgstr "Amaga el contingut"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:216
+#: src/ageAssurance/components/NoAccessScreen.tsx:229
 msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
 msgstr "Hmm, sembla que has iniciat la sessió amb una <0>contrasenya d'aplicació</0>. Per definir la teva data de naixement, hauràs d'iniciar la sessió amb la contrasenya del teu compte principal o demanar a qui controli aquest compte que ho faci."
 
@@ -4716,7 +4720,7 @@ msgstr "Candent"
 
 #: src/components/contacts/components/InviteInfo.tsx:53
 msgid "How it works:"
-msgstr ""
+msgstr "Com funciona:"
 
 #: src/components/dialogs/InAppBrowserConsent.tsx:62
 #: src/components/dialogs/InAppBrowserConsent.tsx:66
@@ -4725,7 +4729,7 @@ msgstr "Com hem d'obrir aquest enllaç?"
 
 #: src/components/contacts/screens/PhoneInput.tsx:276
 msgid "How we use your number:"
-msgstr ""
+msgstr "Com fem servir el teu número:"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:150
 msgid "Human trafficking"
@@ -4733,7 +4737,7 @@ msgstr "Tràfic de persones"
 
 #: src/components/contacts/screens/GetContacts.tsx:264
 msgid "I consent to Bluesky using my contacts for mutual friend discovery and to retain hashed data for matching until I opt out."
-msgstr ""
+msgstr "Dono el meu consentiment perquè Bluesky utilitzi els meus contactes per descobrir amics mutus i per conservar dades codificades per a la coincidència fins que em doni de baixa."
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:133
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
@@ -4750,9 +4754,9 @@ msgstr "Tinc el meu propi domini"
 msgid "I understand"
 msgstr "Ho entenc"
 
-#: src/components/contacts/screens/ViewMatches.tsx:576
+#: src/components/contacts/screens/ViewMatches.tsx:574
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
-msgstr ""
+msgstr "Estic a Bluesky com a {0}. Vine a trobar-me! https://bsky.app/download"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:187
 msgid "If alt text is long, toggles alt text expanded state"
@@ -4838,19 +4842,19 @@ msgstr "Suplantació d'identitat"
 #: src/screens/Settings/FindContactsSettings.tsx:143
 #: src/screens/Settings/FindContactsSettings.tsx:148
 msgid "Import contacts"
-msgstr ""
+msgstr "Importa contactes"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:107
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:118
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:114
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:125
 msgid "Import Contacts"
-msgstr ""
+msgstr "Importa contactes"
 
 #: src/components/contacts/FindContactsBannerNUX.tsx:32
 #: src/components/contacts/FindContactsBannerNUX.tsx:70
 msgid "Import contacts to find your friends"
-msgstr ""
+msgstr "Importa contactes per trobar els teus amics"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:192
+#: src/ageAssurance/components/NoAccessScreen.tsx:205
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "Per tal d'oferir una experiència adequada a l'edat, necessitem saber la teva data de naixement. Només cal fer-ho un sol cop i les teves dades es mantindran privades."
 
@@ -4923,9 +4927,9 @@ msgstr "Configuració de les interaccions"
 msgid "Introducing activity notifications"
 msgstr "Introducció a les notificacions d'activitat"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:48
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
-msgstr ""
+msgstr "Com pots trobar amics a través dels contactes"
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:37
 msgid "Introducing saved posts AKA bookmarks"
@@ -4948,7 +4952,7 @@ msgstr "Configuració de les interaccions invàlida."
 #: src/components/contacts/phone-number.ts:33
 #: src/components/contacts/screens/PhoneInput.tsx:139
 msgid "Invalid phone number"
-msgstr ""
+msgstr "Número de telèfon no vàlid"
 
 #: src/components/moderation/ReportDialog/index.tsx:81
 msgid "Invalid report subject"
@@ -4958,13 +4962,13 @@ msgstr "El tema de l'informe no és vàlid"
 msgid "Invalid Verification Code"
 msgstr "Codi de verificació invàlid"
 
-#: src/components/contacts/screens/ViewMatches.tsx:585
+#: src/components/contacts/screens/ViewMatches.tsx:583
 msgid "Invite"
-msgstr ""
+msgstr "Convida"
 
-#: src/components/contacts/screens/ViewMatches.tsx:565
+#: src/components/contacts/screens/ViewMatches.tsx:563
 msgid "Invite {name} to join Bluesky"
-msgstr ""
+msgstr "Convida {name} a unir-se a Bluesky"
 
 #: src/screens/Signup/StepInfo/index.tsx:166
 msgid "Invite code"
@@ -4977,11 +4981,11 @@ msgstr "Codi d'invitació rebutjat. Comprova que l'has entrat correctament i tor
 #: src/components/contacts/components/InviteInfo.tsx:41
 #: src/components/contacts/components/InviteInfo.tsx:43
 msgid "Invite Friends"
-msgstr ""
+msgstr "Convida amics"
 
-#: src/components/contacts/screens/ViewMatches.tsx:300
+#: src/components/contacts/screens/ViewMatches.tsx:298
 msgid "Invite friends <0/>"
-msgstr ""
+msgstr "Convida amics <0/>"
 
 #: src/components/StarterPack/ShareDialog.tsx:81
 msgid "Invite people to this starter pack!"
@@ -4995,14 +4999,14 @@ msgstr "Convida els teus amics a seguir els teus canals i persones preferides"
 msgid "Invites, but personal"
 msgstr "Convida a Bluesky de manera més personalitzada"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:353
+#: src/ageAssurance/components/NoAccessScreen.tsx:368
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "La ubicació no és exacta? <0>Toca aquí per a confirmar la teva ubicació.</0>"
 
 #: src/components/contacts/components/InviteInfo.tsx:46
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
-msgstr ""
+msgstr "Sembla que alguns dels teus contactes encara no han intentat trobar-te aquí. Pots convidar-los personalment adaptant un esborrany de missatge que et proporcionarem."
 
 #: src/screens/Signup/StepInfo/index.tsx:292
 msgid "It's correct"
@@ -5083,8 +5087,8 @@ msgid "Language Settings"
 msgstr "Configuració d'idioma"
 
 #: src/screens/Settings/LanguageSettings.tsx:78
-#: src/screens/Settings/Settings.tsx:242
-#: src/screens/Settings/Settings.tsx:245
+#: src/screens/Settings/Settings.tsx:246
+#: src/screens/Settings/Settings.tsx:249
 msgid "Languages"
 msgstr "Idiomes"
 
@@ -5092,12 +5096,12 @@ msgstr "Idiomes"
 msgid "Larger"
 msgstr "Més gran"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:336
+#: src/ageAssurance/components/NoAccessScreen.tsx:351
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated {timeAgo} ago"
 msgstr "Última iniciació fa {timeAgo}"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:334
+#: src/ageAssurance/components/NoAccessScreen.tsx:349
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
 msgid "Last initiated just now"
 msgstr "Última iniciació ara mateix"
@@ -5132,14 +5136,14 @@ msgstr "Més informació sobre Bluesky"
 
 #: src/components/contacts/components/InviteInfo.tsx:32
 msgid "Learn more about how inviting friends works"
-msgstr ""
+msgstr "Més informació sobre com funciona convidar amics"
 
 #: src/components/contacts/screens/PhoneInput.tsx:300
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:45
 #: src/screens/Settings/FindContactsSettings.tsx:130
 msgctxt "english-only-resource"
 msgid "Learn more about importing contacts"
-msgstr ""
+msgstr "Més informació sobre la importació de contactes"
 
 #: src/components/dialogs/ServerInput.tsx:223
 msgid "Learn more about self hosting your PDS."
@@ -5633,8 +5637,8 @@ msgstr "Enganyós"
 
 #: src/Navigation.tsx:179
 #: src/screens/Moderation/index.tsx:99
-#: src/screens/Settings/Settings.tsx:192
-#: src/screens/Settings/Settings.tsx:195
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Moderation"
 msgstr "Moderació"
 
@@ -5979,8 +5983,8 @@ msgstr "Les respostes més noves primer"
 msgid "News"
 msgstr "Notícies"
 
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:409
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:407
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:346
@@ -6011,13 +6015,13 @@ msgstr "Sense anuncis, sense seguiment invasiu, sense trampes d'interacció. Blu
 msgid "No app passwords yet"
 msgstr "Encara no hi ha contrasenyes d'aplicació"
 
-#: src/components/contacts/screens/ViewMatches.tsx:679
+#: src/components/contacts/screens/ViewMatches.tsx:677
 msgid "No contacts found"
-msgstr ""
+msgstr "No s'han trobat contactes"
 
-#: src/components/contacts/screens/ViewMatches.tsx:657
+#: src/components/contacts/screens/ViewMatches.tsx:655
 msgid "No contacts with the name “{query}” found"
-msgstr ""
+msgstr "No s'han trobat contactes amb el nom «{query}»"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:408
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:410
@@ -6068,9 +6072,9 @@ msgstr "Encara no tens cap missatge"
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr "S'han acabat els algoritmes plens de brossa i que t'enganxen en una espiral de notícies negatives. Troba canals que funcionin per a tu, no en contra teva."
 
-#: src/components/contacts/screens/ViewMatches.tsx:561
+#: src/components/contacts/screens/ViewMatches.tsx:559
 msgid "No name"
-msgstr ""
+msgstr "Sense nom"
 
 #: src/view/com/notifications/NotificationFeed.tsx:125
 msgid "No notifications yet!"
@@ -6189,7 +6193,7 @@ msgstr "Cap"
 #: src/screens/FindContactsFlowScreen.tsx:70
 #: src/screens/Settings/FindContactsSettings.tsx:101
 msgid "Not available on this platform."
-msgstr ""
+msgstr "No disponible en aquesta plataforma."
 
 #: src/components/KnownFollowers.tsx:259
 msgid "Not followed by anyone you're following"
@@ -6249,8 +6253,8 @@ msgstr "Sons de les notificacions"
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:200
-#: src/screens/Settings/Settings.tsx:203
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:205
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:709
@@ -6277,7 +6281,7 @@ msgstr "Nuesa"
 
 #: src/components/contacts/phone-number.ts:43
 msgid "Number should be a mobile number"
-msgstr ""
+msgstr "El número ha de ser un número de mòbil"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:14
 #: src/screens/Settings/NotificationSettings/index.tsx:291
@@ -6315,7 +6319,7 @@ msgstr "Respostes més antigues primer"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "en<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:402
+#: src/screens/Settings/Settings.tsx:406
 msgid "Onboarding reset"
 msgstr "Restableix la incorporació"
 
@@ -6417,7 +6421,7 @@ msgstr "Obre l'enllaç a {niceUrl}"
 msgid "Open message options"
 msgstr "Obre les opcions dels missatges"
 
-#: src/screens/Settings/Settings.tsx:467
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open moderation debug page"
 msgstr "Obre la pàgina de depuració de moderació"
 
@@ -6446,12 +6450,12 @@ msgstr "Obre el menú de compatir"
 msgid "Open starter pack menu"
 msgstr "Obre el menú de l'starter pack"
 
-#: src/screens/Settings/Settings.tsx:460
-#: src/screens/Settings/Settings.tsx:474
+#: src/screens/Settings/Settings.tsx:464
+#: src/screens/Settings/Settings.tsx:478
 msgid "Open storybook page"
 msgstr "Obre la pàgina d'historial"
 
-#: src/screens/Settings/Settings.tsx:453
+#: src/screens/Settings/Settings.tsx:457
 msgid "Open system log"
 msgstr "Obre el registre del sistema"
 
@@ -6514,7 +6518,7 @@ msgstr "Obre el procés per a iniciar sessió a un compte existent de Bluesky"
 msgid "Opens GIF select dialog"
 msgstr "Obre el diàleg per a triar GIF"
 
-#: src/screens/Settings/Settings.tsx:251
+#: src/screens/Settings/Settings.tsx:255
 msgid "Opens helpdesk in browser"
 msgstr "Obre el centre d'ajuda al navegador"
 
@@ -6708,7 +6712,7 @@ msgstr "Canvi de persona"
 
 #: src/components/contacts/components/InviteInfo.tsx:59
 msgid "Personalize the message"
-msgstr ""
+msgstr "Personalitza el missatge"
 
 #: src/lib/interests.ts:68
 msgid "Pets"
@@ -6717,11 +6721,11 @@ msgstr "Mascotes"
 #: src/components/contacts/screens/PhoneInput.tsx:189
 #: src/components/contacts/screens/PhoneInput.tsx:201
 msgid "Phone number"
-msgstr ""
+msgstr "Número de telèfon"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:301
 msgid "Phone number verified"
-msgstr ""
+msgstr "Número de telèfon verificat"
 
 #: src/lib/interests.ts:69
 msgid "Photography"
@@ -6942,7 +6946,7 @@ msgstr "Inicia sessió com a @{0}"
 #: src/screens/FindContactsFlowScreen.tsx:71
 #: src/screens/Settings/FindContactsSettings.tsx:102
 msgid "Please use the native app to sync your contacts."
-msgstr ""
+msgstr "Fes servir l'aplicació nativa per sincronitzar els teus contactes."
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:62
 msgid "Please verify your email"
@@ -7121,8 +7125,8 @@ msgstr "Idioma principal"
 msgid "Privacy"
 msgstr "Privacitat"
 
-#: src/screens/Settings/Settings.tsx:186
-#: src/screens/Settings/Settings.tsx:189
+#: src/screens/Settings/Settings.tsx:188
+#: src/screens/Settings/Settings.tsx:191
 msgid "Privacy and security"
 msgstr "Privadesa i seguretat"
 
@@ -7282,7 +7286,7 @@ msgstr "Has superat el límit – has intentat canviar l'identificador massa veg
 
 #: src/components/contacts/screens/PhoneInput.tsx:106
 msgid "Rate limit exceeded. Please try again later."
-msgstr ""
+msgstr "S'ha superat el límit de velocitat. Torna-ho a provar més tard."
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
@@ -7400,7 +7404,7 @@ msgstr "Carrega les converses de nou"
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:105
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:112
 #: src/screens/Bookmarks/index.tsx:266
-#: src/screens/Settings/Settings.tsx:678
+#: src/screens/Settings/Settings.tsx:682
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:220
 msgid "Remove"
@@ -7414,15 +7418,15 @@ msgstr "Elimina a {displayName} de l'starter pack"
 msgid "Remove {historyItem}"
 msgstr "Elimina {historyItem}"
 
-#: src/screens/Settings/Settings.tsx:657
-#: src/screens/Settings/Settings.tsx:660
+#: src/screens/Settings/Settings.tsx:661
+#: src/screens/Settings/Settings.tsx:664
 msgid "Remove account"
 msgstr "Elimina el compte"
 
 #: src/screens/Settings/FindContactsSettings.tsx:548
 #: src/screens/Settings/FindContactsSettings.tsx:556
 msgid "Remove all contacts"
-msgstr ""
+msgstr "Elimina tots els contactes"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:19
 msgid "Remove attachment"
@@ -7460,7 +7464,7 @@ msgstr "Vols eliminar el canal?"
 msgid "Remove from my feeds"
 msgstr "Elimina dels meus canals"
 
-#: src/screens/Settings/Settings.tsx:670
+#: src/screens/Settings/Settings.tsx:674
 msgid "Remove from quick access?"
 msgstr "Vols eliminar-lo de l'accés ràpid?"
 
@@ -7504,10 +7508,10 @@ msgstr "Elimina la republicació"
 msgid "Remove subtitle file"
 msgstr "Eliminar el fitxer de subtítols"
 
-#: src/components/contacts/screens/ViewMatches.tsx:499
+#: src/components/contacts/screens/ViewMatches.tsx:497
 #: src/screens/Settings/FindContactsSettings.tsx:323
 msgid "Remove suggestion"
-msgstr ""
+msgstr "Elimina el suggeriment"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:218
 msgid "Remove this feed from your saved feeds"
@@ -7816,11 +7820,11 @@ msgstr "Torna'l a enviar"
 #: src/components/contacts/screens/VerifyNumber.tsx:362
 #: src/components/contacts/screens/VerifyNumber.tsx:379
 msgid "Resend code"
-msgstr ""
+msgstr "Torna a enviar el codi"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:369
 msgid "Resend code in <0>00:{0}</0>"
-msgstr ""
+msgstr "Torna a enviar el codi en <0>00:{0}</0>"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
@@ -7835,8 +7839,8 @@ msgstr "Torna a enviar el correu"
 msgid "Resend Verification Email"
 msgstr "Torna a enviar el correu de verificació"
 
-#: src/screens/Settings/Settings.tsx:496
-#: src/screens/Settings/Settings.tsx:498
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Reset activity subscription nudge"
 msgstr "Restableix el toc de subscripció a l'activitat"
 
@@ -7844,8 +7848,8 @@ msgstr "Restableix el toc de subscripció a l'activitat"
 msgid "Reset code"
 msgstr "Codi de restabliment"
 
-#: src/screens/Settings/Settings.tsx:481
-#: src/screens/Settings/Settings.tsx:483
+#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:487
 msgid "Reset onboarding state"
 msgstr "Restableix l'estat de la incorporació"
 
@@ -7856,7 +7860,7 @@ msgstr "Restableix la contrasenya"
 #: src/screens/Settings/FindContactsSettings.tsx:516
 #: src/screens/Settings/FindContactsSettings.tsx:532
 msgid "Resync contacts"
-msgstr ""
+msgstr "Resincronitza els contactes"
 
 #: src/screens/Login/LoginForm.tsx:327
 msgid "Retries signing in"
@@ -8047,9 +8051,9 @@ msgstr "Cerca a les publicacions de @{0}"
 msgid "Search by name or interest"
 msgstr "Cerca per nom o interès"
 
-#: src/components/contacts/screens/ViewMatches.tsx:355
+#: src/components/contacts/screens/ViewMatches.tsx:353
 msgid "Search contacts"
-msgstr ""
+msgstr "Cerca contactes"
 
 #: src/view/screens/Feeds.tsx:444
 msgid "Search feeds"
@@ -8286,7 +8290,7 @@ msgstr "Selecciona l'idioma principal"
 msgid "Select subtitle file (.vtt)"
 msgstr "Tria el fitxer de subtítols (.vtt)"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:67
+#: src/components/InternationalPhoneCodeSelect.tsx:68
 msgid "Select telephone code"
 msgstr "Tria el codi de telèfon"
 
@@ -8342,7 +8346,7 @@ msgstr "Envia un lloc web net!"
 #: src/components/contacts/screens/PhoneInput.tsx:252
 #: src/components/contacts/screens/PhoneInput.tsx:257
 msgid "Send code"
-msgstr ""
+msgstr "Envia el codi"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:181
@@ -8379,7 +8383,7 @@ msgstr "Envia l'informe a {title}"
 
 #: src/components/contacts/components/InviteInfo.tsx:62
 msgid "Send the message from your phone"
-msgstr ""
+msgstr "Envia el missatge des del teu telèfon"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:295
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
@@ -8400,7 +8404,7 @@ msgstr "Envia un correu amb el codi de confirmació per l'eliminació del compte
 
 #: src/components/contacts/screens/PhoneInput.tsx:280
 msgid "Sent to our phone number verification provider Plivo"
-msgstr ""
+msgstr "Enviat al nostre proveïdor de verificació de números de telèfon Plivo"
 
 #: src/components/dialogs/ServerInput.tsx:177
 msgid "Server address"
@@ -8426,7 +8430,7 @@ msgstr "Configura el teu compte"
 msgid "Set who can reply to your post"
 msgstr "Defineix qui pot respondre a la teva publicació"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:199
+#: src/ageAssurance/components/NoAccessScreen.tsx:212
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr "Estableix la teva data de naixement a continuació i et permetrem tornar a publicar i explorar en un tres i no res!"
 
@@ -8435,7 +8439,7 @@ msgid "Sets email for password reset"
 msgstr "Estableix un correu per a restablir la contrasenya"
 
 #: src/Navigation.tsx:215
-#: src/screens/Settings/Settings.tsx:103
+#: src/screens/Settings/Settings.tsx:105
 #: src/view/shell/desktop/LeftNav.tsx:805
 #: src/view/shell/Drawer.tsx:609
 msgid "Settings"
@@ -8573,7 +8577,7 @@ msgstr "Comparteix a través de..."
 
 #: src/components/contacts/screens/GetContacts.tsx:229
 msgid "Share your contacts to find friends"
-msgstr ""
+msgstr "Comparteix els teus contactes per trobar amics"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -8685,7 +8689,7 @@ msgstr "Mostra l'advertiment i filtra-ho dels canals"
 msgid "Shows information about when this post was created"
 msgstr "Mostra informació sobre quan es va crear aquesta publicació"
 
-#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:131
 msgid "Shows other accounts you can switch to"
 msgstr "Mostra altres comptes als quals pots canviar"
 
@@ -8746,9 +8750,9 @@ msgstr "Inicia sessió o crea el teu compte"
 msgid "Sign in to view post"
 msgstr "Inicia la sessió per veure la publicació"
 
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:270
-#: src/screens/Settings/Settings.tsx:302
+#: src/screens/Settings/Settings.tsx:272
+#: src/screens/Settings/Settings.tsx:274
+#: src/screens/Settings/Settings.tsx:306
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:93
@@ -8762,7 +8766,7 @@ msgstr "Tanca sessió"
 msgid "Sign Out"
 msgstr "Tanca la sessió"
 
-#: src/screens/Settings/Settings.tsx:299
+#: src/screens/Settings/Settings.tsx:303
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Sign out?"
 msgstr "Tancar la sessió?"
@@ -8796,7 +8800,7 @@ msgstr "Salta aquest pas"
 #: src/components/contacts/screens/PhoneInput.tsx:157
 #: src/components/contacts/screens/VerifyNumber.tsx:199
 msgid "Skip contact sharing and continue to the app"
-msgstr ""
+msgstr "Omet la compartició de contactes i continua a l'aplicació"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:287
 #: src/screens/Onboarding/StepFinished/index.tsx:313
@@ -8988,16 +8992,16 @@ msgstr "Pàgina d'estat"
 msgid "Step {0} of {1}"
 msgstr "Pas {0} de {1}"
 
-#: src/screens/Settings/Settings.tsx:407
+#: src/screens/Settings/Settings.tsx:411
 msgid "Storage cleared, you need to restart the app now."
 msgstr "L'emmagatzematge s'ha esborrat, cal que reinicieu l'aplicació ara."
 
 #: src/components/contacts/screens/PhoneInput.tsx:291
 msgid "Stored as part of a secure code for matching with others"
-msgstr ""
+msgstr "Emmagatzemat com a part d'un codi segur per a la coincidència amb altres persones"
 
 #: src/Navigation.tsx:308
-#: src/screens/Settings/Settings.tsx:462
+#: src/screens/Settings/Settings.tsx:466
 msgid "Storybook"
 msgstr "Historial"
 
@@ -9095,11 +9099,11 @@ msgstr "Suport"
 
 #: src/components/contacts/screens/PhoneInput.tsx:233
 msgid "Support for this feature in your country has not been enabled yet! Please check back later."
-msgstr ""
+msgstr "Encara no s'ha activat la compatibilitat amb aquesta funció al teu país. Torna-ho a comprovar més tard."
 
-#: src/screens/Settings/Settings.tsx:127
-#: src/screens/Settings/Settings.tsx:141
-#: src/screens/Settings/Settings.tsx:620
+#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:624
 #: src/view/shell/desktop/LeftNav.tsx:247
 msgid "Switch account"
 msgstr "Canvia el compte"
@@ -9127,7 +9131,7 @@ msgstr "Sistema"
 #: src/screens/Log.tsx:58
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:455
+#: src/screens/Settings/Settings.tsx:459
 msgid "System log"
 msgstr "Registres del sistema"
 
@@ -9227,7 +9231,7 @@ msgstr "Gràcies pels teus comentaris! S'han enviat a l'operador del canal."
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Gràcies, has verificat correctament el teu correu. Pots tancar aquest diàleg."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:382
+#: src/ageAssurance/components/NoAccessScreen.tsx:397
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
 msgid "Thanks! You're all set."
 msgstr "Gràcies! Ja ho tenim tot."
@@ -9363,7 +9367,7 @@ msgstr "El codi de verificació que has proporcionat no és vàlid. Assegura't q
 #: src/components/contacts/screens/VerifyNumber.tsx:110
 #: src/components/contacts/screens/VerifyNumber.tsx:162
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
-msgstr ""
+msgstr "El proveïdor de verificació no ha pogut enviar un codi al teu número de telèfon. Comprova'l i torna-ho a provar."
 
 #: src/screens/Settings/AppearanceSettings.tsx:139
 msgid "Theme"
@@ -9379,7 +9383,7 @@ msgstr "No hi ha límit de temps per a la desactivació del compte, torna quan v
 
 #: src/components/contacts/screens/GetContacts.tsx:144
 msgid "There was a problem with your internet connection, please try again"
-msgstr ""
+msgstr "Hi ha hagut un problema amb la connexió a Internet. Torna-ho a intentar"
 
 #: src/components/dialogs/GifSelect.tsx:214
 msgid "There was an issue connecting to Tenor."
@@ -9520,7 +9524,7 @@ msgstr "Aquest xat s'ha desconnectat"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:103
 msgid "This code is invalid. Resend to get a new code."
-msgstr ""
+msgstr "Aquest codi no és vàlid. Torna'l a enviar per obtenir-ne un de nou."
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:144
 msgid "This confirmation code is not valid. Please try again."
@@ -9723,7 +9727,7 @@ msgstr "Aquest usuari no segueix a ningú."
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Això suprimirà \"{0}\" de les teves paraules silenciades. Sempre el pots tornar a afegir més tard."
 
-#: src/screens/Settings/Settings.tsx:672
+#: src/screens/Settings/Settings.tsx:676
 msgid "This will remove @{0} from the quick access list."
 msgstr "Això eliminarà @{0} de la llista d'accés ràpid."
 
@@ -9771,7 +9775,7 @@ msgstr "per a desactivar el mètode 2FA de correu, verifica el teu accés a l'ad
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "Per a desactivar el mètode 2FA de correu, verifica el teu accés a <0>{0}</0>"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:230
+#: src/ageAssurance/components/NoAccessScreen.tsx:245
 msgid "To log out, <0>click here</0>."
 msgstr "Per tancar la sessió, <0>fes clic aquí</0>."
 
@@ -9793,15 +9797,15 @@ msgstr "Commuta el so"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:120
 msgid "Too many attempts. Please wait a few minutes and try again."
-msgstr ""
+msgstr "Massa intents. Si us plau, espera uns minuts i torna-ho a intentar."
 
 #: src/components/contacts/screens/VerifyNumber.tsx:173
 msgid "Too many codes sent. Please wait a few minutes and try again."
-msgstr ""
+msgstr "Massa codis enviats. Espera uns minuts i torna-ho a intentar."
 
 #: src/components/contacts/screens/GetContacts.tsx:153
 msgid "Too many contacts - you've exceeded the number of contacts you can import to find your friends"
-msgstr ""
+msgstr "Massa contactes: has superat el nombre de contactes que pots importar per trobar els teus amics"
 
 #: src/screens/Hashtag.tsx:91
 #: src/screens/Search/SearchResults.tsx:52
@@ -9902,11 +9906,11 @@ msgstr "No es pot contactar amb el teu servei. Comprova la teva connexió a inte
 msgid "Unable to delete"
 msgstr "No s'ha pogut eliminar"
 
-#: src/screens/Settings/Settings.tsx:521
+#: src/screens/Settings/Settings.tsx:525
 msgid "Unapply Pull Request"
 msgstr "Desaplica la petició d'integració Pull Request"
 
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:527
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Desaplica la petició d'integració Pull Request {currentChannel}"
 
@@ -9986,7 +9990,7 @@ msgstr "Deixa de seguir l'usuari"
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "Malauradament, cap dels vostres etiquetadora subscrits admet aquest tipus d'informe."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:176
+#: src/ageAssurance/components/NoAccessScreen.tsx:187
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr "Malauradament, la data de naixement que has desat al teu perfil et fa massa jove per accedir a Bluesky."
 
@@ -10094,8 +10098,8 @@ msgstr "Ja no està fix als teus canals"
 msgid "Unpinned list"
 msgstr "Llista no fixada"
 
-#: src/screens/Settings/Settings.tsx:488
-#: src/screens/Settings/Settings.tsx:490
+#: src/screens/Settings/Settings.tsx:492
+#: src/screens/Settings/Settings.tsx:494
 msgid "Unsnooze email reminder"
 msgstr "Deixa de posposar el recordatori de correu"
 
@@ -10188,7 +10192,7 @@ msgstr "Puja de la biblioteca"
 
 #: src/screens/Settings/FindContactsSettings.tsx:507
 msgid "Uploaded on {0}"
-msgstr ""
+msgstr "Carregat el {0}"
 
 #: src/lib/api/index.ts:302
 msgid "Uploading images..."
@@ -10347,7 +10351,7 @@ msgstr "Verificat per:"
 msgid "Verify account"
 msgstr "Verifica el compte"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:319
+#: src/ageAssurance/components/NoAccessScreen.tsx:334
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
 msgid "Verify again"
 msgstr "Verifica de nou"
@@ -10374,8 +10378,8 @@ msgstr "Verifica el codi del correu"
 msgid "Verify email dialog"
 msgstr "Diàleg de verificació del correu"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:307
-#: src/ageAssurance/components/NoAccessScreen.tsx:321
+#: src/ageAssurance/components/NoAccessScreen.tsx:322
+#: src/ageAssurance/components/NoAccessScreen.tsx:336
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify now"
@@ -10384,7 +10388,7 @@ msgstr "Verifica ara"
 #: src/components/contacts/screens/PhoneInput.tsx:172
 #: src/components/contacts/screens/VerifyNumber.tsx:214
 msgid "Verify phone number"
-msgstr ""
+msgstr "Verifica el número de telèfon"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:545
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:567
@@ -10417,7 +10421,7 @@ msgstr "Verificant l'estat de la teva garantia d'edat"
 
 #: src/components/contacts/screens/VerifyNumber.tsx:304
 msgid "Verifying..."
-msgstr ""
+msgstr "Verificant..."
 
 #: src/screens/Settings/AboutSettings.tsx:126
 #: src/screens/Settings/AboutSettings.tsx:155
@@ -10644,7 +10648,7 @@ msgstr "Mira ara"
 
 #: src/components/contacts/screens/GetContacts.tsx:250
 msgid "We apply the highest privacy standards, and never share or sell your contact information."
-msgstr ""
+msgstr "Apliquem els estàndards de privadesa més alts i mai compartim ni venem la teva informació de contacte."
 
 #: src/view/com/feeds/MissingFeed.tsx:140
 msgid "We could not connect to the service that provides this custom feed. It may be temporarily unavailable and experiencing issues, or permanently unavailable."
@@ -10668,11 +10672,11 @@ msgstr "No hem pogut carregar aquesta conversa"
 
 #: src/components/contacts/screens/GetContacts.tsx:241
 msgid "We delete hashes after matches are made"
-msgstr ""
+msgstr "Eliminem els hashes després que es trobin coincidències"
 
 #: src/components/contacts/components/InviteInfo.tsx:66
 msgid "We don't store your friends' phone numbers or send any messages"
-msgstr ""
+msgstr "No emmagatzemem els números de telèfon dels teus amics ni enviem cap missatge"
 
 #: src/screens/SignupQueued.tsx:160
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -10688,15 +10692,15 @@ msgstr "Hem enviat un altre correu de verificació a <0>{0}</0>."
 
 #: src/components/contacts/screens/PhoneInput.tsx:181
 msgid "We need to verify your number before we can look for your friends. A verification code will be sent to this number."
-msgstr ""
+msgstr "Hem de verificar el teu número abans de poder buscar els teus amics. S'enviarà un codi de verificació a aquest número."
 
 #: src/components/contacts/screens/GetContacts.tsx:238
 msgid "We never keep plain phone numbers"
-msgstr ""
+msgstr "Mai guardem números de telèfon en clar"
 
 #: src/components/contacts/screens/GetContacts.tsx:244
 msgid "We only suggest follows if both people consent"
-msgstr ""
+msgstr "Només suggerim seguir si ambdues persones hi estan d'acord"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -10733,7 +10737,7 @@ msgstr "T'informarem quan el teu compte estigui llest."
 
 #: src/screens/Settings/FindContactsSettings.tsx:503
 msgid "We will notify you when we find your friends."
-msgstr ""
+msgstr "T'avisarem quan trobem els teus amics."
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:249
 msgid "We'll send an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
@@ -10773,7 +10777,7 @@ msgstr "Estem introduint una nova capa de verificació a Bluesky: una marca de v
 msgid "We're so excited to have you join us!"
 msgstr "Ens fa molta il·lusió que t'uneixis a nosaltres!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:375
+#: src/ageAssurance/components/NoAccessScreen.tsx:390
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "Segons la ubicació del teu dispositiu, actualment et trobes en una regió on es requereix verificació de l'edat."
@@ -10981,7 +10985,7 @@ msgstr "Ahir"
 msgid "You are a trusted verifier"
 msgstr "Ets un verificador de confiança"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:161
+#: src/ageAssurance/components/NoAccessScreen.tsx:170
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr "Estàs accedint a Bluesky des d'una regió que legalment ens obliga a verificar la teva edat abans de permetre't accedir a l'aplicació."
 
@@ -10989,7 +10993,7 @@ msgstr "Estàs accedint a Bluesky des d'una regió que legalment ens obliga a ve
 msgid "You are creating an account on"
 msgstr "Estàs creant un compte a"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:289
+#: src/ageAssurance/components/NoAccessScreen.tsx:304
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "Actualment no pots accedir al procés de garantia d'edat de Bluesky. Si creus que es tracta d'un error, <0>posa't en contacte amb el nostre equip de moderació</0>."
@@ -11050,7 +11054,7 @@ msgstr "També pots desactivar el teu compte temporalment i reactivar-lo en qual
 
 #: src/components/contacts/screens/GetContacts.tsx:247
 msgid "You can always opt out and delete your data"
-msgstr ""
+msgstr "Sempre pots optar per no participar i suprimir les teves dades"
 
 #: src/lib/hooks/useNotificationHandler.ts:101
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
@@ -11122,9 +11126,9 @@ msgstr "No tens cap canal fixat."
 msgid "You don't have any saved feeds."
 msgstr "No tens cap canal desat."
 
-#: src/components/contacts/screens/ViewMatches.tsx:311
+#: src/components/contacts/screens/ViewMatches.tsx:309
 msgid "You got here first"
-msgstr ""
+msgstr "Vas arribar primer"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 msgid "You have blocked this user"
@@ -11277,7 +11281,7 @@ msgstr "Has de verificar el teu correu abans de poder habilitar la verificació 
 msgid "You previously deactivated @{0}."
 msgstr "Abans has desactivat @{0}."
 
-#: src/screens/Settings/Settings.tsx:418
+#: src/screens/Settings/Settings.tsx:422
 msgid "You probably want to restart the app now."
 msgstr "Segurament vols reiniciar l'aplicació ara."
 
@@ -11294,7 +11298,7 @@ msgstr "Has reaccionat amb {0} a {1}"
 msgid "You recently changed your birthdate"
 msgstr "Has canviat la teva data de naixement fa poc"
 
-#: src/screens/Settings/Settings.tsx:300
+#: src/screens/Settings/Settings.tsx:304
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "You will be signed out of all your accounts."
 msgstr "Es tancarà la sessió de tots els teus comptes."
@@ -11345,7 +11349,7 @@ msgstr "Seguiràs a aquesta gent de seguida"
 
 #: src/components/contacts/screens/GetContacts.tsx:311
 msgid "You'll need to go to the System Settings for Bluesky and give permission if you want to use this feature."
-msgstr ""
+msgstr "Has d'anar a la Configuració del sistema de Bluesky i donar permís si vols utilitzar aquesta funció."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
 msgid "You'll start receiving notifications for {0}!"
@@ -11375,7 +11379,7 @@ msgstr "Has triat amagar una paraula o una etiqueta d'aquesta publicació."
 
 #: src/components/contacts/screens/GetContacts.tsx:310
 msgid "You've denied access to your contacts"
-msgstr ""
+msgstr "Has denegat l'accés als teus contactes"
 
 #: src/state/shell/progress-guide.tsx:236
 msgid "You've found some people to follow"
@@ -11455,15 +11459,15 @@ msgstr "La teva elecció es recordarà per a futurs enllaços. Pots canviar-la e
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:374
 msgid "Your contact {firstAuthorLink} is on Bluesky"
-msgstr ""
+msgstr "El teu contacte {firstAuthorLink} està a Bluesky"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:372
 msgid "Your contact {firstAuthorName} is on Bluesky"
-msgstr ""
+msgstr "El teu contacte {firstAuthorName} està a Bluesky"
 
-#: src/components/contacts/screens/ViewMatches.tsx:453
+#: src/components/contacts/screens/ViewMatches.tsx:451
 msgid "Your contact {name}"
-msgstr ""
+msgstr "El teu contacte {name}"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:529
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."

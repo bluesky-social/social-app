@@ -43,7 +43,7 @@ msgstr "{0, plural, one {# követő} other {# követő}}"
 msgid "{0, plural, one {# following} other {# following}}"
 msgstr "{0, plural, one {# követett} other {# követett}}"
 
-#: src/components/contacts/screens/ViewMatches.tsx:267
+#: src/components/contacts/screens/ViewMatches.tsx:265
 msgid "{0, plural, one {# friend found!} other {# friends found!}}"
 msgstr "{0, plural, other {# ismerőst találtunk.}}"
 
@@ -581,8 +581,8 @@ msgstr "Képernyőkép egy felhasználói profilról, amelyen egy harang ikon l�
 
 #: src/Navigation.tsx:534
 #: src/screens/Settings/AboutSettings.tsx:75
-#: src/screens/Settings/Settings.tsx:258
-#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:262
+#: src/screens/Settings/Settings.tsx:265
 msgid "About"
 msgstr "Névjegy"
 
@@ -609,8 +609,8 @@ msgid "Accept this language suggestion"
 msgstr "Javasolt nyelv elfogadása"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:44
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Accessibility"
 msgstr "Akadálymentesítés"
 
@@ -621,8 +621,8 @@ msgstr "Akadálymentesítés"
 #: src/Navigation.tsx:401
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:51
-#: src/screens/Settings/Settings.tsx:178
-#: src/screens/Settings/Settings.tsx:181
+#: src/screens/Settings/Settings.tsx:180
+#: src/screens/Settings/Settings.tsx:183
 msgid "Account"
 msgstr "Fiók"
 
@@ -653,7 +653,7 @@ msgstr "Elnémított fiók"
 msgid "Account Muted by List"
 msgstr "Elnémított fiók (lista által)"
 
-#: src/screens/Settings/Settings.tsx:640
+#: src/screens/Settings/Settings.tsx:644
 msgid "Account options"
 msgstr "Fióklehetőségek"
 
@@ -661,7 +661,7 @@ msgstr "Fióklehetőségek"
 msgid "Account provider"
 msgstr "Fiókszolgáltató"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:680
 msgid "Account removed from quick access"
 msgstr "Fiók levéve a listáról"
 
@@ -746,8 +746,8 @@ msgstr "Helyettesítő szöveg hozzáadása"
 msgid "Add alt text (optional)"
 msgstr "Helyettesítő szöveg hozzáadása (nem kötelező)"
 
-#: src/screens/Settings/Settings.tsx:580
-#: src/screens/Settings/Settings.tsx:583
+#: src/screens/Settings/Settings.tsx:584
+#: src/screens/Settings/Settings.tsx:587
 #: src/view/shell/desktop/LeftNav.tsx:262
 #: src/view/shell/desktop/LeftNav.tsx:266
 msgid "Add another account"
@@ -849,7 +849,7 @@ msgstr "Felvétel kezdőcsomagba"
 msgid "Add user to list"
 msgstr "Személy felvétele a listára"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:210
+#: src/ageAssurance/components/NoAccessScreen.tsx:223
 msgid "Add your birthdate"
 msgstr "Születési dátum megadása"
 
@@ -919,7 +919,7 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "Az életkor-igazolási kérelem küldése sikeresen megtörtént"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:342
+#: src/ageAssurance/components/NoAccessScreen.tsx:357
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Age assurance only takes a few minutes"
 msgstr "Az életkor-igazolás általában csupán néhány percet vesz igénybe"
@@ -939,7 +939,7 @@ msgstr "Mind"
 msgid "All accounts have been followed!"
 msgstr "Mostantól mindegyik fiókot követed!"
 
-#: src/components/contacts/screens/ViewMatches.tsx:143
+#: src/components/contacts/screens/ViewMatches.tsx:141
 msgid "All friends followed!"
 msgstr "Mostantól minden megtalált ismerősödet követed!"
 
@@ -1075,7 +1075,7 @@ msgstr "A hírfolyam lekérdezése meghiúsult."
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "A kezdőcsomag létrehozása meghiúsult. Szeretnéd újra megpróbálni?"
 
-#: src/components/contacts/screens/ViewMatches.tsx:242
+#: src/components/contacts/screens/ViewMatches.tsx:240
 msgid "An error occurred while hiding suggestion. {0}"
 msgstr "Hiba történt a javaslat elrejtése közben. {0}"
 
@@ -1113,7 +1113,7 @@ msgid "An error occurred. {0}"
 msgstr "Hiba történt. {0}"
 
 #: src/components/contacts/components/HeroImage.tsx:28
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:71
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:78
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
 msgstr "Egy telefonkönyvből a Bluesky alkalmazásba áramló profilképeket ábrázoló kép"
 
@@ -1277,8 +1277,8 @@ msgstr "Döntés fellebbezése"
 
 #: src/Navigation.tsx:393
 #: src/screens/Settings/AppearanceSettings.tsx:73
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:230
+#: src/screens/Settings/Settings.tsx:233
 msgid "Appearance"
 msgstr "Megjelenés"
 
@@ -1287,8 +1287,8 @@ msgstr "Megjelenés"
 msgid "Apply default recommended feeds"
 msgstr "Ajánlott hírfolyamok elfogadása"
 
-#: src/screens/Settings/Settings.tsx:512
-#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:518
 msgid "Apply Pull Request"
 msgstr "Lekéréses kérelem alkalmazása"
 
@@ -1590,11 +1590,11 @@ msgstr "A Bluesky ismerősökkel még jobb!"
 msgid "Bluesky is more fun with friends"
 msgstr "A Bluesky ismerősökkel még mókásabb"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:99
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:106
 msgid "Bluesky is more fun with friends! Import your contacts to see who’s already here."
 msgstr "A Bluesky ismerősökkel még mókásabb! Importáld a névjegyeidet, hogy könnyebben megtalálhasd a barátaidat!"
 
-#: src/components/contacts/screens/ViewMatches.tsx:314
+#: src/components/contacts/screens/ViewMatches.tsx:312
 msgid "Bluesky is more fun with friends. Do you want to invite some of yours? <0/>"
 msgstr "A Bluesky ismerősökkel még mókásabb. Szeretnél meghívni valakit? <0/>"
 
@@ -1766,7 +1766,7 @@ msgstr "Kamera"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:85
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:247
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:253
-#: src/screens/Settings/Settings.tsx:303
+#: src/screens/Settings/Settings.tsx:307
 #: src/screens/Takendown.tsx:107
 #: src/screens/Takendown.tsx:110
 #: src/view/com/composer/Composer.tsx:1050
@@ -2002,11 +2002,11 @@ msgstr "Jelszó megadása"
 msgid "Choose your username"
 msgstr "Felhasználónév megadása"
 
-#: src/screens/Settings/Settings.tsx:504
+#: src/screens/Settings/Settings.tsx:508
 msgid "Clear all storage data"
 msgstr "Összes adat törlése"
 
-#: src/screens/Settings/Settings.tsx:506
+#: src/screens/Settings/Settings.tsx:510
 msgid "Clear all storage data (restart after this)"
 msgstr "Összes adat törlése (A program újra fog indulni)"
 
@@ -2031,7 +2031,7 @@ msgstr "kattints ide"
 msgid "Click here to contact our support team"
 msgstr "Kattints ide az ügyfélszolgálattal történő kapcsolatfelvételhez"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:233
+#: src/ageAssurance/components/NoAccessScreen.tsx:248
 msgid "Click here to log out"
 msgstr "Kattints ide a kijelentkezéshez"
 
@@ -2040,7 +2040,7 @@ msgid "Click here to restart the verification process."
 msgstr "Hitelesítés most."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:97
-#: src/ageAssurance/components/NoAccessScreen.tsx:207
+#: src/ageAssurance/components/NoAccessScreen.tsx:220
 msgid "Click here to update your birthdate"
 msgstr "Kattints ide a születési dáumod frissítéséhez"
 
@@ -2257,7 +2257,7 @@ msgstr "Tartalomnyelvi beállítások megerősítése"
 msgid "Confirm delete account"
 msgstr "Fiók törlésének megerősítése"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:356
+#: src/ageAssurance/components/NoAccessScreen.tsx:371
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
@@ -2284,7 +2284,7 @@ msgstr "Csatlakozás folyamatban…"
 msgid "Connection issue"
 msgstr "Megszakadt a kapcsolat"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:293
+#: src/ageAssurance/components/NoAccessScreen.tsx:308
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
@@ -2317,8 +2317,8 @@ msgstr "Névjegyek feltöltve"
 msgid "Content & Media"
 msgstr "Tartalom és média"
 
-#: src/screens/Settings/Settings.tsx:208
-#: src/screens/Settings/Settings.tsx:211
+#: src/screens/Settings/Settings.tsx:210
+#: src/screens/Settings/Settings.tsx:213
 msgid "Content and media"
 msgstr "Tartalom és média"
 
@@ -2586,7 +2586,7 @@ msgstr "A névjegyek feltöltése meghiúsult. {0}"
 msgid "Could not upload contacts. You need to re-verify your phone number to proceed"
 msgstr "A névjegyek feltöltése meghiúsult. A folytatáshoz ismét hitelesítened kell a telefonszámodat"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:79
+#: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
 msgstr "Országhívószám"
 
@@ -2746,7 +2746,7 @@ msgstr "Születési dátum"
 msgid "Deactivate account"
 msgstr "Fiók deaktiválása"
 
-#: src/screens/Settings/Settings.tsx:469
+#: src/screens/Settings/Settings.tsx:473
 msgid "Debug Moderation"
 msgstr "Moderálási hibakeresés"
 
@@ -2799,7 +2799,7 @@ msgstr "Alkalmazásjelszó törlése"
 msgid "Delete chat"
 msgstr "Csevegés törlése"
 
-#: src/screens/Settings/Settings.tsx:476
+#: src/screens/Settings/Settings.tsx:480
 msgid "Delete chat declaration record"
 msgstr "Csevegéskijelentési jegyzőkönyv ürítése"
 
@@ -2912,8 +2912,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "Bekapcsoltad a fejlesztői módot"
 
-#: src/screens/Settings/Settings.tsx:285
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:289
+#: src/screens/Settings/Settings.tsx:292
 msgid "Developer options"
 msgstr "Fejlesztői beállítások"
 
@@ -3073,8 +3073,8 @@ msgstr "Ne aggódj! A korábbi üzeneteid és beállításaid nem vesztek el és
 
 #: src/components/contacts/components/InviteInfo.tsx:72
 #: src/components/contacts/components/InviteInfo.tsx:78
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:411
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:409
 #: src/components/dialogs/BirthDateSettings.tsx:183
 #: src/components/dialogs/BirthDateSettings.tsx:190
 #: src/components/dialogs/ServerInput.tsx:240
@@ -3700,15 +3700,15 @@ msgstr "A kezdőcsomag törlése meghiúsult"
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "A javasolt fiókok automatikus követése meghiúsult. Próbáld újra"
 
-#: src/components/contacts/screens/ViewMatches.tsx:147
+#: src/components/contacts/screens/ViewMatches.tsx:145
 msgid "Failed to follow all your friends, please try again"
 msgstr "Az ismerőseid követése meghiúsult. Próbáld újra"
 
-#: src/components/contacts/screens/ViewMatches.tsx:235
+#: src/components/contacts/screens/ViewMatches.tsx:233
 msgid "Failed to hide suggestion, please check your internet connection"
 msgstr "A javaslat elrejtése meghiúsult. Ellenőrizd az internetkapcsolatot"
 
-#: src/components/contacts/screens/ViewMatches.tsx:580
+#: src/components/contacts/screens/ViewMatches.tsx:578
 msgid "Failed to launch SMS app"
 msgstr "Az SMS-alkalmazás megnyitása meghiúsult"
 
@@ -3996,8 +3996,8 @@ msgstr "Ismerősök felkutatása"
 msgid "Find Friends"
 msgstr "Ismerősök felkutatása"
 
-#: src/screens/Settings/Settings.tsx:217
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Settings/Settings.tsx:221
+#: src/screens/Settings/Settings.tsx:224
 msgid "Find friends from contacts"
 msgstr "Ismerősök felkutatása névjegyek alapján"
 
@@ -4018,7 +4018,7 @@ msgstr "Követendő személyek felfedezése"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Bejegyzések, felhasználók és hírfolyamok felfedezése a Blueskyon"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:89
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:96
 msgid "Find your friends"
 msgstr "Ismerősök felkutatása"
 
@@ -4093,8 +4093,8 @@ msgstr "Kövess 7 fiókot!"
 msgid "Follow account"
 msgstr "Fiók követése"
 
-#: src/components/contacts/screens/ViewMatches.tsx:275
-#: src/components/contacts/screens/ViewMatches.tsx:290
+#: src/components/contacts/screens/ViewMatches.tsx:273
+#: src/components/contacts/screens/ViewMatches.tsx:288
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:265
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:156
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:163
@@ -4209,6 +4209,10 @@ msgstr "Betűméret"
 #: src/lib/interests.ts:61
 msgid "Food"
 msgstr "Étel-ital"
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:125
+msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -4532,8 +4536,8 @@ msgstr "Problémába ütköztél?"
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr "A visszaélések elkerülése érdekében a Bluesky 7 napig megtartja, majd törli ezeket az adatokat"
 
-#: src/screens/Settings/Settings.tsx:250
 #: src/screens/Settings/Settings.tsx:254
+#: src/screens/Settings/Settings.tsx:258
 #: src/view/shell/desktop/RightNav.tsx:123
 #: src/view/shell/desktop/RightNav.tsx:124
 #: src/view/shell/Drawer.tsx:381
@@ -4553,11 +4557,11 @@ msgstr "Elkészült az alkalmazásjelszó."
 msgid "Hey there 👋"
 msgstr "Szervusz! 👋"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:158
+#: src/ageAssurance/components/NoAccessScreen.tsx:167
 msgid "Hey there!"
 msgstr "Szervusz!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:189
+#: src/ageAssurance/components/NoAccessScreen.tsx:202
 msgid "Hi there!"
 msgstr "Üdvözletem!"
 
@@ -4657,7 +4661,7 @@ msgstr "Hitelesítési jelvények elrejtése"
 msgid "Hides the content"
 msgstr "Tartalom elrejtése"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:216
+#: src/ageAssurance/components/NoAccessScreen.tsx:229
 msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
 msgstr "Hmm… úgy tűnik, hogy jelenleg egy <0>alkalmazásjelszóval</0> vagy bejelentkezve. Ahhoz, hogy megváltoztathasd a születési dátumodat, a valódi jelszavaddal kell bejelentkezned, vagy meg kell kérned a fiók kezelőjét, hogy tegye ezt meg helyetted."
 
@@ -4750,7 +4754,7 @@ msgstr "Saját tartománnyal rendelkezem"
 msgid "I understand"
 msgstr "Értettem"
 
-#: src/components/contacts/screens/ViewMatches.tsx:576
+#: src/components/contacts/screens/ViewMatches.tsx:574
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "A Blueskyon {0} néven találhatsz meg. Csatlakozz Te is! https://bsky.app/download"
 
@@ -4840,8 +4844,8 @@ msgstr "Megszemélyesítés"
 msgid "Import contacts"
 msgstr "Névjegyek importálása"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:107
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:118
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:114
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:125
 msgid "Import Contacts"
 msgstr "Névjegyek importálása"
 
@@ -4850,7 +4854,7 @@ msgstr "Névjegyek importálása"
 msgid "Import contacts to find your friends"
 msgstr "Importáld a névjegyeidet és találd meg az ismerőseidet!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:192
+#: src/ageAssurance/components/NoAccessScreen.tsx:205
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "Az életkorodnak megfelelő tartalmak megjelenítése érdekében tudnunk kell a születési dátumodat. Ezt az adatot csak egyszer fogjuk elkérni Tőled és bizalmasan kezeljük."
 
@@ -4923,7 +4927,7 @@ msgstr "Kapcsolatbalépési beállítások"
 msgid "Introducing activity notifications"
 msgstr "Tevékenységértesítések"
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:48
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
 msgstr "Mostantól a névjegyeid alapján is találhatsz ismerősöket!"
 
@@ -4958,11 +4962,11 @@ msgstr "Érvénytelen jelentési ok"
 msgid "Invalid Verification Code"
 msgstr "Érvénytelen ellenőrzőkód"
 
-#: src/components/contacts/screens/ViewMatches.tsx:585
+#: src/components/contacts/screens/ViewMatches.tsx:583
 msgid "Invite"
 msgstr "Meghívás"
 
-#: src/components/contacts/screens/ViewMatches.tsx:565
+#: src/components/contacts/screens/ViewMatches.tsx:563
 msgid "Invite {name} to join Bluesky"
 msgstr "{name} meghívása a Blueskyra"
 
@@ -4979,7 +4983,7 @@ msgstr "Érvénytelen meghívókód. Ellenőrizd a helyességét, majd próbáld
 msgid "Invite Friends"
 msgstr "Ismerősök meghívása"
 
-#: src/components/contacts/screens/ViewMatches.tsx:300
+#: src/components/contacts/screens/ViewMatches.tsx:298
 msgid "Invite friends <0/>"
 msgstr "Ismerősök meghívása <0/>"
 
@@ -4995,7 +4999,7 @@ msgstr "Könnyen oszd meg ismerőseiddel a kedvenc hírfolyamaidat és személye
 msgid "Invites, but personal"
 msgstr "Olyan, mint egy meghívó, csak személyesebb"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:353
+#: src/ageAssurance/components/NoAccessScreen.tsx:368
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "Helytelenül állapítottuk meg a tartózkodási helyedet? <0>Koppints ide a megerősítéshez.</0>"
@@ -5083,8 +5087,8 @@ msgid "Language Settings"
 msgstr "Nyelvi beállítások"
 
 #: src/screens/Settings/LanguageSettings.tsx:78
-#: src/screens/Settings/Settings.tsx:242
-#: src/screens/Settings/Settings.tsx:245
+#: src/screens/Settings/Settings.tsx:246
+#: src/screens/Settings/Settings.tsx:249
 msgid "Languages"
 msgstr "Nyelvek"
 
@@ -5092,12 +5096,12 @@ msgstr "Nyelvek"
 msgid "Larger"
 msgstr "Nagyobb"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:336
+#: src/ageAssurance/components/NoAccessScreen.tsx:351
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated {timeAgo} ago"
 msgstr "Legutóbbi kérelem: {timeAgo}"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:334
+#: src/ageAssurance/components/NoAccessScreen.tsx:349
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
 msgid "Last initiated just now"
 msgstr "Legutóbbi kérelem: épp most"
@@ -5633,8 +5637,8 @@ msgstr "Félrevezető tartalom"
 
 #: src/Navigation.tsx:179
 #: src/screens/Moderation/index.tsx:99
-#: src/screens/Settings/Settings.tsx:192
-#: src/screens/Settings/Settings.tsx:195
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Moderation"
 msgstr "Moderálás"
 
@@ -5979,8 +5983,8 @@ msgstr "A legújabb válaszok elöl"
 msgid "News"
 msgstr "Hírek"
 
-#: src/components/contacts/screens/ViewMatches.tsx:394
-#: src/components/contacts/screens/ViewMatches.tsx:409
+#: src/components/contacts/screens/ViewMatches.tsx:392
+#: src/components/contacts/screens/ViewMatches.tsx:407
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:346
@@ -6011,11 +6015,11 @@ msgstr "Ilyen egy közösségi oldal hirdetések, magánéletsértő nyomonköve
 msgid "No app passwords yet"
 msgstr "Még nem hoztál létre alkalmazásjelszót"
 
-#: src/components/contacts/screens/ViewMatches.tsx:679
+#: src/components/contacts/screens/ViewMatches.tsx:677
 msgid "No contacts found"
 msgstr "Nem található névjegy"
 
-#: src/components/contacts/screens/ViewMatches.tsx:657
+#: src/components/contacts/screens/ViewMatches.tsx:655
 msgid "No contacts with the name “{query}” found"
 msgstr "Nem található „{query}” kifejezést tartalmazó névjegy"
 
@@ -6068,7 +6072,7 @@ msgstr "Még nincsenek üzenetek"
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr "Vess véget a szeméttel teli hírfolyamok örökös görgetésének! Inkább találj olyan tartalmakat, amelyek érted és nem ellened dolgoznak!"
 
-#: src/components/contacts/screens/ViewMatches.tsx:561
+#: src/components/contacts/screens/ViewMatches.tsx:559
 msgid "No name"
 msgstr "Névtelen"
 
@@ -6249,8 +6253,8 @@ msgstr "Értesítési hangok"
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:200
-#: src/screens/Settings/Settings.tsx:203
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:205
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:709
@@ -6315,7 +6319,7 @@ msgstr "A legrégebbi válaszok elöl"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "ekkor:<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:402
+#: src/screens/Settings/Settings.tsx:406
 msgid "Onboarding reset"
 msgstr "Regisztrációs varázslót alaphelyzetbe állítva"
 
@@ -6417,7 +6421,7 @@ msgstr "A(z) {niceUrl} hivatkozás megnyitása"
 msgid "Open message options"
 msgstr "Üzenetlehetőségek megnyitása"
 
-#: src/screens/Settings/Settings.tsx:467
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open moderation debug page"
 msgstr "Moderálási hibakeresési oldal megnyitása"
 
@@ -6446,12 +6450,12 @@ msgstr "Továbbítási menü megnyitása"
 msgid "Open starter pack menu"
 msgstr "Kezdőcsomag-menü megnyitása"
 
-#: src/screens/Settings/Settings.tsx:460
-#: src/screens/Settings/Settings.tsx:474
+#: src/screens/Settings/Settings.tsx:464
+#: src/screens/Settings/Settings.tsx:478
 msgid "Open storybook page"
 msgstr "Mesekönyv-oldal megnyitása"
 
-#: src/screens/Settings/Settings.tsx:453
+#: src/screens/Settings/Settings.tsx:457
 msgid "Open system log"
 msgstr "Rendszernapló megnyitása"
 
@@ -6514,7 +6518,7 @@ msgstr "Bejelentkezési varázsló megnyitása"
 msgid "Opens GIF select dialog"
 msgstr "GIF-választó párbeszédablak megnyitása"
 
-#: src/screens/Settings/Settings.tsx:251
+#: src/screens/Settings/Settings.tsx:255
 msgid "Opens helpdesk in browser"
 msgstr "Támogatási hivatkozás megnyitása böngészőben"
 
@@ -7121,8 +7125,8 @@ msgstr "Elsődleges nyelv"
 msgid "Privacy"
 msgstr "Adatvédelem"
 
-#: src/screens/Settings/Settings.tsx:186
-#: src/screens/Settings/Settings.tsx:189
+#: src/screens/Settings/Settings.tsx:188
+#: src/screens/Settings/Settings.tsx:191
 msgid "Privacy and security"
 msgstr "Adatvédelem és biztonság"
 
@@ -7400,7 +7404,7 @@ msgstr "Beszélgetések újratöltése"
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:105
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:112
 #: src/screens/Bookmarks/index.tsx:266
-#: src/screens/Settings/Settings.tsx:678
+#: src/screens/Settings/Settings.tsx:682
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:220
 msgid "Remove"
@@ -7414,8 +7418,8 @@ msgstr "{displayName} eltávolítása a kezdőcsomagból"
 msgid "Remove {historyItem}"
 msgstr "{historyItem} törlése"
 
-#: src/screens/Settings/Settings.tsx:657
-#: src/screens/Settings/Settings.tsx:660
+#: src/screens/Settings/Settings.tsx:661
+#: src/screens/Settings/Settings.tsx:664
 msgid "Remove account"
 msgstr "Fiók eltávolítása"
 
@@ -7460,7 +7464,7 @@ msgstr "Hírfolyam eltávolítása"
 msgid "Remove from my feeds"
 msgstr "Eltávolítás a hírfolyamgyűjteményből"
 
-#: src/screens/Settings/Settings.tsx:670
+#: src/screens/Settings/Settings.tsx:674
 msgid "Remove from quick access?"
 msgstr "Eltávolítás a fióklistáról"
 
@@ -7504,7 +7508,7 @@ msgstr "Megosztott bejegyzés eltávolítása"
 msgid "Remove subtitle file"
 msgstr "Feliratfájl eltávolítása"
 
-#: src/components/contacts/screens/ViewMatches.tsx:499
+#: src/components/contacts/screens/ViewMatches.tsx:497
 #: src/screens/Settings/FindContactsSettings.tsx:323
 msgid "Remove suggestion"
 msgstr "Javaslat eltávolítása"
@@ -7835,8 +7839,8 @@ msgstr "E-mail újraküldése"
 msgid "Resend Verification Email"
 msgstr "Visszaigazoló e-mail újraküldése"
 
-#: src/screens/Settings/Settings.tsx:496
-#: src/screens/Settings/Settings.tsx:498
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Reset activity subscription nudge"
 msgstr "Tevékenységértesítés-feliratkozási jelző alaphelyzetbe állítása"
 
@@ -7844,8 +7848,8 @@ msgstr "Tevékenységértesítés-feliratkozási jelző alaphelyzetbe állítás
 msgid "Reset code"
 msgstr "Helyreállítási kód"
 
-#: src/screens/Settings/Settings.tsx:481
-#: src/screens/Settings/Settings.tsx:483
+#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:487
 msgid "Reset onboarding state"
 msgstr "Regisztrációs varázsló állapotának alaphelyzetbe állítása"
 
@@ -8047,7 +8051,7 @@ msgstr "Keresés @{0} bejegyzései között"
 msgid "Search by name or interest"
 msgstr "Keresés név vagy érdeklődési kör alapján"
 
-#: src/components/contacts/screens/ViewMatches.tsx:355
+#: src/components/contacts/screens/ViewMatches.tsx:353
 msgid "Search contacts"
 msgstr "Névjegyek keresése"
 
@@ -8286,7 +8290,7 @@ msgstr "Elsődleges nyelv megadása"
 msgid "Select subtitle file (.vtt)"
 msgstr "Feliratfájl (.vtt) társítása"
 
-#: src/components/InternationalPhoneCodeSelect.tsx:67
+#: src/components/InternationalPhoneCodeSelect.tsx:68
 msgid "Select telephone code"
 msgstr "Országhívószám megadása"
 
@@ -8426,7 +8430,7 @@ msgstr "Fiók beállítása"
 msgid "Set who can reply to your post"
 msgstr "Add meg, hogy ki léphet kapcsolatba a bejegyzéssel"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:199
+#: src/ageAssurance/components/NoAccessScreen.tsx:212
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr "Add meg a születési dátumodat és seperc alatt folytathatod a böngészést és bejegyzésírást!"
 
@@ -8435,7 +8439,7 @@ msgid "Sets email for password reset"
 msgstr "E-mail cím beállítása jelszóvisszaállításhoz"
 
 #: src/Navigation.tsx:215
-#: src/screens/Settings/Settings.tsx:103
+#: src/screens/Settings/Settings.tsx:105
 #: src/view/shell/desktop/LeftNav.tsx:805
 #: src/view/shell/Drawer.tsx:609
 msgid "Settings"
@@ -8685,7 +8689,7 @@ msgstr "Figyelmeztetés és kiszűrés a hírfolyamokból"
 msgid "Shows information about when this post was created"
 msgstr "További információ a bejegyzés dátumáról"
 
-#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:131
 msgid "Shows other accounts you can switch to"
 msgstr "További fiókok megjelenítése váltás céljából"
 
@@ -8746,9 +8750,9 @@ msgstr "Jelentkezz be vagy hozz létre egy Bluesky-fiókot."
 msgid "Sign in to view post"
 msgstr "A megtekintéshez bejelentkezés szükséges"
 
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:270
-#: src/screens/Settings/Settings.tsx:302
+#: src/screens/Settings/Settings.tsx:272
+#: src/screens/Settings/Settings.tsx:274
+#: src/screens/Settings/Settings.tsx:306
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:93
@@ -8762,7 +8766,7 @@ msgstr "Kijelentkezés"
 msgid "Sign Out"
 msgstr "Kijelentkezés"
 
-#: src/screens/Settings/Settings.tsx:299
+#: src/screens/Settings/Settings.tsx:303
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Sign out?"
 msgstr "Kijelentkezés"
@@ -8988,7 +8992,7 @@ msgstr "Állapot"
 msgid "Step {0} of {1}"
 msgstr "{1}/{0}. lépés"
 
-#: src/screens/Settings/Settings.tsx:407
+#: src/screens/Settings/Settings.tsx:411
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Adatok törölve. Indítsd újra az alkalmazást."
 
@@ -8997,7 +9001,7 @@ msgid "Stored as part of a secure code for matching with others"
 msgstr "Ezeket az adatokat egy titkosított kód részeként tároljuk ismerősfelkutatás céljából"
 
 #: src/Navigation.tsx:308
-#: src/screens/Settings/Settings.tsx:462
+#: src/screens/Settings/Settings.tsx:466
 msgid "Storybook"
 msgstr "Mesekönyv"
 
@@ -9097,9 +9101,9 @@ msgstr "Támogatás"
 msgid "Support for this feature in your country has not been enabled yet! Please check back later."
 msgstr "Ez a funkció a Te országodban még nem támogatott. Próbáld újra később."
 
-#: src/screens/Settings/Settings.tsx:127
-#: src/screens/Settings/Settings.tsx:141
-#: src/screens/Settings/Settings.tsx:620
+#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:624
 #: src/view/shell/desktop/LeftNav.tsx:247
 msgid "Switch account"
 msgstr "Fiókváltás"
@@ -9127,7 +9131,7 @@ msgstr "Rendszer"
 #: src/screens/Log.tsx:58
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:455
+#: src/screens/Settings/Settings.tsx:459
 msgid "System log"
 msgstr "Rendszernapló"
 
@@ -9229,7 +9233,7 @@ msgstr "Köszönjük! A hírfolyam üzemeltetője megkapta a visszajelzést."
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Köszönjük! Visszaigazoltad az e-mail-címedet – most már bezárhatod ezt az ablakot."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:382
+#: src/ageAssurance/components/NoAccessScreen.tsx:397
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
 msgid "Thanks! You're all set."
 msgstr "Köszönjük! Most már minden kész."
@@ -9725,7 +9729,7 @@ msgstr "Ez a felhasználó még senkit sem követ."
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Ezzel a(z) „{0}” kifejezés el lesz távolítva az elnémított szavak listájáról. Később bármikor újra felveheted."
 
-#: src/screens/Settings/Settings.tsx:672
+#: src/screens/Settings/Settings.tsx:676
 msgid "This will remove @{0} from the quick access list."
 msgstr "Ezzel @{0} el lesz távolítva a fióklistáról."
 
@@ -9773,7 +9777,7 @@ msgstr "A kétlépcsős azonosítás kikapcsolásához vissza kell igazolnod az 
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "A kétlépcsős azonosítás kikapcsolásához vissza kell igazolnod az e-mail-címedet: <0>{0}</0>"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:230
+#: src/ageAssurance/components/NoAccessScreen.tsx:245
 msgid "To log out, <0>click here</0>."
 msgstr "A kijelentkezéshez <0>kattints ide</0>."
 
@@ -9904,11 +9908,11 @@ msgstr "A szolgáltatással való kapcsolatfelvétel meghiúsult. Ellenőrizd az
 msgid "Unable to delete"
 msgstr "A törlés meghiúsult"
 
-#: src/screens/Settings/Settings.tsx:521
+#: src/screens/Settings/Settings.tsx:525
 msgid "Unapply Pull Request"
 msgstr "Lekéréses kérelem alkalmazásának visszavonása"
 
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:527
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Lekéréses kérelem alkalmazásának visszavonása ({currentChannel})"
 
@@ -9988,7 +9992,7 @@ msgstr "Követés megszüntetése"
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "A feljegyzőid közül egyik sem támogatja ezt a jelentési típust."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:176
+#: src/ageAssurance/components/NoAccessScreen.tsx:187
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr "A megadott születési dátum szerint sajnos túl fiatal vagy a Bluesky használatához."
 
@@ -10096,8 +10100,8 @@ msgstr "Feloldottad a hírfolyam kitűzését"
 msgid "Unpinned list"
 msgstr "Kitűzetlen lista"
 
-#: src/screens/Settings/Settings.tsx:488
-#: src/screens/Settings/Settings.tsx:490
+#: src/screens/Settings/Settings.tsx:492
+#: src/screens/Settings/Settings.tsx:494
 msgid "Unsnooze email reminder"
 msgstr "E-mail-cím-emlékeztető elhalasztásának visszavonása"
 
@@ -10349,7 +10353,7 @@ msgstr "Hitelesítő:"
 msgid "Verify account"
 msgstr "Fiók hitelesítése"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:319
+#: src/ageAssurance/components/NoAccessScreen.tsx:334
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
 msgid "Verify again"
 msgstr "Igazolás ismét"
@@ -10376,8 +10380,8 @@ msgstr "E-mailes kód megerősítése"
 msgid "Verify email dialog"
 msgstr "E-mail-cím-visszaigazoló párbeszédablak"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:307
-#: src/ageAssurance/components/NoAccessScreen.tsx:321
+#: src/ageAssurance/components/NoAccessScreen.tsx:322
+#: src/ageAssurance/components/NoAccessScreen.tsx:336
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify now"
@@ -10775,7 +10779,7 @@ msgstr "Bevezetjük a hitelesítés egy új formáját: egy könnyen látható j
 msgid "We're so excited to have you join us!"
 msgstr "Örvendünk, hogy megismerhetünk!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:375
+#: src/ageAssurance/components/NoAccessScreen.tsx:390
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "Sajnáljuk, de az eszközöd szerint jelenleg egy olyan régióban tartózkodsz, ahol kötelező az életkor-igazolás."
@@ -10983,7 +10987,7 @@ msgstr "Tegnap"
 msgid "You are a trusted verifier"
 msgstr "Megbítzható hitelesítő vagy"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:161
+#: src/ageAssurance/components/NoAccessScreen.tsx:170
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr "A helyi törvények szerint a Bluesky haszálata előtt igazolnod kell az életkorodat."
 
@@ -10991,7 +10995,7 @@ msgstr "A helyi törvények szerint a Bluesky haszálata előtt igazolnod kell a
 msgid "You are creating an account on"
 msgstr "Ez a fiók az alábbi tárhelyszolgáltatónál lesz létrehozva:"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:289
+#: src/ageAssurance/components/NoAccessScreen.tsx:304
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "Jelenleg nincs hozzáférésed az életkor-igazolási folyamathoz. Ha úgy gondolod, hogy ez hibás megállapítás, vedd fel a kapcsolatot a <0>moderálási csapatunkkal</0>."
@@ -11124,7 +11128,7 @@ msgstr "Egy hírfolyamot sem tűztél ki."
 msgid "You don't have any saved feeds."
 msgstr "Egy hírfolyamot se mentettél el."
 
-#: src/components/contacts/screens/ViewMatches.tsx:311
+#: src/components/contacts/screens/ViewMatches.tsx:309
 msgid "You got here first"
 msgstr "Te vagy az első!"
 
@@ -11279,7 +11283,7 @@ msgstr "Az e-mailes kétlépcsős azonosítás bekapcsolása előtt vissza kell 
 msgid "You previously deactivated @{0}."
 msgstr "Korábban deaktiváltad a(z) @{0} fiókot."
 
-#: src/screens/Settings/Settings.tsx:418
+#: src/screens/Settings/Settings.tsx:422
 msgid "You probably want to restart the app now."
 msgstr "Lehetséges, hogy most előnyös lenne bezárni és újra megnyitni az alkalmazást."
 
@@ -11296,7 +11300,7 @@ msgstr "{0} emojival reagáltál erre: {1}"
 msgid "You recently changed your birthdate"
 msgstr "Nemrég megváltoztattad a születési dátumodat"
 
-#: src/screens/Settings/Settings.tsx:300
+#: src/screens/Settings/Settings.tsx:304
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "You will be signed out of all your accounts."
 msgstr "Ezzel az összes fiókból ki fogsz jelentkezni."
@@ -11463,7 +11467,7 @@ msgstr "Megtaláltuk egy ismerősödet a Blueskyon: {firstAuthorLink}"
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr "Megtaláltuk egy ismerősödet a Blueskyon: {firstAuthorName}"
 
-#: src/components/contacts/screens/ViewMatches.tsx:453
+#: src/components/contacts/screens/ViewMatches.tsx:451
 msgid "Your contact {name}"
 msgstr "A névjegyzékedben {name}"
 
