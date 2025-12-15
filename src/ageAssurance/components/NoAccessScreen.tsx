@@ -123,8 +123,8 @@ export function NoAccessScreen() {
   const orgAdmonition = (
     <Admonition type="tip">
       <Trans>
-        For organizational accounts, use the birthdate of the person controlling
-        the account.
+        For organizational accounts, use the birthdate of the person who is
+        responsible for the account.
       </Trans>
     </Admonition>
   )
