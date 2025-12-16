@@ -11382,6 +11382,11 @@ expect@^29.7.0:
     jest-message-util "^29.7.0"
     jest-util "^29.7.0"
 
+expo-age-range@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/expo-age-range/-/expo-age-range-0.2.0.tgz#d3f671e787af712ac619bb0b8da68727cf579fe4"
+  integrity sha512-isEfB+jnvDP4zOt8Coh7pYkL5jVpVoV3NPk+7LEejaNHWcNSd/Q0WsHDeyzRBr0qh/C6jBrOxNu8cIDFywi8rg==
+
 expo-application@~7.0.8:
   version "7.0.8"
   resolved "https://registry.yarnpkg.com/expo-application/-/expo-application-7.0.8.tgz#320af0d6c39b331456d3bc833b25763c702d23db"

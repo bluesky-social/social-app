@@ -3,6 +3,7 @@ import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as AgeRange from 'expo-age-range';
 
 import {
   SupportCode,
@@ -322,7 +323,18 @@ function AccessSection() {
                 label={_(msg`Verify now`)}
                 size="large"
                 color={hasInitiated ? 'secondary' : 'primary'}
-                onPress={() => {
+                onPress={async () => {
+                  try {
+                    const ageRange = await AgeRange.requestAgeRangeAsync({
+                      threshold1: 10,
+                      threshold2: 13,
+                      threshold3: 18,
+                    });
+                    console.log(ageRange)
+                  } catch (e) {
+                    console.error(e)
+                  }
+                  return
                   control.open()
                   logger.metric('ageAssurance:initDialogOpen', {
                     hasInitiatedPreviously: hasInitiated,
