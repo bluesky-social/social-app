@@ -429,13 +429,17 @@ function ProfileScreenLoaded({
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={_(msg`No posts yet`)}
-                emptyStateButton={{
-                  label: _(msg`Write a post`),
-                  text: _(msg`Write a post`),
-                  onPress: () => openComposer({}),
-                  size: 'small',
-                  color: 'primary',
-                }}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Write a post`),
+                        text: _(msg`Write a post`),
+                        onPress: () => openComposer({}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
               />
             )
           : null}
@@ -465,13 +469,17 @@ function ProfileScreenLoaded({
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={_(msg`No media yet`)}
-                emptyStateButton={{
-                  label: _(msg`Post a photo`),
-                  text: _(msg`Post a photo`),
-                  onPress: () => openComposer({}),
-                  size: 'small',
-                  color: 'primary',
-                }}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Post a photo`),
+                        text: _(msg`Post a photo`),
+                        onPress: () => openComposer({}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
                 emptyStateIcon={ImageIcon}
               />
             )
@@ -487,13 +495,17 @@ function ProfileScreenLoaded({
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={_(msg`No video posts yet`)}
-                emptyStateButton={{
-                  label: _(msg`Post a video`),
-                  text: _(msg`Post a video`),
-                  onPress: () => openComposer({}),
-                  size: 'small',
-                  color: 'primary',
-                }}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Post a video`),
+                        text: _(msg`Post a video`),
+                        onPress: () => openComposer({}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
                 emptyStateIcon={VideoIcon}
               />
             )
@@ -535,16 +547,24 @@ function ProfileScreenLoaded({
                 headerOffset={headerHeight}
                 enabled={isFocused}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(
-                  msg`Starter packs let you share your favorite feeds and people with your friends.`,
-                )}
-                emptyStateButton={{
-                  label: _(msg`Create a Starter Pack`),
-                  text: _(msg`Create a Starter Pack`),
-                  onPress: wrappedNavToWizard,
-                  color: 'primary',
-                  size: 'small',
-                }}
+                emptyStateMessage={
+                  isMe
+                    ? _(
+                        msg`Starter Packs let you share your favorite feeds and people with your friends.`,
+                      )
+                    : _(msg`No Starter Packs yet`)
+                }
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Create a Starter Pack`),
+                        text: _(msg`Create a Starter Pack`),
+                        onPress: wrappedNavToWizard,
+                        color: 'primary',
+                        size: 'small',
+                      }
+                    : undefined
+                }
                 emptyStateIcon={CircleAndSquareIcon}
               />
             )
