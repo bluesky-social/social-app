@@ -464,7 +464,7 @@ export function ProfileGrid({
       : profiles.slice(0, maxLength).map((profile, index) => (
           <Animated.View
             key={profile.did}
-            layout={LinearTransition.duration(200)}
+            layout={LinearTransition.duration(DISMISS_ANIMATION_DURATION)}
             style={[
               a.flex_1,
               gtMobile &&
