@@ -223,6 +223,7 @@ export function AnimatedProfileHeaderSuggestedFollows({
         viewContext="profileHeader"
         onDismiss={onDismiss}
         dismissingDids={dismissingDids}
+        isVisible={isExpanded}
       />
     </AccordionAnimation>
   )

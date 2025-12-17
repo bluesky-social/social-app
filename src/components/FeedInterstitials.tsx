@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useEffect, useRef} from 'react'
 import {ScrollView, View} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
@@ -9,6 +9,7 @@ import {useNavigation} from '@react-navigation/native'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {type MetricEvents} from '#/logger/metrics'
 import {isIOS} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
@@ -30,14 +31,16 @@ import {
   web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {InlineLinkText, Link} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {FollowDialogWithoutGuide} from './ProgressGuide/FollowDialog'
 import {ProgressGuideList} from './ProgressGuide/List'
 
 const DISMISS_ANIMATION_DURATION = 200
@@ -417,6 +420,7 @@ export function ProfileGrid({
   viewContext = 'feed',
   onDismiss,
   dismissingDids,
+  isVisible = true,
 }: {
   isSuggestionsLoading: boolean
   profiles: bsky.profile.AnyProfileView[]
@@ -426,12 +430,14 @@ export function ProfileGrid({
   dismissingDids?: Set<string>
   viewContext: 'profile' | 'profileHeader' | 'feed'
   onDismiss?: (did: string) => void
+  isVisible?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const gate = useGate()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
+  const followDialogControl = useDialogControl()
 
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
@@ -440,6 +446,84 @@ export function ProfileGrid({
 
   const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6
   const minLength = gtMobile ? 3 : 4
+
+  // Track seen profiles
+  const seenProfilesRef = useRef<Set<string>>(new Set())
+  const containerRef = useRef<View>(null)
+  const hasTrackedRef = useRef(false)
+  const logContext: MetricEvents['suggestedUser:seen']['logContext'] =
+    isFeedContext
+      ? 'InterstitialDiscover'
+      : isProfileHeaderContext
+        ? 'Profile'
+        : 'InterstitialProfile'
+
+  // Callback to fire seen events
+  const fireSeen = useCallback(() => {
+    if (isLoading || error || !profiles.length) return
+    if (hasTrackedRef.current) return
+    hasTrackedRef.current = true
+
+    const profilesToShow = profiles.slice(0, maxLength)
+    profilesToShow.forEach((profile, index) => {
+      if (!seenProfilesRef.current.has(profile.did)) {
+        seenProfilesRef.current.add(profile.did)
+        logger.metric(
+          'suggestedUser:seen',
+          {
+            logContext,
+            recId,
+            position: index,
+            suggestedDid: profile.did,
+            category: null,
+          },
+          {statsig: true},
+        )
+      }
+    })
+  }, [isLoading, error, profiles, maxLength, logContext, recId])
+
+  // For profile header, fire when isVisible becomes true
+  useEffect(() => {
+    if (isProfileHeaderContext) {
+      if (!isVisible) {
+        hasTrackedRef.current = false
+        return
+      }
+      fireSeen()
+    }
+  }, [isVisible, isProfileHeaderContext, fireSeen])
+
+  // For feed interstitials, use IntersectionObserver to detect actual visibility
+  useEffect(() => {
+    if (isProfileHeaderContext) return // handled above
+    if (isLoading || error || !profiles.length) return
+
+    const node = containerRef.current
+    if (!node) return
+
+    // Use IntersectionObserver on web to detect when actually visible
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver(
+        entries => {
+          if (entries[0]?.isIntersecting) {
+            fireSeen()
+            observer.disconnect()
+          }
+        },
+        {threshold: 0.5},
+      )
+      // @ts-ignore - web only
+      observer.observe(node)
+      return () => observer.disconnect()
+    } else {
+      // On native, delay slightly to account for layout shifts during hydration
+      const timeout = setTimeout(() => {
+        fireSeen()
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+  }, [isProfileHeaderContext, isLoading, error, profiles.length, fireSeen])
 
   const content = isLoading
     ? Array(maxLength)
@@ -488,6 +572,8 @@ export function ProfileGrid({
                     : 'InterstitialProfile',
                   recId,
                   position: index,
+                  suggestedDid: profile.did,
+                  category: null,
                 })
               }}>
               {({hovered, pressed}) => (
@@ -577,6 +663,8 @@ export function ProfileGrid({
                           location: 'Card',
                           recId,
                           position: index,
+                          suggestedDid: profile.did,
+                          category: null,
                         })
                       }}
                     />
@@ -596,6 +684,7 @@ export function ProfileGrid({
 
   return (
     <View
+      ref={containerRef}
       style={[
         !isProfileHeaderContext && a.border_t,
         t.atoms.border_contrast_low,
@@ -619,18 +708,33 @@ export function ProfileGrid({
           )}
         </Text>
         {!isProfileHeaderContext && (
-          <InlineLinkText
-            label={_(msg`See more suggested profiles on the Explore page`)}
-            to="/search"
+          <Button
+            label={_(msg`See more suggested profiles`)}
             onPress={() => {
-              logger.metric('suggestedUser:seeMore', {
+              followDialogControl.open()
+              logEvent('suggestedUser:seeMore', {
                 logContext: isFeedContext ? 'Explore' : 'Profile',
               })
             }}>
-            <Trans>See more</Trans>
-          </InlineLinkText>
+            {({hovered}) => (
+              <Text
+                style={[
+                  a.text_sm,
+                  {color: t.palette.primary_500},
+                  hovered &&
+                    web({
+                      textDecorationLine: 'underline',
+                      textDecorationColor: t.palette.primary_500,
+                    }),
+                ]}>
+                <Trans>See more</Trans>
+              </Text>
+            )}
+          </Button>
         )}
       </View>
+
+      <FollowDialogWithoutGuide control={followDialogControl} />
 
       {gtMobile ? (
         <View style={[a.p_lg, a.pt_md]}>
@@ -648,7 +752,16 @@ export function ProfileGrid({
             decelerationRate="fast">
             {content}
 
-            {!isProfileHeaderContext && <SeeMoreSuggestedProfilesCard />}
+            {!isProfileHeaderContext && (
+              <SeeMoreSuggestedProfilesCard
+                onPress={() => {
+                  followDialogControl.open()
+                  logger.metric('suggestedUser:seeMore', {
+                    logContext: 'Explore',
+                  })
+                }}
+              />
+            )}
           </ScrollView>
         </BlockDrawerGesture>
       )}
@@ -656,20 +769,14 @@ export function ProfileGrid({
   )
 }
 
-function SeeMoreSuggestedProfilesCard() {
+function SeeMoreSuggestedProfilesCard({onPress}: {onPress: () => void}) {
   const t = useTheme()
   const {_} = useLingui()
 
   return (
-    <Link
-      to="/search"
-      color="primary"
-      label={_(msg`Browse more accounts on the Explore page`)}
-      onPress={() => {
-        logger.metric('suggestedUser:seeMore', {
-          logContext: 'Explore',
-        })
-      }}
+    <Button
+      label={_(msg`Browse more accounts`)}
+      onPress={onPress}
       style={[
         a.flex_col,
         a.align_center,
@@ -685,7 +792,7 @@ function SeeMoreSuggestedProfilesCard() {
         style={[a.text_md, a.font_medium, a.leading_snug, a.text_center]}>
         <Trans>See more</Trans>
       </ButtonText>
-    </Link>
+    </Button>
   )
 }
 

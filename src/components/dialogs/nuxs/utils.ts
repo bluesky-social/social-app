@@ -1,3 +1,24 @@
+import {type AppBskyActorDefs} from '@atproto/api'
+
+import {type useGate} from '#/lib/statsig/statsig'
+import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import {type SessionAccount} from '#/state/session'
+import {type Geolocation} from '#/geolocation'
+
+export type EnabledCheckProps = {
+  gate: ReturnType<typeof useGate>
+  currentAccount: SessionAccount
+  currentProfile: AppBskyActorDefs.ProfileViewDetailed
+  preferences: UsePreferencesQueryResponse
+  geolocation: Geolocation
+}
+
+export function createIsEnabledCheck(
+  cb: (props: EnabledCheckProps) => boolean,
+) {
+  return cb
+}
+
 const ONE_DAY = 1000 * 60 * 60 * 24
 
 export function isDaysOld(days: number, createdAt?: string) {

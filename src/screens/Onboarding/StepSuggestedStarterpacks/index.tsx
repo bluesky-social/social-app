@@ -1,18 +1,20 @@
-import {useContext} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useOnboardingSuggestedStarterPacksQuery} from '#/state/queries/useOnboardingSuggestedStarterPacksQuery'
-import {OnboardingControls} from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {
+  OnboardingControls,
+  OnboardingPosition,
+  OnboardingTitleText,
+} from '#/screens/Onboarding/Layout'
+import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotate'
 import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
 import {StarterPackCard} from './StarterPackCard'
 
 export function StepSuggestedStarterpacks() {
@@ -20,7 +22,7 @@ export function StepSuggestedStarterpacks() {
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
 
-  const {state, dispatch} = useContext(Context)
+  const {state, dispatch} = useOnboardingInternalState()
 
   const {
     data: suggestedStarterPacks,
@@ -34,26 +36,26 @@ export function StepSuggestedStarterpacks() {
   })
 
   return (
-    <View style={[a.align_start]} testID="onboardingInterests">
-      <Text style={[a.font_bold, a.text_3xl]}>
-        <Trans comment="Accounts suggested to the user for them to follow">
-          Suggested for you
+    <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
+      <OnboardingPosition />
+      <OnboardingTitleText>
+        <Trans comment="Starter packs suggested to the user for them to follow">
+          Find people to follow
         </Trans>
-      </Text>
+      </OnboardingTitleText>
 
       <View
         style={[
           a.overflow_hidden,
-          a.mt_lg,
           a.flex_1,
           a.justify_start,
           a.w_full,
+          a.mt_sm,
         ]}>
         {isLoading || !moderationOpts ? (
           <View
             style={[
               a.flex_1,
-              a.mt_md,
               a.align_center,
               a.justify_center,
               {minHeight: 400},
@@ -69,7 +71,7 @@ export function StepSuggestedStarterpacks() {
             </Admonition>
           </View>
         ) : (
-          <View style={[a.flex_1, a.mt_md]}>
+          <View style={[a.flex_1]}>
             {suggestedStarterPacks?.starterPacks.map(starterPack => (
               <View style={[a.pb_lg]} key={starterPack.uri}>
                 <StarterPackCard view={starterPack} />

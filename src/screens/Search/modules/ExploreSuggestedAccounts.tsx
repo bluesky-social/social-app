@@ -123,6 +123,8 @@ let SuggestedProfileCard = ({
             logContext: 'Explore',
             recId,
             position,
+            suggestedDid: profile.did,
+            category: null,
           },
           {statsig: true},
         )
@@ -162,6 +164,8 @@ let SuggestedProfileCard = ({
                         location: 'Card',
                         recId,
                         position,
+                        suggestedDid: profile.did,
+                        category: null,
                       },
                       {statsig: true},
                     )

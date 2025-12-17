@@ -1,11 +1,17 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {TextInput, useWindowDimensions, View} from 'react-native'
+import {
+  TextInput,
+  useWindowDimensions,
+  View,
+  type ViewToken,
+} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearch} from '#/state/queries/actor-search'
@@ -25,7 +31,7 @@ import {
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
@@ -84,11 +90,28 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
   )
 }
 
+/**
+ * Same as {@link FollowDialog} but without a progress guide.
+ */
+export function FollowDialogWithoutGuide({
+  control,
+}: {
+  control: Dialog.DialogOuterProps['control']
+}) {
+  const {height: minHeight} = useWindowDimensions()
+  return (
+    <Dialog.Outer control={control} nativeOptions={{minHeight}}>
+      <Dialog.Handle />
+      <DialogInner />
+    </Dialog.Outer>
+  )
+}
+
 // Fine to keep this top-level.
 let lastSelectedInterest = ''
 let lastSearchText = ''
 
-function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
+function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
@@ -226,6 +249,43 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
     [moderationOpts],
   )
 
+  // Track seen profiles
+  const seenProfilesRef = useRef<Set<string>>(new Set())
+  const itemsRef = useRef(items)
+  itemsRef.current = items
+  const selectedInterestRef = useRef(selectedInterest)
+  selectedInterestRef.current = selectedInterest
+
+  const onViewableItemsChanged = useRef(
+    ({viewableItems}: {viewableItems: ViewToken[]}) => {
+      for (const viewableItem of viewableItems) {
+        const item = viewableItem.item as Item
+        if (item.type === 'profile') {
+          if (!seenProfilesRef.current.has(item.profile.did)) {
+            seenProfilesRef.current.add(item.profile.did)
+            const position = itemsRef.current.findIndex(
+              i => i.type === 'profile' && i.profile.did === item.profile.did,
+            )
+            logger.metric(
+              'suggestedUser:seen',
+              {
+                logContext: 'ProgressGuide',
+                recId: undefined,
+                position: position !== -1 ? position : 0,
+                suggestedDid: item.profile.did,
+                category: selectedInterestRef.current,
+              },
+              {statsig: true},
+            )
+          }
+        }
+      }
+    },
+  ).current
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current
+
   const onSelectTab = useCallback(
     (interest: string) => {
       setSelectedInterest(interest)
@@ -273,6 +333,8 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
       scrollIndicatorInsets={{top: headerHeight}}
       initialNumToRender={8}
       maxToRenderPerBatch={8}
+      onViewableItemsChanged={onViewableItemsChanged}
+      viewabilityConfig={viewabilityConfig}
     />
   )
 }
@@ -289,7 +351,7 @@ let Header = ({
   selectedInterest,
   interestsDisplayNames,
 }: {
-  guide: Follow10ProgressGuide
+  guide?: Follow10ProgressGuide
   inputRef: React.RefObject<TextInput | null>
   listRef: React.RefObject<ListMethods | null>
   onSelectTab: (v: string) => void
@@ -340,7 +402,7 @@ let Header = ({
 }
 Header = memo(Header)
 
-function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
+function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
@@ -363,14 +425,16 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
         ]}>
         <Trans>Find people to follow</Trans>
       </Text>
-      <View style={isWeb && {paddingRight: 36}}>
-        <ProgressGuideTask
-          current={guide.numFollows + 1}
-          total={10 + 1}
-          title={`${guide.numFollows} / 10`}
-          tabularNumsTitle
-        />
-      </View>
+      {guide && (
+        <View style={isWeb && {paddingRight: 36}}>
+          <ProgressGuideTask
+            current={guide.numFollows + 1}
+            total={10 + 1}
+            title={`${guide.numFollows} / 10`}
+            tabularNumsTitle
+          />
+        </View>
+      )}
       {isWeb ? (
         <Button
           label={_(msg`Close`)}
@@ -381,7 +445,7 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
           style={[
             a.absolute,
             a.z_20,
-            web({right: -4}),
+            web({right: 8}),
             native({right: 0}),
             native({height: 32, width: 32, borderRadius: 16}),
           ]}

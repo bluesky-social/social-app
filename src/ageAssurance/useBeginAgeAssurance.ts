@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {type AppBskyAgeassuranceBegin, AtpAgent} from '@atproto/api'
 import {useMutation} from '@tanstack/react-query'
 
@@ -8,9 +9,9 @@ import {
   PUBLIC_APPVIEW_DID,
 } from '#/lib/constants'
 import {isNetworkError} from '#/lib/hooks/useCleanError'
-import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {usePatchAgeAssuranceServerState} from '#/ageAssurance'
+import {logger} from '#/ageAssurance/logger'
 import {BLUESKY_PROXY_DID} from '#/env'
 import {useGeolocation} from '#/geolocation'
 
@@ -29,8 +30,8 @@ export function useBeginAgeAssurance() {
         'countryCode' | 'regionCode'
       >,
     ) {
-      const countryCode = geolocation?.countryCode
-      const regionCode = geolocation?.regionCode
+      const countryCode = geolocation?.countryCode?.toUpperCase()
+      const regionCode = geolocation?.regionCode?.toUpperCase()
       if (!countryCode) {
         throw new Error(`Geolocation not available, cannot init age assurance.`)
       }
@@ -47,6 +48,16 @@ export function useBeginAgeAssurance() {
       appView.sessionManager.session.accessJwt = token
       appView.sessionManager.session.refreshJwt = ''
 
+      logger.metric(
+        'ageAssurance:api:begin',
+        {
+          platform: Platform.OS,
+          countryCode,
+          regionCode,
+        },
+        {statsig: false},
+      )
+
       /*
        * 2s wait is good actually. Email sending takes a hot sec and this helps
        * ensure the email is ready for the user once they open their inbox.
@@ -55,8 +66,8 @@ export function useBeginAgeAssurance() {
         2e3,
         appView.app.bsky.ageassurance.begin({
           ...props,
-          countryCode: countryCode.toUpperCase(),
-          regionCode: regionCode ? regionCode.toUpperCase() : undefined,
+          countryCode,
+          regionCode,
         }),
       )
 

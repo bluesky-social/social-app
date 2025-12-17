@@ -16,13 +16,11 @@ import {isNative} from '#/platform/detection'
 import {useInAppBrowser} from '#/state/preferences/in-app-browser'
 import {useTheme} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 export function useOpenLink() {
   const enabled = useInAppBrowser()
   const t = useTheme()
-  const sheetWrapper = useSheetWrapper()
   const dialogContext = useDialogContext()
   const {inAppBrowserConsentControl} = useGlobalDialogsControlContext()
 
@@ -58,25 +56,23 @@ export function useOpenLink() {
           }
           return
         } else if (override ?? enabled) {
-          await sheetWrapper(
-            WebBrowser.openBrowserAsync(url, {
-              presentationStyle:
-                WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
-              toolbarColor: t.atoms.bg.backgroundColor,
-              controlsColor: t.palette.primary_500,
-              createTask: false,
-            }).catch(err => {
-              if (__DEV__)
-                logger.error('Could not open web browser', {message: err})
-              Linking.openURL(url)
-            }),
-          )
+          WebBrowser.openBrowserAsync(url, {
+            presentationStyle:
+              WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
+            toolbarColor: t.atoms.bg.backgroundColor,
+            controlsColor: t.palette.primary_500,
+            createTask: false,
+          }).catch(err => {
+            if (__DEV__)
+              logger.error('Could not open web browser', {message: err})
+            Linking.openURL(url)
+          })
           return
         }
       }
       Linking.openURL(url)
     },
-    [enabled, inAppBrowserConsentControl, t, sheetWrapper, dialogContext],
+    [enabled, inAppBrowserConsentControl, t, dialogContext],
   )
 
   return openLink

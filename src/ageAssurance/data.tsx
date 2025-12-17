@@ -15,11 +15,17 @@ import debounce from 'lodash.debounce'
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {getAge} from '#/lib/strings/time'
-import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
+import {
+  hasSnoozedBirthdateUpdateForDid,
+  snoozeBirthdateUpdateAllowedForDid,
+} from '#/state/birthdate'
 import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
-import {isLegacyBirthdateBug} from '#/ageAssurance/util'
+import {
+  getBirthdateStringFromAge,
+  isLegacyBirthdateBug,
+} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
@@ -321,6 +327,22 @@ export async function getOtherRequiredData({
   const data: OtherRequiredData = {
     birthdate: prefs.birthDate ? prefs.birthDate.toISOString() : undefined,
   }
+
+  /**
+   * If we can't read a birthdate, it may be due to the user accessing the
+   * account via an app password. In that case, fall-back to declared age
+   * flags.
+   */
+  if (!data.birthdate) {
+    if (prefs.declaredAge?.isOverAge18) {
+      data.birthdate = getBirthdateStringFromAge(18)
+    } else if (prefs.declaredAge?.isOverAge16) {
+      data.birthdate = getBirthdateStringFromAge(16)
+    } else if (prefs.declaredAge?.isOverAge13) {
+      data.birthdate = getBirthdateStringFromAge(13)
+    }
+  }
+
   const did = getDidFromAgentSession(agent)
   if (data && did && birthdateCache.has(did)) {
     /*
@@ -331,10 +353,17 @@ export async function getOtherRequiredData({
   }
 
   /**
-   * If the user is under the minimum age, and the birthdate is not due to
-   * the legacy bug, snooze further birthdate updates for this user.
+   * If the user is under the minimum age, and the birthdate is not due to the
+   * legacy bug, AND we've not already snoozed their birthdate update, snooze
+   * further birthdate updates for this user.
+   *
+   * This is basically a migration step for this initial rollout.
    */
-  if (data.birthdate && !isLegacyBirthdateBug(data.birthdate)) {
+  if (
+    data.birthdate &&
+    !isLegacyBirthdateBug(data.birthdate) &&
+    !hasSnoozedBirthdateUpdateForDid(did!)
+  ) {
     snoozeBirthdateUpdateAllowedForDid(did!)
   }
 

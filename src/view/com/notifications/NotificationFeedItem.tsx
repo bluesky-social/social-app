@@ -1,11 +1,4 @@
-import {
-  memo,
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
   type GestureResponderEvent,
@@ -61,6 +54,7 @@ import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron'
+import {Contacts_Filled_Corner2_Rounded as ContactsIconFilled} from '#/components/icons/Contacts'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/components/icons/Heart2'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -116,6 +110,7 @@ let NotificationFeedItem = ({
         break
       }
       case 'follow':
+      case 'contact-match':
       case 'verified':
       case 'unverified': {
         return makeProfileLink(item.notification.author)
@@ -279,7 +274,7 @@ let NotificationFeedItem = ({
     : ''
 
   let a11yLabel = ''
-  let notificationContent: ReactElement<any>
+  let notificationContent: React.ReactElement<any>
   let icon = (
     <HeartIconFilled
       size="xl"
@@ -373,6 +368,14 @@ let NotificationFeedItem = ({
       )
     }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
+  } else if (item.type === 'contact-match') {
+    a11yLabel = _(msg`Your contact ${firstAuthorName} is on Bluesky`)
+    notificationContent = (
+      <Trans>Your contact {firstAuthorLink} is on Bluesky</Trans>
+    )
+    icon = (
+      <ContactsIconFilled size="xl" style={{color: t.palette.primary_500}} />
+    )
   } else if (item.type === 'feedgen-like') {
     a11yLabel = hasMultipleAuthors
       ? _(
@@ -438,7 +441,7 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -463,7 +466,7 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -670,7 +673,9 @@ let NotificationFeedItem = ({
                 </TimeElapsed>
               </Text>
             </ExpandListPressable>
-            {item.type === 'follow' && !hasMultipleAuthors && !isFollowBack ? (
+            {(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
+            (item.type === 'contact-match' &&
+              !item.notification.author.viewer?.following) ? (
               <FollowBackButton profile={item.notification.author} />
             ) : null}
             {item.type === 'post-like' ||
@@ -809,6 +814,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   }
 
   const isFollowing = profileShadow.viewer.following
+  const isFollowedBy = profileShadow.viewer.followedBy
   const followingLabel = _(
     msg({
       message: 'Following',
@@ -832,14 +838,14 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
         </Button>
       ) : (
         <Button
-          label={_(msg`Follow back`)}
+          label={isFollowedBy ? _(msg`Follow back`) : _(msg`Follow`)}
           color="primary"
           size="small"
           style={[a.self_start]}
           onPress={onPressFollow}>
           <ButtonIcon icon={PlusIcon} />
           <ButtonText>
-            <Trans>Follow back</Trans>
+            {isFollowedBy ? <Trans>Follow back</Trans> : <Trans>Follow</Trans>}
           </ButtonText>
         </Button>
       )}

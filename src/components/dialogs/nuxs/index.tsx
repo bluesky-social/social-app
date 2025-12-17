@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
@@ -12,12 +19,13 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
-import {BookmarksAnnouncement} from '#/components/dialogs/nuxs/BookmarksAnnouncement'
-/*
- * NUXs
- */
+import {
+  enabled as isFindContactsAnnouncementEnabled,
+  FindContactsAnnouncement,
+} from '#/components/dialogs/nuxs/FindContactsAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-import {isExistingUserAsOf} from './utils'
+import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
+import {useGeolocation} from '#/geolocation'
 
 type Context = {
   activeNux: Nux | undefined
@@ -26,32 +34,22 @@ type Context = {
 
 const queuedNuxs: {
   id: Nux
-  enabled?: (props: {
-    gate: ReturnType<typeof useGate>
-    currentAccount: SessionAccount
-    currentProfile: AppBskyActorDefs.ProfileViewDetailed
-    preferences: UsePreferencesQueryResponse
-  }) => boolean
+  enabled?: (props: EnabledCheckProps) => boolean
 }[] = [
   {
-    id: Nux.BookmarksAnnouncement,
-    enabled: ({currentProfile}) => {
-      return isExistingUserAsOf(
-        '2025-09-08T00:00:00.000Z',
-        currentProfile.createdAt,
-      )
-    },
+    id: Nux.FindContactsAnnouncement,
+    enabled: isFindContactsAnnouncementEnabled,
   },
 ]
 
-const Context = React.createContext<Context>({
+const Context = createContext<Context>({
   activeNux: undefined,
   dismissActiveNux: () => {},
 })
 Context.displayName = 'NuxDialogContext'
 
 export function useNuxDialogContext() {
-  return React.useContext(Context)
+  return useContext(Context)
 }
 
 export function NuxDialogs() {
@@ -91,20 +89,21 @@ function Inner({
   preferences: UsePreferencesQueryResponse
 }) {
   const gate = useGate()
+  const geolocation = useGeolocation()
   const {nuxs} = useNuxs()
-  const [snoozed, setSnoozed] = React.useState(() => {
+  const [snoozed, setSnoozed] = useState(() => {
     return isSnoozed()
   })
-  const [activeNux, setActiveNux] = React.useState<Nux | undefined>()
+  const [activeNux, setActiveNux] = useState<Nux | undefined>()
   const {mutateAsync: saveNux} = useSaveNux()
   const {mutate: resetNuxs} = useResetNuxs()
 
-  const snoozeNuxDialog = React.useCallback(() => {
+  const snoozeNuxDialog = useCallback(() => {
     snooze()
     setSnoozed(true)
   }, [setSnoozed])
 
-  const dismissActiveNux = React.useCallback(() => {
+  const dismissActiveNux = useCallback(() => {
     if (!activeNux) return
     setActiveNux(undefined)
   }, [activeNux, setActiveNux])
@@ -118,7 +117,7 @@ function Inner({
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (snoozed) return // comment this out to test
     if (!nuxs) return
 
@@ -133,7 +132,13 @@ function Inner({
       // then check gate (track exposure)
       if (
         enabled &&
-        !enabled({gate, currentAccount, currentProfile, preferences})
+        !enabled({
+          gate,
+          currentAccount,
+          currentProfile,
+          preferences,
+          geolocation,
+        })
       ) {
         continue
       }
@@ -168,9 +173,10 @@ function Inner({
     currentAccount,
     currentProfile,
     preferences,
+    geolocation,
   ])
 
-  const ctx = React.useMemo(() => {
+  const ctx = useMemo(() => {
     return {
       activeNux,
       dismissActiveNux,
@@ -180,7 +186,9 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.BookmarksAnnouncement && <BookmarksAnnouncement />}
+      {activeNux === Nux.FindContactsAnnouncement && (
+        <FindContactsAnnouncement />
+      )}
     </Context.Provider>
   )
 }
