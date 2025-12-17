@@ -436,7 +436,7 @@ export function ProfileGrid({
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
   const isFeedContext = viewContext === 'feed'
-  const showDismissButton = gate('suggested_users_dismiss') && onDismiss
+  const showDismissButton = onDismiss && gate('suggested_users_dismiss')
 
   const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6
   const minLength = gtMobile ? 3 : 4
