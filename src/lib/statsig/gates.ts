@@ -12,5 +12,6 @@ export type Gate =
   | 'onboarding_suggested_starterpacks'
   | 'remove_show_latest_button'
   | 'show_composer_prompt'
+  | 'suggested_users_dismiss'
   | 'test_gate_1'
   | 'test_gate_2'
