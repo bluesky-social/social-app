@@ -8,7 +8,7 @@ msgstr ""
 "Language: el\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-13 19:06\n"
+"PO-Revision-Date: 2025-12-18 22:44\n"
 "Last-Translator: \n"
 "Language-Team: Greek\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -849,7 +849,7 @@ msgstr ""
 msgid "Add user to list"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:223
+#: src/ageAssurance/components/NoAccessScreen.tsx:222
 msgid "Add your birthdate"
 msgstr ""
 
@@ -919,7 +919,7 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:357
+#: src/ageAssurance/components/NoAccessScreen.tsx:345
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Age assurance only takes a few minutes"
 msgstr ""
@@ -1453,7 +1453,7 @@ msgstr ""
 msgid "Begin the age assurance process by completing the fields below."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:149
+#: src/components/dialogs/BirthDateSettings.tsx:162
 msgid "Birthdate"
 msgstr ""
 
@@ -1642,25 +1642,25 @@ msgstr "Βιβλία"
 msgid "Breaking site rules"
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:158
-#: src/view/com/feeds/ProfileFeedgens.tsx:159
+#: src/view/com/feeds/ProfileFeedgens.tsx:167
+#: src/view/com/feeds/ProfileFeedgens.tsx:168
 msgid "Browse custom feeds"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:547
+#: src/components/FeedInterstitials.tsx:778
 msgid "Browse more accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:676
+#: src/components/FeedInterstitials.tsx:907
 msgid "Browse more feeds on the Explore page"
 msgstr "Περιηγηθείτε σε περισσότερες ροές στην σελίδα Εξερεύνησης"
 
-#: src/components/FeedInterstitials.tsx:657
-#: src/components/FeedInterstitials.tsx:660
+#: src/components/FeedInterstitials.tsx:888
+#: src/components/FeedInterstitials.tsx:891
 msgid "Browse more suggestions"
 msgstr "Περιηγηθείτε σε περισσότερες προτάσεις"
 
-#: src/components/FeedInterstitials.tsx:685
+#: src/components/FeedInterstitials.tsx:916
 msgid "Browse more suggestions on the Explore page"
 msgstr "Περιηγηθείτε σε περισσότερες προτάσεις στην σελίδα Εξερεύνησης"
 
@@ -2027,11 +2027,11 @@ msgstr ""
 msgid "click here"
 msgstr "κάντε κλικ εδώ"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:114
+#: src/ageAssurance/components/NoAccessScreen.tsx:126
 msgid "Click here to contact our support team"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:248
+#: src/ageAssurance/components/NoAccessScreen.tsx:236
 msgid "Click here to log out"
 msgstr ""
 
@@ -2039,8 +2039,8 @@ msgstr ""
 msgid "Click here to restart the verification process."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:97
-#: src/ageAssurance/components/NoAccessScreen.tsx:220
+#: src/ageAssurance/components/NoAccessScreen.tsx:103
+#: src/ageAssurance/components/NoAccessScreen.tsx:219
 msgid "Click here to update your birthdate"
 msgstr ""
 
@@ -2126,7 +2126,7 @@ msgstr "Κλείσιμο κάτω συρταριού"
 msgid "Close dialog"
 msgstr "Κλείσιμο διαλόγου"
 
-#: src/view/shell/index.web.tsx:111
+#: src/view/shell/index.web.tsx:113
 msgid "Close drawer menu"
 msgstr ""
 
@@ -2257,7 +2257,7 @@ msgstr "Επιβεβαίωση ρυθμίσεων γλώσσας περιεχο�
 msgid "Confirm delete account"
 msgstr "Επιβεβαίωση διαγραφής λογαριασμού"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:371
+#: src/ageAssurance/components/NoAccessScreen.tsx:359
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
@@ -2284,7 +2284,7 @@ msgstr "Σύνδεση..."
 msgid "Connection issue"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:308
+#: src/ageAssurance/components/NoAccessScreen.tsx:296
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
@@ -2598,8 +2598,8 @@ msgstr ""
 msgid "Create"
 msgstr "Δημιουργία"
 
-#: src/view/com/lists/ProfileLists.tsx:159
-#: src/view/com/lists/ProfileLists.tsx:160
+#: src/view/com/lists/ProfileLists.tsx:166
+#: src/view/com/lists/ProfileLists.tsx:167
 msgid "Create a list"
 msgstr ""
 
@@ -2613,8 +2613,8 @@ msgstr "Δημιουργία QR κώδικα για ένα starter pack"
 msgid "Create a starter pack"
 msgstr "Δημιουργία starter pack"
 
-#: src/view/screens/Profile.tsx:542
-#: src/view/screens/Profile.tsx:543
+#: src/view/screens/Profile.tsx:560
+#: src/view/screens/Profile.tsx:561
 msgid "Create a Starter Pack"
 msgstr ""
 
@@ -3023,6 +3023,10 @@ msgstr ""
 msgid "Dismiss this section"
 msgstr ""
 
+#: src/components/FeedInterstitials.tsx:587
+msgid "Dismiss this suggestion"
+msgstr ""
+
 #: src/screens/Settings/AccessibilitySettings.tsx:69
 #: src/screens/Settings/AccessibilitySettings.tsx:74
 msgid "Display larger alt text badges"
@@ -3075,8 +3079,8 @@ msgstr ""
 #: src/components/contacts/components/InviteInfo.tsx:78
 #: src/components/contacts/screens/ViewMatches.tsx:392
 #: src/components/contacts/screens/ViewMatches.tsx:409
-#: src/components/dialogs/BirthDateSettings.tsx:183
-#: src/components/dialogs/BirthDateSettings.tsx:190
+#: src/components/dialogs/BirthDateSettings.tsx:196
+#: src/components/dialogs/BirthDateSettings.tsx:203
 #: src/components/dialogs/ServerInput.tsx:240
 #: src/components/dialogs/ServerInput.tsx:242
 #: src/components/dms/AfterReportDialog.tsx:142
@@ -3450,7 +3454,7 @@ msgstr "Εισάγετε το email που χρησιμοποιήσατε για
 msgid "Enter the username or email address you used when you created your account"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:150
+#: src/components/dialogs/BirthDateSettings.tsx:163
 msgid "Enter your birthdate"
 msgstr ""
 
@@ -4210,7 +4214,7 @@ msgstr "Μέγεθος γραμματοσειράς"
 msgid "Food"
 msgstr "Φαγητό"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:125
+#: src/ageAssurance/components/NoAccessScreen.tsx:90
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
 msgstr ""
 
@@ -4557,11 +4561,11 @@ msgstr "Αυτός είναι ο κωδικός πρόσβασης της εφα
 msgid "Hey there 👋"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:167
+#: src/ageAssurance/components/NoAccessScreen.tsx:170
 msgid "Hey there!"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:202
+#: src/ageAssurance/components/NoAccessScreen.tsx:201
 msgid "Hi there!"
 msgstr ""
 
@@ -4661,7 +4665,7 @@ msgstr ""
 msgid "Hides the content"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:229
+#: src/components/dialogs/BirthDateSettings.tsx:74
 msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
 msgstr ""
 
@@ -4766,11 +4770,11 @@ msgstr "Εάν το εναλλακτικό κείμενο είναι μακρύ,
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Εάν δεν είστε ακόμη ενήλικας σύμφωνα με τους νόμους της χώρας σας, ο γονέας ή ο νόμιμος κηδεμόνας σας πρέπει να διαβάσει αυτούς τους Όρους εκ μέρους σας."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:110
+#: src/ageAssurance/components/NoAccessScreen.tsx:122
 msgid "If you believe your birthdate is incorrect, please <0>contact our support team</0>."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:94
+#: src/ageAssurance/components/NoAccessScreen.tsx:100
 msgid "If you believe your birthdate is incorrect, you can update it by <0>clicking here</0>."
 msgstr ""
 
@@ -4854,7 +4858,7 @@ msgstr ""
 msgid "Import contacts to find your friends"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:205
+#: src/ageAssurance/components/NoAccessScreen.tsx:204
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr ""
 
@@ -4999,7 +5003,7 @@ msgstr "Προσκαλέστε τους φίλους σας να ακολουθ�
 msgid "Invites, but personal"
 msgstr "Προσκλήσεις, αλλά προσωπικές"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:368
+#: src/ageAssurance/components/NoAccessScreen.tsx:356
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr ""
@@ -5096,12 +5100,12 @@ msgstr "Γλώσσες"
 msgid "Larger"
 msgstr "Μεγαλύτερο"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:351
+#: src/ageAssurance/components/NoAccessScreen.tsx:339
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated {timeAgo} ago"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:349
+#: src/ageAssurance/components/NoAccessScreen.tsx:337
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
 msgid "Last initiated just now"
 msgstr ""
@@ -5410,7 +5414,6 @@ msgid "Lists"
 msgstr "Λίστες"
 
 #: src/view/com/lists/MyLists.tsx:72
-#: src/view/com/lists/ProfileLists.tsx:155
 msgid "Lists allow you to see content from your favorite people."
 msgstr ""
 
@@ -5827,8 +5830,8 @@ msgstr "Λέξεις & ετικέτες σε σίγαση"
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Η σίγαση είναι ιδιωτική. Οι λογαριασμοί σε σίγαση μπορούν να αλληλεπιδράσουν μαζί σας, αλλά δεν θα βλέπετε τις δημοσιεύσεις τους ούτε θα λαμβάνετε ειδοποιήσεις από αυτούς."
 
-#: src/components/dialogs/BirthDateSettings.tsx:43
 #: src/components/dialogs/BirthDateSettings.tsx:47
+#: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "My Birthdate"
 msgstr ""
 
@@ -5941,7 +5944,7 @@ msgstr "Νέος κωδικός πρόσβασης"
 #: src/screens/ProfileList/index.tsx:284
 #: src/view/screens/Feeds.tsx:552
 #: src/view/screens/Notifications.tsx:167
-#: src/view/screens/Profile.tsx:571
+#: src/view/screens/Profile.tsx:591
 msgid "New post"
 msgstr "Νέα δημοσίευση"
 
@@ -6023,6 +6026,10 @@ msgstr ""
 msgid "No contacts with the name “{query}” found"
 msgstr ""
 
+#: src/view/com/feeds/ProfileFeedgens.tsx:161
+msgid "No custom feeds yet"
+msgstr ""
+
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:408
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:410
 msgid "No DNS Panel"
@@ -6050,9 +6057,13 @@ msgstr ""
 
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
-#: src/view/screens/Profile.tsx:511
+#: src/view/screens/Profile.tsx:523
 msgid "No likes yet"
 msgstr "Δεν υπάρχουν ακόμη \"Μου αρέσει\""
+
+#: src/view/com/lists/ProfileLists.tsx:160
+msgid "No lists"
+msgstr ""
 
 #: src/components/ProfileCard.tsx:531
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:269
@@ -6060,7 +6071,7 @@ msgstr "Δεν υπάρχουν ακόμη \"Μου αρέσει\""
 msgid "No longer following {0}"
 msgstr "Δεν ακολουθώ πλέον τον {0}"
 
-#: src/view/screens/Profile.tsx:467
+#: src/view/screens/Profile.tsx:471
 msgid "No media yet"
 msgstr ""
 
@@ -6105,7 +6116,7 @@ msgstr ""
 msgid "No quotes yet"
 msgstr "Δεν υπάρχουν ακόμη παραθέσεις"
 
-#: src/view/screens/Profile.tsx:452
+#: src/view/screens/Profile.tsx:456
 msgid "No replies yet"
 msgstr ""
 
@@ -6148,12 +6159,16 @@ msgstr ""
 msgid "No search results found for \"{search}\"."
 msgstr "Χωρίς αποτελέσματα αναζήτησης για “{search}”."
 
+#: src/view/screens/Profile.tsx:555
+msgid "No Starter Packs yet"
+msgstr ""
+
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
 msgid "No thanks"
 msgstr "Όχι ευχαριστώ"
 
-#: src/view/screens/Profile.tsx:489
+#: src/view/screens/Profile.tsx:497
 msgid "No video posts yet"
 msgstr ""
 
@@ -6975,13 +6990,13 @@ msgctxt "action"
 msgid "Post"
 msgstr "Δημοσίευση"
 
-#: src/view/screens/Profile.tsx:469
-#: src/view/screens/Profile.tsx:470
+#: src/view/screens/Profile.tsx:475
+#: src/view/screens/Profile.tsx:476
 msgid "Post a photo"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:491
-#: src/view/screens/Profile.tsx:492
+#: src/view/screens/Profile.tsx:501
+#: src/view/screens/Profile.tsx:502
 msgid "Post a video"
 msgstr ""
 
@@ -7925,7 +7940,7 @@ msgstr "Επιστροφή στην προηγούμενη σελίδα"
 msgid "Returns to the previous step"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:190
+#: src/components/dialogs/BirthDateSettings.tsx:203
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
@@ -7951,7 +7966,7 @@ msgctxt "action"
 msgid "Save"
 msgstr "Αποθήκευση"
 
-#: src/components/dialogs/BirthDateSettings.tsx:183
+#: src/components/dialogs/BirthDateSettings.tsx:196
 msgid "Save birthdate"
 msgstr ""
 
@@ -8158,12 +8173,12 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr "Δείτε θέσεις εργασίας στο Bluesky"
 
-#: src/components/FeedInterstitials.tsx:499
-#: src/components/FeedInterstitials.tsx:562
+#: src/components/FeedInterstitials.tsx:730
+#: src/components/FeedInterstitials.tsx:793
 msgid "See more"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:481
+#: src/components/FeedInterstitials.tsx:712
 msgid "See more suggested profiles"
 msgstr ""
 
@@ -8430,7 +8445,7 @@ msgstr "Ρύθμιση του λογαριασμού σας"
 msgid "Set who can reply to your post"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:212
+#: src/ageAssurance/components/NoAccessScreen.tsx:211
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr ""
 
@@ -8781,7 +8796,7 @@ msgstr "Απαιτείται σύνδεση"
 msgid "Signed in as @{0}"
 msgstr "Συνδεδεμένος ως @{0}"
 
-#: src/components/FeedInterstitials.tsx:476
+#: src/components/FeedInterstitials.tsx:707
 msgid "Similar accounts"
 msgstr "Παρόμοιοι λογαριασμοί"
 
@@ -8832,7 +8847,7 @@ msgstr "Ανάπτυξη λογισμικού"
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:639
+#: src/components/FeedInterstitials.tsx:870
 msgid "Some other feeds you might like"
 msgstr "Κάποιες άλλες ροές που μπορεί να σας αρέσουν"
 
@@ -8889,8 +8904,8 @@ msgstr ""
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
-#: src/App.native.tsx:127
-#: src/App.web.tsx:100
+#: src/App.native.tsx:126
+#: src/App.web.tsx:99
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
@@ -8978,8 +8993,8 @@ msgstr ""
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Τα Starter Packs σας επιτρέπουν να μοιράζεστε εύκολα τις αγαπημένες σας ροές και άτομα με τους φίλους σας."
 
-#: src/view/screens/Profile.tsx:539
-msgid "Starter packs let you share your favorite feeds and people with your friends."
+#: src/view/screens/Profile.tsx:553
+msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
 #: src/screens/Settings/AboutSettings.tsx:100
@@ -9071,7 +9086,7 @@ msgid "Suggested Accounts"
 msgstr ""
 
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:474
+#: src/components/FeedInterstitials.tsx:705
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:155
 msgid "Suggested for you"
 msgstr "Προτεινόμενα για εσάς"
@@ -9202,7 +9217,7 @@ msgstr "Πες μας λίγα ακόμη"
 msgid "Terms"
 msgstr "Όροι"
 
-#: src/components/dialogs/BirthDateSettings.tsx:169
+#: src/components/dialogs/BirthDateSettings.tsx:182
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:30
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:97
 #: src/Navigation.tsx:338
@@ -9231,7 +9246,7 @@ msgstr ""
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Σας ευχαριστούμε, έχετε επαληθεύσει με επιτυχία τη διεύθυνση email σας. Μπορείτε να κλείσετε αυτό το παράθυρο διαλόγου."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:397
+#: src/ageAssurance/components/NoAccessScreen.tsx:385
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
 msgid "Thanks! You're all set."
 msgstr ""
@@ -9277,7 +9292,7 @@ msgstr ""
 msgid "The author of this thread has hidden this reply."
 msgstr "Ο συντάκτης αυτού του νήματος έχει κρύψει αυτήν την απάντηση."
 
-#: src/components/dialogs/BirthDateSettings.tsx:156
+#: src/components/dialogs/BirthDateSettings.tsx:169
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr ""
 
@@ -9373,7 +9388,7 @@ msgstr ""
 msgid "Theme"
 msgstr "Θέμα"
 
-#: src/components/dialogs/BirthDateSettings.tsx:91
+#: src/components/dialogs/BirthDateSettings.tsx:104
 msgid "There is a limit to how often you can change your birthdate. You may need to wait a day or two before updating it again."
 msgstr ""
 
@@ -9418,8 +9433,8 @@ msgstr "Παρουσιάστηκε πρόβλημα λήψης της λίστα
 msgid "There was an issue fetching your app passwords"
 msgstr "Παρουσιάστηκε πρόβλημα λήψης των κωδικών πρόσβασης της εφαρμογής σας"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:174
-#: src/view/com/lists/ProfileLists.tsx:175
+#: src/view/com/feeds/ProfileFeedgens.tsx:185
+#: src/view/com/lists/ProfileLists.tsx:184
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "Παρουσιάστηκε πρόβλημα λήψης των λιστών σας. Πατήστε εδώ για να δοκιμάσετε ξανά."
 
@@ -9597,7 +9612,7 @@ msgstr "Αυτή η ροή δεν είναι πλέον διαθέσιμη. Σα
 msgid "This handle is reserved. Please try a different one."
 msgstr "Αυτό το όνομα χρήστη είναι κρατημένο. Παρακαλούμε δοκιμάστε ένα διαφορετικό."
 
-#: src/components/dialogs/BirthDateSettings.tsx:51
+#: src/components/dialogs/BirthDateSettings.tsx:55
 msgid "This information is private and not shared with other users."
 msgstr ""
 
@@ -9775,7 +9790,7 @@ msgstr "Για να απενεργοποιήσετε τη μέθοδο email 2FA
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:245
+#: src/ageAssurance/components/NoAccessScreen.tsx:233
 msgid "To log out, <0>click here</0>."
 msgstr ""
 
@@ -9990,7 +10005,7 @@ msgstr ""
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:187
+#: src/ageAssurance/components/NoAccessScreen.tsx:188
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr ""
 
@@ -10351,7 +10366,7 @@ msgstr ""
 msgid "Verify account"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:334
+#: src/ageAssurance/components/NoAccessScreen.tsx:322
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
 msgid "Verify again"
 msgstr ""
@@ -10378,8 +10393,8 @@ msgstr ""
 msgid "Verify email dialog"
 msgstr "Παράθυρο διαλόγου επαλήθευσης email"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:322
-#: src/ageAssurance/components/NoAccessScreen.tsx:336
+#: src/ageAssurance/components/NoAccessScreen.tsx:310
+#: src/ageAssurance/components/NoAccessScreen.tsx:324
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify now"
@@ -10718,7 +10733,7 @@ msgstr ""
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Δεν μπορέσαμε να προσδιορίσουμε εάν επιτρέπεται να ανεβάζετε βίντεο. Παρακαλώ προσπαθήστε ξανά."
 
-#: src/components/dialogs/BirthDateSettings.tsx:63
+#: src/components/dialogs/BirthDateSettings.tsx:67
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr ""
 
@@ -10777,7 +10792,7 @@ msgstr ""
 msgid "We're so excited to have you join us!"
 msgstr "Είμαστε τόσο ενθουσιασμένοι που θα γίνετε μέλος μας!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:390
+#: src/ageAssurance/components/NoAccessScreen.tsx:378
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr ""
@@ -10925,8 +10940,8 @@ msgstr ""
 msgid "Write a message"
 msgstr "Γράψτε ένα μήνυμα"
 
-#: src/view/screens/Profile.tsx:433
-#: src/view/screens/Profile.tsx:434
+#: src/view/screens/Profile.tsx:435
+#: src/view/screens/Profile.tsx:436
 msgid "Write a post"
 msgstr ""
 
@@ -10985,7 +11000,7 @@ msgstr "Χθες"
 msgid "You are a trusted verifier"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:170
+#: src/ageAssurance/components/NoAccessScreen.tsx:173
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr ""
 
@@ -10993,7 +11008,7 @@ msgstr ""
 msgid "You are creating an account on"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:304
+#: src/ageAssurance/components/NoAccessScreen.tsx:292
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr ""
@@ -11203,7 +11218,11 @@ msgstr "Έχετε φτάσει προσωρινά το όριο για μετα
 msgid "You haven't created a starter pack yet!"
 msgstr "Δεν έχετε δημιουργήσει ακόμη starter pack!"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:155
+#: src/view/com/lists/ProfileLists.tsx:159
+msgid "You haven't created any lists yet."
+msgstr ""
+
+#: src/view/com/feeds/ProfileFeedgens.tsx:160
 msgid "You haven't made any custom feeds yet."
 msgstr ""
 
@@ -11248,7 +11267,7 @@ msgstr "Μπορείτε να προσθέσετε έως και 3 ροές"
 msgid "You must be 13 years of age or older to create an account."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:165
+#: src/components/dialogs/BirthDateSettings.tsx:178
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr ""
 
@@ -11293,8 +11312,8 @@ msgstr ""
 msgid "You reacted {0} to {1}"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:77
-#: src/components/dialogs/BirthDateSettings.tsx:87
+#: src/components/dialogs/BirthDateSettings.tsx:90
+#: src/components/dialogs/BirthDateSettings.tsx:100
 msgid "You recently changed your birthdate"
 msgstr ""
 

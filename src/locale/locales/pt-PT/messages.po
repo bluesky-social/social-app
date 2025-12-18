@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-13 19:06\n"
+"PO-Revision-Date: 2025-12-18 22:44\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -849,7 +849,7 @@ msgstr "Adicionar a pacotes de iniciante"
 msgid "Add user to list"
 msgstr "Adicionar utilizador à lista"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:223
+#: src/ageAssurance/components/NoAccessScreen.tsx:222
 msgid "Add your birthdate"
 msgstr "Adicionar a sua data de nascimento"
 
@@ -919,7 +919,7 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "O inquérito de verificação de idade foi enviado"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:357
+#: src/ageAssurance/components/NoAccessScreen.tsx:345
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Age assurance only takes a few minutes"
 msgstr "A verificação de idade demora apenas alguns minutos"
@@ -1453,7 +1453,7 @@ msgstr "Começar processo de verificação de idade"
 msgid "Begin the age assurance process by completing the fields below."
 msgstr "Comece o processo de verificação de idade, preenchendo os campos abaixo."
 
-#: src/components/dialogs/BirthDateSettings.tsx:149
+#: src/components/dialogs/BirthDateSettings.tsx:162
 msgid "Birthdate"
 msgstr "Data de nascimento"
 
@@ -1642,25 +1642,25 @@ msgstr "Livros"
 msgid "Breaking site rules"
 msgstr "Violação das regras do site"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:158
-#: src/view/com/feeds/ProfileFeedgens.tsx:159
+#: src/view/com/feeds/ProfileFeedgens.tsx:167
+#: src/view/com/feeds/ProfileFeedgens.tsx:168
 msgid "Browse custom feeds"
 msgstr "Procurar feeds personalizados"
 
-#: src/components/FeedInterstitials.tsx:547
+#: src/components/FeedInterstitials.tsx:778
 msgid "Browse more accounts"
 msgstr "Procurar mais contas"
 
-#: src/components/FeedInterstitials.tsx:676
+#: src/components/FeedInterstitials.tsx:907
 msgid "Browse more feeds on the Explore page"
 msgstr "Procure mais feeds na página Explorar"
 
-#: src/components/FeedInterstitials.tsx:657
-#: src/components/FeedInterstitials.tsx:660
+#: src/components/FeedInterstitials.tsx:888
+#: src/components/FeedInterstitials.tsx:891
 msgid "Browse more suggestions"
 msgstr "Procurar mais sugestões"
 
-#: src/components/FeedInterstitials.tsx:685
+#: src/components/FeedInterstitials.tsx:916
 msgid "Browse more suggestions on the Explore page"
 msgstr "Procure mais sugestões na página Explorar"
 
@@ -2027,11 +2027,11 @@ msgstr "Clique para mais informação"
 msgid "click here"
 msgstr "clique aqui"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:114
+#: src/ageAssurance/components/NoAccessScreen.tsx:126
 msgid "Click here to contact our support team"
 msgstr "Clique aqui para contactar a nossa equipa de suporte"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:248
+#: src/ageAssurance/components/NoAccessScreen.tsx:236
 msgid "Click here to log out"
 msgstr "Clique aqui para terminar sessão"
 
@@ -2039,8 +2039,8 @@ msgstr "Clique aqui para terminar sessão"
 msgid "Click here to restart the verification process."
 msgstr "Clique aqui para reiniciar o processo de verificação."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:97
-#: src/ageAssurance/components/NoAccessScreen.tsx:220
+#: src/ageAssurance/components/NoAccessScreen.tsx:103
+#: src/ageAssurance/components/NoAccessScreen.tsx:219
 msgid "Click here to update your birthdate"
 msgstr "Clique aqui para atualizar a sua data de nascimento"
 
@@ -2126,7 +2126,7 @@ msgstr "Fechar parte inferior"
 msgid "Close dialog"
 msgstr "Fechar janela de diálogo"
 
-#: src/view/shell/index.web.tsx:111
+#: src/view/shell/index.web.tsx:113
 msgid "Close drawer menu"
 msgstr "Fechar menu lateral"
 
@@ -2257,7 +2257,7 @@ msgstr "Confirmar definições de idioma do conteúdo"
 msgid "Confirm delete account"
 msgstr "Confirmar eliminação de conta"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:371
+#: src/ageAssurance/components/NoAccessScreen.tsx:359
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
@@ -2284,7 +2284,7 @@ msgstr "A conectar..."
 msgid "Connection issue"
 msgstr "Problema de conexão"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:308
+#: src/ageAssurance/components/NoAccessScreen.tsx:296
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
@@ -2598,8 +2598,8 @@ msgstr "Código do país"
 msgid "Create"
 msgstr "Criar"
 
-#: src/view/com/lists/ProfileLists.tsx:159
-#: src/view/com/lists/ProfileLists.tsx:160
+#: src/view/com/lists/ProfileLists.tsx:166
+#: src/view/com/lists/ProfileLists.tsx:167
 msgid "Create a list"
 msgstr "Criar uma Lista"
 
@@ -2613,8 +2613,8 @@ msgstr "Criar um código QR para um pacote de iniciante"
 msgid "Create a starter pack"
 msgstr "Criar um pacote de iniciante"
 
-#: src/view/screens/Profile.tsx:542
-#: src/view/screens/Profile.tsx:543
+#: src/view/screens/Profile.tsx:560
+#: src/view/screens/Profile.tsx:561
 msgid "Create a Starter Pack"
 msgstr "Criar um Pacote de Iniciante"
 
@@ -3023,6 +3023,10 @@ msgstr "Descartar interesses"
 msgid "Dismiss this section"
 msgstr "Ignorar esta secção"
 
+#: src/components/FeedInterstitials.tsx:587
+msgid "Dismiss this suggestion"
+msgstr "Ignorar esta sugestão"
+
 #: src/screens/Settings/AccessibilitySettings.tsx:69
 #: src/screens/Settings/AccessibilitySettings.tsx:74
 msgid "Display larger alt text badges"
@@ -3075,8 +3079,8 @@ msgstr "Não se preocupe! Todas as mensagens e configurações existentes serão
 #: src/components/contacts/components/InviteInfo.tsx:78
 #: src/components/contacts/screens/ViewMatches.tsx:392
 #: src/components/contacts/screens/ViewMatches.tsx:409
-#: src/components/dialogs/BirthDateSettings.tsx:183
-#: src/components/dialogs/BirthDateSettings.tsx:190
+#: src/components/dialogs/BirthDateSettings.tsx:196
+#: src/components/dialogs/BirthDateSettings.tsx:203
 #: src/components/dialogs/ServerInput.tsx:240
 #: src/components/dialogs/ServerInput.tsx:242
 #: src/components/dms/AfterReportDialog.tsx:142
@@ -3450,7 +3454,7 @@ msgstr "Insira o e-mail que usou para criar a sua conta. Enviaremos um \"código
 msgid "Enter the username or email address you used when you created your account"
 msgstr "Introduza o nome de utilizador ou o endereço de e-mail que usou quando criou a sua conta"
 
-#: src/components/dialogs/BirthDateSettings.tsx:150
+#: src/components/dialogs/BirthDateSettings.tsx:163
 msgid "Enter your birthdate"
 msgstr "Insira a sua data de nascimento"
 
@@ -4210,9 +4214,9 @@ msgstr "Tamanho de letra"
 msgid "Food"
 msgstr "Comida"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:125
+#: src/ageAssurance/components/NoAccessScreen.tsx:90
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
-msgstr ""
+msgstr "Para contas de organizações, use a data de nascimento da pessoa responsável pela conta."
 
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -4557,11 +4561,11 @@ msgstr "Aqui está a sua palavra-passe de aplicação!"
 msgid "Hey there 👋"
 msgstr "Olá 👋"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:167
+#: src/ageAssurance/components/NoAccessScreen.tsx:170
 msgid "Hey there!"
 msgstr "Olá!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:202
+#: src/ageAssurance/components/NoAccessScreen.tsx:201
 msgid "Hi there!"
 msgstr "Olá!"
 
@@ -4661,7 +4665,7 @@ msgstr "Ocultar selos de verificação"
 msgid "Hides the content"
 msgstr "Oculta o conteúdo"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:229
+#: src/components/dialogs/BirthDateSettings.tsx:74
 msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
 msgstr "Hmm, parece que tem sessão iniciada com uma <0>Palavra-passe da Aplicação</0>. Para definir a sua data de nascimento, terá de iniciar sessão com a palavra-passe principal da sua conta ou pedir a quem controla esta conta para o fazer."
 
@@ -4766,11 +4770,11 @@ msgstr "Se o texto alternativo for longo, alterna para o estado de texto alterna
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Se ainda não é considerado um adulto pelas leis do seu país, um parente ou responsável legal deve ler estes Termos em seu nome."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:110
+#: src/ageAssurance/components/NoAccessScreen.tsx:122
 msgid "If you believe your birthdate is incorrect, please <0>contact our support team</0>."
 msgstr "Se acredita que a sua data de nascimento está incorreta, por favor <0>contacte a nossa equipa de suporte</0>."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:94
+#: src/ageAssurance/components/NoAccessScreen.tsx:100
 msgid "If you believe your birthdate is incorrect, you can update it by <0>clicking here</0>."
 msgstr "Se acredita que a sua data de nascimento está incorreta, pode atualizá-la clicando <0>aqui</0>."
 
@@ -4854,7 +4858,7 @@ msgstr "Importar Contactos"
 msgid "Import contacts to find your friends"
 msgstr "Importe contactos para encontrar os seus amigos"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:205
+#: src/ageAssurance/components/NoAccessScreen.tsx:204
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "De modo a fornecer uma experiência apropriada à sua idade, precisamos de saber a sua data de nascimento. Isto só lhe será pedido uma vez, e os seus dados serão mantidos privados."
 
@@ -4999,7 +5003,7 @@ msgstr "Convide os seus amigos para seguirem os seus feeds e pessoas favoritas"
 msgid "Invites, but personal"
 msgstr "Convites, mas pessoais"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:368
+#: src/ageAssurance/components/NoAccessScreen.tsx:356
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "A sua localização não está correta? <0>Toque aqui para confirmar a sua localização.</0>"
@@ -5096,12 +5100,12 @@ msgstr "Idiomas"
 msgid "Larger"
 msgstr "Maior"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:351
+#: src/ageAssurance/components/NoAccessScreen.tsx:339
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated {timeAgo} ago"
 msgstr "Iniciado pela última vez há {timeAgo}"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:349
+#: src/ageAssurance/components/NoAccessScreen.tsx:337
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
 msgid "Last initiated just now"
 msgstr "Iniciado pela última vez agora mesmo"
@@ -5410,7 +5414,6 @@ msgid "Lists"
 msgstr "Listas"
 
 #: src/view/com/lists/MyLists.tsx:72
-#: src/view/com/lists/ProfileLists.tsx:155
 msgid "Lists allow you to see content from your favorite people."
 msgstr "As listas permitem-lhe ver o conteúdo das suas pessoas favoritas."
 
@@ -5827,8 +5830,8 @@ msgstr "Palavras e tags silenciadas"
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Silenciar é privado. Contas silenciadas podem interagir consigo, mas não verá as publicações nem receberá notificações delas."
 
-#: src/components/dialogs/BirthDateSettings.tsx:43
 #: src/components/dialogs/BirthDateSettings.tsx:47
+#: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "My Birthdate"
 msgstr "A minha data de nascimento"
 
@@ -5941,7 +5944,7 @@ msgstr "Nova palavra-passe"
 #: src/screens/ProfileList/index.tsx:284
 #: src/view/screens/Feeds.tsx:552
 #: src/view/screens/Notifications.tsx:167
-#: src/view/screens/Profile.tsx:571
+#: src/view/screens/Profile.tsx:591
 msgid "New post"
 msgstr "Nova publicação"
 
@@ -6023,6 +6026,10 @@ msgstr "Nenhum contacto encontrado"
 msgid "No contacts with the name “{query}” found"
 msgstr "Nenhum contacto com o nome “{query}” encontrado"
 
+#: src/view/com/feeds/ProfileFeedgens.tsx:161
+msgid "No custom feeds yet"
+msgstr "Nenhum feed personalizado ainda"
+
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:408
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:410
 msgid "No DNS Panel"
@@ -6050,9 +6057,13 @@ msgstr "Sem imagem"
 
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
-#: src/view/screens/Profile.tsx:511
+#: src/view/screens/Profile.tsx:523
 msgid "No likes yet"
 msgstr "Sem gostos ainda"
+
+#: src/view/com/lists/ProfileLists.tsx:160
+msgid "No lists"
+msgstr "Nenhuma lista"
 
 #: src/components/ProfileCard.tsx:531
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:269
@@ -6060,7 +6071,7 @@ msgstr "Sem gostos ainda"
 msgid "No longer following {0}"
 msgstr "Já não segue {0}"
 
-#: src/view/screens/Profile.tsx:467
+#: src/view/screens/Profile.tsx:471
 msgid "No media yet"
 msgstr "Sem conteúdo multimédia ainda"
 
@@ -6105,7 +6116,7 @@ msgstr "Sem publicações ainda"
 msgid "No quotes yet"
 msgstr "Ainda sem citações"
 
-#: src/view/screens/Profile.tsx:452
+#: src/view/screens/Profile.tsx:456
 msgid "No replies yet"
 msgstr "Sem respostas ainda"
 
@@ -6148,12 +6159,16 @@ msgstr "Sem resultados."
 msgid "No search results found for \"{search}\"."
 msgstr "Não foram encontrados resultados para \"{search}\"."
 
+#: src/view/screens/Profile.tsx:555
+msgid "No Starter Packs yet"
+msgstr "Nenhum Pacote de Iniciante ainda"
+
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
 msgid "No thanks"
 msgstr "Não, obrigado"
 
-#: src/view/screens/Profile.tsx:489
+#: src/view/screens/Profile.tsx:497
 msgid "No video posts yet"
 msgstr "Sem vídeos ainda"
 
@@ -6975,13 +6990,13 @@ msgctxt "action"
 msgid "Post"
 msgstr "Publicação"
 
-#: src/view/screens/Profile.tsx:469
-#: src/view/screens/Profile.tsx:470
+#: src/view/screens/Profile.tsx:475
+#: src/view/screens/Profile.tsx:476
 msgid "Post a photo"
 msgstr "Publicar uma foto"
 
-#: src/view/screens/Profile.tsx:491
-#: src/view/screens/Profile.tsx:492
+#: src/view/screens/Profile.tsx:501
+#: src/view/screens/Profile.tsx:502
 msgid "Post a video"
 msgstr "Publicar um vídeo"
 
@@ -7925,7 +7940,7 @@ msgstr "Volta à página anterior"
 msgid "Returns to the previous step"
 msgstr "Regressa ao passo anterior"
 
-#: src/components/dialogs/BirthDateSettings.tsx:190
+#: src/components/dialogs/BirthDateSettings.tsx:203
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
@@ -7951,7 +7966,7 @@ msgctxt "action"
 msgid "Save"
 msgstr "Guardar"
 
-#: src/components/dialogs/BirthDateSettings.tsx:183
+#: src/components/dialogs/BirthDateSettings.tsx:196
 msgid "Save birthdate"
 msgstr "Guardar data de nascimento"
 
@@ -8158,12 +8173,12 @@ msgstr "Ver publicações em #{tag} por utilizador"
 msgid "See jobs at Bluesky"
 msgstr "Ver empregos no Bluesky"
 
-#: src/components/FeedInterstitials.tsx:499
-#: src/components/FeedInterstitials.tsx:562
+#: src/components/FeedInterstitials.tsx:730
+#: src/components/FeedInterstitials.tsx:793
 msgid "See more"
 msgstr "Ver mais"
 
-#: src/components/FeedInterstitials.tsx:481
+#: src/components/FeedInterstitials.tsx:712
 msgid "See more suggested profiles"
 msgstr "Ver mais perfis sugeridos"
 
@@ -8430,7 +8445,7 @@ msgstr "Configure a sua conta"
 msgid "Set who can reply to your post"
 msgstr "Definir quem pode responder à sua publicação"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:212
+#: src/ageAssurance/components/NoAccessScreen.tsx:211
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr "Defina a sua data de nascimento abaixo e poderá voltar a publicar e a explorar num piscar de olhos!"
 
@@ -8781,7 +8796,7 @@ msgstr "Requer início de sessão"
 msgid "Signed in as @{0}"
 msgstr "Sessão iniciada como {0}"
 
-#: src/components/FeedInterstitials.tsx:476
+#: src/components/FeedInterstitials.tsx:707
 msgid "Similar accounts"
 msgstr "Contas semelhantes"
 
@@ -8832,7 +8847,7 @@ msgstr "Programador"
 msgid "Some of your verifications are invalid."
 msgstr "Algumas das suas verificações são inválidas."
 
-#: src/components/FeedInterstitials.tsx:639
+#: src/components/FeedInterstitials.tsx:870
 msgid "Some other feeds you might like"
 msgstr "Outros feeds que talvez possa gostar"
 
@@ -8889,8 +8904,8 @@ msgstr "Aconteceu algo de errado? Informe-nos."
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "Lamentamos, mas de momento não conseguimos carregar as sugestões de contas. "
 
-#: src/App.native.tsx:127
-#: src/App.web.tsx:100
+#: src/App.native.tsx:126
+#: src/App.web.tsx:99
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Desculpe! A sua sessão expirou. Por favor, inicie sessão novamente."
 
@@ -8978,9 +8993,9 @@ msgstr "Pacotes de Iniciante"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Pacotes de iniciante permitem-lhe compartilhar facilmente os seus feeds e pessoas favoritos com os seus amigos."
 
-#: src/view/screens/Profile.tsx:539
-msgid "Starter packs let you share your favorite feeds and people with your friends."
-msgstr "Pacotes de iniciante permitem-lhe partilhar os seus feeds e pessoas favoritos com os seus amigos."
+#: src/view/screens/Profile.tsx:553
+msgid "Starter Packs let you share your favorite feeds and people with your friends."
+msgstr "Pacotes de Iniciante permitem-lhe partilhar os seus feeds e utilizadores preferidos com os seus amigos."
 
 #: src/screens/Settings/AboutSettings.tsx:100
 #: src/screens/Settings/AboutSettings.tsx:103
@@ -9071,7 +9086,7 @@ msgid "Suggested Accounts"
 msgstr "Contas Sugeridas"
 
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:474
+#: src/components/FeedInterstitials.tsx:705
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:155
 msgid "Suggested for you"
 msgstr "Sugerido para si"
@@ -9202,7 +9217,7 @@ msgstr "Conte-nos um pouco mais"
 msgid "Terms"
 msgstr "Termos"
 
-#: src/components/dialogs/BirthDateSettings.tsx:169
+#: src/components/dialogs/BirthDateSettings.tsx:182
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:30
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:97
 #: src/Navigation.tsx:338
@@ -9231,7 +9246,7 @@ msgstr "Obrigado pelo seu feedback! Ele foi enviado para o operador do feed."
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Obrigado, verificou o seu endereço de e-mail com sucesso. Pode fechar esta janela de diálogo."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:397
+#: src/ageAssurance/components/NoAccessScreen.tsx:385
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
 msgid "Thanks! You're all set."
 msgstr "Obrigado! Está tudo pronto."
@@ -9277,7 +9292,7 @@ msgstr "A aplicação será reiniciada"
 msgid "The author of this thread has hidden this reply."
 msgstr "O autor deste fio ocultou a sua resposta."
 
-#: src/components/dialogs/BirthDateSettings.tsx:156
+#: src/components/dialogs/BirthDateSettings.tsx:169
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr "A data de nascimento que inseriu indica que tem menos de 18 anos. Certos conteúdos e funcionalidades podem estar indisponíveis para si."
 
@@ -9373,7 +9388,7 @@ msgstr "O fornecedor de verificação não conseguiu enviar um código para o se
 msgid "Theme"
 msgstr "Tema"
 
-#: src/components/dialogs/BirthDateSettings.tsx:91
+#: src/components/dialogs/BirthDateSettings.tsx:104
 msgid "There is a limit to how often you can change your birthdate. You may need to wait a day or two before updating it again."
 msgstr "Há um limite para o quão frequentemente pode alterar a sua data de nascimento. Talvez tenha de aguardar um ou dois dias antes de a atualizar novamente."
 
@@ -9418,8 +9433,8 @@ msgstr "Houve um problema ao obter a lista. Toque aqui para tentar novamente."
 msgid "There was an issue fetching your app passwords"
 msgstr "Houve um problema ao obter as suas palavras-passe de aplicação"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:174
-#: src/view/com/lists/ProfileLists.tsx:175
+#: src/view/com/feeds/ProfileFeedgens.tsx:185
+#: src/view/com/lists/ProfileLists.tsx:184
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "Houve um problema ao obter as suas listas. Toque aqui para tentar novamente."
 
@@ -9597,7 +9612,7 @@ msgstr "Este feed já não se encontra online. Em vez disso, estamos a mostrar <
 msgid "This handle is reserved. Please try a different one."
 msgstr "Este nome de utilizador é reservado. Por favor, tente um diferente."
 
-#: src/components/dialogs/BirthDateSettings.tsx:51
+#: src/components/dialogs/BirthDateSettings.tsx:55
 msgid "This information is private and not shared with other users."
 msgstr "Esta informação é privada e não é partilhada com outros utilizadores."
 
@@ -9775,7 +9790,7 @@ msgstr "Para desativar o método de 2FA por e-mail, verifique o seu acesso ao en
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "Para desativar o método de 2FA por e-mail, verifique o seu acesso a <0>{0}</0>"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:245
+#: src/ageAssurance/components/NoAccessScreen.tsx:233
 msgid "To log out, <0>click here</0>."
 msgstr "Para terminar sessão, <0>clique aqui</0>."
 
@@ -9990,7 +10005,7 @@ msgstr "Deixa de seguir o utilizador"
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "Infelizmente, nenhum dos rotuladores que subscreve suportam este tipo de denúncia."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:187
+#: src/ageAssurance/components/NoAccessScreen.tsx:188
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr "Infelizmente, a data de aniversário que guardou no seu perfil indica que não tem idade suficiente para aceder ao Bluesky."
 
@@ -10351,7 +10366,7 @@ msgstr "Verificado por:"
 msgid "Verify account"
 msgstr "Verificar conta"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:334
+#: src/ageAssurance/components/NoAccessScreen.tsx:322
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
 msgid "Verify again"
 msgstr "Verificar novamente"
@@ -10378,8 +10393,8 @@ msgstr "Verificar o código de e-mail"
 msgid "Verify email dialog"
 msgstr "Janela de diálogo para verificação de e-mail"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:322
-#: src/ageAssurance/components/NoAccessScreen.tsx:336
+#: src/ageAssurance/components/NoAccessScreen.tsx:310
+#: src/ageAssurance/components/NoAccessScreen.tsx:324
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify now"
@@ -10718,7 +10733,7 @@ msgstr "Enviámos um e-mail com um link para <0>{0}</0>. Clique nele para conclu
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Não conseguimos determinar se tem permissão para carregar vídeos. Por favor, tente novamente."
 
-#: src/components/dialogs/BirthDateSettings.tsx:63
+#: src/components/dialogs/BirthDateSettings.tsx:67
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr "Não foi possível carregar as suas preferências de data de nascimento. Por favor, tente novamente."
 
@@ -10777,7 +10792,7 @@ msgstr "Estamos a introduzir uma nova camada de verificação no Bluesky — um 
 msgid "We're so excited to have you join us!"
 msgstr "Estamos muito contentes por tê-lo aqui!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:390
+#: src/ageAssurance/components/NoAccessScreen.tsx:378
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "Pedimos desculpa, mas com base na localização do seu dispositivo, está atualmente numa região que requer verificação de idade."
@@ -10925,8 +10940,8 @@ msgstr "Deseja bloquear este utilizador e/ou eliminar esta conversa?"
 msgid "Write a message"
 msgstr "Escreva uma mensagem"
 
-#: src/view/screens/Profile.tsx:433
-#: src/view/screens/Profile.tsx:434
+#: src/view/screens/Profile.tsx:435
+#: src/view/screens/Profile.tsx:436
 msgid "Write a post"
 msgstr "Escrever uma publicação"
 
@@ -10985,7 +11000,7 @@ msgstr "Ontem"
 msgid "You are a trusted verifier"
 msgstr "Você é um verificador confiável"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:170
+#: src/ageAssurance/components/NoAccessScreen.tsx:173
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr "Está a aceder ao Bluesky a partir de uma região cuja lei nos obriga a verificar a sua idade antes de permitir que aceda à aplicação."
 
@@ -10993,7 +11008,7 @@ msgstr "Está a aceder ao Bluesky a partir de uma região cuja lei nos obriga a 
 msgid "You are creating an account on"
 msgstr "Está a criar uma conta em"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:304
+#: src/ageAssurance/components/NoAccessScreen.tsx:292
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "De momento não pode aceder ao processo de verificação de idade do Bluesky. Por favor, <0>contacte a nossa equipa de moderação</0> se acredita que isto é um erro."
@@ -11203,7 +11218,11 @@ msgstr "Atingiu temporariamente o limite para carregamento de vídeos. Por favor
 msgid "You haven't created a starter pack yet!"
 msgstr "Ainda não criou um pacote de iniciante!"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:155
+#: src/view/com/lists/ProfileLists.tsx:159
+msgid "You haven't created any lists yet."
+msgstr "Ainda não criou nenhuma lista."
+
+#: src/view/com/feeds/ProfileFeedgens.tsx:160
 msgid "You haven't made any custom feeds yet."
 msgstr "Ainda não criou nenhum feed personalizado."
 
@@ -11248,7 +11267,7 @@ msgstr "Pode adicionar um máximo de 3 feeds"
 msgid "You must be 13 years of age or older to create an account."
 msgstr "Deve ter pelo menos 13 anos para criar uma conta."
 
-#: src/components/dialogs/BirthDateSettings.tsx:165
+#: src/components/dialogs/BirthDateSettings.tsx:178
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr "Tem de ter pelo menos 13 anos para usar o Bluesky. Leia os nossos <0>Termos de Serviço</0> para mais informação."
 
@@ -11293,8 +11312,8 @@ msgstr "Reagiu {0}"
 msgid "You reacted {0} to {1}"
 msgstr "Reagiu {0} a {1}"
 
-#: src/components/dialogs/BirthDateSettings.tsx:77
-#: src/components/dialogs/BirthDateSettings.tsx:87
+#: src/components/dialogs/BirthDateSettings.tsx:90
+#: src/components/dialogs/BirthDateSettings.tsx:100
 msgid "You recently changed your birthdate"
 msgstr "Alterou recentemente a sua data de nascimento"
 
