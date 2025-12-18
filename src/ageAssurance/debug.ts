@@ -1,9 +1,9 @@
+import type * as AgeRange from 'expo-age-range'
 import {
   ageAssuranceRuleIDs as ids,
   type AppBskyAgeassuranceDefs,
   type AppBskyAgeassuranceGetState,
 } from '@atproto/api'
-import * as AgeRange from 'expo-age-range'
 
 import {type OtherRequiredData} from '#/ageAssurance/data'
 import {IS_DEV, IS_E2E} from '#/env'
@@ -260,7 +260,12 @@ export const config: AppBskyAgeassuranceDefs.Config = {
 
 const deviceSignalsEnabled = true
 export const deviceSignals: AgeRange.AgeRangeResponse | undefined =
-  deviceSignalsEnabled ? {} : undefined
+  deviceSignalsEnabled
+    ? {
+        lowerBound: null,
+        upperBound: null,
+      }
+    : undefined
 
 export async function resolve<T>(data: T) {
   await new Promise(y => setTimeout(y, 500)) // simulate network
