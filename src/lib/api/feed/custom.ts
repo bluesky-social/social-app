@@ -119,10 +119,16 @@ async function loggedOutFetch({
   }
 
   // manually construct fetch call so we can add the `lang` cache-busting param
+  const params = new URLSearchParams({
+    feed: feed,
+    limit: limit.toString(),
+    lang: contentLangs,
+  })
+  if (cursor) {
+    params.append('cursor', cursor)
+  }
   let res = await fetch(
-    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
-      cursor ? `&cursor=${cursor}` : ''
-    }&limit=${limit}&lang=${contentLangs}`,
+    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?${params.toString()}`,
     {
       method: 'GET',
       headers: {'Accept-Language': contentLangs, ...labelersHeader},
@@ -139,10 +145,15 @@ async function loggedOutFetch({
   }
 
   // no data, try again with language headers removed
+  const paramsWithoutLang = new URLSearchParams({
+    feed: feed,
+    limit: limit.toString(),
+  })
+  if (cursor) {
+    paramsWithoutLang.append('cursor', cursor)
+  }
   res = await fetch(
-    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
-      cursor ? `&cursor=${cursor}` : ''
-    }&limit=${limit}`,
+    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?${paramsWithoutLang.toString()}`,
     {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},
   )
   data = res.ok
