@@ -354,9 +354,8 @@ let PostMenuItems = ({
       if (e instanceof MaxHiddenRepliesError) {
         Toast.show(
           _(
-            msg({
-              message: `You can hide a maximum of ${MAX_HIDDEN_REPLIES} replies.`,
-              context: 'toast',
+            plural(MAX_HIDDEN_REPLIES, {
+              other: 'You can hide a maximum of # replies.',
             }),
           ),
         )
