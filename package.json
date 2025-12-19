@@ -99,7 +99,6 @@
     "@mozzius/expo-dynamic-app-icon": "^1.8.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/bottom-tabs": "^7.9.0",
-    "@react-navigation/drawer": "^7.7.10",
     "@react-navigation/native": "^7.1.26",
     "@react-navigation/native-stack": "^7.9.0",
     "@sentry/react-native": "~6.20.0",

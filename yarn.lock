@@ -6572,16 +6572,6 @@
     use-latest-callback "^0.2.4"
     use-sync-external-store "^1.5.0"
 
-"@react-navigation/drawer@^7.7.10":
-  version "7.7.10"
-  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-7.7.10.tgz#c07651bcf917d163ff8b1a4e4c35ac527b11caa3"
-  integrity sha512-FGYU5Ebd2whTa4Z+RBCxnWqmyWIQGTJ7PAAhk2RjlVrEXLU0HaFR5JGmEHuNm/Cm9xX3xCwOxYZiA0Xi/DeyAA==
-  dependencies:
-    "@react-navigation/elements" "^2.9.3"
-    color "^4.2.3"
-    react-native-drawer-layout "^4.2.1"
-    use-latest-callback "^0.2.4"
-
 "@react-navigation/elements@^2.9.3":
   version "2.9.3"
   resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-2.9.3.tgz#505ae38af347a0bc5326155318a3d9a54e2071e3"
