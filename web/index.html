@@ -81,6 +81,7 @@
         right: 0;
         align-items: center;
         justify-content: center;
+        background-color: var(--splash-bg);
       }
       #splash svg {
         position: relative;
@@ -98,6 +99,19 @@
         overflow-y: scroll;
       }
     </style>
+    <script>
+    let colorMode = localStorage.getItem('SPLASH_COLOR_MODE') || 'system'
+    const darkTheme = localStorage.getItem('SPLASH_DARK_THEME') || 'dim'
+    if (colorMode === 'system') {
+      colorMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+    }
+    document.documentElement.style.setProperty(
+      '--splash-bg',
+      colorMode === 'dark' ? (darkTheme === 'dim' ? '#151D28' : '#000') : '#fff',
+    )
+    </script>
   </head>
 
   <body>
