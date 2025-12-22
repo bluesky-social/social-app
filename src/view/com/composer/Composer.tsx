@@ -78,6 +78,7 @@ import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {draftsStorage} from '#/state/drafts'
 import {emitPostCreated} from '#/state/events'
 import {
   type ComposerImage,
@@ -130,7 +131,6 @@ import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
-import {account} from '#/storage'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {DraftsView} from './DraftsDialog'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
@@ -302,46 +302,27 @@ export const ComposePost = ({
 
     // If a draftId is provided, load that specific draft
     if (initDraftId) {
-      try {
-        const allDrafts = account.get([currentAccount.did, 'composerDrafts'])
-        if (!allDrafts) return null
+      const draft = draftsStorage.getDraftSync(currentAccount.did, initDraftId)
+      if (!draft) return null
 
-        const draft = allDrafts[initDraftId]
-        if (!draft) return null
+      logger.info('Composer: loading draft by ID', {
+        draftId: initDraftId,
+        textLength: draft.thread.posts[0]?.text.length || 0,
+      })
 
-        if (draft.version !== 1) return null
-
-        // Check age
-        const age = Date.now() - draft.timestamp
-        if (age > 7 * 24 * 60 * 60 * 1000) {
-          return null
-        }
-
-        logger.info('Composer: loading draft by ID', {
-          draftId: initDraftId,
-          textLength: draft.thread.posts[0]?.text.length || 0,
+      // Construct video URLs from blobRefs if we have videos in the draft
+      const parsed = JSON.parse(JSON.stringify(draft)) // Deep clone
+      if (parsed.thread?.posts) {
+        parsed.thread.posts = parsed.thread.posts.map((post: any) => {
+          if (post.embed?.video?.blobRef?.ref?.$link) {
+            const cid = post.embed.video.blobRef.ref.$link
+            post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(currentAccount.did)}/${cid}/playlist.m3u8`
+          }
+          return post
         })
-
-        // Construct video URLs from blobRefs if we have videos in the draft
-        const parsed = JSON.parse(JSON.stringify(draft)) // Deep clone
-        if (parsed.thread?.posts) {
-          parsed.thread.posts = parsed.thread.posts.map((post: any) => {
-            if (post.embed?.video?.blobRef?.ref?.$link) {
-              const cid = post.embed.video.blobRef.ref.$link
-              post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(currentAccount.did)}/${cid}/playlist.m3u8`
-            }
-            return post
-          })
-        }
-
-        return parsed
-      } catch (e) {
-        logger.error('Failed to load draft by ID', {
-          error: e,
-          draftId: initDraftId,
-        })
-        return null
       }
+
+      return parsed
     }
 
     return null
@@ -424,51 +405,44 @@ export const ComposePost = ({
     (selectedDraftId: string) => {
       if (!currentAccount) return
 
-      try {
-        const allDrafts = account.get([currentAccount.did, 'composerDrafts'])
-        if (!allDrafts) return
+      const draft = draftsStorage.getDraftSync(
+        currentAccount.did,
+        selectedDraftId,
+      )
+      if (!draft) return
 
-        const draft = allDrafts[selectedDraftId]
-        if (!draft || draft.version !== 1) return
-
-        // Deep clone and construct video URLs if needed
-        const parsed = JSON.parse(JSON.stringify(draft))
-        if (parsed.thread?.posts) {
-          parsed.thread.posts = parsed.thread.posts.map((post: any) => {
-            if (post.embed?.video?.blobRef?.ref?.$link) {
-              const cid = post.embed.video.blobRef.ref.$link
-              post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(currentAccount.did)}/${cid}/playlist.m3u8`
-            }
-            return post
-          })
-        }
-
-        // Convert to ComposerState
-        const newState = createComposerState({
-          initText: undefined,
-          initMention: undefined,
-          initImageUris: undefined,
-          initQuoteUri: undefined,
-          initInteractionSettings: preferences?.postInteractionSettings,
-          initDraft: parsed,
-        })
-
-        // Update draft tracking state
-        setCurrentDraftId(selectedDraftId)
-        setIsEditingExistingDraft(true)
-        setLoadedDraftSnapshot(serializeStateForComparison(newState))
-
-        // Load the draft and switch back to compose mode
-        composerDispatch({type: 'load_draft', draft: newState})
-        setViewMode('compose')
-
-        logger.info('Loaded draft into composer', {draftId: selectedDraftId})
-      } catch (e) {
-        logger.error('Failed to load draft', {
-          error: e,
-          draftId: selectedDraftId,
+      // Deep clone and construct video URLs if needed
+      const parsed = JSON.parse(JSON.stringify(draft))
+      if (parsed.thread?.posts) {
+        parsed.thread.posts = parsed.thread.posts.map((post: any) => {
+          if (post.embed?.video?.blobRef?.ref?.$link) {
+            const cid = post.embed.video.blobRef.ref.$link
+            post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(currentAccount.did)}/${cid}/playlist.m3u8`
+          }
+          return post
         })
       }
+
+      // Convert to ComposerState
+      const newState = createComposerState({
+        initText: undefined,
+        initMention: undefined,
+        initImageUris: undefined,
+        initQuoteUri: undefined,
+        initInteractionSettings: preferences?.postInteractionSettings,
+        initDraft: parsed,
+      })
+
+      // Update draft tracking state
+      setCurrentDraftId(selectedDraftId)
+      setIsEditingExistingDraft(true)
+      setLoadedDraftSnapshot(serializeStateForComparison(newState))
+
+      // Load the draft and switch back to compose mode
+      composerDispatch({type: 'load_draft', draft: newState})
+      setViewMode('compose')
+
+      logger.info('Loaded draft into composer', {draftId: selectedDraftId})
     },
     [currentAccount, preferences?.postInteractionSettings],
   )
