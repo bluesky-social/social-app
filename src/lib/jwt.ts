@@ -21,3 +21,9 @@ export function isJwtExpired(token: string) {
     return true // invalid token or parse error
   }
 }
+
+export function isAppPassword(token: string) {
+  const payload = jwtDecode(token)
+  // @ts-ignore
+  return payload.scope === 'com.atproto.appPass'
+}

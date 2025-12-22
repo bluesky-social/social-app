@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -15,7 +14,6 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -37,18 +35,11 @@ export function Deactivated() {
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {logoutCurrentAccount} = useSessionApi()
   const agent = useAgent()
   const [pending, setPending] = React.useState(false)
   const [error, setError] = React.useState<string | undefined>()
   const queryClient = useQueryClient()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(true)
-    }, [setMinimalShellMode]),
-  )
 
   const onSelectAccount = React.useCallback(
     (account: SessionAccount) => {

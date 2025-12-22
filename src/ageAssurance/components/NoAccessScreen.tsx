@@ -64,6 +64,13 @@ export function NoAccessScreen() {
   useEffect(() => {
     // just counting overall hits here
     logger.metric(`blockedGeoOverlay:shown`, {})
+    logger.metric(`ageAssurance:noAccessScreen:shown`, {
+      accountCreatedAt: data?.accountCreatedAt || 'unknown',
+      isAARegion,
+      hasDeclaredAge,
+      canUpdateBirthday,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onPressLogout = useCallback(() => {
@@ -78,21 +85,38 @@ export function NoAccessScreen() {
     logoutCurrentAccount('AgeAssuranceNoAccessScreen')
   }, [logoutCurrentAccount])
 
-  const birthdateUpdateText = canUpdateBirthday ? (
-    <Text style={[textStyles]}>
+  const orgAdmonition = (
+    <Admonition type="tip">
       <Trans>
-        If you believe your birthdate is incorrect, you can update it by{' '}
-        <SimpleInlineLinkText
-          label={_(msg`Click here to update your birthdate`)}
-          style={[textStyles]}
-          {...createStaticClick(() => {
-            birthdateControl.open()
-          })}>
-          clicking here
-        </SimpleInlineLinkText>
-        .
+        For organizational accounts, use the birthdate of the person who is
+        responsible for the account.
       </Trans>
-    </Text>
+    </Admonition>
+  )
+
+  const birthdateUpdateText = canUpdateBirthday ? (
+    <>
+      <Text style={[textStyles]}>
+        <Trans>
+          If you believe your birthdate is incorrect, you can update it by{' '}
+          <SimpleInlineLinkText
+            label={_(msg`Click here to update your birthdate`)}
+            style={[textStyles]}
+            {...createStaticClick(() => {
+              logger.metric(
+                'ageAssurance:noAccessScreen:openBirthdateDialog',
+                {},
+              )
+              birthdateControl.open()
+            })}>
+            clicking here
+          </SimpleInlineLinkText>
+          .
+        </Trans>
+      </Text>
+
+      {orgAdmonition}
+    </>
   ) : (
     <Text style={[textStyles]}>
       <Trans>
@@ -110,99 +134,118 @@ export function NoAccessScreen() {
 
   return (
     <>
-      <ScrollView
-        contentContainerStyle={[
-          a.px_2xl,
-          {
-            paddingTop: isWeb ? a.p_5xl.padding : insets.top + a.p_2xl.padding,
-            paddingBottom: 100,
-          },
-        ]}>
-        <View
-          style={[
-            a.mx_auto,
-            a.w_full,
-            web({
-              maxWidth: 380,
-              paddingTop: gtPhone ? '8vh' : undefined,
-            }),
+      <View style={[a.util_screen_outer, a.flex_1]}>
+        <ScrollView
+          contentContainerStyle={[
+            a.px_2xl,
             {
-              gap: 32,
+              paddingTop: isWeb
+                ? a.p_5xl.padding
+                : insets.top + a.p_2xl.padding,
+              paddingBottom: 100,
             },
           ]}>
-          <View style={[a.align_start]}>
-            <AgeAssuranceBadge />
-          </View>
+          <View
+            style={[
+              a.mx_auto,
+              a.w_full,
+              web({
+                maxWidth: 380,
+                paddingTop: gtPhone ? '8vh' : undefined,
+              }),
+              {
+                gap: 32,
+              },
+            ]}>
+            <View style={[a.align_start]}>
+              <AgeAssuranceBadge />
+            </View>
 
-          {hasDeclaredAge ? (
-            <>
-              {isAARegion ? (
-                <>
+            {hasDeclaredAge ? (
+              <>
+                {isAARegion ? (
+                  <>
+                    <View style={[a.gap_lg]}>
+                      <Text style={[textStyles]}>
+                        <Trans>Hey there!</Trans>
+                      </Text>
+                      <Text style={[textStyles]}>
+                        <Trans>
+                          You are accessing Bluesky from a region that legally
+                          requires us to verify your age before allowing you to
+                          access the app.
+                        </Trans>
+                      </Text>
+
+                      {!isBlocked && birthdateUpdateText}
+                    </View>
+
+                    <AccessSection />
+                  </>
+                ) : (
                   <View style={[a.gap_lg]}>
                     <Text style={[textStyles]}>
                       <Trans>
-                        You are accessing Bluesky from a region that legally
-                        requires us to verify your age before allowing you to
-                        access the app.
+                        Unfortunately, the birthdate you have saved to your
+                        profile makes you too young to access Bluesky.
                       </Trans>
                     </Text>
 
-                    {!isBlocked && birthdateUpdateText}
+                    {birthdateUpdateText}
                   </View>
+                )}
+              </>
+            ) : (
+              <View style={[a.gap_lg]}>
+                <Text style={[textStyles]}>
+                  <Trans>Hi there!</Trans>
+                </Text>
+                <Text style={[textStyles]}>
+                  <Trans>
+                    In order to provide an age-appropriate experience, we need
+                    to know your birthdate. This is a one-time thing, and your
+                    data will be kept private.
+                  </Trans>
+                </Text>
+                <Text style={[textStyles]}>
+                  <Trans>
+                    Set your birthdate below and we'll get you back to posting
+                    and exploring in no time!
+                  </Trans>
+                </Text>
+                <Button
+                  color="primary"
+                  size="large"
+                  label={_(msg`Click here to update your birthdate`)}
+                  onPress={() => birthdateControl.open()}>
+                  <ButtonText>
+                    <Trans>Add your birthdate</Trans>
+                  </ButtonText>
+                </Button>
 
-                  <AccessSection />
-                </>
-              ) : (
-                <View style={[a.gap_lg]}>
-                  <Text style={[textStyles]}>
-                    <Trans>
-                      Unfortunately, the birthdate you have saved to your
-                      profile makes you too young to access Bluesky.
-                    </Trans>
-                  </Text>
+                {orgAdmonition}
+              </View>
+            )}
 
-                  {birthdateUpdateText}
-                </View>
-              )}
-            </>
-          ) : (
-            <View style={[a.gap_lg]}>
-              <Text style={[textStyles]}>
+            <View style={[a.pt_lg, a.gap_xl]}>
+              <Logo width={120} textFill={t.atoms.text.color} />
+              <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
                 <Trans>
-                  It looks like you haven't added your birthdate. You must
-                  provide an accurate date of birth to use Bluesky.
+                  To log out,{' '}
+                  <SimpleInlineLinkText
+                    label={_(msg`Click here to log out`)}
+                    {...createStaticClick(() => {
+                      onPressLogout()
+                    })}>
+                    click here
+                  </SimpleInlineLinkText>
+                  .
                 </Trans>
               </Text>
-              <Button
-                color="primary"
-                size="large"
-                label={_(msg`Click here to update your birthdate`)}
-                onPress={() => birthdateControl.open()}>
-                <ButtonText>
-                  <Trans>Add your birthdate</Trans>
-                </ButtonText>
-              </Button>
             </View>
-          )}
-
-          <View style={[a.pt_lg, a.gap_xl]}>
-            <Logo width={120} textFill={t.atoms.text.color} />
-            <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-              <Trans>
-                To log out,{' '}
-                <SimpleInlineLinkText
-                  label={_(msg`Click here to log out`)}
-                  {...createStaticClick(() => {
-                    onPressLogout()
-                  })}>
-                  click here
-                </SimpleInlineLinkText>
-                .
-              </Trans>
-            </Text>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
 
       <BirthDateSettingsDialog control={birthdateControl} />
 

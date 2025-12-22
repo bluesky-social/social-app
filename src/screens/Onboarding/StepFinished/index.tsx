@@ -1,4 +1,4 @@
-import {useCallback, useContext, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -35,28 +35,23 @@ import {
   useSetActiveStarterPack,
 } from '#/state/shell/starter-pack'
 import {
-  DescriptionText,
   OnboardingControls,
   OnboardingHeaderSlot,
-  TitleText,
 } from '#/screens/Onboarding/Layout'
-import {Context, type OnboardingState} from '#/screens/Onboarding/state'
+import {
+  type OnboardingState,
+  useOnboardingInternalState,
+} from '#/screens/Onboarding/state'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {IconCircle} from '#/components/IconCircle'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
-import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
-import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending'
 import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 import {ValuePropositionPager} from './ValuePropositionPager'
 
 export function StepFinished() {
-  const {state, dispatch} = useContext(Context)
+  const {state, dispatch} = useOnboardingInternalState()
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = useState(false)
   const queryClient = useQueryClient()
@@ -166,11 +161,10 @@ export function StepFinished() {
             }
 
             next.displayName = ''
-            // HACKFIX
-            // creating a bunch of identical profile objects is breaking the relay
-            // tossing this unspecced field onto it to reduce the size of the problem
-            // -prf
-            next.createdAt = new Date().toISOString()
+
+            if (!next.createdAt) {
+              next.createdAt = new Date().toISOString()
+            }
             return next
           })
 
@@ -247,14 +241,8 @@ export function StepFinished() {
     gate,
   ])
 
-  return state.experiments?.onboarding_value_prop ? (
+  return (
     <ValueProposition
-      finishOnboarding={finishOnboarding}
-      saving={saving}
-      state={state}
-    />
-  ) : (
-    <LegacyFinalStep
       finishOnboarding={finishOnboarding}
       saving={saving}
       state={state}
@@ -357,92 +345,5 @@ function ValueProposition({
         </View>
       </OnboardingControls.Portal>
     </>
-  )
-}
-
-function LegacyFinalStep({
-  finishOnboarding,
-  saving,
-  state,
-}: {
-  finishOnboarding: () => void
-  saving: boolean
-  state: OnboardingState
-}) {
-  const t = useTheme()
-  const {_} = useLingui()
-
-  return (
-    <View style={[a.align_start]}>
-      <IconCircle icon={Check} style={[a.mb_2xl]} />
-
-      <TitleText>
-        <Trans>You're ready to go!</Trans>
-      </TitleText>
-      <DescriptionText>
-        <Trans>We hope you have a wonderful time. Remember, Bluesky is:</Trans>
-      </DescriptionText>
-
-      <View style={[a.pt_5xl, a.gap_3xl]}>
-        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          <IconCircle icon={Growth} size="lg" style={{width: 48, height: 48}} />
-          <View style={[a.flex_1, a.gap_xs]}>
-            <Text style={[a.font_semi_bold, a.text_lg]}>
-              <Trans>Public</Trans>
-            </Text>
-            <Text
-              style={[t.atoms.text_contrast_medium, a.text_md, a.leading_snug]}>
-              <Trans>
-                Your posts, likes, and blocks are public. Mutes are private.
-              </Trans>
-            </Text>
-          </View>
-        </View>
-        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          <IconCircle icon={News} size="lg" style={{width: 48, height: 48}} />
-          <View style={[a.flex_1, a.gap_xs]}>
-            <Text style={[a.font_semi_bold, a.text_lg]}>
-              <Trans>Open</Trans>
-            </Text>
-            <Text
-              style={[t.atoms.text_contrast_medium, a.text_md, a.leading_snug]}>
-              <Trans>Never lose access to your followers or data.</Trans>
-            </Text>
-          </View>
-        </View>
-        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          <IconCircle
-            icon={Trending}
-            size="lg"
-            style={{width: 48, height: 48}}
-          />
-          <View style={[a.flex_1, a.gap_xs]}>
-            <Text style={[a.font_semi_bold, a.text_lg]}>
-              <Trans>Flexible</Trans>
-            </Text>
-            <Text
-              style={[t.atoms.text_contrast_medium, a.text_md, a.leading_snug]}>
-              <Trans>Choose the algorithms that power your custom feeds.</Trans>
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      <OnboardingControls.Portal>
-        <Button
-          testID="onboardingFinish"
-          disabled={saving}
-          key={state.activeStep} // remove focus state on nav
-          color="primary"
-          size="large"
-          label={_(msg`Complete onboarding and start using your account`)}
-          onPress={finishOnboarding}>
-          <ButtonText>
-            {saving ? <Trans>Finalizing</Trans> : <Trans>Let's go!</Trans>}
-          </ButtonText>
-          {saving && <ButtonIcon icon={Loader} position="right" />}
-        </Button>
-      </OnboardingControls.Portal>
-    </View>
   )
 }

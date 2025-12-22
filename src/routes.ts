@@ -7,7 +7,7 @@ type AllNavigatableRoutes = Omit<
 >
 
 export const router = new Router<AllNavigatableRoutes>({
-  Home: '/',
+  Home: ['/', '/download'],
   Search: '/search',
   Feeds: '/feeds',
   Notifications: '/notifications',
@@ -69,6 +69,7 @@ export const router = new Router<AllNavigatableRoutes>({
     '/settings/notifications/reposts-on-reposts',
   ActivityNotificationSettings: '/settings/notifications/activity',
   MiscellaneousNotificationSettings: '/settings/notifications/miscellaneous',
+  FindContactsSettings: '/settings/find-contacts',
   // support
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
@@ -91,4 +92,5 @@ export const router = new Router<AllNavigatableRoutes>({
   StarterPackWizard: '/starter-pack/create',
   VideoFeed: '/video-feed',
   Bookmarks: '/saved',
+  FindContactsFlow: '/find-contacts',
 })

@@ -42,6 +42,21 @@ export function useCleanError() {
         }
       }
 
+      /**
+       * @see https://github.com/bluesky-social/atproto/blob/255cfcebb54332a7129af768a93004e22c6858e3/packages/pds/src/actor-store/preference/transactor.ts#L24
+       */
+      if (
+        raw.includes('Do not have authorization to set preferences') &&
+        raw.includes('app.bsky.actor.defs#personalDetailsPref')
+      ) {
+        return {
+          raw,
+          clean: _(
+            msg`You cannot update your birthdate while using an app password. Please sign in with your main password to update your birthdate.`,
+          ),
+        }
+      }
+
       if (raw.includes('Bad token scope') || raw.includes('Bad token method')) {
         return {
           raw,

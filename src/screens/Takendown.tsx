@@ -1,6 +1,5 @@
 import {useMemo, useState} from 'react'
-import {Modal, View} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
+import {View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ComAtprotoAdminDefs, ToolsOzoneReportDefs} from '@atproto/api'
@@ -15,14 +14,14 @@ import {
 } from '#/lib/constants'
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {cleanError} from '#/lib/strings/errors'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
-import {InlineLinkText} from '#/components/Link'
+import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 
@@ -130,12 +129,7 @@ export function Takendown() {
   useEnableKeyboardController(true)
 
   return (
-    <Modal
-      visible
-      animationType={native('slide')}
-      presentationStyle="formSheet"
-      style={[web(a.util_screen_outer)]}>
-      {isIOS && <SystemBars style={{statusBar: 'light'}} />}
+    <View style={[a.util_screen_outer, a.flex_1]}>
       <KeyboardAwareScrollView style={[a.flex_1, t.atoms.bg]} centerContent>
         <View
           style={[
@@ -222,13 +216,12 @@ export function Takendown() {
               <P style={[t.atoms.text_contrast_medium]}>
                 <Trans>
                   Your account was found to be in violation of the{' '}
-                  <InlineLinkText
+                  <SimpleInlineLinkText
                     label={_(msg`Bluesky Social Terms of Service`)}
                     to="https://bsky.social/about/support/tos"
-                    style={[a.text_md, a.leading_normal]}
-                    overridePresentation>
+                    style={[a.text_md, a.leading_normal]}>
                     Bluesky Social Terms of Service
-                  </InlineLinkText>
+                  </SimpleInlineLinkText>
                   . You have been sent an email outlining the specific violation
                   and suspension period, if applicable. You can appeal this
                   decision if you believe it was made in error.
@@ -267,6 +260,6 @@ export function Takendown() {
           </View>
         </View>
       )}
-    </Modal>
+    </View>
   )
 }

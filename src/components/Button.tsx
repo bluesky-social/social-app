@@ -105,7 +105,8 @@ export type ButtonProps = Pick<
     PressableComponent?: React.ComponentType<PressableProps>
   }
 
-export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
+export type ButtonTextProps = TextProps &
+  VariantProps & {disabled?: boolean; emoji?: boolean}
 
 const Context = React.createContext<VariantProps & ButtonState>({
   hovered: false,

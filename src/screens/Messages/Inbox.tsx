@@ -37,7 +37,7 @@ import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'

@@ -330,14 +330,20 @@ export function Name({
   )
 }
 
-export function Handle({profile}: {profile: bsky.profile.AnyProfileView}) {
+export function Handle({
+  profile,
+  textStyle,
+}: {
+  profile: bsky.profile.AnyProfileView
+  textStyle?: StyleProp<TextStyle>
+}) {
   const t = useTheme()
   const handle = sanitizeHandle(profile.handle, '@')
 
   return (
     <Text
       emoji
-      style={[a.leading_snug, t.atoms.text_contrast_medium]}
+      style={[a.leading_snug, t.atoms.text_contrast_medium, textStyle]}
       numberOfLines={1}>
       {handle}
     </Text>

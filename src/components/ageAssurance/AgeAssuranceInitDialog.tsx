@@ -16,7 +16,7 @@ import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {type AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {urls} from '#/components/ageAssurance/const'
@@ -63,7 +63,6 @@ export function AgeAssuranceInitDialog({
 }
 
 function Inner() {
-  const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const langPrefs = useLanguagePrefs()
@@ -202,11 +201,11 @@ function Inner() {
                     style={[a.text_sm, a.leading_snug]}>
                     KWS
                   </SimpleInlineLinkText>{' '}
-                  to verify that you’re an adult. When you click "Begin" below,
-                  KWS will check if you have previously verified your age using
-                  this email address for other games/services powered by KWS
-                  technology. If not, KWS will email you instructions for
-                  verifying your age. When you’re done, you'll be brought back
+                  to handle age verification. When you click "Begin" below, KWS
+                  will email you instructions to complete the verification
+                  process. If your email address has already been used to verify
+                  your age for another game or service that uses KWS, you won’t
+                  need to do it again. When you’re done, you'll be brought back
                   to continue using Bluesky.
                 </Trans>
               </Text>
@@ -289,6 +288,7 @@ function Inner() {
                   <Trans>Your preferred language</Trans>
                 </TextField.LabelText>
                 <LanguageSelect
+                  label={_(msg`Preferred language`)}
                   value={language}
                   onChange={value => {
                     setLanguage(value)
@@ -322,30 +322,6 @@ function Inner() {
                 />
               </Button>
             </View>
-
-            <Text
-              style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
-              <Trans>
-                By continuing, you agree to the{' '}
-                <SimpleInlineLinkText
-                  label={_(msg`KWS Terms of Use`)}
-                  to={urls.kwsTermsOfUse}
-                  style={[a.text_xs, a.leading_snug]}>
-                  KWS Terms of Use
-                </SimpleInlineLinkText>{' '}
-                and acknowledge that KWS will store your verified status with
-                your hashed email address in accordance with the{' '}
-                <SimpleInlineLinkText
-                  label={_(msg`KWS Privacy Policy`)}
-                  to={urls.kwsPrivacyPolicy}
-                  style={[a.text_xs, a.leading_snug]}>
-                  KWS Privacy Policy
-                </SimpleInlineLinkText>
-                . This means you won’t need to verify again the next time you
-                use this email for other apps, games, and services powered by
-                KWS technology.
-              </Trans>
-            </Text>
           </>
         )}
       </View>

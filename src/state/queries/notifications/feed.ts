@@ -319,7 +319,10 @@ export function* findAllProfilesInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const item of page.items) {
-        if (item.type === 'follow' && item.notification.author.did === did) {
+        if (
+          (item.type === 'follow' || item.type === 'contact-match') &&
+          item.notification.author.did === did
+        ) {
           yield item.notification.author
         } else if (
           item.type !== 'starterpack-joined' &&

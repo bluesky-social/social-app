@@ -13,6 +13,8 @@ export type Device = {
    * Geolocation config, fetched from the IP service. This previously did
    * double duty as the "status" for geolocation state, but that has since
    * moved here to the client.
+   *
+   * @deprecated use `mergedGeolocation` instead
    */
   geolocation?: {
     countryCode: string | undefined

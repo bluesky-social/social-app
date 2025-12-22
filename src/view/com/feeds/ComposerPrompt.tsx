@@ -205,7 +205,7 @@ export function ComposerPrompt() {
               shape="round">
               {({hovered, pressed, focused}) => (
                 <CameraIcon
-                  size="md"
+                  size="lg"
                   style={{
                     color:
                       hovered || pressed || focused
@@ -227,7 +227,7 @@ export function ComposerPrompt() {
             shape="round">
             {({hovered, pressed, focused}) => (
               <ImageIcon
-                size="md"
+                size="lg"
                 style={{
                   color:
                     hovered || pressed || focused

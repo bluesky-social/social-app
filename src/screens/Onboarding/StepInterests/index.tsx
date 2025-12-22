@@ -8,25 +8,23 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
 import {
-  DescriptionText,
   OnboardingControls,
-  TitleText,
+  OnboardingDescriptionText,
+  OnboardingPosition,
+  OnboardingTitleText,
 } from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
-import {IconCircle} from '#/components/IconCircle'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {Loader} from '#/components/Loader'
 
 export function StepInterests() {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
 
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch} = useOnboardingInternalState()
   const [saving, setSaving] = React.useState(false)
   const [selectedInterests, setSelectedInterests] = React.useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
@@ -53,17 +51,16 @@ export function StepInterests() {
   }, [selectedInterests, setSaving, dispatch])
 
   return (
-    <View style={[a.align_start]} testID="onboardingInterests">
-      <IconCircle icon={Hashtag} style={[a.mb_2xl]} />
-
-      <TitleText>
+    <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
+      <OnboardingPosition />
+      <OnboardingTitleText>
         <Trans>What are your interests?</Trans>
-      </TitleText>
-      <DescriptionText>
+      </OnboardingTitleText>
+      <OnboardingDescriptionText>
         <Trans>We'll use this to help customize your experience.</Trans>
-      </DescriptionText>
+      </OnboardingDescriptionText>
 
-      <View style={[a.w_full, a.pt_2xl]}>
+      <View style={[a.w_full, a.pt_lg]}>
         <Toggle.Group
           values={selectedInterests}
           onChange={setSelectedInterests}
@@ -93,7 +90,7 @@ export function StepInterests() {
           <ButtonText>
             <Trans>Continue</Trans>
           </ButtonText>
-          <ButtonIcon icon={saving ? Loader : ChevronRight} />
+          {saving && <ButtonIcon icon={Loader} />}
         </Button>
       </OnboardingControls.Portal>
     </View>

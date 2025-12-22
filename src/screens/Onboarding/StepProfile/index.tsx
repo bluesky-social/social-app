@@ -19,11 +19,12 @@ import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {
-  DescriptionText,
   OnboardingControls,
-  TitleText,
+  OnboardingDescriptionText,
+  OnboardingPosition,
+  OnboardingTitleText,
 } from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {AvatarCircle} from '#/screens/Onboarding/StepProfile/AvatarCircle'
 import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
 import {AvatarCreatorItems} from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
@@ -32,13 +33,10 @@ import {
   type PlaceholderCanvasRef,
 } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {IconCircle} from '#/components/IconCircle'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
-import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
 import {Text} from '#/components/Typography'
 import {type AvatarColor, avatarColors, type Emoji, emojiItems} from './types'
 
@@ -78,7 +76,7 @@ export function StepProfile() {
   const creatorControl = Dialog.useDialogControl()
   const [error, setError] = React.useState('')
 
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch} = useOnboardingInternalState()
   const [avatar, setAvatar] = React.useState<Avatar>({
     image: state.profileStepResults?.image,
     placeholder: state.profileStepResults.creatorState?.emoji || emojiItems.at,
@@ -237,19 +235,21 @@ export function StepProfile() {
 
   return (
     <AvatarContext.Provider value={value}>
-      <View style={[a.align_start, t.atoms.bg, a.justify_between]}>
-        <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
-        <TitleText>
-          <Trans>Give your profile a face</Trans>
-        </TitleText>
-        <DescriptionText>
-          <Trans>
-            Help people know you're not a bot by uploading a picture or creating
-            an avatar.
-          </Trans>
-        </DescriptionText>
+      <View style={[a.align_start]}>
+        <View style={[a.gap_sm]}>
+          <OnboardingPosition />
+          <OnboardingTitleText>
+            <Trans>Give your profile a face</Trans>
+          </OnboardingTitleText>
+          <OnboardingDescriptionText>
+            <Trans>
+              Help people know you're not a bot by uploading a picture or
+              creating an avatar.
+            </Trans>
+          </OnboardingDescriptionText>
+        </View>
         <View
-          style={[a.w_full, a.align_center, {paddingTop: gtMobile ? 80 : 40}]}>
+          style={[a.w_full, a.align_center, {paddingTop: gtMobile ? 80 : 60}]}>
           <AvatarCircle
             openLibrary={openLibrary}
             openCreator={creatorControl.open}
@@ -279,7 +279,6 @@ export function StepProfile() {
           <View style={[a.gap_md, gtMobile && a.flex_row_reverse]}>
             <Button
               testID="onboardingContinue"
-              variant="solid"
               color="primary"
               size="large"
               label={_(msg`Continue to next step`)}
@@ -287,12 +286,10 @@ export function StepProfile() {
               <ButtonText>
                 <Trans>Continue</Trans>
               </ButtonText>
-              <ButtonIcon icon={ChevronRight} position="right" />
             </Button>
             <Button
               testID="onboardingAvatarCreator"
-              variant="ghost"
-              color="primary"
+              color="primary_subtle"
               size="large"
               label={_(msg`Open avatar creator`)}
               onPress={onSecondaryPress}>
@@ -335,7 +332,6 @@ export function StepProfile() {
           </View>
           <View style={[a.pt_4xl]}>
             <Button
-              variant="solid"
               color="primary"
               size="large"
               label={_(msg`Done`)}
