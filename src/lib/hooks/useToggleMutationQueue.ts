@@ -30,7 +30,7 @@ export function useToggleMutationQueue<TServerState>({
   onSuccess: (finalState: TServerState) => void
 }) {
   // We use the queue as a mutable object.
-  // This is safe becuase it is not used for rendering.
+  // This is safe because it is not used for rendering.
   const [queue] = useState<TaskQueue<TServerState>>({
     activeTask: null,
     queuedTask: null,

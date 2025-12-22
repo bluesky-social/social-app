@@ -13,7 +13,7 @@ func (srv *Server) postEmbedHTML(postView *appbsky.FeedDefs_PostView) (string, e
 	// ensure that there isn't an injection from the URI
 	aturi, err := syntax.ParseATURI(postView.Uri)
 	if err != nil {
-		log.Error("bad AT-URI in reponse", "aturi", aturi, "err", err)
+		log.Error("bad AT-URI in response", "aturi", aturi, "err", err)
 		return "", err
 	}
 
