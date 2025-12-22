@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {RichText} from '@atproto/api'
 
 import {type SelfLabel} from '#/lib/moderation'
@@ -10,13 +10,17 @@ import {type ComposerState} from './state/composer'
 const AUTOSAVE_DELAY_MS = 1000 // 1 second debounce
 const MAX_DRAFT_AGE_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
 
-function removeDraftContext(
+function generateDraftId(): string {
+  return `draft-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
+}
+
+function removeDraft(
   allDrafts: Record<string, ComposerDraft>,
-  contextToRemove: string,
+  draftIdToRemove: string,
 ): Record<string, ComposerDraft> | null {
   const result: Record<string, ComposerDraft> = {}
   for (const key of Object.keys(allDrafts)) {
-    if (key !== contextToRemove) {
+    if (key !== draftIdToRemove) {
       result[key] = allDrafts[key]
     }
   }
@@ -122,7 +126,9 @@ function serializeDraft(state: ComposerState): SerializedDraft {
   }
 }
 
-function deserializeDraft(data: SerializedDraft): Partial<ComposerState> {
+export function deserializeDraft(
+  data: SerializedDraft,
+): Partial<ComposerState> {
   return {
     thread: {
       posts: data.thread.posts.map(post => {
@@ -214,14 +220,24 @@ function deserializeDraft(data: SerializedDraft): Partial<ComposerState> {
   }
 }
 
+/**
+ * Hook for managing a single draft in the composer.
+ * Auto-saves the draft as the user types, and provides methods to load/clear.
+ *
+ * @param composerState The current composer state to auto-save
+ * @param draftId Optional draft ID to load an existing draft. If not provided, a new ID is generated.
+ */
 export function useComposerDraft(
   composerState: ComposerState,
-  context: string = 'default',
+  draftId?: string,
 ) {
   const {currentAccount} = useSession()
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined,
   )
+
+  // Generate or use provided draft ID
+  const currentDraftId = useMemo(() => draftId || generateDraftId(), [draftId])
 
   const accountDid = currentAccount?.did
 
@@ -236,6 +252,55 @@ export function useComposerDraft(
     )
   }, [])
 
+  // Core save logic (used by both debounced and immediate save)
+  const performSave = useCallback(
+    (state: ComposerState) => {
+      if (!accountDid) return
+
+      try {
+        const allDrafts = account.get([accountDid, 'composerDrafts']) ?? {}
+
+        if (hasContent(state)) {
+          const serialized = serializeDraft(state)
+          logger.debug('Draft serialized successfully', {
+            draftId: currentDraftId,
+            hasPosts: serialized.thread.posts.length > 0,
+            hasVideo: !!serialized.thread.posts[0]?.embed?.video,
+          })
+
+          // Update the draft
+          account.set([accountDid, 'composerDrafts'], {
+            ...allDrafts,
+            [currentDraftId]: serialized,
+          })
+
+          logger.info('Composer draft saved', {
+            draftId: currentDraftId,
+            textLength: state.thread.posts[0]?.richtext.text.length || 0,
+          })
+        } else {
+          // If no content, remove this draft
+          if (allDrafts[currentDraftId]) {
+            const remainingDrafts = removeDraft(allDrafts, currentDraftId)
+            if (remainingDrafts) {
+              account.set([accountDid, 'composerDrafts'], remainingDrafts)
+            } else {
+              account.remove([accountDid, 'composerDrafts'])
+            }
+            logger.debug('Empty draft removed', {draftId: currentDraftId})
+          }
+        }
+      } catch (e) {
+        logger.error('Failed to save composer draft', {
+          error: e,
+          message: e instanceof Error ? e.message : String(e),
+          stack: e instanceof Error ? e.stack : undefined,
+        })
+      }
+    },
+    [accountDid, currentDraftId, hasContent],
+  )
+
   // Save draft to storage (debounced)
   const saveDraft = useCallback(
     (state: ComposerState) => {
@@ -248,59 +313,33 @@ export function useComposerDraft(
 
       // Debounce the save
       saveTimeoutRef.current = setTimeout(() => {
-        try {
-          const allDrafts = account.get([accountDid, 'composerDraft']) ?? {}
-
-          if (hasContent(state)) {
-            const serialized = serializeDraft(state)
-            logger.debug('Draft serialized successfully', {
-              hasPosts: serialized.thread.posts.length > 0,
-              hasVideo: !!serialized.thread.posts[0]?.embed?.video,
-            })
-
-            // Update the draft for this context
-            account.set([accountDid, 'composerDraft'], {
-              ...allDrafts,
-              [context]: serialized,
-            })
-
-            logger.info('Composer draft saved', {
-              context,
-              textLength: state.thread.posts[0]?.richtext.text.length || 0,
-            })
-          } else {
-            // If no content, remove this context's draft
-            if (allDrafts[context]) {
-              const remainingDrafts = removeDraftContext(allDrafts, context)
-              if (remainingDrafts) {
-                account.set([accountDid, 'composerDraft'], remainingDrafts)
-              } else {
-                account.remove([accountDid, 'composerDraft'])
-              }
-              logger.debug('Empty draft removed', {context})
-            }
-          }
-        } catch (e) {
-          logger.error('Failed to save composer draft', {
-            error: e,
-            message: e instanceof Error ? e.message : String(e),
-            stack: e instanceof Error ? e.stack : undefined,
-          })
-        }
+        performSave(state)
       }, AUTOSAVE_DELAY_MS)
     },
-    [accountDid, context, hasContent],
+    [accountDid, performSave],
+  )
+
+  // Save draft immediately (bypasses debounce)
+  const saveImmediate = useCallback(
+    (state: ComposerState) => {
+      // Clear any pending debounced save
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+      performSave(state)
+    },
+    [performSave],
   )
 
   // Load draft from storage
   const loadDraft = useCallback((): Partial<ComposerState> | null => {
-    if (!accountDid) return null
+    if (!accountDid || !draftId) return null
 
     try {
-      const allDrafts = account.get([accountDid, 'composerDraft'])
+      const allDrafts = account.get([accountDid, 'composerDrafts'])
       if (!allDrafts) return null
 
-      const draft = allDrafts[context]
+      const draft = allDrafts[draftId]
       if (!draft) return null
 
       // Check version compatibility
@@ -308,12 +347,11 @@ export function useComposerDraft(
         logger.warn('Incompatible draft version, discarding', {
           version: draft.version,
         })
-        // Remove this context's draft
-        const remainingDrafts = removeDraftContext(allDrafts, context)
+        const remainingDrafts = removeDraft(allDrafts, draftId)
         if (remainingDrafts) {
-          account.set([accountDid, 'composerDraft'], remainingDrafts)
+          account.set([accountDid, 'composerDrafts'], remainingDrafts)
         } else {
-          account.remove([accountDid, 'composerDraft'])
+          account.remove([accountDid, 'composerDrafts'])
         }
         return null
       }
@@ -322,55 +360,54 @@ export function useComposerDraft(
       const age = Date.now() - draft.timestamp
       if (age > MAX_DRAFT_AGE_MS) {
         logger.debug('Draft too old, discarding', {age})
-        // Remove this context's draft
-        const remainingDrafts = removeDraftContext(allDrafts, context)
+        const remainingDrafts = removeDraft(allDrafts, draftId)
         if (remainingDrafts) {
-          account.set([accountDid, 'composerDraft'], remainingDrafts)
+          account.set([accountDid, 'composerDrafts'], remainingDrafts)
         } else {
-          account.remove([accountDid, 'composerDraft'])
+          account.remove([accountDid, 'composerDrafts'])
         }
         return null
       }
 
       logger.info('Composer draft loaded', {
-        context,
+        draftId,
         textLength: draft.thread.posts[0]?.text.length || 0,
       })
       return deserializeDraft(draft)
     } catch (e) {
       logger.error('Failed to load composer draft', {error: e})
-      // Remove corrupted drafts
-      try {
-        account.remove([accountDid, 'composerDraft'])
-      } catch {}
       return null
     }
-  }, [accountDid, context])
+  }, [accountDid, draftId])
 
   // Clear draft from storage
   const clearDraft = useCallback(() => {
     if (!accountDid) return
 
     try {
-      const allDrafts = account.get([accountDid, 'composerDraft'])
-      if (allDrafts && allDrafts[context]) {
-        const remainingDrafts = removeDraftContext(allDrafts, context)
+      const allDrafts = account.get([accountDid, 'composerDrafts'])
+      if (allDrafts && allDrafts[currentDraftId]) {
+        const remainingDrafts = removeDraft(allDrafts, currentDraftId)
         if (remainingDrafts) {
-          account.set([accountDid, 'composerDraft'], remainingDrafts)
+          account.set([accountDid, 'composerDrafts'], remainingDrafts)
         } else {
-          account.remove([accountDid, 'composerDraft'])
+          account.remove([accountDid, 'composerDrafts'])
         }
-        logger.debug('Composer draft cleared', {context})
+        logger.debug('Composer draft cleared', {draftId: currentDraftId})
       }
     } catch (e) {
       logger.error('Failed to clear composer draft', {error: e})
     }
-  }, [accountDid, context])
+  }, [accountDid, currentDraftId])
 
-  // Auto-save on state changes
+  // Auto-save on state changes (only for new drafts, not when editing existing ones)
+  // For existing drafts, we only save on explicit user action (Update button)
+  const isExisting = !!draftId
   useEffect(() => {
-    saveDraft(composerState)
-  }, [composerState, saveDraft])
+    if (!isExisting) {
+      saveDraft(composerState)
+    }
+  }, [composerState, saveDraft, isExisting])
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -381,19 +418,11 @@ export function useComposerDraft(
     }
   }, [])
 
-  const checkHasStoredDraft = useCallback(() => {
-    if (!accountDid) return false
-    try {
-      const allDrafts = account.get([accountDid, 'composerDraft'])
-      return allDrafts ? !!allDrafts[context] : false
-    } catch {
-      return false
-    }
-  }, [accountDid, context])
-
   return {
+    draftId: currentDraftId,
     loadDraft,
     clearDraft,
-    hasStoredDraft: checkHasStoredDraft,
+    saveImmediate,
+    isExistingDraft: !!draftId,
   }
 }
