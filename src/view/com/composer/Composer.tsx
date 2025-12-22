@@ -831,6 +831,7 @@ export const ComposePost = ({
       onPost?.(postUri)
       onPostSuccess?.(postSuccessData)
     }
+    clearDraft()
     onClose()
     setTimeout(() => {
       Toast.show(
@@ -866,6 +867,7 @@ export const ComposePost = ({
     canPost,
     isPublishing,
     currentLanguages,
+    clearDraft,
     onClose,
     onPost,
     onPostSuccess,
@@ -1088,7 +1090,7 @@ export const ComposePost = ({
             </Prompt.DescriptionText>
             <Prompt.Actions>
               <Prompt.Action
-                cta={_(msg`Update`)}
+                cta={_(msg`Update draft`)}
                 onPress={() => {
                   // Explicitly save the changes before closing
                   saveImmediate(composerState)
@@ -1098,7 +1100,7 @@ export const ComposePost = ({
               />
               <Prompt.Action
                 cta={_(msg`Don't update`)}
-                color="negative"
+                color="negative_subtle"
                 onPress={() => {
                   // Just close without saving - preserve the original draft
                   closeComposer()
@@ -1117,10 +1119,10 @@ export const ComposePost = ({
               <Trans>Save to drafts to edit and post at a later time.</Trans>
             </Prompt.DescriptionText>
             <Prompt.Actions>
-              <Prompt.Action cta={_(msg`Save`)} onPress={onClose} />
+              <Prompt.Action cta={_(msg`Save draft`)} onPress={onClose} />
               <Prompt.Action
                 cta={_(msg`Don't save`)}
-                color="negative"
+                color="negative_subtle"
                 onPress={() => {
                   clearDraft()
                   closeComposer()
@@ -1140,10 +1142,13 @@ export const ComposePost = ({
             <Trans>Save to drafts to edit and post at a later time.</Trans>
           </Prompt.DescriptionText>
           <Prompt.Actions>
-            <Prompt.Action cta={_(msg`Save`)} onPress={onSaveBeforeDrafts} />
+            <Prompt.Action
+              cta={_(msg`Save draft`)}
+              onPress={onSaveBeforeDrafts}
+            />
             <Prompt.Action
               cta={_(msg`Don't save`)}
-              color="negative"
+              color="negative_subtle"
               onPress={onDiscardBeforeDrafts}
             />
             <Prompt.Cancel />
@@ -1159,7 +1164,7 @@ export const ComposePost = ({
           </Prompt.DescriptionText>
           <Prompt.Actions>
             <Prompt.Action
-              cta={_(msg`Update`)}
+              cta={_(msg`Update draft`)}
               onPress={() => {
                 saveImmediate(composerState)
                 setViewMode('drafts')
@@ -1167,7 +1172,7 @@ export const ComposePost = ({
             />
             <Prompt.Action
               cta={_(msg`Don't update`)}
-              color="negative"
+              color="negative_subtle"
               onPress={() => {
                 setViewMode('drafts')
               }}
