@@ -10,6 +10,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
+import {PencilLine_Stroke2_Corner0_Rounded as PencilLineIcon} from '#/components/icons/Pencil'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
@@ -44,35 +45,32 @@ export function DraftsView({
     <View style={[a.flex_1]}>
       <View
         style={[a.flex_row, a.align_center, a.px_sm, a.gap_xs, {height: 54}]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="ghost"
-          color="primary"
-          shape="default"
-          size="small"
-          style={[a.rounded_full, a.py_sm, {paddingLeft: 7, paddingRight: 7}]}
-          onPress={onBack}>
-          <ButtonText style={[a.text_md]}>
-            <Trans>Back</Trans>
-          </ButtonText>
-        </Button>
+        <View style={[a.flex_1, a.flex_row, a.justify_start]}>
+          <Button
+            label={_(msg`Back`)}
+            variant="ghost"
+            color="primary"
+            shape="default"
+            size="small"
+            style={[a.rounded_full, a.py_sm, {paddingLeft: 7, paddingRight: 7}]}
+            onPress={onBack}>
+            <ButtonText style={[a.text_md]}>
+              <Trans>Back</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+        <Text style={[a.text_lg, a.font_bold]}>
+          <Trans>Drafts</Trans>
+        </Text>
         <View style={[a.flex_1]} />
       </View>
 
-      <ScrollView style={[a.flex_1]} contentContainerStyle={[a.p_lg, a.gap_lg]}>
-        <Text style={[a.text_2xl, a.font_semi_bold]}>
-          <Trans>Drafts</Trans>
-        </Text>
-
+      <ScrollView style={[a.flex_1]} contentContainerStyle={[a.p_lg, a.gap_md]}>
         {drafts.length === 0 ? (
-          <View style={[a.py_xl, a.align_center, a.gap_xs]}>
+          <View style={[a.py_xl, a.align_center, a.gap_md]}>
+            <PencilLineIcon width={64} style={[t.atoms.text_contrast_low]} />
             <Text style={[t.atoms.text_contrast_medium]}>
               <Trans>No drafts yet</Trans>
-            </Text>
-            <Text style={[t.atoms.text_contrast_low, a.text_center]}>
-              <Trans>
-                When you close the composer, your post will be saved here.
-              </Trans>
             </Text>
           </View>
         ) : (
