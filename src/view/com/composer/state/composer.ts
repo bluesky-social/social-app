@@ -122,6 +122,10 @@ export type ComposerAction =
       type: 'focus_post'
       postId: string
     }
+  | {
+      type: 'load_draft'
+      draft: ComposerState
+    }
 
 export const MAX_IMAGES = 4
 
@@ -228,6 +232,9 @@ export function composerReducer(
         ...state,
         activePostIndex: nextActivePostIndex,
       }
+    }
+    case 'load_draft': {
+      return action.draft
     }
   }
 }

@@ -70,9 +70,18 @@ export type Account = {
   /**
    * Composer draft, saved when the user has unsent content in the post composer.
    * Keyed by context (e.g., 'default', reply URI, etc.)
+   * @deprecated Use composerDrafts instead for multi-draft support
    */
   composerDraft?: {
     [context: string]: ComposerDraft
+  }
+
+  /**
+   * Composer drafts library, allowing users to save multiple drafts.
+   * Keyed by unique draft ID (UUID).
+   */
+  composerDrafts?: {
+    [draftId: string]: ComposerDraft
   }
 }
 

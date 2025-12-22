@@ -44,6 +44,8 @@ export interface ComposerOpts {
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
   videoUri?: {uri: string; width: number; height: number}
   openGallery?: boolean
+  /** ID of a saved draft to load */
+  draftId?: string
 }
 
 type StateContext = ComposerOpts | undefined
