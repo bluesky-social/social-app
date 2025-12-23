@@ -3,8 +3,8 @@ import {
   FlatList,
   type FlatListProps,
   type GestureResponderEvent,
+  Pressable,
   type StyleProp,
-  TouchableWithoutFeedback,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -113,7 +113,7 @@ export function Outer({
         <Portal>
           <Context.Provider value={context}>
             <RemoveScrollBar />
-            <TouchableWithoutFeedback
+            <Pressable
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
               onPress={handleBackgroundPress}>
@@ -146,7 +146,7 @@ export function Outer({
                   {children}
                 </View>
               </View>
-            </TouchableWithoutFeedback>
+            </Pressable>
           </Context.Provider>
         </Portal>
       )}
@@ -304,7 +304,7 @@ export function Handle() {
   return null
 }
 
-function Backdrop() {
+export function Backdrop() {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
   return (

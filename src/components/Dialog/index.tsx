@@ -403,3 +403,7 @@ export function Handle({difference = false}: {difference?: boolean}) {
 export function Close() {
   return null
 }
+
+export function Backdrop() {
+  return null
+}
