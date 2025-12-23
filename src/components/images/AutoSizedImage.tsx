@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import {useMemo, useRef} from 'react'
 import {type DimensionValue, Pressable, View} from 'react-native'
 import Animated, {
   type AnimatedRef,
@@ -34,7 +34,7 @@ export function ConstrainedImage({
    * Computed as a % value to apply as `paddingTop`, this basically controls
    * the height of the image.
    */
-  const outerAspectRatio = React.useMemo<DimensionValue>(() => {
+  const outerAspectRatio = useMemo<DimensionValue>(() => {
     const ratio = isNative
       ? Math.min(1 / aspectRatio, minMobileAspectRatio ?? 16 / 9) // 9:16 bounding box
       : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
@@ -127,6 +127,7 @@ export function AutoSizedImage({
             }
           }
         }}
+        loading="lazy"
       />
       <MediaInsetBorder />
 

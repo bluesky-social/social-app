@@ -1,11 +1,11 @@
-import React from 'react'
+import {useRef} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {type AppBskyEmbedImages} from '@atproto/api'
 
+import {type Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
-import {type Dimensions} from '../../lightbox/ImageViewing/@types'
 import {GalleryItem} from './Gallery'
 
 interface ImageLayoutGridProps {
@@ -60,7 +60,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   const containerRef2 = useAnimatedRef()
   const containerRef3 = useAnimatedRef()
   const containerRef4 = useAnimatedRef()
-  const thumbDimsRef = React.useRef<(Dimensions | null)[]>([])
+  const thumbDimsRef = useRef<(Dimensions | null)[]>([])
 
   switch (count) {
     case 2: {
