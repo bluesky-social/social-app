@@ -194,4 +194,6 @@ jobs:
 
       - name: ✏️ Write commit hash to cache
         if: ${{ inputs.profile == 'testflight-android' }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt

@@ -35,20 +35,27 @@ jobs:
           cache: yarn
 
       - name: Ensure tracking relevant branches and checkout base
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          git checkout ${{ github.head_ref }}
-          git checkout ${{ github.base_ref }}
+          git checkout $HEAD_REF
+          git checkout $BASE_REF
 
       - name: Get the base commit
         id: base-commit
-        run: echo base-commit=$(git log -n 1 ${{ github.base_ref }} --pretty=format:'%H') >> "$GITHUB_OUTPUT"
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: echo base-commit=$(git log -n 1 $BASE_REF --pretty=format:'%H') >> "$GITHUB_OUTPUT"
 
       - name: Merge PR commit
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           # Have to set a git config for the merge to work
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git merge --no-edit ${{ github.head_ref }}
+          git merge --no-edit $HEAD_REF
           yarn install
           yarn intl:build
 
