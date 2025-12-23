@@ -138,7 +138,7 @@ export async function dynamicActivate(locale: AppLanguage) {
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/eo'),
         import('@formatjs/intl-numberformat/locale-data/eo'),
-        import('@formatjs/intl-displaynames/locale-data/eo'),
+        import('@formatjs/intl-displaynames/locale-data/en'),
       ])
       break
     }
