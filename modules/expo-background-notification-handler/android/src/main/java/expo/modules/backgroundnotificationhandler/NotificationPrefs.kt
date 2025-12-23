@@ -34,12 +34,15 @@ class NotificationPrefs(
             is Boolean -> {
               putBoolean(key, value)
             }
+
             is String -> {
               putString(key, value)
             }
+
             is Array<*> -> {
               putStringSet(key, value.map { it.toString() }.toSet())
             }
+
             is Map<*, *> -> {
               putStringSet(key, value.map { it.toString() }.toSet())
             }

@@ -12,7 +12,6 @@ import {
   BLUESKY_MOD_SERVICE_HEADERS,
   MAX_REPORT_REASON_GRAPHEME_LENGTH,
 } from '#/lib/constants'
-import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {cleanError} from '#/lib/strings/errors'
 import {isWeb} from '#/platform/detection'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
@@ -125,8 +124,6 @@ export function Takendown() {
   )
 
   const webLayout = isWeb && gtMobile
-
-  useEnableKeyboardController(true)
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>
