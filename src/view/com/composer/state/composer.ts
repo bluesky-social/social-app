@@ -122,6 +122,10 @@ export type ComposerAction =
       type: 'focus_post'
       postId: string
     }
+  | {
+      type: 'load_draft'
+      draft: ComposerState
+    }
 
 export const MAX_IMAGES = 4
 
@@ -228,6 +232,9 @@ export function composerReducer(
         ...state,
         activePostIndex: nextActivePostIndex,
       }
+    }
+    case 'load_draft': {
+      return action.draft
     }
   }
 }
@@ -488,6 +495,7 @@ export function createComposerState({
   initImageUris,
   initQuoteUri,
   initInteractionSettings,
+  initDraft,
 }: {
   initText: string | undefined
   initMention: string | undefined
@@ -496,7 +504,106 @@ export function createComposerState({
   initInteractionSettings:
     | BskyPreferences['postInteractionSettings']
     | undefined
+  initDraft?: any
 }): ComposerState {
+  // If we have a draft, use it instead of init values
+  if (initDraft?.thread?.posts?.[0]) {
+    return {
+      activePostIndex: initDraft.activePostIndex || 0,
+      mutableNeedsFocusActive: false,
+      thread: {
+        posts: initDraft.thread.posts.map((post: any) => {
+          let media: ImagesMedia | GifMedia | VideoMedia | undefined
+
+          if (post.embed?.images?.length) {
+            media = {
+              type: 'images',
+              images: post.embed.images.map((img: any) => ({
+                alt: img.alt,
+                source: {
+                  id: `restored-${Date.now()}-${Math.random()}`,
+                  path: img.path,
+                  width: img.width,
+                  height: img.height,
+                  mime: img.mime,
+                },
+              })),
+            }
+          } else if (post.embed?.gif) {
+            media = {
+              type: 'gif',
+              gif: post.embed.gif,
+              alt: post.embed.gif.alt || '',
+            }
+          } else if (post.embed?.video) {
+            // Restore video from draft (already uploaded to server)
+            const abortController = new AbortController()
+            abortController.abort() // Can't resume, already uploaded
+            const videoUri = post.embed.video.uri || '' // URL constructed from blobRef in Composer.tsx
+            media = {
+              type: 'video',
+              video: {
+                status: 'done',
+                progress: 100,
+                abortController,
+                asset: {
+                  uri: videoUri,
+                  width: post.embed.video.width,
+                  height: post.embed.video.height,
+                  mimeType: post.embed.video.mimeType,
+                },
+                video: {
+                  uri: videoUri,
+                  mimeType: post.embed.video.mimeType,
+                  size: 0,
+                },
+                pendingPublish: {
+                  blobRef: post.embed.video.blobRef,
+                },
+                altText: post.embed.video.altText || '',
+                captions: [],
+              },
+            }
+          }
+
+          return {
+            id: nanoid(),
+            richtext: new RichText({text: post.text || ''}),
+            shortenedGraphemeLength: getShortenedLength(
+              new RichText({text: post.text || ''}),
+            ),
+            labels: post.labels || [],
+            embed: {
+              quote: post.embed?.quoteUri
+                ? {type: 'link', uri: post.embed.quoteUri}
+                : undefined,
+              media,
+              link: post.embed?.linkUri
+                ? {type: 'link', uri: post.embed.linkUri}
+                : undefined,
+            },
+          }
+        }),
+        postgate:
+          initDraft.thread.postgate ||
+          createPostgateRecord({
+            post: '',
+            embeddingRules:
+              initInteractionSettings?.postgateEmbeddingRules || [],
+          }),
+        threadgate:
+          initDraft.thread.threadgate ||
+          threadgateRecordToAllowUISetting({
+            $type: 'app.bsky.feed.threadgate',
+            post: '',
+            createdAt: new Date().toString(),
+            allow: initInteractionSettings?.threadgateAllowRules,
+          }),
+      },
+    }
+  }
+
+  // Otherwise use normal initialization
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
     media = {
