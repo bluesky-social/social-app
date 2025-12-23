@@ -371,6 +371,6 @@ jobs:
 
       - name: ✏️ Write commit hash to cache
         env:
-          GITHUB_SHA: {{ github.sha }}
+          GITHUB_SHA: ${{ github.sha }}
         if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
         run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
