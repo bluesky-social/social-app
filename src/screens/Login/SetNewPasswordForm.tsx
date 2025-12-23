@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,13 +8,15 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {Agent} from '#/state/session/agent'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {atoms as a, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
 
@@ -32,7 +34,6 @@ export const SetNewPasswordForm = ({
   onPasswordSet: () => void
 }) => {
   const {_} = useLingui()
-  const t = useTheme()
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
@@ -163,37 +164,34 @@ export const SetNewPasswordForm = ({
 
       <FormError error={error} />
 
-      <View style={[a.flex_row, a.align_center, a.pt_lg]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>
-            <Trans>Back</Trans>
-          </ButtonText>
-        </Button>
-        <View style={a.flex_1} />
-        {isProcessing ? (
-          <ActivityIndicator />
-        ) : (
-          <Button
-            label={_(msg`Next`)}
-            variant="solid"
-            color="primary"
-            size="large"
-            onPress={onPressNext}>
-            <ButtonText>
-              <Trans>Next</Trans>
-            </ButtonText>
-          </Button>
+      <View style={[web([a.flex_row, a.align_center]), a.pt_lg]}>
+        {isWeb && (
+          <>
+            <Button
+              label={_(msg`Back`)}
+              variant="solid"
+              color="secondary"
+              size="large"
+              onPress={onPressBack}>
+              <ButtonText>
+                <Trans>Back</Trans>
+              </ButtonText>
+            </Button>
+            <View style={a.flex_1} />
+          </>
         )}
-        {isProcessing ? (
-          <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
-            <Trans>Updating...</Trans>
-          </Text>
-        ) : undefined}
+
+        <Button
+          label={_(msg`Next`)}
+          color="primary"
+          size="large"
+          onPress={onPressNext}
+          disabled={isProcessing}>
+          <ButtonText>
+            <Trans>Next</Trans>
+          </ButtonText>
+          {isProcessing && <ButtonIcon icon={Loader} />}
+        </Button>
       </View>
     </FormContainer>
   )
