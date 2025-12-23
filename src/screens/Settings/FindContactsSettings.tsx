@@ -99,7 +99,7 @@ export function FindContactsSettingsScreen({}: Props) {
       ) : (
         <ErrorScreen
           title={_(msg`Not available on this platform.`)}
-          message={_(msg`Please use the native app to sync your contacts.`)}
+          message={_(msg`Please use the native app to import your contacts.`)}
         />
       )}
     </Layout.Screen>
@@ -429,7 +429,7 @@ function StatusHeader({
         <Text style={[a.text_md, a.font_semi_bold]}>
           <Plural
             value={numMatches}
-            one="1 contact found"
+            one="# contact found"
             other="# contacts found"
           />
         </Text>
@@ -495,7 +495,7 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
     <View style={[a.px_xl, a.py_xl, a.gap_4xl]}>
       <View style={[a.gap_xs, a.align_start]}>
         <Text style={[a.text_md, a.font_semi_bold]}>
-          <Trans>Contacts uploaded</Trans>
+          <Trans>Contacts imported</Trans>
         </Text>
         <View style={[a.gap_2xs]}>
           <Text
@@ -505,7 +505,7 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
           <Text
             style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>
-              Uploaded on{' '}
+              Imported on{' '}
               {i18n.date(new Date(syncedAt), {
                 dateStyle: 'long',
               })}
