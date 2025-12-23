@@ -16,7 +16,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {BLUE_HUE} from '#/alf/util/colorGeneration'
 import {select} from '#/alf/util/themeSelector'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -28,6 +28,8 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
+import {useSimpleVerificationState} from './verification'
+import {VerificationCheck} from './verification/VerificationCheck'
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {
   return select(t.name, {
@@ -51,6 +53,7 @@ export function VideoPostCard({
    */
   onInteract?: () => void
 }) {
+  const verification = useSimpleVerificationState({profile: post.author})
   const t = useTheme()
   const {_, i18n} = useLingui()
   const embed = post.embed
@@ -102,16 +105,31 @@ export function VideoPostCard({
           <UserAvatar type="user" size={20} avatar={post.author.avatar} />
           <MediaInsetBorder />
         </View>
-        <Text
-          style={[
-            a.flex_1,
-            a.text_sm,
-            a.leading_tight,
-            t.atoms.text_contrast_medium,
-          ]}
-          numberOfLines={1}>
-          {sanitizeHandle(post.author.handle, '@')}
-        </Text>
+        <View style={[a.flex_1, a.align_center, a.flex_row]}>
+          <Text
+            style={[
+              a.text_sm,
+              a.leading_tight,
+              t.atoms.text_contrast_medium,
+              a.flex_shrink,
+            ]}
+            numberOfLines={1}>
+            {sanitizeHandle(post.author.handle, '@')}
+          </Text>
+          {verification.showBadge && (
+            <View
+              style={[
+                a.pl_2xs,
+                a.self_center,
+                {marginTop: platform({default: 0, android: -1})},
+              ]}>
+              <VerificationCheck
+                width={platform({android: 11, default: 10})}
+                verifier={verification.role === 'verifier'}
+              />
+            </View>
+          )}
+        </View>
       </View>
     </View>
   )
