@@ -32,7 +32,7 @@ jobs:
           fi
 
 
-          if [[ "${{ github.event.comment.body }}" == *"ota"* ]]; then
+          if [[ "$COMMENT" == *"ota"* ]]; then
             has_ota=true
           else
             has_ota=false
@@ -75,6 +75,8 @@ jobs:
 
     steps:
       - name: Get PR HEAD SHA
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         id: pr-info
         uses: actions/github-script@v7
         with:
@@ -82,7 +84,7 @@ jobs:
             const pr = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: ${{ github.event.issue.number }}
+              pull_number: process.env.ISSUE_NUMBER,
             });
 
             console.log(`PR HEAD SHA: ${pr.data.head.sha}`);
@@ -184,13 +186,15 @@ jobs:
 
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         with:
           header: pull-request-eas-build-${{ steps.pr-info.outputs.head-sha }}
           number: ${{ github.event.issue.number }}
           message: |
             Your requested OTA deployment was successful! You may now apply it by either scanning the QR code or opening the deep link below in your browser:
 
-            <img src="https://bsky-qr.vercel.app?channel=pull-request-${{ github.event.issue.number }}" width=300 height=300>
+            <img src="https://bsky-qr.vercel.app?channel=pull-request-$ISSUE_NUMBER" width=300 height=300>
 
             `bluesky://intent/apply-ota?channel=pull-request-${{ github.event.issue.number }}`
             ---
