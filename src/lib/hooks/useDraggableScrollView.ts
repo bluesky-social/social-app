@@ -48,7 +48,7 @@ export function useDraggableScroll<Scrollable extends ScrollView = ScrollView>({
         return
       }
 
-      // Require n pixels momement before start of drag (3 in this case )
+      // Require n pixels moment before start of drag (3 in this case )
       const x = e.pageX - slider.offsetLeft
       if (Math.abs(x - startX) < 3) {
         return
