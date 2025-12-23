@@ -1,4 +1,4 @@
-import {lazy} from 'react'
+import {lazy, useState} from 'react'
 import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
@@ -102,39 +102,74 @@ export function QrCode({
 
 export function QrCodeInner({link}: {link: string}) {
   const t = useTheme()
+  const [logoArea, setLogoArea] = useState<{
+    x: number
+    y: number
+    width: number
+    height: number
+  } | null>(null)
+
+  const onLogoAreaChange = (area: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }) => {
+    setLogoArea(area)
+  }
 
   return (
-    <QRCode
-      data={link}
-      style={[
-        a.rounded_sm,
-        {height: 225, width: 225, backgroundColor: '#f3f3f3'},
-      ]}
-      pieceSize={isWeb ? 8 : 6}
-      padding={20}
-      // pieceLiquidRadius={2}
-      pieceBorderRadius={isWeb ? 4.5 : 3.5}
-      outerEyesOptions={{
-        topLeft: {
-          borderRadius: [12, 12, 0, 12],
-          color: t.palette.primary_500,
-        },
-        topRight: {
-          borderRadius: [12, 12, 12, 0],
-          color: t.palette.primary_500,
-        },
-        bottomLeft: {
-          borderRadius: [12, 0, 12, 12],
-          color: t.palette.primary_500,
-        },
-      }}
-      innerEyesOptions={{borderRadius: 3}}
-      logo={{
-        href: require('../../../assets/logo.png'),
-        scale: 0.95,
-        padding: 2,
-        hidePieces: true,
-      }}
-    />
+    <View style={{position: 'relative'}}>
+      {/* An SVG version of the logo is placed on top of normal `QRCode` `logo` prop, since the PNG fails to load before the export completes on web. */}
+      {isWeb && logoArea && (
+        <View
+          style={{
+            position: 'absolute',
+            left: logoArea.x,
+            top: logoArea.y + 1,
+            zIndex: 1,
+            padding: 4,
+          }}>
+          <Logo width={logoArea.width - 14} height={logoArea.height - 14} />
+        </View>
+      )}
+      <QRCode
+        data={link}
+        style={[
+          a.rounded_sm,
+          {height: 225, width: 225, backgroundColor: '#f3f3f3'},
+        ]}
+        pieceSize={isWeb ? 8 : 6}
+        padding={20}
+        pieceBorderRadius={isWeb ? 4.5 : 3.5}
+        outerEyesOptions={{
+          topLeft: {
+            borderRadius: [12, 12, 0, 12],
+            color: t.palette.primary_500,
+          },
+          topRight: {
+            borderRadius: [12, 12, 12, 0],
+            color: t.palette.primary_500,
+          },
+          bottomLeft: {
+            borderRadius: [12, 0, 12, 12],
+            color: t.palette.primary_500,
+          },
+        }}
+        innerEyesOptions={{borderRadius: 3}}
+        logo={{
+          href: require('../../../assets/logo.png'),
+          ...(isWeb && {
+            onChange: onLogoAreaChange,
+            padding: 28,
+          }),
+          ...(!isWeb && {
+            padding: 2,
+            scale: 0.95,
+          }),
+          hidePieces: true,
+        }}
+      />
+    </View>
   )
 }
