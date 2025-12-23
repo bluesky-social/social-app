@@ -84,7 +84,7 @@ jobs:
             const pr = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: $ISSUE_NUMBER,
+              pull_number: process.env.ISSUE_NUMBER,
             });
 
             console.log(`PR HEAD SHA: ${pr.data.head.sha}`);
