@@ -79,13 +79,15 @@ jobs:
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
+        env:
+          PROFILE: ${{ inputs.profile || 'testflight-android' }}
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           yarn use-build-number-with-bump
           eas build -p android
-          --profile ${{ inputs.profile || 'testflight-android' }}
+          --profile $PROFILE
           --local --output build.aab --non-interactive
 
       - name: ✍️ Rename Testflight bundle
