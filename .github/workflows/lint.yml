@@ -34,7 +34,9 @@ jobs:
       - name: Prettier check
         run: yarn prettier --check .
       - name: Check & compile i18n
-        run: yarn intl:build
+        uses: ./.github/actions/build-translations
+        with:
+          check-for-errors: 'true'
       - name: Type check
         run: yarn typecheck
   testing:
@@ -55,7 +57,9 @@ jobs:
           attempt_limit: 3
           attempt_delay: 2000
       - name: Check & compile i18n
-        run: yarn intl:build
+        uses: ./.github/actions/build-translations
+        with:
+          check-for-errors: 'true'
       - name: Run tests
         run: |
           NODE_ENV=test yarn test --forceExit
