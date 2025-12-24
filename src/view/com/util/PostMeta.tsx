@@ -63,7 +63,6 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         a.flex_1,
         a.flex_row,
         a.align_center,
-        a.pb_xs,
         a.gap_xs,
         a.z_20,
         opts.style,
@@ -94,7 +93,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 a.text_md,
                 a.font_semi_bold,
                 t.atoms.text,
-                a.leading_tight,
+                a.leading_snug,
                 a.flex_shrink_0,
                 {maxWidth: '70%'},
               ]}>
@@ -131,7 +130,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               style={[
                 a.text_md,
                 t.atoms.text_contrast_medium,
-                a.leading_tight,
+                a.leading_snug,
                 {flexShrink: 10},
               ]}>
               {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
@@ -151,7 +150,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               style={[
                 a.pl_xs,
                 a.text_md,
-                a.leading_tight,
+                a.leading_snug,
                 isAndroid && a.flex_grow,
                 a.text_right,
                 t.atoms.text_contrast_medium,
@@ -163,7 +162,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 <Text
                   style={[
                     a.text_md,
-                    a.leading_tight,
+                    a.leading_snug,
                     t.atoms.text_contrast_medium,
                   ]}
                   accessible={false}>
