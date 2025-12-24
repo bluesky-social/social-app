@@ -1,5 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {LinearGradient} from 'expo-linear-gradient'
+import {utils} from '@bsky.app/alf'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -54,13 +56,7 @@ export function ExploreInterestsCard() {
       />
 
       <View style={[a.pb_2xs]}>
-        <View
-          style={[
-            a.p_lg,
-            a.border_b,
-            a.gap_md,
-            t.atoms.border_contrast_medium,
-          ]}>
+        <View style={[a.p_lg, a.gap_md]}>
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             <Shapes />
             <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
@@ -70,41 +66,70 @@ export function ExploreInterestsCard() {
 
           {preferences?.interests?.tags &&
           preferences.interests.tags.length > 0 ? (
-            <View style={[a.flex_row, a.flex_wrap, {gap: 6}]}>
-              {preferences.interests.tags.map(tag => (
-                <View
-                  key={tag}
+            <View style={[a.flex_row, a.w_full, a.gap_xs]}>
+              <View style={[a.flex_1, a.flex_row, a.overflow_hidden, {gap: 6}]}>
+                {preferences.interests.tags.map(tag => (
+                  <View
+                    key={tag}
+                    style={[
+                      a.justify_center,
+                      a.align_center,
+                      a.rounded_full,
+                      t.atoms.bg_contrast_25,
+                      a.px_lg,
+                      {height: 32},
+                    ]}>
+                    <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
+                      {interestsDisplayNames[tag]}
+                    </Text>
+                  </View>
+                ))}
+                <LinearGradient
+                  key={t.name} // android does not update when you change the colors. sigh.
+                  start={[0, 0.5]}
+                  end={[1, 0.5]}
+                  colors={[
+                    utils.alpha(t.atoms.bg.backgroundColor, 0),
+                    t.atoms.bg.backgroundColor,
+                  ]}
                   style={[
-                    a.justify_center,
-                    a.align_center,
-                    a.rounded_full,
-                    t.atoms.bg_contrast_25,
-                    a.px_lg,
-                    {height: 32},
-                  ]}>
-                  <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
-                    {interestsDisplayNames[tag]}
-                  </Text>
-                </View>
-              ))}
+                    a.absolute,
+                    a.top_0,
+                    a.right_0,
+                    a.bottom_0,
+                    {width: 30},
+                  ]}
+                />
+              </View>
+              <View style={[a.h_full, t.atoms.bg]}>
+                <Link
+                  label={_(msg`Edit interests`)}
+                  to="/settings/interests"
+                  size="small"
+                  color="primary_subtle"
+                  style={[a.justify_center]}>
+                  <ButtonText>
+                    <Trans>Edit</Trans>
+                  </ButtonText>
+                </Link>
+              </View>
             </View>
-          ) : null}
+          ) : (
+            <Link
+              label={_(msg`Add interests`)}
+              to="/settings/interests"
+              size="small"
+              color="primary"
+              style={[a.justify_center]}>
+              <ButtonText>
+                <Trans>Add interests</Trans>
+              </ButtonText>
+            </Link>
+          )}
 
           <Text style={[a.text_sm, a.leading_snug]}>
             <Trans>Your interests help us find what you like!</Trans>
           </Text>
-
-          <Link
-            label={_(msg`Edit interests`)}
-            to="/settings/interests"
-            size="small"
-            variant="solid"
-            color="primary"
-            style={[a.justify_center]}>
-            <ButtonText>
-              <Trans>Edit interests</Trans>
-            </ButtonText>
-          </Link>
 
           <Button
             label={_(msg`Hide this card`)}
