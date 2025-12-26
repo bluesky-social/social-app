@@ -20,6 +20,7 @@ import {
 } from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
+import {pinnedFeedInfosQueryKeyRoot} from '#/lib/react-query'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {STALE} from '#/state/queries'
@@ -417,8 +418,6 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   },
   contentMode: undefined,
 }
-
-const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
