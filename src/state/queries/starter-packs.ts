@@ -373,6 +373,8 @@ export async function precacheStarterPack(
     if (starterPack.record.feeds) {
       feeds = []
       for (const feed of starterPack.record.feeds) {
+        // note: types are wrong? claims to be `FeedItem`, but we actually
+        // get un$typed `GeneratorView` objects here -sfn
         if (bsky.validate(feed, AppBskyFeedDefs.validateGeneratorView)) {
           feeds.push(feed)
         }
