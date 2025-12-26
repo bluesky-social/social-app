@@ -195,8 +195,11 @@ function HashtagScreenTab({
 
   const onRefresh = React.useCallback(async () => {
     setIsPTR(true)
-    await refetch()
-    setIsPTR(false)
+    try {
+      await refetch()
+    } finally {
+      setIsPTR(false)
+    }
   }, [refetch])
 
   const onEndReached = React.useCallback(() => {
