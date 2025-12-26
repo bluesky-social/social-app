@@ -337,7 +337,7 @@ export const ComposePost = ({
         // keyboard is closed, so we subtract that in the offset and add it back
         // here when the keyboard is open
         (isAndroid && isKeyboardVisible)
-          ? insets.bottom
+          ? insets.bottom * 2
           : 0,
     }),
     [insets, isKeyboardVisible],
@@ -1654,8 +1654,7 @@ function useKeyboardVerticalOffset() {
 
   // Android etc
   if (!isIOS) {
-    // need to account for the edge-to-edge nav bar
-    return bottom * -1
+    return bottom * -2
   }
 
   // iPhone SE
