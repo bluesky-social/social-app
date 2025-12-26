@@ -50,11 +50,13 @@ type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
 function NativeStackNavigator({
   id,
   initialRouteName,
+  UNSTABLE_routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
   screenOptions,
   screenLayout,
+  UNSTABLE_router,
   ...rest
 }: NativeStackNavigatorProps) {
   // --- this is copy and pasted from the original native stack navigator ---
@@ -68,11 +70,13 @@ function NativeStackNavigator({
     >(StackRouter, {
       id,
       initialRouteName,
+      UNSTABLE_routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
       screenOptions,
       screenLayout,
+      UNSTABLE_router,
     })
 
   React.useEffect(
@@ -169,7 +173,7 @@ function NativeStackNavigator({
 
 export function createNativeStackNavigatorWithAuth<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
+  const NavigatorID extends string | undefined = string | undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList
     NavigatorID: NavigatorID

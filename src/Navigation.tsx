@@ -5,6 +5,7 @@ import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
   type BottomTabBarProps,
+  type BottomTabNavigatorProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
@@ -636,7 +637,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * The TabsNavigator is used by native mobile to represent the routes
  * in 3 distinct tab-stacks with a different root screen on each.
  */
-function TabsNavigator() {
+function TabsNavigator({layout}: {layout: BottomTabNavigatorProps['layout']}) {
   const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
@@ -649,7 +650,8 @@ function TabsNavigator() {
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
       screenOptions={{headerShown: false, lazy: true}}
-      tabBar={tabBar}>
+      tabBar={tabBar}
+      layout={layout}>
       <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
       <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
       <Tab.Screen

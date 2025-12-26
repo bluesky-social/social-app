@@ -91,14 +91,19 @@ function ShellInner() {
     }
   }, [dedupe, navigation])
 
+  const drawerLayout = useCallback(
+    ({children}: {children: React.ReactNode}) => (
+      <DrawerLayout>{children}</DrawerLayout>
+    ),
+    [],
+  )
+
   return (
     <>
       <View style={[a.h_full]}>
         <ErrorBoundary
           style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
-          <DrawerLayout>
-            <TabsNavigator />
-          </DrawerLayout>
+          <TabsNavigator layout={drawerLayout} />
         </ErrorBoundary>
       </View>
 
