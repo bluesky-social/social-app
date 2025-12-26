@@ -360,8 +360,11 @@ function ProfileScreenLoaded({
 
   const onRefresh = async () => {
     setIsRefreshing(true)
-    await postFeedRef.current?.refreshFeed()
-    setIsRefreshing(false)
+    try {
+      await postFeedRef.current?.refreshFeed()
+    } finally {
+      setIsRefreshing(false)
+    }
   }
 
   // rendering
