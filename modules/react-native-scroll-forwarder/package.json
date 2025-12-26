@@ -6,7 +6,12 @@
   "codegenConfig": {
     "name": "ScrollForwarderViewSpec",
     "type": "all",
-    "jsSrcsDir": "src"
+    "jsSrcsDir": "src",
+    "ios": {
+      "componentProvider": {
+        "ScrollForwarderView": "ScrollForwarderView"
+      }
+    }
   },
   "author": "Hailey <me@haileyok.com>",
   "license": "MIT",
