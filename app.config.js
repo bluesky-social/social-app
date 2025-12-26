@@ -43,7 +43,7 @@ module.exports = function (_config) {
       icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#1083fe',
-      newArchEnabled: false,
+      newArchEnabled: true,
       ios: {
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
@@ -237,16 +237,21 @@ module.exports = function (_config) {
         ],
         [
           'expo-build-properties',
+          // NOTE: buildReactNativeFromSource: IS_PRODUCTION
+          // will speed up dev builds significantly, but currently
+          // the patches are a little too loadbearing -sfn
           {
             ios: {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
+              reactNativeReleaseLevel: 'experimental',
             },
             android: {
               compileSdkVersion: 35,
               targetSdkVersion: 35,
               buildToolsVersion: '35.0.0',
               buildReactNativeFromSource: true,
+              reactNativeReleaseLevel: 'experimental',
             },
           },
         ],
