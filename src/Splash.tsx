@@ -146,7 +146,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
             withTiming(
               1,
               {duration: 400, easing: Easing.out(Easing.cubic)},
-              async () => {
+              () => {
+                'worklet'
                 // set these values to check animation at specific point
                 outroLogo.set(() =>
                   withTiming(

@@ -7,7 +7,7 @@ import {
   PersistQueryClientProvider,
   type PersistQueryClientProviderProps,
 } from '@tanstack/react-query-persist-client'
-import type React from 'react'
+import {SuperJSON} from 'superjson'
 
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
 import {IS_NATIVE, IS_WEB} from '#/env'
@@ -18,9 +18,17 @@ declare global {
   }
 }
 
-// any query keys in this array will be persisted to AsyncStorage
+// any query keys in this array will be persisted to AsyncStorage.
+// keys are here for require cycle reasons ¯\_(ツ)_/¯
 export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
-const STORED_CACHE_QUERY_KEY_ROOTS = [labelersDetailedInfoQueryKeyRoot]
+export const preferencesQueryKeyRoot = 'get-preferences'
+export const pinnedFeedInfosQueryKeyRoot = 'pinned-feeds-infos'
+
+const STORED_CACHE_QUERY_KEY_ROOTS = [
+  labelersDetailedInfoQueryKeyRoot,
+  preferencesQueryKeyRoot,
+  pinnedFeedInfosQueryKeyRoot,
+]
 
 async function checkIsOnline(): Promise<boolean> {
   try {
@@ -160,6 +168,8 @@ export function QueryProvider({
   )
 }
 
+const PERSIST_VERSION = 2
+
 function QueryProviderInner({
   children,
   currentDid,
@@ -179,7 +189,10 @@ function QueryProviderInner({
   const [persistOptions, _setPersistOptions] = useState(() => {
     const asyncPersister = createAsyncStoragePersister({
       storage: AsyncStorage,
-      key: 'queryClient-' + (currentDid ?? 'logged-out'),
+      key:
+        'queryClient-' + (currentDid ?? 'logged-out') + `-v${PERSIST_VERSION}`,
+      serialize: SuperJSON.stringify,
+      deserialize: SuperJSON.parse,
     })
     return {
       persister: asyncPersister,
