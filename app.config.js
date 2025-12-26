@@ -237,10 +237,13 @@ module.exports = function (_config) {
         ],
         [
           'expo-build-properties',
+          // NOTE: buildReactNativeFromSource: IS_PRODUCTION
+          // will speed up dev builds significantly, but currently
+          // the patches are a little too loadbearing -sfn
           {
             ios: {
               deploymentTarget: '15.1',
-              buildReactNativeFromSource: IS_PRODUCTION,
+              buildReactNativeFromSource: true,
               reactNativeReleaseLevel: 'experimental',
             },
             android: {
