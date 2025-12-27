@@ -23,16 +23,19 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
 
   if (guide) {
     return (
-      <View style={[a.flex_col, a.gap_md, style]}>
+      <View
+        style={[
+          a.flex_col,
+          a.gap_md,
+          a.rounded_md,
+          t.atoms.bg_contrast_25,
+          style,
+          a.p_md,
+        ]}>
         <View style={[a.flex_row, a.align_center, a.justify_between]}>
           <Text
-            style={[
-              t.atoms.text_contrast_medium,
-              a.font_semi_bold,
-              a.text_sm,
-              {textTransform: 'uppercase'},
-            ]}>
-            <Trans>Getting started</Trans>
+            style={[t.atoms.text_contrast_medium, a.font_semi_bold, a.text_sm]}>
+            <Trans>Getting Started</Trans>
           </Text>
           <Button
             variant="ghost"
@@ -40,8 +43,9 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
             color="secondary"
             shape="round"
             label={_(msg`Dismiss getting started guide`)}
-            onPress={endProgressGuide}>
-            <ButtonIcon icon={Times} size="sm" />
+            onPress={endProgressGuide}
+            style={[a.bg_transparent]}>
+            <ButtonIcon icon={Times} size="xs" />
           </Button>
         </View>
         {guide.guide === 'follow-10' && (

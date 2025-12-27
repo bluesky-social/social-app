@@ -18,7 +18,6 @@ import {
   web,
 } from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
-import {Divider} from '#/components/Divider'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
@@ -86,9 +85,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
 
       {hasSession && (
         <>
-          <ProgressGuideList />
           <DesktopFeeds />
-          <Divider />
+          <ProgressGuideList />
         </>
       )}
 
