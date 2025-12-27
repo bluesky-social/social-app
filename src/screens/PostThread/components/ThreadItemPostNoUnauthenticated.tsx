@@ -44,7 +44,10 @@ export function ThreadItemPostNoUnauthenticated({
         </Skele.Circle>
 
         <Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
-          <Trans>You must sign in to view this post.</Trans>
+          <Trans>
+            This author has chosen to make their posts visible only to people
+            who are signed in.
+          </Trans>
         </Text>
       </Skele.Row>
       <View
