@@ -65,7 +65,7 @@ function Inner() {
             color="secondary"
             shape="round"
             onPress={() => trendingPrompt.open()}>
-            <ButtonIcon icon={X} />
+            <ButtonIcon icon={X} size="sm" />
           </Button>
         </View>
 
