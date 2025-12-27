@@ -933,8 +933,15 @@ export function SuggestedFeeds() {
 
 export function ProgressGuide() {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   return (
-    <View style={[t.atoms.border_contrast_low, a.px_lg, a.py_lg, a.pb_lg]}>
+    <View
+      style={[
+        t.atoms.border_contrast_low,
+        a.px_lg,
+        a.py_lg,
+        !gtMobile && {marginTop: 4},
+      ]}>
       <ProgressGuideList />
     </View>
   )

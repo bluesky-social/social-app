@@ -12,9 +12,7 @@ import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/service-config'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {Divider} from '#/components/Divider'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import * as Prompt from '#/components/Prompt'
 import {
   TrendingTopic,
@@ -46,9 +44,15 @@ function Inner() {
 
   return error || noTopics ? null : (
     <>
-      <View style={[a.gap_sm, {paddingBottom: 2}]}>
+      <View
+        style={[
+          a.gap_sm,
+          a.py_md,
+          a.px_md,
+          a.rounded_md,
+          t.atoms.bg_contrast_25,
+        ]}>
         <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-          <Graph size="sm" />
           <Text
             style={[
               a.flex_1,
@@ -59,17 +63,19 @@ function Inner() {
             <Trans>Trending</Trans>
           </Text>
           <Button
-            label={_(msg`Hide trending topics`)}
-            size="tiny"
             variant="ghost"
+            size="tiny"
             color="secondary"
             shape="round"
-            onPress={() => trendingPrompt.open()}>
-            <ButtonIcon icon={X} size="sm" />
+            label={_(msg`Hide trending topics`)}
+            onPress={() => trendingPrompt.open()}
+            style={[a.bg_transparent]}>
+            <ButtonIcon icon={X} size="xs" />
           </Button>
         </View>
 
-        <View style={[a.flex_row, a.flex_wrap, {gap: '6px 4px'}]}>
+        <View
+          style={[a.flex_row, a.flex_wrap, {gap: '6px 4px', marginLeft: -4}]}>
           {isLoading ? (
             Array(TRENDING_LIMIT)
               .fill(0)
@@ -90,12 +96,7 @@ function Inner() {
                     <TrendingTopic
                       size="small"
                       topic={topic}
-                      style={[
-                        hovered && [
-                          t.atoms.border_contrast_high,
-                          t.atoms.bg_contrast_25,
-                        ],
-                      ]}
+                      hovered={hovered}
                     />
                   )}
                 </TrendingTopicLink>
@@ -111,7 +112,6 @@ function Inner() {
         confirmButtonCta={_(msg`Hide`)}
         onConfirm={onConfirmHide}
       />
-      <Divider />
     </>
   )
 }
