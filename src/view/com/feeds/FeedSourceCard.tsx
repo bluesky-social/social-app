@@ -193,7 +193,7 @@ export function FeedSourceCardLoaded({
         }}
         style={[
           a.flex_1,
-          a.p_lg,
+          a.p_md,
           a.gap_md,
           !hideTopBorder && !a.border_t,
           t.atoms.border_contrast_low,
@@ -207,7 +207,7 @@ export function FeedSourceCardLoaded({
       <View
         style={[
           a.flex_1,
-          a.p_lg,
+          a.p_md,
           a.gap_md,
           !hideTopBorder && !a.border_t,
           t.atoms.border_contrast_low,
