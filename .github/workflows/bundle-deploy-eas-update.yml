@@ -39,10 +39,12 @@ jobs:
 
       # Validate the version if one is supplied. This should generally happen if the update is for a production client
       - name: 🧐 Validate version
+        env:
+          RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
         if: ${{ inputs.runtimeVersion }}
         run: |
-          if [ -z "${{ inputs.runtimeVersion }}" ]; then
-            [[ "${{ inputs.runtimeVersion }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
+          if [ -z "$RUNTIME_VERSION" ]; then
+            [[ "$RUNTIME_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
           fi
 
       - name: ⬇️ Checkout
@@ -103,12 +105,15 @@ jobs:
 
       # eas.json not used here, set EXPO_PUBLIC_ENV
       - name: Env
+        env:
+          CHANNEL: ${{ inputs.channel || 'testflight' }}
+          GITHUB_SHA: ${{ github.sha }}
         id: env
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
-          echo "EXPO_PUBLIC_ENV=${{ inputs.channel || 'testflight' }}" >> .env
+          echo "EXPO_PUBLIC_ENV=$CHANNEL" >> .env
           echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> .env
           echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> .env
@@ -145,7 +150,7 @@ jobs:
 
       - name: ✏️ Write commit hash to cache
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
 
   # GitHub actions are horrible so let's just copy paste this in
   buildIfNecessaryIOS:
@@ -249,7 +254,9 @@ jobs:
 
       - name: ✏️ Write commit hash to cache
         if: ${{ inputs.channel == 'testflight' }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
 
   buildIfNecessaryAndroid:
     name: Build and Submit Android
@@ -363,5 +370,7 @@ jobs:
           key: most-recent-testflight-commit
 
       - name: ✏️ Write commit hash to cache
+        env:
+          GITHUB_SHA: ${{ github.sha }}
         if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
