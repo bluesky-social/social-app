@@ -30,7 +30,10 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
           a.rounded_md,
           t.atoms.bg_contrast_25,
           style,
-          a.p_md,
+          a.pt_sm,
+          a.pr_sm,
+          a.pb_md,
+          a.pl_md,
         ]}>
         <View style={[a.flex_row, a.align_center, a.justify_between]}>
           <Text

@@ -47,8 +47,10 @@ function Inner() {
       <View
         style={[
           a.gap_sm,
-          a.py_md,
-          a.px_md,
+          a.pt_sm,
+          a.pr_sm,
+          a.pb_md,
+          a.pl_md,
           a.rounded_md,
           t.atoms.bg_contrast_25,
         ]}>
