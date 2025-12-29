@@ -138,7 +138,8 @@ export async function dynamicActivate(locale: AppLanguage) {
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/eo'),
         import('@formatjs/intl-numberformat/locale-data/eo'),
-        import('@formatjs/intl-displaynames/locale-data/eo'),
+        // borked, see https://github.com/bluesky-social/social-app/pull/9574
+        // import('@formatjs/intl-displaynames/locale-data/eo'),
       ])
       break
     }
