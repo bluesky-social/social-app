@@ -12,7 +12,6 @@ import {
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
 import {
-  android,
   applyFonts,
   atoms as a,
   platform,
@@ -219,10 +218,6 @@ export function createInput(Component: typeof TextInput) {
         paddingTop: 13,
         paddingBottom: 13,
       },
-      android({
-        paddingTop: 8,
-        paddingBottom: 9,
-      }),
       /*
        * Margins are needed here to avoid autofill background overlapping the
        * top and bottom borders - esb
