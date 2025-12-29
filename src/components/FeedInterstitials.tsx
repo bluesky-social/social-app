@@ -770,7 +770,6 @@ export function ProfileGrid({
 }
 
 function SeeMoreSuggestedProfilesCard({onPress}: {onPress: () => void}) {
-  const t = useTheme()
   const {_} = useLingui()
 
   return (
@@ -784,7 +783,6 @@ function SeeMoreSuggestedProfilesCard({onPress}: {onPress: () => void}) {
         a.gap_sm,
         a.p_md,
         a.rounded_lg,
-        t.atoms.shadow_sm,
         {width: FINAL_CARD_WIDTH},
       ]}>
       <ButtonIcon icon={ArrowRight} size="lg" />
