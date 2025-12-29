@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import {
   KeyboardAwareScrollView,
+  type KeyboardAwareScrollViewRef,
   useKeyboardHandler,
   useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller'
@@ -256,7 +257,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
           {paddingBottom},
           contentContainerStyle,
         ]}
-        ref={ref}
+        ref={ref as React.Ref<KeyboardAwareScrollViewRef>}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
