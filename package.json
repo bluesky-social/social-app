@@ -222,7 +222,7 @@
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "tldts": "^6.1.46",
-    "unicode-segmenter": "^0.14.1",
+    "unicode-segmenter": "^0.14.5",
     "zod": "^3.20.2"
   },
   "devDependencies": {
@@ -289,7 +289,8 @@
     "**/expo-constants": "18.0.8",
     "**/expo-device": "7.1.4",
     "**/zod": "3.23.8",
-    "**/multiformats": "9.9.0"
+    "**/multiformats": "9.9.0",
+    "unicode-segmenter": "0.14.5"
   },
   "jest": {
     "preset": "jest-expo/ios",
