@@ -11,6 +11,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {clamp} from '#/lib/numbers'
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isWeb} from '#/platform/detection'
 import {useAutoplayDisabled} from '#/state/preferences'
@@ -111,6 +112,15 @@ export function GifEmbed({
     playerRef.current?.toggleAsync()
   }, [])
 
+  let aspectRatio = 1
+  if (params.dimensions) {
+    aspectRatio = clamp(
+      params.dimensions.width / params.dimensions.height,
+      0.75,
+      4,
+    )
+  }
+
   return (
     <View
       style={[
@@ -118,7 +128,8 @@ export function GifEmbed({
         a.overflow_hidden,
         a.border,
         t.atoms.border_contrast_low,
-        {aspectRatio: params.dimensions!.width / params.dimensions!.height},
+        {backgroundColor: t.palette.black},
+        {aspectRatio},
         style,
       ]}>
       <View
