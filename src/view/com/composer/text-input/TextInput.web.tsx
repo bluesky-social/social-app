@@ -20,7 +20,7 @@ import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {Fragment, Node, Slice} from '@tiptap/pm/model'
 import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
-import Graphemer from 'graphemer'
+import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
@@ -218,7 +218,7 @@ export function TextInput({
                 // all the lines get mushed together -sfn
                 '\n',
               )
-              const graphemes = new Graphemer().splitGraphemes(textBefore)
+              const graphemes = [...splitGraphemes(textBefore)]
 
               if (graphemes.length > 0) {
                 const lastGrapheme = graphemes[graphemes.length - 1]

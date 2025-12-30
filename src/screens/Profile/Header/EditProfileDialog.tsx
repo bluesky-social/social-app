@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
+import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {type ImageMeta} from '#/state/gallery'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
@@ -203,11 +203,11 @@ function DialogInner({
     _,
   ])
 
-  const displayNameTooLong = useWarnMaxGraphemeCount({
+  const displayNameTooLong = isOverMaxGraphemeCount({
     text: displayName,
     maxCount: DISPLAY_NAME_MAX_GRAPHEMES,
   })
-  const descriptionTooLong = useWarnMaxGraphemeCount({
+  const descriptionTooLong = isOverMaxGraphemeCount({
     text: description,
     maxCount: DESCRIPTION_MAX_GRAPHEMES,
   })
