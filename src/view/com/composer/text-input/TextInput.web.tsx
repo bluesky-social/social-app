@@ -1,13 +1,24 @@
-import {lazy, Suspense, useEffect, useState} from 'react'
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {RichText} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useAlf, useTheme} from '#/alf'
+import {normalizeTextStyles} from '#/alf/typography'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
-import {type TextInputProps} from './TextInput.types'
+import {type TextInputProps, type TextInputRef} from './TextInput.types'
 import {getImageOrVideoFromUri} from './web/uri-to-media'
 
 const RichTextInput = lazy(async () => {
@@ -15,6 +26,101 @@ const RichTextInput = lazy(async () => {
 
   return await import('./web/RichTextInputWeb')
 })
+
+function FallbackTextInput({
+  ref,
+  richtext,
+  placeholder,
+  webForceMinHeight,
+  setRichText,
+  onFocus,
+}: Pick<
+  TextInputProps,
+  | 'ref'
+  | 'richtext'
+  | 'placeholder'
+  | 'webForceMinHeight'
+  | 'setRichText'
+  | 'onFocus'
+>) {
+  const {theme: t, fonts} = useAlf()
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const newText = e.target.value
+      const newRt = new RichText({text: newText})
+      newRt.detectFacetsWithoutResolution()
+      setRichText(newRt)
+    },
+    [setRichText],
+  )
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      textInputWebEmitter.emit('publish')
+      e.preventDefault()
+    }
+  }, [])
+
+  useImperativeHandle(
+    ref,
+    (): TextInputRef => ({
+      focus: () => textareaRef.current?.focus(),
+      blur: () => textareaRef.current?.blur(),
+      getCursorPosition: () => undefined,
+      maybeClosePopup: () => false,
+    }),
+  )
+
+  useEffect(() => {
+    // Move cursor to end after autofocus
+    const textarea = textareaRef.current
+    if (textarea) {
+      const len = textarea.value.length
+      textarea.setSelectionRange(len, len)
+    }
+  }, [])
+
+  const inputStyle = useMemo((): React.CSSProperties => {
+    const style = normalizeTextStyles(
+      [a.text_lg, a.leading_snug, t.atoms.text],
+      {
+        fontScale: fonts.scaleMultiplier,
+        fontFamily: fonts.family,
+        flags: {},
+      },
+    )
+    style.lineHeight = style.lineHeight
+      ? ((style.lineHeight + 'px') as unknown as number)
+      : undefined
+    style.minHeight = webForceMinHeight ? 140 : undefined
+    return {
+      ...style,
+      width: '100%',
+      border: 'none',
+      outline: 'none',
+      resize: 'none',
+      background: 'transparent',
+      padding: 0,
+      margin: 0,
+    } as React.CSSProperties
+  }, [t, fonts, webForceMinHeight])
+
+  return (
+    <textarea
+      ref={textareaRef}
+      className="composer-fallback-input"
+      autoFocus
+      value={richtext.text}
+      onChange={handleChange}
+      onKeyDown={handleKeyDown}
+      onFocus={onFocus}
+      placeholder={placeholder}
+      style={inputStyle}
+    />
+  )
+}
 
 export function TextInput(props: TextInputProps) {
   const {hasRightPadding, isActive, onPhotoPasted, onPressPublish} = props
@@ -90,7 +196,7 @@ export function TextInput(props: TextInputProps) {
   return (
     <>
       <View style={[styles.container, hasRightPadding && styles.rightPadding]}>
-        <Suspense fallback={<View style={styles.fallback} />}>
+        <Suspense fallback={<FallbackTextInput {...props} />}>
           <RichTextInput {...props} />
         </Suspense>
       </View>
@@ -162,8 +268,5 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderRadius: 8,
     borderWidth: 2,
-  },
-  fallback: {
-    minHeight: 140,
   },
 })

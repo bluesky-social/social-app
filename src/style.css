@@ -74,6 +74,9 @@ a[role='link'][data-no-underline='1']:hover {
   height: 0;
   pointer-events: none;
 }
+.composer-fallback-input::placeholder {
+  color: #8d8e96;
+}
 .ProseMirror .mention {
   color: #0085ff;
 }
