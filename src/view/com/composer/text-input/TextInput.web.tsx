@@ -21,11 +21,7 @@ import {Text} from '#/components/Typography'
 import {type TextInputProps, type TextInputRef} from './TextInput.types'
 import {getImageOrVideoFromUri} from './web/uri-to-media'
 
-const RichTextInput = lazy(async () => {
-  await new Promise(resolve => setTimeout(resolve, 2000))
-
-  return await import('./web/RichTextInputWeb')
-})
+const RichTextInput = lazy(() => import('./web/RichTextInputWeb'))
 
 function FallbackTextInput({
   ref,

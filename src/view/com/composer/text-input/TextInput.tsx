@@ -6,9 +6,8 @@ import {
   useState,
 } from 'react'
 import {
-  type NativeSyntheticEvent,
   Text as RNText,
-  type TextInputSelectionChangeEventData,
+  type TextInputSelectionChangeEvent,
   View,
 } from 'react-native'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
@@ -145,7 +144,7 @@ export function TextInput({
   )
 
   const onSelectionChange = useCallback(
-    (evt: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
+    (evt: TextInputSelectionChangeEvent) => {
       // NOTE we track the input selection using a ref to avoid excessive renders -prf
       textInputSelection.current = evt.nativeEvent.selection
     },
