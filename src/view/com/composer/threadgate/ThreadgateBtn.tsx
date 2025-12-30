@@ -4,7 +4,7 @@ import {type AnimatedStyle} from 'react-native-reanimated'
 import {type AppBskyFeedPostgate} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import deepEqual from 'lodash.isequal'
+import deepEqual from 'fast-deep-equal'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
