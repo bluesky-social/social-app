@@ -634,7 +634,9 @@ function AccountRow({
         ) : (
           <View style={[{width: 28}]} />
         )}
-        <SettingsList.ItemText>
+        <SettingsList.ItemText
+          numberOfLines={1}
+          style={[a.pr_2xl, a.leading_snug]}>
           {sanitizeHandle(account.handle, '@')}
         </SettingsList.ItemText>
         {pendingDid === account.did && <SettingsList.ItemIcon icon={Loader} />}
