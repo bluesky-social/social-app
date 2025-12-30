@@ -270,7 +270,6 @@
     "jest-junit": "^16.0.0",
     "lint-staged": "^13.2.3",
     "lockfile-lint": "^4.14.0",
-    "metro-react-native-babel-preset": "^0.77.0",
     "prettier": "^3.6.0",
     "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
