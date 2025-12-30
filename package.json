@@ -62,6 +62,7 @@
     "intl:compile-if-needed": "is-ci || [ -f src/locale/locales/en/messages.js ] || yarn intl:compile",
     "intl:pull": "crowdin download translations --verbose -b main",
     "intl:push": "crowdin push translations --verbose -b main",
+    "intl:push-sources": "crowdin push sources --verbose -b main",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
     "update-extensions": "bash scripts/updateExtensions.sh",
     "export": "npx expo export --dump-sourcemap && yarn upload-native-sourcemaps",
