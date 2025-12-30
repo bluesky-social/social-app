@@ -1,4 +1,4 @@
-import {useEffect, useLayoutEffect, useState} from 'react'
+import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -6,7 +6,6 @@ import {useNavigation} from '@react-navigation/native'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSession} from '#/state/session'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
@@ -17,7 +16,7 @@ import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
@@ -39,30 +38,10 @@ import {Composer} from './Composer.web'
 import {DrawerContent} from './Drawer'
 
 function ShellInner() {
-  const t = useTheme()
-  const isDrawerOpen = useIsDrawerOpen()
-  const setDrawerOpen = useSetDrawerOpen()
-  const {isDesktop} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {_} = useLingui()
-  const showDrawer = !isDesktop && isDrawerOpen
-  const [showDrawerDelayedExit, setShowDrawerDelayedExit] = useState(showDrawer)
   const {state: policyUpdateState} = usePolicyUpdateContext()
   const welcomeModalControl = useWelcomeModal()
-
-  useLayoutEffect(() => {
-    if (showDrawer !== showDrawerDelayedExit) {
-      if (showDrawer) {
-        setShowDrawerDelayedExit(true)
-      } else {
-        const timeout = setTimeout(() => {
-          setShowDrawerDelayedExit(false)
-        }, 160)
-        return () => clearTimeout(timeout)
-      }
-    }
-  }, [showDrawer, showDrawerDelayedExit])
 
   useComposerKeyboardShortcut()
   useIntentHandler()
@@ -74,10 +53,16 @@ function ShellInner() {
     return unsubscribe
   }, [navigator, closeAllActiveElements])
 
+  const drawerLayout = useCallback(
+    ({children}: {children: React.ReactNode}) => (
+      <DrawerLayout>{children}</DrawerLayout>
+    ),
+    [],
+  )
   return (
     <>
       <ErrorBoundary>
-        <FlatNavigator />
+        <FlatNavigator layout={drawerLayout} />
       </ErrorBoundary>
       <Composer winHeight={0} />
       <ModalsContainer />
@@ -100,6 +85,36 @@ function ShellInner() {
         </>
       )}
 
+      <PolicyUpdateOverlayPortalOutlet />
+    </>
+  )
+}
+
+function DrawerLayout({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  const isDrawerOpen = useIsDrawerOpen()
+  const setDrawerOpen = useSetDrawerOpen()
+  const {gtTablet} = useBreakpoints()
+  const {_} = useLingui()
+  const showDrawer = !gtTablet && isDrawerOpen
+  const [showDrawerDelayedExit, setShowDrawerDelayedExit] = useState(showDrawer)
+
+  useLayoutEffect(() => {
+    if (showDrawer !== showDrawerDelayedExit) {
+      if (showDrawer) {
+        setShowDrawerDelayedExit(true)
+      } else {
+        const timeout = setTimeout(() => {
+          setShowDrawerDelayedExit(false)
+        }, 160)
+        return () => clearTimeout(timeout)
+      }
+    }
+  }, [showDrawer, showDrawerDelayedExit])
+
+  return (
+    <>
+      {children}
       {showDrawerDelayedExit && (
         <>
           <RemoveScrollBar />
@@ -137,8 +152,6 @@ function ShellInner() {
           </TouchableWithoutFeedback>
         </>
       )}
-
-      <PolicyUpdateOverlayPortalOutlet />
     </>
   )
 }
