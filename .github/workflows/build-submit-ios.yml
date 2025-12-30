@@ -91,13 +91,15 @@ jobs:
           echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
 
       - name: 🏗️ EAS Build
+        env:
+          PROFILE: ${{ inputs.profile || 'testflight' }}
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           yarn use-build-number-with-bump
           eas build -p ios
-          --profile ${{ inputs.profile || 'testflight' }}
+          --profile $PROFILE
           --local --output build.tar.gz --non-interactive
 
       - name: 📂 Extract build artifact
@@ -147,5 +149,7 @@ jobs:
           key: most-recent-testflight-commit
 
       - name: ✏️ Write commit hash to cache
+        env:
+          GITHUB_SHA: ${{ github.sha }}
         if: ${{ inputs.profile == 'testflight' }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt

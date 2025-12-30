@@ -17,7 +17,9 @@ jobs:
           fetch-depth: 0
 
       - name: Fetch base branch
-        run: git fetch origin ${{ github.base_ref }} --depth=1
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git fetch origin $BASE_REF --depth=1
 
       - name: Install node
         uses: actions/setup-node@v6
@@ -25,7 +27,9 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Reset yarn.lock to base
-        run: git show "origin/${{ github.base_ref }}:yarn.lock" > yarn.lock
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git show "origin/$BASE_REF:yarn.lock" > yarn.lock
 
       - name: Yarn install
         uses: Wandalen/wretry.action@master
