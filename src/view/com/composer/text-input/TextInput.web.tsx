@@ -23,101 +23,6 @@ import {getImageOrVideoFromUri} from './web/uri-to-media'
 
 const RichTextInput = lazy(() => import('./web/RichTextInputWeb'))
 
-function FallbackTextInput({
-  ref,
-  richtext,
-  placeholder,
-  webForceMinHeight,
-  setRichText,
-  onFocus,
-}: Pick<
-  TextInputProps,
-  | 'ref'
-  | 'richtext'
-  | 'placeholder'
-  | 'webForceMinHeight'
-  | 'setRichText'
-  | 'onFocus'
->) {
-  const {theme: t, fonts} = useAlf()
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const newText = e.target.value
-      const newRt = new RichText({text: newText})
-      newRt.detectFacetsWithoutResolution()
-      setRichText(newRt)
-    },
-    [setRichText],
-  )
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-      textInputWebEmitter.emit('publish')
-      e.preventDefault()
-    }
-  }, [])
-
-  useImperativeHandle(
-    ref,
-    (): TextInputRef => ({
-      focus: () => textareaRef.current?.focus(),
-      blur: () => textareaRef.current?.blur(),
-      getCursorPosition: () => undefined,
-      maybeClosePopup: () => false,
-    }),
-  )
-
-  useEffect(() => {
-    // Move cursor to end after autofocus
-    const textarea = textareaRef.current
-    if (textarea) {
-      const len = textarea.value.length
-      textarea.setSelectionRange(len, len)
-    }
-  }, [])
-
-  const inputStyle = useMemo((): React.CSSProperties => {
-    const style = normalizeTextStyles(
-      [a.text_lg, a.leading_snug, t.atoms.text],
-      {
-        fontScale: fonts.scaleMultiplier,
-        fontFamily: fonts.family,
-        flags: {},
-      },
-    )
-    style.lineHeight = style.lineHeight
-      ? ((style.lineHeight + 'px') as unknown as number)
-      : undefined
-    style.minHeight = webForceMinHeight ? 140 : undefined
-    return {
-      ...style,
-      width: '100%',
-      border: 'none',
-      outline: 'none',
-      resize: 'none',
-      background: 'transparent',
-      padding: 0,
-      margin: 0,
-    } as React.CSSProperties
-  }, [t, fonts, webForceMinHeight])
-
-  return (
-    <textarea
-      ref={textareaRef}
-      className="composer-fallback-input"
-      autoFocus
-      value={richtext.text}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown}
-      onFocus={onFocus}
-      placeholder={placeholder}
-      style={inputStyle}
-    />
-  )
-}
-
 export function TextInput(props: TextInputProps) {
   const {hasRightPadding, isActive, onPhotoPasted, onPressPublish} = props
 
@@ -224,6 +129,101 @@ export function TextInput(props: TextInputProps) {
         </Portal>
       )}
     </>
+  )
+}
+
+function FallbackTextInput({
+  ref,
+  richtext,
+  placeholder,
+  webForceMinHeight,
+  setRichText,
+  onFocus,
+}: Pick<
+  TextInputProps,
+  | 'ref'
+  | 'richtext'
+  | 'placeholder'
+  | 'webForceMinHeight'
+  | 'setRichText'
+  | 'onFocus'
+>) {
+  const {theme: t, fonts} = useAlf()
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const newText = e.target.value
+      const newRt = new RichText({text: newText})
+      newRt.detectFacetsWithoutResolution()
+      setRichText(newRt)
+    },
+    [setRichText],
+  )
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      textInputWebEmitter.emit('publish')
+      e.preventDefault()
+    }
+  }, [])
+
+  useImperativeHandle(
+    ref,
+    (): TextInputRef => ({
+      focus: () => textareaRef.current?.focus(),
+      blur: () => textareaRef.current?.blur(),
+      getCursorPosition: () => undefined,
+      maybeClosePopup: () => false,
+    }),
+  )
+
+  useEffect(() => {
+    // Move cursor to end after autofocus
+    const textarea = textareaRef.current
+    if (textarea) {
+      const len = textarea.value.length
+      textarea.setSelectionRange(len, len)
+    }
+  }, [])
+
+  const inputStyle = useMemo((): React.CSSProperties => {
+    const style = normalizeTextStyles(
+      [a.text_lg, a.leading_snug, t.atoms.text],
+      {
+        fontScale: fonts.scaleMultiplier,
+        fontFamily: fonts.family,
+        flags: {},
+      },
+    )
+    style.lineHeight = style.lineHeight
+      ? ((style.lineHeight + 'px') as unknown as number)
+      : undefined
+    style.minHeight = webForceMinHeight ? 140 : undefined
+    return {
+      ...style,
+      width: '100%',
+      border: 'none',
+      outline: 'none',
+      resize: 'none',
+      background: 'transparent',
+      padding: 0,
+      margin: 0,
+    } as React.CSSProperties
+  }, [t, fonts, webForceMinHeight])
+
+  return (
+    <textarea
+      ref={textareaRef}
+      className="composer-fallback-input"
+      autoFocus
+      value={richtext.text}
+      onChange={handleChange}
+      onKeyDown={handleKeyDown}
+      onFocus={onFocus}
+      placeholder={placeholder}
+      style={inputStyle}
+    />
   )
 }
 
