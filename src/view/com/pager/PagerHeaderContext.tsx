@@ -4,7 +4,21 @@ import {type SharedValue, useDerivedValue} from 'react-native-reanimated'
 import {isNative} from '#/platform/detection'
 
 export const PagerHeaderContext = createContext<{
+  /**
+   * The current scroll position
+   *
+   * NOTE: If you can, use `clampedScrollY` as it helps with
+   * Reanimated performance
+   */
   scrollY: SharedValue<number>
+  /**
+   * The current scroll position, but clamped to be max 100
+   *
+   * Most header styles only need to listen to values <100,
+   * so this helps avoid Reanimated needlessly updating styles on each
+   * scroll event as this can cause cross-thread jank if the JS
+   * thread is trying to do something (i.e. FlatList rendering stuff)
+   */
   clampedScrollY: SharedValue<number>
   headerHeight: number
 } | null>(null)
