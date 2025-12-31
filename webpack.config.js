@@ -27,6 +27,7 @@ module.exports = async function (env, argv) {
     'unicode-segmenter/grapheme': require
       .resolve('unicode-segmenter/grapheme')
       .replace(/\.cjs$/, '.js'),
+    'react-native-gesture-handler': false, // RNGH should not be used on web, so let's cause a build error if it sneaks in
   })
   config.module.rules = [
     ...(config.module.rules || []),
