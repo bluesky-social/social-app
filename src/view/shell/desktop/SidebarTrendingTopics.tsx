@@ -97,6 +97,7 @@ function Inner() {
                 <TrendingTopicLink
                   key={topic.link}
                   topic={topic}
+                  style={[a.self_start]}
                   onPress={() => {
                     logEvent('trendingTopic:click', {context: 'sidebar'})
                   }}>

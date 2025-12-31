@@ -32,7 +32,6 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
-import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -77,7 +76,6 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
         size={gtMobile ? 'small' : 'large'}
         color="primary"
         variant="solid">
-        <ButtonIcon icon={PersonGroupIcon} />
         <ButtonText>
           <Trans>Find people to follow</Trans>
         </ButtonText>

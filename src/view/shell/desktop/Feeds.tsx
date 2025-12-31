@@ -70,7 +70,7 @@ export function DesktopFeeds() {
            * Small padding prevents overflow prior to actually overflowing the
            * height of the screen with lots of feeds.
            */
-          paddingVertical: 2,
+          paddingTop: 2,
           overflowY: 'auto',
         }),
       ]}>
@@ -112,40 +112,50 @@ export function DesktopFeeds() {
           a.self_start,
           a.rounded_sm,
           {paddingVertical: 6, paddingHorizontal: 8},
+          route.name === 'Feeds' && {backgroundColor: t.palette.primary_50},
         ]}>
-        {({hovered}) => (
-          <>
-            <View
-              style={[
-                a.align_center,
-                a.justify_center,
-                a.rounded_xs,
-                t.atoms.bg_contrast_50,
-                {
-                  width: 20,
-                  height: 20,
-                },
-              ]}>
-              <Plus
-                style={{width: 16, height: 16}}
-                fill={
-                  hovered
-                    ? t.atoms.text.color
-                    : t.atoms.text_contrast_medium.color
-                }
-              />
-            </View>
-            <Text
-              style={[
-                a.text_md,
-                a.leading_snug,
-                hovered ? t.atoms.text : t.atoms.text_contrast_medium,
-              ]}
-              numberOfLines={1}>
-              {_(msg`More feeds`)}
-            </Text>
-          </>
-        )}
+        {({hovered}) => {
+          const isActive = route.name === 'Feeds'
+          return (
+            <>
+              <View
+                style={[
+                  a.align_center,
+                  a.justify_center,
+                  a.rounded_xs,
+                  isActive
+                    ? {backgroundColor: t.palette.primary_100}
+                    : t.atoms.bg_contrast_50,
+                  {
+                    width: 20,
+                    height: 20,
+                  },
+                ]}>
+                <Plus
+                  style={{width: 16, height: 16}}
+                  fill={
+                    isActive || hovered
+                      ? t.atoms.text.color
+                      : t.atoms.text_contrast_medium.color
+                  }
+                />
+              </View>
+              <Text
+                style={[
+                  a.text_md,
+                  a.leading_snug,
+                  isActive
+                    ? [t.atoms.text, a.font_semi_bold]
+                    : hovered
+                      ? t.atoms.text
+                      : t.atoms.text_contrast_medium,
+                ]}
+                numberOfLines={1}>
+                {_(msg`More feeds`)}
+              </Text>
+            </>
+          )
+        }}
       </Link>
     </View>
   )
@@ -183,7 +193,6 @@ function FeedItem({
         a.self_start,
         a.rounded_sm,
         {paddingVertical: 6, paddingHorizontal: 8},
-        // current && t.atoms.bg_contrast_50,
         current && {backgroundColor: t.palette.primary_50},
       ]}>
       {isFollowing ? (
