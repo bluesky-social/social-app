@@ -131,7 +131,10 @@ const MinimalHeader = memo(function MinimalHeader({
         opacity: 0,
       }
     }
-    const pastThreshold = scrollY.get() > 100
+
+    const scrollYValue = scrollY.get()
+
+    const pastThreshold = scrollYValue > 100
     return {
       opacity: pastThreshold
         ? withTiming(1, {duration: 75})
@@ -139,7 +142,7 @@ const MinimalHeader = memo(function MinimalHeader({
       transform: [
         {
           translateY: Math.min(
-            scrollY.get(),
+            scrollYValue,
             headerHeight - minimalHeaderHeight,
           ),
         },
