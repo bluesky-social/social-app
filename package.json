@@ -367,8 +367,7 @@
     ],
     "allowedUrls": [
       "https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908",
-      "https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4",
-      "https://codeload.github.com/mattermost/react-native-paste-input/tar.gz/f260447edc645a817ab1ba7b46d8341d84dba8e9"
+      "https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4"
     ],
     "emptyHostname": false,
     "validatePackageNames": true,
