@@ -9,8 +9,6 @@ import {isIOS} from '#/platform/detection'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
 
-const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
-
 export function StatusBarShadow() {
   const {top: topInset} = useSafeAreaInsets()
   const pagerContext = usePagerHeaderContext()
@@ -46,14 +44,20 @@ function StatusBarShadowInnner({scrollY}: {scrollY: SharedValue<number>}) {
   })
 
   return (
-    <AnimatedLinearGradient
-      colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)']}
+    <Animated.View
       style={[
-        animatedStyle,
         a.absolute,
+        a.top_0,
+        a.left_0,
+        a.right_0,
         a.z_10,
-        {height: topInset, top: 0, left: 0, right: 0},
-      ]}
-    />
+        {height: topInset},
+        animatedStyle,
+      ]}>
+      <LinearGradient
+        colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0)']}
+        style={[a.flex_1]}
+      />
+    </Animated.View>
   )
 }
