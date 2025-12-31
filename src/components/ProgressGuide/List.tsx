@@ -60,7 +60,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
             shape="round"
             label={_(msg`Dismiss getting started guide`)}
             onPress={endProgressGuide}
-            style={[a.bg_transparent]}>
+            style={[a.bg_transparent, {marginTop: -6, marginRight: -6}]}>
             <ButtonIcon icon={Times} size="xs" />
           </Button>
         </View>

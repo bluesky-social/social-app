@@ -55,7 +55,7 @@ function Inner() {
             shape="round"
             label={_(msg`Trending options`)}
             onPress={() => trendingPrompt.open()}
-            style={[a.bg_transparent]}>
+            style={[a.bg_transparent, {marginTop: -6, marginRight: -6}]}>
             <ButtonIcon icon={Ellipsis} size="xs" />
           </Button>
         </View>
