@@ -12,16 +12,13 @@ import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/service-config'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import * as Prompt from '#/components/Prompt'
-import {
-  TrendingTopic,
-  TrendingTopicLink,
-  TrendingTopicSkeleton,
-} from '#/components/TrendingTopics'
+import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
-const TRENDING_LIMIT = 6
+const TRENDING_LIMIT = 5
 
 export function SidebarTrendingTopics() {
   const {enabled} = useTrendingConfig()
@@ -46,22 +43,17 @@ function Inner() {
     <>
       <View
         style={[
-          a.gap_sm,
           a.pt_sm,
           a.pr_sm,
           a.pb_md,
           a.pl_md,
           a.rounded_md,
-          t.atoms.bg_contrast_25,
+          a.border,
+          t.atoms.border_contrast_low,
         ]}>
-        <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-          <Text
-            style={[
-              a.flex_1,
-              a.text_sm,
-              a.font_semi_bold,
-              t.atoms.text_contrast_medium,
-            ]}>
+        <View style={[a.flex_row, a.align_center, a.gap_xs, a.pb_sm]}>
+          <TrendingIcon width={16} height={16} fill={t.atoms.text.color} />
+          <Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
             <Trans>Trending</Trans>
           </Text>
           <Button
@@ -69,37 +61,64 @@ function Inner() {
             size="tiny"
             color="secondary"
             shape="round"
-            label={_(msg`Hide trending topics`)}
+            label={_(msg`Trending options`)}
             onPress={() => trendingPrompt.open()}
             style={[a.bg_transparent]}>
-            <ButtonIcon icon={X} size="xs" />
+            <ButtonIcon icon={Ellipsis} size="xs" />
           </Button>
         </View>
 
-        <View
-          style={[a.flex_row, a.flex_wrap, {gap: '6px 4px', marginLeft: -4}]}>
+        <View style={[a.gap_sm]}>
           {isLoading ? (
             Array(TRENDING_LIMIT)
               .fill(0)
               .map((_n, i) => (
-                <TrendingTopicSkeleton key={i} size="small" index={i} />
+                <View key={i} style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <Text
+                    style={[
+                      a.text_sm,
+                      t.atoms.text_contrast_low,
+                      {minWidth: 16},
+                    ]}>
+                    {i + 1}.
+                  </Text>
+                  <View
+                    style={[
+                      a.rounded_xs,
+                      t.atoms.bg_contrast_50,
+                      {height: 14, width: i % 2 === 0 ? 80 : 100},
+                    ]}
+                  />
+                </View>
               ))
           ) : !trending?.topics ? null : (
             <>
-              {trending.topics.slice(0, TRENDING_LIMIT).map(topic => (
+              {trending.topics.slice(0, TRENDING_LIMIT).map((topic, i) => (
                 <TrendingTopicLink
                   key={topic.link}
                   topic={topic}
-                  style={a.rounded_full}
                   onPress={() => {
                     logEvent('trendingTopic:click', {context: 'sidebar'})
                   }}>
                   {({hovered}) => (
-                    <TrendingTopic
-                      size="small"
-                      topic={topic}
-                      hovered={hovered}
-                    />
+                    <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                      <Text
+                        style={[
+                          a.text_sm,
+                          t.atoms.text_contrast_low,
+                          {minWidth: 16},
+                        ]}>
+                        {i + 1}.
+                      </Text>
+                      <Text
+                        style={[
+                          a.text_sm,
+                          hovered ? t.atoms.text : t.atoms.text_contrast_medium,
+                        ]}
+                        numberOfLines={1}>
+                        {topic.displayName ?? topic.topic}
+                      </Text>
+                    </View>
                   )}
                 </TrendingTopicLink>
               ))}
