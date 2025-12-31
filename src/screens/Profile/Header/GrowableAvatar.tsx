@@ -1,6 +1,5 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {
-  Extrapolation,
   interpolate,
   type SharedValue,
   useAnimatedStyle,
@@ -24,30 +23,28 @@ export function GrowableAvatar({
     return <View style={style}>{children}</View>
   }
 
-  const {scrollY} = pagerContext
+  const {clampedScrollY} = pagerContext
 
   return (
-    <GrowableAvatarInner scrollY={scrollY} style={style}>
+    <GrowableAvatarInner clampedScrollY={clampedScrollY} style={style}>
       {children}
     </GrowableAvatarInner>
   )
 }
 
 function GrowableAvatarInner({
-  scrollY,
+  clampedScrollY,
   children,
   style,
 }: {
-  scrollY: SharedValue<number>
+  clampedScrollY: SharedValue<number>
   children: React.ReactNode
   style?: StyleProp<ViewStyle>
 }) {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(scrollY.get(), [-150, 0], [1.2, 1], {
-          extrapolateRight: Extrapolation.CLAMP,
-        }),
+        scale: interpolate(clampedScrollY.get(), [-150, 0], [1.2, 1]),
       },
     ],
   }))
