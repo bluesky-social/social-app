@@ -98,7 +98,11 @@ function GrowableBannerInner({
         Extrapolation.CLAMP,
       ),
       transform: [
-        {translateY: interpolate(scrollYValue, [-150, 0], [-75, 0])},
+        {
+          translateY: interpolate(scrollYValue, [-150, 0], [-75, 0], {
+            extrapolateRight: Extrapolation.CLAMP,
+          }),
+        },
         {rotate: '90deg'},
       ],
     }
