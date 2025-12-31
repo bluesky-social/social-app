@@ -42,16 +42,8 @@ function Inner() {
   return error || noTopics ? null : (
     <>
       <View
-        style={[
-          a.pt_sm,
-          a.pr_sm,
-          a.pb_md,
-          a.pl_md,
-          a.rounded_md,
-          a.border,
-          t.atoms.border_contrast_low,
-        ]}>
-        <View style={[a.flex_row, a.align_center, a.gap_xs, a.pb_sm]}>
+        style={[a.p_lg, a.rounded_md, a.border, t.atoms.border_contrast_low]}>
+        <View style={[a.flex_row, a.align_center, a.gap_xs, a.pb_md]}>
           <TrendingIcon width={16} height={16} fill={t.atoms.text.color} />
           <Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
             <Trans>Trending</Trans>
