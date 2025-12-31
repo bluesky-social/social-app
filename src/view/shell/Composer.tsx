@@ -1,52 +1,44 @@
 import {useEffect} from 'react'
-import {Animated, Easing} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
+import Animated, {
+  Easing,
+  SlideInDown,
+  SlideOutDown,
+} from 'react-native-reanimated'
 
-import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {useComposerState} from '#/state/shell/composer'
+import {ComposePost} from '#/view/com/composer/Composer'
 import {atoms as a, useTheme} from '#/alf'
-import {ComposePost} from '../com/composer/Composer'
 
-export function Composer({winHeight}: {winHeight: number}) {
+export function Composer() {
   const state = useComposerState()
   const t = useTheme()
-  const initInterp = useAnimatedValue(0)
+
+  const open = !!state
 
   useEffect(() => {
-    if (state) {
-      Animated.timing(initInterp, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.out(Easing.exp),
-        useNativeDriver: true,
-      }).start()
-    } else {
-      initInterp.setValue(0)
+    if (open) {
+      const entry = SystemBars.pushStackEntry({
+        style: {
+          statusBar: t.name !== 'light' ? 'light' : 'dark',
+        },
+      })
+      return () => SystemBars.popStackEntry(entry)
     }
-  }, [initInterp, state])
-  const wrapperAnimStyle = {
-    transform: [
-      {
-        translateY: initInterp.interpolate({
-          inputRange: [0, 1],
-          outputRange: [winHeight, 0],
-        }),
-      },
-    ],
-  }
+  }, [open, t.name])
 
   useEnableKeyboardController(!!state)
 
-  // rendering
-  // =
-
-  if (!state) {
+  if (!open) {
     return null
   }
 
   return (
     <Animated.View
-      style={[a.absolute, a.inset_0, t.atoms.bg, wrapperAnimStyle]}
+      style={[a.absolute, a.inset_0, t.atoms.bg]}
+      entering={SlideInDown.duration(300).easing(Easing.out(Easing.exp))}
+      exiting={SlideOutDown.duration(200).easing(Easing.in(Easing.quad))}
       aria-modal
       accessibilityViewIsModal>
       <ComposePost
