@@ -14,8 +14,8 @@ export function StatusBarShadow() {
   const pagerContext = usePagerHeaderContext()
 
   if (isIOS && pagerContext) {
-    const {scrollY} = pagerContext
-    return <StatusBarShadowInnner scrollY={scrollY} />
+    const {clampedScrollY} = pagerContext
+    return <StatusBarShadowInnner clampedScrollY={clampedScrollY} />
   }
 
   return (
@@ -30,14 +30,18 @@ export function StatusBarShadow() {
   )
 }
 
-function StatusBarShadowInnner({scrollY}: {scrollY: SharedValue<number>}) {
+function StatusBarShadowInnner({
+  clampedScrollY,
+}: {
+  clampedScrollY: SharedValue<number>
+}) {
   const {top: topInset} = useSafeAreaInsets()
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: Math.min(0, scrollY.get()),
+          translateY: Math.min(0, clampedScrollY.get()),
         },
       ],
     }

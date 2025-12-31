@@ -44,32 +44,37 @@ export function GrowableBanner({
     )
   }
 
-  const {scrollY} = pagerContext
+  const {clampedScrollY} = pagerContext
 
   return (
-    <GrowableBannerInner scrollY={scrollY} backButton={backButton}>
+    <GrowableBannerInner
+      clampedScrollY={clampedScrollY}
+      backButton={backButton}>
       {children}
     </GrowableBannerInner>
   )
 }
 
 function GrowableBannerInner({
-  scrollY,
+  clampedScrollY,
   backButton,
   children,
 }: {
-  scrollY: SharedValue<number>
+  clampedScrollY: SharedValue<number>
   backButton?: React.ReactNode
   children: React.ReactNode
 }) {
   const {top: topInset} = useSafeAreaInsets()
   const isFetching = useIsProfileFetching()
-  const animateSpinner = useShouldAnimateSpinner({isFetching, scrollY})
+  const animateSpinner = useShouldAnimateSpinner({
+    isFetching,
+    clampedScrollY,
+  })
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(scrollY.get(), [-150, 0], [2, 1], {
+        scale: interpolate(clampedScrollY.get(), [-150, 0], [2, 1], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },
@@ -79,7 +84,7 @@ function GrowableBannerInner({
   const animatedBlurViewProps = useAnimatedProps(() => {
     return {
       intensity: interpolate(
-        scrollY.get(),
+        clampedScrollY.get(),
         [-300, -65, -15],
         [50, 40, 0],
         Extrapolation.CLAMP,
@@ -88,7 +93,7 @@ function GrowableBannerInner({
   })
 
   const animatedSpinnerStyle = useAnimatedStyle(() => {
-    const scrollYValue = scrollY.get()
+    const scrollYValue = clampedScrollY.get()
     return {
       display: scrollYValue < 0 ? 'flex' : 'none',
       opacity: interpolate(
@@ -98,11 +103,7 @@ function GrowableBannerInner({
         Extrapolation.CLAMP,
       ),
       transform: [
-        {
-          translateY: interpolate(scrollYValue, [-150, 0], [-75, 0], {
-            extrapolateRight: Extrapolation.CLAMP,
-          }),
-        },
+        {translateY: interpolate(scrollYValue, [-150, 0], [-75, 0])},
         {rotate: '90deg'},
       ],
     }
@@ -111,9 +112,7 @@ function GrowableBannerInner({
   const animatedBackButtonStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: interpolate(scrollY.get(), [-150, 10], [-150, 10], {
-          extrapolateRight: Extrapolation.CLAMP,
-        }),
+        translateY: Math.max(-150, Math.min(10, clampedScrollY.get())),
       },
     ],
   }))
@@ -172,10 +171,10 @@ function useIsProfileFetching() {
 
 function useShouldAnimateSpinner({
   isFetching,
-  scrollY,
+  clampedScrollY,
 }: {
   isFetching: boolean
-  scrollY: SharedValue<number>
+  clampedScrollY: SharedValue<number>
 }) {
   const [isOverscrolled, setIsOverscrolled] = useState(false)
   // HACK: it reports a scroll pos of 0 for a tick when fetching finishes
@@ -183,13 +182,13 @@ function useShouldAnimateSpinner({
   const stickyIsOverscrolled = useStickyToggle(isOverscrolled, 10)
 
   useAnimatedReaction(
-    () => scrollY.get() < -5,
+    () => clampedScrollY.get() < -5,
     (value, prevValue) => {
       if (value !== prevValue) {
         runOnJS(setIsOverscrolled)(value)
       }
     },
-    [scrollY],
+    [clampedScrollY],
   )
 
   const [isAnimating, setIsAnimating] = useState(isFetching)
