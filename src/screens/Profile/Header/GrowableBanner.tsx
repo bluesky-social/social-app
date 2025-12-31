@@ -74,7 +74,9 @@ function GrowableBannerInner({
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(clampedScrollY.get(), [-150, 0], [2, 1]),
+        scale: interpolate(clampedScrollY.get(), [-150, 0], [2, 1], {
+          extrapolateRight: Extrapolation.CLAMP,
+        }),
       },
     ],
   }))
