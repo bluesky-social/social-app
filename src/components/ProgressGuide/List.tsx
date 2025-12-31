@@ -9,7 +9,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useLayoutBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Person_Stroke2_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
@@ -46,11 +46,8 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
           a.gap_md,
           a.rounded_md,
           t.atoms.bg_contrast_25,
+          a.p_lg,
           style,
-          a.pt_sm,
-          a.pr_sm,
-          a.pb_md,
-          a.pl_md,
         ]}>
         <View style={[a.flex_row, a.align_center, a.justify_between]}>
           <Text style={[t.atoms.text, a.font_semi_bold, a.text_md]}>
@@ -97,8 +94,12 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
 
 function StackedAvatars({follows}: {follows?: {avatar?: string}[]}) {
   const t = useTheme()
-  const avatarSize = 38
-  const overlap = 11
+  const {centerColumnOffset} = useLayoutBreakpoints()
+
+  // Smaller avatars for narrower viewport
+  const avatarSize = centerColumnOffset ? 30 : 37
+  const overlap = centerColumnOffset ? 9 : 11
+  const iconSize = centerColumnOffset ? 14 : 18
 
   // Use actual follows count, not the guide's event counter
   const followedAvatars = follows?.slice(0, TOTAL_AVATARS) ?? []
@@ -151,8 +152,8 @@ function StackedAvatars({follows}: {follows?: {avatar?: string}[]}) {
               },
             ]}>
             <PersonIcon
-              width={18}
-              height={18}
+              width={iconSize}
+              height={iconSize}
               fill={t.atoms.text_contrast_low.color}
             />
           </View>
