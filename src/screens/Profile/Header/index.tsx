@@ -4,6 +4,7 @@ import Animated, {
   runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -122,7 +123,18 @@ const MinimalHeader = memo(function MinimalHeader({
   const [minimalHeaderHeight, setMinimalHeaderHeight] = useState(insets.top)
   const isScreenFocused = useIsFocused()
   if (!ctx) throw new Error('MinimalHeader cannot be used on web')
-  const {scrollY, headerHeight} = ctx
+  const {scrollY, clampedScrollY, headerHeight} = ctx
+
+  // similar to clampedScrollY but with a different threshold
+  // clamping outside of the animated style means it only updates
+  // when the it needs to, rather than on every scrollY change -sfn
+  const minHeaderTranslate = useDerivedValue(() => {
+    if (!_WORKLET || minimalHeaderHeight === 0) {
+      return 0
+    }
+
+    return Math.min(scrollY.get(), headerHeight - minimalHeaderHeight)
+  })
 
   const animatedStyle = useAnimatedStyle(() => {
     // if we don't yet have the min header height in JS, hide
@@ -132,26 +144,17 @@ const MinimalHeader = memo(function MinimalHeader({
       }
     }
 
-    const scrollYValue = scrollY.get()
-
-    const pastThreshold = scrollYValue > 100
+    const pastThreshold = clampedScrollY.get() >= 100
     return {
       opacity: pastThreshold
-        ? withTiming(1, {duration: 75})
-        : withTiming(0, {duration: 75}),
-      transform: [
-        {
-          translateY: Math.min(
-            scrollYValue,
-            headerHeight - minimalHeaderHeight,
-          ),
-        },
-      ],
+        ? withTiming(1, {duration: 100})
+        : withTiming(0, {duration: 100}),
+      transform: [{translateY: minHeaderTranslate.get()}],
     }
   })
 
   useAnimatedReaction(
-    () => scrollY.get() > 100,
+    () => clampedScrollY.get() >= 100,
     (value, prev) => {
       if (prev !== value) {
         runOnJS(setVisible)(value)
