@@ -1454,12 +1454,7 @@ function ComposerTopBar({
             color="primary"
             shape="default"
             size="small"
-            style={[
-              a.rounded_full,
-              a.py_sm,
-              {paddingLeft: 7, paddingRight: 7},
-              a.mr_sm,
-            ]}
+            style={[a.rounded_full, a.py_sm, a.mr_sm]}
             onPress={onPressDrafts}>
             <ButtonText style={[a.text_md]}>
               <Trans>Drafts</Trans>
