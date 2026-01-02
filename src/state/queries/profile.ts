@@ -26,6 +26,7 @@ import {type Shadow} from '#/state/cache/types'
 import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import {RQKEY as PROFILE_FOLLOWS_RQKEY} from '#/state/queries/profile-follows'
 import {
   unstableCacheProfileView,
   useUnstableProfileViewCache,
@@ -247,6 +248,7 @@ export function useProfileFollowMutationQueue(
 ) {
   const agent = useAgent()
   const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
   const followMutation = useProfileFollowMutation(
@@ -282,6 +284,44 @@ export function useProfileFollowMutationQueue(
       updateProfileShadow(queryClient, did, {
         followingUri: finalFollowingUri,
       })
+
+      // Optimistically update profile follows cache for avatar displays
+      if (currentAccount?.did) {
+        queryClient.setQueryData(
+          PROFILE_FOLLOWS_RQKEY(currentAccount.did),
+          (old: any) => {
+            if (!old?.pages?.[0]) return old
+            if (finalFollowingUri) {
+              // Add the followed profile to the beginning
+              const alreadyExists = old.pages[0].follows.some(
+                (f: any) => f.did === profile.did,
+              )
+              if (alreadyExists) return old
+              return {
+                ...old,
+                pages: [
+                  {
+                    ...old.pages[0],
+                    follows: [profile, ...old.pages[0].follows],
+                  },
+                  ...old.pages.slice(1),
+                ],
+              }
+            } else {
+              // Remove the unfollowed profile
+              return {
+                ...old,
+                pages: old.pages.map((page: any) => ({
+                  ...page,
+                  follows: page.follows.filter(
+                    (f: any) => f.did !== profile.did,
+                  ),
+                })),
+              }
+            }
+          },
+        )
+      }
 
       if (finalFollowingUri) {
         agent.app.bsky.graph
