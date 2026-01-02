@@ -42,7 +42,8 @@ export function createSinglePathSVG({
   strokeLinejoin?: 'miter' | 'round' | 'bevel'
 }) {
   return React.forwardRef<Svg, Props>(function LogoImpl(props, ref) {
-    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
+    const {fill, width, height, style, gradient, ...rest} =
+      useCommonSVGProps(props)
 
     const hasStroke = strokeWidth > 0
 
@@ -52,8 +53,8 @@ export function createSinglePathSVG({
         {...rest}
         ref={ref}
         viewBox={viewBox || '0 0 24 24'}
-        width={size}
-        height={size}
+        width={width}
+        height={height}
         style={[style]}>
         {gradient}
         <Path
@@ -71,29 +72,10 @@ export function createSinglePathSVG({
   })
 }
 
-export function createSinglePathSVG2({path}: {path: string}) {
-  return React.forwardRef<Svg, Props>(function LogoImpl(props, ref) {
-    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
-
-    return (
-      <Svg
-        fill="none"
-        {...rest}
-        ref={ref}
-        viewBox="0 0 24 24"
-        width={size}
-        height={size}
-        style={style}>
-        {gradient}
-        <Path fill={fill} fillRule="evenodd" clipRule="evenodd" d={path} />
-      </Svg>
-    )
-  })
-}
-
 export function createMultiPathSVG({paths}: {paths: string[]}) {
   return React.forwardRef<Svg, Props>(function LogoImpl(props, ref) {
-    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
+    const {fill, width, height, style, gradient, ...rest} =
+      useCommonSVGProps(props)
 
     return (
       <Svg
@@ -101,8 +83,8 @@ export function createMultiPathSVG({paths}: {paths: string[]}) {
         {...rest}
         ref={ref}
         viewBox="0 0 24 24"
-        width={size}
-        height={size}
+        width={width}
+        height={height}
         style={[style]}>
         {gradient}
         {paths.map((path, i) => (
