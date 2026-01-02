@@ -11,10 +11,6 @@ export interface UserAddRemoveListsModal {
   onRemove?: (listUri: string) => void
 }
 
-export interface DeleteAccountModal {
-  name: 'delete-account'
-}
-
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
@@ -23,9 +19,6 @@ export interface ContentLanguagesSettingsModal {
  * @deprecated DO NOT ADD NEW MODALS
  */
 export type Modal =
-  // Account
-  | DeleteAccountModal
-
   // Curation
   | ContentLanguagesSettingsModal
 
