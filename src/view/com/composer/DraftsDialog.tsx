@@ -155,7 +155,7 @@ function DraftListItem({
           ]}>
           <UserAvatar avatar={profile?.avatar} size={42} type="user" />
 
-          <View style={[a.flex_1, a.gap_sm, a.pr_md]}>
+          <View style={[a.flex_1, a.gap_xs, a.pr_md]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <Text
                 style={[
