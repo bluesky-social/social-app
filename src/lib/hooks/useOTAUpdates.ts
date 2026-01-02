@@ -80,7 +80,7 @@ export function useApplyPullRequestOTAUpdate() {
     if (res.isAvailable) {
       Alert.alert(
         'Deployment Available',
-        `A deployment of ${channel} is availalble. Applying this deployment may result in a bricked installation, in which case you will need to reinstall the app and may lose local data. Are you sure you want to proceed?`,
+        `A deployment of ${channel} is available. Applying this deployment may result in a bricked installation, in which case you will need to reinstall the app and may lose local data. Are you sure you want to proceed?`,
         [
           {
             text: 'No',
@@ -197,7 +197,7 @@ export function useOTAUpdates() {
     // This is causing a crash when the thread view is open due to
     // `maintainVisibleContentPosition`. See repro repo for more details:
     // https://github.com/mozzius/ota-crash-repro
-    // Old Arch only - re-enable once we're on the New Archictecture! -sfn
+    // Old Arch only - re-enable once we're on the New Architecture! -sfn
     if (isAndroid) return
 
     const subscription = AppState.addEventListener(
