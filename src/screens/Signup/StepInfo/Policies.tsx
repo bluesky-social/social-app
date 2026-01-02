@@ -1,11 +1,11 @@
-import {ReactElement} from 'react'
+import {type ReactElement} from 'react'
 import {View} from 'react-native'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -30,19 +30,17 @@ export const Policies = ({
 
   if (!tos && !pp) {
     return (
-      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <CircleInfo size="md" fill={t.atoms.text_contrast_low.color} />
-
-        <Text style={[t.atoms.text_contrast_medium]}>
+      <View style={[a.gap_sm]}>
+        <Admonition type="info">
           <Trans>
             This service has not provided terms of service or a privacy policy.
           </Trans>
-        </Text>
+        </Admonition>
       </View>
     )
   }
 
-  let els: ReactElement
+  let els: ReactElement<any>
   if (tos && pp) {
     els = (
       <Trans>
@@ -102,16 +100,18 @@ export const Policies = ({
       ) : null}
 
       {under13 ? (
-        <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
-          <Trans>You must be 13 years of age or older to sign up.</Trans>
-        </Text>
+        <Admonition type="error">
+          <Trans>
+            You must be 13 years of age or older to create an account.
+          </Trans>
+        </Admonition>
       ) : needsGuardian ? (
-        <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
+        <Admonition type="warning">
           <Trans>
             If you are not yet an adult according to the laws of your country,
             your parent or legal guardian must read these Terms on your behalf.
           </Trans>
-        </Text>
+        </Admonition>
       ) : undefined}
     </View>
   )

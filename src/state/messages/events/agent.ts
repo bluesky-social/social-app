@@ -1,24 +1,28 @@
-import {BskyAgent, ChatBskyConvoGetLog} from '@atproto/api'
+import {type BskyAgent, type ChatBskyConvoGetLog} from '@atproto/api'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {logger} from '#/logger'
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
+import {
+  isErrorMaybeAppPasswordPermissions,
+  isNetworkError,
+} from '#/lib/strings/errors'
+import {Logger} from '#/logger'
 import {
   BACKGROUND_POLL_INTERVAL,
   DEFAULT_POLL_INTERVAL,
 } from '#/state/messages/events/const'
 import {
-  MessagesEventBusDispatch,
+  type MessagesEventBusDispatch,
   MessagesEventBusDispatchEvent,
   MessagesEventBusErrorCode,
-  MessagesEventBusEvent,
-  MessagesEventBusParams,
+  type MessagesEventBusEvent,
+  type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
-const LOGGER_CONTEXT = 'MessagesEventBus'
+const logger = Logger.create(Logger.Context.DMsAgent)
 
 export class MessagesEventBus {
   private id: string
@@ -65,10 +69,7 @@ export class MessagesEventBus {
     const handle = (event: MessagesEventBusEvent) => {
       if (event.type === 'logs' && options.convoId) {
         const filteredLogs = event.logs.filter(log => {
-          if (
-            typeof log.convoId === 'string' &&
-            log.convoId === options.convoId
-          ) {
+          if ('convoId' in log && log.convoId === options.convoId) {
             return log.convoId === options.convoId
           }
           return false
@@ -93,17 +94,17 @@ export class MessagesEventBus {
   }
 
   background() {
-    logger.debug(`${LOGGER_CONTEXT}: background`, {}, logger.DebugContext.convo)
+    logger.debug(`background`, {})
     this.dispatch({event: MessagesEventBusDispatchEvent.Background})
   }
 
   suspend() {
-    logger.debug(`${LOGGER_CONTEXT}: suspend`, {}, logger.DebugContext.convo)
+    logger.debug(`suspend`, {})
     this.dispatch({event: MessagesEventBusDispatchEvent.Suspend})
   }
 
   resume() {
-    logger.debug(`${LOGGER_CONTEXT}: resume`, {}, logger.DebugContext.convo)
+    logger.debug(`resume`, {})
     this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
   }
 
@@ -210,12 +211,17 @@ export class MessagesEventBus {
       }
       case MessagesEventBusStatus.Error: {
         switch (action.event) {
-          case MessagesEventBusDispatchEvent.UpdatePoll:
-          case MessagesEventBusDispatchEvent.Resume: {
+          case MessagesEventBusDispatchEvent.UpdatePoll: {
             // basically reset
             this.status = MessagesEventBusStatus.Initializing
             this.latestRev = undefined
             this.init()
+            break
+          }
+          case MessagesEventBusDispatchEvent.Resume: {
+            this.status = MessagesEventBusStatus.Ready
+            this.resetPoll()
+            this.emitter.emit('event', {type: 'connect'})
             break
           }
         }
@@ -225,44 +231,43 @@ export class MessagesEventBus {
         break
     }
 
-    logger.debug(
-      `${LOGGER_CONTEXT}: dispatch '${action.event}'`,
-      {
-        id: this.id,
-        prev: prevStatus,
-        next: this.status,
-      },
-      logger.DebugContext.convo,
-    )
+    logger.debug(`dispatch '${action.event}'`, {
+      id: this.id,
+      prev: prevStatus,
+      next: this.status,
+    })
   }
 
   private async init() {
-    logger.debug(`${LOGGER_CONTEXT}: init`, {}, logger.DebugContext.convo)
+    logger.debug(`init`, {})
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.listConvos(
-          {
-            limit: 1,
-          },
+        return this.agent.chat.bsky.convo.getLog(
+          {},
           {headers: DM_SERVICE_HEADERS},
         )
       })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
-      const {convos} = response.data
+      const {cursor} = response.data
 
-      for (const convo of convos) {
-        if (convo.rev > (this.latestRev = this.latestRev || convo.rev)) {
-          this.latestRev = convo.rev
+      // should always be defined
+      if (cursor) {
+        if (!this.latestRev) {
+          this.latestRev = cursor
+        } else if (cursor > this.latestRev) {
+          this.latestRev = cursor
         }
       }
 
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
     } catch (e: any) {
-      logger.error(e, {
-        context: `${LOGGER_CONTEXT}: init failed`,
-      })
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
+        logger.error(`init failed`, {
+          safeMessage: e.message,
+        })
+      }
 
       this.dispatch({
         event: MessagesEventBusDispatchEvent.Error,
@@ -324,18 +329,17 @@ export class MessagesEventBus {
     this.isPolling = true
 
     // logger.debug(
-    //   `${LOGGER_CONTEXT}: poll`,
+    //   `poll`,
     //   {
     //     requestedPollIntervals: Array.from(
     //       this.requestedPollIntervals.values(),
     //     ),
     //   },
-    //   logger.DebugContext.convo,
     // )
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.getLog(
+        return this.agent.chat.bsky.convo.getLog(
           {
             cursor: this.latestRev,
           },
@@ -355,7 +359,7 @@ export class MessagesEventBus {
          * If there's a rev, we should handle it. If there's not a rev, we don't
          * know what it is.
          */
-        if (typeof ev.rev === 'string') {
+        if ('rev' in ev && typeof ev.rev === 'string') {
           /*
            * We only care about new events
            */
@@ -371,16 +375,14 @@ export class MessagesEventBus {
       }
 
       if (needsEmit) {
-        try {
-          this.emitter.emit('event', {type: 'logs', logs: batch})
-        } catch (e: any) {
-          logger.error(e, {
-            context: `${LOGGER_CONTEXT}: process latest events`,
-          })
-        }
+        this.emitter.emit('event', {type: 'logs', logs: batch})
       }
     } catch (e: any) {
-      logger.error(e, {context: `${LOGGER_CONTEXT}: poll events failed`})
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
+        logger.error(`poll events failed`, {
+          safeMessage: e.message,
+        })
+      }
 
       this.dispatch({
         event: MessagesEventBusDispatchEvent.Error,

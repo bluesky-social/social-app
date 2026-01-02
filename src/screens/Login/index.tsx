@@ -1,22 +1,23 @@
-import React from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {KeyboardAvoidingView} from 'react-native'
-import {LayoutAnimationConfig} from 'react-native-reanimated'
+import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
-import {SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount, useSession} from '#/state/session'
 import {useLoggedOutView} from '#/state/shell/logged-out'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {ForgotPasswordForm} from '#/screens/Login/ForgotPasswordForm'
 import {LoginForm} from '#/screens/Login/LoginForm'
 import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
 import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
-import {atoms as a} from '#/alf'
+import {atoms as a, native} from '#/alf'
+import {ScreenTransition} from '#/components/ScreenTransition'
 import {ChooseAccountForm} from './ChooseAccountForm'
-import {ScreenTransition} from './ScreenTransition'
 
 enum Forms {
   Login,
@@ -26,8 +27,18 @@ enum Forms {
   PasswordUpdated,
 }
 
+const OrderedForms = [
+  Forms.ChooseAccount,
+  Forms.Login,
+  Forms.ForgotPassword,
+  Forms.SetNewPassword,
+  Forms.PasswordUpdated,
+] as const
+
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const {_} = useLingui()
+  const failedAttemptCountRef = useRef(0)
+  const startTimeRef = useRef(Date.now())
 
   const {accounts} = useSession()
   const {requestedAccountSwitchTo} = useLoggedOutView()
@@ -35,20 +46,23 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     acc => acc.did === requestedAccountSwitchTo,
   )
 
-  const [error, setError] = React.useState<string>('')
-  const [serviceUrl, setServiceUrl] = React.useState<string>(
+  const [error, setError] = useState('')
+  const [serviceUrl, setServiceUrl] = useState(
     requestedAccount?.service || DEFAULT_SERVICE,
   )
-  const [initialHandle, setInitialHandle] = React.useState<string>(
+  const [initialHandle, setInitialHandle] = useState(
     requestedAccount?.handle || '',
   )
-  const [currentForm, setCurrentForm] = React.useState<Forms>(
+  const [currentForm, setCurrentForm] = useState<Forms>(
     requestedAccount
       ? Forms.Login
       : accounts.length
-      ? Forms.ChooseAccount
-      : Forms.Login,
+        ? Forms.ChooseAccount
+        : Forms.Login,
   )
+  const [screenTransitionDirection, setScreenTransitionDirection] = useState<
+    'Forward' | 'Backward'
+  >('Forward')
 
   const {
     data: serviceDescription,
@@ -61,15 +75,18 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       setServiceUrl(account.service)
     }
     setInitialHandle(account?.handle || '')
-    setCurrentForm(Forms.Login)
+    gotoForm(Forms.Login)
   }
 
   const gotoForm = (form: Forms) => {
     setError('')
+    const index = OrderedForms.indexOf(currentForm)
+    const nextIndex = OrderedForms.indexOf(form)
+    setScreenTransitionDirection(index < nextIndex ? 'Forward' : 'Backward')
     setCurrentForm(form)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (serviceError) {
       setError(
         _(
@@ -79,13 +96,35 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
         error: String(serviceError),
       })
+      logEvent('signin:hostingProviderFailedResolution', {})
     } else {
       setError('')
     }
   }, [serviceError, serviceUrl, _])
 
   const onPressForgotPassword = () => {
-    setCurrentForm(Forms.ForgotPassword)
+    gotoForm(Forms.ForgotPassword)
+    logEvent('signin:forgotPasswordPressed', {})
+  }
+
+  const handlePressBack = () => {
+    onPressBack()
+    setScreenTransitionDirection('Backward')
+    logEvent('signin:backPressed', {
+      failedAttemptsCount: failedAttemptCountRef.current,
+    })
+  }
+
+  const onAttemptSuccess = () => {
+    logEvent('signin:success', {
+      isUsingCustomProvider: serviceUrl !== DEFAULT_SERVICE,
+      timeTakenSeconds: Math.round((Date.now() - startTimeRef.current) / 1000),
+      failedAttemptsCount: failedAttemptCountRef.current,
+    })
+  }
+
+  const onAttemptFailed = () => {
+    failedAttemptCountRef.current += 1
   }
 
   let content = null
@@ -103,9 +142,11 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           serviceDescription={serviceDescription}
           initialHandle={initialHandle}
           setError={setError}
+          onAttemptFailed={onAttemptFailed}
+          onAttemptSuccess={onAttemptSuccess}
           setServiceUrl={setServiceUrl}
           onPressBack={() =>
-            accounts.length ? gotoForm(Forms.ChooseAccount) : onPressBack()
+            accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
           }
           onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={refetchService}
@@ -118,7 +159,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       content = (
         <ChooseAccountForm
           onSelectAccount={onSelectAccount}
-          onPressBack={onPressBack}
+          onPressBack={handlePressBack}
         />
       )
       break
@@ -160,16 +201,22 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   }
 
   return (
-    <KeyboardAvoidingView testID="signIn" behavior="padding" style={a.flex_1}>
-      <LoggedOutLayout
-        leadin=""
-        title={title}
-        description={description}
-        scrollable>
-        <LayoutAnimationConfig skipEntering skipExiting>
-          <ScreenTransition key={currentForm}>{content}</ScreenTransition>
-        </LayoutAnimationConfig>
-      </LoggedOutLayout>
-    </KeyboardAvoidingView>
+    <Animated.View style={a.flex_1} entering={native(FadeIn.duration(90))}>
+      <KeyboardAvoidingView testID="signIn" behavior="padding" style={a.flex_1}>
+        <LoggedOutLayout
+          leadin=""
+          title={title}
+          description={description}
+          scrollable>
+          <LayoutAnimationConfig skipEntering>
+            <ScreenTransition
+              key={currentForm}
+              direction={screenTransitionDirection}>
+              {content}
+            </ScreenTransition>
+          </LayoutAnimationConfig>
+        </LoggedOutLayout>
+      </KeyboardAvoidingView>
+    </Animated.View>
   )
 }

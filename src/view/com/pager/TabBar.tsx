@@ -1,11 +1,16 @@
 import {useCallback} from 'react'
-import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
+import {
+  type LayoutChangeEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import Animated, {
   interpolate,
   runOnJS,
   runOnUI,
   scrollTo,
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
@@ -25,6 +30,7 @@ export interface TabBarProps {
   onPressSelected?: (index: number) => void
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
+  transparent?: boolean
 }
 
 const ITEM_PADDING = 10
@@ -41,6 +47,7 @@ export function TabBar({
   onPressSelected,
   dragProgress,
   dragState,
+  transparent,
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useAnimatedRef<ScrollView>()
@@ -267,15 +274,27 @@ export function TabBar({
         {
           translateX: interpolate(
             dragProgress.get(),
-            layoutsValue.map((l, i) => i),
-            layoutsValue.map(l => l.x + l.width / 2 - contentSize.get() / 2),
+            layoutsValue.map((l, i) => {
+              'worklet'
+              return i
+            }),
+            layoutsValue.map(l => {
+              'worklet'
+              return l.x + l.width / 2 - contentSize.get() / 2
+            }),
           ),
         },
         {
           scaleX: interpolate(
             dragProgress.get(),
-            textLayoutsValue.map((l, i) => i),
-            textLayoutsValue.map((l, i) => getScaleX(i)),
+            textLayoutsValue.map((l, i) => {
+              'worklet'
+              return i
+            }),
+            textLayoutsValue.map((l, i) => {
+              'worklet'
+              return getScaleX(i)
+            }),
           ),
         },
       ],
@@ -296,7 +315,7 @@ export function TabBar({
   return (
     <View
       testID={testID}
-      style={[t.atoms.bg, a.flex_row]}
+      style={[!transparent && t.atoms.bg, a.flex_row]}
       accessibilityRole="tablist">
       <BlockDrawerGesture>
         <ScrollView
@@ -414,7 +433,7 @@ function TabBarItem({
           <Text
             emoji
             testID={testID ? `${testID}-${item}` : undefined}
-            style={[styles.itemText, t.atoms.text, a.text_md, a.font_bold]}
+            style={[styles.itemText, t.atoms.text, a.text_md, a.font_semi_bold]}
             onLayout={handleTextLayout}>
             {item}
           </Text>

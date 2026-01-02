@@ -12,7 +12,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {FeedSourceFeedInfo} from '#/state/queries/feed'
+import {type FeedSourceFeedInfo} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {
   useAddSavedFeedsMutation,
@@ -29,7 +29,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {useRichText} from '#/components/hooks/useRichText'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {
@@ -46,7 +46,10 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import * as Menu from '#/components/Menu'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
@@ -58,14 +61,7 @@ export function ProfileFeedHeaderSkeleton() {
       <Layout.Header.BackButton />
       <Layout.Header.Content>
         <View
-          style={[
-            a.w_full,
-            a.rounded_sm,
-            t.atoms.bg_contrast_25,
-            {
-              height: 44,
-            },
-          ]}
+          style={[a.w_full, a.rounded_sm, t.atoms.bg_contrast_25, {height: 40}]}
         />
       </Layout.Header.Content>
       <Layout.Header.Slot>
@@ -98,9 +94,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const {data: preferences} = usePreferencesQuery()
 
   const [likeUri, setLikeUri] = React.useState(info.likeUri || '')
-  const isLiked = !!likeUri
   const likeCount =
-    isLiked && likeUri ? (info.likeCount || 0) + 1 : info.likeCount || 0
+    (info.likeCount || 0) +
+    (likeUri && !info.likeUri ? 1 : !likeUri && info.likeUri ? -1 : 0)
 
   const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
     useAddSavedFeedsMutation()
@@ -117,13 +113,14 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const isSaved = Boolean(savedFeedConfig)
   const isPinned = Boolean(savedFeedConfig?.pinned)
 
-  const onToggleSaved = React.useCallback(async () => {
+  const onToggleSaved = async () => {
     try {
       playHaptic()
 
       if (savedFeedConfig) {
         await removeFeed(savedFeedConfig)
         Toast.show(_(msg`Removed from your feeds`))
+        logger.metric('feed:unsave', {feedUrl: info.uri})
       } else {
         await addSavedFeeds([
           {
@@ -133,6 +130,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
           },
         ])
         Toast.show(_(msg`Saved to your feeds`))
+        logger.metric('feed:save', {feedUrl: info.uri})
       }
     } catch (err) {
       Toast.show(
@@ -143,9 +141,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
       )
       logger.error('Failed to update feeds', {message: err})
     }
-  }, [_, playHaptic, info, removeFeed, addSavedFeeds, savedFeedConfig])
+  }
 
-  const onTogglePinned = React.useCallback(async () => {
+  const onTogglePinned = async () => {
     try {
       playHaptic()
 
@@ -160,8 +158,10 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
 
         if (pinned) {
           Toast.show(_(msg`Pinned ${info.displayName} to Home`))
+          logger.metric('feed:pin', {feedUrl: info.uri})
         } else {
           Toast.show(_(msg`Unpinned ${info.displayName} from Home`))
+          logger.metric('feed:unpin', {feedUrl: info.uri})
         }
       } else {
         await addSavedFeeds([
@@ -172,12 +172,13 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
           },
         ])
         Toast.show(_(msg`Pinned ${info.displayName} to Home`))
+        logger.metric('feed:pin', {feedUrl: info.uri})
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [playHaptic, info, _, savedFeedConfig, updateSavedFeeds, addSavedFeeds])
+  }
 
   return (
     <>
@@ -233,11 +234,12 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                       <Text
                         style={[
                           a.text_md,
-                          a.font_heavy,
-                          a.leading_tight,
+                          a.font_bold,
+                          a.leading_snug,
                           gtMobile && a.text_lg,
                         ]}
-                        numberOfLines={2}>
+                        numberOfLines={2}
+                        emoji>
                         {info.displayName}
                       </Text>
                       <View style={[a.flex_row, {gap: 6}]}>
@@ -398,16 +400,18 @@ function DialogInner({
   const isLiked = !!likeUri
   const feedRkey = React.useMemo(() => new AtUri(info.uri).rkey, [info.uri])
 
-  const onToggleLiked = React.useCallback(async () => {
+  const onToggleLiked = async () => {
     try {
       playHaptic()
 
       if (isLiked && likeUri) {
         await unlikeFeed({uri: likeUri})
         setLikeUri('')
+        logger.metric('feed:unlike', {feedUrl: info.uri})
       } else {
         const res = await likeFeed({uri: info.uri, cid: info.cid})
         setLikeUri(res.uri)
+        logger.metric('feed:like', {feedUrl: info.uri})
       }
     } catch (err) {
       Toast.show(
@@ -418,12 +422,13 @@ function DialogInner({
       )
       logger.error('Failed to toggle like', {message: err})
     }
-  }, [playHaptic, isLiked, likeUri, unlikeFeed, setLikeUri, likeFeed, info, _])
+  }
 
   const onPressShare = React.useCallback(() => {
     playHaptic()
     const url = toShareUrl(info.route.href)
     shareUrl(url)
+    logger.metric('feed:share', {feedUrl: info.uri})
   }, [info, playHaptic])
 
   const onPressReport = React.useCallback(() => {
@@ -437,12 +442,13 @@ function DialogInner({
 
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
-            style={[a.text_2xl, a.font_heavy, a.leading_tight]}
-            numberOfLines={2}>
+            style={[a.text_2xl, a.font_bold, a.leading_tight]}
+            numberOfLines={2}
+            emoji>
             {info.displayName}
           </Text>
           <Text
-            style={[a.text_sm, a.leading_tight, t.atoms.text_contrast_medium]}
+            style={[a.text_sm, a.leading_relaxed, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
             <Trans>
               By{' '}
@@ -452,12 +458,7 @@ function DialogInner({
                   did: info.creatorDid,
                   handle: info.creatorHandle,
                 })}
-                style={[
-                  a.text_sm,
-                  a.leading_tight,
-                  a.underline,
-                  t.atoms.text_contrast_medium,
-                ]}
+                style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}
                 numberOfLines={1}
                 onPress={() => control.close()}>
                 {sanitizeHandle(info.creatorHandle, '@')}
@@ -477,7 +478,7 @@ function DialogInner({
         </Button>
       </View>
 
-      <RichText value={rt} style={[a.text_md, a.leading_snug]} />
+      <RichText value={rt} style={[a.text_md]} />
 
       <View style={[a.flex_row, a.gap_sm, a.align_center]}>
         {typeof likeCount === 'number' && (
@@ -498,7 +499,7 @@ function DialogInner({
           <View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
             <Button
               disabled={isLikePending || isUnlikePending}
-              label={_(msg`Like feed`)}
+              label={_(msg`Like this feed`)}
               size="small"
               variant="solid"
               color="secondary"
@@ -551,14 +552,15 @@ function DialogInner({
               </Button>
             </View>
 
-            <ReportDialog
-              control={reportDialogControl}
-              params={{
-                type: 'feedgen',
-                uri: info.uri,
-                cid: info.cid,
-              }}
-            />
+            {info.view && (
+              <ReportDialog
+                control={reportDialogControl}
+                subject={{
+                  ...info.view,
+                  $type: 'app.bsky.feed.defs#generatorView',
+                }}
+              />
+            )}
           </View>
         </>
       )}

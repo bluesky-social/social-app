@@ -1,11 +1,10 @@
 import React, {useCallback, useMemo, useState} from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyActorDefs,
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   moderateProfile,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -43,12 +42,22 @@ import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import type * as bsky from '#/types/bsky'
+
+export const ChatListItemPortal = createPortalGroup()
 
 export let ChatListItem = ({
   convo,
+  showMenu = true,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
+  showMenu?: boolean
+  children?: React.ReactNode
 }): React.ReactNode => {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -66,7 +75,9 @@ export let ChatListItem = ({
       convo={convo}
       profile={otherUser}
       moderationOpts={moderationOpts}
-    />
+      showMenu={showMenu}>
+      {children}
+    </ChatListItemReady>
   )
 }
 
@@ -76,10 +87,14 @@ function ChatListItemReady({
   convo,
   profile: profileUnshadowed,
   moderationOpts,
+  showMenu,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  showMenu?: boolean
+  children?: React.ReactNode
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -96,6 +111,9 @@ function ChatListItemReady({
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
   const isUnread = convo.unreadCount > 0
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const blockInfo = useMemo(() => {
     const modui = moderation.ui('profileView')
@@ -175,9 +193,63 @@ function ChatListItemReady({
         lastMessageSentAt = convo.lastMessage.sentAt
       }
       if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
+        lastMessageSentAt = convo.lastMessage.sentAt
+
         lastMessage = isDeletedAccount
           ? _(msg`Conversation deleted`)
           : _(msg`Message deleted`)
+      }
+
+      if (ChatBskyConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
+        if (
+          !lastMessageSentAt ||
+          new Date(lastMessageSentAt) <
+            new Date(convo.lastReaction.reaction.createdAt)
+        ) {
+          const isFromMe =
+            convo.lastReaction.reaction.sender.did === currentAccount?.did
+          const lastMessageText = convo.lastReaction.message.text
+          const fallbackMessage = _(
+            msg({
+              message: 'a message',
+              comment: `If last message does not contain text, fall back to "{user} reacted to {a message}"`,
+            }),
+          )
+
+          if (isFromMe) {
+            lastMessage = _(
+              msg`You reacted ${convo.lastReaction.reaction.value} to ${
+                lastMessageText
+                  ? `"${convo.lastReaction.message.text}"`
+                  : fallbackMessage
+              }`,
+            )
+          } else {
+            const senderDid = convo.lastReaction.reaction.sender.did
+            const sender = convo.members.find(
+              member => member.did === senderDid,
+            )
+            if (sender) {
+              lastMessage = _(
+                msg`${sanitizeDisplayName(
+                  sender.displayName || sender.handle,
+                )} reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            } else {
+              lastMessage = _(
+                msg`Someone reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            }
+          }
+        }
       }
 
       return {
@@ -185,7 +257,14 @@ function ChatListItemReady({
         lastMessageSentAt,
         latestReportableMessage,
       }
-    }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
+    }, [
+      _,
+      convo.lastMessage,
+      convo.lastReaction,
+      currentAccount?.did,
+      isDeletedAccount,
+      convo.members,
+    ])
 
   const [showActions, setShowActions] = useState(false)
 
@@ -252,192 +331,218 @@ function ChatListItemReady({
         leftFirst: deleteAction,
       }
 
+  const hasUnread = convo.unreadCount > 0 && !isDeletedAccount
+
   return (
-    <GestureActionView actions={actions}>
-      <View
-        // @ts-expect-error web only
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onFocus={onFocus}
-        onBlur={onMouseLeave}
-        style={[a.relative, t.atoms.bg]}>
+    <ChatListItemPortal.Provider>
+      <GestureActionView actions={actions}>
         <View
-          style={[
-            a.z_10,
-            a.absolute,
-            {top: tokens.space.md, left: tokens.space.lg},
-          ]}>
-          <PreviewableUserAvatar
-            profile={profile}
-            size={52}
-            moderation={moderation.ui('avatar')}
-          />
-        </View>
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          // @ts-expect-error web only
+          onFocus={onFocus}
+          onBlur={onMouseLeave}
+          style={[a.relative, t.atoms.bg]}>
+          <View
+            style={[
+              a.z_10,
+              a.absolute,
+              {top: tokens.space.md, left: tokens.space.lg},
+            ]}>
+            <PreviewableUserAvatar
+              profile={profile}
+              size={52}
+              moderation={moderation.ui('avatar')}
+            />
+          </View>
 
-        <Link
-          to={`/messages/${convo.id}`}
-          label={displayName}
-          accessibilityHint={
-            !isDeletedAccount
-              ? _(msg`Go to conversation with ${profile.handle}`)
-              : _(
-                  msg`This conversation is with a deleted or a deactivated account. Press for options.`,
-                )
-          }
-          accessibilityActions={
-            isNative
-              ? [
-                  {name: 'magicTap', label: _(msg`Open conversation options`)},
-                  {name: 'longpress', label: _(msg`Open conversation options`)},
-                ]
-              : undefined
-          }
-          onPress={onPress}
-          onLongPress={isNative ? onLongPress : undefined}
-          onAccessibilityAction={onLongPress}>
-          {({hovered, pressed, focused}) => (
-            <View
-              style={[
-                a.flex_row,
-                isDeletedAccount ? a.align_center : a.align_start,
-                a.flex_1,
-                a.px_lg,
-                a.py_md,
-                a.gap_md,
-                (hovered || pressed || focused) && t.atoms.bg_contrast_25,
-                t.atoms.border_contrast_low,
-              ]}>
-              {/* Avatar goes here */}
-              <View style={{width: 52, height: 52}} />
-
+          <Link
+            to={`/messages/${convo.id}`}
+            label={displayName}
+            accessibilityHint={
+              !isDeletedAccount
+                ? _(msg`Go to conversation with ${profile.handle}`)
+                : _(
+                    msg`This conversation is with a deleted or a deactivated account. Press for options`,
+                  )
+            }
+            accessibilityActions={
+              isNative
+                ? [
+                    {
+                      name: 'magicTap',
+                      label: _(msg`Open conversation options`),
+                    },
+                    {
+                      name: 'longpress',
+                      label: _(msg`Open conversation options`),
+                    },
+                  ]
+                : undefined
+            }
+            onPress={onPress}
+            onLongPress={isNative ? onLongPress : undefined}
+            onAccessibilityAction={onLongPress}>
+            {({hovered, pressed, focused}) => (
               <View
-                style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
-                <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
-                  <Text
-                    numberOfLines={1}
-                    style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
+                style={[
+                  a.flex_row,
+                  isDeletedAccount ? a.align_center : a.align_start,
+                  a.flex_1,
+                  a.px_lg,
+                  a.py_md,
+                  a.gap_md,
+                  (hovered || pressed || focused) && t.atoms.bg_contrast_25,
+                ]}>
+                {/* Avatar goes here */}
+                <View style={{width: 52, height: 52}} />
+
+                <View
+                  style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
+                  <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
+                    <View style={[a.flex_shrink]}>
+                      <Text
+                        emoji
+                        numberOfLines={1}
+                        style={[
+                          a.text_md,
+                          t.atoms.text,
+                          a.font_semi_bold,
+                          {lineHeight: 21},
+                          isDimStyle && t.atoms.text_contrast_medium,
+                        ]}>
+                        {displayName}
+                      </Text>
+                    </View>
+                    {verification.showBadge && (
+                      <View style={[a.pl_xs, a.self_center]}>
+                        <VerificationCheck
+                          width={14}
+                          verifier={verification.role === 'verifier'}
+                        />
+                      </View>
+                    )}
+                    {lastMessageSentAt && (
+                      <View style={[a.pl_xs]}>
+                        <TimeElapsed timestamp={lastMessageSentAt}>
+                          {({timeElapsed}) => (
+                            <Text
+                              style={[
+                                a.text_sm,
+                                {lineHeight: 21},
+                                t.atoms.text_contrast_medium,
+                                web({whiteSpace: 'preserve nowrap'}),
+                              ]}>
+                              &middot; {timeElapsed}
+                            </Text>
+                          )}
+                        </TimeElapsed>
+                      </View>
+                    )}
+                    {(convo.muted || moderation.blocked) && (
+                      <Text
+                        style={[
+                          a.text_sm,
+                          {lineHeight: 21},
+                          t.atoms.text_contrast_medium,
+                          web({whiteSpace: 'preserve nowrap'}),
+                        ]}>
+                        {' '}
+                        &middot;{' '}
+                        <BellStroke
+                          size="xs"
+                          style={[t.atoms.text_contrast_medium]}
+                        />
+                      </Text>
+                    )}
+                  </View>
+
+                  {!isDeletedAccount && (
                     <Text
-                      emoji
-                      style={[
-                        a.text_md,
-                        t.atoms.text,
-                        a.font_bold,
-                        {lineHeight: 21},
-                        isDimStyle && t.atoms.text_contrast_medium,
-                      ]}>
-                      {displayName}
-                    </Text>
-                  </Text>
-                  {lastMessageSentAt && (
-                    <TimeElapsed timestamp={lastMessageSentAt}>
-                      {({timeElapsed}) => (
-                        <Text
-                          style={[
-                            a.text_sm,
-                            {lineHeight: 21},
-                            t.atoms.text_contrast_medium,
-                            web({whiteSpace: 'preserve nowrap'}),
-                          ]}>
-                          {' '}
-                          &middot; {timeElapsed}
-                        </Text>
-                      )}
-                    </TimeElapsed>
-                  )}
-                  {(convo.muted || moderation.blocked) && (
-                    <Text
+                      numberOfLines={1}
                       style={[
                         a.text_sm,
-                        {lineHeight: 21},
                         t.atoms.text_contrast_medium,
-                        web({whiteSpace: 'preserve nowrap'}),
+                        a.pb_xs,
                       ]}>
-                      {' '}
-                      &middot;{' '}
-                      <BellStroke
-                        size="xs"
-                        style={[t.atoms.text_contrast_medium]}
-                      />
+                      @{profile.handle}
                     </Text>
                   )}
+
+                  <Text
+                    emoji
+                    numberOfLines={2}
+                    style={[
+                      a.text_sm,
+                      a.leading_snug,
+                      hasUnread ? a.font_semi_bold : t.atoms.text_contrast_high,
+                      isDimStyle && t.atoms.text_contrast_medium,
+                    ]}>
+                    {lastMessage}
+                  </Text>
+
+                  <PostAlerts
+                    modui={moderation.ui('contentList')}
+                    size="lg"
+                    style={[a.pt_xs]}
+                  />
+
+                  {children}
                 </View>
 
-                {!isDeletedAccount && (
-                  <Text
-                    numberOfLines={1}
-                    style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
-                    @{profile.handle}
-                  </Text>
+                {hasUnread && (
+                  <View
+                    style={[
+                      a.absolute,
+                      a.rounded_full,
+                      {
+                        backgroundColor: isDimStyle
+                          ? t.palette.contrast_200
+                          : t.palette.primary_500,
+                        height: 7,
+                        width: 7,
+                        top: 15,
+                        right: 12,
+                      },
+                    ]}
+                  />
                 )}
-
-                <Text
-                  emoji
-                  numberOfLines={2}
-                  style={[
-                    a.text_sm,
-                    a.leading_snug,
-                    convo.unreadCount > 0
-                      ? a.font_bold
-                      : t.atoms.text_contrast_high,
-                    isDimStyle && t.atoms.text_contrast_medium,
-                  ]}>
-                  {lastMessage}
-                </Text>
-
-                <PostAlerts
-                  modui={moderation.ui('contentList')}
-                  size="lg"
-                  style={[a.pt_xs]}
-                />
               </View>
+            )}
+          </Link>
 
-              {convo.unreadCount > 0 && (
-                <View
-                  style={[
-                    a.absolute,
-                    a.rounded_full,
-                    {
-                      backgroundColor: isDimStyle
-                        ? t.palette.contrast_200
-                        : t.palette.primary_500,
-                      height: 7,
-                      width: 7,
-                      top: 15,
-                      right: 12,
-                    },
-                  ]}
-                />
-              )}
-            </View>
+          <ChatListItemPortal.Outlet />
+
+          {showMenu && (
+            <ConvoMenu
+              convo={convo}
+              profile={profile}
+              control={menuControl}
+              currentScreen="list"
+              showMarkAsRead={convo.unreadCount > 0}
+              hideTrigger={isNative}
+              blockInfo={blockInfo}
+              style={[
+                a.absolute,
+                a.h_full,
+                a.self_end,
+                a.justify_center,
+                {
+                  right: tokens.space.lg,
+                  opacity:
+                    !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
+                },
+              ]}
+              latestReportableMessage={latestReportableMessage}
+            />
           )}
-        </Link>
-
-        <ConvoMenu
-          convo={convo}
-          profile={profile}
-          control={menuControl}
-          currentScreen="list"
-          showMarkAsRead={convo.unreadCount > 0}
-          hideTrigger={isNative}
-          blockInfo={blockInfo}
-          style={[
-            a.absolute,
-            a.h_full,
-            a.self_end,
-            a.justify_center,
-            {
-              right: tokens.space.lg,
-              opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
-            },
-          ]}
-          latestReportableMessage={latestReportableMessage}
-        />
-        <LeaveConvoPrompt
-          control={leaveConvoControl}
-          convoId={convo.id}
-          currentScreen="list"
-        />
-      </View>
-    </GestureActionView>
+          <LeaveConvoPrompt
+            control={leaveConvoControl}
+            convoId={convo.id}
+            currentScreen="list"
+          />
+        </View>
+      </GestureActionView>
+    </ChatListItemPortal.Provider>
   )
 }

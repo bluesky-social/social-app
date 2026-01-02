@@ -3,11 +3,11 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   AppBskyEmbedVideo,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  ModerationDecision,
+  type ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -15,7 +15,7 @@ import {useLingui} from '@lingui/react'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
+import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useTheme} from '#/alf'
 import {BLUE_HUE} from '#/alf/util/colorGeneration'
 import {select} from '#/alf/util/themeSelector'
@@ -27,6 +27,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {
   return select(t.name, {
@@ -78,7 +79,12 @@ export function VideoPostCard({
   if (!AppBskyEmbedVideo.isView(embed)) return null
 
   const author = post.author
-  const text = AppBskyFeedPost.isRecord(post.record) ? post.record?.text : ''
+  const text = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
+    ? post.record?.text
+    : ''
   const likeCount = post?.likeCount ?? 0
   const repostCount = post?.repostCount ?? 0
   const {thumbnail} = embed
@@ -112,7 +118,7 @@ export function VideoPostCard({
 
   return (
     <Link
-      accessibilityHint={_(msg`Tap to view video in immersive mode.`)}
+      accessibilityHint={_(msg`Views video in immersive mode`)}
       label={_(msg`Video from ${author.handle}: ${text}`)}
       to={{
         screen: 'VideoFeed',
@@ -221,7 +227,8 @@ export function VideoPostCard({
                   {likeCount > 0 && (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                       <Heart size="sm" fill="white" />
-                      <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
+                      <Text
+                        style={[a.text_sm, a.font_semi_bold, {color: 'white'}]}>
                         {formatCount(i18n, likeCount)}
                       </Text>
                     </View>
@@ -229,7 +236,8 @@ export function VideoPostCard({
                   {repostCount > 0 && (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                       <Repost size="sm" fill="white" />
-                      <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
+                      <Text
+                        style={[a.text_sm, a.font_semi_bold, {color: 'white'}]}>
                         {formatCount(i18n, repostCount)}
                       </Text>
                     </View>
@@ -384,6 +392,7 @@ export function CompactVideoPostCard({
   if (!AppBskyEmbedVideo.isView(embed)) return null
 
   const likeCount = post?.likeCount ?? 0
+  const showLikeCount = false
   const {thumbnail} = embed
   const black = getBlackColor(t)
 
@@ -404,6 +413,7 @@ export function CompactVideoPostCard({
       onPressOut={onPressOut}
       style={[
         a.flex_col,
+        t.atoms.shadow_sm,
         {
           alignItems: undefined,
           justifyContent: undefined,
@@ -414,8 +424,10 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_md,
+              a.rounded_lg,
               a.overflow_hidden,
+              a.border,
+              t.atoms.border_contrast_low,
               {
                 backgroundColor: black,
                 aspectRatio: 9 / 16,
@@ -436,6 +448,8 @@ export function CompactVideoPostCard({
                   a.inset_0,
                   a.justify_center,
                   a.align_center,
+                  a.border,
+                  t.atoms.border_contrast_low,
                   {
                     backgroundColor: 'black',
                     opacity: 0.2,
@@ -455,8 +469,10 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_md,
+              a.rounded_lg,
               a.overflow_hidden,
+              a.border,
+              t.atoms.border_contrast_low,
               {
                 backgroundColor: black,
                 aspectRatio: 9 / 16,
@@ -469,47 +485,55 @@ export function CompactVideoPostCard({
             />
             <MediaInsetBorder />
 
-            <View style={[a.absolute, a.inset_0]}>
+            <View style={[a.absolute, a.inset_0, t.atoms.shadow_sm]}>
               <View style={[a.absolute, a.inset_0, a.p_sm, {bottom: 'auto'}]}>
                 <View
-                  style={[a.relative, a.rounded_full, {width: 20, height: 20}]}>
+                  style={[a.relative, a.rounded_full, {width: 24, height: 24}]}>
                   <UserAvatar
                     type="user"
-                    size={20}
+                    size={24}
                     avatar={post.author.avatar}
                   />
                   <MediaInsetBorder />
                 </View>
               </View>
-              <View
-                style={[
-                  a.absolute,
-                  a.inset_0,
-                  a.pt_2xl,
-                  {
-                    top: 'auto',
-                  },
-                ]}>
-                <LinearGradient
-                  colors={[black, 'rgba(0, 0, 0, 0)']}
-                  locations={[0.02, 1]}
-                  start={{x: 0, y: 1}}
-                  end={{x: 0, y: 0}}
-                  style={[a.absolute, a.inset_0, {opacity: 0.9}]}
-                />
 
+              {showLikeCount && (
                 <View
-                  style={[a.relative, a.z_10, a.p_sm, a.flex_row, a.gap_md]}>
-                  {likeCount > 0 && (
-                    <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                      <Heart size="sm" fill="white" />
-                      <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
-                        {formatCount(i18n, likeCount)}
-                      </Text>
-                    </View>
-                  )}
+                  style={[
+                    a.absolute,
+                    a.inset_0,
+                    a.pt_2xl,
+                    {
+                      top: 'auto',
+                    },
+                  ]}>
+                  <LinearGradient
+                    colors={[black, 'rgba(0, 0, 0, 0)']}
+                    locations={[0.02, 1]}
+                    start={{x: 0, y: 1}}
+                    end={{x: 0, y: 0}}
+                    style={[a.absolute, a.inset_0, {opacity: 0.9}]}
+                  />
+
+                  <View
+                    style={[a.relative, a.z_10, a.p_sm, a.flex_row, a.gap_md]}>
+                    {likeCount > 0 && (
+                      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                        <Heart size="sm" fill="white" />
+                        <Text
+                          style={[
+                            a.text_sm,
+                            a.font_semi_bold,
+                            {color: 'white'},
+                          ]}>
+                          {formatCount(i18n, likeCount)}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
           </View>
         </Hider.Content>
@@ -523,11 +547,13 @@ export function CompactVideoPostCardPlaceholder() {
   const black = getBlackColor(t)
 
   return (
-    <View style={[a.flex_1]}>
+    <View style={[a.flex_1, t.atoms.shadow_sm]}>
       <View
         style={[
-          a.rounded_md,
+          a.rounded_lg,
           a.overflow_hidden,
+          a.border,
+          t.atoms.border_contrast_low,
           {
             backgroundColor: black,
             aspectRatio: 9 / 16,

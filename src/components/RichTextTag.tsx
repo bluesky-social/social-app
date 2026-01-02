@@ -1,10 +1,10 @@
 import React from 'react'
-import {StyleProp, Text as RNText, TextStyle} from 'react-native'
+import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {isNative, isWeb} from '#/platform/detection'
 import {
@@ -12,7 +12,7 @@ import {
   useRemoveMutedWordsMutation,
   useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import {
@@ -96,7 +96,8 @@ export function RichTextTag({
             onLongPress={createStaticClick(menuProps.onPress).onPress}
             accessibilityHint={hint}
             label={label}
-            style={textStyle}>
+            style={textStyle}
+            emoji>
             {isNative ? (
               display
             ) : (

@@ -1,20 +1,22 @@
 import React from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
+import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Link} from '#/view/com/util/Link'
 import {Logo} from '#/view/icons/Logo'
@@ -30,7 +32,7 @@ import {
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
 import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass'
 import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
@@ -49,6 +51,8 @@ export function BottomBarWeb() {
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const {footerHeight} = useShellLayout()
+  const hideBorder = useHideBottomBarBorder()
   const iconWidth = 26
 
   const unreadMessageCount = useUnreadMessageCount()
@@ -74,9 +78,12 @@ export function BottomBarWeb() {
         styles.bottomBar,
         styles.bottomBarWeb,
         t.atoms.bg,
-        t.atoms.border_contrast_low,
+        hideBorder
+          ? {borderColor: t.atoms.bg.backgroundColor}
+          : t.atoms.border_contrast_low,
         footerMinimalShellTransform,
-      ]}>
+      ]}
+      onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>
       {hasSession ? (
         <>
           <NavItem
@@ -112,11 +119,8 @@ export function BottomBarWeb() {
               <NavItem
                 routeName="Messages"
                 href="/messages"
-                notificationCount={
-                  unreadMessageCount.count > 0
-                    ? unreadMessageCount.numUnread
-                    : undefined
-                }>
+                notificationCount={unreadMessageCount.numUnread}
+                hasNew={unreadMessageCount.hasNew}>
                 {({isActive}) => {
                   const Icon = isActive ? MessageFilled : Message
                   return (
@@ -226,12 +230,13 @@ export function BottomBarWeb() {
 }
 
 const NavItem: React.FC<{
-  children: (props: {isActive: boolean}) => React.ReactChild
+  children: (props: {isActive: boolean}) => React.ReactNode
   href: string
   routeName: string
   hasNew?: boolean
   notificationCount?: string
 }> = ({children, href, routeName, hasNew, notificationCount}) => {
+  const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
@@ -240,26 +245,45 @@ const NavItem: React.FC<{
     }
     return getCurrentRoute(state)
   })
+
+  // Checks whether we're on someone else's profile
+  const isOnDifferentProfile =
+    currentRoute.name === 'Profile' &&
+    routeName === 'Profile' &&
+    (currentRoute.params as CommonNavigatorParams['Profile']).name !==
+      currentAccount?.handle
+
   const isActive =
     currentRoute.name === 'Profile'
       ? isTab(currentRoute.name, routeName) &&
         (currentRoute.params as CommonNavigatorParams['Profile']).name ===
-          currentAccount?.handle
+          (routeName === 'Profile'
+            ? currentAccount?.handle
+            : (currentRoute.params as CommonNavigatorParams['Profile']).name)
       : isTab(currentRoute.name, routeName)
 
   return (
     <Link
       href={href}
       style={[styles.ctrl, a.pb_lg]}
-      navigationAction="navigate"
+      navigationAction={isOnDifferentProfile ? 'push' : 'navigate'}
       aria-role="link"
       aria-label={routeName}
       accessible={true}>
       {children({isActive})}
       {notificationCount ? (
         <View
-          style={styles.notificationCount}
-          aria-label={_(msg`${notificationCount} unread items`)}>
+          style={[
+            styles.notificationCount,
+            styles.notificationCountWeb,
+            {backgroundColor: t.palette.primary_500},
+          ]}
+          aria-label={_(
+            msg`${plural(notificationCount, {
+              one: '# unread item',
+              other: '# unread items',
+            })}`,
+          )}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : hasNew ? (

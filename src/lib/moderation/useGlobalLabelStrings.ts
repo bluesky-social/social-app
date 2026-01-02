@@ -46,6 +46,10 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
         name: _(msg`Graphic Media`),
         description: _(msg`Explicit or potentially disturbing media.`),
       },
+      gore: {
+        name: _(msg`Graphic Media`),
+        description: _(msg`Explicit or potentially disturbing media.`),
+      },
     }),
     [_],
   )

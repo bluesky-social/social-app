@@ -1,24 +1,50 @@
-FROM golang:1.23-bullseye AS build-env
+FROM golang:1.25-bookworm AS build-env
 
 WORKDIR /usr/src/social-app
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+#
 # Node
+#
 ENV NODE_VERSION=20
 ENV NVM_DIR=/usr/share/nvm
 
+#
 # Go
+#
 ENV GODEBUG="netdns=go"
 ENV GOOS="linux"
 ENV GOARCH="amd64"
 ENV CGO_ENABLED=1
 ENV GOEXPERIMENT="loopvar"
 
-# Expo
-ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
-ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-dev}
+# The latest git hash of the preview branch on render.com
+# https://render.com/docs/docker-secrets#environment-variables-in-docker-builds
+ARG RENDER_GIT_COMMIT
 
+#
+# Expo
+#
+ARG EXPO_PUBLIC_ENV
+ENV EXPO_PUBLIC_ENV=${EXPO_PUBLIC_ENV:-development}
+ARG EXPO_PUBLIC_RELEASE_VERSION
+ENV EXPO_PUBLIC_RELEASE_VERSION=$EXPO_PUBLIC_RELEASE_VERSION
+ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
+# If not set by GitHub workflows, we're probably in Render
+ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-$RENDER_GIT_COMMIT}
+
+#
+# Sentry
+#
+ARG SENTRY_AUTH_TOKEN
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN:-unknown}
+ARG EXPO_PUBLIC_SENTRY_DSN
+ENV EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN
+
+#
+# Copy everything into the container
+#
 COPY . .
 
 #
@@ -34,12 +60,16 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   nvm install $NODE_VERSION && \
   nvm use $NODE_VERSION && \
   echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
+  echo "EXPO_PUBLIC_ENV=$EXPO_PUBLIC_ENV" >> .env && \
+  echo "EXPO_PUBLIC_RELEASE_VERSION=$EXPO_PUBLIC_RELEASE_VERSION" >> .env && \
   echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER" >> .env && \
   echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env && \
+  echo "EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN" >> .env && \
   npm install --global yarn && \
   yarn && \
-  yarn intl:build && \
-  EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$() yarn build-web
+  yarn intl:build 2>&1 | tee i18n.log && \
+  if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi && \
+  SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER yarn build-web
 
 # DEBUG
 RUN find ./bskyweb/static && find ./web-build/static
@@ -59,7 +89,7 @@ RUN cd bskyweb/ && \
     -o /bskyweb \
     ./cmd/bskyweb
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 ENV GODEBUG=netdns=go
 ENV TZ=Etc/UTC

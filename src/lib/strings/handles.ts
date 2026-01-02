@@ -5,6 +5,8 @@ import {forceLTR} from '#/lib/strings/bidi'
 const VALIDATE_REGEX =
   /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/
 
+export const MAX_SERVICE_HANDLE_LENGTH = 18
+
 export function makeValidHandle(str: string): string {
   if (str.length > 20) {
     str = str.slice(0, 20)
@@ -19,33 +21,36 @@ export function createFullHandle(name: string, domain: string): string {
   return `${name}.${domain}`
 }
 
-export function maxServiceHandleLength(domain: string): number {
-  return 30 - `.${(domain || '').replace(/^[.]+/, '')}`.length
-}
-
 export function isInvalidHandle(handle: string): boolean {
   return handle === 'handle.invalid'
 }
 
-export function sanitizeHandle(handle: string, prefix = ''): string {
+export function sanitizeHandle(
+  handle: string,
+  prefix = '',
+  forceLeftToRight = true,
+): string {
+  const lowercasedWithPrefix = `${prefix}${handle.toLocaleLowerCase()}`
   return isInvalidHandle(handle)
     ? '⚠Invalid Handle'
-    : forceLTR(`${prefix}${handle}`)
+    : forceLeftToRight
+      ? forceLTR(lowercasedWithPrefix)
+      : lowercasedWithPrefix
 }
 
 export interface IsValidHandle {
   handleChars: boolean
   hyphenStartOrEnd: boolean
-  frontLength: boolean
+  frontLengthNotTooShort: boolean
+  frontLengthNotTooLong: boolean
   totalLength: boolean
   overall: boolean
 }
 
 // More checks from https://github.com/bluesky-social/atproto/blob/main/packages/pds/src/handle/index.ts#L72
-export function validateHandle(
+export function validateServiceHandle(
   str: string,
   userDomain: string,
-  isServiceHandle?: boolean,
 ): IsValidHandle {
   const fullHandle = createFullHandle(str, userDomain)
 
@@ -53,8 +58,9 @@ export function validateHandle(
     handleChars:
       !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
     hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
-    frontLength: str.length >= 3,
-    totalLength: fullHandle.length <= (isServiceHandle ? 30 : 253),
+    frontLengthNotTooShort: str.length >= 3,
+    frontLengthNotTooLong: str.length <= MAX_SERVICE_HANDLE_LENGTH,
+    totalLength: fullHandle.length <= 253,
   }
 
   return {

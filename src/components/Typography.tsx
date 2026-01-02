@@ -1,14 +1,16 @@
 import {UITextView} from 'react-native-uitextview'
 
 import {logger} from '#/logger'
-import {atoms, flatten, useAlf, useTheme, web} from '#/alf'
+import {atoms, useAlf, useTheme, web} from '#/alf'
 import {
   childHasEmoji,
   normalizeTextStyles,
   renderChildrenWithEmoji,
-  TextProps,
+  type TextProps,
 } from '#/alf/typography'
+
 export type {TextProps}
+export {Text as Span} from 'react-native'
 
 /**
  * Our main text component. Use this most of the time.
@@ -24,7 +26,7 @@ export function Text({
 }: TextProps) {
   const {fonts, flags} = useAlf()
   const t = useTheme()
-  const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)], {
+  const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, style], {
     fontScale: fonts.scaleMultiplier,
     fontFamily: fonts.family,
     flags,
@@ -82,7 +84,7 @@ export function P({style, ...rest}: TextProps) {
     <Text
       {...attr}
       {...rest}
-      style={[atoms.text_md, atoms.leading_normal, flatten(style)]}
+      style={[atoms.text_md, atoms.leading_relaxed, style]}
     />
   )
 }

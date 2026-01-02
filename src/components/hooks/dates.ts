@@ -8,17 +8,21 @@
  */
 
 import React from 'react'
-import {formatDistance, Locale} from 'date-fns'
+import {formatDistance, type Locale} from 'date-fns'
 import {
   ca,
+  cy,
   da,
   de,
   el,
   enGB,
+  eo,
   es,
   eu,
   fi,
   fr,
+  fy,
+  gd,
   gl,
   hi,
   hu,
@@ -29,6 +33,7 @@ import {
   ko,
   nl,
   pl,
+  pt,
   ptBR,
   ro,
   ru,
@@ -42,7 +47,7 @@ import {
   zhTW,
 } from 'date-fns/locale'
 
-import {AppLanguage} from '#/locale/languages'
+import {type AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 
 /**
@@ -53,18 +58,23 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   an: undefined,
   ast: undefined,
   ca,
+  cy,
   da,
   de,
   el,
   ['en-GB']: enGB,
+  eo,
   es,
   eu,
   fi,
   fr,
+  fy,
   ga: undefined,
+  gd,
   gl,
   hi,
   hu,
+  ia: undefined,
   id,
   it,
   ja,
@@ -73,6 +83,7 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   ne: undefined,
   nl,
   pl,
+  ['pt-PT']: pt,
   ['pt-BR']: ptBR,
   ro,
   ru,

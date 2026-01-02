@@ -1,18 +1,18 @@
 import React from 'react'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyFeedSearchPosts,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyFeedSearchPosts,
   AtUri,
+  moderatePost,
 } from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
 import {
@@ -174,7 +174,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, undefined> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
   >({

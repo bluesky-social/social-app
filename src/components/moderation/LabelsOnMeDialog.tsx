@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {View} from 'react-native'
-import {ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
+import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
+import {XRPCError} from '@atproto/xrpc'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useLabelSubject} from '#/lib/moderation'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -18,6 +20,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {Admonition} from '../Admonition'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
 
@@ -31,7 +34,9 @@ export interface LabelsOnMeDialogProps {
 
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer
+      control={props.control}
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <LabelsOnMeDialogInner {...props} />
     </Dialog.Outer>
@@ -122,6 +127,7 @@ function Label({
   const sourceName = labeler
     ? sanitizeHandle(labeler.creator.handle, '@')
     : label.src
+  const timeDiff = useGetTimeAgo({future: true})
   return (
     <View
       style={[
@@ -132,7 +138,7 @@ function Label({
       ]}>
       <View style={[a.p_md, a.gap_sm, a.flex_row]}>
         <View style={[a.flex_1, a.gap_xs]}>
-          <Text emoji style={[a.font_bold, a.text_md]}>
+          <Text emoji style={[a.font_semi_bold, a.text_md]}>
             {strings.name}
           </Text>
           <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
@@ -163,18 +169,41 @@ function Label({
             <Trans>This label was applied by you.</Trans>
           </Text>
         ) : (
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[t.atoms.text_contrast_medium]}>
-              <Trans>Source: </Trans>{' '}
+          <View
+            style={[
+              a.flex_row,
+              a.justify_between,
+              a.gap_xl,
+              {paddingBottom: 1},
+            ]}>
+            <Text
+              style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]}
+              numberOfLines={1}>
+              <Trans>
+                Source:{' '}
+                <InlineLinkText
+                  label={sourceName}
+                  to={makeProfileLink(
+                    labeler ? labeler.creator : {did: label.src, handle: ''},
+                  )}
+                  onPress={() => control.close()}>
+                  {sourceName}
+                </InlineLinkText>
+              </Trans>
             </Text>
-            <InlineLinkText
-              label={sourceName}
-              to={makeProfileLink(
-                labeler ? labeler.creator : {did: label.src, handle: ''},
-              )}
-              onPress={() => control.close()}>
-              {sourceName}
-            </InlineLinkText>
+            {label.exp && (
+              <View>
+                <Text
+                  style={[
+                    a.leading_snug,
+                    a.text_sm,
+                    a.italic,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Trans>Expires in {timeDiff(Date.now(), label.exp)}</Trans>
+                </Text>
+              </View>
+            )}
           </View>
         )}
       </View>
@@ -201,6 +230,7 @@ function AppealForm({
   const sourceName = labeler
     ? sanitizeHandle(labeler.creator.handle, '@')
     : label.src
+  const [error, setError] = useState<string | null>(null)
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
@@ -209,7 +239,7 @@ function AppealForm({
         : 'com.atproto.admin.defs#repoRef'
       await agent.createModerationReport(
         {
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
           subject: {
             $type,
             ...subject,
@@ -225,12 +255,20 @@ function AppealForm({
       )
     },
     onError: err => {
+      if (err instanceof XRPCError && err.error === 'AlreadyAppealed') {
+        setError(
+          _(
+            msg`You've already appealed this label and it's being reviewed by our moderation team.`,
+          ),
+        )
+      } else {
+        setError(_(msg`Failed to submit appeal, please try again.`))
+      }
       logger.error('Failed to submit label appeal', {message: err})
-      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
     },
     onSuccess: () => {
       control.close()
-      Toast.show(_(msg`Appeal submitted`))
+      Toast.show(_(msg({message: 'Appeal submitted', context: 'toast'})))
     },
   })
 
@@ -239,7 +277,7 @@ function AppealForm({
   return (
     <>
       <View>
-        <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
+        <Text style={[a.text_2xl, a.font_semi_bold, a.pb_xs, a.leading_tight]}>
           <Trans>Appeal "{strings.name}" label</Trans>
         </Text>
         <Text style={[a.text_md, a.leading_snug]}>
@@ -258,6 +296,11 @@ function AppealForm({
           </Trans>
         </Text>
       </View>
+      {error && (
+        <Admonition type="error" style={[a.mt_sm]}>
+          {error}
+        </Admonition>
+      )}
       <View style={[a.my_md]}>
         <Dialog.Input
           label={_(msg`Text input field`)}

@@ -1,18 +1,18 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  AppBskyUnspeccedGetPopularFeedGenerators,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  type AppBskyUnspeccedGetPopularFeedGenerators,
   AtUri,
   moderateFeedGenerator,
   RichText,
 } from '@atproto/api'
 import {
-  InfiniteData,
+  type InfiniteData,
   keepPreviousData,
-  QueryClient,
-  QueryKey,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -28,11 +28,12 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 import {useModerationOpts} from '../preferences/moderation-opts'
-import {FeedDescriptor} from './post-feed'
+import {type FeedDescriptor} from './post-feed'
 import {precacheResolvedUri} from './resolve-uri'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
+  view?: AppBskyFeedDefs.GeneratorView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -47,12 +48,14 @@ export type FeedSourceFeedInfo = {
   creatorDid: string
   creatorHandle: string
   likeCount: number | undefined
+  acceptsInteractions?: boolean
   likeUri: string | undefined
   contentMode: AppBskyFeedDefs.GeneratorView['contentMode']
 }
 
 export type FeedSourceListInfo = {
   type: 'list'
+  view?: AppBskyGraphDefs.ListView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -70,6 +73,12 @@ export type FeedSourceListInfo = {
 }
 
 export type FeedSourceInfo = FeedSourceFeedInfo | FeedSourceListInfo
+
+export function isFeedSourceFeedInfo(
+  feed: FeedSourceInfo,
+): feed is FeedSourceFeedInfo {
+  return feed.type === 'feed'
+}
 
 const feedSourceInfoQueryKeyRoot = 'getFeedSourceInfo'
 export const feedSourceInfoQueryKey = ({uri}: {uri: string}) => [
@@ -93,6 +102,7 @@ export function hydrateFeedGenerator(
 
   return {
     type: 'feed',
+    view,
     uri: view.uri,
     feedDescriptor: `feedgen|${view.uri}`,
     cid: view.cid,
@@ -112,6 +122,7 @@ export function hydrateFeedGenerator(
     creatorDid: view.creator.did,
     creatorHandle: view.creator.handle,
     likeCount: view.likeCount,
+    acceptsInteractions: view.acceptsInteractions,
     likeUri: view.viewer?.like,
     contentMode: view.contentMode,
   }
@@ -126,6 +137,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 
   return {
     type: 'list',
+    view,
     uri: view.uri,
     feedDescriptor: `list|${view.uri}`,
     route: {
@@ -199,12 +211,12 @@ export const KNOWN_AUTHED_ONLY_FEEDS = [
   'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
 ]
 
-type GetPopularFeedsOptions = {limit?: number}
+type GetPopularFeedsOptions = {limit?: number; enabled?: boolean}
 
 export function createGetPopularFeedsQueryKey(
   options?: GetPopularFeedsOptions,
 ) {
-  return ['getPopularFeeds', options]
+  return ['getPopularFeeds', options?.limit]
 }
 
 export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
@@ -233,7 +245,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
     QueryKey,
     string | undefined
   >({
-    enabled: Boolean(moderationOpts),
+    enabled: Boolean(moderationOpts) && options?.enabled !== false,
     queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
@@ -330,7 +342,7 @@ export function useSearchPopularFeedsMutation() {
       if (moderationOpts) {
         return res.data.feeds.filter(feed => {
           const decision = moderateFeedGenerator(feed, moderationOpts)
-          return !decision.ui('contentList').filter
+          return !decision.ui('contentMedia').blur
         })
       }
 
@@ -371,7 +383,7 @@ export function usePopularFeedsSearch({
     select(data) {
       return data.filter(feed => {
         const decision = moderateFeedGenerator(feed, moderationOpts!)
-        return !decision.ui('contentList').filter
+        return !decision.ui('contentMedia').blur
       })
     },
   })
@@ -611,6 +623,29 @@ export function useSavedFeeds() {
         count: result.length,
         feeds: result,
       }
+    },
+  })
+}
+
+const feedInfoQueryKeyRoot = 'feedInfo'
+
+export function useFeedInfo(feedUri: string | undefined) {
+  const agent = useAgent()
+
+  return useQuery({
+    staleTime: STALE.INFINITY,
+    queryKey: [feedInfoQueryKeyRoot, feedUri],
+    queryFn: async () => {
+      if (!feedUri) {
+        return null
+      }
+
+      const res = await agent.app.bsky.feed.getFeedGenerator({
+        feed: feedUri,
+      })
+
+      const feedSourceInfo = hydrateFeedGenerator(res.data.view)
+      return feedSourceInfo
     },
   })
 }

@@ -41,6 +41,7 @@ export function useMyLabelersQuery({
       isLoading,
       error,
       data: labelers.data,
+      refetch: labelers.refetch,
     }
   }, [labelers, isLoading, error])
 }

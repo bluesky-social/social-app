@@ -1,18 +1,24 @@
 import '../index.css'
 
-import {AppBskyFeedDefs, AppBskyFeedPost, AtUri, BskyAgent} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPost, AtpAgent, AtUri} from '@atproto/api'
 import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
-import {initColorMode} from '../color-mode'
+import {
+  assertColorModeValues,
+  ColorModeValues,
+  initSystemColorMode,
+} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
-import {niceDate} from '../utils'
+import * as bsky from '../types/bsky'
+import {niceDate} from '../util/nice-date'
 
-const DEFAULT_POST = 'https://bsky.app/profile/emilyliu.me/post/3jzn6g7ixgq2y'
+const DEFAULT_POST =
+  'https://bsky.app/profile/did:plc:vjug55kidv6sye7ykr5faxxn/post/3jzn6g7ixgq2y'
 const DEFAULT_URI =
   'at://did:plc:vjug55kidv6sye7ykr5faxxn/app.bsky.feed.post/3jzn6g7ixgq2y'
 
@@ -22,9 +28,9 @@ export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-initColorMode()
+initSystemColorMode()
 
-const agent = new BskyAgent({
+const agent = new AtpAgent({
   service: 'https://public.api.bsky.app',
 })
 
@@ -32,6 +38,7 @@ render(<LandingPage />, root)
 
 function LandingPage() {
   const [uri, setUri] = useState('')
+  const [colorMode, setColorMode] = useState<ColorModeValues>('system')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [thread, setThread] = useState<AppBskyFeedDefs.ThreadViewPost | null>(
@@ -120,24 +127,50 @@ function LandingPage() {
 
       <h1 className="text-4xl font-bold text-center">Embed a Bluesky Post</h1>
 
-      <input
-        type="text"
-        value={uri}
-        onInput={e => setUri(e.currentTarget.value)}
-        className="border rounded-lg py-3 w-full max-w-[600px] px-4 dark:bg-dimmedBg dark:border-slate-500"
-        placeholder={DEFAULT_POST}
-      />
+      <div className="flex flex-col w-full max-w-[600px] gap-6">
+        <input
+          type="text"
+          value={uri}
+          onInput={e => setUri(e.currentTarget.value)}
+          className="border rounded-lg py-3 px-4 dark:bg-dimmedBg dark:border-slate-500"
+          placeholder={DEFAULT_POST}
+        />
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium" for="colorModeSelect">
+            Theme
+          </label>
+          <select
+            value={colorMode}
+            onChange={e => {
+              const value = e.currentTarget.value
+              if (assertColorModeValues(value)) {
+                setColorMode(value)
+              }
+            }}
+            id="colorModeSelect"
+            className="appearance-none bg-white border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+      </div>
 
       <img src={arrowBottom} className="w-6 dark:invert" />
 
       {loading ? (
-        <div className="w-full max-w-[600px]">
+        <div className={`${colorMode} w-full max-w-[600px]`}>
           <Skeleton />
         </div>
       ) : (
         <div className="w-full max-w-[600px] gap-8 flex flex-col">
-          {!error && thread && uri && <Snippet thread={thread} />}
-          {!error && thread && <Post thread={thread} key={thread.post.uri} />}
+          {!error && thread && uri && (
+            <Snippet thread={thread} colorMode={colorMode} />
+          )}
+          <div className={colorMode}>
+            {!error && thread && <Post thread={thread} key={thread.post.uri} />}
+          </div>
           {error && (
             <div className="w-full border border-red-500 bg-red-500/10 px-4 py-3 rounded-lg">
               <p className="text-red-500 text-center">{error}</p>
@@ -168,7 +201,13 @@ function Skeleton() {
   )
 }
 
-function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
+function Snippet({
+  thread,
+  colorMode,
+}: {
+  thread: AppBskyFeedDefs.ThreadViewPost
+  colorMode: ColorModeValues
+}) {
   const ref = useRef<HTMLInputElement>(null)
   const [copied, setCopied] = useState(false)
 
@@ -185,7 +224,12 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
   const snippet = useMemo(() => {
     const record = thread.post.record
 
-    if (!AppBskyFeedPost.isRecord(record)) {
+    if (
+      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        record,
+        AppBskyFeedPost.isRecord,
+      )
+    ) {
       return ''
     }
 
@@ -204,9 +248,11 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
     // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
     return `<blockquote class="bluesky-embed" data-bluesky-uri="${escapeHtml(
       thread.post.uri,
-    )}" data-bluesky-cid="${escapeHtml(thread.post.cid)}"><p lang="${escapeHtml(
-      lang,
-    )}">${escapeHtml(record.text)}${
+    )}" data-bluesky-cid="${escapeHtml(
+      thread.post.cid,
+    )}" data-bluesky-embed-color-mode="${escapeHtml(
+      colorMode,
+    )}"><p lang="${escapeHtml(lang)}">${escapeHtml(record.text)}${
       record.embed
         ? `<br><br><a href="${escapeHtml(href)}">[image or embed]</a>`
         : ''
@@ -217,7 +263,7 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
     )}</a>) <a href="${escapeHtml(href)}">${escapeHtml(
       niceDate(thread.post.indexedAt),
     )}</a></blockquote><script async src="${EMBED_SCRIPT}" charset="utf-8"></script>`
-  }, [thread])
+  }, [thread, colorMode])
 
   return (
     <div className="flex gap-2 w-full">

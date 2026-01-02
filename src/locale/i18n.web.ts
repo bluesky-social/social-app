@@ -24,6 +24,10 @@ export async function dynamicActivate(locale: AppLanguage) {
       mod = await import(`./locales/ca/messages`)
       break
     }
+    case AppLanguage.cy: {
+      mod = await import(`./locales/cy/messages`)
+      break
+    }
     case AppLanguage.da: {
       mod = await import(`./locales/da/messages`)
       break
@@ -38,6 +42,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.en_GB: {
       mod = await import(`./locales/en-GB/messages`)
+      break
+    }
+    case AppLanguage.eo: {
+      mod = await import(`./locales/eo/messages`)
       break
     }
     case AppLanguage.es: {
@@ -56,8 +64,16 @@ export async function dynamicActivate(locale: AppLanguage) {
       mod = await import(`./locales/fr/messages`)
       break
     }
+    case AppLanguage.fy: {
+      mod = await import(`./locales/fy/messages`)
+      break
+    }
     case AppLanguage.ga: {
       mod = await import(`./locales/ga/messages`)
+      break
+    }
+    case AppLanguage.gd: {
+      mod = await import(`./locales/gd/messages`)
       break
     }
     case AppLanguage.gl: {
@@ -70,6 +86,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.hu: {
       mod = await import(`./locales/hu/messages`)
+      break
+    }
+    case AppLanguage.ia: {
+      mod = await import(`./locales/ia/messages`)
       break
     }
     case AppLanguage.id: {
@@ -106,6 +126,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.pt_BR: {
       mod = await import(`./locales/pt-BR/messages`)
+      break
+    }
+    case AppLanguage.pt_PT: {
+      mod = await import(`./locales/pt-PT/messages`)
       break
     }
     case AppLanguage.ro: {
@@ -158,7 +182,7 @@ export async function dynamicActivate(locale: AppLanguage) {
   i18n.activate(locale)
 }
 
-export async function useLocaleLanguage() {
+export function useLocaleLanguage() {
   const {appLanguage} = useLanguagePrefs()
   useEffect(() => {
     const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage)

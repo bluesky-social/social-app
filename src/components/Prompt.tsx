@@ -1,13 +1,19 @@
 import React from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonColor, ButtonText} from '#/components/Button'
+import {
+  atoms as a,
+  useBreakpoints,
+  useTheme,
+  type ViewStyleProp,
+  web,
+} from '#/alf'
+import {Button, type ButtonColor, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
-import {BottomSheetViewProps} from '../../modules/bottom-sheet'
+import {type BottomSheetViewProps} from '../../modules/bottom-sheet'
 
 export {
   type DialogControlProps as PromptControlProps,
@@ -21,6 +27,7 @@ const Context = React.createContext<{
   titleId: '',
   descriptionId: '',
 })
+Context.displayName = 'PromptContext'
 
 export function Outer({
   children,
@@ -32,7 +39,6 @@ export function Outer({
   testID?: string
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
 }>) {
-  const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
   const descriptionId = React.useId()
 
@@ -45,15 +51,14 @@ export function Outer({
     <Dialog.Outer
       control={control}
       testID={testID}
+      webOptions={{alignCenter: true}}
       nativeOptions={{preventExpansion: true, ...nativeOptions}}>
       <Dialog.Handle />
       <Context.Provider value={context}>
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[
-            gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
-          ]}>
+          style={web({maxWidth: 400})}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -61,12 +66,22 @@ export function Outer({
   )
 }
 
-export function TitleText({children}: React.PropsWithChildren<{}>) {
+export function TitleText({
+  children,
+  style,
+}: React.PropsWithChildren<ViewStyleProp>) {
   const {titleId} = React.useContext(Context)
   return (
     <Text
       nativeID={titleId}
-      style={[a.text_2xl, a.font_bold, a.pb_sm, a.leading_snug]}>
+      style={[
+        a.flex_1,
+        a.text_2xl,
+        a.font_semi_bold,
+        a.pb_sm,
+        a.leading_snug,
+        style,
+      ]}>
       {children}
     </Text>
   )
@@ -189,7 +204,7 @@ export function Basic({
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   title: string
-  description: string
+  description?: string
   cancelButtonCta?: string
   confirmButtonCta?: string
   /**
@@ -206,7 +221,7 @@ export function Basic({
   return (
     <Outer control={control} testID="confirmModal">
       <TitleText>{title}</TitleText>
-      <DescriptionText>{description}</DescriptionText>
+      {description && <DescriptionText>{description}</DescriptionText>}
       <Actions>
         <Action
           cta={confirmButtonCta}

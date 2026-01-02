@@ -3,12 +3,12 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {Avatar} from '#/screens/Onboarding/StepProfile/index'
+import {type Avatar} from '#/screens/Onboarding/StepProfile/index'
 import {
-  AvatarColor,
+  type AvatarColor,
   avatarColors,
   emojiItems,
-  EmojiName,
+  type EmojiName,
   emojiNames,
 } from '#/screens/Onboarding/StepProfile/types'
 import {atoms as a, useTheme} from '#/alf'
