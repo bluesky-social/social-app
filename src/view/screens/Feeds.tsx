@@ -54,6 +54,7 @@ import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {Menu_Stroke2_Corner0_Rounded as DragHandleIcon} from '#/components/icons/Menu'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import * as ListCard from '#/components/ListCard'
@@ -88,6 +89,10 @@ type FlatlistSlice =
     }
   | {
       type: 'noFollowingFeed'
+      key: string
+    }
+  | {
+      type: 'noPinnedFeeds'
       key: string
     }
 
@@ -221,12 +226,17 @@ const FeedsScreenInner = React.memo(
                   key: 'pinnedFeedsSection',
                   type: 'pinnedFeedsSection',
                 })
-              }
 
-              if (!hasFollowingFeed && pinnedCount > 0) {
+                if (!hasFollowingFeed) {
+                  slices.push({
+                    key: 'noFollowingFeed',
+                    type: 'noFollowingFeed',
+                  })
+                }
+              } else {
                 slices.push({
-                  key: 'noFollowingFeed',
-                  type: 'noFollowingFeed',
+                  key: 'noPinnedFeeds',
+                  type: 'noPinnedFeeds',
                 })
               }
             } else {
@@ -307,11 +317,33 @@ const FeedsScreenInner = React.memo(
               <NoFollowingFeed />
             </View>
           )
+        } else if (item.type === 'noPinnedFeeds') {
+          return (
+            <View
+              style={[
+                pal.border,
+                a.flex_row,
+                a.align_center,
+                a.gap_sm,
+                {
+                  borderBottomWidth: 1,
+                  paddingHorizontal: 16,
+                  paddingVertical: 16,
+                },
+              ]}>
+              <PinIcon size="sm" fill={pal.colors.textLight} />
+              <Text type="md" style={pal.textLight}>
+                <Trans>You don't have any pinned feeds.</Trans>
+              </Text>
+            </View>
+          )
         }
         return null
       },
       [
         pal.border,
+        pal.textLight,
+        pal.colors,
         overlayY,
         overlayVisible,
         setOverlayFeed,
@@ -422,14 +454,24 @@ const PinnedFeedsSection = React.memo(function PinnedFeedsSection({
   const isDraggingRef = React.useRef(false)
 
   // Keep ref in sync with server feeds
-  // Always sync unless actively dragging, to handle pin/unpin updates
+  // Merge changes: keep local order for existing feeds, add new ones, remove deleted ones
   React.useEffect(() => {
     if (!isDraggingRef.current) {
-      // Check if feeds actually changed (different items or order from server)
-      const currentIds = feedsRef.current.map(f => f.config.id).join(',')
-      const serverIds = serverFeeds.map(f => f.config.id).join(',')
-      if (currentIds !== serverIds) {
-        feedsRef.current = serverFeeds
+      const currentIds = new Set(feedsRef.current.map(f => f.config.id))
+      const serverIds = new Set(serverFeeds.map(f => f.config.id))
+
+      // Find new feeds (in server but not local) and removed feeds (in local but not server)
+      const newFeeds = serverFeeds.filter(f => !currentIds.has(f.config.id))
+      const removedIds = new Set(
+        [...currentIds].filter(id => !serverIds.has(id)),
+      )
+
+      if (newFeeds.length > 0 || removedIds.size > 0) {
+        // Keep existing feeds in their current order, remove deleted, add new at end
+        const updatedFeeds = feedsRef.current
+          .filter(f => !removedIds.has(f.config.id))
+          .concat(newFeeds)
+        feedsRef.current = updatedFeeds
         forceRender(n => n + 1)
       }
     }
@@ -1153,6 +1195,7 @@ function DragOverlay({
   visible: Animated.SharedValue<number>
 }) {
   const t = useTheme()
+  const {isMobile} = useWebMediaQueries()
 
   // Position overlay at finger position, offset by half item height (~30px) to center it
   const animatedStyle = useAnimatedStyle(() => {
@@ -1168,11 +1211,13 @@ function DragOverlay({
     <Animated.View
       style={[
         animatedStyle,
+        a.mx_auto,
         {
           position: 'absolute',
           left: 0,
           right: 0,
           zIndex: 1000,
+          maxWidth: isMobile ? undefined : 600,
         },
       ]}
       pointerEvents="none">
