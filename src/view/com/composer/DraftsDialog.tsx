@@ -66,10 +66,20 @@ export function DraftsView({
         <View style={[a.flex_1]} />
       </View>
 
-      <ScrollView style={[a.flex_1]} contentContainerStyle={[a.gap_md]}>
+      <ScrollView
+        style={[a.flex_1]}
+        contentContainerStyle={[
+          a.gap_md,
+          drafts.length === 0 && {flexGrow: 1},
+        ]}>
         {drafts.length === 0 ? (
-          <View style={[a.py_xl, a.align_center, a.gap_md]}>
-            <PencilLineIcon width={64} style={[t.atoms.text_contrast_low]} />
+          <View
+            style={[
+              a.align_center,
+              a.gap_lg,
+              isNative ? [a.flex_1, a.justify_center] : [a.pt_xl, a.pb_4xl],
+            ]}>
+            <PencilLineIcon width={48} style={[t.atoms.text_contrast_low]} />
             <Text style={[t.atoms.text_contrast_medium]}>
               <Trans>No drafts yet</Trans>
             </Text>
