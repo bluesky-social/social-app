@@ -6,7 +6,7 @@ on:
     branches:
       - main
 concurrency:
-  group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
+  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -15,11 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: yarn
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
@@ -28,6 +29,8 @@ jobs:
           attempt_delay: 2000
       - name: Lint check
         run: yarn lint
+      - name: Lint lockfile
+        run: yarn lockfile-lint
       - name: Prettier check
         run: yarn prettier --check .
       - name: Check & compile i18n
@@ -39,11 +42,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: yarn
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
@@ -54,4 +58,4 @@ jobs:
         run: yarn intl:build
       - name: Run tests
         run: |
-          NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test --forceExit
+          NODE_ENV=test yarn test --forceExit

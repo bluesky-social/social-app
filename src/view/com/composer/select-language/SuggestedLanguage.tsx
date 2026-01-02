@@ -1,36 +1,57 @@
 import {useEffect, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {Text as RNText, View} from 'react-native'
+import {parseLanguage} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import lande from 'lande'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {s} from '#/lib/styles'
 import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
-import {
-  toPostLanguages,
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-} from '#/state/preferences/languages'
-import {Button} from '../../util/forms/Button'
-import {Text} from '../../util/text/Text'
+import {useLanguagePrefs} from '#/state/preferences/languages'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
+import {Text} from '#/components/Typography'
 
 // fallbacks for safari
 const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
 const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
-export function SuggestedLanguage({text}: {text: string}) {
+export function SuggestedLanguage({
+  text,
+  replyToLanguages: replyToLanguagesProp,
+  currentLanguages,
+  onAcceptSuggestedLanguage,
+}: {
+  text: string
+  /**
+   * All languages associated with the post being replied to.
+   */
+  replyToLanguages: string[]
+  /**
+   * All languages currently selected for the post being composed.
+   */
+  currentLanguages: string[]
+  /**
+   * Called when the user accepts a suggested language. We only pass a single
+   * language here. If the post being replied to has multiple languages, we
+   * only suggest the first one.
+   */
+  onAcceptSuggestedLanguage: (language: string | null) => void
+}) {
+  const langPrefs = useLanguagePrefs()
+  const replyToLanguages = replyToLanguagesProp
+    .map(lang => cleanUpLanguage(lang))
+    .filter(Boolean) as string[]
+  const [hasInteracted, setHasInteracted] = useState(false)
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
-  >()
-  const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useLanguagePrefsApi()
-  const pal = usePalette('default')
-  const {_} = useLingui()
+  >(undefined)
+
+  useEffect(() => {
+    if (text.length > 0 && !hasInteracted) {
+      setHasInteracted(true)
+    }
+  }, [text, hasInteracted])
 
   useEffect(() => {
     const textTrimmed = text.trim()
@@ -49,52 +70,120 @@ export function SuggestedLanguage({text}: {text: string}) {
     return () => cancelIdle(idle)
   }, [text])
 
-  return suggestedLanguage &&
-    !toPostLanguages(langPrefs.postLanguage).includes(suggestedLanguage) ? (
-    <View style={[pal.border, styles.infoBar]}>
-      <FontAwesomeIcon
-        icon="language"
-        style={pal.text as FontAwesomeIconStyle}
-        size={24}
-      />
-      <Text style={[pal.text, s.flex1]}>
-        <Trans>
-          Are you writing in{' '}
-          <Text type="sm-bold" style={pal.text}>
-            {codeToLanguageName(suggestedLanguage)}
-          </Text>
-          ?
-        </Trans>
-      </Text>
+  /*
+   * We've detected a language, and the user hasn't already selected it.
+   */
+  const hasLanguageSuggestion =
+    suggestedLanguage && !currentLanguages.includes(suggestedLanguage)
+  /*
+   * We have not detected a different language, and the user is not already
+   * using or has not already selected one of the languages of the post they
+   * are replying to.
+   */
+  const hasSuggestedReplyLanguage =
+    !hasInteracted &&
+    !suggestedLanguage &&
+    replyToLanguages.length &&
+    !replyToLanguages.some(l => currentLanguages.includes(l))
 
-      <Button
-        type="default"
-        onPress={() => setLangPrefs.setPostLanguage(suggestedLanguage)}
-        accessibilityLabel={_(
-          msg`Change post language to ${codeToLanguageName(suggestedLanguage)}`,
-        )}
-        accessibilityHint="">
-        <Text type="button" style={[pal.link, s.fw600]}>
-          <Trans>Yes</Trans>
-        </Text>
-      </Button>
-    </View>
-  ) : null
+  if (hasLanguageSuggestion) {
+    const suggestedLanguageName = codeToLanguageName(
+      suggestedLanguage,
+      langPrefs.appLanguage,
+    )
+
+    return (
+      <LanguageSuggestionButton
+        label={
+          <RNText>
+            <Trans>
+              Are you writing in{' '}
+              <Text style={[a.font_bold]}>{suggestedLanguageName}</Text>?
+            </Trans>
+          </RNText>
+        }
+        value={suggestedLanguage}
+        onAccept={onAcceptSuggestedLanguage}
+      />
+    )
+  } else if (hasSuggestedReplyLanguage) {
+    const suggestedLanguageName = codeToLanguageName(
+      replyToLanguages[0],
+      langPrefs.appLanguage,
+    )
+
+    return (
+      <LanguageSuggestionButton
+        label={
+          <RNText>
+            <Trans>
+              The post you're replying to was marked as being written in{' '}
+              {suggestedLanguageName} by its author. Would you like to reply in{' '}
+              <Text style={[a.font_bold]}>{suggestedLanguageName}</Text>?
+            </Trans>
+          </RNText>
+        }
+        value={replyToLanguages[0]}
+        onAccept={onAcceptSuggestedLanguage}
+      />
+    )
+  } else {
+    return null
+  }
 }
 
-const styles = StyleSheet.create({
-  infoBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    borderWidth: 1,
-    borderRadius: 6,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginHorizontal: 10,
-    marginBottom: 10,
-  },
-})
+function LanguageSuggestionButton({
+  label,
+  value,
+  onAccept,
+}: {
+  label: React.ReactNode
+  value: string
+  onAccept: (language: string | null) => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <View style={[a.px_lg, a.py_sm]}>
+      <View
+        style={[
+          a.gap_md,
+          a.border,
+          a.flex_row,
+          a.align_center,
+          a.rounded_sm,
+          a.p_md,
+          a.pl_lg,
+          t.atoms.bg,
+          t.atoms.border_contrast_low,
+        ]}>
+        <EarthIcon />
+        <View style={[a.flex_1]}>
+          <Text
+            style={[
+              a.leading_snug,
+              {
+                maxWidth: 400,
+              },
+            ]}>
+            {label}
+          </Text>
+        </View>
+
+        <Button
+          size="small"
+          color="secondary"
+          onPress={() => onAccept(value)}
+          label={_(msg`Accept this language suggestion`)}>
+          <ButtonText>
+            <Trans>Yes</Trans>
+          </ButtonText>
+        </Button>
+      </View>
+    </View>
+  )
+}
 
 /**
  * This function is using the lande language model to attempt to detect the language
@@ -113,4 +202,12 @@ function guessLanguage(text: string): string | undefined {
     return undefined
   }
   return code3ToCode2Strict(lang)
+}
+
+function cleanUpLanguage(text: string | undefined): string | undefined {
+  if (!text) {
+    return undefined
+  }
+
+  return parseLanguage(text)?.language
 }

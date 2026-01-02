@@ -18,9 +18,6 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
   }
 })
 
-// Silence the warning: Animated: `useNativeDriver` is not supported
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
-
 jest.mock('@fortawesome/react-native-fontawesome', () => ({
   FontAwesomeIcon: '',
 }))
@@ -36,22 +33,19 @@ jest.mock('react-native-safe-area-context', () => {
   }
 })
 
-jest.mock('rn-fetch-blob', () => ({
-  config: jest.fn().mockReturnThis(),
-  cancel: jest.fn(),
-  fetch: jest.fn(),
-}))
-
-jest.mock('expo-file-system', () => ({
+jest.mock('expo-file-system/legacy', () => ({
   getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
   deleteAsync: jest.fn(),
+  createDownloadResumable: jest.fn(),
 }))
 
 jest.mock('expo-image-manipulator', () => ({
   manipulateAsync: jest.fn().mockResolvedValue({
     uri: 'file://resized-image',
   }),
-  SaveFormat: jest.requireActual('expo-image-manipulator').SaveFormat,
+  SaveFormat: {
+    JPEG: 'jpeg',
+  },
 }))
 
 jest.mock('expo-camera', () => ({
@@ -102,7 +96,23 @@ jest.mock('expo-modules-core', () => ({
       }
     }
   }),
-  requireNativeViewManager: jest.fn().mockImplementation(moduleName => {
+  requireNativeViewManager: jest.fn().mockImplementation(_ => {
     return () => null
   }),
 }))
+
+jest.mock('expo-localization', () => ({
+  getLocales: () => [],
+}))
+
+jest.mock('statsig-react-native-expo', () => ({
+  Statsig: {
+    initialize() {},
+    initializeCalled() {
+      return false
+    },
+  },
+}))
+
+jest.mock('../src/logger/bitdrift/lib', () => ({}))
+jest.mock('../src/lib/statsig/statsig', () => ({}))

@@ -1,5 +1,5 @@
 import React from 'react'
-import {useMediaQuery} from 'react-responsive'
+import {type Theme, type ThemeName} from '@bsky.app/alf'
 
 import {
   computeFontScaleMultiplier,
@@ -8,23 +8,23 @@ import {
   setFontFamily as persistFontFamily,
   setFontScale as persistFontScale,
 } from '#/alf/fonts'
-import {createThemes, defaultTheme} from '#/alf/themes'
-import {Theme, ThemeName} from '#/alf/types'
-import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
-import {Device} from '#/storage'
+import {themes} from '#/alf/themes'
+import {type Device} from '#/storage'
 
+export {type TextStyleProp, type Theme, type ViewStyleProp} from '@bsky.app/alf'
 export {atoms} from '#/alf/atoms'
+export * from '#/alf/breakpoints'
 export * from '#/alf/fonts'
 export * as tokens from '#/alf/tokens'
-export * from '#/alf/types'
 export * from '#/alf/util/flatten'
 export * from '#/alf/util/platform'
 export * from '#/alf/util/themeSelector'
+export * from '#/alf/util/useGutters'
 
 export type Alf = {
   themeName: ThemeName
   theme: Theme
-  themes: ReturnType<typeof createThemes>
+  themes: typeof themes
   fonts: {
     scale: Exclude<Device['fontScale'], undefined>
     scaleMultiplier: number
@@ -43,14 +43,8 @@ export type Alf = {
  */
 export const Context = React.createContext<Alf>({
   themeName: 'light',
-  theme: defaultTheme,
-  themes: createThemes({
-    hues: {
-      primary: BLUE_HUE,
-      negative: RED_HUE,
-      positive: GREEN_HUE,
-    },
-  }),
+  theme: themes.light,
+  themes,
   fonts: {
     scale: getFontScale(),
     scaleMultiplier: computeFontScaleMultiplier(getFontScale()),
@@ -60,6 +54,7 @@ export const Context = React.createContext<Alf>({
   },
   flags: {},
 })
+Context.displayName = 'AlfContext'
 
 export function ThemeProvider({
   children,
@@ -74,10 +69,10 @@ export function ThemeProvider({
   const setFontScaleAndPersist = React.useCallback<
     Alf['fonts']['setFontScale']
   >(
-    fontScale => {
-      setFontScale(fontScale)
-      persistFontScale(fontScale)
-      setFontScaleMultiplier(computeFontScaleMultiplier(fontScale))
+    fs => {
+      setFontScale(fs)
+      persistFontScale(fs)
+      setFontScaleMultiplier(computeFontScaleMultiplier(fs))
     },
     [setFontScale],
   )
@@ -87,21 +82,12 @@ export function ThemeProvider({
   const setFontFamilyAndPersist = React.useCallback<
     Alf['fonts']['setFontFamily']
   >(
-    fontFamily => {
-      setFontFamily(fontFamily)
-      persistFontFamily(fontFamily)
+    ff => {
+      setFontFamily(ff)
+      persistFontFamily(ff)
     },
     [setFontFamily],
   )
-  const themes = React.useMemo(() => {
-    return createThemes({
-      hues: {
-        primary: BLUE_HUE,
-        negative: RED_HUE,
-        positive: GREEN_HUE,
-      },
-    })
-  }, [])
 
   const value = React.useMemo<Alf>(
     () => ({
@@ -119,7 +105,6 @@ export function ThemeProvider({
     }),
     [
       themeName,
-      themes,
       fontScale,
       setFontScaleAndPersist,
       fontFamily,
@@ -140,15 +125,4 @@ export function useTheme(theme?: ThemeName) {
   return React.useMemo(() => {
     return theme ? alf.themes[theme] : alf.theme
   }, [theme, alf])
-}
-
-export function useBreakpoints() {
-  const gtPhone = useMediaQuery({minWidth: 500})
-  const gtMobile = useMediaQuery({minWidth: 800})
-  const gtTablet = useMediaQuery({minWidth: 1300})
-  return {
-    gtPhone,
-    gtMobile,
-    gtTablet,
-  }
 }

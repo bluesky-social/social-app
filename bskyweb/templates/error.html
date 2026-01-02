@@ -12,14 +12,14 @@
 {# don't include the bundle on non-404 error pages #}
 {% block head_bundle %}
   {% if statusCode == 404 %}
-    {{ super() }}
+    {{ block.Super }}
   {% else %}
   {% endif %}
 {% endblock %}
 
 {%- block body_all %}
   {% if statusCode == 404 %}
-    {{ super() }}
+    {{ block.Super }}
   {% else %}
     <h1>{{ statusCode }}: Server Error</h1>
     <p>Sorry about that! Our <a href="https://bluesky.statuspage.io/">Status Page</a> might have more context.

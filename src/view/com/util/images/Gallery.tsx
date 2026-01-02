@@ -1,16 +1,16 @@
-import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import {Image, ImageStyle} from 'expo-image'
-import {AppBskyEmbedImages} from '@atproto/api'
+import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
+import {type AnimatedRef} from 'react-native-reanimated'
+import {Image, type ImageStyle} from 'expo-image'
+import {type AppBskyEmbedImages} from '@atproto/api'
+import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HandleRef} from '#/lib/hooks/useHandleRef'
-import {Dimensions} from '#/lib/media/types'
+import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 
 type EventFunction = (index: number) => void
@@ -20,7 +20,7 @@ interface Props {
   index: number
   onPress?: (
     index: number,
-    containerRefs: HandleRef[],
+    containerRefs: AnimatedRef<any>[],
     fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: EventFunction
@@ -28,7 +28,7 @@ interface Props {
   imageStyle?: StyleProp<ImageStyle>
   viewContext?: PostEmbedViewContext
   insetBorderStyle?: StyleProp<ViewStyle>
-  containerRefs: HandleRef[]
+  containerRefs: AnimatedRef<any>[]
   thumbDimsRef: React.MutableRefObject<(Dimensions | null)[]>
 }
 
@@ -61,6 +61,10 @@ export function GalleryItem({
         }
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
+        android_ripple={{
+          color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
+          foreground: true,
+        }}
         style={[
           a.flex_1,
           a.overflow_hidden,
@@ -110,7 +114,7 @@ export function GalleryItem({
             ],
           ]}>
           <Text
-            style={[a.font_heavy, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
+            style={[a.font_bold, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
             ALT
           </Text>
         </View>

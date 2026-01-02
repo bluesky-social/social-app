@@ -1,16 +1,17 @@
 import {useCallback} from 'react'
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
-  AppBskyActorDefs,
-  AppBskyActorGetProfile,
-  AppBskyActorGetProfiles,
-  AppBskyActorProfile,
+  type AppBskyActorDefs,
+  type AppBskyActorGetProfile,
+  type AppBskyActorGetProfiles,
+  type AppBskyActorProfile,
   AtUri,
-  BskyAgent,
-  ComAtprotoRepoUploadBlob,
+  type BskyAgent,
+  type ComAtprotoRepoUploadBlob,
+  type Un$Typed,
 } from '@atproto/api'
 import {
-  QueryClient,
+  keepPreviousData,
+  type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -19,34 +20,41 @@ import {
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
-import {Shadow} from '#/state/cache/types'
+import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
+import {type Shadow} from '#/state/cache/types'
+import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import {
+  unstableCacheProfileView,
+  useUnstableProfileViewCache,
+} from '#/state/queries/unstable-profile-cache'
+import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
+import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {updateProfileShadow} from '../cache/profile-shadow'
-import {useAgent, useSession} from '../session'
+import type * as bsky from '#/types/bsky'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '../shell/progress-guide'
-import {RQKEY as RQKEY_LIST_CONVOS} from './messages/list-converations'
+import {RQKEY_ROOT as RQKEY_LIST_CONVOS} from './messages/list-conversations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
+
+export * from '#/state/queries/unstable-profile-cache'
+/**
+ * @deprecated use {@link unstableCacheProfileView} instead
+ */
+export const precacheProfile = unstableCacheProfileView
 
 const RQKEY_ROOT = 'profile'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
-const profilesQueryKeyRoot = 'profiles'
+export const profilesQueryKeyRoot = 'profiles'
 export const profilesQueryKey = (handles: string[]) => [
   profilesQueryKeyRoot,
   handles,
-]
-
-const profileBasicQueryKeyRoot = 'profileBasic'
-export const profileBasicQueryKey = (didOrHandle: string) => [
-  profileBasicQueryKeyRoot,
-  didOrHandle,
 ]
 
 export function useProfileQuery({
@@ -56,8 +64,8 @@ export function useProfileQuery({
   did: string | undefined
   staleTime?: number
 }) {
-  const queryClient = useQueryClient()
   const agent = useAgent()
+  const {getUnstableProfile} = useUnstableProfileViewCache()
   return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
@@ -72,16 +80,19 @@ export function useProfileQuery({
     },
     placeholderData: () => {
       if (!did) return
-
-      return queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
-        profileBasicQueryKey(did),
-      )
+      return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed
     },
     enabled: !!did,
   })
 }
 
-export function useProfilesQuery({handles}: {handles: string[]}) {
+export function useProfilesQuery({
+  handles,
+  maintainData,
+}: {
+  handles: string[]
+  maintainData?: boolean
+}) {
   const agent = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
@@ -90,6 +101,7 @@ export function useProfilesQuery({handles}: {handles: string[]}) {
       const res = await agent.getProfiles({actors: handles})
       return res.data
     },
+    placeholderData: maintainData ? keepPreviousData : undefined,
   })
 }
 
@@ -113,17 +125,20 @@ export function usePrefetchProfileQuery() {
 }
 
 interface ProfileUpdateParams {
-  profile: AppBskyActorDefs.ProfileView
+  profile: AppBskyActorDefs.ProfileViewDetailed
   updates:
-    | AppBskyActorProfile.Record
-    | ((existing: AppBskyActorProfile.Record) => AppBskyActorProfile.Record)
-  newUserAvatar?: RNImage | undefined | null
-  newUserBanner?: RNImage | undefined | null
+    | Un$Typed<AppBskyActorProfile.Record>
+    | ((
+        existing: Un$Typed<AppBskyActorProfile.Record>,
+      ) => Un$Typed<AppBskyActorProfile.Record>)
+  newUserAvatar?: ImageMeta | undefined | null
+  newUserBanner?: ImageMeta | undefined | null
   checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const updateProfileVerificationCache = useUpdateProfileVerificationCache()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({
       profile,
@@ -153,29 +168,29 @@ export function useProfileUpdateMutation() {
         )
       }
       await agent.upsertProfile(async existing => {
-        existing = existing || {}
+        let next: Un$Typed<AppBskyActorProfile.Record> = existing || {}
         if (typeof updates === 'function') {
-          existing = updates(existing)
+          next = updates(next)
         } else {
-          existing.displayName = updates.displayName
-          existing.description = updates.description
+          next.displayName = updates.displayName
+          next.description = updates.description
           if ('pinnedPost' in updates) {
-            existing.pinnedPost = updates.pinnedPost
+            next.pinnedPost = updates.pinnedPost
           }
         }
         if (newUserAvatarPromise) {
           const res = await newUserAvatarPromise
-          existing.avatar = res.data.blob
+          next.avatar = res.data.blob
         } else if (newUserAvatar === null) {
-          existing.avatar = undefined
+          next.avatar = undefined
         }
         if (newUserBannerPromise) {
           const res = await newUserBannerPromise
-          existing.banner = res.data.blob
+          next.banner = res.data.blob
         } else if (newUserBanner === null) {
-          existing.banner = undefined
+          next.banner = undefined
         }
-        return existing
+        return next
       })
       await whenAppViewReady(
         agent,
@@ -210,25 +225,36 @@ export function useProfileUpdateMutation() {
           }),
       )
     },
-    onSuccess(data, variables) {
+    async onSuccess(_, variables) {
       // invalidate cache
       queryClient.invalidateQueries({
         queryKey: RQKEY(variables.profile.did),
       })
+      queryClient.invalidateQueries({
+        queryKey: [profilesQueryKeyRoot, [variables.profile.did]],
+      })
+      await updateProfileVerificationCache({profile: variables.profile})
     },
   })
 }
 
 export function useProfileFollowMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<bsky.profile.AnyProfileView>,
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:follow']['logContext'],
+  position?: number,
+  contextProfileDid?: string,
 ) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
-  const followMutation = useProfileFollowMutation(logContext, profile)
+  const followMutation = useProfileFollowMutation(
+    logContext,
+    profile,
+    position,
+    contextProfileDid,
+  )
   const unfollowMutation = useProfileUnfollowMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
@@ -294,7 +320,9 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<bsky.profile.AnyProfileView>,
+  position?: number,
+  contextProfileDid?: string,
 ) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -313,8 +341,14 @@ function useProfileFollowMutation(
         didBecomeMutual: profile.viewer
           ? Boolean(profile.viewer.followedBy)
           : undefined,
-        followeeClout: toClout(profile.followersCount),
+        followeeClout:
+          'followersCount' in profile
+            ? toClout(profile.followersCount)
+            : undefined,
+        followeeDid: did,
         followerClout: toClout(ownProfile?.followersCount),
+        position,
+        contextProfileDid,
       })
       return await agent.follow(did)
     },
@@ -334,7 +368,7 @@ function useProfileUnfollowMutation(
 }
 
 export function useProfileMuteMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<bsky.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -409,7 +443,7 @@ function useProfileUnmuteMutation() {
 }
 
 export function useProfileBlockMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
+  profile: Shadow<bsky.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -440,7 +474,7 @@ export function useProfileBlockMutationQueue(
       updateProfileShadow(queryClient, did, {
         blockingUri: finalBlockingUri,
       })
-      queryClient.invalidateQueries({queryKey: RQKEY_LIST_CONVOS})
+      queryClient.invalidateQueries({queryKey: [RQKEY_LIST_CONVOS]})
     },
   })
 
@@ -503,14 +537,6 @@ function useProfileUnblockMutation() {
       resetProfilePostsQueries(queryClient, did, 1000)
     },
   })
-}
-
-export function precacheProfile(
-  queryClient: QueryClient,
-  profile: AppBskyActorDefs.ProfileViewBasic,
-) {
-  queryClient.setQueryData(profileBasicQueryKey(profile.handle), profile)
-  queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
 }
 
 async function whenAppViewReady(

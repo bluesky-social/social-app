@@ -1,15 +1,17 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
-import {isWeb} from '#/platform/detection'
+import {type NavigationProp} from '#/lib/routes/types'
 import {useSetThemePrefs} from '#/state/shell'
-import {CenteredView} from '#/view/com/util/Views'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
-import {atoms as a, ThemeProvider, useTheme} from '#/alf'
+import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
+import {
+  useDeviceGeolocationApi,
+  useRequestDeviceGeolocation,
+} from '#/geolocation'
 import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
@@ -22,36 +24,40 @@ import {Settings} from './Settings'
 import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
 import {Theming} from './Theming'
+import {Toasts} from './Toasts'
 import {Typography} from './Typography'
 
 export function Storybook() {
   return (
     <Layout.Screen>
-      {isWeb ? (
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>Storybook</Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content keyboardShouldPersistTaps="handled">
         <StorybookInner />
-      ) : (
-        <ScrollView>
-          <StorybookInner />
-        </ScrollView>
-      )}
+      </Layout.Content>
     </Layout.Screen>
   )
 }
 
 function StorybookInner() {
-  const t = useTheme()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const [showContainedList, setShowContainedList] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
+  const requestDeviceGeolocation = useRequestDeviceGeolocation()
+  const {setDeviceGeolocation} = useDeviceGeolocationApi()
 
   return (
-    <CenteredView style={[t.atoms.bg]}>
+    <>
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
         {!showContainedList ? (
           <>
             <View style={[a.flex_row, a.align_start, a.gap_md]}>
               <Button
-                variant="outline"
                 color="primary"
                 size="small"
                 label='Set theme to "system"'
@@ -59,7 +65,6 @@ function StorybookInner() {
                 <ButtonText>System</ButtonText>
               </Button>
               <Button
-                variant="solid"
                 color="secondary"
                 size="small"
                 label='Set theme to "light"'
@@ -67,7 +72,6 @@ function StorybookInner() {
                 <ButtonText>Light</ButtonText>
               </Button>
               <Button
-                variant="solid"
                 color="secondary"
                 size="small"
                 label='Set theme to "dim"'
@@ -78,7 +82,6 @@ function StorybookInner() {
                 <ButtonText>Dim</ButtonText>
               </Button>
               <Button
-                variant="solid"
                 color="secondary"
                 size="small"
                 label='Set theme to "dark"'
@@ -91,7 +94,6 @@ function StorybookInner() {
             </View>
 
             <Button
-              variant="solid"
               color="primary"
               size="small"
               onPress={() => navigation.navigate('SharedPreferencesTester')}
@@ -99,10 +101,19 @@ function StorybookInner() {
               testID="sharedPrefsTestOpenBtn">
               <ButtonText>Open Shared Prefs Tester</ButtonText>
             </Button>
-
-            <Admonitions />
-
-            <Settings />
+            <Button
+              color="primary_subtle"
+              size="large"
+              onPress={() =>
+                requestDeviceGeolocation().then(req => {
+                  if (req.granted && req.location) {
+                    setDeviceGeolocation(req.location)
+                  }
+                })
+              }
+              label="crash">
+              <ButtonText>Get GPS Location</ButtonText>
+            </Button>
 
             <ThemeProvider theme="light">
               <Theming />
@@ -114,21 +125,22 @@ function StorybookInner() {
               <Theming />
             </ThemeProvider>
 
-            <Forms />
+            <Toasts />
             <Buttons />
+            <Forms />
             <Typography />
             <Spacing />
             <Shadows />
-            <Buttons />
             <Icons />
             <Links />
             <Dialogs />
             <Menus />
             <Breakpoints />
             <Dialogs />
+            <Admonitions />
+            <Settings />
 
             <Button
-              variant="solid"
               color="primary"
               size="large"
               label="Switch to Contained List"
@@ -139,7 +151,6 @@ function StorybookInner() {
         ) : (
           <>
             <Button
-              variant="solid"
               color="primary"
               size="large"
               label="Switch to Storybook"
@@ -150,6 +161,6 @@ function StorybookInner() {
           </>
         )}
       </View>
-    </CenteredView>
+    </>
   )
 }

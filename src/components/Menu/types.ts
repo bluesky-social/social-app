@@ -1,14 +1,14 @@
-import React from 'react'
 import {
-  AccessibilityProps,
-  AccessibilityRole,
-  GestureResponderEvent,
-  PressableProps,
+  type AccessibilityProps,
+  type AccessibilityRole,
+  type GestureResponderEvent,
+  type PressableProps,
 } from 'react-native'
+import type React from 'react'
 
-import {TextStyleProp, ViewStyleProp} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type TextStyleProp, type ViewStyleProp} from '#/alf'
+import type * as Dialog from '#/components/Dialog'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']
@@ -19,6 +19,7 @@ export type ItemContextType = {
 }
 
 export type RadixPassThroughTriggerProps = {
+  ref: React.RefObject<any>
   id: string
   type: 'button'
   disabled: boolean
@@ -37,6 +38,7 @@ export type RadixPassThroughTriggerProps = {
 export type TriggerProps = {
   children(props: TriggerChildProps): React.ReactNode
   label: string
+  hint?: string
   role?: AccessibilityRole
 }
 export type TriggerChildProps =
@@ -59,11 +61,13 @@ export type TriggerChildProps =
        * object is empty.
        */
       props: {
+        ref: null
         onPress: () => void
         onFocus: () => void
         onBlur: () => void
         onPressIn: () => void
         onPressOut: () => void
+        accessibilityHint?: string
         accessibilityLabel: string
         accessibilityRole: AccessibilityRole
       }
@@ -85,6 +89,7 @@ export type TriggerChildProps =
         onBlur: () => void
         onMouseEnter: () => void
         onMouseLeave: () => void
+        accessibilityHint?: string
         accessibilityLabel: string
         accessibilityRole: AccessibilityRole
       }

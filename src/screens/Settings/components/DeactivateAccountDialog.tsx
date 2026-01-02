@@ -7,7 +7,7 @@ import {logger} from '#/logger'
 import {useAgent, useSessionApi} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {DialogOuterProps} from '#/components/Dialog'
+import {type DialogOuterProps} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
@@ -51,7 +51,7 @@ function DeactivateAccountDialogInner({
         case 'Bad token scope':
           setError(
             _(
-              msg`You're logged in with an App Password. Please log in with your main password to continue deactivating your account.`,
+              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
             ),
           )
           break
@@ -61,7 +61,7 @@ function DeactivateAccountDialogInner({
       }
 
       logger.error(e, {
-        context: 'Failed to deactivate account',
+        message: 'Failed to deactivate account',
       })
     } finally {
       setPending(false)

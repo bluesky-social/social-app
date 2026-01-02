@@ -1,35 +1,38 @@
-import React, {ComponentProps} from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type JSX, useCallback} from 'react'
+import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
+import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {BOTTOM_BAR_AVI} from '#/lib/demo'
 import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
+import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
-import {s} from '#/lib/styles'
+import {useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
-import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
+import {useHomeBadge} from '#/state/home-badge'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Button} from '#/view/com/util/forms/Button'
-import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
@@ -41,20 +44,16 @@ import {
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
 import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass'
 import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
+import {Text} from '#/components/Typography'
+import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
-type TabOptions =
-  | 'Home'
-  | 'Search'
-  | 'Notifications'
-  | 'MyProfile'
-  | 'Feeds'
-  | 'Messages'
+type TabOptions = 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile'
 
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
@@ -73,53 +72,73 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
   const playHaptic = useHaptics()
+  const hasHomeBadge = useHomeBadge()
+  const gate = useGate()
+  const hideBorder = useHideBottomBarBorder()
   const iconWidth = 28
 
-  const showSignIn = React.useCallback(() => {
+  const showSignIn = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = React.useCallback(() => {
+  const showCreateAccount = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const onPressTab = React.useCallback(
+  const onPressTab = useCallback(
     (tab: TabOptions) => {
       const state = navigation.getState()
       const tabState = getTabState(state, tab)
       if (tabState === TabState.InsideAtRoot) {
         emitSoftReset()
       } else if (tabState === TabState.Inside) {
-        dedupe(() => navigation.dispatch(StackActions.popToTop()))
+        // find the correct navigator in which to pop-to-top
+        const target = state.routes.find(route => route.name === `${tab}Tab`)
+          ?.state?.key
+        dedupe(() => {
+          if (target) {
+            // if we found it, trigger pop-to-top
+            navigation.dispatch({
+              ...StackActions.popToTop(),
+              target,
+            })
+          } else {
+            // fallback: reset navigation
+            navigation.reset({
+              index: 0,
+              routes: [{name: `${tab}Tab`}],
+            })
+          }
+        })
       } else {
         dedupe(() => navigation.navigate(`${tab}Tab`))
       }
     },
     [navigation, dedupe],
   )
-  const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
-  const onPressSearch = React.useCallback(
-    () => onPressTab('Search'),
-    [onPressTab],
-  )
-  const onPressNotifications = React.useCallback(
+  const onPressHome = useCallback(() => onPressTab('Home'), [onPressTab])
+  const onPressSearch = useCallback(() => onPressTab('Search'), [onPressTab])
+  const onPressNotifications = useCallback(
     () => onPressTab('Notifications'),
     [onPressTab],
   )
-  const onPressProfile = React.useCallback(() => {
+  const onPressProfile = useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
-  const onPressMessages = React.useCallback(() => {
+  const onPressMessages = useCallback(() => {
     onPressTab('Messages')
   }, [onPressTab])
 
-  const onLongPressProfile = React.useCallback(() => {
+  const onLongPressProfile = useCallback(() => {
     playHaptic()
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])
+
+  const [demoMode] = useDemoMode()
+  const {isActive: live} = useActorStatus(profile)
 
   return (
     <>
@@ -129,8 +148,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         style={[
           styles.bottomBar,
           pal.view,
-          pal.border,
-          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
+          hideBorder ? {borderColor: pal.view.backgroundColor} : pal.border,
+          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}
         onLayout={e => {
@@ -153,6 +172,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   />
                 )
               }
+              hasNew={hasHomeBadge && gate('remove_show_latest_button')}
               onPress={onPressHome}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Home`)}
@@ -195,12 +215,18 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }
               onPress={onPressMessages}
               notificationCount={numUnreadMessages.numUnread}
+              hasNew={numUnreadMessages.hasNew}
               accessible={true}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Chat`)}
               accessibilityHint={
                 numUnreadMessages.count > 0
-                  ? _(msg`${numUnreadMessages.numUnread} unread items`)
+                  ? _(
+                      msg`${plural(numUnreadMessages.numUnread ?? 0, {
+                        one: '# unread item',
+                        other: '# unread items',
+                      })}` || '',
+                    )
                   : ''
               }
             />
@@ -227,7 +253,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityHint={
                 numUnreadNotifications === ''
                   ? ''
-                  : _(msg`${numUnreadNotifications} unread items`)
+                  : _(
+                      msg`${plural(numUnreadNotifications ?? 0, {
+                        one: '# unread item',
+                        other: '# unread items',
+                      })}` || '',
+                    )
               }
             />
             <Btn
@@ -241,25 +272,39 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                         pal.text,
                         styles.profileIcon,
                         styles.onProfile,
-                        {borderColor: pal.text.color},
+                        {
+                          borderColor: pal.text.color,
+                          borderWidth: live ? 0 : 1,
+                        },
                       ]}>
                       <UserAvatar
-                        avatar={profile?.avatar}
-                        size={iconWidth - 3}
+                        avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
+                        size={iconWidth - 2}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                        live={live}
+                        hideLiveBadge
                       />
                     </View>
                   ) : (
                     <View
-                      style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+                      style={[
+                        styles.ctrlIcon,
+                        pal.text,
+                        styles.profileIcon,
+                        {
+                          borderWidth: live ? 0 : 1,
+                        },
+                      ]}>
                       <UserAvatar
-                        avatar={profile?.avatar}
-                        size={iconWidth - 3}
+                        avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
+                        size={iconWidth - 2}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                        live={live}
+                        hideLiveBadge
                       />
                     </View>
                   )}
@@ -294,25 +339,26 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 </View>
               </View>
 
-              <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+              <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
                 <Button
                   onPress={showCreateAccount}
-                  accessibilityHint={_(msg`Sign up`)}
-                  accessibilityLabel={_(msg`Sign up`)}>
-                  <Text type="md" style={[{color: 'white'}, s.bold]}>
-                    <Trans>Sign up</Trans>
-                  </Text>
+                  label={_(msg`Create account`)}
+                  size="small"
+                  variant="solid"
+                  color="primary">
+                  <ButtonText>
+                    <Trans>Create account</Trans>
+                  </ButtonText>
                 </Button>
-
                 <Button
-                  type="default"
                   onPress={showSignIn}
-                  accessibilityHint={_(msg`Sign in`)}
-                  accessibilityLabel={_(msg`Sign in`)}>
-                  <Text type="md" style={[pal.text, s.bold]}>
+                  label={_(msg`Sign in`)}
+                  size="small"
+                  variant="solid"
+                  color="secondary">
+                  <ButtonText>
                     <Trans>Sign in</Trans>
-                  </Text>
+                  </ButtonText>
                 </Button>
               </View>
             </View>
@@ -325,7 +371,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
 interface BtnProps
   extends Pick<
-    ComponentProps<typeof PressableScale>,
+    React.ComponentProps<typeof PressableScale>,
     | 'accessible'
     | 'accessibilityRole'
     | 'accessibilityHint'
@@ -334,6 +380,7 @@ interface BtnProps
   testID?: string
   icon: JSX.Element
   notificationCount?: string
+  hasNew?: boolean
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }
@@ -341,6 +388,7 @@ interface BtnProps
 function Btn({
   testID,
   icon,
+  hasNew,
   notificationCount,
   onPress,
   onLongPress,
@@ -348,6 +396,8 @@ function Btn({
   accessibilityHint,
   accessibilityLabel,
 }: BtnProps) {
+  const t = useTheme()
+
   return (
     <PressableScale
       testID={testID}
@@ -357,13 +407,22 @@ function Btn({
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      targetScale={0.8}>
+      targetScale={0.8}
+      accessibilityLargeContentTitle={accessibilityLabel}
+      accessibilityShowsLargeContentViewer>
       {icon}
       {notificationCount ? (
-        <View style={[styles.notificationCount, a.rounded_full]}>
+        <View
+          style={[
+            styles.notificationCount,
+            a.rounded_full,
+            {backgroundColor: t.palette.primary_500},
+          ]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
-      ) : undefined}
+      ) : hasNew ? (
+        <View style={[styles.hasNewBadge, a.rounded_full]} />
+      ) : null}
     </PressableScale>
   )
 }

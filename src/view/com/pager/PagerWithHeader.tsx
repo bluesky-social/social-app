@@ -1,17 +1,16 @@
-import * as React from 'react'
+import {type JSX, memo, useCallback, useEffect, useRef, useState} from 'react'
 import {
-  LayoutChangeEvent,
-  NativeScrollEvent,
-  ScrollView,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type ScrollView,
   StyleSheet,
   View,
 } from 'react-native'
 import Animated, {
-  AnimatedRef,
-  runOnJS,
+  type AnimatedRef,
   runOnUI,
   scrollTo,
-  SharedValue,
+  type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
@@ -20,8 +19,13 @@ import Animated, {
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {isIOS} from '#/platform/detection'
-import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
-import {ListMethods} from '../util/List'
+import {
+  Pager,
+  type PagerRef,
+  type RenderTabBarFnProps,
+} from '#/view/com/pager/Pager'
+import {useTheme} from '#/alf'
+import {type ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
 
@@ -32,105 +36,111 @@ export interface PagerWithHeaderChildParams {
 }
 
 export interface PagerWithHeaderProps {
+  ref?: React.Ref<PagerRef>
   testID?: string
   children:
     | (((props: PagerWithHeaderChildParams) => JSX.Element) | null)[]
     | ((props: PagerWithHeaderChildParams) => JSX.Element)
   items: string[]
   isHeaderReady: boolean
-  renderHeader?: () => JSX.Element
+  renderHeader?: ({
+    setMinimumHeight,
+  }: {
+    setMinimumHeight: (height: number) => void
+  }) => JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
   allowHeaderOverScroll?: boolean
 }
-export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
-  function PageWithHeaderImpl(
-    {
-      children,
-      testID,
+export function PagerWithHeader({
+  ref,
+  children,
+  testID,
+  items,
+  isHeaderReady,
+  renderHeader,
+  initialPage,
+  onPageSelected,
+  onCurrentPageSelected,
+  allowHeaderOverScroll,
+}: PagerWithHeaderProps) {
+  const [currentPage, setCurrentPage] = useState(0)
+  const [tabBarHeight, setTabBarHeight] = useState(0)
+  const [headerOnlyHeight, setHeaderOnlyHeight] = useState(0)
+  const scrollY = useSharedValue(0)
+  const headerHeight = headerOnlyHeight + tabBarHeight
+
+  // capture the header bar sizing
+  const onTabBarLayout = useNonReactiveCallback((evt: LayoutChangeEvent) => {
+    const height = evt.nativeEvent.layout.height
+    if (height > 0) {
+      // The rounding is necessary to prevent jumps on iOS
+      setTabBarHeight(Math.round(height * 2) / 2)
+    }
+  })
+  const onHeaderOnlyLayout = useNonReactiveCallback((height: number) => {
+    if (height > 0) {
+      // The rounding is necessary to prevent jumps on iOS
+      setHeaderOnlyHeight(Math.round(height * 2) / 2)
+    }
+  })
+
+  const renderTabBar = useCallback(
+    (props: RenderTabBarFnProps) => {
+      return (
+        <PagerHeaderProvider scrollY={scrollY} headerHeight={headerOnlyHeight}>
+          <PagerTabBar
+            headerOnlyHeight={headerOnlyHeight}
+            items={items}
+            isHeaderReady={isHeaderReady}
+            renderHeader={renderHeader}
+            currentPage={currentPage}
+            onCurrentPageSelected={onCurrentPageSelected}
+            onTabBarLayout={onTabBarLayout}
+            onHeaderOnlyLayout={onHeaderOnlyLayout}
+            onSelect={props.onSelect}
+            scrollY={scrollY}
+            testID={testID}
+            allowHeaderOverScroll={allowHeaderOverScroll}
+            dragProgress={props.dragProgress}
+            dragState={props.dragState}
+          />
+        </PagerHeaderProvider>
+      )
+    },
+    [
+      headerOnlyHeight,
       items,
       isHeaderReady,
       renderHeader,
-      initialPage,
-      onPageSelected,
+      currentPage,
       onCurrentPageSelected,
+      onTabBarLayout,
+      onHeaderOnlyLayout,
+      scrollY,
+      testID,
       allowHeaderOverScroll,
-    }: PagerWithHeaderProps,
-    ref,
-  ) {
-    const [currentPage, setCurrentPage] = React.useState(0)
-    const [tabBarHeight, setTabBarHeight] = React.useState(0)
-    const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
-    const scrollY = useSharedValue(0)
-    const headerHeight = headerOnlyHeight + tabBarHeight
+    ],
+  )
 
-    // capture the header bar sizing
-    const onTabBarLayout = useNonReactiveCallback((evt: LayoutChangeEvent) => {
-      const height = evt.nativeEvent.layout.height
-      if (height > 0) {
-        // The rounding is necessary to prevent jumps on iOS
-        setTabBarHeight(Math.round(height * 2) / 2)
-      }
-    })
-    const onHeaderOnlyLayout = useNonReactiveCallback((height: number) => {
-      if (height > 0) {
-        // The rounding is necessary to prevent jumps on iOS
-        setHeaderOnlyHeight(Math.round(height * 2) / 2)
-      }
-    })
+  const scrollRefs = useSharedValue<Array<AnimatedRef<any> | null>>([])
+  const registerRef = useCallback(
+    (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
+      scrollRefs.modify(refs => {
+        'worklet'
+        refs[atIndex] = scrollRef
+        return refs
+      })
+    },
+    [scrollRefs],
+  )
 
-    const renderTabBar = React.useCallback(
-      (props: RenderTabBarFnProps) => {
-        return (
-          <PagerHeaderProvider scrollY={scrollY}>
-            <PagerTabBar
-              headerOnlyHeight={headerOnlyHeight}
-              items={items}
-              isHeaderReady={isHeaderReady}
-              renderHeader={renderHeader}
-              currentPage={currentPage}
-              onCurrentPageSelected={onCurrentPageSelected}
-              onTabBarLayout={onTabBarLayout}
-              onHeaderOnlyLayout={onHeaderOnlyLayout}
-              onSelect={props.onSelect}
-              scrollY={scrollY}
-              testID={testID}
-              allowHeaderOverScroll={allowHeaderOverScroll}
-            />
-          </PagerHeaderProvider>
-        )
-      },
-      [
-        headerOnlyHeight,
-        items,
-        isHeaderReady,
-        renderHeader,
-        currentPage,
-        onCurrentPageSelected,
-        onTabBarLayout,
-        onHeaderOnlyLayout,
-        scrollY,
-        testID,
-        allowHeaderOverScroll,
-      ],
-    )
-
-    const scrollRefs = useSharedValue<Array<AnimatedRef<any> | null>>([])
-    const registerRef = React.useCallback(
-      (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
-        scrollRefs.modify(refs => {
-          'worklet'
-          refs[atIndex] = scrollRef
-          return refs
-        })
-      },
-      [scrollRefs],
-    )
-
-    const lastForcedScrollY = useSharedValue(0)
-    const adjustScrollForOtherPages = () => {
+  const lastForcedScrollY = useSharedValue(0)
+  const adjustScrollForOtherPages = useCallback(
+    (scrollState: 'idle' | 'dragging' | 'settling') => {
       'worklet'
+      if (scrollState !== 'dragging') return
       const currentScrollY = scrollY.get()
       const forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
       if (lastForcedScrollY.get() !== forcedScrollY) {
@@ -143,80 +153,69 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
           }
         }
       }
-    }
+    },
+    [currentPage, headerOnlyHeight, lastForcedScrollY, scrollRefs, scrollY],
+  )
 
-    const throttleTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
-      null,
-    )
-    const queueThrottledOnScroll = useNonReactiveCallback(() => {
-      if (!throttleTimeout.current) {
-        throttleTimeout.current = setTimeout(() => {
-          throttleTimeout.current = null
-          runOnUI(adjustScrollForOtherPages)()
-        }, 80 /* Sync often enough you're unlikely to catch it unsynced */)
+  const onScrollWorklet = useCallback(
+    (e: NativeScrollEvent) => {
+      'worklet'
+      const nextScrollY = e.contentOffset.y
+      // HACK: onScroll is reporting some strange values on load (negative header height).
+      // Highly improbable that you'd be overscrolled by over 400px -
+      // in fact, I actually can't do it, so let's just ignore those. -sfn
+      const isPossiblyInvalid =
+        headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
+      if (!isPossiblyInvalid) {
+        scrollY.set(nextScrollY)
       }
-    })
+    },
+    [scrollY, headerHeight],
+  )
 
-    const onScrollWorklet = React.useCallback(
-      (e: NativeScrollEvent) => {
-        'worklet'
-        const nextScrollY = e.contentOffset.y
-        // HACK: onScroll is reporting some strange values on load (negative header height).
-        // Highly improbable that you'd be overscrolled by over 400px -
-        // in fact, I actually can't do it, so let's just ignore those. -sfn
-        const isPossiblyInvalid =
-          headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
-        if (!isPossiblyInvalid) {
-          scrollY.set(nextScrollY)
-          runOnJS(queueThrottledOnScroll)()
-        }
-      },
-      [scrollY, queueThrottledOnScroll, headerHeight],
-    )
-
-    const onPageSelectedInner = React.useCallback(
-      (index: number) => {
-        setCurrentPage(index)
-        onPageSelected?.(index)
-      },
-      [onPageSelected, setCurrentPage],
-    )
-
-    const onPageSelecting = React.useCallback((index: number) => {
+  const onPageSelectedInner = useCallback(
+    (index: number) => {
       setCurrentPage(index)
-    }, [])
+      onPageSelected?.(index)
+    },
+    [onPageSelected, setCurrentPage],
+  )
 
-    return (
-      <Pager
-        ref={ref}
-        testID={testID}
-        initialPage={initialPage}
-        onPageSelected={onPageSelectedInner}
-        onPageSelecting={onPageSelecting}
-        renderTabBar={renderTabBar}>
-        {toArray(children)
-          .filter(Boolean)
-          .map((child, i) => {
-            const isReady =
-              isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
-            return (
-              <View key={i} collapsable={false}>
-                <PagerItem
-                  headerHeight={headerHeight}
-                  index={i}
-                  isReady={isReady}
-                  isFocused={i === currentPage}
-                  onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
-                  registerRef={registerRef}
-                  renderTab={child}
-                />
-              </View>
-            )
-          })}
-      </Pager>
-    )
-  },
-)
+  const onTabPressed = useCallback(() => {
+    runOnUI(adjustScrollForOtherPages)('dragging')
+  }, [adjustScrollForOtherPages])
+
+  return (
+    <Pager
+      ref={ref}
+      testID={testID}
+      initialPage={initialPage}
+      onTabPressed={onTabPressed}
+      onPageSelected={onPageSelectedInner}
+      renderTabBar={renderTabBar}
+      onPageScrollStateChanged={adjustScrollForOtherPages}>
+      {toArray(children)
+        .filter(Boolean)
+        .map((child, i) => {
+          const isReady =
+            isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
+          return (
+            <View key={i} collapsable={false}>
+              <PagerItem
+                headerHeight={headerHeight}
+                index={i}
+                isReady={isReady}
+                isFocused={i === currentPage}
+                onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
+                registerRef={registerRef}
+                renderTab={child}
+              />
+            </View>
+          )
+        })}
+    </Pager>
+  )
+}
 
 let PagerTabBar = ({
   currentPage,
@@ -231,6 +230,8 @@ let PagerTabBar = ({
   onCurrentPageSelected,
   onSelect,
   allowHeaderOverScroll,
+  dragProgress,
+  dragState,
 }: {
   currentPage: number
   headerOnlyHeight: number
@@ -238,15 +239,27 @@ let PagerTabBar = ({
   items: string[]
   testID?: string
   scrollY: SharedValue<number>
-  renderHeader?: () => JSX.Element
+  renderHeader?: ({
+    setMinimumHeight,
+  }: {
+    setMinimumHeight: (height: number) => void
+  }) => JSX.Element
   onHeaderOnlyLayout: (height: number) => void
   onTabBarLayout: (e: LayoutChangeEvent) => void
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
   allowHeaderOverScroll?: boolean
+  dragProgress: SharedValue<number>
+  dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }): React.ReactNode => {
+  const t = useTheme()
+  const [minimumHeaderHeight, setMinimumHeaderHeight] = useState(0)
   const headerTransform = useAnimatedStyle(() => {
-    const translateY = Math.min(scrollY.get(), headerOnlyHeight) * -1
+    const translateY =
+      Math.min(
+        scrollY.get(),
+        Math.max(headerOnlyHeight - minimumHeaderHeight, 0),
+      ) * -1
     return {
       transform: [
         {
@@ -257,16 +270,16 @@ let PagerTabBar = ({
       ],
     }
   })
-  const headerRef = React.useRef(null)
+  const headerRef = useRef(null)
   return (
     <Animated.View
       pointerEvents={isIOS ? 'auto' : 'box-none'}
-      style={[styles.tabBarMobile, headerTransform]}>
+      style={[styles.tabBarMobile, headerTransform, t.atoms.bg]}>
       <View
         ref={headerRef}
         pointerEvents={isIOS ? 'auto' : 'box-none'}
         collapsable={false}>
-        {renderHeader?.()}
+        {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
         {
           // It wouldn't be enough to place `onLayout` on the parent node because
           // this would risk measuring before `isHeaderReady` has turned `true`.
@@ -302,12 +315,14 @@ let PagerTabBar = ({
           selectedPage={currentPage}
           onSelect={onSelect}
           onPressSelected={onCurrentPageSelected}
+          dragProgress={dragProgress}
+          dragState={dragState}
         />
       </View>
     </Animated.View>
   )
 }
-PagerTabBar = React.memo(PagerTabBar)
+PagerTabBar = memo(PagerTabBar)
 
 function PagerItem({
   headerHeight,
@@ -328,7 +343,7 @@ function PagerItem({
 }) {
   const scrollElRef = useAnimatedRef()
 
-  React.useEffect(() => {
+  useEffect(() => {
     registerRef(scrollElRef, index)
     return () => {
       registerRef(null, index)

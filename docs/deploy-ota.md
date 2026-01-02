@@ -1,95 +1,138 @@
 # OTA Deployments
 
-## Overview
+## Automatic internal OTAs
 
-![OTA Deployment](./img/ota-flow.png)
-
-## Internal Deployments
-
-Internal OTA deployments should be performed automatically upon all merges into main. In cases where the fingerprint
-diff results in incompatible native changes, a new client build will automatically be ran and deployed to TestFlight 
+OTA deployments to TestFlight/APK installs happen automatically upon all merges
+into main. In cases where the fingerprint diff shows incompatible native
+changes, a new client build will automatically be ran and deployed to TestFlight
 (iOS) or delivered in Slack (Android).
 
-## Production Deployments
+## Production OTAs
 
-### Prerequisites
+Production OTAs can only update the JavaScript bundle. Changes to native modules
+must be done as a full release cycle through the app stores.
 
-- Find the latest production build number for both iOS and Android in Slack. These are listed in #client-builds
-  - Production builds always send the Version Number and Build Number in the Slack message. Search for the latest
-  production version number, and you should find the correct information.
-  
-    ![slack-build-info](./img/slack-build-info.png)
+> [!TIP]
+> If you're using a TestFlight build, in order to reference the correct build
+> number and to verify the success of an OTA, you will need to delete the
+> TestFlight app itself, delete the Bluesky app entirely, and re-install from
+> the App Store.
 
-- It may also be useful to check the current production clients for these values. This will also help for testing. Note
-that you will need to _fully_ remove the existing internal client build from your device, otherwise the given values in
-the app may differ from the actual production values.
+### 1. Find the build numbers
 
-  ![app-build-number](./img/app-build-number.png)
+Find the latest production build numbers for iOS and Android in Slack. These are
+spit out into `#bot-client-builds` after each release. You can also find this
+information under the `About` section in app settings.
 
-- You should have signed in to EAS locally through npx eas login. You will need to modify the build number in a
-subsequent step.
-- Ensure that the commit the initial client was cut from is properly tagged in git. The tag should be in the format of 1.X.0
-  - Note: If the commit is not properly tagged, then the OTA deployment will simply fail since the GitHub Action will 
-  not be able to find a commit to fingerprint and diff against.
+| Slack | In app |
+| ----- | ------ |
+| ![slack](./img/slack_client_builds.jpeg) | ![slack](./img/ios_settings_about.jpeg) |
 
-### Preparation
+### 2. Ensure the release is tagged
 
-- Create a new branch from the git tag that the initial release was cut from if no OTA deployment has been made yet for this 
-client. Name this branch `1.X.0-ota-1`
-- If a deployment has been made previously for this release, increment the branch name, i.e. `1.x.0-ota-2`
-- If necessary, cherry-pick the commit(s) that you wish to deploy
-- Ensure that the package.json’s version field is set to the appropriate value. As long as used the correct git tag
-to create your branch from, this should be properly set.
+You need to ensure that the latest release was properly tagged using the format
+`1.X.0`. If the commit is not properly tagged, then the OTA deployment will
+simply fail since the GitHub Action will not be able to find a commit to
+fingerprint and diff against.
 
-### Deployment
+### 3. Create an OTA branch
 
-- Update the build number through EAS to match the build numbers of the
-    production iOS/Android apps
-    - Note: This isn’t strictly necessary, but having a step that takes you off of GitHub and into the terminal provides 
-    a little “friction” to avoid fat fingering a release. Since there are legitimate reasons to just “click and deploy”
-    for internal builds, I felt it useful to make sure it doesn’t accidentally become a prod deployment.
-    - Set the build numbers to the values found in the prerequisite steps. Again, this should be the 
-    build number for the current production release you want to deploy for.
-    - `npx eas build:version:set -p ios`
-    - `npx eas build:version:set -p android`
-    - These steps should spit out what the current build number is, save those values
-        for later too
-- Run the deployment
-  - Navigate to https://github.com/bluesky-social/social-app/actions/workflows/bundle-deploy-eas-update.yml
-  - Select the “Run Workflow” dropdown
-  
-    ![run-workflow](./img/run-workflow.png)
-  
-  - Select the branch for the deployment you are releasing.
-  
-    ![branch-selection](./img/branch-selection.png)
-  
-  - Double check the branch selection.
-  - Select the production channel
-  - Enter the version for the client you are releasing to, i.e. 1.80.0
-    - Note: If you do enter an incorrect version here, the deployment will either:
-      - Fail because the action cannot find a commit with your misentered version
-      - Succeed - but with no users receiving the update. This is because the version you entered will not properly 
-      correlate to a _build number_ as well, so no clients in the wild will be able to receive the update.
-  
-        ![other-ota-options](./img/other-ota-options.png)
-  
-  - Triple check the branch selection.
-    - You selected the correct branch
-    - You selected the "Production" channel
-    - You entered the correct version in the format of `1.X.0`.
-  - Press “Run Workflow”
+Create a branch based off the last commit that was deployed in the most recent
+release. This could be the commit that was tagged `1.x.0`, or a later commit,
+but it **needs to be the tip of the latest production release** in any case.
+Double check yourself by ensuring that the `version` in `package.json` matches
+what's in the latest release.
 
-In about five minutes, the new deployment should be available for download. To test:
+This new OTA branch should follow the format `1.X.0-ota-1`. If one or more OTAs
+have already been deployed for this release, incremement the branch name e.g.
+`1.x.0-ota-2`.
 
-- Remove the internal build of the app from your device
-- Download the app from the App Store/Google Play
-- Launch the app once and wait approximately 15 seconds
-- Relaunch the app
-- Check the Settings page and scroll to the bottom. The commit hash should now be the latest commit on your deployed branch.
+### 4. Add commits to the OTA branch
 
-### Post Deployment
+Cherry pick in the commits that need to be deployed on top of the most recent
+release or OTA.
 
-- Reset both platforms build numbers to what they were before the OTA
-    deployment. These values should have been logged by the EAS CLI when you
-    reset them to the production values prior to OTA.
+### 5. Manually set build numbers
+
+Log in to the EAS CLI with `eas login` and manually set the build numbers to the
+values you found in **Step 1**.
+
+```sh
+> npx eas build:version:set -p ios
+>
+> Project @blueskysocial/bluesky with bundle identifier "xyz.blueskyweb.app" is configured with buildNumber 1011.
+> ✔ What version would you like to set? … 1009
+>
+> npx eas build:version:set -p android
+>
+> Project @blueskysocial/bluesky with application ID "xyz.blueskyweb.app" is configured with versionCode 641.
+> ✔ What version would you like to set? … 639  
+```
+
+👉 **Save the previous values,** in this case `1011` and `641`, so you can reset
+them after the OTA completes.
+
+### 6. Run the GitHub actions
+You'll need to run two separate actions: one to deploy the iOS/Android OTA
+itself, and one to build the web Docker container.
+
+**For the iOS/Android OTA,** head to [Actions > Bundle and Deploy EAS
+Update](https://github.com/bluesky-social/social-app/actions/workflows/bundle-deploy-eas-update.yml)
+and run the action.
+
+| Steps |     |
+| ----- | --- |
+| Select your OTA branch `1.x.0-ota-x`, select `production` in the dropdown, enter the git tag of the latest release `1.x.0`, and click "Run workflow"  | ![workflow](./img/ota_action.png) |
+
+> [!NOTE]
+> If you do enter an incorrect version here, the deployment will either:
+> - Fail, because the action cannot find a commit with your misentered version
+> - Succeed, but with no users receiving the update. This is because the version
+>   you entered will not properly correlate to a _build number_ as well, so no
+>   clients in the wild will be able to receive the update.
+
+**For web,** head to [Actions >
+build-and-push-bskyweb-aws](https://github.com/bluesky-social/social-app/actions/workflows/build-and-push-bskyweb-aws.yaml)
+and run the action.
+
+| Steps |     |
+| ----- | --- |
+| Select your OTA branch `1.x.0-ota-x` and click "Run workflow" | ![workflow](./img/web_action.png) |
+
+### 7. Deploy web
+
+Once the web Docker container build finishes, go to your `1.x.0-ota-x` branch,
+copy the most recent commit hash. Post this hash in `#ops-deploys` and request
+someone with web deploy access deploy the built container.
+
+### 8. Confirm successful deployment
+
+In about five minutes, the new deployment should be deployed and devices will
+begin downloading and installing in the background.
+
+To confirm this, as mentioned above, you must completely clear the TestFlight
+build from your device and re-install from the App Store. Then, you'll need to:
+- Launch the app (or quit and reopen) and wait ~15s for the download to complete
+- Quit and reopen the app
+- Check the `Settings > About` page and confirm the has matches the most recent has on your OTA branch
+
+### 9. Reset build numbers
+
+Grab the build numbers you saved in **Step 5** and reverse the EAS CLI commands
+to reset the build numbers.
+
+```sh
+> npx eas build:version:set -p ios
+>
+> Project @blueskysocial/bluesky with bundle identifier "xyz.blueskyweb.app" is configured with buildNumber 1009.
+> ✔ What version would you like to set? … 1011
+>
+> npx eas build:version:set -p android
+>
+> Project @blueskysocial/bluesky with application ID "xyz.blueskyweb.app" is configured with versionCode 639.
+> ✔ What version would you like to set? … 641
+```
+
+## Overview diagram
+
+![OTA Deployment](./img/ota-flow.png)

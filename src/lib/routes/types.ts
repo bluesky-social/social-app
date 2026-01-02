@@ -1,5 +1,7 @@
-import {NavigationState, PartialState} from '@react-navigation/native'
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import {type NavigationState, type PartialState} from '@react-navigation/native'
+import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
+
+import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -10,17 +12,24 @@ export type CommonNavigatorParams = {
   ModerationModlists: undefined
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined
+  ModerationInteractionSettings: undefined
+  ModerationVerificationSettings: undefined
   Settings: undefined
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
   ProfileKnownFollowers: {name: string}
+  ProfileSearch: {name: string; q?: string}
   ProfileList: {name: string; rkey: string}
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
   PostQuotes: {name: string; rkey: string}
-  ProfileFeed: {name: string; rkey: string}
+  ProfileFeed: {
+    name: string
+    rkey: string
+    feedCacheKey?: 'discover' | 'explore' | undefined
+  }
   ProfileFeedLikedBy: {name: string; rkey: string}
   ProfileLabelerLikedBy: {name: string}
   Debug: undefined
@@ -42,19 +51,44 @@ export type CommonNavigatorParams = {
   AppearanceSettings: undefined
   AccountSettings: undefined
   PrivacyAndSecuritySettings: undefined
+  ActivityPrivacySettings: undefined
   ContentAndMediaSettings: undefined
-  AboutSettings: undefined
-  Search: {q?: string}
-  Hashtag: {tag: string; author?: string}
-  MessagesConversation: {conversation: string; embed?: string}
-  MessagesSettings: undefined
   NotificationSettings: undefined
+  ReplyNotificationSettings: undefined
+  MentionNotificationSettings: undefined
+  QuoteNotificationSettings: undefined
+  LikeNotificationSettings: undefined
+  RepostNotificationSettings: undefined
+  NewFollowerNotificationSettings: undefined
+  LikesOnRepostsNotificationSettings: undefined
+  RepostsOnRepostsNotificationSettings: undefined
+  ActivityNotificationSettings: undefined
+  MiscellaneousNotificationSettings: undefined
+  InterestsSettings: undefined
+  AboutSettings: undefined
+  AppIconSettings: undefined
+  FindContactsSettings: undefined
+  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
+  Hashtag: {tag: string; author?: string}
+  Topic: {topic: string}
+  MessagesConversation: {conversation: string; embed?: string; accept?: true}
+  MessagesSettings: undefined
+  MessagesInbox: undefined
+  NotificationsActivityList: {posts: string}
+  LegacyNotificationSettings: undefined
   Feeds: undefined
   Start: {name: string; rkey: string}
   StarterPack: {name: string; rkey: string; new?: boolean}
   StarterPackShort: {code: string}
-  StarterPackWizard: undefined
+  StarterPackWizard: {
+    fromDialog?: boolean
+    targetDid?: string
+    onSuccess?: () => void
+  }
   StarterPackEdit: {rkey?: string}
+  VideoFeed: VideoFeedSourceContext
+  Bookmarks: undefined
+  FindContactsFlow: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -70,15 +104,15 @@ export type HomeTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
-  Search: {q?: string}
+  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
 }
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
-  Notifications: {show?: 'all'}
+  Notifications: undefined
 }
 
 export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
-  MyProfile: undefined
+  MyProfile: {name: 'me'; hideBackButton: true}
 }
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {
@@ -87,10 +121,9 @@ export type MessagesTabNavigatorParams = CommonNavigatorParams & {
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
-  Search: {q?: string}
+  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
   Feeds: undefined
-  Notifications: {show?: 'all'}
-  Hashtag: {tag: string; author?: string}
+  Notifications: undefined
   Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
@@ -98,19 +131,13 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   HomeTab: undefined
   Home: undefined
   SearchTab: undefined
-  Search: {q?: string}
+  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
   Feeds: undefined
   NotificationsTab: undefined
-  Notifications: {show?: 'all'}
+  Notifications: undefined
   MyProfileTab: undefined
-  Hashtag: {tag: string; author?: string}
   MessagesTab: undefined
   Messages: {animation?: 'push' | 'pop'}
-  Start: {name: string; rkey: string}
-  StarterPack: {name: string; rkey: string; new?: boolean}
-  StarterPackShort: {code: string}
-  StarterPackWizard: undefined
-  StarterPackEdit: {rkey?: string}
 }
 
 // NOTE
@@ -127,5 +154,5 @@ export type RouteParams = Record<string, string>
 export type MatchResult = {params: RouteParams}
 export type Route = {
   match: (path: string) => MatchResult | undefined
-  build: (params: RouteParams) => string
+  build: (params?: Record<string, any>) => string
 }

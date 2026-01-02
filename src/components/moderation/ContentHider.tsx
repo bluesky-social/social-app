@@ -1,6 +1,6 @@
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {ModerationUI} from '@atproto/api'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,20 +23,23 @@ export function ContentHider({
   modui,
   ignoreMute,
   style,
+  activeStyle,
   childContainerStyle,
   children,
-}: React.PropsWithChildren<{
+}: {
   testID?: string
   modui: ModerationUI | undefined
   ignoreMute?: boolean
   style?: StyleProp<ViewStyle>
+  activeStyle?: StyleProp<ViewStyle>
   childContainerStyle?: StyleProp<ViewStyle>
-}>) {
+  children?: React.ReactNode | ((props: {active: boolean}) => React.ReactNode)
+}) {
   const blur = modui?.blurs[0]
   if (!blur || (ignoreMute && isJustAMute(modui))) {
     return (
       <View testID={testID} style={style}>
-        {children}
+        {typeof children === 'function' ? children({active: false}) : children}
       </View>
     )
   }
@@ -44,9 +47,9 @@ export function ContentHider({
     <ContentHiderActive
       testID={testID}
       modui={modui}
-      style={style}
+      style={[style, activeStyle]}
       childContainerStyle={childContainerStyle}>
-      {children}
+      {typeof children === 'function' ? children({active: true}) : children}
     </ContentHiderActive>
   )
 }
@@ -82,7 +85,11 @@ function ContentHiderActive({
       blur.type !== 'label' ||
       (blur.type === 'label' && blur.source.type !== 'user')
     ) {
-      return desc.name
+      if (desc.isSubjectAccount) {
+        return _(msg`${desc.name} (Account)`)
+      } else {
+        return desc.name
+      }
     }
 
     let hasAdultContentLabel = false
@@ -124,6 +131,7 @@ function ContentHiderActive({
     modui?.blurs,
     blur,
     desc.name,
+    desc.isSubjectAccount,
     labelDefs,
     i18n.locale,
     globalLabelStrings,
@@ -146,10 +154,10 @@ function ContentHiderActive({
         label={desc.name}
         accessibilityHint={
           modui.noOverride
-            ? _(msg`Learn more about the moderation applied to this content.`)
+            ? _(msg`Learn more about the moderation applied to this content`)
             : override
-            ? _(msg`Hide the content`)
-            : _(msg`Show the content`)
+              ? _(msg`Hides the content`)
+              : _(msg`Shows the content`)
         }>
         {state => (
           <View
@@ -175,9 +183,9 @@ function ContentHiderActive({
               style={[
                 a.flex_1,
                 a.text_left,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_snug,
-                gtMobile && [a.font_bold],
+                gtMobile && [a.font_semi_bold],
                 t.atoms.text_contrast_medium,
                 web({
                   marginBottom: 1,
@@ -189,9 +197,9 @@ function ContentHiderActive({
             {!modui.noOverride && (
               <Text
                 style={[
-                  a.font_bold,
+                  a.font_semi_bold,
                   a.leading_snug,
-                  gtMobile && [a.font_bold],
+                  gtMobile && [a.font_semi_bold],
                   t.atoms.text_contrast_high,
                   web({
                     marginBottom: 1,
@@ -212,7 +220,7 @@ function ContentHiderActive({
             control.open()
           }}
           label={_(
-            msg`Learn more about the moderation applied to this content.`,
+            msg`Learn more about the moderation applied to this content`,
           )}
           style={[a.pt_sm]}>
           {state => (

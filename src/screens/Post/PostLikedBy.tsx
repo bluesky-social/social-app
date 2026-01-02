@@ -1,24 +1,28 @@
 import React from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
-import {isWeb} from '#/platform/detection'
+import {usePostQuery} from '#/state/queries/post'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {PostLikedBy as PostLikedByComponent} from '#/view/com/post-thread/PostLikedBy'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
 import * as Layout from '#/components/Layout'
-import {ListHeaderDesktop} from '#/components/Lists'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostLikedBy'>
 export const PostLikedByScreen = ({route}: Props) => {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
-  const {_} = useLingui()
+  const {data: post} = usePostQuery(uri)
+
+  let likeCount
+  if (post) {
+    likeCount = post.likeCount
+  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -28,11 +32,23 @@ export const PostLikedByScreen = ({route}: Props) => {
 
   return (
     <Layout.Screen>
-      <CenteredView sideBorders={true}>
-        <ListHeaderDesktop title={_(msg`Liked By`)} />
-        <ViewHeader title={_(msg`Liked By`)} showBorder={!isWeb} />
-        <PostLikedByComponent uri={uri} />
-      </CenteredView>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          {post && (
+            <>
+              <Layout.Header.TitleText>
+                <Trans>Liked By</Trans>
+              </Layout.Header.TitleText>
+              <Layout.Header.SubtitleText>
+                <Plural value={likeCount ?? 0} one="# like" other="# likes" />
+              </Layout.Header.SubtitleText>
+            </>
+          )}
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <PostLikedByComponent uri={uri} />
     </Layout.Screen>
   )
 }

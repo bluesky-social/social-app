@@ -11,7 +11,7 @@ import {logger} from '#/logger'
 import {RQKEY_ROOT as listQueryRoot} from '#/state/queries/list'
 import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
 import {
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
@@ -122,8 +122,12 @@ export function ListHiddenScreen({
           width={42}
         />
         <View style={[a.gap_sm, a.align_center]}>
-          <Text style={[a.font_bold, a.text_3xl]}>
-            <Trans>List has been hidden</Trans>
+          <Text style={[a.font_semi_bold, a.text_3xl]}>
+            {list.creator.viewer?.blocking || list.creator.viewer?.blockedBy ? (
+              <Trans>Creator has been blocked</Trans>
+            ) : (
+              <Trans>List has been hidden</Trans>
+            )}
           </Text>
           <Text
             style={[
@@ -133,16 +137,26 @@ export function ListHiddenScreen({
               t.atoms.text_contrast_high,
               {lineHeight: 1.4},
             ]}>
-            <Trans>
-              This list - created by{' '}
-              <Text style={[a.text_md, !isOwner && a.font_bold]}>
-                {isOwner
-                  ? _(msg`you`)
-                  : sanitizeHandle(list.creator.handle, '@')}
-              </Text>{' '}
-              - contains possible violations of Bluesky's community guidelines
-              in its name or description.
-            </Trans>
+            {list.creator.viewer?.blocking || list.creator.viewer?.blockedBy ? (
+              <Trans>
+                Either the creator of this list has blocked you or you have
+                blocked the creator.
+              </Trans>
+            ) : isOwner ? (
+              <Trans>
+                This list – created by you – contains possible violations of
+                Bluesky's community guidelines in its name or description.
+              </Trans>
+            ) : (
+              <Trans>
+                This list – created by{' '}
+                <Text style={[a.font_semi_bold]}>
+                  {sanitizeHandle(list.creator.handle, '@')}
+                </Text>{' '}
+                – contains possible violations of Bluesky's community guidelines
+                in its name or description.
+              </Trans>
+            )}
           </Text>
         </View>
       </View>
@@ -157,7 +171,7 @@ export function ListHiddenScreen({
               onPress={onRemoveList}
               disabled={isProcessing}>
               <ButtonText>
-                <Trans>Removed from saved feeds</Trans>
+                <Trans>Remove from saved feeds</Trans>
               </ButtonText>
               {isProcessing ? (
                 <ButtonIcon icon={Loader} position="right" />

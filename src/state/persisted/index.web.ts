@@ -4,11 +4,11 @@ import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
 import {
   defaults,
-  Schema,
+  type Schema,
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
-import {PersistedApi} from './types'
+import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
@@ -24,6 +24,7 @@ const _emitter = new EventEmitter()
 
 export async function init() {
   broadcast.onmessage = onBroadcastMessage
+  window.onstorage = onStorage
   const stored = readFromStorage()
   if (stored) {
     _state = stored
@@ -89,6 +90,17 @@ export async function clearStorage() {
   }
 }
 clearStorage satisfies PersistedApi['clearStorage']
+
+function onStorage() {
+  const next = readFromStorage()
+  if (next === _state) {
+    return
+  }
+  if (next) {
+    _state = next
+    _emitter.emit('update')
+  }
+}
 
 async function onBroadcastMessage({data}: MessageEvent) {
   if (

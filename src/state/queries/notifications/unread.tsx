@@ -2,19 +2,18 @@
  * A kind of companion API to ./feed.ts. See that file for more info.
  */
 
-import React from 'react'
+import React, {useRef} from 'react'
 import {AppState} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {resetBadgeCount} from '#/lib/notifications/notifications'
-import {logger} from '#/logger'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {truncateAndInvalidate} from '#/state/queries/util'
 import {useAgent, useSession} from '#/state/session'
-import {useModerationOpts} from '../../preferences/moderation-opts'
-import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
-import {CachedFeedPage, FeedPage} from './types'
+import {type CachedFeedPage, type FeedPage} from './types'
 import {fetchPage} from './util'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
@@ -35,12 +34,14 @@ interface ApiContext {
 }
 
 const stateContext = React.createContext<StateContext>('')
+stateContext.displayName = 'NotificationsUnreadStateContext'
 
 const apiContext = React.createContext<ApiContext>({
   async markAllRead() {},
   async checkUnread() {},
   getCachedUnreadPage: () => undefined,
 })
+apiContext.displayName = 'NotificationsUnreadApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
@@ -94,8 +95,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           data.event === '30+'
             ? 30
             : data.event === ''
-            ? 0
-            : parseInt(data.event, 10) || 1,
+              ? 0
+              : parseInt(data.event, 10) || 1,
       }
       setNumUnread(data.event)
     }
@@ -104,6 +105,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       broadcast.removeEventListener('message', listener)
     }
   }, [setNumUnread])
+
+  const isFetchingRef = useRef(false)
 
   // create API
   const api = React.useMemo<ApiContext>(() => {
@@ -138,6 +141,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             }
           }
 
+          if (isFetchingRef.current) {
+            return
+          }
+          // Do not move this without ensuring it gets a symmetrical reset in the finally block.
+          isFetchingRef.current = true
+
           // count
           const {page, indexedAt: lastIndexed} = await fetchPage({
             agent,
@@ -145,6 +154,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             limit: 40,
             queryClient,
             moderationOpts,
+            reasons: [],
 
             // only fetch subjects when the page is going to be used
             // in the notifications query, otherwise skip it
@@ -155,8 +165,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             unreadCount >= 30
               ? '30+'
               : unreadCount === 0
-              ? ''
-              : String(unreadCount)
+                ? ''
+                : String(unreadCount)
 
           // track last sync
           const now = new Date()
@@ -174,11 +184,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           // update & broadcast
           setNumUnread(unreadCountStr)
           if (invalidate) {
-            truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
+            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
+            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
           }
           broadcast.postMessage({event: unreadCountStr})
-        } catch (e) {
-          logger.warn('Failed to check unread notifications', {error: e})
+        } finally {
+          isFetchingRef.current = false
         }
       },
 

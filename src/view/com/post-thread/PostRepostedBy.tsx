@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,8 +12,20 @@ import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
-function renderItem({item}: {item: ActorDefs.ProfileViewBasic}) {
-  return <ProfileCardWithFollowBtn key={item.did} profile={item} />
+function renderItem({
+  item,
+  index,
+}: {
+  item: ActorDefs.ProfileView
+  index: number
+}) {
+  return (
+    <ProfileCardWithFollowBtn
+      key={item.did}
+      profile={item}
+      noBorder={index === 0}
+    />
+  )
 }
 
 function keyExtractor(item: ActorDefs.ProfileViewBasic) {

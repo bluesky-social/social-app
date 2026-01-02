@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {Props, useCommonSVGProps} from '#/components/icons/common'
+import {type Props, useCommonSVGProps} from '#/components/icons/common'
 
 export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
   function LogoImpl(props: Props, ref) {
@@ -28,7 +28,50 @@ export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
   },
 )
 
-export function createSinglePathSVG({path}: {path: string}) {
+export function createSinglePathSVG({
+  path,
+  viewBox,
+  strokeWidth = 0,
+  strokeLinecap = 'butt',
+  strokeLinejoin = 'miter',
+}: {
+  path: string
+  viewBox?: string
+  strokeWidth?: number
+  strokeLinecap?: 'butt' | 'round' | 'square'
+  strokeLinejoin?: 'miter' | 'round' | 'bevel'
+}) {
+  return React.forwardRef<Svg, Props>(function LogoImpl(props, ref) {
+    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
+
+    const hasStroke = strokeWidth > 0
+
+    return (
+      <Svg
+        fill="none"
+        {...rest}
+        ref={ref}
+        viewBox={viewBox || '0 0 24 24'}
+        width={size}
+        height={size}
+        style={[style]}>
+        {gradient}
+        <Path
+          fill={hasStroke ? 'none' : fill}
+          stroke={hasStroke ? fill : 'none'}
+          strokeWidth={strokeWidth}
+          strokeLinecap={strokeLinecap}
+          strokeLinejoin={strokeLinejoin}
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d={path}
+        />
+      </Svg>
+    )
+  })
+}
+
+export function createSinglePathSVG2({path}: {path: string}) {
   return React.forwardRef<Svg, Props>(function LogoImpl(props, ref) {
     const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
 
@@ -40,7 +83,7 @@ export function createSinglePathSVG({path}: {path: string}) {
         viewBox="0 0 24 24"
         width={size}
         height={size}
-        style={[style]}>
+        style={style}>
         {gradient}
         <Path fill={fill} fillRule="evenodd" clipRule="evenodd" d={path} />
       </Svg>

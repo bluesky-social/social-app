@@ -1,7 +1,7 @@
 import React from 'react'
-import {Modal, View} from 'react-native'
+import {Modal, ScrollView, View} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {StatusBar} from 'expo-status-bar'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,7 +9,6 @@ import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
-import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -86,13 +85,28 @@ export function SignupQueued() {
     </Button>
   )
 
+  const logoutBtn = (
+    <Button
+      variant="ghost"
+      size="large"
+      color="primary"
+      label={_(msg`Sign out`)}
+      onPress={() => logoutCurrentAccount('SignupQueued')}>
+      <ButtonText>
+        <Trans>Sign out</Trans>
+      </ButtonText>
+    </Button>
+  )
+
+  const webLayout = isWeb && gtMobile
+
   return (
     <Modal
       visible
       animationType={native('slide')}
       presentationStyle="formSheet"
       style={[web(a.util_screen_outer)]}>
-      {isIOS && <StatusBar style="light" />}
+      {isIOS && <SystemBars style={{statusBar: 'light'}} />}
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}
         contentContainerStyle={{borderWidth: 0}}
@@ -132,7 +146,7 @@ export function SignupQueued() {
               ]}>
               {typeof placeInQueue === 'number' && (
                 <Text
-                  style={[a.text_5xl, a.text_center, a.font_heavy, a.mb_2xl]}>
+                  style={[a.text_5xl, a.text_center, a.font_bold, a.mb_2xl]}>
                   {placeInQueue}
                 </Text>
               )}
@@ -154,7 +168,7 @@ export function SignupQueued() {
               </P>
             </View>
 
-            {isWeb && gtMobile && (
+            {webLayout && (
               <View
                 style={[
                   a.w_full,
@@ -163,15 +177,7 @@ export function SignupQueued() {
                   a.pt_5xl,
                   {paddingBottom: 200},
                 ]}>
-                <Button
-                  variant="ghost"
-                  size="large"
-                  label={_(msg`Log out`)}
-                  onPress={() => logoutCurrentAccount('SignupQueued')}>
-                  <ButtonText style={[{color: t.palette.primary_500}]}>
-                    <Trans>Log out</Trans>
-                  </ButtonText>
-                </Button>
+                {logoutBtn}
                 {checkBtn}
               </View>
             )}
@@ -179,27 +185,17 @@ export function SignupQueued() {
         </View>
       </ScrollView>
 
-      {(!isWeb || !gtMobile) && (
+      {!webLayout && (
         <View
           style={[
             a.align_center,
             t.atoms.bg,
             gtMobile ? a.px_5xl : a.px_xl,
-            {
-              paddingBottom: Math.max(insets.bottom, a.pb_5xl.paddingBottom),
-            },
+            {paddingBottom: Math.max(insets.bottom, a.pb_5xl.paddingBottom)},
           ]}>
           <View style={[a.w_full, a.gap_sm, {maxWidth: COL_WIDTH}]}>
             {checkBtn}
-            <Button
-              variant="ghost"
-              size="large"
-              label={_(msg`Log out`)}
-              onPress={() => logoutCurrentAccount('SignupQueued')}>
-              <ButtonText style={[{color: t.palette.primary_500}]}>
-                <Trans>Log out</Trans>
-              </ButtonText>
-            </Button>
+            {logoutBtn}
           </View>
         </View>
       )}

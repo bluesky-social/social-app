@@ -16,7 +16,7 @@
 
 import {TAG_REGEX, TRAILING_PUNCTUATION_REGEX} from '@atproto/api'
 import {Mark} from '@tiptap/core'
-import {Node as ProsemirrorNode} from '@tiptap/pm/model'
+import {type Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Plugin, PluginKey} from '@tiptap/pm/state'
 import {Decoration, DecorationSet} from '@tiptap/pm/view'
 
@@ -30,7 +30,7 @@ function getDecorations(doc: ProsemirrorNode) {
 
       let match
       while ((match = regex.exec(textContent))) {
-        const [matchedString, _, tag] = match
+        const [matchedString, __, tag] = match
 
         if (!tag || tag.replace(TRAILING_PUNCTUATION_REGEX, '').length > 64)
           continue

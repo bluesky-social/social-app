@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationCause} from '@atproto/api'
+import {type ModerationDecision} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -14,20 +14,18 @@ import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {Text} from '#/components/Typography'
+import type * as bsky from '#/types/bsky'
 
 export function MessagesListBlockedFooter({
   recipient: initialRecipient,
   convoId,
   hasMessages,
-  blockInfo,
+  moderation,
 }: {
-  recipient: AppBskyActorDefs.ProfileViewBasic
+  recipient: bsky.profile.AnyProfileView
   convoId: string
   hasMessages: boolean
-  blockInfo: {
-    listBlocks: ModerationCause[]
-    userBlock: ModerationCause | undefined
-  }
+  moderation: ModerationDecision
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -39,7 +37,17 @@ export function MessagesListBlockedFooter({
   const reportControl = useDialogControl()
   const blockedByListControl = useDialogControl()
 
-  const {listBlocks, userBlock} = blockInfo
+  const {listBlocks, userBlock} = React.useMemo(() => {
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
+
   const isBlocking = !!userBlock || !!listBlocks.length
 
   const onUnblockPress = React.useCallback(() => {
@@ -53,7 +61,7 @@ export function MessagesListBlockedFooter({
   return (
     <View style={[hasMessages && a.pt_md, a.pb_xl, a.gap_lg]}>
       <Divider />
-      <Text style={[a.text_md, a.font_bold, a.text_center]}>
+      <Text style={[a.text_md, a.font_semi_bold, a.text_center]}>
         {isBlocking ? (
           <Trans>You have blocked this user</Trans>
         ) : (

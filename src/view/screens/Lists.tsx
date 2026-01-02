@@ -1,109 +1,91 @@
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {useCallback} from 'react'
 import {AtUri} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
-import {useEmail} from '#/lib/hooks/useEmail'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {NavigationProp} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
-import {useModalControls} from '#/state/modals'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MyLists} from '#/view/com/lists/MyLists'
-import {Button} from '#/view/com/util/forms/Button'
-import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
-import {Text} from '#/view/com/util/text/Text'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {CreateOrEditListDialog} from '#/components/dialogs/lists/CreateOrEditListDialog'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export function ListsScreen({}: Props) {
   const {_} = useLingui()
-  const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isMobile} = useWebMediaQueries()
   const navigation = useNavigation<NavigationProp>()
-  const {openModal} = useModalControls()
-  const {needsEmailVerification} = useEmail()
-  const control = useDialogControl()
+  const requireEmailVerification = useRequireEmailVerification()
+  const createListDialogControl = useDialogControl()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPressNewList = React.useCallback(() => {
-    if (needsEmailVerification) {
-      control.open()
-      return
-    }
+  const onPressNewList = useCallback(() => {
+    createListDialogControl.open()
+  }, [createListDialogControl])
 
-    openModal({
-      name: 'create-or-edit-list',
-      purpose: 'app.bsky.graph.defs#curatelist',
-      onSave: (uri: string) => {
-        try {
-          const urip = new AtUri(uri)
-          navigation.navigate('ProfileList', {
-            name: urip.hostname,
-            rkey: urip.rkey,
-          })
-        } catch {}
-      },
-    })
-  }, [needsEmailVerification, control, openModal, navigation])
+  const wrappedOnPressNewList = requireEmailVerification(onPressNewList, {
+    instructions: [
+      <Trans key="lists">
+        Before creating a list, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
+  const onCreateList = useCallback(
+    (uri: string) => {
+      try {
+        const urip = new AtUri(uri)
+        navigation.navigate('ProfileList', {
+          name: urip.hostname,
+          rkey: urip.rkey,
+        })
+      } catch {}
+    },
+    [navigation],
+  )
 
   return (
     <Layout.Screen testID="listsScreen">
-      <SimpleViewHeader
-        showBackButton={isMobile}
-        style={[
-          pal.border,
-          isMobile
-            ? {borderBottomWidth: StyleSheet.hairlineWidth}
-            : {
-                borderLeftWidth: StyleSheet.hairlineWidth,
-                borderRightWidth: StyleSheet.hairlineWidth,
-              },
-        ]}>
-        <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
-            <Trans>User Lists</Trans>
-          </Text>
-          <Text style={pal.textLight}>
-            <Trans>Public, shareable lists which can drive feeds.</Trans>
-          </Text>
-        </View>
-        <View style={[{marginLeft: 18}, isMobile && {marginLeft: 12}]}>
-          <Button
-            testID="newUserListBtn"
-            type="default"
-            onPress={onPressNewList}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 8,
-            }}>
-            <FontAwesomeIcon icon="plus" color={pal.colors.text} />
-            <Text type="button" style={pal.text}>
-              <Trans context="action">New</Trans>
-            </Text>
-          </Button>
-        </View>
-      </SimpleViewHeader>
-      <MyLists filter="curate" style={s.flexGrow1} />
-      <VerifyEmailDialog
-        reasonText={_(
-          msg`Before creating a list, you must first verify your email.`,
-        )}
-        control={control}
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content align="left">
+          <Layout.Header.TitleText>
+            <Trans>Lists</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Button
+          label={_(msg`New list`)}
+          testID="newUserListBtn"
+          color="secondary"
+          size="small"
+          onPress={wrappedOnPressNewList}>
+          <ButtonIcon icon={PlusIcon} />
+          <ButtonText>
+            <Trans context="action">New</Trans>
+          </ButtonText>
+        </Button>
+      </Layout.Header.Outer>
+
+      <MyLists filter="curate" style={a.flex_grow} />
+
+      <CreateOrEditListDialog
+        purpose="app.bsky.graph.defs#curatelist"
+        control={createListDialogControl}
+        onSave={onCreateList}
       />
     </Layout.Screen>
   )

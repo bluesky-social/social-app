@@ -1,10 +1,10 @@
 import {
-  AppBskyFeedDefs,
-  AppBskyFeedGetActorLikes as GetActorLikes,
-  BskyAgent,
+  type AppBskyFeedDefs,
+  type AppBskyFeedGetActorLikes as GetActorLikes,
+  type BskyAgent,
 } from '@atproto/api'
 
-import {FeedAPI, FeedAPIResponse} from './types'
+import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class LikesFeedAPI implements FeedAPI {
   agent: BskyAgent
@@ -42,8 +42,10 @@ export class LikesFeedAPI implements FeedAPI {
       limit,
     })
     if (res.success) {
+      // HACKFIX: the API incorrectly returns a cursor when there are no items -sfn
+      const isEmptyPage = res.data.feed.length === 0
       return {
-        cursor: res.data.cursor,
+        cursor: isEmptyPage ? undefined : res.data.cursor,
         feed: res.data.feed,
       }
     }

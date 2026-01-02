@@ -1,27 +1,25 @@
-import {StyleProp, StyleSheet, TextStyle} from 'react-native'
-import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
+import {type StyleProp, type TextStyle} from 'react-native'
+import {type AppBskyActorGetProfile} from '@atproto/api'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {TypographyVariant} from '#/lib/ThemeContext'
 import {STALE} from '#/state/queries'
 import {useProfileQuery} from '#/state/queries/profile'
-import {TextLinkOnWebOnly} from './Link'
+import {atoms as a} from '#/alf'
+import {InlineLinkText} from '#/components/Link'
+import {Text} from '#/components/Typography'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
-import {Text} from './text/Text'
 
 export function UserInfoText({
-  type = 'md',
   did,
   attr,
   failed,
   prefix,
   style,
 }: {
-  type?: TypographyVariant
   did: string
-  attr?: keyof GetProfile.OutputSchema
+  attr?: keyof AppBskyActorGetProfile.OutputSchema
   loading?: string
   failed?: string
   prefix?: string
@@ -35,45 +33,37 @@ export function UserInfoText({
     staleTime: STALE.INFINITY,
   })
 
-  let inner
   if (isError) {
-    inner = (
-      <Text type={type} style={style} numberOfLines={1}>
+    return (
+      <Text style={style} numberOfLines={1}>
         {failed}
       </Text>
     )
   } else if (profile) {
-    inner = (
-      <TextLinkOnWebOnly
-        type={type}
+    const text = `${prefix || ''}${sanitizeDisplayName(
+      typeof profile[attr] === 'string' && profile[attr]
+        ? (profile[attr] as string)
+        : sanitizeHandle(profile.handle),
+    )}`
+    return (
+      <InlineLinkText
+        label={text}
         style={style}
-        lineHeight={1.2}
         numberOfLines={1}
-        href={makeProfileLink(profile)}
-        text={
-          <Text emoji type={type} style={style} lineHeight={1.2}>
-            {`${prefix || ''}${sanitizeDisplayName(
-              typeof profile[attr] === 'string' && profile[attr]
-                ? (profile[attr] as string)
-                : sanitizeHandle(profile.handle),
-            )}`}
-          </Text>
-        }
-      />
-    )
-  } else {
-    inner = (
-      <LoadingPlaceholder
-        width={80}
-        height={8}
-        style={styles.loadingPlaceholder}
-      />
+        to={makeProfileLink(profile)}>
+        <Text emoji style={style}>
+          {text}
+        </Text>
+      </InlineLinkText>
     )
   }
 
-  return inner
+  // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
+  return (
+    <LoadingPlaceholder
+      width={80}
+      height={8}
+      style={[a.relative, {top: 1, left: 2}]}
+    />
+  )
 }
-
-const styles = StyleSheet.create({
-  loadingPlaceholder: {position: 'relative', top: 1, left: 2},
-})

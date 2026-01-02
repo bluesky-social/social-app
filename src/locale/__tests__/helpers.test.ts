@@ -5,6 +5,7 @@ import {AppLanguage} from '#/locale/languages'
 
 test('sanitizeAppLanguageSetting', () => {
   expect(sanitizeAppLanguageSetting('en')).toBe(AppLanguage.en)
+  expect(sanitizeAppLanguageSetting('el')).toBe(AppLanguage.el)
   expect(sanitizeAppLanguageSetting('pt-BR')).toBe(AppLanguage.pt_BR)
   expect(sanitizeAppLanguageSetting('hi')).toBe(AppLanguage.hi)
   expect(sanitizeAppLanguageSetting('id')).toBe(AppLanguage.id)
@@ -12,4 +13,5 @@ test('sanitizeAppLanguageSetting', () => {
   expect(sanitizeAppLanguageSetting('en,foo')).toBe(AppLanguage.en)
   expect(sanitizeAppLanguageSetting('foo,en')).toBe(AppLanguage.en)
   expect(sanitizeAppLanguageSetting('vi')).toBe(AppLanguage.vi)
+  expect(sanitizeAppLanguageSetting('ne')).toBe(AppLanguage.ne)
 })

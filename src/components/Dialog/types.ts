@@ -1,15 +1,14 @@
-import React from 'react'
-import type {
-  AccessibilityProps,
-  GestureResponderEvent,
-  ScrollViewProps,
+import {
+  type AccessibilityProps,
+  type GestureResponderEvent,
+  type ScrollViewProps,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native'
-import {ViewStyle} from 'react-native'
-import {StyleProp} from 'react-native'
 
-import {ViewStyleProp} from '#/alf'
-import {BottomSheetViewProps} from '../../../modules/bottom-sheet'
-import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
+import {type ViewStyleProp} from '#/alf'
+import {type BottomSheetViewProps} from '../../../modules/bottom-sheet'
+import {type BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 type A11yProps = Required<AccessibilityProps>
 
@@ -34,7 +33,7 @@ export type DialogControlRefProps = {
  */
 export type DialogControlProps = DialogControlRefProps & {
   id: string
-  ref: React.RefObject<DialogControlRefProps>
+  ref: React.RefObject<DialogControlRefProps | null>
   isOpen?: boolean
 }
 
@@ -44,6 +43,8 @@ export type DialogContextProps = {
   nativeSnapPoint: BottomSheetSnapPoint
   disableDrag: boolean
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
+  // in the event that the hook is used outside of a dialog
+  isWithinDialog: boolean
 }
 
 export type DialogControlOpenOptions = {
@@ -60,11 +61,17 @@ export type DialogOuterProps = {
   control: DialogControlProps
   onClose?: () => void
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
-  webOptions?: {}
+  webOptions?: {
+    alignCenter?: boolean
+    onBackgroundPress?: (e: GestureResponderEvent) => void
+  }
   testID?: string
 }
 
-type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T
+type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> &
+  T & {
+    testID?: string
+  }
 export type DialogInnerProps =
   | DialogInnerPropsBase<{
       label?: undefined

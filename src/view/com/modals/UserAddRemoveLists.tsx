@@ -5,7 +5,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
+import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -18,7 +18,7 @@ import {isAndroid, isMobileWeb, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {
   getMembership,
-  ListMembersip,
+  type ListMembersip,
   useDangerousListMembershipsQuery,
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,

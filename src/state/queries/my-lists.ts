@@ -1,5 +1,5 @@
-import {AppBskyGraphDefs} from '@atproto/api'
-import {QueryClient, useQuery} from '@tanstack/react-query'
+import {type AppBskyGraphDefs} from '@atproto/api'
+import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {accumulate} from '#/lib/async/accumulate'
 import {STALE} from '#/state/queries'

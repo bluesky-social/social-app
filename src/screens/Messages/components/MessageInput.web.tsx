@@ -1,9 +1,10 @@
 import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import Graphemer from 'graphemer'
+import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {isSafari, isTouchDevice} from '#/lib/browser'
 import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
@@ -14,11 +15,11 @@ import {
 } from '#/state/messages/message-drafts'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
-  Emoji,
-  EmojiPickerPosition,
-} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+  type Emoji,
+  type EmojiPickerPosition,
+} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, flatten, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
@@ -55,7 +56,7 @@ export function MessageInput({
     if (!hasEmbed && message.trim() === '') {
       return
     }
-    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+    if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
@@ -106,11 +107,19 @@ export function MessageInput({
 
   const onEmojiInserted = React.useCallback(
     (emoji: Emoji) => {
-      const position = textAreaRef.current?.selectionStart ?? 0
-      setMessage(
-        message =>
-          message.slice(0, position) + emoji.native + message.slice(position),
-      )
+      if (!textAreaRef.current) {
+        return
+      }
+      const position = textAreaRef.current.selectionStart ?? 0
+      textAreaRef.current.focus()
+      flushSync(() => {
+        setMessage(
+          message =>
+            message.slice(0, position) + emoji.native + message.slice(position),
+        )
+      })
+      textAreaRef.current.selectionStart = position + emoji.native.length
+      textAreaRef.current.selectionEnd = position + emoji.native.length
     },
     [setMessage],
   )
@@ -148,7 +157,14 @@ export function MessageInput({
         <Button
           onPress={e => {
             e.currentTarget.measure((_fx, _fy, _width, _height, px, py) => {
-              openEmojiPicker?.({top: py, left: px, right: px, bottom: py})
+              openEmojiPicker?.({
+                top: py,
+                left: px,
+                right: px,
+                bottom: py,
+                nextFocusRef:
+                  textAreaRef as unknown as React.MutableRefObject<HTMLElement>,
+              })
             })
           }}
           style={[
@@ -183,7 +199,7 @@ export function MessageInput({
         </Button>
         <TextareaAutosize
           ref={textAreaRef}
-          style={StyleSheet.flatten([
+          style={flatten([
             a.flex_1,
             a.px_sm,
             a.border_0,

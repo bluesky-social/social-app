@@ -1,7 +1,6 @@
 import React from 'react'
 import {
-  cancelAnimation,
-  SharedValue,
+  type SharedValue,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
@@ -34,7 +33,9 @@ const stateContext = React.createContext<StateContext>({
     set() {},
   },
 })
+stateContext.displayName = 'MinimalModeStateContext'
 const setContext = React.createContext<SetContext>((_: boolean) => {})
+setContext.displayName = 'MinimalModeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const headerMode = useSharedValue(0)
@@ -42,14 +43,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const setMode = React.useCallback(
     (v: boolean) => {
       'worklet'
-      // Cancel any existing animation
-      cancelAnimation(headerMode)
       headerMode.set(() =>
         withSpring(v ? 1 : 0, {
           overshootClamping: true,
         }),
       )
-      cancelAnimation(footerMode)
       footerMode.set(() =>
         withSpring(v ? 1 : 0, {
           overshootClamping: true,

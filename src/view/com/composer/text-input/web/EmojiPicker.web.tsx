@@ -1,15 +1,13 @@
 import React from 'react'
-import {
-  GestureResponderEvent,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {Pressable, useWindowDimensions, View} from 'react-native'
 import Picker from '@emoji-mart/react'
-import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {DismissableLayer, FocusScope} from 'radix-ui/internal'
 
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
-import {atoms as a} from '#/alf'
+import {atoms as a, flatten} from '#/alf'
+import {Portal} from '#/components/Portal'
 
 const HEIGHT_OFFSET = 40
 const WIDTH_OFFSET = 100
@@ -32,6 +30,7 @@ export interface EmojiPickerPosition {
   left: number
   right: number
   bottom: number
+  nextFocusRef: React.MutableRefObject<HTMLElement> | null
 }
 
 export interface EmojiPickerState {
@@ -50,6 +49,7 @@ interface IProps {
 }
 
 export function EmojiPicker({state, close, pinToTop}: IProps) {
+  const {_} = useLingui()
   const {height, width} = useWindowDimensions()
 
   const isShiftDown = React.useRef(false)
@@ -118,33 +118,42 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
 
   if (!state.isOpen) return null
 
-  const onPressBackdrop = (e: GestureResponderEvent) => {
-    // @ts-ignore web only
-    if (e.nativeEvent?.pointerId === -1) return
-    close()
-  }
-
   return (
-    <TouchableWithoutFeedback
-      accessibilityRole="button"
-      onPress={onPressBackdrop}
-      accessibilityViewIsModal>
-      <View
-        style={[
-          a.fixed,
-          a.w_full,
-          a.h_full,
-          a.align_center,
-          {
-            top: 0,
-            left: 0,
-            right: 0,
-          },
-        ]}>
-        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
-        <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
+    <Portal>
+      <FocusScope.FocusScope
+        loop
+        trapped
+        onUnmountAutoFocus={e => {
+          const nextFocusRef = state.pos.nextFocusRef
+          const node = nextFocusRef?.current
+          if (node) {
+            e.preventDefault()
+            node.focus()
+          }
+        }}>
+        <Pressable
+          accessible
+          accessibilityLabel={_(msg`Close emoji picker`)}
+          accessibilityHint={_(msg`Closes the emoji picker`)}
+          onPress={close}
+          style={[a.fixed, a.inset_0]}
+        />
+
+        <View
+          style={flatten([
+            a.fixed,
+            a.w_full,
+            a.h_full,
+            a.align_center,
+            a.z_10,
+            {
+              top: 0,
+              left: 0,
+              right: 0,
+            },
+          ])}>
           <View style={[{position: 'absolute'}, position]}>
-            <DismissableLayer
+            <DismissableLayer.DismissableLayer
               onFocusOutside={evt => evt.preventDefault()}
               onDismiss={close}>
               <Picker
@@ -154,10 +163,18 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
                 onEmojiSelect={onInsert}
                 autoFocus={true}
               />
-            </DismissableLayer>
+            </DismissableLayer.DismissableLayer>
           </View>
-        </TouchableWithoutFeedback>
-      </View>
-    </TouchableWithoutFeedback>
+        </View>
+
+        <Pressable
+          accessible
+          accessibilityLabel={_(msg`Close emoji picker`)}
+          accessibilityHint={_(msg`Closes the emoji picker`)}
+          onPress={close}
+          style={[a.fixed, a.inset_0]}
+        />
+      </FocusScope.FocusScope>
+    </Portal>
   )
 }

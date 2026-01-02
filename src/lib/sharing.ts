@@ -25,3 +25,19 @@ export async function shareUrl(url: string) {
     Toast.show(t`Copied to clipboard`, 'clipboard-check')
   }
 }
+
+/**
+ * This function shares a text using the native Share API if available, or copies it to the clipboard
+ * and displays a toast message if not (mostly on web)
+ *
+ * @param {string} text - A string representing the text that needs to be shared or copied to the
+ * clipboard.
+ */
+export async function shareText(text: string) {
+  if (isAndroid || isIOS) {
+    await Share.share({message: text})
+  } else {
+    await setStringAsync(text)
+    Toast.show(t`Copied to clipboard`, 'clipboard-check')
+  }
+}

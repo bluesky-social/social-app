@@ -1,5 +1,4 @@
-import React from 'react'
-import {View, ViewStyle} from 'react-native'
+import {View, type ViewStyle} from 'react-native'
 
 /**
  * This utility function captures events and stops

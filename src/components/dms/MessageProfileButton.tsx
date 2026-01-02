@@ -1,53 +1,67 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useEmail} from '#/lib/hooks/useEmail'
-import {NavigationProp} from '#/lib/routes/types'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
-import {useMaybeConvoForUser} from '#/state/queries/messages/get-convo-for-members'
+import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
+import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {canBeMessaged} from '#/components/dms/util'
 import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
-import {useDialogControl} from '../Dialog'
-import {VerifyEmailDialog} from '../dialogs/VerifyEmailDialog'
 
 export function MessageProfileButton({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileView
+  profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const {needsEmailVerification} = useEmail()
-  const verifyEmailControl = useDialogControl()
+  const requireEmailVerification = useRequireEmailVerification()
 
-  const {data: convo, isPending} = useMaybeConvoForUser(profile.did)
+  const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
+  const {mutate: initiateConvo} = useGetConvoForMembers({
+    onSuccess: ({convo}) => {
+      logEvent('chat:open', {logContext: 'ProfileHeader'})
+      navigation.navigate('MessagesConversation', {conversation: convo.id})
+    },
+    onError: () => {
+      Toast.show(_(msg`Failed to create conversation`))
+    },
+  })
 
   const onPress = React.useCallback(() => {
-    if (!convo?.id) {
+    if (!convoAvailability?.canChat) {
       return
     }
 
-    if (needsEmailVerification) {
-      verifyEmailControl.open()
-      return
-    }
-
-    if (convo && !convo.lastMessage) {
+    if (convoAvailability.convo) {
+      logEvent('chat:open', {logContext: 'ProfileHeader'})
+      navigation.navigate('MessagesConversation', {
+        conversation: convoAvailability.convo.id,
+      })
+    } else {
       logEvent('chat:create', {logContext: 'ProfileHeader'})
+      initiateConvo([profile.did])
     }
-    logEvent('chat:open', {logContext: 'ProfileHeader'})
+  }, [navigation, profile.did, initiateConvo, convoAvailability])
 
-    navigation.navigate('MessagesConversation', {conversation: convo.id})
-  }, [needsEmailVerification, verifyEmailControl, convo, navigation])
+  const wrappedOnPress = requireEmailVerification(onPress, {
+    instructions: [
+      <Trans key="message">
+        Before you can message another user, you must first verify your email.
+      </Trans>,
+    ],
+  })
 
-  if (isPending) {
+  if (!convoAvailability) {
     // show pending state based on declaration
     if (canBeMessaged(profile)) {
       return (
@@ -59,7 +73,8 @@ export function MessageProfileButton({
             a.align_center,
             t.atoms.bg_contrast_25,
             a.rounded_full,
-            {width: 34, height: 34},
+            // Matches size of button below to avoid layout shift
+            {width: 33, height: 33},
           ]}>
           <Message style={[t.atoms.text, {opacity: 0.3}]} size="md" />
         </View>
@@ -69,7 +84,7 @@ export function MessageProfileButton({
     }
   }
 
-  if (convo) {
+  if (convoAvailability.canChat) {
     return (
       <>
         <Button
@@ -81,15 +96,9 @@ export function MessageProfileButton({
           shape="round"
           label={_(msg`Message ${profile.handle}`)}
           style={[a.justify_center]}
-          onPress={onPress}>
+          onPress={wrappedOnPress}>
           <ButtonIcon icon={Message} size="md" />
         </Button>
-        <VerifyEmailDialog
-          reasonText={_(
-            msg`Before you may message another user, you must first verify your email.`,
-          )}
-          control={verifyEmailControl}
-        />
       </>
     )
   } else {

@@ -32,7 +32,7 @@ export function usePinnedPostMutation() {
         updatePostShadow(queryClient, postUri, {pinned: pinCurrentPost})
 
         // get the currently pinned post so we can optimistically remove the pin from it
-        if (!currentAccount) throw new Error('Not logged in')
+        if (!currentAccount) throw new Error('Not signed in')
         const {data: profile} = await agent.getProfile({
           actor: currentAccount.did,
         })
@@ -56,9 +56,9 @@ export function usePinnedPostMutation() {
         })
 
         if (pinCurrentPost) {
-          Toast.show(_(msg`Post pinned`))
+          Toast.show(_(msg({message: 'Post pinned', context: 'toast'})))
         } else {
-          Toast.show(_(msg`Post unpinned`))
+          Toast.show(_(msg({message: 'Post unpinned', context: 'toast'})))
         }
 
         queryClient.invalidateQueries({

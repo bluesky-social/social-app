@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {AppLanguage} from '#/locale/languages'
+import {type AppLanguage} from '#/locale/languages'
 import * as persisted from '#/state/persisted'
 
 type SetStateCb = (
@@ -20,6 +20,7 @@ type ApiContext = {
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.languagePrefs,
 )
+stateContext.displayName = 'LanguagePrefsStateContext'
 const apiContext = React.createContext<ApiContext>({
   setPrimaryLanguage: (_: string) => {},
   setPostLanguage: (_: string) => {},
@@ -29,6 +30,7 @@ const apiContext = React.createContext<ApiContext>({
   savePostLanguageToHistory: () => {},
   setAppLanguage: (_: AppLanguage) => {},
 })
+apiContext.displayName = 'LanguagePrefsApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(persisted.get('languagePrefs'))
@@ -152,6 +154,10 @@ export function getAppLanguageAsContentLanguage() {
 export function toPostLanguages(postLanguage: string): string[] {
   // filter out empty strings if exist
   return postLanguage.split(',').filter(Boolean)
+}
+
+export function fromPostLanguages(languages: string[]): string {
+  return languages.filter(Boolean).join(',')
 }
 
 export function hasPostLanguage(postLanguage: string, code2: string): boolean {

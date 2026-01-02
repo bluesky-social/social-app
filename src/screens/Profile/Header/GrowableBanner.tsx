@@ -1,17 +1,19 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {ActivityIndicator} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedStyle,
 } from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
+import type React from 'react'
 
 import {isIOS} from '#/platform/detection'
 import {RQKEY_ROOT as STARTERPACK_RQKEY_ROOT} from '#/state/queries/actor-starter-packs'
@@ -32,7 +34,7 @@ export function GrowableBanner({
 }) {
   const pagerContext = usePagerHeaderContext()
 
-  // pagerContext should only be present on iOS, but better safe than sorry
+  // plain non-growable mode for Android/Web
   if (!pagerContext || !isIOS) {
     return (
       <View style={[a.w_full, a.h_full]}>
@@ -60,6 +62,7 @@ function GrowableBannerInner({
   backButton?: React.ReactNode
   children: React.ReactNode
 }) {
+  const {top: topInset} = useSafeAreaInsets()
   const isFetching = useIsProfileFetching()
   const animateSpinner = useShouldAnimateSpinner({isFetching, scrollY})
 
@@ -104,7 +107,7 @@ function GrowableBannerInner({
   const animatedBackButtonStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: interpolate(scrollY.get(), [-150, 60], [-150, 60], {
+        translateY: interpolate(scrollY.get(), [-150, 10], [-150, 10], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },
@@ -128,7 +131,14 @@ function GrowableBannerInner({
           animatedProps={animatedBlurViewProps}
         />
       </Animated.View>
-      <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+      <View
+        style={[
+          a.absolute,
+          a.inset_0,
+          {top: topInset - (isIOS ? 15 : 0)},
+          a.justify_center,
+          a.align_center,
+        ]}>
         <Animated.View style={[animatedSpinnerStyle]}>
           <ActivityIndicator
             key={animateSpinner ? 'spin' : 'stop'}

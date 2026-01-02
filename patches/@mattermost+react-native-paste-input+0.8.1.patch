@@ -1,0 +1,13 @@
+diff --git a/node_modules/@mattermost/react-native-paste-input/android/src/main/java/com/mattermost/pasteinputtext/PasteTextInputManager.kt b/node_modules/@mattermost/react-native-paste-input/android/src/main/java/com/mattermost/pasteinputtext/PasteTextInputManager.kt
+index 4ed2307..ede1181 100644
+--- a/node_modules/@mattermost/react-native-paste-input/android/src/main/java/com/mattermost/pasteinputtext/PasteTextInputManager.kt
++++ b/node_modules/@mattermost/react-native-paste-input/android/src/main/java/com/mattermost/pasteinputtext/PasteTextInputManager.kt
+@@ -54,7 +54,7 @@ class PasteTextInputManager(context: ReactApplicationContext) : ReactTextInputMa
+   }
+ 
+   override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any> {
+-    val map = super.getExportedCustomBubblingEventTypeConstants()!!
++    val map = super.getExportedCustomBubblingEventTypeConstants().toMutableMap()
+     map["onPaste"] = MapBuilder.of(
+       "phasedRegistrationNames",
+       MapBuilder.of("bubbled", "onPaste")

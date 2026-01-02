@@ -1,20 +1,21 @@
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {getCurrentRoute} from '#/lib/routes/helpers'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
+import {logger} from '#/logger'
 import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {TextLink} from '#/view/com/util/Link'
+import {atoms as a, useTheme, web} from '#/alf'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 
 export function DesktopFeeds() {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
-  const {data: pinnedFeedInfos} = usePinnedFeedsInfos()
+  const {data: pinnedFeedInfos, error, isLoading} = usePinnedFeedsInfos()
   const selectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
   const navigation = useNavigation<NavigationProp>()
@@ -24,76 +25,103 @@ export function DesktopFeeds() {
     }
     return getCurrentRoute(state)
   })
-  if (!pinnedFeedInfos) {
+
+  if (isLoading) {
+    return (
+      <View style={[{gap: 10}]}>
+        {Array(5)
+          .fill(0)
+          .map((_, i) => (
+            <View
+              key={i}
+              style={[
+                a.rounded_sm,
+                t.atoms.bg_contrast_25,
+                {
+                  height: 16,
+                  width: i % 2 === 0 ? '60%' : '80%',
+                },
+              ]}
+            />
+          ))}
+      </View>
+    )
+  }
+
+  if (error || !pinnedFeedInfos) {
     return null
   }
+
   return (
-    <View style={[styles.container, pal.view]}>
+    <View
+      style={[
+        a.flex_1,
+        web({
+          gap: 10,
+          /*
+           * Small padding prevents overflow prior to actually overflowing the
+           * height of the screen with lots of feeds.
+           */
+          paddingVertical: 2,
+          marginHorizontal: -2,
+          overflowY: 'auto',
+        }),
+      ]}>
       {pinnedFeedInfos.map(feedInfo => {
         const feed = feedInfo.feedDescriptor
+        const current = route.name === 'Home' && feed === selectedFeed
+
         return (
-          <FeedItem
-            key={feed}
-            href={'/?' + new URLSearchParams([['feed', feed]])}
-            title={feedInfo.displayName}
-            current={route.name === 'Home' && feed === selectedFeed}
-            onPress={() => {
+          <InlineLinkText
+            key={feedInfo.uri}
+            label={feedInfo.displayName}
+            {...createStaticClick(() => {
+              logger.metric(
+                'desktopFeeds:feed:click',
+                {
+                  feedUri: feedInfo.uri,
+                  feedDescriptor: feed,
+                },
+                {statsig: false},
+              )
               setSelectedFeed(feed)
               navigation.navigate('Home')
               if (route.name === 'Home' && feed === selectedFeed) {
                 emitSoftReset()
               }
-            }}
-          />
+            })}
+            style={[
+              a.text_md,
+              a.leading_snug,
+              a.flex_shrink_0,
+              current
+                ? [a.font_semi_bold, t.atoms.text]
+                : [t.atoms.text_contrast_medium],
+              web({
+                marginHorizontal: 2,
+                width: 'calc(100% - 4px)',
+              }),
+            ]}
+            numberOfLines={1}>
+            {feedInfo.displayName}
+          </InlineLinkText>
         )
       })}
-      <View style={{paddingTop: 8, paddingBottom: 6}}>
-        <TextLink
-          type="lg"
-          href="/feeds"
-          text={_(msg`More feeds`)}
-          style={[pal.link]}
-        />
-      </View>
-    </View>
-  )
-}
 
-function FeedItem({
-  title,
-  href,
-  current,
-  onPress,
-}: {
-  title: string
-  href: string
-  current: boolean
-  onPress: () => void
-}) {
-  const pal = usePalette('default')
-  return (
-    <View style={{paddingVertical: 6}}>
-      <TextLink
-        type="xl"
-        href={href}
-        text={title}
-        onPress={onPress}
+      <InlineLinkText
+        to="/feeds"
+        label={_(msg`More feeds`)}
         style={[
-          current ? pal.text : pal.textLight,
-          {letterSpacing: 0.15, fontWeight: current ? '600' : '400'},
+          a.text_md,
+          a.leading_snug,
+          web({
+            marginHorizontal: 2,
+            width: 'calc(100% - 4px)',
+          }),
         ]}
-      />
+        numberOfLines={1}>
+        {_(msg`More feeds`)}
+      </InlineLinkText>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // @ts-ignore web only -prf
-    overflowY: 'auto',
-    width: 300,
-    paddingHorizontal: 12,
-    paddingVertical: 18,
-  },
-})

@@ -1,13 +1,13 @@
-import React from 'react'
+import React, {type JSX} from 'react'
 import {
   ActivityIndicator,
   FlatList as RNFlatList,
   RefreshControl,
-  StyleProp,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
+import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,12 +15,12 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
-import {EmptyState} from '#/view/com/util/EmptyState'
+import {type MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {atoms as a, useTheme} from '#/alf'
+import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
+import {Text} from '#/components/Typography'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
 
@@ -65,6 +65,23 @@ export function MyLists({
     return items
   }, [isError, isEmpty, isFetched, isFetching, moderationOpts, data])
 
+  let emptyText
+  switch (filter) {
+    case 'curate':
+      emptyText = _(
+        msg`Lists allow you to see content from your favorite people.`,
+      )
+      break
+    case 'mod':
+      emptyText = _(
+        msg`Public, sharable lists of users to mute or block in bulk.`,
+      )
+      break
+    default:
+      emptyText = _(msg`You have no lists.`)
+      break
+  }
+
   // events
   // =
 
@@ -85,11 +102,33 @@ export function MyLists({
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <EmptyState
-            icon="list-ul"
-            message={_(msg`You have no lists.`)}
-            testID="listsEmpty"
-          />
+          <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_3xl]}>
+            <View
+              style={[
+                a.align_center,
+                a.justify_center,
+                a.rounded_full,
+                {
+                  width: 64,
+                  height: 64,
+                },
+              ]}>
+              <ListIcon size="2xl" fill={t.atoms.text_contrast_medium.color} />
+            </View>
+            <Text
+              style={[
+                a.text_center,
+                a.flex_1,
+                a.text_sm,
+                a.leading_snug,
+                t.atoms.text_contrast_medium,
+                {
+                  maxWidth: 200,
+                },
+              ]}>
+              {emptyText}
+            </Text>
+          </View>
         )
       } else if (item === ERROR_ITEM) {
         return (
@@ -110,7 +149,7 @@ export function MyLists({
       ) : (
         <View
           style={[
-            (index !== 0 || isWeb) && a.border_t,
+            index !== 0 && a.border_t,
             t.atoms.border_contrast_low,
             a.px_lg,
             a.py_lg,
@@ -119,7 +158,7 @@ export function MyLists({
         </View>
       )
     },
-    [renderItem, t.atoms.border_contrast_low, _, error, onRefresh],
+    [t, renderItem, error, onRefresh, emptyText],
   )
 
   if (inline) {
@@ -141,8 +180,6 @@ export function MyLists({
             }
             contentContainerStyle={[s.contentContainer]}
             removeClippedSubviews={true}
-            // @ts-ignore our .web version only -prf
-            desktopFixedHeight
           />
         )}
       </View>
@@ -160,8 +197,8 @@ export function MyLists({
             onRefresh={onRefresh}
             contentContainerStyle={[s.contentContainer]}
             removeClippedSubviews={true}
-            // @ts-ignore our .web version only -prf
             desktopFixedHeight
+            sideBorders={false}
           />
         )}
       </View>

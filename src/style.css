@@ -14,21 +14,21 @@
 :root {
   --text: black;
   --background: white;
-  --backgroundLight: hsl(211, 20%, 95%);
+  --backgroundLight: #f9fafb;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
     --text: white;
     --background: black;
-    --backgroundLight: hsl(211, 20%, 20%);
+    --backgroundLight: #111822;
   }
 }
 
 html.theme--light {
   --text: black;
   --background: white;
-  --backgroundLight: hsl(211, 20%, 95%);
+  --backgroundLight: #f9fafb;
   background-color: white;
 }
 html.theme--dark {
@@ -36,14 +36,14 @@ html.theme--dark {
   background-color: black;
   --text: white;
   --background: black;
-  --backgroundLight: hsl(211, 20%, 20%);
+  --backgroundLight: #111822;
 }
 html.theme--dim {
   color-scheme: dark;
-  background-color: hsl(211, 28%, 12%);
+  background-color: #151d28;
   --text: white;
-  --background: hsl(211, 20%, 4%);
-  --backgroundLight: hsl(211, 20%, 10%);
+  --background: #151d28;
+  --backgroundLight: #1c2736;
 }
 
 /* Buttons and inputs have a font set by UA, so we'll have to reset that */
@@ -92,6 +92,9 @@ a[role='link'][data-no-underline='1']:hover {
 }
 
 /* ProseMirror */
+.ProseMirror {
+  min-height: inherit;
+}
 .ProseMirror-dark {
   color: white;
 }
@@ -184,6 +187,7 @@ input:focus {
   animation: rotate 500ms linear infinite;
 }
 
+/* animations for atoms */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -200,6 +204,41 @@ input:focus {
   to {
     opacity: 0;
   }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* animating radix dropdowns requires knowing the data attributes */
+.dropdown-menu-transform-origin > * {
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+}
+.dropdown-menu-constrain-size > * {
+  max-height: var(--radix-dropdown-menu-content-available-height);
 }
 
 .force-no-clicks > *,
@@ -250,4 +289,103 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
   height: 16px;
   width: 16px;
   margin-left: -6px;
+}
+
+/*
+ * EmojiReactionPicker dropdown elements, within Radix components
+ */
+.EmojiReactionPicker__Pressable {
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.EmojiReactionPicker__Pressable:focus {
+  outline: none;
+  border-color: var(--text);
+}
+.EmojiReactionPicker__Pressable:hover {
+  outline: none;
+  transform: scale(1.1);
+  border-color: transparent;
+}
+.EmojiReactionPicker__Pressable:not(.__selected).__disabled {
+  transform: scale(1) !important;
+  border-color: transparent !important;
+  opacity: 0.7;
+}
+.EmojiReactionPicker__Pressable ~ button {
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.EmojiReactionPicker__Pressable ~ button:focus {
+  outline: none;
+  border-color: var(--text);
+}
+.EmojiReactionPicker__Pressable ~ button:hover {
+  outline: none;
+  background-color: var(--backgroundLight);
+  border-color: transparent;
+}
+
+/* #/components/Select/index.web.tsx */
+.radix-select-content {
+  box-shadow:
+    0px 6px 24px -10px rgba(22, 23, 24, 0.25),
+    0px 6px 12px -12px rgba(22, 23, 24, 0.15);
+  min-width: var(--radix-select-trigger-width);
+  max-height: var(--radix-select-content-available-height);
+}
+
+/*
+ * #/components/Tooltip/index.web.tsx
+ */
+.radix-popover-content {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.17, 0.73, 0.14, 1);
+  will-change: transform, opacity;
+}
+.radix-popover-content[data-state='open'][data-side='top'] {
+  animation-name: radixPopoverSlideUpAndFade;
+}
+.radix-popover-content[data-state='open'][data-side='bottom'] {
+  animation-name: radixPopoverSlideDownAndFade;
+}
+@keyframes radixPopoverSlideUpAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes radixPopoverSlideDownAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+ * #/components/Toast/index.web.tsx
+ */
+@keyframes toastFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes toastFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
