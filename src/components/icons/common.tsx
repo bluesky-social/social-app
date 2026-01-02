@@ -28,6 +28,12 @@ export function useCommonSVGProps(props: Props) {
   const {fill, size, gradient, ...rest} = props
   const style = StyleSheet.flatten(rest.style)
   const _size = Number(size ? sizes[size] : rest.width || sizes.md)
+  let _width = _size
+  let _height = _size
+  if (!size && rest.width && rest.height) {
+    _width = Number(rest.width)
+    _height = Number(rest.height)
+  }
   let _fill = fill || style?.color || t.palette.primary_500
   let gradientDef = null
 
@@ -55,6 +61,8 @@ export function useCommonSVGProps(props: Props) {
   return {
     fill: _fill,
     size: _size,
+    width: _width,
+    height: _height,
     style,
     gradient: gradientDef,
     ...rest,
