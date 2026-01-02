@@ -13,7 +13,6 @@ import {Trans} from '@lingui/macro'
 import {Document} from '@tiptap/extension-document'
 import Hardbreak from '@tiptap/extension-hard-break'
 import History from '@tiptap/extension-history'
-import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
@@ -35,10 +34,9 @@ import {normalizeTextStyles} from '#/alf/typography'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {type TextInputProps} from './TextInput.types'
-import {type AutocompleteRef, createSuggestion} from './web/Autocomplete'
+import {Autocomplete, type AutocompleteRef} from './web/Autocomplete'
 import {type Emoji} from './web/EmojiPicker'
-import {LinkDecorator} from './web/LinkDecorator'
-import {TagDecorator} from './web/TagDecorator'
+import {FacetDecorator} from './web/FacetDecorator'
 
 export function TextInput({
   ref,
@@ -63,13 +61,10 @@ export function TextInput({
   const extensions = useMemo(
     () => [
       Document,
-      LinkDecorator,
-      TagDecorator,
-      Mention.configure({
-        HTMLAttributes: {
-          class: 'mention',
-        },
-        suggestion: createSuggestion({autocomplete, autocompleteRef}),
+      FacetDecorator,
+      Autocomplete.configure({
+        autocomplete,
+        autocompleteRef,
       }),
       Paragraph,
       Placeholder.configure({
