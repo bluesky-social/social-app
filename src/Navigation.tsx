@@ -68,7 +68,7 @@ import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PrivacyPolicyScreen} from '#/view/screens/PrivacyPolicy'
 import {ProfileScreen} from '#/view/screens/Profile'
 import {ProfileFeedLikedByScreen} from '#/view/screens/ProfileFeedLikedBy'
-import {Storybook} from '#/view/screens/Storybook'
+import {StorybookScreen} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
@@ -304,7 +304,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="Debug"
-        getComponent={() => Storybook}
+        getComponent={() => StorybookScreen}
         options={{title: title(msg`Storybook`), requireAuth: true}}
       />
       <Stack.Screen
