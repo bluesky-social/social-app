@@ -1,11 +1,18 @@
-import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
+import {
+  Pressable,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import {DropdownMenu} from 'radix-ui'
 
+import {useA11y} from '#/state/a11y'
 import {atoms as a, flatten, useTheme, web} from '#/alf'
-import * as Dialog from '#/components/Dialog'
+import type * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
   Context,
@@ -14,22 +21,24 @@ import {
   useMenuItemContext,
 } from '#/components/Menu/context'
 import {
-  ContextType,
-  GroupProps,
-  ItemIconProps,
-  ItemProps,
-  ItemTextProps,
-  RadixPassThroughTriggerProps,
-  TriggerProps,
+  type ContextType,
+  type GroupProps,
+  type ItemIconProps,
+  type ItemProps,
+  type ItemTextProps,
+  type RadixPassThroughTriggerProps,
+  type TriggerProps,
 } from '#/components/Menu/types'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
-export function useMenuControl(): Dialog.DialogControlProps {
-  const id = React.useId()
-  const [isOpen, setIsOpen] = React.useState(false)
+export {useMenuContext}
 
-  return React.useMemo(
+export function useMenuControl(): Dialog.DialogControlProps {
+  const id = useId()
+  const [isOpen, setIsOpen] = useState(false)
+
+  return useMemo(
     () => ({
       id,
       ref: {current: null},
@@ -49,17 +58,17 @@ export function Root({
   children,
   control,
 }: React.PropsWithChildren<{
-  control?: Dialog.DialogOuterProps['control']
+  control?: Dialog.DialogControlProps
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
-  const context = React.useMemo<ContextType>(
+  const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
     }),
     [control, defaultControl],
   )
-  const onOpenChange = React.useCallback(
+  const onOpenChange = useCallback(
     (open: boolean) => {
       if (context.control.isOpen && !open) {
         context.control.close()
@@ -93,7 +102,7 @@ export function Root({
   )
 }
 
-const RadixTriggerPassThrough = React.forwardRef(
+const RadixTriggerPassThrough = forwardRef(
   (
     props: {
       children: (
@@ -110,7 +119,12 @@ const RadixTriggerPassThrough = React.forwardRef(
 )
 RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
 
-export function Trigger({children, label, role = 'button'}: TriggerProps) {
+export function Trigger({
+  children,
+  label,
+  role = 'button',
+  hint,
+}: TriggerProps) {
   const {control} = useMenuContext()
   const {
     state: hovered,
@@ -153,6 +167,7 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
               onBlur: onBlur,
               onMouseEnter,
               onMouseLeave,
+              accessibilityHint: hint,
               accessibilityLabel: label,
               accessibilityRole: role,
             },
@@ -171,10 +186,16 @@ export function Outer({
   style?: StyleProp<ViewStyle>
 }>) {
   const t = useTheme()
+  const {reduceMotionEnabled} = useA11y()
 
   return (
     <DropdownMenu.Portal>
-      <DropdownMenu.Content sideOffset={5} loop aria-label="Test">
+      <DropdownMenu.Content
+        sideOffset={5}
+        collisionPadding={{left: 5, right: 5, bottom: 5}}
+        loop
+        aria-label="Test"
+        className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
         <View
           style={[
             a.rounded_sm,
@@ -183,6 +204,8 @@ export function Outer({
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
             t.atoms.border_contrast_low,
+            a.overflow_auto,
+            !reduceMotionEnabled && a.zoom_fade_in,
             style,
           ]}>
           {children}
@@ -202,7 +225,7 @@ export function Outer({
   )
 }
 
-export function Item({children, label, onPress, ...rest}: ItemProps) {
+export function Item({children, label, onPress, style, ...rest}: ItemProps) {
   const t = useTheme()
   const {control} = useMenuContext()
   const {
@@ -248,6 +271,7 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
                 ? t.atoms.bg_contrast_25
                 : t.atoms.bg_contrast_50,
             ],
+          style,
         ])}
         {...web({
           onMouseEnter,
@@ -268,7 +292,7 @@ export function ItemText({children, style}: ItemTextProps) {
     <Text
       style={[
         a.flex_1,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_high,
         style,
         disabled && t.atoms.text_contrast_low,
@@ -337,18 +361,23 @@ export function ItemRadio({selected}: {selected: boolean}) {
   )
 }
 
-export function LabelText({children}: {children: React.ReactNode}) {
+export function LabelText({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<TextStyle>
+}) {
   const t = useTheme()
   return (
     <Text
       style={[
-        a.font_bold,
-        a.pt_md,
-        a.pb_sm,
+        a.font_semi_bold,
+        a.p_sm,
         t.atoms.text_contrast_low,
-        {
-          paddingHorizontal: 10,
-        },
+        a.leading_snug,
+        {paddingHorizontal: 10},
+        style,
       ]}>
       {children}
     </Text>
@@ -366,10 +395,13 @@ export function Divider() {
       style={flatten([
         a.my_xs,
         t.atoms.bg_contrast_100,
-        {
-          height: 1,
-        },
+        a.flex_shrink_0,
+        {height: 1},
       ])}
     />
   )
+}
+
+export function ContainerItem() {
+  return null
 }

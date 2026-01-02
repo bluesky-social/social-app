@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -6,26 +6,26 @@ import {useLingui} from '@lingui/react'
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function ExportCarDialog({
   control,
 }: {
-  control: Dialog.DialogOuterProps['control']
+  control: Dialog.DialogControlProps
 }) {
   const {_} = useLingui()
   const t = useTheme()
   const agent = useAgent()
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const download = React.useCallback(async () => {
+  const download = useCallback(async () => {
     if (!agent.session) {
       return // shouldnt ever happen
     }
@@ -36,7 +36,7 @@ export function ExportCarDialog({
       const saveRes = await saveBytesToDisk(
         'repo.car',
         downloadRes.data,
-        downloadRes.headers['content-type'],
+        downloadRes.headers['content-type'] || 'application/vnd.ipld.car',
       )
 
       if (saveRes) {
@@ -44,7 +44,7 @@ export function ExportCarDialog({
       }
     } catch (e) {
       logger.error('Error occurred while downloading CAR file', {message: e})
-      Toast.show(_(msg`Error occurred while saving file`), 'xmark')
+      Toast.show(_(msg`Error occurred while saving file`), {type: 'error'})
     } finally {
       setLoading(false)
       control.close()
@@ -52,16 +52,19 @@ export function ExportCarDialog({
   }, [_, control, agent])
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
-        accessibilityLabelledBy="dialog-title">
+        accessibilityLabelledBy="dialog-title"
+        style={web({maxWidth: 500})}>
         <View style={[a.relative, a.gap_lg, a.w_full]}>
           <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
             <Trans>Export My Data</Trans>
           </Text>
-          <Text nativeID="dialog-description" style={[a.text_sm]}>
+          <Text
+            nativeID="dialog-description"
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
             <Trans>
               Your account repository, containing all public data records, can
               be downloaded as a "CAR" file. This file does not include media
@@ -71,7 +74,6 @@ export function ExportCarDialog({
           </Text>
 
           <Button
-            variant="solid"
             color="primary"
             size="large"
             label={_(msg`Download CAR file`)}
@@ -104,6 +106,7 @@ export function ExportCarDialog({
             </Trans>
           </Text>
         </View>
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )

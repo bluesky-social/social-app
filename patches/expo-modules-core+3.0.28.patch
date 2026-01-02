@@ -1,0 +1,44 @@
+diff --git a/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/activityresult/AppContextActivityResultLauncher.kt b/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/activityresult/AppContextActivityResultLauncher.kt
+index d300fc2..0890878 100644
+--- a/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/activityresult/AppContextActivityResultLauncher.kt
++++ b/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/activityresult/AppContextActivityResultLauncher.kt
+@@ -3,8 +3,8 @@ package expo.modules.kotlin.activityresult
+ import androidx.activity.result.ActivityResultCallback
+ import androidx.activity.result.contract.ActivityResultContract
+ import java.io.Serializable
++import kotlinx.coroutines.suspendCancellableCoroutine
+ import kotlin.coroutines.resume
+-import kotlin.coroutines.suspendCoroutine
+ 
+ /**
+  * A launcher for a previously-[AppContextActivityResultCaller.registerForActivityResult] prepared call
+@@ -22,8 +22,12 @@ abstract class AppContextActivityResultLauncher<I : Serializable, O> {
+    */
+   abstract fun launch(input: I, callback: ActivityResultCallback<O>)
+ 
+-  suspend fun launch(input: I): O = suspendCoroutine { continuation ->
+-    launch(input) { output -> continuation.resume(output) }
++  suspend fun launch(input: I): O = suspendCancellableCoroutine { continuation ->
++    launch(input) { output ->
++      if (continuation.isActive) {
++        continuation.resume(output)
++      }
++    }
+   }
+ 
+   abstract val contract: AppContextActivityResultContract<I, O>
+diff --git a/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt b/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+index 47c4d15..afe138d 100644
+--- a/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
++++ b/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+@@ -125,6 +125,10 @@ internal fun peekResponseBody(
+ }
+ 
+ internal fun shouldParseBody(response: Response): Boolean {
++  if (response.request.url.encodedPath == "/bitdrift_public.protobuf.client.v1.ApiService/Mux") {
++    return false
++  }
++
+   // Check for Content-Type
+   val skipContentTypes = listOf(
+     "text/event-stream", // Server Sent Events

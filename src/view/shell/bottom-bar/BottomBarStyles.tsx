@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native'
 
 import {colors} from '#/lib/styles'
+import {atoms as a} from '#/alf'
 
 export const styles = StyleSheet.create({
   bottomBar: {
@@ -13,10 +14,7 @@ export const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 10,
   },
-  bottomBarWeb: {
-    // @ts-ignore web-only
-    position: 'fixed',
-  },
+  bottomBarWeb: a.fixed,
   ctrl: {
     flex: 1,
     paddingTop: 13,
@@ -26,17 +24,15 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     left: '52%',
     top: 8,
-    backgroundColor: colors.blue3,
     paddingHorizontal: 4,
     paddingBottom: 1,
     borderRadius: 6,
     zIndex: 1,
   },
-  notificationCountLight: {
-    borderColor: colors.white,
-  },
-  notificationCountDark: {
-    borderColor: colors.gray8,
+  notificationCountWeb: {
+    paddingTop: 3,
+    paddingBottom: 3,
+    borderRadius: 12,
   },
   notificationCountLabel: {
     fontSize: 12,
@@ -46,7 +42,7 @@ export const styles = StyleSheet.create({
   },
   hasNewBadge: {
     position: 'absolute',
-    left: '52%',
+    left: '54%',
     marginLeft: 4,
     top: 10,
     width: 8,

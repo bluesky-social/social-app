@@ -9,7 +9,7 @@ import {Loader} from '#/components/Loader'
 export interface BackNextButtonsProps {
   hideNext?: boolean
   showRetry?: boolean
-  isLoading: boolean
+  isLoading?: boolean
   isNextDisabled?: boolean
   onBackPress: () => void
   onNextPress?: () => void

@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextInput, View} from 'react-native'
+import {type TextInput, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,7 +8,7 @@ import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlassIcon} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon} from '#/components/icons/MagnifyingGlass'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 type SearchInputProps = Omit<TextField.InputProps, 'label'> & {

@@ -1,17 +1,17 @@
 import React, {memo} from 'react'
-import {RefreshControl, ViewToken} from 'react-native'
+import {RefreshControl, type ViewToken} from 'react-native'
 import {
-  FlatListPropsWithLayout,
+  type FlatListPropsWithLayout,
   runOnJS,
+  useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
 import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
 import {FlatList_INTERNAL} from './Views'
@@ -39,7 +39,7 @@ export type ListProps<ItemT = any> = Omit<
   sideBorders?: boolean
   progressViewOffset?: number
 }
-export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
+export type ListRef = React.RefObject<FlatList_INTERNAL | null>
 
 const SCROLLED_DOWN_LIMIT = 200
 
@@ -57,11 +57,11 @@ let List = React.forwardRef<ListMethods, ListProps>(
       ...props
     },
     ref,
-  ): React.ReactElement => {
+  ): React.ReactElement<any> => {
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
     const dedupe = useDedupe(400)
-    const {activeLightbox} = useLightbox()
+    const scrollsToTop = useAllowScrollToTop()
 
     function handleScrolledDownChange(didScrollDown: boolean) {
       onScrolledDownChange?.(didScrollDown)
@@ -132,6 +132,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
     if (refreshing !== undefined || onRefresh !== undefined) {
       refreshControl = (
         <RefreshControl
+          key={t.atoms.text.color}
           refreshing={refreshing ?? false}
           onRefresh={onRefresh}
           tintColor={t.atoms.text.color}
@@ -151,6 +152,9 @@ let List = React.forwardRef<ListMethods, ListProps>(
 
     return (
       <FlatList_INTERNAL
+        showsVerticalScrollIndicator // overridable
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         {...props}
         automaticallyAdjustsScrollIndicatorInsets={
           automaticallyAdjustsScrollIndicatorInsets
@@ -160,14 +164,12 @@ let List = React.forwardRef<ListMethods, ListProps>(
           right: 1,
           ...props.scrollIndicatorInsets,
         }}
+        indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
-        scrollsToTop={!activeLightbox}
+        scrollsToTop={scrollsToTop}
         scrollEventThrottle={1}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        showsVerticalScrollIndicator={!isAndroid}
         style={style}
         // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
         ref={ref}
@@ -179,3 +181,11 @@ List.displayName = 'List'
 
 List = memo(List)
 export {List}
+
+// We only want to use this context value on iOS because the `scrollsToTop` prop is iOS-only
+// removing it saves us a re-render on Android
+const useAllowScrollToTop = isIOS ? useAllowScrollToTopIOS : () => undefined
+function useAllowScrollToTopIOS() {
+  const {activeLightbox} = useLightbox()
+  return !activeLightbox
+}

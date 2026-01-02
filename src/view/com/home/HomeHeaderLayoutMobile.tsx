@@ -1,4 +1,4 @@
-import React from 'react'
+import {type JSX} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
@@ -56,13 +56,8 @@ export function HomeHeaderLayoutMobile({
           <PressableScale
             targetScale={0.9}
             onPress={() => {
-              emitSoftReset()
-            }}
-            onPressIn={() => {
-              playHaptic('Heavy')
-            }}
-            onPressOut={() => {
               playHaptic('Light')
+              emitSoftReset()
             }}>
             <Logo width={30} />
           </PressableScale>
@@ -72,7 +67,7 @@ export function HomeHeaderLayoutMobile({
           {hasSession && (
             <Link
               testID="viewHeaderHomeFeedPrefsBtn"
-              to="/feeds"
+              to={{screen: 'Feeds'}}
               hitSlop={HITSLOP_10}
               label={_(msg`View your feeds and explore more`)}
               size="small"
@@ -81,9 +76,8 @@ export function HomeHeaderLayoutMobile({
               shape="square"
               style={[
                 a.justify_center,
-                {
-                  marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET,
-                },
+                {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
+                a.bg_transparent,
               ]}>
               <ButtonIcon icon={FeedsIcon} size="lg" />
             </Link>

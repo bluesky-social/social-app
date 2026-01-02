@@ -1,33 +1,35 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppBskyFeedPost,
   AtUri,
-  BskyAgent,
-  ModerationDecision,
+  type BskyAgent,
+  moderatePost,
+  type ModerationDecision,
+  type ModerationPrefs,
 } from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {AuthorFeedAPI} from '#/lib/api/feed/author'
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
+import {DemoFeedAPI} from '#/lib/api/feed/demo'
 import {FollowingFeedAPI} from '#/lib/api/feed/following'
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
-import {FeedAPI, ReasonFeedSource} from '#/lib/api/feed/types'
+import {PostListFeedAPI} from '#/lib/api/feed/posts'
+import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
-import {FeedTuner, FeedTunerFn} from '#/lib/api/feed-manip'
+import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
-import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -44,13 +46,15 @@ import {
 } from './util'
 
 type ActorDid = string
-type AuthorFilter =
+export type AuthorFilter =
   | 'posts_with_replies'
   | 'posts_no_replies'
   | 'posts_and_author_threads'
   | 'posts_with_media'
+  | 'posts_with_video'
 type FeedUri = string
 type ListUri = string
+type PostsUriList = string
 
 export type FeedDescriptor =
   | 'following'
@@ -58,9 +62,12 @@ export type FeedDescriptor =
   | `feedgen|${FeedUri}`
   | `likes|${ActorDid}`
   | `list|${ListUri}`
+  | `posts|${PostsUriList}`
+  | 'demo'
 export interface FeedParams {
   mergeFeedEnabled?: boolean
   mergeFeedSources?: string[]
+  feedCacheKey?: 'discover' | 'explore' | undefined
 }
 
 type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
@@ -88,6 +95,8 @@ export interface FeedPostSlice {
   isIncompleteThread: boolean
   isFallbackMarker: boolean
   feedContext: string | undefined
+  reqId: string | undefined
+  feedPostUri: string
   reason?:
     | AppBskyFeedDefs.ReasonRepost
     | AppBskyFeedDefs.ReasonPin
@@ -125,6 +134,12 @@ export function usePostFeedQuery(
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
+  /**
+   * Load bearing: we need to await AA state or risk FOUC. This marginally
+   * delays feeds, but AA state is fetched immediately on load and is then
+   * available for the remainder of the session, so this delay only affects cold
+   * loads. -esb
+   */
   const enabled =
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const userInterests = aggregateUserInterests(preferences)
@@ -187,40 +202,27 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
-      try {
-        const res = await api.fetch({cursor, limit: fetchLimit})
+      const res = await api.fetch({cursor, limit: fetchLimit})
 
-        /*
-         * If this is a public view, we need to check if posts fail moderation.
-         * If all fail, we throw an error. If only some fail, we continue and let
-         * moderations happen later, which results in some posts being shown and
-         * some not.
-         */
-        if (!agent.session) {
-          assertSomePostsPassModeration(res.feed)
-        }
+      /*
+       * If this is a public view, we need to check if posts fail moderation.
+       * If all fail, we throw an error. If only some fail, we continue and let
+       * moderations happen later, which results in some posts being shown and
+       * some not.
+       */
+      if (!agent.session) {
+        assertSomePostsPassModeration(
+          res.feed,
+          preferences?.moderationPrefs ||
+            DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+        )
+      }
 
-        return {
-          api,
-          cursor: res.cursor,
-          feed: res.feed,
-          fetchedAt: Date.now(),
-        }
-      } catch (e) {
-        const feedDescParts = feedDesc.split('|')
-        const feedOwnerDid = new AtUri(feedDescParts[1]).hostname
-
-        if (
-          feedDescParts[0] === 'feedgen' &&
-          BSKY_FEED_OWNER_DIDS.includes(feedOwnerDid)
-        ) {
-          logger.error(`Bluesky feed may be offline: ${feedOwnerDid}`, {
-            feedDesc,
-            jsError: e,
-          })
-        }
-
-        throw e
+      return {
+        api,
+        cursor: res.cursor,
+        feed: res.feed,
+        fetchedAt: Date.now(),
       }
     },
     initialPageParam: undefined,
@@ -311,6 +313,7 @@ export function usePostFeedQuery(
                     userActionHistory.seen(
                       slice.items.map(item => ({
                         feedContext: slice.feedContext,
+                        reqId: slice.reqId,
                         likeCount: item.post.likeCount ?? 0,
                         repostCount: item.post.repostCount ?? 0,
                         replyCount: item.post.replyCount ?? 0,
@@ -328,7 +331,9 @@ export function usePostFeedQuery(
                     isIncompleteThread: slice.isIncompleteThread,
                     isFallbackMarker: slice.isFallbackMarker,
                     feedContext: slice.feedContext,
+                    reqId: slice.reqId,
                     reason: slice.reason,
+                    feedPostUri: slice.feedPostUri,
                     items: slice.items.map((item, i) => {
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
@@ -464,21 +469,26 @@ function createApi({
       }
     }
   } else if (feedDesc.startsWith('author')) {
-    const [_, actor, filter] = feedDesc.split('|')
+    const [__, actor, filter] = feedDesc.split('|')
     return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
-    const [_, actor] = feedDesc.split('|')
+    const [__, actor] = feedDesc.split('|')
     return new LikesFeedAPI({agent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
-    const [_, feed] = feedDesc.split('|')
+    const [__, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
       agent,
       feedParams: {feed},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
-    const [_, list] = feedDesc.split('|')
+    const [__, list] = feedDesc.split('|')
     return new ListFeedAPI({agent, feedParams: {list}})
+  } else if (feedDesc.startsWith('posts')) {
+    const [__, uriList] = feedDesc.split('|')
+    return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
+  } else if (feedDesc === 'demo') {
+    return new DemoFeedAPI({agent})
   } else {
     // shouldnt happen
     return new FollowingFeedAPI({agent})
@@ -543,7 +553,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, undefined> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
@@ -579,7 +589,10 @@ export function* findAllProfilesInQueryData(
   }
 }
 
-function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
+function assertSomePostsPassModeration(
+  feed: AppBskyFeedDefs.FeedViewPost[],
+  moderationPrefs: ModerationPrefs,
+) {
   // no posts in this feed
   if (feed.length === 0) return true
 
@@ -589,7 +602,7 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   for (const item of feed) {
     const moderation = moderatePost(item.post, {
       userDid: undefined,
-      prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+      prefs: moderationPrefs,
     })
 
     if (!moderation.ui('contentList').filter) {

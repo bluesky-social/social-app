@@ -1,7 +1,6 @@
-import * as React from 'react'
 import {requireNativeViewManager} from 'expo-modules-core'
 
-import {ExpoScrollForwarderViewProps} from './ExpoScrollForwarder.types'
+import {type ExpoScrollForwarderViewProps} from './ExpoScrollForwarder.types'
 
 const NativeView: React.ComponentType<ExpoScrollForwarderViewProps> =
   requireNativeViewManager('ExpoScrollForwarder')

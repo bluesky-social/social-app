@@ -1,11 +1,12 @@
 import {RichText} from '@atproto/api'
 
-import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {
   createStarterPackGooglePlayUri,
   createStarterPackLinkFromAndroidReferrer,
   parseStarterPackUri,
-} from 'lib/strings/starter-pack'
+} from '#/lib/strings/starter-pack'
+import {tenorUrlToBskyGifUrl} from '#/state/queries/tenor'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
 import {enforceLen} from '../../src/lib/strings/helpers'
@@ -377,6 +378,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://music.apple.com/us/playlist/playlistName/playlistId',
     'https://music.apple.com/us/album/albumName/albumId',
     'https://music.apple.com/us/album/albumName/albumId?i=songId',
+    'https://music.apple.com/us/song/songName/songId',
 
     'https://vimeo.com/videoId',
     'https://vimeo.com/videoId?autoplay=0',
@@ -602,6 +604,11 @@ describe('parseEmbedPlayerFromUrl', () => {
       source: 'appleMusic',
       playerUri:
         'https://embed.music.apple.com/us/album/albumName/albumId?i=songId',
+    },
+    {
+      type: 'apple_music_song',
+      source: 'appleMusic',
+      playerUri: 'https://embed.music.apple.com/us/song/songName/songId',
     },
 
     {
@@ -950,20 +957,20 @@ describe('parseStarterPackHttpUri', () => {
   })
 
   it('returns the at uri when the input is a valid starterpack at uri', () => {
-    const validAtUri = 'at://did:123/app.bsky.graph.starterpack/rkey'
+    const validAtUri = 'at://did:plc:123/app.bsky.graph.starterpack/rkey'
     expect(parseStarterPackUri(validAtUri)).toEqual({
-      name: 'did:123',
+      name: 'did:plc:123',
       rkey: 'rkey',
     })
   })
 
   it('returns null when the at uri has no rkey', () => {
-    const validAtUri = 'at://did:123/app.bsky.graph.starterpack'
+    const validAtUri = 'at://did:plc:123/app.bsky.graph.starterpack'
     expect(parseStarterPackUri(validAtUri)).toEqual(null)
   })
 
   it('returns null when the collection is not app.bsky.graph.starterpack', () => {
-    const validAtUri = 'at://did:123/app.bsky.graph.list/rkey'
+    const validAtUri = 'at://did:plc:123/app.bsky.graph.list/rkey'
     expect(parseStarterPackUri(validAtUri)).toEqual(null)
   })
 
@@ -996,4 +1003,19 @@ describe('createStarterPackGooglePlayUri', () => {
     // @ts-expect-error test
     expect(createStarterPackGooglePlayUri(undefined, 'rkey')).toEqual(null)
   })
+})
+
+describe('tenorUrlToBskyGifUrl', () => {
+  const inputs = [
+    'https://media.tenor.com/someID_AAAAC/someName.gif',
+    'https://media.tenor.com/someID/someName.gif',
+  ]
+
+  it.each(inputs)(
+    'returns url with t.gifs.bsky.app as hostname for input url',
+    input => {
+      const out = tenorUrlToBskyGifUrl(input)
+      expect(out.startsWith('https://t.gifs.bsky.app/')).toEqual(true)
+    },
+  )
 })

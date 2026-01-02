@@ -1,15 +1,16 @@
-import React, {ComponentProps} from 'react'
+import React, {type ComponentProps, type JSX} from 'react'
 import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
@@ -17,18 +18,19 @@ import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount, useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
+import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {BulletList_Stroke2_Corner0_Rounded as List} from '#/components/icons/BulletList'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
@@ -39,7 +41,7 @@ import {
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
 import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass'
 import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
@@ -51,6 +53,8 @@ import {
 } from '#/components/icons/UserCircle'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 const iconWidth = 26
 
@@ -64,6 +68,8 @@ let DrawerProfileCard = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const {data: profile} = useProfileQuery({did: account.did})
+  const verification = useSimpleVerificationState({profile})
+  const {isActive: live} = useActorStatus(profile)
 
   return (
     <TouchableOpacity
@@ -71,21 +77,35 @@ let DrawerProfileCard = ({
       accessibilityLabel={_(msg`Profile`)}
       accessibilityHint={_(msg`Navigates to your profile`)}
       onPress={onPressProfile}
-      style={[a.gap_sm]}>
+      style={[a.gap_sm, a.pr_lg]}>
       <UserAvatar
         size={52}
         avatar={profile?.avatar}
         // See https://github.com/bluesky-social/social-app/pull/1801:
         usePlainRNImage={true}
         type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        live={live}
       />
       <View style={[a.gap_2xs]}>
-        <Text
-          emoji
-          style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
-          numberOfLines={1}>
-          {profile?.displayName || account.handle}
-        </Text>
+        <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+          <Text
+            emoji
+            style={[a.font_bold, a.text_xl, a.mt_2xs, a.leading_tight]}
+            numberOfLines={1}>
+            {profile?.displayName || account.handle}
+          </Text>
+          {verification.showBadge && (
+            <View
+              style={{
+                top: 0,
+              }}>
+              <VerificationCheck
+                width={16}
+                verifier={verification.role === 'verifier'}
+              />
+            </View>
+          )}
+        </View>
         <Text
           emoji
           style={[t.atoms.text_contrast_medium, a.text_md, a.leading_tight]}
@@ -95,7 +115,7 @@ let DrawerProfileCard = ({
       </View>
       <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
         <Trans>
-          <Text style={[a.text_md, a.font_bold]}>
+          <Text style={[a.text_md, a.font_semi_bold]}>
             {formatCount(i18n, profile?.followersCount ?? 0)}
           </Text>{' '}
           <Plural
@@ -106,7 +126,7 @@ let DrawerProfileCard = ({
         </Trans>{' '}
         &middot;{' '}
         <Trans>
-          <Text style={[a.text_md, a.font_bold]}>
+          <Text style={[a.text_md, a.font_semi_bold]}>
             {formatCount(i18n, profile?.followsCount ?? 0)}
           </Text>{' '}
           <Plural
@@ -131,6 +151,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     isAtHome,
     isAtSearch,
     isAtFeeds,
+    isAtBookmarks,
     isAtNotifications,
     isAtMyProfile,
     isAtMessages,
@@ -141,7 +162,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   // =
 
   const onPressTab = React.useCallback(
-    (tab: string) => {
+    (tab: 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile') => {
       const state = navigation.getState()
       setDrawerOpen(false)
       if (isWeb) {
@@ -149,7 +170,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
         if (tab === 'MyProfile') {
           navigation.navigate('Profile', {name: currentAccount!.handle})
         } else {
-          // @ts-ignore must be Home, Search, Notifications, or MyProfile
+          // @ts-expect-error struggles with string unions, apparently
           navigation.navigate(tab)
         }
       } else {
@@ -157,9 +178,23 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
         if (tabState === TabState.InsideAtRoot) {
           emitSoftReset()
         } else if (tabState === TabState.Inside) {
-          navigation.dispatch(StackActions.popToTop())
+          // find the correct navigator in which to pop-to-top
+          const target = state.routes.find(route => route.name === `${tab}Tab`)
+            ?.state?.key
+          if (target) {
+            // if we found it, trigger pop-to-top
+            navigation.dispatch({
+              ...StackActions.popToTop(),
+              target,
+            })
+          } else {
+            // fallback: reset navigation
+            navigation.reset({
+              index: 0,
+              routes: [{name: `${tab}Tab`}],
+            })
+          }
         } else {
-          // @ts-ignore must be Home, Search, Notifications, or MyProfile
           navigation.navigate(`${tab}Tab`)
         }
       }
@@ -195,6 +230,11 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
 
   const onPressLists = React.useCallback(() => {
     navigation.navigate('Lists')
+    setDrawerOpen(false)
+  }, [navigation, setDrawerOpen])
+
+  const onPressBookmarks = React.useCallback(() => {
+    navigation.navigate('Bookmarks')
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen])
 
@@ -259,6 +299,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
             />
             <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
             <ListsMenuItem onPress={onPressLists} />
+            <BookmarksMenuItem
+              isActive={isAtBookmarks}
+              onPress={onPressBookmarks}
+            />
             <ProfileMenuItem
               isActive={isAtMyProfile}
               onPress={onPressProfile}
@@ -306,7 +350,12 @@ let DrawerFooter = ({
         a.flex_wrap,
         a.pl_xl,
         a.pt_md,
-        {paddingBottom: Math.max(insets.bottom, a.pb_xl.paddingBottom)},
+        {
+          paddingBottom: Math.max(
+            insets.bottom + tokens.space.xs,
+            tokens.space.xl,
+          ),
+        },
       ]}>
       <Button
         label={_(msg`Send feedback`)}
@@ -362,7 +411,7 @@ let SearchMenuItem = ({
           <MagnifyingGlass style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg`Search`)}
+      label={_(msg`Explore`)}
       bold={isActive}
       onPress={onPress}
     />
@@ -445,7 +494,12 @@ let NotificationsMenuItem = ({
       accessibilityHint={
         numUnreadNotifications === ''
           ? ''
-          : _(msg`${numUnreadNotifications} unread`)
+          : _(
+              msg`${plural(numUnreadNotifications ?? 0, {
+                one: '# unread item',
+                other: '# unread items',
+              })}` || '',
+            )
       }
       count={numUnreadNotifications}
       bold={isActive}
@@ -494,6 +548,32 @@ let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   )
 }
 ListsMenuItem = React.memo(ListsMenuItem)
+
+let BookmarksMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const t = useTheme()
+
+  return (
+    <MenuItem
+      icon={
+        isActive ? (
+          <BookmarkFilled style={[t.atoms.text]} width={iconWidth} />
+        ) : (
+          <Bookmark style={[t.atoms.text]} width={iconWidth} />
+        )
+      }
+      label={_(msg({message: 'Saved', context: 'link to bookmarks screen'}))}
+      onPress={onPress}
+    />
+  )
+}
+BookmarksMenuItem = React.memo(BookmarksMenuItem)
 
 let ProfileMenuItem = ({
   isActive,
@@ -576,7 +656,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
                     style={[
                       a.text_xs,
                       a.leading_tight,
-                      a.font_bold,
+                      a.font_semi_bold,
                       {
                         fontVariant: ['tabular-nums'],
                         color: colors.white,
@@ -593,7 +673,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
             style={[
               a.flex_1,
               a.text_2xl,
-              bold && a.font_heavy,
+              bold && a.font_bold,
               web(a.leading_snug),
             ]}
             numberOfLines={1}>

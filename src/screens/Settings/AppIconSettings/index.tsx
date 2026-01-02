@@ -3,20 +3,20 @@ import {Alert, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {IS_INTERNAL} from '#/lib/app-info'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {isAndroid} from '#/platform/detection'
 import {AppIconImage} from '#/screens/Settings/AppIconSettings/AppIconImage'
-import {AppIconSet} from '#/screens/Settings/AppIconSettings/types'
+import {type AppIconSet} from '#/screens/Settings/AppIconSettings/types'
 import {useAppIconSets} from '#/screens/Settings/AppIconSettings/useAppIconSets'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {IS_INTERNAL} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
 export function AppIconSettingsScreen({}: Props) {
@@ -28,7 +28,7 @@ export function AppIconSettingsScreen({}: Props) {
     getAppIconName(DynamicAppIcon.getAppIcon()),
   )
 
-  const onSetAppIcon = (icon: string) => {
+  const onSetAppIcon = (icon: DynamicAppIcon.IconName) => {
     if (isAndroid) {
       const next =
         sets.defaults.find(i => i.id === icon) ??
@@ -37,7 +37,7 @@ export function AppIconSettingsScreen({}: Props) {
         next
           ? _(msg`Change app icon to "${next.name}"`)
           : _(msg`Change app icon`),
-        // to determine - can we stop this happening? -sfn
+        // unfortunately necessary -sfn
         _(msg`The app will be restarted`),
         [
           {
@@ -93,7 +93,7 @@ export function AppIconSettingsScreen({}: Props) {
                 a.text_md,
                 a.mt_xl,
                 a.mb_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Bluesky+</Trans>
@@ -119,7 +119,7 @@ export function AppIconSettingsScreen({}: Props) {
   )
 }
 
-function setAppIcon(icon: string) {
+function setAppIcon(icon: DynamicAppIcon.IconName) {
   if (icon === 'default_light') {
     return getAppIconName(DynamicAppIcon.setAppIcon(null))
   } else {
@@ -127,11 +127,11 @@ function setAppIcon(icon: string) {
   }
 }
 
-function getAppIconName(icon: string | false) {
+function getAppIconName(icon: string | false): DynamicAppIcon.IconName {
   if (!icon || icon === 'DEFAULT') {
     return 'default_light'
   } else {
-    return icon
+    return icon as DynamicAppIcon.IconName
   }
 }
 
@@ -143,8 +143,8 @@ function Group({
 }: {
   children: React.ReactNode
   label: string
-  value: string
-  onChange: (value: string) => void
+  value: DynamicAppIcon.IconName
+  onChange: (value: DynamicAppIcon.IconName) => void
 }) {
   return (
     <Toggle.Group
@@ -153,7 +153,7 @@ function Group({
       values={[value]}
       maxSelections={1}
       onChange={vals => {
-        if (vals[0]) onChange(vals[0])
+        if (vals[0]) onChange(vals[0] as DynamicAppIcon.IconName)
       }}>
       <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
         {children}
@@ -201,7 +201,12 @@ function RowText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
     <Text
-      style={[a.text_md, a.font_bold, a.flex_1, t.atoms.text_contrast_medium]}
+      style={[
+        a.text_md,
+        a.font_semi_bold,
+        a.flex_1,
+        t.atoms.text_contrast_medium,
+      ]}
       emoji>
       {children}
     </Text>
@@ -213,7 +218,7 @@ function AppIcon({icon, size = 50}: {icon: AppIconSet; size: number}) {
   return (
     <PressableScale
       accessibilityLabel={icon.name}
-      accessibilityHint={_(msg`Tap to change app icon`)}
+      accessibilityHint={_(msg`Changes app icon`)}
       targetScale={0.95}
       onPress={() => {
         if (isAndroid) {

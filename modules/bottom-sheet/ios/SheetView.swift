@@ -1,4 +1,5 @@
 import ExpoModulesCore
+import React
 import UIKit
 
 class SheetView: ExpoView, UISheetPresentationControllerDelegate {
@@ -144,7 +145,8 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
 
   func updateLayout() {
-    if self.prevLayoutDetentIdentifier == self.selectedDetentIdentifier,
+    // Allow updates either when identifiers match OR when prevLayoutDetentIdentifier is nil (first real content update)
+    if self.prevLayoutDetentIdentifier == self.selectedDetentIdentifier || self.prevLayoutDetentIdentifier == nil,
        let contentHeight = self.innerView?.subviews.first?.frame.size.height {
       self.sheetVc?.updateDetents(contentHeight: self.clampHeight(contentHeight),
                                   preventExpansion: self.preventExpansion)
@@ -154,9 +156,15 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
 
   func dismiss() {
+    guard let sheetVc = self.sheetVc else {
+      return
+    }
+
     self.isClosing = true
-    self.sheetVc?.dismiss(animated: true) { [weak self] in
-      self?.destroy()
+    DispatchQueue.main.async {
+      sheetVc.dismiss(animated: true) { [weak self] in
+        self?.destroy()
+      }
     }
   }
 

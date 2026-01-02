@@ -11,9 +11,11 @@ export function DO_NOT_USE() {
   return useFonts({
     'Inter-Regular': require('../../../assets/fonts/inter/Inter-Regular.otf'),
     'Inter-Italic': require('../../../assets/fonts/inter/Inter-Italic.otf'),
-    'Inter-Bold': require('../../../assets/fonts/inter/Inter-SemiBold.otf'),
-    'Inter-BoldItalic': require('../../../assets/fonts/inter/Inter-SemiBoldItalic.otf'),
-    'Inter-Black': require('../../../assets/fonts/inter/Inter-ExtraBold.otf'),
-    'Inter-BlackItalic': require('../../../assets/fonts/inter/Inter-ExtraBoldItalic.otf'),
+    'Inter-Medium': require('../../../assets/fonts/inter/Inter-Medium.otf'),
+    'Inter-MediumItalic': require('../../../assets/fonts/inter/Inter-MediumItalic.otf'),
+    'Inter-SemiBold': require('../../../assets/fonts/inter/Inter-SemiBold.otf'),
+    'Inter-SemiBoldItalic': require('../../../assets/fonts/inter/Inter-SemiBoldItalic.otf'),
+    'Inter-Bold': require('../../../assets/fonts/inter/Inter-Bold.otf'),
+    'Inter-BoldItalic': require('../../../assets/fonts/inter/Inter-BoldItalic.otf'),
   })
 }

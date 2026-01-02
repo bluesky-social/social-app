@@ -1,38 +1,43 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {VIDEO_FEED_URIS} from '#/lib/constants'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
-import {CommonNavigatorParams} from '#/lib/routes/types'
-import {NavigationProp} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
-import {FeedSourceFeedInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {
+  type FeedSourceFeedInfo,
+  useFeedSourceInfoQuery,
+} from '#/state/queries/feed'
+import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {Button} from '#/view/com/util/forms/Button'
-import {ListRef} from '#/view/com/util/List'
+import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
@@ -40,12 +45,18 @@ import {
   ProfileFeedHeader,
   ProfileFeedHeaderSkeleton,
 } from '#/screens/Profile/components/ProfileFeedHeader'
+import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export function ProfileFeedScreen(props: Props) {
   const {rkey, name: handleOrDid} = props.route.params
 
+  const feedParams: FeedParams | undefined = props.route.params.feedCacheKey
+    ? {
+        feedCacheKey: props.route.params.feedCacheKey,
+      }
+    : undefined
   const pal = usePalette('default')
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
@@ -95,20 +106,29 @@ export function ProfileFeedScreen(props: Props) {
   }
 
   return resolvedUri ? (
-    <Layout.Screen>
-      <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
+    <Layout.Screen testID="profileFeedScreen">
+      <ProfileFeedScreenIntermediate
+        feedUri={resolvedUri.uri}
+        feedParams={feedParams}
+      />
     </Layout.Screen>
   ) : (
-    <Layout.Screen>
+    <Layout.Screen testID="profileFeedScreen">
+      <ProfileFeedHeaderSkeleton />
       <Layout.Content>
-        <ProfileFeedHeaderSkeleton />
         <PostFeedLoadingPlaceholder />
       </Layout.Content>
     </Layout.Screen>
   )
 }
 
-function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
+function ProfileFeedScreenIntermediate({
+  feedUri,
+  feedParams,
+}: {
+  feedUri: string
+  feedParams: FeedParams | undefined
+}) {
   const {data: preferences} = usePreferencesQuery()
   const {data: info} = useFeedSourceInfoQuery({uri: feedUri})
 
@@ -125,19 +145,22 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
     <ProfileFeedScreenInner
       preferences={preferences}
       feedInfo={info as FeedSourceFeedInfo}
+      feedParams={feedParams}
     />
   )
 }
 
 export function ProfileFeedScreenInner({
   feedInfo,
+  feedParams,
 }: {
   preferences: UsePreferencesQueryResponse
   feedInfo: FeedSourceFeedInfo
+  feedParams: FeedParams | undefined
 }) {
   const {_} = useLingui()
   const {hasSession} = useSession()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const isScreenFocused = useIsFocused()
 
   useSetTitle(feedInfo?.displayName)
@@ -147,7 +170,7 @@ export function ProfileFeedScreenInner({
   const [hasNew, setHasNew] = React.useState(false)
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const queryClient = useQueryClient()
-  const feedFeedback = useFeedFeedback(feed, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useAnimatedRef() as ListRef
 
   const onScrollToTop = useCallback(() => {
@@ -167,8 +190,22 @@ export function ProfileFeedScreenInner({
   }, [onScrollToTop, isScreenFocused])
 
   const renderPostsEmpty = useCallback(() => {
-    return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
+    return (
+      <EmptyState
+        icon={HashtagWideIcon}
+        iconSize="2xl"
+        message={_(msg`This feed is empty.`)}
+      />
+    )
   }, [_])
+
+  const isVideoFeed = React.useMemo(() => {
+    const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
+    const feedIsVideoMode =
+      feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
+    const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
+    return isNative && _isVideoFeed
+  }, [feedInfo])
 
   return (
     <>
@@ -177,12 +214,14 @@ export function ProfileFeedScreenInner({
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
           feed={feed}
+          feedParams={feedParams}
           pollInterval={60e3}
           disablePoll={hasNew}
           onHasNew={setHasNew}
           scrollElRef={scrollElRef}
           onScrolledDownChange={setIsScrolledDown}
           renderEmptyState={renderPostsEmpty}
+          isVideoFeed={isVideoFeed}
         />
       </FeedFeedbackProvider>
 

@@ -1,11 +1,9 @@
-import 'react-native-url-polyfill/auto'
-import '#/lib/sentry' // must be near top
-import '#/lib/bitdrift' // must be near top
+import '#/logger/sentry/setup'
+import '#/logger/bitdrift/setup'
 import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
-import {RootSiblingParent} from 'react-native-root-siblings'
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -15,8 +13,10 @@ import * as SplashScreen from 'expo-splash-screen'
 import * as SystemUI from 'expo-system-ui'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as Sentry from '@sentry/react-native'
 
 import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
+import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider, tryFetchGates} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
@@ -27,14 +27,10 @@ import {isAndroid, isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
+import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
-import {
-  beginResolveGeolocation,
-  ensureGeolocationResolved,
-  Provider as GeolocationProvider,
-} from '#/state/geolocation'
+import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
-import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
 import {Provider as ModalStateProvider} from '#/state/modals'
@@ -43,33 +39,37 @@ import {Provider as PrefsStateProvider} from '#/state/preferences'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
+import {Provider as ServiceAccountManager} from '#/state/service-config'
 import {
   Provider as SessionProvider,
-  SessionAccount,
+  type SessionAccount,
   useSession,
   useSessionApi,
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
-import {Provider as LightStatusBarProvider} from '#/state/shell/light-status-bar'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
+import {Provider as OnboardingProvider} from '#/state/shell/onboarding'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
-import {Provider as TrendingConfigProvider} from '#/state/trending-config'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
-import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
-import {NuxDialogs} from '#/components/dialogs/nuxs'
+import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
+import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
-import {AppProfiler} from '#/AppProfiler'
+import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {ToastOutlet} from '#/components/Toast'
+import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
+import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
+import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -80,13 +80,18 @@ if (isIOS) {
 }
 if (isAndroid) {
   // iOS is handled by the config plugin -sfn
-  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+  ScreenOrientation.lockAsync(
+    ScreenOrientation.OrientationLock.PORTRAIT_UP,
+  ).catch(error =>
+    logger.debug('Could not lock orientation', {safeMessage: error}),
+  )
 }
 
 /**
  * Begin geolocation ASAP
  */
-beginResolveGeolocation()
+Geo.resolve()
+prefetchAgeAssuranceConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -94,7 +99,6 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
-
   const hasCheckedReferrer = useStarterPackEntry()
 
   // init
@@ -119,7 +123,7 @@ function InnerApp() {
   useEffect(() => {
     return listenSessionDropped(() => {
       Toast.show(
-        _(msg`Sorry! Your session expired. Please log in again.`),
+        _(msg`Sorry! Your session expired. Please sign in again.`),
         'info',
       )
     })
@@ -128,53 +132,65 @@ function InnerApp() {
   return (
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
-        <Splash isReady={isReady && hasCheckedReferrer}>
-          <RootSiblingParent>
+        <ContextMenuProvider>
+          <Splash isReady={isReady && hasCheckedReferrer}>
             <VideoVolumeProvider>
               <React.Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
-                  <ComposerProvider>
+                  <PolicyUpdateOverlayProvider>
                     <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <HomeBadgeProvider>
-                                    <UnreadNotifsProvider>
-                                      <BackgroundNotificationPreferencesProvider>
-                                        <MutedThreadsProvider>
-                                          <ProgressGuideProvider>
-                                            <TrendingConfigProvider>
-                                              <GestureHandlerRootView
-                                                style={s.h100pct}>
-                                                <TestCtrls />
-                                                <Shell />
-                                                <NuxDialogs />
-                                              </GestureHandlerRootView>
-                                            </TrendingConfigProvider>
-                                          </ProgressGuideProvider>
-                                        </MutedThreadsProvider>
-                                      </BackgroundNotificationPreferencesProvider>
-                                    </UnreadNotifsProvider>
-                                  </HomeBadgeProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
+                      <AgeAssuranceV2Provider>
+                        <ComposerProvider>
+                          <MessagesProvider>
+                            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                            <LabelDefsProvider>
+                              <ModerationOptsProvider>
+                                <LoggedOutViewProvider>
+                                  <SelectedFeedProvider>
+                                    <HiddenRepliesProvider>
+                                      <HomeBadgeProvider>
+                                        <UnreadNotifsProvider>
+                                          <BackgroundNotificationPreferencesProvider>
+                                            <MutedThreadsProvider>
+                                              <ProgressGuideProvider>
+                                                <ServiceAccountManager>
+                                                  <EmailVerificationProvider>
+                                                    <HideBottomBarBorderProvider>
+                                                      <GestureHandlerRootView
+                                                        style={s.h100pct}>
+                                                        <GlobalGestureEventsProvider>
+                                                          <IntentDialogProvider>
+                                                            <TestCtrls />
+                                                            <Shell />
+                                                            <ToastOutlet />
+                                                          </IntentDialogProvider>
+                                                        </GlobalGestureEventsProvider>
+                                                      </GestureHandlerRootView>
+                                                    </HideBottomBarBorderProvider>
+                                                  </EmailVerificationProvider>
+                                                </ServiceAccountManager>
+                                              </ProgressGuideProvider>
+                                            </MutedThreadsProvider>
+                                          </BackgroundNotificationPreferencesProvider>
+                                        </UnreadNotifsProvider>
+                                      </HomeBadgeProvider>
+                                    </HiddenRepliesProvider>
+                                  </SelectedFeedProvider>
+                                </LoggedOutViewProvider>
+                              </ModerationOptsProvider>
+                            </LabelDefsProvider>
+                          </MessagesProvider>
+                        </ComposerProvider>
+                      </AgeAssuranceV2Provider>
                     </StatsigProvider>
-                  </ComposerProvider>
+                  </PolicyUpdateOverlayProvider>
                 </QueryProvider>
               </React.Fragment>
             </VideoVolumeProvider>
-          </RootSiblingParent>
-        </Splash>
+          </Splash>
+        </ContextMenuProvider>
       </ThemeProvider>
     </Alf>
   )
@@ -184,7 +200,7 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
+    Promise.all([initPersistedState(), Geo.resolve()]).then(() =>
       setReady(true),
     )
   }, [])
@@ -198,45 +214,39 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <AppProfiler>
-      <GeolocationProvider>
-        <A11yProvider>
-          <KeyboardControllerProvider>
+    <Geo.Provider>
+      <A11yProvider>
+        <KeyboardControllerProvider>
+          <OnboardingProvider>
             <SessionProvider>
               <PrefsStateProvider>
                 <I18nProvider>
                   <ShellStateProvider>
-                    <InvitesStateProvider>
-                      <ModalStateProvider>
-                        <DialogStateProvider>
-                          <LightboxStateProvider>
-                            <PortalProvider>
-                              <BottomSheetProvider>
-                                <StarterPackProvider>
-                                  <SafeAreaProvider
-                                    initialMetrics={initialWindowMetrics}>
-                                    <IntentDialogProvider>
-                                      <LightStatusBarProvider>
-                                        <InnerApp />
-                                      </LightStatusBarProvider>
-                                    </IntentDialogProvider>
-                                  </SafeAreaProvider>
-                                </StarterPackProvider>
-                              </BottomSheetProvider>
-                            </PortalProvider>
-                          </LightboxStateProvider>
-                        </DialogStateProvider>
-                      </ModalStateProvider>
-                    </InvitesStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <BottomSheetProvider>
+                              <StarterPackProvider>
+                                <SafeAreaProvider
+                                  initialMetrics={initialWindowMetrics}>
+                                  <InnerApp />
+                                </SafeAreaProvider>
+                              </StarterPackProvider>
+                            </BottomSheetProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
                   </ShellStateProvider>
                 </I18nProvider>
               </PrefsStateProvider>
             </SessionProvider>
-          </KeyboardControllerProvider>
-        </A11yProvider>
-      </GeolocationProvider>
-    </AppProfiler>
+          </OnboardingProvider>
+        </KeyboardControllerProvider>
+      </A11yProvider>
+    </Geo.Provider>
   )
 }
 
-export default App
+export default Sentry.wrap(App)

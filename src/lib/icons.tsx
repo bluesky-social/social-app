@@ -1,4 +1,4 @@
-import {StyleProp, TextStyle, ViewStyle} from 'react-native'
+import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
 import Svg, {Ellipse, Line, Path, Rect} from 'react-native-svg'
 
 // Copyright (c) 2020 Refactoring UI Inc.
@@ -7,17 +7,19 @@ export function MagnifyingGlassIcon({
   style,
   size,
   strokeWidth = 2,
+  color = 'currentColor',
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
   strokeWidth?: number
+  color?: string
 }) {
   return (
     <Svg
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={strokeWidth}
-      stroke="currentColor"
+      stroke={color}
       width={size || 24}
       height={size || 24}
       style={style}>

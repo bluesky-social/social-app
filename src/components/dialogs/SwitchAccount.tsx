@@ -41,11 +41,11 @@ export function SwitchAccountDialog({
   }, [setShowLoggedOut, control])
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Switch Account`)}>
         <View style={[a.gap_lg]}>
-          <Text style={[a.text_2xl, a.font_bold]}>
+          <Text style={[a.text_2xl, a.font_semi_bold]}>
             <Trans>Switch Account</Trans>
           </Text>
 

@@ -1,4 +1,27 @@
-import type {Sentry} from '#/logger/sentry'
+/**
+ * DO NOT IMPORT THIS DIRECTLY
+ *
+ * Logger contexts, defined here and used via `Logger.Context.*` static prop.
+ */
+export enum LogContext {
+  Default = 'logger',
+  Session = 'session',
+  Notifications = 'notifications',
+  ConversationAgent = 'conversation-agent',
+  DMsAgent = 'dms-agent',
+  ReportDialog = 'report-dialog',
+  FeedFeedback = 'feed-feedback',
+  PostSource = 'post-source',
+  AgeAssurance = 'age-assurance',
+  PolicyUpdate = 'policy-update',
+  Geolocation = 'geolocation',
+
+  /**
+   * METRIC IS FOR INTERNAL USE ONLY, don't create any other loggers using this
+   * context
+   */
+  Metric = 'metric',
+}
 
 export enum LogLevel {
   Debug = 'debug',
@@ -10,6 +33,7 @@ export enum LogLevel {
 
 export type Transport = (
   level: LogLevel,
+  context: LogContext | undefined,
   message: string | Error,
   metadata: Metadata,
   timestamp: number,
@@ -20,6 +44,11 @@ export type Transport = (
  * `captureException` parameter, `CaptureContext`.
  */
 export type Metadata = {
+  /**
+   * Reserved for appending `LogContext` in logging payloads
+   */
+  __context__?: undefined
+
   /**
    * Applied as Sentry breadcrumb types. Defaults to `default`.
    *
@@ -43,27 +72,23 @@ export type Metadata = {
    * @see https://github.com/getsentry/sentry-javascript/blob/903addf9a1a1534a6cb2ba3143654b918a86f6dd/packages/types/src/misc.ts#L65
    */
   tags?: {
-    [key: string]:
-      | number
-      | string
-      | boolean
-      | bigint
-      | symbol
-      | null
-      | undefined
+    [key: string]: number | string | boolean | null | undefined
   }
 
   /**
    * Any additional data, passed through to Sentry as `extra` param on
    * exceptions, or the `data` param on breadcrumbs.
    */
-  [key: string]: unknown
-} & Parameters<typeof Sentry.captureException>[1]
-
-export type ConsoleTransportEntry = {
-  id: string
-  timestamp: number
-  level: LogLevel
-  message: string | Error
-  metadata: Metadata
+  [key: string]: Serializable | Error | unknown
 }
+
+export type Serializable =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | Serializable[]
+  | {
+      [key: string]: Serializable
+    }

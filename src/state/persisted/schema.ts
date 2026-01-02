@@ -71,15 +71,15 @@ const schema = z.object({
     contentLanguages: z.array(z.string()),
     /**
      * The language(s) the user is currently posting in, configured within the
-     * composer. Multiple languages are psearate by commas.
+     * composer. Multiple languages are separated by commas.
      *
      * BCP-47 2-letter language code without region.
      */
     postLanguage: z.string(),
     /**
      * The user's post language history, used to pre-populate the post language
-     * selector in the composer. Within each value, multiple languages are
-     * separated by values.
+     * selector in the composer. Within each value, multiple languages are separated
+     * by commas.
      *
      * BCP-47 2-letter language codes without region.
      */
@@ -126,6 +126,7 @@ const schema = z.object({
   /** @deprecated */
   mutedThreads: z.array(z.string()),
   trendingDisabled: z.boolean().optional(),
+  trendingVideoDisabled: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -172,6 +173,7 @@ export const defaults: Schema = {
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
   trendingDisabled: false,
+  trendingVideoDisabled: false,
 }
 
 export function tryParse(rawData: string): Schema | undefined {

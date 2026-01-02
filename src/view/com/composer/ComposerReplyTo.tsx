@@ -1,5 +1,5 @@
-import React from 'react'
-import {LayoutAnimation, Pressable, StyleSheet, View} from 'react-native'
+import {useCallback, useMemo, useState} from 'react'
+import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 import {
   AppBskyEmbedImages,
@@ -12,20 +12,23 @@ import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {ComposerOptsPostRef} from '#/state/shell/composer'
-import {MaybeQuoteEmbed} from '#/view/com/util/post-embeds/QuoteEmbed'
-import {Text} from '#/view/com/util/text/Text'
+import {type ComposerOptsPostRef} from '#/state/shell/composer'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
+import {QuoteEmbed} from '#/components/Post/Embed'
+import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {parseEmbed} from '#/types/bsky/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
   const {_} = useLingui()
   const {embed} = replyTo
 
-  const [showFull, setShowFull] = React.useState(false)
+  const [showFull, setShowFull] = useState(false)
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     setShowFull(prev => !prev)
     LayoutAnimation.configureNext({
       duration: 350,
@@ -33,7 +36,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
     })
   }, [])
 
-  const quoteEmbed = React.useMemo(() => {
+  const quoteEmbed = useMemo(() => {
     if (
       AppBskyEmbedRecord.isView(embed) &&
       AppBskyEmbedRecord.isViewRecord(embed.record) &&
@@ -49,8 +52,14 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
     }
     return null
   }, [embed])
+  const parsedQuoteEmbed = quoteEmbed
+    ? parseEmbed({
+        $type: 'app.bsky.embed.record#view',
+        ...quoteEmbed,
+      })
+    : null
 
-  const images = React.useMemo(() => {
+  const images = useMemo(() => {
     if (AppBskyEmbedImages.isView(embed)) {
       return embed.images
     } else if (
@@ -61,34 +70,58 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
     }
   }, [embed])
 
+  const verification = useSimpleVerificationState({profile: replyTo.author})
+
   return (
     <Pressable
-      style={[t.atoms.border_contrast_medium, styles.replyToLayout]}
+      style={[
+        a.flex_row,
+        a.align_start,
+        a.pt_xs,
+        a.pb_lg,
+        a.mb_md,
+        a.mx_lg,
+        a.border_b,
+        t.atoms.border_contrast_medium,
+        web(a.user_select_text),
+      ]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={_(
         msg`Expand or collapse the full post you are replying to`,
       )}
-      accessibilityHint={_(
-        msg`Expand or collapse the full post you are replying to`,
-      )}>
+      accessibilityHint="">
       <PreviewableUserAvatar
-        size={50}
+        size={42}
         profile={replyTo.author}
         moderation={replyTo.moderation?.ui('avatar')}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
+        disableNavigation={true}
       />
-      <View style={styles.replyToPost}>
-        <Text type="xl-medium" style={t.atoms.text} numberOfLines={1} emoji>
-          {sanitizeDisplayName(
-            replyTo.author.displayName || sanitizeHandle(replyTo.author.handle),
+      <View style={[a.flex_1, a.pl_md, a.pr_sm, a.gap_2xs]}>
+        <View style={[a.flex_row, a.align_center, a.pr_xs]}>
+          <Text
+            style={[a.font_semi_bold, a.text_md, a.leading_snug, a.flex_shrink]}
+            numberOfLines={1}
+            emoji>
+            {sanitizeDisplayName(
+              replyTo.author.displayName ||
+                sanitizeHandle(replyTo.author.handle),
+            )}
+          </Text>
+          {verification.showBadge && (
+            <View style={[a.pl_xs]}>
+              <VerificationCheck
+                width={14}
+                verifier={verification.role === 'verifier'}
+              />
+            </View>
           )}
-        </Text>
-        <View style={styles.replyToBody}>
-          <View style={styles.replyToText}>
+        </View>
+        <View style={[a.flex_row, a.gap_md]}>
+          <View style={[a.flex_1, a.flex_grow]}>
             <Text
-              type="post-text"
-              style={t.atoms.text}
+              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}
               numberOfLines={!showFull ? 6 : undefined}
               selectable={true}
               emoji>
@@ -99,7 +132,9 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
             <ComposerReplyToImages images={images} showFull={showFull} />
           )}
         </View>
-        {showFull && quoteEmbed && <MaybeQuoteEmbed embed={quoteEmbed} />}
+        {showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
+          <QuoteEmbed embed={parsedQuoteEmbed} />
+        )}
       </View>
     </Pressable>
   )
@@ -112,7 +147,17 @@ function ComposerReplyToImages({
   showFull: boolean
 }) {
   return (
-    <View style={[styles.imagesContainer, a.mx_xs]}>
+    <View
+      style={[
+        a.rounded_xs,
+        a.overflow_hidden,
+        a.mt_2xs,
+        a.mx_xs,
+        {
+          height: 64,
+          width: 64,
+        },
+      ]}>
       {(images.length === 1 && (
         <Image
           source={{uri: images[0].thumb}}
@@ -196,35 +241,3 @@ function ComposerReplyToImages({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  replyToLayout: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    paddingTop: 4,
-    paddingBottom: 16,
-    marginBottom: 12,
-    marginHorizontal: 16,
-  },
-  replyToPost: {
-    flex: 1,
-    paddingLeft: 13,
-    paddingRight: 8,
-  },
-  replyToBody: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  replyToText: {
-    flex: 1,
-    flexGrow: 1,
-  },
-  imagesContainer: {
-    borderRadius: 6,
-    overflow: 'hidden',
-    marginTop: 2,
-    height: 64,
-    width: 64,
-  },
-})

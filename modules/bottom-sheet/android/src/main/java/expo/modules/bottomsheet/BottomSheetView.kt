@@ -19,7 +19,6 @@ import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
 
-
 class BottomSheetView(
   context: Context,
   appContext: AppContext,
@@ -31,9 +30,15 @@ class BottomSheetView(
   private lateinit var dialogRootViewGroup: DialogRootViewGroup
   private var eventDispatcher: EventDispatcher? = null
 
-  private val screenHeight =
+  private val rawScreenHeight =
     context.resources.displayMetrics.heightPixels
       .toFloat()
+  private val safeScreenHeight = (rawScreenHeight - getNavigationBarHeight()).toFloat()
+
+  private fun getNavigationBarHeight(): Int {
+    val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+    return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
+  }
 
   private val onAttemptDismiss by EventDispatcher()
   private val onSnapPointChange by EventDispatcher()
@@ -41,7 +46,7 @@ class BottomSheetView(
 
   // Props
   var disableDrag = false
-    set (value) {
+    set(value) {
       field = value
       this.setDraggable(!value)
     }
@@ -63,12 +68,12 @@ class BottomSheetView(
         }
     }
 
-  var maxHeight = this.screenHeight
+  var maxHeight = this.safeScreenHeight
     set(value) {
       val px = dpToPx(value)
       field =
-        if (px > this.screenHeight) {
-          this.screenHeight
+        if (px > this.safeScreenHeight) {
+          this.safeScreenHeight
         } else {
           px
         }
@@ -153,6 +158,18 @@ class BottomSheetView(
 
   // Presentation
 
+  private fun getHalfExpandedRatio(contentHeight: Float): Float =
+    when {
+      // Full height sheets
+      contentHeight >= safeScreenHeight -> 0.99f
+      // Medium height sheets (>50% but <100%)
+      contentHeight >= safeScreenHeight / 2 ->
+        this.clampRatio(this.getTargetHeight() / safeScreenHeight)
+      // Small height sheets (<50%)
+      else ->
+        this.clampRatio(this.getTargetHeight() / rawScreenHeight)
+    }
+
   private fun present() {
     if (this.isOpen || this.isOpening || this.isClosing) return
 
@@ -172,12 +189,12 @@ class BottomSheetView(
       val behavior = BottomSheetBehavior.from(it)
       behavior.state = BottomSheetBehavior.STATE_HIDDEN
       behavior.isFitToContents = true
-      behavior.halfExpandedRatio = this.clampRatio(this.getTargetHeight() / this.screenHeight)
+      behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
       behavior.skipCollapsed = true
       behavior.isDraggable = true
       behavior.isHideable = true
 
-      if (contentHeight >= this.screenHeight || this.minHeight >= this.screenHeight) {
+      if (contentHeight >= this.safeScreenHeight || this.minHeight >= this.safeScreenHeight) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.selectedSnapPoint = 2
       } else {
@@ -226,12 +243,17 @@ class BottomSheetView(
     val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
     bottomSheet?.let {
       val behavior = BottomSheetBehavior.from(it)
+      val currentState = behavior.state
 
-      behavior.halfExpandedRatio = this.clampRatio(this.getTargetHeight() / this.screenHeight)
+      val oldRatio = behavior.halfExpandedRatio
+      var newRatio = getHalfExpandedRatio(contentHeight)
+      behavior.halfExpandedRatio = newRatio
 
-      if (contentHeight > this.screenHeight && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+      if (contentHeight > this.safeScreenHeight && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-      } else if (contentHeight < this.screenHeight && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
+      } else if (contentHeight < this.safeScreenHeight && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
+        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+      } else if (currentState == BottomSheetBehavior.STATE_HALF_EXPANDED && oldRatio != newRatio) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
       }
     }
@@ -300,6 +322,9 @@ class BottomSheetView(
   // View overrides to pass to DialogRootViewGroup instead
 
   override fun dispatchProvideStructure(structure: ViewStructure?) {
+    if (structure == null) {
+      return
+    }
     dialogRootViewGroup.dispatchProvideStructure(structure)
   }
 

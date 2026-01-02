@@ -1,19 +1,24 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
+import {isJwtExpired} from '#/lib/jwt'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
-import {Button} from './Button'
-import {Text} from './Typography'
+import {Button} from '#/components/Button'
+import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/icons/Chevron'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 export function AccountList({
   onSelectAccount,
@@ -41,9 +46,9 @@ export function AccountList({
     <View
       pointerEvents={pendingDid ? 'none' : 'auto'}
       style={[
-        a.rounded_md,
+        a.rounded_lg,
         a.overflow_hidden,
-        {borderWidth: 1},
+        a.border,
         t.atoms.border_contrast_low,
       ]}>
       {accounts.map(account => (
@@ -55,34 +60,39 @@ export function AccountList({
             isCurrentAccount={account.did === currentAccount?.did}
             isPendingAccount={account.did === pendingDid}
           />
-          <View style={[{borderBottomWidth: 1}, t.atoms.border_contrast_low]} />
+          <View style={[a.border_b, t.atoms.border_contrast_low]} />
         </React.Fragment>
       ))}
       <Button
         testID="chooseAddAccountBtn"
         style={[a.flex_1]}
         onPress={pendingDid ? undefined : onPressAddAccount}
-        label={_(msg`Login to account that is not listed`)}>
+        label={_(msg`Sign in to account that is not listed`)}>
         {({hovered, pressed}) => (
           <View
             style={[
               a.flex_1,
               a.flex_row,
               a.align_center,
-              {height: 48},
+              a.p_lg,
+              a.gap_sm,
               (hovered || pressed) && t.atoms.bg_contrast_25,
             ]}>
-            <Text
+            <View
               style={[
-                a.align_baseline,
-                a.flex_1,
-                a.flex_row,
-                a.py_sm,
-                {paddingLeft: 48},
+                t.atoms.bg_contrast_25,
+                a.rounded_full,
+                {width: 48, height: 48},
+                a.justify_center,
+                a.align_center,
+                (hovered || pressed) && t.atoms.bg_contrast_50,
               ]}>
+              <PlusIcon style={[t.atoms.text_contrast_low]} size="md" />
+            </View>
+            <Text style={[a.flex_1, a.leading_tight, a.text_md, a.font_medium]}>
               {otherLabel ?? <Trans>Other account</Trans>}
             </Text>
-            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+            <ChevronIcon size="md" style={[t.atoms.text_contrast_low]} />
           </View>
         )}
       </Button>
@@ -105,16 +115,20 @@ function AccountItem({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const verification = useSimpleVerificationState({profile})
+  const {isActive: live} = useActorStatus(profile)
 
   const onPress = useCallback(() => {
     onSelect(account)
   }, [account, onSelect])
 
+  const isLoggedOut = !account.refreshJwt || isJwtExpired(account.refreshJwt)
+
   return (
     <Button
       testID={`chooseAccountBtn-${account.handle}`}
       key={account.did}
-      style={[a.flex_1]}
+      style={[a.w_full]}
       onPress={onPress}
       label={
         isCurrentAccount
@@ -127,29 +141,74 @@ function AccountItem({
             a.flex_1,
             a.flex_row,
             a.align_center,
-            {height: 48},
+            a.p_lg,
+            a.gap_sm,
             (hovered || pressed || isPendingAccount) && t.atoms.bg_contrast_25,
           ]}>
-          <View style={a.p_md}>
-            <UserAvatar avatar={profile?.avatar} size={24} />
-          </View>
-          <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
-            <Text emoji style={[a.font_bold]}>
-              {sanitizeDisplayName(
-                profile?.displayName || profile?.handle || account.handle,
+          <UserAvatar
+            avatar={profile?.avatar}
+            size={48}
+            type={profile?.associated?.labeler ? 'labeler' : 'user'}
+            live={live}
+            hideLiveBadge
+          />
+
+          <View style={[a.flex_1, a.gap_2xs, a.pr_2xl]}>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Text
+                emoji
+                style={[a.font_medium, a.leading_tight, a.text_md]}
+                numberOfLines={1}>
+                {sanitizeDisplayName(
+                  profile?.displayName || profile?.handle || account.handle,
+                )}
+              </Text>
+              {verification.showBadge && (
+                <View>
+                  <VerificationCheck
+                    width={12}
+                    verifier={verification.role === 'verifier'}
+                  />
+                </View>
               )}
-            </Text>{' '}
-            <Text emoji style={[t.atoms.text_contrast_medium]}>
-              {sanitizeHandle(account.handle)}
+            </View>
+            <Text
+              style={[
+                a.leading_tight,
+                t.atoms.text_contrast_medium,
+                a.text_sm,
+              ]}>
+              {sanitizeHandle(account.handle, '@')}
             </Text>
-          </Text>
+            {isLoggedOut && (
+              <Text
+                style={[
+                  a.leading_tight,
+                  a.text_xs,
+                  a.italic,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>Logged out</Trans>
+              </Text>
+            )}
+          </View>
+
           {isCurrentAccount ? (
-            <Check
-              size="sm"
-              style={[{color: t.palette.positive_600}, a.mr_md]}
-            />
+            <View
+              style={[
+                {
+                  width: 20,
+                  height: 20,
+                  backgroundColor: t.palette.positive_500,
+                },
+                a.rounded_full,
+                a.justify_center,
+                a.align_center,
+              ]}>
+              <CheckIcon size="xs" style={[{color: t.palette.white}]} />
+            </View>
           ) : (
-            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+            <ChevronIcon size="md" style={[t.atoms.text_contrast_low]} />
           )}
         </View>
       )}
