@@ -1,5 +1,5 @@
 import {
-  type AppBskyFeedDefs,
+  AppBskyFeedDefs,
   AppBskyGraphDefs,
   type AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
@@ -369,6 +369,18 @@ export async function precacheStarterPack(
     AppBskyGraphDefs.isStarterPackViewBasic(starterPack) &&
     bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
   ) {
+    let feeds: AppBskyFeedDefs.GeneratorView[] | undefined
+    if (starterPack.record.feeds) {
+      feeds = []
+      for (const feed of starterPack.record.feeds) {
+        // note: types are wrong? claims to be `FeedItem`, but we actually
+        // get un$typed `GeneratorView` objects here -sfn
+        if (bsky.validate(feed, AppBskyFeedDefs.validateGeneratorView)) {
+          feeds.push(feed)
+        }
+      }
+    }
+
     const listView: AppBskyGraphDefs.ListViewBasic = {
       uri: starterPack.record.list,
       // This will be populated once the data from server is fetched
@@ -380,6 +392,7 @@ export async function precacheStarterPack(
       ...starterPack,
       $type: 'app.bsky.graph.defs#starterPackView',
       list: listView,
+      feeds,
     }
   }
 
