@@ -574,6 +574,7 @@ function FollowProfileCardInner({
           <ProfileCard.Outer>
             <ProfileCard.Header>
               <ProfileCard.Avatar
+                disabledPreview={!isWeb}
                 profile={profile}
                 moderationOpts={moderationOpts}
               />
