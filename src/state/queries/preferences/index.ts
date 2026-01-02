@@ -209,13 +209,48 @@ export function useOverwriteSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
+  return useMutation<
+    void,
+    unknown,
+    AppBskyActorDefs.SavedFeed[],
+    {previousPrefs: UsePreferencesQueryResponse | undefined}
+  >({
     mutationFn: async savedFeeds => {
       await agent.overwriteSavedFeeds(savedFeeds)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
+    },
+    onMutate: async newSavedFeeds => {
+      // Cancel any outgoing refetches so they don't overwrite our optimistic update
+      await queryClient.cancelQueries({queryKey: preferencesQueryKey})
+
+      // Snapshot the previous value
+      const previousPrefs =
+        queryClient.getQueryData<UsePreferencesQueryResponse>(
+          preferencesQueryKey,
+        )
+
+      // Optimistically update the cache
+      if (previousPrefs) {
+        queryClient.setQueryData<UsePreferencesQueryResponse>(
+          preferencesQueryKey,
+          {
+            ...previousPrefs,
+            savedFeeds: newSavedFeeds,
+          },
+        )
+      }
+
+      // Return context with the previous value for rollback
+      return {previousPrefs}
+    },
+    onError: (_err, _newSavedFeeds, context) => {
+      // Rollback to the previous value on error
+      if (context?.previousPrefs) {
+        queryClient.setQueryData(preferencesQueryKey, context.previousPrefs)
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure server state consistency
+      queryClient.invalidateQueries({queryKey: preferencesQueryKey})
     },
   })
 }
@@ -227,14 +262,51 @@ export function useAddSavedFeedsMutation() {
   return useMutation<
     void,
     unknown,
-    Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[]
+    Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[],
+    {previousPrefs: UsePreferencesQueryResponse | undefined}
   >({
     mutationFn: async savedFeeds => {
       await agent.addSavedFeeds(savedFeeds)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
+    },
+    onMutate: async newFeeds => {
+      // Cancel any outgoing refetches so they don't overwrite our optimistic update
+      await queryClient.cancelQueries({queryKey: preferencesQueryKey})
+
+      // Snapshot the previous value
+      const previousPrefs =
+        queryClient.getQueryData<UsePreferencesQueryResponse>(
+          preferencesQueryKey,
+        )
+
+      // Optimistically update the cache
+      if (previousPrefs) {
+        // Generate temporary IDs for new feeds
+        const newSavedFeeds = newFeeds.map((feed, index) => ({
+          ...feed,
+          id: `temp-${Date.now()}-${index}`,
+        }))
+
+        queryClient.setQueryData<UsePreferencesQueryResponse>(
+          preferencesQueryKey,
+          {
+            ...previousPrefs,
+            savedFeeds: [...previousPrefs.savedFeeds, ...newSavedFeeds],
+          },
+        )
+      }
+
+      // Return context with the previous value for rollback
+      return {previousPrefs}
+    },
+    onError: (_err, _newFeeds, context) => {
+      // Rollback to the previous value on error
+      if (context?.previousPrefs) {
+        queryClient.setQueryData(preferencesQueryKey, context.previousPrefs)
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure server state consistency
+      queryClient.invalidateQueries({queryKey: preferencesQueryKey})
     },
   })
 }

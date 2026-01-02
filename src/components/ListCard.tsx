@@ -145,7 +145,7 @@ export function TitleAndByline({
       {creator && (
         <Text
           emoji
-          style={[a.leading_snug, t.atoms.text_contrast_medium]}
+          style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
           {purpose === MODLIST
             ? _(msg`Moderation list by ${sanitizeHandle(creator.handle, '@')}`)

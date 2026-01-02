@@ -1,6 +1,7 @@
 import React from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -19,7 +20,10 @@ import {
   usePinnedFeedsInfos,
 } from '#/state/queries/feed'
 import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
-import {usePreferencesQuery} from '#/state/queries/preferences'
+import {
+  preferencesQueryKey,
+  usePreferencesQuery,
+} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -41,11 +45,19 @@ import {useDemoMode} from '#/storage/hooks/demo-mode'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
+  const queryClient = useQueryClient()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {data: preferences} = usePreferencesQuery()
   const {currentAccount} = useSession()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
+
+  // Refetch preferences when Home gains focus to sync feed changes
+  useFocusEffect(
+    React.useCallback(() => {
+      queryClient.invalidateQueries({queryKey: preferencesQueryKey})
+    }, [queryClient]),
+  )
 
   React.useEffect(() => {
     if (isWeb && !currentAccount) {

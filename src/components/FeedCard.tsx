@@ -6,7 +6,7 @@ import {
   AtUri,
   RichText as RichTextApi,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -17,8 +17,10 @@ import {
   useAddSavedFeedsMutation,
   usePreferencesQuery,
   useRemoveFeedMutation,
+  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {formatCount} from '#/view/com/util/numeric/format'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -28,6 +30,7 @@ import {
   type ButtonProps,
   ButtonText,
 } from '#/components/Button'
+import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
@@ -134,9 +137,9 @@ export function TitleAndByline({
       </Text>
       {creator && (
         <Text
-          style={[a.leading_snug, t.atoms.text_contrast_medium]}
+          style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+          <Trans>By {sanitizeHandle(creator.handle, '@')}</Trans>
         </Text>
       )}
     </View>
@@ -213,12 +216,14 @@ export function DescriptionPlaceholder() {
 
 export function Likes({count}: {count: number}) {
   const t = useTheme()
+  const {i18n} = useLingui()
   return (
-    <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.font_semi_bold]}>
-      <Trans>
-        Liked by <Plural value={count || 0} one="# user" other="# users" />
-      </Trans>
-    </Text>
+    <View style={[a.flex_row, a.align_center, {gap: 2}]}>
+      <HeartIcon size="xs" fill={t.atoms.text_contrast_low.color} />
+      <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+        {formatCount(i18n, count)}
+      </Text>
+    </View>
   )
 }
 
@@ -252,6 +257,8 @@ function SaveButtonInner({
     useAddSavedFeedsMutation()
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
+  const {isPending: isUpdatePending, mutateAsync: updateSavedFeeds} =
+    useUpdateSavedFeedsMutation()
 
   const uri = view.uri
   const type = view.uri.includes('app.bsky.feed.generator') ? 'feed' : 'list'
@@ -259,23 +266,26 @@ function SaveButtonInner({
   const savedFeedConfig = React.useMemo(() => {
     return preferences?.savedFeeds?.find(feed => feed.value === uri)
   }, [preferences?.savedFeeds, uri])
+  const isPinned = savedFeedConfig?.pinned ?? false
   const removePromptControl = Prompt.usePromptControl()
-  const isPending = isAddSavedFeedPending || isRemovePending
+  const isPending = isAddSavedFeedPending || isRemovePending || isUpdatePending
 
-  const toggleSave = React.useCallback(
+  const onPinFeed = React.useCallback(
     async (e: GestureResponderEvent) => {
       e.preventDefault()
       e.stopPropagation()
 
       try {
         if (savedFeedConfig) {
-          await removeFeed(savedFeedConfig)
+          // Feed is saved but not pinned, update it to be pinned
+          await updateSavedFeeds([{...savedFeedConfig, pinned: true}])
         } else {
+          // Feed is not saved, save it with pinned=true
           await saveFeeds([
             {
               type,
               value: uri,
-              pinned: pin || false,
+              pinned: true,
             },
           ])
         }
@@ -285,10 +295,22 @@ function SaveButtonInner({
         Toast.show(_(msg`Failed to update feeds`), 'xmark')
       }
     },
-    [_, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
+    [_, pin, saveFeeds, updateSavedFeeds, uri, savedFeedConfig, type],
   )
 
-  const onPrompRemoveFeed = React.useCallback(
+  const onRemoveFeed = React.useCallback(async () => {
+    try {
+      if (savedFeedConfig) {
+        await removeFeed(savedFeedConfig)
+      }
+      Toast.show(_(msg({message: 'Feeds updated!', context: 'toast'})))
+    } catch (err: any) {
+      logger.error(err, {message: `FeedCard: failed to remove feed`})
+      Toast.show(_(msg`Failed to update feeds`), 'xmark')
+    }
+  }, [_, removeFeed, savedFeedConfig])
+
+  const onPromptRemoveFeed = React.useCallback(
     async (e: GestureResponderEvent) => {
       e.preventDefault()
       e.stopPropagation()
@@ -302,13 +324,17 @@ function SaveButtonInner({
     <>
       <Button
         disabled={isPending}
-        label={_(msg`Add this feed to your feeds`)}
+        label={
+          isPinned
+            ? _(msg`Remove this feed from your feeds`)
+            : _(msg`Add this feed to your feeds`)
+        }
         size="small"
         variant="solid"
-        color={savedFeedConfig ? 'secondary' : 'primary'}
-        onPress={savedFeedConfig ? onPrompRemoveFeed : toggleSave}
+        color={isPinned ? 'secondary' : 'primary'}
+        onPress={isPinned ? onPromptRemoveFeed : onPinFeed}
         {...buttonProps}>
-        {savedFeedConfig ? (
+        {isPinned ? (
           <>
             {isPending ? (
               <ButtonIcon size="md" icon={Loader} />
@@ -317,7 +343,7 @@ function SaveButtonInner({
             )}
             {text && (
               <ButtonText>
-                <Trans>Unpin Feed</Trans>
+                <Trans>Unpin</Trans>
               </ButtonText>
             )}
           </>
@@ -326,7 +352,7 @@ function SaveButtonInner({
             <ButtonIcon size="md" icon={isPending ? Loader : PinIcon} />
             {text && (
               <ButtonText>
-                <Trans>Pin Feed</Trans>
+                <Trans>Pin</Trans>
               </ButtonText>
             )}
           </>
@@ -339,7 +365,7 @@ function SaveButtonInner({
         description={_(
           msg`Are you sure you want to remove this from your feeds?`,
         )}
-        onConfirm={toggleSave}
+        onConfirm={onRemoveFeed}
         confirmButtonCta={_(msg`Remove`)}
         confirmButtonColor="negative"
       />
