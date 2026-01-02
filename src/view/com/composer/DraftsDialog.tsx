@@ -4,6 +4,7 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {isNative} from '#/platform/detection'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -65,7 +66,7 @@ export function DraftsView({
         <View style={[a.flex_1]} />
       </View>
 
-      <ScrollView style={[a.flex_1]} contentContainerStyle={[a.p_lg, a.gap_md]}>
+      <ScrollView style={[a.flex_1]} contentContainerStyle={[a.gap_md]}>
         {drafts.length === 0 ? (
           <View style={[a.py_xl, a.align_center, a.gap_md]}>
             <PencilLineIcon width={64} style={[t.atoms.text_contrast_low]} />
@@ -76,9 +77,9 @@ export function DraftsView({
         ) : (
           <View
             style={[
-              a.rounded_lg,
               a.overflow_hidden,
-              a.border,
+              a.border_t,
+              isNative && a.border_b,
               t.atoms.border_contrast_low,
             ]}>
             {drafts.map((item, index) => (
@@ -137,26 +138,47 @@ function DraftListItem({
           style={[
             a.flex_1,
             a.flex_row,
-            a.align_center,
+            a.align_start,
             a.p_lg,
-            a.gap_sm,
+            a.gap_md,
             (hovered || pressed) && t.atoms.bg_contrast_25,
           ]}>
-          <UserAvatar avatar={profile?.avatar} size={48} type="user" />
+          <UserAvatar avatar={profile?.avatar} size={42} type="user" />
 
-          <View style={[a.flex_1, a.gap_2xs, a.pr_md]}>
+          <View style={[a.flex_1, a.gap_sm, a.pr_md]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <Text
-                style={[a.font_medium, a.leading_tight, a.text_md]}
+                style={[
+                  a.font_semi_bold,
+                  a.leading_tight,
+                  a.text_md,
+                  a.flex_shrink_0,
+                ]}
                 numberOfLines={1}>
                 {profile?.displayName || currentAccount?.handle}
               </Text>
-              <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
-                {timeAgo}
+              <Text
+                style={[
+                  t.atoms.text_contrast_medium,
+                  a.text_md,
+                  a.leading_tight,
+                  {flexShrink: 10},
+                ]}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                @{currentAccount?.handle}
+              </Text>
+              <Text
+                style={[
+                  t.atoms.text_contrast_medium,
+                  a.text_md,
+                  a.flex_shrink_0,
+                ]}>
+                · {timeAgo}
               </Text>
             </View>
             <Text
-              style={[a.leading_tight, t.atoms.text_contrast_high]}
+              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}
               numberOfLines={2}>
               {previewText}
             </Text>
@@ -175,7 +197,7 @@ function DraftListItem({
                   style={[
                     a.justify_center,
                     a.align_center,
-                    {width: 34, height: 34},
+                    {width: 34, height: 34, marginRight: -8, marginTop: -8},
                     (state.hovered || state.pressed) && t.atoms.bg_contrast_50,
                   ]}>
                   <ButtonIcon icon={DotsIcon} size="md" />
@@ -186,7 +208,8 @@ function DraftListItem({
               <Menu.Item
                 label={_(msg`Delete draft`)}
                 onPress={handleDelete}
-                testID="deleteDraftBtn">
+                testID="deleteDraftBtn"
+                style={[a.gap_sm]}>
                 <Menu.ItemIcon icon={TrashIcon} />
                 <Menu.ItemText>
                   <Trans>Delete</Trans>
