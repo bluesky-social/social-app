@@ -7,6 +7,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {logEvent} from '#/lib/statsig/statsig'
+import {isNative} from '#/platform/detection'
 import {STALE} from '#/state/queries'
 import {profilesQueryKey} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
@@ -77,13 +78,16 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     clearRequestedAccount()
   }, [clearRequestedAccount, onDismiss])
 
+  const fullBleed =
+    isNative && screenState === ScreenState.S_LoginOrCreateAccount
+
   return (
     <View
       testID="noSessionView"
       style={[
         a.util_screen_outer,
         t.atoms.bg,
-        {paddingTop: insets.top, paddingBottom: insets.bottom},
+        !fullBleed && {paddingTop: insets.top, paddingBottom: insets.bottom},
       ]}>
       <ErrorBoundary>
         {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
