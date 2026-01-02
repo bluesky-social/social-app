@@ -7,7 +7,8 @@ import {Extension, ReactRenderer} from '@tiptap/react'
 import {
   Suggestion,
   type SuggestionKeyDownProps,
-  type SuggestionProps} from '@tiptap/suggestion'
+  type SuggestionProps,
+} from '@tiptap/suggestion'
 import tippy, {type Instance as TippyInstance} from 'tippy.js'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -15,7 +16,10 @@ import {type ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {atoms as a, useTheme} from '#/alf'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {type AutocompleteRef} from './web/Autocomplete'
+
+export interface AutocompleteRef {
+  maybeClose: () => boolean
+}
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -26,11 +30,21 @@ export const Autocomplete = Extension.create({
   priority: 1001,
 
   addProseMirrorPlugins() {
-    return [suggestionPlugin(this.editor, this.options.autocomplete, this.options.autocompleteRef)]
+    return [
+      suggestionPlugin(
+        this.editor,
+        this.options.autocomplete,
+        this.options.autocompleteRef,
+      ),
+    ]
   },
 })
 
-function suggestionPlugin(editor: Editor, autocomplete: ActorAutocompleteFn, autocompleteRef: React.Ref<AutocompleteRef>) {
+function suggestionPlugin(
+  editor: Editor,
+  autocomplete: ActorAutocompleteFn,
+  autocompleteRef: React.Ref<AutocompleteRef>,
+) {
   return Suggestion<
     AppBskyActorDefs.ProfileViewBasic,
     AppBskyActorDefs.ProfileViewBasic
