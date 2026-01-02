@@ -479,6 +479,14 @@ export const ComposePost = ({
     setViewMode('drafts')
   }, [clearDraft])
 
+  // Handler for saving draft and closing with toast
+  const onSaveDraftAndClose = useCallback(() => {
+    saveImmediate(composerState)
+    closeComposer()
+    clearThumbnailCache(queryClient)
+    Toast.show(_(msg`Saved to drafts`))
+  }, [_, saveImmediate, composerState, closeComposer, queryClient])
+
   // Handler for when a draft is deleted from the drafts list
   const onDraftDeleted = useCallback(
     (deletedDraftId: string) => {
@@ -1086,17 +1094,12 @@ export const ComposePost = ({
               <Trans>Update draft?</Trans>
             </Prompt.TitleText>
             <Prompt.DescriptionText>
-              <Trans>Update draft and save it to post at a later time.</Trans>
+              <Trans>Update draft and save it to post later.</Trans>
             </Prompt.DescriptionText>
             <Prompt.Actions>
               <Prompt.Action
                 cta={_(msg`Update draft`)}
-                onPress={() => {
-                  // Explicitly save the changes before closing
-                  saveImmediate(composerState)
-                  closeComposer()
-                  clearThumbnailCache(queryClient)
-                }}
+                onPress={onSaveDraftAndClose}
               />
               <Prompt.Action
                 cta={_(msg`Don't update`)}
@@ -1116,10 +1119,13 @@ export const ComposePost = ({
               <Trans>Save to drafts?</Trans>
             </Prompt.TitleText>
             <Prompt.DescriptionText>
-              <Trans>Save to drafts to edit and post at a later time.</Trans>
+              <Trans>Save to drafts to edit and post later.</Trans>
             </Prompt.DescriptionText>
             <Prompt.Actions>
-              <Prompt.Action cta={_(msg`Save draft`)} onPress={onClose} />
+              <Prompt.Action
+                cta={_(msg`Save draft`)}
+                onPress={onSaveDraftAndClose}
+              />
               <Prompt.Action
                 cta={_(msg`Don't save`)}
                 color="negative_subtle"
@@ -1139,7 +1145,7 @@ export const ComposePost = ({
             <Trans>Save to drafts?</Trans>
           </Prompt.TitleText>
           <Prompt.DescriptionText>
-            <Trans>Save to drafts to edit and post at a later time.</Trans>
+            <Trans>Save to drafts to edit and post later.</Trans>
           </Prompt.DescriptionText>
           <Prompt.Actions>
             <Prompt.Action
@@ -1160,7 +1166,7 @@ export const ComposePost = ({
             <Trans>Update draft?</Trans>
           </Prompt.TitleText>
           <Prompt.DescriptionText>
-            <Trans>Update draft and save it to post at a later time.</Trans>
+            <Trans>Update draft and save it to post later.</Trans>
           </Prompt.DescriptionText>
           <Prompt.Actions>
             <Prompt.Action
