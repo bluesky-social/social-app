@@ -82,7 +82,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		}
 	}
 
-	af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, did.String(), "", "posts_no_replies", 30)
+	af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, did.String(), "", "posts_no_replies", false, 30)
 	if err != nil {
 		log.Warn("failed to fetch author feed", "did", did, "err", err)
 		return err

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import * as Dialog from '#/components/Dialog'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import {VerifyEmailIntentDialog} from '#/components/intents/VerifyEmailIntentDialog'
 
 interface Context {
@@ -11,6 +11,7 @@ interface Context {
 }
 
 const Context = React.createContext({} as Context)
+Context.displayName = 'IntentDialogsContext'
 export const useIntentDialogs = () => React.useContext(Context)
 
 export function Provider({children}: {children: React.ReactNode}) {

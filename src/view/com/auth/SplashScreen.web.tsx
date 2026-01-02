@@ -16,9 +16,9 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
+import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {CenteredView} from '../util/Views'
 
 export const SplashScreen = ({
   onDismiss,
@@ -70,13 +70,13 @@ export const SplashScreen = ({
         </Pressable>
       )}
 
-      <CenteredView style={[a.h_full, a.flex_1]}>
+      <Layout.Center style={[a.h_full, a.flex_1]} ignoreTabletLayoutOffset>
         <View
           testID="noSessionView"
           style={[
             a.h_full,
             a.justify_center,
-            // @ts-ignore web only
+            // @ts-expect-error web only
             {paddingBottom: '20vh'},
             isMobileWeb && a.pb_5xl,
             t.atoms.border_contrast_medium,
@@ -95,7 +95,11 @@ export const SplashScreen = ({
               )}
 
               <Text
-                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+                style={[
+                  a.text_md,
+                  a.font_semi_bold,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 <Trans>What's up?</Trans>
               </Text>
             </View>
@@ -122,7 +126,7 @@ export const SplashScreen = ({
                 onPress={onPressSignin}
                 label={_(msg`Sign in`)}
                 accessibilityHint={_(
-                  msg`Opens flow to sign into your existing Bluesky account`,
+                  msg`Opens flow to sign in to your existing Bluesky account`,
                 )}
                 size="large"
                 variant="solid"
@@ -135,7 +139,7 @@ export const SplashScreen = ({
           </ErrorBoundary>
         </View>
         <Footer />
-      </CenteredView>
+      </Layout.Center>
       <AppClipOverlay
         visible={showClipOverlay}
         setIsVisible={setShowClipOverlay}
@@ -154,9 +158,11 @@ function Footer() {
         a.absolute,
         a.inset_0,
         {top: 'auto'},
-        a.p_xl,
+        a.px_xl,
+        a.py_lg,
         a.border_t,
         a.flex_row,
+        a.align_center,
         a.flex_wrap,
         a.gap_xl,
         a.flex_1,
@@ -175,7 +181,9 @@ function Footer() {
       <InlineLinkText
         label={_(msg`See jobs at Bluesky`)}
         to="https://bsky.social/about/join">
-        <Trans>Jobs</Trans>
+        <Trans comment="Link to a page with job openings at Bluesky">
+          Jobs
+        </Trans>
       </InlineLinkText>
 
       <View style={a.flex_1} />

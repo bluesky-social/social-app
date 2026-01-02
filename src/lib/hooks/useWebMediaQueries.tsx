@@ -1,3 +1,6 @@
+/**
+ * @deprecated use `useBreakpoints` from `#/alf` instead
+ */
 export function useWebMediaQueries() {
   return {
     isMobile: true,

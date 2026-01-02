@@ -15,7 +15,7 @@ This is NOT required when developing for web.
 
 - Set up your environment [using the expo instructions](https://docs.expo.dev/guides/local-app-development/).
   - make sure that the JAVA_HOME points to the zulu-17 directory in your `.zshrc` or `.bashrc` file: `export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`. DO NOT use another JDK or you will encounter build errors.
-- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:- 
+- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:-
   - If you are using Apple Silicon and this is the first time you are building for RN 0.74+, you may need to run:
     - `arch -arm64 brew install llvm`
     - `sudo gem install ffi`
@@ -33,7 +33,7 @@ This is NOT required when developing for web.
 - After initial setup:
   - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
   - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
- 
+
 ### Running the Native App
 
 - iOS: `yarn ios`
@@ -63,7 +63,7 @@ After you do `yarn ios` and `yarn android` once, you can later just run `yarn we
 ### Tips
 
 - Copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
-- To run on the device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release`.
+- To run on the device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release` on Android or `--configuration Release` on iOS.
 - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` and `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
 - `npx react-native info` Checks what has been installed.
 - If the Android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
@@ -75,7 +75,7 @@ After you do `yarn ios` and `yarn android` once, you can later just run `yarn we
 
 - Start in various console tabs:
   - `yarn e2e:mock-server`
-  - `yarn e2e:metro`
+  - `yarn e2e:start`
 - Run once: `yarn e2e:build`
 - Each test run: `yarn e2e:run`
 
@@ -89,9 +89,9 @@ If you change `SENTRY_AUTH_TOKEN`, you need to do `yarn prebuild` before running
 
 ### Adding bitdrift
 
-Adding bitdirft is NOT required. You can keep `BITDRIFT_API_KEY=` in `.env` which will avoid initializing bitdrift during startup.
+Adding bitdrift is NOT required. You can keep `EXPO_PUBLIC_BITDRIFT_API_KEY=` in `.env` which will avoid initializing bitdrift during startup.
 
-However, if you're a part of the Bluesky team and want to enable bitdrift, fill in `BITDRIFT_API_KEY` in your `.env` to enable bitdrift.
+However, if you're a part of the Bluesky team and want to enable bitdrift, fill in `EXPO_PUBLIC_BITDRIFT_API_KEY` in your `.env` to enable bitdrift.
 
 ### Adding and Updating Locales
 
@@ -111,6 +111,8 @@ This is NOT required for app development but if you also want to develop the Blu
   - Start the docker daemon (on MacOS this entails starting the Docker Desktop app)
   - Launch a Postgres database on port 5432
   - `cd packages/dev-env && pnpm start`
+  
+Run the account with the AppView proxy DID passed in as an environment variable: `EXPO_PUBLIC_BLUESKY_PROXY_DID=did:plc:dw4kbjf5mn7nhenabiqpkyh3 yarn start`
 
 Then, when logging in or creating an account, point it to the localhost port of the devserver.
 
@@ -162,6 +164,8 @@ See [testing.md](./testing.md).
 `./platform/polyfills.*.ts` adds polyfills to the environment. Currently, this includes:
 
 - TextEncoder / TextDecoder
+- react-native-url-polyfill
+- Array#findLast (on web)
 
 ### Sentry sourcemaps
 

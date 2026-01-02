@@ -1,8 +1,9 @@
 import {
+  type $Typed,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
-  AppBskyFeedPostgate,
+  type AppBskyFeedDefs,
+  type AppBskyFeedPostgate,
   AtUri,
 } from '@atproto/api'
 
@@ -45,8 +46,12 @@ export function mergePostgateRecords(
   })
 }
 
-export function createEmbedViewDetachedRecord({uri}: {uri: string}) {
-  const record: AppBskyEmbedRecord.ViewDetached = {
+export function createEmbedViewDetachedRecord({
+  uri,
+}: {
+  uri: string
+}): $Typed<AppBskyEmbedRecord.View> {
+  const record: $Typed<AppBskyEmbedRecord.ViewDetached> = {
     $type: 'app.bsky.embed.record#viewDetached',
     uri,
     detached: true,
@@ -95,7 +100,7 @@ export function createMaybeDetachedQuoteEmbed({
 
 export function createEmbedViewRecordFromPost(
   post: AppBskyFeedDefs.PostView,
-): AppBskyEmbedRecord.ViewRecord {
+): $Typed<AppBskyEmbedRecord.ViewRecord> {
   return {
     $type: 'app.bsky.embed.record#viewRecord',
     uri: post.uri,
@@ -108,6 +113,7 @@ export function createEmbedViewRecordFromPost(
     likeCount: post.likeCount,
     quoteCount: post.quoteCount,
     indexedAt: post.indexedAt,
+    embeds: post.embed ? [post.embed] : [],
   }
 }
 

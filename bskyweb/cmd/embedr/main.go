@@ -46,6 +46,13 @@ func run(args []string) {
 					Value:    ":8100",
 					EnvVars:  []string{"HTTP_ADDRESS"},
 				},
+				&cli.StringFlag{
+					Name:     "metrics-address",
+					Usage:    "Specify the local IP/port to bind the metrics server to",
+					Required: false,
+					Value:    ":9090",
+					EnvVars:  []string{"METRICS_HTTP_ADDRESS"},
+				},
 				&cli.BoolFlag{
 					Name:     "debug",
 					Usage:    "Enable debug mode",

@@ -1,43 +1,49 @@
 import React from 'react'
 import {
-  AccessibilityProps,
-  GestureResponderEvent,
-  MouseEvent,
-  NativeSyntheticEvent,
+  type AccessibilityProps,
+  type GestureResponderEvent,
+  type MouseEvent,
+  type NativeSyntheticEvent,
   Pressable,
-  PressableProps,
-  StyleProp,
-  StyleSheet,
-  TargetedEvent,
-  TextProps,
-  TextStyle,
+  type PressableProps,
+  type StyleProp,
+  type TargetedEvent,
+  type TextProps,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 
-import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {atoms as a, flatten, select, useTheme} from '#/alf'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
-export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
+/**
+ * The `Button` component, and some extensions of it like `Link` are intended
+ * to be generic and therefore apply no styles by default. These `VariantProps`
+ * are what control the `Button`'s presentation, and are intended only use cases where the buttons appear as, well, buttons.
+ *
+ * If `Button` or an extension of it are used for other compound components, use this property to avoid misuse of these variant props further down the line.
+ *
+ * @example
+ * type MyComponentProps = Omit<ButtonProps, UninheritableButtonProps> & {...}
+ */
+export type UninheritableButtonProps = 'variant' | 'color' | 'size' | 'shape'
+
+export type ButtonVariant = 'solid' | 'outline' | 'ghost'
 export type ButtonColor =
   | 'primary'
   | 'secondary'
   | 'secondary_inverted'
   | 'negative'
-  | 'gradient_primary'
-  | 'gradient_sky'
-  | 'gradient_midnight'
-  | 'gradient_sunrise'
-  | 'gradient_sunset'
-  | 'gradient_nordic'
-  | 'gradient_bonfire'
+  | 'primary_subtle'
+  | 'negative_subtle'
 export type ButtonSize = 'tiny' | 'small' | 'large'
-export type ButtonShape = 'round' | 'square' | 'default'
+export type ButtonShape = 'round' | 'square' | 'rectangular' | 'default'
 export type VariantProps = {
   /**
    * The style variation of the button
+   * @deprecated Use `color` instead.
    */
   variant?: ButtonVariant
   /**
@@ -50,6 +56,11 @@ export type VariantProps = {
   size?: ButtonSize
   /**
    * The shape of the button
+   *
+   * - `default`: Pill shaped. Most buttons should use this shape.
+   * - `round`: Circular. For icon-only buttons.
+   * - `square`: Square. For icon-only buttons.
+   * - `rectangular`: Rectangular. Matches previous style, use when adjacent to form fields.
    */
   shape?: ButtonShape
 }
@@ -64,8 +75,8 @@ export type ButtonState = {
 export type ButtonContext = VariantProps & ButtonState
 
 type NonTextElements =
-  | React.ReactElement
-  | Iterable<React.ReactElement | null | undefined | boolean>
+  | React.ReactElement<any>
+  | Iterable<React.ReactElement<any> | null | undefined | boolean>
 
 export type ButtonProps = Pick<
   PressableProps,
@@ -94,7 +105,8 @@ export type ButtonProps = Pick<
     PressableComponent?: React.ComponentType<PressableProps>
   }
 
-export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
+export type ButtonTextProps = TextProps &
+  VariantProps & {disabled?: boolean; emoji?: boolean}
 
 const Context = React.createContext<VariantProps & ButtonState>({
   hovered: false,
@@ -102,6 +114,7 @@ const Context = React.createContext<VariantProps & ButtonState>({
   pressed: false,
   disabled: false,
 })
+Context.displayName = 'ButtonContext'
 
 export function useButtonContext() {
   return React.useContext(Context)
@@ -130,6 +143,15 @@ export const Button = React.forwardRef<View, ButtonProps>(
     },
     ref,
   ) => {
+    /**
+     * The `variant` prop is deprecated in favor of simply specifying `color`.
+     * If a `color` is set, then we want to use the existing codepaths for
+     * "solid" buttons. This is to maintain backwards compatibility.
+     */
+    if (!variant && color) {
+      variant = 'solid'
+    }
+
     const t = useTheme()
     const [state, setState] = React.useState({
       pressed: false,
@@ -202,8 +224,13 @@ export const Button = React.forwardRef<View, ButtonProps>(
       const baseStyles: ViewStyle[] = []
       const hoverStyles: ViewStyle[] = []
 
-      if (color === 'primary') {
-        if (variant === 'solid') {
+      /*
+       * This is the happy path for new button styles, following the
+       * deprecation of `variant` prop. This redundant `variant` check is here
+       * just to make this handling easier to understand.
+       */
+      if (variant === 'solid') {
+        if (color === 'primary') {
           if (!disabled) {
             baseStyles.push({
               backgroundColor: t.palette.primary_500,
@@ -213,108 +240,30 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_700,
-                dim: t.palette.primary_300,
-                dark: t.palette.primary_300,
-              }),
+              backgroundColor: t.palette.primary_200,
             })
           }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
+        } else if (color === 'secondary') {
           if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.primary_500,
-            })
-            hoverStyles.push(a.border, {
-              backgroundColor: t.palette.primary_50,
-            })
+            baseStyles.push(t.atoms.bg_contrast_50)
+            hoverStyles.push(t.atoms.bg_contrast_100)
           } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.primary_200,
-            })
+            baseStyles.push(t.atoms.bg_contrast_50)
           }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.primary_100,
-            })
-          }
-        }
-      } else if (color === 'secondary') {
-        if (variant === 'solid') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg_contrast_25)
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(t.atoms.bg_contrast_100)
-          }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_300,
-            })
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_25,
-            })
-          }
-        }
-      } else if (color === 'secondary_inverted') {
-        if (variant === 'solid') {
+        } else if (color === 'secondary_inverted') {
           if (!disabled) {
             baseStyles.push({
               backgroundColor: t.palette.contrast_900,
             })
             hoverStyles.push({
-              backgroundColor: t.palette.contrast_950,
+              backgroundColor: t.palette.contrast_975,
             })
           } else {
             baseStyles.push({
               backgroundColor: t.palette.contrast_600,
             })
           }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_300,
-            })
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_25,
-            })
-          }
-        }
-      } else if (color === 'negative') {
-        if (variant === 'solid') {
+        } else if (color === 'negative') {
           if (!disabled) {
             baseStyles.push({
               backgroundColor: t.palette.negative_500,
@@ -324,81 +273,237 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_700,
-                dim: t.palette.negative_300,
-                dark: t.palette.negative_300,
-              }),
+              backgroundColor: t.palette.negative_700,
             })
           }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
+        } else if (color === 'primary_subtle') {
           if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_500,
+            baseStyles.push({
+              backgroundColor: t.palette.primary_50,
             })
-            hoverStyles.push(a.border, {
-              backgroundColor: t.palette.negative_50,
+            hoverStyles.push({
+              backgroundColor: t.palette.primary_100,
             })
           } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_200,
+            baseStyles.push({
+              backgroundColor: t.palette.primary_50,
             })
           }
-        } else if (variant === 'ghost') {
+        } else if (color === 'negative_subtle') {
           if (!disabled) {
-            baseStyles.push(t.atoms.bg)
+            baseStyles.push({
+              backgroundColor: t.palette.negative_50,
+            })
             hoverStyles.push({
               backgroundColor: t.palette.negative_100,
             })
+          } else {
+            baseStyles.push({
+              backgroundColor: t.palette.negative_50,
+            })
           }
         }
+      } else {
+        /*
+         * BEGIN DEPRECATED STYLES
+         */
+        if (color === 'primary') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
+            })
+
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.primary_500,
+              })
+              hoverStyles.push(a.border, {
+                backgroundColor: t.palette.primary_50,
+              })
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.primary_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.primary_100,
+              })
+            }
+          }
+        } else if (color === 'secondary') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
+            })
+
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.contrast_300,
+              })
+              hoverStyles.push(t.atoms.bg_contrast_50)
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.contrast_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.contrast_50,
+              })
+            }
+          }
+        } else if (color === 'secondary_inverted') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
+            })
+
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.contrast_300,
+              })
+              hoverStyles.push(t.atoms.bg_contrast_50)
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.contrast_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.contrast_50,
+              })
+            }
+          }
+        } else if (color === 'negative') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
+            })
+
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.negative_500,
+              })
+              hoverStyles.push(a.border, {
+                backgroundColor: t.palette.negative_50,
+              })
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.negative_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.negative_100,
+              })
+            }
+          }
+        } else if (color === 'negative_subtle') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
+            })
+
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.negative_500,
+              })
+              hoverStyles.push(a.border, {
+                backgroundColor: t.palette.negative_50,
+              })
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.negative_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.negative_100,
+              })
+            }
+          }
+        }
+        /*
+         * END DEPRECATED STYLES
+         */
       }
 
       if (shape === 'default') {
         if (size === 'large') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+            gap: 6,
+          })
+        } else if (size === 'small') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 8,
+            paddingHorizontal: 14,
+            gap: 5,
+          })
+        } else if (size === 'tiny') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            gap: 3,
+          })
+        }
+      } else if (shape === 'rectangular') {
+        if (size === 'large') {
           baseStyles.push({
-            paddingVertical: 13,
-            paddingHorizontal: 20,
-            borderRadius: 8,
-            gap: 8,
+            paddingVertical: 12,
+            paddingHorizontal: 25,
+            borderRadius: 10,
+            gap: 3,
           })
         } else if (size === 'small') {
           baseStyles.push({
-            paddingVertical: 9,
-            paddingHorizontal: 12,
-            borderRadius: 6,
-            gap: 6,
+            paddingVertical: 8,
+            paddingHorizontal: 13,
+            borderRadius: 8,
+            gap: 3,
           })
         } else if (size === 'tiny') {
           baseStyles.push({
-            paddingVertical: 4,
-            paddingHorizontal: 8,
-            borderRadius: 4,
-            gap: 4,
+            paddingVertical: 5,
+            paddingHorizontal: 9,
+            borderRadius: 6,
+            gap: 2,
           })
         }
       } else if (shape === 'round' || shape === 'square') {
+        /*
+         * These sizes match the actual rendered size on screen, based on
+         * Chrome's web inspector
+         */
         if (size === 'large') {
           if (shape === 'round') {
-            baseStyles.push({height: 46, width: 46})
+            baseStyles.push({height: 44, width: 44})
           } else {
             baseStyles.push({height: 44, width: 44})
           }
         } else if (size === 'small') {
           if (shape === 'round') {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({height: 33, width: 33})
           } else {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({height: 33, width: 33})
           }
         } else if (size === 'tiny') {
           if (shape === 'round') {
-            baseStyles.push({height: 22, width: 22})
+            baseStyles.push({height: 25, width: 25})
           } else {
-            baseStyles.push({height: 21, width: 21})
+            baseStyles.push({height: 25, width: 25})
           }
         }
 
@@ -406,7 +511,9 @@ export const Button = React.forwardRef<View, ButtonProps>(
           baseStyles.push(a.rounded_full)
         } else if (shape === 'square') {
           if (size === 'tiny') {
-            baseStyles.push(a.rounded_xs)
+            baseStyles.push({
+              borderRadius: 6,
+            })
           } else {
             baseStyles.push(a.rounded_sm)
           }
@@ -419,60 +526,17 @@ export const Button = React.forwardRef<View, ButtonProps>(
       }
     }, [t, variant, color, size, shape, disabled])
 
-    const gradientValues = React.useMemo(() => {
-      const gradient = {
-        primary: tokens.gradients.sky,
-        secondary: tokens.gradients.sky,
-        secondary_inverted: tokens.gradients.sky,
-        negative: tokens.gradients.sky,
-        gradient_primary: tokens.gradients.primary,
-        gradient_sky: tokens.gradients.sky,
-        gradient_midnight: tokens.gradients.midnight,
-        gradient_sunrise: tokens.gradients.sunrise,
-        gradient_sunset: tokens.gradients.sunset,
-        gradient_nordic: tokens.gradients.nordic,
-        gradient_bonfire: tokens.gradients.bonfire,
-      }[color || 'primary']
-
-      if (variant === 'gradient') {
-        if (gradient.values.length < 2) {
-          throw new Error(
-            'Gradient buttons must have at least two colors in the gradient',
-          )
-        }
-
-        return {
-          colors: gradient.values.map(([_, color]) => color) as [
-            string,
-            string,
-            ...string[],
-          ],
-          hoverColors: gradient.values.map(_ => gradient.hover_value) as [
-            string,
-            string,
-            ...string[],
-          ],
-          locations: gradient.values.map(([location, _]) => location) as [
-            number,
-            number,
-            ...number[],
-          ],
-        }
-      }
-    }, [variant, color])
-
     const context = React.useMemo<ButtonContext>(
       () => ({
         ...state,
         variant,
         color,
         size,
+        shape,
         disabled: disabled || false,
       }),
-      [state, variant, color, size, disabled],
+      [state, variant, color, size, shape, disabled],
     )
-
-    const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
       <PressableComponent
@@ -492,9 +556,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.flex_row,
           a.align_center,
           a.justify_center,
-          flattenedBaseStyles,
+          a.curve_continuous,
+          baseStyles,
+          style,
           ...(state.hovered || state.pressed
-            ? [hoverStyles, flatten(hoverStyleProp)]
+            ? [hoverStyles, hoverStyleProp]
             : []),
         ]}
         onPressIn={onPressIn}
@@ -503,27 +569,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
         onHoverOut={onHoverOut}
         onFocus={onFocus}
         onBlur={onBlur}>
-        {variant === 'gradient' && gradientValues && (
-          <View
-            style={[
-              a.absolute,
-              a.inset_0,
-              a.overflow_hidden,
-              {borderRadius: flattenedBaseStyles.borderRadius},
-            ]}>
-            <LinearGradient
-              colors={
-                state.hovered || state.pressed
-                  ? gradientValues.hoverColors
-                  : gradientValues.colors
-              }
-              locations={gradientValues.locations}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              style={[a.absolute, a.inset_0]}
-            />
-          </View>
-        )}
         <Context.Provider value={context}>
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
@@ -539,129 +584,174 @@ export function useSharedButtonTextStyles() {
   return React.useMemo(() => {
     const baseStyles: TextStyle[] = []
 
-    if (color === 'primary') {
-      if (variant === 'solid') {
+    /*
+     * This is the happy path for new button styles, following the
+     * deprecation of `variant` prop. This redundant `variant` check is here
+     * just to make this handling easier to understand.
+     */
+    if (variant === 'solid') {
+      if (color === 'primary') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.white,
+              dim: t.atoms.text_inverted.color,
+              dark: t.atoms.text_inverted.color,
+            }),
+          })
         }
-      } else if (variant === 'outline') {
+      } else if (color === 'secondary') {
+        if (!disabled) {
+          baseStyles.push(t.atoms.text_contrast_medium)
+        } else {
+          baseStyles.push({
+            color: t.palette.contrast_300,
+          })
+        }
+      } else if (color === 'secondary_inverted') {
+        if (!disabled) {
+          baseStyles.push(t.atoms.text_inverted)
+        } else {
+          baseStyles.push({
+            color: t.palette.contrast_300,
+          })
+        }
+      } else if (color === 'negative') {
+        if (!disabled) {
+          baseStyles.push({color: t.palette.white})
+        } else {
+          baseStyles.push({color: t.palette.negative_300})
+        }
+      } else if (color === 'primary_subtle') {
         if (!disabled) {
           baseStyles.push({
             color: t.palette.primary_600,
           })
         } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          baseStyles.push({
+            color: t.palette.primary_200,
+          })
         }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.primary_600})
-        } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
-        }
-      }
-    } else if (color === 'secondary') {
-      if (variant === 'solid' || variant === 'gradient') {
+      } else if (color === 'negative_subtle') {
         if (!disabled) {
           baseStyles.push({
-            color: t.palette.contrast_700,
+            color: t.palette.negative_600,
           })
         } else {
           baseStyles.push({
-            color: t.palette.contrast_400,
+            color: t.palette.negative_200,
           })
-        }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      }
-    } else if (color === 'secondary_inverted') {
-      if (variant === 'solid' || variant === 'gradient') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_100,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_400,
-          })
-        }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      }
-    } else if (color === 'negative') {
-      if (variant === 'solid' || variant === 'gradient') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.white})
-        } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
-        }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
-        } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
-        } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
         }
       }
     } else {
-      if (!disabled) {
-        baseStyles.push({color: t.palette.white})
-      } else {
-        baseStyles.push({color: t.palette.white, opacity: 0.5})
+      /*
+       * BEGIN DEPRECATED STYLES
+       */
+      if (color === 'primary') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.primary_600,
+            })
+          } else {
+            baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.primary_600})
+          } else {
+            baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          }
+        }
+      } else if (color === 'secondary') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        }
+      } else if (color === 'secondary_inverted') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        }
+      } else if (color === 'negative') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        }
+      } else if (color === 'negative_subtle') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        }
       }
+      /*
+       * END DEPRECATED STYLES
+       */
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_tight)
+      baseStyles.push(a.text_md, a.leading_snug, a.font_medium)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_tight)
+      baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_tight)
+      baseStyles.push(a.text_xs, a.leading_snug, a.font_semi_bold)
     }
 
-    return StyleSheet.flatten(baseStyles)
+    return flatten(baseStyles)
   }, [t, variant, color, size, disabled])
 }
 
@@ -669,7 +759,7 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
+    <Text {...rest} style={[a.text_center, textStyles, style]}>
       {children}
     </Text>
   )
@@ -677,69 +767,88 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
 
 export function ButtonIcon({
   icon: Comp,
-  position,
   size,
 }: {
   icon: React.ComponentType<SVGIconProps>
+  /**
+   * @deprecated no longer needed
+   */
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size: buttonSize, disabled} = useButtonContext()
+  const {size: buttonSize, shape: buttonShape} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
-  const {iconSize, iconContainerSize} = React.useMemo(() => {
-    /**
-     * Pre-set icon sizes for different button sizes
-     */
-    const iconSizeShorthand =
-      size ??
-      (({
-        large: 'sm',
-        small: 'sm',
-        tiny: 'xs',
-      }[buttonSize || 'small'] || 'sm') as Exclude<
-        SVGIconProps['size'],
-        undefined
-      >)
+  const {iconSize, iconContainerSize, iconNegativeMargin} =
+    React.useMemo(() => {
+      /**
+       * Pre-set icon sizes for different button sizes
+       */
+      const iconSizeShorthand =
+        size ??
+        (({
+          large: 'md',
+          small: 'sm',
+          tiny: 'xs',
+        }[buttonSize || 'small'] || 'sm') as Exclude<
+          SVGIconProps['size'],
+          undefined
+        >)
 
-    /*
-     * Copied here from icons/common.tsx so we can tweak if we need to, but
-     * also so that we can calculate transforms.
-     */
-    const iconSize = {
-      xs: 12,
-      sm: 16,
-      md: 20,
-      lg: 24,
-      xl: 28,
-      '2xl': 32,
-    }[iconSizeShorthand]
+      /*
+       * Copied here from icons/common.tsx so we can tweak if we need to, but
+       * also so that we can calculate transforms.
+       */
+      const iconSize = {
+        xs: 12,
+        sm: 16,
+        md: 18,
+        lg: 24,
+        xl: 28,
+        '2xs': 8,
+        '2xl': 32,
+        '3xl': 40,
+      }[iconSizeShorthand]
 
-    /*
-     * Goal here is to match rendered text size so that different size icons
-     * don't increase button size
-     */
-    const iconContainerSize = {
-      large: 18,
-      small: 16,
-      tiny: 13,
-    }[buttonSize || 'small']
+      /*
+       * Goal here is to match rendered text size so that different size icons
+       * don't increase button size
+       */
+      const iconContainerSize = {
+        large: 20,
+        small: 17,
+        tiny: 15,
+      }[buttonSize || 'small']
 
-    return {
-      iconSize,
-      iconContainerSize,
-    }
-  }, [buttonSize, size])
+      /*
+       * The icon needs to be closer to the edge of the button than the text. Therefore
+       * we make the gap slightly too large, and then pull in the sides using negative margins.
+       */
+      let iconNegativeMargin = 0
+
+      if (buttonShape === 'default') {
+        iconNegativeMargin = {
+          large: -2,
+          small: -2,
+          tiny: -1,
+        }[buttonSize || 'small']
+      }
+
+      return {
+        iconSize,
+        iconContainerSize,
+        iconNegativeMargin,
+      }
+    }, [buttonSize, buttonShape, size])
 
   return (
     <View
       style={[
         a.z_20,
         {
-          width: iconContainerSize,
+          width: size === '2xs' ? 10 : iconContainerSize,
           height: iconContainerSize,
-          opacity: disabled ? 0.7 : 1,
-          marginLeft: position === 'left' ? -2 : 0,
-          marginRight: position === 'right' ? -2 : 0,
+          marginLeft: iconNegativeMargin,
+          marginRight: iconNegativeMargin,
         },
       ]}>
       <View
@@ -771,5 +880,49 @@ export function ButtonIcon({
         />
       </View>
     </View>
+  )
+}
+
+export type StackedButtonProps = Omit<
+  ButtonProps,
+  keyof VariantProps | 'children'
+> &
+  Pick<VariantProps, 'color'> & {
+    children: React.ReactNode
+    icon: React.ComponentType<SVGIconProps>
+  }
+
+export function StackedButton({children, ...props}: StackedButtonProps) {
+  return (
+    <Button
+      {...props}
+      size="tiny"
+      style={[
+        a.flex_col,
+        {
+          height: 72,
+          paddingHorizontal: 16,
+          borderRadius: 20,
+          gap: 4,
+        },
+        props.style,
+      ]}>
+      <StackedButtonInnerText icon={props.icon}>
+        {children}
+      </StackedButtonInnerText>
+    </Button>
+  )
+}
+
+function StackedButtonInnerText({
+  children,
+  icon: Icon,
+}: Pick<StackedButtonProps, 'icon' | 'children'>) {
+  const textStyles = useSharedButtonTextStyles()
+  return (
+    <>
+      <Icon width={24} fill={textStyles.color} />
+      <ButtonText>{children}</ButtonText>
+    </>
   )
 }

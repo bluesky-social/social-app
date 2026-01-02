@@ -1,5 +1,5 @@
 import React from 'react'
-import {ColorValue, Dimensions, StyleSheet, View} from 'react-native'
+import {type ColorValue, Dimensions, StyleSheet, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
@@ -114,11 +114,16 @@ export function GestureActionView({
     },
   )
 
+  // NOTE(haileyok):
+  // Absurdly high value so it doesn't interfere with the pan gestures above (i.e., scroll)
+  // reanimated doesn't offer great support for disabling y/x axes :/
+  const effectivelyDisabledOffset = 200
   const panGesture = Gesture.Pan()
-    .activeOffsetX([-10, 10])
-    // Absurdly high value so it doesn't interfere with the pan gestures above (i.e., scroll)
-    // reanimated doesn't offer great support for disabling y/x axes :/
-    .activeOffsetY([-200, 200])
+    .activeOffsetX([
+      actions.leftFirst ? -10 : -effectivelyDisabledOffset,
+      actions.rightFirst ? 10 : effectivelyDisabledOffset,
+    ])
+    .activeOffsetY([-effectivelyDisabledOffset, effectivelyDisabledOffset])
     .onStart(() => {
       'worklet'
       isActive.set(true)

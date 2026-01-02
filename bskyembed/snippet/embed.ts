@@ -3,9 +3,19 @@ interface Window {
   bluesky: {
     scan: (element?: Pick<Element, 'querySelectorAll'>) => void
   }
+  BSKY_DEV_EMBED_URL?: string
 }
 
-const EMBED_URL = 'https://embed.bsky.app'
+/**
+ * Allow url to be overwritten during development
+ */
+const IS_DEV =
+  window.location.protocol === 'file:' ||
+  window.location.hostname === 'localhost'
+const EMBED_URL =
+  IS_DEV && window.BSKY_DEV_EMBED_URL
+    ? window.BSKY_DEV_EMBED_URL
+    : 'https://embed.bsky.app'
 
 window.bluesky = window.bluesky || {
   scan,
@@ -67,6 +77,9 @@ function scan(node = document) {
     searchParams.set('id', id)
     if (ref_url.startsWith('http')) {
       searchParams.set('ref_url', encodeURIComponent(ref_url))
+    }
+    if (embed.dataset.blueskyEmbedColorMode) {
+      searchParams.set('colorMode', embed.dataset.blueskyEmbedColorMode)
     }
 
     const iframe = document.createElement('iframe')

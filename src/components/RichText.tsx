@@ -1,14 +1,14 @@
 import React from 'react'
-import {TextStyle} from 'react-native'
+import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
-import {atoms as a, flatten, TextStyleProp} from '#/alf'
+import {atoms as a, flatten, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
-import {InlineLinkText, LinkProps} from '#/components/Link'
+import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
-import {Text, TextProps} from '#/components/Typography'
+import {Text, type TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -21,8 +21,9 @@ export type RichTextProps = TextStyleProp &
     enableTags?: boolean
     authorHandle?: string
     onLinkPress?: LinkProps['onPress']
-    interactiveStyle?: TextStyle
+    interactiveStyle?: StyleProp<TextStyle>
     emojiMultiplier?: number
+    shouldProxyLinks?: boolean
   }
 
 export function RichText({
@@ -39,6 +40,7 @@ export function RichText({
   emojiMultiplier = 1.85,
   onLayout,
   onTextLayout,
+  shouldProxyLinks,
 }: RichTextProps) {
   const richText = React.useMemo(
     () =>
@@ -46,18 +48,14 @@ export function RichText({
     [value],
   )
 
-  const flattenedStyle = flatten(style)
-  const plainStyles = [a.leading_snug, flattenedStyle]
-  const interactiveStyles = [
-    a.leading_snug,
-    flatten(interactiveStyle),
-    flattenedStyle,
-  ]
+  const plainStyles = [a.leading_snug, style]
+  const interactiveStyles = [plainStyles, interactiveStyle]
 
   const {text, facets} = richText
 
   if (!facets?.length) {
     if (isOnlyEmoji(text)) {
+      const flattenedStyle = flatten(style) ?? {}
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
@@ -103,13 +101,14 @@ export function RichText({
       !disableLinks
     ) {
       els.push(
-        <ProfileHoverCard key={key} inline did={mention.did}>
+        <ProfileHoverCard key={key} did={mention.did}>
           <InlineLinkText
             selectable={selectable}
             to={`/profile/${mention.did}`}
             style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
+            shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}>
             {segment.text}
           </InlineLinkText>
@@ -128,6 +127,7 @@ export function RichText({
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
+            shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}
             emoji>
             {toShortUrl(segment.text)}

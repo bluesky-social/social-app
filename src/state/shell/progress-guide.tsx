@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
   ProgressGuideToast,
-  ProgressGuideToastRef,
+  type ProgressGuideToastRef,
 } from '#/components/ProgressGuide/Toast'
 import {
   usePreferencesQuery,
@@ -45,6 +45,7 @@ export type ProgressGuide =
   | undefined
 
 const ProgressGuideContext = React.createContext<ProgressGuide>(undefined)
+ProgressGuideContext.displayName = 'ProgressGuideContext'
 
 const ProgressGuideControlContext = React.createContext<{
   startProgressGuide(guide: ProgressGuideName): void
@@ -55,6 +56,7 @@ const ProgressGuideControlContext = React.createContext<{
   endProgressGuide: () => {},
   captureAction: (_action: ProgressGuideAction, _count = 1) => {},
 })
+ProgressGuideControlContext.displayName = 'ProgressGuideControlContext'
 
 export function useProgressGuide(guide: ProgressGuideName) {
   const ctx = React.useContext(ProgressGuideContext)

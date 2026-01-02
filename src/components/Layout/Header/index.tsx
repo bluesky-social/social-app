@@ -1,28 +1,31 @@
 import {createContext, useCallback, useContext} from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {
   atoms as a,
   platform,
-  TextStyleProp,
+  type TextStyleProp,
   useBreakpoints,
   useGutters,
+  useLayoutBreakpoints,
   useTheme,
   web,
 } from '#/alf'
-import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
+import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
   BUTTON_VISUAL_ALIGNMENT_OFFSET,
+  CENTER_COLUMN_OFFSET,
   HEADER_SLOT_SIZE,
+  SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
@@ -35,13 +38,14 @@ export function Outer({
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
-  headerRef?: React.MutableRefObject<View | null>
+  headerRef?: React.RefObject<View | null>
   sticky?: boolean
 }) {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
   const {gtMobile} = useBreakpoints()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
+  const {centerColumnOffset} = useLayoutBreakpoints()
 
   return (
     <View
@@ -60,7 +64,12 @@ export function Outer({
         }),
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
-        !isWithinOffsetView && a.scrollbar_offset,
+        !isWithinOffsetView && {
+          transform: [
+            {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
+            {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+          ],
+        },
       ]}>
       {children}
     </View>
@@ -68,6 +77,7 @@ export function Outer({
 }
 
 const AlignmentContext = createContext<'platform' | 'left'>('platform')
+AlignmentContext.displayName = 'AlignmentContext'
 
 export function Content({
   children,
@@ -119,7 +129,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         size="small"
         variant="ghost"
         color="secondary"
-        shape="square"
+        shape="round"
         onPress={onPressBack}
         hitSlop={HITSLOP_30}
         style={[
@@ -140,6 +150,7 @@ export function MenuButton() {
   const {gtMobile} = useBreakpoints()
 
   const onPress = useCallback(() => {
+    Keyboard.dismiss()
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
@@ -153,7 +164,10 @@ export function MenuButton() {
         shape="square"
         onPress={onPress}
         hitSlop={HITSLOP_30}
-        style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}]}>
+        style={[
+          {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
+          a.bg_transparent,
+        ]}>
         <ButtonIcon icon={Menu} size="lg" />
       </Button>
     </Slot>
@@ -170,7 +184,7 @@ export function TitleText({
     <Text
       style={[
         a.text_lg,
-        a.font_heavy,
+        a.font_semi_bold,
         a.leading_tight,
         isIOS && align === 'platform' && a.text_center,
         gtMobile && a.text_xl,

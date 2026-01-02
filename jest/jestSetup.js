@@ -33,15 +33,10 @@ jest.mock('react-native-safe-area-context', () => {
   }
 })
 
-jest.mock('rn-fetch-blob', () => ({
-  config: jest.fn().mockReturnThis(),
-  cancel: jest.fn(),
-  fetch: jest.fn(),
-}))
-
-jest.mock('expo-file-system', () => ({
+jest.mock('expo-file-system/legacy', () => ({
   getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
   deleteAsync: jest.fn(),
+  createDownloadResumable: jest.fn(),
 }))
 
 jest.mock('expo-image-manipulator', () => ({
@@ -101,7 +96,7 @@ jest.mock('expo-modules-core', () => ({
       }
     }
   }),
-  requireNativeViewManager: jest.fn().mockImplementation(moduleName => {
+  requireNativeViewManager: jest.fn().mockImplementation(_ => {
     return () => null
   }),
 }))
@@ -119,5 +114,5 @@ jest.mock('statsig-react-native-expo', () => ({
   },
 }))
 
-jest.mock('../src/lib/bitdrift', () => ({}))
+jest.mock('../src/logger/bitdrift/lib', () => ({}))
 jest.mock('../src/lib/statsig/statsig', () => ({}))

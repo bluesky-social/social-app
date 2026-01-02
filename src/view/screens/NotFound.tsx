@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Button} from '#/view/com/util/forms/Button'

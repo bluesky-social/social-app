@@ -1,13 +1,14 @@
 import {useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {BskyAgent} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
+import {Agent} from '#/state/session/agent'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
@@ -48,6 +49,7 @@ export const SetNewPasswordForm = ({
           msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
         ),
       )
+      logEvent('signin:passwordResetFailure', {})
       return
     }
 
@@ -61,15 +63,17 @@ export const SetNewPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
+      const agent = new Agent(null, {service: serviceUrl})
       await agent.com.atproto.server.resetPassword({
         token: formattedCode,
         password,
       })
       onPasswordSet()
+      logEvent('signin:passwordResetSuccess', {})
     } catch (e: any) {
       const errMsg = e.toString()
       logger.warn('Failed to set new password', {error: e})
+      logEvent('signin:passwordResetFailure', {})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
@@ -108,7 +112,9 @@ export const SetNewPasswordForm = ({
       </Text>
 
       <View>
-        <TextField.LabelText>Reset code</TextField.LabelText>
+        <TextField.LabelText>
+          <Trans>Reset code</Trans>
+        </TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={Ticket} />
           <TextField.Input
@@ -131,7 +137,9 @@ export const SetNewPasswordForm = ({
       </View>
 
       <View>
-        <TextField.LabelText>New password</TextField.LabelText>
+        <TextField.LabelText>
+          <Trans>New password</Trans>
+        </TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={Lock} />
           <TextField.Input
@@ -139,10 +147,10 @@ export const SetNewPasswordForm = ({
             label={_(msg`Enter a password`)}
             autoCapitalize="none"
             autoCorrect={false}
-            autoComplete="password"
             returnKeyType="done"
             secureTextEntry={true}
-            textContentType="password"
+            autoComplete="new-password"
+            passwordRules="minlength: 8;"
             clearButtonMode="while-editing"
             value={password}
             onChangeText={setPassword}

@@ -1,23 +1,28 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
-import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
-import {AppBskyGraphDefs} from '@atproto/api'
+import Animated, {
+  measure,
+  type MeasuredDimensions,
+  runOnJS,
+  runOnUI,
+  useAnimatedRef,
+} from 'react-native-reanimated'
+import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useLightboxControls} from '#/state/lightbox'
 import {TextLink} from '#/view/com/util/Link'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
-import {UserAvatar, UserAvatarType} from '#/view/com/util/UserAvatar'
+import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
 import {StarterPack} from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
 
@@ -52,7 +57,7 @@ export function ProfileSubpageHeader({
   const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
-  const aviRef = useHandleRef()
+  const aviRef = useAnimatedRef()
 
   const _openLightbox = React.useCallback(
     (uri: string, thumbRect: MeasuredDimensions | null) => {
@@ -81,10 +86,9 @@ export function ProfileSubpageHeader({
     if (
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {
-      const aviHandle = aviRef.current
       runOnUI(() => {
         'worklet'
-        const rect = measureHandle(aviHandle)
+        const rect = measure(aviRef)
         runOnJS(_openLightbox)(avatar, rect)
       })()
     }
@@ -111,7 +115,7 @@ export function ProfileSubpageHeader({
           paddingBottom: 14,
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
-        <View ref={aviRef} collapsable={false}>
+        <Animated.View ref={aviRef} collapsable={false}>
           <Pressable
             testID="headerAviButton"
             onPress={onPressAvi}
@@ -125,7 +129,7 @@ export function ProfileSubpageHeader({
               <UserAvatar type={avatarType} size={58} avatar={avatar} />
             )}
           </Pressable>
-        </View>
+        </Animated.View>
         <View style={{flex: 1, gap: 4}}>
           {isLoading ? (
             <LoadingPlaceholder

@@ -1,12 +1,12 @@
-import React from 'react'
+import {createContext, useContext, useMemo, useRef} from 'react'
 import {
-  AccessibilityProps,
+  type AccessibilityProps,
   StyleSheet,
   TextInput,
-  TextInputProps,
-  TextStyle,
+  type TextInputProps,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {HITSLOP_20} from '#/lib/constants'
@@ -15,17 +15,19 @@ import {
   android,
   applyFonts,
   atoms as a,
-  TextStyleProp,
+  platform,
+  type TextStyleProp,
+  tokens,
   useAlf,
   useTheme,
   web,
 } from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
-const Context = React.createContext<{
-  inputRef: React.RefObject<TextInput> | null
+const Context = createContext<{
+  inputRef: React.RefObject<TextInput | null> | null
   isInvalid: boolean
   hovered: boolean
   onHoverIn: () => void
@@ -43,11 +45,14 @@ const Context = React.createContext<{
   onFocus: () => {},
   onBlur: () => {},
 })
+Context.displayName = 'TextFieldContext'
 
-export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
+export type RootProps = React.PropsWithChildren<
+  {isInvalid?: boolean} & TextStyleProp
+>
 
-export function Root({children, isInvalid = false}: RootProps) {
-  const inputRef = React.useRef<TextInput>(null)
+export function Root({children, isInvalid = false, style}: RootProps) {
+  const inputRef = useRef<TextInput>(null)
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -55,7 +60,7 @@ export function Root({children, isInvalid = false}: RootProps) {
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       inputRef,
       hovered,
@@ -81,7 +86,14 @@ export function Root({children, isInvalid = false}: RootProps) {
   return (
     <Context.Provider value={context}>
       <View
-        style={[a.flex_row, a.align_center, a.relative, a.w_full, a.px_md]}
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.relative,
+          a.w_full,
+          a.px_md,
+          style,
+        ]}
         {...web({
           onClick: () => inputRef.current?.focus(),
           onMouseOver: onHoverIn,
@@ -95,7 +107,7 @@ export function Root({children, isInvalid = false}: RootProps) {
 
 export function useSharedInputStyles() {
   const t = useTheme()
-  return React.useMemo(() => {
+  return useMemo(() => {
     const hover: ViewStyle[] = [
       {
         borderColor: t.palette.contrast_100,
@@ -129,17 +141,28 @@ export function useSharedInputStyles() {
   }, [t])
 }
 
-export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
+export type InputProps = Omit<
+  TextInputProps,
+  'value' | 'onChangeText' | 'placeholder'
+> & {
   label: string
   /**
    * @deprecated Controlled inputs are *strongly* discouraged. Use `defaultValue` instead where possible.
    *
    * See https://github.com/facebook/react-native-website/pull/4247
+   *
+   * Note: This guidance no longer applies once we migrate to the New Architecture!
    */
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
-  inputRef?: React.RefObject<TextInput> | React.ForwardedRef<TextInput>
+  inputRef?: React.RefObject<TextInput | null> | React.ForwardedRef<TextInput>
+  /**
+   * Note: this currently falls back to the label if not specified. However,
+   * most new designs have no placeholder. We should eventually remove this fallback
+   * behaviour, but for now just pass `null` if you want no placeholder -sfn
+   */
+  placeholder?: string | null | undefined
 }
 
 export function createInput(Component: typeof TextInput) {
@@ -157,7 +180,7 @@ export function createInput(Component: typeof TextInput) {
   }: InputProps) {
     const t = useTheme()
     const {fonts} = useAlf()
-    const ctx = React.useContext(Context)
+    const ctx = useContext(Context)
     const withinRoot = Boolean(ctx.inputRef)
 
     const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
@@ -189,23 +212,26 @@ export function createInput(Component: typeof TextInput) {
       a.px_xs,
       {
         // paddingVertical doesn't work w/multiline - esb
-        paddingTop: 12,
-        paddingBottom: 13,
-        lineHeight: a.text_md.fontSize * 1.1875,
+        lineHeight: a.text_md.fontSize * 1.2,
         textAlignVertical: rest.multiline ? 'top' : undefined,
         minHeight: rest.multiline ? 80 : undefined,
         minWidth: 0,
+        paddingTop: 13,
+        paddingBottom: 13,
       },
-      // fix for autofill styles covering border
+      android({
+        paddingTop: 8,
+        paddingBottom: 9,
+      }),
+      /*
+       * Margins are needed here to avoid autofill background overlapping the
+       * top and bottom borders - esb
+       */
       web({
-        paddingTop: 10,
+        paddingTop: 11,
         paddingBottom: 11,
         marginTop: 2,
         marginBottom: 2,
-      }),
-      android({
-        paddingTop: 8,
-        paddingBottom: 8,
       }),
       style,
     ])
@@ -226,6 +252,7 @@ export function createInput(Component: typeof TextInput) {
       <>
         <Component
           accessibilityHint={undefined}
+          hitSlop={HITSLOP_20}
           {...rest}
           accessibilityLabel={label}
           ref={refs}
@@ -239,10 +266,9 @@ export function createInput(Component: typeof TextInput) {
             ctx.onBlur()
             onBlur?.(e)
           }}
-          placeholder={placeholder || label}
+          placeholder={placeholder === null ? undefined : placeholder || label}
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          hitSlop={HITSLOP_20}
           style={flattened}
         />
 
@@ -251,8 +277,8 @@ export function createInput(Component: typeof TextInput) {
             a.z_10,
             a.absolute,
             a.inset_0,
-            a.rounded_sm,
-            t.atoms.bg_contrast_25,
+            {borderRadius: 10},
+            t.atoms.bg_contrast_50,
             {borderColor: 'transparent', borderWidth: 2},
             ctx.hovered ? chromeHover : {},
             ctx.focused ? chromeFocus : {},
@@ -277,7 +303,7 @@ export function LabelText({
   return (
     <Text
       nativeID={nativeID}
-      style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium, a.mb_sm]}>
+      style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium, a.mb_sm]}>
       {children}
     </Text>
   )
@@ -285,8 +311,8 @@ export function LabelText({
 
 export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
   const t = useTheme()
-  const ctx = React.useContext(Context)
-  const {hover, focus, errorHover, errorFocus} = React.useMemo(() => {
+  const ctx = useContext(Context)
+  const {hover, focus, errorHover, errorFocus} = useMemo(() => {
     const hover: TextStyle[] = [
       {
         color: t.palette.contrast_800,
@@ -344,7 +370,7 @@ export function SuffixText({
   }
 >) {
   const t = useTheme()
-  const ctx = React.useContext(Context)
+  const ctx = useContext(Context)
   return (
     <Text
       accessibilityLabel={label}
@@ -355,20 +381,76 @@ export function SuffixText({
         a.pr_sm,
         a.text_md,
         t.atoms.text_contrast_medium,
-        {
-          pointerEvents: 'none',
-        },
-        web({
-          marginTop: -2,
-        }),
-        ctx.hovered || ctx.focused
-          ? {
-              color: t.palette.contrast_800,
-            }
-          : {},
+        a.pointer_events_none,
+        web([{marginTop: -2}, a.leading_snug]),
+        (ctx.hovered || ctx.focused) && {color: t.palette.contrast_800},
         style,
       ]}>
       {children}
     </Text>
+  )
+}
+
+export function GhostText({
+  children,
+  value,
+}: {
+  children: string
+  value: string
+}) {
+  const t = useTheme()
+  // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
+  return (
+    <View
+      style={[
+        a.pointer_events_none,
+        a.absolute,
+        a.z_10,
+        {
+          paddingLeft: platform({
+            native:
+              // input padding
+              tokens.space.md +
+              // icon
+              tokens.space.xl +
+              // icon padding
+              tokens.space.xs +
+              // text input padding
+              tokens.space.xs,
+            web:
+              // icon
+              tokens.space.xl +
+              // icon padding
+              tokens.space.xs +
+              // text input padding
+              tokens.space.xs,
+          }),
+        },
+        web(a.pr_md),
+        a.overflow_hidden,
+        a.max_w_full,
+      ]}
+      aria-hidden={true}
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants">
+      <Text
+        style={[
+          {color: 'transparent'},
+          a.text_md,
+          {lineHeight: a.text_md.fontSize * 1.1875},
+          a.w_full,
+        ]}
+        numberOfLines={1}>
+        {children}
+        <Text
+          style={[
+            t.atoms.text_contrast_low,
+            a.text_md,
+            {lineHeight: a.text_md.fontSize * 1.1875},
+          ]}>
+          {value}
+        </Text>
+      </Text>
+    </View>
   )
 }

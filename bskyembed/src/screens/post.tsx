@@ -4,11 +4,11 @@ import {AppBskyFeedDefs, AtpAgent} from '@atproto/api'
 import {h, render} from 'preact'
 
 import logo from '../../assets/logo.svg'
-import {initColorMode} from '../color-mode'
+import {applyTheme, initSystemColorMode} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
-import {getRkey} from '../utils'
+import {getRkey} from '../util/rkey'
 
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
@@ -22,7 +22,23 @@ if (!uri) {
   throw new Error('No uri in path')
 }
 
-initColorMode()
+const query = new URLSearchParams(window.location.search)
+
+// theme - default to light mode
+const colorMode = query.get('colorMode')
+
+switch (colorMode) {
+  case 'dark':
+    applyTheme('dark')
+    break
+  case 'system':
+    initSystemColorMode()
+    break
+  case 'light':
+  default:
+    applyTheme('light')
+    break
+}
 
 agent
   .getPostThread({

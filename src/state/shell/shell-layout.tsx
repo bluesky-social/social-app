@@ -1,5 +1,5 @@
 import React from 'react'
-import {SharedValue, useSharedValue} from 'react-native-reanimated'
+import {type SharedValue, useSharedValue} from 'react-native-reanimated'
 
 type StateContext = {
   headerHeight: SharedValue<number>
@@ -28,6 +28,7 @@ const stateContext = React.createContext<StateContext>({
     set() {},
   },
 })
+stateContext.displayName = 'ShellLayoutContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const headerHeight = useSharedValue(0)

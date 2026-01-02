@@ -5,21 +5,24 @@ import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   AtUri,
-  ModerationOpts,
+  type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {HITSLOP_20} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {makeProfileLink, makeStarterPackLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
@@ -43,12 +46,12 @@ import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
 import * as Toast from '#/view/com/util/Toast'
-import {CenteredView} from '#/view/com/util/Views'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
@@ -57,8 +60,11 @@ import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {FeedsList} from '#/components/StarterPack/Main/FeedsList'
 import {PostsList} from '#/components/StarterPack/Main/PostsList'
@@ -66,6 +72,7 @@ import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 type StarterPackScreeProps = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -221,55 +228,53 @@ function StarterPackScreenLoaded({
   }, [onOpenShareDialog, routeParams.new, shareDialogControl])
 
   return (
-    <CenteredView style={[a.h_full_vh]}>
-      <View style={isWeb ? {minHeight: '100%'} : {height: '100%'}}>
-        <PagerWithHeader
-          items={tabs}
-          isHeaderReady={true}
-          renderHeader={() => (
-            <Header
-              starterPack={starterPack}
-              routeParams={routeParams}
-              onOpenShareDialog={onOpenShareDialog}
-            />
-          )}>
-          {showPeopleTab
-            ? ({headerHeight, scrollElRef}) => (
-                <ProfilesList
-                  // Validated above
-                  listUri={starterPack!.list!.uri}
-                  headerHeight={headerHeight}
-                  // @ts-expect-error
-                  scrollElRef={scrollElRef}
-                  moderationOpts={moderationOpts}
-                />
-              )
-            : null}
-          {showFeedsTab
-            ? ({headerHeight, scrollElRef}) => (
-                <FeedsList
-                  // @ts-expect-error ?
-                  feeds={starterPack?.feeds}
-                  headerHeight={headerHeight}
-                  // @ts-expect-error
-                  scrollElRef={scrollElRef}
-                />
-              )
-            : null}
-          {showPostsTab
-            ? ({headerHeight, scrollElRef}) => (
-                <PostsList
-                  // Validated above
-                  listUri={starterPack!.list!.uri}
-                  headerHeight={headerHeight}
-                  // @ts-expect-error
-                  scrollElRef={scrollElRef}
-                  moderationOpts={moderationOpts}
-                />
-              )
-            : null}
-        </PagerWithHeader>
-      </View>
+    <>
+      <PagerWithHeader
+        items={tabs}
+        isHeaderReady={true}
+        renderHeader={() => (
+          <Header
+            starterPack={starterPack}
+            routeParams={routeParams}
+            onOpenShareDialog={onOpenShareDialog}
+          />
+        )}>
+        {showPeopleTab
+          ? ({headerHeight, scrollElRef}) => (
+              <ProfilesList
+                // Validated above
+                listUri={starterPack!.list!.uri}
+                headerHeight={headerHeight}
+                // @ts-expect-error
+                scrollElRef={scrollElRef}
+                moderationOpts={moderationOpts}
+              />
+            )
+          : null}
+        {showFeedsTab
+          ? ({headerHeight, scrollElRef}) => (
+              <FeedsList
+                // @ts-expect-error ?
+                feeds={starterPack?.feeds}
+                headerHeight={headerHeight}
+                // @ts-expect-error
+                scrollElRef={scrollElRef}
+              />
+            )
+          : null}
+        {showPostsTab
+          ? ({headerHeight, scrollElRef}) => (
+              <PostsList
+                // Validated above
+                listUri={starterPack!.list!.uri}
+                headerHeight={headerHeight}
+                // @ts-expect-error
+                scrollElRef={scrollElRef}
+                moderationOpts={moderationOpts}
+              />
+            )
+          : null}
+      </PagerWithHeader>
 
       <QrCodeDialog
         control={qrCodeDialogControl}
@@ -283,7 +288,7 @@ function StarterPackScreenLoaded({
         link={link}
         imageLoaded={imageLoaded}
       />
-    </CenteredView>
+    </>
   )
 }
 
@@ -387,7 +392,12 @@ function Header({
     })
   }
 
-  if (!AppBskyGraphStarterpack.isRecord(record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 
@@ -435,7 +445,7 @@ function Header({
                 <ButtonText>
                   <Trans>Follow all</Trans>
                 </ButtonText>
-                {isProcessing && <Loader size="xs" />}
+                {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
             )}
             <OverflowMenu
@@ -448,9 +458,7 @@ function Header({
       </ProfileSubpageHeader>
       {!hasSession || richText || joinedAllTimeCount >= 25 ? (
         <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
-          {richText ? (
-            <RichText value={richText} style={[a.text_md, a.leading_snug]} />
-          ) : null}
+          {richText ? <RichText value={richText} style={[a.text_md]} /> : null}
           {!hasSession ? (
             <Button
               label={_(msg`Join Bluesky`)}
@@ -476,10 +484,17 @@ function Header({
                 color={t.atoms.text_contrast_medium.color}
               />
               <Text
-                style={[a.font_bold, a.text_sm, t.atoms.text_contrast_medium]}>
-                <Trans>
-                  {starterPack.joinedAllTimeCount || 0} people have used this
-                  starter pack!
+                style={[
+                  a.font_semi_bold,
+                  a.text_sm,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific starter pack">
+                  <Plural
+                    value={starterPack.joinedAllTimeCount || 0}
+                    other="# people have"
+                  />{' '}
+                  used this starter pack!
                 </Trans>
               </Text>
             </View>
@@ -592,13 +607,24 @@ function OverflowMenu({
             <>
               <Menu.Group>
                 <Menu.Item
-                  label={_(msg`Share`)}
+                  label={
+                    isWeb
+                      ? _(msg`Copy link to starter pack`)
+                      : _(msg`Share via...`)
+                  }
                   testID="shareStarterPackLinkBtn"
                   onPress={onOpenShareDialog}>
                   <Menu.ItemText>
-                    <Trans>Share link</Trans>
+                    {isWeb ? (
+                      <Trans>Copy link</Trans>
+                    ) : (
+                      <Trans>Share via...</Trans>
+                    )}
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
+                  <Menu.ItemIcon
+                    icon={isWeb ? ChainLinkIcon : ArrowOutOfBoxIcon}
+                    position="right"
+                  />
                 </Menu.Item>
               </Menu.Group>
 
@@ -618,10 +644,9 @@ function OverflowMenu({
       {starterPack.list && (
         <ReportDialog
           control={reportDialogControl}
-          params={{
-            type: 'starterpack',
-            uri: starterPack.uri,
-            cid: starterPack.cid,
+          subject={{
+            ...starterPack,
+            $type: 'app.bsky.graph.defs#starterPackView',
           }}
         />
       )}
@@ -646,7 +671,7 @@ function OverflowMenu({
               t.atoms.bg_contrast_25,
             ]}>
             <View style={[a.flex_1, a.gap_2xs]}>
-              <Text style={[a.font_bold]}>
+              <Text style={[a.font_semi_bold]}>
                 <Trans>Unable to delete</Trans>
               </Text>
               <Text style={[a.leading_snug]}>{cleanError(deleteError)}</Text>
@@ -701,64 +726,57 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
   })
 
   return (
-    <CenteredView
-      style={[
-        a.flex_1,
-        a.align_center,
-        a.gap_5xl,
-        !gtMobile && a.justify_between,
-        t.atoms.border_contrast_low,
-        {paddingTop: 175, paddingBottom: 110},
-      ]}
-      sideBorders={true}>
-      <View style={[a.w_full, a.align_center, a.gap_lg]}>
-        <Text style={[a.font_bold, a.text_3xl]}>
-          <Trans>Starter pack is invalid</Trans>
-        </Text>
-        <Text
-          style={[
-            a.text_md,
-            a.text_center,
-            t.atoms.text_contrast_high,
-            {lineHeight: 1.4},
-            gtMobile ? {width: 450} : [a.w_full, a.px_lg],
-          ]}>
-          <Trans>
-            The starter pack that you are trying to view is invalid. You may
-            delete this starter pack instead.
-          </Trans>
-        </Text>
+    <Layout.Content centerContent>
+      <View style={[a.py_4xl, a.px_xl, a.align_center, a.gap_5xl]}>
+        <View style={[a.w_full, a.align_center, a.gap_lg]}>
+          <Text style={[a.font_semi_bold, a.text_3xl]}>
+            <Trans>Starter pack is invalid</Trans>
+          </Text>
+          <Text
+            style={[
+              a.text_md,
+              a.text_center,
+              t.atoms.text_contrast_high,
+              {lineHeight: 1.4},
+              gtMobile ? {width: 450} : [a.w_full, a.px_lg],
+            ]}>
+            <Trans>
+              The starter pack that you are trying to view is invalid. You may
+              delete this starter pack instead.
+            </Trans>
+          </Text>
+        </View>
+        <View style={[a.gap_md, gtMobile ? {width: 350} : [a.w_full, a.px_lg]]}>
+          <Button
+            variant="solid"
+            color="primary"
+            label={_(msg`Delete starter pack`)}
+            size="large"
+            style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
+            disabled={isProcessing}
+            onPress={() => {
+              setIsProcessing(true)
+              deleteStarterPack({rkey})
+            }}>
+            <ButtonText>
+              <Trans>Delete</Trans>
+            </ButtonText>
+            {isProcessing && <Loader size="xs" color="white" />}
+          </Button>
+          <Button
+            variant="solid"
+            color="secondary"
+            label={_(msg`Return to previous page`)}
+            size="large"
+            style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
+            disabled={isProcessing}
+            onPress={goBack}>
+            <ButtonText>
+              <Trans>Go Back</Trans>
+            </ButtonText>
+          </Button>
+        </View>
       </View>
-      <View style={[a.gap_md, gtMobile ? {width: 350} : [a.w_full, a.px_lg]]}>
-        <Button
-          variant="solid"
-          color="primary"
-          label={_(msg`Delete starter pack`)}
-          size="large"
-          style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
-          disabled={isProcessing}
-          onPress={() => {
-            setIsProcessing(true)
-            deleteStarterPack({rkey})
-          }}>
-          <ButtonText>
-            <Trans>Delete</Trans>
-          </ButtonText>
-          {isProcessing && <Loader size="xs" color="white" />}
-        </Button>
-        <Button
-          variant="solid"
-          color="secondary"
-          label={_(msg`Return to previous page`)}
-          size="large"
-          style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
-          disabled={isProcessing}
-          onPress={goBack}>
-          <ButtonText>
-            <Trans>Go Back</Trans>
-          </ButtonText>
-        </Button>
-      </View>
-    </CenteredView>
+    </Layout.Content>
   )
 }

@@ -1,2 +1,2 @@
 flows:
-  - "flows/*"
+  - "flows/**"

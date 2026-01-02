@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-  AppBskyActorDefs,
-  AppBskyEmbedRecord,
-  AppBskyFeedDefs,
-  ModerationDecision,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyUnspeccedGetPostThreadV2,
+  type ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -13,27 +13,37 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
 import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
-import type {EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
 
 export interface ComposerOptsPostRef {
   uri: string
   cid: string
   text: string
+  langs?: string[]
   author: AppBskyActorDefs.ProfileViewBasic
-  embed?: AppBskyEmbedRecord.ViewRecord['embed']
+  embed?: AppBskyFeedDefs.PostView['embed']
   moderation?: ModerationDecision
 }
+
+export type OnPostSuccessData =
+  | {
+      replyToUri?: string
+      posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
+    }
+  | undefined
 
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
+  onPostSuccess?: (data: OnPostSuccessData) => void
   quote?: AppBskyFeedDefs.PostView
   mention?: string // handle of user to mention
   openEmojiPicker?: (pos: EmojiPickerPosition | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
   videoUri?: {uri: string; width: number; height: number}
+  openGallery?: boolean
 }
 
 type StateContext = ComposerOpts | undefined
@@ -43,12 +53,14 @@ type ControlsContext = {
 }
 
 const stateContext = React.createContext<StateContext>(undefined)
+stateContext.displayName = 'ComposerStateContext'
 const controlsContext = React.createContext<ControlsContext>({
   openComposer(_opts: ComposerOpts) {},
   closeComposer() {
     return false
   },
 })
+controlsContext.displayName = 'ComposerControlsContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
@@ -126,5 +138,17 @@ export function useComposerState() {
 }
 
 export function useComposerControls() {
-  return React.useContext(controlsContext)
+  const {closeComposer} = React.useContext(controlsContext)
+  return React.useMemo(() => ({closeComposer}), [closeComposer])
+}
+
+/**
+ * DO NOT USE DIRECTLY. The deprecation notice as a warning only, it's not
+ * actually deprecated.
+ *
+ * @deprecated use `#/lib/hooks/useOpenComposer` instead
+ */
+export function useOpenComposer() {
+  const {openComposer} = React.useContext(controlsContext)
+  return React.useMemo(() => ({openComposer}), [openComposer])
 }

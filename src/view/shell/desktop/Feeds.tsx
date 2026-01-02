@@ -4,7 +4,8 @@ import {useLingui} from '@lingui/react'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {getCurrentRoute} from '#/lib/routes/helpers'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
+import {logger} from '#/logger'
 import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
@@ -27,12 +28,7 @@ export function DesktopFeeds() {
 
   if (isLoading) {
     return (
-      <View
-        style={[
-          {
-            gap: 12,
-          },
-        ]}>
+      <View style={[{gap: 10}]}>
         {Array(5)
           .fill(0)
           .map((_, i) => (
@@ -59,6 +55,7 @@ export function DesktopFeeds() {
   return (
     <View
       style={[
+        a.flex_1,
         web({
           gap: 10,
           /*
@@ -66,6 +63,7 @@ export function DesktopFeeds() {
            * height of the screen with lots of feeds.
            */
           paddingVertical: 2,
+          marginHorizontal: -2,
           overflowY: 'auto',
         }),
       ]}>
@@ -78,6 +76,14 @@ export function DesktopFeeds() {
             key={feedInfo.uri}
             label={feedInfo.displayName}
             {...createStaticClick(() => {
+              logger.metric(
+                'desktopFeeds:feed:click',
+                {
+                  feedUri: feedInfo.uri,
+                  feedDescriptor: feed,
+                },
+                {statsig: false},
+              )
               setSelectedFeed(feed)
               navigation.navigate('Home')
               if (route.name === 'Home' && feed === selectedFeed) {
@@ -87,9 +93,14 @@ export function DesktopFeeds() {
             style={[
               a.text_md,
               a.leading_snug,
+              a.flex_shrink_0,
               current
-                ? [a.font_bold, t.atoms.text]
+                ? [a.font_semi_bold, t.atoms.text]
                 : [t.atoms.text_contrast_medium],
+              web({
+                marginHorizontal: 2,
+                width: 'calc(100% - 4px)',
+              }),
             ]}
             numberOfLines={1}>
             {feedInfo.displayName}
@@ -100,7 +111,14 @@ export function DesktopFeeds() {
       <InlineLinkText
         to="/feeds"
         label={_(msg`More feeds`)}
-        style={[a.text_md, a.leading_snug]}
+        style={[
+          a.text_md,
+          a.leading_snug,
+          web({
+            marginHorizontal: 2,
+            width: 'calc(100% - 4px)',
+          }),
+        ]}
         numberOfLines={1}>
         {_(msg`More feeds`)}
       </InlineLinkText>

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Modal, ScrollView, View} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {StatusBar} from 'expo-status-bar'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -90,10 +90,10 @@ export function SignupQueued() {
       variant="ghost"
       size="large"
       color="primary"
-      label={_(msg`Log out`)}
+      label={_(msg`Sign out`)}
       onPress={() => logoutCurrentAccount('SignupQueued')}>
       <ButtonText>
-        <Trans>Log out</Trans>
+        <Trans>Sign out</Trans>
       </ButtonText>
     </Button>
   )
@@ -106,7 +106,7 @@ export function SignupQueued() {
       animationType={native('slide')}
       presentationStyle="formSheet"
       style={[web(a.util_screen_outer)]}>
-      {isIOS && <StatusBar style="light" />}
+      {isIOS && <SystemBars style={{statusBar: 'light'}} />}
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}
         contentContainerStyle={{borderWidth: 0}}
@@ -123,7 +123,7 @@ export function SignupQueued() {
               <Logo width={120} />
             </View>
 
-            <Text style={[a.text_4xl, a.font_heavy, a.pb_sm]}>
+            <Text style={[a.text_4xl, a.font_bold, a.pb_sm]}>
               <Trans>You're in line</Trans>
             </Text>
             <P style={[t.atoms.text_contrast_medium]}>
@@ -146,7 +146,7 @@ export function SignupQueued() {
               ]}>
               {typeof placeInQueue === 'number' && (
                 <Text
-                  style={[a.text_5xl, a.text_center, a.font_heavy, a.mb_2xl]}>
+                  style={[a.text_5xl, a.text_center, a.font_bold, a.mb_2xl]}>
                   {placeInQueue}
                 </Text>
               )}

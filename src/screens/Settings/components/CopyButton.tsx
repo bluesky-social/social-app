@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import Animated, {
   FadeOutUp,
   useReducedMotion,
@@ -9,7 +9,7 @@ import * as Clipboard from 'expo-clipboard'
 import {Trans} from '@lingui/macro'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonProps} from '#/components/Button'
+import {Button, type ButtonProps} from '#/components/Button'
 import {Text} from '#/components/Typography'
 
 export function CopyButton({
@@ -58,9 +58,9 @@ export function CopyButton({
           pointerEvents="none">
           <Text
             style={[
-              a.font_bold,
+              a.font_medium,
               a.text_right,
-              a.text_md,
+              a.text_sm,
               t.atoms.text_contrast_high,
             ]}>
             <Trans>Copied!</Trans>

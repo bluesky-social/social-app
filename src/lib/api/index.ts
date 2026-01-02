@@ -1,22 +1,23 @@
 import {
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyEmbedVideo,
-  AppBskyFeedPost,
+  type $Typed,
+  type AppBskyEmbedExternal,
+  type AppBskyEmbedImages,
+  type AppBskyEmbedRecord,
+  type AppBskyEmbedRecordWithMedia,
+  type AppBskyEmbedVideo,
+  type AppBskyFeedPost,
   AtUri,
   BlobRef,
-  BskyAgent,
-  ComAtprotoLabelDefs,
-  ComAtprotoRepoApplyWrites,
-  ComAtprotoRepoStrongRef,
+  type BskyAgent,
+  type ComAtprotoLabelDefs,
+  type ComAtprotoRepoApplyWrites,
+  type ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import * as dcbor from '@ipld/dag-cbor'
 import {t} from '@lingui/macro'
-import {QueryClient} from '@tanstack/react-query'
+import {type QueryClient} from '@tanstack/react-query'
 import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
@@ -34,9 +35,9 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
 } from '#/state/queries/threadgate'
 import {
-  EmbedDraft,
-  PostDraft,
-  ThreadDraft,
+  type EmbedDraft,
+  type PostDraft,
+  type ThreadDraft,
 } from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {uploadBlob} from './upload-blob'
@@ -74,7 +75,7 @@ export async function post(
   }
 
   const did = agent.assertDid
-  const writes: ComAtprotoRepoApplyWrites.Create[] = []
+  const writes: $Typed<ComAtprotoRepoApplyWrites.Create>[] = []
   const uris: string[] = []
 
   let now = new Date()
@@ -91,7 +92,7 @@ export async function post(
       draft,
       opts.onStateChange,
     )
-    let labels: ComAtprotoLabelDefs.SelfLabels | undefined
+    let labels: $Typed<ComAtprotoLabelDefs.SelfLabels> | undefined
     if (draft.labels.length) {
       labels = {
         $type: 'com.atproto.label.defs#selfLabels',
@@ -230,11 +231,11 @@ async function resolveEmbed(
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
-  | AppBskyEmbedImages.Main
-  | AppBskyEmbedVideo.Main
-  | AppBskyEmbedExternal.Main
-  | AppBskyEmbedRecord.Main
-  | AppBskyEmbedRecordWithMedia.Main
+  | $Typed<AppBskyEmbedImages.Main>
+  | $Typed<AppBskyEmbedVideo.Main>
+  | $Typed<AppBskyEmbedExternal.Main>
+  | $Typed<AppBskyEmbedRecord.Main>
+  | $Typed<AppBskyEmbedRecordWithMedia.Main>
   | undefined
 > {
   if (draft.embed.quote) {
@@ -288,9 +289,9 @@ async function resolveMedia(
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
-  | AppBskyEmbedExternal.Main
-  | AppBskyEmbedImages.Main
-  | AppBskyEmbedVideo.Main
+  | $Typed<AppBskyEmbedExternal.Main>
+  | $Typed<AppBskyEmbedImages.Main>
+  | $Typed<AppBskyEmbedVideo.Main>
   | undefined
 > {
   if (embedDraft.media?.type === 'images') {
@@ -332,15 +333,27 @@ async function resolveMedia(
           return {lang: caption.lang, file: data.blob}
         }),
     )
+
+    // lexicon numbers must be floats
+    const width = Math.round(videoDraft.asset.width)
+    const height = Math.round(videoDraft.asset.height)
+
+    // aspect ratio values must be >0 - better to leave as unset otherwise
+    // posting will fail if aspect ratio is set to 0
+    const aspectRatio = width > 0 && height > 0 ? {width, height} : undefined
+
+    if (!aspectRatio) {
+      logger.error(
+        `Invalid aspect ratio - got { width: ${videoDraft.asset.width}, height: ${videoDraft.asset.height} }`,
+      )
+    }
+
     return {
       $type: 'app.bsky.embed.video',
       video: videoDraft.pendingPublish.blobRef,
       alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
-      aspectRatio: {
-        width: videoDraft.asset.width,
-        height: videoDraft.asset.height,
-      },
+      aspectRatio,
     }
   }
   if (embedDraft.media?.type === 'gif') {
