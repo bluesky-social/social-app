@@ -66,6 +66,7 @@
       flex: 1 0 auto;
       min-height: 100%;
       width: 100%;
+      background-color: var(--splash-bg);
     }
     #splash {
       display: flex;
@@ -93,6 +94,19 @@
       overflow-y: scroll;
     }
   </style>
+  <script>
+  let colorMode = localStorage.getItem('SPLASH_COLOR_MODE') || 'system'
+  const darkTheme = localStorage.getItem('SPLASH_DARK_THEME') || 'dim'
+  if (colorMode === 'system') {
+    colorMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light'
+  }
+  document.documentElement.style.setProperty(
+    '--splash-bg',
+    colorMode === 'dark' ? (darkTheme === 'dim' ? '#151D28' : '#000') : '#fff',
+  )
+  </script>
 
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="{{ staticCDNHost }}/static/apple-touch-icon.png">
