@@ -375,6 +375,17 @@ export const ComposePost = ({
     },
   )
 
+  // Track the timestamp of the loaded draft (for analytics)
+  const [loadedDraftTimestamp, setLoadedDraftTimestamp] = useState<
+    number | null
+  >(() => {
+    if (initDraftId && currentAccount) {
+      const draft = draftsStorage.getDraftSync(currentAccount.did, initDraftId)
+      return draft?.timestamp ?? null
+    }
+    return null
+  })
+
   // Drafts list for the drafts dialog
   const {draftsCount} = useDraftsList()
 
@@ -399,6 +410,22 @@ export const ComposePost = ({
     const currentSnapshot = serializeStateForComparison(composerState)
     return currentSnapshot !== loadedDraftSnapshot
   }, [isEditingExistingDraft, loadedDraftSnapshot, composerState])
+
+  // Helper to get draft metadata for analytics events
+  const getDraftMetadata = useCallback((state: ComposerState) => {
+    const posts = state.thread.posts
+    const firstPost = posts[0]
+    return {
+      hasText: posts.some(p => p.richtext.text.trim().length > 0),
+      hasImages: posts.some(p => p.embed.media?.type === 'images'),
+      hasVideo: posts.some(p => p.embed.media?.type === 'video'),
+      hasGif: posts.some(p => p.embed.media?.type === 'gif'),
+      hasQuote: posts.some(p => !!p.embed.quote),
+      hasLink: posts.some(p => !!p.embed.link),
+      postCount: posts.length,
+      textLength: firstPost?.richtext.text.length ?? 0,
+    }
+  }, [])
 
   // Handler for selecting a draft from the list
   const onSelectDraft = useCallback(
@@ -437,14 +464,26 @@ export const ComposePost = ({
       setCurrentDraftId(selectedDraftId)
       setIsEditingExistingDraft(true)
       setLoadedDraftSnapshot(serializeStateForComparison(newState))
+      setLoadedDraftTimestamp(draft.timestamp)
 
       // Load the draft and switch back to compose mode
       composerDispatch({type: 'load_draft', draft: newState})
       setViewMode('compose')
 
+      // Log draft:load event
+      const metadata = getDraftMetadata(newState)
+      logEvent('draft:load', {
+        draftAgeMs: Date.now() - draft.timestamp,
+        hasText: metadata.hasText,
+        hasImages: metadata.hasImages,
+        hasVideo: metadata.hasVideo,
+        hasGif: metadata.hasGif,
+        postCount: metadata.postCount,
+      })
+
       logger.info('Loaded draft into composer', {draftId: selectedDraftId})
     },
-    [currentAccount, preferences?.postInteractionSettings],
+    [currentAccount, preferences?.postInteractionSettings, getDraftMetadata],
   )
 
   // Handler for opening drafts view
@@ -458,6 +497,9 @@ export const ComposePost = ({
     } else {
       // No content or no changes - just show drafts
       setViewMode('drafts')
+      logEvent('draft:listOpen', {
+        draftCount: draftsCount ?? 0,
+      })
     }
   }, [
     hasContent,
@@ -465,27 +507,106 @@ export const ComposePost = ({
     hasUnsavedChanges,
     saveBeforeDraftsPromptControl,
     updateBeforeDraftsPromptControl,
+    draftsCount,
   ])
 
   // Handler for "Save" in the save-before-drafts prompt
   const onSaveBeforeDrafts = useCallback(() => {
     saveImmediate(composerState)
+    const metadata = getDraftMetadata(composerState)
+    logEvent('draft:save', {
+      isNewDraft: !isEditingExistingDraft,
+      ...metadata,
+    })
     setViewMode('drafts')
-  }, [saveImmediate, composerState])
+    logEvent('draft:listOpen', {
+      draftCount: (draftsCount ?? 0) + (isEditingExistingDraft ? 0 : 1),
+    })
+  }, [
+    saveImmediate,
+    composerState,
+    getDraftMetadata,
+    isEditingExistingDraft,
+    draftsCount,
+  ])
 
   // Handler for "Don't save" in the save-before-drafts prompt
   const onDiscardBeforeDrafts = useCallback(() => {
+    const metadata = getDraftMetadata(composerState)
+    logEvent('draft:discard', {
+      logContext: 'BeforeDraftsList',
+      hadContent: hasContent,
+      textLength: metadata.textLength,
+    })
     clearDraft()
     setViewMode('drafts')
-  }, [clearDraft])
+    logEvent('draft:listOpen', {
+      draftCount: draftsCount ?? 0,
+    })
+  }, [clearDraft, getDraftMetadata, composerState, hasContent, draftsCount])
 
   // Handler for saving draft and closing with toast
   const onSaveDraftAndClose = useCallback(() => {
     saveImmediate(composerState)
+    const metadata = getDraftMetadata(composerState)
+    logEvent('draft:save', {
+      isNewDraft: !isEditingExistingDraft,
+      ...metadata,
+    })
     closeComposer()
     clearThumbnailCache(queryClient)
     Toast.show(_(msg`Saved to drafts`))
-  }, [_, saveImmediate, composerState, closeComposer, queryClient])
+  }, [
+    _,
+    saveImmediate,
+    composerState,
+    getDraftMetadata,
+    isEditingExistingDraft,
+    closeComposer,
+    queryClient,
+  ])
+
+  // Handler for "Don't save" when closing composer with unsaved content
+  const onDiscardAndClose = useCallback(() => {
+    const metadata = getDraftMetadata(composerState)
+    logEvent('draft:discard', {
+      logContext: 'ComposerClose',
+      hadContent: hasContent,
+      textLength: metadata.textLength,
+    })
+    clearDraft()
+    closeComposer()
+    clearThumbnailCache(queryClient)
+  }, [
+    getDraftMetadata,
+    composerState,
+    hasContent,
+    clearDraft,
+    closeComposer,
+    queryClient,
+  ])
+
+  // Handler for "Update draft" in the update-before-drafts prompt
+  const onUpdateBeforeDrafts = useCallback(() => {
+    saveImmediate(composerState)
+    const metadata = getDraftMetadata(composerState)
+    logEvent('draft:save', {
+      isNewDraft: false,
+      ...metadata,
+    })
+    setViewMode('drafts')
+    logEvent('draft:listOpen', {
+      draftCount: draftsCount ?? 0,
+    })
+  }, [saveImmediate, composerState, getDraftMetadata, draftsCount])
+
+  // Handler for "Don't update" in the update-before-drafts prompt
+  const onSkipUpdateBeforeDrafts = useCallback(() => {
+    setViewMode('drafts')
+    logEvent('draft:listOpen', {
+      draftCount: draftsCount ?? 0,
+    })
+  }, [draftsCount])
 
   // Handler for when a draft is deleted from the drafts list
   const onDraftDeleted = useCallback(
@@ -839,6 +960,13 @@ export const ComposePost = ({
       onPost?.(postUri)
       onPostSuccess?.(postSuccessData)
     }
+    // Log draft:post event if we posted from an existing draft
+    if (isEditingExistingDraft && loadedDraftTimestamp) {
+      logEvent('draft:post', {
+        draftAgeMs: Date.now() - loadedDraftTimestamp,
+        wasEdited: hasUnsavedChanges,
+      })
+    }
     clearDraft()
     onClose()
     setTimeout(() => {
@@ -884,6 +1012,9 @@ export const ComposePost = ({
     setLangPrefs,
     queryClient,
     navigation,
+    isEditingExistingDraft,
+    loadedDraftTimestamp,
+    hasUnsavedChanges,
   ])
 
   // Preserves the referential identity passed to each post item.
@@ -1129,11 +1260,7 @@ export const ComposePost = ({
               <Prompt.Action
                 cta={_(msg`Don't save`)}
                 color="negative_subtle"
-                onPress={() => {
-                  clearDraft()
-                  closeComposer()
-                  clearThumbnailCache(queryClient)
-                }}
+                onPress={onDiscardAndClose}
               />
               <Prompt.Cancel />
             </Prompt.Actions>
@@ -1171,17 +1298,12 @@ export const ComposePost = ({
           <Prompt.Actions>
             <Prompt.Action
               cta={_(msg`Update draft`)}
-              onPress={() => {
-                saveImmediate(composerState)
-                setViewMode('drafts')
-              }}
+              onPress={onUpdateBeforeDrafts}
             />
             <Prompt.Action
               cta={_(msg`Don't update`)}
               color="negative_subtle"
-              onPress={() => {
-                setViewMode('drafts')
-              }}
+              onPress={onSkipUpdateBeforeDrafts}
             />
             <Prompt.Cancel />
           </Prompt.Actions>
