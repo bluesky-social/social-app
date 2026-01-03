@@ -11,7 +11,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
@@ -27,6 +27,7 @@ export function SearchHistory({
   onProfileClick,
   onRemoveItemClick,
   onRemoveProfileClick,
+  onClearAll,
 }: {
   searchHistory: string[]
   selectedProfiles: bsky.profile.AnyProfileView[]
@@ -34,6 +35,7 @@ export function SearchHistory({
   onProfileClick: (profile: bsky.profile.AnyProfileView) => void
   onRemoveItemClick: (item: string) => void
   onRemoveProfileClick: (profile: bsky.profile.AnyProfileView) => void
+  onClearAll: () => void
 }) {
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -44,10 +46,28 @@ export function SearchHistory({
       keyboardShouldPersistTaps="handled">
       <View style={[a.w_full, a.gap_md]}>
         {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
-          <View style={[a.px_lg, a.pt_sm]}>
+          <View
+            style={[
+              a.px_lg,
+              a.pt_sm,
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+            ]}>
             <Text style={[a.text_md, a.font_semi_bold]}>
               <Trans>Recent Searches</Trans>
             </Text>
+            <Button
+              label={_(msg`Clear all`)}
+              onPress={onClearAll}
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="rectangular">
+              <ButtonText>
+                <Trans>Clear All</Trans>
+              </ButtonText>
+            </Button>
           </View>
         )}
 
