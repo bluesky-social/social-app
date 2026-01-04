@@ -58,7 +58,7 @@ export function SearchHistory({
               <Trans>Recent Searches</Trans>
             </Text>
             <Button
-              label={_(msg`Clear all`)}
+              label={_(msg`Clear All`)}
               onPress={onClearAll}
               size="small"
               variant="ghost"
