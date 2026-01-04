@@ -131,6 +131,7 @@ import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
+import {type ComposerDraft} from '#/storage'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {DraftsView} from './DraftsDialog'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
@@ -202,6 +203,27 @@ function serializeStateForComparison(state: ComposerState): string {
     postgate: state.thread.postgate,
     threadgate: state.thread.threadgate,
   })
+}
+
+/**
+ * Prepares a draft from storage for loading into the composer.
+ * Constructs video URLs from blobRefs since we only store the ref, not the URL.
+ */
+function prepareDraftForLoading(
+  draft: ComposerDraft,
+  did: string,
+): ComposerDraft {
+  const prepared = JSON.parse(JSON.stringify(draft)) // Deep clone
+  if (prepared.thread?.posts) {
+    prepared.thread.posts = prepared.thread.posts.map((post: any) => {
+      if (post.embed?.video?.blobRef?.ref?.$link) {
+        const cid = post.embed.video.blobRef.ref.$link
+        post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(did)}/${cid}/playlist.m3u8`
+      }
+      return post
+    })
+  }
+  return prepared
 }
 
 type CancelRef = {
@@ -287,54 +309,14 @@ export const ComposePost = ({
     setReplyToLanguages([])
   }
 
-  // Load draft by ID if provided
-  const loadInitialDraft = useCallback(() => {
-    if (!currentAccount) return null
-
-    const hasInitialContent =
-      initText ||
-      initMention ||
-      initImageUris?.length ||
-      initQuote ||
-      initVideoUri
-
-    if (hasInitialContent) return null
-
-    // If a draftId is provided, load that specific draft
-    if (initDraftId) {
-      const draft = draftsStorage.getDraftSync(currentAccount.did, initDraftId)
-      if (!draft) return null
-
-      logger.info('Composer: loading draft by ID', {
-        draftId: initDraftId,
-        textLength: draft.thread.posts[0]?.text.length || 0,
-      })
-
-      // Construct video URLs from blobRefs if we have videos in the draft
-      const parsed = JSON.parse(JSON.stringify(draft)) // Deep clone
-      if (parsed.thread?.posts) {
-        parsed.thread.posts = parsed.thread.posts.map((post: any) => {
-          if (post.embed?.video?.blobRef?.ref?.$link) {
-            const cid = post.embed.video.blobRef.ref.$link
-            post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(currentAccount.did)}/${cid}/playlist.m3u8`
-          }
-          return post
-        })
-      }
-
-      return parsed
-    }
-
-    return null
-  }, [
-    currentAccount,
-    initDraftId,
-    initText,
-    initMention,
-    initImageUris,
-    initQuote,
-    initVideoUri,
-  ])
+  // Check if we should load a draft (no other initial content provided)
+  const shouldLoadDraft =
+    initDraftId &&
+    !initText &&
+    !initMention &&
+    !initImageUris?.length &&
+    !initQuote &&
+    !initVideoUri
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
@@ -344,7 +326,7 @@ export const ComposePost = ({
       initText,
       initMention,
       initInteractionSettings: preferences?.postInteractionSettings,
-      initDraft: loadInitialDraft(),
+      initDraft: undefined, // Draft loaded async below
     },
     createComposerState,
   )
@@ -355,10 +337,7 @@ export const ComposePost = ({
   )
 
   // Draft persistence - only for top-level posts (not replies)
-  const {clearDraft, saveImmediate} = useComposerDraft(
-    composerState,
-    currentDraftId,
-  )
+  const {clearDraft, saveDraft} = useComposerDraft(currentDraftId)
 
   // Track if we're editing an existing draft (either from initial load or from list selection)
   const [isEditingExistingDraft, setIsEditingExistingDraft] =
@@ -366,25 +345,81 @@ export const ComposePost = ({
 
   // Snapshot of the draft content when loaded, for detecting changes
   const [loadedDraftSnapshot, setLoadedDraftSnapshot] = useState<string | null>(
-    () => {
-      // If loading from initDraftId, capture initial snapshot
-      if (initDraftId && composerState.thread.posts.length > 0) {
-        return serializeStateForComparison(composerState)
-      }
-      return null
-    },
+    null,
   )
 
   // Track the timestamp of the loaded draft (for analytics)
   const [loadedDraftTimestamp, setLoadedDraftTimestamp] = useState<
     number | null
-  >(() => {
-    if (initDraftId && currentAccount) {
-      const draft = draftsStorage.getDraftSync(currentAccount.did, initDraftId)
-      return draft?.timestamp ?? null
+  >(null)
+
+  // Loading state for initial draft
+  const [isLoadingDraft, setIsLoadingDraft] = useState(!!shouldLoadDraft)
+
+  // Load initial draft asynchronously
+  useEffect(() => {
+    if (!shouldLoadDraft || !currentAccount) {
+      setIsLoadingDraft(false)
+      return
     }
-    return null
-  })
+
+    let cancelled = false
+
+    async function loadDraft() {
+      const draft = await draftsStorage.getDraft(
+        currentAccount!.did,
+        initDraftId!,
+      )
+      if (cancelled || !draft) {
+        setIsLoadingDraft(false)
+        return
+      }
+
+      const prepared = prepareDraftForLoading(draft, currentAccount!.did)
+      const newState = createComposerState({
+        initText: undefined,
+        initMention: undefined,
+        initImageUris: undefined,
+        initQuoteUri: undefined,
+        initInteractionSettings: preferences?.postInteractionSettings,
+        initDraft: prepared,
+      })
+
+      composerDispatch({type: 'load_draft', draft: newState})
+      setLoadedDraftSnapshot(serializeStateForComparison(newState))
+      setLoadedDraftTimestamp(draft.timestamp)
+      setIsLoadingDraft(false)
+
+      logger.info('Composer: loaded draft', {
+        draftId: initDraftId,
+        textLength: draft.thread.posts[0]?.text.length || 0,
+      })
+    }
+
+    loadDraft()
+    return () => {
+      cancelled = true
+    }
+  }, [
+    shouldLoadDraft,
+    currentAccount,
+    initDraftId,
+    preferences?.postInteractionSettings,
+  ])
+
+  // Log composer:open event on mount
+  const onceRef = useRef(false)
+  useEffect(() => {
+    if (onceRef.current) return
+    onceRef.current = true
+    const logContext = replyTo ? 'PostReply' : initQuote ? 'QuotePost' : 'Fab'
+    logger.metric('composer:open', {
+      logContext,
+      isReply: !!replyTo,
+      hasQuote: !!initQuote,
+      hasDraft: !!initDraftId,
+    })
+  }, [replyTo, initQuote, initDraftId])
 
   // Drafts list for the drafts dialog
   const {draftsCount} = useDraftsList()
@@ -429,35 +464,23 @@ export const ComposePost = ({
 
   // Handler for selecting a draft from the list
   const onSelectDraft = useCallback(
-    (selectedDraftId: string) => {
+    async (selectedDraftId: string) => {
       if (!currentAccount) return
 
-      const draft = draftsStorage.getDraftSync(
+      const draft = await draftsStorage.getDraft(
         currentAccount.did,
         selectedDraftId,
       )
       if (!draft) return
 
-      // Deep clone and construct video URLs if needed
-      const parsed = JSON.parse(JSON.stringify(draft))
-      if (parsed.thread?.posts) {
-        parsed.thread.posts = parsed.thread.posts.map((post: any) => {
-          if (post.embed?.video?.blobRef?.ref?.$link) {
-            const cid = post.embed.video.blobRef.ref.$link
-            post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(currentAccount.did)}/${cid}/playlist.m3u8`
-          }
-          return post
-        })
-      }
-
-      // Convert to ComposerState
+      const prepared = prepareDraftForLoading(draft, currentAccount.did)
       const newState = createComposerState({
         initText: undefined,
         initMention: undefined,
         initImageUris: undefined,
         initQuoteUri: undefined,
         initInteractionSettings: preferences?.postInteractionSettings,
-        initDraft: parsed,
+        initDraft: prepared,
       })
 
       // Update draft tracking state
@@ -472,7 +495,7 @@ export const ComposePost = ({
 
       // Log draft:load event
       const metadata = getDraftMetadata(newState)
-      logEvent('draft:load', {
+      logger.metric('draft:load', {
         draftAgeMs: Date.now() - draft.timestamp,
         hasText: metadata.hasText,
         hasImages: metadata.hasImages,
@@ -497,7 +520,7 @@ export const ComposePost = ({
     } else {
       // No content or no changes - just show drafts
       setViewMode('drafts')
-      logEvent('draft:listOpen', {
+      logger.metric('draft:listOpen', {
         draftCount: draftsCount ?? 0,
       })
     }
@@ -512,18 +535,18 @@ export const ComposePost = ({
 
   // Handler for "Save" in the save-before-drafts prompt
   const onSaveBeforeDrafts = useCallback(() => {
-    saveImmediate(composerState)
+    saveDraft(composerState)
     const metadata = getDraftMetadata(composerState)
-    logEvent('draft:save', {
+    logger.metric('draft:save', {
       isNewDraft: !isEditingExistingDraft,
       ...metadata,
     })
     setViewMode('drafts')
-    logEvent('draft:listOpen', {
+    logger.metric('draft:listOpen', {
       draftCount: (draftsCount ?? 0) + (isEditingExistingDraft ? 0 : 1),
     })
   }, [
-    saveImmediate,
+    saveDraft,
     composerState,
     getDraftMetadata,
     isEditingExistingDraft,
@@ -533,23 +556,23 @@ export const ComposePost = ({
   // Handler for "Don't save" in the save-before-drafts prompt
   const onDiscardBeforeDrafts = useCallback(() => {
     const metadata = getDraftMetadata(composerState)
-    logEvent('draft:discard', {
+    logger.metric('draft:discard', {
       logContext: 'BeforeDraftsList',
       hadContent: hasContent,
       textLength: metadata.textLength,
     })
     clearDraft()
     setViewMode('drafts')
-    logEvent('draft:listOpen', {
+    logger.metric('draft:listOpen', {
       draftCount: draftsCount ?? 0,
     })
   }, [clearDraft, getDraftMetadata, composerState, hasContent, draftsCount])
 
   // Handler for saving draft and closing with toast
   const onSaveDraftAndClose = useCallback(() => {
-    saveImmediate(composerState)
+    saveDraft(composerState)
     const metadata = getDraftMetadata(composerState)
-    logEvent('draft:save', {
+    logger.metric('draft:save', {
       isNewDraft: !isEditingExistingDraft,
       ...metadata,
     })
@@ -558,7 +581,7 @@ export const ComposePost = ({
     Toast.show(_(msg`Saved to drafts`))
   }, [
     _,
-    saveImmediate,
+    saveDraft,
     composerState,
     getDraftMetadata,
     isEditingExistingDraft,
@@ -569,7 +592,7 @@ export const ComposePost = ({
   // Handler for "Don't save" when closing composer with unsaved content
   const onDiscardAndClose = useCallback(() => {
     const metadata = getDraftMetadata(composerState)
-    logEvent('draft:discard', {
+    logger.metric('draft:discard', {
       logContext: 'ComposerClose',
       hadContent: hasContent,
       textLength: metadata.textLength,
@@ -588,22 +611,22 @@ export const ComposePost = ({
 
   // Handler for "Update draft" in the update-before-drafts prompt
   const onUpdateBeforeDrafts = useCallback(() => {
-    saveImmediate(composerState)
+    saveDraft(composerState)
     const metadata = getDraftMetadata(composerState)
-    logEvent('draft:save', {
+    logger.metric('draft:save', {
       isNewDraft: false,
       ...metadata,
     })
     setViewMode('drafts')
-    logEvent('draft:listOpen', {
+    logger.metric('draft:listOpen', {
       draftCount: draftsCount ?? 0,
     })
-  }, [saveImmediate, composerState, getDraftMetadata, draftsCount])
+  }, [saveDraft, composerState, getDraftMetadata, draftsCount])
 
   // Handler for "Don't update" in the update-before-drafts prompt
   const onSkipUpdateBeforeDrafts = useCallback(() => {
     setViewMode('drafts')
-    logEvent('draft:listOpen', {
+    logger.metric('draft:listOpen', {
       draftCount: draftsCount ?? 0,
     })
   }, [draftsCount])
@@ -962,7 +985,7 @@ export const ComposePost = ({
     }
     // Log draft:post event if we posted from an existing draft
     if (isEditingExistingDraft && loadedDraftTimestamp) {
-      logEvent('draft:post', {
+      logger.metric('draft:post', {
         draftAgeMs: Date.now() - loadedDraftTimestamp,
         wasEdited: hasUnsavedChanges,
       })
@@ -1147,7 +1170,11 @@ export const ComposePost = ({
           style={[a.flex_1, viewStyles]}
           aria-modal
           accessibilityViewIsModal>
-          {viewMode === 'drafts' ? (
+          {isLoadingDraft ? (
+            <View style={[a.flex_1, a.justify_center, a.align_center]}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : viewMode === 'drafts' ? (
             <DraftsView
               onSelectDraft={onSelectDraft}
               onBack={() => setViewMode('compose')}

@@ -201,6 +201,19 @@ export type MetricEvents = {
     userDid: string
   }
 
+  // Fired when the composer is opened
+  'composer:open': {
+    logContext:
+      | 'Fab'
+      | 'PostReply'
+      | 'QuotePost'
+      | 'ProfileFeed'
+      | 'Deeplink'
+      | 'Other'
+    isReply: boolean
+    hasQuote: boolean
+    hasDraft: boolean
+  }
   'composer:gif:open': {}
   'composer:gif:select': {}
   'composerPrompt:press': {}
