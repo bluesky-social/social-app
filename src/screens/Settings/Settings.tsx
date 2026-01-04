@@ -41,6 +41,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
+import {SearchInput} from '#/components/forms/SearchInput'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
 import {Bell_Stroke2_Corner0_Rounded as NotificationIcon} from '#/components/icons/Bell'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
@@ -74,10 +75,14 @@ import {
 import {IS_INTERNAL} from '#/env'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
+import {SettingsSearchEmpty} from './components/SettingsSearchEmpty'
+import {SettingsSearchResultItem} from './components/SettingsSearchResultItem'
+import {useSettingsSearch} from './useSettingsSearch'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const {_} = useLingui()
+  const t = useTheme()
   const reducedMotion = useReducedMotion()
   const {logoutEveryAccount} = useSessionApi()
   const {accounts, currentAccount} = useSession()
@@ -95,6 +100,13 @@ export function SettingsScreen({}: Props) {
   const findContactsEnabled =
     useIsFindContactsFeatureEnabledBasedOnGeolocation()
   const gate = useGate()
+
+  const {query, setQuery, clearQuery, filteredItems, isSearching, hasResults} =
+    useSettingsSearch({
+      isNative,
+      findContactsEnabled,
+      gate,
+    })
 
   return (
     <Layout.Screen>
@@ -123,9 +135,30 @@ export function SettingsScreen({}: Props) {
             ]}>
             {profile && <ProfilePreview profile={profile} />}
           </View>
-          {accounts.length > 1 ? (
+
+          <View style={[a.px_lg, a.pb_md]}>
+            <SearchInput
+              value={query}
+              onChangeText={setQuery}
+              onClearText={clearQuery}
+              label={_(msg`Search settings`)}
+              placeholder={_(msg`Search settings`)}
+            />
+          </View>
+
+          {isSearching ? (
+            hasResults ? (
+              filteredItems.map(result => (
+                <SettingsSearchResultItem key={result.item.id} {...result} />
+              ))
+            ) : (
+              <SettingsSearchEmpty query={query} />
+            )
+          ) : (
             <>
-              <SettingsList.PressableItem
+              {accounts.length > 1 ? (
+                <>
+                  <SettingsList.PressableItem
                 label={_(msg`Switch account`)}
                 accessibilityHint={_(
                   msg`Shows other accounts you can switch to`,
@@ -293,6 +326,8 @@ export function SettingsScreen({}: Props) {
                 </SettingsList.ItemText>
               </SettingsList.PressableItem>
               {showDevOptions && <DevOptions />}
+            </>
+          )}
             </>
           )}
         </SettingsList.Container>
