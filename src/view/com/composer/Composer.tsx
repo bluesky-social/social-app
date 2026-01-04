@@ -78,6 +78,7 @@ import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {draftsStorage} from '#/state/drafts'
 import {emitPostCreated} from '#/state/events'
 import {
   type ComposerImage,
@@ -130,7 +131,9 @@ import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
+import {type ComposerDraft} from '#/storage'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {DraftsView} from './DraftsDialog'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
   type AssetType,
@@ -140,6 +143,7 @@ import {
 import {
   type ComposerAction,
   composerReducer,
+  type ComposerState,
   createComposerState,
   type EmbedDraft,
   MAX_IMAGES,
@@ -154,8 +158,73 @@ import {
   type VideoState,
 } from './state/video'
 import {type TextInputRef} from './text-input/TextInput.types'
+import {useComposerDraft} from './useComposerDraft'
+import {useDraftsList} from './useDraftsList'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
+
+/**
+ * Serializes the relevant parts of composer state for comparison.
+ * Used to detect if a loaded draft has been modified.
+ */
+function serializeStateForComparison(state: ComposerState): string {
+  return JSON.stringify({
+    posts: state.thread.posts.map(post => ({
+      text: post.richtext.text,
+      labels: post.labels,
+      hasQuote: !!post.embed.quote,
+      quoteUri: post.embed.quote?.uri,
+      hasLink: !!post.embed.link,
+      linkUri: post.embed.link?.uri,
+      mediaType: post.embed.media?.type,
+      // For images, compare paths and alts
+      images:
+        post.embed.media?.type === 'images'
+          ? post.embed.media.images.map(img => ({
+              path: img.source.path,
+              alt: img.alt,
+            }))
+          : undefined,
+      // For gif, compare id and alt
+      gif:
+        post.embed.media?.type === 'gif'
+          ? {id: post.embed.media.gif.id, alt: post.embed.media.alt}
+          : undefined,
+      // For video, compare blobRef (if done)
+      video:
+        post.embed.media?.type === 'video' &&
+        post.embed.media.video.status === 'done'
+          ? {
+              blobRef: (post.embed.media.video as any).pendingPublish?.blobRef,
+              alt: post.embed.media.video.altText,
+            }
+          : undefined,
+    })),
+    postgate: state.thread.postgate,
+    threadgate: state.thread.threadgate,
+  })
+}
+
+/**
+ * Prepares a draft from storage for loading into the composer.
+ * Constructs video URLs from blobRefs since we only store the ref, not the URL.
+ */
+function prepareDraftForLoading(
+  draft: ComposerDraft,
+  did: string,
+): ComposerDraft {
+  const prepared = JSON.parse(JSON.stringify(draft)) // Deep clone
+  if (prepared.thread?.posts) {
+    prepared.thread.posts = prepared.thread.posts.map((post: any) => {
+      if (post.embed?.video?.blobRef?.ref?.$link) {
+        const cid = post.embed.video.blobRef.ref.$link
+        post.embed.video.uri = `https://video.bsky.app/watch/${encodeURIComponent(did)}/${cid}/playlist.m3u8`
+      }
+      return post
+    })
+  }
+  return prepared
+}
 
 type CancelRef = {
   onPressCancel: () => void
@@ -173,6 +242,7 @@ export const ComposePost = ({
   imageUris: initImageUris,
   videoUri: initVideoUri,
   openGallery,
+  draftId: initDraftId,
   cancelRef,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef | null>
@@ -188,6 +258,8 @@ export const ComposePost = ({
   const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
+  const saveBeforeDraftsPromptControl = Prompt.usePromptControl()
+  const updateBeforeDraftsPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
@@ -197,6 +269,7 @@ export const ComposePost = ({
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
+  const [viewMode, setViewMode] = useState<'compose' | 'drafts'>('compose')
 
   /**
    * A temporary local reference to a language suggestion that the user has
@@ -236,6 +309,15 @@ export const ComposePost = ({
     setReplyToLanguages([])
   }
 
+  // Check if we should load a draft (no other initial content provided)
+  const shouldLoadDraft =
+    initDraftId &&
+    !initText &&
+    !initMention &&
+    !initImageUris?.length &&
+    !initQuote &&
+    !initVideoUri
+
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {
@@ -244,11 +326,324 @@ export const ComposePost = ({
       initText,
       initMention,
       initInteractionSettings: preferences?.postInteractionSettings,
+      initDraft: undefined, // Draft loaded async below
     },
     createComposerState,
   )
 
+  // Track current draft ID - can be updated when user selects a draft from the list
+  const [currentDraftId, setCurrentDraftId] = useState<string | undefined>(
+    !replyTo ? initDraftId : undefined,
+  )
+
+  // Draft persistence - only for top-level posts (not replies)
+  const {clearDraft, saveDraft} = useComposerDraft(currentDraftId)
+
+  // Track if we're editing an existing draft (either from initial load or from list selection)
+  const [isEditingExistingDraft, setIsEditingExistingDraft] =
+    useState(!!initDraftId)
+
+  // Snapshot of the draft content when loaded, for detecting changes
+  const [loadedDraftSnapshot, setLoadedDraftSnapshot] = useState<string | null>(
+    null,
+  )
+
+  // Track the timestamp of the loaded draft (for analytics)
+  const [loadedDraftTimestamp, setLoadedDraftTimestamp] = useState<
+    number | null
+  >(null)
+
+  // Loading state for initial draft
+  const [isLoadingDraft, setIsLoadingDraft] = useState(!!shouldLoadDraft)
+
+  // Load initial draft asynchronously
+  useEffect(() => {
+    if (!shouldLoadDraft || !currentAccount) {
+      setIsLoadingDraft(false)
+      return
+    }
+
+    let cancelled = false
+
+    async function loadDraft() {
+      const draft = await draftsStorage.getDraft(
+        currentAccount!.did,
+        initDraftId!,
+      )
+      if (cancelled || !draft) {
+        setIsLoadingDraft(false)
+        return
+      }
+
+      const prepared = prepareDraftForLoading(draft, currentAccount!.did)
+      const newState = createComposerState({
+        initText: undefined,
+        initMention: undefined,
+        initImageUris: undefined,
+        initQuoteUri: undefined,
+        initInteractionSettings: preferences?.postInteractionSettings,
+        initDraft: prepared,
+      })
+
+      composerDispatch({type: 'load_draft', draft: newState})
+      setLoadedDraftSnapshot(serializeStateForComparison(newState))
+      setLoadedDraftTimestamp(draft.timestamp)
+      setIsLoadingDraft(false)
+
+      logger.info('Composer: loaded draft', {
+        draftId: initDraftId,
+        textLength: draft.thread.posts[0]?.text.length || 0,
+      })
+    }
+
+    loadDraft()
+    return () => {
+      cancelled = true
+    }
+  }, [
+    shouldLoadDraft,
+    currentAccount,
+    initDraftId,
+    preferences?.postInteractionSettings,
+  ])
+
+  // Log composer:open event on mount
+  const onceRef = useRef(false)
+  useEffect(() => {
+    if (onceRef.current) return
+    onceRef.current = true
+    const logContext = replyTo ? 'PostReply' : initQuote ? 'QuotePost' : 'Fab'
+    logger.metric('composer:open', {
+      logContext,
+      isReply: !!replyTo,
+      hasQuote: !!initQuote,
+      hasDraft: !!initDraftId,
+    })
+  }, [replyTo, initQuote, initDraftId])
+
+  // Drafts list for the drafts dialog
+  const {draftsCount} = useDraftsList()
+
   const thread = composerState.thread
+
+  // Check if composer has content
+  const hasContent = useMemo(() => {
+    return thread.posts.some(
+      post =>
+        post.richtext.text.trim().length > 0 ||
+        post.embed.quote ||
+        post.embed.link ||
+        post.embed.media,
+    )
+  }, [thread.posts])
+
+  // Check if an existing draft has been modified since loading
+  const hasUnsavedChanges = useMemo(() => {
+    if (!isEditingExistingDraft || !loadedDraftSnapshot) {
+      return false
+    }
+    const currentSnapshot = serializeStateForComparison(composerState)
+    return currentSnapshot !== loadedDraftSnapshot
+  }, [isEditingExistingDraft, loadedDraftSnapshot, composerState])
+
+  // Helper to get draft metadata for analytics events
+  const getDraftMetadata = useCallback((state: ComposerState) => {
+    const posts = state.thread.posts
+    const firstPost = posts[0]
+    return {
+      hasText: posts.some(p => p.richtext.text.trim().length > 0),
+      hasImages: posts.some(p => p.embed.media?.type === 'images'),
+      hasVideo: posts.some(p => p.embed.media?.type === 'video'),
+      hasGif: posts.some(p => p.embed.media?.type === 'gif'),
+      hasQuote: posts.some(p => !!p.embed.quote),
+      hasLink: posts.some(p => !!p.embed.link),
+      postCount: posts.length,
+      textLength: firstPost?.richtext.text.length ?? 0,
+    }
+  }, [])
+
+  // Handler for selecting a draft from the list
+  const onSelectDraft = useCallback(
+    async (selectedDraftId: string) => {
+      if (!currentAccount) return
+
+      const draft = await draftsStorage.getDraft(
+        currentAccount.did,
+        selectedDraftId,
+      )
+      if (!draft) return
+
+      const prepared = prepareDraftForLoading(draft, currentAccount.did)
+      const newState = createComposerState({
+        initText: undefined,
+        initMention: undefined,
+        initImageUris: undefined,
+        initQuoteUri: undefined,
+        initInteractionSettings: preferences?.postInteractionSettings,
+        initDraft: prepared,
+      })
+
+      // Update draft tracking state
+      setCurrentDraftId(selectedDraftId)
+      setIsEditingExistingDraft(true)
+      setLoadedDraftSnapshot(serializeStateForComparison(newState))
+      setLoadedDraftTimestamp(draft.timestamp)
+
+      // Load the draft and switch back to compose mode
+      composerDispatch({type: 'load_draft', draft: newState})
+      setViewMode('compose')
+
+      // Log draft:load event
+      const metadata = getDraftMetadata(newState)
+      logger.metric('draft:load', {
+        draftAgeMs: Date.now() - draft.timestamp,
+        hasText: metadata.hasText,
+        hasImages: metadata.hasImages,
+        hasVideo: metadata.hasVideo,
+        hasGif: metadata.hasGif,
+        postCount: metadata.postCount,
+      })
+
+      logger.info('Loaded draft into composer', {draftId: selectedDraftId})
+    },
+    [currentAccount, preferences?.postInteractionSettings, getDraftMetadata],
+  )
+
+  // Handler for opening drafts view
+  const onPressDrafts = useCallback(() => {
+    if (hasContent && !isEditingExistingDraft) {
+      // New unsaved content - prompt to save first
+      saveBeforeDraftsPromptControl.open()
+    } else if (isEditingExistingDraft && hasUnsavedChanges) {
+      // Editing existing draft with changes - prompt to update first
+      updateBeforeDraftsPromptControl.open()
+    } else {
+      // No content or no changes - just show drafts
+      setViewMode('drafts')
+      logger.metric('draft:listOpen', {
+        draftCount: draftsCount ?? 0,
+      })
+    }
+  }, [
+    hasContent,
+    isEditingExistingDraft,
+    hasUnsavedChanges,
+    saveBeforeDraftsPromptControl,
+    updateBeforeDraftsPromptControl,
+    draftsCount,
+  ])
+
+  // Handler for "Save" in the save-before-drafts prompt
+  const onSaveBeforeDrafts = useCallback(() => {
+    saveDraft(composerState)
+    const metadata = getDraftMetadata(composerState)
+    logger.metric('draft:save', {
+      isNewDraft: !isEditingExistingDraft,
+      ...metadata,
+    })
+    setViewMode('drafts')
+    logger.metric('draft:listOpen', {
+      draftCount: (draftsCount ?? 0) + (isEditingExistingDraft ? 0 : 1),
+    })
+  }, [
+    saveDraft,
+    composerState,
+    getDraftMetadata,
+    isEditingExistingDraft,
+    draftsCount,
+  ])
+
+  // Handler for "Don't save" in the save-before-drafts prompt
+  const onDiscardBeforeDrafts = useCallback(() => {
+    const metadata = getDraftMetadata(composerState)
+    logger.metric('draft:discard', {
+      logContext: 'BeforeDraftsList',
+      hadContent: hasContent,
+      textLength: metadata.textLength,
+    })
+    clearDraft()
+    setViewMode('drafts')
+    logger.metric('draft:listOpen', {
+      draftCount: draftsCount ?? 0,
+    })
+  }, [clearDraft, getDraftMetadata, composerState, hasContent, draftsCount])
+
+  // Handler for saving draft and closing with toast
+  const onSaveDraftAndClose = useCallback(() => {
+    saveDraft(composerState)
+    const metadata = getDraftMetadata(composerState)
+    logger.metric('draft:save', {
+      isNewDraft: !isEditingExistingDraft,
+      ...metadata,
+    })
+    closeComposer()
+    clearThumbnailCache(queryClient)
+    Toast.show(_(msg`Saved to drafts`))
+  }, [
+    _,
+    saveDraft,
+    composerState,
+    getDraftMetadata,
+    isEditingExistingDraft,
+    closeComposer,
+    queryClient,
+  ])
+
+  // Handler for "Don't save" when closing composer with unsaved content
+  const onDiscardAndClose = useCallback(() => {
+    const metadata = getDraftMetadata(composerState)
+    logger.metric('draft:discard', {
+      logContext: 'ComposerClose',
+      hadContent: hasContent,
+      textLength: metadata.textLength,
+    })
+    clearDraft()
+    closeComposer()
+    clearThumbnailCache(queryClient)
+  }, [
+    getDraftMetadata,
+    composerState,
+    hasContent,
+    clearDraft,
+    closeComposer,
+    queryClient,
+  ])
+
+  // Handler for "Update draft" in the update-before-drafts prompt
+  const onUpdateBeforeDrafts = useCallback(() => {
+    saveDraft(composerState)
+    const metadata = getDraftMetadata(composerState)
+    logger.metric('draft:save', {
+      isNewDraft: false,
+      ...metadata,
+    })
+    setViewMode('drafts')
+    logger.metric('draft:listOpen', {
+      draftCount: draftsCount ?? 0,
+    })
+  }, [saveDraft, composerState, getDraftMetadata, draftsCount])
+
+  // Handler for "Don't update" in the update-before-drafts prompt
+  const onSkipUpdateBeforeDrafts = useCallback(() => {
+    setViewMode('drafts')
+    logger.metric('draft:listOpen', {
+      draftCount: draftsCount ?? 0,
+    })
+  }, [draftsCount])
+
+  // Handler for when a draft is deleted from the drafts list
+  const onDraftDeleted = useCallback(
+    (deletedDraftId: string) => {
+      // If the deleted draft is the one we're currently editing, reset to new draft state
+      if (currentDraftId === deletedDraftId) {
+        setCurrentDraftId(undefined)
+        setIsEditingExistingDraft(false)
+        setLoadedDraftSnapshot(null)
+      }
+    },
+    [currentDraftId],
+  )
+
   const activePost = thread.posts[composerState.activePostIndex]
   const nextPost: PostDraft | undefined =
     thread.posts[composerState.activePostIndex + 1]
@@ -322,6 +717,7 @@ export const ComposePost = ({
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const onClose = useCallback(() => {
+    // Don't clear draft - it's auto-saved and will be kept
     closeComposer()
     clearThumbnailCache(queryClient)
   }, [closeComposer, queryClient])
@@ -346,7 +742,23 @@ export const ComposePost = ({
   const onPressCancel = useCallback(() => {
     if (textInput.current?.maybeClosePopup()) {
       return
-    } else if (
+    }
+
+    // For existing drafts, only prompt if there are unsaved changes
+    if (isEditingExistingDraft) {
+      if (hasUnsavedChanges) {
+        closeAllDialogs()
+        Keyboard.dismiss()
+        discardPromptControl.open()
+      } else {
+        // No changes made, just close without prompt
+        onClose()
+      }
+      return
+    }
+
+    // For new content, prompt if there's any content
+    if (
       thread.posts.some(
         post =>
           post.shortenedGraphemeLength > 0 ||
@@ -360,7 +772,14 @@ export const ComposePost = ({
     } else {
       onClose()
     }
-  }, [thread, closeAllDialogs, discardPromptControl, onClose])
+  }, [
+    thread,
+    closeAllDialogs,
+    discardPromptControl,
+    onClose,
+    isEditingExistingDraft,
+    hasUnsavedChanges,
+  ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
@@ -564,6 +983,14 @@ export const ComposePost = ({
       onPost?.(postUri)
       onPostSuccess?.(postSuccessData)
     }
+    // Log draft:post event if we posted from an existing draft
+    if (isEditingExistingDraft && loadedDraftTimestamp) {
+      logger.metric('draft:post', {
+        draftAgeMs: Date.now() - loadedDraftTimestamp,
+        wasEdited: hasUnsavedChanges,
+      })
+    }
+    clearDraft()
     onClose()
     setTimeout(() => {
       Toast.show(
@@ -599,6 +1026,7 @@ export const ComposePost = ({
     canPost,
     isPublishing,
     currentLanguages,
+    clearDraft,
     onClose,
     onPost,
     onPostSuccess,
@@ -607,6 +1035,9 @@ export const ComposePost = ({
     setLangPrefs,
     queryClient,
     navigation,
+    isEditingExistingDraft,
+    loadedDraftTimestamp,
+    hasUnsavedChanges,
   ])
 
   // Preserves the referential identity passed to each post item.
@@ -739,74 +1170,171 @@ export const ComposePost = ({
           style={[a.flex_1, viewStyles]}
           aria-modal
           accessibilityViewIsModal>
-          <ComposerTopBar
-            canPost={canPost}
-            isReply={!!replyTo}
-            isPublishQueued={publishOnUpload}
-            isPublishing={isPublishing}
-            isThread={thread.posts.length > 1}
-            publishingStage={publishingStage}
-            topBarAnimatedStyle={topBarAnimatedStyle}
-            onCancel={onPressCancel}
-            onPublish={onPressPublish}>
-            {missingAltError && <AltTextReminder error={missingAltError} />}
-            <ErrorBanner
-              error={error}
-              videoState={erroredVideo}
-              clearError={() => setError('')}
-              clearVideo={
-                erroredVideoPostId
-                  ? () => clearVideo(erroredVideoPostId)
-                  : () => {}
-              }
+          {isLoadingDraft ? (
+            <View style={[a.flex_1, a.justify_center, a.align_center]}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : viewMode === 'drafts' ? (
+            <DraftsView
+              onSelectDraft={onSelectDraft}
+              onBack={() => setViewMode('compose')}
+              onDeleteDraft={onDraftDeleted}
             />
-          </ComposerTopBar>
-
-          <Animated.ScrollView
-            ref={scrollViewRef}
-            layout={native(LinearTransition)}
-            onScroll={scrollHandler}
-            contentContainerStyle={a.flex_grow}
-            style={a.flex_1}
-            keyboardShouldPersistTaps="always"
-            onContentSizeChange={onScrollViewContentSizeChange}
-            onLayout={onScrollViewLayout}>
-            {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-            {thread.posts.map((post, index) => (
-              <React.Fragment key={post.id}>
-                <ComposerPost
-                  post={post}
-                  dispatch={composerDispatch}
-                  textInput={post.id === activePost.id ? textInput : null}
-                  isFirstPost={index === 0}
-                  isLastPost={index === thread.posts.length - 1}
-                  isPartOfThread={thread.posts.length > 1}
-                  isReply={index > 0 || !!replyTo}
-                  isActive={post.id === activePost.id}
-                  canRemovePost={thread.posts.length > 1}
-                  canRemoveQuote={index > 0 || !initQuote}
-                  onSelectVideo={selectVideo}
-                  onClearVideo={clearVideo}
-                  onPublish={onComposerPostPublish}
-                  onError={setError}
+          ) : (
+            <>
+              <ComposerTopBar
+                canPost={canPost}
+                isReply={!!replyTo}
+                isPublishQueued={publishOnUpload}
+                isPublishing={isPublishing}
+                isThread={thread.posts.length > 1}
+                publishingStage={publishingStage}
+                topBarAnimatedStyle={topBarAnimatedStyle}
+                onCancel={onPressCancel}
+                onPublish={onPressPublish}
+                onPressDrafts={onPressDrafts}
+                draftsCount={draftsCount}>
+                {missingAltError && <AltTextReminder error={missingAltError} />}
+                <ErrorBanner
+                  error={error}
+                  videoState={erroredVideo}
+                  clearError={() => setError('')}
+                  clearVideo={
+                    erroredVideoPostId
+                      ? () => clearVideo(erroredVideoPostId)
+                      : () => {}
+                  }
                 />
-                {isWebFooterSticky && post.id === activePost.id && (
-                  <View style={styles.stickyFooterWeb}>{footer}</View>
-                )}
-              </React.Fragment>
-            ))}
-          </Animated.ScrollView>
-          {!isWebFooterSticky && footer}
+              </ComposerTopBar>
+
+              <Animated.ScrollView
+                ref={scrollViewRef}
+                layout={native(LinearTransition)}
+                onScroll={scrollHandler}
+                contentContainerStyle={a.flex_grow}
+                style={a.flex_1}
+                keyboardShouldPersistTaps="always"
+                onContentSizeChange={onScrollViewContentSizeChange}
+                onLayout={onScrollViewLayout}>
+                {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
+                {thread.posts.map((post, index) => (
+                  <React.Fragment key={post.id}>
+                    <ComposerPost
+                      post={post}
+                      dispatch={composerDispatch}
+                      textInput={post.id === activePost.id ? textInput : null}
+                      isFirstPost={index === 0}
+                      isLastPost={index === thread.posts.length - 1}
+                      isPartOfThread={thread.posts.length > 1}
+                      isReply={index > 0 || !!replyTo}
+                      isActive={post.id === activePost.id}
+                      canRemovePost={thread.posts.length > 1}
+                      canRemoveQuote={index > 0 || !initQuote}
+                      onSelectVideo={selectVideo}
+                      onClearVideo={clearVideo}
+                      onPublish={onComposerPostPublish}
+                      onError={setError}
+                    />
+                    {isWebFooterSticky && post.id === activePost.id && (
+                      <View style={styles.stickyFooterWeb}>{footer}</View>
+                    )}
+                  </React.Fragment>
+                ))}
+              </Animated.ScrollView>
+              {!isWebFooterSticky && footer}
+            </>
+          )}
         </View>
 
-        <Prompt.Basic
-          control={discardPromptControl}
-          title={_(msg`Discard draft?`)}
-          description={_(msg`Are you sure you'd like to discard this draft?`)}
-          onConfirm={onClose}
-          confirmButtonCta={_(msg`Discard`)}
-          confirmButtonColor="negative"
-        />
+        {isEditingExistingDraft ? (
+          <Prompt.Outer control={discardPromptControl}>
+            <Prompt.TitleText>
+              <Trans>Update draft?</Trans>
+            </Prompt.TitleText>
+            <Prompt.DescriptionText>
+              <Trans>Update draft and save it to post later.</Trans>
+            </Prompt.DescriptionText>
+            <Prompt.Actions>
+              <Prompt.Action
+                cta={_(msg`Update draft`)}
+                onPress={onSaveDraftAndClose}
+              />
+              <Prompt.Action
+                cta={_(msg`Don't update`)}
+                color="negative_subtle"
+                onPress={() => {
+                  // Just close without saving - preserve the original draft
+                  closeComposer()
+                  clearThumbnailCache(queryClient)
+                }}
+              />
+              <Prompt.Cancel />
+            </Prompt.Actions>
+          </Prompt.Outer>
+        ) : (
+          <Prompt.Outer control={discardPromptControl}>
+            <Prompt.TitleText>
+              <Trans>Save to drafts?</Trans>
+            </Prompt.TitleText>
+            <Prompt.DescriptionText>
+              <Trans>Save to drafts to edit and post later.</Trans>
+            </Prompt.DescriptionText>
+            <Prompt.Actions>
+              <Prompt.Action
+                cta={_(msg`Save draft`)}
+                onPress={onSaveDraftAndClose}
+              />
+              <Prompt.Action
+                cta={_(msg`Don't save`)}
+                color="negative_subtle"
+                onPress={onDiscardAndClose}
+              />
+              <Prompt.Cancel />
+            </Prompt.Actions>
+          </Prompt.Outer>
+        )}
+
+        <Prompt.Outer control={saveBeforeDraftsPromptControl}>
+          <Prompt.TitleText>
+            <Trans>Save to drafts?</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>Save to drafts to edit and post later.</Trans>
+          </Prompt.DescriptionText>
+          <Prompt.Actions>
+            <Prompt.Action
+              cta={_(msg`Save draft`)}
+              onPress={onSaveBeforeDrafts}
+            />
+            <Prompt.Action
+              cta={_(msg`Don't save`)}
+              color="negative_subtle"
+              onPress={onDiscardBeforeDrafts}
+            />
+            <Prompt.Cancel />
+          </Prompt.Actions>
+        </Prompt.Outer>
+
+        <Prompt.Outer control={updateBeforeDraftsPromptControl}>
+          <Prompt.TitleText>
+            <Trans>Update draft?</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>Update draft and save it to post later.</Trans>
+          </Prompt.DescriptionText>
+          <Prompt.Actions>
+            <Prompt.Action
+              cta={_(msg`Update draft`)}
+              onPress={onUpdateBeforeDrafts}
+            />
+            <Prompt.Action
+              cta={_(msg`Don't update`)}
+              color="negative_subtle"
+              onPress={onSkipUpdateBeforeDrafts}
+            />
+            <Prompt.Cancel />
+          </Prompt.Actions>
+        </Prompt.Outer>
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
   )
@@ -1025,6 +1553,8 @@ function ComposerTopBar({
   publishingStage,
   onCancel,
   onPublish,
+  onPressDrafts,
+  draftsCount,
   topBarAnimatedStyle,
   children,
 }: {
@@ -1036,11 +1566,14 @@ function ComposerTopBar({
   isThread: boolean
   onCancel: () => void
   onPublish: () => void
+  onPressDrafts?: () => void
+  draftsCount?: number
   topBarAnimatedStyle: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const showDraftsButton = !isReply && draftsCount !== undefined
   return (
     <Animated.View
       style={topBarAnimatedStyle}
@@ -1062,6 +1595,21 @@ function ComposerTopBar({
           </ButtonText>
         </Button>
         <View style={a.flex_1} />
+        {showDraftsButton && (
+          <Button
+            testID="composerDraftsBtn"
+            label={_(msg`Drafts`)}
+            variant="ghost"
+            color="primary"
+            shape="default"
+            size="small"
+            style={[a.rounded_full, a.py_sm, a.mr_sm]}
+            onPress={onPressDrafts}>
+            <ButtonText style={[a.text_md]}>
+              <Trans>Drafts</Trans>
+            </ButtonText>
+          </Button>
+        )}
         {isPublishing ? (
           <>
             <Text style={pal.textLight}>{publishingStage}</Text>
@@ -1409,7 +1957,7 @@ function ComposerFooter({
 
       if (assets.length) {
         if (type === 'image') {
-          const images: ComposerImage[] = []
+          const composerImages: ComposerImage[] = []
 
           await Promise.all(
             assets.map(async image => {
@@ -1419,7 +1967,7 @@ function ComposerFooter({
                 height: image.height,
                 mime: image.mimeType!,
               })
-              images.push(composerImage)
+              composerImages.push(composerImage)
             }),
           ).catch(e => {
             logger.error(`createComposerImage failed`, {
@@ -1427,7 +1975,7 @@ function ComposerFooter({
             })
           })
 
-          onImageAdd(images)
+          onImageAdd(composerImages)
         } else if (type === 'video') {
           onSelectVideo(post.id, assets[0])
         } else if (type === 'gif') {

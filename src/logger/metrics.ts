@@ -201,6 +201,19 @@ export type MetricEvents = {
     userDid: string
   }
 
+  // Fired when the composer is opened
+  'composer:open': {
+    logContext:
+      | 'Fab'
+      | 'PostReply'
+      | 'QuotePost'
+      | 'ProfileFeed'
+      | 'Deeplink'
+      | 'Other'
+    isReply: boolean
+    hasQuote: boolean
+    hasDraft: boolean
+  }
   'composer:gif:open': {}
   'composer:gif:select': {}
   'composerPrompt:press': {}
@@ -215,6 +228,48 @@ export type MetricEvents = {
     quotesEnabled: boolean
     persist: boolean
     hasChanged: boolean
+  }
+
+  // Fired when user explicitly saves a draft (via "Save draft" button or prompt)
+  'draft:save': {
+    isNewDraft: boolean
+    hasText: boolean
+    hasImages: boolean
+    hasVideo: boolean
+    hasGif: boolean
+    hasQuote: boolean
+    hasLink: boolean
+    postCount: number
+    textLength: number
+  }
+  // Fired when user selects a draft from the drafts list to load it into the composer
+  'draft:load': {
+    draftAgeMs: number
+    hasText: boolean
+    hasImages: boolean
+    hasVideo: boolean
+    hasGif: boolean
+    postCount: number
+  }
+  // Fired when user explicitly deletes a draft
+  'draft:delete': {
+    logContext: 'DraftsList' | 'ComposerClose'
+    draftAgeMs: number
+  }
+  // Fired when user opens the drafts list view
+  'draft:listOpen': {
+    draftCount: number
+  }
+  // Fired when a draft is successfully posted
+  'draft:post': {
+    draftAgeMs: number
+    wasEdited: boolean
+  }
+  // Fired when user chooses "Don't save" and discards unsaved content
+  'draft:discard': {
+    logContext: 'ComposerClose' | 'BeforeDraftsList'
+    hadContent: boolean
+    textLength: number
   }
 
   // Data events
