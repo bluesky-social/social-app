@@ -4,7 +4,7 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -132,7 +132,7 @@ function DraftListItem({
   }, [item.id, onSelect])
 
   const handleDelete = useCallback(() => {
-    logEvent('draft:delete', {
+    logger.metric('draft:delete', {
       logContext: 'DraftsList',
       draftAgeMs: Date.now() - item.draft.timestamp,
     })
