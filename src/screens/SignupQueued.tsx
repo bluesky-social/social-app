@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
@@ -37,7 +38,7 @@ export function SignupQueued() {
   const checkStatus = React.useCallback(async () => {
     setProcessing(true)
     try {
-      const res = await agent.com.atproto.temp.checkSignupQueue()
+      const res = await pdsAgent(agent).com.atproto.temp.checkSignupQueue()
       if (res.data.activated) {
         // ready to go, exchange the access token for a usable one and kick off onboarding
         await agent.sessionManager.refreshSession()
