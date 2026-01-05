@@ -17,6 +17,7 @@ import {until} from '#/lib/async/until'
 import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {useAgent, useSession} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 
@@ -152,7 +153,7 @@ export function useListMetadataMutation() {
         record.avatar = undefined
       }
       const res = (
-        await agent.com.atproto.repo.putRecord({
+        await pdsAgent(agent).com.atproto.repo.putRecord({
           repo: currentAccount.did,
           collection: 'app.bsky.graph.list',
           rkey,
@@ -231,7 +232,7 @@ export function useListDeleteMutation() {
 
       // apply in chunks
       for (const writesChunk of chunk(writes, 10)) {
-        await agent.com.atproto.repo.applyWrites({
+        await pdsAgent(agent).com.atproto.repo.applyWrites({
           repo: currentAccount.did,
           writes: writesChunk,
         })

@@ -18,6 +18,7 @@ import {
 } from '#/state/queries/threadgate/util'
 import {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread'
 import {useAgent} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 import {useThreadgateHiddenReplyUrisAPI} from '#/state/threadgate-hidden-replies'
 import * as bsky from '#/types/bsky'
 
@@ -162,7 +163,7 @@ export async function writeThreadgateRecord({
   })
 
   await networkRetry(2, () =>
-    agent.api.com.atproto.repo.putRecord({
+    pdsAgent(agent).com.atproto.repo.putRecord({
       repo: agent.session!.did,
       collection: 'app.bsky.feed.threadgate',
       rkey: postUrip.rkey,

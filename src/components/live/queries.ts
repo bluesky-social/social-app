@@ -16,6 +16,7 @@ import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLiveNowConfig} from '#/state/service-config'
 import {useAgent, useSession} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 import * as Toast from '#/view/com/util/Toast'
 import {useDialogContext} from '#/components/Dialog'
 
@@ -108,11 +109,11 @@ export function useUpsertLiveStatusMutation(
         const repo = currentAccount.did
         const collection = 'app.bsky.actor.status'
 
-        const existing = await agent.com.atproto.repo
-          .getRecord({repo, collection, rkey: 'self'})
+        const existing = await pdsAgent(agent)
+          .com.atproto.repo.getRecord({repo, collection, rkey: 'self'})
           .catch(_e => undefined)
 
-        await agent.com.atproto.repo.putRecord({
+        await pdsAgent(agent).com.atproto.repo.putRecord({
           repo,
           collection,
           rkey: 'self',
