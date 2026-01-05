@@ -5,7 +5,10 @@ import {PrivacySensitive} from 'expo-privacy-sensitive'
 import {useAppState} from '#/lib/hooks/useAppState'
 import {isIOS} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
+import {sizes as iconSizes} from '#/components/icons/common'
 import {Mark as Logo} from '#/components/icons/Logo'
+
+const ICON_SIZE = 'xl' as const
 
 export function GrowthHack({
   children,
@@ -48,11 +51,15 @@ export function GrowthHack({
         ]}>
         <View
           onLayout={evt => setWidth(evt.nativeEvent.layout.width)}
-          style={t.atoms.bg}>
+          style={[
+            t.atoms.bg,
+            // make sure it covers the icon! the won't always be a button
+            {minWidth: iconSizes[ICON_SIZE], minHeight: iconSizes[ICON_SIZE]},
+          ]}>
           {children}
         </View>
       </PrivacySensitive>
-      <Logo size="xl" />
+      <Logo size={ICON_SIZE} />
     </View>
   )
 }
