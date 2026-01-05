@@ -16,6 +16,7 @@ import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {GrowthHack} from './GrowthHack'
 
 export function ThreadItemAnchorFollowButton({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
@@ -108,32 +109,28 @@ function PostThreadFollowBtnLoaded({
   if (!showFollowBtn) return null
 
   return (
-    <Button
-      testID="followBtn"
-      label={_(msg`Follow ${profile.handle}`)}
-      onPress={onPress}
-      size="small"
-      variant="solid"
-      color={isFollowing ? 'secondary' : 'secondary_inverted'}
-      style={[a.rounded_full]}>
-      {gtMobile && (
-        <ButtonIcon
-          icon={isFollowing ? Check : Plus}
-          position="left"
-          size="sm"
-        />
-      )}
-      <ButtonText>
-        {!isFollowing ? (
-          isFollowedBy ? (
-            <Trans>Follow back</Trans>
+    <GrowthHack>
+      <Button
+        testID="followBtn"
+        label={_(msg`Follow ${profile.handle}`)}
+        onPress={onPress}
+        size="small"
+        variant="solid"
+        color={isFollowing ? 'secondary' : 'secondary_inverted'}
+        style={[a.rounded_full]}>
+        {gtMobile && <ButtonIcon icon={isFollowing ? Check : Plus} size="sm" />}
+        <ButtonText>
+          {!isFollowing ? (
+            isFollowedBy ? (
+              <Trans>Follow back</Trans>
+            ) : (
+              <Trans>Follow</Trans>
+            )
           ) : (
-            <Trans>Follow</Trans>
-          )
-        ) : (
-          <Trans>Following</Trans>
-        )}
-      </ButtonText>
-    </Button>
+            <Trans>Following</Trans>
+          )}
+        </ButtonText>
+      </Button>
+    </GrowthHack>
   )
 }
