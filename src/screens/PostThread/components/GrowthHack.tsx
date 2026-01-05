@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {PrivacySensitive} from 'expo-privacy-sensitive'
 
+import {useAppState} from '#/lib/hooks/useAppState'
 import {isIOS} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Mark as Logo} from '#/components/icons/Logo'
@@ -19,7 +20,9 @@ export function GrowthHack({
   // set the minimum width of the underlying button
   const [width, setWidth] = useState<number | undefined>(undefined)
 
-  if (!isIOS) return children
+  const appState = useAppState()
+
+  if (!isIOS || appState !== 'active') return children
 
   return (
     <View
