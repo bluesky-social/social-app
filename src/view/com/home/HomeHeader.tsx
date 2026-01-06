@@ -1,4 +1,6 @@
 import React from 'react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -18,6 +20,7 @@ export function HomeHeader(
   const {feeds, onSelect: onSelectProp} = props
   const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
 
   const hasPinnedCustom = React.useMemo<boolean>(() => {
     if (!hasSession) return false
@@ -30,10 +33,18 @@ export function HomeHeader(
   const items = React.useMemo(() => {
     const pinnedNames = feeds.map(f => f.displayName)
     if (!hasPinnedCustom) {
-      return pinnedNames.concat('Feeds ✨')
+      return pinnedNames.concat(
+        _(
+          msg({
+            message: 'Feeds ✨',
+            comment:
+              'Shown in tab bar on Home screen when logged out and when the user has no pinned feeds',
+          }),
+        ),
+      )
     }
     return pinnedNames
-  }, [hasPinnedCustom, feeds])
+  }, [hasPinnedCustom, feeds, _])
 
   const onPressFeedsLink = React.useCallback(() => {
     navigation.navigate('Feeds')
