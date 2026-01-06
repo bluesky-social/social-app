@@ -74,7 +74,27 @@ function ContentHiderActive({
   const {labelDefs} = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()
   const {i18n} = useLingui()
-  const blur = modui?.blurs[0]
+
+  const blur = React.useMemo(() => {
+    const blurs = modui.blurs!
+    const primary = blurs[0]
+
+    if (primary.type === 'label' && primary.source.type !== 'user') {
+      const userEquivalent = blurs.find(
+        b =>
+          b.type === 'label' &&
+          b.source.type === 'user' &&
+          b.label.val === primary.label.val,
+      )
+
+      if (userEquivalent) {
+        return userEquivalent
+      }
+    }
+
+    return primary
+  }, [modui.blurs])
+
   const desc = useModerationCauseDescription(blur)
 
   const labelName = React.useMemo(() => {
