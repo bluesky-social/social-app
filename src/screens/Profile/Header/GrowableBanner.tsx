@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
-import {View} from 'react-native'
-import {ActivityIndicator} from 'react-native'
+import {ActivityIndicator, Pressable, View} from 'react-native'
 import Animated, {
+  type AnimatedRef,
   Extrapolation,
   interpolate,
   runOnJS,
@@ -28,26 +28,39 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 export function GrowableBanner({
   backButton,
   children,
+  onPress,
+  bannerRef,
 }: {
   backButton?: React.ReactNode
   children: React.ReactNode
+  onPress?: () => void
+  bannerRef?: AnimatedRef<Animated.View>
 }) {
   const pagerContext = usePagerHeaderContext()
 
   // plain non-growable mode for Android/Web
   if (!pagerContext || !isIOS) {
     return (
-      <View style={[a.w_full, a.h_full]}>
-        {children}
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="image"
+        style={[a.w_full, a.h_full]}>
+        <Animated.View ref={bannerRef} style={[a.w_full, a.h_full]}>
+          {children}
+        </Animated.View>
         {backButton}
-      </View>
+      </Pressable>
     )
   }
 
   const {scrollY} = pagerContext
 
   return (
-    <GrowableBannerInner scrollY={scrollY} backButton={backButton}>
+    <GrowableBannerInner
+      scrollY={scrollY}
+      backButton={backButton}
+      onPress={onPress}
+      bannerRef={bannerRef}>
       {children}
     </GrowableBannerInner>
   )
@@ -57,10 +70,14 @@ function GrowableBannerInner({
   scrollY,
   backButton,
   children,
+  onPress,
+  bannerRef,
 }: {
   scrollY: SharedValue<number>
   backButton?: React.ReactNode
   children: React.ReactNode
+  onPress?: () => void
+  bannerRef?: AnimatedRef<Animated.View>
 }) {
   const {top: topInset} = useSafeAreaInsets()
   const isFetching = useIsProfileFetching()
@@ -124,14 +141,26 @@ function GrowableBannerInner({
           {transformOrigin: 'bottom'},
           animatedStyle,
         ]}>
-        {children}
+        <Pressable
+          onPress={onPress}
+          accessibilityRole="image"
+          style={[a.w_full, a.h_full]}>
+          <Animated.View
+            ref={bannerRef}
+            collapsable={false}
+            style={[a.w_full, a.h_full]}>
+            {children}
+          </Animated.View>
+        </Pressable>
         <AnimatedBlurView
+          pointerEvents="none"
           style={[a.absolute, a.inset_0]}
           tint="dark"
           animatedProps={animatedBlurViewProps}
         />
       </Animated.View>
       <View
+        pointerEvents="none"
         style={[
           a.absolute,
           a.inset_0,
