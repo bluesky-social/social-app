@@ -2,6 +2,7 @@ import React from 'react'
 import {type TextInput, View} from 'react-native'
 
 import {APP_LANGUAGES} from '#/lib/../locale/languages'
+import {type CountryCode} from '#/lib/international-telephone-codes'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {DateField, LabelText} from '#/components/forms/DateField'
@@ -25,7 +26,7 @@ export function Forms() {
 
   const [value, setValue] = React.useState('')
   const [date, setDate] = React.useState('2001-01-01')
-  const [countryCode, setCountryCode] = React.useState('US')
+  const [countryCode, setCountryCode] = React.useState<CountryCode>('US')
   const [phoneNumber, setPhoneNumber] = React.useState('')
   const [lang, setLang] = React.useState('en')
 
@@ -54,24 +55,6 @@ export function Forms() {
           }))}
         />
       </Select.Root>
-
-      <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-        <View>
-          <InternationalPhoneCodeSelect
-            // @ts-ignore
-            value={countryCode}
-            onChange={value => setCountryCode(value)}
-          />
-        </View>
-
-        <View style={[a.flex_1]}>
-          <TextField.Input
-            label="Phone number"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-          />
-        </View>
-      </View>
 
       <View style={[a.gap_md, a.align_start, a.w_full]}>
         <H3>InputText</H3>
@@ -163,21 +146,23 @@ export function Forms() {
             label="Input"
           />
         </View>
-
-        {/* commented out so it's not in the web bundle */}
-        {/*<H3>InternationalPhoneCodeSelect</H3>
+        <H3>InternationalPhoneCodeSelect</H3>
 
         <View style={[a.flex_row, a.gap_sm, a.align_center]}>
           <View>
             <InternationalPhoneCodeSelect
-              value={telCode}
-              onChange={setTelCode}
+              value={countryCode}
+              onChange={value => setCountryCode(value)}
             />
           </View>
           <View style={[a.flex_1]}>
-            <TextField.Input label="Phone number" />
+            <TextField.Input
+              label="Phone number"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+            />
           </View>
-        </View>*/}
+        </View>
       </View>
 
       <View style={[a.gap_md, a.align_start, a.w_full]}>
