@@ -3,7 +3,9 @@ import {
   getInfoAsync,
   readDirectoryAsync,
 } from 'expo-file-system/legacy'
-import ExpoImageCropTool, {type OpenCropperOptions} from 'expo-image-crop-tool'
+import ExpoImageCropTool, {
+  type OpenCropperOptions,
+} from '@bsky.app/expo-image-crop-tool'
 
 import {compressIfNeeded} from './manip'
 import {type PickerImage} from './picker.shared'

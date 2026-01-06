@@ -3615,6 +3615,11 @@
   dependencies:
     react-responsive "^10.0.1"
 
+"@bsky.app/expo-image-crop-tool@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@bsky.app/expo-image-crop-tool/-/expo-image-crop-tool-0.5.0.tgz#4308fbde5c15e6be9122601797bc3d9549c95e31"
+  integrity sha512-gmhQr2HWTRFyPO00fn5OmtiEVtikXusHMrN5Zoq26pu1VZX3zVE+aoc668etTqrvsQcm2Qu8fo96k5F3Wu+6wg==
+
 "@bsky.app/react-native-mmkv@2.12.5":
   version "2.12.5"
   resolved "https://registry.yarnpkg.com/@bsky.app/react-native-mmkv/-/react-native-mmkv-2.12.5.tgz#eb17d31a6158c74393f617a1763ac223ff3f83a6"
@@ -11197,11 +11202,6 @@ expo-haptics@~15.0.8:
   version "15.0.8"
   resolved "https://registry.yarnpkg.com/expo-haptics/-/expo-haptics-15.0.8.tgz#f93f895ac5d76fe0c5ac26b3644e1dbb097833f3"
   integrity sha512-lftutojy8Qs8zaDzzjwM3gKHFZ8bOOEZDCkmh2Ddpe95Ra6kt2izeOfOfKuP/QEh0MZ1j9TfqippyHdRd1ZM9g==
-
-expo-image-crop-tool@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/expo-image-crop-tool/-/expo-image-crop-tool-0.4.0.tgz#c376b0695e8b2bf6b38fff5595ce30aaf9cddd64"
-  integrity sha512-2KZI016tb2i0yb0ZRMdH8h1I4YofD78fG/l6KrQTFzy4DtKaQlmJwU2VSJ8AYV5/nxusbHxgro7RQnr1BQ5lJg==
 
 expo-image-loader@~6.0.0:
   version "6.0.0"
