@@ -77,7 +77,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         size="small"
         variant="ghost"
         color="secondary"
-        shape="square"
+        shape="round"
         hitSlop={HITSLOP_30}
         style={[
           {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
