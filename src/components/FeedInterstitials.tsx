@@ -56,6 +56,7 @@ function CardOuter({
   const {gtMobile} = useBreakpoints()
   return (
     <View
+      testID="CardOuter"
       style={[
         a.flex_1,
         a.w_full,
@@ -575,7 +576,8 @@ export function ProfileGrid({
                   suggestedDid: profile.did,
                   category: null,
                 })
-              }}>
+              }}
+              style={[a.flex_1]}>
               {({hovered, pressed}) => (
                 <CardOuter
                   style={[
