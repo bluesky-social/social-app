@@ -26,7 +26,7 @@ export type ImageSource = {
   thumbDimensions: Dimensions | null
   thumbRect: MeasuredDimensions | null
   alt?: string
-  type: 'image' | 'circle-avi' | 'rect-avi' | 'profile-banner'
+  type: 'image' | 'circle-avi' | 'rect-avi'
 }
 
 export type Transform = Exclude<

@@ -77,7 +77,7 @@ let ProfileHeaderShell = ({
     (
       uri: string,
       thumbRect: MeasuredDimensions | null,
-      type: 'circle-avi' | 'profile-banner' = 'circle-avi',
+      type: 'circle-avi' | 'image' = 'circle-avi',
     ) => {
       openLightbox({
         images: [
@@ -93,6 +93,7 @@ let ProfileHeaderShell = ({
                     width: 1000,
                   }
                 : {
+                    // Banner aspect ratio is 3:1
                     width: 3000,
                     height: 1000,
                   },
@@ -160,7 +161,7 @@ let ProfileHeaderShell = ({
       runOnUI(() => {
         'worklet'
         const rect = measure(bannerRef)
-        runOnJS(_openLightbox)(banner, rect, 'profile-banner')
+        runOnJS(_openLightbox)(banner, rect, 'image')
       })()
     }
   }, [profile.banner, moderation, _openLightbox, bannerRef])
