@@ -2,10 +2,11 @@ import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
 import {Trans} from '@lingui/macro'
-import {ReactRenderer} from '@tiptap/react'
+import {type Editor} from '@tiptap/core'
+import {Extension, ReactRenderer} from '@tiptap/react'
 import {
+  Suggestion,
   type SuggestionKeyDownProps,
-  type SuggestionOptions,
   type SuggestionProps,
 } from '@tiptap/suggestion'
 import tippy, {type Instance as TippyInstance} from 'tippy.js'
@@ -16,22 +17,63 @@ import {atoms as a, useTheme} from '#/alf'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 
-interface MentionListRef {
-  onKeyDown: (props: SuggestionKeyDownProps) => boolean
-}
-
 export interface AutocompleteRef {
   maybeClose: () => boolean
 }
 
-export function createSuggestion({
-  autocomplete,
-  autocompleteRef,
-}: {
-  autocomplete: ActorAutocompleteFn
-  autocompleteRef: React.Ref<AutocompleteRef>
-}): Omit<SuggestionOptions, 'editor'> {
-  return {
+interface MentionListRef {
+  onKeyDown: (props: SuggestionKeyDownProps) => boolean
+}
+
+export const Autocomplete = Extension.create({
+  name: 'autocomplete',
+  priority: 1001,
+
+  addProseMirrorPlugins() {
+    return [
+      suggestionPlugin(
+        this.editor,
+        this.options.autocomplete,
+        this.options.autocompleteRef,
+      ),
+    ]
+  },
+})
+
+function suggestionPlugin(
+  editor: Editor,
+  autocomplete: ActorAutocompleteFn,
+  autocompleteRef: React.Ref<AutocompleteRef>,
+) {
+  return Suggestion<
+    AppBskyActorDefs.ProfileViewBasic,
+    AppBskyActorDefs.ProfileViewBasic
+  >({
+    editor,
+    char: '@',
+
+    allow: ({state}) => {
+      const node = state.selection.$to.nodeAfter
+      return !node || !node.text || node.text.startsWith(' ')
+    },
+
+    command: ({range, props}) => {
+      // Include trailing space
+      const node = editor.view.state.selection.$to.nodeAfter
+      if (node?.text?.startsWith(' ')) {
+        range.to += 1
+      }
+
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(range, {
+          type: 'text',
+          text: '@' + props.handle + ' ',
+        })
+        .run()
+    },
+
     async items({query}) {
       const suggestions = await autocomplete({query})
       return suggestions.slice(0, 8)
@@ -95,7 +137,7 @@ export function createSuggestion({
         },
       }
     },
-  }
+  })
 }
 
 const MentionList = forwardRef<
@@ -113,7 +155,7 @@ const MentionList = forwardRef<
     const item = items[index]
 
     if (item) {
-      command({id: item.handle})
+      command(item)
     }
   }
 
