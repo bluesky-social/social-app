@@ -310,6 +310,7 @@ export type MetricEvents = {
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
       | 'FindContacts'
+    recId?: number
   }
   'profile:followers:view': {
     contextProfileDid: string

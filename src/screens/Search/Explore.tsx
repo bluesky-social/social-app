@@ -385,6 +385,7 @@ export function Explore({
                 type: 'profile',
                 key: actor.did,
                 profile: actor,
+                recId: suggestedUsers.recId,
               })
             }
           }

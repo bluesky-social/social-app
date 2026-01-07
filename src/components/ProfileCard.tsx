@@ -468,6 +468,7 @@ export type FollowButtonProps = {
   withIcon?: boolean
   position?: number
   contextProfileDid?: string
+  recId?: number
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
@@ -486,6 +487,7 @@ export function FollowButtonInner({
   withIcon = true,
   position,
   contextProfileDid,
+  recId,
   ...rest
 }: FollowButtonProps) {
   const {_} = useLingui()
@@ -496,6 +498,7 @@ export function FollowButtonInner({
     logContext,
     position,
     contextProfileDid,
+    recId,
   )
   const isRound = Boolean(rest.shape && rest.shape === 'round')
 

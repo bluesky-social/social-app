@@ -45,6 +45,7 @@ type Item =
       type: 'profile'
       key: string
       profile: bsky.profile.AnyProfileView
+      recId: number | undefined
     }
   | {
       type: 'empty'
@@ -162,6 +163,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
     const results = hasSearchText
       ? searchResults?.pages.flatMap(p => p.actors)
       : suggestions?.actors
+    const recId = hasSearchText ? undefined : suggestions?.recId
     let _items: Item[] = []
 
     if (isFetchingSuggestions || isFetchingSearchResults) {
@@ -197,6 +199,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
           // Don't share identity across tabs or typing attempts
           key: resultsKey + ':' + profile.did,
           profile,
+          recId,
         })
       }
     }
@@ -233,6 +236,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
               profile={item.profile}
               moderationOpts={moderationOpts!}
               noBorder={index === 0}
+              recId={item.recId}
             />
           )
         }
@@ -531,16 +535,19 @@ let FollowProfileCard = ({
   profile,
   moderationOpts,
   noBorder,
+  recId,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   noBorder?: boolean
+  recId?: number
 }): React.ReactNode => {
   return (
     <FollowProfileCardInner
       profile={profile}
       moderationOpts={moderationOpts}
       noBorder={noBorder}
+      recId={recId}
     />
   )
 }
@@ -551,11 +558,13 @@ function FollowProfileCardInner({
   moderationOpts,
   onFollow,
   noBorder,
+  recId,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onFollow?: () => void
   noBorder?: boolean
+  recId?: number
 }) {
   const control = Dialog.useDialogContext()
   const t = useTheme()
@@ -589,6 +598,7 @@ function FollowProfileCardInner({
                 shape="round"
                 onPress={onFollow}
                 colorInverted
+                recId={recId}
               />
             </ProfileCard.Header>
             <ProfileCard.Description profile={profile} numberOfLines={2} />
