@@ -176,13 +176,19 @@ export type MetricEvents = {
   'feed:suggestion:press': {
     feedUrl: string
   }
-  'feed:showMore': {
-    feed: string
-    feedContext: string
+  'post:showMore': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
   }
-  'feed:showLess': {
-    feed: string
-    feedContext: string
+  'post:showLess': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
   }
   'feed:clickthrough': {
     feed: string
@@ -257,15 +263,70 @@ export type MetricEvents = {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
   }
-  'post:mute': {}
-  'post:unmute': {}
+  'post:mute': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:unmute': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
   'post:pin': {}
   'post:unpin': {}
   'post:bookmark': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
   }
   'post:unbookmark': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickReply': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickQuotePost': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickthroughAuthor': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickthroughItem': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickthroughEmbed': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
   }
   'post:view': {
     uri: string
@@ -565,7 +626,14 @@ export type MetricEvents = {
   'live:view:profile': {subject: string}
   'live:view:post': {subject: string; feed?: string}
 
-  'share:open': {context: 'feed' | 'thread'}
+  'post:share': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    postContext: 'feed' | 'thread'
+    position?: number
+  }
   'share:press:copyLink': {}
   'share:press:nativeShare': {}
   'share:press:openDmSearch': {}

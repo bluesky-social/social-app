@@ -21,6 +21,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {countLines} from '#/lib/strings/helpers'
+import {logger} from '#/logger'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -173,7 +174,8 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey]
   }, [post.uri, post.author])
-  const {sendInteraction, feedSourceInfo} = useFeedFeedbackContext()
+  const {sendInteraction, feedSourceInfo, feedDescriptor} =
+    useFeedFeedbackContext()
 
   const onPressReply = () => {
     sendInteraction({
@@ -209,6 +211,12 @@ let FeedItemInner = ({
       feedContext,
       reqId,
     })
+    logger.metric('post:clickthroughAuthor', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'FeedItem',
+      feedDescriptor,
+    })
   }
 
   const onOpenReposter = () => {
@@ -227,6 +235,12 @@ let FeedItemInner = ({
       feedContext,
       reqId,
     })
+    logger.metric('post:clickthroughEmbed', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'FeedItem',
+      feedDescriptor,
+    })
   }
 
   const onBeforePress = () => {
@@ -235,6 +249,12 @@ let FeedItemInner = ({
       event: 'app.bsky.feed.defs#clickthroughItem',
       feedContext,
       reqId,
+    })
+    logger.metric('post:clickthroughItem', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'FeedItem',
+      feedDescriptor,
     })
     unstableCacheProfileView(queryClient, post.author)
     setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
