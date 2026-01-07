@@ -41,6 +41,7 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
+import {useCollapsibleThreadItems} from '#/screens/PostThread/useCollapsibleThreadItems'
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -319,26 +320,8 @@ export function PostThread({uri}: {uri: string}) {
     [thread, prepareForParamsUpdate],
   )
 
-  const [collapsedPostUris, setCollapsedPostUris] = useState<Set<string>>(
-    new Set(),
-  )
-  const isPostCollapsed = useCallback(
-    (item: Extract<ThreadItem, {type: 'threadPost'}>) =>
-      collapsedPostUris.has(item.uri),
-    [collapsedPostUris],
-  )
-  const togglePostCollapse = useCallback(
-    (item: Extract<ThreadItem, {type: 'threadPost'}>) => {
-      setCollapsedPostUris(prev => {
-        const next = new Set(prev)
-        if (!next.delete(item.uri)) {
-          next.add(item.uri)
-        }
-        return next
-      })
-    },
-    [setCollapsedPostUris],
-  )
+  const {filterCollapsedChildren, isPostCollapsed, togglePostCollapse} =
+    useCollapsibleThreadItems()
 
   const onStartReached = () => {
     if (thread.state.isFetching) return
@@ -358,7 +341,7 @@ export function PostThread({uri}: {uri: string}) {
     setMaxChildrenCount(prev => prev + CHILDREN_CHUNK_SIZE)
   }
 
-  const unfilteredSlices = useMemo(() => {
+  const pagedSlices = useMemo(() => {
     const results: ThreadItem[] = []
 
     if (!thread.data.items.length) return results
@@ -414,51 +397,19 @@ export function PostThread({uri}: {uri: string}) {
   }, [thread, deferParents, maxParentCount, maxChildrenCount])
 
   const isTombstoneView = useMemo(() => {
-    if (unfilteredSlices.length > 1) return false
-    return unfilteredSlices.every(
+    if (pagedSlices.length > 1) return false
+    return pagedSlices.every(
       s => s.type === 'threadPostBlocked' || s.type === 'threadPostNotFound',
     )
-  }, [unfilteredSlices])
+  }, [pagedSlices])
 
-  /**
-   * Filter out children of collapsed posts, after pagination.
-   */
-  const slices = useMemo(() => {
-    if (!collapsedPostUris.size) return unfilteredSlices
-
-    const results: ThreadItem[] = []
-    const collapsedParents: Extract<ThreadItem, {depth: number}>[] = []
-
-    for (const item of unfilteredSlices) {
-      if (!('depth' in item)) {
-        // Non-depth items (like readMore, etc.) - only include if not under collapsed parent
-        if (!collapsedParents.length) {
-          results.push(item)
-        }
-        continue
-      }
-
-      // Remove collapsed parents we've exited (reached sibling or parent)
-      while (item.depth <= (collapsedParents.at(-1)?.depth ?? -Infinity)) {
-        collapsedParents.pop()
-      }
-
-      // Check if we're still within any collapsed parent's subtree
-      if (!collapsedParents.length) {
-        // Only check if this is a collapsed post if we're NOT within a collapsed parent's subtree
-        if (item.type === 'threadPost' && collapsedPostUris.has(item.uri)) {
-          collapsedParents.push(item)
-          results.push(item) // Include the collapsed post itself
-          continue
-        }
-
-        // Include this item
-        results.push(item)
-      }
-    }
-
-    return results
-  }, [unfilteredSlices, collapsedPostUris])
+  const slices = useMemo(
+    () =>
+      thread.state.view === 'tree'
+        ? filterCollapsedChildren(pagedSlices)
+        : pagedSlices,
+    [pagedSlices, thread.state.view, filterCollapsedChildren],
+  )
 
   const renderItem = useCallback(
     ({item, index}: {item: ThreadItem; index: number}) => {
