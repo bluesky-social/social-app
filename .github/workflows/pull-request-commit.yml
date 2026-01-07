@@ -91,7 +91,7 @@ jobs:
         with:
           base_path: "stats-base.json"
           pr_path: "../stats-new.json"
-          excluded_assets: "(.+).chunk.js|(.+).js.map|(.+).json|(.+).png"
+          excluded_assets: "(.+).chunk.js|(.+).js.map|(.+).json|(.+).png|(.+).svg|(.+).webp|(.+).jpg|(.+).ico"
 
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
