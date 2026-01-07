@@ -11609,4 +11609,3 @@ msgstr "Seleccionar els teus interessos ens ajuda a mostrar-te el contingut que 
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Les teves verificacions"
-

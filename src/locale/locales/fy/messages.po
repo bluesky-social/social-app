@@ -11609,4 +11609,3 @@ msgstr "Dyn selektearre ynteressen helpe ús dy ynhâld dy’t dy ynteressearret
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Dyn ferifikaasjes"
-
