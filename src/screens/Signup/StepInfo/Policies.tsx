@@ -11,12 +11,8 @@ import {Text} from '#/components/Typography'
 
 export const Policies = ({
   serviceDescription,
-  needsGuardian,
-  under13,
 }: {
   serviceDescription: ComAtprotoServerDescribeServer.OutputSchema
-  needsGuardian: boolean
-  under13: boolean
 }) => {
   const t = useTheme()
   const {_} = useLingui()
@@ -91,30 +87,9 @@ export const Policies = ({
     return null
   }
 
-  return (
-    <View style={[a.gap_sm]}>
-      {els ? (
-        <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
-          {els}
-        </Text>
-      ) : null}
-
-      {under13 ? (
-        <Admonition type="error">
-          <Trans>
-            You must be 13 years of age or older to create an account.
-          </Trans>
-        </Admonition>
-      ) : needsGuardian ? (
-        <Admonition type="warning">
-          <Trans>
-            If you are not yet an adult according to the laws of your country,
-            your parent or legal guardian must read these Terms on your behalf.
-          </Trans>
-        </Admonition>
-      ) : undefined}
-    </View>
-  )
+  return els ? (
+    <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>{els}</Text>
+  ) : null
 }
 
 function validWebLink(url?: string): string | undefined {

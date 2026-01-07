@@ -12,7 +12,23 @@ import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
 import {AgeAssuranceAccess} from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
-const DEFAULT_MIN_AGE = 13
+export const MIN_ACCESS_AGE = 13
+const FALLBACK_REGION_CONFIG: AppBskyAgeassuranceDefs.ConfigRegion = {
+  countryCode: '*',
+  regionCode: undefined,
+  minAccessAge: MIN_ACCESS_AGE,
+  rules: [
+    {
+      $type: ids.IfDeclaredOverAge,
+      age: MIN_ACCESS_AGE,
+      access: AgeAssuranceAccess.Full,
+    },
+    {
+      $type: ids.Default,
+      access: AgeAssuranceAccess.None,
+    },
+  ],
+}
 
 /**
  * Get age assurance region config based on geolocation, with fallback to
@@ -30,23 +46,7 @@ export function getAgeAssuranceRegionConfigWithFallback(
     regionCode: geolocation.regionCode,
   })
 
-  return (
-    region || {
-      countryCode: '*',
-      regionCode: undefined,
-      rules: [
-        {
-          $type: ids.IfDeclaredOverAge,
-          age: DEFAULT_MIN_AGE,
-          access: AgeAssuranceAccess.Full,
-        },
-        {
-          $type: ids.Default,
-          access: AgeAssuranceAccess.None,
-        },
-      ],
-    }
-  )
+  return region || FALLBACK_REGION_CONFIG
 }
 
 /**
@@ -68,6 +68,14 @@ export function useAgeAssuranceRegionConfig() {
 }
 
 /**
+ * Hook to get the age assurance region config based on current geolocation.
+ * Falls back to our app defaults if no region config is found.
+ */
+export function useAgeAssuranceRegionConfigWithFallback() {
+  return useAgeAssuranceRegionConfig() || FALLBACK_REGION_CONFIG
+}
+
+/**
  * Some users may have erroneously set their birth date to the current date
  * if one wasn't set on their account. We previously didn't do validation on
  * the bday dialog, and it defaulted to the current date. This bug _has_ been
@@ -78,15 +86,11 @@ export function isLegacyBirthdateBug(birthDate: string) {
 }
 
 /**
- * Returns whether the user is under the minimum age required to use the app.
- * This applies to all regions.
+ * Returns whether the date (converted to an age as a whole integer) is under
+ * the provided minimum age.
  */
-export function isUserUnderMinimumAge(birthDate: string) {
-  return getAge(new Date(birthDate)) < DEFAULT_MIN_AGE
-}
-
-export function isUserUnderAdultAge(birthDate: string) {
-  return getAge(new Date(birthDate)) < 18
+export function isUnderAge(birthDate: string, age: number) {
+  return getAge(new Date(birthDate)) < age
 }
 
 export function getBirthdateStringFromAge(age: number) {
