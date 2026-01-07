@@ -192,8 +192,8 @@ export function VideoPostCard({
               a.justify_center,
               a.rounded_md,
               a.overflow_hidden,
+              t.atoms.bg_contrast_50,
               {
-                backgroundColor: black,
                 aspectRatio: 9 / 16,
               },
             ]}>
