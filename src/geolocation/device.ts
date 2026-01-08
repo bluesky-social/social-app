@@ -46,7 +46,8 @@ const useForegroundPermissions = createPermissionHook({
 })
 
 export async function getDeviceGeolocation(): Promise<Geolocation> {
-  if (debug.enabled) return debug.resolve(debug.deviceGeolocation)
+  if (debug.enabled && debug.deviceGeolocation)
+    return debug.resolve(debug.deviceGeolocation)
 
   try {
     const geocode = await Location.getCurrentPositionAsync()
@@ -141,4 +142,9 @@ export function useSyncDeviceGeolocationOnStartup(
       )
     })
   }, [status, sync])
+}
+
+export function useIsDeviceGeolocationGranted() {
+  const [status] = useForegroundPermissions()
+  return status?.granted === true
 }
