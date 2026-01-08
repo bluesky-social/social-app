@@ -16,6 +16,9 @@ jobs:
     if: github.repository == 'bluesky-social/social-app'
     name: Build and Submit Android
     runs-on: Linux-x64-32core
+    concurrency:
+      group: android-build
+      cancel-in-progress: false
     steps:
       - name: Check for EXPO_TOKEN
         run: >
