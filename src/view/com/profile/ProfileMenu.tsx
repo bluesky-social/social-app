@@ -332,7 +332,7 @@ let ProfileMenu = ({
                     testID="profileHeaderDropdownListAddRemoveBtn"
                     label={
                       status.isDisabled
-                        ? _(msg`Go live is disabled`)
+                        ? _(msg`Go live (disabled)`)
                         : status.isActive
                           ? _(msg`Edit live status`)
                           : _(msg`Go live`)
@@ -344,7 +344,7 @@ let ProfileMenu = ({
                     }>
                     <Menu.ItemText>
                       {status.isDisabled ? (
-                        <Trans>Go live is disabled</Trans>
+                        <Trans>Go live (disabled)</Trans>
                       ) : status.isActive ? (
                         <Trans>Edit live status</Trans>
                       ) : (
