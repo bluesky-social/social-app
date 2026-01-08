@@ -35,13 +35,14 @@ export function useAgeAssuranceState(): AgeAssuranceState {
      * The query handler will try it again, but if it continues to fail, of
      * course we won't have config.
      *
-     * In this case, fail open (unknown status/access) to avoid blocking users.
+     * In this case, fail open to avoid blocking users.
      */
     if (!config) {
       logger.warn('useAgeAssuranceState: missing config')
       return {
         status: AgeAssuranceStatus.Unknown,
-        access: AgeAssuranceAccess.Unknown,
+        access: AgeAssuranceAccess.Safe,
+        error: 'config',
       }
     }
 

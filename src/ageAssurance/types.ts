@@ -18,6 +18,7 @@ export type AgeAssuranceState = {
   lastInitiatedAt?: string
   status: AgeAssuranceStatus
   access: AgeAssuranceAccess
+  error?: 'config' // maybe other specific cases in the future
 }
 
 export function parseStatusFromString(raw: string) {
