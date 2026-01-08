@@ -136,6 +136,15 @@ export async function prefetchConfig() {
     }
   })
 }
+export async function refetchConfig() {
+  logger.debug(`refetchConfig: fetching...`)
+  const res = await getConfig()
+  qc.setQueryData<AppBskyAgeassuranceGetConfig.OutputSchema>(
+    configQueryKey,
+    res,
+  )
+  return res
+}
 export function useConfigQuery() {
   return useQuery(
     {

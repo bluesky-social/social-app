@@ -21,7 +21,7 @@ export function AgeAssuranceAdmonition({
 
   if (aa.state.access === aa.Access.Full) return null
   if (aa.state.error === 'config') {
-    return <AgeAssuranceConfigUnavailableError style={[a.pr_4xl]} />
+    return <AgeAssuranceConfigUnavailableError style={style} />
   }
 
   return (
