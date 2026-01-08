@@ -82,12 +82,26 @@
     "@atproto/xrpc" "^0.7.6"
     "@atproto/xrpc-server" "^0.10.0"
 
-"@atproto/api@^0.18.12", "@atproto/api@^0.18.8", "@atproto/api@^0.18.9":
+"@atproto/api@^0.18.12", "@atproto/api@^0.18.9":
   version "0.18.12"
   resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.12.tgz#8a32e7ddda260eda79fa877d6d3586d21c066286"
   integrity sha512-b4MdUhYzebb6nQLo8LLZvBC9yvlzF69XqZeKewvmz9SleK2sJX2cqAPj78IStjNzT/3Xm9vVQrq9DkCkhSiTiQ==
   dependencies:
     "@atproto/common-web" "^0.4.10"
+    "@atproto/lexicon" "^0.6.0"
+    "@atproto/syntax" "^0.4.2"
+    "@atproto/xrpc" "^0.7.7"
+    await-lock "^2.2.2"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    zod "^3.23.8"
+
+"@atproto/api@^0.18.8":
+  version "0.18.8"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.8.tgz#6df69731005413d8507345829a12abeda787c32d"
+  integrity sha512-Qo3sGd1N5hdHTaEWUBgptvPkULt2SXnMcWRhveSyctSd/IQwTMyaIH6E62A1SU+8xBSN5QLpoUJNE7iSrYM2Zg==
+  dependencies:
+    "@atproto/common-web" "^0.4.7"
     "@atproto/lexicon" "^0.6.0"
     "@atproto/syntax" "^0.4.2"
     "@atproto/xrpc" "^0.7.7"
