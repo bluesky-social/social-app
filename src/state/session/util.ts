@@ -40,7 +40,7 @@ export async function createTemporaryAgentsAndResume(
 ) {
   const agents = await Promise.allSettled(
     accounts.map(async account => {
-      const agent = new AtpAgent({service: account.service})
+      const agent: AtpAgent = new AtpAgent({service: account.service})
       if (account.pdsUrl) {
         agent.sessionManager.pdsUrl = new URL(account.pdsUrl)
       }
@@ -49,7 +49,7 @@ export async function createTemporaryAgentsAndResume(
       const res = await agent.resumeSession(session)
       if (!res.success) throw new Error('Failed to resume session')
 
-      agent.assertAuthenticated // confirm auth success
+      agent.assertAuthenticated() // confirm auth success
 
       return agent
     }),

@@ -6,7 +6,11 @@ import {type AtpAgent} from '@atproto/api'
 import {type AppBskyNotificationRegisterPush} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
-import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
+import {
+  BLUESKY_NOTIF_SERVICE_HEADERS,
+  PUBLIC_APPVIEW_DID,
+  PUBLIC_STAGING_APPVIEW_DID,
+} from '#/lib/constants'
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {isNative} from '#/platform/detection'
@@ -45,7 +49,9 @@ async function _registerPushToken({
 
     notyLogger.debug(`registerPushToken: registering`, {...payload})
 
-    await agent.app.bsky.notification.registerPush(payload)
+    await agent.app.bsky.notification.registerPush(payload, {
+      headers: BLUESKY_NOTIF_SERVICE_HEADERS,
+    })
 
     notyLogger.debug(`registerPushToken: success`)
   } catch (error) {
@@ -295,14 +301,19 @@ export async function unregisterPushToken(agents: AtpAgent[]) {
     const token = await getPushToken()
     if (token) {
       for (const agent of agents) {
-        await agent.app.bsky.notification.unregisterPush({
-          serviceDid: agent.serviceUrl.hostname.includes('staging')
-            ? PUBLIC_STAGING_APPVIEW_DID
-            : PUBLIC_APPVIEW_DID,
-          platform: Platform.OS,
-          token: token.data,
-          appId: 'xyz.blueskyweb.app',
-        })
+        await agent.app.bsky.notification.unregisterPush(
+          {
+            serviceDid: agent.serviceUrl.hostname.includes('staging')
+              ? PUBLIC_STAGING_APPVIEW_DID
+              : PUBLIC_APPVIEW_DID,
+            platform: Platform.OS,
+            token: token.data,
+            appId: 'xyz.blueskyweb.app',
+          },
+          {
+            headers: BLUESKY_NOTIF_SERVICE_HEADERS,
+          },
+        )
         notyLogger.debug(`Push token unregistered for ${agent.session?.handle}`)
       }
     } else {
