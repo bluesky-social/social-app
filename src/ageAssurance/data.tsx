@@ -136,6 +136,15 @@ export async function prefetchConfig() {
     }
   })
 }
+export async function refetchConfig() {
+  logger.debug(`refetchConfig: fetching...`)
+  const res = await getConfig()
+  qc.setQueryData<AppBskyAgeassuranceGetConfig.OutputSchema>(
+    configQueryKey,
+    res,
+  )
+  return res
+}
 export function useConfigQuery() {
   return useQuery(
     {
@@ -146,6 +155,10 @@ export function useConfigQuery() {
        * @see https://tanstack.com/query/latest/docs/framework/react/guides/initial-query-data#initial-data-from-the-cache-with-initialdataupdatedat
        */
       staleTime: IS_DEV ? 5e3 : 1000 * 60 * 60,
+      /**
+       * N.B. if prefetch failed above, we'll have no `initialData`, and this
+       * query will run on startup.
+       */
       initialData: getConfigFromCache(),
       initialDataUpdatedAt: () =>
         qc.getQueryState(configQueryKey)?.dataUpdatedAt,

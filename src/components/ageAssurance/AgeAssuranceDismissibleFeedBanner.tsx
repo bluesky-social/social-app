@@ -23,6 +23,7 @@ export function useInternalState() {
   const visible = useMemo(() => {
     if (aa.state.access === aa.Access.Full) return false
     if (aa.state.lastInitiatedAt) return false
+    if (aa.state.error === 'config') return false
     if (hidden) return false
     if (nux && nux.completed) return false
     return true
