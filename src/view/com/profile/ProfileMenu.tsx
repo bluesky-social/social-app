@@ -49,6 +49,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/
 import {StarterPack} from '#/components/icons/StarterPack'
 import {EditLiveDialog} from '#/components/live/EditLiveDialog'
 import {GoLiveDialog} from '#/components/live/GoLiveDialog'
+import {GoLiveDisabledDialog} from '#/components/live/GoLiveDisabledDialog'
 import * as Menu from '#/components/Menu'
 import {
   ReportDialog,
@@ -79,6 +80,7 @@ let ProfileMenu = ({
   const [devModeEnabled] = useDevMode()
   const verification = useFullVerificationState({profile})
   const canGoLive = useCanGoLive(currentAccount?.did)
+  const status = useActorStatus(profile)
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -90,6 +92,7 @@ let ProfileMenu = ({
   const blockPromptControl = Prompt.usePromptControl()
   const loggedOutWarningPromptControl = Prompt.usePromptControl()
   const goLiveDialogControl = useDialogControl()
+  const goLiveDisabledDialogControl = useDialogControl()
   const addToStarterPacksDialogControl = useDialogControl()
 
   const showLoggedOutWarning = React.useMemo(() => {
@@ -220,8 +223,6 @@ let ProfileMenu = ({
       return v.issuer === currentAccount?.did
     }) ?? []
 
-  const status = useActorStatus(profile)
-
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -330,13 +331,21 @@ let ProfileMenu = ({
                   <Menu.Item
                     testID="profileHeaderDropdownListAddRemoveBtn"
                     label={
-                      status.isActive
-                        ? _(msg`Edit live status`)
-                        : _(msg`Go live`)
+                      status.isDisabled
+                        ? _(msg`Go live is disabled`)
+                        : status.isActive
+                          ? _(msg`Edit live status`)
+                          : _(msg`Go live`)
                     }
-                    onPress={goLiveDialogControl.open}>
+                    onPress={
+                      status.isDisabled
+                        ? goLiveDisabledDialogControl.open
+                        : goLiveDialogControl.open
+                    }>
                     <Menu.ItemText>
-                      {status.isActive ? (
+                      {status.isDisabled ? (
+                        <Trans>Go live is disabled</Trans>
+                      ) : status.isActive ? (
                         <Trans>Edit live status</Trans>
                       ) : (
                         <Trans>Go live</Trans>
@@ -517,7 +526,12 @@ let ProfileMenu = ({
         verifications={currentAccountVerifications}
       />
 
-      {status.isActive ? (
+      {status.isDisabled ? (
+        <GoLiveDisabledDialog
+          control={goLiveDisabledDialogControl}
+          status={status}
+        />
+      ) : status.isActive ? (
         <EditLiveDialog
           control={goLiveDialogControl}
           status={status}
