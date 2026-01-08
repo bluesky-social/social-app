@@ -3,6 +3,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, select, useTheme, type ViewStyleProp} from '#/alf'
+import {AgeAssuranceConfigUnavailableError} from '#/components/ageAssurance/AgeAssuranceErrors'
 import {useDialogControl} from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import type * as Dialog from '#/components/Dialog'
 import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
@@ -19,6 +20,9 @@ export function AgeAssuranceAdmonition({
   const aa = useAgeAssurance()
 
   if (aa.state.access === aa.Access.Full) return null
+  if (aa.state.error === 'config') {
+    return <AgeAssuranceConfigUnavailableError style={style} />
+  }
 
   return (
     <Inner style={style} control={control}>

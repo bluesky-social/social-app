@@ -8,6 +8,7 @@ import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
+import {AgeAssuranceConfigUnavailableError} from '#/components/ageAssurance/AgeAssuranceErrors'
 import {
   AgeAssuranceInitDialog,
   useDialogControl,
@@ -27,6 +28,13 @@ import {useDeviceGeolocationApi} from '#/geolocation'
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
   const aa = useAgeAssurance()
   if (aa.state.access === aa.Access.Full) return null
+  if (aa.state.error === 'config') {
+    return (
+      <View style={style}>
+        <AgeAssuranceConfigUnavailableError />
+      </View>
+    )
+  }
   return <Inner style={style} />
 }
 
