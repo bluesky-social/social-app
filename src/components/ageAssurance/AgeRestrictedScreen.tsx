@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
+import {AgeAssuranceConfigUnavailableError} from '#/components/ageAssurance/AgeAssuranceErrors'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -44,6 +45,12 @@ export function AgeRestrictedScreen({
       </Layout.Header.Outer>
       <Layout.Content>
         <View style={[a.p_lg]}>
+          {aa.state.error === 'config' && (
+            <View style={[a.pb_lg]}>
+              <AgeAssuranceConfigUnavailableError />
+            </View>
+          )}
+
           <View style={[a.align_start, a.pb_lg]}>
             <AgeAssuranceBadge />
           </View>

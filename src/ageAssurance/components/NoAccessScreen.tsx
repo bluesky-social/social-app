@@ -177,10 +177,19 @@ export function NoAccessScreen() {
                         </Trans>
                       </Text>
 
+                      {!aa.flags.isOverRegionMinAccessAge && (
+                        <Text style={[textStyles]}>
+                          <Trans>
+                            Unfortunately, your declared age indicates that you
+                            are not old enough to access Bluesky in your region.
+                          </Trans>
+                        </Text>
+                      )}
+
                       {!isBlocked && birthdateUpdateText}
                     </View>
 
-                    <AccessSection />
+                    {aa.flags.isOverRegionMinAccessAge && <AccessSection />}
                   </>
                 ) : (
                   <View style={[a.gap_lg]}>

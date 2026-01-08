@@ -157,8 +157,8 @@ jobs:
     name: Build and Submit iOS
     runs-on: macos-26
     concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-ios
-      cancel-in-progress: true
+      group: ios-build
+      cancel-in-progress: false
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
@@ -262,7 +262,7 @@ jobs:
     name: Build and Submit Android
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-android
+      group: android-build
       cancel-in-progress: false
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
