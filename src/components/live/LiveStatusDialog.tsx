@@ -19,10 +19,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
-import {
-  ReportDialog,
-  useReportDialogControl,
-} from '#/components/moderation/ReportDialog'
+import {useGlobalReportDialogControl} from '#/components/moderation/ReportDialog'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -100,7 +97,7 @@ export function LiveStatus({
   const queryClient = useQueryClient()
   const openLink = useOpenLink()
   const moderationOpts = useModerationOpts()
-  const reportDialogControl = useReportDialogControl()
+  const reportDialogControl = useGlobalReportDialogControl()
 
   return (
     <>
@@ -229,21 +226,18 @@ export function LiveStatus({
           <SimpleInlineLinkText
             label={_(msg`Report`)}
             {...createStaticClick(() => {
-              reportDialogControl.open()
+              reportDialogControl.open({
+                subject: {
+                  ...profile.status,
+                  $type: 'app.bsky.actor.defs#statusView',
+                },
+              })
             })}
             style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}>
             <Trans>Report</Trans>
           </SimpleInlineLinkText>
         </View>
       </View>
-
-      <ReportDialog
-        control={reportDialogControl}
-        subject={{
-          ...profile.status,
-          $type: 'app.bsky.actor.defs#statusView',
-        }}
-      />
     </>
   )
 }

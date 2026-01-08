@@ -16,6 +16,7 @@ import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotate'
 import {
@@ -44,9 +45,23 @@ import {
   useReportOptions,
 } from './utils/useReportOptions'
 
+export {type ReportSubject} from './types'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
+export function useGlobalReportDialogControl() {
+  return useGlobalDialogsControlContext().reportDialogControl
+}
+
 const logger = Logger.create(Logger.Context.ReportDialog)
+
+export function GlobalReportDialog() {
+  const {value, control, clear} = useGlobalReportDialogControl()
+  if (!value) {
+    clear()
+    return null
+  }
+  return <ReportDialog control={control} subject={value.subject} />
+}
 
 export function ReportDialog(
   props: Omit<ReportDialogProps, 'subject'> & {
