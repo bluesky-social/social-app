@@ -99,6 +99,7 @@ export function LiveStatus({
   const moderationOpts = useModerationOpts()
   const reportDialogControl = useGlobalReportDialogControl()
   const dialogContext = Dialog.useDialogContext()
+  const hasLiveStatus = 'status' in profile
 
   return (
     <>
@@ -224,26 +225,29 @@ export function LiveStatus({
               <Trans>Live feature is in beta</Trans>
             </Text>
           </View>
-          <SimpleInlineLinkText
-            label={_(msg`Report this livestream`)}
-            {...createStaticClick(() => {
-              function open() {
-                reportDialogControl.open({
-                  subject: {
-                    ...profile.status,
-                    $type: 'app.bsky.actor.defs#statusView',
-                  },
-                })
-              }
-              if (dialogContext.isWithinDialog) {
-                dialogContext.close(open)
-              } else {
-                open()
-              }
-            })}
-            style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}>
-            <Trans>Report</Trans>
-          </SimpleInlineLinkText>
+          {hasLiveStatus && (
+            <SimpleInlineLinkText
+              label={_(msg`Report this livestream`)}
+              {...createStaticClick(() => {
+                function open() {
+                  if (!hasLiveStatus) return // already checked above
+                  reportDialogControl.open({
+                    subject: {
+                      ...profile.status,
+                      $type: 'app.bsky.actor.defs#statusView',
+                    },
+                  })
+                }
+                if (dialogContext.isWithinDialog) {
+                  dialogContext.close(open)
+                } else {
+                  open()
+                }
+              })}
+              style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}>
+              <Trans>Report</Trans>
+            </SimpleInlineLinkText>
+          )}
         </View>
       </View>
     </>
