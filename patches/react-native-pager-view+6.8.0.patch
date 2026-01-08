@@ -1,0 +1,30 @@
+diff --git a/node_modules/react-native-pager-view/ios/RNCPagerView.m b/node_modules/react-native-pager-view/ios/RNCPagerView.m
+index adfc7c6..366df60 100644
+--- a/node_modules/react-native-pager-view/ios/RNCPagerView.m
++++ b/node_modules/react-native-pager-view/ios/RNCPagerView.m
+@@ -498,6 +498,25 @@ - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecogni
+         return YES;
+     }
+ 
++    // iOS 26+ full-screen back gesture (interactiveContentPopGestureRecognizer)
++    if (@available(iOS 26, *)) {
++        if (gestureRecognizer == self.panGestureRecognizer &&
++            otherGestureRecognizer == self.reactViewController.navigationController.interactiveContentPopGestureRecognizer) {
++            UIPanGestureRecognizer* panGestureRecognizer = (UIPanGestureRecognizer*) gestureRecognizer;
++            CGPoint velocity = [panGestureRecognizer velocityInView:self];
++            BOOL isLTR = [self isLtrLayout];
++            BOOL isBackGesture = (isLTR && velocity.x > 0) || (!isLTR && velocity.x < 0);
++
++            if (self.currentIndex == 0 && isBackGesture) {
++                self.scrollView.panGestureRecognizer.enabled = false;
++            } else {
++                self.scrollView.panGestureRecognizer.enabled = self.scrollEnabled;
++            }
++
++            return YES;
++        }
++    }
++
+     self.scrollView.panGestureRecognizer.enabled = self.scrollEnabled;
+     return NO;
+ }
