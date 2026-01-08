@@ -6,12 +6,14 @@ import {useLingui} from '@lingui/react'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useLiveNowConfig} from '#/state/service-config'
 import {useTickEveryMinute} from '#/state/shell'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {getLiveServiceNames} from '#/components/live/utils'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
@@ -48,6 +50,10 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
+  const liveNowConfig = useLiveNowConfig()
+  const {formatted: allowedServices} = getLiveServiceNames(
+    liveNowConfig.allowedDomains,
+  )
 
   const time = useCallback(
     (offset: number) => {
@@ -138,13 +144,20 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               />
             </TextField.Root>
           </View>
-          {(liveLinkError || linkMetaError) && (
+          {liveLinkError || linkMetaError ? (
             <Admonition type="error">
               {liveLinkError ? (
                 <Trans>This is not a valid link</Trans>
               ) : (
                 cleanError(linkMetaError)
               )}
+            </Admonition>
+          ) : (
+            <Admonition type="tip">
+              <Trans>
+                The following services are enabled for your account:{' '}
+                {allowedServices}
+              </Trans>
             </Admonition>
           )}
 
