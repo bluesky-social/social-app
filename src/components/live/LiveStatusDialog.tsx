@@ -31,6 +31,7 @@ export function LiveStatusDialog({
   control,
   profile,
   embed,
+  status,
 }: {
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
@@ -41,7 +42,12 @@ export function LiveStatusDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle difference={!!embed.external.thumb} />
-      <DialogInner profile={profile} embed={embed} navigation={navigation} />
+      <DialogInner
+        status={status}
+        profile={profile}
+        embed={embed}
+        navigation={navigation}
+      />
     </Dialog.Outer>
   )
 }
@@ -50,10 +56,12 @@ function DialogInner({
   profile,
   embed,
   navigation,
+  status,
 }: {
   profile: bsky.profile.AnyProfileView
   embed: AppBskyEmbedExternal.View
   navigation: NavigationProp
+  status: AppBskyActorDefs.StatusView
 }) {
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
@@ -72,6 +80,7 @@ function DialogInner({
       contentContainerStyle={[a.pt_0, a.px_0]}
       style={[web({maxWidth: 420}), a.overflow_hidden]}>
       <LiveStatus
+        status={status}
         profile={profile}
         embed={embed}
         onPressOpenProfile={onPressOpenProfile}
@@ -82,11 +91,13 @@ function DialogInner({
 }
 
 export function LiveStatus({
+  status,
   profile,
   embed,
   padding = 'xl',
   onPressOpenProfile,
 }: {
+  status: AppBskyActorDefs.StatusView
   profile: bsky.profile.AnyProfileView
   embed: AppBskyEmbedExternal.View
   padding?: 'lg' | 'xl'
@@ -99,7 +110,6 @@ export function LiveStatus({
   const moderationOpts = useModerationOpts()
   const reportDialogControl = useGlobalReportDialogControl()
   const dialogContext = Dialog.useDialogContext()
-  const hasLiveStatus = 'status' in profile
 
   return (
     <>
@@ -225,15 +235,14 @@ export function LiveStatus({
               <Trans>Live feature is in beta</Trans>
             </Text>
           </View>
-          {hasLiveStatus && (
+          {status && (
             <SimpleInlineLinkText
               label={_(msg`Report this livestream`)}
               {...createStaticClick(() => {
                 function open() {
-                  if (!hasLiveStatus) return // already checked above
                   reportDialogControl.open({
                     subject: {
-                      ...profile.status,
+                      ...status,
                       $type: 'app.bsky.actor.defs#statusView',
                     },
                   })
