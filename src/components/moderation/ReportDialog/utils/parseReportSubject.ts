@@ -1,5 +1,6 @@
 import {
   AppBskyActorDefs,
+  AppBskyActorStatus,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyGraphDefs,
@@ -32,6 +33,21 @@ export function parseReportSubject(
       type: 'account',
       did: subject.did,
       nsid: 'app.bsky.actor.profile',
+    }
+  } else if (AppBskyActorDefs.isStatusView(subject)) {
+    const record = subject.record
+    if (
+      bsky.dangerousIsType<AppBskyActorStatus.Record>(
+        record,
+        AppBskyActorStatus.isRecord,
+      )
+    ) {
+      return {
+        type: 'status',
+        uri: subject.uri,
+        cid: subject.cid,
+        nsid: 'app.bsky.actor.status',
+      }
     }
   } else if (AppBskyGraphDefs.isListView(subject)) {
     return {

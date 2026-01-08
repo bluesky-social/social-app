@@ -17,6 +17,12 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {android, atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -94,6 +100,7 @@ export function LiveStatus({
   const queryClient = useQueryClient()
   const openLink = useOpenLink()
   const moderationOpts = useModerationOpts()
+  const reportDialogControl = useReportDialogControl()
 
   return (
     <>
@@ -205,16 +212,38 @@ export function LiveStatus({
             </Button>
           </ProfileCard.Header>
         )}
-        <Text
+        <View
           style={[
-            a.w_full,
-            a.text_center,
-            t.atoms.text_contrast_low,
-            a.text_sm,
+            a.flex_row,
+            a.align_center,
+            a.justify_between,
+            a.flex_1,
+            a.pt_sm,
           ]}>
-          <Trans>Live feature is in beta testing</Trans>
-        </Text>
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <CircleInfoIcon size="sm" fill={t.atoms.text_contrast_low.color} />
+            <Text style={[t.atoms.text_contrast_low, a.text_sm, a.flex_1]}>
+              <Trans>Live feature is in beta</Trans>
+            </Text>
+          </View>
+          <SimpleInlineLinkText
+            label={_(msg`Report`)}
+            {...createStaticClick(() => {
+              reportDialogControl.open()
+            })}
+            style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}>
+            <Trans>Report</Trans>
+          </SimpleInlineLinkText>
+        </View>
       </View>
+
+      <ReportDialog
+        control={reportDialogControl}
+        subject={{
+          ...profile.status,
+          $type: 'app.bsky.actor.defs#statusView',
+        }}
+      />
     </>
   )
 }
