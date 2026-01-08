@@ -225,7 +225,7 @@ export function LiveStatus({
             </Text>
           </View>
           <SimpleInlineLinkText
-            label={_(msg`Report`)}
+            label={_(msg`Report this livestream`)}
             {...createStaticClick(() => {
               function open() {
                 reportDialogControl.open({
