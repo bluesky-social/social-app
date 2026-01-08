@@ -16,6 +16,9 @@ jobs:
     if: github.repository == 'bluesky-social/social-app'
     name: Build and Submit iOS
     runs-on: macos-26-xlarge
+    concurrency:
+      group: ios-build
+      cancel-in-progress: false
     steps:
       - name: Check for EXPO_TOKEN
         run: >
