@@ -55,21 +55,17 @@ export function useGlobalReportDialogControl() {
 const logger = Logger.create(Logger.Context.ReportDialog)
 
 export function GlobalReportDialog() {
-  const {value, control, clear} = useGlobalReportDialogControl()
-  if (!value) {
-    clear()
-    return null
-  }
-  return <ReportDialog control={control} subject={value.subject} />
+  const {value, control} = useGlobalReportDialogControl()
+  return <ReportDialog control={control} subject={value?.subject} />
 }
 
 export function ReportDialog(
   props: Omit<ReportDialogProps, 'subject'> & {
-    subject: ReportSubject
+    subject?: ReportSubject
   },
 ) {
   const subject = React.useMemo(
-    () => parseReportSubject(props.subject),
+    () => (props.subject ? parseReportSubject(props.subject) : undefined),
     [props.subject],
   )
   const onClose = React.useCallback(() => {

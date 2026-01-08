@@ -98,6 +98,7 @@ export function LiveStatus({
   const openLink = useOpenLink()
   const moderationOpts = useModerationOpts()
   const reportDialogControl = useGlobalReportDialogControl()
+  const dialogContext = Dialog.useDialogContext()
 
   return (
     <>
@@ -217,21 +218,28 @@ export function LiveStatus({
             a.flex_1,
             a.pt_sm,
           ]}>
-          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+          <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
             <CircleInfoIcon size="sm" fill={t.atoms.text_contrast_low.color} />
-            <Text style={[t.atoms.text_contrast_low, a.text_sm, a.flex_1]}>
+            <Text style={[t.atoms.text_contrast_low, a.text_sm]}>
               <Trans>Live feature is in beta</Trans>
             </Text>
           </View>
           <SimpleInlineLinkText
             label={_(msg`Report`)}
             {...createStaticClick(() => {
-              reportDialogControl.open({
-                subject: {
-                  ...profile.status,
-                  $type: 'app.bsky.actor.defs#statusView',
-                },
-              })
+              function open() {
+                reportDialogControl.open({
+                  subject: {
+                    ...profile.status,
+                    $type: 'app.bsky.actor.defs#statusView',
+                  },
+                })
+              }
+              if (dialogContext.isWithinDialog) {
+                dialogContext.close(open)
+              } else {
+                open()
+              }
             })}
             style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}>
             <Trans>Report</Trans>
