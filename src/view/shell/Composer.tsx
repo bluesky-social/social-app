@@ -2,6 +2,7 @@ import {useEffect} from 'react'
 import {Animated, Easing} from 'react-native'
 
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
+import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {useComposerState} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {ComposePost} from '../com/composer/Composer'
@@ -33,6 +34,8 @@ export function Composer({winHeight}: {winHeight: number}) {
       },
     ],
   }
+
+  useEnableKeyboardController(!!state)
 
   // rendering
   // =

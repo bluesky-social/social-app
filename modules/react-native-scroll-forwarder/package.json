@@ -1,0 +1,24 @@
+{
+  "name": "react-native-scroll-forwarder",
+  "version": "0.0.0",
+  "description": "Scroll forwarder module for Bluesky profile headers",
+  "main": "src/index",
+  "codegenConfig": {
+    "name": "ScrollForwarderViewSpec",
+    "type": "all",
+    "jsSrcsDir": "src",
+    "ios": {
+      "componentProvider": {
+        "ScrollForwarderView": "ScrollForwarderView"
+      }
+    }
+  },
+  "author": "Hailey <me@haileyok.com>",
+  "license": "MIT",
+  "homepage": "#readme",
+  "create-react-native-library": {
+    "languages": "kotlin-objc",
+    "type": "fabric-view",
+    "version": "0.50.2"
+  }
+}

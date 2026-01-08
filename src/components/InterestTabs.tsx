@@ -199,7 +199,7 @@ export function InterestTabs({
   }, [])
 
   return (
-    <View style={[a.relative, a.flex_row]}>
+    <View style={[a.relative, a.flex_row]} collapsable={false}>
       <DraggableScrollView
         ref={listRef}
         contentContainerStyle={[

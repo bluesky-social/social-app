@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
   BackHandler,
   Keyboard,
-  KeyboardAvoidingView,
   type LayoutChangeEvent,
   ScrollView,
   type StyleProp,
@@ -19,6 +18,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
@@ -332,13 +332,7 @@ export const ComposePost = ({
       paddingTop: isAndroid ? insets.top : 0,
       paddingBottom:
         // iOS - when keyboard is closed, keep the bottom bar in the safe area
-        (isIOS && !isKeyboardVisible) ||
-        // Android - Android >=35 KeyboardAvoidingView adds double padding when
-        // keyboard is closed, so we subtract that in the offset and add it back
-        // here when the keyboard is open
-        (isAndroid && isKeyboardVisible)
-          ? insets.bottom
-          : 0,
+        (isIOS && !isKeyboardVisible) || isAndroid ? insets.bottom : 0,
     }),
     [insets, isKeyboardVisible],
   )
@@ -730,15 +724,12 @@ export const ComposePost = ({
   const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
-      <KeyboardAvoidingView
-        testID="composePostView"
-        behavior={isIOS ? 'padding' : 'height'}
-        keyboardVerticalOffset={keyboardVerticalOffset}
-        style={a.flex_1}>
-        <View
-          style={[a.flex_1, viewStyles]}
-          aria-modal
-          accessibilityViewIsModal>
+      <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
+        <KeyboardAvoidingView
+          testID="composePostView"
+          behavior={isIOS ? 'padding' : 'height'}
+          keyboardVerticalOffset={keyboardVerticalOffset}
+          style={a.flex_1}>
           <ComposerTopBar
             canPost={canPost}
             isReply={!!replyTo}
@@ -797,17 +788,17 @@ export const ComposePost = ({
             ))}
           </Animated.ScrollView>
           {!isWebFooterSticky && footer}
-        </View>
+        </KeyboardAvoidingView>
+      </View>
 
-        <Prompt.Basic
-          control={discardPromptControl}
-          title={_(msg`Discard draft?`)}
-          description={_(msg`Are you sure you'd like to discard this draft?`)}
-          onConfirm={onClose}
-          confirmButtonCta={_(msg`Discard`)}
-          confirmButtonColor="negative"
-        />
-      </KeyboardAvoidingView>
+      <Prompt.Basic
+        control={discardPromptControl}
+        title={_(msg`Discard draft?`)}
+        description={_(msg`Are you sure you'd like to discard this draft?`)}
+        onConfirm={onClose}
+        confirmButtonCta={_(msg`Discard`)}
+        confirmButtonColor="negative"
+      />
     </BottomSheetPortalProvider>
   )
 }
@@ -1650,12 +1641,11 @@ function useScrollTracker({
 }
 
 function useKeyboardVerticalOffset() {
-  const {top, bottom} = useSafeAreaInsets()
+  const {top} = useSafeAreaInsets()
 
   // Android etc
   if (!isIOS) {
-    // need to account for the edge-to-edge nav bar
-    return bottom * -1
+    return 0
   }
 
   // iPhone SE
