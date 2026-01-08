@@ -32,6 +32,7 @@ import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
 import {
   BSKY_LABELER_ONLY_REPORT_REASONS,
+  BSKY_LABELER_ONLY_SUBJECT_TYPES,
   NEW_TO_OLD_REASONS_MAP,
   SUPPORT_PAGE,
 } from './const'
@@ -127,8 +128,10 @@ function Inner(props: ReportDialogProps) {
   const isBskyOnlyReason = state?.selectedOption?.reason
     ? BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)
     : false
-  // some subjects (chats) only go to Bluesky
-  const isBskyOnlySubject = props.subject.type === 'convoMessage'
+  // some subjects ONLY go to Bluesky
+  const isBskyOnlySubject = BSKY_LABELER_ONLY_SUBJECT_TYPES.has(
+    props.subject.type,
+  )
 
   /**
    * Labelers that support this `subject` and its NSID collection
