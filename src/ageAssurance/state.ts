@@ -30,7 +30,13 @@ export function useAgeAssuranceState(): AgeAssuranceState {
         access: AgeAssuranceAccess.Safe,
       }
 
-    // should never happen, but need to guard
+    /**
+     * This can happen if the prefetch fails (such as due to network issues).
+     * The query handler will try it again, but if it continues to fail, of
+     * course we won't have config.
+     *
+     * In this case, fail open (unknown status/access) to avoid blocking users.
+     */
     if (!config) {
       logger.warn('useAgeAssuranceState: missing config')
       return {
