@@ -27,7 +27,7 @@ import {Loader} from '#/components/Loader'
 import {usePreemptivelyCompleteActivePolicyUpdate} from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
 import * as Toast from '#/components/Toast'
 import {
-  isUserUnderAge,
+  isUnderAge,
   MIN_ACCESS_AGE,
   useAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
@@ -76,16 +76,13 @@ export function StepInfo({
   const {setDeviceGeolocation} = useDeviceGeolocationApi()
   const locationControl = Dialog.useDialogControl()
   const isOverRegionMinAccessAge = state.dateOfBirth
-    ? !isUserUnderAge(
-        state.dateOfBirth.toISOString(),
-        aaRegionConfig.minAccessAge,
-      )
+    ? !isUnderAge(state.dateOfBirth.toISOString(), aaRegionConfig.minAccessAge)
     : true
   const isOverAppMinAccessAge = state.dateOfBirth
-    ? !isUserUnderAge(state.dateOfBirth.toISOString(), MIN_ACCESS_AGE)
+    ? !isUnderAge(state.dateOfBirth.toISOString(), MIN_ACCESS_AGE)
     : true
   const isOverMinAdultAge = state.dateOfBirth
-    ? !isUserUnderAge(state.dateOfBirth.toISOString(), 18)
+    ? !isUnderAge(state.dateOfBirth.toISOString(), 18)
     : true
   const isDeviceGeolocationGranted = useIsDeviceGeolocationGranted()
 
