@@ -170,7 +170,7 @@ export function CreateListFromStarterPackDialog({
               <Button
                 label={_(msg`Cancel`)}
                 onPress={() => control.close()}
-                size="small"
+                size="large"
                 color="secondary"
                 variant="solid">
                 <ButtonText>
@@ -180,7 +180,7 @@ export function CreateListFromStarterPackDialog({
               <Button
                 label={_(msg`Create list`)}
                 onPress={onPressCreate}
-                size="small"
+                size="large"
                 color="primary"
                 variant="solid">
                 <ButtonText>
