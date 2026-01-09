@@ -46,8 +46,7 @@ export function CreateListFromStarterPackDialog({
   const record = starterPack.record as AppBskyGraphStarterpack.Record
 
   const onPressCreate = useCallback(() => {
-    control.close()
-    createDialogControl.open()
+    control.close(() => createDialogControl.open())
   }, [control, createDialogControl])
 
   const onListCreated = useCallback(
