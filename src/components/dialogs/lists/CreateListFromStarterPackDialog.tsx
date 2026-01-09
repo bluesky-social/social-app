@@ -217,7 +217,7 @@ export function CreateListFromStarterPackDialog({
         onOpen={addMembersAndNavigate}>
         <Dialog.Handle />
         <Dialog.Inner label={_(msg`Adding members to list`)}>
-          <View style={[a.align_center, a.gap_lg, a.py_lg]}>
+          <View style={[a.align_center, a.gap_lg, a.py_5xl]}>
             <Loader size="xl" />
             <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
               <Trans>Adding members to list...</Trans>
