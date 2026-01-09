@@ -838,12 +838,7 @@ function LabelerCard({
               {title}
             </Text>
             <Text
-              style={[
-                a.text_sm,
-                ,
-                a.leading_snug,
-                t.atoms.text_contrast_medium,
-              ]}>
+              style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>By {sanitizeHandle(labeler.creator.handle, '@')}</Trans>
             </Text>
           </View>
