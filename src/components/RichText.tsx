@@ -11,7 +11,7 @@ import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
-// lifted from facet detection in `RichText` impl
+// lifted from facet detection in `RichText` impl, _without_ `gm` flags
 const URL_REGEX =
   /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i
 
