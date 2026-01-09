@@ -1,4 +1,3 @@
-import {useCallback} from 'react'
 import {View} from 'react-native'
 import {
   type $Typed,
@@ -45,100 +44,89 @@ export function CreateListFromStarterPackDialog({
 
   const record = starterPack.record as AppBskyGraphStarterpack.Record
 
-  const onPressCreate = useCallback(() => {
+  const onPressCreate = () => {
     control.close(() => createDialogControl.open())
-  }, [control, createDialogControl])
+  }
 
-  const onListCreated = useCallback(
-    async (listUri: string) => {
-      const navigateToList = () => {
-        const urip = new AtUri(listUri)
-        navigation.navigate('ProfileList', {
-          name: urip.hostname,
-          rkey: urip.rkey,
-        })
-      }
+  const onListCreated = async (listUri: string) => {
+    const navigateToList = () => {
+      const urip = new AtUri(listUri)
+      navigation.navigate('ProfileList', {
+        name: urip.hostname,
+        rkey: urip.rkey,
+      })
+    }
 
-      if (!starterPack.list || !currentAccount) {
-        // Navigate to the list even if we can't add members
-        createDialogControl.close(navigateToList)
-        return
-      }
+    if (!starterPack.list || !currentAccount) {
+      // Navigate to the list even if we can't add members
+      createDialogControl.close(navigateToList)
+      return
+    }
 
-      try {
-        // Fetch all members from the starter pack's list
-        const listItems = await getAllListMembers(agent, starterPack.list.uri)
+    try {
+      // Fetch all members from the starter pack's list
+      const listItems = await getAllListMembers(agent, starterPack.list.uri)
 
-        if (listItems.length > 0) {
-          // Create list item records for all members
-          const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
-            listItems.map(item => {
-              const listitemRecord: $Typed<AppBskyGraphListitem.Record> = {
-                $type: 'app.bsky.graph.listitem',
-                subject: item.subject.did,
-                list: listUri,
-                createdAt: new Date().toISOString(),
-              }
-              return {
-                $type: 'com.atproto.repo.applyWrites#create',
-                collection: 'app.bsky.graph.listitem',
-                rkey: TID.nextStr(),
-                value: listitemRecord,
-              }
-            })
+      if (listItems.length > 0) {
+        // Create list item records for all members
+        const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
+          listItems.map(item => {
+            const listitemRecord: $Typed<AppBskyGraphListitem.Record> = {
+              $type: 'app.bsky.graph.listitem',
+              subject: item.subject.did,
+              list: listUri,
+              createdAt: new Date().toISOString(),
+            }
+            return {
+              $type: 'com.atproto.repo.applyWrites#create',
+              collection: 'app.bsky.graph.listitem',
+              rkey: TID.nextStr(),
+              value: listitemRecord,
+            }
+          })
 
-          // Write in chunks of 50
-          const chunks = chunk(listitemWrites, 50)
-          for (const c of chunks) {
-            await agent.com.atproto.repo.applyWrites({
-              repo: currentAccount.did,
-              writes: c,
-            })
-          }
-
-          // Wait for the appview to be updated
-          await until(
-            5,
-            1e3,
-            (res: {data: {items: unknown[]}}) => res.data.items.length > 0,
-            () =>
-              agent.app.bsky.graph.getList({
-                list: listUri,
-                limit: 1,
-              }),
-          )
+        // Write in chunks of 50
+        const chunks = chunk(listitemWrites, 50)
+        for (const c of chunks) {
+          await agent.com.atproto.repo.applyWrites({
+            repo: currentAccount.did,
+            writes: c,
+          })
         }
 
-        // Invalidate relevant queries
-        queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
-
-        logEvent('starterPack:convertToList', {
-          starterPack: starterPack.uri,
-          memberCount: listItems.length,
-        })
-
-        Toast.show(_(msg`List created with ${listItems.length} members`))
-      } catch (e) {
-        logger.error('Failed to add members to list', {safeMessage: e})
-        Toast.show(
-          _(msg`List created, but failed to add some members`),
-          'xmark',
+        // Wait for the appview to be updated
+        await until(
+          5,
+          1e3,
+          (res: {data: {items: unknown[]}}) => res.data.items.length > 0,
+          () =>
+            agent.app.bsky.graph.getList({
+              list: listUri,
+              limit: 1,
+            }),
         )
       }
 
-      // Close dialog and navigate to the new list
-      createDialogControl.close(navigateToList)
-    },
-    [
-      agent,
-      createDialogControl,
-      currentAccount,
-      navigation,
-      queryClient,
-      starterPack,
-      _,
-    ],
-  )
+      // Invalidate relevant queries
+      queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
+
+      logEvent('starterPack:convertToList', {
+        starterPack: starterPack.uri,
+        memberCount: listItems.length,
+      })
+
+      Toast.show(_(msg`List created with ${listItems.length} members`))
+    } catch (e) {
+      logger.error('Failed to add members to list', {safeMessage: e})
+      Toast.show(
+        _(msg`List created, but failed to add some members`),
+        'xmark',
+      )
+    }
+
+    // Close dialog and navigate to the new list
+    createDialogControl.close(navigateToList)
+  }
 
   return (
     <>
