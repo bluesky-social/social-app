@@ -48,3 +48,7 @@ jobs:
           # or https://code.claude.com/docs/en/cli-reference for available options
           # claude_args: '--allowed-tools Bash(gh pr:*)'
 
+          # NOTE(sfn): we can add a custom system prompt here
+
+          claude_args: |
+            --model claude-opus-4-5-20251101
