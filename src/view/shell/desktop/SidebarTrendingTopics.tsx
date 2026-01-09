@@ -1,9 +1,8 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {
   useTrendingSettings,
   useTrendingSettingsApi,
@@ -34,10 +33,10 @@ function Inner() {
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
-  const onConfirmHide = React.useCallback(() => {
-    logEvent('trendingTopics:hide', {context: 'sidebar'})
+  const onConfirmHide = () => {
+    logger.metric('trendingTopics:hide', {context: 'sidebar'})
     setTrendingDisabled(true)
-  }, [setTrendingDisabled])
+  }
 
   return error || noTopics ? null : (
     <>
@@ -60,7 +59,7 @@ function Inner() {
           </Button>
         </View>
 
-        <View style={[a.gap_sm]}>
+        <View style={[a.gap_xs]}>
           {isLoading ? (
             Array(TRENDING_LIMIT)
               .fill(0)
@@ -91,13 +90,14 @@ function Inner() {
                   topic={topic}
                   style={[a.self_start]}
                   onPress={() => {
-                    logEvent('trendingTopic:click', {context: 'sidebar'})
+                    logger.metric('trendingTopic:click', {context: 'sidebar'})
                   }}>
                   {({hovered}) => (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                       <Text
                         style={[
                           a.text_sm,
+                          a.leading_snug,
                           t.atoms.text_contrast_low,
                           {minWidth: 16},
                         ]}>
@@ -106,7 +106,10 @@ function Inner() {
                       <Text
                         style={[
                           a.text_sm,
-                          hovered ? t.atoms.text : t.atoms.text_contrast_medium,
+                          a.leading_snug,
+                          hovered
+                            ? [t.atoms.text, a.underline]
+                            : t.atoms.text_contrast_medium,
                         ]}
                         numberOfLines={1}>
                         {topic.displayName ?? topic.topic}
