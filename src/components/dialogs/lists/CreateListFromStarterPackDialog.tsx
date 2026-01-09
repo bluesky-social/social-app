@@ -1,4 +1,3 @@
-import {useState} from 'react'
 import {View} from 'react-native'
 import {
   type $Typed,
@@ -45,7 +44,6 @@ export function CreateListFromStarterPackDialog({
   const queryClient = useQueryClient()
   const createDialogControl = Dialog.useDialogControl()
   const loadingDialogControl = Dialog.useDialogControl()
-  const [pendingListUri, setPendingListUri] = useState<string | null>(null)
 
   const record = starterPack.record as AppBskyGraphStarterpack.Record
 
@@ -53,15 +51,7 @@ export function CreateListFromStarterPackDialog({
     control.close(() => createDialogControl.open())
   }
 
-  const onListCreated = async (listUri: string) => {
-    setPendingListUri(listUri)
-    loadingDialogControl.open()
-  }
-
-  const addMembersAndNavigate = async () => {
-    if (!pendingListUri) return
-
-    const listUri = pendingListUri
+  const addMembersAndNavigate = async (listUri: string) => {
     const navigateToList = () => {
       const urip = new AtUri(listUri)
       navigation.navigate('ProfileList', {
@@ -137,6 +127,11 @@ export function CreateListFromStarterPackDialog({
     loadingDialogControl.close(navigateToList)
   }
 
+  const onListCreated = (listUri: string) => {
+    loadingDialogControl.open()
+    addMembersAndNavigate(listUri)
+  }
+
   return (
     <>
       <Dialog.Outer control={control} testID="createListFromStarterPackDialog">
@@ -175,7 +170,7 @@ export function CreateListFromStarterPackDialog({
               <Button
                 label={_(msg`Cancel`)}
                 onPress={() => control.close()}
-                size="medium"
+                size="small"
                 color="secondary"
                 variant="solid">
                 <ButtonText>
@@ -185,7 +180,7 @@ export function CreateListFromStarterPackDialog({
               <Button
                 label={_(msg`Create list`)}
                 onPress={onPressCreate}
-                size="medium"
+                size="small"
                 color="primary"
                 variant="solid">
                 <ButtonText>
@@ -210,8 +205,7 @@ export function CreateListFromStarterPackDialog({
 
       <Dialog.Outer
         control={loadingDialogControl}
-        nativeOptions={{preventDismiss: true}}
-        onOpen={addMembersAndNavigate}>
+        nativeOptions={{preventDismiss: true}}>
         <Dialog.Handle />
         <Dialog.Inner label={_(msg`Adding members to list`)}>
           <View style={[a.align_center, a.gap_lg, a.py_5xl]}>
