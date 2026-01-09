@@ -50,6 +50,7 @@ import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {CreateListFromStarterPackDialog} from '#/components/dialogs/lists/CreateListFromStarterPackDialog'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -61,7 +62,6 @@ import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
-import {CreateListFromStarterPackDialog} from '#/components/dialogs/lists/CreateListFromStarterPackDialog'
 import {
   ReportDialog,
   useReportDialogControl,
