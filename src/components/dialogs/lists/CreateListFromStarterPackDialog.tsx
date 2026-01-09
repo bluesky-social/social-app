@@ -76,9 +76,9 @@ export function CreateListFromStarterPackDialog({
     }
 
     try {
-      // Fetch all members and add them, with minimum 1.5s duration for UX
+      // Fetch all members and add them, with minimum 3s duration for UX
       const listItems = await wait(
-        1500,
+        3000,
         (async () => {
           const items = await getAllListMembers(agent, starterPack.list!.uri)
 
