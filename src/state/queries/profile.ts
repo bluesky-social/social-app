@@ -4,12 +4,14 @@ import {
   type AppBskyActorGetProfile,
   type AppBskyActorGetProfiles,
   type AppBskyActorProfile,
+  type AppBskyGraphGetFollows,
   AtUri,
   type BskyAgent,
   type ComAtprotoRepoUploadBlob,
   type Un$Typed,
 } from '@atproto/api'
 import {
+  type InfiniteData,
   keepPreviousData,
   type QueryClient,
   useMutation,
@@ -287,14 +289,16 @@ export function useProfileFollowMutationQueue(
 
       // Optimistically update profile follows cache for avatar displays
       if (currentAccount?.did) {
-        queryClient.setQueryData(
+        type FollowsQueryData =
+          InfiniteData<AppBskyGraphGetFollows.OutputSchema>
+        queryClient.setQueryData<FollowsQueryData>(
           PROFILE_FOLLOWS_RQKEY(currentAccount.did),
-          (old: any) => {
+          old => {
             if (!old?.pages?.[0]) return old
             if (finalFollowingUri) {
               // Add the followed profile to the beginning
               const alreadyExists = old.pages[0].follows.some(
-                (f: any) => f.did === profile.did,
+                f => f.did === profile.did,
               )
               if (alreadyExists) return old
               return {
@@ -302,7 +306,10 @@ export function useProfileFollowMutationQueue(
                 pages: [
                   {
                     ...old.pages[0],
-                    follows: [profile, ...old.pages[0].follows],
+                    follows: [
+                      profile as AppBskyActorDefs.ProfileView,
+                      ...old.pages[0].follows,
+                    ],
                   },
                   ...old.pages.slice(1),
                 ],
@@ -311,11 +318,9 @@ export function useProfileFollowMutationQueue(
               // Remove the unfollowed profile
               return {
                 ...old,
-                pages: old.pages.map((page: any) => ({
+                pages: old.pages.map(page => ({
                   ...page,
-                  follows: page.follows.filter(
-                    (f: any) => f.did !== profile.did,
-                  ),
+                  follows: page.follows.filter(f => f.did !== profile.did),
                 })),
               }
             }
