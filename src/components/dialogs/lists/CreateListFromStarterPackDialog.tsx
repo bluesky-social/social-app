@@ -57,9 +57,9 @@ export function CreateListFromStarterPackDialog({
       })
     }
 
+    // Dialog is already closed by CreateOrEditListDialog before onSave is called
     if (!starterPack.list || !currentAccount) {
-      // Navigate to the list even if we can't add members
-      createDialogControl.close(navigateToList)
+      navigateToList()
       return
     }
 
@@ -124,8 +124,7 @@ export function CreateListFromStarterPackDialog({
       )
     }
 
-    // Close dialog and navigate to the new list
-    createDialogControl.close(navigateToList)
+    navigateToList()
   }
 
   return (
