@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {View} from 'react-native'
 import {
   type $Typed,
@@ -15,6 +16,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
+import {wait} from '#/lib/async/wait'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -24,6 +26,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {CreateOrEditListDialog} from './CreateOrEditListDialog'
 
@@ -41,6 +44,8 @@ export function CreateListFromStarterPackDialog({
   const navigation = useNavigation<NavigationProp>()
   const queryClient = useQueryClient()
   const createDialogControl = Dialog.useDialogControl()
+  const loadingDialogControl = Dialog.useDialogControl()
+  const [pendingListUri, setPendingListUri] = useState<string | null>(null)
 
   const record = starterPack.record as AppBskyGraphStarterpack.Record
 
@@ -49,6 +54,14 @@ export function CreateListFromStarterPackDialog({
   }
 
   const onListCreated = async (listUri: string) => {
+    setPendingListUri(listUri)
+    loadingDialogControl.open()
+  }
+
+  const addMembersAndNavigate = async () => {
+    if (!pendingListUri) return
+
+    const listUri = pendingListUri
     const navigateToList = () => {
       const urip = new AtUri(listUri)
       navigation.navigate('ProfileList', {
@@ -57,65 +70,65 @@ export function CreateListFromStarterPackDialog({
       })
     }
 
-    // Dialog is already closed by CreateOrEditListDialog before onSave is called
     if (!starterPack.list || !currentAccount) {
-      navigateToList()
+      loadingDialogControl.close(navigateToList)
       return
     }
 
     try {
-      // Fetch all members from the starter pack's list
-      const listItems = await getAllListMembers(agent, starterPack.list.uri)
+      // Fetch all members and add them, with minimum 1.5s duration for UX
+      const listItems = await wait(
+        1500,
+        (async () => {
+          const items = await getAllListMembers(agent, starterPack.list!.uri)
 
-      if (listItems.length > 0) {
-        // Create list item records for all members
-        const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
-          listItems.map(item => {
-            const listitemRecord: $Typed<AppBskyGraphListitem.Record> = {
-              $type: 'app.bsky.graph.listitem',
-              subject: item.subject.did,
-              list: listUri,
-              createdAt: new Date().toISOString(),
+          if (items.length > 0) {
+            const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
+              items.map(item => {
+                const listitemRecord: $Typed<AppBskyGraphListitem.Record> = {
+                  $type: 'app.bsky.graph.listitem',
+                  subject: item.subject.did,
+                  list: listUri,
+                  createdAt: new Date().toISOString(),
+                }
+                return {
+                  $type: 'com.atproto.repo.applyWrites#create',
+                  collection: 'app.bsky.graph.listitem',
+                  rkey: TID.nextStr(),
+                  value: listitemRecord,
+                }
+              })
+
+            const chunks = chunk(listitemWrites, 50)
+            for (const c of chunks) {
+              await agent.com.atproto.repo.applyWrites({
+                repo: currentAccount!.did,
+                writes: c,
+              })
             }
-            return {
-              $type: 'com.atproto.repo.applyWrites#create',
-              collection: 'app.bsky.graph.listitem',
-              rkey: TID.nextStr(),
-              value: listitemRecord,
-            }
-          })
 
-        // Write in chunks of 50
-        const chunks = chunk(listitemWrites, 50)
-        for (const c of chunks) {
-          await agent.com.atproto.repo.applyWrites({
-            repo: currentAccount.did,
-            writes: c,
-          })
-        }
+            await until(
+              5,
+              1e3,
+              (res: {data: {items: unknown[]}}) => res.data.items.length > 0,
+              () =>
+                agent.app.bsky.graph.getList({
+                  list: listUri,
+                  limit: 1,
+                }),
+            )
+          }
 
-        // Wait for the appview to be updated
-        await until(
-          5,
-          1e3,
-          (res: {data: {items: unknown[]}}) => res.data.items.length > 0,
-          () =>
-            agent.app.bsky.graph.getList({
-              list: listUri,
-              limit: 1,
-            }),
-        )
-      }
+          return items
+        })(),
+      )
 
-      // Invalidate relevant queries
       queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
 
       logEvent('starterPack:convertToList', {
         starterPack: starterPack.uri,
         memberCount: listItems.length,
       })
-
-      Toast.show(_(msg`List created with ${listItems.length} members`))
     } catch (e) {
       logger.error('Failed to add members to list', {safeMessage: e})
       Toast.show(
@@ -124,7 +137,7 @@ export function CreateListFromStarterPackDialog({
       )
     }
 
-    navigateToList()
+    loadingDialogControl.close(navigateToList)
   }
 
   return (
@@ -197,6 +210,21 @@ export function CreateListFromStarterPackDialog({
           avatar: starterPack.list?.avatar,
         }}
       />
+
+      <Dialog.Outer
+        control={loadingDialogControl}
+        nativeOptions={{preventDismiss: true}}
+        onOpen={addMembersAndNavigate}>
+        <Dialog.Handle />
+        <Dialog.Inner label={_(msg`Adding members to list`)}>
+          <View style={[a.align_center, a.gap_lg, a.py_lg]}>
+            <Loader size="xl" />
+            <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
+              <Trans>Adding members to list...</Trans>
+            </Text>
+          </View>
+        </Dialog.Inner>
+      </Dialog.Outer>
     </>
   )
 }
