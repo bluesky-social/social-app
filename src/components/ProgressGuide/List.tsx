@@ -14,6 +14,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {Person_Stroke2_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import type * as bsky from '#/types/bsky'
 import {FollowDialog} from './FollowDialog'
 import {ProgressGuideTask} from './Task'
 
@@ -92,7 +93,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   return null
 }
 
-function StackedAvatars({follows}: {follows?: {avatar?: string}[]}) {
+function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
   const t = useTheme()
   const {centerColumnOffset} = useLayoutBreakpoints()
 
@@ -113,7 +114,7 @@ function StackedAvatars({follows}: {follows?: {avatar?: string}[]}) {
       {/* Show followed user avatars */}
       {followedAvatars.map((follow, i) => (
         <View
-          key={i}
+          key={follow.did}
           style={[
             a.rounded_full,
             {
