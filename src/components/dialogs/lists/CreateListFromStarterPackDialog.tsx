@@ -51,13 +51,17 @@ export function CreateListFromStarterPackDialog({
 
   const onListCreated = useCallback(
     async (listUri: string) => {
-      if (!starterPack.list || !currentAccount) {
-        // Navigate to the list even if we can't add members
+      const navigateToList = () => {
         const urip = new AtUri(listUri)
         navigation.navigate('ProfileList', {
           name: urip.hostname,
           rkey: urip.rkey,
         })
+      }
+
+      if (!starterPack.list || !currentAccount) {
+        // Navigate to the list even if we can't add members
+        createDialogControl.close(navigateToList)
         return
       }
 
@@ -122,14 +126,18 @@ export function CreateListFromStarterPackDialog({
         )
       }
 
-      // Navigate to the new list
-      const urip = new AtUri(listUri)
-      navigation.navigate('ProfileList', {
-        name: urip.hostname,
-        rkey: urip.rkey,
-      })
+      // Close dialog and navigate to the new list
+      createDialogControl.close(navigateToList)
     },
-    [agent, currentAccount, navigation, queryClient, starterPack, _],
+    [
+      agent,
+      createDialogControl,
+      currentAccount,
+      navigation,
+      queryClient,
+      starterPack,
+      _,
+    ],
   )
 
   return (
