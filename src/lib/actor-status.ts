@@ -19,15 +19,27 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
   return useMemo(() => {
     tick! // revalidate every minute
 
-    if (
-      shadowed &&
-      'status' in shadowed &&
-      shadowed.status &&
-      validateStatus(shadowed.did, shadowed.status, config) &&
-      isStatusStillActive(shadowed.status.expiresAt)
-    ) {
+    if (shadowed && 'status' in shadowed && shadowed.status) {
+      const isValid = validateStatus(shadowed.did, shadowed.status, config)
+      const isDisabled = shadowed.status.isDisabled || false
+      const isActive = isStatusStillActive(shadowed.status.expiresAt)
+      if (isValid && !isDisabled && isActive) {
+        return {
+          uri: shadowed.status.uri,
+          cid: shadowed.status.cid,
+          isDisabled: false,
+          isActive: true,
+          status: 'app.bsky.actor.status#live',
+          embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+          expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
+          record: shadowed.status.record,
+        } satisfies AppBskyActorDefs.StatusView
+      }
       return {
-        isActive: true,
+        uri: shadowed.status.uri,
+        cid: shadowed.status.cid,
+        isDisabled,
+        isActive: false,
         status: 'app.bsky.actor.status#live',
         embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
         expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
@@ -36,6 +48,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
     } else {
       return {
         status: '',
+        isDisabled: false,
         isActive: false,
         record: {},
       } satisfies AppBskyActorDefs.StatusView
