@@ -9,7 +9,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useLayoutBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Person_Stroke2_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
@@ -23,6 +23,8 @@ const TOTAL_AVATARS = 10
 export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
+  const {gtPhone} = useBreakpoints()
+  const {rightNavVisible} = useLayoutBreakpoints()
   const {currentAccount} = useSession()
   const followProgressGuide = useProgressGuide('follow-10')
   const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
@@ -38,6 +40,9 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   if (guide?.guide === 'follow-10' && actualFollowsCount >= TOTAL_AVATARS) {
     return null
   }
+
+  // Inline layout when left nav visible but no right sidebar (800-1100px)
+  const inlineLayout = gtPhone && !rightNavVisible
 
   if (guide) {
     return (
@@ -66,10 +71,22 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
           </Button>
         </View>
         {guide.guide === 'follow-10' && (
-          <>
+          <View
+            style={[
+              inlineLayout
+                ? [
+                    a.flex_row,
+                    a.flex_wrap,
+                    a.align_center,
+                    a.justify_between,
+                    a.gap_sm,
+                  ]
+                : a.flex_col,
+              !inlineLayout && a.gap_md,
+            ]}>
             <StackedAvatars follows={follows?.pages?.[0]?.follows} />
-            <FollowDialog guide={guide} />
-          </>
+            <FollowDialog guide={guide} showArrow={inlineLayout} />
+          </View>
         )}
         {guide.guide === 'like-10-and-follow-7' && (
           <>
