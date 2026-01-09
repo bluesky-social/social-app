@@ -460,6 +460,86 @@ import {Button} from '#/components/Button'
 import {useSession} from '../../../state/session'
 ```
 
+## Footguns
+
+Common pitfalls to avoid in this codebase:
+
+### Dialog Close Callback (Critical)
+
+**Always use `control.close(() => ...)` when performing actions after closing a dialog.** The callback ensures the action runs after the dialog's close animation completes. Failing to do this causes race conditions with React state updates.
+
+```tsx
+// WRONG - causes bugs with state updates, navigation, opening other dialogs
+const onConfirm = () => {
+  control.close()
+  navigation.navigate('Home')  // May race with dialog animation
+}
+
+// WRONG - same problem
+const onConfirm = () => {
+  control.close()
+  otherDialogControl.open()  // Will likely fail or cause visual glitches
+}
+
+// CORRECT - action runs after dialog fully closes
+const onConfirm = () => {
+  control.close(() => {
+    navigation.navigate('Home')
+  })
+}
+
+// CORRECT - opening another dialog after close
+const onConfirm = () => {
+  control.close(() => {
+    otherDialogControl.open()
+  })
+}
+
+// CORRECT - state updates after close
+const onConfirm = () => {
+  control.close(() => {
+    setSomeState(newValue)
+    onCallback?.()
+  })
+}
+```
+
+This applies to:
+- Navigation (`navigation.navigate()`, `navigation.push()`)
+- Opening other dialogs or menus
+- State updates that affect UI (`setState`, `queryClient.invalidateQueries`)
+- Callbacks passed from parent components
+
+The Menu component on iOS specifically uses this pattern - see `src/components/Menu/index.tsx:151`.
+
+### Controlled vs Uncontrolled Inputs
+
+Prefer `defaultValue` over `value` for TextInput on the old architecture:
+
+```tsx
+// Preferred - uncontrolled
+<TextField.Input
+  defaultValue={initialEmail}
+  onChangeText={setEmail}
+/>
+
+// Avoid when possible - controlled (can cause performance issues)
+<TextField.Input
+  value={email}
+  onChangeText={setEmail}
+/>
+```
+
+### Platform-Specific Behavior
+
+Some components behave differently across platforms:
+- `Dialog.Handle` - Only renders on native (drag handle for bottom sheet)
+- `Dialog.Close` - Only renders on web (X button)
+- `Menu.Divider` - Only renders on web
+- `Menu.ContainerItem` - Only works on native
+
+Always test on multiple platforms when using these components.
+
 ## Best Practices
 
 1. **Accessibility**: Always provide `label` prop for interactive elements, use `accessibilityHint` where helpful
