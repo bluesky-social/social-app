@@ -82,12 +82,12 @@
     "@atproto/xrpc" "^0.7.6"
     "@atproto/xrpc-server" "^0.10.0"
 
-"@atproto/api@^0.18.11":
-  version "0.18.11"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.11.tgz#38b8bacecaae4c24bc29bd98b34f270d8be675b3"
-  integrity sha512-YhgyL4rOBFOIs+e/8s5S+EjwM3T5q65IKh30ZoIrWcQS/2uteiIzg1xB+iXmexZq4Cwug0NLfRUJDViDK/ut0w==
+"@atproto/api@^0.18.13":
+  version "0.18.13"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.13.tgz#63eee310e6715752eb87748323cf9ab57dd91e4b"
+  integrity sha512-CULZ01pSJDltLS/Gc9MMrhFzB6OM3ezyZw7KoeLT/sBfwgA1ddA4mWdTh7DIRosPRigXtA05bnoiCutZbQDo+Q==
   dependencies:
-    "@atproto/common-web" "^0.4.10"
+    "@atproto/common-web" "^0.4.11"
     "@atproto/lexicon" "^0.6.0"
     "@atproto/syntax" "^0.4.2"
     "@atproto/xrpc" "^0.7.7"
@@ -208,13 +208,13 @@
     pino-http "^8.2.1"
     typed-emitter "^2.1.0"
 
-"@atproto/common-web@^0.4.10":
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.10.tgz#3d29df4dc3ea8f5c149161209f55e146f27867c1"
-  integrity sha512-TLDZSgSKzT8ZgOrBrTGK87J1CXve9TEuY6NVVUBRkOMzRRtQzpFb9/ih5WVS/hnaWVvE30CfuyaetRoma+WKNw==
+"@atproto/common-web@^0.4.11":
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.11.tgz#eb41dc02c1ea4221388630e193d181fb098186e0"
+  integrity sha512-VHejNmSABU8/03VrQ3e36AmT5U3UIeio+qSUqCrO1oNgrJcWfGy1rpj0FVtUugWF8Un29+yzkukzWGZfXL70rQ==
   dependencies:
-    "@atproto/lex-data" "0.0.6"
-    "@atproto/lex-json" "0.0.6"
+    "@atproto/lex-data" "0.0.7"
+    "@atproto/lex-json" "0.0.7"
     zod "^3.23.8"
 
 "@atproto/common-web@^0.4.4", "@atproto/common-web@^0.4.6":
@@ -415,10 +415,10 @@
     uint8arrays "3.0.0"
     unicode-segmenter "^0.14.0"
 
-"@atproto/lex-data@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@atproto/lex-data/-/lex-data-0.0.6.tgz#280d05ec9579ab091dc4a8b696ebbeddcb8ee37d"
-  integrity sha512-MBNB4ghRJQzuXK1zlUPljpPbQcF1LZ5dzxy274KqPt4p3uPuRw0mHjgcCoWzRUNBQC685WMQR4IN9DHtsnG57A==
+"@atproto/lex-data@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-data/-/lex-data-0.0.7.tgz#6aa87423f6d47849bec8ff3ca0b00ce93964adc8"
+  integrity sha512-W/Q5o9o7n2Sv3UywckChu01X5lwQUtaiiOkGJLnRsdkQTyC6813nPgY+p2sG7NwwM+82lu+FUV9fE/Ul3VqaJw==
   dependencies:
     "@atproto/syntax" "0.4.2"
     multiformats "^9.9.0"
@@ -451,12 +451,12 @@
     "@atproto/lex-data" "0.0.3"
     tslib "^2.8.1"
 
-"@atproto/lex-json@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@atproto/lex-json/-/lex-json-0.0.6.tgz#50618efb1cc11708b3897de14dcd3bd9c06e064d"
-  integrity sha512-EILnN5cditPvf+PCNjXt7reMuzjugxAL1fpSzmzJbEMGMUwxOf5pPWxRsaA/M3Boip4NQZ+6DVrPOGUMlnqceg==
+"@atproto/lex-json@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-json/-/lex-json-0.0.7.tgz#c06e1fc3e06d739bbb74694f5d846055bed37866"
+  integrity sha512-bjNPD5M/MhLfjNM7tcxuls80UgXpHqxdOxDXEUouAtZQV/nIDhGjmNUvKxOmOgnDsiZRnT2g5y3onrnjH3a44g==
   dependencies:
-    "@atproto/lex-data" "0.0.6"
+    "@atproto/lex-data" "0.0.7"
     tslib "^2.8.1"
 
 "@atproto/lex-resolver@0.0.5":

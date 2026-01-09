@@ -18,6 +18,7 @@ export type ReportSubject =
   | $Typed<AppBskyActorDefs.ProfileViewBasic>
   | $Typed<AppBskyActorDefs.ProfileView>
   | $Typed<AppBskyActorDefs.ProfileViewDetailed>
+  | $Typed<AppBskyActorDefs.StatusView>
   | $Typed<AppBskyGraphDefs.ListView>
   | $Typed<AppBskyFeedDefs.GeneratorView>
   | $Typed<AppBskyGraphDefs.StarterPackView>
@@ -37,6 +38,12 @@ export type ParsedReportSubject =
         link: boolean
         quote: boolean
       }
+    }
+  | {
+      type: 'status'
+      uri: string
+      cid: string
+      nsid: string
     }
   | {
       type: 'list'

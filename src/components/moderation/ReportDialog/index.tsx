@@ -16,6 +16,7 @@ import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotate'
 import {
@@ -31,6 +32,7 @@ import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
 import {
   BSKY_LABELER_ONLY_REPORT_REASONS,
+  BSKY_LABELER_ONLY_SUBJECT_TYPES,
   NEW_TO_OLD_REASONS_MAP,
   SUPPORT_PAGE,
 } from './const'
@@ -44,17 +46,27 @@ import {
   useReportOptions,
 } from './utils/useReportOptions'
 
+export {type ReportSubject} from './types'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
+
+export function useGlobalReportDialogControl() {
+  return useGlobalDialogsControlContext().reportDialogControl
+}
 
 const logger = Logger.create(Logger.Context.ReportDialog)
 
+export function GlobalReportDialog() {
+  const {value, control} = useGlobalReportDialogControl()
+  return <ReportDialog control={control} subject={value?.subject} />
+}
+
 export function ReportDialog(
   props: Omit<ReportDialogProps, 'subject'> & {
-    subject: ReportSubject
+    subject?: ReportSubject
   },
 ) {
   const subject = React.useMemo(
-    () => parseReportSubject(props.subject),
+    () => (props.subject ? parseReportSubject(props.subject) : undefined),
     [props.subject],
   )
   const onClose = React.useCallback(() => {
@@ -116,8 +128,10 @@ function Inner(props: ReportDialogProps) {
   const isBskyOnlyReason = state?.selectedOption?.reason
     ? BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)
     : false
-  // some subjects (chats) only go to Bluesky
-  const isBskyOnlySubject = props.subject.type === 'convoMessage'
+  // some subjects ONLY go to Bluesky
+  const isBskyOnlySubject = BSKY_LABELER_ONLY_SUBJECT_TYPES.has(
+    props.subject.type,
+  )
 
   /**
    * Labelers that support this `subject` and its NSID collection
@@ -824,12 +838,7 @@ function LabelerCard({
               {title}
             </Text>
             <Text
-              style={[
-                a.text_sm,
-                ,
-                a.leading_snug,
-                t.atoms.text_contrast_medium,
-              ]}>
+              style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>By {sanitizeHandle(labeler.creator.handle, '@')}</Trans>
             </Text>
           </View>
