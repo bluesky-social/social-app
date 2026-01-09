@@ -540,6 +540,26 @@ Some components behave differently across platforms:
 
 Always test on multiple platforms when using these components.
 
+### React Compiler is Enabled
+
+This codebase uses React Compiler, so **don't proactively add `useMemo` or `useCallback`**. The compiler handles memoization automatically.
+
+```tsx
+// UNNECESSARY - React Compiler handles this
+const handlePress = useCallback(() => {
+  doSomething()
+}, [doSomething])
+
+// JUST WRITE THIS
+const handlePress = () => {
+  doSomething()
+}
+```
+
+Only use `useMemo`/`useCallback` when you have a specific reason, such as:
+- The value is immediately used in an effect's dependency array
+- You're passing a callback to a non-React library that needs referential stability
+
 ## Best Practices
 
 1. **Accessibility**: Always provide `label` prop for interactive elements, use `accessibilityHint` where helpful
