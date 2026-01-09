@@ -151,7 +151,8 @@ function DialogInner({
   const [displayNameTooShort, setDisplayNameTooShort] = useState(false)
   const initialDisplayName = list?.name || initialValues?.name || ''
   const [displayName, setDisplayName] = useState(initialDisplayName)
-  const initialDescription = list?.description || initialValues?.description || ''
+  const initialDescription =
+    list?.description || initialValues?.description || ''
   const [descriptionRt, setDescriptionRt] = useState<RichTextAPI>(() => {
     const text = list?.description ?? initialValues?.description
     const facets = list?.descriptionFacets

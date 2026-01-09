@@ -131,10 +131,7 @@ export function CreateListFromStarterPackDialog({
       })
     } catch (e) {
       logger.error('Failed to add members to list', {safeMessage: e})
-      Toast.show(
-        _(msg`List created, but failed to add some members`),
-        'xmark',
-      )
+      Toast.show(_(msg`List created, but failed to add some members`), 'xmark')
     }
 
     loadingDialogControl.close(navigateToList)
