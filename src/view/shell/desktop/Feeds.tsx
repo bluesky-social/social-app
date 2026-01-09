@@ -171,6 +171,7 @@ function FeedItem({
   onPress: () => void
 }) {
   const t = useTheme()
+  const {_} = useLingui()
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -182,7 +183,7 @@ function FeedItem({
     <Pressable
       accessibilityRole="link"
       accessibilityLabel={feedInfo.displayName}
-      accessibilityHint=""
+      accessibilityHint={_(msg`Opens ${feedInfo.displayName} feed`)}
       onPress={onPress}
       onHoverIn={onHoverIn}
       onHoverOut={onHoverOut}
