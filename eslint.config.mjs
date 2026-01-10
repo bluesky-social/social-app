@@ -210,4 +210,14 @@ export default tseslint.config(
       'no-control-regex': 'off',
     },
   },
+
+  // Test files configuration
+  {
+    files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.test.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
 )
