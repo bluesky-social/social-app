@@ -620,7 +620,7 @@ function OverflowMenu({
                   convertToListDialogControl.open()
                 }}>
                 <Menu.ItemText>
-                  <Trans>Create list</Trans>
+                  <Trans>Create list from members</Trans>
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={ListSparkle} position="right" />
               </Menu.Item>

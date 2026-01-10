@@ -20,7 +20,8 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
@@ -135,9 +136,14 @@ export function CreateListFromStarterPackDialog({
 
   return (
     <>
-      <Dialog.Outer control={control} testID="createListFromStarterPackDialog">
+      <Dialog.Outer
+        control={control}
+        testID="createListFromStarterPackDialog"
+        nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
-        <Dialog.ScrollableInner label={_(msg`Create list from starter pack`)}>
+        <Dialog.ScrollableInner
+          label={_(msg`Create list from starter pack`)}
+          style={web({maxWidth: 400})}>
           <View style={[a.gap_lg]}>
             <Text style={[a.text_xl, a.font_bold]}>
               <Trans>Create list from starter pack</Trans>
@@ -151,43 +157,47 @@ export function CreateListFromStarterPackDialog({
               </Trans>
             </Text>
 
+            <Admonition type="tip">
+              Changes to the starter pack will not be reflected in the list
+              after creation. The list will be an independent copy.
+            </Admonition>
+
             <View
               style={[
-                a.p_md,
-                a.rounded_sm,
-                a.border,
-                t.atoms.border_contrast_low,
-                t.atoms.bg_contrast_25,
+                platform({
+                  web: [a.flex_row_reverse],
+                  native: [a.flex_col],
+                }),
+                a.gap_md,
+                a.pt_sm,
               ]}>
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                <Trans>
-                  Changes to the starter pack will not be reflected in the list
-                  after creation. The list will be an independent copy.
-                </Trans>
-              </Text>
-            </View>
-
-            <View style={[a.flex_row, a.gap_md, a.justify_end, a.pt_sm]}>
-              <Button
-                label={_(msg`Cancel`)}
-                onPress={() => control.close()}
-                size="large"
-                color="secondary">
-                <ButtonText>
-                  <Trans>Cancel</Trans>
-                </ButtonText>
-              </Button>
               <Button
                 label={_(msg`Create list`)}
                 onPress={onPressCreate}
-                size="large"
+                size={platform({
+                  web: 'small',
+                  native: 'large',
+                })}
                 color="primary">
                 <ButtonText>
                   <Trans>Create list</Trans>
                 </ButtonText>
               </Button>
+              <Button
+                label={_(msg`Cancel`)}
+                onPress={() => control.close()}
+                size={platform({
+                  web: 'small',
+                  native: 'large',
+                })}
+                color="secondary">
+                <ButtonText>
+                  <Trans>Cancel</Trans>
+                </ButtonText>
+              </Button>
             </View>
           </View>
+          <Dialog.Close />
         </Dialog.ScrollableInner>
       </Dialog.Outer>
 
@@ -206,14 +216,16 @@ export function CreateListFromStarterPackDialog({
         control={loadingDialogControl}
         nativeOptions={{preventDismiss: true}}>
         <Dialog.Handle />
-        <Dialog.Inner label={_(msg`Adding members to list`)}>
+        <Dialog.ScrollableInner
+          label={_(msg`Adding members to list`)}
+          style={web({maxWidth: 400})}>
           <View style={[a.align_center, a.gap_lg, a.py_5xl]}>
             <Loader size="xl" />
             <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
               <Trans>Adding members to list...</Trans>
             </Text>
           </View>
-        </Dialog.Inner>
+        </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
   )

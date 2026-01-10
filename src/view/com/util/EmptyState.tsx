@@ -67,7 +67,7 @@ export function EmptyState({
   }
 
   return (
-    <View testID={testID} style={style}>
+    <View testID={testID} style={[a.w_full, style]}>
       <View
         style={[
           a.flex_row,
