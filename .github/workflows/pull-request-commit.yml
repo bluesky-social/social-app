@@ -74,13 +74,12 @@ jobs:
       - name: Restore to base commit
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         run: |
-          git reset HEAD~
-          git restore .
+          git reset --hard HEAD~
 
       - name: 🔦 Generate stats file from base commit
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         run: |
-          yarn install
+          yarn install --force
           yarn intl:build
           yarn generate-webpack-stats-file
           mv stats.json stats-base.json
