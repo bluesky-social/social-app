@@ -1,11 +1,11 @@
 diff --git a/node_modules/react-native-uitextview/ios/RNUITextViewShadow.swift b/node_modules/react-native-uitextview/ios/RNUITextViewShadow.swift
-index c34ba71..13d576a 100644
+index c34ba71..b1c4d35 100644
 --- a/node_modules/react-native-uitextview/ios/RNUITextViewShadow.swift
 +++ b/node_modules/react-native-uitextview/ios/RNUITextViewShadow.swift
 @@ -159,13 +159,23 @@ class RNUITextViewShadow: RCTShadowView {
      let maxSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(MAXFLOAT))
      let textSize = self.attributedText.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, context: nil)
-     
+ 
 -    var totalLines = self.lineHeight == 0.0 ? 0 : Int(ceil(textSize.height / self.lineHeight))
 -
 -    if self.numberOfLines != 0, totalLines > self.numberOfLines {
@@ -31,3 +31,19 @@ index c34ba71..13d576a 100644
      return YGSize(width: Float(self.frameSize.width), height: Float(self.frameSize.height))
    }
  
+diff --git a/node_modules/react-native-uitextview/src/Text.web.tsx b/node_modules/react-native-uitextview/src/Text.web.tsx
+new file mode 100644
+index 0000000..0455396
+--- /dev/null
++++ b/node_modules/react-native-uitextview/src/Text.web.tsx
+@@ -0,0 +1,10 @@
++import {Text, TextProps} from 'react-native'
++
++// Web fallback - just use the standard Text component
++export function UITextView(props: TextProps & {uiTextView?: boolean}) {
++  return <Text {...props} />
++}
++
++// These are not used on web, but export them for compatibility
++export const RNUITextView = Text
++export const RNUITextViewChild = Text

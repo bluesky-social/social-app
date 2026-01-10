@@ -71,6 +71,9 @@ artifacts
 # Expo
 .expo/
 dist/
+
+# Rsbuild
+.rsbuild/
 *.jks
 *.p8
 *.p12
@@ -121,7 +124,9 @@ src/locale/locales/**/*.js
 bskyogcard/src/assets/fonts/noto-*
 
 # bskyweb build output
+bskyweb/static/js/
 bskyweb/static/media/*.webp
 bskyweb/static/media/*.jpg
 bskyweb/static/media/*.png
 bskyweb/static/media/*.svg
+bskyweb/static/media/*.woff2
