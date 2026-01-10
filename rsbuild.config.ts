@@ -180,7 +180,7 @@ export default defineConfig({
             process.env.BUNDLE_ANALYZE === 'server' ? 'server' : 'static',
           openAnalyzer: process.env.BUNDLE_ANALYZE === 'server',
           generateStatsFile: true,
-          statsFilename: 'stats.json',
+          statsFilename: '../stats.json',
         }
       : undefined,
   },

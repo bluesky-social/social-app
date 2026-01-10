@@ -70,6 +70,7 @@
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
     "analyze": "BUNDLE_ANALYZE=true yarn build-web",
     "analyze:open": "BUNDLE_ANALYZE=server yarn build-web",
+    "generate-webpack-stats-file": "yarn analyze",
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
