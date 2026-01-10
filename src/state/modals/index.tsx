@@ -2,15 +2,6 @@ import React from 'react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
-export interface UserAddRemoveListsModal {
-  name: 'user-add-remove-lists'
-  subject: string
-  handle: string
-  displayName: string
-  onAdd?: (listUri: string) => void
-  onRemove?: (listUri: string) => void
-}
-
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
@@ -21,9 +12,6 @@ export interface ContentLanguagesSettingsModal {
 export type Modal =
   // Curation
   | ContentLanguagesSettingsModal
-
-  // Lists
-  | UserAddRemoveListsModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean
