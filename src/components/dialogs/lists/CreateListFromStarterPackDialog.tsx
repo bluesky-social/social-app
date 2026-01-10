@@ -3,7 +3,7 @@ import {
   type $Typed,
   type AppBskyGraphDefs,
   type AppBskyGraphListitem,
-  AppBskyGraphStarterpack,
+  type AppBskyGraphStarterpack,
   AtUri,
   type ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
@@ -17,15 +17,14 @@ import chunk from 'lodash.chunk'
 import {until} from '#/lib/async/until'
 import {wait} from '#/lib/async/wait'
 import {type NavigationProp} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {CreateOrEditListDialog} from './CreateOrEditListDialog'
 
@@ -115,13 +114,15 @@ export function CreateListFromStarterPackDialog({
 
       queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
 
-      logEvent('starterPack:convertToList', {
+      logger.metric('starterPack:convertToList', {
         starterPack: starterPack.uri,
         memberCount: listItems.length,
       })
     } catch (e) {
       logger.error('Failed to add members to list', {safeMessage: e})
-      Toast.show(_(msg`List created, but failed to add some members`), 'xmark')
+      Toast.show(_(msg`List created, but failed to add some members`), {
+        type: 'error',
+      })
     }
 
     loadingDialogControl.close(navigateToList)
@@ -171,8 +172,7 @@ export function CreateListFromStarterPackDialog({
                 label={_(msg`Cancel`)}
                 onPress={() => control.close()}
                 size="large"
-                color="secondary"
-                variant="solid">
+                color="secondary">
                 <ButtonText>
                   <Trans>Cancel</Trans>
                 </ButtonText>
@@ -181,8 +181,7 @@ export function CreateListFromStarterPackDialog({
                 label={_(msg`Create list`)}
                 onPress={onPressCreate}
                 size="large"
-                color="primary"
-                variant="solid">
+                color="primary">
                 <ButtonText>
                   <Trans>Create list</Trans>
                 </ButtonText>
