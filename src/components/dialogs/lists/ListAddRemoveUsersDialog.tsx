@@ -6,10 +6,8 @@ import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useAllListMembersQuery} from '#/state/queries/list-members'
 import {
-  getMembership,
-  type ListMembersip,
-  useDangerousListMembershipsQuery,
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
@@ -57,7 +55,7 @@ function DialogInner({
 }) {
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const {data: memberships} = useDangerousListMembershipsQuery()
+  const {data: listMembers} = useAllListMembersQuery(list.uri)
 
   const renderProfileCard = useCallback(
     (item: ProfileItem) => {
@@ -65,13 +63,13 @@ function DialogInner({
         <UserResult
           profile={item.profile}
           onChange={onChange}
-          memberships={memberships}
+          listMembers={listMembers}
           list={list}
           moderationOpts={moderationOpts}
         />
       )
     },
-    [onChange, memberships, list, moderationOpts],
+    [onChange, listMembers, list, moderationOpts],
   )
 
   return (
@@ -82,16 +80,30 @@ function DialogInner({
   )
 }
 
+/**
+ * Returns undefined for pending, false for not a member, and string for a member (the URI of the membership record)
+ */
+function getMembership(
+  listMembers: AppBskyGraphDefs.ListItemView[] | undefined,
+  actorDid: string,
+): string | false | undefined {
+  if (!listMembers) {
+    return undefined
+  }
+  const member = listMembers.find(item => item.subject.did === actorDid)
+  return member ? member.uri : false
+}
+
 function UserResult({
   profile,
   list,
-  memberships,
+  listMembers,
   onChange,
   moderationOpts,
 }: {
   profile: bsky.profile.AnyProfileView
   list: AppBskyGraphDefs.ListView
-  memberships: ListMembersip[] | undefined
+  listMembers: AppBskyGraphDefs.ListItemView[] | undefined
   onChange?: (
     type: 'add' | 'remove',
     profile: bsky.profile.AnyProfileView,
@@ -100,8 +112,8 @@ function UserResult({
 }) {
   const {_} = useLingui()
   const membership = useMemo(
-    () => getMembership(memberships, list.uri, profile.did),
-    [memberships, list.uri, profile.did],
+    () => getMembership(listMembers, profile.did),
+    [listMembers, profile.did],
   )
   const {mutate: listMembershipAdd, isPending: isAddingPending} =
     useListMembershipAddMutation({
