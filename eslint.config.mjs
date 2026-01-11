@@ -180,34 +180,16 @@ export default tseslint.config(
         {prefer: 'type-imports', fixStyle: 'inline-type-imports'},
       ],
       '@typescript-eslint/no-require-imports': 'off',
-      // Maintain previous behavior - these are stricter in typescript-eslint v8
+      // Keep disabled - too many violations to fix now
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
-      '@typescript-eslint/no-wrapper-object-types': 'off',
-      '@typescript-eslint/no-unsafe-function-type': 'off',
 
       // Import rules
       'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],
 
-      // Turn off rules that weren't enforced in previous config
+      // Keep disabled - many are intentional empty destructuring patterns
       'no-empty-pattern': 'off',
-      'no-async-promise-executor': 'off',
-      'no-constant-binary-expression': 'warn',
-      'prefer-const': 'off',
-      'no-empty': 'off',
-      'no-unsafe-optional-chaining': 'off',
-      'no-prototype-builtins': 'off',
-      'no-var': 'off',
-      'prefer-rest-params': 'off',
-      'no-case-declarations': 'off',
-      'no-irregular-whitespace': 'off',
-      'no-useless-escape': 'off',
-      'no-sparse-arrays': 'off',
-      'no-fallthrough': 'off',
-      'no-control-regex': 'off',
     },
   },
 

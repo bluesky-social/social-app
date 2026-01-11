@@ -53,7 +53,9 @@ export function ListsScreen({}: Props) {
           name: urip.hostname,
           rkey: urip.rkey,
         })
-      } catch {}
+      } catch {
+        // no-op
+      }
     },
     [navigation],
   )

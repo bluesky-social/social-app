@@ -123,7 +123,9 @@ function BookmarksInner() {
     if (isFetchingNextPage || !hasNextPage || error) return
     try {
       await fetchNextPage()
-    } catch {}
+    } catch {
+      // no-op
+    }
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
   const items = useMemo(() => {

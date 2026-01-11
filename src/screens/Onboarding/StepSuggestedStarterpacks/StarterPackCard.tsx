@@ -82,7 +82,7 @@ export function StarterPackCard({
     setIsFollowingAll(true)
     setIsProcessing(false)
     batchedUpdates(() => {
-      for (let did of dids) {
+      for (const did of dids) {
         updateProfileShadow(queryClient, did, {
           followingUri: followUris.get(did),
         })

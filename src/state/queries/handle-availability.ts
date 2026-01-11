@@ -120,7 +120,9 @@ export async function checkHandleAvailability(
         logger.metric('signup:handleTaken', {typeahead}, {statsig: true})
         return {available: false} as const
       }
-    } catch {}
+    } catch {
+      // no-op
+    }
     logger.metric('signup:handleAvailable', {typeahead}, {statsig: true})
     return {available: true} as const
   }

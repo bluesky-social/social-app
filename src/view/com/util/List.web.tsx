@@ -422,7 +422,7 @@ function useResizeObserver(
     }
     const resizeObserver = new ResizeObserver(entries => {
       batchedUpdates(() => {
-        for (let entry of entries) {
+        for (const entry of entries) {
           const rect = entry.contentRect
           handleResize(rect.width, rect.height)
         }

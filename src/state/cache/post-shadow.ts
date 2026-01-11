@@ -158,7 +158,7 @@ export function updatePostShadow(
   value: Partial<PostShadow>,
 ) {
   const cachedPosts = findPostsInCache(queryClient, uri)
-  for (let post of cachedPosts) {
+  for (const post of cachedPosts) {
     shadows.set(post, {...shadows.get(post), ...value})
   }
   batchedUpdates(() => {
@@ -170,28 +170,28 @@ function* findPostsInCache(
   queryClient: QueryClient,
   uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
-  for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
+  for (const post of findAllPostsInFeedQueryData(queryClient, uri)) {
     yield post
   }
-  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+  for (const post of findAllPostsInNotifsQueryData(queryClient, uri)) {
     yield post
   }
-  for (let post of findAllPostsInThreadV2QueryData(queryClient, uri)) {
+  for (const post of findAllPostsInThreadV2QueryData(queryClient, uri)) {
     yield post
   }
-  for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
+  for (const post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield post
   }
-  for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
+  for (const post of findAllPostsInQuoteQueryData(queryClient, uri)) {
     yield post
   }
-  for (let post of findAllPostsInExploreFeedPreviewsQueryData(
+  for (const post of findAllPostsInExploreFeedPreviewsQueryData(
     queryClient,
     uri,
   )) {
     yield post
   }
-  for (let post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
+  for (const post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
     yield post
   }
 }

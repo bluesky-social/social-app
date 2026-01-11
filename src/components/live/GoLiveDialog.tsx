@@ -52,7 +52,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
 
   const time = useCallback(
     (offset: number) => {
-      tick!
+      void tick // revalidate every minute
 
       const date = new Date()
       date.setMinutes(date.getMinutes() + offset)

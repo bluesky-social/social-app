@@ -185,7 +185,9 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
         try {
           // fire off a confirmation email immediately
           await requestEmailVerification()
-        } catch {}
+        } catch {
+          // no-op
+        }
       }
     } catch (e) {
       logger.error('EmailDialog: update email failed', {safeMessage: e})

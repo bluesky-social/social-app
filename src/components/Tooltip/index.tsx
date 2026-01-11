@@ -286,7 +286,7 @@ function Bubble({
       left -= left + cw - maxLeft
     }
 
-    let tipLeft =
+    const tipLeft =
       targetMeasurements.x -
       left +
       targetMeasurements.width / 2 -

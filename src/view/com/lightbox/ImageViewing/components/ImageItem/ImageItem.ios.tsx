@@ -308,8 +308,8 @@ const getZoomRectAfterDoubleTap = (
 
   // Next, we'll be calculating the rectangle to "zoom into" in screen coordinates.
   // We already know the zoom level, so this gives us the rectangle size.
-  let rectWidth = screenSize.width / zoom
-  let rectHeight = screenSize.height / zoom
+  const rectWidth = screenSize.width / zoom
+  const rectHeight = screenSize.height / zoom
 
   // Before we settle on the zoomed rect, figure out the safe area it has to be inside.
   // We don't want to introduce new black bars or make existing black bars unbalanced.

@@ -1673,7 +1673,7 @@ describe('session', () => {
 
 function run(initialState: State, actions: Action[]): State {
   let state = initialState
-  for (let action of actions) {
+  for (const action of actions) {
     state = reducer(state, action)
   }
   return state

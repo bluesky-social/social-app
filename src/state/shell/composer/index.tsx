@@ -107,7 +107,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   })
 
   const closeComposer = useNonReactiveCallback(() => {
-    let wasOpen = !!state
+    const wasOpen = !!state
     if (wasOpen) {
       setState(undefined)
       purgeTemporaryImageFiles()

@@ -75,7 +75,7 @@ export const USRegionNameToRegionCode: {
 export function normalizeDeviceLocation(
   location: LocationGeocodedAddress,
 ): Geolocation {
-  let {isoCountryCode, region} = location
+  const {isoCountryCode, region} = location
   let regionCode: string | undefined = region ?? undefined
 
   /*

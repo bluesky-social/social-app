@@ -11,7 +11,10 @@ if (process.env.NODE_ENV !== 'production') {
   // This is a hack to get it showing as a redbox on the web so we catch it early.
   const realConsoleError = console.error
   const thrownErrors = new WeakSet()
-  console.error = function consoleErrorWrapper(msgOrError) {
+  console.error = function consoleErrorWrapper(
+    ...args: Parameters<typeof console.error>
+  ) {
+    const msgOrError = args[0]
     if (
       typeof msgOrError === 'string' &&
       msgOrError.startsWith('Unexpected text node')
@@ -28,7 +31,7 @@ if (process.env.NODE_ENV !== 'production') {
       thrownErrors.add(err)
       throw err
     } else if (!thrownErrors.has(msgOrError)) {
-      return realConsoleError.apply(this, arguments as any)
+      return realConsoleError.apply(this, args)
     }
   }
 }

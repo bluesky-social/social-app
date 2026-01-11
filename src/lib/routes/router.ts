@@ -39,7 +39,7 @@ export class Router<T extends Record<string, any>> {
 
 function createRoute(pattern: string): Route {
   const pathParamNames: Set<string> = new Set()
-  let matcherReInternal = pattern.replace(/:([\w]+)/g, (_m, name) => {
+  const matcherReInternal = pattern.replace(/:([\w]+)/g, (_m, name) => {
     pathParamNames.add(name)
     return `(?<${name}>[^/]+)`
   })

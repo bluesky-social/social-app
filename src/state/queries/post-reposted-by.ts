@@ -55,7 +55,7 @@ export function* findAllProfilesInQueryData(
     if (!queryData?.pages) {
       continue
     }
-    for (const page of queryData?.pages) {
+    for (const page of queryData.pages) {
       for (const repostedBy of page.repostedBy) {
         if (repostedBy.did === did) {
           yield repostedBy

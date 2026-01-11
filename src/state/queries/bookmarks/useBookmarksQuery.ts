@@ -135,7 +135,7 @@ export function* findAllPostsInQueryData(
     if (!queryData?.pages) {
       continue
     }
-    for (const page of queryData?.pages) {
+    for (const page of queryData.pages) {
       for (const bookmark of page.bookmarks) {
         if (
           !bsky.dangerousIsType<AppBskyFeedDefs.PostView>(

@@ -375,7 +375,7 @@ export function Explore({
         if (suggestedUsers.actors.length > 0 && moderationOpts) {
           // Currently the responses contain duplicate items.
           // Needs to be fixed on backend, but let's dedupe to be safe.
-          let seen = new Set()
+          const seen = new Set()
           const profileItems: ExploreScreenItems[] = []
           for (const actor of suggestedUsers.actors) {
             // checking for following still necessary if search data is used
@@ -439,7 +439,7 @@ export function Explore({
 
     if (useFullExperience) {
       if (suggestedFeeds && preferences) {
-        let seen = new Set()
+        const seen = new Set()
         const feedItems: ExploreScreenItems[] = []
         for (const feed of suggestedFeeds.feeds) {
           if (!seen.has(feed.uri)) {
@@ -527,7 +527,7 @@ export function Explore({
       if (feeds && preferences) {
         // Currently the responses contain duplicate items.
         // Needs to be fixed on backend, but let's dedupe to be safe.
-        let seen = new Set()
+        const seen = new Set()
         const feedItems: ExploreScreenItems[] = []
         for (const page of feeds.pages) {
           for (const feed of page.feeds) {

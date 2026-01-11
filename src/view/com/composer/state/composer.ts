@@ -198,7 +198,7 @@ export function composerReducer(
       const indexToRemove = state.thread.posts.findIndex(
         p => p.id === action.postId,
       )
-      let nextPosts = [...state.thread.posts]
+      const nextPosts = [...state.thread.posts]
       if (indexToRemove !== -1) {
         const postToRemove = state.thread.posts[indexToRemove]
         if (postToRemove.embed.media?.type === 'video') {

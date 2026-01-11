@@ -334,7 +334,7 @@ async function createProfileRecord(
     imageUri && imageMime ? uploadBlob(agent, imageUri, imageMime) : undefined
 
   await agent.upsertProfile(async existing => {
-    let next: Un$Typed<AppBskyActorProfile.Record> = existing ?? {}
+    const next: Un$Typed<AppBskyActorProfile.Record> = existing ?? {}
 
     if (blobPromise) {
       const res = await blobPromise

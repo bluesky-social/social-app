@@ -413,7 +413,7 @@ export function SelectMediaButton({
             msg`You can only select one GIF at a time.`,
           ),
           [SelectedAssetError.FileTooBig]: _(
-            msg`One or more of your selected files are too large. Maximum size is 100 MB.`,
+            msg`One or more of your selected files are too large. Maximum size is 100 MB.`,
           ),
         }[error]
       })

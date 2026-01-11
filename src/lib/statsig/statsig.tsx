@@ -131,8 +131,8 @@ function toStringRecord<E extends keyof MetricEvents>(
   metadata: MetricEvents[E] & FlatJSONRecord,
 ): Record<string, string> {
   const record: Record<string, string> = {}
-  for (let key in metadata) {
-    if (metadata.hasOwnProperty(key)) {
+  for (const key in metadata) {
+    if (Object.hasOwn(metadata, key)) {
       if (typeof metadata[key] === 'string') {
         record[key] = metadata[key]
       } else {

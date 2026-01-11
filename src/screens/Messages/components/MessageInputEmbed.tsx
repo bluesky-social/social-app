@@ -156,7 +156,7 @@ export function MessageInputEmbed({
         </View>
       )
       break
-    case 'success':
+    case 'success': {
       const itemUrip = new AtUri(post.uri)
       const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey)
 
@@ -203,6 +203,7 @@ export function MessageInputEmbed({
         </View>
       )
       break
+    }
   }
 
   return (

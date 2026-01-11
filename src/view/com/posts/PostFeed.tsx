@@ -333,14 +333,14 @@ let PostFeed = ({
   }, [enabled, isEmpty, disablePoll, checkForNew])
 
   useEffect(() => {
-    let cleanup1: () => void | undefined, cleanup2: () => void | undefined
     const subscription = AppState.addEventListener('change', nextAppState => {
       // check for new on app foreground
       if (nextAppState === 'active') {
         checkForNew()
       }
     })
-    cleanup1 = () => subscription.remove()
+    const cleanup1 = () => subscription.remove()
+    let cleanup2: (() => void) | undefined
     if (pollInterval) {
       // check for new on interval
       const i = setInterval(() => {
@@ -349,7 +349,7 @@ let PostFeed = ({
       cleanup2 = () => clearInterval(i)
     }
     return () => {
-      cleanup1?.()
+      cleanup1()
       cleanup2?.()
     }
   }, [pollInterval, checkForNew])
@@ -402,7 +402,7 @@ let PostFeed = ({
       feedKind = 'profile'
     }
 
-    let arr: FeedRow[] = []
+    const arr: FeedRow[] = []
     if (KNOWN_SHUTDOWN_FEEDS.includes(feedUriOrActorDid)) {
       arr.push({
         type: 'feedShutdownMsg',
@@ -481,7 +481,7 @@ let PostFeed = ({
             })
           }
         } else {
-          for (const page of data?.pages) {
+          for (const page of data.pages) {
             for (const slice of page.slices) {
               sliceIndex++
 

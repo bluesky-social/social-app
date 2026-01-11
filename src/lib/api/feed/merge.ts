@@ -129,7 +129,7 @@ export class MergeFeedAPI implements FeedAPI {
     // assemble a response by sampling from feeds with content
     const posts: AppBskyFeedDefs.FeedViewPost[] = []
     while (posts.length < limit) {
-      let slice = this.sampleItem()
+      const slice = this.sampleItem()
       if (slice[0]) {
         posts.push(slice[0])
       } else {

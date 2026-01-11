@@ -248,7 +248,7 @@ let SearchScreenPostResults = ({
     return results?.pages.flatMap(page => page.posts) || []
   }, [results])
   const items = useMemo(() => {
-    let temp: SearchResultSlice[] = []
+    const temp: SearchResultSlice[] = []
 
     const seenUris = new Set()
     for (const post of posts) {

@@ -95,7 +95,7 @@ export class Convo {
     this.convoId = params.convoId
     this.agent = params.agent
     this.events = params.events
-    this.senderUserDid = params.agent.session?.did!
+    this.senderUserDid = params.agent.session?.did ?? ''
 
     if (params.placeholderData) {
       this.setupPlaceholderData(params.placeholderData)
@@ -557,11 +557,7 @@ export class Convo {
   async fetchConvo() {
     if (this.pendingFetchConvo) return this.pendingFetchConvo
 
-    this.pendingFetchConvo = new Promise<{
-      convo: ChatBskyConvoDefs.ConvoView
-      sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-      recipients: ChatBskyActorDefs.ProfileViewBasic[]
-    }>(async (resolve, reject) => {
+    this.pendingFetchConvo = (async () => {
       try {
         const response = await networkRetry(2, () => {
           return this.agent.api.chat.bsky.convo.getConvo(
@@ -574,17 +570,15 @@ export class Convo {
 
         const convo = response.data.convo
 
-        resolve({
+        return {
           convo,
           sender: convo.members.find(m => m.did === this.senderUserDid),
           recipients: convo.members.filter(m => m.did !== this.senderUserDid),
-        })
-      } catch (e) {
-        reject(e)
+        }
       } finally {
         this.pendingFetchConvo = undefined
       }
-    })
+    })()
 
     return this.pendingFetchConvo
   }

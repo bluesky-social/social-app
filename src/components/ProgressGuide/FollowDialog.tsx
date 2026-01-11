@@ -167,7 +167,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
     const results = hasSearchText
       ? searchResults?.pages.flatMap(p => p.actors)
       : suggestions?.actors
-    let _items: Item[] = []
+    const _items: Item[] = []
 
     if (isFetchingSuggestions || isFetchingSearchResults) {
       const placeholders: Item[] = Array(10)

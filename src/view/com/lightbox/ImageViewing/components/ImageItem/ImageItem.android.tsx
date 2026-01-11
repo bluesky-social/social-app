@@ -191,7 +191,7 @@ const ImageItem = ({
     .onEnd(() => {
       'worklet'
       // Commit just the pinch.
-      let t = createTransform()
+      const t = createTransform()
       prependPinch(
         t,
         pinchScale.get(),
@@ -220,7 +220,7 @@ const ImageItem = ({
       }
 
       const nextPanTranslation = {x: e.translationX, y: e.translationY}
-      let t = createTransform()
+      const t = createTransform()
       prependPan(t, nextPanTranslation)
       prependPinch(
         t,
@@ -239,7 +239,7 @@ const ImageItem = ({
     .onEnd(() => {
       'worklet'
       // Commit just the pan.
-      let t = createTransform()
+      const t = createTransform()
       prependPan(t, panTranslation.get())
       prependTransform(t, committedTransform.get())
       applyRounding(t)
@@ -265,7 +265,7 @@ const ImageItem = ({
       const [, , committedScale] = readTransform(committedTransform.get())
       if (committedScale !== 1) {
         // Go back to 1:1 using the identity vector.
-        let t = createTransform()
+        const t = createTransform()
         committedTransform.set(withClampedSpring(t))
         return
       }
@@ -317,7 +317,7 @@ const ImageItem = ({
     const {scaleAndMoveTransform, isHidden} = transforms.get()
     // Apply the active adjustments on top of the committed transform before the gestures.
     // This is matrix multiplication, so operations are applied in the reverse order.
-    let t = createTransform()
+    const t = createTransform()
     prependPan(t, panTranslation.get())
     prependPinch(t, pinchScale.get(), pinchOrigin.get(), pinchTranslation.get())
     prependTransform(t, committedTransform.get())

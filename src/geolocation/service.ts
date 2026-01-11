@@ -67,7 +67,7 @@ export async function resolve() {
      * THIS PROMISE SHOULD NEVER `reject()`! We want the app to proceed with
      * startup, even if geolocation resolution fails.
      */
-    geolocationServicePromise = new Promise(async resolve => {
+    geolocationServicePromise = (async () => {
       let success = false
 
       function cacheResponseOrThrow(response: Geolocation | undefined) {
@@ -111,10 +111,10 @@ export async function resolve() {
               },
             )
           })
-      } finally {
-        resolve({success})
       }
-    })
+
+      return {success}
+    })()
   }
 }
 

@@ -621,7 +621,7 @@ export function* findAllProfilesInQueryData(
     if (!queryData) {
       continue
     }
-    for (let profile of queryData.profiles) {
+    for (const profile of queryData.profiles) {
       if (profile.did === did) {
         yield profile
       }

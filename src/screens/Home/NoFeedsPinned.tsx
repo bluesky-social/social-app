@@ -29,7 +29,7 @@ export function NoFeedsPinned({
   const addRecommendedFeeds = React.useCallback(async () => {
     let skippedTimeline = false
     let skippedDiscover = false
-    let remainingSavedFeeds = []
+    const remainingSavedFeeds = []
 
     // remove first instance of both timeline and discover, since we're going to overwrite them
     for (const savedFeed of preferences.savedFeeds) {

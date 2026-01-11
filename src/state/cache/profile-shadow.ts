@@ -195,7 +195,7 @@ export function updateProfileShadow(
   value: Partial<ProfileShadow>,
 ) {
   const cachedProfiles = findProfilesInCache(queryClient, did)
-  for (let profile of cachedProfiles) {
+  for (const profile of cachedProfiles) {
     shadows.set(profile, {...shadows.get(profile), ...value})
   }
   batchedUpdates(() => {

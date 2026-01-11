@@ -60,7 +60,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   })
 
   const closeModal = useNonReactiveCallback(() => {
-    let wasActive = activeModals.length > 0
+    const wasActive = activeModals.length > 0
     setActiveModals(modals => {
       return modals.slice(0, -1)
     })
@@ -68,7 +68,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   })
 
   const closeAllModals = useNonReactiveCallback(() => {
-    let wasActive = activeModals.length > 0
+    const wasActive = activeModals.length > 0
     setActiveModals([])
     return wasActive
   })

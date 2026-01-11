@@ -374,7 +374,7 @@ export class Agent extends BaseAgent {
 // WARN: In the factories above, we _manually set a proxy header_ for the agent after we do whatever it is we are supposed to do.
 // Ideally, we wouldn't be doing this. However, since there is so much logic that requires making calls to the PDS right now, it
 // feels safer to just let those run as-is and set the header afterward.
-let realFetch = globalThis.fetch
+const realFetch = globalThis.fetch
 class BskyAppAgent extends BskyAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined

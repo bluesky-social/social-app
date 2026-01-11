@@ -276,7 +276,7 @@ function sendOrAggregateInteractionsForStats(
   interactions: AppBskyFeedDefs.Interaction[],
   feed: string,
 ) {
-  for (let interaction of interactions) {
+  for (const interaction of interactions) {
     switch (interaction.event) {
       // Pressing "Show more" / "Show less" is relatively uncommon so we won't aggregate them.
       // This lets us send the feed context together with them.

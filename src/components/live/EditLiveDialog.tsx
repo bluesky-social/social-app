@@ -99,7 +99,7 @@ function DialogInner({
   } = useRemoveLiveStatusMutation()
 
   const {minutesUntilExpiry, expiryDateTime} = useMemo(() => {
-    tick!
+    void tick // revalidate every minute
 
     const expiry = new Date(status.expiresAt ?? new Date())
     return {

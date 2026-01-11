@@ -519,7 +519,7 @@ export const ComposePost = ({
     } finally {
       if (postUri) {
         let index = 0
-        for (let post of thread.posts) {
+        for (const post of thread.posts) {
           logEvent('post:create', {
             imageCount:
               post.embed.media?.type === 'images'
@@ -619,7 +619,7 @@ export const ComposePost = ({
     if (publishOnUpload) {
       let erroredVideos = 0
       let uploadingVideos = 0
-      for (let post of thread.posts) {
+      for (const post of thread.posts) {
         if (post.embed.media?.type === 'video') {
           const video = post.embed.media.video
           if (video.status === 'error') {
@@ -812,7 +812,7 @@ export const ComposePost = ({
   )
 }
 
-let ComposerPost = React.memo(function ComposerPost({
+const ComposerPost = React.memo(function ComposerPost({
   post,
   dispatch,
   textInput,

@@ -87,7 +87,7 @@ export function useSearchPostsQuery({
 
         // Keep track of the last run and whether we can reuse
         // some already selected pages from there.
-        let reusedPages = []
+        const reusedPages = []
         if (lastRun.current) {
           const {
             data: lastData,
@@ -95,8 +95,8 @@ export function useSearchPostsQuery({
             result: lastResult,
           } = lastRun.current
           let canReuse = true
-          for (let key in selectArgs) {
-            if (selectArgs.hasOwnProperty(key)) {
+          for (const key in selectArgs) {
+            if (Object.hasOwn(selectArgs, key)) {
               if ((selectArgs as any)[key] !== (lastArgs as any)[key]) {
                 // Can't do reuse anything if any input has changed.
                 canReuse = false
@@ -156,7 +156,7 @@ export function* findAllPostsInQueryData(
     if (!queryData?.pages) {
       continue
     }
-    for (const page of queryData?.pages) {
+    for (const page of queryData.pages) {
       for (const post of page.posts) {
         if (didOrHandleUriMatches(atUri, post)) {
           yield post
@@ -184,7 +184,7 @@ export function* findAllProfilesInQueryData(
     if (!queryData?.pages) {
       continue
     }
-    for (const page of queryData?.pages) {
+    for (const page of queryData.pages) {
       for (const post of page.posts) {
         if (post.author.did === did) {
           yield post.author

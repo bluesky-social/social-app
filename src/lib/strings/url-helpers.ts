@@ -28,7 +28,7 @@ const TRUSTED_REGEX = new RegExp(
 
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
-    let i = str.lastIndexOf(tld)
+    const i = str.lastIndexOf(tld)
     if (i === -1) {
       return false
     }
@@ -123,7 +123,9 @@ export function isBskyPostUrl(url: string): boolean {
       return /profile\/(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(
         urlp.pathname,
       )
-    } catch {}
+    } catch {
+      // no-op
+    }
   }
   return false
 }
@@ -135,7 +137,9 @@ export function isBskyCustomFeedUrl(url: string): boolean {
       return /profile\/(?<name>[^/]+)\/feed\/(?<rkey>[^/]+)/i.test(
         urlp.pathname,
       )
-    } catch {}
+    } catch {
+      // no-op
+    }
   }
   return false
 }
@@ -291,10 +295,14 @@ export function labelToDomain(label: string): string | undefined {
   }
   try {
     return new URL(label).hostname.toLowerCase()
-  } catch {}
+  } catch {
+    // no-op
+  }
   try {
     return new URL('https://' + label).hostname.toLowerCase()
-  } catch {}
+  } catch {
+    // no-op
+  }
   return undefined
 }
 
@@ -306,7 +314,7 @@ export function isPossiblyAUrl(str: string): boolean {
   if (str.startsWith('https://')) {
     return true
   }
-  const [firstWord] = str.split(/[\s\/]/)
+  const [firstWord] = str.split(/[\s/]/)
   return isValidDomain(firstWord)
 }
 

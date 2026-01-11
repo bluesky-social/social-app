@@ -108,7 +108,7 @@ function computeSuggestions({
   searched?: AppBskyActorDefs.ProfileViewBasic[]
   moderationOpts: ModerationOpts
 }) {
-  let items: AppBskyActorDefs.ProfileViewBasic[] = []
+  const items: AppBskyActorDefs.ProfileViewBasic[] = []
   for (const item of searched) {
     if (!items.find(item2 => item2.handle === item.handle)) {
       items.push(item)

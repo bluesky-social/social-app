@@ -211,8 +211,8 @@ function Inner(props: ReportDialogProps) {
       logger.metric(
         'reportDialog:success',
         {
-          reason: state.selectedOption?.reason!,
-          labeler: state.selectedLabeler?.creator.handle!,
+          reason: state.selectedOption?.reason ?? '',
+          labeler: state.selectedLabeler?.creator.handle ?? '',
           details: !!state.details,
         },
         {statsig: false},
@@ -719,7 +719,7 @@ function CategoryCard({
             {option.title}
           </Text>
           <Text
-            style={[a.text_sm, , a.leading_snug, t.atoms.text_contrast_medium]}>
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             {option.description}
           </Text>
         </View>

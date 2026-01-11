@@ -106,7 +106,7 @@ async function loggedOutFetch({
   limit: number
   cursor?: string
 }) {
-  let contentLangs = getAppLanguageAsContentLanguage()
+  const contentLangs = getAppLanguageAsContentLanguage()
 
   /**
    * Copied from our root `Agent` class

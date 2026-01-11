@@ -47,7 +47,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     if (isWeb) {
       try {
         sessionStorage.setItem('lastSelectedHomeFeed', feed)
-      } catch {}
+      } catch {
+        // no-op
+      }
     }
     persisted.write('lastSelectedHomeFeed', feed)
   }, [])

@@ -50,7 +50,7 @@ export async function saveImageToMediaLibrary(_opts: {uri: string}) {
 }
 
 export async function getImageDim(path: string): Promise<Dimensions> {
-  var img = document.createElement('img')
+  const img = document.createElement('img')
   const promise = new Promise((resolve, reject) => {
     img.onload = resolve
     img.onerror = reject
@@ -139,8 +139,8 @@ function createResizedImage(
       } else if (mode === 'contain') {
         scale = img.width > img.height ? width / img.width : height / img.height
       }
-      let w = img.width * scale
-      let h = img.height * scale
+      const w = img.width * scale
+      const h = img.height * scale
 
       canvas.width = w
       canvas.height = h

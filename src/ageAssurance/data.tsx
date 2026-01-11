@@ -111,13 +111,12 @@ export async function prefetchConfig() {
     return
   }
 
-  configPrefetchPromise = new Promise(async resolve => {
+  configPrefetchPromise = (async () => {
     await cacheHydrationPromise
     const cached = getConfigFromCache()
 
     if (cached) {
       logger.debug(`prefetchAgeAssuranceConfig: using cache`)
-      resolve()
     } else {
       try {
         logger.debug(`prefetchAgeAssuranceConfig: resolving...`)
@@ -130,11 +129,9 @@ export async function prefetchConfig() {
         logger.warn(`prefetchAgeAssuranceConfig: failed`, {
           safeMessage: e.message,
         })
-      } finally {
-        resolve()
       }
     }
-  })
+  })()
 }
 export async function refetchConfig() {
   logger.debug(`refetchConfig: fetching...`)

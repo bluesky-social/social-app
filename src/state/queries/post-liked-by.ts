@@ -52,7 +52,7 @@ export function* findAllProfilesInQueryData(
     if (!queryData?.pages) {
       continue
     }
-    for (const page of queryData?.pages) {
+    for (const page of queryData.pages) {
       for (const like of page.likes) {
         if (like.actor.did === did) {
           yield like.actor

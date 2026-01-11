@@ -289,7 +289,7 @@ function SwitcherMenuProfileLink() {
     }
     return getCurrentRoute(state)
   })
-  let isCurrent =
+  const isCurrent =
     currentRouteInfo.name === 'Profile'
       ? isTab(currentRouteInfo.name, pathName) &&
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
@@ -385,7 +385,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
     }
     return getCurrentRoute(state)
   })
-  let isCurrent =
+  const isCurrent =
     currentRouteInfo.name === 'Profile'
       ? isTab(currentRouteInfo.name, pathName) &&
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===

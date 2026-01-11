@@ -36,7 +36,7 @@ const consumedSources = new Map<string, PostSource>()
 export function setUnstablePostSource(key: string, source: PostSource) {
   assertValidDevOnly(
     key,
-    `setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
+    `setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
   )
   logger.debug('set', {key, source})
   transientSources.set(key, source)
@@ -53,7 +53,7 @@ export function useUnstablePostSource(key: string) {
   const [source] = useState(() => {
     assertValidDevOnly(
       key,
-      `consumeUnstablePostSource key should be a URI containing a handle, received ${key} — be sure to use buildPostSourceKey when setting the source`,
+      `consumeUnstablePostSource key should be a URI containing a handle, received ${key} — be sure to use buildPostSourceKey when setting the source`,
       true,
     )
     const source = consumedSources.get(id) || transientSources.get(key)

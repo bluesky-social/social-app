@@ -81,7 +81,11 @@ export function Outer({
 
   const handleBackgroundPress = React.useCallback(
     async (e: GestureResponderEvent) => {
-      webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
+      if (webOptions?.onBackgroundPress) {
+        webOptions.onBackgroundPress(e)
+      } else {
+        close()
+      }
     },
     [webOptions, close],
   )

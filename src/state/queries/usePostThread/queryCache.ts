@@ -202,7 +202,7 @@ export function getThreadPlaceholder(
   uri: string,
 ): $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItem> | void {
   let partial
-  for (let item of getThreadPlaceholderCandidates(queryClient, uri)) {
+  for (const item of getThreadPlaceholderCandidates(queryClient, uri)) {
     /*
      * Currently, the backend doesn't send full post info in some cases (for
      * example, for quoted posts). We use missing `likeCount` as a way to
@@ -246,19 +246,19 @@ export function* getThreadPlaceholderCandidates(
    * with >0 likes/reposts over a stale version with no metrics in order to
    * avoid a notification->post scroll jump.
    */
-  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+  for (const post of findAllPostsInNotifsQueryData(queryClient, uri)) {
     yield postViewToThreadPlaceholder(post)
   }
-  for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
+  for (const post of findAllPostsInFeedQueryData(queryClient, uri)) {
     yield postViewToThreadPlaceholder(post)
   }
-  for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
+  for (const post of findAllPostsInQuoteQueryData(queryClient, uri)) {
     yield postViewToThreadPlaceholder(post)
   }
-  for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
+  for (const post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield postViewToThreadPlaceholder(post)
   }
-  for (let post of findAllPostsInExploreFeedPreviewsQueryData(
+  for (const post of findAllPostsInExploreFeedPreviewsQueryData(
     queryClient,
     uri,
   )) {

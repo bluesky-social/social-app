@@ -179,14 +179,18 @@ const emitter = new EventEmitter()
 
 if (isWeb) {
   const originalScroll = window.scroll
+
   window.scroll = function () {
     emitter.emit('forced-scroll')
+    // eslint-disable-next-line prefer-rest-params
     return originalScroll.apply(this, arguments as any)
   }
 
   const originalScrollTo = window.scrollTo
+
   window.scrollTo = function () {
     emitter.emit('forced-scroll')
+    // eslint-disable-next-line prefer-rest-params
     return originalScrollTo.apply(this, arguments as any)
   }
 }

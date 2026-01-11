@@ -95,7 +95,7 @@ export function ProfileFeedgens({
     } else if (isEmpty) {
       items = items.concat([EMPTY])
     } else if (data?.pages) {
-      for (const page of data?.pages) {
+      for (const page of data.pages) {
         items = items.concat(page.feeds)
       }
     } else if (isError && !isEmpty) {

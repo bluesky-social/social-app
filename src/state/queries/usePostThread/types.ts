@@ -128,7 +128,7 @@ export type ThreadItem =
  * total number of replies, the reply index, etc.
  *
  * The idea here is that these values should be objectively true in all cases,
- * such that we can use them later — either individually on in composite — to
+ * such that we can use them later — either individually on in composite — to
  * drive rendering behaviors.
  */
 export type TraversalMetadata = {

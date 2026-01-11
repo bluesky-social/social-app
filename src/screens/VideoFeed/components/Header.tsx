@@ -74,8 +74,9 @@ export function Header({
       break
     }
     case 'author':
-    // TODO
+    // falls through
     default: {
+      // TODO: implement author header
       break
     }
   }

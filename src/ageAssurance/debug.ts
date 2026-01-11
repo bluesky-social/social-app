@@ -8,6 +8,7 @@ import {type OtherRequiredData} from '#/ageAssurance/data'
 import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
 
+// eslint-disable-next-line no-constant-binary-expression -- intentional debug toggle
 export const enabled = (IS_DEV && false) || IS_E2E
 
 export const geolocation: Geolocation | undefined = enabled

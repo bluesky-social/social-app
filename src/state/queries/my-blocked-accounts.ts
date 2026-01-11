@@ -47,7 +47,7 @@ export function* findAllProfilesInQueryData(
     if (!queryData?.pages) {
       continue
     }
-    for (const page of queryData?.pages) {
+    for (const page of queryData.pages) {
       for (const block of page.blocks) {
         if (block.did === did) {
           yield block

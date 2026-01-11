@@ -150,7 +150,7 @@ function* findAllProfilesInSuggestedFollowsQueryData(
     if (!queryData?.pages) {
       continue
     }
-    for (const page of queryData?.pages) {
+    for (const page of queryData.pages) {
       for (const actor of page.actors) {
         if (actor.did === did) {
           yield actor

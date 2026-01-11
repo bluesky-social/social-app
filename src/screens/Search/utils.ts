@@ -10,7 +10,7 @@ export function parseSearchQuery(rawQuery: string) {
   }
 
   // find remaining params in base
-  const rawParams = base.match(/[a-z]+:[a-z-\.@\d:"]+/gi) || []
+  const rawParams = base.match(/[a-z]+:[a-z-.@\d:"]+/gi) || []
 
   for (const param of rawParams) {
     base = base.replace(param, '')

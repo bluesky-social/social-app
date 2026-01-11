@@ -90,7 +90,7 @@ function iterateUris(str: string, cb: (from: number, to: number) => void) {
       }
       uri = `https://${uri}`
     }
-    let from = str.indexOf(match[2], match.index)
+    const from = str.indexOf(match[2], match.index)
     let to = from + match[2].length
     // strip ending puncuation
     if (/[.,;!?]$/.test(uri)) {

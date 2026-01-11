@@ -103,7 +103,7 @@ export function* findAllProfilesInQueryData(
     if (!queryData?.pages) {
       continue
     }
-    for (const page of queryData?.pages) {
+    for (const page of queryData.pages) {
       for (const match of page.matches) {
         if (match.did === did) {
           yield match

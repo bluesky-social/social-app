@@ -123,8 +123,8 @@ export function addSessionDebugLog(log: Log) {
   }
 }
 
-let agentIds = new WeakMap<object, string>()
-let realmId = Math.random().toString(36).slice(2)
+const agentIds = new WeakMap<object, string>()
+const realmId = Math.random().toString(36).slice(2)
 let nextAgentId = 1
 
 function getAgentId(agent: object) {

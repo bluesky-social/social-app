@@ -208,7 +208,7 @@ export class FeedViewPostsSlice {
 
   getAuthors(): AuthorContext {
     const feedPost = this._feedPost
-    let author: AppBskyActorDefs.ProfileViewBasic = feedPost.post.author
+    const author: AppBskyActorDefs.ProfileViewBasic = feedPost.post.author
     let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
     let grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
     let rootAuthor: AppBskyActorDefs.ProfileViewBasic | undefined

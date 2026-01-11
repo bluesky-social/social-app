@@ -128,7 +128,7 @@ function NativeStackNavigator({
     return <Onboarding />
   }
   const newDescriptors: typeof descriptors = {}
-  for (let key in descriptors) {
+  for (const key in descriptors) {
     const descriptor = descriptors[key]
     const requireAuth = descriptor.options.requireAuth ?? false
     newDescriptors[key] = {

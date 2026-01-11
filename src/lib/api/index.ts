@@ -78,7 +78,7 @@ export async function post(
   const writes: $Typed<ComAtprotoRepoApplyWrites.Create>[] = []
   const uris: string[] = []
 
-  let now = new Date()
+  const now = new Date()
   let tid: TID | undefined
 
   for (let i = 0; i < thread.posts.length; i++) {

@@ -46,7 +46,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const closeLightbox = useNonReactiveCallback(() => {
-    let wasActive = !!activeLightbox
+    const wasActive = !!activeLightbox
     setActiveLightbox(null)
     return wasActive
   })

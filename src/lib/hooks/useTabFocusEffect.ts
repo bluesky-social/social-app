@@ -18,7 +18,7 @@ export function useTabFocusEffect(
 
   useEffect(() => {
     // check if inside
-    let v = getTabState(state, tabName) !== TabState.Outside
+    const v = getTabState(state, tabName) !== TabState.Outside
     if (v !== isInside) {
       // fire
       setIsInside(v)

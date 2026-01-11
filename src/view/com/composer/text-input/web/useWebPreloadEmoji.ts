@@ -17,7 +17,9 @@ export function useWebPreloadEmoji({immediate}: {immediate?: boolean} = {}) {
     try {
       const data = (await import('./EmojiPickerData.json')).default
       init({data})
-    } catch (e) {}
+    } catch (e) {
+      // no-op
+    }
   }, [])
   if (immediate) preload()
   return preload

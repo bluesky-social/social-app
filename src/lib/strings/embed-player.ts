@@ -426,7 +426,7 @@ export function parseEmbedPlayerFromUrl(
   // link shortened flickr path
   if (urlp.hostname === 'flic.kr') {
     const b58alph = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
-    let [__, type, idBase58Enc] = urlp.pathname.split('/')
+    const [__, type, idBase58Enc] = urlp.pathname.split('/')
     let id = 0n
     for (const char of idBase58Enc) {
       const nextIdx = b58alph.indexOf(char)
@@ -439,7 +439,7 @@ export function parseEmbedPlayerFromUrl(
     }
 
     switch (type) {
-      case 'go':
+      case 'go': {
         const formattedGroupId = `${id}`
         return {
           type: 'flickr_album',
@@ -449,6 +449,7 @@ export function parseEmbedPlayerFromUrl(
             -2,
           )}@N${formattedGroupId.slice(-2)}`,
         }
+      }
       case 's':
         return {
           type: 'flickr_album',
@@ -537,13 +538,13 @@ export function parseTenorGif(urlp: URL):
     return {success: false}
   }
 
-  let [__, id, filename] = urlp.pathname.split('/')
+  const [, initialId, initialFilename] = urlp.pathname.split('/')
 
-  if (!id || !filename) {
+  if (!initialId || !initialFilename) {
     return {success: false}
   }
 
-  if (!id.includes('AAAAC')) {
+  if (!initialId.includes('AAAAC')) {
     return {success: false}
   }
 
@@ -559,16 +560,19 @@ export function parseTenorGif(urlp: URL):
     width: Number(w),
   }
 
+  let id: string
+  let filename: string
   if (isWeb) {
     if (isSafari) {
-      id = id.replace('AAAAC', 'AAAP1')
-      filename = filename.replace('.gif', '.mp4')
+      id = initialId.replace('AAAAC', 'AAAP1')
+      filename = initialFilename.replace('.gif', '.mp4')
     } else {
-      id = id.replace('AAAAC', 'AAAP3')
-      filename = filename.replace('.gif', '.webm')
+      id = initialId.replace('AAAAC', 'AAAP3')
+      filename = initialFilename.replace('.gif', '.webm')
     }
   } else {
-    id = id.replace('AAAAC', 'AAAAM')
+    id = initialId.replace('AAAAC', 'AAAAM')
+    filename = initialFilename
   }
 
   return {

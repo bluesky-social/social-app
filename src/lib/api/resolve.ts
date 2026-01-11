@@ -229,5 +229,7 @@ export async function imageToThumb(
     if (img) {
       return await createComposerImage(img)
     }
-  } catch {}
+  } catch {
+    // no-op
+  }
 }

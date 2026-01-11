@@ -352,7 +352,7 @@ export class MessagesEventBus {
       const {logs: events} = response.data
 
       let needsEmit = false
-      let batch: ChatBskyConvoGetLog.OutputSchema['logs'] = []
+      const batch: ChatBskyConvoGetLog.OutputSchema['logs'] = []
 
       for (const ev of events) {
         /*
