@@ -181,10 +181,14 @@ function HashtagScreenTab({
   const {hasSession} = useSession()
   const trackPostView = usePostViewTracking('Hashtag')
 
+  const isCashtag = fullTag.startsWith('$')
+
   const queryParam = React.useMemo(() => {
-    if (!author) return fullTag
-    return `${fullTag} from:${author}`
-  }, [fullTag, author])
+    // Cashtags need # prefix for search: "#$BTC" or "#$BTC from:author"
+    const searchTag = isCashtag ? `#${fullTag}` : fullTag
+    if (!author) return searchTag
+    return `${searchTag} from:${author}`
+  }, [fullTag, author, isCashtag])
 
   const {
     data,
