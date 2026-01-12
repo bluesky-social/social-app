@@ -160,15 +160,8 @@ const MinimalHeader = memo(function MinimalHeader({
 
   return (
     <Animated.View
-      pointerEvents={visible ? 'auto' : 'none'}
-      aria-hidden={!visible}
-      accessibilityElementsHidden={!visible}
-      importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
-      onLayout={evt => {
-        setMinimalHeaderHeight(evt.nativeEvent.layout.height)
-        onLayout(evt)
-      }}
       style={[
+        visible ? a.pointer_events_auto : a.pointer_events_none,
         a.absolute,
         a.z_50,
         t.atoms.bg,
@@ -179,7 +172,14 @@ const MinimalHeader = memo(function MinimalHeader({
           paddingTop: insets.top,
         },
         animatedStyle,
-      ]}>
+      ]}
+      aria-hidden={!visible}
+      accessibilityElementsHidden={!visible}
+      importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
+      onLayout={evt => {
+        setMinimalHeaderHeight(evt.nativeEvent.layout.height)
+        onLayout(evt)
+      }}>
       <Header.Outer noBottomBorder>
         {hideBackButton ? <Header.MenuButton /> : <Header.BackButton />}
         <Header.Content align="left">

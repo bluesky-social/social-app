@@ -69,12 +69,7 @@ export function PostLoadingPlaceholder({
           <View style={[styles.postCtrl, {marginLeft: -6}]}>
             <View style={styles.postBtn}>
               <Bubble
-                style={[
-                  {
-                    color: t.palette.contrast_500,
-                  },
-                  {pointerEvents: 'none'},
-                ]}
+                style={[{color: t.palette.contrast_500}, a.pointer_events_none]}
                 width={18}
               />
             </View>
@@ -82,12 +77,7 @@ export function PostLoadingPlaceholder({
           <View style={styles.postCtrl}>
             <View style={styles.postBtn}>
               <Repost
-                style={[
-                  {
-                    color: t.palette.contrast_500,
-                  },
-                  {pointerEvents: 'none'},
-                ]}
+                style={[{color: t.palette.contrast_500}, a.pointer_events_none]}
                 width={18}
               />
             </View>
@@ -95,12 +85,7 @@ export function PostLoadingPlaceholder({
           <View style={styles.postCtrl}>
             <View style={styles.postBtn}>
               <HeartIconOutline
-                style={[
-                  {
-                    color: t.palette.contrast_500,
-                  },
-                  {pointerEvents: 'none'},
-                ]}
+                style={[{color: t.palette.contrast_500}, a.pointer_events_none]}
                 width={18}
               />
             </View>

@@ -102,8 +102,13 @@ let ProfileHeaderStandard = ({
         hideBackButton={hideBackButton}
         isPlaceholderProfile={isPlaceholderProfile}>
         <View
-          style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
-          pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+          style={[
+            a.px_lg,
+            a.pt_md,
+            a.pb_sm,
+            a.overflow_hidden,
+            IS_IOS ? a.pointer_events_auto : a.pointer_events_box_none,
+          ]}>
           <View
             style={[
               {paddingLeft: 90},
@@ -113,8 +118,8 @@ let ProfileHeaderStandard = ({
               a.gap_xs,
               a.pb_sm,
               a.flex_wrap,
-            ]}
-            pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+              IS_IOS ? a.pointer_events_auto : a.pointer_events_box_none,
+            ]}>
             <HeaderStandardButtons
               profile={profile}
               moderation={moderation}
@@ -151,7 +156,7 @@ let ProfileHeaderStandard = ({
             <View style={a.gap_md}>
               <ProfileHeaderMetrics profile={profile} />
               {descriptionRT && !moderation.ui('profileView').blur ? (
-                <View pointerEvents="auto">
+                <View style={a.pointer_events_auto}>
                   <RichText
                     testID="profileHeaderDescription"
                     style={[a.text_md]}
