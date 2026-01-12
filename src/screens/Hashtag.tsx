@@ -46,13 +46,22 @@ export default function HashtagScreen({
   const {tag, author} = route.params
   const {_} = useLingui()
 
-  const fullTag = React.useMemo(() => {
-    return `#${decodeURIComponent(tag)}`
+  const decodedTag = React.useMemo(() => {
+    return decodeURIComponent(tag)
   }, [tag])
 
+  const isCashtag = decodedTag.startsWith('$')
+
+  const fullTag = React.useMemo(() => {
+    // Cashtags already include the $ prefix, hashtags need # added
+    return isCashtag ? decodedTag : `#${decodedTag}`
+  }, [decodedTag, isCashtag])
+
   const headerTitle = React.useMemo(() => {
-    return enforceLen(fullTag.toLowerCase(), 24, true, 'middle')
-  }, [fullTag])
+    // Keep cashtags uppercase, lowercase hashtags
+    const displayTag = isCashtag ? fullTag.toUpperCase() : fullTag.toLowerCase()
+    return enforceLen(displayTag, 24, true, 'middle')
+  }, [fullTag, isCashtag])
 
   const sanitizedAuthor = React.useMemo(() => {
     if (!author) return
@@ -255,7 +264,7 @@ function HashtagScreenTab({
           isError={isError}
           onRetry={refetch}
           emptyType="results"
-          emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
+          emptyMessage={_(msg`We couldn't find any results for that tag.`)}
         />
       ) : (
         <List
