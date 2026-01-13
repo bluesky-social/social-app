@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -11,7 +11,9 @@ import {
   useLoadDraft,
 } from '#/state/drafts'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {DraftItem} from './DraftItem'
@@ -48,42 +50,76 @@ export function DraftsListDialog({
     [deleteDraft],
   )
 
+  const backButton = useCallback(
+    () => (
+      <Button
+        label={_(msg`Back`)}
+        onPress={() => control.close()}
+        size="small"
+        color="primary"
+        variant="ghost"
+        shape="round">
+        <ButtonIcon icon={ArrowLeftIcon} size="md" />
+      </Button>
+    ),
+    [control, _],
+  )
+
+  const listHeader = useMemo(() => {
+    return (
+      <Dialog.Header renderLeft={backButton}>
+        <Dialog.HeaderText>
+          <Trans>Drafts</Trans>
+        </Dialog.HeaderText>
+      </Dialog.Header>
+    )
+  }, [backButton])
+
+  const renderItem = useCallback(
+    ({item}: {item: DraftSummary}) => {
+      return (
+        <DraftItem
+          draft={item}
+          onSelect={handleSelectDraft}
+          onDelete={handleDeleteDraft}
+          isDeleting={isDeleting}
+        />
+      )
+    },
+    [handleSelectDraft, handleDeleteDraft, isDeleting],
+  )
+
+  const emptyComponent = useMemo(() => {
+    if (isLoading) {
+      return (
+        <View style={[a.py_xl, a.align_center]}>
+          <Loader size="lg" />
+        </View>
+      )
+    }
+    return (
+      <View style={[a.py_xl, a.align_center]}>
+        <Text style={[t.atoms.text_contrast_medium]}>
+          <Trans>No drafts saved</Trans>
+        </Text>
+      </View>
+    )
+  }, [isLoading, t.atoms.text_contrast_medium])
+
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner label={_(msg`Your Drafts`)}>
-        <View style={[a.gap_md]}>
-          <Text style={[a.text_2xl, a.font_semi_bold]}>
-            <Trans>Your Drafts</Trans>
-          </Text>
-
-          {isLoading ? (
-            <View style={[a.py_xl, a.align_center]}>
-              <Loader size="lg" />
-            </View>
-          ) : drafts && drafts.length > 0 ? (
-            <View style={[a.gap_sm]}>
-              {drafts.map(draft => (
-                <DraftItem
-                  key={draft.id}
-                  draft={draft}
-                  onSelect={handleSelectDraft}
-                  onDelete={handleDeleteDraft}
-                  isDeleting={isDeleting}
-                />
-              ))}
-            </View>
-          ) : (
-            <View style={[a.py_xl, a.align_center]}>
-              <Text style={[t.atoms.text_contrast_medium]}>
-                <Trans>No drafts saved</Trans>
-              </Text>
-            </View>
-          )}
-        </View>
-
-        <Dialog.Close />
-      </Dialog.ScrollableInner>
+      <Dialog.InnerFlatList
+        data={drafts ?? []}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        ListHeaderComponent={listHeader}
+        ListEmptyComponent={emptyComponent}
+        stickyHeaderIndices={[0]}
+        contentContainerStyle={[a.pb_lg]}
+        ItemSeparatorComponent={() => <View style={[{height: 8}]} />}
+        style={[a.px_lg]}
+      />
     </Dialog.Outer>
   )
 }
