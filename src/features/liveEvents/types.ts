@@ -3,6 +3,7 @@ export type LiveEventFeedImageLayout = 'wide' // maybe more in the future
 export type LiveEventFeedImage = {
   alt: string
   overlayColor: string
+  textColor: string
   url: string
   blurhash: string
 }

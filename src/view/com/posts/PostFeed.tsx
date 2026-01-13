@@ -70,6 +70,7 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
+import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
@@ -153,6 +154,10 @@ type FeedRow =
     }
   | {
       type: 'composerPrompt'
+      key: string
+    }
+  | {
+      type: 'liveEventFeedsAndTrendingBanner'
       key: string
     }
 
@@ -360,7 +365,7 @@ let PostFeed = ({
   const showProgressIntersitial =
     (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
 
-  const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
+  const {trendingVideoDisabled} = useTrendingSettings()
 
   const ageAssuranceBannerState = useAgeAssuranceBannerState()
   const selectedFeed = useSelectedFeed()
@@ -510,13 +515,10 @@ let PostFeed = ({
                         })
                       }
                     }
-                    if (!rightNavVisible && !trendingDisabled) {
-                      arr.push({
-                        type: 'interstitialTrending',
-                        key:
-                          'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
-                      })
-                    }
+                    arr.push({
+                      type: 'liveEventFeedsAndTrendingBanner',
+                      key: 'liveEventFeedsAndTrendingBanner-' + sliceIndex,
+                    })
                     // Show composer prompt for Discover and Following feeds
                     if (
                       hasSession &&
@@ -672,9 +674,7 @@ let PostFeed = ({
     feedTab,
     hasSession,
     showProgressIntersitial,
-    trendingDisabled,
     trendingVideoDisabled,
-    rightNavVisible,
     gtMobile,
     isVideoFeed,
     areVideoFeedsEnabled,
@@ -773,6 +773,8 @@ let PostFeed = ({
         return <AgeAssuranceDismissibleFeedBanner />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
+        return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
       } else if (row.type === 'composerPrompt') {
         return <ComposerPrompt />
       } else if (row.type === 'interstitialTrendingVideos') {
