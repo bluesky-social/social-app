@@ -11,11 +11,11 @@ import {
   useLoadDraft,
 } from '#/state/drafts'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
+import {PageX_Stroke2_Corner0_Rounded_Large} from '#/components/icons/PageX'
 import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
+import {EmptyState} from '../../util/EmptyState'
 import {DraftItem} from './DraftItem'
 
 export function DraftsListDialog({
@@ -57,9 +57,10 @@ export function DraftsListDialog({
         onPress={() => control.close()}
         size="small"
         color="primary"
-        variant="ghost"
-        shape="round">
-        <ButtonIcon icon={ArrowLeftIcon} size="md" />
+        variant="ghost">
+        <ButtonText style={[a.text_md]}>
+          <Trans>Back</Trans>
+        </ButtonText>
       </Button>
     ),
     [control, _],
@@ -98,17 +99,15 @@ export function DraftsListDialog({
       )
     }
     return (
-      <View style={[a.py_xl, a.align_center]}>
-        <Text style={[t.atoms.text_contrast_medium]}>
-          <Trans>No drafts saved</Trans>
-        </Text>
-      </View>
+      <EmptyState
+        icon={PageX_Stroke2_Corner0_Rounded_Large}
+        message={_(msg`No drafts yet`)}
+      />
     )
-  }, [isLoading, t.atoms.text_contrast_medium])
+  }, [isLoading, _])
 
   return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
-      <Dialog.Handle />
+    <Dialog.Outer control={control}>
       <Dialog.InnerFlatList
         data={drafts ?? []}
         renderItem={renderItem}
@@ -116,9 +115,7 @@ export function DraftsListDialog({
         ListHeaderComponent={listHeader}
         ListEmptyComponent={emptyComponent}
         stickyHeaderIndices={[0]}
-        contentContainerStyle={[a.pb_lg]}
-        ItemSeparatorComponent={() => <View style={[{height: 8}]} />}
-        style={[a.px_lg]}
+        style={t.atoms.bg_contrast_25}
       />
     </Dialog.Outer>
   )

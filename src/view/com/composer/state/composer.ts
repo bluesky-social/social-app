@@ -102,6 +102,8 @@ export type ComposerState = {
   thread: ThreadDraft
   activePostIndex: number
   mutableNeedsFocusActive: boolean
+  /** ID of the draft being edited, if any. Used to update existing draft on save. */
+  draftId?: string
 }
 
 export type ComposerAction =
@@ -299,6 +301,7 @@ export function composerReducer(
       return {
         activePostIndex: 0,
         mutableNeedsFocusActive: true,
+        draftId: draft.id,
         thread: {
           posts,
           postgate: draft.postgate || state.thread.postgate,

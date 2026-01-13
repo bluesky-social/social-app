@@ -74,12 +74,12 @@ export function DraftsButton({
         </Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
-            cta={_(msg`Save & View Drafts`)}
+            cta={_(msg`Save changes`)}
             onPress={handleSaveAndOpen}
             color="primary"
           />
           <Prompt.Action
-            cta={_(msg`Discard & View Drafts`)}
+            cta={_(msg`Discard`)}
             onPress={handleDiscardAndOpen}
             color="negative"
           />
