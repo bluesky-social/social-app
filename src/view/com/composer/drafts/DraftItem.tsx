@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {Image, Pressable, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,7 +12,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
-import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 
 // Platform-specific storage import
@@ -24,53 +24,68 @@ export function DraftItem({
   draft,
   onSelect,
   onDelete,
-  isDeleting,
 }: {
   draft: DraftSummary
   onSelect: (draft: DraftSummary) => void
   onDelete: (draftId: string) => void
-  isDeleting: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const discardPromptControl = Prompt.usePromptControl()
+
+  const handleDelete = useCallback(() => {
+    onDelete(draft.id)
+  }, [onDelete, draft.id])
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Open draft`)}
-      accessibilityHint={_(msg`Opens this draft in the composer`)}
-      onPress={() => onSelect(draft)}
-      style={({pressed, hovered}) => [
-        a.rounded_md,
-        a.overflow_hidden,
-        t.atoms.bg,
-        (pressed || hovered) && t.atoms.bg_contrast_25,
-      ]}>
-      <View style={[a.p_md, a.gap_sm]}>
-        {/* Reply indicator */}
-        {draft.isReply && draft.replyToHandle && (
-          <Text
-            style={[a.text_xs, t.atoms.text_contrast_medium, a.pb_2xs]}
-            numberOfLines={1}>
-            <Trans>Replying to @{draft.replyToHandle}</Trans>
-          </Text>
-        )}
+    <>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Open draft`)}
+        accessibilityHint={_(msg`Opens this draft in the composer`)}
+        onPress={() => onSelect(draft)}
+        style={({pressed, hovered}) => [
+          a.rounded_md,
+          a.overflow_hidden,
+          a.border,
+          t.atoms.bg,
+          t.atoms.border_contrast_low,
+          t.atoms.shadow_sm,
+          (pressed || hovered) && t.atoms.bg_contrast_25,
+        ]}>
+        <View style={[a.p_md, a.gap_sm]}>
+          {/* Reply indicator */}
+          {draft.isReply && draft.replyToHandle && (
+            <Text
+              style={[a.text_xs, t.atoms.text_contrast_medium, a.pb_2xs]}
+              numberOfLines={1}>
+              <Trans>Replying to @{draft.replyToHandle}</Trans>
+            </Text>
+          )}
 
-        {/* Posts */}
-        {draft.posts.map((post, index) => (
-          <DraftPostRow
-            key={post.id}
-            post={post}
-            isFirst={index === 0}
-            isLast={index === draft.posts.length - 1}
-            timestamp={draft.updatedAt}
-            draftId={draft.id}
-            onDelete={onDelete}
-            isDeleting={isDeleting}
-          />
-        ))}
-      </View>
-    </Pressable>
+          {/* Posts */}
+          {draft.posts.map((post, index) => (
+            <DraftPostRow
+              key={post.id}
+              post={post}
+              isFirst={index === 0}
+              isLast={index === draft.posts.length - 1}
+              timestamp={draft.updatedAt}
+              discardPromptControl={discardPromptControl}
+            />
+          ))}
+        </View>
+      </Pressable>
+
+      <Prompt.Basic
+        control={discardPromptControl}
+        title={_(msg`Discard draft?`)}
+        description={_(msg`This draft will be permanently deleted.`)}
+        onConfirm={handleDelete}
+        confirmButtonCta={_(msg`Discard`)}
+        confirmButtonColor="negative"
+      />
+    </>
   )
 }
 
@@ -79,17 +94,13 @@ function DraftPostRow({
   isFirst,
   isLast,
   timestamp,
-  draftId,
-  onDelete,
-  isDeleting,
+  discardPromptControl,
 }: {
   post: DraftPostDisplay
   isFirst: boolean
   isLast: boolean
   timestamp: string
-  draftId: string
-  onDelete: (draftId: string) => void
-  isDeleting: boolean
+  discardPromptControl: Prompt.PromptControlProps
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -101,15 +112,11 @@ function DraftPostRow({
   const handle = profile?.handle || currentAccount?.handle || ''
   const avatarUrl = profile?.avatar
 
-  // Nested posts (not first) have smaller styling
-  const avatarSize = isFirst ? 42 : 32
-  const textStyle = isFirst ? a.text_md : a.text_sm
-
   return (
-    <View style={[a.flex_row, a.gap_sm, !isFirst && [a.ml_xl, a.pt_xs]]}>
+    <View style={[a.flex_row, a.gap_sm]}>
       {/* Avatar column with thread line */}
       <View style={[a.align_center]}>
-        <UserAvatar type="user" size={avatarSize} avatar={avatarUrl} />
+        <UserAvatar type="user" size={42} avatar={avatarUrl} />
         {/* Thread line connecting posts */}
         {!isLast && (
           <View
@@ -133,23 +140,23 @@ function DraftPostRow({
           <View style={[a.flex_row, a.align_center, a.flex_1, a.gap_xs]}>
             {displayName && (
               <Text
-                style={[textStyle, a.font_bold, t.atoms.text]}
+                style={[a.text_md, a.font_bold, t.atoms.text]}
                 numberOfLines={1}>
                 {displayName}
               </Text>
             )}
             <Text
-              style={[textStyle, t.atoms.text_contrast_medium]}
+              style={[a.text_md, t.atoms.text_contrast_medium]}
               numberOfLines={1}>
               @{handle}
             </Text>
-            <Text style={[textStyle, t.atoms.text_contrast_medium]}>
+            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
               &middot;
             </Text>
             <TimeElapsed timestamp={timestamp}>
               {({timeElapsed}) => (
                 <Text
-                  style={[textStyle, t.atoms.text_contrast_medium]}
+                  style={[a.text_md, t.atoms.text_contrast_medium]}
                   numberOfLines={1}>
                   {timeElapsed}
                 </Text>
@@ -167,7 +174,7 @@ function DraftPostRow({
               size="tiny"
               onPress={e => {
                 e.stopPropagation()
-                // TODO: Show menu with options
+                discardPromptControl.open()
               }}>
               <ButtonIcon icon={DotsIcon} />
             </Button>
@@ -176,34 +183,15 @@ function DraftPostRow({
 
         {/* Post text - full, not truncated */}
         {post.text ? (
-          <Text style={[textStyle, t.atoms.text]}>{post.text}</Text>
+          <Text style={[a.text_md, t.atoms.text]}>{post.text}</Text>
         ) : (
-          <Text style={[textStyle, t.atoms.text_contrast_medium, a.italic]}>
+          <Text style={[a.text_md, t.atoms.text_contrast_medium, a.italic]}>
             <Trans>(No text)</Trans>
           </Text>
         )}
 
         {/* Media preview */}
         <DraftMediaPreview post={post} />
-
-        {/* Delete button (only on last post) */}
-        {isLast && (
-          <View style={[a.flex_row, a.justify_end, a.pt_xs]}>
-            <Button
-              label={_(msg`Delete draft`)}
-              variant="ghost"
-              color="negative"
-              shape="round"
-              size="small"
-              disabled={isDeleting}
-              onPress={e => {
-                e.stopPropagation()
-                onDelete(draftId)
-              }}>
-              <ButtonIcon icon={TrashIcon} />
-            </Button>
-          </View>
-        )}
       </View>
     </View>
   )

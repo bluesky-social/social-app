@@ -29,7 +29,7 @@ export function DraftsListDialog({
   const t = useTheme()
   const {data: drafts, isLoading} = useDrafts()
   const loadDraft = useLoadDraft()
-  const {mutate: deleteDraft, isPending: isDeleting} = useDeleteDraft()
+  const {mutate: deleteDraft} = useDeleteDraft()
 
   const handleSelectDraft = useCallback(
     async (summary: DraftSummary) => {
@@ -68,11 +68,15 @@ export function DraftsListDialog({
 
   const listHeader = useMemo(() => {
     return (
-      <Dialog.Header renderLeft={backButton}>
-        <Dialog.HeaderText>
-          <Trans>Drafts</Trans>
-        </Dialog.HeaderText>
-      </Dialog.Header>
+      <View>
+        <Dialog.Header renderLeft={backButton}>
+          <Dialog.HeaderText>
+            <Trans>Drafts</Trans>
+          </Dialog.HeaderText>
+        </Dialog.Header>
+        {/* Spacer between header and first item */}
+        <View style={[{height: 12}]} />
+      </View>
     )
   }, [backButton])
 
@@ -84,12 +88,11 @@ export function DraftsListDialog({
             draft={item}
             onSelect={handleSelectDraft}
             onDelete={handleDeleteDraft}
-            isDeleting={isDeleting}
           />
         </View>
       )
     },
-    [handleSelectDraft, handleDeleteDraft, isDeleting],
+    [handleSelectDraft, handleDeleteDraft],
   )
 
   const itemSeparator = useCallback(() => <View style={[{height: 12}]} />, [])
@@ -102,7 +105,13 @@ export function DraftsListDialog({
         </View>
       )
     }
-    return <EmptyState icon={PageXIcon} message={_(msg`No drafts yet`)} />
+    return (
+      <EmptyState
+        icon={PageXIcon}
+        message={_(msg`No drafts yet`)}
+        style={[a.justify_center, {minHeight: 500}]}
+      />
+    )
   }, [isLoading, _])
 
   return (
@@ -115,8 +124,8 @@ export function DraftsListDialog({
         ListEmptyComponent={emptyComponent}
         ItemSeparatorComponent={itemSeparator}
         stickyHeaderIndices={[0]}
-        style={t.atoms.bg_contrast_25}
-        contentContainerStyle={[a.pb_lg]}
+        style={[t.atoms.bg_contrast_50, a.px_0]}
+        webInnerContentContainerStyle={[a.py_0]}
       />
     </Dialog.Outer>
   )
