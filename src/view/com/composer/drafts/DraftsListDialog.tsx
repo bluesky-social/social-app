@@ -13,7 +13,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {PageX_Stroke2_Corner0_Rounded_Large} from '#/components/icons/PageX'
+import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
 import {Loader} from '#/components/Loader'
 import {EmptyState} from '../../util/EmptyState'
 import {DraftItem} from './DraftItem'
@@ -79,16 +79,20 @@ export function DraftsListDialog({
   const renderItem = useCallback(
     ({item}: {item: DraftSummary}) => {
       return (
-        <DraftItem
-          draft={item}
-          onSelect={handleSelectDraft}
-          onDelete={handleDeleteDraft}
-          isDeleting={isDeleting}
-        />
+        <View style={[a.px_lg]}>
+          <DraftItem
+            draft={item}
+            onSelect={handleSelectDraft}
+            onDelete={handleDeleteDraft}
+            isDeleting={isDeleting}
+          />
+        </View>
       )
     },
     [handleSelectDraft, handleDeleteDraft, isDeleting],
   )
+
+  const itemSeparator = useCallback(() => <View style={[{height: 12}]} />, [])
 
   const emptyComponent = useMemo(() => {
     if (isLoading) {
@@ -98,12 +102,7 @@ export function DraftsListDialog({
         </View>
       )
     }
-    return (
-      <EmptyState
-        icon={PageX_Stroke2_Corner0_Rounded_Large}
-        message={_(msg`No drafts yet`)}
-      />
-    )
+    return <EmptyState icon={PageXIcon} message={_(msg`No drafts yet`)} />
   }, [isLoading, _])
 
   return (
@@ -114,8 +113,10 @@ export function DraftsListDialog({
         keyExtractor={item => item.id}
         ListHeaderComponent={listHeader}
         ListEmptyComponent={emptyComponent}
+        ItemSeparatorComponent={itemSeparator}
         stickyHeaderIndices={[0]}
         style={t.atoms.bg_contrast_25}
+        contentContainerStyle={[a.pb_lg]}
       />
     </Dialog.Outer>
   )

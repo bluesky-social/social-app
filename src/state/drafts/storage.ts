@@ -11,7 +11,11 @@ import {
 import {nanoid} from 'nanoid/non-secure'
 
 import {logger} from '#/logger'
-import {type DraftSummary, type StoredDraft} from './schema'
+import {
+  type DraftPostDisplay,
+  type DraftSummary,
+  type StoredDraft,
+} from './schema'
 
 const DRAFTS_DIR = 'bsky-drafts'
 
@@ -271,6 +275,8 @@ function createDraftSummary(draft: StoredDraft): DraftSummary {
   let mediaCount = 0
   let hasMedia = false
 
+  const posts: DraftPostDisplay[] = []
+
   for (const post of draft.posts) {
     if (post.images) {
       mediaCount += post.images.length
@@ -284,6 +290,14 @@ function createDraftSummary(draft: StoredDraft): DraftSummary {
       mediaCount += 1
       hasMedia = true
     }
+
+    posts.push({
+      id: post.id,
+      text: post.richtext.text,
+      images: post.images,
+      video: post.video,
+      gif: post.gif,
+    })
   }
 
   return {
@@ -295,6 +309,7 @@ function createDraftSummary(draft: StoredDraft): DraftSummary {
     isReply: Boolean(draft.replyToUri),
     replyToHandle: draft.replyToAuthor?.handle,
     updatedAt: draft.updatedAt,
+    posts,
   }
 }
 

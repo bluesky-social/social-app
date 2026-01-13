@@ -93,6 +93,21 @@ export type StoredDraft = {
 }
 
 /**
+ * Post content for display in draft list
+ */
+export type DraftPostDisplay = {
+  id: string
+  /** Full text content */
+  text: string
+  /** Image URLs for display (local IDs that need to be loaded) */
+  images?: LocalMediaRef[]
+  /** Video reference */
+  video?: LocalMediaRef
+  /** GIF metadata */
+  gif?: StoredGif
+}
+
+/**
  * Draft summary for list display
  */
 export type DraftSummary = {
@@ -111,4 +126,6 @@ export type DraftSummary = {
   replyToHandle?: string
   /** ISO timestamp of last update */
   updatedAt: string
+  /** All posts in the draft for full display */
+  posts: DraftPostDisplay[]
 }
