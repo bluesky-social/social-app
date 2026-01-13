@@ -15,20 +15,25 @@ export interface PersistedQueryStorage {
   removeItem: (key: string) => Promise<void>
 }
 
-const mmkv = new MMKV({id: 'bsky_persisted_queries'})
-
 /**
- * MMKV-based storage adapter for persisting react-query cache on native platforms.
+ * Creates an MMKV-based storage adapter for persisting react-query cache on native platforms.
+ * Each storage instance uses a separate MMKV store identified by the provided id.
  * MMKV provides synchronous access but we wrap it in Promises for API compatibility.
+ *
+ * @param id - Unique identifier for this storage instance (used as MMKV store id)
  */
-export const persistedQueryStorage: PersistedQueryStorage = {
-  getItem: async (key: string): Promise<string | null> => {
-    return mmkv.getString(key) ?? null
-  },
-  setItem: async (key: string, value: string): Promise<void> => {
-    mmkv.set(key, value)
-  },
-  removeItem: async (key: string): Promise<void> => {
-    mmkv.delete(key)
-  },
+export function createPersistedQueryStorage(id: string): PersistedQueryStorage {
+  const mmkv = new MMKV({id})
+
+  return {
+    getItem: async (key: string): Promise<string | null> => {
+      return mmkv.getString(key) ?? null
+    },
+    setItem: async (key: string, value: string): Promise<void> => {
+      mmkv.set(key, value)
+    },
+    removeItem: async (key: string): Promise<void> => {
+      mmkv.delete(key)
+    },
+  }
 }

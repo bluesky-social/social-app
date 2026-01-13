@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query-persist-client'
 import {SuperJSON} from 'superjson'
 
-import {persistedQueryStorage} from '#/lib/persisted-query-storage'
+import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {isNative} from '#/platform/detection'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
 
@@ -181,8 +181,9 @@ function QueryProviderInner({
   // Do not move the query client creation outside of this component.
   const [queryClient, _setQueryClient] = useState(() => createQueryClient())
   const [persistOptions, _setPersistOptions] = useState(() => {
+    const storage = createPersistedQueryStorage('persisted_queries')
     const asyncPersister = createAsyncStoragePersister({
-      storage: persistedQueryStorage,
+      storage,
       key:
         'queryClient-' + (currentDid ?? 'logged-out') + `-v${PERSIST_VERSION}`,
       serialize: SuperJSON.stringify,
