@@ -353,6 +353,7 @@ export const ComposePost = ({
         composerState,
         replyTo,
         existingDraftId: composerState.draftId,
+        loadedMediaMap: composerState.loadedMediaMap,
       })
       composerDispatch({type: 'mark_saved', draftId: savedDraft.id})
       onClose()
@@ -368,6 +369,7 @@ export const ComposePost = ({
       composerState,
       replyTo,
       existingDraftId: composerState.draftId,
+      loadedMediaMap: composerState.loadedMediaMap,
     })
     composerDispatch({type: 'mark_saved', draftId: savedDraft.id})
   }, [saveDraft, composerState, replyTo, composerDispatch])

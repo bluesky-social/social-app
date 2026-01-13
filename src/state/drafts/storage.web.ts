@@ -349,3 +349,17 @@ export function revokeMediaUrl(url: string): void {
     URL.revokeObjectURL(url)
   }
 }
+
+/**
+ * Extract the localId from a path if it's already in drafts media storage
+ * For web, this always returns null since blob URLs don't contain localId
+ * The hooks layer handles tracking of web localIds separately
+ */
+export function extractLocalIdFromPath(
+  _accountDid: string,
+  _path: string,
+): string | null {
+  // Web uses blob URLs which don't contain the localId
+  // Tracking is done via loadedMediaMap in hooks.ts
+  return null
+}

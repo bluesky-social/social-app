@@ -324,3 +324,22 @@ export async function mediaExists(
   const info = await getInfoAsync(path)
   return info.exists
 }
+
+/**
+ * Extract the localId from a path if it's already in drafts media storage
+ * Returns null if the path is not in drafts storage
+ */
+export function extractLocalIdFromPath(
+  accountDid: string,
+  path: string,
+): string | null {
+  const mediaDir = getMediaDirectory(accountDid)
+  if (path.startsWith(mediaDir)) {
+    // Extract the localId from the path (it's the filename)
+    const localId = path.slice(mediaDir.length).replace(/^\//, '')
+    if (localId && !localId.includes('/')) {
+      return localId
+    }
+  }
+  return null
+}

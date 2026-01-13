@@ -106,6 +106,8 @@ export type ComposerState = {
   draftId?: string
   /** Whether the composer has been modified since loading a draft. */
   isDirty: boolean
+  /** Map of localId -> loaded media path/URL for the current draft. Used for re-saving without re-copying media. */
+  loadedMediaMap?: Map<string, string>
 }
 
 export type ComposerAction =
@@ -317,6 +319,7 @@ export function composerReducer(
         mutableNeedsFocusActive: true,
         draftId: draft.id,
         isDirty: false,
+        loadedMediaMap: loadedMedia,
         thread: {
           posts,
           postgate: draft.postgate || state.thread.postgate,
@@ -330,6 +333,7 @@ export function composerReducer(
         mutableNeedsFocusActive: true,
         draftId: undefined,
         isDirty: false,
+        loadedMediaMap: undefined,
         thread: {
           posts: [
             {

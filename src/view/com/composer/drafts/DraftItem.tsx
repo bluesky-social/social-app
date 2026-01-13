@@ -266,7 +266,7 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
   }
 
   return (
-    <View style={[a.pt_xs]}>
+    <View style={[a.pt_xs, a.pointer_events_none]}>
       {/* Images - use real embed components */}
       {viewImages.length === 1 && (
         <AutoSizedImage image={viewImages[0]} hideBadge />

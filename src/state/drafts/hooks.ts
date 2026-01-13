@@ -75,10 +75,12 @@ export function useSaveDraft() {
       composerState,
       replyTo,
       existingDraftId,
+      loadedMediaMap,
     }: {
       composerState: ComposerState
       replyTo?: ComposerOpts['replyTo']
       existingDraftId?: string
+      loadedMediaMap?: Map<string, string> // localId -> path/url
     }): Promise<StoredDraft> => {
       if (!did) {
         throw new Error('No account')
@@ -87,21 +89,42 @@ export function useSaveDraft() {
       const now = new Date().toISOString()
       const draftId = existingDraftId || nanoid()
 
-      // If updating existing draft, delete old media first
-      if (existingDraftId) {
-        const existingDraft = await storage.loadDraftMeta(did, existingDraftId)
-        if (existingDraft) {
-          // Clean up old media that's no longer used
-          await cleanupOldMedia(did, existingDraft)
+      // Build a reverse map (path -> localId) for identifying reusable media
+      const pathToLocalId = new Map<string, string>()
+      if (loadedMediaMap) {
+        for (const [localId, path] of loadedMediaMap) {
+          pathToLocalId.set(path, localId)
         }
       }
 
-      // Serialize the composer state
+      // Collect old media localIds for cleanup
+      let oldMediaLocalIds: Set<string> = new Set()
+      if (existingDraftId) {
+        const existingDraft = await storage.loadDraftMeta(did, existingDraftId)
+        if (existingDraft) {
+          oldMediaLocalIds = collectMediaLocalIds(existingDraft)
+        }
+      }
+
+      // Serialize the composer state, tracking which localIds are reused
+      const reusedLocalIds = new Set<string>()
       const posts: StoredPostDraft[] = []
 
       for (const post of composerState.thread.posts) {
-        const storedPost = await serializePost(did, post)
+        const storedPost = await serializePost(
+          did,
+          post,
+          pathToLocalId,
+          reusedLocalIds,
+        )
         posts.push(storedPost)
+      }
+
+      // Clean up old media that wasn't reused
+      for (const oldLocalId of oldMediaLocalIds) {
+        if (!reusedLocalIds.has(oldLocalId)) {
+          await storage.deleteMediaFromLocal(did, oldLocalId)
+        }
       }
 
       const draft: StoredDraft = {
@@ -163,11 +186,31 @@ export function useDeleteDraft() {
 }
 
 /**
+ * Collect all media localIds from a draft
+ */
+function collectMediaLocalIds(draft: StoredDraft): Set<string> {
+  const localIds = new Set<string>()
+  for (const post of draft.posts) {
+    if (post.images) {
+      for (const image of post.images) {
+        localIds.add(image.localId)
+      }
+    }
+    if (post.video) {
+      localIds.add(post.video.localId)
+    }
+  }
+  return localIds
+}
+
+/**
  * Serialize a post for storage
  */
 async function serializePost(
   accountDid: string,
   post: PostDraft,
+  pathToLocalId: Map<string, string>,
+  reusedLocalIds: Set<string>,
 ): Promise<StoredPostDraft> {
   const richtext: StoredRichText = {
     text: post.richtext.text,
@@ -188,11 +231,15 @@ async function serializePost(
       storedPost.images = await serializeImages(
         accountDid,
         post.embed.media.images,
+        pathToLocalId,
+        reusedLocalIds,
       )
     } else if (post.embed.media.type === 'video') {
       storedPost.video = await serializeVideo(
         accountDid,
         post.embed.media.video,
+        pathToLocalId,
+        reusedLocalIds,
       )
     } else if (post.embed.media.type === 'gif') {
       storedPost.gif = serializeGif(post.embed.media)
@@ -208,16 +255,36 @@ async function serializePost(
 async function serializeImages(
   accountDid: string,
   images: ComposerImage[],
+  pathToLocalId: Map<string, string>,
+  reusedLocalIds: Set<string>,
 ): Promise<LocalMediaRef[]> {
   const refs: LocalMediaRef[] = []
 
   for (const image of images) {
     const path = image.transformed?.path || image.source.path
-    const localId = await storage.saveMediaToLocal(
-      accountDid,
-      path,
-      image.source.mime,
-    )
+
+    // Check if this image is already in drafts storage
+    // First try the pathToLocalId map (works for both native and web)
+    let existingLocalId: string | null | undefined = pathToLocalId.get(path)
+
+    // On native, also check if the path is in the media directory
+    if (!existingLocalId) {
+      existingLocalId = storage.extractLocalIdFromPath(accountDid, path)
+    }
+
+    let localId: string
+    if (existingLocalId) {
+      // Reuse existing media
+      localId = existingLocalId
+      reusedLocalIds.add(localId)
+    } else {
+      // Save new media
+      localId = await storage.saveMediaToLocal(
+        accountDid,
+        path,
+        image.source.mime,
+      )
+    }
 
     refs.push({
       localId,
@@ -238,6 +305,8 @@ async function serializeImages(
 async function serializeVideo(
   accountDid: string,
   videoState: VideoState,
+  pathToLocalId: Map<string, string>,
+  reusedLocalIds: Set<string>,
 ): Promise<LocalMediaRef | undefined> {
   // Only save videos that have been compressed (have a video file)
   if (!videoState.video) {
@@ -245,11 +314,24 @@ async function serializeVideo(
   }
 
   const video = videoState.video
-  const localId = await storage.saveMediaToLocal(
-    accountDid,
-    video.uri,
-    video.mimeType,
-  )
+  const path = video.uri
+
+  // Check if this video is already in drafts storage
+  let existingLocalId: string | null | undefined = pathToLocalId.get(path)
+
+  if (!existingLocalId) {
+    existingLocalId = storage.extractLocalIdFromPath(accountDid, path)
+  }
+
+  let localId: string
+  if (existingLocalId) {
+    // Reuse existing media
+    localId = existingLocalId
+    reusedLocalIds.add(localId)
+  } else {
+    // Save new media
+    localId = await storage.saveMediaToLocal(accountDid, path, video.mimeType)
+  }
 
   return {
     localId,
@@ -281,25 +363,6 @@ function serializeGif(gifMedia: {
     width: gifFormat?.dims?.[0] || 0,
     height: gifFormat?.dims?.[1] || 0,
     altText: gifMedia.alt,
-  }
-}
-
-/**
- * Clean up old media when updating a draft
- */
-async function cleanupOldMedia(
-  accountDid: string,
-  draft: StoredDraft,
-): Promise<void> {
-  for (const post of draft.posts) {
-    if (post.images) {
-      for (const image of post.images) {
-        await storage.deleteMediaFromLocal(accountDid, image.localId)
-      }
-    }
-    if (post.video) {
-      await storage.deleteMediaFromLocal(accountDid, post.video.localId)
-    }
   }
 }
 
