@@ -104,6 +104,8 @@ export type ComposerState = {
   mutableNeedsFocusActive: boolean
   /** ID of the draft being edited, if any. Used to update existing draft on save. */
   draftId?: string
+  /** Whether the composer has been modified since loading a draft. */
+  isDirty: boolean
 }
 
 export type ComposerAction =
@@ -145,6 +147,7 @@ export function composerReducer(
     case 'update_postgate': {
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           postgate: action.postgate,
@@ -154,6 +157,7 @@ export function composerReducer(
     case 'update_threadgate': {
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           threadgate: action.threadgate,
@@ -174,6 +178,7 @@ export function composerReducer(
       }
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -196,6 +201,7 @@ export function composerReducer(
       })
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -221,6 +227,7 @@ export function composerReducer(
       }
       return {
         ...state,
+        isDirty: true,
         activePostIndex: nextActivePostIndex,
         mutableNeedsFocusActive: true,
         thread: {
@@ -305,6 +312,7 @@ export function composerReducer(
         activePostIndex: 0,
         mutableNeedsFocusActive: true,
         draftId: draft.id,
+        isDirty: false,
         thread: {
           posts,
           postgate: draft.postgate || state.thread.postgate,
@@ -317,6 +325,7 @@ export function composerReducer(
         activePostIndex: 0,
         mutableNeedsFocusActive: true,
         draftId: undefined,
+        isDirty: false,
         thread: {
           posts: [
             {
@@ -699,6 +708,7 @@ export function createComposerState({
   return {
     activePostIndex: 0,
     mutableNeedsFocusActive: false,
+    isDirty: false,
     thread: {
       posts: [
         {

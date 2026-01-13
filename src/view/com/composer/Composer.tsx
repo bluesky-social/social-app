@@ -413,21 +413,31 @@ export const ComposePost = ({
   const onPressCancel = useCallback(() => {
     if (textInput.current?.maybeClosePopup()) {
       return
-    } else if (
-      thread.posts.some(
-        post =>
-          post.shortenedGraphemeLength > 0 ||
-          post.embed.media ||
-          post.embed.link,
-      )
-    ) {
+    }
+
+    const hasContent = thread.posts.some(
+      post =>
+        post.shortenedGraphemeLength > 0 || post.embed.media || post.embed.link,
+    )
+
+    // Show discard prompt if there's content AND either:
+    // - No draft is loaded (new composition)
+    // - Draft is loaded but has been modified
+    if (hasContent && (!composerState.draftId || composerState.isDirty)) {
       closeAllDialogs()
       Keyboard.dismiss()
       discardPromptControl.open()
     } else {
       onClose()
     }
-  }, [thread, closeAllDialogs, discardPromptControl, onClose])
+  }, [
+    thread,
+    composerState.draftId,
+    composerState.isDirty,
+    closeAllDialogs,
+    discardPromptControl,
+    onClose,
+  ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
