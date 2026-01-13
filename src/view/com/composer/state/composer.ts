@@ -136,6 +136,10 @@ export type ComposerAction =
   | {
       type: 'clear'
     }
+  | {
+      type: 'mark_saved'
+      draftId: string
+    }
 
 export const MAX_IMAGES = 4
 
@@ -344,6 +348,13 @@ export function composerReducer(
           postgate: state.thread.postgate,
           threadgate: state.thread.threadgate,
         },
+      }
+    }
+    case 'mark_saved': {
+      return {
+        ...state,
+        isDirty: false,
+        draftId: action.draftId,
       }
     }
   }

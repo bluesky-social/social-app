@@ -349,26 +349,28 @@ export const ComposePost = ({
 
   const handleSaveDraft = React.useCallback(async () => {
     try {
-      await saveDraft({
+      const savedDraft = await saveDraft({
         composerState,
         replyTo,
         existingDraftId: composerState.draftId,
       })
+      composerDispatch({type: 'mark_saved', draftId: savedDraft.id})
       onClose()
     } catch (e) {
       logger.error('Failed to save draft', {error: e})
       setError(_(msg`Failed to save draft`))
     }
-  }, [saveDraft, composerState, replyTo, onClose, _])
+  }, [saveDraft, composerState, replyTo, composerDispatch, onClose, _])
 
   // Save without closing - for use by DraftsButton
   const saveCurrentDraft = React.useCallback(async () => {
-    await saveDraft({
+    const savedDraft = await saveDraft({
       composerState,
       replyTo,
       existingDraftId: composerState.draftId,
     })
-  }, [saveDraft, composerState, replyTo])
+    composerDispatch({type: 'mark_saved', draftId: savedDraft.id})
+  }, [saveDraft, composerState, replyTo, composerDispatch])
 
   // Check if composer is empty (no content to save)
   const isComposerEmpty = React.useMemo(() => {
