@@ -15,6 +15,7 @@ import {
   postUriToRelativePath,
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
+import {type StoredDraft} from '#/state/drafts/schema'
 import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {type Gif} from '#/state/queries/tenor'
@@ -122,6 +123,12 @@ export type ComposerAction =
       type: 'focus_post'
       postId: string
     }
+  | {
+      type: 'restore_from_draft'
+      draft: StoredDraft
+      /** Map of localId -> loaded media path/URL */
+      loadedMedia: Map<string, string>
+    }
 
 export const MAX_IMAGES = 4
 
@@ -227,6 +234,76 @@ export function composerReducer(
       return {
         ...state,
         activePostIndex: nextActivePostIndex,
+      }
+    }
+    case 'restore_from_draft': {
+      const {draft, loadedMedia} = action
+      const posts: PostDraft[] = draft.posts.map(storedPost => {
+        // Reconstruct RichText
+        const richtext = new RichText({
+          text: storedPost.richtext.text,
+          facets: storedPost.richtext.facets,
+        })
+
+        // Reconstruct embed
+        const embed: EmbedDraft = {
+          quote: storedPost.quoteUri
+            ? {type: 'link', uri: storedPost.quoteUri}
+            : undefined,
+          link: storedPost.linkUri
+            ? {type: 'link', uri: storedPost.linkUri}
+            : undefined,
+          media: undefined,
+        }
+
+        // Restore images
+        if (storedPost.images && storedPost.images.length > 0) {
+          const images: ComposerImage[] = storedPost.images
+            .map(img => {
+              const path = loadedMedia.get(img.localId)
+              if (!path) return null
+              return {
+                alt: img.altText,
+                source: {
+                  id: nanoid(),
+                  path,
+                  width: img.width,
+                  height: img.height,
+                  mime: img.mimeType,
+                },
+              }
+            })
+            .filter((img): img is ComposerImage => img !== null)
+
+          if (images.length > 0) {
+            embed.media = {type: 'images', images}
+          }
+        }
+
+        // Note: Videos require re-upload, so we store the path but mark as needing processing
+        // For now, we skip restoring videos as they'd need re-compression and upload
+        // TODO: Implement video restoration with re-upload flow
+
+        // Note: GIFs could be restored by re-fetching from Tenor using the stored ID
+        // TODO: Implement GIF restoration
+
+        return {
+          id: storedPost.id,
+          richtext,
+          shortenedGraphemeLength: getShortenedLength(richtext),
+          labels: storedPost.labels as SelfLabel[],
+          embed,
+        }
+      })
+
+      return {
+        activePostIndex: 0,
+        mutableNeedsFocusActive: true,
+        thread: {
+          posts,
+          postgate: draft.postgate || state.thread.postgate,
+          threadgate: draft.threadgate || state.thread.threadgate,
+        },
       }
     }
   }

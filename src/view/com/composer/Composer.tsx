@@ -76,6 +76,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {loadDraftMedia, type StoredDraft, useSaveDraft} from '#/state/drafts'
 import {emitPostCreated} from '#/state/events'
 import {
   type ComposerImage,
@@ -98,6 +99,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
+import {DraftsButton} from '#/view/com/composer/drafts/DraftsButton'
 import {
   ExternalEmbedGif,
   ExternalEmbedLink,
@@ -189,6 +191,7 @@ export const ComposePost = ({
   const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
+  const {mutateAsync: saveDraft, isPending: _isSavingDraft} = useSaveDraft()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
@@ -320,12 +323,42 @@ export const ComposePost = ({
     [composerDispatch],
   )
 
+  const handleSelectDraft = React.useCallback(
+    async (draft: StoredDraft) => {
+      if (!currentDid) return
+
+      // Load media from local storage
+      const loadedMedia = await loadDraftMedia(currentDid, draft)
+
+      // Dispatch restore action
+      composerDispatch({
+        type: 'restore_from_draft',
+        draft,
+        loadedMedia,
+      })
+    },
+    [currentDid, composerDispatch],
+  )
+
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const onClose = useCallback(() => {
     closeComposer()
     clearThumbnailCache(queryClient)
   }, [closeComposer, queryClient])
+
+  const handleSaveDraft = React.useCallback(async () => {
+    try {
+      await saveDraft({
+        composerState,
+        replyTo,
+      })
+      onClose()
+    } catch (e) {
+      logger.error('Failed to save draft', {error: e})
+      setError(_(msg`Failed to save draft`))
+    }
+  }, [saveDraft, composerState, replyTo, onClose, _])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
@@ -750,7 +783,8 @@ export const ComposePost = ({
             publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
-            onPublish={onPressPublish}>
+            onPublish={onPressPublish}
+            onSelectDraft={handleSelectDraft}>
             {missingAltError && <AltTextReminder error={missingAltError} />}
             <ErrorBanner
               error={error}
@@ -801,14 +835,25 @@ export const ComposePost = ({
           {!IS_WEBFooterSticky && footer}
         </View>
 
-        <Prompt.Basic
-          control={discardPromptControl}
-          title={_(msg`Discard draft?`)}
-          description={_(msg`Are you sure you'd like to discard this draft?`)}
-          onConfirm={onClose}
-          confirmButtonCta={_(msg`Discard`)}
-          confirmButtonColor="negative"
-        />
+        <Prompt.Outer control={discardPromptControl}>
+          <Prompt.TitleText>{_(msg`Discard draft?`)}</Prompt.TitleText>
+          <Prompt.DescriptionText>
+            {_(msg`You can save this draft to continue later.`)}
+          </Prompt.DescriptionText>
+          <Prompt.Actions>
+            <Prompt.Action
+              cta={_(msg`Save Draft`)}
+              onPress={handleSaveDraft}
+              color="primary"
+            />
+            <Prompt.Action
+              cta={_(msg`Discard`)}
+              onPress={onClose}
+              color="negative"
+            />
+            <Prompt.Cancel />
+          </Prompt.Actions>
+        </Prompt.Outer>
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
   )
@@ -1027,6 +1072,7 @@ function ComposerTopBar({
   publishingStage,
   onCancel,
   onPublish,
+  onSelectDraft,
   topBarAnimatedStyle,
   children,
 }: {
@@ -1038,6 +1084,7 @@ function ComposerTopBar({
   isThread: boolean
   onCancel: () => void
   onPublish: () => void
+  onSelectDraft: (draft: StoredDraft) => void
   topBarAnimatedStyle: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
@@ -1063,6 +1110,7 @@ function ComposerTopBar({
             <Trans>Cancel</Trans>
           </ButtonText>
         </Button>
+        <DraftsButton onSelectDraft={onSelectDraft} />
         <View style={a.flex_1} />
         {isPublishing ? (
           <>
@@ -1411,7 +1459,7 @@ function ComposerFooter({
 
       if (assets.length) {
         if (type === 'image') {
-          const images: ComposerImage[] = []
+          const selectedImages: ComposerImage[] = []
 
           await Promise.all(
             assets.map(async image => {
@@ -1421,7 +1469,7 @@ function ComposerFooter({
                 height: image.height,
                 mime: image.mimeType!,
               })
-              images.push(composerImage)
+              selectedImages.push(composerImage)
             }),
           ).catch(e => {
             logger.error(`createComposerImage failed`, {
@@ -1429,7 +1477,7 @@ function ComposerFooter({
             })
           })
 
-          onImageAdd(images)
+          onImageAdd(selectedImages)
         } else if (type === 'video') {
           onSelectVideo(post.id, assets[0])
         } else if (type === 'gif') {
