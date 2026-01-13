@@ -1,14 +1,11 @@
-import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {type StoredDraft, useDrafts, useSaveDraft} from '#/state/drafts'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {PageText_Stroke2_Corner0_Rounded as DraftIcon} from '#/components/icons/PageText'
 import * as Prompt from '#/components/Prompt'
-import {Text} from '#/components/Typography'
 import {DraftsListDialog} from './DraftsListDialog'
 
 export function DraftsButton({
@@ -21,7 +18,6 @@ export function DraftsButton({
   isEmpty: boolean
 }) {
   const {_} = useLingui()
-  const t = useTheme()
   const draftsDialogControl = Dialog.useDialogControl()
   const savePromptControl = Prompt.usePromptControl()
   const {data: drafts} = useDrafts()
@@ -53,34 +49,19 @@ export function DraftsButton({
       <Button
         label={_(msg`Drafts`)}
         variant="ghost"
-        color="secondary"
-        shape="round"
+        color="primary"
+        shape="default"
         size="small"
-        style={[a.mx_xs]}
+        style={[a.rounded_full, a.py_sm, {paddingLeft: 7, paddingRight: 7}]}
         disabled={isSaving}
         onPress={handlePress}>
-        <ButtonIcon icon={DraftIcon} />
-        {draftCount > 0 && (
-          <View
-            style={[
-              a.absolute,
-              a.rounded_full,
-              {
-                top: -2,
-                right: -2,
-                minWidth: 16,
-                height: 16,
-                backgroundColor: t.palette.primary_500,
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingHorizontal: 4,
-              },
-            ]}>
-            <Text style={[a.text_2xs, a.font_bold, {color: t.palette.white}]}>
-              {draftCount}
-            </Text>
-          </View>
-        )}
+        <ButtonText style={[a.text_md]}>
+          {draftCount > 0 ? (
+            <Trans>Drafts ({draftCount})</Trans>
+          ) : (
+            <Trans>Drafts</Trans>
+          )}
+        </ButtonText>
       </Button>
 
       <DraftsListDialog
