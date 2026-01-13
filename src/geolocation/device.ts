@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useRef} from 'react'
+import {Platform} from 'react-native'
 import * as Location from 'expo-location'
 import {createPermissionHook} from 'expo-modules-core'
 
@@ -57,6 +58,18 @@ export async function getDeviceGeolocation(): Promise<Geolocation> {
     })
     const location = locations.at(0)
     const normalized = location ? normalizeDeviceLocation(location) : undefined
+    if (normalized?.regionCode && normalized.regionCode.length > 5) {
+      /*
+       * We want short codes only, and we're still seeing some full names here.
+       * 5 is just a heuristic for a region that is probably not formatted as a
+       * short code.
+       */
+      logger.error('getDeviceGeolocation: invalid regionCode', {
+        os: Platform.OS,
+        version: Platform.Version,
+        regionCode: normalized.regionCode,
+      })
+    }
     return {
       countryCode: normalized?.countryCode ?? undefined,
       regionCode: normalized?.regionCode ?? undefined,
