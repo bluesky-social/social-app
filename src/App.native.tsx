@@ -69,6 +69,10 @@ import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbe
 import {ToastOutlet} from '#/components/Toast'
 import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
 import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
+import {
+  prefetchLiveEvents,
+  Provider as LiveEventsProvider,
+} from '#/features/liveEvents/context'
 import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
@@ -92,6 +96,7 @@ if (isAndroid) {
  */
 Geo.resolve()
 prefetchAgeAssuranceConfig()
+prefetchLiveEvents()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -230,7 +235,9 @@ function App() {
                               <StarterPackProvider>
                                 <SafeAreaProvider
                                   initialMetrics={initialWindowMetrics}>
-                                  <InnerApp />
+                                  <LiveEventsProvider>
+                                    <InnerApp />
+                                  </LiveEventsProvider>
                                 </SafeAreaProvider>
                               </StarterPackProvider>
                             </BottomSheetProvider>
