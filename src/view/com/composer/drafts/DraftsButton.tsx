@@ -1,7 +1,7 @@
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {type StoredDraft, useDrafts, useSaveDraft} from '#/state/drafts'
+import {type StoredDraft, useSaveDraft} from '#/state/drafts'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -20,10 +20,7 @@ export function DraftsButton({
   const {_} = useLingui()
   const draftsDialogControl = Dialog.useDialogControl()
   const savePromptControl = Prompt.usePromptControl()
-  const {data: drafts} = useDrafts()
   const {isPending: isSaving} = useSaveDraft()
-
-  const draftCount = drafts?.length ?? 0
 
   const handlePress = () => {
     if (isEmpty) {
@@ -56,11 +53,7 @@ export function DraftsButton({
         disabled={isSaving}
         onPress={handlePress}>
         <ButtonText style={[a.text_md]}>
-          {draftCount > 0 ? (
-            <Trans>Drafts ({draftCount})</Trans>
-          ) : (
-            <Trans>Drafts</Trans>
-          )}
+          <Trans>Drafts</Trans>
         </ButtonText>
       </Button>
 
