@@ -13,11 +13,13 @@ export function DraftsButton({
   onSaveDraft,
   onDiscard,
   isEmpty,
+  isDirty,
 }: {
   onSelectDraft: (draft: StoredDraft) => void
   onSaveDraft: () => Promise<void>
   onDiscard: () => void
   isEmpty: boolean
+  isDirty: boolean
 }) {
   const {_} = useLingui()
   const draftsDialogControl = Dialog.useDialogControl()
@@ -25,11 +27,11 @@ export function DraftsButton({
   const {isPending: isSaving} = useSaveDraft()
 
   const handlePress = () => {
-    if (isEmpty) {
-      // Composer is empty, go directly to drafts list
+    if (isEmpty || !isDirty) {
+      // Composer is empty or has no unsaved changes, go directly to drafts list
       draftsDialogControl.open()
     } else {
-      // Composer has content, ask what to do
+      // Composer has unsaved changes, ask what to do
       savePromptControl.open()
     }
   }

@@ -832,7 +832,8 @@ export const ComposePost = ({
             onSelectDraft={handleSelectDraft}
             onSaveDraft={saveCurrentDraft}
             onDiscard={handleClearComposer}
-            isEmpty={isComposerEmpty}>
+            isEmpty={isComposerEmpty}
+            isDirty={composerState.isDirty}>
             {missingAltError && <AltTextReminder error={missingAltError} />}
             <ErrorBanner
               error={error}
@@ -1124,6 +1125,7 @@ function ComposerTopBar({
   onSaveDraft,
   onDiscard,
   isEmpty,
+  isDirty,
   topBarAnimatedStyle,
   children,
 }: {
@@ -1139,6 +1141,7 @@ function ComposerTopBar({
   onSaveDraft: () => Promise<void>
   onDiscard: () => void
   isEmpty: boolean
+  isDirty: boolean
   topBarAnimatedStyle: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
@@ -1170,6 +1173,7 @@ function ComposerTopBar({
           onSaveDraft={onSaveDraft}
           onDiscard={onDiscard}
           isEmpty={isEmpty}
+          isDirty={isDirty}
         />
         {isPublishing ? (
           <>
