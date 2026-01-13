@@ -360,6 +360,32 @@ export const ComposePost = ({
     }
   }, [saveDraft, composerState, replyTo, onClose, _])
 
+  // Save without closing - for use by DraftsButton
+  const saveCurrentDraft = React.useCallback(async () => {
+    await saveDraft({
+      composerState,
+      replyTo,
+    })
+  }, [saveDraft, composerState, replyTo])
+
+  // Check if composer is empty (no content to save)
+  const isComposerEmpty = React.useMemo(() => {
+    // Has multiple posts means it's not empty
+    if (thread.posts.length > 1) return false
+
+    const firstPost = thread.posts[0]
+    // Has text
+    if (firstPost.richtext.text.trim().length > 0) return false
+    // Has media
+    if (firstPost.embed.media) return false
+    // Has quote
+    if (firstPost.embed.quote) return false
+    // Has link
+    if (firstPost.embed.link) return false
+
+    return true
+  }, [thread.posts])
+
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
@@ -784,7 +810,9 @@ export const ComposePost = ({
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
             onPublish={onPressPublish}
-            onSelectDraft={handleSelectDraft}>
+            onSelectDraft={handleSelectDraft}
+            onSaveDraft={saveCurrentDraft}
+            isEmpty={isComposerEmpty}>
             {missingAltError && <AltTextReminder error={missingAltError} />}
             <ErrorBanner
               error={error}
@@ -1073,6 +1101,8 @@ function ComposerTopBar({
   onCancel,
   onPublish,
   onSelectDraft,
+  onSaveDraft,
+  isEmpty,
   topBarAnimatedStyle,
   children,
 }: {
@@ -1085,6 +1115,8 @@ function ComposerTopBar({
   onCancel: () => void
   onPublish: () => void
   onSelectDraft: (draft: StoredDraft) => void
+  onSaveDraft: () => Promise<void>
+  isEmpty: boolean
   topBarAnimatedStyle: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
@@ -1110,8 +1142,12 @@ function ComposerTopBar({
             <Trans>Cancel</Trans>
           </ButtonText>
         </Button>
-        <DraftsButton onSelectDraft={onSelectDraft} />
         <View style={a.flex_1} />
+        <DraftsButton
+          onSelectDraft={onSelectDraft}
+          onSaveDraft={onSaveDraft}
+          isEmpty={isEmpty}
+        />
         {isPublishing ? (
           <>
             <Text style={pal.textLight}>{publishingStage}</Text>

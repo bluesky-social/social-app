@@ -416,7 +416,7 @@ describe('Draft serialization', () => {
             labels: [],
           },
         ],
-        threadgate: ['nobody'],
+        threadgate: [{type: 'nobody'}],
         syncStatus: 'local',
       }
 
@@ -428,7 +428,7 @@ describe('Draft serialization', () => {
         loadedMedia,
       })
 
-      expect(newState.thread.threadgate).toEqual(['nobody'])
+      expect(newState.thread.threadgate).toEqual([{type: 'nobody'}])
     })
 
     it('restores reply information', () => {
