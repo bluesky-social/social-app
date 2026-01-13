@@ -11,10 +11,12 @@ import {DraftsListDialog} from './DraftsListDialog'
 export function DraftsButton({
   onSelectDraft,
   onSaveDraft,
+  onDiscard,
   isEmpty,
 }: {
   onSelectDraft: (draft: StoredDraft) => void
   onSaveDraft: () => Promise<void>
+  onDiscard: () => void
   isEmpty: boolean
 }) {
   const {_} = useLingui()
@@ -38,6 +40,7 @@ export function DraftsButton({
   }
 
   const handleDiscardAndOpen = () => {
+    onDiscard()
     draftsDialogControl.open()
   }
 

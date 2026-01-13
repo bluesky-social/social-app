@@ -131,6 +131,9 @@ export type ComposerAction =
       /** Map of localId -> loaded media path/URL */
       loadedMedia: Map<string, string>
     }
+  | {
+      type: 'clear'
+    }
 
 export const MAX_IMAGES = 4
 
@@ -306,6 +309,31 @@ export function composerReducer(
           posts,
           postgate: draft.postgate || state.thread.postgate,
           threadgate: draft.threadgate || state.thread.threadgate,
+        },
+      }
+    }
+    case 'clear': {
+      return {
+        activePostIndex: 0,
+        mutableNeedsFocusActive: true,
+        draftId: undefined,
+        thread: {
+          posts: [
+            {
+              id: nanoid(),
+              richtext: new RichText({text: ''}),
+              shortenedGraphemeLength: 0,
+              labels: [],
+              embed: {
+                quote: undefined,
+                media: undefined,
+                link: undefined,
+              },
+            },
+          ],
+          // Keep the user's default interaction settings
+          postgate: state.thread.postgate,
+          threadgate: state.thread.threadgate,
         },
       }
     }
