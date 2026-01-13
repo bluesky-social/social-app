@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isNative} from '#/platform/detection'
 import {
   type DraftSummary,
   type StoredDraft,
@@ -10,7 +11,7 @@ import {
   useDrafts,
   useLoadDraft,
 } from '#/state/drafts'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
@@ -66,24 +67,10 @@ export function DraftsListDialog({
     [control, _],
   )
 
-  const listHeader = useMemo(() => {
-    return (
-      <View>
-        <Dialog.Header renderLeft={backButton}>
-          <Dialog.HeaderText>
-            <Trans>Drafts</Trans>
-          </Dialog.HeaderText>
-        </Dialog.Header>
-        {/* Spacer between header and first item */}
-        <View style={[{height: 12}]} />
-      </View>
-    )
-  }, [backButton])
-
   const renderItem = useCallback(
     ({item}: {item: DraftSummary}) => {
       return (
-        <View style={[a.px_lg]}>
+        <View style={[a.px_lg, a.mt_lg]}>
           <DraftItem
             draft={item}
             onSelect={handleSelectDraft}
@@ -95,7 +82,16 @@ export function DraftsListDialog({
     [handleSelectDraft, handleDeleteDraft],
   )
 
-  const itemSeparator = useCallback(() => <View style={[{height: 12}]} />, [])
+  const header = useMemo(
+    () => (
+      <Dialog.Header renderLeft={backButton}>
+        <Dialog.HeaderText>
+          <Trans>Drafts</Trans>
+        </Dialog.HeaderText>
+      </Dialog.Header>
+    ),
+    [backButton],
+  )
 
   const emptyComponent = useMemo(() => {
     if (isLoading) {
@@ -116,15 +112,15 @@ export function DraftsListDialog({
 
   return (
     <Dialog.Outer control={control}>
+      {isNative && header}
       <Dialog.InnerFlatList
         data={drafts ?? []}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        ListHeaderComponent={listHeader}
+        ListHeaderComponent={web(header)}
+        stickyHeaderIndices={web([0])}
         ListEmptyComponent={emptyComponent}
-        ItemSeparatorComponent={itemSeparator}
-        stickyHeaderIndices={[0]}
-        style={[t.atoms.bg_contrast_50, a.px_0]}
+        style={[t.atoms.bg_contrast_50, a.px_0, web({minHeight: 500})]}
         webInnerContentContainerStyle={[a.py_0]}
       />
     </Dialog.Outer>
