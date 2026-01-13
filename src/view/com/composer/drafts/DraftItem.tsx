@@ -1,12 +1,20 @@
-import {useCallback, useEffect, useState} from 'react'
-import {Image, Pressable, View} from 'react-native'
+import {useCallback, useEffect, useMemo, useState} from 'react'
+import {Pressable, View} from 'react-native'
+import {Image} from 'expo-image'
+import {type AppBskyEmbedImages} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
-import {type DraftPostDisplay, type DraftSummary} from '#/state/drafts'
+import {
+  type DraftPostDisplay,
+  type DraftSummary,
+  type LocalMediaRef,
+} from '#/state/drafts'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useSession} from '#/state/session'
+import {AutoSizedImage} from '#/view/com/util/images/AutoSizedImage'
+import {ImageLayoutGrid} from '#/view/com/util/images/ImageLayoutGrid'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -134,13 +142,13 @@ function DraftPostRow({
       </View>
 
       {/* Content column */}
-      <View style={[a.flex_1, a.gap_xs]}>
+      <View style={[a.flex_1, a.gap_2xs]}>
         {/* Header row: name, handle, timestamp, menu */}
         <View style={[a.flex_row, a.align_center, a.gap_xs]}>
           <View style={[a.flex_row, a.align_center, a.flex_1, a.gap_xs]}>
             {displayName && (
               <Text
-                style={[a.text_md, a.font_bold, t.atoms.text]}
+                style={[a.text_md, a.font_semi_bold, t.atoms.text]}
                 numberOfLines={1}>
                 {displayName}
               </Text>
@@ -197,10 +205,15 @@ function DraftPostRow({
   )
 }
 
+type LoadedImage = {
+  url: string
+  meta: LocalMediaRef
+}
+
 function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
   const t = useTheme()
   const {currentAccount} = useSession()
-  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [loadedImages, setLoadedImages] = useState<LoadedImage[]>([])
   const [gifUrl, setGifUrl] = useState<string | null>(null)
 
   useEffect(() => {
@@ -209,20 +222,20 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
 
       // Load images
       if (post.images && post.images.length > 0) {
-        const urls: string[] = []
+        const loaded: LoadedImage[] = []
         for (const image of post.images) {
           try {
             const url = await storage.loadMediaFromLocal(
               currentAccount.did,
               image.localId,
             )
-            urls.push(url)
+            loaded.push({url, meta: image})
           } catch (e) {
             // Image might not exist anymore
             console.warn('Failed to load draft image', e)
           }
         }
-        setImageUrls(urls)
+        setLoadedImages(loaded)
       }
 
       // GIFs have a URL directly
@@ -234,52 +247,50 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
     loadMedia()
   }, [currentAccount?.did, post.images, post.gif])
 
+  // Convert loaded images to ViewImage format for the embed components
+  const viewImages = useMemo<AppBskyEmbedImages.ViewImage[]>(() => {
+    return loadedImages.map(({url, meta}) => ({
+      thumb: url,
+      fullsize: url,
+      alt: meta.altText || '',
+      aspectRatio:
+        meta.width && meta.height
+          ? {width: meta.width, height: meta.height}
+          : undefined,
+    }))
+  }, [loadedImages])
+
   // Nothing to show
-  if (imageUrls.length === 0 && !gifUrl && !post.video) {
+  if (viewImages.length === 0 && !gifUrl && !post.video) {
     return null
   }
 
   return (
-    <View style={[a.gap_xs, a.pt_xs]}>
-      {/* Images grid */}
-      {imageUrls.length > 0 && (
-        <View style={[a.flex_row, a.gap_xs, a.flex_wrap]}>
-          {imageUrls.map((url, index) => (
-            <View
-              key={index}
-              style={[
-                a.rounded_sm,
-                a.overflow_hidden,
-                t.atoms.bg_contrast_25,
-                {
-                  width: imageUrls.length === 1 ? '100%' : '48%',
-                  aspectRatio: imageUrls.length === 1 ? 16 / 9 : 1,
-                },
-              ]}>
-              <Image
-                source={{uri: url}}
-                style={[a.flex_1]}
-                resizeMode="cover"
-                accessibilityIgnoresInvertColors
-              />
-            </View>
-          ))}
-        </View>
+    <View style={[a.pt_xs]}>
+      {/* Images - use real embed components */}
+      {viewImages.length === 1 && (
+        <AutoSizedImage image={viewImages[0]} hideBadge />
       )}
+      {viewImages.length > 1 && <ImageLayoutGrid images={viewImages} />}
 
       {/* GIF preview */}
       {gifUrl && (
         <View
           style={[
-            a.rounded_sm,
+            a.rounded_md,
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
-            {aspectRatio: 16 / 9},
+            {
+              aspectRatio:
+                post.gif?.width && post.gif?.height
+                  ? post.gif.width / post.gif.height
+                  : 16 / 9,
+            },
           ]}>
           <Image
             source={{uri: gifUrl}}
             style={[a.flex_1]}
-            resizeMode="cover"
+            contentFit="cover"
             accessibilityIgnoresInvertColors
           />
         </View>
@@ -289,12 +300,17 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
       {post.video && (
         <View
           style={[
-            a.rounded_sm,
+            a.rounded_md,
             a.p_md,
             a.align_center,
             a.justify_center,
             t.atoms.bg_contrast_50,
-            {aspectRatio: 16 / 9},
+            {
+              aspectRatio:
+                post.video.width && post.video.height
+                  ? post.video.width / post.video.height
+                  : 16 / 9,
+            },
           ]}>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
             <Trans>Video attached</Trans>
