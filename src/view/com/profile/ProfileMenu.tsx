@@ -88,7 +88,10 @@ let ProfileMenu = ({
   const status = useActorStatus(profile)
   const statusNudge = useNux(Nux.LiveNowBetaNudge)
   const statusNudgeActive =
-    canGoLive && statusNudge.status === 'ready' && !statusNudge.nux?.completed
+    isSelf &&
+    canGoLive &&
+    statusNudge.status === 'ready' &&
+    !statusNudge.nux?.completed
   const {mutate: saveNux} = useSaveNux()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
