@@ -284,6 +284,7 @@
     "@react-native/babel-preset": "0.81.5",
     "@react-native/normalize-colors": "0.81.5",
     "**/@expo/image-utils": "0.8.7",
+    "**/@react-native-async-storage/async-storage": "2.2.0",
     "**/expo-constants": "18.0.8",
     "**/expo-device": "7.1.4",
     "**/zod": "3.23.8",
