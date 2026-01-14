@@ -886,8 +886,12 @@ export const ComposePost = ({
           {!IS_WEBFooterSticky && footer}
         </View>
 
-        <Prompt.Outer control={discardPromptControl}>
-          <Prompt.TitleText>{_(msg`Discard draft?`)}</Prompt.TitleText>
+        <Prompt.Outer
+          control={discardPromptControl}
+          webOptions={{vertical: true}}>
+          <Prompt.TitleText>
+            <Trans>Save draft?</Trans>{' '}
+          </Prompt.TitleText>
           <Prompt.DescriptionText>
             {_(msg`You can save this draft to continue later.`)}
           </Prompt.DescriptionText>
@@ -900,7 +904,7 @@ export const ComposePost = ({
             <Prompt.Action
               cta={_(msg`Discard`)}
               onPress={onClose}
-              color="negative"
+              color="negative_subtle"
             />
             <Prompt.Cancel />
           </Prompt.Actions>

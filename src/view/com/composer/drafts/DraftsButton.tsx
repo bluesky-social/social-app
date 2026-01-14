@@ -67,7 +67,7 @@ export function DraftsButton({
         onSelectDraft={onSelectDraft}
       />
 
-      <Prompt.Outer control={savePromptControl}>
+      <Prompt.Outer control={savePromptControl} webOptions={{vertical: true}}>
         <Prompt.TitleText>
           <Trans>Save current draft?</Trans>
         </Prompt.TitleText>
@@ -86,7 +86,7 @@ export function DraftsButton({
           <Prompt.Action
             cta={_(msg`Discard`)}
             onPress={handleDiscardAndOpen}
-            color="negative"
+            color="negative_subtle"
           />
           <Prompt.Cancel />
         </Prompt.Actions>
