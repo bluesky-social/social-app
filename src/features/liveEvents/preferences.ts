@@ -9,6 +9,7 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
+import * as env from '#/env'
 import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,
@@ -40,7 +41,7 @@ function useWebOnlyDebugLiveEventPreferences() {
   const agent = useAgent()
 
   useEffect(() => {
-    if (isWeb && typeof window !== 'undefined') {
+    if (env.IS_DEV && isWeb && typeof window !== 'undefined') {
       // @ts-ignore
       window.__updateLiveEventPreferences = async (
         action: LiveEventPreferencesAction,
