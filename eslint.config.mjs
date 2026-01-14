@@ -89,8 +89,8 @@ export default tseslint.config(
       // React Native rules
       'react-native/no-inline-styles': 'off',
 
-      // React Native A11y rules (iOS focused)
-      ...reactNativeA11y.configs.ios.rules,
+      // React Native A11y rules
+      ...reactNativeA11y.configs.all.rules,
 
       // Bsky internal rules
       'bsky-internal/avoid-unwrapped-text': [
