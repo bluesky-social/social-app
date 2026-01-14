@@ -137,7 +137,7 @@ export function LiveNowBetaDialog() {
                 ]}
                 alt={_(
                   msg({
-                    message: `A screenshot of a post from @rtgame.bsky.social, showing the user is currently livestreaming content on Twitch. The post reads: "New stream. New energy. Same chaos. Tap in now — we're just getting started!"`,
+                    message: `A screenshot of a post from <TODO>, showing the user is currently livestreaming content on Twitch. The post reads: "TODO"`,
                     comment:
                       'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
                   }),
@@ -172,7 +172,7 @@ export function LiveNowBetaDialog() {
               ]}>
               <Trans>
                 Streaming on Twitch? Set your live status on Bluesky to add a
-                badge to your avatar.  Tapping it takes people straight to your
+                badge to your avatar. Tapping it takes people straight to your
                 stream.
               </Trans>
             </Text>
