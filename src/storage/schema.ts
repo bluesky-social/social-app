@@ -50,8 +50,6 @@ export type Device = {
   activitySubscriptionsNudged?: boolean
   threadgateNudged?: boolean
 
-  liveEventFeedsBannerDisabled?: boolean
-
   /**
    * Policy update overlays. New IDs are required for each new announcement.
    */

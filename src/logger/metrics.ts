@@ -788,4 +788,9 @@ export type MetricEvents = {
   }
   // user pressed the remove all data button
   'contacts:settings:removeData': {}
+
+  'liveEventFeeds:hideFeed': {feedId: string}
+  'liveEventFeeds:unhideFeed': {feedId: string}
+  'liveEventFeed:hideAllFeeds': {}
+  'liveEventFeed:unhideAllFeeds': {}
 }

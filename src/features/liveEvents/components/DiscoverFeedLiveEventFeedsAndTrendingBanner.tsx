@@ -5,12 +5,15 @@ import {useLingui} from '@lingui/react'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {atoms as a, useLayoutBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
+import {DotGrid_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
-import * as Prompt from '#/components/Prompt'
 import {LiveEventFeedCardWide} from '#/features/liveEvents/components/LiveEventFeedCardWide'
+import {
+  LiveEventFeedOptionsMenu,
+  useDialogControl,
+} from '#/features/liveEvents/components/LiveEventFeedOptionsMenu'
 import {useLiveEvents} from '#/features/liveEvents/context'
-import {device, useStorage} from '#/storage'
+import {useLiveEventPreferences} from '#/features/liveEvents/preferences'
 
 export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
   const t = useTheme()
@@ -18,14 +21,17 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
   const events = useLiveEvents()
   const {rightNavVisible} = useLayoutBreakpoints()
   const {trendingDisabled} = useTrendingSettings()
-  const promptControl = Prompt.usePromptControl()
-  const [bannerDisabled, setBannerDisabled] = useStorage(device, [
-    'liveEventFeedsBannerDisabled',
-  ])
+  const optionsMenuControl = useDialogControl()
+  const {data, isLoading} = useLiveEventPreferences()
 
+  // user prefs should be loaded by now, but for TS-sake
+  if (isLoading) return null
+
+  const {hideAllFeeds, hiddenFeedIds} = data
   const feed = events.feeds.at(0)
+  const feedHidden = feed?.id ? hiddenFeedIds.includes(feed?.id || '') : false
 
-  if (!feed || bannerDisabled) {
+  if (!feed || hideAllFeeds || feedHidden) {
     if (!rightNavVisible && !trendingDisabled) {
       // only show trending on mobile when live event banner is not shown
       return <TrendingInterstitial />
@@ -52,7 +58,7 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
             shape="round"
             style={[a.absolute, a.z_10, {top: 6, right: 6}]}
             onPress={() => {
-              promptControl.open()
+              optionsMenuControl.open()
             }}>
             {({hovered, pressed}) => (
               <>
@@ -67,8 +73,8 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
                     },
                   ]}
                 />
-                <CloseIcon
-                  size="xs"
+                <EllipsisIcon
+                  size="sm"
                   fill={
                     image.textColor === 'light'
                       ? t.palette.white
@@ -82,17 +88,7 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
         </View>
       </View>
 
-      <Prompt.Basic
-        control={promptControl}
-        title={_(msg`Disable the live event banner?`)}
-        description={_(
-          msg`Live events appear occasionally when something exciting is happening that we think you might like. You can always re-enable this banner from your Content & Media settings page.`,
-        )}
-        confirmButtonCta={_(msg`Disable banner`)}
-        onConfirm={() => {
-          setBannerDisabled(true)
-        }}
-      />
+      <LiveEventFeedOptionsMenu feed={feed} control={optionsMenuControl} />
     </>
   )
 }

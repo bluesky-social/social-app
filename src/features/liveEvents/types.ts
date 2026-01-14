@@ -9,6 +9,7 @@ export type LiveEventFeedImage = {
 }
 
 export type LiveEventFeed = {
+  id: string
   title: string
   url: string
   images: Record<LiveEventFeedImageLayout, LiveEventFeedImage>
