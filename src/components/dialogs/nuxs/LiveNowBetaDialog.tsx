@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -6,7 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isWeb} from '#/platform/detection'
-import {atoms as a, useTheme, utils, web} from '#/alf'
+import {atoms as a, select, useTheme, utils, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
@@ -40,6 +40,14 @@ export function LiveNowBetaDialog() {
   const onClose = useCallback(() => {
     nuxDialogs.dismissActiveNux()
   }, [nuxDialogs])
+
+  const shadowColor = useMemo(() => {
+    return select(t.name, {
+      light: utils.alpha(t.palette.primary_900, 0.4),
+      dark: utils.alpha(t.palette.primary_25, 0.4),
+      dim: utils.alpha(t.palette.primary_25, 0.4),
+    })
+  }, [t])
 
   return (
     <Dialog.Outer
@@ -106,18 +114,18 @@ export function LiveNowBetaDialog() {
               style={[
                 {
                   borderRadius: 24,
-                  aspectRatio: 326 / 105,
+                  aspectRatio: 652 / 211,
                 },
                 isWeb
                   ? [
                       {
-                        boxShadow: `0px 10px 15px -3px ${utils.alpha(t.palette.primary_900, 0.4)}`,
+                        boxShadow: `0px 10px 15px -3px ${shadowColor}`,
                       },
                     ]
                   : [
                       t.atoms.shadow_md,
                       {
-                        shadowColor: utils.alpha(t.palette.primary_900, 0.4),
+                        shadowColor,
                         shadowOpacity: 0.2,
                         shadowOffset: {
                           width: 0,
@@ -128,16 +136,16 @@ export function LiveNowBetaDialog() {
               ]}>
               <Image
                 accessibilityIgnoresInvertColors
-                source={require('../../../../assets/images/bookmarks_announcement_nux.webp')}
+                source={require('../../../../assets/images/live_now_beta.webp')}
                 style={[
                   a.w_full,
                   {
-                    aspectRatio: 326 / 105,
+                    aspectRatio: 652 / 211,
                   },
                 ]}
                 alt={_(
                   msg({
-                    message: `A screenshot of a post from <TODO>, showing the user is currently livestreaming content on Twitch. The post reads: "TODO"`,
+                    message: `A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: "Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!"`,
                     comment:
                       'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
                   }),
