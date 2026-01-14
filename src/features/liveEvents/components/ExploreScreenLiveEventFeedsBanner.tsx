@@ -11,7 +11,7 @@ export function ExploreScreenLiveEventFeedsBanner() {
   if (!feed) return null
   return (
     <View style={[a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
-      <LiveEventFeedCardWide feed={feed} />
+      <LiveEventFeedCardWide feed={feed} metricContext="explore" />
     </View>
   )
 }

@@ -50,7 +50,7 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
     <>
       <View style={[a.px_lg, a.pt_md, a.pb_xs]}>
         <View>
-          <LiveEventFeedCardWide feed={feed} />
+          <LiveEventFeedCardWide feed={feed} metricContext="discover" />
 
           <Button
             label={_(msg`Configure live event banner`)}
@@ -88,7 +88,11 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
         </View>
       </View>
 
-      <LiveEventFeedOptionsMenu feed={feed} control={optionsMenuControl} />
+      <LiveEventFeedOptionsMenu
+        feed={feed}
+        control={optionsMenuControl}
+        metricContext="discover"
+      />
     </>
   )
 }

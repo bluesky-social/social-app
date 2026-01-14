@@ -6,14 +6,24 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isBskyCustomFeedUrl} from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {atoms as a, useBreakpoints, utils} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type LiveEventFeed} from '#/features/liveEvents/types'
+import {
+  type LiveEventFeed,
+  type LiveEventFeedMetricContext,
+} from '#/features/liveEvents/types'
 
 const roundedStyles = [a.rounded_lg, a.curve_continuous]
 
-export function LiveEventFeedCardWide({feed}: {feed: LiveEventFeed}) {
+export function LiveEventFeedCardWide({
+  feed,
+  metricContext,
+}: {
+  feed: LiveEventFeed
+  metricContext: LiveEventFeedMetricContext
+}) {
   const {_} = useLingui()
   const {gtPhone} = useBreakpoints()
 
@@ -30,7 +40,13 @@ export function LiveEventFeedCardWide({feed}: {feed: LiveEventFeed}) {
     <Link
       to={url}
       label={_(msg`Live event happening now: ${feed.title}`)}
-      style={[a.w_full]}>
+      style={[a.w_full]}
+      onPress={() => {
+        logger.metric('liveEvents:feed:click', {
+          feed: feed.url,
+          context: metricContext,
+        })
+      }}>
       {({hovered, pressed}) => (
         <View style={[roundedStyles, a.shadow_md, a.w_full]}>
           <View

@@ -10,6 +10,7 @@ export type LiveEventFeedImage = {
 
 export type LiveEventFeed = {
   id: string
+  preview: boolean
   title: string
   url: string
   images: Record<LiveEventFeedImageLayout, LiveEventFeedImage>
@@ -18,3 +19,9 @@ export type LiveEventFeed = {
 export type LiveEventsWorkerResponse = {
   feeds: LiveEventFeed[]
 }
+
+export type LiveEventFeedMetricContext =
+  | 'explore'
+  | 'discover'
+  | 'sidebar'
+  | 'settings'

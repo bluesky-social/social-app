@@ -1,5 +1,6 @@
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 export type MetricEvents = {
   // App events
@@ -789,8 +790,22 @@ export type MetricEvents = {
   // user pressed the remove all data button
   'contacts:settings:removeData': {}
 
-  'liveEventFeeds:hideFeed': {feedId: string}
-  'liveEventFeeds:unhideFeed': {feedId: string}
-  'liveEventFeed:hideAllFeeds': {}
-  'liveEventFeed:unhideAllFeeds': {}
+  'liveEvents:feed:click': {
+    feed: string
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:feed:hide': {
+    feed: string
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:feed:unhide': {
+    feed: string
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:hideAllFeeds': {
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:unhideAllFeeds': {
+    context: LiveEventFeedMetricContext
+  }
 }

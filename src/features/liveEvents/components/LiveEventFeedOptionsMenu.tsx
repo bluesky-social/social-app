@@ -16,16 +16,21 @@ import {
   type LiveEventPreferencesAction,
   useUpdateLiveEventPreferences,
 } from '#/features/liveEvents/preferences'
-import {type LiveEventFeed} from '#/features/liveEvents/types'
+import {
+  type LiveEventFeed,
+  type LiveEventFeedMetricContext,
+} from '#/features/liveEvents/types'
 
 export {useDialogControl} from '#/components/Dialog'
 
 export function LiveEventFeedOptionsMenu({
   control,
   feed,
+  metricContext,
 }: {
   control: Dialog.DialogControlProps
   feed: LiveEventFeed
+  metricContext: LiveEventFeedMetricContext
 }) {
   const {_} = useLingui()
   return (
@@ -34,7 +39,7 @@ export function LiveEventFeedOptionsMenu({
       <Dialog.ScrollableInner
         label={_(msg`Configure live event banner`)}
         style={[web({maxWidth: 400})]}>
-        <Inner control={control} feed={feed} />
+        <Inner control={control} feed={feed} metricContext={metricContext} />
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
@@ -44,9 +49,11 @@ export function LiveEventFeedOptionsMenu({
 function Inner({
   control,
   feed,
+  metricContext,
 }: {
   control: Dialog.DialogControlProps
   feed: LiveEventFeed
+  metricContext: LiveEventFeedMetricContext
 }) {
   const {_} = useLingui()
   const canUndo = useRef(true)
@@ -57,6 +64,8 @@ function Inner({
     error: rawError,
     variables,
   } = useUpdateLiveEventPreferences({
+    feed,
+    metricContext,
     onSuccess() {
       toast.show(
         <toast.Outer>

@@ -16,7 +16,9 @@ export function LiveEventFeedsSettingsToggle() {
     isPending,
     data: updatedPrefs,
     mutate: update,
-  } = useUpdateLiveEventPreferences()
+  } = useUpdateLiveEventPreferences({
+    metricContext: 'settings',
+  })
   const hideAllFeeds = !!(updatedPrefs || prefs)?.hideAllFeeds
 
   return (
