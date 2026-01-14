@@ -24,7 +24,7 @@ export function LiveEventFeedsSettingsToggle() {
   return (
     <Toggle.Item
       name="enable_live_event_banner"
-      label={_(msg`Enable live event banner in your Discover feed`)}
+      label={_(msg`Show live events in your Discover Feed`)}
       value={!hideAllFeeds}
       onChange={() => {
         if (!isPending) {
@@ -34,7 +34,7 @@ export function LiveEventFeedsSettingsToggle() {
       <SettingsList.Item>
         <SettingsList.ItemIcon icon={LiveIcon} />
         <SettingsList.ItemText>
-          <Trans>Enable live event banner</Trans>
+          <Trans>Show live events in your Discover Feed</Trans>
         </SettingsList.ItemText>
         <Toggle.Platform />
       </SettingsList.Item>

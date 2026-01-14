@@ -84,7 +84,11 @@ function Inner({
         },
       )
 
-      // must protect to avoid closing an already closed dialog
+      /*
+       * If there is no `undoAction`, it means that the action was already
+       * undone, and therefore the menu would have been closed prior to the
+       * undo happening.
+       */
       if (undoAction) {
         control.close()
       }
@@ -107,7 +111,7 @@ function Inner({
           <Trans>
             Live events appear occasionally when something exciting is
             happening. If you'd like, you can hide this particular event, or all
-            events.
+            events for this placement in your app interface.
           </Trans>
         </Text>
 
