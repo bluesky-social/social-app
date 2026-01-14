@@ -164,6 +164,13 @@ export default tseslint.config(
       // React Compiler
       'react-compiler/react-compiler': 'warn',
 
+      // React - new version is much stricter, so warn for now
+      // TODO: Fix and set to error
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/purity': 'warn',
+      'react-hooks/refs': 'warn',
+      'react-hooks/immutability': 'warn',
+
       // TypeScript rules
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
