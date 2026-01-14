@@ -251,7 +251,7 @@ let ProfileMenu = ({
                   color="secondary"
                   size="small"
                   shape="round">
-                  {statusNudgeActive && <Gradient />}
+                  {statusNudgeActive && <Gradient style={[a.rounded_full]} />}
                   <ButtonIcon icon={Ellipsis} size="sm" />
                 </Button>
 

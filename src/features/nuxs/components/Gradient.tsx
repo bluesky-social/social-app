@@ -1,8 +1,8 @@
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {atoms as a, useTheme, utils} from '#/alf'
+import {atoms as a, useTheme, utils, type ViewStyleProp} from '#/alf'
 
-export function Gradient() {
+export function Gradient({style}: ViewStyleProp) {
   const t = useTheme()
   return (
     <LinearGradient
@@ -13,7 +13,7 @@ export function Gradient() {
       locations={[0, 1]}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 0}}
-      style={[a.absolute, a.inset_0]}
+      style={[a.absolute, a.inset_0, style]}
     />
   )
 }

@@ -557,7 +557,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.align_center,
           a.justify_center,
           a.curve_continuous,
-          a.overflow_hidden,
           baseStyles,
           style,
           ...(state.hovered || state.pressed
