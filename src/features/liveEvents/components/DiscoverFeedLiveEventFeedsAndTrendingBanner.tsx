@@ -12,26 +12,15 @@ import {
   LiveEventFeedOptionsMenu,
   useDialogControl,
 } from '#/features/liveEvents/components/LiveEventFeedOptionsMenu'
-import {useLiveEvents} from '#/features/liveEvents/context'
-import {useLiveEventPreferences} from '#/features/liveEvents/preferences'
+import {useUserPreferencedLiveEvents} from '#/features/liveEvents/context'
+import {type LiveEventFeed} from '#/features/liveEvents/types'
 
 export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
-  const t = useTheme()
-  const {_} = useLingui()
-  const events = useLiveEvents()
+  const events = useUserPreferencedLiveEvents()
   const {rightNavVisible} = useLayoutBreakpoints()
   const {trendingDisabled} = useTrendingSettings()
-  const optionsMenuControl = useDialogControl()
-  const {data, isLoading} = useLiveEventPreferences()
 
-  // user prefs should be loaded by now, but for TS-sake
-  if (isLoading) return null
-
-  const {hideAllFeeds, hiddenFeedIds} = data
-  const feed = events.feeds.at(0)
-  const feedHidden = feed?.id ? hiddenFeedIds.includes(feed?.id || '') : false
-
-  if (!feed || hideAllFeeds || feedHidden) {
+  if (!events.feeds.length) {
     if (!rightNavVisible && !trendingDisabled) {
       // only show trending on mobile when live event banner is not shown
       return <TrendingInterstitial />
@@ -44,7 +33,13 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
   // On desktop, we show in the sidebar
   if (rightNavVisible) return null
 
-  const image = feed.images.wide
+  return events.feeds.map(feed => <Inner feed={feed} key={feed.id} />)
+}
+
+function Inner({feed}: {feed: LiveEventFeed}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const optionsMenuControl = useDialogControl()
 
   return (
     <>
@@ -76,7 +71,7 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
                 <EllipsisIcon
                   size="sm"
                   fill={
-                    image.textColor === 'light'
+                    feed.images.wide.textColor === 'light'
                       ? t.palette.white
                       : t.palette.black
                   }

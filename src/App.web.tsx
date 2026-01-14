@@ -122,45 +122,47 @@ function InnerApp() {
                 <QueryProvider currentDid={currentAccount?.did}>
                   <PolicyUpdateOverlayProvider>
                     <StatsigProvider>
-                      <AgeAssuranceV2Provider>
-                        <ComposerProvider>
-                          <MessagesProvider>
-                            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                            <LabelDefsProvider>
-                              <ModerationOptsProvider>
-                                <LoggedOutViewProvider>
-                                  <SelectedFeedProvider>
-                                    <HiddenRepliesProvider>
-                                      <HomeBadgeProvider>
-                                        <UnreadNotifsProvider>
-                                          <BackgroundNotificationPreferencesProvider>
-                                            <MutedThreadsProvider>
-                                              <SafeAreaProvider>
-                                                <ProgressGuideProvider>
-                                                  <ServiceConfigProvider>
-                                                    <EmailVerificationProvider>
-                                                      <HideBottomBarBorderProvider>
-                                                        <IntentDialogProvider>
-                                                          <Shell />
-                                                          <ToastOutlet />
-                                                        </IntentDialogProvider>
-                                                      </HideBottomBarBorderProvider>
-                                                    </EmailVerificationProvider>
-                                                  </ServiceConfigProvider>
-                                                </ProgressGuideProvider>
-                                              </SafeAreaProvider>
-                                            </MutedThreadsProvider>
-                                          </BackgroundNotificationPreferencesProvider>
-                                        </UnreadNotifsProvider>
-                                      </HomeBadgeProvider>
-                                    </HiddenRepliesProvider>
-                                  </SelectedFeedProvider>
-                                </LoggedOutViewProvider>
-                              </ModerationOptsProvider>
-                            </LabelDefsProvider>
-                          </MessagesProvider>
-                        </ComposerProvider>
-                      </AgeAssuranceV2Provider>
+                      <LiveEventsProvider>
+                        <AgeAssuranceV2Provider>
+                          <ComposerProvider>
+                            <MessagesProvider>
+                              {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                              <LabelDefsProvider>
+                                <ModerationOptsProvider>
+                                  <LoggedOutViewProvider>
+                                    <SelectedFeedProvider>
+                                      <HiddenRepliesProvider>
+                                        <HomeBadgeProvider>
+                                          <UnreadNotifsProvider>
+                                            <BackgroundNotificationPreferencesProvider>
+                                              <MutedThreadsProvider>
+                                                <SafeAreaProvider>
+                                                  <ProgressGuideProvider>
+                                                    <ServiceConfigProvider>
+                                                      <EmailVerificationProvider>
+                                                        <HideBottomBarBorderProvider>
+                                                          <IntentDialogProvider>
+                                                            <Shell />
+                                                            <ToastOutlet />
+                                                          </IntentDialogProvider>
+                                                        </HideBottomBarBorderProvider>
+                                                      </EmailVerificationProvider>
+                                                    </ServiceConfigProvider>
+                                                  </ProgressGuideProvider>
+                                                </SafeAreaProvider>
+                                              </MutedThreadsProvider>
+                                            </BackgroundNotificationPreferencesProvider>
+                                          </UnreadNotifsProvider>
+                                        </HomeBadgeProvider>
+                                      </HiddenRepliesProvider>
+                                    </SelectedFeedProvider>
+                                  </LoggedOutViewProvider>
+                                </ModerationOptsProvider>
+                              </LabelDefsProvider>
+                            </MessagesProvider>
+                          </ComposerProvider>
+                        </AgeAssuranceV2Provider>
+                      </LiveEventsProvider>
                     </StatsigProvider>
                   </PolicyUpdateOverlayProvider>
                 </QueryProvider>
@@ -203,9 +205,7 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <LiveEventsProvider>
-                              <InnerApp />
-                            </LiveEventsProvider>
+                            <InnerApp />
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>

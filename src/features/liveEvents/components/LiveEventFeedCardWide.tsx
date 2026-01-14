@@ -28,6 +28,7 @@ export function LiveEventFeedCardWide({
   const {gtPhone} = useBreakpoints()
 
   const image = feed.images.wide
+  const textColor = feed.images.wide.textColor === 'light' ? 'white' : 'black'
   const url = useMemo(() => {
     // Validated in multiple places on the backend
     if (isBskyCustomFeedUrl(feed.url)) {
@@ -106,16 +107,20 @@ export function LiveEventFeedCardWide({
                   style={[
                     a.leading_snug,
                     gtPhone ? a.text_xs : a.text_2xs,
-                    {color: 'white', opacity: 0.8},
+                    {color: textColor, opacity: 0.8},
                   ]}>
-                  <Trans>Happening now</Trans>
+                  {feed.preview ? (
+                    <Trans>Preview</Trans>
+                  ) : (
+                    <Trans>Happening now</Trans>
+                  )}
                 </Text>
                 <Text
                   style={[
                     a.leading_snug,
                     a.font_bold,
                     gtPhone ? a.text_3xl : a.text_lg,
-                    {color: 'white'},
+                    {color: textColor},
                   ]}>
                   {feed.title}
                 </Text>

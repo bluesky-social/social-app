@@ -146,49 +146,51 @@ function InnerApp() {
                 <QueryProvider currentDid={currentAccount?.did}>
                   <PolicyUpdateOverlayProvider>
                     <StatsigProvider>
-                      <AgeAssuranceV2Provider>
-                        <ComposerProvider>
-                          <MessagesProvider>
-                            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                            <LabelDefsProvider>
-                              <ModerationOptsProvider>
-                                <LoggedOutViewProvider>
-                                  <SelectedFeedProvider>
-                                    <HiddenRepliesProvider>
-                                      <HomeBadgeProvider>
-                                        <UnreadNotifsProvider>
-                                          <BackgroundNotificationPreferencesProvider>
-                                            <MutedThreadsProvider>
-                                              <ProgressGuideProvider>
-                                                <ServiceAccountManager>
-                                                  <EmailVerificationProvider>
-                                                    <HideBottomBarBorderProvider>
-                                                      <GestureHandlerRootView
-                                                        style={s.h100pct}>
-                                                        <GlobalGestureEventsProvider>
-                                                          <IntentDialogProvider>
-                                                            <TestCtrls />
-                                                            <Shell />
-                                                            <ToastOutlet />
-                                                          </IntentDialogProvider>
-                                                        </GlobalGestureEventsProvider>
-                                                      </GestureHandlerRootView>
-                                                    </HideBottomBarBorderProvider>
-                                                  </EmailVerificationProvider>
-                                                </ServiceAccountManager>
-                                              </ProgressGuideProvider>
-                                            </MutedThreadsProvider>
-                                          </BackgroundNotificationPreferencesProvider>
-                                        </UnreadNotifsProvider>
-                                      </HomeBadgeProvider>
-                                    </HiddenRepliesProvider>
-                                  </SelectedFeedProvider>
-                                </LoggedOutViewProvider>
-                              </ModerationOptsProvider>
-                            </LabelDefsProvider>
-                          </MessagesProvider>
-                        </ComposerProvider>
-                      </AgeAssuranceV2Provider>
+                      <LiveEventsProvider>
+                        <AgeAssuranceV2Provider>
+                          <ComposerProvider>
+                            <MessagesProvider>
+                              {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                              <LabelDefsProvider>
+                                <ModerationOptsProvider>
+                                  <LoggedOutViewProvider>
+                                    <SelectedFeedProvider>
+                                      <HiddenRepliesProvider>
+                                        <HomeBadgeProvider>
+                                          <UnreadNotifsProvider>
+                                            <BackgroundNotificationPreferencesProvider>
+                                              <MutedThreadsProvider>
+                                                <ProgressGuideProvider>
+                                                  <ServiceAccountManager>
+                                                    <EmailVerificationProvider>
+                                                      <HideBottomBarBorderProvider>
+                                                        <GestureHandlerRootView
+                                                          style={s.h100pct}>
+                                                          <GlobalGestureEventsProvider>
+                                                            <IntentDialogProvider>
+                                                              <TestCtrls />
+                                                              <Shell />
+                                                              <ToastOutlet />
+                                                            </IntentDialogProvider>
+                                                          </GlobalGestureEventsProvider>
+                                                        </GestureHandlerRootView>
+                                                      </HideBottomBarBorderProvider>
+                                                    </EmailVerificationProvider>
+                                                  </ServiceAccountManager>
+                                                </ProgressGuideProvider>
+                                              </MutedThreadsProvider>
+                                            </BackgroundNotificationPreferencesProvider>
+                                          </UnreadNotifsProvider>
+                                        </HomeBadgeProvider>
+                                      </HiddenRepliesProvider>
+                                    </SelectedFeedProvider>
+                                  </LoggedOutViewProvider>
+                                </ModerationOptsProvider>
+                              </LabelDefsProvider>
+                            </MessagesProvider>
+                          </ComposerProvider>
+                        </AgeAssuranceV2Provider>
+                      </LiveEventsProvider>
                     </StatsigProvider>
                   </PolicyUpdateOverlayProvider>
                 </QueryProvider>
@@ -235,9 +237,7 @@ function App() {
                               <StarterPackProvider>
                                 <SafeAreaProvider
                                   initialMetrics={initialWindowMetrics}>
-                                  <LiveEventsProvider>
-                                    <InnerApp />
-                                  </LiveEventsProvider>
+                                  <InnerApp />
                                 </SafeAreaProvider>
                               </StarterPackProvider>
                             </BottomSheetProvider>

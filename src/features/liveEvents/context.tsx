@@ -1,11 +1,18 @@
 import {createContext, useContext} from 'react'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
+import {useIsBskyTeam} from '#/lib/hooks/useIsBskyTeam'
 import {IS_DEV, LIVE_EVENTS_URL} from '#/env'
+import {useLiveEventPreferences} from '#/features/liveEvents/preferences'
 import {type LiveEventsWorkerResponse} from '#/features/liveEvents/types'
+import {useDevMode} from '#/storage/hooks/dev-mode'
 
 const qc = new QueryClient()
 const liveEventsQueryKey = ['live-events']
+
+export const DEFAULT_LIVE_EVENTS = {
+  feeds: [],
+}
 
 async function fetchLiveEvents(): Promise<LiveEventsWorkerResponse | null> {
   try {
@@ -18,17 +25,29 @@ async function fetchLiveEvents(): Promise<LiveEventsWorkerResponse | null> {
   }
 }
 
-const Context = createContext<LiveEventsWorkerResponse>({
-  feeds: [],
-})
+const Context = createContext<LiveEventsWorkerResponse>(DEFAULT_LIVE_EVENTS)
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const [isDevMode] = useDevMode()
+  const isBskyTeam = useIsBskyTeam()
   const {data} = useQuery(
     {
       staleTime: IS_DEV ? 5e3 : 1000 * 60,
       queryKey: liveEventsQueryKey,
       async queryFn() {
-        return fetchLiveEvents()
+        const events = await fetchLiveEvents()
+        if (!events) return null
+        const feeds = events.feeds.filter(f => {
+          if (f.preview && !isBskyTeam) {
+            return false
+          }
+          return true
+        })
+        return {
+          ...events,
+          // only one at a time for now, unless bsky team and dev mode
+          feeds: isBskyTeam && isDevMode ? feeds : feeds.slice(0, 1),
+        }
       },
     },
     qc,
@@ -52,4 +71,20 @@ export function useLiveEvents() {
     throw new Error('useLiveEventsContext must be used within a Provider')
   }
   return ctx
+}
+
+export function useUserPreferencedLiveEvents() {
+  const events = useLiveEvents()
+  const {data, isLoading} = useLiveEventPreferences()
+  if (isLoading) return DEFAULT_LIVE_EVENTS
+  const {hideAllFeeds, hiddenFeedIds} = data
+  return {
+    ...events,
+    feeds: hideAllFeeds
+      ? []
+      : events.feeds.filter(f => {
+          const hidden = f?.id ? hiddenFeedIds.includes(f?.id || '') : false
+          return !hidden
+        }),
+  }
 }
