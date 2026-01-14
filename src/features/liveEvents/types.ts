@@ -1,10 +1,10 @@
-export type LiveEventFeedImageLayout = 'wide' // maybe more in the future
+export type LiveEventFeedImageLayout = 'wide' | 'compact' // maybe more in the future
 
-export type LiveEventFeedImage = {
-  alt: string
+export type LiveEventFeedLayout = {
+  title: string
   overlayColor: string
   textColor: string
-  url: string
+  image: string
   blurhash: string
 }
 
@@ -13,7 +13,7 @@ export type LiveEventFeed = {
   preview: boolean
   title: string
   url: string
-  images: Record<LiveEventFeedImageLayout, LiveEventFeedImage>
+  layouts: Record<LiveEventFeedImageLayout, LiveEventFeedLayout>
 }
 
 export type LiveEventsWorkerResponse = {
