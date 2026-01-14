@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react'
+import {createContext, useContext, useMemo} from 'react'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
 import {useIsBskyTeam} from '#/lib/hooks/useIsBskyTeam'
@@ -40,27 +40,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       staleTime: IS_DEV ? 5e3 : 1000 * 60,
       queryKey: liveEventsQueryKey,
       async queryFn() {
-        const events = await fetchLiveEvents()
-        if (!events) return null
-        const feeds = events.feeds.filter(f => {
-          if (f.preview && !isBskyTeam) {
-            return false
-          }
-          return true
-        })
-        return {
-          ...events,
-          // only one at a time for now, unless bsky team and dev mode
-          feeds: isBskyTeam && isDevMode ? feeds : feeds.slice(0, 1),
-        }
+        return fetchLiveEvents()
       },
     },
     qc,
   )
 
-  return (
-    <Context.Provider value={data || {feeds: []}}>{children}</Context.Provider>
-  )
+  const ctx = useMemo(() => {
+    if (!data) return DEFAULT_LIVE_EVENTS
+    const feeds = data.feeds.filter(f => {
+      if (f.preview && !isBskyTeam) return false
+      return true
+    })
+    return {
+      ...data,
+      // only one at a time for now, unless bsky team and dev mode
+      feeds: isBskyTeam && isDevMode ? feeds : feeds.slice(0, 1),
+    }
+  }, [data, isBskyTeam, isDevMode])
+
+  return <Context.Provider value={ctx}>{children}</Context.Provider>
 }
 
 export async function prefetchLiveEvents() {
