@@ -262,6 +262,7 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
           a.gap_lg,
           a.py_sm,
           a.rounded_xs,
+          a.overflow_hidden,
           {minHeight: 32, paddingHorizontal: 10},
           web({outline: 0}),
           (hovered || focused) &&
@@ -302,7 +303,7 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
+export function ItemIcon({icon: Comp, position = 'left', fill}: ItemIconProps) {
   const t = useTheme()
   const {disabled} = useMenuItemContext()
   return (
@@ -319,9 +320,11 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
       <Comp
         size="md"
         fill={
-          disabled
-            ? t.atoms.text_contrast_low.color
-            : t.atoms.text_contrast_medium.color
+          fill
+            ? fill({disabled})
+            : disabled
+              ? t.atoms.text_contrast_low.color
+              : t.atoms.text_contrast_medium.color
         }
       />
     </View>

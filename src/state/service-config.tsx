@@ -93,16 +93,10 @@ export function useLiveNowConfig(): LiveNowConfig {
   const ctx = useContext(LiveNowContext)
   const canGoLive = useCanGoLive()
   const {currentAccount} = useSession()
-  if (!canGoLive) return {allowedDomains: []}
-  if (!currentAccount?.did) return {allowedDomains: []}
+  if (!currentAccount?.did || !canGoLive) return {allowedDomains: []}
   const vip = ctx.find(live => live.did === currentAccount.did)
-  if (vip) {
-    return {
-      allowedDomains: vip.domains.concat(DEFAULT_LIVE_ALLOWED_DOMAINS),
-    }
-  }
   return {
-    allowedDomains: DEFAULT_LIVE_ALLOWED_DOMAINS,
+    allowedDomains: DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
   }
 }
 
@@ -110,9 +104,7 @@ export function useCanGoLive() {
   const gate = useGate()
   const {hasSession} = useSession()
   if (!hasSession) return false
-  const isInBeta = IS_DEV ? true : gate('live_now_beta')
-  if (!isInBeta) return false
-  return true
+  return IS_DEV ? true : gate('live_now_beta')
 }
 
 export function useCheckEmailConfirmed() {
