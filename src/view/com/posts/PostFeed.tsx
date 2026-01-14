@@ -954,7 +954,7 @@ let PostFeed = ({
         const actor = post.author
         if (
           actor.status &&
-          validateStatus(actor.did, actor.status, liveNowConfig) &&
+          validateStatus(actor.status, liveNowConfig) &&
           isStatusStillActive(actor.status.expiresAt)
         ) {
           if (!seenActorWithStatusRef.current.has(actor.did)) {

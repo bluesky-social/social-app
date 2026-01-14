@@ -18,10 +18,10 @@ import {useLiveNowConfig} from '#/state/service-config'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {useDialogContext} from '#/components/Dialog'
+import {getLiveServiceNames} from '#/components/live/utils'
 
 export function useLiveLinkMetaQuery(url: string | null) {
   const liveNowConfig = useLiveNowConfig()
-  const {currentAccount} = useSession()
   const {_} = useLingui()
 
   const agent = useAgent()
@@ -30,13 +30,14 @@ export function useLiveLinkMetaQuery(url: string | null) {
     queryKey: ['link-meta', url],
     queryFn: async () => {
       if (!url) return undefined
-      const config = liveNowConfig.find(cfg => cfg.did === currentAccount?.did)
-
-      if (!config) throw new Error(_(msg`You are not allowed to go live`))
-
       const urlp = new URL(url)
-      if (!config.domains.includes(urlp.hostname)) {
-        throw new Error(_(msg`${urlp.hostname} is not a valid URL`))
+      if (!liveNowConfig.allowedDomains.has(urlp.hostname)) {
+        const {formatted} = getLiveServiceNames(liveNowConfig.allowedDomains)
+        throw new Error(
+          _(
+            msg`This service is not supported while the Live feature is in beta. Allowed services: ${formatted}.`,
+          ),
+        )
       }
 
       return await getLinkMeta(agent, url)

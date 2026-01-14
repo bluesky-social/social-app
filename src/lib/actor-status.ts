@@ -7,7 +7,7 @@ import {
 import {isAfter, parseISO} from 'date-fns'
 
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
-import {useLiveNowConfig} from '#/state/service-config'
+import {type LiveNowConfig, useLiveNowConfig} from '#/state/service-config'
 import {useTickEveryMinute} from '#/state/shell'
 import type * as bsky from '#/types/bsky'
 
@@ -20,7 +20,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
     tick! // revalidate every minute
 
     if (shadowed && 'status' in shadowed && shadowed.status) {
-      const isValid = validateStatus(shadowed.did, shadowed.status, config)
+      const isValid = validateStatus(shadowed.status, config)
       const isDisabled = shadowed.status.isDisabled || false
       const isActive = isStatusStillActive(shadowed.status.expiresAt)
       if (isValid && !isDisabled && isActive) {
@@ -65,19 +65,14 @@ export function isStatusStillActive(timeStr: string | undefined) {
 }
 
 export function validateStatus(
-  did: string,
   status: AppBskyActorDefs.StatusView,
-  config: {did: string; domains: string[]}[],
+  config: LiveNowConfig,
 ) {
   if (status.status !== 'app.bsky.actor.status#live') return false
-  const sources = config.find(cfg => cfg.did === did)
-  if (!sources) {
-    return false
-  }
   try {
     if (AppBskyEmbedExternal.isView(status.embed)) {
       const url = new URL(status.embed.external.uri)
-      return sources.domains.includes(url.hostname)
+      return config.allowedDomains.has(url.hostname)
     } else {
       return false
     }

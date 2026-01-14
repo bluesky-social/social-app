@@ -35,3 +35,28 @@ export function useDebouncedValue<T>(val: T, delayMs: number): T {
 
   return prev
 }
+
+const serviceUrlToNameMap: Record<string, string> = {
+  'twitch.tv': 'Twitch',
+  'www.twitch.tv': 'Twitch',
+  'youtube.com': 'YouTube',
+  'www.youtube.com': 'YouTube',
+  'youtu.be': 'YouTube',
+  'nba.com': 'NBA',
+  'www.nba.com': 'NBA',
+  'nba.smart.link': 'nba.smart.link',
+  'espn.com': 'ESPN',
+  'www.espn.com': 'ESPN',
+  'stream.place': 'Streamplace',
+  'skylight.social': 'Skylight',
+}
+
+export function getLiveServiceNames(domains: Set<string>) {
+  const names = Array.from(
+    new Set(Array.from(domains.values()).map(d => serviceUrlToNameMap[d] || d)),
+  )
+  return {
+    names,
+    formatted: names.join(', '),
+  }
+}
