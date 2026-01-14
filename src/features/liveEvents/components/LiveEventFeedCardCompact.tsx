@@ -63,12 +63,11 @@ export function LiveEventFeedCardCompact({
             style={[a.w_full, a.align_start, a.overflow_hidden, roundedStyles]}>
             <Image
               accessibilityIgnoresInvertColors
-              source={{
-                uri: layout.image,
-                blurhash: layout.blurhash,
-              }}
-              style={[a.absolute, a.inset_0]}
+              source={{uri: layout.image}}
+              placeholder={{blurhash: layout.blurhash}}
+              style={[a.absolute, a.inset_0, a.w_full, a.h_full]}
               contentFit="cover"
+              placeholderContentFit="cover"
             />
 
             <LinearGradient
