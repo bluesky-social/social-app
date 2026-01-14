@@ -3,7 +3,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useTrendingSettings} from '#/state/preferences/trending'
-import {atoms as a, useLayoutBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {Button} from '#/components/Button'
 import {DotGrid_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
@@ -37,7 +37,6 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
 }
 
 function Inner({feed}: {feed: LiveEventFeed}) {
-  const t = useTheme()
   const {_} = useLingui()
   const optionsMenuControl = useDialogControl()
 
@@ -70,11 +69,7 @@ function Inner({feed}: {feed: LiveEventFeed}) {
                 />
                 <EllipsisIcon
                   size="sm"
-                  fill={
-                    feed.images.wide.textColor === 'light'
-                      ? t.palette.white
-                      : t.palette.black
-                  }
+                  fill={feed.images.wide.textColor}
                   style={[a.z_20]}
                 />
               </>

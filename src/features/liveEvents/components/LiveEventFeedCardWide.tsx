@@ -28,7 +28,8 @@ export function LiveEventFeedCardWide({
   const {gtPhone} = useBreakpoints()
 
   const image = feed.images.wide
-  const textColor = feed.images.wide.textColor === 'light' ? 'white' : 'black'
+  const overlayColor = image.overlayColor
+  const textColor = image.textColor
   const url = useMemo(() => {
     // Validated in multiple places on the backend
     if (isBskyCustomFeedUrl(feed.url)) {
@@ -70,7 +71,7 @@ export function LiveEventFeedCardWide({
             />
 
             <LinearGradient
-              colors={[image.overlayColor, utils.alpha(image.overlayColor, 0)]}
+              colors={[overlayColor, utils.alpha(overlayColor, 0)]}
               locations={[0, 1]}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
@@ -87,10 +88,7 @@ export function LiveEventFeedCardWide({
 
             <View style={[a.flex_1, a.justify_end]}>
               <LinearGradient
-                colors={[
-                  image.overlayColor,
-                  utils.alpha(image.overlayColor, 0),
-                ]}
+                colors={[overlayColor, utils.alpha(overlayColor, 0)]}
                 locations={[0, 1]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
