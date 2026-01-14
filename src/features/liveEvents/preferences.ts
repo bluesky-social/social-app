@@ -17,7 +17,12 @@ import {
 
 export type LiveEventPreferencesAction = Parameters<
   Agent['updateLiveEventPreferences']
->[0]
+>[0] & {
+  /**
+   * Flag that is internal to this hook, do not set when updating prefs
+   */
+  __canUndo?: boolean
+}
 
 export function useLiveEventPreferences() {
   const query = usePreferencesQuery()
@@ -54,8 +59,9 @@ function useWebOnlyDebugLiveEventPreferences() {
 export function useUpdateLiveEventPreferences(props: {
   feed?: LiveEventFeed
   metricContext: LiveEventFeedMetricContext
-  onSuccess?: () => void
-  onError?: (error: Error) => void
+  onUpdateSuccess?: (props: {
+    undoAction: LiveEventPreferencesAction | null
+  }) => void
 }) {
   const queryClient = useQueryClient()
   const agent = useAgent()
@@ -63,10 +69,32 @@ export function useUpdateLiveEventPreferences(props: {
   return useMutation<
     AppBskyActorDefs.LiveEventPreferences,
     Error,
-    LiveEventPreferencesAction
+    LiveEventPreferencesAction,
+    {undoAction: LiveEventPreferencesAction | null}
   >({
-    onError: props?.onError,
-    onSuccess: props?.onSuccess,
+    onSettled(data, error, variables) {
+      // If __canUndo is not explicitly set to false, we allow undo
+      const canUndo = variables.__canUndo === undefined ? true : false
+      let undoAction: LiveEventPreferencesAction | null = null
+
+      switch (variables.type) {
+        case 'hideFeed':
+          undoAction = {type: 'unhideFeed', id: variables.id, __canUndo: false}
+          break
+        case 'unhideFeed':
+          undoAction = {type: 'hideFeed', id: variables.id, __canUndo: false}
+          break
+        case 'toggleHideAllFeeds':
+          undoAction = {type: 'toggleHideAllFeeds', __canUndo: false}
+          break
+      }
+
+      if (data && !error) {
+        props?.onUpdateSuccess?.({
+          undoAction: canUndo ? undoAction : null,
+        })
+      }
+    },
     mutationFn: async action => {
       const updated = await agent.updateLiveEventPreferences(action)
 

@@ -1,4 +1,3 @@
-import {useRef} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,10 +11,7 @@ import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import * as toast from '#/components/Toast'
 import {Span, Text} from '#/components/Typography'
-import {
-  type LiveEventPreferencesAction,
-  useUpdateLiveEventPreferences,
-} from '#/features/liveEvents/preferences'
+import {useUpdateLiveEventPreferences} from '#/features/liveEvents/preferences'
 import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,
@@ -56,8 +52,6 @@ function Inner({
   metricContext: LiveEventFeedMetricContext
 }) {
   const {_} = useLingui()
-  const canUndo = useRef(true)
-  const undoAction = useRef<LiveEventPreferencesAction | null>(null)
   const {
     isPending,
     mutate: update,
@@ -66,19 +60,19 @@ function Inner({
   } = useUpdateLiveEventPreferences({
     feed,
     metricContext,
-    onSuccess() {
+    onUpdateSuccess({undoAction}) {
       toast.show(
         <toast.Outer>
           <toast.Icon />
           <toast.Text>
             <Trans>Your live event preferences have been updated.</Trans>
           </toast.Text>
-          {canUndo.current && undoAction.current && (
+          {undoAction && (
             <toast.Action
               label={_(msg`Undo`)}
               onPress={() => {
-                if (undoAction.current) {
-                  update(undoAction.current)
+                if (undoAction) {
+                  update(undoAction)
                 }
               }}>
               <Trans>Undo</Trans>
@@ -91,8 +85,7 @@ function Inner({
       )
 
       // must protect to avoid closing an already closed dialog
-      if (canUndo.current) {
-        canUndo.current = false
+      if (undoAction) {
         control.close()
       }
     },
@@ -133,7 +126,6 @@ function Inner({
           color="primary_subtle"
           onPress={() => {
             update({type: 'hideFeed', id: feed.id})
-            undoAction.current = {type: 'unhideFeed', id: feed.id}
           }}>
           <ButtonText>
             <Trans>Hide this event</Trans>
@@ -146,7 +138,6 @@ function Inner({
           color="secondary"
           onPress={() => {
             update({type: 'toggleHideAllFeeds'})
-            undoAction.current = {type: 'toggleHideAllFeeds'}
           }}>
           <ButtonText>
             <Trans>Hide all events</Trans>
