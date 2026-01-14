@@ -41,7 +41,7 @@ export function Inner() {
   }, [setTrendingDisabled])
 
   return error || noTopics ? null : (
-    <View style={[t.atoms.border_contrast_low, a.border_t]}>
+    <View style={[t.atoms.border_contrast_low, a.border_t, a.border_b]}>
       <BlockDrawerGesture>
         <ScrollView
           horizontal

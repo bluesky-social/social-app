@@ -22,6 +22,7 @@ import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
+import {SidebarLiveEventFeedsBanner} from '#/features/liveEvents/components/SidebarLiveEventFeedsBanner'
 
 function useWebQueryParams() {
   const navigation = useNavigation()
@@ -49,7 +50,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const isSearchScreen = routeName === 'Search'
   const webqueryParams = useWebQueryParams()
   const searchQuery = webqueryParams?.q
-  const showTrending = !isSearchScreen || (isSearchScreen && !!searchQuery)
+  const showExploreScreenDuplicatedContent =
+    !isSearchScreen || (isSearchScreen && !!searchQuery)
   const {rightNavVisible, centerColumnOffset, leftNavMinimal} =
     useLayoutBreakpoints()
 
@@ -90,7 +92,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         </>
       )}
 
-      {showTrending && <SidebarTrendingTopics />}
+      {showExploreScreenDuplicatedContent && <SidebarLiveEventFeedsBanner />}
+      {showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
         {hasSession && (

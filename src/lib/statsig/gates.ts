@@ -7,6 +7,7 @@ export type Gate =
   | 'disable_settings_find_contacts'
   | 'explore_show_suggested_feeds'
   | 'feed_reply_button_open_thread'
+  | 'is_bsky_team_member' // special, do not remove
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
   | 'onboarding_suggested_starterpacks'
