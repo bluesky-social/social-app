@@ -248,7 +248,7 @@ let ProfileMenu = ({
                   color="secondary"
                   size="small"
                   shape="round">
-                  <Gradient />
+                  {statusNudgeActive && <Gradient />}
                   <ButtonIcon icon={Ellipsis} size="sm" />
                 </Button>
 
@@ -363,7 +363,7 @@ let ProfileMenu = ({
                         completed: true,
                       })
                     }}>
-                    <Gradient />
+                    {statusNudgeActive && <Gradient />}
                     <Menu.ItemText>
                       {status.isDisabled ? (
                         <Trans>Go live (disabled)</Trans>
