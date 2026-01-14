@@ -51,9 +51,9 @@ const serviceUrlToNameMap: Record<string, string> = {
   'skylight.social': 'Skylight',
 }
 
-export function getLiveServiceNames(domains: string[]) {
+export function getLiveServiceNames(domains: Set<string>) {
   const names = Array.from(
-    new Set(domains.map(d => serviceUrlToNameMap[d] || d)),
+    new Set(Array.from(domains.values()).map(d => serviceUrlToNameMap[d] || d)),
   )
   return {
     names,

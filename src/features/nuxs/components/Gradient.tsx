@@ -2,6 +2,11 @@ import {LinearGradient} from 'expo-linear-gradient'
 
 import {atoms as a, useTheme, utils, type ViewStyleProp} from '#/alf'
 
+/**
+ * A gradient overlay using the primary color at low opacity. This component is
+ * absolutely positioned and intended to be composed within other components,
+ * with optional styling allowed, such as adjusting border radius.
+ */
 export function Gradient({style}: ViewStyleProp) {
   const t = useTheme()
   return (

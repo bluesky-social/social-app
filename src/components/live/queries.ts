@@ -31,7 +31,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
     queryFn: async () => {
       if (!url) return undefined
       const urlp = new URL(url)
-      if (!liveNowConfig.allowedDomains.includes(urlp.hostname)) {
+      if (!liveNowConfig.allowedDomains.has(urlp.hostname)) {
         const {formatted} = getLiveServiceNames(liveNowConfig.allowedDomains)
         throw new Error(
           _(

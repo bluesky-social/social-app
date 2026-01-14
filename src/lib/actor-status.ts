@@ -72,7 +72,7 @@ export function validateStatus(
   try {
     if (AppBskyEmbedExternal.isView(status.embed)) {
       const url = new URL(status.embed.external.uri)
-      return config.allowedDomains.includes(url.hostname)
+      return config.allowedDomains.has(url.hostname)
     } else {
       return false
     }

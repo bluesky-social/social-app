@@ -87,16 +87,18 @@ export function useTrendingConfig() {
 
 const DEFAULT_LIVE_ALLOWED_DOMAINS = ['twitch.tv', 'www.twitch.tv']
 export type LiveNowConfig = {
-  allowedDomains: string[]
+  allowedDomains: Set<string>
 }
 export function useLiveNowConfig(): LiveNowConfig {
   const ctx = useContext(LiveNowContext)
   const canGoLive = useCanGoLive()
   const {currentAccount} = useSession()
-  if (!currentAccount?.did || !canGoLive) return {allowedDomains: []}
+  if (!currentAccount?.did || !canGoLive) return {allowedDomains: new Set()}
   const vip = ctx.find(live => live.did === currentAccount.did)
   return {
-    allowedDomains: DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
+    allowedDomains: new Set(
+      DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
+    ),
   }
 }
 
