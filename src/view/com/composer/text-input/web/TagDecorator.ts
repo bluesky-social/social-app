@@ -14,15 +14,15 @@
  * the facet-set.
  */
 
-import {TAG_REGEX, TRAILING_PUNCTUATION_REGEX} from '@atproto/api'
+import {
+  CASHTAG_REGEX,
+  TAG_REGEX,
+  TRAILING_PUNCTUATION_REGEX,
+} from '@atproto/api'
 import {Mark} from '@tiptap/core'
 import {type Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Plugin, PluginKey} from '@tiptap/pm/state'
 import {Decoration, DecorationSet} from '@tiptap/pm/view'
-
-// TODO: Import from @atproto/api once updated
-const CASHTAG_REGEX =
-  /(^|\s|\()\$([A-Za-z][A-Za-z0-9]{0,4})(?=\s|$|[.,;:!?)"'\u2019])/gu
 
 function getDecorations(doc: ProsemirrorNode) {
   const decorations: Decoration[] = []
@@ -63,7 +63,7 @@ function getDecorations(doc: ProsemirrorNode) {
       while ((match = cashtagRegex.exec(textContent))) {
         const [_fullMatch, leading, ticker] = match
 
-        if (!ticker || ticker.length > 5) continue
+        if (!ticker) continue
 
         // Calculate positions: leading char + $ + ticker
         const matchedFrom = match.index + leading.length
