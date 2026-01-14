@@ -26,6 +26,7 @@ import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
+import {LiveEventFeedsSettingsToggle} from '#/features/liveEvents/components/LiveEventFeedsSettingsToggle'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -124,7 +125,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               <Toggle.Platform />
             </SettingsList.Item>
           </Toggle.Item>
-          {trendingEnabled && (
+          {trendingEnabled ? (
             <>
               <SettingsList.Divider />
               <Toggle.Item
@@ -148,6 +149,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
                   <Toggle.Platform />
                 </SettingsList.Item>
               </Toggle.Item>
+              <LiveEventFeedsSettingsToggle />
               <Toggle.Item
                 name="show_trending_videos"
                 label={_(msg`Enable trending videos in your Discover feed`)}
@@ -169,6 +171,11 @@ export function ContentAndMediaSettingsScreen({}: Props) {
                   <Toggle.Platform />
                 </SettingsList.Item>
               </Toggle.Item>
+            </>
+          ) : (
+            <>
+              <SettingsList.Divider />
+              <LiveEventFeedsSettingsToggle />
             </>
           )}
         </SettingsList.Container>

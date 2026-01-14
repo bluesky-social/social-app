@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import {type Agent} from '@atproto/api'
+import {type Agent, type AppBskyActorDefs} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -53,7 +53,11 @@ export function useUpdateLiveEventPreferences(props?: {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, Error, LiveEventPreferencesAction>({
+  return useMutation<
+    AppBskyActorDefs.LiveEventPreferences,
+    Error,
+    LiveEventPreferencesAction
+  >({
     onError: props?.onError,
     onSuccess: props?.onSuccess,
     mutationFn: async action => {
@@ -69,7 +73,7 @@ export function useUpdateLiveEventPreferences(props?: {
           break
         }
         case 'toggleHideAllFeeds': {
-          if (updated?.hideAllFeeds) {
+          if (updated!.hideAllFeeds) {
             logger.metric('liveEventFeed:hideAllFeeds', {})
           } else {
             logger.metric('liveEventFeed:unhideAllFeeds', {})
@@ -79,9 +83,11 @@ export function useUpdateLiveEventPreferences(props?: {
       }
 
       // triggers a refetch
-      await queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
       })
+
+      return updated!
     },
   })
 }
