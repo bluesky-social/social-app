@@ -244,6 +244,8 @@ export type MetricEvents = {
     isReply: boolean
   }
   'post:like': {
+    uri: string
+    authorDid: string
     doesLikerFollowPoster: boolean | undefined
     doesPosterFollowLiker: boolean | undefined
     likerClout: number | undefined
@@ -252,14 +254,20 @@ export type MetricEvents = {
     feedDescriptor?: string
   }
   'post:repost': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
   }
   'post:unlike': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
   }
   'post:unrepost': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
   }
