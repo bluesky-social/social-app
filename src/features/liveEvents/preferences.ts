@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import {type Agent, type AppBskyActorDefs} from '@atproto/api'
+import {type Agent, AppBskyActorDefs, asPredicate} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -97,6 +97,9 @@ export function useUpdateLiveEventPreferences(props: {
     },
     mutationFn: async action => {
       const updated = await agent.updateLiveEventPreferences(action)
+      const prefs = updated.find(p =>
+        asPredicate(AppBskyActorDefs.validateLiveEventPreferences)(p),
+      )
 
       switch (action.type) {
         case 'hideFeed':
@@ -122,7 +125,7 @@ export function useUpdateLiveEventPreferences(props: {
           break
         }
         case 'toggleHideAllFeeds': {
-          if (updated!.hideAllFeeds) {
+          if (prefs!.hideAllFeeds) {
             logger.metric('liveEvents:hideAllFeedBanners', {
               context: props.metricContext,
             })
@@ -140,7 +143,7 @@ export function useUpdateLiveEventPreferences(props: {
         queryKey: preferencesQueryKey,
       })
 
-      return updated!
+      return prefs!
     },
   })
 }
