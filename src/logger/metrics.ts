@@ -790,22 +790,26 @@ export type MetricEvents = {
   // user pressed the remove all data button
   'contacts:settings:removeData': {}
 
-  'liveEvents:feed:click': {
+  'liveEvents:feedBanner:seen': {
     feed: string
     context: LiveEventFeedMetricContext
   }
-  'liveEvents:feed:hide': {
+  'liveEvents:feedBanner:click': {
     feed: string
     context: LiveEventFeedMetricContext
   }
-  'liveEvents:feed:unhide': {
+  'liveEvents:feedBanner:hide': {
     feed: string
     context: LiveEventFeedMetricContext
   }
-  'liveEvents:hideAllFeeds': {
+  'liveEvents:feedBanner:unhide': {
+    feed: string
     context: LiveEventFeedMetricContext
   }
-  'liveEvents:unhideAllFeeds': {
+  'liveEvents:hideAllFeedBanners': {
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:unhideAllFeedBanners': {
     context: LiveEventFeedMetricContext
   }
 }

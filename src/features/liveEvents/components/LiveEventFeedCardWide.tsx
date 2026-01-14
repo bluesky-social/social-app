@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -38,13 +38,21 @@ export function LiveEventFeedCardWide({
     return '/'
   }, [feed.url])
 
+  useEffect(() => {
+    logger.metric('liveEvents:feedBanner:seen', {
+      feed: feed.url,
+      context: metricContext,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <Link
       to={url}
       label={_(msg`Live event happening now: ${feed.title}`)}
       style={[a.w_full]}
       onPress={() => {
-        logger.metric('liveEvents:feed:click', {
+        logger.metric('liveEvents:feedBanner:click', {
           feed: feed.url,
           context: metricContext,
         })

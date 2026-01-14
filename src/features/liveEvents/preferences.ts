@@ -112,8 +112,8 @@ export function useUpdateLiveEventPreferences(props: {
 
           logger.metric(
             action.type === 'hideFeed'
-              ? 'liveEvents:feed:hide'
-              : 'liveEvents:feed:unhide',
+              ? 'liveEvents:feedBanner:hide'
+              : 'liveEvents:feedBanner:unhide',
             {
               feed: props.feed.url,
               context: props.metricContext,
@@ -123,11 +123,11 @@ export function useUpdateLiveEventPreferences(props: {
         }
         case 'toggleHideAllFeeds': {
           if (updated!.hideAllFeeds) {
-            logger.metric('liveEvents:hideAllFeeds', {
+            logger.metric('liveEvents:hideAllFeedBanners', {
               context: props.metricContext,
             })
           } else {
-            logger.metric('liveEvents:unhideAllFeeds', {
+            logger.metric('liveEvents:unhideAllFeedBanners', {
               context: props.metricContext,
             })
           }
