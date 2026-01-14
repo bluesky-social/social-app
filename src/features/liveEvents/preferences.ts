@@ -9,7 +9,6 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
-import * as env from '#/env'
 import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,
@@ -73,7 +72,18 @@ export function useUpdateLiveEventPreferences(props: {
     {undoAction: LiveEventPreferencesAction | null}
   >({
     onSettled(data, error, variables) {
-      // If __canUndo is not explicitly set to false, we allow undo
+      /*
+       * `onSettled` runs after the mutation completes, success or no. The idea
+       * here is that we want to invert the action that was just passed in, and
+       * provide it as an `undoAction` to the `onUpdateSuccess` callback.
+       *
+       * If the operation was not a success, we don't provide the `undoAction`.
+       *
+       * Upon the first call of the mutation, the `__canUndo` flag is undefined,
+       * so we allow the undo. However, when we create the `undoAction`, we
+       * set its `__canUndo` flag to false, so that if the user were to call
+       * the undo action, we would not provide another undo for that.
+       */
       const canUndo = variables.__canUndo === undefined ? true : false
       let undoAction: LiveEventPreferencesAction | null = null
 
@@ -105,11 +115,12 @@ export function useUpdateLiveEventPreferences(props: {
         case 'hideFeed':
         case 'unhideFeed': {
           if (!props.feed) {
-            if (env.IS_DEV) {
-              throw new Error(
-                'props.feed is required when calling hideFeed or unhideFeed',
-              )
-            }
+            logger.error(
+              `useUpdateLiveEventPreferences: feed is missing, but required for hiding/unhiding`,
+              {
+                action,
+              },
+            )
             break
           }
 
