@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
@@ -9,8 +9,14 @@ import {
 } from '@tanstack/react-query-persist-client'
 import type React from 'react'
 
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
+
+declare global {
+  interface Window {
+    __TANSTACK_QUERY_CLIENT__: import('@tanstack/query-core').QueryClient
+  }
+}
 
 // any query keys in this array will be persisted to AsyncStorage
 export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
@@ -180,6 +186,11 @@ function QueryProviderInner({
       dehydrateOptions,
     }
   })
+  useEffect(() => {
+    if (isWeb) {
+      window.__TANSTACK_QUERY_CLIENT__ = queryClient
+    }
+  }, [queryClient])
   return (
     <PersistQueryClientProvider
       client={queryClient}

@@ -41,7 +41,7 @@ export function Inner() {
   }, [setTrendingDisabled])
 
   return error || noTopics ? null : (
-    <View style={[t.atoms.border_contrast_low, a.border_t]}>
+    <View style={[t.atoms.border_contrast_low, a.border_t, a.border_b]}>
       <BlockDrawerGesture>
         <ScrollView
           horizontal
@@ -99,10 +99,9 @@ export function Inner() {
                     <View style={[a.py_lg]}>
                       <Text
                         style={[
-                          t.atoms.text,
+                          t.atoms.text_contrast_medium,
                           a.text_sm,
                           a.font_semi_bold,
-                          {opacity: 0.7}, // NOTE: we use opacity 0.7 instead of a color to match the color of the home pager tab bar
                         ]}>
                         {topic.topic}
                       </Text>

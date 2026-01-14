@@ -1,5 +1,6 @@
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 export type MetricEvents = {
   // App events
@@ -176,13 +177,19 @@ export type MetricEvents = {
   'feed:suggestion:press': {
     feedUrl: string
   }
-  'feed:showMore': {
-    feed: string
-    feedContext: string
+  'post:showMore': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
   }
-  'feed:showLess': {
-    feed: string
-    feedContext: string
+  'post:showLess': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
   }
   'feed:clickthrough': {
     feed: string
@@ -238,6 +245,8 @@ export type MetricEvents = {
     isReply: boolean
   }
   'post:like': {
+    uri: string
+    authorDid: string
     doesLikerFollowPoster: boolean | undefined
     doesPosterFollowLiker: boolean | undefined
     likerClout: number | undefined
@@ -246,26 +255,87 @@ export type MetricEvents = {
     feedDescriptor?: string
   }
   'post:repost': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
   }
   'post:unlike': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
   }
   'post:unrepost': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
   }
-  'post:mute': {}
-  'post:unmute': {}
+  'post:mute': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:unmute': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
   'post:pin': {}
   'post:unpin': {}
   'post:bookmark': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
   }
   'post:unbookmark': {
+    uri: string
+    authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickReply': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickQuotePost': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickthroughAuthor': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickthroughItem': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'post:clickthroughEmbed': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
   }
   'post:view': {
     uri: string
@@ -565,7 +635,14 @@ export type MetricEvents = {
   'live:view:profile': {subject: string}
   'live:view:post': {subject: string; feed?: string}
 
-  'share:open': {context: 'feed' | 'thread'}
+  'post:share': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    postContext: 'feed' | 'thread'
+    position?: number
+  }
   'share:press:copyLink': {}
   'share:press:nativeShare': {}
   'share:press:openDmSearch': {}
@@ -720,4 +797,27 @@ export type MetricEvents = {
   }
   // user pressed the remove all data button
   'contacts:settings:removeData': {}
+
+  'liveEvents:feedBanner:seen': {
+    feed: string
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:feedBanner:click': {
+    feed: string
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:feedBanner:hide': {
+    feed: string
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:feedBanner:unhide': {
+    feed: string
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:hideAllFeedBanners': {
+    context: LiveEventFeedMetricContext
+  }
+  'liveEvents:unhideAllFeedBanners': {
+    context: LiveEventFeedMetricContext
+  }
 }

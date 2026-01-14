@@ -137,7 +137,6 @@ export function useFeedFeedback(
     sendOrAggregateInteractionsForStats(
       aggregatedStats.current,
       interactionsToSend,
-      feed?.feedDescriptor ?? 'unknown',
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
@@ -274,28 +273,10 @@ function createAggregatedStats(): AggregatedStats {
 function sendOrAggregateInteractionsForStats(
   stats: AggregatedStats,
   interactions: AppBskyFeedDefs.Interaction[],
-  feed: string,
 ) {
   for (let interaction of interactions) {
     switch (interaction.event) {
-      // Pressing "Show more" / "Show less" is relatively uncommon so we won't aggregate them.
-      // This lets us send the feed context together with them.
-      case 'app.bsky.feed.defs#requestLess': {
-        logger.metric('feed:showLess', {
-          feed,
-          feedContext: interaction.feedContext ?? '',
-        })
-        break
-      }
-      case 'app.bsky.feed.defs#requestMore': {
-        logger.metric('feed:showMore', {
-          feed,
-          feedContext: interaction.feedContext ?? '',
-        })
-        break
-      }
-
-      // The rest of the events are aggregated and sent later in batches.
+      // The events are aggregated and sent later in batches.
       case 'app.bsky.feed.defs#clickthroughAuthor':
       case 'app.bsky.feed.defs#clickthroughEmbed':
       case 'app.bsky.feed.defs#clickthroughItem':

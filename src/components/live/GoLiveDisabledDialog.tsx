@@ -46,6 +46,9 @@ export function DialogInner({
       if (!agent.session?.did) {
         throw new Error('Not logged in')
       }
+      if (!status.uri || !status.cid) {
+        throw new Error('Status is missing uri or cid')
+      }
 
       if (__DEV__) {
         logger.info('Submitting go live appeal', {
@@ -57,8 +60,8 @@ export function DialogInner({
             reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
             subject: {
               $type: 'com.atproto.repo.strongRef',
-              uri: status.uri!,
-              cid: status.cid!,
+              uri: status.uri,
+              cid: status.cid,
             },
             reason: details,
           },
