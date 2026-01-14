@@ -2,6 +2,11 @@ import {createContext, useContext} from 'react'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
 import {useIsBskyTeam} from '#/lib/hooks/useIsBskyTeam'
+import {
+  convertBskyAppUrlIfNeeded,
+  isBskyCustomFeedUrl,
+  makeRecordUri,
+} from '#/lib/strings/url-helpers'
 import {IS_DEV, LIVE_EVENTS_URL} from '#/env'
 import {useLiveEventPreferences} from '#/features/liveEvents/preferences'
 import {type LiveEventsWorkerResponse} from '#/features/liveEvents/types'
@@ -87,4 +92,20 @@ export function useUserPreferencedLiveEvents() {
           return !hidden
         }),
   }
+}
+
+export function useActiveLiveEventFeedUris() {
+  const {feeds} = useLiveEvents()
+
+  return new Set(
+    feeds
+      // insurance
+      .filter(f => isBskyCustomFeedUrl(f.url))
+      .map(f => {
+        const uri = convertBskyAppUrlIfNeeded(f.url)
+        const [_0, did, _1, rkey] = uri.split('/').filter(Boolean)
+        const urip = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
+        return urip.toString()
+      }),
+  )
 }
