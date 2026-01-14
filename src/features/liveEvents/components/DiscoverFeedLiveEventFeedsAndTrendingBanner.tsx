@@ -39,6 +39,7 @@ export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
 function Inner({feed}: {feed: LiveEventFeed}) {
   const {_} = useLingui()
   const optionsMenuControl = useDialogControl()
+  const layout = feed.layouts.wide
 
   return (
     <>
@@ -62,14 +63,14 @@ function Inner({feed}: {feed: LiveEventFeed}) {
                     a.inset_0,
                     a.rounded_full,
                     {
-                      backgroundColor: feed.images.wide.overlayColor,
+                      backgroundColor: layout.overlayColor,
                       opacity: hovered || pressed ? 0.8 : 0.6,
                     },
                   ]}
                 />
                 <EllipsisIcon
                   size="sm"
-                  fill={feed.images.wide.textColor}
+                  fill={layout.textColor}
                   style={[a.z_20]}
                 />
               </>
