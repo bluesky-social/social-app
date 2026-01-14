@@ -71,7 +71,7 @@ func (r Renderer) Render(w io.Writer, name string, data interface{}, c echo.Cont
 	if r.Debug {
 		t, err = pongo2.FromFile(name)
 	} else {
-		t, err = r.TemplateSet.FromFile(name)
+		t, err = r.TemplateSet.FromCache(name)
 	}
 
 	if err != nil {

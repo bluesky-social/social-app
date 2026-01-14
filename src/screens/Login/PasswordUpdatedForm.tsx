@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,7 +19,7 @@ export const PasswordUpdatedForm = ({
     <FormContainer
       testID="passwordUpdatedForm"
       style={[a.gap_2xl, !gtMobile && a.mt_5xl]}>
-      <Text style={[a.text_3xl, a.font_bold, a.text_center]}>
+      <Text style={[a.text_3xl, a.font_semi_bold, a.text_center]}>
         <Trans>Password updated!</Trans>
       </Text>
       <Text style={[a.text_center, a.mx_auto, {maxWidth: '80%'}]}>

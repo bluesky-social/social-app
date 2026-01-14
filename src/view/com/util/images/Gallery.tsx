@@ -1,16 +1,16 @@
-import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import Animated, {AnimatedRef} from 'react-native-reanimated'
-import {Image, ImageStyle} from 'expo-image'
-import {AppBskyEmbedImages} from '@atproto/api'
+import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
+import {type AnimatedRef} from 'react-native-reanimated'
+import {Image, type ImageStyle} from 'expo-image'
+import {type AppBskyEmbedImages} from '@atproto/api'
+import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {Dimensions} from '#/lib/media/types'
+import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 
 type EventFunction = (index: number) => void
@@ -20,7 +20,7 @@ interface Props {
   index: number
   onPress?: (
     index: number,
-    containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    containerRefs: AnimatedRef<any>[],
     fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: EventFunction
@@ -28,7 +28,7 @@ interface Props {
   imageStyle?: StyleProp<ImageStyle>
   viewContext?: PostEmbedViewContext
   insetBorderStyle?: StyleProp<ViewStyle>
-  containerRefs: AnimatedRef<React.Component<{}, {}, any>>[]
+  containerRefs: AnimatedRef<any>[]
   thumbDimsRef: React.MutableRefObject<(Dimensions | null)[]>
 }
 
@@ -52,10 +52,7 @@ export function GalleryItem({
   const hideBadges =
     viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
   return (
-    <Animated.View
-      style={a.flex_1}
-      ref={containerRefs[index]}
-      collapsable={false}>
+    <View style={a.flex_1} ref={containerRefs[index]} collapsable={false}>
       <Pressable
         onPress={
           onPress
@@ -64,6 +61,10 @@ export function GalleryItem({
         }
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
+        android_ripple={{
+          color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
+          foreground: true,
+        }}
         style={[
           a.flex_1,
           a.overflow_hidden,
@@ -113,11 +114,11 @@ export function GalleryItem({
             ],
           ]}>
           <Text
-            style={[a.font_heavy, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
+            style={[a.font_bold, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
             ALT
           </Text>
         </View>
       ) : null}
-    </Animated.View>
+    </View>
   )
 }

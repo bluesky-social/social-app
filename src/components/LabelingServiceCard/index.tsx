@@ -1,16 +1,16 @@
-import React from 'react'
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '../icons/Chevron'
@@ -45,7 +45,7 @@ export function Avatar({avatar}: {avatar?: string}) {
 
 export function Title({value}: {value: string}) {
   return (
-    <Text emoji style={[a.text_md, a.font_bold, a.leading_tight]}>
+    <Text emoji style={[a.text_md, a.font_semi_bold, a.leading_tight]}>
       {value}
     </Text>
   )
@@ -55,7 +55,7 @@ export function Description({value, handle}: {value?: string; handle: string}) {
   const {_} = useLingui()
   return value ? (
     <Text numberOfLines={2}>
-      <RichText value={value} style={[a.leading_snug]} />
+      <RichText value={value} />
     </Text>
   ) : (
     <Text emoji style={[a.leading_snug]}>
@@ -83,7 +83,7 @@ export function RegionalNotice() {
   )
 }
 
-export function LikeCount({count}: {count: number}) {
+export function LikeCount({likeCount}: {likeCount: number}) {
   const t = useTheme()
   return (
     <Text
@@ -93,7 +93,9 @@ export function LikeCount({count}: {count: number}) {
         t.atoms.text_contrast_medium,
         {fontWeight: '600'},
       ]}>
-      <Plural value={count} one="Liked by # user" other="Liked by # users" />
+      <Trans>
+        Liked by <Plural value={likeCount} one="# user" other="# users" />
+      </Trans>
     </Text>
   )
 }
@@ -138,7 +140,7 @@ export function Default({
           value={labeler.creator.description}
           handle={labeler.creator.handle}
         />
-        {labeler.likeCount ? <LikeCount count={labeler.likeCount} /> : null}
+        {labeler.likeCount ? <LikeCount likeCount={labeler.likeCount} /> : null}
       </Content>
     </Outer>
   )

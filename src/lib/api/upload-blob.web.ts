@@ -1,4 +1,4 @@
-import {BskyAgent, ComAtprotoRepoUploadBlob} from '@atproto/api'
+import {type BskyAgent, type ComAtprotoRepoUploadBlob} from '@atproto/api'
 
 /**
  * @note It is recommended, on web, to use the `file` instance of the file
@@ -11,7 +11,10 @@ export async function uploadBlob(
   input: string | Blob,
   encoding?: string,
 ): Promise<ComAtprotoRepoUploadBlob.Response> {
-  if (typeof input === 'string' && input.startsWith('data:')) {
+  if (
+    typeof input === 'string' &&
+    (input.startsWith('data:') || input.startsWith('blob:'))
+  ) {
     const blob = await fetch(input).then(r => r.blob())
     return agent.uploadBlob(blob, {encoding})
   }

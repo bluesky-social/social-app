@@ -1,37 +1,39 @@
 import React from 'react'
-import {ActivityIndicator, type FlatList, StyleSheet, View} from 'react-native'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {isNative, isWeb} from '#/platform/detection'
 import {
-  SavedFeedItem,
+  type SavedFeedItem,
   useGetPopularFeedsQuery,
   useSavedFeeds,
   useSearchPopularFeedsMutation,
 } from '#/state/queries/feed'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useComposerControls} from '#/state/shell/composer'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {FAB} from '#/view/com/util/fab/FAB'
-import {TextLink} from '#/view/com/util/Link'
-import {List} from '#/view/com/util/List'
+import {List, type ListMethods} from '#/view/com/util/List'
 import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
+import {ButtonIcon} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
@@ -40,7 +42,9 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
+import {Link} from '#/components/Link'
 import * as ListCard from '#/components/ListCard'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
@@ -101,8 +105,8 @@ type FlatlistSlice =
 
 export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
-  const {openComposer} = useComposerControls()
-  const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
+  const {openComposer} = useOpenComposer()
+  const {isMobile} = useWebMediaQueries()
   const [query, setQuery] = React.useState('')
   const [isPTR, setIsPTR] = React.useState(false)
   const {
@@ -130,7 +134,7 @@ export function FeedsScreen(_props: Props) {
     error: searchError,
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
-  const listRef = React.useRef<FlatList>(null)
+  const listRef = React.useRef<ListMethods>(null)
 
   /**
    * A search query is present. We may not have search results yet.
@@ -374,22 +378,6 @@ export function FeedsScreen(_props: Props) {
     isUserSearching,
   ])
 
-  const renderHeaderBtn = React.useCallback(() => {
-    return (
-      <View style={styles.headerBtnGroup}>
-        <TextLink
-          testID="editFeedsBtn"
-          type="lg-medium"
-          href="/settings/saved-feeds"
-          accessibilityLabel={_(msg`Edit My Feeds`)}
-          accessibilityHint=""
-          text={_(msg`Edit`)}
-          style={[pal.link, a.pr_xs]}
-        />
-      </View>
-    )
-  }, [pal, _])
-
   const searchBarIndex = items.findIndex(
     item => item.type === 'popularFeedsHeader',
   )
@@ -430,36 +418,7 @@ export function FeedsScreen(_props: Props) {
           </View>
         )
       } else if (item.type === 'savedFeedsHeader') {
-        return (
-          <>
-            {!isMobile && (
-              <View
-                style={[
-                  pal.view,
-                  styles.header,
-                  pal.border,
-                  {
-                    borderBottomWidth: 1,
-                  },
-                ]}>
-                <Text type="title-lg" style={[pal.text, s.bold]}>
-                  <Trans>Feeds</Trans>
-                </Text>
-                <View style={styles.headerBtnGroup}>
-                  <TextLink
-                    type="lg"
-                    href="/settings/saved-feeds"
-                    accessibilityLabel={_(msg`Edit My Feeds`)}
-                    accessibilityHint=""
-                    text={_(msg`Edit`)}
-                    style={[pal.link]}
-                  />
-                </View>
-              </View>
-            )}
-            <FeedsSavedHeader />
-          </>
-        )
+        return <FeedsSavedHeader />
       } else if (item.type === 'savedFeedNoResults') {
         return (
           <View
@@ -482,6 +441,7 @@ export function FeedsScreen(_props: Props) {
             <FeedsAboutHeader />
             <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
+                placeholder={_(msg`Search feeds`)}
                 value={query}
                 onChangeText={onChangeQuery}
                 onClearText={onPressCancelSearch}
@@ -530,13 +490,9 @@ export function FeedsScreen(_props: Props) {
       return null
     },
     [
-      isMobile,
-      pal.view,
-      pal.border,
-      pal.text,
-      pal.textLight,
-      pal.link,
       _,
+      pal.border,
+      pal.textLight,
       query,
       onChangeQuery,
       onPressCancelSearch,
@@ -547,31 +503,45 @@ export function FeedsScreen(_props: Props) {
 
   return (
     <Layout.Screen testID="FeedsScreen">
-      {isMobile && (
-        <ViewHeader
-          title={_(msg`Feeds`)}
-          renderButton={renderHeaderBtn}
-          showBorder
-        />
-      )}
+      <Layout.Center>
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Feeds</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+          <Layout.Header.Slot>
+            <Link
+              testID="editFeedsBtn"
+              to="/settings/saved-feeds"
+              label={_(msg`Edit My Feeds`)}
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="round"
+              style={[a.justify_center, {right: -3}]}>
+              <ButtonIcon icon={Gear} size="lg" />
+            </Link>
+          </Layout.Header.Slot>
+        </Layout.Header.Outer>
 
-      <List
-        ref={listRef}
-        style={[!isTabletOrDesktop && s.flex1, styles.list]}
-        data={items}
-        keyExtractor={item => item.key}
-        contentContainerStyle={styles.contentContainer}
-        renderItem={renderItem}
-        refreshing={isPTR}
-        onRefresh={isUserSearching ? undefined : onPullToRefresh}
-        initialNumToRender={10}
-        onEndReached={onEndReached}
-        // @ts-ignore our .web version only -prf
-        desktopFixedHeight
-        scrollIndicatorInsets={{right: 1}}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-      />
+        <List
+          ref={listRef}
+          data={items}
+          keyExtractor={item => item.key}
+          contentContainerStyle={styles.contentContainer}
+          renderItem={renderItem}
+          refreshing={isPTR}
+          onRefresh={isUserSearching ? undefined : onPullToRefresh}
+          initialNumToRender={10}
+          onEndReached={onEndReached}
+          desktopFixedHeight
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          sideBorders={false}
+        />
+      </Layout.Center>
 
       {hasSession && (
         <FAB
@@ -629,7 +599,9 @@ function FollowingFeed() {
             fill={t.palette.white}
           />
         </View>
-        <FeedCard.TitleAndByline title={_(msg`Following`)} />
+        <FeedCard.TitleAndByline
+          title={_(msg({message: 'Following', context: 'feed-name'}))}
+        />
       </FeedCard.Header>
     </View>
   )
@@ -759,8 +731,8 @@ function FeedsAboutHeader() {
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
           <Trans>
-            Custom feeds built by the community bring you new experiences and
-            help you find the content you love.
+            Choose your own timeline! Feeds built by the community help you find
+            content you love.
           </Trans>
         </Text>
       </View>
@@ -769,9 +741,6 @@ function FeedsAboutHeader() {
 }
 
 const styles = StyleSheet.create({
-  list: {
-    height: '100%',
-  },
   contentContainer: {
     paddingBottom: 100,
   },

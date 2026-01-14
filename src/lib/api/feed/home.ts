@@ -1,9 +1,9 @@
-import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
+import {type AppBskyFeedDefs, type BskyAgent} from '@atproto/api'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {CustomFeedAPI} from './custom'
 import {FollowingFeedAPI} from './following'
-import {FeedAPI, FeedAPIResponse} from './types'
+import {type FeedAPI, type FeedAPIResponse} from './types'
 
 // HACK
 // the feed API does not include any facilities for passing down
@@ -93,7 +93,7 @@ export class HomeFeedAPI implements FeedAPI {
       }
     }
 
-    if (this.usingDiscover) {
+    if (this.usingDiscover && !__DEV__) {
       const res = await this.discover.fetch({cursor, limit})
       returnCursor = res.cursor
       posts = posts.concat(res.feed)

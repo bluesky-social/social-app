@@ -1,2 +1,2 @@
-export const DEFAULT_POLL_INTERVAL = 60e3 * 5
+export const DEFAULT_POLL_INTERVAL = 60e3
 export const BACKGROUND_POLL_INTERVAL = 60e3 * 5

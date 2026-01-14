@@ -1,14 +1,14 @@
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   AppBskyEmbedRecord,
-  AppBskyFeedDefs,
-  AppBskyFeedGetQuotes,
+  type AppBskyFeedDefs,
+  type AppBskyFeedGetQuotes,
   AtUri,
 } from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -70,7 +70,7 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyFeedGetQuotes.OutputSchema>
   >({

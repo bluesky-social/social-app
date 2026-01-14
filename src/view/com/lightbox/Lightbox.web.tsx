@@ -1,34 +1,33 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {
   Image,
-  ImageStyle,
+  type ImageStyle,
   Pressable,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {colors, s} from '#/lib/styles'
 import {useLightbox, useLightboxControls} from '#/state/lightbox'
 import {Text} from '../util/text/Text'
-import {ImageSource} from './ImageViewing/@types'
+import {type ImageSource} from './ImageViewing/@types'
 import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 export function Lightbox() {
   const {activeLightbox} = useLightbox()
   const {closeLightbox} = useLightboxControls()
   const isActive = !!activeLightbox
-  useWebBodyScrollLock(isActive)
 
   if (!isActive) {
     return null
@@ -37,11 +36,14 @@ export function Lightbox() {
   const initialIndex = activeLightbox.index
   const imgs = activeLightbox.images
   return (
-    <LightboxInner
-      imgs={imgs}
-      initialIndex={initialIndex}
-      onClose={closeLightbox}
-    />
+    <>
+      <RemoveScrollBar />
+      <LightboxInner
+        imgs={imgs}
+        initialIndex={initialIndex}
+        onClose={closeLightbox}
+      />
+    </>
   )
 }
 
@@ -74,6 +76,7 @@ function LightboxInner({
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        e.preventDefault()
         onClose()
       } else if (e.key === 'ArrowLeft') {
         onPressLeft()
@@ -119,8 +122,8 @@ function LightboxInner({
                     img.type === 'circle-avi'
                       ? '50%'
                       : img.type === 'rect-avi'
-                      ? '10%'
-                      : 0,
+                        ? '10%'
+                        : 0,
                 } as ImageStyle
               }
               alt={img.alt}

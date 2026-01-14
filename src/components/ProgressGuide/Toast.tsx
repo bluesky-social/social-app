@@ -14,7 +14,7 @@ import {useLingui} from '@lingui/react'
 import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
-import {AnimatedCheck, AnimatedCheckRef} from '../anim/AnimatedCheck'
+import {AnimatedCheck, type AnimatedCheckRef} from '../anim/AnimatedCheck'
 import {Text} from '../Typography'
 
 export interface ProgressGuideToastRef {
@@ -39,7 +39,7 @@ export const ProgressGuideToast = React.forwardRef<
   const translateY = useSharedValue(0)
   const opacity = useSharedValue(0)
   const animatedCheckRef = React.useRef<AnimatedCheckRef | null>(null)
-  const timeoutRef = React.useRef<NodeJS.Timeout | undefined>()
+  const timeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined)
   const winDim = useWindowDimensions()
 
   /**
@@ -55,13 +55,15 @@ export const ProgressGuideToast = React.forwardRef<
 
     // animate the opacity then set isOpen to false when done
     const setIsntOpen = () => setIsOpen(false)
-    opacity.value = withTiming(
-      0,
-      {
-        duration: 400,
-        easing: Easing.out(Easing.cubic),
-      },
-      () => runOnJS(setIsntOpen)(),
+    opacity.set(() =>
+      withTiming(
+        0,
+        {
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+        },
+        () => runOnJS(setIsntOpen)(),
+      ),
     )
   }, [setIsOpen, opacity])
 
@@ -71,20 +73,24 @@ export const ProgressGuideToast = React.forwardRef<
 
     // animate the vertical translation, the opacity, and the checkmark
     const playCheckmark = () => animatedCheckRef.current?.play()
-    opacity.value = 0
-    opacity.value = withTiming(
-      1,
-      {
-        duration: 100,
-        easing: Easing.out(Easing.cubic),
-      },
-      () => runOnJS(playCheckmark)(),
+    opacity.set(0)
+    opacity.set(() =>
+      withTiming(
+        1,
+        {
+          duration: 100,
+          easing: Easing.out(Easing.cubic),
+        },
+        () => runOnJS(playCheckmark)(),
+      ),
     )
-    translateY.value = 0
-    translateY.value = withTiming(insets.top + 10, {
-      duration: 500,
-      easing: Easing.out(Easing.cubic),
-    })
+    translateY.set(0)
+    translateY.set(() =>
+      withTiming(insets.top + 10, {
+        duration: 500,
+        easing: Easing.out(Easing.cubic),
+      }),
+    )
 
     // start the countdown timer to autoclose
     timeoutRef.current = setTimeout(close, visibleDuration || 5e3)
@@ -114,8 +120,8 @@ export const ProgressGuideToast = React.forwardRef<
   }, [winDim.width])
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: translateY.value}],
-    opacity: opacity.value,
+    transform: [{translateY: translateY.get()}],
+    opacity: opacity.get(),
   }))
 
   return (
@@ -154,7 +160,7 @@ export const ProgressGuideToast = React.forwardRef<
               ref={animatedCheckRef}
             />
             <View>
-              <Text style={[a.text_md, a.font_bold]}>{title}</Text>
+              <Text style={[a.text_md, a.font_semi_bold]}>{title}</Text>
               {subtitle && (
                 <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
                   {subtitle}

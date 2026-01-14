@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {
   FadeIn,
@@ -10,32 +10,38 @@ import Animated, {
   SlideOutLeft,
   SlideOutRight,
 } from 'react-native-reanimated'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
+import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
-import * as ToggleButton from '#/components/forms/ToggleButton'
-import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
+import {
+  ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon,
+  ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon,
+} from '#/components/icons/Arrow'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
 import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({
@@ -86,7 +92,6 @@ function ChangeHandleDialogInner() {
   return (
     <Dialog.ScrollableInner
       label={_(msg`Change Handle`)}
-      style={[a.overflow_hidden]}
       header={
         <Dialog.Header renderLeft={cancelButton}>
           <Dialog.HeaderText>
@@ -149,6 +154,10 @@ function ProvidedHandlePage({
   const control = Dialog.useDialogContext()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
+  const profile = useCurrentAccountProfile()
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const {
     mutate: changeHandle,
@@ -169,13 +178,11 @@ function ProvidedHandlePage({
   const host = serviceInfo.availableUserDomains[0]
 
   const validation = useMemo(
-    () => validateHandle(subdomain, host),
+    () => validateServiceHandle(subdomain, host),
     [subdomain, host],
   )
 
-  const isTooLong = subdomain.length > 18
   const isInvalid =
-    isTooLong ||
     !validation.handleChars ||
     !validation.hyphenStartOrEnd ||
     !validation.totalLength
@@ -196,6 +203,24 @@ function ProvidedHandlePage({
         <Animated.View
           layout={native(LinearTransition)}
           style={[a.flex_1, a.gap_md]}>
+          {verification.isVerified && verification.role === 'default' && (
+            <Admonition type="error">
+              <Trans>
+                You are verified. You will lose your verification status if you
+                change your handle.{' '}
+                <InlineLinkText
+                  label={_(
+                    msg({
+                      message: `Learn more`,
+                      context: `english-only-resource`,
+                    }),
+                  )}
+                  to={urls.website.blog.initialVerificationAnnouncement}>
+                  <Trans context="english-only-resource">Learn more.</Trans>
+                </InlineLinkText>
+              </Trans>
+            </Admonition>
+          )}
           <View>
             <TextField.LabelText>
               <Trans>New handle</Trans>
@@ -219,7 +244,7 @@ function ProvidedHandlePage({
           <Text>
             <Trans>
               Your full handle will be{' '}
-              <Text style={[a.font_bold]}>
+              <Text style={[a.font_semi_bold]}>
                 @{createFullHandle(subdomain, host)}
               </Text>
             </Trans>
@@ -228,10 +253,10 @@ function ProvidedHandlePage({
             label={_(msg`Save new handle`)}
             variant="solid"
             size="large"
-            color={validation.overall && !isTooLong ? 'primary' : 'secondary'}
-            disabled={!validation.overall && !isTooLong}
+            color={validation.overall ? 'primary' : 'secondary'}
+            disabled={!validation.overall}
             onPress={() => {
-              if (validation.overall && !isTooLong) {
+              if (validation.overall) {
                 changeHandle({handle: createFullHandle(subdomain, host)})
               }
             }}>
@@ -246,15 +271,19 @@ function ProvidedHandlePage({
           <Text style={[a.leading_snug]}>
             <Trans>
               If you have your own domain, you can use that as your handle. This
-              lets you self-verify your identity –{' '}
+              lets you self-verify your identity.{' '}
               <InlineLinkText
-                label={_(msg`learn more`)}
+                label={_(
+                  msg({
+                    message: `Learn more`,
+                    context: `english-only-resource`,
+                  }),
+                )}
                 to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
-                style={[a.font_bold]}
+                style={[a.font_semi_bold]}
                 disableMismatchWarning>
-                learn more
+                Learn more here.
               </InlineLinkText>
-              .
             </Trans>
           </Text>
           <Button
@@ -266,7 +295,7 @@ function ProvidedHandlePage({
             <ButtonText>
               <Trans>I have my own domain</Trans>
             </ButtonText>
-            <ButtonIcon icon={ArrowRightIcon} />
+            <ButtonIcon icon={ArrowRightIcon} position="right" />
           </Button>
         </Animated.View>
       </View>
@@ -366,21 +395,22 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             />
           </TextField.Root>
         </View>
-        <ToggleButton.Group
+        <SegmentedControl.Root
           label={_(msg`Choose domain verification method`)}
-          values={[dnsPanel ? 'dns' : 'file']}
-          onChange={values => setDNSPanel(values[0] === 'dns')}>
-          <ToggleButton.Button name="dns" label={_(msg`DNS Panel`)}>
-            <ToggleButton.ButtonText>
+          type="tabs"
+          value={dnsPanel ? 'dns' : 'file'}
+          onChange={values => setDNSPanel(values === 'dns')}>
+          <SegmentedControl.Item value="dns" label={_(msg`DNS Panel`)}>
+            <SegmentedControl.ItemText>
               <Trans>DNS Panel</Trans>
-            </ToggleButton.ButtonText>
-          </ToggleButton.Button>
-          <ToggleButton.Button name="file" label={_(msg`No DNS Panel`)}>
-            <ToggleButton.ButtonText>
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+          <SegmentedControl.Item value="file" label={_(msg`No DNS Panel`)}>
+            <SegmentedControl.ItemText>
               <Trans>No DNS Panel</Trans>
-            </ToggleButton.ButtonText>
-          </ToggleButton.Button>
-        </ToggleButton.Group>
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+        </SegmentedControl.Root>
         {dnsPanel ? (
           <>
             <Text>
@@ -399,10 +429,10 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               </Text>
               <View style={[a.py_xs]}>
                 <CopyButton
-                  variant="solid"
                   color="secondary"
                   value="_atproto"
                   label={_(msg`Copy host`)}
+                  style={[a.bg_transparent]}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
                   <Text style={[a.text_md, a.flex_1]}>_atproto</Text>
@@ -420,10 +450,10 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               </Text>
               <View style={[a.py_xs]}>
                 <CopyButton
-                  variant="solid"
                   color="secondary"
                   value={'did=' + currentAccount?.did}
                   label={_(msg`Copy TXT record value`)}
+                  style={[a.bg_transparent]}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
                   <Text style={[a.text_md, a.flex_1]}>
@@ -471,9 +501,14 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               value={currentAccount?.did ?? ''}
               label={_(msg`Copy DID`)}
               size="large"
-              variant="solid"
+              shape="rectangular"
               color="secondary"
-              style={[a.px_md, a.border, t.atoms.border_contrast_low]}>
+              style={[
+                a.px_md,
+                a.border,
+                t.atoms.border_contrast_low,
+                t.atoms.bg_contrast_25,
+              ]}>
               <Text style={[a.text_md, a.flex_1]}>{currentAccount?.did}</Text>
               <ButtonIcon icon={CopyIcon} />
             </CopyButton>
@@ -489,17 +524,29 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Animated.View>
       )}
       <Animated.View layout={native(LinearTransition)}>
+        {currentAccount?.handle?.endsWith('.bsky.social') && (
+          <Admonition type="info" style={[a.mb_md]}>
+            <Trans>
+              Your current handle{' '}
+              <Text style={[a.font_semi_bold]}>
+                {sanitizeHandle(currentAccount?.handle || '', '@')}
+              </Text>{' '}
+              will automatically remain reserved for you. You can switch back to
+              it at any time from this account.
+            </Trans>
+          </Admonition>
+        )}
         <Button
           label={
             isVerified
               ? _(msg`Update to ${domain}`)
               : dnsPanel
-              ? _(msg`Verify DNS Record`)
-              : _(msg`Verify Text File`)
+                ? _(msg`Verify DNS Record`)
+                : _(msg`Verify Text File`)
           }
           variant="solid"
           size="large"
-          color={domain.trim().length > 0 ? 'primary' : 'secondary'}
+          color="primary"
           disabled={domain.trim().length === 0}
           onPress={() => {
             if (isVerified) {
@@ -522,14 +569,17 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             </ButtonText>
           )}
         </Button>
-      </Animated.View>
-      <Animated.View layout={native(LinearTransition)}>
+
         <Button
           label={_(msg`Use default provider`)}
-          accessibilityHint={_(msg`Go back to previous page`)}
+          accessibilityHint={_(msg`Returns to previous page`)}
           onPress={goToServiceHandle}
-          style={[a.p_0, a.justify_start]}>
-          <ButtonText style={[{color: t.palette.primary_500}, a.text_left]}>
+          variant="outline"
+          color="secondary"
+          size="large"
+          style={[a.mt_sm]}>
+          <ButtonIcon icon={ArrowLeftIcon} position="left" />
+          <ButtonText>
             <Trans>Nevermind, create a handle for me</Trans>
           </ButtonText>
         </Button>
@@ -592,7 +642,7 @@ function SuccessMessage({text}: {text: string}) {
           a.rounded_full,
           a.align_center,
           a.justify_center,
-          {backgroundColor: t.palette.positive_600},
+          {backgroundColor: t.palette.positive_500},
         ]}>
         <CheckIcon fill={t.palette.white} size="xs" />
       </View>

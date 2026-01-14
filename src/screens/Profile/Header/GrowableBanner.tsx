@@ -1,17 +1,19 @@
-import React, {useEffect, useState} from 'react'
-import {View} from 'react-native'
-import {ActivityIndicator} from 'react-native'
+import {useEffect, useState} from 'react'
+import {ActivityIndicator, Pressable, View} from 'react-native'
 import Animated, {
+  type AnimatedRef,
   Extrapolation,
   interpolate,
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedStyle,
 } from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
+import type React from 'react'
 
 import {isIOS} from '#/platform/detection'
 import {RQKEY_ROOT as STARTERPACK_RQKEY_ROOT} from '#/state/queries/actor-starter-packs'
@@ -26,26 +28,39 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 export function GrowableBanner({
   backButton,
   children,
+  onPress,
+  bannerRef,
 }: {
   backButton?: React.ReactNode
   children: React.ReactNode
+  onPress?: () => void
+  bannerRef?: AnimatedRef<Animated.View>
 }) {
   const pagerContext = usePagerHeaderContext()
 
-  // pagerContext should only be present on iOS, but better safe than sorry
+  // plain non-growable mode for Android/Web
   if (!pagerContext || !isIOS) {
     return (
-      <View style={[a.w_full, a.h_full]}>
-        {children}
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="image"
+        style={[a.w_full, a.h_full]}>
+        <Animated.View ref={bannerRef} style={[a.w_full, a.h_full]}>
+          {children}
+        </Animated.View>
         {backButton}
-      </View>
+      </Pressable>
     )
   }
 
   const {scrollY} = pagerContext
 
   return (
-    <GrowableBannerInner scrollY={scrollY} backButton={backButton}>
+    <GrowableBannerInner
+      scrollY={scrollY}
+      backButton={backButton}
+      onPress={onPress}
+      bannerRef={bannerRef}>
       {children}
     </GrowableBannerInner>
   )
@@ -55,18 +70,23 @@ function GrowableBannerInner({
   scrollY,
   backButton,
   children,
+  onPress,
+  bannerRef,
 }: {
   scrollY: SharedValue<number>
   backButton?: React.ReactNode
   children: React.ReactNode
+  onPress?: () => void
+  bannerRef?: AnimatedRef<Animated.View>
 }) {
+  const {top: topInset} = useSafeAreaInsets()
   const isFetching = useIsProfileFetching()
   const animateSpinner = useShouldAnimateSpinner({isFetching, scrollY})
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(scrollY.value, [-150, 0], [2, 1], {
+        scale: interpolate(scrollY.get(), [-150, 0], [2, 1], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },
@@ -76,7 +96,7 @@ function GrowableBannerInner({
   const animatedBlurViewProps = useAnimatedProps(() => {
     return {
       intensity: interpolate(
-        scrollY.value,
+        scrollY.get(),
         [-300, -65, -15],
         [50, 40, 0],
         Extrapolation.CLAMP,
@@ -85,16 +105,17 @@ function GrowableBannerInner({
   })
 
   const animatedSpinnerStyle = useAnimatedStyle(() => {
+    const scrollYValue = scrollY.get()
     return {
-      display: scrollY.value < 0 ? 'flex' : 'none',
+      display: scrollYValue < 0 ? 'flex' : 'none',
       opacity: interpolate(
-        scrollY.value,
+        scrollYValue,
         [-60, -15],
         [1, 0],
         Extrapolation.CLAMP,
       ),
       transform: [
-        {translateY: interpolate(scrollY.value, [-150, 0], [-75, 0])},
+        {translateY: interpolate(scrollYValue, [-150, 0], [-75, 0])},
         {rotate: '90deg'},
       ],
     }
@@ -103,7 +124,7 @@ function GrowableBannerInner({
   const animatedBackButtonStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: interpolate(scrollY.value, [-150, 60], [-150, 60], {
+        translateY: interpolate(scrollY.get(), [-150, 10], [-150, 10], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },
@@ -120,14 +141,33 @@ function GrowableBannerInner({
           {transformOrigin: 'bottom'},
           animatedStyle,
         ]}>
-        {children}
+        <Pressable
+          onPress={onPress}
+          accessibilityRole="image"
+          style={[a.w_full, a.h_full]}>
+          <Animated.View
+            ref={bannerRef}
+            collapsable={false}
+            style={[a.w_full, a.h_full]}>
+            {children}
+          </Animated.View>
+        </Pressable>
         <AnimatedBlurView
+          pointerEvents="none"
           style={[a.absolute, a.inset_0]}
           tint="dark"
           animatedProps={animatedBlurViewProps}
         />
       </Animated.View>
-      <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+      <View
+        pointerEvents="none"
+        style={[
+          a.absolute,
+          a.inset_0,
+          {top: topInset - (isIOS ? 15 : 0)},
+          a.justify_center,
+          a.align_center,
+        ]}>
         <Animated.View style={[animatedSpinnerStyle]}>
           <ActivityIndicator
             key={animateSpinner ? 'spin' : 'stop'}
@@ -168,7 +208,7 @@ function useShouldAnimateSpinner({
   const stickyIsOverscrolled = useStickyToggle(isOverscrolled, 10)
 
   useAnimatedReaction(
-    () => scrollY.value < -5,
+    () => scrollY.get() < -5,
     (value, prevValue) => {
       if (value !== prevValue) {
         runOnJS(setIsOverscrolled)(value)

@@ -1,45 +1,50 @@
-import React from 'react'
+import {Fragment, useCallback} from 'react'
 import {Linking, View} from 'react-native'
-import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {LABELS} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
+import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
-import {ScrollView} from '#/view/com/util/Views'
-import {atoms as a, useBreakpoints, useTheme, ViewStyleProp} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
-import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
+import {Admonition} from '#/components/Admonition'
+import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
+import {Button} from '#/components/Button'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
+import {type Props as SVGIconProps} from '#/components/icons/common'
+import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import * as LabelingService from '#/components/LabelingServiceCard'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
+import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
@@ -75,35 +80,30 @@ function ErrorState({error}: {error: string}) {
 export function ModerationScreen(
   _props: NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>,
 ) {
-  const t = useTheme()
   const {_} = useLingui()
   const {
     isLoading: isPreferencesLoading,
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
-  const {gtMobile} = useBreakpoints()
-  const {height} = useSafeAreaFrame()
 
   const isLoading = isPreferencesLoading
   const error = preferencesError
 
   return (
     <Layout.Screen testID="moderationScreen">
-      <CenteredView
-        testID="moderationScreen"
-        style={[
-          t.atoms.border_contrast_low,
-          t.atoms.bg,
-          {minHeight: height},
-          ...(gtMobile ? [a.border_l, a.border_r] : []),
-        ]}>
-        <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
-
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Moderation</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content>
         {isLoading ? (
-          <View style={[a.w_full, a.align_center, a.pt_2xl]}>
-            <Loader size="xl" fill={t.atoms.text.color} />
-          </View>
+          <ListMaybePlaceholder isLoading={true} sideBorders={false} />
         ) : error || !preferences ? (
           <ErrorState
             error={
@@ -114,7 +114,7 @@ export function ModerationScreen(
         ) : (
           <ModerationScreenInner preferences={preferences} />
         )}
-      </CenteredView>
+      </Layout.Content>
     </Layout.Screen>
   )
 }
@@ -141,7 +141,7 @@ function SubItem({
       ]}>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <Icon size="md" style={[t.atoms.text_contrast_medium]} />
-        <Text style={[a.text_sm, a.font_bold]}>{title}</Text>
+        <Text style={[a.text_sm, a.font_semi_bold]}>{title}</Text>
       </View>
       <ChevronRight
         size="sm"
@@ -161,29 +161,36 @@ export function ModerationScreenInner({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
-  const birthdateDialogControl = Dialog.useDialogControl()
   const {
     isLoading: isLabelersLoading,
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
+  const aa = useAgeAssurance()
+  const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
+  const aaCopy = useAgeAssuranceCopy()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
   const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =
     usePreferencesSetAdultContentMutation()
-  const adultContentEnabled = !!(
+  let adultContentEnabled = !!(
     (optimisticAdultContent && optimisticAdultContent.enabled) ||
     (!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled)
   )
-  const ageNotSet = !preferences.userAge
-  const isUnderage = (preferences.userAge || 0) < 18
+  const adultContentUIDisabledOnIOS = isIOS && !adultContentEnabled
+  let adultContentUIDisabled = adultContentUIDisabledOnIOS
 
-  const onToggleAdultContentEnabled = React.useCallback(
+  if (aa.flags.adultContentDisabled) {
+    adultContentEnabled = false
+    adultContentUIDisabled = true
+  }
+
+  const onToggleAdultContentEnabled = useCallback(
     async (selected: boolean) => {
       try {
         await setAdultContentPref({
@@ -198,18 +205,33 @@ export function ModerationScreenInner({
     [setAdultContentPref],
   )
 
-  const disabledOnIOS = isIOS && !adultContentEnabled
-
   return (
-    <ScrollView
-      contentContainerStyle={[
-        a.border_0,
-        a.pt_2xl,
-        a.px_lg,
-        gtMobile && a.px_2xl,
-      ]}>
+    <View style={[a.pt_2xl, a.px_lg, gtMobile && a.px_2xl]}>
+      {aa.flags.adultContentDisabled && isBirthdateUpdateAllowed && (
+        <View style={[a.pb_2xl]}>
+          <Admonition type="tip" style={[a.pb_md]}>
+            <Trans>
+              Your declared age is under 18. Some settings below may be
+              disabled. If this was a mistake, you may edit your birthdate in
+              your{' '}
+              <InlineLinkText
+                to="/settings/account"
+                label={_(msg`Go to account settings`)}>
+                account settings
+              </InlineLinkText>
+              .
+            </Trans>
+          </Admonition>
+        </View>
+      )}
+
       <Text
-        style={[a.text_md, a.font_bold, a.pb_md, t.atoms.text_contrast_high]}>
+        style={[
+          a.text_md,
+          a.font_semi_bold,
+          a.pb_md,
+          t.atoms.text_contrast_high,
+        ]}>
         <Trans>Moderation tools</Trans>
       </Text>
 
@@ -220,6 +242,21 @@ export function ModerationScreenInner({
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
         ]}>
+        <Link
+          label={_(msg`View your default post interaction settings`)}
+          testID="interactionSettingsBtn"
+          to="/moderation/interaction-settings">
+          {state => (
+            <SubItem
+              title={_(msg`Interaction settings`)}
+              icon={EditBig}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
+        <Divider />
         <Button
           testID="mutedWordsBtn"
           label={_(msg`Open muted words and tags settings`)}
@@ -279,6 +316,21 @@ export function ModerationScreenInner({
             />
           )}
         </Link>
+        <Divider />
+        <Link
+          label={_(msg`Manage verification settings`)}
+          testID="verificationSettingsBtn"
+          to="/moderation/verification-settings">
+          {state => (
+            <SubItem
+              title={_(msg`Verification settings`)}
+              icon={CircleCheck}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
       </View>
 
       <Text
@@ -286,35 +338,17 @@ export function ModerationScreenInner({
           a.pt_2xl,
           a.pb_md,
           a.text_md,
-          a.font_bold,
+          a.font_semi_bold,
           t.atoms.text_contrast_high,
         ]}>
         <Trans>Content filters</Trans>
       </Text>
 
-      <View style={[a.gap_md]}>
-        {ageNotSet && (
-          <>
-            <Button
-              label={_(msg`Confirm your birthdate`)}
-              size="small"
-              variant="solid"
-              color="secondary"
-              onPress={() => {
-                birthdateDialogControl.open()
-              }}
-              style={[a.justify_between, a.rounded_md, a.px_lg, a.py_lg]}>
-              <ButtonText>
-                <Trans>Confirm your age:</Trans>
-              </ButtonText>
-              <ButtonText>
-                <Trans>Set birthdate</Trans>
-              </ButtonText>
-            </Button>
+      <AgeAssuranceAdmonition style={[a.pb_md]}>
+        {aaCopy.notice}
+      </AgeAssuranceAdmonition>
 
-            <BirthDateSettingsDialog control={birthdateDialogControl} />
-          </>
-        )}
+      <View style={[a.gap_md]}>
         <View
           style={[
             a.w_full,
@@ -322,7 +356,7 @@ export function ModerationScreenInner({
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
           ]}>
-          {!ageNotSet && !isUnderage && (
+          {aa.state.access === aa.Access.Full && (
             <>
               <View
                 style={[
@@ -331,14 +365,14 @@ export function ModerationScreenInner({
                   a.flex_row,
                   a.align_center,
                   a.justify_between,
-                  disabledOnIOS && {opacity: 0.5},
+                  adultContentUIDisabled && {opacity: 0.5},
                 ]}>
-                <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+                <Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
                   <Trans>Enable adult content</Trans>
                 </Text>
                 <Toggle.Item
                   label={_(msg`Toggle to enable or disable adult content`)}
-                  disabled={disabledOnIOS}
+                  disabled={adultContentUIDisabled}
                   name="adultContent"
                   value={adultContentEnabled}
                   onChange={onToggleAdultContentEnabled}>
@@ -354,7 +388,7 @@ export function ModerationScreenInner({
                   </View>
                 </Toggle.Item>
               </View>
-              {disabledOnIOS && (
+              {adultContentUIDisabledOnIOS && (
                 <View style={[a.pb_lg, a.px_lg]}>
                   <Text>
                     <Trans>
@@ -374,29 +408,30 @@ export function ModerationScreenInner({
                   </Text>
                 </View>
               )}
-              <Divider />
+
+              {adultContentEnabled && (
+                <>
+                  <Divider />
+                  <GlobalLabelPreference labelDefinition={LABELS.porn} />
+                  <Divider />
+                  <GlobalLabelPreference labelDefinition={LABELS.sexual} />
+                  <Divider />
+                  <GlobalLabelPreference
+                    labelDefinition={LABELS['graphic-media']}
+                  />
+                  <Divider />
+                  <GlobalLabelPreference labelDefinition={LABELS.nudity} />
+                </>
+              )}
             </>
           )}
-          {!isUnderage && adultContentEnabled && (
-            <>
-              <GlobalLabelPreference labelDefinition={LABELS.porn} />
-              <Divider />
-              <GlobalLabelPreference labelDefinition={LABELS.sexual} />
-              <Divider />
-              <GlobalLabelPreference
-                labelDefinition={LABELS['graphic-media']}
-              />
-              <Divider />
-            </>
-          )}
-          <GlobalLabelPreference labelDefinition={LABELS.nudity} />
         </View>
       </View>
 
       <Text
         style={[
           a.text_md,
-          a.font_bold,
+          a.font_semi_bold,
           a.pt_2xl,
           a.pb_md,
           t.atoms.text_contrast_high,
@@ -420,7 +455,7 @@ export function ModerationScreenInner({
         <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
           {labelers.map((labeler, i) => {
             return (
-              <React.Fragment key={labeler.creator.did}>
+              <Fragment key={labeler.creator.did}>
                 {i !== 0 && <Divider />}
                 <LabelingService.Link labeler={labeler}>
                   {state => (
@@ -457,12 +492,12 @@ export function ModerationScreenInner({
                     </LabelingService.Outer>
                   )}
                 </LabelingService.Link>
-              </React.Fragment>
+              </Fragment>
             )
           })}
         </View>
       )}
-      <View style={{height: 200}} />
-    </ScrollView>
+      <View style={{height: 150}} />
+    </View>
   )
 }

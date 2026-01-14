@@ -1,16 +1,16 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Modal, ScrollView, View} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
-import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
@@ -85,20 +85,38 @@ export function SignupQueued() {
     </Button>
   )
 
+  const logoutBtn = (
+    <Button
+      variant="ghost"
+      size="large"
+      color="primary"
+      label={_(msg`Sign out`)}
+      onPress={() => logoutCurrentAccount('SignupQueued')}>
+      <ButtonText>
+        <Trans>Sign out</Trans>
+      </ButtonText>
+    </Button>
+  )
+
+  const webLayout = isWeb && gtMobile
+
   return (
-    <View
-      aria-modal
-      role="dialog"
-      aria-role="dialog"
-      aria-label={_(msg`You're in line`)}
-      accessibilityLabel={_(msg`You're in line`)}
-      accessibilityHint=""
-      style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
+    <Modal
+      visible
+      animationType={native('slide')}
+      presentationStyle="formSheet"
+      style={[web(a.util_screen_outer)]}>
+      {isIOS && <SystemBars style={{statusBar: 'light'}} />}
       <ScrollView
-        style={[a.h_full, a.w_full]}
-        contentContainerStyle={{borderWidth: 0}}>
+        style={[a.flex_1, t.atoms.bg]}
+        contentContainerStyle={{borderWidth: 0}}
+        bounces={false}>
         <View
-          style={[a.flex_row, a.justify_center, gtMobile ? a.pt_4xl : a.px_xl]}>
+          style={[
+            a.flex_row,
+            a.justify_center,
+            gtMobile ? a.pt_4xl : [a.px_xl, a.pt_xl],
+          ]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
             <View
               style={[a.w_full, a.justify_center, a.align_center, a.my_4xl]}>
@@ -121,7 +139,10 @@ export function SignupQueued() {
                 a.px_2xl,
                 a.py_4xl,
                 a.mt_2xl,
-                t.atoms.bg_contrast_50,
+                a.mb_md,
+                a.border,
+                t.atoms.bg_contrast_25,
+                t.atoms.border_contrast_medium,
               ]}>
               {typeof placeInQueue === 'number' && (
                 <Text
@@ -147,50 +168,38 @@ export function SignupQueued() {
               </P>
             </View>
 
-            {isWeb && gtMobile && (
-              <View style={[a.w_full, a.flex_row, a.justify_between, a.pt_5xl]}>
-                <Button
-                  variant="ghost"
-                  size="large"
-                  label={_(msg`Log out`)}
-                  onPress={() => logoutCurrentAccount('SignupQueued')}>
-                  <ButtonText style={[{color: t.palette.primary_500}]}>
-                    <Trans>Log out</Trans>
-                  </ButtonText>
-                </Button>
+            {webLayout && (
+              <View
+                style={[
+                  a.w_full,
+                  a.flex_row,
+                  a.justify_between,
+                  a.pt_5xl,
+                  {paddingBottom: 200},
+                ]}>
+                {logoutBtn}
                 {checkBtn}
               </View>
             )}
           </View>
-
-          <View style={{height: 200}} />
         </View>
       </ScrollView>
 
-      {(!isWeb || !gtMobile) && (
+      {!webLayout && (
         <View
           style={[
             a.align_center,
+            t.atoms.bg,
             gtMobile ? a.px_5xl : a.px_xl,
-            {
-              paddingBottom: Math.max(insets.bottom, a.pb_5xl.paddingBottom),
-            },
+            {paddingBottom: Math.max(insets.bottom, a.pb_5xl.paddingBottom)},
           ]}>
           <View style={[a.w_full, a.gap_sm, {maxWidth: COL_WIDTH}]}>
             {checkBtn}
-            <Button
-              variant="ghost"
-              size="large"
-              label={_(msg`Log out`)}
-              onPress={() => logoutCurrentAccount('SignupQueued')}>
-              <ButtonText style={[{color: t.palette.primary_500}]}>
-                <Trans>Log out</Trans>
-              </ButtonText>
-            </Button>
+            {logoutBtn}
           </View>
         </View>
       )}
-    </View>
+    </Modal>
   )
 }
 

@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import React, {type JSX, useEffect, useState} from 'react'
 import {
-  NativeScrollEvent,
-  NativeSyntheticEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -36,7 +36,7 @@ export const ViewSelector = React.forwardRef<
     renderItem: (item: any) => JSX.Element
     ListFooterComponent?:
       | React.ComponentType<any>
-      | React.ReactElement
+      | React.ReactElement<any>
       | null
       | undefined
     onSelectView?: (viewIndex: number) => void
@@ -113,6 +113,7 @@ export const ViewSelector = React.forwardRef<
   )
   return (
     <FlatList_INTERNAL
+      // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
       ref={flatListRef}
       data={data}
       keyExtractor={keyExtractor}

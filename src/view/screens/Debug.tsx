@@ -4,24 +4,23 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
-import {PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
+import {type PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {Button, ButtonType} from '#/view/com/util/forms/Button'
-import {
-  DropdownButton,
-  DropdownItem,
-} from '#/view/com/util/forms/DropdownButton'
-import {RadioGroup} from '#/view/com/util/forms/RadioGroup'
+import {Button} from '#/view/com/util/forms/Button'
 import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import * as LoadingPlaceholder from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ViewSelector} from '#/view/com/util/ViewSelector'
+import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
@@ -135,12 +134,8 @@ function ControlsView() {
     <ScrollView style={[s.pl10, s.pr10]}>
       <Heading label="Buttons" />
       <ButtonsView />
-      <Heading label="Dropdown Buttons" />
-      <DropdownButtonsView />
       <Heading label="Toggle Buttons" />
       <ToggleButtonsView />
-      <Heading label="Radio Buttons" />
-      <RadioButtonsView />
       <View style={s.footerSpacer} />
     </ScrollView>
   )
@@ -339,7 +334,15 @@ function TypographyView() {
 }
 
 function EmptyStateView() {
-  return <EmptyState icon="bars" message="This is an empty state" />
+  const {_} = useLingui()
+
+  return (
+    <EmptyState
+      icon={HashtagWideIcon}
+      iconSize="2xl"
+      message={_(msg`This is an empty state`)}
+    />
+  )
 }
 
 function LoadingPlaceholderView() {
@@ -394,44 +397,6 @@ function ButtonsView() {
           label="Default light"
           style={buttonStyles}
         />
-      </View>
-    </View>
-  )
-}
-
-const DROPDOWN_ITEMS: DropdownItem[] = [
-  {
-    icon: ['far', 'paste'],
-    label: 'Copy post text',
-    onPress() {},
-  },
-  {
-    icon: 'share',
-    label: 'Share...',
-    onPress() {},
-  },
-  {
-    icon: 'circle-exclamation',
-    label: 'Report post',
-    onPress() {},
-  },
-]
-function DropdownButtonsView() {
-  const defaultPal = usePalette('default')
-  return (
-    <View style={[defaultPal.view]}>
-      <View style={s.mb5}>
-        <DropdownButton
-          type="primary"
-          items={DROPDOWN_ITEMS}
-          menuWidth={200}
-          label="Primary button"
-        />
-      </View>
-      <View style={s.mb5}>
-        <DropdownButton type="bare" items={DROPDOWN_ITEMS} menuWidth={200}>
-          <Text>Bare</Text>
-        </DropdownButton>
       </View>
     </View>
   )
@@ -499,31 +464,6 @@ function ToggleButtonsView() {
         style={buttonStyles}
         isSelected={isSelected}
         onPress={onToggle}
-      />
-    </View>
-  )
-}
-
-const RADIO_BUTTON_ITEMS = [
-  {key: 'default-light', label: 'Default Light'},
-  {key: 'primary', label: 'Primary'},
-  {key: 'secondary', label: 'Secondary'},
-  {key: 'inverted', label: 'Inverted'},
-  {key: 'primary-outline', label: 'Primary Outline'},
-  {key: 'secondary-outline', label: 'Secondary Outline'},
-  {key: 'primary-light', label: 'Primary Light'},
-  {key: 'secondary-light', label: 'Secondary Light'},
-]
-function RadioButtonsView() {
-  const defaultPal = usePalette('default')
-  const [rgType, setRgType] = React.useState<ButtonType>('default-light')
-  return (
-    <View style={[defaultPal.view]}>
-      <RadioGroup
-        type={rgType}
-        items={RADIO_BUTTON_ITEMS}
-        initialSelection="default-light"
-        onSelect={v => setRgType(v as ButtonType)}
       />
     </View>
   )

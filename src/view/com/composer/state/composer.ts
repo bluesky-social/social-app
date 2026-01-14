@@ -1,8 +1,13 @@
-import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyFeedPostgate, RichText} from '@atproto/api'
+import {type ImagePickerAsset} from 'expo-image-picker'
+import {
+  type AppBskyFeedPostgate,
+  AppBskyRichtextFacet,
+  type BskyPreferences,
+  RichText,
+} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
-import {SelfLabel} from '#/lib/moderation'
+import {type SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {
@@ -10,13 +15,22 @@ import {
   postUriToRelativePath,
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
-import {ComposerImage, createInitialImages} from '#/state/gallery'
+import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
-import {Gif} from '#/state/queries/tenor'
-import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate'
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {ComposerOpts} from '#/state/shell/composer'
-import {createVideoState, VideoAction, videoReducer, VideoState} from './video'
+import {type Gif} from '#/state/queries/tenor'
+import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
+import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {type ComposerOpts} from '#/state/shell/composer'
+import {
+  type LinkFacetMatch,
+  suggestLinkCardUri,
+} from '#/view/com/composer/text-input/text-input-util'
+import {
+  createVideoState,
+  type VideoAction,
+  videoReducer,
+  type VideoState,
+} from './video'
 
 type ImagesMedia = {
   type: 'images'
@@ -473,11 +487,15 @@ export function createComposerState({
   initMention,
   initImageUris,
   initQuoteUri,
+  initInteractionSettings,
 }: {
   initText: string | undefined
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
+  initInteractionSettings:
+    | BskyPreferences['postInteractionSettings']
+    | undefined
 }): ComposerState {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
@@ -501,13 +519,75 @@ export function createComposerState({
     text: initText
       ? initText
       : initMention
-      ? insertMentionAt(
-          `@${initMention}`,
-          initMention.length + 1,
-          `${initMention}`,
-        )
-      : '',
+        ? insertMentionAt(
+            `@${initMention}`,
+            initMention.length + 1,
+            `${initMention}`,
+          )
+        : '',
   })
+
+  let link: Link | undefined
+
+  /**
+   * `initText` atm is only used for compose intents, meaning share links from
+   * external sources. If `initText` is defined, we want to extract links/posts
+   * from `initText` and suggest them as embeds.
+   *
+   * This checks for posts separately from other types of links so that posts
+   * can become quotes. The util `suggestLinkCardUri` is then applied to ensure
+   * we suggest at most 1 of each.
+   */
+  if (initText) {
+    initRichText.detectFacetsWithoutResolution()
+    const detectedExtUris = new Map<string, LinkFacetMatch>()
+    const detectedPostUris = new Map<string, LinkFacetMatch>()
+    if (initRichText.facets) {
+      for (const facet of initRichText.facets) {
+        for (const feature of facet.features) {
+          if (AppBskyRichtextFacet.isLink(feature)) {
+            if (isBskyPostUrl(feature.uri)) {
+              detectedPostUris.set(feature.uri, {facet, rt: initRichText})
+            } else {
+              detectedExtUris.set(feature.uri, {facet, rt: initRichText})
+            }
+          }
+        }
+      }
+    }
+    const pastSuggestedUris = new Set<string>()
+    const suggestedExtUri = suggestLinkCardUri(
+      true,
+      detectedExtUris,
+      new Map(),
+      pastSuggestedUris,
+    )
+    if (suggestedExtUri) {
+      link = {
+        type: 'link',
+        uri: suggestedExtUri,
+      }
+    }
+    const suggestedPostUri = suggestLinkCardUri(
+      true,
+      detectedPostUris,
+      new Map(),
+      pastSuggestedUris,
+    )
+    if (suggestedPostUri) {
+      /*
+       * `initQuote` is only populated via in-app user action, but we're being
+       * future-defensive here.
+       */
+      if (!quote) {
+        quote = {
+          type: 'link',
+          uri: suggestedPostUri,
+        }
+      }
+    }
+  }
+
   return {
     activePostIndex: 0,
     mutableNeedsFocusActive: false,
@@ -521,12 +601,20 @@ export function createComposerState({
           embed: {
             quote,
             media,
-            link: undefined,
+            link,
           },
         },
       ],
-      postgate: createPostgateRecord({post: ''}),
-      threadgate: threadgateViewToAllowUISetting(undefined),
+      postgate: createPostgateRecord({
+        post: '',
+        embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
+      }),
+      threadgate: threadgateRecordToAllowUISetting({
+        $type: 'app.bsky.feed.threadgate',
+        post: '',
+        createdAt: new Date().toString(),
+        allow: initInteractionSettings?.threadgateAllowRules,
+      }),
     },
   }
 }

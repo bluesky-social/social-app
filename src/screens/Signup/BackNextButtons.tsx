@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -10,7 +9,7 @@ import {Loader} from '#/components/Loader'
 export interface BackNextButtonsProps {
   hideNext?: boolean
   showRetry?: boolean
-  isLoading: boolean
+  isLoading?: boolean
   isNextDisabled?: boolean
   onBackPress: () => void
   onNextPress?: () => void

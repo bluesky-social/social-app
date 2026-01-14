@@ -1,6 +1,5 @@
-import React from 'react'
-import {StyleSheet, TextProps} from 'react-native'
-import type {PathProps, SvgProps} from 'react-native-svg'
+import {StyleSheet, type TextProps} from 'react-native'
+import {type PathProps, type SvgProps} from 'react-native-svg'
 import {Defs, LinearGradient, Stop} from 'react-native-svg'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -14,13 +13,15 @@ export type Props = {
 } & Omit<SvgProps, 'style' | 'size'>
 
 export const sizes = {
+  '2xs': 8,
   xs: 12,
   sm: 16,
   md: 20,
   lg: 24,
   xl: 28,
   '2xl': 32,
-}
+  '3xl': 48,
+} as const
 
 export function useCommonSVGProps(props: Props) {
   const t = useTheme()

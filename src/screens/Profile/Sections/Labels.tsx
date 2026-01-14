@@ -1,31 +1,29 @@
-import React from 'react'
-import {findNodeHandle, View} from 'react-native'
-import {useSafeAreaFrame} from 'react-native-safe-area-context'
+import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
+import {findNodeHandle, type ListRenderItemInfo, View} from 'react-native'
 import {
-  AppBskyLabelerDefs,
-  InterpretedLabelValueDefinition,
+  type AppBskyLabelerDefs,
+  type InterpretedLabelValueDefinition,
   interpretLabelValueDefinitions,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
-import {useScrollHandlers} from '#/lib/ScrollContext'
-import {isNative} from '#/platform/detection'
-import {ListRef} from '#/view/com/util/List'
-import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {atoms as a, useTheme} from '#/alf'
+import {isIOS, isNative} from '#/platform/detection'
+import {List, type ListRef} from '#/view/com/util/List'
+import {atoms as a, ios, tokens, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
 import {ErrorState} from '../ErrorState'
-import {SectionRef} from './types'
+import {type SectionRef} from './types'
 
 interface LabelsSectionProps {
+  ref: React.Ref<SectionRef>
   isLabelerLoading: boolean
   labelerInfo: AppBskyLabelerDefs.LabelerViewDetailed | undefined
   labelerError: Error | null
@@ -35,201 +33,205 @@ interface LabelsSectionProps {
   isFocused: boolean
   setScrollViewTag: (tag: number | null) => void
 }
-export const ProfileLabelsSection = React.forwardRef<
-  SectionRef,
-  LabelsSectionProps
->(function LabelsSectionImpl(
-  {
-    isLabelerLoading,
-    labelerInfo,
-    labelerError,
-    moderationOpts,
-    scrollElRef,
-    headerHeight,
-    isFocused,
-    setScrollViewTag,
-  },
-  ref,
-) {
-  const {_} = useLingui()
-  const {height: minHeight} = useSafeAreaFrame()
 
-  const onScrollToTop = React.useCallback(() => {
-    // @ts-ignore TODO fix this
-    scrollElRef.current?.scrollTo({
+export function ProfileLabelsSection({
+  ref,
+  isLabelerLoading,
+  labelerInfo,
+  labelerError,
+  moderationOpts,
+  scrollElRef,
+  headerHeight,
+  isFocused,
+  setScrollViewTag,
+}: LabelsSectionProps) {
+  const t = useTheme()
+
+  const onScrollToTop = useCallback(() => {
+    scrollElRef.current?.scrollToOffset({
       animated: isNative,
-      x: 0,
-      y: -headerHeight,
+      offset: -headerHeight,
     })
   }, [scrollElRef, headerHeight])
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
   }))
 
-  React.useEffect(() => {
-    if (isFocused && scrollElRef.current) {
+  useEffect(() => {
+    if (isIOS && isFocused && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [isFocused, scrollElRef, setScrollViewTag])
 
-  return (
-    <CenteredView style={{flex: 1, minHeight}} sideBorders>
-      {isLabelerLoading ? (
-        <View style={[a.w_full, a.align_center]}>
-          <Loader size="xl" />
+  const isSubscribed = labelerInfo
+    ? !!isLabelerSubscribed(labelerInfo, moderationOpts)
+    : false
+
+  const labelValues = useMemo(() => {
+    if (isLabelerLoading || !labelerInfo || labelerError) return []
+    const customDefs = interpretLabelValueDefinitions(labelerInfo)
+    return labelerInfo.policies.labelValues
+      .filter((val, i, arr) => arr.indexOf(val) === i) // dedupe
+      .map(val => lookupLabelValueDefinition(val, customDefs))
+      .filter(
+        def => def && def?.configurable,
+      ) as InterpretedLabelValueDefinition[]
+  }, [labelerInfo, labelerError, isLabelerLoading])
+
+  const numItems = labelValues.length
+
+  const renderItem = useCallback(
+    ({item, index}: ListRenderItemInfo<InterpretedLabelValueDefinition>) => {
+      if (!labelerInfo) return null
+      return (
+        <View
+          style={[
+            t.atoms.bg_contrast_25,
+            index === 0 && [
+              a.overflow_hidden,
+              {
+                borderTopLeftRadius: tokens.borderRadius.md,
+                borderTopRightRadius: tokens.borderRadius.md,
+              },
+            ],
+            index === numItems - 1 && [
+              a.overflow_hidden,
+              {
+                borderBottomLeftRadius: tokens.borderRadius.md,
+                borderBottomRightRadius: tokens.borderRadius.md,
+              },
+            ],
+          ]}>
+          {index !== 0 && <Divider />}
+          <LabelerLabelPreference
+            disabled={isSubscribed ? undefined : true}
+            labelDefinition={item}
+            labelerDid={labelerInfo.creator.did}
+          />
         </View>
-      ) : labelerError || !labelerInfo ? (
+      )
+    },
+    [labelerInfo, isSubscribed, numItems, t],
+  )
+
+  return (
+    <View>
+      <List
+        ref={scrollElRef}
+        data={labelValues}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        contentContainerStyle={a.px_xl}
+        headerOffset={headerHeight}
+        progressViewOffset={ios(0)}
+        ListHeaderComponent={
+          <LabelerListHeader
+            isLabelerLoading={isLabelerLoading}
+            labelerInfo={labelerInfo}
+            labelerError={labelerError}
+            hasValues={labelValues.length !== 0}
+            isSubscribed={isSubscribed}
+          />
+        }
+        ListFooterComponent={
+          <ListFooter
+            height={headerHeight + 180}
+            style={a.border_transparent}
+          />
+        }
+      />
+    </View>
+  )
+}
+
+function keyExtractor(item: InterpretedLabelValueDefinition) {
+  return item.identifier
+}
+
+export function LabelerListHeader({
+  isLabelerLoading,
+  labelerError,
+  labelerInfo,
+  hasValues,
+  isSubscribed,
+}: {
+  isLabelerLoading: boolean
+  labelerError?: Error | null
+  labelerInfo?: AppBskyLabelerDefs.LabelerViewDetailed
+  hasValues: boolean
+  isSubscribed: boolean
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  if (isLabelerLoading) {
+    return (
+      <View style={[a.w_full, a.align_center, a.py_4xl]}>
+        <Loader size="xl" />
+      </View>
+    )
+  }
+
+  if (labelerError || !labelerInfo) {
+    return (
+      <View style={[a.w_full, a.align_center, a.py_4xl]}>
         <ErrorState
           error={
             labelerError?.toString() ||
             _(msg`Something went wrong, please try again.`)
           }
         />
-      ) : (
-        <ProfileLabelsSectionInner
-          moderationOpts={moderationOpts}
-          labelerInfo={labelerInfo}
-          scrollElRef={scrollElRef}
-          headerHeight={headerHeight}
-        />
-      )}
-    </CenteredView>
-  )
-})
-
-export function ProfileLabelsSectionInner({
-  moderationOpts,
-  labelerInfo,
-  scrollElRef,
-  headerHeight,
-}: {
-  moderationOpts: ModerationOpts
-  labelerInfo: AppBskyLabelerDefs.LabelerViewDetailed
-  scrollElRef: ListRef
-  headerHeight: number
-}) {
-  const t = useTheme()
-
-  // Intentionally destructured outside the main thread closure.
-  // See https://github.com/bluesky-social/social-app/pull/4108.
-  const {
-    onBeginDrag: onBeginDragFromContext,
-    onEndDrag: onEndDragFromContext,
-    onScroll: onScrollFromContext,
-    onMomentumEnd: onMomentumEndFromContext,
-  } = useScrollHandlers()
-  const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag(e, ctx) {
-      onBeginDragFromContext?.(e, ctx)
-    },
-    onEndDrag(e, ctx) {
-      onEndDragFromContext?.(e, ctx)
-    },
-    onScroll(e, ctx) {
-      onScrollFromContext?.(e, ctx)
-    },
-    onMomentumEnd(e, ctx) {
-      onMomentumEndFromContext?.(e, ctx)
-    },
-  })
-
-  const {labelValues} = labelerInfo.policies
-  const isSubscribed = isLabelerSubscribed(labelerInfo, moderationOpts)
-  const labelDefs = React.useMemo(() => {
-    const customDefs = interpretLabelValueDefinitions(labelerInfo)
-    return labelValues
-      .map(val => lookupLabelValueDefinition(val, customDefs))
-      .filter(
-        def => def && def?.configurable,
-      ) as InterpretedLabelValueDefinition[]
-  }, [labelerInfo, labelValues])
+      </View>
+    )
+  }
 
   return (
-    <ScrollView
-      // @ts-ignore TODO fix this
-      ref={scrollElRef}
-      scrollEventThrottle={1}
-      contentContainerStyle={{
-        paddingTop: headerHeight,
-        borderWidth: 0,
-      }}
-      contentOffset={{x: 0, y: headerHeight * -1}}
-      onScroll={scrollHandler}>
-      <View style={[a.pt_xl, a.px_lg, a.border_t, t.atoms.border_contrast_low]}>
-        <View>
+    <View style={[a.py_xl]}>
+      <Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
+        <Trans>
+          Labels are annotations on users and content. They can be used to hide,
+          warn, and categorize the network.
+        </Trans>
+      </Text>
+      {labelerInfo?.creator.viewer?.blocking ? (
+        <View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
+          <CircleInfo size="sm" fill={t.atoms.text_contrast_medium.color} />
           <Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
             <Trans>
-              Labels are annotations on users and content. They can be used to
-              hide, warn, and categorize the network.
+              Blocking does not prevent this labeler from placing labels on your
+              account.
             </Trans>
           </Text>
-          {labelerInfo.creator.viewer?.blocking ? (
-            <View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
-              <CircleInfo size="sm" fill={t.atoms.text_contrast_medium.color} />
-              <Text
-                style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
-                <Trans>
-                  Blocking does not prevent this labeler from placing labels on
-                  your account.
-                </Trans>
-              </Text>
-            </View>
-          ) : null}
-          {labelValues.length === 0 ? (
-            <Text
-              style={[
-                a.pt_xl,
-                t.atoms.text_contrast_high,
-                a.leading_snug,
-                a.text_sm,
-              ]}>
-              <Trans>
-                This labeler hasn't declared what labels it publishes, and may
-                not be active.
-              </Trans>
-            </Text>
-          ) : !isSubscribed ? (
-            <Text
-              style={[
-                a.pt_xl,
-                t.atoms.text_contrast_high,
-                a.leading_snug,
-                a.text_sm,
-              ]}>
-              <Trans>
-                Subscribe to @{labelerInfo.creator.handle} to use these labels:
-              </Trans>
-            </Text>
-          ) : null}
         </View>
-        {labelDefs.length > 0 && (
-          <View
-            style={[
-              a.mt_xl,
-              a.w_full,
-              a.rounded_md,
-              a.overflow_hidden,
-              t.atoms.bg_contrast_25,
-            ]}>
-            {labelDefs.map((labelDef, i) => {
-              return (
-                <React.Fragment key={labelDef.identifier}>
-                  {i !== 0 && <Divider />}
-                  <LabelerLabelPreference
-                    disabled={isSubscribed ? undefined : true}
-                    labelDefinition={labelDef}
-                    labelerDid={labelerInfo.creator.did}
-                  />
-                </React.Fragment>
-              )
-            })}
-          </View>
-        )}
-
-        <View style={{height: 400}} />
-      </View>
-    </ScrollView>
+      ) : null}
+      {!hasValues ? (
+        <Text
+          style={[
+            a.pt_xl,
+            t.atoms.text_contrast_high,
+            a.leading_snug,
+            a.text_sm,
+          ]}>
+          <Trans>
+            This labeler hasn't declared what labels it publishes, and may not
+            be active.
+          </Trans>
+        </Text>
+      ) : !isSubscribed ? (
+        <Text
+          style={[
+            a.pt_xl,
+            t.atoms.text_contrast_high,
+            a.leading_snug,
+            a.text_sm,
+          ]}>
+          <Trans>
+            Subscribe to @{labelerInfo.creator.handle} to use these labels:
+          </Trans>
+        </Text>
+      ) : null}
+    </View>
   )
 }

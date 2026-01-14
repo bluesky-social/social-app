@@ -1,7 +1,12 @@
-import React from 'react'
-import {StyleProp, TextStyle, View, ViewStyle} from 'react-native'
+import {
+  type LayoutChangeEvent,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 export function Header({
@@ -9,16 +14,21 @@ export function Header({
   renderRight,
   children,
   style,
+  onLayout,
 }: {
   renderLeft?: () => React.ReactNode
   renderRight?: () => React.ReactNode
   children?: React.ReactNode
   style?: StyleProp<ViewStyle>
+  onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const t = useTheme()
   return (
     <View
+      onLayout={onLayout}
       style={[
+        a.sticky,
+        a.top_0,
         a.relative,
         a.w_full,
         a.py_sm,
@@ -29,10 +39,8 @@ export function Header({
         a.border_b,
         t.atoms.border_contrast_medium,
         t.atoms.bg,
-        web([
-          {borderRadiusTopLeft: a.rounded_md.borderRadius},
-          {borderRadiusTopRight: a.rounded_md.borderRadius},
-        ]),
+        {borderTopLeftRadius: a.rounded_md.borderRadius},
+        {borderTopRightRadius: a.rounded_md.borderRadius},
         style,
       ]}>
       {renderLeft && (
@@ -54,7 +62,7 @@ export function HeaderText({
   style?: StyleProp<TextStyle>
 }) {
   return (
-    <Text style={[a.text_lg, a.text_center, a.font_bold, style]}>
+    <Text style={[a.text_lg, a.text_center, a.font_semi_bold, style]}>
       {children}
     </Text>
   )

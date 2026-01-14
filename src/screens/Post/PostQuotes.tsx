@@ -1,24 +1,28 @@
 import React from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
-import {isWeb} from '#/platform/detection'
+import {usePostQuery} from '#/state/queries/post'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {PostQuotes as PostQuotesComponent} from '#/view/com/post-thread/PostQuotes'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
 import * as Layout from '#/components/Layout'
-import {ListHeaderDesktop} from '#/components/Lists'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostQuotes'>
 export const PostQuotesScreen = ({route}: Props) => {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
-  const {_} = useLingui()
+  const {data: post} = usePostQuery(uri)
+
+  let quoteCount
+  if (post) {
+    quoteCount = post.quoteCount
+  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -28,11 +32,27 @@ export const PostQuotesScreen = ({route}: Props) => {
 
   return (
     <Layout.Screen>
-      <CenteredView sideBorders={true}>
-        <ListHeaderDesktop title={_(msg`Quotes`)} />
-        <ViewHeader title={_(msg`Quotes`)} showBorder={!isWeb} />
-        <PostQuotesComponent uri={uri} />
-      </CenteredView>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          {post && (
+            <>
+              <Layout.Header.TitleText>
+                <Trans>Quotes</Trans>
+              </Layout.Header.TitleText>
+              <Layout.Header.SubtitleText>
+                <Plural
+                  value={quoteCount ?? 0}
+                  one="# quote"
+                  other="# quotes"
+                />
+              </Layout.Header.SubtitleText>
+            </>
+          )}
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <PostQuotesComponent uri={uri} />
     </Layout.Screen>
   )
 }

@@ -3,9 +3,19 @@ interface Window {
   bluesky: {
     scan: (element?: Pick<Element, 'querySelectorAll'>) => void
   }
+  BSKY_DEV_EMBED_URL?: string
 }
 
-const EMBED_URL = 'https://embed.bsky.app'
+/**
+ * Allow url to be overwritten during development
+ */
+const IS_DEV =
+  window.location.protocol === 'file:' ||
+  window.location.hostname === 'localhost'
+const EMBED_URL =
+  IS_DEV && window.BSKY_DEV_EMBED_URL
+    ? window.BSKY_DEV_EMBED_URL
+    : 'https://embed.bsky.app'
 
 window.bluesky = window.bluesky || {
   scan,
@@ -20,6 +30,7 @@ window.addEventListener('message', event => {
     return
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const id = (event.data as {id: string}).id
   if (!id) {
     return
@@ -33,6 +44,7 @@ window.addEventListener('message', event => {
     return
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const height = (event.data as {height: number}).height
   if (height) {
     embed.style.height = `${height}px`
@@ -47,7 +59,7 @@ window.addEventListener('message', event => {
  * @returns
  */
 function scan(node = document) {
-  const embeds = node.querySelectorAll('[data-bluesky-uri]')
+  const embeds = node.querySelectorAll<HTMLIFrameElement>('[data-bluesky-uri]')
 
   for (let i = 0; i < embeds.length; i++) {
     const id = String(Math.random()).slice(2)
@@ -65,6 +77,9 @@ function scan(node = document) {
     searchParams.set('id', id)
     if (ref_url.startsWith('http')) {
       searchParams.set('ref_url', encodeURIComponent(ref_url))
+    }
+    if (embed.dataset.blueskyEmbedColorMode) {
+      searchParams.set('colorMode', embed.dataset.blueskyEmbedColorMode)
     }
 
     const iframe = document.createElement('iframe')

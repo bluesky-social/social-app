@@ -1,11 +1,20 @@
-import {ChatBskyConvoDefs} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {type ChatBskyConvoDefs} from '@atproto/api'
+import {
+  type QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {STALE} from '#/state/queries'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
+import {useOnMarkAsRead} from '#/state/queries/messages/list-conversations'
 import {useAgent} from '#/state/session'
-import {RQKEY as LIST_CONVOS_KEY} from './list-converations'
+import {
+  type ConvoListQueryData,
+  getConvoFromQueryData,
+  RQKEY_ROOT as LIST_CONVOS_KEY,
+} from './list-conversations'
 
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
@@ -16,7 +25,7 @@ export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
   return useQuery({
     queryKey: RQKEY(convo.id),
     queryFn: async () => {
-      const {data} = await agent.api.chat.bsky.convo.getConvo(
+      const {data} = await agent.chat.bsky.convo.getConvo(
         {convoId: convo.id},
         {headers: DM_SERVICE_HEADERS},
       )
@@ -25,6 +34,13 @@ export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
     initialData: convo,
     staleTime: STALE.INFINITY,
   })
+}
+
+export function precacheConvoQuery(
+  queryClient: QueryClient,
+  convo: ChatBskyConvoDefs.ConvoView,
+) {
+  queryClient.setQueryData(RQKEY(convo.id), convo)
 }
 
 export function useMarkAsReadMutation() {
@@ -57,8 +73,40 @@ export function useMarkAsReadMutation() {
       if (!convoId) throw new Error('No convoId provided')
       optimisticUpdate(convoId)
     },
-    onSettled() {
-      queryClient.invalidateQueries({queryKey: LIST_CONVOS_KEY})
+    onSuccess(_, {convoId}) {
+      if (!convoId) return
+
+      queryClient.setQueriesData(
+        {queryKey: [LIST_CONVOS_KEY]},
+        (old?: ConvoListQueryData) => {
+          if (!old) return old
+
+          const existingConvo = getConvoFromQueryData(convoId, old)
+
+          if (existingConvo) {
+            return {
+              ...old,
+              pages: old.pages.map(page => {
+                return {
+                  ...page,
+                  convos: page.convos.map(convo => {
+                    if (convo.id === convoId) {
+                      return {
+                        ...convo,
+                        unreadCount: 0,
+                      }
+                    }
+                    return convo
+                  }),
+                }
+              }),
+            }
+          } else {
+            // If we somehow marked a convo as read that doesn't exist in the
+            // list, then we don't need to do anything.
+          }
+        },
+      )
     },
   })
 }

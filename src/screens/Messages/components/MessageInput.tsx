@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
 import {
   useFocusedInputHandler,
@@ -14,19 +14,19 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import Graphemer from 'graphemer'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {useEmail} from '#/lib/hooks/useEmail'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
+import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {android, atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
@@ -58,37 +58,42 @@ export function MessageInput({
   const isInputScrollable = useSharedValue(false)
 
   const inputStyles = useSharedInputStyles()
-  const [isFocused, setIsFocused] = React.useState(false)
-  const [message, setMessage] = React.useState(getDraft)
+  const [isFocused, setIsFocused] = useState(false)
+  const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
+  const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
 
   const {needsEmailVerification} = useEmail()
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     if (needsEmailVerification) {
       return
     }
     if (!hasEmbed && message.trim() === '') {
       return
     }
-    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+    if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
     clearDraft()
     onSendMessage(message)
     playHaptic()
-    setMessage('')
     setEmbed(undefined)
-
-    // Pressing the send button causes the text input to lose focus, so we need to
-    // re-focus it after sending
-    setTimeout(() => {
-      inputRef.current?.focus()
-    }, 100)
+    setMessage('')
+    if (isIOS) {
+      setShouldEnforceClear(true)
+    }
+    if (isWeb) {
+      // Pressing the send button causes the text input to lose focus, so we need to
+      // re-focus it after sending
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 100)
+    }
   }, [
     needsEmailVerification,
     hasEmbed,
@@ -97,8 +102,8 @@ export function MessageInput({
     onSendMessage,
     playHaptic,
     setEmbed,
-    _,
     inputRef,
+    _,
   ])
 
   useFocusedInputHandler(
@@ -108,22 +113,22 @@ export function MessageInput({
         const measurement = measure(inputRef)
         if (!measurement) return
 
-        const max = windowHeight - -keyboardHeight.value - topInset - 150
+        const max = windowHeight - -keyboardHeight.get() - topInset - 150
         const availableSpace = max - measurement.height
 
-        maxHeight.value = max
-        isInputScrollable.value = availableSpace < 30
+        maxHeight.set(max)
+        isInputScrollable.set(availableSpace < 30)
       },
     },
     [windowHeight, topInset],
   )
 
   const animatedStyle = useAnimatedStyle(() => ({
-    maxHeight: maxHeight.value,
+    maxHeight: maxHeight.get(),
   }))
 
   const animatedProps = useAnimatedProps(() => ({
-    scrollEnabled: isInputScrollable.value,
+    scrollEnabled: isInputScrollable.get(),
   }))
 
   return (
@@ -149,18 +154,32 @@ export function MessageInput({
           placeholder={_(msg`Write a message`)}
           placeholderTextColor={t.palette.contrast_500}
           value={message}
+          onChange={evt => {
+            // bit of a hack: iOS automatically accepts autocomplete suggestions when you tap anywhere on the screen
+            // including the button we just pressed - and this overrides clearing the input! so we watch for the
+            // next change and double make sure the input is cleared. It should *always* send an onChange event after
+            // clearing via setMessage('') that happens in onSubmit()
+            // -sfn
+            if (isIOS && shouldEnforceClear) {
+              setShouldEnforceClear(false)
+              setMessage('')
+              return
+            }
+            const text = evt.nativeEvent.text
+            setMessage(text)
+          }}
           multiline={true}
-          onChangeText={setMessage}
           style={[
             a.flex_1,
             a.text_md,
             a.px_sm,
             t.atoms.text,
+            android({paddingTop: 0}),
             {paddingBottom: isIOS ? 5 : 0},
             animatedStyle,
           ]}
-          keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          blurOnSubmit={false}
+          keyboardAppearance={t.scheme}
+          submitBehavior="newline"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           ref={inputRef}

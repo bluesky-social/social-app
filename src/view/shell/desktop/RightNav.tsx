@@ -1,145 +1,152 @@
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {useEffect, useState} from 'react'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/core'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {s} from '#/lib/styles'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
-import {TextLink} from '#/view/com/util/Link'
-import {Text} from '#/view/com/util/text/Text'
-import {atoms as a} from '#/alf'
+import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
+import {DesktopSearch} from '#/view/shell/desktop/Search'
+import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
+import {
+  atoms as a,
+  useGutters,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
+import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
+import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
-import {DesktopFeeds} from './Feeds'
-import {DesktopSearch} from './Search'
+import {Text} from '#/components/Typography'
+
+function useWebQueryParams() {
+  const navigation = useNavigation()
+  const [params, setParams] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    return navigation.addListener('state', e => {
+      try {
+        const {state} = e.data
+        const lastRoute = state.routes[state.routes.length - 1]
+        setParams(lastRoute.params)
+      } catch (err) {}
+    })
+  }, [navigation, setParams])
+
+  return params
+}
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
-
   const kawaii = useKawaiiMode()
+  const gutters = useGutters(['base', 0, 'base', 'wide'])
+  const isSearchScreen = routeName === 'Search'
+  const webqueryParams = useWebQueryParams()
+  const searchQuery = webqueryParams?.q
+  const showTrending = !isSearchScreen || (isSearchScreen && !!searchQuery)
+  const {rightNavVisible, centerColumnOffset, leftNavMinimal} =
+    useLayoutBreakpoints()
 
-  const {isTablet} = useWebMediaQueries()
-  if (isTablet) {
+  if (!rightNavVisible) {
     return null
   }
 
-  return (
-    <View style={[styles.rightNav, pal.view]}>
-      <View style={{paddingVertical: 20}}>
-        {routeName === 'Search' ? (
-          <View style={{marginBottom: 18}}>
-            <DesktopFeeds />
-          </View>
-        ) : (
-          <>
-            <DesktopSearch />
+  const width = centerColumnOffset ? 250 : 300
 
-            {hasSession && (
-              <>
-                <ProgressGuideList style={[{marginTop: 22, marginBottom: 8}]} />
-                <View style={[pal.border, styles.desktopFeedsContainer]}>
-                  <DesktopFeeds />
-                </View>
-              </>
-            )}
+  return (
+    <View
+      style={[
+        gutters,
+        a.gap_lg,
+        a.pr_2xs,
+        web({
+          position: 'fixed',
+          left: '50%',
+          transform: [
+            {
+              translateX: 300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
+            },
+            ...a.scrollbar_offset.transform,
+          ],
+          /**
+           * Compensate for the right padding above (2px) to retain intended width.
+           */
+          width: width + gutters.paddingLeft + 2,
+          maxHeight: '100vh',
+        }),
+      ]}>
+      {!isSearchScreen && <DesktopSearch />}
+
+      {hasSession && (
+        <>
+          <DesktopFeeds />
+          <ProgressGuideList />
+        </>
+      )}
+
+      {showTrending && <SidebarTrendingTopics />}
+
+      <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
+        {hasSession && (
+          <>
+            <InlineLinkText
+              to={FEEDBACK_FORM_URL({
+                email: currentAccount?.email,
+                handle: currentAccount?.handle,
+              })}
+              style={[t.atoms.text_contrast_medium]}
+              label={_(msg`Feedback`)}>
+              {_(msg`Feedback`)}
+            </InlineLinkText>
+            <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
           </>
         )}
+        <InlineLinkText
+          to="https://bsky.social/about/support/privacy-policy"
+          style={[t.atoms.text_contrast_medium]}
+          label={_(msg`Privacy`)}>
+          {_(msg`Privacy`)}
+        </InlineLinkText>
+        <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
+        <InlineLinkText
+          to="https://bsky.social/about/support/tos"
+          style={[t.atoms.text_contrast_medium]}
+          label={_(msg`Terms`)}>
+          {_(msg`Terms`)}
+        </InlineLinkText>
+        <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
+        <InlineLinkText
+          label={_(msg`Help`)}
+          to={HELP_DESK_URL}
+          style={[t.atoms.text_contrast_medium]}>
+          {_(msg`Help`)}
+        </InlineLinkText>
+      </Text>
 
-        <View
-          style={[
-            styles.message,
-            {
-              paddingTop: hasSession ? 0 : 18,
-            },
-          ]}>
-          <View style={[{flexWrap: 'wrap'}, s.flexRow, a.gap_xs]}>
-            {hasSession && (
-              <>
-                <TextLink
-                  type="md"
-                  style={pal.link}
-                  href={FEEDBACK_FORM_URL({
-                    email: currentAccount?.email,
-                    handle: currentAccount?.handle,
-                  })}
-                  text={_(msg`Feedback`)}
-                />
-                <Text type="md" style={pal.textLight}>
-                  &middot;
-                </Text>
-              </>
-            )}
-            <TextLink
-              type="md"
-              style={pal.link}
-              href="https://bsky.social/about/support/privacy-policy"
-              text={_(msg`Privacy`)}
-            />
-            <Text type="md" style={pal.textLight}>
-              &middot;
-            </Text>
-            <TextLink
-              type="md"
-              style={pal.link}
-              href="https://bsky.social/about/support/tos"
-              text={_(msg`Terms`)}
-            />
-            <Text type="md" style={pal.textLight}>
-              &middot;
-            </Text>
-            <TextLink
-              type="md"
-              style={pal.link}
-              href={HELP_DESK_URL}
-              text={_(msg`Help`)}
-            />
-          </View>
-          {kawaii && (
-            <Text type="md" style={[pal.textLight, {marginTop: 12}]}>
-              <Trans>
-                Logo by{' '}
-                <TextLink
-                  type="md"
-                  href="/profile/sawaratsuki.bsky.social"
-                  text="@sawaratsuki.bsky.social"
-                  style={pal.link}
-                />
-              </Trans>
-            </Text>
-          )}
+      {kawaii && (
+        <Text style={[t.atoms.text_contrast_medium, {marginTop: 12}]}>
+          <Trans>
+            Logo by{' '}
+            <InlineLinkText
+              label={_(msg`Logo by @sawaratsuki.bsky.social`)}
+              to="/profile/sawaratsuki.bsky.social">
+              @sawaratsuki.bsky.social
+            </InlineLinkText>
+          </Trans>
+        </Text>
+      )}
+
+      {!hasSession && leftNavMinimal && (
+        <View style={[a.w_full, {height: 32}]}>
+          <AppLanguageDropdown />
         </View>
-      </View>
+      )}
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  rightNav: {
-    // @ts-ignore web only
-    position: 'fixed',
-    // @ts-ignore web only
-    left: 'calc(50vw + 300px + 20px)',
-    width: 300,
-    maxHeight: '100%',
-    overflowY: 'auto',
-  },
-
-  message: {
-    paddingVertical: 18,
-    paddingHorizontal: 12,
-  },
-  messageLine: {
-    marginBottom: 10,
-  },
-  desktopFeedsContainer: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    marginTop: 18,
-    marginBottom: 18,
-  },
-})

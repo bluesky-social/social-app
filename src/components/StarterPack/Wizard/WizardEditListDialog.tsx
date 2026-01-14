@@ -1,16 +1,21 @@
-import React, {useRef} from 'react'
-import type {ListRenderItemInfo} from 'react-native'
+import {useRef} from 'react'
+import {type ListRenderItemInfo} from 'react-native'
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type ModerationOpts,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isWeb} from '#/platform/detection'
-import {useSession} from '#/state/session'
-import {ListMethods} from '#/view/com/util/List'
-import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
+import {type ListMethods} from '#/view/com/util/List'
+import {
+  type WizardAction,
+  type WizardState,
+} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -21,7 +26,7 @@ import {
 import {Text} from '#/components/Typography'
 
 function keyExtractor(
-  item: AppBskyActorDefs.ProfileViewBasic | GeneratorView,
+  item: AppBskyActorDefs.ProfileViewBasic | AppBskyFeedDefs.GeneratorView,
   index: number,
 ) {
   return `${item.did}-${index}`
@@ -38,11 +43,10 @@ export function WizardEditListDialog({
   state: WizardState
   dispatch: (action: WizardAction) => void
   moderationOpts: ModerationOpts
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
 
   const listRef = useRef<ListMethods>(null)
@@ -50,10 +54,7 @@ export function WizardEditListDialog({
   const getData = () => {
     if (state.currentStep === 'Feeds') return state.feeds
 
-    return [
-      profile,
-      ...state.profiles.filter(p => p.did !== currentAccount?.did),
-    ]
+    return [profile, ...state.profiles.filter(p => p.did !== profile.did)]
   }
 
   const renderItem = ({item}: ListRenderItemInfo<any>) =>
@@ -104,7 +105,7 @@ export function WizardEditListDialog({
                 : [a.pb_sm, a.align_end],
             ]}>
             <View style={{width: 60}} />
-            <Text style={[a.font_bold, a.text_xl]}>
+            <Text style={[a.font_semi_bold, a.text_xl]}>
               {state.currentStep === 'Profiles' ? (
                 <Trans>Edit People</Trans>
               ) : (

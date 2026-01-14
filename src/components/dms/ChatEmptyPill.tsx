@@ -42,12 +42,12 @@ export function ChatEmptyPill() {
 
   const onPressIn = React.useCallback(() => {
     if (isWeb) return
-    scale.value = withTiming(1.075, {duration: 100})
+    scale.set(() => withTiming(1.075, {duration: 100}))
   }, [scale])
 
   const onPressOut = React.useCallback(() => {
     if (isWeb) return
-    scale.value = withTiming(1, {duration: 100})
+    scale.set(() => withTiming(1, {duration: 100}))
   }, [scale])
 
   const onPress = React.useCallback(() => {
@@ -61,7 +61,7 @@ export function ChatEmptyPill() {
   }, [playHaptic, prompts.length])
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{scale: scale.value}],
+    transform: [{scale: scale.get()}],
   }))
 
   return (
@@ -89,7 +89,9 @@ export function ChatEmptyPill() {
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}>
-        <Text style={[a.font_bold, a.pointer_events_none]} selectable={false}>
+        <Text
+          style={[a.font_semi_bold, a.pointer_events_none]}
+          selectable={false}>
           {prompts[promptIndex]}
         </Text>
       </AnimatedPressable>

@@ -1,22 +1,33 @@
-import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {cloneElement, Fragment, isValidElement, useMemo} from 'react'
+import {
+  Pressable,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {isNative} from '#/platform/detection'
+import {isAndroid, isIOS, isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Context, ItemContext} from '#/components/Menu/context'
 import {
-  ContextType,
-  GroupProps,
-  ItemIconProps,
-  ItemProps,
-  ItemTextProps,
-  TriggerProps,
+  Context,
+  ItemContext,
+  useMenuContext,
+  useMenuItemContext,
+} from '#/components/Menu/context'
+import {
+  type ContextType,
+  type GroupProps,
+  type ItemIconProps,
+  type ItemProps,
+  type ItemTextProps,
+  type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 
@@ -25,18 +36,16 @@ export {
   useDialogControl as useMenuControl,
 } from '#/components/Dialog'
 
-export function useMemoControlContext() {
-  return React.useContext(Context)
-}
+export {useMenuContext}
 
 export function Root({
   children,
   control,
 }: React.PropsWithChildren<{
-  control?: Dialog.DialogOuterProps['control']
+  control?: Dialog.DialogControlProps
 }>) {
   const defaultControl = Dialog.useDialogControl()
-  const context = React.useMemo<ContextType>(
+  const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
     }),
@@ -46,8 +55,13 @@ export function Root({
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
-export function Trigger({children, label, role = 'button'}: TriggerProps) {
-  const {control} = React.useContext(Context)
+export function Trigger({
+  children,
+  label,
+  role = 'button',
+  hint,
+}: TriggerProps) {
+  const context = useMenuContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -57,18 +71,20 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
 
   return children({
     isNative: true,
-    control,
+    control: context.control,
     state: {
       hovered: false,
       focused,
       pressed,
     },
     props: {
-      onPress: control.open,
+      ref: null,
+      onPress: context.control.open,
       onFocus,
       onBlur,
       onPressIn,
       onPressOut,
+      accessibilityHint: hint,
       accessibilityLabel: label,
       accessibilityRole: role,
     },
@@ -82,7 +98,7 @@ export function Outer({
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
 }>) {
-  const context = React.useContext(Context)
+  const context = useMenuContext()
   const {_} = useLingui()
 
   return (
@@ -92,7 +108,7 @@ export function Outer({
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner label={_(msg`Menu`)} style={[a.py_sm]}>
+        <Dialog.ScrollableInner label={_(msg`Menu`)}>
           <View style={[a.gap_lg]}>
             {children}
             {isNative && showCancel && <Cancel />}
@@ -105,7 +121,7 @@ export function Outer({
 
 export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
-  const {control} = React.useContext(Context)
+  const context = useMenuContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -121,9 +137,20 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       onFocus={onFocus}
       onBlur={onBlur}
       onPress={async e => {
-        await onPress(e)
-        if (!e.defaultPrevented) {
-          control?.close()
+        if (isAndroid) {
+          /**
+           * Below fix for iOS doesn't work for Android, this does.
+           */
+          onPress?.(e)
+          context.control.close()
+        } else if (isIOS) {
+          /**
+           * Fixes a subtle bug on iOS
+           * {@link https://github.com/bluesky-social/social-app/pull/5849/files#diff-de516ef5e7bd9840cd639213301df38cf03acfcad5bda85a1d63efd249ba79deL124-L127}
+           */
+          context.control.close(() => {
+            onPress?.(e)
+          })
         }
       }}
       onPressIn={e => {
@@ -156,7 +183,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <Text
       numberOfLines={1}
@@ -164,7 +191,7 @@ export function ItemText({children, style}: ItemTextProps) {
       style={[
         a.flex_1,
         a.text_md,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_high,
         {paddingTop: 3},
         style,
@@ -177,7 +204,7 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <Comp
       size="lg"
@@ -187,6 +214,92 @@ export function ItemIcon({icon: Comp}: ItemIconProps) {
           : t.atoms.text_contrast_medium.color
       }
     />
+  )
+}
+
+export function ItemRadio({selected}: {selected: boolean}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.justify_center,
+        a.align_center,
+        a.rounded_full,
+        t.atoms.border_contrast_high,
+        {
+          borderWidth: 1,
+          height: 20,
+          width: 20,
+        },
+      ]}>
+      {selected ? (
+        <View
+          style={[
+            a.absolute,
+            a.rounded_full,
+            {height: 14, width: 14},
+            selected
+              ? {
+                  backgroundColor: t.palette.primary_500,
+                }
+              : {},
+          ]}
+        />
+      ) : null}
+    </View>
+  )
+}
+
+/**
+ * NATIVE ONLY - for adding non-pressable items to the menu
+ *
+ * @platform ios, android
+ */
+export function ContainerItem({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.px_md,
+        a.rounded_md,
+        a.border,
+        t.atoms.bg_contrast_25,
+        t.atoms.border_contrast_low,
+        {paddingVertical: 10},
+        style,
+      ]}>
+      {children}
+    </View>
+  )
+}
+
+export function LabelText({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<TextStyle>
+}) {
+  const t = useTheme()
+  return (
+    <Text
+      style={[
+        a.font_semi_bold,
+        t.atoms.text_contrast_medium,
+        {marginBottom: -8},
+        style,
+      ]}>
+      {children}
+    </Text>
   )
 }
 
@@ -202,19 +315,20 @@ export function Group({children, style}: GroupProps) {
         style,
       ]}>
       {flattenReactChildren(children).map((child, i) => {
-        return React.isValidElement(child) && child.type === Item ? (
-          <React.Fragment key={i}>
+        return isValidElement(child) &&
+          (child.type === Item || child.type === ContainerItem) ? (
+          <Fragment key={i}>
             {i > 0 ? (
               <View style={[a.border_b, t.atoms.border_contrast_low]} />
             ) : null}
-            {React.cloneElement(child, {
-              // @ts-ignore
+            {cloneElement(child, {
+              // @ts-expect-error cloneElement is not aware of the types
               style: {
                 borderRadius: 0,
                 borderWidth: 0,
               },
             })}
-          </React.Fragment>
+          </Fragment>
         ) : null
       })}
     </View>
@@ -223,7 +337,7 @@ export function Group({children, style}: GroupProps) {
 
 function Cancel() {
   const {_} = useLingui()
-  const {control} = React.useContext(Context)
+  const context = useMenuContext()
 
   return (
     <Button
@@ -231,7 +345,7 @@ function Cancel() {
       size="small"
       variant="ghost"
       color="secondary"
-      onPress={() => control.close()}>
+      onPress={() => context.control.close()}>
       <ButtonText>
         <Trans>Cancel</Trans>
       </ButtonText>

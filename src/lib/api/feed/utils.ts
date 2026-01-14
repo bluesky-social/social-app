@@ -2,7 +2,7 @@ import {AtUri} from '@atproto/api'
 
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {isWeb} from '#/platform/detection'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
 
 let debugTopics = ''
 if (isWeb && typeof window !== 'undefined') {

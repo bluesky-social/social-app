@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -88,22 +89,20 @@ class GifView(
         .listener(
           object : RequestListener<Drawable> {
             override fun onResourceReady(
-              resource: Drawable?,
-              model: Any?,
+              resource: Drawable,
+              model: Any,
               target: Target<Drawable>?,
-              dataSource: com.bumptech.glide.load.DataSource?,
+              dataSource: DataSource,
               isFirstResource: Boolean,
             ): Boolean {
-              if (placeholderRequest != null) {
-                glide.clear(placeholderRequest)
-              }
+              placeholderRequest?.let { glide.clear(it) }
               return false
             }
 
             override fun onLoadFailed(
               e: GlideException?,
               model: Any?,
-              target: Target<Drawable>?,
+              target: Target<Drawable>,
               isFirstResource: Boolean,
             ): Boolean = true
           },
@@ -119,14 +118,15 @@ class GifView(
           .listener(
             object : RequestListener<Drawable> {
               override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
+                resource: Drawable,
+                model: Any,
                 target: Target<Drawable>?,
-                dataSource: com.bumptech.glide.load.DataSource?,
+                dataSource: DataSource,
                 isFirstResource: Boolean,
               ): Boolean {
                 // Incase this request finishes after the webp, let's just not set
-                // the drawable. This shouldn't happen because the request should get cancelled
+                // the drawable. This shouldn't happen because the request should
+                // get cancelled
                 if (imageView.drawable == null) {
                   imageView.setImageDrawable(resource)
                 }
@@ -136,7 +136,7 @@ class GifView(
               override fun onLoadFailed(
                 e: GlideException?,
                 model: Any?,
-                target: Target<Drawable>?,
+                target: Target<Drawable>,
                 isFirstResource: Boolean,
               ): Boolean = true
             },

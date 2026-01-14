@@ -1,4 +1,11 @@
-import React, {useRef} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
@@ -11,71 +18,49 @@ import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
-import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
+import {Fragment, Node, Slice} from '@tiptap/pm/model'
+import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
+import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {
-  LinkFacetMatch,
+  type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a, useAlf} from '#/alf'
+import {normalizeTextStyles} from '#/alf/typography'
 import {Portal} from '#/components/Portal'
-import {normalizeTextStyles} from '#/components/Typography'
-import {Text} from '../../util/text/Text'
-import {createSuggestion} from './web/Autocomplete'
-import {Emoji} from './web/EmojiPicker.web'
+import {Text} from '#/components/Typography'
+import {type TextInputProps} from './TextInput.types'
+import {type AutocompleteRef, createSuggestion} from './web/Autocomplete'
+import {type Emoji} from './web/EmojiPicker'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
-export interface TextInputRef {
-  focus: () => void
-  blur: () => void
-  getCursorPosition: () => DOMRect | undefined
-}
-
-interface TextInputProps {
-  richtext: RichText
-  placeholder: string
-  suggestedLinks: Set<string>
-  webForceMinHeight: boolean
-  hasRightPadding: boolean
-  isActive: boolean
-  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
-  onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => void
-  onNewLink: (uri: string) => void
-  onError: (err: string) => void
-  onFocus: () => void
-}
-
-export const TextInput = React.forwardRef(function TextInputImpl(
-  {
-    richtext,
-    placeholder,
-    webForceMinHeight,
-    hasRightPadding,
-    isActive,
-    setRichText,
-    onPhotoPasted,
-    onPressPublish,
-    onNewLink,
-    onFocus,
-  }: // onError, TODO
-  TextInputProps,
+export function TextInput({
   ref,
-) {
+  richtext,
+  placeholder,
+  webForceMinHeight,
+  hasRightPadding,
+  isActive,
+  setRichText,
+  onPhotoPasted,
+  onPressPublish,
+  onNewLink,
+  onFocus,
+}: TextInputProps) {
   const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
-  const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
 
-  const [isDropping, setIsDropping] = React.useState(false)
+  const [isDropping, setIsDropping] = useState(false)
+  const autocompleteRef = useRef<AutocompleteRef>(null)
 
-  const extensions = React.useMemo(
+  const extensions = useMemo(
     () => [
       Document,
       LinkDecorator,
@@ -84,7 +69,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         HTMLAttributes: {
           class: 'mention',
         },
-        suggestion: createSuggestion({autocomplete}),
+        suggestion: createSuggestion({autocomplete, autocompleteRef}),
       }),
       Paragraph,
       Placeholder.configure({
@@ -97,7 +82,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [autocomplete, placeholder],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isActive) {
       return
     }
@@ -107,7 +92,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [onPressPublish, isActive])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isActive) {
       return
     }
@@ -117,7 +102,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [isActive, onPhotoPasted])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isActive) {
       return
     }
@@ -166,12 +151,31 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   const editor = useEditor(
     {
       extensions,
+      coreExtensionOptions: {
+        clipboardTextSerializer: {
+          blockSeparator: '\n',
+        },
+      },
       onFocus() {
         onFocus?.()
       },
       editorProps: {
         attributes: {
           class: modeClass,
+        },
+        clipboardTextParser: (text, context) => {
+          const blocks = text.split(/(?:\r\n?|\n)/)
+          const nodes: Node[] = blocks.map(line => {
+            return Node.fromJSON(
+              context.doc.type.schema,
+              line.length > 0
+                ? {type: 'paragraph', content: [{type: 'text', text: line}]}
+                : {type: 'paragraph', content: []},
+            )
+          })
+
+          const fragment = Fragment.fromArray(nodes)
+          return Slice.maxOpen(fragment)
         },
         handlePaste: (view, event) => {
           const clipboardData = event.clipboardData
@@ -194,17 +198,56 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             }
           }
         },
-        handleKeyDown: (_, event) => {
+        handleKeyDown: (view, event) => {
           if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
             textInputWebEmitter.emit('publish')
             return true
           }
+
+          if (
+            event.code === 'Backspace' &&
+            !(event.metaKey || event.altKey || event.ctrlKey)
+          ) {
+            const isNotSelection = view.state.selection.empty
+            if (isNotSelection) {
+              const cursorPosition = view.state.selection.$anchor.pos
+              const textBefore = view.state.doc.textBetween(
+                0,
+                cursorPosition,
+                // important - use \n as a block separator, otherwise
+                // all the lines get mushed together -sfn
+                '\n',
+              )
+              const graphemes = [...splitGraphemes(textBefore)]
+
+              if (graphemes.length > 0) {
+                const lastGrapheme = graphemes[graphemes.length - 1]
+                // deleteRange doesn't work on newlines, because tiptap
+                // treats them as separate 'blocks' and we're using \n
+                // as a stand-in. bail out if the last grapheme is a newline
+                // to let the default behavior handle it -sfn
+                if (lastGrapheme !== '\n') {
+                  // otherwise, delete the last grapheme using deleteRange,
+                  // so that emojis are deleted as a whole
+                  const deleteFrom = cursorPosition - lastGrapheme.length
+                  editor?.commands.deleteRange({
+                    from: deleteFrom,
+                    to: cursorPosition,
+                  })
+                  return true
+                }
+              }
+            }
+          }
         },
       },
-      content: generateJSON(richtext.text.toString(), extensions),
+      content: generateJSON(richtext.text.toString(), extensions, {
+        preserveWhitespace: 'full',
+      }),
       autofocus: 'end',
       editable: true,
       injectCSS: true,
+      shouldRerenderOnTransaction: false,
       onCreate({editor: editorProp}) {
         // HACK
         // the 'enter' animation sometimes causes autofocus to fail
@@ -250,13 +293,13 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [modeClass],
   )
 
-  const onEmojiInserted = React.useCallback(
+  const onEmojiInserted = useCallback(
     (emoji: Emoji) => {
       editor?.chain().focus().insertContent(emoji.native).run()
     },
     [editor],
   )
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isActive) {
       return
     }
@@ -266,7 +309,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [onEmojiInserted, isActive])
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     focus: () => {
       editor?.chain().focus()
     },
@@ -277,9 +320,10 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       const pos = editor?.state.selection.$anchor.pos
       return pos ? editor?.view.coordsAtPos(pos) : undefined
     },
+    maybeClosePopup: () => autocompleteRef.current?.maybeClose() ?? false,
   }))
 
-  const inputStyle = React.useMemo(() => {
+  const inputStyle = useMemo(() => {
     const style = normalizeTextStyles(
       [a.text_lg, a.leading_snug, t.atoms.text],
       {
@@ -297,15 +341,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     style.lineHeight = style.lineHeight
       ? ((style.lineHeight + 'px') as unknown as number)
       : undefined
+    style.minHeight = webForceMinHeight ? 140 : undefined
     return style
-  }, [t, fonts])
-
-  React.useLayoutEffect(() => {
-    let node = editor?.view.dom
-    if (node) {
-      node.style.minHeight = webForceMinHeight ? '140px' : ''
-    }
-  }, [editor, webForceMinHeight])
+  }, [t, fonts, webForceMinHeight])
 
   return (
     <>
@@ -320,10 +358,20 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             style={styles.dropContainer}
             entering={FadeIn.duration(80)}
             exiting={FadeOut.duration(80)}>
-            <View style={[pal.view, pal.border, styles.dropModal]}>
+            <View
+              style={[
+                t.atoms.bg,
+                t.atoms.border_contrast_low,
+                styles.dropModal,
+              ]}>
               <Text
-                type="lg"
-                style={[pal.text, pal.borderDark, styles.dropText]}>
+                style={[
+                  a.text_lg,
+                  a.font_semi_bold,
+                  t.atoms.text_contrast_medium,
+                  t.atoms.border_contrast_high,
+                  styles.dropText,
+                ]}>
                 <Trans>Drop to add images</Trans>
               </Text>
             </View>
@@ -332,7 +380,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       )}
     </>
   )
-})
+}
 
 function editorJsonToText(
   json: JSONContent,

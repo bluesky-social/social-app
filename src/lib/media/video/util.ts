@@ -1,6 +1,6 @@
 import {AtpAgent} from '@atproto/api'
 
-import {SupportedMimeTypes, VIDEO_SERVICE} from '#/lib/constants'
+import {type SupportedMimeTypes, VIDEO_SERVICE} from '#/lib/constants'
 
 export const createVideoEndpointUrl = (
   route: string,
@@ -32,13 +32,15 @@ export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {
       return 'mpeg'
     case 'video/quicktime':
       return 'mov'
+    case 'image/gif':
+      return 'gif'
     default:
       throw new Error(`Unsupported mime type: ${mimeType}`)
   }
 }
 
 export function extToMime(ext: string) {
-  switch (ext) {
+  switch (ext.toLowerCase()) {
     case 'mp4':
       return 'video/mp4'
     case 'webm':
@@ -47,6 +49,8 @@ export function extToMime(ext: string) {
       return 'video/mpeg'
     case 'mov':
       return 'video/quicktime'
+    case 'gif':
+      return 'image/gif'
     default:
       throw new Error(`Unsupported file extension: ${ext}`)
   }

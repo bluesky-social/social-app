@@ -1,24 +1,26 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {
-  AppBskyActorDefs,
-  AppBskyGraphGetActorStarterPacks,
+  type AppBskyActorDefs,
   moderateProfile,
-  ModerationOpts,
+  type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
-import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {combinedDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isInvalidHandle} from '#/lib/strings/handles'
@@ -26,25 +28,27 @@ import {colors, s} from '#/lib/styles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
-import {useComposerControls} from '#/state/shell/composer'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
 import {ProfileLists} from '#/view/com/lists/ProfileLists'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
-import {ListRef} from '#/view/com/util/List'
-import {CenteredView} from '#/view/com/util/Views'
+import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {web} from '#/alf'
+import {atoms as a} from '#/alf'
+import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
+import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
+import {Image_Stroke1_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
+import {Message_Stroke1_Corner0_Rounded_Filled as MessageIcon} from '#/components/icons/Message'
+import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons/VideoClip'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
@@ -58,7 +62,7 @@ interface SectionRef {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen(props: Props) {
   return (
-    <Layout.Screen testID="profileScreen">
+    <Layout.Screen testID="profileScreen" style={[a.pt_0]}>
       <ProfileScreenInner {...props} />
     </Layout.Screen>
   )
@@ -86,7 +90,6 @@ function ProfileScreenInner({route}: Props) {
   } = useProfileQuery({
     did: resolvedDid,
   })
-  const starterPacksQuery = useActorStarterPacksQuery({did: resolvedDid})
 
   const onPressTryAgain = React.useCallback(() => {
     if (resolveError) {
@@ -114,29 +117,30 @@ function ProfileScreenInner({route}: Props) {
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile || starterPacksQuery.isLoading) {
+  if (isLoadingDid || isLoadingProfile) {
     return (
-      <CenteredView sideBorders style={web({height: '100vh'})}>
+      <Layout.Content>
         <ProfileHeaderLoading />
-      </CenteredView>
+      </Layout.Content>
     )
   }
   if (resolveError || profileError) {
     return (
-      <ErrorScreen
-        testID="profileErrorScreen"
-        title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
-        message={cleanError(resolveError || profileError)}
-        onPressTryAgain={onPressTryAgain}
-        showHeader
-      />
+      <SafeAreaView style={[a.flex_1]}>
+        <ErrorScreen
+          testID="profileErrorScreen"
+          title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
+          message={cleanError(resolveError || profileError)}
+          onPressTryAgain={onPressTryAgain}
+          showHeader
+        />
+      </SafeAreaView>
     )
   }
   if (profile && moderationOpts) {
     return (
       <ProfileScreenLoaded
         profile={profile}
-        starterPacksQuery={starterPacksQuery}
         moderationOpts={moderationOpts}
         isPlaceholderProfile={isPlaceholderProfile}
         hideBackButton={!!route.params.hideBackButton}
@@ -145,13 +149,15 @@ function ProfileScreenInner({route}: Props) {
   }
   // should never happen
   return (
-    <ErrorScreen
-      testID="profileErrorScreen"
-      title="Oops!"
-      message="Something went wrong and we're not sure what."
-      onPressTryAgain={onPressTryAgain}
-      showHeader
-    />
+    <SafeAreaView style={[a.flex_1]}>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title="Oops!"
+        message="Something went wrong and we're not sure what."
+        onPressTryAgain={onPressTryAgain}
+        showHeader
+      />
+    </SafeAreaView>
   )
 }
 
@@ -160,21 +166,18 @@ function ProfileScreenLoaded({
   isPlaceholderProfile,
   moderationOpts,
   hideBackButton,
-  starterPacksQuery,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hideBackButton: boolean
   isPlaceholderProfile: boolean
-  starterPacksQuery: UseInfiniteQueryResult<
-    InfiniteData<AppBskyGraphGetActorStarterPacks.OutputSchema, unknown>,
-    Error
-  >
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
+  const navigation = useNavigation<NavigationProp>()
+  const requireEmailVerification = useRequireEmailVerification()
   const {
     data: labelerInfo,
     error: labelerError,
@@ -185,13 +188,13 @@ function ProfileScreenLoaded({
   })
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
   const postsSectionRef = React.useRef<SectionRef>(null)
   const repliesSectionRef = React.useRef<SectionRef>(null)
   const mediaSectionRef = React.useRef<SectionRef>(null)
+  const videosSectionRef = React.useRef<SectionRef>(null)
   const likesSectionRef = React.useRef<SectionRef>(null)
   const feedsSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
@@ -215,12 +218,15 @@ function ProfileScreenLoaded({
   const showPostsTab = true
   const showRepliesTab = hasSession
   const showMediaTab = !hasLabeler
+  const showVideosTab = !hasLabeler
   const showLikesTab = isMe
-  const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
-  const showStarterPacksTab =
-    isMe || !!starterPacksQuery.data?.pages?.[0].starterPacks.length
-  const showListsTab =
-    hasSession && (isMe || (profile.associated?.lists || 0) > 0)
+  const feedGenCount = profile.associated?.feedgens || 0
+  const showFeedsTab = isMe || feedGenCount > 0
+  const starterPackCount = profile.associated?.starterPacks || 0
+  const showStarterPacksTab = isMe || starterPackCount > 0
+  // subtract starterpack count from list count, since starterpacks are a type of list
+  const listCount = (profile.associated?.lists || 0) - starterPackCount
+  const showListsTab = hasSession && (isMe || listCount > 0)
 
   const sectionTitles = [
     showFiltersTab ? _(msg`Labels`) : undefined,
@@ -228,6 +234,7 @@ function ProfileScreenLoaded({
     showPostsTab ? _(msg`Posts`) : undefined,
     showRepliesTab ? _(msg`Replies`) : undefined,
     showMediaTab ? _(msg`Media`) : undefined,
+    showVideosTab ? _(msg`Videos`) : undefined,
     showLikesTab ? _(msg`Likes`) : undefined,
     showFeedsTab ? _(msg`Feeds`) : undefined,
     showStarterPacksTab ? _(msg`Starter Packs`) : undefined,
@@ -239,6 +246,7 @@ function ProfileScreenLoaded({
   let postsIndex: number | null = null
   let repliesIndex: number | null = null
   let mediaIndex: number | null = null
+  let videosIndex: number | null = null
   let likesIndex: number | null = null
   let feedsIndex: number | null = null
   let starterPacksIndex: number | null = null
@@ -254,6 +262,9 @@ function ProfileScreenLoaded({
   }
   if (showMediaTab) {
     mediaIndex = nextIndex++
+  }
+  if (showVideosTab) {
+    videosIndex = nextIndex++
   }
   if (showLikesTab) {
     likesIndex = nextIndex++
@@ -278,6 +289,8 @@ function ProfileScreenLoaded({
         repliesSectionRef.current?.scrollToTop()
       } else if (index === mediaIndex) {
         mediaSectionRef.current?.scrollToTop()
+      } else if (index === videosIndex) {
+        videosSectionRef.current?.scrollToTop()
       } else if (index === likesIndex) {
         likesSectionRef.current?.scrollToTop()
       } else if (index === feedsIndex) {
@@ -293,6 +306,7 @@ function ProfileScreenLoaded({
       postsIndex,
       repliesIndex,
       mediaIndex,
+      videosIndex,
       likesIndex,
       feedsIndex,
       listsIndex,
@@ -307,15 +321,6 @@ function ProfileScreenLoaded({
         scrollSectionToTop(currentPage)
       })
     }, [setMinimalShellMode, currentPage, scrollSectionToTop]),
-  )
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setDrawerSwipeDisabled(currentPage > 0)
-      return () => {
-        setDrawerSwipeDisabled(false)
-      }
-    }, [setDrawerSwipeDisabled, currentPage]),
   )
 
   // events
@@ -338,10 +343,25 @@ function ProfileScreenLoaded({
     scrollSectionToTop(index)
   }
 
+  const navToWizard = useCallback(() => {
+    navigation.navigate('StarterPackWizard', {})
+  }, [navigation])
+  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
+    instructions: [
+      <Trans key="nav">
+        Before creating a starter pack, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
   // rendering
   // =
 
-  const renderHeader = () => {
+  const renderHeader = ({
+    setMinimumHeight,
+  }: {
+    setMinimumHeight: (height: number) => void
+  }) => {
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
@@ -351,6 +371,7 @@ function ProfileScreenLoaded({
           moderationOpts={moderationOpts}
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
+          setMinimumHeight={setMinimumHeight}
         />
       </ExpoScrollForwarderView>
     )
@@ -407,6 +428,18 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No posts yet`)}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Write a post`),
+                        text: _(msg`Write a post`),
+                        onPress: () => openComposer({}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
               />
             )
           : null}
@@ -420,6 +453,8 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No replies yet`)}
+                emptyStateIcon={MessageIcon}
               />
             )
           : null}
@@ -433,6 +468,45 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No media yet`)}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Post a photo`),
+                        text: _(msg`Post a photo`),
+                        onPress: () => openComposer({}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
+                emptyStateIcon={ImageIcon}
+              />
+            )
+          : null}
+        {showVideosTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileFeedSection
+                ref={videosSectionRef}
+                feed={`author|${profile.did}|posts_with_video`}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No video posts yet`)}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Post a video`),
+                        text: _(msg`Post a video`),
+                        onPress: () => openComposer({}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
+                emptyStateIcon={VideoIcon}
               />
             )
           : null}
@@ -446,6 +520,8 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No likes yet`)}
+                emptyStateIcon={HeartIcon}
               />
             )
           : null}
@@ -465,12 +541,31 @@ function ProfileScreenLoaded({
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileStarterPacks
                 ref={starterPacksSectionRef}
+                did={profile.did}
                 isMe={isMe}
-                starterPacksQuery={starterPacksQuery}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
                 enabled={isFocused}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={
+                  isMe
+                    ? _(
+                        msg`Starter Packs let you share your favorite feeds and people with your friends.`,
+                      )
+                    : _(msg`No Starter Packs yet`)
+                }
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Create a Starter Pack`),
+                        text: _(msg`Create a Starter Pack`),
+                        onPress: wrappedNavToWizard,
+                        color: 'primary',
+                        size: 'small',
+                      }
+                    : undefined
+                }
+                emptyStateIcon={CircleAndSquareIcon}
               />
             )
           : null}

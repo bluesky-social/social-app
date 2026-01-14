@@ -10,6 +10,7 @@ const PostProgressContext = React.createContext<PostProgressState>({
   progress: 0,
   status: 'idle',
 })
+PostProgressContext.displayName = 'PostProgressContext'
 
 export function Provider() {}
 

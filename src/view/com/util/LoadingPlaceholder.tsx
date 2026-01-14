@@ -1,16 +1,14 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {
-  DimensionValue,
-  StyleProp,
+  type DimensionValue,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {s} from '#/lib/styles'
-import {useTheme} from '#/lib/ThemeContext'
-import {atoms as a, useTheme as useTheme_NEW} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
@@ -24,10 +22,10 @@ export function LoadingPlaceholder({
   style,
 }: {
   width: DimensionValue
-  height: DimensionValue
+  height: DimensionValue | undefined
   style?: StyleProp<ViewStyle>
 }) {
-  const theme = useTheme()
+  const t = useTheme()
   return (
     <View
       style={[
@@ -35,7 +33,7 @@ export function LoadingPlaceholder({
         {
           width,
           height,
-          backgroundColor: theme.palette.default.backgroundLight,
+          backgroundColor: t.palette.contrast_50,
         },
         style,
       ]}
@@ -48,10 +46,9 @@ export function PostLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const t = useTheme_NEW()
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
-    <View style={[styles.post, pal.view, style]}>
+    <View style={[styles.post, style]}>
       <LoadingPlaceholder
         width={42}
         height={42}
@@ -137,20 +134,17 @@ export function NotificationLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
-    <View style={[styles.notification, pal.view, style]}>
-      <View style={[{width: 70}, a.align_end, a.pr_sm, a.pt_2xs]}>
-        <HeartIconFilled
-          size="xl"
-          style={{color: pal.colors.backgroundLight}}
-        />
+    <View style={[styles.notification, style]}>
+      <View style={[{width: 60}, a.align_end, a.pr_sm, a.pt_2xs]}>
+        <HeartIconFilled size="xl" style={{color: t.palette.contrast_50}} />
       </View>
       <View style={{flex: 1}}>
         <View style={[a.flex_row, s.mb10]}>
           <LoadingPlaceholder
-            width={30}
-            height={30}
+            width={35}
+            height={35}
             style={styles.smallAvatar}
           />
         </View>
@@ -184,9 +178,8 @@ export function ProfileCardLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const pal = usePalette('default')
   return (
-    <View style={[styles.profileCard, pal.view, style]}>
+    <View style={[styles.profileCard, style]}>
       <LoadingPlaceholder
         width={40}
         height={40}
@@ -228,23 +221,22 @@ export function FeedLoadingPlaceholder({
   showTopBorder?: boolean
   showLowerPlaceholder?: boolean
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <View
       style={[
         {
-          paddingHorizontal: 12,
-          paddingVertical: 18,
+          padding: 16,
           borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
         },
-        pal.border,
+        t.atoms.border_contrast_low,
         style,
       ]}>
-      <View style={[pal.view, {flexDirection: 'row'}]}>
+      <View style={[{flexDirection: 'row'}]}>
         <LoadingPlaceholder
           width={36}
           height={36}
-          style={[styles.avatar, {borderRadius: 6}]}
+          style={[styles.avatar, {borderRadius: 8}]}
         />
         <View style={[s.flex1]}>
           <LoadingPlaceholder width={100} height={8} style={[s.mt5, s.mb10]} />
@@ -252,12 +244,7 @@ export function FeedLoadingPlaceholder({
         </View>
       </View>
       {showLowerPlaceholder && (
-        <View style={{paddingHorizontal: 5, marginTop: 10}}>
-          <LoadingPlaceholder
-            width={260}
-            height={8}
-            style={{marginVertical: 12}}
-          />
+        <View style={{marginTop: 12}}>
           <LoadingPlaceholder width={120} height={8} />
         </View>
       )}
@@ -279,6 +266,47 @@ export function FeedFeedLoadingPlaceholder() {
       <FeedLoadingPlaceholder />
       <FeedLoadingPlaceholder />
       <FeedLoadingPlaceholder />
+    </>
+  )
+}
+
+export function ChatListItemLoadingPlaceholder({
+  style,
+}: {
+  style?: StyleProp<ViewStyle>
+}) {
+  const t = useTheme()
+  const random = useMemo(() => Math.random(), [])
+  return (
+    <View style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, t.atoms.bg, style]}>
+      <LoadingPlaceholder width={52} height={52} style={a.rounded_full} />
+      <View>
+        <LoadingPlaceholder width={140} height={12} style={a.mt_xs} />
+        <LoadingPlaceholder width={120} height={8} style={a.mt_sm} />
+        <LoadingPlaceholder
+          width={80 + random * 100}
+          height={8}
+          style={a.mt_sm}
+        />
+      </View>
+    </View>
+  )
+}
+
+export function ChatListLoadingPlaceholder() {
+  return (
+    <>
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
     </>
   )
 }
@@ -310,9 +338,8 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   avatar: {
-    borderRadius: 26,
-    marginRight: 10,
-    marginLeft: 8,
+    borderRadius: 999,
+    marginRight: 12,
   },
   notification: {
     flexDirection: 'row',
@@ -324,11 +351,11 @@ const styles = StyleSheet.create({
     margin: 1,
   },
   profileCardAvi: {
-    borderRadius: 20,
+    borderRadius: 999,
     marginRight: 10,
   },
   smallAvatar: {
-    borderRadius: 15,
+    borderRadius: 999,
     marginRight: 10,
   },
 })

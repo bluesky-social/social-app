@@ -1,14 +1,20 @@
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AtUri,
+  type AtUri,
 } from '@atproto/api'
-import {InfiniteData, QueryClient, QueryKey} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
+} from '@tanstack/react-query'
 
-export function truncateAndInvalidate<T = any>(
+import * as bsky from '#/types/bsky'
+
+export async function truncateAndInvalidate<T = any>(
   queryClient: QueryClient,
   queryKey: QueryKey,
 ) {
@@ -21,7 +27,7 @@ export function truncateAndInvalidate<T = any>(
     }
     return data
   })
-  queryClient.invalidateQueries({queryKey})
+  return queryClient.invalidateQueries({queryKey})
 }
 
 // Given an AtUri, this function will check if the AtUri matches a
@@ -44,7 +50,9 @@ export function didOrHandleUriMatches(
 export function getEmbeddedPost(
   v: unknown,
 ): AppBskyEmbedRecord.ViewRecord | undefined {
-  if (AppBskyEmbedRecord.isView(v)) {
+  if (
+    bsky.dangerousIsType<AppBskyEmbedRecord.View>(v, AppBskyEmbedRecord.isView)
+  ) {
     if (
       AppBskyEmbedRecord.isViewRecord(v.record) &&
       AppBskyFeedPost.isRecord(v.record.value)
@@ -52,7 +60,12 @@ export function getEmbeddedPost(
       return v.record
     }
   }
-  if (AppBskyEmbedRecordWithMedia.isView(v)) {
+  if (
+    bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.View>(
+      v,
+      AppBskyEmbedRecordWithMedia.isView,
+    )
+  ) {
     if (
       AppBskyEmbedRecord.isViewRecord(v.record.record) &&
       AppBskyFeedPost.isRecord(v.record.record.value)

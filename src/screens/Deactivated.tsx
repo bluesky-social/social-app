@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -15,15 +14,14 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -37,18 +35,11 @@ export function Deactivated() {
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {logoutCurrentAccount} = useSessionApi()
   const agent = useAgent()
   const [pending, setPending] = React.useState(false)
   const [error, setError] = React.useState<string | undefined>()
   const queryClient = useQueryClient()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(true)
-    }, [setMinimalShellMode]),
-  )
 
   const onSelectAccount = React.useCallback(
     (account: SessionAccount) => {
@@ -86,7 +77,7 @@ export function Deactivated() {
         case 'Bad token scope':
           setError(
             _(
-              msg`You're logged in with an App Password. Please log in with your main password to continue deactivating your account.`,
+              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
             ),
           )
           break
@@ -96,7 +87,7 @@ export function Deactivated() {
       }
 
       logger.error(e, {
-        context: 'Failed to activate account',
+        message: 'Failed to activate account',
       })
     } finally {
       setPending(false)
@@ -104,30 +95,24 @@ export function Deactivated() {
   }, [_, agent, setPending, setError, queryClient])
 
   return (
-    <View style={[a.util_screen_outer, a.flex_1, t.atoms.bg]}>
-      <ScrollView
-        style={[
-          a.h_full,
-          a.w_full,
+    <View style={[a.util_screen_outer, a.flex_1]}>
+      <Layout.Content
+        ignoreTabletLayoutOffset
+        contentContainerStyle={[
           a.px_2xl,
           {
             paddingTop: isWeb ? 64 : insets.top + 16,
             paddingBottom: isWeb ? 64 : insets.bottom,
           },
-        ]}
-        contentContainerStyle={[
-          a.w_full,
-          a.flex_row,
-          a.justify_center,
-          {borderWidth: 0},
         ]}>
-        <View style={[a.w_full, {maxWidth: COL_WIDTH}]}>
+        <View
+          style={[a.w_full, {marginHorizontal: 'auto', maxWidth: COL_WIDTH}]}>
           <View style={[a.w_full, a.justify_center, a.align_center, a.pb_5xl]}>
             <Logo width={40} />
           </View>
 
           <View style={[a.gap_xs, a.pb_3xl]}>
-            <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_xl, a.font_semi_bold, a.leading_snug]}>
               <Trans>Welcome back!</Trans>
             </Text>
             <Text style={[a.text_sm, a.leading_snug]}>
@@ -155,7 +140,7 @@ export function Deactivated() {
                 {pending && <ButtonIcon icon={Loader} position="right" />}
               </Button>
               <Button
-                label={_(msg`Cancel reactivation and log out`)}
+                label={_(msg`Cancel reactivation and sign out`)}
                 size="large"
                 variant="solid"
                 color="secondary"
@@ -190,7 +175,7 @@ export function Deactivated() {
             <>
               <Text
                 style={[t.atoms.text_contrast_medium, a.pb_md, a.leading_snug]}>
-                <Trans>Or, log into one of your other accounts.</Trans>
+                <Trans>Or, sign in to one of your other accounts.</Trans>
               </Text>
               <AccountList
                 onSelectAccount={onSelectAccount}
@@ -206,19 +191,19 @@ export function Deactivated() {
                 <Trans>Or, continue with another account.</Trans>
               </Text>
               <Button
-                label={_(msg`Log in or sign up`)}
+                label={_(msg`Sign in or create an account`)}
                 size="large"
                 variant="solid"
                 color="secondary"
                 onPress={() => setShowLoggedOut(true)}>
                 <ButtonText>
-                  <Trans>Log in or sign up</Trans>
+                  <Trans>Sign in or create an account</Trans>
                 </ButtonText>
               </Button>
             </>
           )}
         </View>
-      </ScrollView>
+      </Layout.Content>
     </View>
   )
 }

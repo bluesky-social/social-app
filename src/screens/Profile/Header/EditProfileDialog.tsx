@@ -1,30 +1,32 @@
-import React, {useCallback, useEffect, useState} from 'react'
-import {Dimensions, View} from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {AppBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {useCallback, useEffect, useState} from 'react'
+import {useWindowDimensions, View} from 'react-native'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {compressIfNeeded} from '#/lib/media/manip'
+import {urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
+import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {type ImageMeta} from '#/state/gallery'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Admonition} from '#/components/Admonition'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {InlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
+import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 256
-
-const SCREEN_HEIGHT = Dimensions.get('window').height
 
 export function EditProfileDialog({
   profile,
@@ -38,20 +40,7 @@ export function EditProfileDialog({
   const {_} = useLingui()
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
-
-  // 'You might lose unsaved changes' warning
-  useEffect(() => {
-    if (isWeb && dirty) {
-      const abortController = new AbortController()
-      const {signal} = abortController
-      window.addEventListener('beforeunload', evt => evt.preventDefault(), {
-        signal,
-      })
-      return () => {
-        abortController.abort()
-      }
-    }
-  }, [dirty])
+  const {height} = useWindowDimensions()
 
   const onPressCancel = useCallback(() => {
     if (dirty) {
@@ -66,7 +55,16 @@ export function EditProfileDialog({
       control={control}
       nativeOptions={{
         preventDismiss: dirty,
-        minHeight: SCREEN_HEIGHT,
+        minHeight: height,
+      }}
+      webOptions={{
+        onBackgroundPress: () => {
+          if (dirty) {
+            cancelControl.open()
+          } else {
+            control.close()
+          }
+        },
       }}
       testID="editProfileModal">
       <DialogInner
@@ -102,6 +100,9 @@ function DialogInner({
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
+  const verification = useSimpleVerificationState({
+    profile,
+  })
   const {
     mutateAsync: updateProfileMutation,
     error: updateProfileError,
@@ -120,10 +121,10 @@ function DialogInner({
     profile.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<
-    RNImage | undefined | null
+    ImageMeta | undefined | null
   >()
   const [newUserAvatar, setNewUserAvatar] = useState<
-    RNImage | undefined | null
+    ImageMeta | undefined | null
   >()
 
   const dirty =
@@ -137,7 +138,7 @@ function DialogInner({
   }, [dirty, setDirty])
 
   const onSelectNewAvatar = useCallback(
-    async (img: RNImage | null) => {
+    (img: ImageMeta | null) => {
       setImageError('')
       if (img === null) {
         setNewUserAvatar(null)
@@ -145,9 +146,8 @@ function DialogInner({
         return
       }
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewUserAvatar(finalImg)
-        setUserAvatar(finalImg.path)
+        setNewUserAvatar(img)
+        setUserAvatar(img.path)
       } catch (e: any) {
         setImageError(cleanError(e))
       }
@@ -156,7 +156,7 @@ function DialogInner({
   )
 
   const onSelectNewBanner = useCallback(
-    async (img: RNImage | null) => {
+    (img: ImageMeta | null) => {
       setImageError('')
       if (!img) {
         setNewUserBanner(null)
@@ -164,9 +164,8 @@ function DialogInner({
         return
       }
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewUserBanner(finalImg)
-        setUserBanner(finalImg.path)
+        setNewUserBanner(img)
+        setUserBanner(img.path)
       } catch (e: any) {
         setImageError(cleanError(e))
       }
@@ -186,9 +185,8 @@ function DialogInner({
         newUserAvatar,
         newUserBanner,
       })
-      onUpdate?.()
-      control.close()
-      Toast.show(_(msg`Profile updated`))
+      control.close(() => onUpdate?.())
+      Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
     }
@@ -205,11 +203,11 @@ function DialogInner({
     _,
   ])
 
-  const displayNameTooLong = useWarnMaxGraphemeCount({
+  const displayNameTooLong = isOverMaxGraphemeCount({
     text: displayName,
     maxCount: DISPLAY_NAME_MAX_GRAPHEMES,
   })
-  const descriptionTooLong = useWarnMaxGraphemeCount({
+  const descriptionTooLong = isOverMaxGraphemeCount({
     text: description,
     maxCount: DESCRIPTION_MAX_GRAPHEMES,
   })
@@ -251,6 +249,7 @@ function DialogInner({
         <ButtonText style={[a.text_md, !dirty && t.atoms.text_contrast_low]}>
           <Trans>Save</Trans>
         </ButtonText>
+        {isUpdatingProfile && <ButtonIcon icon={Loader} />}
       </Button>
     ),
     [
@@ -323,21 +322,41 @@ function DialogInner({
             />
           </TextField.Root>
           {displayNameTooLong && (
-            <TextField.SuffixText
+            <Text
               style={[
                 a.text_sm,
                 a.mt_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 {color: t.palette.negative_400},
-              ]}
-              label={_(msg`Display name is too long`)}>
-              <Trans>
-                Display name is too long. The maximum number of characters is{' '}
-                {DISPLAY_NAME_MAX_GRAPHEMES}.
-              </Trans>
-            </TextField.SuffixText>
+              ]}>
+              <Plural
+                value={DISPLAY_NAME_MAX_GRAPHEMES}
+                other="Display name is too long. The maximum number of characters is #."
+              />
+            </Text>
           )}
         </View>
+
+        {verification.isVerified &&
+          verification.role === 'default' &&
+          displayName !== initialDisplayName && (
+            <Admonition type="error">
+              <Trans>
+                You are verified. You will lose your verification status if you
+                change your display name.{' '}
+                <InlineLinkText
+                  label={_(
+                    msg({
+                      message: `Learn more`,
+                      context: `english-only-resource`,
+                    }),
+                  )}
+                  to={urls.website.blog.initialVerificationAnnouncement}>
+                  <Trans context="english-only-resource">Learn more.</Trans>
+                </InlineLinkText>
+              </Trans>
+            </Admonition>
+          )}
 
         <View>
           <TextField.LabelText>
@@ -348,25 +367,24 @@ function DialogInner({
               defaultValue={description}
               onChangeText={setDescription}
               multiline
-              label={_(msg`Display name`)}
+              label={_(msg`Description`)}
               placeholder={_(msg`Tell us a bit about yourself`)}
               testID="editProfileDescriptionInput"
             />
           </TextField.Root>
           {descriptionTooLong && (
-            <TextField.SuffixText
+            <Text
               style={[
                 a.text_sm,
                 a.mt_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 {color: t.palette.negative_400},
-              ]}
-              label={_(msg`Description is too long`)}>
-              <Trans>
-                Description is too long. The maximum number of characters is{' '}
-                {DESCRIPTION_MAX_GRAPHEMES}.
-              </Trans>
-            </TextField.SuffixText>
+              ]}>
+              <Plural
+                value={DESCRIPTION_MAX_GRAPHEMES}
+                other="Description is too long. The maximum number of characters is #."
+              />
+            </Text>
           )}
         </View>
       </View>

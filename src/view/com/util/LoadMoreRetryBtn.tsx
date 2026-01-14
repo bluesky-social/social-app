@@ -1,8 +1,7 @@
-import React from 'react'
 import {StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
 import {usePalette} from '#/lib/hooks/usePalette'

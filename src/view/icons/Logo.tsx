@@ -1,17 +1,17 @@
 import React from 'react'
-import {StyleSheet, TextProps} from 'react-native'
+import {type TextProps} from 'react-native'
 import Svg, {
   Defs,
   LinearGradient,
   Path,
-  PathProps,
+  type PathProps,
   Stop,
-  SvgProps,
+  type SvgProps,
 } from 'react-native-svg'
 import {Image} from 'expo-image'
 
-import {colors} from '#/lib/styles'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
+import {flatten, useTheme} from '#/alf'
 
 const ratio = 57 / 64
 
@@ -21,12 +21,15 @@ type Props = {
 } & Omit<SvgProps, 'style'>
 
 export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
+  const t = useTheme()
   const {fill, ...rest} = props
   const gradient = fill === 'sky'
-  const styles = StyleSheet.flatten(props.style)
-  const _fill = gradient ? 'url(#sky)' : fill || styles?.color || colors.blue3
+  const styles = flatten(props.style)
+  const _fill = gradient
+    ? 'url(#sky)'
+    : fill || styles?.color || t.palette.primary_500
   // @ts-ignore it's fiiiiine
-  const size = parseInt(rest.width || 32)
+  const size = parseInt(rest.width || 32, 10)
 
   const isKawaii = useKawaiiMode()
 

@@ -1,34 +1,30 @@
 import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import Animated, {
   measure,
-  MeasuredDimensions,
+  type MeasuredDimensions,
   runOnJS,
   runOnUI,
   useAnimatedRef,
 } from 'react-native-reanimated'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {BACK_HITSLOP} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isNative} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useLightboxControls} from '#/state/lightbox'
-import {useSetDrawerOpen} from '#/state/shell'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {TextLink} from '#/view/com/util/Link'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {TextLink} from '../util/Link'
-import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {Text} from '../util/text/Text'
-import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
-import {CenteredView} from '../util/Views'
+import * as Layout from '#/components/Layout'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -36,6 +32,7 @@ export function ProfileSubpageHeader({
   title,
   avatar,
   isOwner,
+  purpose,
   creator,
   avatarType,
   children,
@@ -45,6 +42,7 @@ export function ProfileSubpageHeader({
   title: string | undefined
   avatar: string | undefined
   isOwner: boolean | undefined
+  purpose: AppBskyGraphDefs.ListPurpose | undefined
   creator:
     | {
         did: string
@@ -53,7 +51,6 @@ export function ProfileSubpageHeader({
     | undefined
   avatarType: UserAvatarType | 'starter-pack'
 }>) {
-  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
@@ -61,18 +58,6 @@ export function ProfileSubpageHeader({
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
   const aviRef = useAnimatedRef()
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  const onPressMenu = React.useCallback(() => {
-    setDrawerOpen(true)
-  }, [setDrawerOpen])
 
   const _openLightbox = React.useCallback(
     (uri: string, thumbRect: MeasuredDimensions | null) => {
@@ -110,49 +95,24 @@ export function ProfileSubpageHeader({
   }, [_openLightbox, avatar, aviRef])
 
   return (
-    <CenteredView style={pal.view}>
-      {isMobile && (
-        <View
-          style={[
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              paddingTop: isNative ? 0 : 8,
-              paddingBottom: 8,
-              paddingHorizontal: isMobile ? 12 : 14,
-            },
-            pal.border,
-          ]}>
-          <Pressable
-            testID="headerDrawerBtn"
-            onPress={canGoBack ? onPressBack : onPressMenu}
-            hitSlop={BACK_HITSLOP}
-            style={canGoBack ? styles.backBtn : styles.backBtnWide}
-            accessibilityRole="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-            accessibilityHint="">
-            {canGoBack ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="angle-left"
-                style={[styles.backIcon, pal.text]}
-              />
-            ) : (
-              <Menu size="lg" style={[{marginTop: 4}, pal.textLight]} />
-            )}
-          </Pressable>
-          <View style={{flex: 1}} />
-          {children}
-        </View>
-      )}
+    <>
+      <Layout.Header.Outer>
+        {canGoBack ? (
+          <Layout.Header.BackButton />
+        ) : (
+          <Layout.Header.MenuButton />
+        )}
+        <Layout.Header.Content />
+        {children}
+      </Layout.Header.Outer>
+
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'flex-start',
           gap: 10,
           paddingTop: 14,
-          paddingBottom: 6,
+          paddingBottom: 14,
           paddingHorizontal: isMobile ? 12 : 14,
         }}>
         <Animated.View ref={aviRef} collapsable={false}>
@@ -170,7 +130,7 @@ export function ProfileSubpageHeader({
             )}
           </Pressable>
         </Animated.View>
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, gap: 4}}>
           {isLoading ? (
             <LoadingPlaceholder
               width={200}
@@ -189,52 +149,54 @@ export function ProfileSubpageHeader({
             />
           )}
 
-          {isLoading ? (
+          {isLoading || !creator ? (
             <LoadingPlaceholder width={50} height={8} />
           ) : (
-            <Text type="xl" style={[pal.textLight]} numberOfLines={1}>
-              {!creator ? (
-                <Trans>by —</Trans>
-              ) : isOwner ? (
-                <Trans>by you</Trans>
-              ) : (
-                <Trans>
-                  by{' '}
-                  <TextLink
-                    text={sanitizeHandle(creator.handle, '@')}
-                    href={makeProfileLink(creator)}
-                    style={pal.textLight}
-                  />
-                </Trans>
-              )}
+            <Text type="lg" style={[pal.textLight]} numberOfLines={1}>
+              {purpose === 'app.bsky.graph.defs#curatelist' ? (
+                isOwner ? (
+                  <Trans>List by you</Trans>
+                ) : (
+                  <Trans>
+                    List by{' '}
+                    <TextLink
+                      text={sanitizeHandle(creator.handle || '', '@')}
+                      href={makeProfileLink(creator)}
+                      style={pal.textLight}
+                    />
+                  </Trans>
+                )
+              ) : purpose === 'app.bsky.graph.defs#modlist' ? (
+                isOwner ? (
+                  <Trans>Moderation list by you</Trans>
+                ) : (
+                  <Trans>
+                    Moderation list by{' '}
+                    <TextLink
+                      text={sanitizeHandle(creator.handle || '', '@')}
+                      href={makeProfileLink(creator)}
+                      style={pal.textLight}
+                    />
+                  </Trans>
+                )
+              ) : purpose === 'app.bsky.graph.defs#referencelist' ? (
+                isOwner ? (
+                  <Trans>Starter pack by you</Trans>
+                ) : (
+                  <Trans>
+                    Starter pack by{' '}
+                    <TextLink
+                      text={sanitizeHandle(creator.handle || '', '@')}
+                      href={makeProfileLink(creator)}
+                      style={pal.textLight}
+                    />
+                  </Trans>
+                )
+              ) : null}
             </Text>
           )}
         </View>
-        {!isMobile && (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            {children}
-          </View>
-        )}
       </View>
-    </CenteredView>
+    </>
   )
 }
-
-const styles = StyleSheet.create({
-  backBtn: {
-    width: 20,
-    height: 30,
-  },
-  backBtnWide: {
-    width: 20,
-    height: 30,
-    marginRight: 4,
-  },
-  backIcon: {
-    marginTop: 6,
-  },
-})

@@ -1,22 +1,20 @@
-import React, {
-  ComponentProps,
-  forwardRef,
+import {
   useCallback,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import {
-  NativeSyntheticEvent,
+  type NativeSyntheticEvent,
   Text as RNText,
-  TextInput as RNTextInput,
-  TextInputSelectionChangeEventData,
+  type TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
-  PastedFile,
-  PasteInputRef,
+  type PastedFile,
+  type PasteInputRef, // @ts-expect-error no types when installing from github
 } from '@mattermost/react-native-paste-input'
 
 import {POST_IMG_MAX} from '#/lib/constants'
@@ -27,63 +25,44 @@ import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
 import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isNative} from '#/platform/detection'
 import {
-  LinkFacetMatch,
+  type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {atoms as a, useAlf} from '#/alf'
-import {normalizeTextStyles} from '#/components/Typography'
+import {normalizeTextStyles} from '#/alf/typography'
 import {Autocomplete} from './mobile/Autocomplete'
-
-export interface TextInputRef {
-  focus: () => void
-  blur: () => void
-  getCursorPosition: () => DOMRect | undefined
-}
-
-interface TextInputProps extends ComponentProps<typeof RNTextInput> {
-  richtext: RichText
-  placeholder: string
-  webForceMinHeight: boolean
-  hasRightPadding: boolean
-  isActive: boolean
-  setRichText: (v: RichText) => void
-  onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => void
-  onNewLink: (uri: string) => void
-  onError: (err: string) => void
-}
+import {type TextInputProps} from './TextInput.types'
 
 interface Selection {
   start: number
   end: number
 }
 
-export const TextInput = forwardRef(function TextInputImpl(
-  {
-    richtext,
-    placeholder,
-    hasRightPadding,
-    setRichText,
-    onPhotoPasted,
-    onNewLink,
-    onError,
-    ...props
-  }: TextInputProps,
+export function TextInput({
   ref,
-) {
+  richtext,
+  placeholder,
+  hasRightPadding,
+  setRichText,
+  onPhotoPasted,
+  onNewLink,
+  onError,
+  ...props
+}: TextInputProps) {
   const {theme: t, fonts} = useAlf()
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
-  const prevLength = React.useRef(richtext.length)
+  const prevLength = useRef(richtext.length)
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
     blur: () => {
       textInput.current?.blur()
     },
     getCursorPosition: () => undefined, // Not implemented on native
+    maybeClosePopup: () => false, // Not needed on native
   }))
 
   const pastSuggestedUris = useRef(new Set<string>())
@@ -96,10 +75,11 @@ export const TextInput = forwardRef(function TextInputImpl(
       newRt.detectFacetsWithoutResolution()
       setRichText(newRt)
 
-      const prefix = getMentionAt(
-        newText,
-        textInputSelection.current?.start || 0,
-      )
+      // NOTE: BinaryFiddler
+      // onChangeText happens before onSelectionChange, cursorPos is out of bound if the user deletes characters,
+      const cursorPos = textInputSelection.current?.start ?? 0
+      const prefix = getMentionAt(newText, Math.min(cursorPos, newText.length))
+
       if (prefix) {
         setAutocompletePrefix(prefix.value)
       } else if (autocompletePrefix) {
@@ -184,9 +164,9 @@ export const TextInput = forwardRef(function TextInputImpl(
     [onChangeText, richtext, setAutocompletePrefix],
   )
 
-  const inputTextStyle = React.useMemo(() => {
+  const inputTextStyle = useMemo(() => {
     const style = normalizeTextStyles(
-      [a.text_xl, a.leading_snug, t.atoms.text],
+      [a.text_lg, a.leading_snug, t.atoms.text],
       {
         fontScale: fonts.scaleMultiplier,
         fontFamily: fonts.family,
@@ -249,16 +229,25 @@ export const TextInput = forwardRef(function TextInputImpl(
         multiline
         scrollEnabled={false}
         numberOfLines={2}
+        // Note: should be the default value, but as of v1.104
+        // it switched to "none" on Android
+        autoCapitalize="sentences"
+        {...props}
         style={[
           inputTextStyle,
           a.w_full,
+          !autocompletePrefix && a.h_full,
           {
             textAlignVertical: 'top',
             minHeight: 60,
             includeFontPadding: false,
           },
-        ]}
-        {...props}>
+          {
+            borderWidth: 1,
+            borderColor: 'transparent',
+          },
+          props.style,
+        ]}>
         {textDecorated}
       </PasteInput>
       <Autocomplete
@@ -267,4 +256,4 @@ export const TextInput = forwardRef(function TextInputImpl(
       />
     </View>
   )
-})
+}

@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -41,7 +40,7 @@ export function Error({
       ]}
       sideBorders={sideBorders}>
       <View style={[a.w_full, a.align_center, a.gap_lg]}>
-        <Text style={[a.font_bold, a.text_3xl]}>{title}</Text>
+        <Text style={[a.font_semi_bold, a.text_3xl]}>{title}</Text>
         <Text
           style={[
             a.text_md,

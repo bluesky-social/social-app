@@ -7,9 +7,11 @@ type StateContext = Map<string, boolean>
 type SetStateContext = (uri: string, value: boolean) => void
 
 const stateContext = React.createContext<StateContext>(new Map())
+stateContext.displayName = 'ThreadMutesStateContext'
 const setStateContext = React.createContext<SetStateContext>(
   (_: string) => false,
 )
+setStateContext.displayName = 'ThreadMutesSetStateContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<StateContext>(() => new Map())
@@ -69,6 +71,7 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
         while (!cancelled) {
           const threads = persisted.get('mutedThreads')
 
+          // @ts-ignore findLast is polyfilled - esb
           const root = threads.findLast(uri => uri.includes(currentAccount.did))
 
           if (!root) break

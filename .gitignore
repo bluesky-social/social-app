@@ -58,6 +58,7 @@ buck-out/
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+Gemfile.lock
 
 # Testing
 coverage/
@@ -118,3 +119,9 @@ src/locale/locales/**/*.js
 
 # ogcard assets
 bskyogcard/src/assets/fonts/noto-*
+
+# bskyweb build output
+bskyweb/static/media/*.webp
+bskyweb/static/media/*.jpg
+bskyweb/static/media/*.png
+bskyweb/static/media/*.svg

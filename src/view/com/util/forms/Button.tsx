@@ -1,16 +1,16 @@
 import React from 'react'
 import {
   ActivityIndicator,
-  GestureResponderEvent,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
+  type GestureResponderEvent,
+  type NativeSyntheticEvent,
+  type NativeTouchEvent,
   Pressable,
-  PressableStateCallbackType,
-  StyleProp,
+  type PressableStateCallbackType,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {choose} from '#/lib/functions'
@@ -31,12 +31,15 @@ export type ButtonType =
 // Augment type for react-native-web (see https://github.com/necolas/react-native-web/issues/1684#issuecomment-766451866)
 declare module 'react-native' {
   interface PressableStateCallbackType {
+    // @ts-ignore web only
     hovered?: boolean
     focused?: boolean
   }
 }
 
-// TODO: Enforce that button always has a label
+/**
+ * @deprecated use Button from `#/components/Button.tsx` instead
+ */
 export function Button({
   type = 'primary',
   label,

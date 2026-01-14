@@ -5,6 +5,7 @@ import {Trans} from '@lingui/macro'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
+import {languageName} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
@@ -80,7 +81,7 @@ export function Component({}: {}) {
         </Trans>
       </Text>
       <Text style={[pal.textLight, styles.description]}>
-        <Trans>Leave them all unchecked to see any language.</Trans>
+        <Trans>Leave them all unselected to see any language.</Trans>
       </Text>
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => (
@@ -88,7 +89,7 @@ export function Component({}: {}) {
             key={lang.code2}
             code2={lang.code2}
             langType="contentLanguages"
-            name={lang.name}
+            name={languageName(lang, langPrefs.appLanguage)}
             onPress={() => {
               onPress(lang.code2)
             }}

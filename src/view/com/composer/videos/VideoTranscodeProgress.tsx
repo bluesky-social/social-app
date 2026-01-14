@@ -1,8 +1,7 @@
-import React from 'react'
 import {View} from 'react-native'
 // @ts-expect-error no type definition
 import ProgressPie from 'react-native-progress/Pie'
-import {ImagePickerAsset} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 
 import {clamp} from '#/lib/numbers'
 import {isWeb} from '#/platform/detection'

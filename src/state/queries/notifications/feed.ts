@@ -18,30 +18,30 @@
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
-  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
+  moderatePost,
 } from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
-import {useModerationOpts} from '../../preferences/moderation-opts'
-import {STALE} from '..'
+import type * as bsky from '#/types/bsky'
 import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from '../util'
-import {FeedPage} from './types'
+import {type FeedPage} from './types'
 import {useUnreadNotificationsApi} from './unread'
 import {fetchPage} from './util'
 
@@ -52,24 +52,21 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'notification-feed'
-export function RQKEY(priority?: false) {
-  return [RQKEY_ROOT, priority]
+export function RQKEY(filter: 'all' | 'mentions') {
+  return [RQKEY_ROOT, filter]
 }
 
-export function useNotificationFeedQuery(opts?: {
+export function useNotificationFeedQuery(opts: {
   enabled?: boolean
-  overridePriorityNotifications?: boolean
+  filter: 'all' | 'mentions'
 }) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
-  const enabled = opts?.enabled !== false
+  const enabled = opts.enabled !== false
+  const filter = opts.filter
   const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
-
-  // false: force showing all notifications
-  // undefined: let the server decide
-  const priority = opts?.overridePriorityNotifications ? false : undefined
 
   const selectArgs = useMemo(() => {
     return {
@@ -91,14 +88,23 @@ export function useNotificationFeedQuery(opts?: {
     RQPageParam
   >({
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(priority),
+    queryKey: RQKEY(filter),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       let page
-      if (!pageParam) {
+      if (filter === 'all' && !pageParam) {
         // for the first page, we check the cached page held by the unread-checker first
         page = unreads.getCachedUnreadPage()
       }
       if (!page) {
+        let reasons: string[] = []
+        if (filter === 'mentions') {
+          reasons = [
+            // Anything that's a post
+            'mention',
+            'reply',
+            'quote',
+          ]
+        }
         const {page: fetchedPage} = await fetchPage({
           agent,
           limit: PAGE_SIZE,
@@ -106,13 +112,13 @@ export function useNotificationFeedQuery(opts?: {
           queryClient,
           moderationOpts,
           fetchAdditionalData: true,
-          priority,
+          reasons,
         })
         page = fetchedPage
       }
 
-      // if the first page has an unread, mark all read
-      if (!pageParam) {
+      if (filter === 'all' && !pageParam) {
+        // if the first page has an unread, mark all read
         unreads.markAllRead()
       }
 
@@ -289,9 +295,11 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        const quotedPost = getEmbeddedPost(item.subject?.embed)
-        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-          yield embedViewRecordToPostView(quotedPost!)
+        if (AppBskyFeedDefs.isPostView(item.subject)) {
+          const quotedPost = getEmbeddedPost(item.subject?.embed)
+          if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
+            yield embedViewRecordToPostView(quotedPost!)
+          }
         }
       }
     }
@@ -301,7 +309,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<bsky.profile.AnyProfileView, void> {
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
     queryKey: [RQKEY_ROOT],
   })
@@ -312,14 +320,21 @@ export function* findAllProfilesInQueryData(
     for (const page of queryData?.pages) {
       for (const item of page.items) {
         if (
+          (item.type === 'follow' || item.type === 'contact-match') &&
+          item.notification.author.did === did
+        ) {
+          yield item.notification.author
+        } else if (
           item.type !== 'starterpack-joined' &&
           item.subject?.author.did === did
         ) {
           yield item.subject.author
         }
-        const quotedPost = getEmbeddedPost(item.subject?.embed)
-        if (quotedPost?.author.did === did) {
-          yield quotedPost.author
+        if (AppBskyFeedDefs.isPostView(item.subject)) {
+          const quotedPost = getEmbeddedPost(item.subject?.embed)
+          if (quotedPost?.author.did === did) {
+            yield quotedPost.author
+          }
         }
       }
     }

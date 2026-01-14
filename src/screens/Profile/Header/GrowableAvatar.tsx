@@ -1,11 +1,11 @@
-import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
+import type React from 'react'
 
 import {isIOS} from '#/platform/detection'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
@@ -45,7 +45,7 @@ function GrowableAvatarInner({
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(scrollY.value, [-150, 0], [1.2, 1], {
+        scale: interpolate(scrollY.get(), [-150, 0], [1.2, 1], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },

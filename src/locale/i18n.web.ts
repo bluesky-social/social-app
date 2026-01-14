@@ -12,20 +12,48 @@ export async function dynamicActivate(locale: AppLanguage) {
   let mod: any
 
   switch (locale) {
+    case AppLanguage.an: {
+      mod = await import(`./locales/an/messages`)
+      break
+    }
+    case AppLanguage.ast: {
+      mod = await import(`./locales/ast/messages`)
+      break
+    }
     case AppLanguage.ca: {
       mod = await import(`./locales/ca/messages`)
+      break
+    }
+    case AppLanguage.cy: {
+      mod = await import(`./locales/cy/messages`)
+      break
+    }
+    case AppLanguage.da: {
+      mod = await import(`./locales/da/messages`)
       break
     }
     case AppLanguage.de: {
       mod = await import(`./locales/de/messages`)
       break
     }
+    case AppLanguage.el: {
+      mod = await import(`./locales/el/messages`)
+      break
+    }
     case AppLanguage.en_GB: {
       mod = await import(`./locales/en-GB/messages`)
       break
     }
+    case AppLanguage.eo: {
+      mod = await import(`./locales/eo/messages`)
+      break
+    }
     case AppLanguage.es: {
       mod = await import(`./locales/es/messages`)
+      break
+    }
+    case AppLanguage.eu: {
+      mod = await import(`./locales/eu/messages`)
       break
     }
     case AppLanguage.fi: {
@@ -36,8 +64,20 @@ export async function dynamicActivate(locale: AppLanguage) {
       mod = await import(`./locales/fr/messages`)
       break
     }
+    case AppLanguage.fy: {
+      mod = await import(`./locales/fy/messages`)
+      break
+    }
     case AppLanguage.ga: {
       mod = await import(`./locales/ga/messages`)
+      break
+    }
+    case AppLanguage.gd: {
+      mod = await import(`./locales/gd/messages`)
+      break
+    }
+    case AppLanguage.gl: {
+      mod = await import(`./locales/gl/messages`)
       break
     }
     case AppLanguage.hi: {
@@ -46,6 +86,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.hu: {
       mod = await import(`./locales/hu/messages`)
+      break
+    }
+    case AppLanguage.ia: {
+      mod = await import(`./locales/ia/messages`)
       break
     }
     case AppLanguage.id: {
@@ -60,16 +104,44 @@ export async function dynamicActivate(locale: AppLanguage) {
       mod = await import(`./locales/ja/messages`)
       break
     }
+    case AppLanguage.km: {
+      mod = await import(`./locales/km/messages`)
+      break
+    }
     case AppLanguage.ko: {
       mod = await import(`./locales/ko/messages`)
+      break
+    }
+    case AppLanguage.ne: {
+      mod = await import(`./locales/ne/messages`)
+      break
+    }
+    case AppLanguage.nl: {
+      mod = await import(`./locales/nl/messages`)
+      break
+    }
+    case AppLanguage.pl: {
+      mod = await import(`./locales/pl/messages`)
       break
     }
     case AppLanguage.pt_BR: {
       mod = await import(`./locales/pt-BR/messages`)
       break
     }
+    case AppLanguage.pt_PT: {
+      mod = await import(`./locales/pt-PT/messages`)
+      break
+    }
+    case AppLanguage.ro: {
+      mod = await import(`./locales/ro/messages`)
+      break
+    }
     case AppLanguage.ru: {
       mod = await import(`./locales/ru/messages`)
+      break
+    }
+    case AppLanguage.sv: {
+      mod = await import(`./locales/sv/messages`)
       break
     }
     case AppLanguage.th: {
@@ -82,6 +154,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.uk: {
       mod = await import(`./locales/uk/messages`)
+      break
+    }
+    case AppLanguage.vi: {
+      mod = await import(`./locales/vi/messages`)
       break
     }
     case AppLanguage.zh_CN: {
@@ -106,7 +182,7 @@ export async function dynamicActivate(locale: AppLanguage) {
   i18n.activate(locale)
 }
 
-export async function useLocaleLanguage() {
+export function useLocaleLanguage() {
   const {appLanguage} = useLanguagePrefs()
   useEffect(() => {
     const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage)

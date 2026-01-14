@@ -1,0 +1,57 @@
+diff --git a/node_modules/react-native-svg/android/src/main/java/com/horcrux/svg/PathView.java b/node_modules/react-native-svg/android/src/main/java/com/horcrux/svg/PathView.java
+index 06829bd..1b15818 100644
+--- a/node_modules/react-native-svg/android/src/main/java/com/horcrux/svg/PathView.java
++++ b/node_modules/react-native-svg/android/src/main/java/com/horcrux/svg/PathView.java
+@@ -14,17 +14,33 @@ import android.graphics.Paint;
+ import android.graphics.Path;
+ import com.facebook.react.bridge.ReactContext;
+ 
++import java.util.ArrayList;
++import java.util.HashMap;
++
++class ParsedPath {
++  final Path path;
++  final ArrayList<PathElement> elements;
++
++  ParsedPath(Path path, ArrayList<PathElement> elements) {
++    this.path = path;
++    this.elements = elements;
++  }
++}
++
+ @SuppressLint("ViewConstructor")
+ class PathView extends RenderableView {
+   private Path mPath;
+ 
++  // This grows forever but for our use case (static icons) it's ok.
++  private static final HashMap<String, ParsedPath> sPathCache = new HashMap<>();
++
+   public PathView(ReactContext reactContext) {
+     super(reactContext);
+     PathParser.mScale = mScale;
+     mPath = new Path();
+   }
+ 
+-  public void setD(String d) {
++  void setDByParsing(String d) {
+     mPath = PathParser.parse(d);
+     elements = PathParser.elements;
+     for (PathElement elem : elements) {
+@@ -33,6 +49,17 @@ class PathView extends RenderableView {
+         point.y *= mScale;
+       }
+     }
++  }
++
++  public void setD(String d) {
++    ParsedPath cached = sPathCache.get(d);
++    if (cached != null) {
++      mPath = cached.path;
++      elements = cached.elements;
++    } else {
++      setDByParsing(d);
++      sPathCache.put(d, new ParsedPath(mPath, elements));
++    }
+     invalidate();
+   }
+ 

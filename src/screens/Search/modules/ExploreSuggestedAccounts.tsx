@@ -1,0 +1,184 @@
+import {memo, useEffect} from 'react'
+import {View} from 'react-native'
+import {type AppBskyActorSearchActors, type ModerationOpts} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {type InfiniteData} from '@tanstack/react-query'
+
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
+import {logger} from '#/logger'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
+import {useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
+import {boostInterests, InterestTabs} from '#/components/InterestTabs'
+import * as ProfileCard from '#/components/ProfileCard'
+import {SubtleHover} from '#/components/SubtleHover'
+import type * as bsky from '#/types/bsky'
+
+export function useLoadEnoughProfiles({
+  interest,
+  data,
+  isLoading,
+  isFetchingNextPage,
+  hasNextPage,
+  fetchNextPage,
+}: {
+  interest: string | null
+  data?: InfiniteData<AppBskyActorSearchActors.OutputSchema>
+  isLoading: boolean
+  isFetchingNextPage: boolean
+  hasNextPage: boolean
+  fetchNextPage: () => Promise<unknown>
+}) {
+  const profileCount =
+    data?.pages.flatMap(page =>
+      page.actors.filter(actor => !actor.viewer?.following),
+    ).length || 0
+  const isAnyLoading = isLoading || isFetchingNextPage
+  const isEnoughProfiles = profileCount > 3
+  const shouldFetchMore = !isEnoughProfiles && hasNextPage && !!interest
+  useEffect(() => {
+    if (shouldFetchMore && !isAnyLoading) {
+      logger.info('Not enough suggested accounts - fetching more')
+      fetchNextPage()
+    }
+  }, [shouldFetchMore, fetchNextPage, isAnyLoading, interest])
+
+  return {
+    isReady: !shouldFetchMore,
+  }
+}
+
+export function SuggestedAccountsTabBar({
+  selectedInterest,
+  onSelectInterest,
+  hideDefaultTab,
+  defaultTabLabel,
+}: {
+  selectedInterest: string | null
+  onSelectInterest: (interest: string | null) => void
+  hideDefaultTab?: boolean
+  defaultTabLabel?: string
+}) {
+  const {_} = useLingui()
+  const interestsDisplayNames = useInterestsDisplayNames()
+  const {data: preferences} = usePreferencesQuery()
+  const personalizedInterests = preferences?.interests?.tags
+  const interests = Object.keys(interestsDisplayNames)
+    .sort(boostInterests(popularInterests))
+    .sort(boostInterests(personalizedInterests))
+
+  return (
+    <BlockDrawerGesture>
+      <InterestTabs
+        interests={hideDefaultTab ? interests : ['all', ...interests]}
+        selectedInterest={
+          selectedInterest || (hideDefaultTab ? interests[0] : 'all')
+        }
+        onSelectTab={tab => {
+          logger.metric(
+            'explore:suggestedAccounts:tabPressed',
+            {tab: tab},
+            {statsig: true},
+          )
+          onSelectInterest(tab === 'all' ? null : tab)
+        }}
+        interestsDisplayNames={
+          hideDefaultTab
+            ? interestsDisplayNames
+            : {
+                all: defaultTabLabel || _(msg`For You`),
+                ...interestsDisplayNames,
+              }
+        }
+      />
+    </BlockDrawerGesture>
+  )
+}
+
+/**
+ * Profile card for suggested accounts. Note: border is on the bottom edge
+ */
+let SuggestedProfileCard = ({
+  profile,
+  moderationOpts,
+  recId,
+  position,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+  recId?: number
+  position: number
+}): React.ReactNode => {
+  const t = useTheme()
+  return (
+    <ProfileCard.Link
+      profile={profile}
+      style={[a.flex_1]}
+      onPress={() => {
+        logger.metric(
+          'suggestedUser:press',
+          {
+            logContext: 'Explore',
+            recId,
+            position,
+            suggestedDid: profile.did,
+            category: null,
+          },
+          {statsig: true},
+        )
+      }}>
+      {s => (
+        <>
+          <SubtleHover hover={s.hovered || s.pressed} />
+          <View
+            style={[
+              a.flex_1,
+              a.w_full,
+              a.py_lg,
+              a.px_lg,
+              a.border_t,
+              t.atoms.border_contrast_low,
+            ]}>
+            <ProfileCard.Outer>
+              <ProfileCard.Header>
+                <ProfileCard.Avatar
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                <ProfileCard.NameAndHandle
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                <ProfileCard.FollowButton
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  withIcon={false}
+                  logContext="ExploreSuggestedAccounts"
+                  onFollow={() => {
+                    logger.metric(
+                      'suggestedUser:follow',
+                      {
+                        logContext: 'Explore',
+                        location: 'Card',
+                        recId,
+                        position,
+                        suggestedDid: profile.did,
+                        category: null,
+                      },
+                      {statsig: true},
+                    )
+                  }}
+                />
+              </ProfileCard.Header>
+              <ProfileCard.Description profile={profile} numberOfLines={2} />
+            </ProfileCard.Outer>
+          </View>
+        </>
+      )}
+    </ProfileCard.Link>
+  )
+}
+SuggestedProfileCard = memo(SuggestedProfileCard)
+export {SuggestedProfileCard}

@@ -1,18 +1,21 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
 import {
   AppBskyFeedPost,
   AppBskyRichtextFacet,
   AtUri,
+  moderatePost,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {
   convertBskyAppUrlIfNeeded,
   isBskyPostUrl,
@@ -30,6 +33,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 export function useMessageEmbed() {
   const route =
@@ -113,8 +117,10 @@ export function MessageInputEmbed({
   const {rt, record} = useMemo(() => {
     if (
       post &&
-      AppBskyFeedPost.isRecord(post.record) &&
-      AppBskyFeedPost.validateRecord(post.record).success
+      bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        post.record,
+        AppBskyFeedPost.isRecord,
+      )
     ) {
       return {
         rt: new RichTextAPI({

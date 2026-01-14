@@ -1,5 +1,9 @@
-import React from 'react'
-import {StyleProp, TextStyle, View, ViewStyle} from 'react-native'
+import {
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 // @ts-ignore no type definition -prf
 import ProgressCircle from 'react-native-progress/Circle'
 // @ts-ignore no type definition -prf
