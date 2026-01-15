@@ -310,7 +310,6 @@ let UserAvatar = ({
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
           onLoad={onLoad}
-          loading="lazy"
         />
       )}
       {!noBorder && <MediaInsetBorder style={borderStyle} />}
@@ -447,7 +446,6 @@ let EditableUserAvatar = ({
                   style={aviStyle}
                   source={{uri: avatar}}
                   accessibilityRole="image"
-                  loading="lazy"
                 />
               ) : (
                 <DefaultAvatar type={type} size={size} />
