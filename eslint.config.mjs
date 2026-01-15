@@ -1,9 +1,12 @@
 // @ts-check
 import js from '@eslint/js'
 import tseslint from 'typescript-eslint'
+import { defineConfig } from 'eslint/config';
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
+// @ts-expect-error no types
 import reactNative from 'eslint-plugin-react-native'
+// @ts-expect-error no types
 import reactNativeA11y from 'eslint-plugin-react-native-a11y'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import importX from 'eslint-plugin-import-x'
@@ -11,8 +14,9 @@ import lingui from 'eslint-plugin-lingui'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import bskyInternal from 'eslint-plugin-bsky-internal'
 import globals from 'globals'
+import tsParser from '@typescript-eslint/parser'
 
-export default tseslint.config(
+export default defineConfig(
   // Global ignores
   {
     ignores: [
@@ -40,18 +44,25 @@ export default tseslint.config(
   js.configs.recommended,
 
   // TypeScript rules
-  ...tseslint.configs.recommended,
+  tseslint.configs.recommendedTypeChecked,
+
+  // React Hooks rules
+  reactHooks.configs.flat.recommended,
+
+  // Import X
+  // @ts-expect-error https://github.com/un-ts/eslint-plugin-import-x/issues/439
+  importX.flatConfigs.recommended,
+  importX.flatConfigs.typescript,
+  importX.flatConfigs['react-native'],
 
   // Main configuration for all JS/TS/JSX/TSX files
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       react,
-      'react-hooks': reactHooks,
       'react-native': reactNative,
       'react-native-a11y': reactNativeA11y,
       'simple-import-sort': simpleImportSort,
-      'import-x': importX,
       lingui,
       'react-compiler': reactCompiler,
       'bsky-internal': bskyInternal,
@@ -65,6 +76,8 @@ export default tseslint.config(
         ...globals.es2021,
       },
       parserOptions: {
+        parser: tsParser,
+        projectService: true,
         ecmaFeatures: {
           jsx: true,
         },
@@ -83,8 +96,6 @@ export default tseslint.config(
       'react/no-unescaped-entities': 'off',
       'react/prop-types': 'off',
 
-      // React Hooks rules
-      ...reactHooks.configs.recommended.rules,
 
       // React Native rules
       'react-native/no-inline-styles': 'off',
@@ -188,13 +199,27 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-require-imports': 'off',
       // Maintain previous behavior - these are stricter in typescript-eslint v8
+      // `warn` ones are probably worth fixing. `off` ones are a bit too nit-picky
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
-      '@typescript-eslint/no-wrapper-object-types': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/unbound-method': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'warn',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-misused-promises': 'warn',
+      '@typescript-eslint/require-await': 'warn',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'warn',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
+      '@typescript-eslint/no-redundant-type-constituents': 'warn',
+      '@typescript-eslint/no-duplicate-type-constituents': 'warn',
+      '@typescript-eslint/no-base-to-string': 'warn',
+      '@typescript-eslint/prefer-promise-reject-errors': 'warn',
+      '@typescript-eslint/await-thenable': 'warn',
 
       // Import rules
       'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],
