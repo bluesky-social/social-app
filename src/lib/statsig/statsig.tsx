@@ -5,8 +5,8 @@ import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
-import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
+import {IS_WEB} from '#/env'
 import * as env from '#/env'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
@@ -37,7 +37,7 @@ type StatsigUser = {
 
 let refSrc = ''
 let refUrl = ''
-if (isWeb && typeof window !== 'undefined') {
+if (IS_WEB && typeof window !== 'undefined') {
   const params = new URLSearchParams(window.location.search)
   refSrc = params.get('ref_src') ?? ''
   refUrl = decodeURIComponent(params.get('ref_url') ?? '')

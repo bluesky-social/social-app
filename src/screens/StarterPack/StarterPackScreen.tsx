@@ -27,7 +27,6 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
@@ -72,6 +71,7 @@ import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 type StarterPackScreeProps = NativeStackScreenProps<
@@ -608,21 +608,21 @@ function OverflowMenu({
               <Menu.Group>
                 <Menu.Item
                   label={
-                    isWeb
+                    IS_WEB
                       ? _(msg`Copy link to starter pack`)
                       : _(msg`Share via...`)
                   }
                   testID="shareStarterPackLinkBtn"
                   onPress={onOpenShareDialog}>
                   <Menu.ItemText>
-                    {isWeb ? (
+                    {IS_WEB ? (
                       <Trans>Copy link</Trans>
                     ) : (
                       <Trans>Share via...</Trans>
                     )}
                   </Menu.ItemText>
                   <Menu.ItemIcon
-                    icon={isWeb ? ChainLinkIcon : ArrowOutOfBoxIcon}
+                    icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
                     position="right"
                   />
                 </Menu.Item>

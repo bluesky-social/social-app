@@ -13,7 +13,6 @@ import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerificati
 import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
@@ -38,6 +37,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxPreview} from './components/InboxPreview'
 
@@ -222,7 +222,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
 
   const onSoftReset = useCallback(async () => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: 0,
     })
     try {
@@ -348,7 +348,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
             hasNextPage={hasNextPage}
           />
         }
-        onEndReachedThreshold={isNative ? 1.5 : 0}
+        onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
         initialNumToRender={initialNumToRender}
         windowSize={11}
         desktopFixedHeight

@@ -21,7 +21,6 @@ import {
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
@@ -44,6 +43,7 @@ import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {RequestListItem} from './components/RequestListItem'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
@@ -288,7 +288,7 @@ function RequestList({
             hasNextPage={hasNextPage}
           />
         }
-        onEndReachedThreshold={isNative ? 1.5 : 0}
+        onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
         initialNumToRender={initialNumToRender}
         windowSize={11}
         desktopFixedHeight

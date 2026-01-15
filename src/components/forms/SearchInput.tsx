@@ -4,12 +4,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon} from '#/components/icons/MagnifyingGlass'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {IS_NATIVE} from '#/env'
 
 type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
   label?: TextField.InputProps['label']
@@ -36,7 +36,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
             placeholder={_(msg`Search`)}
             returnKeyType="search"
             keyboardAppearance={t.scheme}
-            selectTextOnFocus={isNative}
+            selectTextOnFocus={IS_NATIVE}
             autoFocus={false}
             accessibilityRole="search"
             autoCorrect={false}

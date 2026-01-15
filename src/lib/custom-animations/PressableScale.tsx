@@ -13,9 +13,9 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {isTouchDevice} from '#/lib/browser'
-import {isNative} from '#/platform/detection'
+import {IS_NATIVE} from '#/env'
 
-const DEFAULT_TARGET_SCALE = isNative || isTouchDevice ? 0.98 : 1
+const DEFAULT_TARGET_SCALE = IS_NATIVE || isTouchDevice ? 0.98 : 1
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 

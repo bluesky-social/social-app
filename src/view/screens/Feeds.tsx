@@ -16,7 +16,6 @@ import {
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
-import {isNative, isWeb} from '#/platform/detection'
 import {
   type SavedFeedItem,
   useGetPopularFeedsQuery,
@@ -46,6 +45,7 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import * as ListCard from '#/components/ListCard'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
@@ -385,7 +385,7 @@ export function FeedsScreen(_props: Props) {
   const onChangeSearchFocus = React.useCallback(
     (focus: boolean) => {
       if (focus && searchBarIndex > -1) {
-        if (isNative) {
+        if (IS_NATIVE) {
           // scrollToIndex scrolls the exact right amount, so use if available
           listRef.current?.scrollToIndex({
             index: searchBarIndex,
@@ -681,7 +681,7 @@ function FeedsSavedHeader() {
   return (
     <View
       style={
-        isWeb
+        IS_WEB
           ? [
               a.flex_row,
               a.px_md,
@@ -717,7 +717,7 @@ function FeedsAboutHeader() {
   return (
     <View
       style={
-        isWeb
+        IS_WEB
           ? [a.flex_row, a.px_md, a.pt_lg, a.pb_lg, a.gap_md]
           : [{flexDirection: 'row-reverse'}, a.p_lg, a.gap_md]
       }>

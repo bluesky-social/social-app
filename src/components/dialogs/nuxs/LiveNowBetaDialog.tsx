@@ -5,7 +5,6 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
 import {atoms as a, select, useTheme, utils, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -16,6 +15,7 @@ import {
 } from '#/components/dialogs/nuxs/utils'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import {IS_E2E} from '#/env'
 
 export const enabled = createIsEnabledCheck(props => {
@@ -72,7 +72,7 @@ export function LiveNowBetaDialog() {
             a.overflow_hidden,
             {
               gap: 16,
-              paddingTop: isWeb ? 24 : 40,
+              paddingTop: IS_WEB ? 24 : 40,
               borderTopLeftRadius: a.rounded_md.borderRadius,
               borderTopRightRadius: a.rounded_md.borderRadius,
             },
@@ -116,7 +116,7 @@ export function LiveNowBetaDialog() {
                   borderRadius: 24,
                   aspectRatio: 652 / 211,
                 },
-                isWeb
+                IS_WEB
                   ? [
                       {
                         boxShadow: `0px 10px 15px -3px ${shadowColor}`,
@@ -163,7 +163,7 @@ export function LiveNowBetaDialog() {
                 a.font_bold,
                 a.text_center,
                 {
-                  fontSize: isWeb ? 28 : 32,
+                  fontSize: IS_WEB ? 28 : 32,
                   maxWidth: 360,
                 },
               ]}>
@@ -186,7 +186,7 @@ export function LiveNowBetaDialog() {
             </Text>
           </View>
 
-          {!isWeb && (
+          {!IS_WEB && (
             <Button
               label={_(msg`Close`)}
               size="large"

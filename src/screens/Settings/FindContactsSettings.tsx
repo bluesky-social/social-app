@@ -20,7 +20,6 @@ import {
 } from '#/lib/routes/types'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {
   updateProfileShadow,
   useProfileShadow,
@@ -48,6 +47,7 @@ import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../Onboarding/util'
 
@@ -78,7 +78,7 @@ export function FindContactsSettingsScreen({}: Props) {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      {isNative ? (
+      {IS_NATIVE ? (
         data ? (
           !data.syncStatus ? (
             <Intro />

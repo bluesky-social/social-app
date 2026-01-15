@@ -10,7 +10,6 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
-import {isIOS} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
@@ -39,6 +38,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {IS_IOS} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {FollowDialogWithoutGuide} from './ProgressGuide/FollowDialog'
 import {ProgressGuideList} from './ProgressGuide/List'
@@ -692,7 +692,7 @@ export function ProfileGrid({
         t.atoms.border_contrast_low,
         t.atoms.bg_contrast_25,
       ]}
-      pointerEvents={isIOS ? 'auto' : 'box-none'}>
+      pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
       <View
         style={[
           a.px_lg,
@@ -701,7 +701,7 @@ export function ProfileGrid({
           a.align_center,
           a.justify_between,
         ]}
-        pointerEvents={isIOS ? 'auto' : 'box-none'}>
+        pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
         <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
           {isFeedContext ? (
             <Trans>Suggested for you</Trans>

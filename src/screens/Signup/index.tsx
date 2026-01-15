@@ -8,7 +8,6 @@ import {useLingui} from '@lingui/react'
 
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
 import {useServiceQuery} from '#/state/queries/service'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {useActiveStarterPack} from '#/state/shell/starter-pack'
@@ -30,6 +29,7 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID} from '#/env'
 import {GCP_PROJECT_ID} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -108,7 +108,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
   // On Android, warmup the Play Integrity API on the signup screen so it is ready by the time we get to the gate screen.
   useEffect(() => {
-    if (!isAndroid) {
+    if (!IS_ANDROID) {
       return
     }
     ReactNativeDeviceAttest.warmupIntegrity(GCP_PROJECT_ID).catch(err =>

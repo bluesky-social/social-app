@@ -3,12 +3,12 @@ import {type Agent, AppBskyActorDefs, asPredicate} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   preferencesQueryKey,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
+import {IS_WEB} from '#/env'
 import * as env from '#/env'
 import {
   type LiveEventFeed,
@@ -41,7 +41,7 @@ function useWebOnlyDebugLiveEventPreferences() {
   const agent = useAgent()
 
   useEffect(() => {
-    if (env.IS_DEV && isWeb && typeof window !== 'undefined') {
+    if (env.IS_DEV && IS_WEB && typeof window !== 'undefined') {
       // @ts-ignore
       window.__updateLiveEventPreferences = async (
         action: LiveEventPreferencesAction,

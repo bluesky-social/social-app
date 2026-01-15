@@ -8,7 +8,6 @@ import {useLingui} from '@lingui/react'
 import {useTranslate} from '#/lib/hooks/useTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
@@ -23,6 +22,7 @@ import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/War
 import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
+import {IS_NATIVE} from '#/env'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {hasReachedReactionLimit} from './util'
 
@@ -112,7 +112,7 @@ export let MessageContextMenu = ({
   return (
     <>
       <ContextMenu.Root>
-        {isNative && (
+        {IS_NATIVE && (
           <ContextMenu.AuxiliaryView align={isFromSelf ? 'right' : 'left'}>
             <EmojiReactionPicker
               message={message}

@@ -17,12 +17,12 @@ export const APP_METADATA = `${BUNDLE_IDENTIFIER.slice(0, 7)} (${__DEV__ ? 'dev'
 /**
  * Platform detection
  */
-export const IS_IOS = false
-export const IS_ANDROID = false
-export const IS_NATIVE = false
-export const IS_WEB = true
+export const IS_IOS: boolean = false
+export const IS_ANDROID: boolean = false
+export const IS_NATIVE: boolean = false
+export const IS_WEB: boolean = true
 // @ts-ignore we know window exists -prf
-export const IS_WEB_MOBILE = global.window.matchMedia(
+export const IS_WEB_MOBILE: boolean = global.window.matchMedia(
   'only screen and (max-width: 1300px)',
 )?.matches
-export const IS_WEB_MOBILE_IOS = /iPhone/.test(navigator.userAgent)
+export const IS_WEB_MOBILE_IOS: boolean = /iPhone/.test(navigator.userAgent)

@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 
 import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
-import {isNative} from '#/platform/detection'
 import {useAgent} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -18,6 +17,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {refetchAgeAssuranceServerState} from '#/ageAssurance'
 import {logger} from '#/ageAssurance'
+import {IS_NATIVE} from '#/env'
 
 export type AgeAssuranceRedirectDialogState = {
   result: 'success' | 'unknown'
@@ -166,7 +166,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
             </Trans>
           </Text>
 
-          {isNative && (
+          {IS_NATIVE && (
             <View style={[a.w_full, a.pt_lg]}>
               <Button
                 label={_(msg`Close`)}
@@ -225,7 +225,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           )}
         </Text>
 
-        {error && isNative && (
+        {error && IS_NATIVE && (
           <View style={[a.w_full, a.pt_lg]}>
             <Button
               label={_(msg`Close`)}

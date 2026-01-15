@@ -9,8 +9,8 @@ import {
 } from '@tanstack/react-query-persist-client'
 import type React from 'react'
 
-import {isNative, isWeb} from '#/platform/detection'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 declare global {
   interface Window {
@@ -87,7 +87,7 @@ setInterval(() => {
 }, 2000)
 
 focusManager.setEventListener(onFocus => {
-  if (isNative) {
+  if (IS_NATIVE) {
     const subscription = AppState.addEventListener(
       'change',
       (status: AppStateStatus) => {
@@ -187,7 +187,7 @@ function QueryProviderInner({
     }
   })
   useEffect(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       window.__TANSTACK_QUERY_CLIENT__ = queryClient
     }
   }, [queryClient])

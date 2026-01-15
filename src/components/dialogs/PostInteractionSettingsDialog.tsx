@@ -12,7 +12,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
 import {useGetPost} from '#/state/queries/post'
@@ -52,6 +51,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_IOS} from '#/env'
 
 export type PostInteractionSettingsFormProps = {
   canSave?: boolean
@@ -531,7 +531,7 @@ export function PostInteractionSettingsForm({
                 hitSlop={0}
                 onPress={() => {
                   playHaptic('Light')
-                  if (isIOS && !showLists) {
+                  if (IS_IOS && !showLists) {
                     LayoutAnimation.configureNext({
                       ...LayoutAnimation.Presets.linear,
                       duration: 175,

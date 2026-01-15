@@ -20,7 +20,6 @@ import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type AllNavigatorParams} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
-import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
@@ -34,6 +33,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {IS_NATIVE} from '#/env'
 import {PostFeed} from '../posts/PostFeed'
 import {FAB} from '../util/fab/FAB'
 import {type ListMethods} from '../util/List'
@@ -80,7 +80,7 @@ export function FeedPage({
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
-    return isNative && _isVideoFeed
+    return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export function FeedPage({
 
   const scrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: -headerOffset,
     })
     setMinimalShellMode(false)
@@ -136,7 +136,7 @@ export function FeedPage({
     })
   }, [scrollToTop, feed, queryClient])
 
-  const shouldPrefetch = isNative && isPageAdjacent
+  const shouldPrefetch = IS_NATIVE && isPageAdjacent
   const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI
   return (
     <View

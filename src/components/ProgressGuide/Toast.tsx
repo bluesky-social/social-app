@@ -11,9 +11,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
+import {IS_WEB} from '#/env'
 import {AnimatedCheck, type AnimatedCheckRef} from '../anim/AnimatedCheck'
 import {Text} from '../Typography'
 
@@ -108,11 +108,11 @@ export const ProgressGuideToast = React.forwardRef<
   const containerStyle = React.useMemo(() => {
     let left = 10
     let right = 10
-    if (isWeb && winDim.width > 400) {
+    if (IS_WEB && winDim.width > 400) {
       left = right = (winDim.width - 380) / 2
     }
     return {
-      position: isWeb ? 'fixed' : 'absolute',
+      position: IS_WEB ? 'fixed' : 'absolute',
       top: 0,
       left,
       right,

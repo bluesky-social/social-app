@@ -6,7 +6,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
-import {isNative, isWeb} from '#/platform/detection'
 import {
   usePreferencesQuery,
   useRemoveMutedWordsMutation,
@@ -22,6 +21,7 @@ import {
 } from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function RichTextTag({
   tag,
@@ -50,7 +50,7 @@ export function RichTextTag({
   const navigation = useNavigation<NavigationProp>()
   const isCashtag = tag.startsWith('$')
   const label = isCashtag ? _(msg`Cashtag ${tag}`) : _(msg`Hashtag ${tag}`)
-  const hint = isNative
+  const hint = IS_NATIVE
     ? _(msg`Long press to open tag menu for ${isCashtag ? tag : `#${tag}`}`)
     : _(msg`Click to open tag menu for ${isCashtag ? tag : `#${tag}`}`)
 
@@ -86,9 +86,9 @@ export function RichTextTag({
             }}
             {...menuProps}
             onPress={e => {
-              if (isWeb) {
+              if (IS_WEB) {
                 return createStaticClickIfUnmodified(() => {
-                  if (!isNative) {
+                  if (!IS_NATIVE) {
                     menuProps.onPress()
                   }
                 }).onPress(e)
@@ -99,7 +99,7 @@ export function RichTextTag({
             label={label}
             style={textStyle}
             emoji>
-            {isNative ? (
+            {IS_NATIVE ? (
               display
             ) : (
               <RNText ref={menuProps.ref}>{display}</RNText>

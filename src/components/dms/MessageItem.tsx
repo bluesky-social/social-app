@@ -21,7 +21,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
@@ -32,6 +31,7 @@ import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
 import {localDateString} from './util'
@@ -218,10 +218,10 @@ let MessageItem = ({
             </View>
           )}
 
-          {isNative && appliedReactions}
+          {IS_NATIVE && appliedReactions}
         </ActionsWrapper>
 
-        {!isNative && appliedReactions}
+        {!IS_NATIVE && appliedReactions}
 
         {isLastInGroup && (
           <MessageItemMetadata

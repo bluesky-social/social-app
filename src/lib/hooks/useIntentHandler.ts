@@ -6,10 +6,10 @@ import * as WebBrowser from 'expo-web-browser'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {logger} from '#/logger'
-import {isIOS, isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
@@ -29,7 +29,7 @@ export function useIntentHandler() {
 
   React.useEffect(() => {
     const handleIncomingURL = async (url: string) => {
-      if (isIOS) {
+      if (IS_IOS) {
         // Close in-app browser if it's open (iOS only)
         await WebBrowser.dismissBrowser().catch(() => {})
       }
@@ -150,7 +150,7 @@ export function useComposeIntent() {
       setTimeout(() => {
         openComposer({
           text: text ?? undefined,
-          imageUris: isNative ? imageUris : undefined,
+          imageUris: IS_NATIVE ? imageUris : undefined,
         })
       }, 500)
     },

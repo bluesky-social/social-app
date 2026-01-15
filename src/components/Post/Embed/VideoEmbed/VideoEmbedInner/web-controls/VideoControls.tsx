@@ -6,7 +6,6 @@ import type Hls from 'hls.js'
 
 import {isTouchDevice} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
-import {isIPhoneWeb} from '#/platform/detection'
 import {
   useAutoplayDisabled,
   useSetSubtitlesEnabled,
@@ -28,6 +27,7 @@ import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Paus
 import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_WEB_MOBILE_IOS} from '#/env'
 import {TimeIndicator} from '../TimeIndicator'
 import {ControlButton} from './ControlButton'
 import {Scrubber} from './Scrubber'
@@ -400,7 +400,7 @@ export function Controls({
             onEndHover={onVolumeEndHover}
             drawFocus={drawFocus}
           />
-          {!isIPhoneWeb && (
+          {!IS_WEB_MOBILE_IOS && (
             <ControlButton
               active={isFullscreen}
               activeLabel={_(msg`Exit fullscreen`)}

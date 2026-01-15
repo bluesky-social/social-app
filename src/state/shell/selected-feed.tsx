@@ -1,8 +1,8 @@
 import {createContext, useCallback, useContext, useState} from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
+import {IS_WEB} from '#/env'
 import {account} from '#/storage'
 
 type StateContext = FeedDescriptor | null
@@ -14,7 +14,7 @@ const setContext = createContext<SetContext>((_: string) => {})
 setContext.displayName = 'SelectedFeedSetContext'
 
 function getInitialFeed(did?: string): FeedDescriptor | null {
-  if (isWeb) {
+  if (IS_WEB) {
     if (window.location.pathname === '/') {
       const params = new URLSearchParams(window.location.search)
       const feedFromUrl = params.get('feed')
@@ -49,7 +49,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const saveState = useCallback(
     (feed: FeedDescriptor) => {
       setState(feed)
-      if (isWeb) {
+      if (IS_WEB) {
         try {
           sessionStorage.setItem('lastSelectedHomeFeed', feed)
         } catch {}

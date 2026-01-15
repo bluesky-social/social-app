@@ -13,7 +13,6 @@ import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
-import {isWeb} from '#/platform/detection'
 import {
   type Gif,
   tenorUrlToBskyGifUrl,
@@ -31,6 +30,7 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {IS_WEB} from '#/env'
 
 export function GifSelectDialog({
   controlRef,
@@ -149,7 +149,7 @@ function GifList({
           a.pb_sm,
           t.atoms.bg,
         ]}>
-        {!gtMobile && isWeb && (
+        {!gtMobile && IS_WEB && (
           <Button
             size="small"
             variant="ghost"
@@ -161,7 +161,7 @@ function GifList({
           </Button>
         )}
 
-        <TextField.Root style={[!gtMobile && isWeb && a.flex_1]}>
+        <TextField.Root style={[!gtMobile && IS_WEB && a.flex_1]}>
           <TextField.Icon icon={Search} />
           <TextField.Input
             label={_(msg`Search GIFs`)}

@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
-import {isNative} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
@@ -15,6 +14,7 @@ import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 enum Stages {
   Email,
@@ -193,7 +193,7 @@ export function DisableEmail2FADialog({
             </View>
           ) : undefined}
 
-          {!gtMobile && isNative && <View style={{height: 40}} />}
+          {!gtMobile && IS_NATIVE && <View style={{height: 40}} />}
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>

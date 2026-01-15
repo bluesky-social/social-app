@@ -3,10 +3,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {type SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
+import {IS_WEB} from '#/env'
 import {logEvent} from '../statsig/statsig'
 import {type LogEvents} from '../statsig/statsig'
 
@@ -28,7 +28,7 @@ export function useAccountSwitcher() {
       try {
         setPendingDid(account.did)
         if (account.accessJwt) {
-          if (isWeb) {
+          if (IS_WEB) {
             // We're switching accounts, which remounts the entire app.
             // On mobile, this gets us Home, but on the web we also need reset the URL.
             // We can't change the URL via a navigate() call because the navigator

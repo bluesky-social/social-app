@@ -3,7 +3,7 @@ import {Platform} from 'react-native'
 import * as Location from 'expo-location'
 import {createPermissionHook} from 'expo-modules-core'
 
-import {isNative} from '#/platform/detection'
+import {IS_NATIVE} from '#/env'
 import * as debug from '#/geolocation/debug'
 import {logger} from '#/geolocation/logger'
 import {type Geolocation} from '#/geolocation/types'
@@ -118,7 +118,7 @@ export function useSyncDeviceGeolocationOnStartup(
   const synced = useRef(false)
   const [status] = useForegroundPermissions()
   useEffect(() => {
-    if (!isNative) return
+    if (!IS_NATIVE) return
 
     async function get() {
       // no need to set this more than once per session

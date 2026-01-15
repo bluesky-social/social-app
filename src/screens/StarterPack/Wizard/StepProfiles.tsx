@@ -4,7 +4,6 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {isNative} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
@@ -16,6 +15,7 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
@@ -89,7 +89,7 @@ export function StepProfiles({
         onEndReached={
           !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
         }
-        onEndReachedThreshold={isNative ? 2 : 0.25}
+        onEndReachedThreshold={IS_NATIVE ? 2 : 0.25}
         keyboardDismissMode="on-drag"
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>

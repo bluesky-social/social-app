@@ -4,8 +4,8 @@ import ProgressPie from 'react-native-progress/Pie'
 import {type ImagePickerAsset} from 'expo-image-picker'
 
 import {clamp} from '#/lib/numbers'
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
+import {IS_WEB} from '#/env'
 import {ExternalEmbedRemoveBtn} from '../ExternalEmbedRemoveBtn'
 import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
@@ -20,7 +20,7 @@ export function VideoTranscodeProgress({
 }) {
   const t = useTheme()
 
-  if (isWeb) return null
+  if (IS_WEB) return null
 
   let aspectRatio = asset.width / asset.height
 

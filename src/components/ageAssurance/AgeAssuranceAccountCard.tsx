@@ -3,7 +3,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {isNative} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -23,6 +22,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {logger, useAgeAssurance} from '#/ageAssurance'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
+import {IS_NATIVE} from '#/env'
 import {useDeviceGeolocationApi} from '#/geolocation'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
@@ -86,7 +86,7 @@ function Inner({style}: ViewStyleProp & {}) {
           <View style={[a.pb_md, a.gap_xs]}>
             <Text style={[a.text_sm, a.leading_snug]}>{copy.notice}</Text>
 
-            {isNative && (
+            {IS_NATIVE && (
               <>
                 <Text style={[a.text_sm, a.leading_snug]}>
                   <Trans>

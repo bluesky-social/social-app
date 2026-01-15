@@ -12,14 +12,14 @@ import {
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {IS_TESTFLIGHT} from '#/env'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 
 async function setExtraParams() {
   await setExtraParamAsync(
-    isIOS ? 'ios-build-number' : 'android-build-number',
+    IS_IOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
     // This just ensures it gets passed as a string
     `${nativeBuildVersion}`,
@@ -32,7 +32,7 @@ async function setExtraParams() {
 
 async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync(
-    isIOS ? 'ios-build-number' : 'android-build-number',
+    IS_IOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
     // This just ensures it gets passed as a string
     `${nativeBuildVersion}`,
@@ -198,7 +198,7 @@ export function useOTAUpdates() {
     // `maintainVisibleContentPosition`. See repro repo for more details:
     // https://github.com/mozzius/ota-crash-repro
     // Old Arch only - re-enable once we're on the New Archictecture! -sfn
-    if (isAndroid) return
+    if (IS_ANDROID) return
 
     const subscription = AppState.addEventListener(
       'change',

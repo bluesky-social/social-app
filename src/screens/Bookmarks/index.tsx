@@ -21,7 +21,6 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -38,6 +37,7 @@ import {ListFooter} from '#/components/Lists'
 import * as Skele from '#/components/Skeleton'
 import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {IS_IOS} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
 
@@ -193,7 +193,7 @@ function BookmarksInner() {
       }
       initialNumToRender={initialNumToRender}
       windowSize={9}
-      maxToRenderPerBatch={isIOS ? 5 : 1}
+      maxToRenderPerBatch={IS_IOS ? 5 : 1}
       updateCellsBatchingPeriod={40}
       sideBorders={false}
     />

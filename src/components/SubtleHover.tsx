@@ -1,8 +1,8 @@
 import {View} from 'react-native'
 
 import {isTouchDevice} from '#/lib/browser'
-import {isNative, isWeb} from '#/platform/detection'
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function SubtleHover({
   style,
@@ -39,9 +39,9 @@ export function SubtleHover({
     />
   )
 
-  if (isWeb && web) {
+  if (IS_WEB && web) {
     return isTouchDevice ? null : el
-  } else if (isNative && native) {
+  } else if (IS_NATIVE && native) {
     return el
   }
 

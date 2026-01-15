@@ -9,7 +9,6 @@ import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {type ImageMeta} from '#/state/gallery'
 import {
   useListCreateMutation,
@@ -26,6 +25,7 @@ import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 300
@@ -48,7 +48,7 @@ export function CreateOrEditListDialog({
 
   // 'You might lose unsaved changes' warning
   useEffect(() => {
-    if (isWeb && dirty) {
+    if (IS_WEB && dirty) {
       const abortController = new AbortController()
       const {signal} = abortController
       window.addEventListener('beforeunload', evt => evt.preventDefault(), {

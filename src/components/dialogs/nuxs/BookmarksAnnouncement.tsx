@@ -5,7 +5,6 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonText} from '#/components/Button'
@@ -13,6 +12,7 @@ import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 export function BookmarksAnnouncement() {
   const t = useTheme()
@@ -49,7 +49,7 @@ export function BookmarksAnnouncement() {
             a.overflow_hidden,
             {
               gap: 16,
-              paddingTop: isWeb ? 24 : 40,
+              paddingTop: IS_WEB ? 24 : 40,
               borderTopLeftRadius: a.rounded_md.borderRadius,
               borderTopRightRadius: a.rounded_md.borderRadius,
             },
@@ -90,7 +90,7 @@ export function BookmarksAnnouncement() {
                   borderRadius: 24,
                   aspectRatio: 333 / 104,
                 },
-                isWeb
+                IS_WEB
                   ? [
                       {
                         boxShadow: `0px 10px 15px -3px ${transparentifyColor(t.palette.black, 0.2)}`,
@@ -136,7 +136,7 @@ export function BookmarksAnnouncement() {
                 a.font_bold,
                 a.text_center,
                 {
-                  fontSize: isWeb ? 28 : 32,
+                  fontSize: IS_WEB ? 28 : 32,
                   maxWidth: 300,
                 },
               ]}>
@@ -158,7 +158,7 @@ export function BookmarksAnnouncement() {
             </Text>
           </View>
 
-          {!isWeb && (
+          {!IS_WEB && (
             <Button
               label={_(msg`Close`)}
               size="large"

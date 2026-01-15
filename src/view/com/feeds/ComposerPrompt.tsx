@@ -11,7 +11,6 @@ import {
 } from '#/lib/hooks/usePermissions'
 import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -22,6 +21,7 @@ import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/C
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export function ComposerPrompt() {
   const {_} = useLingui()
@@ -43,7 +43,7 @@ export function ComposerPrompt() {
     logger.metric('composerPrompt:gallery:press', {})
 
     // On web, open the composer with the gallery picker auto-opening
-    if (!isNative) {
+    if (!IS_NATIVE) {
       openComposer({openGallery: true})
       return
     }
@@ -105,7 +105,7 @@ export function ComposerPrompt() {
         return
       }
 
-      if (isNative && Keyboard.isVisible()) {
+      if (IS_NATIVE && Keyboard.isVisible()) {
         Keyboard.dismiss()
       }
 
@@ -122,7 +122,7 @@ export function ComposerPrompt() {
       ]
 
       openComposer({
-        imageUris: isNative ? imageUris : undefined,
+        imageUris: IS_NATIVE ? imageUris : undefined,
       })
     } catch (err: any) {
       if (!String(err).toLowerCase().includes('cancel')) {
@@ -189,7 +189,7 @@ export function ComposerPrompt() {
           <Trans>What's up?</Trans>
         </Text>
         <View style={[a.flex_row, a.gap_md]}>
-          {isNative && (
+          {IS_NATIVE && (
             <Button
               onPress={e => {
                 e.stopPropagation()

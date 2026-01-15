@@ -10,7 +10,6 @@ import {wait} from '#/lib/async/wait'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -31,6 +30,7 @@ import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as toast from '#/components/Toast'
+import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../util'
 
@@ -161,7 +161,7 @@ export function StepSuggestedAccounts() {
         style={[
           a.overflow_hidden,
           a.mt_sm,
-          isWeb
+          IS_WEB
             ? [a.max_w_full, web({minHeight: '100vh'})]
             : {marginHorizontal: tokens.space.xl * -1},
           a.flex_1,
@@ -213,7 +213,7 @@ export function StepSuggestedAccounts() {
               a.mt_md,
               a.border_y,
               t.atoms.border_contrast_low,
-              isWeb && [a.border_x, a.rounded_sm, a.overflow_hidden],
+              IS_WEB && [a.border_x, a.rounded_sm, a.overflow_hidden],
             ]}>
             {suggestedUsers?.actors.map((user, index) => (
               <SuggestedProfileCard
@@ -324,7 +324,7 @@ function TabBar({
               ...interestsDisplayNames,
             }
       }
-      gutterWidth={isWeb ? 0 : tokens.space.xl}
+      gutterWidth={IS_WEB ? 0 : tokens.space.xl}
     />
   )
 }
@@ -350,7 +350,7 @@ function SuggestedProfileCard({
     const node = cardRef.current
     if (!node || hasTrackedRef.current) return
 
-    if (isWeb && typeof IntersectionObserver !== 'undefined') {
+    if (IS_WEB && typeof IntersectionObserver !== 'undefined') {
       const observer = new IntersectionObserver(
         entries => {
           if (entries[0]?.isIntersecting && !hasTrackedRef.current) {

@@ -4,13 +4,13 @@ import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 export function ActivitySubscriptionsNUX() {
   const t = useTheme()
@@ -44,8 +44,8 @@ export function ActivitySubscriptionsNUX() {
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
             {
-              gap: isWeb ? 16 : 24,
-              paddingTop: isWeb ? 24 : 48,
+              gap: IS_WEB ? 16 : 24,
+              paddingTop: IS_WEB ? 24 : 48,
               borderTopLeftRadius: a.rounded_md.borderRadius,
               borderTopRightRadius: a.rounded_md.borderRadius,
             },
@@ -120,7 +120,7 @@ export function ActivitySubscriptionsNUX() {
           style={[
             a.align_center,
             a.px_xl,
-            isWeb ? [a.pt_xl, a.gap_xl, a.pb_sm] : [a.pt_3xl, a.gap_3xl],
+            IS_WEB ? [a.pt_xl, a.gap_xl, a.pb_sm] : [a.pt_3xl, a.gap_3xl],
           ]}>
           <View style={[a.gap_md, a.align_center]}>
             <Text
@@ -130,7 +130,7 @@ export function ActivitySubscriptionsNUX() {
                 a.font_bold,
                 a.text_center,
                 {
-                  fontSize: isWeb ? 28 : 32,
+                  fontSize: IS_WEB ? 28 : 32,
                   maxWidth: 300,
                 },
               ]}>
@@ -153,7 +153,7 @@ export function ActivitySubscriptionsNUX() {
             </Text>
           </View>
 
-          {!isWeb && (
+          {!IS_WEB && (
             <Button
               label={_(msg`Close`)}
               size="large"

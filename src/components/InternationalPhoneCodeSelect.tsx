@@ -10,9 +10,9 @@ import {
   INTERNATIONAL_TELEPHONE_CODES,
 } from '#/lib/international-telephone-codes'
 import {regionName} from '#/locale/helpers'
-import {isWeb} from '#/platform/detection'
 import {atoms as a, web} from '#/alf'
 import * as Select from '#/components/Select'
+import {IS_WEB} from '#/env'
 import {useGeolocation} from '#/geolocation'
 
 /**
@@ -84,7 +84,7 @@ export function InternationalPhoneCodeSelect({
             <Select.Item value={item.value} label={item.label}>
               <Select.ItemIndicator />
               <Select.ItemText style={[a.flex_1]} emoji>
-                {isWeb ? <Flag {...item} /> : item.unicodeFlag + ' '}
+                {IS_WEB ? <Flag {...item} /> : item.unicodeFlag + ' '}
                 {item.name}
               </Select.ItemText>
               <Select.ItemText style={[a.text_right]}>
@@ -101,7 +101,7 @@ export function InternationalPhoneCodeSelect({
 }
 
 function Flag({unicodeFlag, svgFlag}: {unicodeFlag: string; svgFlag: any}) {
-  if (isWeb) {
+  if (IS_WEB) {
     return (
       <Image
         source={svgFlag}
