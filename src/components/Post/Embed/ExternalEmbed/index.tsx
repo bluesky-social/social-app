@@ -100,6 +100,7 @@ export const ExternalEmbed = ({
               style={[a.aspect_card]}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
+              loading="lazy"
             />
           ) : undefined}
 

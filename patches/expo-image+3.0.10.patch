@@ -1,0 +1,103 @@
+diff --git a/node_modules/expo-image/build/Image.types.d.ts b/node_modules/expo-image/build/Image.types.d.ts
+index 022ae48..416504f 100644
+--- a/node_modules/expo-image/build/Image.types.d.ts
++++ b/node_modules/expo-image/build/Image.types.d.ts
+@@ -152,6 +152,16 @@ export interface ImageProps extends Omit<ViewProps, 'style' | 'children'> {
+      * @default 'normal'
+      */
+     priority?: 'low' | 'normal' | 'high' | null;
++    /**
++     * The loading behavior for the image. Maps to the native HTML `loading` attribute on web.
++     *
++     * - `'lazy'` - Defers loading until the image is near the viewport.
++     * - `'eager'` - Loads the image immediately.
++     *
++     * @default undefined
++     * @platform web
++     */
++    loading?: 'lazy' | 'eager' | null;
+     /**
+      * Determines whether to cache the image and where: on the disk, in the memory or both.
+      *
+diff --git a/node_modules/expo-image/src/ExpoImage.web.tsx b/node_modules/expo-image/src/ExpoImage.web.tsx
+index 2a49ff0..1c3de93 100644
+--- a/node_modules/expo-image/src/ExpoImage.web.tsx
++++ b/node_modules/expo-image/src/ExpoImage.web.tsx
+@@ -70,6 +70,7 @@ export default function ExpoImage({
+   onLoadEnd,
+   onDisplay,
+   priority,
++  loading,
+   blurRadius,
+   recyclingKey,
+   style,
+@@ -118,6 +119,7 @@ export default function ExpoImage({
+               accessibilityLabel={accessibilityLabel ?? alt}
+               cachePolicy={cachePolicy}
+               priority={priority}
++              loading={loading}
+               tintColor={tintColor}
+             />
+           ),
+@@ -149,6 +151,7 @@ export default function ExpoImage({
+           className={className}
+           cachePolicy={cachePolicy}
+           priority={priority}
++          loading={loading}
+           contentPosition={selectedSource ? contentPosition : { top: '50%', left: '50%' }}
+           hashPlaceholderContentPosition={contentPosition}
+           hashPlaceholderStyle={imageHashStyle}
+diff --git a/node_modules/expo-image/src/Image.types.ts b/node_modules/expo-image/src/Image.types.ts
+index 9dec0e7..61c1621 100644
+--- a/node_modules/expo-image/src/Image.types.ts
++++ b/node_modules/expo-image/src/Image.types.ts
+@@ -178,6 +178,17 @@ export interface ImageProps extends Omit<ViewProps, 'style' | 'children'> {
+    */
+   priority?: 'low' | 'normal' | 'high' | null;
+ 
++  /**
++   * The loading behavior for the image. Maps to the native HTML `loading` attribute on web.
++   *
++   * - `'lazy'` - Defers loading until the image is near the viewport.
++   * - `'eager'` - Loads the image immediately.
++   *
++   * @default undefined
++   * @platform web
++   */
++  loading?: 'lazy' | 'eager' | null;
++
+   /**
+    * Determines whether to cache the image and where: on the disk, in the memory or both.
+    *
+diff --git a/node_modules/expo-image/src/web/ImageWrapper.tsx b/node_modules/expo-image/src/web/ImageWrapper.tsx
+index e8f891d..89a5cb1 100644
+--- a/node_modules/expo-image/src/web/ImageWrapper.tsx
++++ b/node_modules/expo-image/src/web/ImageWrapper.tsx
+@@ -30,6 +30,7 @@ const ImageWrapper = React.forwardRef(
+       contentPosition,
+       hashPlaceholderContentPosition,
+       priority,
++      loading,
+       style,
+       hashPlaceholderStyle,
+       tintColor,
+@@ -82,6 +83,7 @@ const ImageWrapper = React.forwardRef(
+           // @ts-ignore
+           // eslint-disable-next-line react/no-unknown-property
+           fetchPriority={getFetchPriorityFromImagePriority(priority || 'normal')}
++          loading={loading || undefined}
+           {...getImageWrapperEventHandler(events, sourceWithHeaders)}
+           {...getImgPropsFromSource(source)}
+           {...props}
+diff --git a/node_modules/expo-image/src/web/ImageWrapper.types.ts b/node_modules/expo-image/src/web/ImageWrapper.types.ts
+index 19bbe2f..179837f 100644
+--- a/node_modules/expo-image/src/web/ImageWrapper.types.ts
++++ b/node_modules/expo-image/src/web/ImageWrapper.types.ts
+@@ -29,6 +29,7 @@ export type ImageWrapperProps = {
+   contentPosition?: ImageContentPositionObject;
+   hashPlaceholderContentPosition?: ImageContentPositionObject;
+   priority?: string | null;
++  loading?: 'lazy' | 'eager' | null;
+   style: CSSProperties;
+   tintColor?: string | null;
+   hashPlaceholderStyle?: CSSProperties;

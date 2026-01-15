@@ -226,6 +226,7 @@ export function ExternalPlayer({
               style={[a.flex_1]}
               source={{uri: link.thumb}}
               accessibilityIgnoresInvertColors
+              loading="lazy"
             />
             <Fill
               style={[
