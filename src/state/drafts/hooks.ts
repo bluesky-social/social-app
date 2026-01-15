@@ -2,7 +2,6 @@ import {useCallback} from 'react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
-import {isNative} from '#/platform/detection'
 import {type ComposerImage} from '#/state/gallery'
 import {useSession} from '#/state/session'
 import {type ComposerOpts} from '#/state/shell/composer'
@@ -19,9 +18,7 @@ import {
   type StoredPostDraft,
   type StoredRichText,
 } from './schema'
-
-// Import platform-specific storage
-const storage = isNative ? require('./storage') : require('./storage.web')
+import * as storage from './storage'
 
 const DRAFTS_QUERY_KEY_ROOT = 'drafts'
 
