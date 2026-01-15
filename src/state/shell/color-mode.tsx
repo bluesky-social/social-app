@@ -1,6 +1,5 @@
 import React from 'react'
 
-import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 
 type StateContext = {
@@ -59,8 +58,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [])
 
-  useStoreDarkThemeForSplash({darkTheme, colorMode})
-
   return (
     <stateContext.Provider value={stateContextValue}>
       <setContext.Provider value={setContextValue}>
@@ -77,21 +74,3 @@ export function useThemePrefs() {
 export function useSetThemePrefs() {
   return React.useContext(setContext)
 }
-
-// use to prevent FOUC in splash screen
-const useStoreDarkThemeForSplash = isWeb
-  ? ({
-      colorMode,
-      darkTheme,
-    }: {
-      colorMode: persisted.Schema['colorMode']
-      darkTheme: persisted.Schema['darkTheme']
-    }) => {
-      React.useEffect(() => {
-        if (window !== undefined) {
-          window.localStorage.setItem('SPLASH_DARK_THEME', darkTheme ?? 'dim')
-          window.localStorage.setItem('SPLASH_COLOR_MODE', colorMode)
-        }
-      }, [darkTheme, colorMode])
-    }
-  : () => {}

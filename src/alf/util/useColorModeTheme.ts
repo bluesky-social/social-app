@@ -51,6 +51,7 @@ function updateDocument(theme: ThemeName) {
     html.classList.add(`theme--${theme}`)
     // set color to 'theme-color' meta tag
     meta?.setAttribute('content', getBackgroundColor(theme))
+    window.localStorage.setItem('ALF_THEME', theme)
   }
 }
 
