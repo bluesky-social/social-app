@@ -14,7 +14,11 @@
  * the facet-set.
  */
 
-import {TAG_REGEX, TRAILING_PUNCTUATION_REGEX} from '@atproto/api'
+import {
+  CASHTAG_REGEX,
+  TAG_REGEX,
+  TRAILING_PUNCTUATION_REGEX,
+} from '@atproto/api'
 import {Mark} from '@tiptap/core'
 import {type Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Plugin, PluginKey} from '@tiptap/pm/state'
@@ -28,6 +32,7 @@ function getDecorations(doc: ProsemirrorNode) {
       const regex = TAG_REGEX
       const textContent = node.textContent
 
+      // Detect hashtags
       let match
       while ((match = regex.exec(textContent))) {
         const [matchedString, __, tag] = match
@@ -44,6 +49,27 @@ function getDecorations(doc: ProsemirrorNode) {
          * highlight by -1 to include the `#`
          */
         const start = pos + matchedFrom - 1
+        const end = pos + matchedTo
+
+        decorations.push(
+          Decoration.inline(start, end, {
+            class: 'autolink',
+          }),
+        )
+      }
+
+      // Detect cashtags
+      const cashtagRegex = new RegExp(CASHTAG_REGEX.source, 'gu')
+      while ((match = cashtagRegex.exec(textContent))) {
+        const [_fullMatch, leading, ticker] = match
+
+        if (!ticker) continue
+
+        // Calculate positions: leading char + $ + ticker
+        const matchedFrom = match.index + leading.length
+        const matchedTo = matchedFrom + 1 + ticker.length // +1 for $
+
+        const start = pos + matchedFrom
         const end = pos + matchedTo
 
         decorations.push(
