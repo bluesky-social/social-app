@@ -12,12 +12,12 @@ export const enabled = (IS_DEV && false) || IS_E2E
 
 export const geolocation: Geolocation | undefined = enabled
   ? {
-      countryCode: 'BB',
+      countryCode: 'AA',
       regionCode: undefined,
     }
   : undefined
 
-const deviceGeolocationEnabled = false
+const deviceGeolocationEnabled = false || IS_E2E
 export const deviceGeolocation: Geolocation | undefined =
   enabled && deviceGeolocationEnabled
     ? {
@@ -46,7 +46,7 @@ export const config: AppBskyAgeassuranceDefs.Config = {
       rules: [
         {
           $type: ids.Default,
-          access: 'none',
+          access: 'full',
         },
       ],
     },
