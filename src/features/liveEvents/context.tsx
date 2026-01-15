@@ -7,7 +7,7 @@ import {
   isBskyCustomFeedUrl,
   makeRecordUri,
 } from '#/lib/strings/url-helpers'
-import {IS_DEV, LIVE_EVENTS_URL} from '#/env'
+import {LIVE_EVENTS_URL} from '#/env'
 import {useLiveEventPreferences} from '#/features/liveEvents/preferences'
 import {type LiveEventsWorkerResponse} from '#/features/liveEvents/types'
 import {useDevMode} from '#/storage/hooks/dev-mode'
@@ -37,8 +37,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const isBskyTeam = useIsBskyTeam()
   const {data} = useQuery(
     {
-      staleTime: IS_DEV ? 5e3 : 1000 * 60,
+      // keep this, prefectching handles initial load
+      staleTime: 1000 * 15,
       queryKey: liveEventsQueryKey,
+      refetchInterval: 1000 * 60 * 5,
       async queryFn() {
         return fetchLiveEvents()
       },
