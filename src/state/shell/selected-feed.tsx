@@ -1,18 +1,19 @@
-import React from 'react'
+import {createContext, useCallback, useContext, useState} from 'react'
 
 import {isWeb} from '#/platform/detection'
-import * as persisted from '#/state/persisted'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {useSession} from '#/state/session'
+import {account} from '#/storage'
 
 type StateContext = FeedDescriptor | null
 type SetContext = (v: FeedDescriptor) => void
 
-const stateContext = React.createContext<StateContext>(null)
+const stateContext = createContext<StateContext>(null)
 stateContext.displayName = 'SelectedFeedStateContext'
-const setContext = React.createContext<SetContext>((_: string) => {})
+const setContext = createContext<SetContext>((_: string) => {})
 setContext.displayName = 'SelectedFeedSetContext'
 
-function getInitialFeed(): FeedDescriptor | null {
+function getInitialFeed(did?: string): FeedDescriptor | null {
   if (isWeb) {
     if (window.location.pathname === '/') {
       const params = new URLSearchParams(window.location.search)
@@ -30,27 +31,35 @@ function getInitialFeed(): FeedDescriptor | null {
     }
   }
 
-  const feedFromPersisted = persisted.get('lastSelectedHomeFeed')
-  if (feedFromPersisted) {
-    // Fall back to the last chosen one across all tabs.
-    return feedFromPersisted as FeedDescriptor
+  if (did) {
+    const feedFromStorage = account.get([did, 'lastSelectedHomeFeed'])
+    if (feedFromStorage) {
+      // Fall back to the last chosen one across all tabs.
+      return feedFromStorage as FeedDescriptor
+    }
   }
 
   return null
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(() => getInitialFeed())
+  const {currentAccount} = useSession()
+  const [state, setState] = useState(() => getInitialFeed(currentAccount?.did))
 
-  const saveState = React.useCallback((feed: FeedDescriptor) => {
-    setState(feed)
-    if (isWeb) {
-      try {
-        sessionStorage.setItem('lastSelectedHomeFeed', feed)
-      } catch {}
-    }
-    persisted.write('lastSelectedHomeFeed', feed)
-  }, [])
+  const saveState = useCallback(
+    (feed: FeedDescriptor) => {
+      setState(feed)
+      if (isWeb) {
+        try {
+          sessionStorage.setItem('lastSelectedHomeFeed', feed)
+        } catch {}
+      }
+      if (currentAccount?.did) {
+        account.set([currentAccount?.did, 'lastSelectedHomeFeed'], feed)
+      }
+    },
+    [currentAccount?.did],
+  )
 
   return (
     <stateContext.Provider value={state}>
@@ -60,9 +69,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useSelectedFeed() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetSelectedFeed() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }
