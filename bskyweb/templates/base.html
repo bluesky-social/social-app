@@ -37,27 +37,18 @@
       font-style: italic;
       font-display: swap;
     }
-    html {
-      background-color: white;
+    :root {
+      --text: black;
+      --background: white;
+      --backgroundLight: #e2e7ee;
     }
     @media (prefers-color-scheme: dark) {
-      html {
-        background-color: black;
+      :root {
+        color-scheme: dark;
+        --text: white;
+        --background: black;
+        --backgroundLight: #232e3e;
       }
-    }
-    html,
-    body {
-      margin: 0px;
-      padding: 0px;
-      font-family: InterVariable, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Liberation Sans', Helvetica, Arial, sans-serif;
-      text-rendering: optimizeLegibility;
-      /* Platform-specific reset */
-      -webkit-overflow-scrolling: touch;
-      -webkit-text-size-adjust: 100%;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      -ms-overflow-style: scrollbar;
-      font-synthesis-weight: none;
     }
     html,
     body,
@@ -66,6 +57,32 @@
       flex: 1 0 auto;
       min-height: 100%;
       width: 100%;
+    }
+    html.theme--light,
+    html.theme--light body,
+    html.theme--light #root {
+      background-color: white;
+      --text: black;
+      --background: white;
+      --backgroundLight: #DCE2EA;
+    }
+    html.theme--dark,
+    html.theme--dark body,
+    html.theme--dark #root {
+      color-scheme: dark;
+      background-color: black;
+      --text: white;
+      --background: black;
+      --backgroundLight: #232E3E;
+    }
+    html.theme--dim,
+    html.theme--dim body,
+    html.theme--dim #root {
+      color-scheme: dark;
+      background-color: #151D28;
+      --text: white;
+      --background: #151D28;
+      --backgroundLight: #2C3A4E;
     }
     #splash {
       display: flex;
@@ -93,6 +110,12 @@
       overflow-y: scroll;
     }
   </style>
+  <script>
+    const theme = localStorage.getItem('ALF_THEME')
+    if (theme) {
+      document.documentElement.classList.add(`theme--${theme}`)
+    }
+  </script>
 
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="{{ staticCDNHost }}/static/apple-touch-icon.png">
