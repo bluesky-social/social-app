@@ -5772,8 +5772,8 @@ msgstr ""
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
-#: src/view/shell/desktop/Feeds.tsx:107
-#: src/view/shell/desktop/Feeds.tsx:154
+#: src/view/shell/desktop/Feeds.tsx:109
+#: src/view/shell/desktop/Feeds.tsx:156
 msgid "More feeds"
 msgstr ""
 
@@ -6548,7 +6548,7 @@ msgstr ""
 msgid "Open system log"
 msgstr ""
 
-#: src/view/shell/desktop/Feeds.tsx:186
+#: src/view/shell/desktop/Feeds.tsx:188
 msgid "Opens {0} feed"
 msgstr ""
 
