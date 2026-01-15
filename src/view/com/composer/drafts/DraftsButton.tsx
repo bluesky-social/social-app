@@ -1,7 +1,7 @@
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {type StoredDraft, useSaveDraft} from '#/state/drafts'
+import {type DraftSummary, useSaveDraft} from '#/state/drafts'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -15,7 +15,7 @@ export function DraftsButton({
   isEmpty,
   isDirty,
 }: {
-  onSelectDraft: (draft: StoredDraft) => void
+  onSelectDraft: (draft: DraftSummary) => void
   onSaveDraft: () => Promise<void>
   onDiscard: () => void
   isEmpty: boolean

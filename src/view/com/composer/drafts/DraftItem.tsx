@@ -9,7 +9,7 @@ import {isNative} from '#/platform/detection'
 import {
   type DraftPostDisplay,
   type DraftSummary,
-  type LocalMediaRef,
+  type LocalMediaDisplay,
 } from '#/state/drafts'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useSession} from '#/state/session'
@@ -62,13 +62,20 @@ export function DraftItem({
           (pressed || hovered) && t.atoms.bg_contrast_25,
         ]}>
         <View style={[a.p_md, a.gap_sm]}>
-          {/* Reply indicator */}
-          {draft.isReply && draft.replyToHandle && (
-            <Text
-              style={[a.text_xs, t.atoms.text_contrast_medium, a.pb_2xs]}
-              numberOfLines={1}>
-              <Trans>Replying to @{draft.replyToHandle}</Trans>
-            </Text>
+          {/* Missing media warning */}
+          {draft.hasMissingMedia && (
+            <View
+              style={[
+                a.rounded_sm,
+                a.px_sm,
+                a.py_xs,
+                a.mb_xs,
+                t.atoms.bg_contrast_100,
+              ]}>
+              <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                <Trans>Some media unavailable (saved on another device)</Trans>
+              </Text>
+            </View>
           )}
 
           {/* Posts */}
@@ -207,61 +214,50 @@ function DraftPostRow({
 
 type LoadedImage = {
   url: string
-  meta: LocalMediaRef
+  meta: LocalMediaDisplay
 }
 
 function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
   const t = useTheme()
-  const {currentAccount} = useSession()
   const [loadedImages, setLoadedImages] = useState<LoadedImage[]>([])
-  const [gifUrl, setGifUrl] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadMedia() {
-      if (!currentAccount?.did) return
-
-      // Load images
+      // Load images that exist locally
       if (post.images && post.images.length > 0) {
         const loaded: LoadedImage[] = []
         for (const image of post.images) {
-          try {
-            const url = await storage.loadMediaFromLocal(
-              currentAccount.did,
-              image.localId,
-            )
-            loaded.push({url, meta: image})
-          } catch (e) {
-            // Image might not exist anymore
-            console.warn('Failed to load draft image', e)
+          if (image.exists) {
+            try {
+              const url = await storage.loadMediaFromLocal(image.localPath)
+              loaded.push({url, meta: image})
+            } catch (e) {
+              console.warn('Failed to load draft image', e)
+            }
           }
         }
         setLoadedImages(loaded)
       }
-
-      // GIFs have a URL directly
-      if (post.gif) {
-        setGifUrl(post.gif.url)
-      }
     }
 
     loadMedia()
-  }, [currentAccount?.did, post.images, post.gif])
+  }, [post.images])
 
   // Convert loaded images to ViewImage format for the embed components
   const viewImages = useMemo<AppBskyEmbedImages.ViewImage[]>(() => {
-    return loadedImages.map(({url, meta}) => ({
+    return loadedImages.map(({url}) => ({
       thumb: url,
       fullsize: url,
-      alt: meta.altText || '',
-      aspectRatio:
-        meta.width && meta.height
-          ? {width: meta.width, height: meta.height}
-          : undefined,
+      alt: '',
+      aspectRatio: undefined, // No dimensions stored in new schema
     }))
   }, [loadedImages])
 
+  // Count missing images
+  const missingImageCount = post.images?.filter(img => !img.exists).length ?? 0
+
   // Nothing to show
-  if (viewImages.length === 0 && !gifUrl && !post.video) {
+  if (viewImages.length === 0 && !post.gif && !post.video) {
     return null
   }
 
@@ -273,8 +269,18 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
       )}
       {viewImages.length > 1 && <ImageLayoutGrid images={viewImages} />}
 
+      {/* Missing images note */}
+      {missingImageCount > 0 && (
+        <Text style={[a.text_xs, t.atoms.text_contrast_medium, a.mt_xs]}>
+          <Trans>
+            {missingImageCount} image{missingImageCount > 1 ? 's' : ''} not
+            available
+          </Trans>
+        </Text>
+      )}
+
       {/* GIF preview */}
-      {gifUrl && (
+      {post.gif && (
         <View
           style={[
             a.rounded_md,
@@ -282,13 +288,13 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
             t.atoms.bg_contrast_25,
             {
               aspectRatio:
-                post.gif?.width && post.gif?.height
+                post.gif.width && post.gif.height
                   ? post.gif.width / post.gif.height
                   : 16 / 9,
             },
           ]}>
           <Image
-            source={{uri: gifUrl}}
+            source={{uri: post.gif.url}}
             style={[a.flex_1]}
             contentFit="cover"
             accessibilityIgnoresInvertColors
@@ -305,15 +311,14 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
             a.align_center,
             a.justify_center,
             t.atoms.bg_contrast_50,
-            {
-              aspectRatio:
-                post.video.width && post.video.height
-                  ? post.video.width / post.video.height
-                  : 16 / 9,
-            },
+            {aspectRatio: 16 / 9},
           ]}>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            <Trans>Video attached</Trans>
+            {post.video.exists ? (
+              <Trans>Video attached</Trans>
+            ) : (
+              <Trans>Video not available</Trans>
+            )}
           </Text>
         </View>
       )}

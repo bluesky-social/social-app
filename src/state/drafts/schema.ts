@@ -1,95 +1,30 @@
-import {type AppBskyFeedPostgate, type AppBskyRichtextFacet} from '@atproto/api'
-
-import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+/**
+ * Types for draft display and local media tracking.
+ * Server draft types come from @atproto/api.
+ */
 
 /**
- * Reference to locally stored media (image or video)
+ * Reference to locally cached media file for display
  */
-export type LocalMediaRef = {
-  /** UUID for local storage key */
-  localId: string
-  type: 'image' | 'video'
-  mimeType: string
-  width: number
-  height: number
-  altText: string
-}
-
-/**
- * Stored GIF metadata (re-fetchable from Tenor)
- */
-export type StoredGif = {
-  /** Tenor GIF ID */
-  tenorId: string
-  /** URL for the GIF */
-  url: string
-  /** Dimensions */
-  width: number
-  height: number
+export type LocalMediaDisplay = {
+  /** Path stored in server draft (used as key for local lookup) */
+  localPath: string
   /** Alt text */
   altText: string
+  /** Whether the local file exists on this device */
+  exists: boolean
 }
 
 /**
- * Serializable version of RichText
+ * GIF display data (parsed from external embed URL)
  */
-export type StoredRichText = {
-  text: string
-  facets?: AppBskyRichtextFacet.Main[]
-}
-
-/**
- * Serializable version of PostDraft for storage
- */
-export type StoredPostDraft = {
-  id: string
-  richtext: StoredRichText
-  labels: string[]
-  /** Quote post URI */
-  quoteUri?: string
-  /** External link URI (for link card) */
-  linkUri?: string
-  /** Locally stored images */
-  images?: LocalMediaRef[]
-  /** Locally stored video */
-  video?: LocalMediaRef & {
-    /** Captions for the video */
-    captions?: Array<{lang: string; localId: string}>
-  }
-  /** GIF metadata (re-fetchable from Tenor) */
-  gif?: StoredGif
-}
-
-/**
- * Full draft including thread structure
- */
-export type StoredDraft = {
-  /** Local draft UUID */
-  id: string
-  /** Owner account DID */
-  accountDid: string
-  /** ISO timestamp of creation */
-  createdAt: string
-  /** ISO timestamp of last update */
-  updatedAt: string
-  /** If this is a reply, the URI of the parent post */
-  replyToUri?: string
-  /** Reply parent author info (for display) */
-  replyToAuthor?: {
-    did: string
-    handle: string
-    displayName?: string
-  }
-  /** Thread posts */
-  posts: StoredPostDraft[]
-  /** Post interaction settings */
-  postgate?: AppBskyFeedPostgate.Record
-  /** Thread interaction settings */
-  threadgate?: ThreadgateAllowUISetting[]
-  /** Server draft ID (if synced) */
-  serverDraftId?: string
-  /** Sync status */
-  syncStatus: 'local' | 'synced' | 'dirty'
+export type GifDisplay = {
+  /** Full URL with dimensions */
+  url: string
+  /** Width */
+  width: number
+  /** Height */
+  height: number
 }
 
 /**
@@ -99,12 +34,12 @@ export type DraftPostDisplay = {
   id: string
   /** Full text content */
   text: string
-  /** Image URLs for display (local IDs that need to be loaded) */
-  images?: LocalMediaRef[]
+  /** Image references for display */
+  images?: LocalMediaDisplay[]
   /** Video reference */
-  video?: LocalMediaRef
-  /** GIF metadata */
-  gif?: StoredGif
+  video?: LocalMediaDisplay
+  /** GIF data (from URL) */
+  gif?: GifDisplay
 }
 
 /**
@@ -116,14 +51,14 @@ export type DraftSummary = {
   previewText: string
   /** Whether the draft has media */
   hasMedia: boolean
+  /** Whether some media is missing (saved on another device) */
+  hasMissingMedia?: boolean
   /** Number of media items */
   mediaCount: number
   /** Number of posts in thread */
   postCount: number
-  /** Whether this is a reply */
+  /** Whether this is a reply (always false - replies not supported) */
   isReply: boolean
-  /** Reply to author handle (if reply) */
-  replyToHandle?: string
   /** ISO timestamp of last update */
   updatedAt: string
   /** All posts in the draft for full display */

@@ -76,7 +76,13 @@ import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {loadDraftMedia, type StoredDraft, useSaveDraft} from '#/state/drafts'
+import {
+  type DraftSummary,
+  draftToComposerPosts,
+  threadgateToUISettings,
+  useLoadDraft,
+  useSaveDraft,
+} from '#/state/drafts'
 import {emitPostCreated} from '#/state/events'
 import {
   type ComposerImage,
@@ -192,6 +198,7 @@ export const ComposePost = ({
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
   const {mutateAsync: saveDraft, isPending: _isSavingDraft} = useSaveDraft()
+  const loadDraft = useLoadDraft()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
@@ -324,20 +331,27 @@ export const ComposePost = ({
   )
 
   const handleSelectDraft = React.useCallback(
-    async (draft: StoredDraft) => {
-      if (!currentDid) return
+    async (draftSummary: DraftSummary) => {
+      // Load full draft from server with media
+      const result = await loadDraft(draftSummary.id)
+      if (!result) return
 
-      // Load media from local storage
-      const loadedMedia = await loadDraftMedia(currentDid, draft)
+      const {draft, loadedMedia} = result
+
+      // Convert server draft to composer posts
+      const posts = draftToComposerPosts(draft, loadedMedia)
+      const threadgate = threadgateToUISettings(draft.threadgateAllow)
 
       // Dispatch restore action (this also sets draftId in state)
       composerDispatch({
         type: 'restore_from_draft',
-        draft,
+        draftId: draftSummary.id,
+        posts,
+        threadgate,
         loadedMedia,
       })
     },
-    [currentDid, composerDispatch],
+    [loadDraft, composerDispatch],
   )
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
@@ -349,30 +363,26 @@ export const ComposePost = ({
 
   const handleSaveDraft = React.useCallback(async () => {
     try {
-      const savedDraft = await saveDraft({
+      const draftId = await saveDraft({
         composerState,
-        replyTo,
         existingDraftId: composerState.draftId,
-        loadedMediaMap: composerState.loadedMediaMap,
       })
-      composerDispatch({type: 'mark_saved', draftId: savedDraft.id})
+      composerDispatch({type: 'mark_saved', draftId})
       onClose()
     } catch (e) {
       logger.error('Failed to save draft', {error: e})
       setError(_(msg`Failed to save draft`))
     }
-  }, [saveDraft, composerState, replyTo, composerDispatch, onClose, _])
+  }, [saveDraft, composerState, composerDispatch, onClose, _])
 
   // Save without closing - for use by DraftsButton
   const saveCurrentDraft = React.useCallback(async () => {
-    const savedDraft = await saveDraft({
+    const draftId = await saveDraft({
       composerState,
-      replyTo,
       existingDraftId: composerState.draftId,
-      loadedMediaMap: composerState.loadedMediaMap,
     })
-    composerDispatch({type: 'mark_saved', draftId: savedDraft.id})
-  }, [saveDraft, composerState, replyTo, composerDispatch])
+    composerDispatch({type: 'mark_saved', draftId})
+  }, [saveDraft, composerState, composerDispatch])
 
   // Check if composer is empty (no content to save)
   const isComposerEmpty = React.useMemo(() => {
@@ -1143,7 +1153,7 @@ function ComposerTopBar({
   isThread: boolean
   onCancel: () => void
   onPublish: () => void
-  onSelectDraft: (draft: StoredDraft) => void
+  onSelectDraft: (draft: DraftSummary) => void
   onSaveDraft: () => Promise<void>
   onDiscard: () => void
   isEmpty: boolean
@@ -1174,13 +1184,16 @@ function ComposerTopBar({
           </ButtonText>
         </Button>
         <View style={a.flex_1} />
-        <DraftsButton
-          onSelectDraft={onSelectDraft}
-          onSaveDraft={onSaveDraft}
-          onDiscard={onDiscard}
-          isEmpty={isEmpty}
-          isDirty={isDirty}
-        />
+        {/* Drafts not supported for replies */}
+        {!isReply && (
+          <DraftsButton
+            onSelectDraft={onSelectDraft}
+            onSaveDraft={onSaveDraft}
+            onDiscard={onDiscard}
+            isEmpty={isEmpty}
+            isDirty={isDirty}
+          />
+        )}
         {isPublishing ? (
           <>
             <Text style={pal.textLight}>{publishingStage}</Text>

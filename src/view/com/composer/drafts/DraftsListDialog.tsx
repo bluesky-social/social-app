@@ -4,13 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
-import {
-  type DraftSummary,
-  type StoredDraft,
-  useDeleteDraft,
-  useDrafts,
-  useLoadDraft,
-} from '#/state/drafts'
+import {type DraftSummary, useDeleteDraft, useDrafts} from '#/state/drafts'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -24,24 +18,20 @@ export function DraftsListDialog({
   onSelectDraft,
 }: {
   control: Dialog.DialogControlProps
-  onSelectDraft: (draft: StoredDraft) => void
+  onSelectDraft: (draft: DraftSummary) => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
   const {data: drafts, isLoading} = useDrafts()
-  const loadDraft = useLoadDraft()
   const {mutate: deleteDraft} = useDeleteDraft()
 
   const handleSelectDraft = useCallback(
-    async (summary: DraftSummary) => {
-      const draft = await loadDraft(summary.id)
-      if (draft) {
-        control.close(() => {
-          onSelectDraft(draft)
-        })
-      }
+    (summary: DraftSummary) => {
+      control.close(() => {
+        onSelectDraft(summary)
+      })
     },
-    [loadDraft, control, onSelectDraft],
+    [control, onSelectDraft],
   )
 
   const handleDeleteDraft = useCallback(
