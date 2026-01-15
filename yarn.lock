@@ -11372,6 +11372,11 @@ expo-notifications@~0.32.14:
     expo-application "~7.0.8"
     expo-constants "~18.0.11"
 
+expo-privacy-sensitive@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/expo-privacy-sensitive/-/expo-privacy-sensitive-0.1.0.tgz#2177d7a3cb8ed352df94c5806d012dfb7b48bc84"
+  integrity sha512-N0xa8yz+u7HvGY5CqZeo5cwtTOyFQxOxxt15jeW1eAjLKZAcNrtrDGGJP18TX2eh5TfJ3I6OtmECJg9Q8+Yorw==
+
 expo-pwa@0.0.127:
   version "0.0.127"
   resolved "https://registry.yarnpkg.com/expo-pwa/-/expo-pwa-0.0.127.tgz#b8d2fd28efff408a24e0f2539bfb47e09f8e4ebe"

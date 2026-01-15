@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   useProfileFollowMutationQueue,
@@ -14,10 +15,23 @@ import {useRequireAuth} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {GrowthHack} from './GrowthHack'
 
 export function ThreadItemAnchorFollowButton({did}: {did: string}) {
+  if (isIOS) {
+    return (
+      <GrowthHack>
+        <ThreadItemAnchorFollowButtonInner did={did} />
+      </GrowthHack>
+    )
+  }
+
+  return <ThreadItemAnchorFollowButtonInner did={did} />
+}
+
+export function ThreadItemAnchorFollowButtonInner({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
 
   // We will never hit this - the profile will always be cached or loaded above
@@ -113,15 +127,10 @@ function PostThreadFollowBtnLoaded({
       label={_(msg`Follow ${profile.handle}`)}
       onPress={onPress}
       size="small"
-      variant="solid"
       color={isFollowing ? 'secondary' : 'secondary_inverted'}
       style={[a.rounded_full]}>
       {gtMobile && (
-        <ButtonIcon
-          icon={isFollowing ? Check : Plus}
-          position="left"
-          size="sm"
-        />
+        <ButtonIcon icon={isFollowing ? CheckIcon : PlusIcon} size="sm" />
       )}
       <ButtonText>
         {!isFollowing ? (

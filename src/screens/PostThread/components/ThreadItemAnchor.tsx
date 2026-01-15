@@ -381,7 +381,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             </View>
           </Link>
           {showFollowButton && (
-            <View collapsable={false}>
+            <View collapsable={false} style={[a.self_center]}>
               <ThreadItemAnchorFollowButton did={post.author.did} />
             </View>
           )}
