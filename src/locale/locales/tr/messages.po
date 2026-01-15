@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-07 09:06\n"
+"PO-Revision-Date: 2026-01-15 15:41\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -94,17 +94,17 @@ msgstr "{0, plural, other {# okunmamış öğe}}"
 msgid "{0, plural, one {#mo} other {#mo}}"
 msgstr "{0, plural, other {#a}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:444
+#: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "{0, plural, other {takipçi}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:448
+#: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, other {takip edilen}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:477
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:489
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, other {beğeni}}"
 
@@ -112,15 +112,15 @@ msgstr "{0, plural, other {beğeni}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, other {gönderi}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:461
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:473
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, other {alıntı}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:443
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:455
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, other {yeniden gönderi}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:488
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:500
 msgid "{0, plural, one {save} other {saves}}"
 msgstr "{0, plural, other {kaydedilme}}"
 
@@ -160,13 +160,9 @@ msgstr "{0} <0><1>metin ve etiketler</1>de</0>"
 msgid "{0} following"
 msgstr "{0} takip edilen"
 
-#: src/components/live/LiveStatusDialog.tsx:68
+#: src/components/live/LiveStatusDialog.tsx:79
 msgid "{0} is live"
 msgstr "{0} canlı yayında"
-
-#: src/components/live/queries.ts:39
-msgid "{0} is not a valid URL"
-msgstr "{0} geçerli bir URL değil"
 
 #: src/screens/Signup/StepHandle/index.tsx:188
 msgid "{0} is not available"
@@ -411,7 +407,7 @@ msgstr "{firstAuthorName} sizin başlangıç paketinizle kaydoldu"
 msgid "{firstAuthorName} verified you"
 msgstr "{firstAuthorName} sizi doğruladı"
 
-#: src/components/ProfileHoverCard/index.web.tsx:577
+#: src/components/ProfileHoverCard/index.web.tsx:578
 msgid "{following} following"
 msgstr "{following} takip ediliyor"
 
@@ -515,7 +511,7 @@ msgstr "<0>{0}</0> üyeleri"
 msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0> {time}"
 
-#: src/screens/Hashtag.tsx:225
+#: src/screens/Hashtag.tsx:238
 #: src/screens/Search/SearchResults.tsx:294
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "<4>Bluesky'da haber, spor, siyaset ve diğer olan biteni aramak için</4><3> </3><0>giriş yapın</0><1> veya </1><2>bir hesap oluşturun.</2>"
@@ -569,6 +565,11 @@ msgstr "Yeni bir kod yollandı"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:91
 msgid "A new form of verification"
 msgstr "Yeni bir doğrulama biçimi"
+
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:147
+msgid "A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: \"Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!\""
+msgstr "@esb.lol tarafından yollanan ve kullanıcının Twitch'ten canlı yayın yaptığını gösteren bir gönderinin ekran görüntüsü. Gönderide İngilizce olarak şu yazıyor: \"Merhaba! Twitch'te canlı yayındayım ve Bluesky'ın bu yeni özelliğini de deniyorum!\""
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
@@ -626,20 +627,20 @@ msgstr "Erişilebilirlik Ayarları"
 msgid "Account"
 msgstr "Hesap"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:393
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:419
 #: src/screens/Messages/components/RequestButtons.tsx:91
-#: src/view/com/profile/ProfileMenu.tsx:166
+#: src/view/com/profile/ProfileMenu.tsx:181
 msgctxt "toast"
 msgid "Account blocked"
 msgstr "Hesap engellendi"
 
-#: src/view/com/profile/ProfileMenu.tsx:179
+#: src/view/com/profile/ProfileMenu.tsx:194
 msgctxt "toast"
 msgid "Account followed"
 msgstr "Hesap takip edildi"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:416
-#: src/view/com/profile/ProfileMenu.tsx:142
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:442
+#: src/view/com/profile/ProfileMenu.tsx:157
 msgctxt "toast"
 msgid "Account muted"
 msgstr "Hesap susturuldu"
@@ -667,18 +668,18 @@ msgstr "Hesap hızlı erişimden kaldırıldı"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:84
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:290
-#: src/view/com/profile/ProfileMenu.tsx:156
+#: src/view/com/profile/ProfileMenu.tsx:171
 msgctxt "toast"
 msgid "Account unblocked"
 msgstr "Hesap engeli kaldırıldı"
 
-#: src/view/com/profile/ProfileMenu.tsx:191
+#: src/view/com/profile/ProfileMenu.tsx:206
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr "Hesap takibi bırakıldı"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:406
-#: src/view/com/profile/ProfileMenu.tsx:132
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:432
+#: src/view/com/profile/ProfileMenu.tsx:147
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr "Hesap susturulması kaldırıldı"
@@ -718,7 +719,7 @@ msgstr "{displayName} adlı kullanıcıyı başlangıç paketine ekle"
 msgid "Add a content warning"
 msgstr "Bir içerik uyarısı ekleyin"
 
-#: src/components/live/GoLiveDialog.tsx:98
+#: src/components/live/GoLiveDialog.tsx:103
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
 msgstr "Profilinize geçici bir canlı yayın durumu ekleyin. Biri profil fotoğrafınıza tıkladığında canlı yayın etkinliğinizle ilgili bilgileri görecektir."
 
@@ -775,7 +776,7 @@ msgstr "Uygulama Şifresi Ekle"
 msgid "Add emoji reaction"
 msgstr "Emoji tepkisi ekle"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:222
+#: src/view/com/feeds/ComposerPrompt.tsx:220
 msgid "Add image"
 msgstr "Resim ekle"
 
@@ -784,8 +785,8 @@ msgstr "Resim ekle"
 msgid "Add media to post"
 msgstr "Gönderiye medya ekle"
 
-#: src/components/moderation/ReportDialog/index.tsx:506
-#: src/components/moderation/ReportDialog/index.tsx:510
+#: src/components/moderation/ReportDialog/index.tsx:520
+#: src/components/moderation/ReportDialog/index.tsx:524
 msgid "Add more details (optional)"
 msgstr "Daha fazla detay ekle (opsiyonel)"
 
@@ -826,22 +827,22 @@ msgstr "Yalnızca takip ettiklerinizden ibaret varsayılan akışı ekleyin"
 msgid "Add the following DNS record to your domain:"
 msgstr "Alan adınıza aşağıdaki DNS kaydını ekleyin:"
 
-#: src/components/FeedCard.tsx:305
+#: src/components/FeedCard.tsx:337
 msgid "Add this feed to your feeds"
 msgstr "Akışlarınıza bu akışı ekleyin"
 
-#: src/view/com/profile/ProfileMenu.tsx:322
-#: src/view/com/profile/ProfileMenu.tsx:325
+#: src/view/com/profile/ProfileMenu.tsx:340
+#: src/view/com/profile/ProfileMenu.tsx:343
 msgid "Add to lists"
 msgstr "Listelere ekle"
 
-#: src/components/PostControls/BookmarkButton.tsx:129
+#: src/components/PostControls/BookmarkButton.tsx:141
 msgid "Add to saved posts"
 msgstr "Kayıtlı gönderilere ekle"
 
 #: src/components/dialogs/StarterPackDialog.tsx:176
-#: src/view/com/profile/ProfileMenu.tsx:313
-#: src/view/com/profile/ProfileMenu.tsx:316
+#: src/view/com/profile/ProfileMenu.tsx:331
+#: src/view/com/profile/ProfileMenu.tsx:334
 msgid "Add to starter packs"
 msgstr "Başlangıç paketlerine ekle"
 
@@ -849,7 +850,7 @@ msgstr "Başlangıç paketlerine ekle"
 msgid "Add user to list"
 msgstr "Kullanıcıyı listeye ekle"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:222
+#: src/ageAssurance/components/NoAccessScreen.tsx:231
 msgid "Add your birthdate"
 msgstr "Doğum tarihinizi ekleyin"
 
@@ -866,7 +867,7 @@ msgstr "Başlangıç paketine eklendi"
 msgid "Additional details (limit 1000 characters)"
 msgstr "Ek ayrıntılar (1000 karakterle sınırlı)"
 
-#: src/components/moderation/ReportDialog/index.tsx:524
+#: src/components/moderation/ReportDialog/index.tsx:538
 msgid "Additional details (limit 300 characters)"
 msgstr "Ek ayrıntılar (300 karakterle sınırlıdır)"
 
@@ -919,8 +920,8 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "Yaş güvencesi sorgusu yollandı"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:345
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
+#: src/ageAssurance/components/NoAccessScreen.tsx:354
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:199
 msgid "Age assurance only takes a few minutes"
 msgstr "Yaş güvencesi sadece birkaç dakika alacaktır"
 
@@ -1042,7 +1043,7 @@ msgstr "Alternatif metin, görme engelli ve düşük görme yeteneğine sahip ku
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:133
 msgid "Alt text must be less than {MAX_ALT_TEXT} characters."
-msgstr ""
+msgstr "Alt metin {MAX_ALT_TEXT} karakterden kısa olmalıdır."
 
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:138
@@ -1155,6 +1156,10 @@ msgstr "Bir sorun oluştu, lütfen tekrar deneyin."
 msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
 msgstr "Bir kurgu iPhone açık Bluesky uygulamasında doğrulanmış bir kullanıcıyı adının yanındaki doğrulanma tikiyle birlikte gösteriyor."
 
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:166
+msgid "An unknown error occurred."
+msgstr "Bilinmeyen bir hata oluştu."
+
 #: src/components/moderation/ModerationDetailsDialog.tsx:136
 #: src/lib/moderation/useModerationCauseDescription.ts:145
 msgid "an unknown labeler"
@@ -1257,6 +1262,11 @@ msgstr "İtiraz et"
 msgid "Appeal \"{0}\" label"
 msgstr "\"{0}\" işaretine itiraz et"
 
+#: src/components/live/GoLiveDisabledDialog.tsx:92
+msgid "Appeal livestream suspension"
+msgstr "Canlı yayın dondurulmasına itiraz et"
+
+#: src/components/live/GoLiveDisabledDialog.tsx:82
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
 #: src/screens/Messages/components/ChatDisabled.tsx:103
 msgctxt "toast"
@@ -1296,12 +1306,12 @@ msgstr "Önerilen öntanımlı akışları uygula"
 msgid "Apply Pull Request"
 msgstr "Pull Request'i uygula"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:658
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:670
 msgid "Archived from {0}"
 msgstr "{0} kaynağından arşivlendi"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:666
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:639
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:678
 msgid "Archived post"
 msgstr "Arşivlenmiş gönderi"
 
@@ -1330,7 +1340,7 @@ msgstr "Bu yazışmayı terk etmek istediğinizden emin misiniz?"
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "Bu yazışmadan ayrılmak istediğinize emin misiniz? Mesajlarınız sizin için silinecek, ancak diğer katılımcı için silinmeyecektir."
 
-#: src/components/FeedCard.tsx:340
+#: src/components/FeedCard.tsx:372
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Bunu akışlarınızdan çıkarmak istediğinize emin misiniz?"
 
@@ -1358,8 +1368,8 @@ msgstr "Sanat"
 msgid "Artistic or non-erotic nudity."
 msgstr "Sanatsal veya erotik olmayan çıplaklık."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:529
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:531
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:555
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:557
 msgid "Assign topic for algo"
 msgstr "Algoritmaya başlık ata"
 
@@ -1372,8 +1382,8 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Kuzey Işıkları"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:116
-#: src/screens/Settings/ContentAndMediaSettings.tsx:122
+#: src/screens/Settings/ContentAndMediaSettings.tsx:117
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
 msgid "Autoplay videos and GIFs"
 msgstr "Videoları ve GIFleri otomatik oynat"
 
@@ -1457,6 +1467,10 @@ msgstr "Yaş güvencesi işlemine başla"
 msgid "Begin the age assurance process by completing the fields below."
 msgstr "Aşağıdaki alanları doldurarak yaş güvencesi işlemine başlayın."
 
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:99
+msgid "Beta Feature"
+msgstr "Beta Özellik"
+
 #: src/components/dialogs/BirthDateSettings.tsx:162
 msgid "Birthdate"
 msgstr "Doğum tarihi"
@@ -1465,25 +1479,25 @@ msgstr "Doğum tarihi"
 msgid "Birthday"
 msgstr "Doğum günü"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:792
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:818
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
-#: src/view/com/profile/ProfileMenu.tsx:495
+#: src/view/com/profile/ProfileMenu.tsx:548
 msgid "Block"
 msgstr "Engelle"
 
 #: src/components/dms/ConvoMenu.tsx:261
 #: src/components/dms/ConvoMenu.tsx:264
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:677
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:679
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:703
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:705
 #: src/screens/Messages/components/RequestButtons.tsx:144
 #: src/screens/Messages/components/RequestButtons.tsx:146
-#: src/view/com/profile/ProfileMenu.tsx:401
-#: src/view/com/profile/ProfileMenu.tsx:408
+#: src/view/com/profile/ProfileMenu.tsx:454
+#: src/view/com/profile/ProfileMenu.tsx:461
 msgid "Block account"
 msgstr "Hesabı engelle"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
-#: src/view/com/profile/ProfileMenu.tsx:478
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:813
+#: src/view/com/profile/ProfileMenu.tsx:531
 msgid "Block Account?"
 msgstr "Hesabı Engelle?"
 
@@ -1534,8 +1548,8 @@ msgstr "Engellenen hesaplar"
 msgid "Blocked Accounts"
 msgstr "Engellenen Hesaplar"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/profile/ProfileMenu.tsx:490
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:815
+#: src/view/com/profile/ProfileMenu.tsx:543
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Engellenen hesaplar, konularınıza yanıt veremez, sizi bahsedemez veya başka şekilde sizinle etkileşime giremez."
 
@@ -1551,7 +1565,7 @@ msgstr "Engellemeniz bu işaretleyicinin hesabınıza işaret koymasına engel o
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Engelleme herkese açıktır. Engellenen hesaplar, konularınıza yanıt veremez, sizi bahsedemez veya başka şekilde sizinle etkileşime giremez."
 
-#: src/view/com/profile/ProfileMenu.tsx:487
+#: src/view/com/profile/ProfileMenu.tsx:540
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr "Engellemeniz hesabınıza işaretlerin uygulanmasını önlemeyecektir fakat bu hesabın sizin konularınıza yanıt vermesini ya da sizle etkileşime geçmesini önleyecektir."
 
@@ -1564,7 +1578,7 @@ msgstr "Blog"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:688
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:700
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky iddia edilen tarihin doğruluğunu onaylayamaz."
 
@@ -1585,8 +1599,7 @@ msgstr "Bluesky, barındırma sağlayıcınızı seçebileceğiniz açık bir a�
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
 msgstr "Bluesky kendi sağlayıcınızı seçebildiğiniz açık bir ağdır. Eğer burada yeniyseniz varsayılan \"Bluesky Social\" seçeneğinde kalmanızı öneririz."
 
-#: src/components/ProgressGuide/List.tsx:53
-#: src/components/ProgressGuide/List.tsx:70
+#: src/components/ProgressGuide/List.tsx:103
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky arkadaşlarla daha güzel!"
 
@@ -1655,16 +1668,16 @@ msgstr "Özelleştirilmiş akışları göster"
 msgid "Browse more accounts"
 msgstr "Diğer hesaplara göz at"
 
-#: src/components/FeedInterstitials.tsx:907
+#: src/components/FeedInterstitials.tsx:908
 msgid "Browse more feeds on the Explore page"
 msgstr "Keşfet sayfasında daha fazla akış bul"
 
-#: src/components/FeedInterstitials.tsx:888
-#: src/components/FeedInterstitials.tsx:891
+#: src/components/FeedInterstitials.tsx:889
+#: src/components/FeedInterstitials.tsx:892
 msgid "Browse more suggestions"
 msgstr "Daha çok öneriye göz at"
 
-#: src/components/FeedInterstitials.tsx:916
+#: src/components/FeedInterstitials.tsx:917
 msgid "Browse more suggestions on the Explore page"
 msgstr "Keşfet sayfasında daha çok öneriye göz at"
 
@@ -1673,15 +1686,15 @@ msgstr "Keşfet sayfasında daha çok öneriye göz at"
 msgid "Browse other feeds"
 msgstr "Diğer akışlara göz at"
 
-#: src/components/TrendingTopics.tsx:178
+#: src/components/TrendingTopics.tsx:179
 msgid "Browse posts about {displayName}"
 msgstr "{displayName} hakkındaki gönderilere göz at"
 
-#: src/components/TrendingTopics.tsx:186
+#: src/components/TrendingTopics.tsx:187
 msgid "Browse posts tagged with {displayName}"
 msgstr "{displayName} etiketini barındıran gönderilere göz at"
 
-#: src/components/TrendingTopics.tsx:195
+#: src/components/TrendingTopics.tsx:196
 msgid "Browse starter pack {displayName}"
 msgstr "{displayName} başlangıç paketine göz at"
 
@@ -1689,7 +1702,7 @@ msgstr "{displayName} başlangıç paketine göz at"
 msgid "Browse topic {0}"
 msgstr "{0} konusuna göz at"
 
-#: src/components/TrendingTopics.tsx:232
+#: src/components/TrendingTopics.tsx:233
 msgid "Browse topic {displayName}"
 msgstr "{displayName} konusunu görüntüle"
 
@@ -1702,9 +1715,9 @@ msgid "Button to go back to the home timeline"
 msgstr "Ana akışa geri dönüş butonu"
 
 #: src/components/LabelingServiceCard/index.tsx:62
-#: src/components/moderation/ReportDialog/index.tsx:833
+#: src/components/moderation/ReportDialog/index.tsx:842
 #: src/screens/Search/components/StarterPackCard.tsx:106
-#: src/screens/Search/Explore.tsx:936
+#: src/screens/Search/Explore.tsx:943
 msgid "By {0}"
 msgstr "{0} tarafından"
 
@@ -1720,15 +1733,15 @@ msgstr "\"Devam et\"e tıklayarak bu güncellemeleri anladığınızı ve kabul 
 msgid "By continuing, you consent to this use. You may change your mind any time by visiting settings. <0>Learn more</0>"
 msgstr "Devam etmek suretiyle bu kullanıma izin veriyorsunuz. Ayarları ziyaret ederek bu konudaki tercihinizi değiştirebilirsiniz. <0>Daha fazla bilgi edinin</0>"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:79
+#: src/screens/Signup/StepInfo/Policies.tsx:75
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
 msgstr "Bir hesap oluşturarak <0>Gizlilik Politikası</0>'nı kabul etmiş sayılırsınız."
 
-#: src/screens/Signup/StepInfo/Policies.tsx:46
+#: src/screens/Signup/StepInfo/Policies.tsx:42
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Bir hesap oluşturarak <0>Hizmet Şartları</0>'nı ve <1>Gizlilik Politikası</1>'nı kabul etmiş sayılırsınız."
 
-#: src/screens/Signup/StepInfo/Policies.tsx:66
+#: src/screens/Signup/StepInfo/Policies.tsx:62
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "Bir hesap oluşturarak <0>Hizmet Şartları</0>'nı kabul etmiş sayılırsınız."
 
@@ -1753,12 +1766,14 @@ msgstr "Kamera"
 #: src/components/dialogs/InAppBrowserConsent.tsx:104
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:274
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:282
-#: src/components/live/GoLiveDialog.tsx:244
-#: src/components/live/GoLiveDialog.tsx:250
-#: src/components/Menu/index.tsx:350
+#: src/components/live/GoLiveDialog.tsx:243
+#: src/components/live/GoLiveDialog.tsx:249
+#: src/components/Menu/index.tsx:352
 #: src/components/PostControls/RepostButton.tsx:209
 #: src/components/Prompt.tsx:144
 #: src/components/Prompt.tsx:146
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:153
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:158
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:149
 #: src/screens/Profile/Header/EditProfileDialog.tsx:218
@@ -1804,9 +1819,9 @@ msgstr "Yeniden etkinleştirmeyi iptal et ve çıkış yap"
 msgid "Cancel search"
 msgstr "Aramayı iptal et"
 
-#: src/components/PostControls/index.tsx:106
-#: src/components/PostControls/index.tsx:137
-#: src/components/PostControls/index.tsx:165
+#: src/components/PostControls/index.tsx:107
+#: src/components/PostControls/index.tsx:138
+#: src/components/PostControls/index.tsx:166
 #: src/state/shell/composer/index.tsx:95
 msgid "Cannot interact with a blocked user"
 msgstr "Engellenen kullanıcıya etkileşime geçilemez"
@@ -1819,6 +1834,10 @@ msgstr "Altyazılar (.vtt)"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:55
 msgid "Captions & alt text"
 msgstr "Altyazılar ve alternatif metin"
+
+#: src/components/RichTextTag.tsx:52
+msgid "Cashtag {tag}"
+msgstr ""
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
@@ -1842,7 +1861,7 @@ msgstr "Uygulama dilini değiştir"
 msgid "Change Handle"
 msgstr "Kullanıcı Adını Değiştir"
 
-#: src/components/moderation/ReportDialog/index.tsx:423
+#: src/components/moderation/ReportDialog/index.tsx:437
 msgid "Change moderation service"
 msgstr "Moderasyon hizmetini değiştir"
 
@@ -1855,11 +1874,11 @@ msgstr "Şifre değiştir"
 msgid "Change password dialog"
 msgstr "Şifre değiştirme diyaloğu"
 
-#: src/components/moderation/ReportDialog/index.tsx:288
+#: src/components/moderation/ReportDialog/index.tsx:302
 msgid "Change report category"
 msgstr "Rapor kategorisini değiştir"
 
-#: src/components/moderation/ReportDialog/index.tsx:368
+#: src/components/moderation/ReportDialog/index.tsx:382
 msgid "Change report reason"
 msgstr "Rapor gerekçesini değiştir"
 
@@ -1998,7 +2017,7 @@ msgstr "Hesap sağlayıcınızı seçin"
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "Kendi zaman akışınızı seçin! Topluluk tarafından oluşturulan akışlar sevdiğiniz içeriği bulmanıza yardımcı olur."
 
-#: src/screens/Signup/StepInfo/index.tsx:244
+#: src/screens/Signup/StepInfo/index.tsx:273
 msgid "Choose your password"
 msgstr "Şifrenizi seçin"
 
@@ -2035,7 +2054,7 @@ msgstr "buraya tıklayın"
 msgid "Click here to contact our support team"
 msgstr "Destek ekibimize ulaşmak için buraya tıklayın"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:236
+#: src/ageAssurance/components/NoAccessScreen.tsx:245
 msgid "Click here to log out"
 msgstr "Hesabınızdan çıkmak için buraya tıklayın"
 
@@ -2044,7 +2063,7 @@ msgid "Click here to restart the verification process."
 msgstr "Doğrulama işlemini yeniden başlatmak için buraya tıklayın."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:103
-#: src/ageAssurance/components/NoAccessScreen.tsx:219
+#: src/ageAssurance/components/NoAccessScreen.tsx:228
 msgid "Click here to update your birthdate"
 msgstr "Doğum tarihinizi güncellemek için buraya tıklayın"
 
@@ -2052,9 +2071,9 @@ msgstr "Doğum tarihinizi güncellemek için buraya tıklayın"
 msgid "Click here to update your email"
 msgstr "E-postanızı güncellemek için buraya tıklayın"
 
-#: src/components/RichTextTag.tsx:54
-msgid "Click to open tag menu for {tag}"
-msgstr "{tag} etiket menüsünü açmak için tıklayın"
+#: src/components/RichTextTag.tsx:55
+msgid "Click to open tag menu for {0}"
+msgstr ""
 
 #: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
@@ -2079,6 +2098,8 @@ msgstr "Klip 🐴 klop 🐴"
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:191
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:199
 #: src/components/dialogs/SearchablePeopleList.tsx:295
 #: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/AfterReportDialog.tsx:93
@@ -2086,12 +2107,12 @@ msgstr "Klip 🐴 klop 🐴"
 #: src/components/dms/AfterReportDialog.tsx:208
 #: src/components/dms/AfterReportDialog.tsx:213
 #: src/components/dms/EmojiPopup.android.tsx:58
-#: src/components/live/EditLiveDialog.tsx:229
-#: src/components/live/EditLiveDialog.tsx:235
+#: src/components/live/EditLiveDialog.tsx:215
+#: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:208
-#: src/components/ProgressGuide/FollowDialog.tsx:440
+#: src/components/ProgressGuide/FollowDialog.tsx:445
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
@@ -2130,7 +2151,7 @@ msgstr "Alt çekmeceyi kapat"
 msgid "Close dialog"
 msgstr "Diyalogu kapat"
 
-#: src/view/shell/index.web.tsx:128
+#: src/view/shell/index.web.tsx:130
 msgid "Close drawer menu"
 msgstr "Çekmece menüyü kapat"
 
@@ -2157,7 +2178,7 @@ msgstr "Resim görüntüleyiciyi kapat"
 msgid "Close menu"
 msgstr "Menüyü kapat"
 
-#: src/components/Menu/index.tsx:344
+#: src/components/Menu/index.tsx:346
 msgid "Close this dialog"
 msgstr "Bu diyalogu kapat"
 
@@ -2242,6 +2263,11 @@ msgstr "Video sıkıştırılıyor..."
 msgid "Configure content filtering setting for category: {name}"
 msgstr "{name} kategorisi için içerik filtreleme ayarını düzenleyin"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
+msgid "Configure live event banner"
+msgstr "Canlı yayın kapak görselini düzenle"
+
 #: src/components/moderation/LabelPreference.tsx:253
 msgid "Configured in <0>moderation settings</0>."
 msgstr "<0>Moderasyon ayarları</0>nda düzenleniyor."
@@ -2261,8 +2287,8 @@ msgstr "İçerik dil ayarlarını onayla"
 msgid "Confirm delete account"
 msgstr "Hesabı silmeyi onayla"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:359
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
+#: src/ageAssurance/components/NoAccessScreen.tsx:368
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:95
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
 msgid "Confirm your location"
@@ -2288,8 +2314,8 @@ msgstr "Bağlanıyor..."
 msgid "Connection issue"
 msgstr "Bağlantı sorunu"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:296
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
+#: src/ageAssurance/components/NoAccessScreen.tsx:305
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:138
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
 msgstr "Denetim ekibimize ulaşın"
@@ -2317,7 +2343,7 @@ msgstr "Bağlantılar aktarıldı"
 msgid "Contacts removed"
 msgstr "Bağlantılar kaldırıldı"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:51
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Content & Media"
 msgstr "İçerik ve Medya"
 
@@ -2420,7 +2446,7 @@ msgstr "Sürüm numarası panoya kopyalandı"
 
 #: src/components/dms/MessageContextMenu.tsx:57
 #: src/components/PostControls/DiscoverDebug.tsx:36
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:235
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:249
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:72
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
@@ -2444,8 +2470,8 @@ msgstr "Kopyala"
 msgid "Copy App Password"
 msgstr "Uygulama Şifresini Kopyala"
 
-#: src/view/com/profile/ProfileMenu.tsx:438
-#: src/view/com/profile/ProfileMenu.tsx:441
+#: src/view/com/profile/ProfileMenu.tsx:491
+#: src/view/com/profile/ProfileMenu.tsx:494
 msgid "Copy at:// URI"
 msgstr "Bu at:// URI'sini kopyala"
 
@@ -2460,8 +2486,8 @@ msgid "Copy code"
 msgstr "Kodu kopyala"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:502
-#: src/view/com/profile/ProfileMenu.tsx:447
-#: src/view/com/profile/ProfileMenu.tsx:450
+#: src/view/com/profile/ProfileMenu.tsx:500
+#: src/view/com/profile/ProfileMenu.tsx:503
 msgid "Copy DID"
 msgstr "DID'i kopyala"
 
@@ -2490,8 +2516,8 @@ msgstr "Liste bağlantısını kopyala"
 msgid "Copy link to post"
 msgstr "Gönderi bağlantısını kopyala"
 
-#: src/view/com/profile/ProfileMenu.tsx:251
-#: src/view/com/profile/ProfileMenu.tsx:262
+#: src/view/com/profile/ProfileMenu.tsx:269
+#: src/view/com/profile/ProfileMenu.tsx:280
 msgid "Copy link to profile"
 msgstr "Profil bağlantısını kopyala"
 
@@ -2509,8 +2535,8 @@ msgstr "Mesajı kopyala"
 msgid "Copy post at:// URI"
 msgstr "Gönderinin at:// URI'sini kopyala"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:484
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:486
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:510
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:512
 msgid "Copy post text"
 msgstr "Gönderi metnini kopyala"
 
@@ -2645,7 +2671,7 @@ msgstr "Hesap Oluştur"
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
-#: src/screens/Hashtag.tsx:234
+#: src/screens/Hashtag.tsx:247
 #: src/screens/Search/SearchResults.tsx:303
 msgid "Create an account"
 msgstr "Bir hesap oluştur"
@@ -2673,8 +2699,8 @@ msgid "Create new account"
 msgstr "Yeni hesap oluştur"
 
 #. Accessibility label for button to create a moderation report for the selected option
-#: src/components/moderation/ReportDialog/index.tsx:688
-#: src/components/moderation/ReportDialog/index.tsx:734
+#: src/components/moderation/ReportDialog/index.tsx:702
+#: src/components/moderation/ReportDialog/index.tsx:748
 msgid "Create report for {0}"
 msgstr "{0} için rapor oluştur"
 
@@ -2740,7 +2766,7 @@ msgstr "Karanlık mod"
 msgid "Dark theme"
 msgstr "Karanlık tema"
 
-#: src/screens/Signup/StepInfo/index.tsx:272
+#: src/screens/Signup/StepInfo/index.tsx:301
 msgid "Date of birth"
 msgstr "Doğum tarihi"
 
@@ -2771,7 +2797,7 @@ msgid "Default icons"
 msgstr "Varsayılan simgeler"
 
 #: src/components/dms/MessageContextMenu.tsx:202
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:736
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:762
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:280
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2843,8 +2869,8 @@ msgstr "Mesajı benim için sil"
 msgid "Delete my account"
 msgstr "Hesabımı sil"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:717
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:719
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:743
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:745
 #: src/view/com/composer/Composer.tsx:969
 msgid "Delete post"
 msgstr "Gönderiyi sil"
@@ -2862,7 +2888,7 @@ msgstr "Başlangıç paketi silinsin mi?"
 msgid "Delete this list?"
 msgstr "Liste silinsin mi?"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:731
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:757
 msgid "Delete this post?"
 msgstr "Bu gönderiyi sil?"
 
@@ -2897,12 +2923,12 @@ msgstr "Açıklama"
 msgid "Descriptive alt text"
 msgstr "Açıklayıcı alt metin"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:631
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:647
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:657
 msgid "Detach quote"
 msgstr "Alıntının ilişiğini kes"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:767
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:793
 msgid "Detach quote post?"
 msgstr "Alıntı gönderinin ilişiği kesilsin mi?"
 
@@ -2998,12 +3024,12 @@ msgstr "Uygulamaların hesabımı oturum açmamış kullanıcılara göstermesin
 msgid "Discover new custom feeds"
 msgstr "Yeni özel akışları keşfet"
 
-#: src/screens/Search/Explore.tsx:431
+#: src/screens/Search/Explore.tsx:436
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "Yeni Akışlar Keşfet"
 
-#: src/components/Dialog/index.tsx:373
+#: src/components/Dialog/index.tsx:379
 msgid "Dismiss"
 msgstr "Yok say"
 
@@ -3015,7 +3041,7 @@ msgstr "Bildirimi gizle"
 msgid "Dismiss error"
 msgstr "Hatayı yok say"
 
-#: src/components/ProgressGuide/List.tsx:42
+#: src/components/ProgressGuide/List.tsx:67
 msgid "Dismiss getting started guide"
 msgstr "Başlangıç rehberini gizle"
 
@@ -3070,8 +3096,8 @@ msgstr "Kodunuz yok mu ya da yeni bir tane mi lazım? <0>Buraya tıklayın.</0>"
 msgid "Don't see an email? <0>Click here to resend.</0>"
 msgstr "E-posta gelmedi mi? <0>Yeniden yollamak için buraya tıklayın.</0>"
 
-#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:103
-#: src/components/ageAssurance/AgeAssuranceDismissibleNotice.tsx:33
+#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:104
+#: src/components/ageAssurance/AgeAssuranceDismissibleNotice.tsx:37
 msgid "Don't show again"
 msgstr "Bunu tekrar gösterme"
 
@@ -3117,7 +3143,7 @@ msgstr "Tamam{extraText}"
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Bir tepki eklemek için mesaja çift dokunun ya da uzun basın"
 
-#: src/components/Dialog/index.tsx:374
+#: src/components/Dialog/index.tsx:380
 msgid "Double tap to close the dialog"
 msgstr "Bu diyalogu kapatmak için çift dokunun"
 
@@ -3215,8 +3241,8 @@ msgstr "Akışları Düzenle"
 msgid "Edit image"
 msgstr "Resmi düzenle"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:698
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:711
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:724
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:737
 msgid "Edit interaction settings"
 msgstr "Etkileşim ayarlarını düzenle"
 
@@ -3230,8 +3256,8 @@ msgstr "İlgi alanlarını düzenle"
 msgid "Edit list details"
 msgstr "Liste ayrıntılarını düzenle"
 
-#: src/view/com/profile/ProfileMenu.tsx:334
-#: src/view/com/profile/ProfileMenu.tsx:340
+#: src/view/com/profile/ProfileMenu.tsx:354
+#: src/view/com/profile/ProfileMenu.tsx:374
 msgid "Edit live status"
 msgstr "Canlı yayın durumunu düzenle"
 
@@ -3294,7 +3320,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr "Ya bu listenin oluşturucusu sizi engellemiş ya da siz onu engellemişsiniz."
 
 #: src/screens/Settings/AccountSettings.tsx:66
-#: src/screens/Signup/StepInfo/index.tsx:196
+#: src/screens/Signup/StepInfo/index.tsx:225
 msgid "Email"
 msgstr "E-posta"
 
@@ -3395,13 +3421,13 @@ msgstr "Altyazıları etkinleştir"
 msgid "Enable this source only"
 msgstr "Yalnızca bu kaynağı etkinleştir"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:132
-#: src/screens/Settings/ContentAndMediaSettings.tsx:146
+#: src/screens/Settings/ContentAndMediaSettings.tsx:133
+#: src/screens/Settings/ContentAndMediaSettings.tsx:147
 msgid "Enable trending topics"
 msgstr "Gündem başlıklarını etkinleştir"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:153
-#: src/screens/Settings/ContentAndMediaSettings.tsx:167
+#: src/screens/Settings/ContentAndMediaSettings.tsx:155
+#: src/screens/Settings/ContentAndMediaSettings.tsx:169
 msgid "Enable trending videos in your Discover feed"
 msgstr "Keşif akışında (\"Discover\") gündem videolarını etkinleştir"
 
@@ -3463,7 +3489,7 @@ msgid "Enter your birthdate"
 msgstr "Doğum tarihinizi girin"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
-#: src/screens/Signup/StepInfo/index.tsx:216
+#: src/screens/Signup/StepInfo/index.tsx:245
 msgid "Enter your email address"
 msgstr "E-posta adresinizi girin"
 
@@ -3597,7 +3623,7 @@ msgstr "{0} içinde süresi doluyor"
 msgid "Expires in {0}"
 msgstr "{0} içinde süresi doluyor"
 
-#: src/components/live/EditLiveDialog.tsx:131
+#: src/components/live/EditLiveDialog.tsx:130
 msgid "Expires in {0} at {1}"
 msgstr "{0} içinde ({1} saatinde) sona erecek"
 
@@ -3631,8 +3657,8 @@ msgstr "Verilerimi dışa aktar"
 msgid "Export My Data"
 msgstr "Verilerimi Dışa Aktar"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:84
-#: src/screens/Settings/ContentAndMediaSettings.tsx:87
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:88
 msgid "External media"
 msgstr "Harici medya"
 
@@ -3696,7 +3722,7 @@ msgstr "Sohbet silinemedi"
 msgid "Failed to delete message"
 msgstr "Mesaj silinemedi"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:204
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:206
 msgid "Failed to delete post, please try again"
 msgstr "Gönderi silinemedi, lütfen tekrar deneyin"
 
@@ -3725,10 +3751,10 @@ msgstr "SMS uygulaması başlatılamadı"
 msgid "Failed to load conversations"
 msgstr "Yazışmalar yüklenemedi"
 
-#: src/screens/Search/Explore.tsx:467
-#: src/screens/Search/Explore.tsx:519
-#: src/screens/Search/Explore.tsx:557
-#: src/screens/Search/Explore.tsx:596
+#: src/screens/Search/Explore.tsx:472
+#: src/screens/Search/Explore.tsx:524
+#: src/screens/Search/Explore.tsx:562
+#: src/screens/Search/Explore.tsx:601
 msgid "Failed to load feeds preferences"
 msgstr "Akış tercihleri ​​yüklenemedi"
 
@@ -3758,14 +3784,14 @@ msgstr "Eski mesajlar yüklenemedi"
 msgid "Failed to load preference."
 msgstr "Tercih yüklenemedi."
 
-#: src/screens/Search/Explore.tsx:460
-#: src/screens/Search/Explore.tsx:512
-#: src/screens/Search/Explore.tsx:550
-#: src/screens/Search/Explore.tsx:589
+#: src/screens/Search/Explore.tsx:465
+#: src/screens/Search/Explore.tsx:517
+#: src/screens/Search/Explore.tsx:555
+#: src/screens/Search/Explore.tsx:594
 msgid "Failed to load suggested feeds"
 msgstr "Önerilen akışlar yüklenemedi"
 
-#: src/screens/Search/Explore.tsx:370
+#: src/screens/Search/Explore.tsx:375
 msgid "Failed to load suggested follows"
 msgstr "Önerilen takipler yüklenemedi"
 
@@ -3826,12 +3852,13 @@ msgstr "Gönderilemedi"
 msgid "Failed to send email, please try again."
 msgstr "E-posta gönderilemedi, lütfen tekrar deneyin."
 
+#: src/components/live/GoLiveDisabledDialog.tsx:76
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 #: src/screens/Messages/components/ChatDisabled.tsx:99
 msgid "Failed to submit appeal, please try again."
 msgstr "İtirazınız gönderilemedi, lütfen tekrar deneyin."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:224
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:238
 msgid "Failed to toggle thread mute, please try again"
 msgstr "Konuyu sessize alma seçeneği değiştirilemedi, lütfen tekrar deneyin"
 
@@ -3848,7 +3875,7 @@ msgstr "E-posta iki adımlı doğrulama ayarları güncellenemedi"
 msgid "Failed to update email, please try again."
 msgstr "E-posta güncellenemedi, lütfen tekrar deneyin."
 
-#: src/components/FeedCard.tsx:285
+#: src/components/FeedCard.tsx:317
 msgid "Failed to update feeds"
 msgstr "Akışlar güncellenemedi"
 
@@ -3887,7 +3914,7 @@ msgstr "Seçimler hakkında yanlış bilgi"
 msgid "Feed"
 msgstr "Akış"
 
-#: src/components/FeedCard.tsx:139
+#: src/components/FeedCard.tsx:171
 #: src/view/com/feeds/FeedSourceCard.tsx:150
 msgid "Feed by {0}"
 msgstr "{0} tarafından besleme"
@@ -3912,14 +3939,14 @@ msgstr "Akış aç/kapa"
 msgid "Feed unavailable"
 msgstr "Akış kullanılamıyor"
 
-#: src/view/shell/desktop/RightNav.tsx:105
-#: src/view/shell/desktop/RightNav.tsx:106
+#: src/view/shell/desktop/RightNav.tsx:107
+#: src/view/shell/desktop/RightNav.tsx:108
 #: src/view/shell/Drawer.tsx:368
 msgid "Feedback"
 msgstr "Geribildirim"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:276
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:294
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:296
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:320
 msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr "Geribildiriminiz akış operatörüne yollandı"
@@ -3939,7 +3966,7 @@ msgstr "Akışlar"
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0>See this guide</0> for more information."
 msgstr "Akışlar kullanıcıların biraz kod tecrübesiyle oluşturdukları özelleştirilmiş algoritmalardır. Daha çok bilgi için <0>bu rehbere göz atın</0>."
 
-#: src/components/FeedCard.tsx:282
+#: src/components/FeedCard.tsx:314
 #: src/screens/SavedFeeds.tsx:90
 msgctxt "toast"
 msgid "Feeds updated!"
@@ -4015,9 +4042,9 @@ msgid "Find my friends"
 msgstr "Arkadaşlarımı bul"
 
 #. Starter packs suggested to the user for them to follow
-#: src/components/ProgressGuide/FollowDialog.tsx:72
-#: src/components/ProgressGuide/FollowDialog.tsx:82
-#: src/components/ProgressGuide/FollowDialog.tsx:426
+#: src/components/ProgressGuide/FollowDialog.tsx:78
+#: src/components/ProgressGuide/FollowDialog.tsx:86
+#: src/components/ProgressGuide/FollowDialog.tsx:431
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:42
 msgid "Find people to follow"
 msgstr "Takip edilecek kişiler bulun"
@@ -4068,9 +4095,9 @@ msgstr "Kod giriş alanına odaklan"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:559
-#: src/components/ProfileHoverCard/index.web.tsx:496
-#: src/components/ProfileHoverCard/index.web.tsx:507
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
+#: src/components/ProfileHoverCard/index.web.tsx:497
+#: src/components/ProfileHoverCard/index.web.tsx:508
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:140
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:378
 #: src/screens/VideoFeed/index.tsx:879
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
@@ -4078,7 +4105,7 @@ msgstr "Kod giriş alanına odaklan"
 msgid "Follow"
 msgstr "Takip et"
 
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:113
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:127
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:366
 msgid "Follow {0}"
 msgstr "{0} takip et"
@@ -4087,17 +4114,20 @@ msgstr "{0} takip et"
 msgid "Follow {handle}"
 msgstr "{handle} kullanıcısını takip et"
 
-#: src/components/ProgressGuide/List.tsx:52
 #: src/state/shell/progress-guide.tsx:231
 msgid "Follow 10 accounts"
 msgstr "10 hesabı takip et"
 
-#: src/components/ProgressGuide/List.tsx:69
+#: src/components/ProgressGuide/List.tsx:60
+msgid "Follow 10 people to get started"
+msgstr "Başlamak için 10 kişiyi takip edin"
+
+#: src/components/ProgressGuide/List.tsx:102
 msgid "Follow 7 accounts"
 msgstr "7 Hesabı takip et"
 
-#: src/view/com/profile/ProfileMenu.tsx:292
-#: src/view/com/profile/ProfileMenu.tsx:303
+#: src/view/com/profile/ProfileMenu.tsx:310
+#: src/view/com/profile/ProfileMenu.tsx:321
 msgid "Follow account"
 msgstr "Hesabı takip et"
 
@@ -4119,7 +4149,7 @@ msgstr "Tüm hesapları takip et"
 
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:553
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:138
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:376
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
 #: src/view/com/notifications/NotificationFeedItem.tsx:848
@@ -4162,9 +4192,9 @@ msgstr "Tanıdığın takipçiler"
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:546
-#: src/components/ProfileHoverCard/index.web.tsx:495
-#: src/components/ProfileHoverCard/index.web.tsx:506
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
+#: src/components/ProfileHoverCard/index.web.tsx:496
+#: src/components/ProfileHoverCard/index.web.tsx:507
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:143
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:374
 #: src/screens/VideoFeed/index.tsx:877
 #: src/view/com/notifications/NotificationFeedItem.tsx:819
@@ -4188,8 +4218,8 @@ msgstr "{0} takip ediliyor"
 msgid "Following {handle}"
 msgstr "{handle} takip ediliyor"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
-#: src/screens/Settings/ContentAndMediaSettings.tsx:79
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Following feed preferences"
 msgstr "Takip edilenler akışı tercihleri"
 
@@ -4268,7 +4298,7 @@ msgstr "Akışınızı özgürleştirin"
 msgid "From"
 msgstr "Kimden"
 
-#: src/screens/Hashtag.tsx:127
+#: src/screens/Hashtag.tsx:136
 msgid "From @{sanitizedAuthor}"
 msgstr "@{sanitizedAuthor} tarafından"
 
@@ -4317,7 +4347,7 @@ msgstr "Yeniden gönderilerinizi yeniden gönderdiklerinde bildirim alın."
 msgid "Get notifications when people repost your posts."
 msgstr "Gönderilerinizi yeniden gönderdiklerinde bildirim alın."
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:91
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:93
 msgid "Get notified about new posts"
 msgstr "Yeni gönderilerden bildirim al"
 
@@ -4333,7 +4363,7 @@ msgstr "{name} kullanıcısının yeni gönderilerinden bildirim al"
 msgid "Get notified of this account’s activity"
 msgstr "Bu hesabın etkinliklerinden bildirim al"
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:84
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:86
 msgid "Get notified when {name} posts"
 msgstr "{name} gönderi paylaştığında bildirim al"
 
@@ -4345,10 +4375,6 @@ msgstr "Birisi gönderi paylaştığında bildirim al"
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
 msgid "Get started"
 msgstr "Başla"
-
-#: src/components/ProgressGuide/List.tsx:35
-msgid "Getting started"
-msgstr "Başlarken"
 
 #: src/components/MediaPreview.tsx:114
 msgid "GIF"
@@ -4412,19 +4438,24 @@ msgstr "Ana sayfaya git"
 msgid "Go Home"
 msgstr "Ana Sayfaya Git"
 
-#: src/view/com/profile/ProfileMenu.tsx:335
-#: src/view/com/profile/ProfileMenu.tsx:342
+#: src/view/com/profile/ProfileMenu.tsx:355
+#: src/view/com/profile/ProfileMenu.tsx:376
 msgid "Go live"
 msgstr "Canlı yayını başlat"
 
-#: src/components/live/GoLiveDialog.tsx:90
 #: src/components/live/GoLiveDialog.tsx:95
-#: src/components/live/GoLiveDialog.tsx:229
-#: src/components/live/GoLiveDialog.tsx:238
+#: src/components/live/GoLiveDialog.tsx:100
+#: src/components/live/GoLiveDialog.tsx:228
+#: src/components/live/GoLiveDialog.tsx:237
 msgid "Go Live"
 msgstr "Canlı Yayını Başlat"
 
-#: src/components/live/GoLiveDialog.tsx:171
+#: src/view/com/profile/ProfileMenu.tsx:352
+#: src/view/com/profile/ProfileMenu.tsx:372
+msgid "Go live (disabled)"
+msgstr "Canlı yayını başlat (devre dışı)"
+
+#: src/components/live/GoLiveDialog.tsx:170
 msgid "Go live for"
 msgstr "Canlı yayın süresi"
 
@@ -4432,9 +4463,9 @@ msgstr "Canlı yayın süresi"
 msgid "Go to {firstAuthorName}'s profile"
 msgstr "{firstAuthorName} kullanıcısının profiline git"
 
-#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:87
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:64
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
+#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:91
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:71
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:80
 #: src/screens/Moderation/index.tsx:219
 msgid "Go to account settings"
 msgstr "Hesap ayarlarına git"
@@ -4460,6 +4491,10 @@ msgstr "Profile git"
 #: src/components/dms/ConvoMenu.tsx:238
 msgid "Go to user's profile"
 msgstr "Kullanıcının profiline git"
+
+#: src/components/live/GoLiveDisabledDialog.tsx:104
+msgid "Going live is currently disabled for your account"
+msgstr "Canlı yayını başlatma şu anda hesabınız için kullanıma kapalı"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -4503,6 +4538,11 @@ msgstr "Kullanıcı adı değişti!"
 msgid "Handle too long. Please try a shorter one."
 msgstr "Kullanıcı adı çok uzun. Lütfen daha kısa bir tane deneyin."
 
+#: src/components/FeedCard.tsx:157
+#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:120
+msgid "Happening now"
+msgstr "Şimdi oluyor"
+
 #: src/screens/Settings/AccessibilitySettings.tsx:85
 msgid "Haptics"
 msgstr "Dokunuş"
@@ -4523,7 +4563,7 @@ msgstr "Küçüklere zarar verme ya da tehlikeye atma"
 msgid "Hashtag"
 msgstr "Etiket"
 
-#: src/components/RichTextTag.tsx:51
+#: src/components/RichTextTag.tsx:52
 msgid "Hashtag {tag}"
 msgstr "{tag} etiketi"
 
@@ -4536,6 +4576,10 @@ msgstr "Nefret söylemi"
 msgid "Have a code? <0>Click here.</0>"
 msgstr "Kodunuz var mı? <0>Buraya tıklayın.</0>"
 
+#: src/screens/Signup/StepInfo/index.tsx:332
+msgid "Have we got your location wrong? <0>Tap here to confirm your location with GPS.</0>"
+msgstr "Konumunuzu tutturamadık mı? <0>Konumunuzu GPS'le doğrulamak için buraya dokunun.</0>"
+
 #: src/screens/Signup/index.tsx:220
 msgid "Having trouble?"
 msgstr "Sorun mu yaşıyorsunuz?"
@@ -4546,8 +4590,8 @@ msgstr "Bluesky tarafından kötüye kullanımı engellemek için 7 gün tutulur
 
 #: src/screens/Settings/Settings.tsx:254
 #: src/screens/Settings/Settings.tsx:258
-#: src/view/shell/desktop/RightNav.tsx:123
-#: src/view/shell/desktop/RightNav.tsx:124
+#: src/view/shell/desktop/RightNav.tsx:128
+#: src/view/shell/desktop/RightNav.tsx:131
 #: src/view/shell/Drawer.tsx:381
 msgid "Help"
 msgstr "Yardım"
@@ -4569,7 +4613,7 @@ msgstr "Merhaba 👋"
 msgid "Hey there!"
 msgstr "Hey!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:201
+#: src/ageAssurance/components/NoAccessScreen.tsx:210
 msgid "Hi there!"
 msgstr "Selam!"
 
@@ -4586,17 +4630,17 @@ msgstr "Moderasyon ayarlarınız tarafından gizlenmiş."
 msgid "Hidden list"
 msgstr "Gizli liste"
 
-#: src/components/interstitials/Trending.tsx:131
+#: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:138
 #: src/components/moderation/ContentHider.tsx:208
 #: src/components/moderation/LabelPreference.tsx:140
 #: src/components/moderation/PostHider.tsx:137
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:747
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:773
 #: src/lib/moderation/useLabelBehaviorDescription.ts:18
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:111
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:129
 msgid "Hide"
 msgstr "Gizle"
 
@@ -4604,6 +4648,11 @@ msgstr "Gizle"
 msgctxt "action"
 msgid "Hide"
 msgstr "Gizle"
+
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:140
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:147
+msgid "Hide all events"
+msgstr "Tüm etkinlikleri gizle"
 
 #: src/components/dialogs/Embed.tsx:128
 msgid "Hide customization options"
@@ -4613,18 +4662,18 @@ msgstr "Özelleştirme seçeneklerini gizle"
 msgid "Hide lists"
 msgstr "Listeleri gizle"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:584
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:604
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:610
 msgid "Hide post for me"
 msgstr "Gönderiyi benim için gizle"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:595
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:605
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:631
 msgid "Hide reply for everyone"
 msgstr "Yanıtı herkesten gizle"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:577
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:583
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:603
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:609
 msgid "Hide reply for me"
 msgstr "Yanıtı benden gizle"
 
@@ -4632,22 +4681,26 @@ msgstr "Yanıtı benden gizle"
 msgid "Hide this card"
 msgstr "Bu kartı gizle"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:742
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:128
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:135
+msgid "Hide this event"
+msgstr "Bu etkinliği gizle"
+
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:768
 msgid "Hide this post?"
 msgstr "Bu gönderiyi gizle?"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:742
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:777
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:768
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:803
 msgid "Hide this reply?"
 msgstr "Bu yanıtı gizle?"
 
-#: src/components/interstitials/Trending.tsx:113
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
+#: src/components/interstitials/Trending.tsx:112
 msgid "Hide trending topics"
 msgstr "Gündem başlıklarını gizle"
 
-#: src/components/interstitials/Trending.tsx:129
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
+#: src/components/interstitials/Trending.tsx:128
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:127
 msgid "Hide trending topics?"
 msgstr "Gündem başlıkları gizlensin mi?"
 
@@ -4770,7 +4823,7 @@ msgstr "Bluesky'da {0} olarak yer alıyorum - gel beni bul! https://bsky.app/dow
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Alternatif metin uzunsa, alternatif metin genişletme durumunu değiştirir"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:110
+#: src/screens/Signup/StepInfo/index.tsx:351
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Ülkenizin yasalarına göre henüz reşit değilseniz, bu koşulları sizin adınıza ebeveyniniz veya yasal vasiniz okumalıdır."
 
@@ -4781,6 +4834,10 @@ msgstr "Eğer doğum tarihinizin doğru olmadığını düşünüyorsanız lütf
 #: src/ageAssurance/components/NoAccessScreen.tsx:100
 msgid "If you believe your birthdate is incorrect, you can update it by <0>clicking here</0>."
 msgstr "Eğer doğum tarihinizin yanlış olduğunu düşünüyorsanız, <0>buraya tıklayarak</0> güncelleyebilirsiniz."
+
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:119
+msgid "If you choose to hide all events, you can always re-enable them from <0>Settings → Content & Media</0>."
+msgstr "Tüm etkinlikleri gizlemeyi seçerseniz, onları her zaman <0>Ayarlar → İçerik ve Medya</0>'dan geri getirebilirsiniz."
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:277
 msgid "If you delete this list, you won't be able to recover it."
@@ -4794,7 +4851,7 @@ msgstr "Kendi alan adınız varsa onu kullanıcı adınız olarak kullanabilirsi
 msgid "If you need to update your email, <0>click here</0>."
 msgstr "E-postanızı güncellemeniz gerekiyorsa <0>buraya tıklayın</0>."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:733
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:759
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "Bu gönderiyi kaldırırsanız geri getirmeniz mümkün olmayacaktır."
 
@@ -4819,7 +4876,7 @@ msgstr "Eğer bir geliştiriciyseniz kendi sunucunuzu barındırabilirsiniz."
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr "Eğer kullanıcı adınızı veya e-postanızı değiştirmeye çalışıyorsanız, bunu devre dışı bırakmadan önce yapın."
 
-#: src/view/com/util/images/Gallery.tsx:75
+#: src/components/images/Gallery.tsx:75
 msgid "Image"
 msgstr "Resim"
 
@@ -4866,7 +4923,7 @@ msgstr "Arkadaşlarınızı bulmak için bağlantılarınızı yükleyin"
 msgid "Imported on {0}"
 msgstr "{0} tarihinde aktarıldı"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:204
+#: src/ageAssurance/components/NoAccessScreen.tsx:213
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "Yaşınıza uygun bir tecrübe sağlamamız için doğum tarihinizi bilmemiz gerekiyor. Bu tek seferlik bir şeydir ve veriniz gizli tutulacaktır."
 
@@ -4956,7 +5013,7 @@ msgstr "Geçersiz 2FA onay kodu."
 msgid "Invalid handle. Please try a different one."
 msgstr "Geçersiz kullanıcı adı. Lütfen başka bir kullanıcı adı deneyin."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:365
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:391
 msgctxt "toast"
 msgid "Invalid interaction settings."
 msgstr "Geçersiz etkileşim ayarları."
@@ -4966,7 +5023,7 @@ msgstr "Geçersiz etkileşim ayarları."
 msgid "Invalid phone number"
 msgstr "Geçersiz telefon numarası"
 
-#: src/components/moderation/ReportDialog/index.tsx:80
+#: src/components/moderation/ReportDialog/index.tsx:92
 msgid "Invalid report subject"
 msgstr "Geçersiz rapor konusu"
 
@@ -4982,7 +5039,7 @@ msgstr "Davet et"
 msgid "Invite {name} to join Bluesky"
 msgstr "{name} kişisini Bluesky'a katılmaya davet et"
 
-#: src/screens/Signup/StepInfo/index.tsx:166
+#: src/screens/Signup/StepInfo/index.tsx:195
 msgid "Invite code"
 msgstr "Davet kodu"
 
@@ -5011,8 +5068,8 @@ msgstr "Arkadaşlarınızı, beğendiğiniz akışları ve kişileri takip etmey
 msgid "Invites, but personal"
 msgstr "Davetler, ancak kişisel"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:356
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
+#: src/ageAssurance/components/NoAccessScreen.tsx:365
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:92
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "Konumunuz tam tutmuyor mu? <0>Buraya dokunup konumunuzu onaylayın.</0>"
 
@@ -5020,7 +5077,7 @@ msgstr "Konumunuz tam tutmuyor mu? <0>Buraya dokunup konumunuzu onaylayın.</0>"
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
 msgstr "Görünüşe göre bazı bağlantılarınız burada sizi bulmayı henüz denememiş. Size sunacağımız bir taslak mesajı özelleştirerek onları şahsen davet edebilirsiniz."
 
-#: src/screens/Signup/StepInfo/index.tsx:292
+#: src/screens/Signup/StepInfo/index.tsx:384
 msgid "It's correct"
 msgstr "Doğrudur"
 
@@ -5108,17 +5165,17 @@ msgstr "Diller"
 msgid "Larger"
 msgstr "Daha büyük"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:339
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
+#: src/ageAssurance/components/NoAccessScreen.tsx:348
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:193
 msgid "Last initiated {timeAgo} ago"
 msgstr "En son {timeAgo} önce başlatılmış"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:337
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
+#: src/ageAssurance/components/NoAccessScreen.tsx:346
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Last initiated just now"
 msgstr "En son az önce başlatılmış"
 
-#: src/screens/Hashtag.tsx:102
+#: src/screens/Hashtag.tsx:111
 #: src/screens/Search/SearchResults.tsx:62
 #: src/screens/Topic.tsx:78
 msgid "Latest"
@@ -5138,7 +5195,7 @@ msgstr "Daha fazla bilgi edinin"
 msgid "Learn More"
 msgstr "Daha Fazla Bilgi Edinin"
 
-#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:64
+#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:65
 msgid "Learn more about age assurance"
 msgstr "Yaş güvencesiyle ilgili daha çok bilgi edinin"
 
@@ -5190,7 +5247,7 @@ msgstr "Bluesky'da doğrulama ile ilgili daha fazla bilgi edinin"
 msgid "Learn more about what is public on Bluesky."
 msgstr "Bluesky'da neyin herkese açık olduğu hakkında daha fazla bilgi edinin."
 
-#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:84
+#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:88
 msgid "Learn more in your <0>account settings.</0>"
 msgstr "<0>Hesap ayarlarınızdan</0> daha çok bilgi edinin."
 
@@ -5258,11 +5315,11 @@ msgid "Like"
 msgstr "Beğen"
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
-#: src/components/PostControls/index.tsx:270
+#: src/components/PostControls/index.tsx:286
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "Beğen ({0, plural, other {# beğeni}})"
 
-#: src/components/ProgressGuide/List.tsx:63
+#: src/components/ProgressGuide/List.tsx:96
 msgid "Like 10 posts"
 msgstr "10 gönderiyi beğen"
 
@@ -5294,7 +5351,7 @@ msgstr "Beğenenler"
 msgid "Liked By"
 msgstr "Beğenenler"
 
-#: src/components/FeedCard.tsx:218
+#: src/components/FeedCard.tsx:250
 #: src/view/com/feeds/FeedSourceCard.tsx:172
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "{0, plural, other {# kullanıcı}} tarafından beğenildi"
@@ -5323,7 +5380,7 @@ msgstr "Yeniden gönderilerinize dair beğeniler"
 msgid "Likes of your reposts notifications"
 msgstr "Yeniden gönderilerinize dair beğenilerin bildirimleri"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:470
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:482
 msgid "Likes on this post"
 msgstr "Bu gönderideki beğeniler"
 
@@ -5434,23 +5491,36 @@ msgstr "Bu kullanıcıyı engelleyen listeler:"
 msgid "LIVE"
 msgstr "CANLI"
 
-#: src/components/live/LiveStatusDialog.tsx:215
-msgid "Live feature is in beta testing"
-msgstr "Canlı yayın özelliği beta testi aşamasındadır"
+#: src/features/liveEvents/components/LiveEventFeedCardCompact.tsx:52
+#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:52
+msgid "Live event happening now: {0}"
+msgstr "Şimdi gerçekleşen canlı etkinlik: {0}"
 
-#: src/components/live/EditLiveDialog.tsx:148
-#: src/components/live/EditLiveDialog.tsx:152
-#: src/components/live/GoLiveDialog.tsx:121
-#: src/components/live/GoLiveDialog.tsx:125
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:107
+msgid "Live event options"
+msgstr "Canlı etkinlik seçenekleri"
+
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:111
+msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
+msgstr "Canlı etkinlikler heyecan verici bir şey olduğunda ortaya çıkarlar. Dilerseniz bu etkinliği ya da tüm etkinlikleri gizleyebilirsiniz."
+
+#: src/components/live/LiveStatusDialog.tsx:235
+msgid "Live feature is in beta"
+msgstr "Canlı özelliği beta'dır"
+
+#: src/components/live/EditLiveDialog.tsx:147
+#: src/components/live/EditLiveDialog.tsx:151
+#: src/components/live/GoLiveDialog.tsx:126
+#: src/components/live/GoLiveDialog.tsx:130
 msgid "Live link"
 msgstr "Canlı yayın bağlantısı"
 
-#: src/screens/Search/Explore.tsx:83
+#: src/screens/Search/Explore.tsx:84
 msgid "Load more"
 msgstr "Daha fazlasını yükle"
 
-#: src/screens/Search/Explore.tsx:501
-#: src/screens/Search/Explore.tsx:578
+#: src/screens/Search/Explore.tsx:506
+#: src/screens/Search/Explore.tsx:583
 msgid "Load more suggested feeds"
 msgstr "Daha çok önerilen akış yükle"
 
@@ -5489,18 +5559,18 @@ msgstr "Çıkış yapılmış"
 msgid "Logged-out visibility"
 msgstr "Çıkış yapan görünürlüğü"
 
-#: src/view/shell/desktop/RightNav.tsx:133
+#: src/view/shell/desktop/RightNav.tsx:140
 msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "Logo: @sawaratsuki.bsky.social"
 
-#: src/view/shell/desktop/RightNav.tsx:130
+#: src/view/shell/desktop/RightNav.tsx:137
 #: src/view/shell/Drawer.tsx:709
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "Logo: <0>@sawaratsuki.bsky.social</0>"
 
-#: src/components/RichTextTag.tsx:53
-msgid "Long press to open tag menu for #{tag}"
-msgstr "#{tag} etiket menüsünü açmak için uzun basın"
+#: src/components/RichTextTag.tsx:54
+msgid "Long press to open tag menu for {0}"
+msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
@@ -5530,8 +5600,8 @@ msgstr "Benim için bir tane yap"
 msgid "Make sure this is where you intend to go!"
 msgstr "Bu gitmek istediğiniz yer olduğundan emin olun!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
-#: src/screens/Settings/ContentAndMediaSettings.tsx:63
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
 msgid "Manage saved feeds"
 msgstr "Kayıtlı akışları yönet"
 
@@ -5707,8 +5777,8 @@ msgstr "Moderasyon araçları"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Moderatör, içeriğe genel bir uyarı koymayı seçti."
 
-#: src/view/shell/desktop/Feeds.tsx:113
-#: src/view/shell/desktop/Feeds.tsx:123
+#: src/view/shell/desktop/Feeds.tsx:109
+#: src/view/shell/desktop/Feeds.tsx:156
 msgid "More feeds"
 msgstr "Daha fazla akış"
 
@@ -5718,8 +5788,8 @@ msgid "More languages..."
 msgstr "Diğer diller..."
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:149
-#: src/view/com/profile/ProfileMenu.tsx:228
-#: src/view/com/profile/ProfileMenu.tsx:234
+#: src/view/com/profile/ProfileMenu.tsx:241
+#: src/view/com/profile/ProfileMenu.tsx:248
 msgid "More options"
 msgstr "Daha fazla seçenek"
 
@@ -5745,15 +5815,15 @@ msgctxt "video"
 msgid "Mute"
 msgstr "Sessize al"
 
-#: src/components/RichTextTag.tsx:141
-#: src/components/RichTextTag.tsx:154
+#: src/components/RichTextTag.tsx:150
+#: src/components/RichTextTag.tsx:163
 msgid "Mute {tag}"
 msgstr "{tag} etiketini sessize al"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:660
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:666
-#: src/view/com/profile/ProfileMenu.tsx:380
-#: src/view/com/profile/ProfileMenu.tsx:387
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:686
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:692
+#: src/view/com/profile/ProfileMenu.tsx:433
+#: src/view/com/profile/ProfileMenu.tsx:440
 msgid "Mute account"
 msgstr "Hesabı sessize al"
 
@@ -5803,13 +5873,13 @@ msgstr "Bu kelimeyi yalnızca etiketlerde sessize al"
 msgid "Mute this word until you unmute it"
 msgstr "Bu kelimeyi tekrar sesini açana kadar sessize al"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:544
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:570
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:574
 msgid "Mute thread"
 msgstr "Konuyu sessize al"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:558
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:560
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:584
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:586
 msgid "Mute words & tags"
 msgstr "Kelimeleri ve etiketleri sustur"
 
@@ -5873,8 +5943,8 @@ msgstr "Sonraki ekrana yönlendirir"
 msgid "Navigates to your profile"
 msgstr "Profilinize yönlendirir"
 
-#: src/components/moderation/ReportDialog/index.tsx:319
-#: src/components/moderation/ReportDialog/index.tsx:336
+#: src/components/moderation/ReportDialog/index.tsx:333
+#: src/components/moderation/ReportDialog/index.tsx:350
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
 msgstr "Bir telif ihlali, hukuki talep ya da mevzuata uygunluk sorunu mu bildirmeniz gerekiyor?"
 
@@ -5883,6 +5953,7 @@ msgid "Nevermind, create a handle for me"
 msgstr "Boşver, bana bir kullanıcı adı üret"
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
+#: src/view/com/profile/ProfileMenu.tsx:388
 msgid "New"
 msgstr "Yeni"
 
@@ -6043,7 +6114,7 @@ msgstr "Henüz özelleştirilmiş bir akış yok"
 msgid "No DNS Panel"
 msgstr "DNS Paneli Yok"
 
-#: src/components/live/EditLiveDialog.tsx:140
+#: src/components/live/EditLiveDialog.tsx:139
 msgid "No expiry set"
 msgstr "Bir bitiş süresi belirlenmemiş"
 
@@ -6138,11 +6209,11 @@ msgid "No result"
 msgstr "Sonuç yok"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:223
-#: src/components/ProgressGuide/FollowDialog.tsx:224
+#: src/components/ProgressGuide/FollowDialog.tsx:229
 msgid "No results"
 msgstr "Sonuç yok"
 
-#: src/screens/Search/Explore.tsx:793
+#: src/screens/Search/Explore.tsx:800
 msgid "No results for \"{0}\"."
 msgstr "\"{0}\" için sonuç bulunamadı."
 
@@ -6159,7 +6230,7 @@ msgstr "\"{query}\" için sonuç bulunamadı"
 msgid "No results found for \"<0>{query}</0>\"."
 msgstr "\"<0>{query}</0>\" için sonuç bulunamadı."
 
-#: src/screens/Search/Explore.tsx:797
+#: src/screens/Search/Explore.tsx:804
 msgid "No results."
 msgstr "Sonuç bulunamadı."
 
@@ -6227,7 +6298,7 @@ msgstr "Takip ettiğiniz hiçkimse tarafından takip edilmiyor"
 msgid "Not Found"
 msgstr "Bulunamadı"
 
-#: src/view/com/profile/ProfileMenu.tsx:502
+#: src/view/com/profile/ProfileMenu.tsx:555
 msgid "Note about sharing"
 msgstr "Paylaşıma dair dikkatinize"
 
@@ -6327,7 +6398,7 @@ msgid "OK"
 msgstr "Tamam"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:693
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:705
 msgid "Okay"
 msgstr "Tamam"
 
@@ -6405,7 +6476,7 @@ msgstr "Hata!"
 msgid "Open avatar creator"
 msgstr "Avatar oluşturucuyu aç"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:200
+#: src/view/com/feeds/ComposerPrompt.tsx:198
 msgid "Open camera"
 msgstr "Kamerayı aç"
 
@@ -6456,16 +6527,16 @@ msgstr "Sessize alınmış kelime ve etiket ayarlarını aç"
 msgid "Open pack"
 msgstr "Paketi aç"
 
-#: src/components/PostControls/PostMenu/index.tsx:64
+#: src/components/PostControls/PostMenu/index.tsx:66
 msgid "Open post options menu"
 msgstr "Gönderi seçenekleri menüsünü aç"
 
-#: src/components/live/LiveStatusDialog.tsx:189
-#: src/components/live/LiveStatusDialog.tsx:203
+#: src/components/live/LiveStatusDialog.tsx:205
+#: src/components/live/LiveStatusDialog.tsx:219
 msgid "Open profile"
 msgstr "Profili aç"
 
-#: src/components/PostControls/ShareMenu/index.tsx:89
+#: src/components/PostControls/ShareMenu/index.tsx:107
 msgid "Open share menu"
 msgstr "Paylaş menüsünü aç"
 
@@ -6481,6 +6552,10 @@ msgstr "Storybook sayfasını aç"
 #: src/screens/Settings/Settings.tsx:457
 msgid "Open system log"
 msgstr "Sistem günlüğünü aç"
+
+#: src/view/shell/desktop/Feeds.tsx:188
+msgid "Opens {0} feed"
+msgstr "{0} akışını açar"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:62
 msgid "Opens a dialog to add a content warning to your post"
@@ -6514,7 +6589,7 @@ msgstr "Kullanıcı adı değiştirme diyaloğunu açar"
 msgid "Opens composer"
 msgstr "Besteciyi açar"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:201
+#: src/view/com/feeds/ComposerPrompt.tsx:199
 msgid "Opens device camera"
 msgstr "Cihaz kamerasını açar"
 
@@ -6545,7 +6620,7 @@ msgstr "GIF seçim diyaloğunu açar"
 msgid "Opens helpdesk in browser"
 msgstr "Tarayıcıda yardım masasını açar"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:223
+#: src/view/com/feeds/ComposerPrompt.tsx:221
 msgid "Opens image picker"
 msgstr "Resim seçiciyi açar"
 
@@ -6666,7 +6741,7 @@ msgstr "Sayfa Bulunamadı"
 #: src/screens/Login/LoginForm.tsx:229
 #: src/screens/Settings/AccountSettings.tsx:121
 #: src/screens/Settings/AccountSettings.tsx:125
-#: src/screens/Signup/StepInfo/index.tsx:231
+#: src/screens/Signup/StepInfo/index.tsx:260
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
@@ -6764,7 +6839,7 @@ msgstr "Yetişkinler için resimler."
 msgid "Pin feed"
 msgstr "Akışı sabitle"
 
-#: src/components/FeedCard.tsx:329
+#: src/components/FeedCard.tsx:361
 msgid "Pin Feed"
 msgstr "Akışı Sabitle"
 
@@ -6777,8 +6852,8 @@ msgstr "Ana ekrana sabitle"
 msgid "Pin to Home"
 msgstr "Ana Sayfaya Sabitle"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:459
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:478
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:485
 msgid "Pin to your profile"
 msgstr "Profiline sabitle"
 
@@ -6847,7 +6922,7 @@ msgid "Please choose your handle."
 msgstr "Kullanıcı adınızı seçin."
 
 #: src/screens/Signup/state.ts:281
-#: src/screens/Signup/StepInfo/index.tsx:122
+#: src/screens/Signup/StepInfo/index.tsx:151
 msgid "Please choose your password."
 msgstr "Şifrenizi seçin."
 
@@ -6860,7 +6935,7 @@ msgid "Please complete the verification captcha."
 msgstr "Lütfen doğrulama captcha'sını tamamlayın."
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:101
-#: src/screens/Signup/StepInfo/index.tsx:111
+#: src/screens/Signup/StepInfo/index.tsx:140
 msgid "Please double-check that you have entered your email address correctly."
 msgstr "Lütfen e-posta adresinizi doğru girdiğinizden emin olun."
 
@@ -6908,11 +6983,11 @@ msgid "Please enter the security code we sent to your previous email address."
 msgstr "Lütfen önceki e-posta adresinize yolladığımız güvenlik kodunu girin."
 
 #: src/screens/Signup/state.ts:265
-#: src/screens/Signup/StepInfo/index.tsx:93
+#: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr "E-postanızı girin."
 
-#: src/screens/Signup/StepInfo/index.tsx:86
+#: src/screens/Signup/StepInfo/index.tsx:115
 msgid "Please enter your invite code."
 msgstr "Lütfen davet kodunuzu girin."
 
@@ -6939,6 +7014,10 @@ msgstr "Lütfen neden bu işaretin {0} tarafından yanlış uygulandığını a�
 #: src/screens/Messages/components/ChatDisabled.tsx:122
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr "Lütfen neden sohbetlerinizin yanlış yere kullanıma kapatıldığını açıklayın"
+
+#: src/components/live/GoLiveDisabledDialog.tsx:123
+msgid "Please explain why you think your Go Live access was incorrectly disabled."
+msgstr "Lütfen neden \"Canlıya Çık\" özelliğinin hatalı olarak devre dışı bırakıldığını açıklayın."
 
 #: src/components/FocusScope/index.tsx:91
 #: src/components/FocusScope/index.tsx:115
@@ -7027,7 +7106,7 @@ msgstr "Gönderi engellendi"
 msgid "Post by @{0}"
 msgstr "@{0} tarafından gönderi"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:184
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:186
 msgctxt "toast"
 msgid "Post deleted"
 msgstr "Gönderi silindi"
@@ -7077,7 +7156,7 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Gönderi sabitlendi"
 
-#: src/components/PostControls/BookmarkButton.tsx:59
+#: src/components/PostControls/BookmarkButton.tsx:66
 msgid "Post saved"
 msgstr "Gönderi kaydedildi"
 
@@ -7134,6 +7213,10 @@ msgstr "Yeniden denemek için basın"
 msgid "Press to view followers of this account that you also follow"
 msgstr "Bu hesabın sizin de takip ettiğiniz takipçilerini görmek için basın"
 
+#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:118
+msgid "Preview"
+msgstr "Önizleme"
+
 #: src/view/com/lightbox/Lightbox.web.tsx:151
 msgid "Previous image"
 msgstr "Önceki resim"
@@ -7146,8 +7229,8 @@ msgstr "Öncelikli dil"
 msgid "Primary Language"
 msgstr "Öncelikli Dil"
 
-#: src/view/shell/desktop/RightNav.tsx:113
-#: src/view/shell/desktop/RightNav.tsx:114
+#: src/view/shell/desktop/RightNav.tsx:116
+#: src/view/shell/desktop/RightNav.tsx:117
 msgid "Privacy"
 msgstr "Gizlilik"
 
@@ -7280,11 +7363,11 @@ msgstr "Alıntı bildirimleri"
 msgid "Quote post"
 msgstr "Gönderiyi alıntıla"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:314
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:340
 msgid "Quote post was re-attached"
 msgstr "Alıntı gönderi yeniden iliştirildi"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:313
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:339
 msgid "Quote post was successfully detached"
 msgstr "Alıntı gönderinin ilişiği başarıyla kesildi"
 
@@ -7302,7 +7385,7 @@ msgstr "Alıntı gönderilen devre dışı bırakıldı"
 msgid "Quotes"
 msgstr "Alıntılar"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:454
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:466
 msgid "Quotes of this post"
 msgstr "Bu gönderinin alıntıları"
 
@@ -7314,8 +7397,8 @@ msgstr "Hız sınırı aşıldı -- kullanıcı adınızı kısa bir sürede ço
 msgid "Rate limit exceeded. Please try again later."
 msgstr "İşlem sıklığı sınırı aşıldı. Lütfen daha sonra tekrar deneyin."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:646
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:656
 msgid "Re-attach quote"
 msgstr "Alıntıyı yeniden iliştir"
 
@@ -7361,13 +7444,13 @@ msgstr "Blog gönderimizi okuyun"
 msgid "Read the Bluesky blog"
 msgstr "Bluesky blog'unu oku"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:56
-#: src/screens/Signup/StepInfo/Policies.tsx:82
+#: src/screens/Signup/StepInfo/Policies.tsx:52
+#: src/screens/Signup/StepInfo/Policies.tsx:78
 msgid "Read the Bluesky Privacy Policy"
 msgstr "Bluesky Gizlilik Politikasını Oku"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:49
-#: src/screens/Signup/StepInfo/Policies.tsx:69
+#: src/screens/Signup/StepInfo/Policies.tsx:45
+#: src/screens/Signup/StepInfo/Policies.tsx:65
 msgid "Read the Bluesky Terms of Service"
 msgstr "Bluesky Hizmet Şartlarını Oku"
 
@@ -7426,7 +7509,7 @@ msgstr "Yazışmaları yeniden yükle"
 #: src/components/dialogs/MutedWords.tsx:443
 #: src/components/dialogs/StarterPackDialog.tsx:374
 #: src/components/dialogs/StarterPackDialog.tsx:380
-#: src/components/FeedCard.tsx:343
+#: src/components/FeedCard.tsx:375
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:105
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:112
 #: src/screens/Bookmarks/index.tsx:266
@@ -7499,12 +7582,12 @@ msgstr "Hızlı erişimden kaldırılsın mı?"
 msgid "Remove from saved feeds"
 msgstr "Kayıtlı akışlardan kaldır"
 
-#: src/components/PostControls/BookmarkButton.tsx:128
+#: src/components/PostControls/BookmarkButton.tsx:140
 #: src/screens/Bookmarks/index.tsx:260
 msgid "Remove from saved posts"
 msgstr "Kayıtlı gönderilerden çıkar"
 
-#: src/components/FeedCard.tsx:338
+#: src/components/FeedCard.tsx:370
 msgid "Remove from your feeds?"
 msgstr "Akışlarınızdan kaldırılsın mı?"
 
@@ -7512,8 +7595,8 @@ msgstr "Akışlarınızdan kaldırılsın mı?"
 msgid "Remove image"
 msgstr "Resmi kaldır"
 
-#: src/components/live/EditLiveDialog.tsx:240
-#: src/components/live/EditLiveDialog.tsx:247
+#: src/components/live/EditLiveDialog.tsx:226
+#: src/components/live/EditLiveDialog.tsx:233
 msgid "Remove live status"
 msgstr "Canlı yayın durumunu kaldır"
 
@@ -7549,8 +7632,8 @@ msgstr "Kullanıcıyı listeden çıkar"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:46
 #: src/components/verification/VerificationsDialog.tsx:252
-#: src/view/com/profile/ProfileMenu.tsx:353
-#: src/view/com/profile/ProfileMenu.tsx:356
+#: src/view/com/profile/ProfileMenu.tsx:406
+#: src/view/com/profile/ProfileMenu.tsx:409
 msgid "Remove verification"
 msgstr "Doğrulamayı kaldır"
 
@@ -7575,7 +7658,7 @@ msgstr "Listeden kaldırıldı"
 msgid "Removed from saved feeds"
 msgstr "Kayıtlı akışlardan kaldırıldı"
 
-#: src/components/PostControls/BookmarkButton.tsx:94
+#: src/components/PostControls/BookmarkButton.tsx:106
 #: src/screens/Bookmarks/index.tsx:218
 msgid "Removed from saved posts"
 msgstr "Kayıtlı gönderilerden çıkarıldı"
@@ -7643,7 +7726,7 @@ msgid "Reply"
 msgstr "Yanıtla"
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
-#: src/components/PostControls/index.tsx:224
+#: src/components/PostControls/index.tsx:240
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr "Yanıtla ({0, plural, other {# yanıt}})"
 
@@ -7669,23 +7752,24 @@ msgstr "Yanıt ayarları konu yazarı tarafından belirlenir"
 msgid "Reply sorting"
 msgstr "Yanıt sıralama"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:351
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:377
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr "Yanıt görünürlüğü güncellendi"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:350
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:376
 msgid "Reply was successfully hidden"
 msgstr "Yanıt başarıyla gizlendi"
 
 #: src/components/dms/MessageContextMenu.tsx:168
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
+#: src/components/live/LiveStatusDialog.tsx:257
 msgid "Report"
 msgstr "Raporla"
 
-#: src/view/com/profile/ProfileMenu.tsx:420
-#: src/view/com/profile/ProfileMenu.tsx:423
+#: src/view/com/profile/ProfileMenu.tsx:473
+#: src/view/com/profile/ProfileMenu.tsx:476
 msgid "Report account"
 msgstr "Hesabı raporla"
 
@@ -7697,8 +7781,8 @@ msgstr "Hesabı raporla"
 msgid "Report conversation"
 msgstr "Yazışmayı raporla"
 
-#: src/components/moderation/ReportDialog/index.tsx:78
-#: src/components/moderation/ReportDialog/index.tsx:239
+#: src/components/moderation/ReportDialog/index.tsx:90
+#: src/components/moderation/ReportDialog/index.tsx:253
 msgid "Report dialog"
 msgstr "Rapor diyaloğu"
 
@@ -7716,8 +7800,8 @@ msgstr "Listeyi raporla"
 msgid "Report message"
 msgstr "Mesajı raporla"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:686
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:688
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:712
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:714
 msgid "Report post"
 msgstr "Gönderiyi raporla"
 
@@ -7731,27 +7815,32 @@ msgstr "Başlangıç paketini raporla"
 msgid "Report submitted"
 msgstr "Rapor yollandı"
 
-#: src/components/moderation/ReportDialog/copy.ts:45
+#: src/components/moderation/ReportDialog/copy.ts:51
 msgid "Report this conversation"
 msgstr "Bu yazışmayı raporla"
 
-#: src/components/moderation/ReportDialog/copy.ts:31
+#: src/components/moderation/ReportDialog/copy.ts:37
 msgid "Report this feed"
 msgstr "Bu akışı raporla"
 
-#: src/components/moderation/ReportDialog/copy.ts:25
+#: src/components/moderation/ReportDialog/copy.ts:31
 msgid "Report this list"
 msgstr "Bu listeyi raporla"
 
-#: src/components/moderation/ReportDialog/copy.ts:51
+#: src/components/live/LiveStatusDialog.tsx:240
+#: src/components/moderation/ReportDialog/copy.ts:19
+msgid "Report this livestream"
+msgstr "Bu canlı yayını raporla"
+
+#: src/components/moderation/ReportDialog/copy.ts:57
 msgid "Report this message"
 msgstr "Bu mesajı raporla"
 
-#: src/components/moderation/ReportDialog/copy.ts:19
+#: src/components/moderation/ReportDialog/copy.ts:25
 msgid "Report this post"
 msgstr "Bu gönderiyi raporla"
 
-#: src/components/moderation/ReportDialog/copy.ts:37
+#: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Report this starter pack"
 msgstr "Bu başlangıç paketini raporla"
 
@@ -7803,7 +7892,7 @@ msgstr "Siz yeniden göndermişsiniz"
 msgid "Reposts"
 msgstr "Yeniden gönderiler"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:436
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:448
 msgid "Reposts of this post"
 msgstr "Bu gönderinin yeniden gönderilmesi"
 
@@ -7831,7 +7920,7 @@ msgstr "Göndermeden önce alternatif metin gerektir"
 msgid "Require an email code to sign in to your account."
 msgstr "Hesabınıza giriş yapmak için e-postanıza onay kodu yollanmasını gerekli kıl."
 
-#: src/screens/Signup/StepInfo/index.tsx:180
+#: src/screens/Signup/StepInfo/index.tsx:209
 msgid "Required for this provider"
 msgstr "Bu sağlayıcı için gereklidir"
 
@@ -7897,12 +7986,14 @@ msgstr "Giriş yapmayı tekrar dener"
 msgid "Retries the last action, which errored out"
 msgstr "Son hataya neden olan son eylemi tekrarlar"
 
+#: src/components/ageAssurance/AgeAssuranceErrors.tsx:27
+#: src/components/ageAssurance/AgeAssuranceErrors.tsx:30
 #: src/components/contacts/screens/VerifyNumber.tsx:347
 #: src/components/contacts/screens/VerifyNumber.tsx:352
 #: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:114
-#: src/components/moderation/ReportDialog/index.tsx:273
+#: src/components/moderation/ReportDialog/index.tsx:287
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:58
 #: src/components/StarterPack/ProfileStarterPacks.tsx:374
@@ -7924,7 +8015,7 @@ msgstr "Son hataya neden olan son eylemi tekrarlar"
 msgid "Retry"
 msgstr "Tekrar dene"
 
-#: src/components/moderation/ReportDialog/index.tsx:270
+#: src/components/moderation/ReportDialog/index.tsx:284
 #: src/view/screens/Storybook/Admonitions.tsx:60
 msgid "Retry loading report options"
 msgstr "Rapor seçeneklerini yüklemeyi tekrar dene"
@@ -7956,8 +8047,8 @@ msgstr "Önceki adıma döner"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
-#: src/components/live/EditLiveDialog.tsx:216
-#: src/components/live/EditLiveDialog.tsx:223
+#: src/components/live/EditLiveDialog.tsx:202
+#: src/components/live/EditLiveDialog.tsx:209
 #: src/components/StarterPack/QrCodeDialog.tsx:204
 #: src/screens/Profile/Header/EditProfileDialog.tsx:236
 #: src/screens/Profile/Header/EditProfileDialog.tsx:250
@@ -8073,7 +8164,7 @@ msgstr "Ara"
 msgid "Search @{0}'s posts"
 msgstr "@{0} gönderilerini ara"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:657
+#: src/components/ProgressGuide/FollowDialog.tsx:662
 msgid "Search by name or interest"
 msgstr "İsim veya ilgi alanına göre ara"
 
@@ -8086,12 +8177,12 @@ msgid "Search feeds"
 msgstr "Akışları ara"
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.
-#: src/components/ProgressGuide/FollowDialog.tsx:486
+#: src/components/ProgressGuide/FollowDialog.tsx:491
 msgid "Search for \"{interestsDisplayName}\""
 msgstr "\"{interestsDisplayName}\" ara"
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
-#: src/components/ProgressGuide/FollowDialog.tsx:479
+#: src/components/ProgressGuide/FollowDialog.tsx:484
 msgid "Search for \"{interestsDisplayName}\" (active)"
 msgstr "\"{interestsDisplayName}\" ara (etkin)"
 
@@ -8107,11 +8198,11 @@ msgstr "\"{searchText}\" ara"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Başkalarına önermek istediğiniz akışları aratın."
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:362
 msgid "Search for more accounts"
 msgstr "Daha fazla hesap arayın"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:439
 msgid "Search for more feeds"
 msgstr "Daha fazla akış arayın"
 
@@ -8123,7 +8214,7 @@ msgstr "Gönderileri, kullanıcıları veya akışları aratın"
 msgid "Search GIFs"
 msgstr "GIF aratın"
 
-#: src/screens/Hashtag.tsx:223
+#: src/screens/Hashtag.tsx:236
 #: src/screens/Search/SearchResults.tsx:292
 msgid "Search is currently unavailable when logged out"
 msgstr "Arama şu anda giriş yapmamış kullanıcıların erişimine kapalıdır"
@@ -8137,13 +8228,13 @@ msgstr "Dil ara"
 msgid "Search my posts"
 msgstr "Gönderilerimi ara"
 
-#: src/view/com/profile/ProfileMenu.tsx:271
-#: src/view/com/profile/ProfileMenu.tsx:274
+#: src/view/com/profile/ProfileMenu.tsx:289
+#: src/view/com/profile/ProfileMenu.tsx:292
 msgid "Search posts"
 msgstr "Gönderileri ara"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:534
-#: src/components/ProgressGuide/FollowDialog.tsx:676
+#: src/components/ProgressGuide/FollowDialog.tsx:681
 msgid "Search profiles"
 msgstr "Profilleri ara"
 
@@ -8156,7 +8247,7 @@ msgid "Search..."
 msgstr "Ara..."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:535
-#: src/components/ProgressGuide/FollowDialog.tsx:677
+#: src/components/ProgressGuide/FollowDialog.tsx:682
 msgid "Searches for profiles"
 msgstr "Profilleri arar"
 
@@ -8164,19 +8255,27 @@ msgstr "Profilleri arar"
 msgid "Security step required"
 msgstr "Güvenlik adımı gerekiyor"
 
-#: src/components/RichTextTag.tsx:112
+#: src/components/RichTextTag.tsx:113
+msgid "See {0} posts"
+msgstr ""
+
+#: src/components/RichTextTag.tsx:130
+msgid "See {0} posts by user"
+msgstr ""
+
+#: src/components/RichTextTag.tsx:121
 msgid "See {tag} posts"
 msgstr "{tag} gönderilerini gör"
 
-#: src/components/RichTextTag.tsx:125
+#: src/components/RichTextTag.tsx:139
 msgid "See {tag} posts by user"
 msgstr "Kullanıcının {tag} gönderilerini gör"
 
-#: src/components/RichTextTag.tsx:119
+#: src/components/RichTextTag.tsx:123
 msgid "See #{tag} posts"
 msgstr "#{tag} gönderilerini gör"
 
-#: src/components/RichTextTag.tsx:133
+#: src/components/RichTextTag.tsx:141
 msgid "See #{tag} posts by user"
 msgstr "Kullanıcının #{tag} gönderilerini gör"
 
@@ -8224,7 +8323,7 @@ msgstr "{langName} dilini seç"
 msgid "Select a color"
 msgstr "Renk seç"
 
-#: src/components/moderation/ReportDialog/index.tsx:358
+#: src/components/moderation/ReportDialog/index.tsx:372
 msgid "Select a reason"
 msgstr "Bir gerekçe seçiniz"
 
@@ -8256,7 +8355,7 @@ msgstr "Uygulama dili seçin"
 msgid "Select content languages"
 msgstr "İçerik dillerini seç"
 
-#: src/components/live/GoLiveDialog.tsx:176
+#: src/components/live/GoLiveDialog.tsx:175
 msgid "Select duration"
 msgstr "Süre seçin"
 
@@ -8299,7 +8398,7 @@ msgstr "Dil seç..."
 msgid "Select languages"
 msgstr "Dilleri seç"
 
-#: src/components/moderation/ReportDialog/index.tsx:408
+#: src/components/moderation/ReportDialog/index.tsx:422
 msgid "Select moderation service"
 msgstr "Moderasyon hizmeti seçin"
 
@@ -8340,7 +8439,7 @@ msgstr "Uygulamanın kullanıcı arayüzünde hangi dili kullanacağınızı se�
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "Abone olduğunuz akışların hangi dilleri içermesini istediğinizi seçin. Hiçbiri seçilmezse, tüm diller gösterilir."
 
-#: src/screens/Signup/StepInfo/index.tsx:273
+#: src/screens/Signup/StepInfo/index.tsx:302
 msgid "Select your date of birth"
 msgstr "Doğum tarihinizi seçin"
 
@@ -8403,7 +8502,7 @@ msgstr "Gönderiyi {name} kullanıcısına gönder"
 msgid "Send post to..."
 msgstr "Şuraya gönder..."
 
-#: src/components/moderation/ReportDialog/index.tsx:799
+#: src/components/moderation/ReportDialog/index.tsx:813
 msgid "Send report to {title}"
 msgstr "Raporu şuraya gönder {title}"
 
@@ -8456,7 +8555,7 @@ msgstr "Hesabınızı ayarlayın"
 msgid "Set who can reply to your post"
 msgstr "Gönderinize kimin yanıt verebileceğini belirleyin"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:211
+#: src/ageAssurance/components/NoAccessScreen.tsx:220
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr "Doğum tarihinizi aşağıda belirlediğinizde sizi en kısa zamanda gönderi yollamaya ve keşfetmeye kavuşturacağız!"
 
@@ -8529,7 +8628,7 @@ msgid "Sexually Suggestive"
 msgstr "Cinsel Çağrışımlı"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:192
-#: src/screens/Hashtag.tsx:133
+#: src/screens/Hashtag.tsx:142
 #: src/screens/StarterPack/StarterPackScreen.tsx:433
 #: src/screens/Topic.tsx:103
 msgid "Share"
@@ -8548,7 +8647,7 @@ msgstr "Havalı bir hikaye paylaş!"
 msgid "Share a fun fact!"
 msgstr "Eğlenceli bir gerçeği paylaş!"
 
-#: src/view/com/profile/ProfileMenu.tsx:507
+#: src/view/com/profile/ProfileMenu.tsx:560
 msgid "Share anyway"
 msgstr "Yine de paylaş"
 
@@ -8596,8 +8695,8 @@ msgstr "Bu başlangıç paketini paylaş ve insanların Bluesky'deki topluluğun
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:171
 #: src/screens/StarterPack/StarterPackScreen.tsx:613
 #: src/screens/StarterPack/StarterPackScreen.tsx:621
-#: src/view/com/profile/ProfileMenu.tsx:251
-#: src/view/com/profile/ProfileMenu.tsx:264
+#: src/view/com/profile/ProfileMenu.tsx:269
+#: src/view/com/profile/ProfileMenu.tsx:282
 msgid "Share via..."
 msgstr "Paylaş..."
 
@@ -8644,8 +8743,8 @@ msgstr "Rozeti göster ve akışlardan filtrele"
 msgid "Show customization options"
 msgstr "Özelleştirme seçeneklerini göster"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:515
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:517
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:541
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:543
 msgid "Show less like this"
 msgstr "Bunun gibi daha az göster"
 
@@ -8657,12 +8756,17 @@ msgstr "Yine de listeyi göster"
 msgid "Show lists of users to select from"
 msgstr "Kullanıcıların seçileceği listeleri göster"
 
+#: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:27
+#: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:37
+msgid "Show live events in your Discover Feed"
+msgstr "Keşif akışında (\"Discover\") canlı etkinlikleri göster"
+
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
 msgstr "Daha Fazla Göster"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:507
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:509
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:533
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:535
 msgid "Show more like this"
 msgstr "Bunun gibi daha fazla göster"
 
@@ -8688,8 +8792,8 @@ msgstr "Yanıtları göster"
 msgid "Show replies as"
 msgstr "Yanıtları şöyle göster"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:604
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
 msgid "Show reply for everyone"
 msgstr "Yanıtı herkese göster"
 
@@ -8711,7 +8815,12 @@ msgstr "Uyarı göster"
 msgid "Show warning and filter from feeds"
 msgstr "Uyarı göster ve akışlardan filtrele"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:629
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:60
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:170
+msgid "Show when you’re live"
+msgstr "Canlı yayına çıktığınızı gösterin"
+
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:641
 msgid "Shows information about when this post was created"
 msgstr "Bu gönderinin ne zaman oluşturulduğuna dair bilgileri gösterir"
 
@@ -8728,7 +8837,7 @@ msgstr "İçeriği gösterir"
 #: src/components/dialogs/Signin.tsx:99
 #: src/components/WelcomeModal.tsx:194
 #: src/components/WelcomeModal.tsx:206
-#: src/screens/Hashtag.tsx:227
+#: src/screens/Hashtag.tsx:240
 #: src/screens/Login/index.tsx:136
 #: src/screens/Login/index.tsx:157
 #: src/screens/Login/LoginForm.tsx:181
@@ -8771,8 +8880,8 @@ msgstr "Listelenmeyen bir hesaba giriş yap"
 msgid "Sign in to Bluesky or create a new account"
 msgstr "Bluesky'da oturum aç veya yeni bir üyelik oluştur"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:493
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:495
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:519
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:521
 msgid "Sign in to view post"
 msgstr "Gönderiyi görmek için giriş yap"
 
@@ -8858,7 +8967,7 @@ msgstr "Yazılım Geliştirme"
 msgid "Some of your verifications are invalid."
 msgstr "Doğrulamalarınızdan bazıları geçersiz."
 
-#: src/components/FeedInterstitials.tsx:870
+#: src/components/FeedInterstitials.tsx:871
 msgid "Some other feeds you might like"
 msgstr "Beğenebileceğiniz diğer akışlar"
 
@@ -8874,7 +8983,7 @@ msgstr "Birisi {0} tepkisi verdi"
 msgid "Someone reacted {0} to {1}"
 msgstr "Biri şuna {0} tepkisi verdi: {1}"
 
-#: src/components/moderation/ReportDialog/index.tsx:83
+#: src/components/moderation/ReportDialog/index.tsx:95
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Raporlamaya çalıştığınız verilerde bir sorun var. Lütfen destekle iletişime geçin."
 
@@ -8883,7 +8992,7 @@ msgid "Something went wrong"
 msgstr "Bir şeyler ters gitti"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:138
-#: src/components/moderation/ReportDialog/index.tsx:265
+#: src/components/moderation/ReportDialog/index.tsx:279
 #: src/screens/Deactivated.tsx:85
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 #: src/view/screens/Storybook/Admonitions.tsx:55
@@ -8903,7 +9012,7 @@ msgstr "Bir şeyler ters gitti!"
 msgid "Something went wrong. Please try again in a moment."
 msgstr "Bir şeyler ters gitti. Lütfen biraz sonra tekrar deneyin."
 
-#: src/components/moderation/ReportDialog/index.tsx:219
+#: src/components/moderation/ReportDialog/index.tsx:233
 msgid "Something went wrong. Please try again."
 msgstr "Bir şeyler ters gitti. Lütfen tekrar deneyin."
 
@@ -8915,8 +9024,8 @@ msgstr "Bir sorun mu var? Bize bildirin."
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "Üzgünüz, hesap önerilerini şu anda yükleyemiyoruz."
 
-#: src/App.native.tsx:126
-#: src/App.web.tsx:99
+#: src/App.native.tsx:131
+#: src/App.web.tsx:104
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Maalesef oturumunuzun süresi doldu. Lütfen tekrar giriş yapın."
 
@@ -8995,7 +9104,7 @@ msgstr "Sizin oluşturduğunuz başlangıç paketi"
 msgid "Starter pack is invalid"
 msgstr "Başlangıç paketi geçersiz"
 
-#: src/screens/Search/Explore.tsx:625
+#: src/screens/Search/Explore.tsx:630
 #: src/view/screens/Profile.tsx:240
 msgid "Starter Packs"
 msgstr "Başlangıç Paketleri"
@@ -9031,8 +9140,14 @@ msgstr "Başkalarıyla eşleşme amaçlı güvenli bir kodun parçası olarak de
 msgid "Storybook"
 msgstr "Storybook"
 
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:181
+msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
+msgstr "Twitch'te yayın mı yapıyorsunuz? Canlı durumunuzu Bluesky'da değiştirerek avatarınıza bir rozet ekleyin. Ona dokunanlar doğrudan yayınınıza gideceklerdir."
+
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123
+#: src/components/live/GoLiveDisabledDialog.tsx:138
+#: src/components/live/GoLiveDisabledDialog.tsx:139
 #: src/components/moderation/LabelsOnMeDialog.tsx:342
 #: src/components/moderation/LabelsOnMeDialog.tsx:343
 #: src/screens/Messages/components/ChatDisabled.tsx:154
@@ -9048,9 +9163,9 @@ msgstr "İtirazı yolla"
 msgid "Submit Appeal"
 msgstr "İtirazı Yolla"
 
-#: src/components/moderation/ReportDialog/index.tsx:486
-#: src/components/moderation/ReportDialog/index.tsx:547
-#: src/components/moderation/ReportDialog/index.tsx:554
+#: src/components/moderation/ReportDialog/index.tsx:500
+#: src/components/moderation/ReportDialog/index.tsx:561
+#: src/components/moderation/ReportDialog/index.tsx:568
 msgid "Submit report"
 msgstr "Raporu yolla"
 
@@ -9092,7 +9207,7 @@ msgstr "Başarılı!"
 msgid "Successfully verified"
 msgstr "Başarıyla doğrulandı"
 
-#: src/screens/Search/Explore.tsx:354
+#: src/screens/Search/Explore.tsx:359
 msgid "Suggested Accounts"
 msgstr "Önerilen Hesaplar"
 
@@ -9177,6 +9292,10 @@ msgstr "Bilgi için dokunun"
 msgid "Tap for more information"
 msgstr "Daha fazla bilgi için dokunun"
 
+#: src/screens/Signup/StepInfo/index.tsx:336
+msgid "Tap here to confirm your location with GPS."
+msgstr "Konumunuzu GPS'le doğrulamak için buraya dokunun."
+
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:164
 msgid "Tap to acknowledge that you understand and agree to these updates and continue using Bluesky"
 msgstr "Bu güncellemeleri anladığınızı ve onayladığınızı kabul etmek ve Bluesky'ı kullanmaya devam etmek için dokunun"
@@ -9203,7 +9322,7 @@ msgstr "Görev tamam - 10 takip!"
 msgid "Task complete - 10 likes!"
 msgstr "Görev tamamlandı - 10 beğeni!"
 
-#: src/components/ProgressGuide/List.tsx:64
+#: src/components/ProgressGuide/List.tsx:97
 msgid "Teach our algorithm what you like"
 msgstr "Algoritmamıza nelerden hoşlandığınızı öğretin"
 
@@ -9223,8 +9342,8 @@ msgstr "Bize biraz kendinden bahset"
 msgid "Tell us a little more"
 msgstr "Biraz daha anlatın"
 
-#: src/view/shell/desktop/RightNav.tsx:119
-#: src/view/shell/desktop/RightNav.tsx:120
+#: src/view/shell/desktop/RightNav.tsx:123
+#: src/view/shell/desktop/RightNav.tsx:124
 msgid "Terms"
 msgstr "Şartlar"
 
@@ -9244,6 +9363,7 @@ msgstr "Hizmet Şartları"
 msgid "Text & tags"
 msgstr "Metin ve etiketler"
 
+#: src/components/live/GoLiveDisabledDialog.tsx:121
 #: src/components/moderation/LabelsOnMeDialog.tsx:306
 #: src/screens/Messages/components/ChatDisabled.tsx:120
 msgid "Text input field"
@@ -9257,8 +9377,8 @@ msgstr "Geribildiriminiz için teşekkürler! Akış yöneticisine iletildi."
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Teşekkürler, e-posta adresinizi başarıyla doğruladınız. Bu iletişim kutusunu kapatabilirsiniz."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:385
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
+#: src/ageAssurance/components/NoAccessScreen.tsx:394
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:121
 msgid "Thanks! You're all set."
 msgstr "Teşekkürler! Her şey tamam."
 
@@ -9289,7 +9409,7 @@ msgstr "Hepsi bu kadar!"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:391
-#: src/view/com/profile/ProfileMenu.tsx:483
+#: src/view/com/profile/ProfileMenu.tsx:536
 msgid "The account will be able to interact with you after unblocking."
 msgstr "Hesap, engeli kaldırdıktan sonra sizinle etkileşime geçebilecek."
 
@@ -9342,6 +9462,10 @@ msgstr "Hesabınıza şu işaretler uygulanmış."
 #: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to your content."
 msgstr "İçeriğinize şu işaretler uygulanmış."
+
+#: src/components/live/GoLiveDialog.tsx:157
+msgid "The following services are enabled for your account: {allowedServices}"
+msgstr "Şu servisler hesabınız için etkindir: {allowedServices}"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
@@ -9431,7 +9555,7 @@ msgstr "Sunucuya bağlanırken bir sorun oldu, lütfen internet bağlantınızı
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Bildirimleri almakta bir sorun oluştu. Tekrar denemek için buraya dokunun."
 
-#: src/screens/Search/Explore.tsx:992
+#: src/screens/Search/Explore.tsx:999
 #: src/view/com/posts/PostFeed.tsx:759
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Gönderileri almakta bir sorun oluştu. Tekrar denemek için buraya dokunun."
@@ -9463,21 +9587,21 @@ msgstr "Bu akışı kaldırırken bir sorun oldu. Lütfen internet bağlantını
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
 msgstr "Akışlarınızı güncellerken bir sorun oldu, lütfen internet bağlantınızı kontrol edin ve tekrar deneyin."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:397
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:410
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:420
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:90
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:101
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:423
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:436
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:104
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:115
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:88
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:253
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:294
-#: src/view/com/profile/ProfileMenu.tsx:136
-#: src/view/com/profile/ProfileMenu.tsx:146
-#: src/view/com/profile/ProfileMenu.tsx:160
-#: src/view/com/profile/ProfileMenu.tsx:170
-#: src/view/com/profile/ProfileMenu.tsx:183
-#: src/view/com/profile/ProfileMenu.tsx:195
+#: src/view/com/profile/ProfileMenu.tsx:151
+#: src/view/com/profile/ProfileMenu.tsx:161
+#: src/view/com/profile/ProfileMenu.tsx:175
+#: src/view/com/profile/ProfileMenu.tsx:185
+#: src/view/com/profile/ProfileMenu.tsx:198
+#: src/view/com/profile/ProfileMenu.tsx:210
 msgid "There was an issue! {0}"
 msgstr "Bir sorun oluştu! {0}"
 
@@ -9540,6 +9664,7 @@ msgstr "Bu işlem herhangi bir zamanda geri alınabilir."
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr "Bu itiraz <0>{sourceName}</0> hesabına yollanacaktır."
 
+#: src/components/live/GoLiveDisabledDialog.tsx:113
 #: src/screens/Messages/components/ChatDisabled.tsx:116
 msgid "This appeal will be sent to Bluesky's moderation service."
 msgstr "Bu itiraz Bluesky'ın moderasyon hizmetine gönderilecektir."
@@ -9636,8 +9761,8 @@ msgstr "Bu bilgi gizlidir ve diğer kullanıcılarla paylaşılmaz."
 msgid "This is an empty state"
 msgstr "Bu boş bir durum"
 
-#: src/components/live/EditLiveDialog.tsx:189
-#: src/components/live/GoLiveDialog.tsx:157
+#: src/components/live/EditLiveDialog.tsx:176
+#: src/components/live/GoLiveDialog.tsx:150
 msgid "This is not a valid link"
 msgstr "Bu bağlantı geçersiz"
 
@@ -9673,7 +9798,7 @@ msgstr "Bu liste boş."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Bu moderasyon hizmeti kullanılamıyor. Daha fazla ayrıntı için aşağıya bakın. Bu sorun devam ederse bizimle iletişime geçin."
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:669
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:681
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Bu gönderi <0>{0}</0> tarihinde oluşturulduğunu beyan ediyor, ancak Bluesky'da ilk olarak <1>{1}</1> tarihinde görüldü."
 
@@ -9689,7 +9814,7 @@ msgstr "Bu gönderi yalnızca giriş yapmış kullanıcılara görünür."
 msgid "This post was deleted by its author"
 msgstr "Bu gönderi yazarı tarafından silinmiş"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:744
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:770
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Bu gönderi akışlarınızdan ve konularınızdan gizlenecektir. Bu işlem geri alınamaz."
 
@@ -9697,17 +9822,21 @@ msgstr "Bu gönderi akışlarınızdan ve konularınızdan gizlenecektir. Bu iş
 msgid "This post's author has disabled quote posts."
 msgstr "Bu gönderinin yazarı alıntılanmasını engellemiş."
 
-#: src/view/com/profile/ProfileMenu.tsx:504
+#: src/view/com/profile/ProfileMenu.tsx:557
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Bu profil sadece giriş yapmış kullanıcılara görünür. Giriş yapmamış kullanıcılara görünmeyecektir."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:779
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:805
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "Bu yanıt konunuzun altındaki gizli bir bölüme sıralanacaktır ve ona gelen yanıtlar hem sizin hem de başkaları için sessize alınacaktır."
 
-#: src/screens/Signup/StepInfo/Policies.tsx:35
+#: src/screens/Signup/StepInfo/Policies.tsx:31
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Bu hizmet, kullanım şartları veya bir gizlilik politikası sunmamış."
+
+#: src/components/live/queries.ts:38
+msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
+msgstr "Canlı özelliği betada olduğu müddetçe bu servis desteklenmemektedir. İzin verilen servisler: {formatted}."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "This should create a domain record at:"
@@ -9762,7 +9891,7 @@ msgstr "Bu \"{0}\" kelimesini sessize alınmış kelimlerden silecek. Sonra her 
 msgid "This will remove @{0} from the quick access list."
 msgstr "Bu @{0} kullanıcısını çabuk erişim listesinden kaldıracak."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:769
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:795
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Bu işlem, gönderinizin bu alıntıyla ilişiğini tüm kullanıcılar için kesecek ve yerine bir yer tutucu koyacaktır."
 
@@ -9771,8 +9900,8 @@ msgstr "Bu işlem, gönderinizin bu alıntıyla ilişiğini tüm kullanıcılar 
 msgid "Thread options"
 msgstr "Konu seçenekleri"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
-#: src/screens/Settings/ContentAndMediaSettings.tsx:71
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:72
 msgid "Thread preferences"
 msgstr "Konu tercihleri"
 
@@ -9806,7 +9935,7 @@ msgstr "E-posta iki adımlı doğrulamasını kapatmak için lütfen e-postanız
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "E-posta iki adımlı doğrulama yöntemini kapatmak için lütfen <0>{0}</0> adresine erişiminizi doğrulayın"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:233
+#: src/ageAssurance/components/NoAccessScreen.tsx:242
 msgid "To log out, <0>click here</0>."
 msgstr "Çıkış yapmak için <0>buraya tıklayın</0>."
 
@@ -9838,7 +9967,7 @@ msgstr "Çok fazla kod yollandı. Lütfen birkaç dakika bekleyip tekrar deneyin
 msgid "Too many contacts - you've exceeded the number of contacts you can import to find your friends"
 msgstr "Çok sayıda bağlantı - arkadaşlarınızı bulmak için bağlantılarınızdan yükleyebileceğiniz kişi sayısını aştınız"
 
-#: src/screens/Hashtag.tsx:91
+#: src/screens/Hashtag.tsx:100
 #: src/screens/Search/SearchResults.tsx:52
 #: src/screens/Topic.tsx:72
 msgid "Top"
@@ -9857,10 +9986,10 @@ msgstr "Konu başlığı"
 
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/dms/MessageContextMenu.tsx:141
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:476
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:478
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:591
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:594
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:502
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:504
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:603
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:606
 msgid "Translate"
 msgstr "Çevir"
 
@@ -9869,9 +9998,13 @@ msgstr "Çevir"
 msgid "Tree view"
 msgstr "Ağaç görünümü"
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:48
 msgid "Trending"
 msgstr "Gündem"
+
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:55
+msgid "Trending options"
+msgstr "Gündem seçenekleri"
 
 #: src/components/interstitials/TrendingVideos.tsx:86
 msgid "Trending Videos"
@@ -9945,7 +10078,7 @@ msgstr "Pull Request'i sök"
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Pull Request'i sök {currentChannel}"
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:40
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:41
 msgid "Unavailable"
 msgstr "Erişilmez"
 
@@ -9962,7 +10095,7 @@ msgstr "Erişilemeyen akış bilgisi"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:394
 #: src/screens/ProfileList/components/Header.tsx:171
 #: src/screens/ProfileList/components/Header.tsx:178
-#: src/view/com/profile/ProfileMenu.tsx:495
+#: src/view/com/profile/ProfileMenu.tsx:548
 msgid "Unblock"
 msgstr "Engeli kaldır"
 
@@ -9973,14 +10106,14 @@ msgstr "Engeli kaldır"
 
 #: src/components/dms/ConvoMenu.tsx:261
 #: src/components/dms/ConvoMenu.tsx:264
-#: src/view/com/profile/ProfileMenu.tsx:400
-#: src/view/com/profile/ProfileMenu.tsx:406
+#: src/view/com/profile/ProfileMenu.tsx:453
+#: src/view/com/profile/ProfileMenu.tsx:459
 msgid "Unblock account"
 msgstr "Hesabın engelini kaldır"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:389
-#: src/view/com/profile/ProfileMenu.tsx:477
+#: src/view/com/profile/ProfileMenu.tsx:530
 msgid "Unblock Account?"
 msgstr "Hesabı Engelle?"
 
@@ -9989,8 +10122,13 @@ msgstr "Hesabı Engelle?"
 msgid "Unblock list"
 msgstr "Listeden engeli kaldır"
 
-#: src/components/PostControls/BookmarkButton.tsx:40
+#: src/components/PostControls/BookmarkButton.tsx:42
 msgctxt "Button label to undo saving/removing a post from saved posts."
+msgid "Undo"
+msgstr "Geri al"
+
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
 msgid "Undo"
 msgstr "Geri al"
 
@@ -10008,8 +10146,8 @@ msgstr "Yeniden gönderiyi geri al ({0, plural, other {# yeniden gönderi}})"
 msgid "Unfollow {0}"
 msgstr "{0} adresini takibi bırak"
 
-#: src/view/com/profile/ProfileMenu.tsx:291
-#: src/view/com/profile/ProfileMenu.tsx:301
+#: src/view/com/profile/ProfileMenu.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:319
 msgid "Unfollow account"
 msgstr "Hesabı takibi bırak"
 
@@ -10017,13 +10155,17 @@ msgstr "Hesabı takibi bırak"
 msgid "Unfollows the user"
 msgstr "Kullanıcıyı takipten çıkarır"
 
-#: src/components/moderation/ReportDialog/index.tsx:470
+#: src/components/moderation/ReportDialog/index.tsx:484
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "Maalesef abone olduğunuz işaretleyicilerin hiçbiri bu rapor türünü desteklemiyor."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:188
+#: src/ageAssurance/components/NoAccessScreen.tsx:197
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr "Maalesef profilinizde belirttiğiniz doğum tarihi sizi Bluesky kullanmak için çok genç gösteriyor."
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:182
+msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
+msgstr "Ne yazık ki beyan edilen yaşınız bulunduğunuz bölgeden Bluesky'a erişmek için yeterince yaşlı olmadığıızı gösteriyor."
 
 #: src/components/verification/VerificationsDialog.tsx:211
 msgid "Unknown verifier"
@@ -10042,7 +10184,7 @@ msgid "Unlike"
 msgstr "Beğenmeyi geri al"
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
-#: src/components/PostControls/index.tsx:260
+#: src/components/PostControls/index.tsx:276
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Beğeniyi kaldır ({0, plural, other {# beğeni}})"
 
@@ -10057,15 +10199,15 @@ msgstr "Sessizden çıkar"
 msgid "Unmute"
 msgstr "Sessizden çıkar"
 
-#: src/components/RichTextTag.tsx:141
-#: src/components/RichTextTag.tsx:154
+#: src/components/RichTextTag.tsx:150
+#: src/components/RichTextTag.tsx:163
 msgid "Unmute {tag}"
 msgstr "{tag} etiketini sessizden çıkar"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:659
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:665
-#: src/view/com/profile/ProfileMenu.tsx:379
-#: src/view/com/profile/ProfileMenu.tsx:385
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:685
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:691
+#: src/view/com/profile/ProfileMenu.tsx:432
+#: src/view/com/profile/ProfileMenu.tsx:438
 msgid "Unmute account"
 msgstr "Hesabı sessizden çıkar"
 
@@ -10078,8 +10220,8 @@ msgstr "Yazışmayı sessizden çıkar"
 msgid "Unmute list"
 msgstr "Listeyi sessizden çıkar"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:544
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:570
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:574
 msgid "Unmute thread"
 msgstr "Konunun sessizliğini kaldır"
 
@@ -10098,7 +10240,7 @@ msgstr "Sabitlemeyi kaldır"
 msgid "Unpin feed"
 msgstr "Akışı sabitlemeyi kaldır"
 
-#: src/components/FeedCard.tsx:320
+#: src/components/FeedCard.tsx:352
 msgid "Unpin Feed"
 msgstr "Akışı Sabitlemeyi Kaldır"
 
@@ -10107,8 +10249,8 @@ msgstr "Akışı Sabitlemeyi Kaldır"
 msgid "Unpin from home"
 msgstr "Ana sayfadan sabitlemeyi kaldır"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:451
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:458
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:477
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:484
 msgid "Unpin from profile"
 msgstr "Profilden sabitlemeyi kaldır"
 
@@ -10180,12 +10322,12 @@ msgstr "{domain} adresine güncelle"
 msgid "Update your email"
 msgstr "E-postanızı güncelleyin"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:318
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:344
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr "Alıntı ilişiğinin güncellenmesi başarısız oldu"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:370
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:396
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "Yanıt görünürlüğünü güncelleme başarısız oldu"
@@ -10247,8 +10389,8 @@ msgstr "Varsayılan sağlayıcıyı kullan"
 msgid "Use in-app browser"
 msgstr "Uygulama içi tarayıcıyı kullan"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:102
-#: src/screens/Settings/ContentAndMediaSettings.tsx:108
+#: src/screens/Settings/ContentAndMediaSettings.tsx:103
+#: src/screens/Settings/ContentAndMediaSettings.tsx:109
 msgid "Use in-app browser to open links"
 msgstr "Bağlantıları açmak için uygulama içi tarayıcıyı kullan"
 
@@ -10373,13 +10515,13 @@ msgstr "Doğrulayan:"
 
 #: src/components/verification/VerificationCreatePrompt.tsx:84
 #: src/components/verification/VerificationCreatePrompt.tsx:86
-#: src/view/com/profile/ProfileMenu.tsx:363
-#: src/view/com/profile/ProfileMenu.tsx:366
+#: src/view/com/profile/ProfileMenu.tsx:416
+#: src/view/com/profile/ProfileMenu.tsx:419
 msgid "Verify account"
 msgstr "Hesabı doğrula"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:322
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
+#: src/ageAssurance/components/NoAccessScreen.tsx:331
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:176
 msgid "Verify again"
 msgstr "Tekrar onayla"
 
@@ -10405,10 +10547,10 @@ msgstr "E-posta kodunu doğrulayın"
 msgid "Verify email dialog"
 msgstr "E-posta onay diyaloğu"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:310
-#: src/ageAssurance/components/NoAccessScreen.tsx:324
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
+#: src/ageAssurance/components/NoAccessScreen.tsx:319
+#: src/ageAssurance/components/NoAccessScreen.tsx:333
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:164
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:178
 msgid "Verify now"
 msgstr "Şimdi onayla"
 
@@ -10530,7 +10672,7 @@ msgstr "{0} kullanıcısının profilini görüntüle"
 msgid "View {displayName}'s profile"
 msgstr "{displayName} kullanıcısının profilini görüntüle"
 
-#: src/components/ProfileHoverCard/index.web.tsx:480
+#: src/components/ProfileHoverCard/index.web.tsx:481
 msgid "View blocked user's profile"
 msgstr "Engelli kullanıcının profilini görüntüle"
 
@@ -10570,9 +10712,9 @@ msgstr "Daha çok gündem olan video göster"
 msgid "View post"
 msgstr "Gönderiyi göster"
 
-#: src/components/ProfileHoverCard/index.web.tsx:466
-#: src/components/ProfileHoverCard/index.web.tsx:486
-#: src/components/ProfileHoverCard/index.web.tsx:513
+#: src/components/ProfileHoverCard/index.web.tsx:467
+#: src/components/ProfileHoverCard/index.web.tsx:487
+#: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/view/com/posts/PostFeedErrorMessage.tsx:182
 #: src/view/com/util/PostMeta.tsx:90
 #: src/view/com/util/PostMeta.tsx:127
@@ -10624,8 +10766,8 @@ msgstr "Sessize aldığınız hesapları görün"
 msgid "View your verifications"
 msgstr "Doğrulamalarınızı görüntüleyin"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:205
-#: src/view/com/util/images/AutoSizedImage.tsx:232
+#: src/components/images/AutoSizedImage.tsx:206
+#: src/components/images/AutoSizedImage.tsx:233
 msgid "Views full image"
 msgstr "Görseli tam boy gösterir"
 
@@ -10668,8 +10810,8 @@ msgstr "İçeriği uyar"
 msgid "Warn content and filter from feeds"
 msgstr "İçeriği uyar ve akışlarda filtrele"
 
-#: src/components/live/LiveStatusDialog.tsx:156
-#: src/components/live/LiveStatusDialog.tsx:169
+#: src/components/live/LiveStatusDialog.tsx:172
+#: src/components/live/LiveStatusDialog.tsx:185
 msgid "Watch now"
 msgstr "Şimdi izle"
 
@@ -10685,9 +10827,9 @@ msgstr "Bu özelleştirilmiş akışı sağlayan hizmete bağlanamadık. Geçici
 msgid "We could not find this list. It was probably deleted."
 msgstr "Bu listeyi bulamadık. Muhtemelen silinmiş."
 
-#: src/screens/Hashtag.tsx:258
-msgid "We couldn't find any results for that hashtag."
-msgstr "Bu etiket için bir sonuç bulamadık."
+#: src/screens/Hashtag.tsx:271
+msgid "We couldn't find any results for that tag."
+msgstr ""
 
 #: src/screens/Topic.tsx:180
 msgid "We couldn't find any results for that topic."
@@ -10745,6 +10887,10 @@ msgstr "<0>{0}</0> adresine bir bağlantı içeren bir e-posta yolladık. Lütfe
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Video yüklemenize izin verilip verilmediğini belirleyemedik. Lütfen tekrar deneyin."
 
+#: src/components/ageAssurance/AgeAssuranceErrors.tsx:18
+msgid "We were unable to load the age assurance configuration for your region, probably due to a network error. Some content and features may be unavailable temporarily. Please try again later."
+msgstr "Muhtemel bir ağ probleminden dolayı yaş güvencesi konfigürasyonunu bölgeniz için yükleyemedik. Bazı içerik ve özellikler geçici olarak erişilmez olabilir. Lütfen daha sonra tekrar deneyin."
+
 #: src/components/dialogs/BirthDateSettings.tsx:67
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr "Doğum tarihi tercihlerinizi yükleyemedik. Lütfen yeniden deneyin."
@@ -10792,7 +10938,7 @@ msgid "We're having issues initializing the age assurance process for your accou
 msgstr "Hesabınızın yaş güvencesi işlemini başlatmakta sıkıntı yaşıyoruz. Lütfen yardım için <0>desteğe ulaşın</0>."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:107
-#: src/components/ProgressGuide/FollowDialog.tsx:184
+#: src/components/ProgressGuide/FollowDialog.tsx:189
 msgid "We're having network issues, try again"
 msgstr "Ağ sorunları yaşıyoruz, tekrar deneyin"
 
@@ -10804,8 +10950,8 @@ msgstr "Bluesky'da yeni bir doğrulama katmanı sunuyoruz - kolay görülebilen 
 msgid "We're so excited to have you join us!"
 msgstr "Sizi aramızda görmekten çok mutluyuz!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:378
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
+#: src/ageAssurance/components/NoAccessScreen.tsx:387
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:114
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "Üzgünüz fakat cihazınızın konumuna göre şu anda yaş güvencesi gerektiren bir bölgedesiniz."
 
@@ -10875,7 +11021,7 @@ msgstr "Başlangıç ​​paketinize ne ad vermek istersiniz?"
 #: src/view/com/auth/SplashScreen.tsx:51
 #: src/view/com/auth/SplashScreen.web.tsx:103
 #: src/view/com/composer/Composer.tsx:857
-#: src/view/com/feeds/ComposerPrompt.tsx:191
+#: src/view/com/feeds/ComposerPrompt.tsx:189
 msgid "What's up?"
 msgstr "Nasılsınız?"
 
@@ -10915,27 +11061,31 @@ msgstr "Ah! Gündemdeki videolar yüklenemedi."
 msgid "Why are you appealing?"
 msgstr "Neden itiraz ediyorsunuz?"
 
-#: src/components/moderation/ReportDialog/copy.ts:46
+#: src/components/moderation/ReportDialog/copy.ts:52
 msgid "Why should this conversation be reviewed?"
 msgstr "Bu yazışma neden gözden geçirilmeli?"
 
-#: src/components/moderation/ReportDialog/copy.ts:32
+#: src/components/moderation/ReportDialog/copy.ts:38
 msgid "Why should this feed be reviewed?"
 msgstr "Bu akış neden gözden geçirilmeli?"
 
-#: src/components/moderation/ReportDialog/copy.ts:26
+#: src/components/moderation/ReportDialog/copy.ts:32
 msgid "Why should this list be reviewed?"
 msgstr "Bu liste neden gözden geçirilmeli?"
 
-#: src/components/moderation/ReportDialog/copy.ts:52
+#: src/components/moderation/ReportDialog/copy.ts:20
+msgid "Why should this livestream be reviewed?"
+msgstr "Bu canlı yayın neden gözden geçirilmeli?"
+
+#: src/components/moderation/ReportDialog/copy.ts:58
 msgid "Why should this message be reviewed?"
 msgstr "Bu mesaj neden gözden geçirilmeli?"
 
-#: src/components/moderation/ReportDialog/copy.ts:20
+#: src/components/moderation/ReportDialog/copy.ts:26
 msgid "Why should this post be reviewed?"
 msgstr "Bu gönderi neden gözden geçirilmeli?"
 
-#: src/components/moderation/ReportDialog/copy.ts:38
+#: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
 msgstr "Bu başlangıç paketi neden gözden geçirilmeli?"
 
@@ -10974,8 +11124,8 @@ msgstr "Yazarlar"
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "Sunucudan yanlış DID döndürüldü. Alınan: {0}"
 
-#: src/components/live/EditLiveDialog.tsx:153
-#: src/components/live/GoLiveDialog.tsx:126
+#: src/components/live/EditLiveDialog.tsx:152
+#: src/components/live/GoLiveDialog.tsx:131
 msgid "www.mylivestream.tv"
 msgstr "www.canliyayinim.tv"
 
@@ -10992,11 +11142,11 @@ msgstr "Evet, devre dışı bırak"
 msgid "Yes, delete this starter pack"
 msgstr "Evet, bu başlangıç ​​paketini sil"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:772
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:798
 msgid "Yes, detach"
 msgstr "Evet, ilişiğini kes"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:782
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:808
 msgid "Yes, hide"
 msgstr "Evet, gizle"
 
@@ -11020,8 +11170,12 @@ msgstr "Bluesky'a yasal olarak sizin yaşınızı uygulamaya erişmeden önce on
 msgid "You are creating an account on"
 msgstr "Hesabınızın oluşturulacağı yer sağlayıcı"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:292
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
+#: src/components/live/GoLiveDisabledDialog.tsx:107
+msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
+msgstr "Canlıya Çık özelliğini kullanmanız engellenmiştir. Bu moderasyon kararına itiraz etmek için lütfen aşağıdaki formu yollayın."
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:301
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:134
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "Şu anda Bluesky'ın Yaş Güvencesi işlemine erişemiyorsunuz. Bunun bir hatadan kaynaklı olduğunu düşünüyorsanız lütfen <0>moderasyon ekibimize ulaşın</0>."
 
@@ -11029,18 +11183,14 @@ msgstr "Şu anda Bluesky'ın Yaş Güvencesi işlemine erişemiyorsunuz. Bunun b
 msgid "You are in line."
 msgstr "Sıradasınız."
 
-#: src/components/live/EditLiveDialog.tsx:119
-#: src/components/live/EditLiveDialog.tsx:124
+#: src/components/live/EditLiveDialog.tsx:118
+#: src/components/live/EditLiveDialog.tsx:123
 msgid "You are Live"
 msgstr "Canlı yayındasınız"
 
-#: src/components/live/queries.ts:211
+#: src/components/live/queries.ts:212
 msgid "You are no longer live"
 msgstr "Artık canlı yayında değilsiniz"
-
-#: src/components/live/queries.ts:35
-msgid "You are not allowed to go live"
-msgstr "Canlı yayın başlatma yetkiniz yok"
 
 #: src/view/com/composer/state/video.ts:411
 msgid "You are not allowed to upload videos."
@@ -11050,7 +11200,7 @@ msgstr "Video yükleme izniniz yok."
 msgid "You are not following anyone yet"
 msgstr "Henüz kimseyi takip etmiyorsunuz"
 
-#: src/components/live/queries.ts:156
+#: src/components/live/queries.ts:157
 msgid "You are now live!"
 msgstr "Canlı yayındasınız!"
 
@@ -11091,7 +11241,7 @@ msgstr "Uygulama içindeki sohbet ayarlarından sohbet bildirimlerinin sesli olu
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr "Hangi ayarı seçerseniz seçin devam eden yazışmaları sürdürebilirsiniz."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:357
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:383
 msgctxt "toast"
 msgid "You can hide a maximum of {MAX_HIDDEN_REPLIES} replies."
 msgstr "En fazla {MAX_HIDDEN_REPLIES} yanıt gizleyebilirsiniz."
@@ -11122,9 +11272,9 @@ msgstr "Giriş yapmaya devam etmek için hesabınızı yeniden etkinleştirebili
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "Toplamda {MAX_IMAGES, plural, other {# adede kadar}} görsel seçebilirsiniz."
 
-#: src/components/interstitials/Trending.tsx:130
+#: src/components/interstitials/Trending.tsx:129
 #: src/components/interstitials/TrendingVideos.tsx:137
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:128
 msgid "You can update this later from your settings."
 msgstr "Bunu daha sonra ayarlarınızdan güncelleyebilirsiniz."
 
@@ -11275,9 +11425,13 @@ msgstr "En fazla {STARTER_PACK_MAX_SIZE, plural, other {{STARTER_PACK_MAX_SIZE} 
 msgid "You may only add up to 3 feeds"
 msgstr "En fazla 3 akış ekleyebilirsiniz"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:104
-msgid "You must be 13 years of age or older to create an account."
-msgstr "Hesap oluşturmak için 13 yaşında veya daha büyük olmanız gerekir."
+#: src/screens/Signup/StepInfo/index.tsx:322
+msgid "You must be {0} years of age or older to create an account in your region."
+msgstr "Bölgenizde hesap oluşturmak için en az {0} yaşında olmanız gerekmektedir."
+
+#: src/screens/Signup/StepInfo/index.tsx:317
+msgid "You must be {MIN_ACCESS_AGE} years of age or older to create an account."
+msgstr "Bir hesap oluşturmak için en az {MIN_ACCESS_AGE} yaşında olmanız gerekmektedir."
 
 #: src/components/dialogs/BirthDateSettings.tsx:178
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
@@ -11287,7 +11441,7 @@ msgstr "Bluesky'ı kullanmak için en az 13 yaşında olmanız gerekmektedir. Da
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "Başlangıç ​​paketi oluşturmak için en az yedi kişiyi takip etmeniz gerekir."
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:53
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:60
 msgid "You must complete age assurance in order to access this screen."
 msgstr "Bu ekrana erişmek için yaş güvencesini tamamlamanız gerekmektedir."
 
@@ -11333,11 +11487,11 @@ msgstr "Tüm hesaplarınızdan çıkış yapacaksınız."
 msgid "You will no longer receive notifications for {0}"
 msgstr "Artık {0} için bildirim almayacaksınız"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:217
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:231
 msgid "You will no longer receive notifications for this thread"
 msgstr "Artık bu konu için bildirim almayacaksınız"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:213
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:221
 msgid "You will now receive notifications for this thread"
 msgstr "Artık bu konu için bildirim alacaksınız"
 
@@ -11467,7 +11621,7 @@ msgstr "Hesabınızın <0>Bluesky Social Hizmet Şartları</0>'nı ihlal ettiği
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr "İtirazınız gönderildi. İtirazınız kabul edilirse size bir e-posta gönderilecektir."
 
-#: src/screens/Signup/StepInfo/index.tsx:260
+#: src/screens/Signup/StepInfo/index.tsx:289
 msgid "Your birth date"
 msgstr "Doğum tarihiniz"
 
@@ -11512,7 +11666,7 @@ msgstr "E-posta adresiniz"
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:81
 #: src/screens/Signup/state.ts:273
-#: src/screens/Signup/StepInfo/index.tsx:100
+#: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr "E-postanız geçersiz gibi görünüyor."
 
@@ -11538,8 +11692,8 @@ msgstr "Tam kullanıcı adınız <0>@{0}</0> olacak"
 
 #: src/Navigation.tsx:526
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
-#: src/screens/Settings/ContentAndMediaSettings.tsx:92
-#: src/screens/Settings/ContentAndMediaSettings.tsx:95
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:96
 #: src/screens/Settings/InterestsSettings.tsx:46
 msgid "Your interests"
 msgstr "İlgi alanlarınız"
@@ -11553,9 +11707,17 @@ msgstr "İlgi alanlarınız güncellendi!"
 msgid "Your interests help us find what you like!"
 msgstr "İlgi alanlarınız, neyi sevdiğinizi bulmamıza yardımcı oluyor!"
 
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:68
+msgid "Your live event preferences have been updated."
+msgstr "Canlı etkinlik tercihleriniz güncellendi."
+
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:123
 msgid "Your location data is not tracked and does not leave your device."
 msgstr "Konum bilginiz takip edilmez ve cihazınızdan dışarı çıkmaz."
+
+#: src/screens/Signup/StepInfo/index.tsx:367
+msgid "Your location has been updated."
+msgstr "Konumunuz güncellendi."
 
 #: src/components/dialogs/MutedWords.tsx:374
 msgid "Your muted words"
@@ -11565,7 +11727,7 @@ msgstr "Sessize aldığınız kelimeler"
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
 msgstr "Şifreniz başarıyla değiştirildi! Lütfen bundan sonra Bluesky'a giriş yaparken yeni şifrenizi kullanın."
 
-#: src/screens/Signup/StepInfo/index.tsx:129
+#: src/screens/Signup/StepInfo/index.tsx:158
 msgid "Your password must be at least 8 characters long."
 msgstr "Şifreniz en az 8 karakter uzunluğunda olmalıdır."
 
@@ -11598,7 +11760,7 @@ msgstr "Profiliniz, gönderileriniz, akışlarınız ve listeleriniz artık diğ
 msgid "Your reply was sent"
 msgstr "Yanıtınız yollandı"
 
-#: src/components/moderation/ReportDialog/index.tsx:497
+#: src/components/moderation/ReportDialog/index.tsx:511
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "Raporunuz <0>{0}</0> işaretleyicisine gönderilecektir."
 

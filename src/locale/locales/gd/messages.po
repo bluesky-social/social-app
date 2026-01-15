@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-07 09:05\n"
+"PO-Revision-Date: 2026-01-15 15:41\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -94,17 +94,17 @@ msgstr "{0, plural, one {# nì gun leughadh} two {# nì gun leughadh} few {# nit
 msgid "{0, plural, one {#mo} other {#mo}}"
 msgstr "{0, plural, one {# mhìos} two {# mhìos} few {# mìosan} other {# mìos}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:444
+#: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "{0, plural, one {gam leantainn} two {gam leantainn} few {gam leantainn} other {gam leantainn}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:448
+#: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {A’ leantainn #} two {A’ leantainn #} few {A’ leantainn #} other {A’ leantainn #}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:477
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:489
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {’s toil le # seo} two {’s toil le # seo} few {’s toil le # seo} other {’s toil le # seo}}"
 
@@ -112,15 +112,15 @@ msgstr "{0, plural, one {’s toil le # seo} two {’s toil le # seo} few {’s 
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {phost} two {phost} few {puist} other {post}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:461
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:473
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {luaidh} two {luaidh} few {luaidhean} other {luaidh}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:443
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:455
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {air ath-phostadh} two {air ath-phostadh} few {air ath-phostadh} other {air ath-phostadh}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:488
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:500
 msgid "{0, plural, one {save} other {saves}}"
 msgstr "{0, plural, one {air a shàbhaladh} two {air a shàbhaladh} few {air an sàbhaladh} other {air an sàbhaladh}}"
 
@@ -160,13 +160,9 @@ msgstr "{0} <0>san <1>teacsa ⁊ sna tagaichean</1></0>"
 msgid "{0} following"
 msgstr "a’ leantainn {0}"
 
-#: src/components/live/LiveStatusDialog.tsx:68
+#: src/components/live/LiveStatusDialog.tsx:79
 msgid "{0} is live"
 msgstr "Tha {0} beò"
-
-#: src/components/live/queries.ts:39
-msgid "{0} is not a valid URL"
-msgstr "Chan e URL dligheach a th’ ann an {0}"
 
 #: src/screens/Signup/StepHandle/index.tsx:188
 msgid "{0} is not available"
@@ -411,7 +407,7 @@ msgstr "Chlàraich {firstAuthorName} aig a’ phacaid tòiseachaidh agad"
 msgid "{firstAuthorName} verified you"
 msgstr "Rinn {firstAuthorName} dearbhadh ort"
 
-#: src/components/ProfileHoverCard/index.web.tsx:577
+#: src/components/ProfileHoverCard/index.web.tsx:578
 msgid "{following} following"
 msgstr "a’ leantainn {following}"
 
@@ -515,7 +511,7 @@ msgstr "Na buill aig <0>{0}</0>"
 msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0> aig {time}"
 
-#: src/screens/Hashtag.tsx:225
+#: src/screens/Hashtag.tsx:238
 #: src/screens/Search/SearchResults.tsx:294
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "<0>Clàraich a-steach</0><1> no </1><2>cruthaich cunntas</2><3> </3><4>airson naidheachdan, spòrs, poileataigs is rud sam bith eile a tha a’ dol air Bluesky a lorg.</4>"
@@ -569,6 +565,11 @@ msgstr "Chaidh còd ùr a chur"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:91
 msgid "A new form of verification"
 msgstr "Dòigh dearbhaidh ùr"
+
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:147
+msgid "A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: \"Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!\""
+msgstr ""
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
@@ -626,20 +627,20 @@ msgstr "Roghainnean na so-ruigsinneachd"
 msgid "Account"
 msgstr "Cunntas"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:393
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:419
 #: src/screens/Messages/components/RequestButtons.tsx:91
-#: src/view/com/profile/ProfileMenu.tsx:166
+#: src/view/com/profile/ProfileMenu.tsx:181
 msgctxt "toast"
 msgid "Account blocked"
 msgstr "Chaidh an cunntas a bhacadh"
 
-#: src/view/com/profile/ProfileMenu.tsx:179
+#: src/view/com/profile/ProfileMenu.tsx:194
 msgctxt "toast"
 msgid "Account followed"
 msgstr "Chaidh an cunntas a leantainn"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:416
-#: src/view/com/profile/ProfileMenu.tsx:142
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:442
+#: src/view/com/profile/ProfileMenu.tsx:157
 msgctxt "toast"
 msgid "Account muted"
 msgstr "Chaidh an cunntas a mhùchadh"
@@ -667,18 +668,18 @@ msgstr "Chaidh an cunntas a thoirt air falbh on ghrad-inntrigeadh"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:84
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:290
-#: src/view/com/profile/ProfileMenu.tsx:156
+#: src/view/com/profile/ProfileMenu.tsx:171
 msgctxt "toast"
 msgid "Account unblocked"
 msgstr "Chaidh am bacadh a thoirt far a’ chunntais"
 
-#: src/view/com/profile/ProfileMenu.tsx:191
+#: src/view/com/profile/ProfileMenu.tsx:206
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr "Chan eil thu a’ leantainn a’ chunntais tuilleadh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:406
-#: src/view/com/profile/ProfileMenu.tsx:132
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:432
+#: src/view/com/profile/ProfileMenu.tsx:147
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr "Chaidh an cunntas a neo-mhùchadh"
@@ -718,7 +719,7 @@ msgstr "Cuir {displayName} ris a’ phacaid tòiseachaidh"
 msgid "Add a content warning"
 msgstr "Cuir ris rabhadh mun t-susbaint"
 
-#: src/components/live/GoLiveDialog.tsx:98
+#: src/components/live/GoLiveDialog.tsx:103
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
 msgstr "Nochd gu bheil tachartas beò agad fad greis sa phròifil agad. Nuair a bhriogas cuideigin air an avatar agad, chì iad fiosrachadh mun tachartas bheò agad."
 
@@ -775,7 +776,7 @@ msgstr "Cuir facal-faire aplacaid ris"
 msgid "Add emoji reaction"
 msgstr "Cuir emoji mar fhrith-fhreagairt"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:222
+#: src/view/com/feeds/ComposerPrompt.tsx:220
 msgid "Add image"
 msgstr "Cuir dealbh ris"
 
@@ -784,8 +785,8 @@ msgstr "Cuir dealbh ris"
 msgid "Add media to post"
 msgstr "Cuir meadhan ris a’ phost"
 
-#: src/components/moderation/ReportDialog/index.tsx:506
-#: src/components/moderation/ReportDialog/index.tsx:510
+#: src/components/moderation/ReportDialog/index.tsx:520
+#: src/components/moderation/ReportDialog/index.tsx:524
 msgid "Add more details (optional)"
 msgstr "Cuir barrachd fiosrachaidh ris (roghainneil)"
 
@@ -826,22 +827,22 @@ msgstr "Cuir ris inbhir bunaiteach nan daoine a tha thu gan leantainn a-mhàin"
 msgid "Add the following DNS record to your domain:"
 msgstr "Cuir an reacord DNS a leanas ris an àrainn agad:"
 
-#: src/components/FeedCard.tsx:305
+#: src/components/FeedCard.tsx:337
 msgid "Add this feed to your feeds"
 msgstr "Cuir an t-inbhir seo ris na h-inbhirean agad"
 
-#: src/view/com/profile/ProfileMenu.tsx:322
-#: src/view/com/profile/ProfileMenu.tsx:325
+#: src/view/com/profile/ProfileMenu.tsx:340
+#: src/view/com/profile/ProfileMenu.tsx:343
 msgid "Add to lists"
 msgstr "Cuir ri liosta"
 
-#: src/components/PostControls/BookmarkButton.tsx:129
+#: src/components/PostControls/BookmarkButton.tsx:141
 msgid "Add to saved posts"
 msgstr "Cuir ris na puist a shàbhail thu"
 
 #: src/components/dialogs/StarterPackDialog.tsx:176
-#: src/view/com/profile/ProfileMenu.tsx:313
-#: src/view/com/profile/ProfileMenu.tsx:316
+#: src/view/com/profile/ProfileMenu.tsx:331
+#: src/view/com/profile/ProfileMenu.tsx:334
 msgid "Add to starter packs"
 msgstr "Cuir ris na pacaidean tòiseachaidh"
 
@@ -849,7 +850,7 @@ msgstr "Cuir ris na pacaidean tòiseachaidh"
 msgid "Add user to list"
 msgstr "Cuir an cleachdaiche ri liosta"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:222
+#: src/ageAssurance/components/NoAccessScreen.tsx:231
 msgid "Add your birthdate"
 msgstr "Cuir latha do bhreith ris"
 
@@ -866,7 +867,7 @@ msgstr "Air a chur ris a’ phacaid tòiseachaidh"
 msgid "Additional details (limit 1000 characters)"
 msgstr "Mion-fhiosrachadh a bharrachd (1,000 caractar air a’ char as motha)"
 
-#: src/components/moderation/ReportDialog/index.tsx:524
+#: src/components/moderation/ReportDialog/index.tsx:538
 msgid "Additional details (limit 300 characters)"
 msgstr "Fiosrachadh a bharrachd (300 caractar air a’ char as motha)"
 
@@ -919,8 +920,8 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "Chaidh do cheist mun dearbhadh aoise a chur"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:345
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
+#: src/ageAssurance/components/NoAccessScreen.tsx:354
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:199
 msgid "Age assurance only takes a few minutes"
 msgstr "Cha toir dearbhadh aoise ach mionaid no dhà"
 
@@ -1155,6 +1156,10 @@ msgstr "Dh’èirich duilgheadas, feuch ris a-rithist."
 msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
 msgstr "Dealbh mas fhìor dhe iPhone a tha a’ sealltainn aplacaid Bluesky agus a’ phròifil aig cleachdaiche dearbhte le cromag ghorm ris an ainm-taisbeanaidh aca."
 
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:166
+msgid "An unknown error occurred."
+msgstr ""
+
 #: src/components/moderation/ModerationDetailsDialog.tsx:136
 #: src/lib/moderation/useModerationCauseDescription.ts:145
 msgid "an unknown labeler"
@@ -1257,6 +1262,11 @@ msgstr "Ath-thagair"
 msgid "Appeal \"{0}\" label"
 msgstr "Tog ath-thagradh an aghaidh na leubail “{0}”"
 
+#: src/components/live/GoLiveDisabledDialog.tsx:92
+msgid "Appeal livestream suspension"
+msgstr ""
+
+#: src/components/live/GoLiveDisabledDialog.tsx:82
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
 #: src/screens/Messages/components/ChatDisabled.tsx:103
 msgctxt "toast"
@@ -1296,12 +1306,12 @@ msgstr "Cuir an sàs na h-inbhirean bunaiteach a mholamaid"
 msgid "Apply Pull Request"
 msgstr "Cuir an t-iarrtas pull an gnìomh"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:658
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:670
 msgid "Archived from {0}"
 msgstr "Air a thasglannachadh ann an {0}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:666
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:639
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:678
 msgid "Archived post"
 msgstr "Post tasglannaichte"
 
@@ -1330,7 +1340,7 @@ msgstr "A bheil thu cinnteach gu bheil thu airson an còmhradh seo fhàgail?"
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "A bheil thu cinnteach gu bheil thu airson an còmhradh seo fhàgail? Thèid na teachdaireachdan agad a sguabadh às dhut-sa ach chan ann dhan chom-pàirtiche eile."
 
-#: src/components/FeedCard.tsx:340
+#: src/components/FeedCard.tsx:372
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "A bheil thu cinnteach gu bheil thu airson seo a thoirt air falbh o na h-inbhirean agad?"
 
@@ -1358,8 +1368,8 @@ msgstr "Ealain"
 msgid "Artistic or non-erotic nudity."
 msgstr "Lomnochd ealanta no neo-earotaigeach."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:529
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:531
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:555
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:557
 msgid "Assign topic for algo"
 msgstr "Iomruin cuspair dhan algairim"
 
@@ -1372,8 +1382,8 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:116
-#: src/screens/Settings/ContentAndMediaSettings.tsx:122
+#: src/screens/Settings/ContentAndMediaSettings.tsx:117
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
 msgid "Autoplay videos and GIFs"
 msgstr "Cluich videothan is GIFs gu fèin-obrachail"
 
@@ -1457,6 +1467,10 @@ msgstr "Tòisich air dearbhadh d’ aoise"
 msgid "Begin the age assurance process by completing the fields below."
 msgstr "Tòisich air dearbhadh d’ aoise le bhith a’ lìonadh nan raointean gu h-ìosal."
 
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:99
+msgid "Beta Feature"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:162
 msgid "Birthdate"
 msgstr "Là-breith"
@@ -1465,25 +1479,25 @@ msgstr "Là-breith"
 msgid "Birthday"
 msgstr "Co-là breith"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:792
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:818
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
-#: src/view/com/profile/ProfileMenu.tsx:495
+#: src/view/com/profile/ProfileMenu.tsx:548
 msgid "Block"
 msgstr "Bac"
 
 #: src/components/dms/ConvoMenu.tsx:261
 #: src/components/dms/ConvoMenu.tsx:264
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:677
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:679
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:703
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:705
 #: src/screens/Messages/components/RequestButtons.tsx:144
 #: src/screens/Messages/components/RequestButtons.tsx:146
-#: src/view/com/profile/ProfileMenu.tsx:401
-#: src/view/com/profile/ProfileMenu.tsx:408
+#: src/view/com/profile/ProfileMenu.tsx:454
+#: src/view/com/profile/ProfileMenu.tsx:461
 msgid "Block account"
 msgstr "Bac an cunntas"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
-#: src/view/com/profile/ProfileMenu.tsx:478
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:813
+#: src/view/com/profile/ProfileMenu.tsx:531
 msgid "Block Account?"
 msgstr "A bheil thu airson an cunntas a bhacadh?"
 
@@ -1534,8 +1548,8 @@ msgstr "Cunntasan air am bacadh"
 msgid "Blocked Accounts"
 msgstr "Cunntasan air am bacadh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/profile/ProfileMenu.tsx:490
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:815
+#: src/view/com/profile/ProfileMenu.tsx:543
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Chan eil cead aig cunntasan bacte freagairt a chur sna snàithleanan agad, iomradh a dhèanamh ort no eadar-ghabhail eile a dhèanamh leat."
 
@@ -1551,7 +1565,7 @@ msgstr "Fiù ma bhacas tu an leubailiche seo, ’s urrainn dha leubailean a chur
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "’S e gnìomh poblach a th’ ann am bacadh. Chan eil cead aig cunntasan bacte freagairt a chur sna snàithleanan agad, iomradh a dhèanamh ort no eadar-ghabhail eile a dhèanamh leat."
 
-#: src/view/com/profile/ProfileMenu.tsx:487
+#: src/view/com/profile/ProfileMenu.tsx:540
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr "Ma nì thu bacadh, ’s urrainn do dhaoine leubailean a chur ris a’ chunntas agad fhathast ach chan urrainn dhaibh freagairt a thoirt sna snàithleanan agad tuilleadh no eadar-ghabhail a dhèanamh leat."
 
@@ -1564,7 +1578,7 @@ msgstr "Bloga"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:688
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:700
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Chan urrainn dha Bluesky dearbhadh gu bheil an ceann-là a thathar a’ cumail a-mach fìor."
 
@@ -1585,8 +1599,7 @@ msgstr "’S e lìonra fosgailte a th’ ann am Bluesky far an urrainn dhut sola
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
 msgstr "’S e lìonra fosgailte a th’ ann am Bluesky far an urrainn dhut solaraiche a thaghadh thu fhèin. Ma tha thu air ùr-thighinn dhan àite, mholamaid dhut a’ bhun-roghainn, Bluesky Social, a chleachdadh an toiseach."
 
-#: src/components/ProgressGuide/List.tsx:53
-#: src/components/ProgressGuide/List.tsx:70
+#: src/components/ProgressGuide/List.tsx:103
 msgid "Bluesky is better with friends!"
 msgstr "Tha Bluesky nas fheàrr le caraidean!"
 
@@ -1655,16 +1668,16 @@ msgstr "Rùraich na h-inbhirean gnàthaichte"
 msgid "Browse more accounts"
 msgstr "Rùraich barrachd chunntasan"
 
-#: src/components/FeedInterstitials.tsx:907
+#: src/components/FeedInterstitials.tsx:908
 msgid "Browse more feeds on the Explore page"
 msgstr "Rùraich barrachd inbhirean air an duilleag “Rùraich”"
 
-#: src/components/FeedInterstitials.tsx:888
-#: src/components/FeedInterstitials.tsx:891
+#: src/components/FeedInterstitials.tsx:889
+#: src/components/FeedInterstitials.tsx:892
 msgid "Browse more suggestions"
 msgstr "Brabhsaich barrachd mholaidhean"
 
-#: src/components/FeedInterstitials.tsx:916
+#: src/components/FeedInterstitials.tsx:917
 msgid "Browse more suggestions on the Explore page"
 msgstr "Rùraich barrachd mholaidhean air an duilleag “Rùraich”"
 
@@ -1673,15 +1686,15 @@ msgstr "Rùraich barrachd mholaidhean air an duilleag “Rùraich”"
 msgid "Browse other feeds"
 msgstr "Rùraich inbhirean eile"
 
-#: src/components/TrendingTopics.tsx:178
+#: src/components/TrendingTopics.tsx:179
 msgid "Browse posts about {displayName}"
 msgstr "Rùraich puist mu dhèidhinn {displayName}"
 
-#: src/components/TrendingTopics.tsx:186
+#: src/components/TrendingTopics.tsx:187
 msgid "Browse posts tagged with {displayName}"
 msgstr "Rùraich puist ris a bheil an taga {displayName}"
 
-#: src/components/TrendingTopics.tsx:195
+#: src/components/TrendingTopics.tsx:196
 msgid "Browse starter pack {displayName}"
 msgstr "Rùraich a’ phacaid tòiseachaidh {displayName}"
 
@@ -1689,7 +1702,7 @@ msgstr "Rùraich a’ phacaid tòiseachaidh {displayName}"
 msgid "Browse topic {0}"
 msgstr "Rùraich an cuspair “{0}”"
 
-#: src/components/TrendingTopics.tsx:232
+#: src/components/TrendingTopics.tsx:233
 msgid "Browse topic {displayName}"
 msgstr "Rùraich an cuspair {displayName}"
 
@@ -1702,9 +1715,9 @@ msgid "Button to go back to the home timeline"
 msgstr "Am putan a bheir air ais gu loidhne-ama do dhachaigh thu"
 
 #: src/components/LabelingServiceCard/index.tsx:62
-#: src/components/moderation/ReportDialog/index.tsx:833
+#: src/components/moderation/ReportDialog/index.tsx:842
 #: src/screens/Search/components/StarterPackCard.tsx:106
-#: src/screens/Search/Explore.tsx:936
+#: src/screens/Search/Explore.tsx:943
 msgid "By {0}"
 msgstr "Le {0}"
 
@@ -1720,15 +1733,15 @@ msgstr "Le bhith a’ briogadh air “Air adhart”, bidh tu ag aideachadh gu bh
 msgid "By continuing, you consent to this use. You may change your mind any time by visiting settings. <0>Learn more</0>"
 msgstr "Le bhith a’ leantainn air adhart, bidh tu ag aontachadh ri cleachdadh d’ a leithid. ’S urrainn dhut a chaochladh a chur romhad uair sam bith sna roghainnean. <0>Barrachd fiosrachaidh</0>"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:79
+#: src/screens/Signup/StepInfo/Policies.tsx:75
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
 msgstr "Le bhith a’ cruthachadh cunntas, bidh tu ag aontachadh ri <0>poileasaidh na prìobhaideachd</0>."
 
-#: src/screens/Signup/StepInfo/Policies.tsx:46
+#: src/screens/Signup/StepInfo/Policies.tsx:42
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "Le bhith a’ cruthachadh cunntas, bidh tu ag aontachadh ri <0>teirmichean na seirbheise</0> agus <1>poileasaidh na prìobhaideachd</1>."
 
-#: src/screens/Signup/StepInfo/Policies.tsx:66
+#: src/screens/Signup/StepInfo/Policies.tsx:62
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "Le bhith a’ cruthachadh cunntas, bidh tu ag aontachadh ri <0>teirmichean na seirbheise</0>."
 
@@ -1753,12 +1766,14 @@ msgstr "An camara"
 #: src/components/dialogs/InAppBrowserConsent.tsx:104
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:274
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:282
-#: src/components/live/GoLiveDialog.tsx:244
-#: src/components/live/GoLiveDialog.tsx:250
-#: src/components/Menu/index.tsx:350
+#: src/components/live/GoLiveDialog.tsx:243
+#: src/components/live/GoLiveDialog.tsx:249
+#: src/components/Menu/index.tsx:352
 #: src/components/PostControls/RepostButton.tsx:209
 #: src/components/Prompt.tsx:144
 #: src/components/Prompt.tsx:146
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:153
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:158
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:149
 #: src/screens/Profile/Header/EditProfileDialog.tsx:218
@@ -1804,9 +1819,9 @@ msgstr "Sguir dhen ath-ghnìomhachadh is clàraich a-mach"
 msgid "Cancel search"
 msgstr "Sguir dhen lorg"
 
-#: src/components/PostControls/index.tsx:106
-#: src/components/PostControls/index.tsx:137
-#: src/components/PostControls/index.tsx:165
+#: src/components/PostControls/index.tsx:107
+#: src/components/PostControls/index.tsx:138
+#: src/components/PostControls/index.tsx:166
 #: src/state/shell/composer/index.tsx:95
 msgid "Cannot interact with a blocked user"
 msgstr "Chan urrainn dhut eadar-ghabhail a dhèanamh le cleachdaiche a bhac thu"
@@ -1819,6 +1834,10 @@ msgstr "Caipseanan (.vtt)"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:55
 msgid "Captions & alt text"
 msgstr "Caipseanan ⁊ roghainn teacsa"
+
+#: src/components/RichTextTag.tsx:52
+msgid "Cashtag {tag}"
+msgstr ""
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
@@ -1842,7 +1861,7 @@ msgstr "Atharraich cànan na h-aplacaid"
 msgid "Change Handle"
 msgstr "Atharraich an làmhrachan"
 
-#: src/components/moderation/ReportDialog/index.tsx:423
+#: src/components/moderation/ReportDialog/index.tsx:437
 msgid "Change moderation service"
 msgstr "Atharraich seirbheise na modarataireachd"
 
@@ -1855,11 +1874,11 @@ msgstr "Atharraich am facal-faire"
 msgid "Change password dialog"
 msgstr "An còmhradh airson am facal-faire atharrachadh"
 
-#: src/components/moderation/ReportDialog/index.tsx:288
+#: src/components/moderation/ReportDialog/index.tsx:302
 msgid "Change report category"
 msgstr "Atharraich roinn-seòrsa na h-aithisg"
 
-#: src/components/moderation/ReportDialog/index.tsx:368
+#: src/components/moderation/ReportDialog/index.tsx:382
 msgid "Change report reason"
 msgstr "Atharraich adhbhar na h-aithrise"
 
@@ -1998,7 +2017,7 @@ msgstr "Tagh solaraiche a’ chunntais agad"
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "Dealbh loidhne-ama dhut fhèin! Inbhirean leis a’ choimhearsnachd a bheir dhut stuth as toil leat."
 
-#: src/screens/Signup/StepInfo/index.tsx:244
+#: src/screens/Signup/StepInfo/index.tsx:273
 msgid "Choose your password"
 msgstr "Tagh facal-faire dhut"
 
@@ -2035,7 +2054,7 @@ msgstr "dèan briogadh an-seo"
 msgid "Click here to contact our support team"
 msgstr "Briog an-seo airson fios a chur ri sgioba na taice againn"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:236
+#: src/ageAssurance/components/NoAccessScreen.tsx:245
 msgid "Click here to log out"
 msgstr "Briog an-seo airson clàradh a-mach"
 
@@ -2044,7 +2063,7 @@ msgid "Click here to restart the verification process."
 msgstr "Briog an-seo a thòiseachadh air a dhearbhadh."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:103
-#: src/ageAssurance/components/NoAccessScreen.tsx:219
+#: src/ageAssurance/components/NoAccessScreen.tsx:228
 msgid "Click here to update your birthdate"
 msgstr "Briog an-seo airson latha do bhreith atharrachadh"
 
@@ -2052,9 +2071,9 @@ msgstr "Briog an-seo airson latha do bhreith atharrachadh"
 msgid "Click here to update your email"
 msgstr "Briog an-seo airson am post-d agad ùrachadh"
 
-#: src/components/RichTextTag.tsx:54
-msgid "Click to open tag menu for {tag}"
-msgstr "Dèan briogadh is fosgail clàr-taice nan tagaichean airson {tag}"
+#: src/components/RichTextTag.tsx:55
+msgid "Click to open tag menu for {0}"
+msgstr ""
 
 #: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
@@ -2079,6 +2098,8 @@ msgstr "Turt 🐴 turt 🐴"
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:191
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:199
 #: src/components/dialogs/SearchablePeopleList.tsx:295
 #: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/AfterReportDialog.tsx:93
@@ -2086,12 +2107,12 @@ msgstr "Turt 🐴 turt 🐴"
 #: src/components/dms/AfterReportDialog.tsx:208
 #: src/components/dms/AfterReportDialog.tsx:213
 #: src/components/dms/EmojiPopup.android.tsx:58
-#: src/components/live/EditLiveDialog.tsx:229
-#: src/components/live/EditLiveDialog.tsx:235
+#: src/components/live/EditLiveDialog.tsx:215
+#: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:208
-#: src/components/ProgressGuide/FollowDialog.tsx:440
+#: src/components/ProgressGuide/FollowDialog.tsx:445
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
@@ -2130,7 +2151,7 @@ msgstr "Dùin an drathair aig a’ bhonn"
 msgid "Close dialog"
 msgstr "Dùin an còmhradh"
 
-#: src/view/shell/index.web.tsx:128
+#: src/view/shell/index.web.tsx:130
 msgid "Close drawer menu"
 msgstr "Dùin an clàr-taice air an taobh"
 
@@ -2157,7 +2178,7 @@ msgstr "Dùin sealladair an deilbh"
 msgid "Close menu"
 msgstr "Dùin an clàr-taice"
 
-#: src/components/Menu/index.tsx:344
+#: src/components/Menu/index.tsx:346
 msgid "Close this dialog"
 msgstr "Dùin an co-còmhradh seo"
 
@@ -2242,6 +2263,11 @@ msgstr "A’ dùmhlachadh a’ video…"
 msgid "Configure content filtering setting for category: {name}"
 msgstr "Rèitich roghainn criathradh na susbainte aig an roinn-seòrsa seo: {name}"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
+msgid "Configure live event banner"
+msgstr ""
+
 #: src/components/moderation/LabelPreference.tsx:253
 msgid "Configured in <0>moderation settings</0>."
 msgstr "Air a rèiteachadh ann an <0>roghainnean na modarataireachd</0>."
@@ -2261,8 +2287,8 @@ msgstr "Dearbh roghainnean cànain na susbainte"
 msgid "Confirm delete account"
 msgstr "Dearbh gu bheil thu airson an cunntas a sguabadh às"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:359
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:87
+#: src/ageAssurance/components/NoAccessScreen.tsx:368
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:95
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
 msgid "Confirm your location"
@@ -2288,8 +2314,8 @@ msgstr "A’ dèanamh ceangal…"
 msgid "Connection issue"
 msgstr "Duilgheadas leis a’ cheangal"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:296
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
+#: src/ageAssurance/components/NoAccessScreen.tsx:305
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:138
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
 msgstr "Cuir fios gu sgioba na modarataireachd againn"
@@ -2317,7 +2343,7 @@ msgstr ""
 msgid "Contacts removed"
 msgstr "Chaidh an luchd-aithne a thoirt air falbh"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:51
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Content & Media"
 msgstr "Susbaint ⁊ meadhanan"
 
@@ -2420,7 +2446,7 @@ msgstr "Chaidh lethbhreac de thionndadh a’ bhuild a chur air an stòr-bhòrd"
 
 #: src/components/dms/MessageContextMenu.tsx:57
 #: src/components/PostControls/DiscoverDebug.tsx:36
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:235
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:249
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:72
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
@@ -2444,8 +2470,8 @@ msgstr "Lethbhreac"
 msgid "Copy App Password"
 msgstr "Dèan lethbhreac de dh’fhacal-faire na h-aplacaid"
 
-#: src/view/com/profile/ProfileMenu.tsx:438
-#: src/view/com/profile/ProfileMenu.tsx:441
+#: src/view/com/profile/ProfileMenu.tsx:491
+#: src/view/com/profile/ProfileMenu.tsx:494
 msgid "Copy at:// URI"
 msgstr "Dèan lethbhreac dheth at:// URI"
 
@@ -2460,8 +2486,8 @@ msgid "Copy code"
 msgstr "Dèan lethbhreac dhen chòd"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:502
-#: src/view/com/profile/ProfileMenu.tsx:447
-#: src/view/com/profile/ProfileMenu.tsx:450
+#: src/view/com/profile/ProfileMenu.tsx:500
+#: src/view/com/profile/ProfileMenu.tsx:503
 msgid "Copy DID"
 msgstr "Dèan lethbhreac dhen DID"
 
@@ -2490,8 +2516,8 @@ msgstr "Dèan lethbhreac dhen cheangal ris an liosta"
 msgid "Copy link to post"
 msgstr "Dèan lethbhreac dhen cheangal ris a’ phost"
 
-#: src/view/com/profile/ProfileMenu.tsx:251
-#: src/view/com/profile/ProfileMenu.tsx:262
+#: src/view/com/profile/ProfileMenu.tsx:269
+#: src/view/com/profile/ProfileMenu.tsx:280
 msgid "Copy link to profile"
 msgstr "Cuir lethbhreac dhen cheangal dhan phròifil"
 
@@ -2509,8 +2535,8 @@ msgstr "Dèan lethbhreac de theacsa na teachdaireachd"
 msgid "Copy post at:// URI"
 msgstr "Dèan lethbhreac dhen phost aig:// URI"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:484
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:486
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:510
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:512
 msgid "Copy post text"
 msgstr "Dèan lethbhreac de theacsa a’ phuist"
 
@@ -2645,7 +2671,7 @@ msgstr "Cruthaich cunntas"
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
-#: src/screens/Hashtag.tsx:234
+#: src/screens/Hashtag.tsx:247
 #: src/screens/Search/SearchResults.tsx:303
 msgid "Create an account"
 msgstr "Cruthaich cunntas"
@@ -2673,8 +2699,8 @@ msgid "Create new account"
 msgstr "Cruthaich cunntas ùr"
 
 #. Accessibility label for button to create a moderation report for the selected option
-#: src/components/moderation/ReportDialog/index.tsx:688
-#: src/components/moderation/ReportDialog/index.tsx:734
+#: src/components/moderation/ReportDialog/index.tsx:702
+#: src/components/moderation/ReportDialog/index.tsx:748
 msgid "Create report for {0}"
 msgstr "Cruthaich aithris airson {0}"
 
@@ -2740,7 +2766,7 @@ msgstr "Am modh dorcha"
 msgid "Dark theme"
 msgstr "Ùrlar dorcha"
 
-#: src/screens/Signup/StepInfo/index.tsx:272
+#: src/screens/Signup/StepInfo/index.tsx:301
 msgid "Date of birth"
 msgstr "Là-breith"
 
@@ -2771,7 +2797,7 @@ msgid "Default icons"
 msgstr "Na h-ìomhaigheagan bunaiteach"
 
 #: src/components/dms/MessageContextMenu.tsx:202
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:736
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:762
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:280
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2843,8 +2869,8 @@ msgstr "Sguab an teachdaireachd às dhomh-sa"
 msgid "Delete my account"
 msgstr "Sguab an cunntas agam às"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:717
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:719
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:743
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:745
 #: src/view/com/composer/Composer.tsx:969
 msgid "Delete post"
 msgstr "Sguab às am post"
@@ -2862,7 +2888,7 @@ msgstr "A bheil thu airson a’ phacaid tòiseachaidh seo a sguabadh às?"
 msgid "Delete this list?"
 msgstr "A bheil thu airson an liosta seo a sguabadh às?"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:731
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:757
 msgid "Delete this post?"
 msgstr "A bheil thu airson am seo post a sguabadh às?"
 
@@ -2897,12 +2923,12 @@ msgstr "Tuairisgeul"
 msgid "Descriptive alt text"
 msgstr "Teacsa a mhìnicheas an t-susbaint"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:631
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:647
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:657
 msgid "Detach quote"
 msgstr "Dealaich an luaidh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:767
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:793
 msgid "Detach quote post?"
 msgstr "A bheil thu airson an luaidh air a’ phost a dhealachadh?"
 
@@ -2998,12 +3024,12 @@ msgstr "Cùm aplacaidean o bhith a’ sealltainn a’ chunntais agam do luchd-cl
 msgid "Discover new custom feeds"
 msgstr "Fidir inbhirean gnàthaichte ùra"
 
-#: src/screens/Search/Explore.tsx:431
+#: src/screens/Search/Explore.tsx:436
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "Fidir inbhirean ùra"
 
-#: src/components/Dialog/index.tsx:373
+#: src/components/Dialog/index.tsx:379
 msgid "Dismiss"
 msgstr "Leig seachad"
 
@@ -3015,7 +3041,7 @@ msgstr "Leig seachad a’ bhratach"
 msgid "Dismiss error"
 msgstr "Leig seachad a’ mhearachd"
 
-#: src/components/ProgressGuide/List.tsx:42
+#: src/components/ProgressGuide/List.tsx:67
 msgid "Dismiss getting started guide"
 msgstr "Leig seachad an treòir thòiseachail"
 
@@ -3070,8 +3096,8 @@ msgstr "Nach eil còd agad no a bheil fear ùr a dhìth ort? <0>Briog an-seo.</0
 msgid "Don't see an email? <0>Click here to resend.</0>"
 msgstr "Nach fhaic thu am post-d sam? <0>Briog an-seo airson a chur às ùr.</0>"
 
-#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:103
-#: src/components/ageAssurance/AgeAssuranceDismissibleNotice.tsx:33
+#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:104
+#: src/components/ageAssurance/AgeAssuranceDismissibleNotice.tsx:37
 msgid "Don't show again"
 msgstr "Na seall seo a-rithist"
 
@@ -3117,7 +3143,7 @@ msgstr "Deiseil{extraText}"
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Thoir gnogag dhùbailte no dèan brùthadh fada air an teachdaireachd airson frith-fhreagairt a chur"
 
-#: src/components/Dialog/index.tsx:374
+#: src/components/Dialog/index.tsx:380
 msgid "Double tap to close the dialog"
 msgstr "Thoir gnogag dhùbailte air gus an còmhradh a dhùnadh"
 
@@ -3215,8 +3241,8 @@ msgstr "Deasaich na h-inbhirean"
 msgid "Edit image"
 msgstr "Deasaich an dealbh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:698
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:711
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:724
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:737
 msgid "Edit interaction settings"
 msgstr "Deasaich roghainnean na h-eadar-ghabhalach"
 
@@ -3230,8 +3256,8 @@ msgstr "Deasaich na rudan sa bheil ùidh agad"
 msgid "Edit list details"
 msgstr "Deasaich mion-fhiosrachadh na liosta"
 
-#: src/view/com/profile/ProfileMenu.tsx:334
-#: src/view/com/profile/ProfileMenu.tsx:340
+#: src/view/com/profile/ProfileMenu.tsx:354
+#: src/view/com/profile/ProfileMenu.tsx:374
 msgid "Edit live status"
 msgstr "Deasaich staid an t-srutha bheò"
 
@@ -3294,7 +3320,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr "Bhac cruthadair na liosta seo thu no bhac thusa cruthadair na liosta."
 
 #: src/screens/Settings/AccountSettings.tsx:66
-#: src/screens/Signup/StepInfo/index.tsx:196
+#: src/screens/Signup/StepInfo/index.tsx:225
 msgid "Email"
 msgstr "Post-d"
 
@@ -3395,13 +3421,13 @@ msgstr "Cuir fo-thiotalan an comas"
 msgid "Enable this source only"
 msgstr "Cuir an tùs seo a-mhàin an comas"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:132
-#: src/screens/Settings/ContentAndMediaSettings.tsx:146
+#: src/screens/Settings/ContentAndMediaSettings.tsx:133
+#: src/screens/Settings/ContentAndMediaSettings.tsx:147
 msgid "Enable trending topics"
 msgstr "Cuir na cuspairean a tha a’ treandadh an comas"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:153
-#: src/screens/Settings/ContentAndMediaSettings.tsx:167
+#: src/screens/Settings/ContentAndMediaSettings.tsx:155
+#: src/screens/Settings/ContentAndMediaSettings.tsx:169
 msgid "Enable trending videos in your Discover feed"
 msgstr "Cuir an comas videothan a tha a’ treandadh san inbhir “Fidir” agad"
 
@@ -3463,7 +3489,7 @@ msgid "Enter your birthdate"
 msgstr "Cuir a-steach latha do bhreith"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
-#: src/screens/Signup/StepInfo/index.tsx:216
+#: src/screens/Signup/StepInfo/index.tsx:245
 msgid "Enter your email address"
 msgstr "Cuir a-steach an seòladh puist-d agad"
 
@@ -3597,7 +3623,7 @@ msgstr "Falbhaidh an ùine air {0}"
 msgid "Expires in {0}"
 msgstr "Falbhaidh an ùine air ann an {0}"
 
-#: src/components/live/EditLiveDialog.tsx:131
+#: src/components/live/EditLiveDialog.tsx:130
 msgid "Expires in {0} at {1}"
 msgstr "Falbhaidh an ùine air ann an {0} aig {1}"
 
@@ -3631,8 +3657,8 @@ msgstr "Às-phortaich an dàta agam"
 msgid "Export My Data"
 msgstr "Às-phortaich an dàta agam"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:84
-#: src/screens/Settings/ContentAndMediaSettings.tsx:87
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:88
 msgid "External media"
 msgstr "Meadhanan on taobh a-muigh"
 
@@ -3696,7 +3722,7 @@ msgstr "Cha b’ urrainn dhuinn a’ chabadaich a sguabadh às"
 msgid "Failed to delete message"
 msgstr "Cha b’ urrainn dhuinn an teachdaireachd a sguabadh às"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:204
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:206
 msgid "Failed to delete post, please try again"
 msgstr "Cha b’ urrainn dhuinn am post a sguabadh às, feuch ris a-rithist"
 
@@ -3725,10 +3751,10 @@ msgstr "Cha b’ urrainn dhuinn aplacaid nan SMS a chur gu dol"
 msgid "Failed to load conversations"
 msgstr "Cha b’ urrainn dhuinn na còmhraidhean a luchdadh"
 
-#: src/screens/Search/Explore.tsx:467
-#: src/screens/Search/Explore.tsx:519
-#: src/screens/Search/Explore.tsx:557
-#: src/screens/Search/Explore.tsx:596
+#: src/screens/Search/Explore.tsx:472
+#: src/screens/Search/Explore.tsx:524
+#: src/screens/Search/Explore.tsx:562
+#: src/screens/Search/Explore.tsx:601
 msgid "Failed to load feeds preferences"
 msgstr "Cha b’ urrainn dhuinn roghainnean nan inbhirean a luchdadh"
 
@@ -3758,14 +3784,14 @@ msgstr "Cha b’ urrainn dhuinn na seann-teachdaireachdan a luchdadh"
 msgid "Failed to load preference."
 msgstr "Cha b’ urrainn dhuinn an roghainn a luchdadh."
 
-#: src/screens/Search/Explore.tsx:460
-#: src/screens/Search/Explore.tsx:512
-#: src/screens/Search/Explore.tsx:550
-#: src/screens/Search/Explore.tsx:589
+#: src/screens/Search/Explore.tsx:465
+#: src/screens/Search/Explore.tsx:517
+#: src/screens/Search/Explore.tsx:555
+#: src/screens/Search/Explore.tsx:594
 msgid "Failed to load suggested feeds"
 msgstr "Cha b’ urrainn dhuinn na h-inbhirean a mholamaid a luchdadh"
 
-#: src/screens/Search/Explore.tsx:370
+#: src/screens/Search/Explore.tsx:375
 msgid "Failed to load suggested follows"
 msgstr "Cha b’ urrainn dhuinn na daoine a mholamaid an leantainn a luchdadh"
 
@@ -3826,12 +3852,13 @@ msgstr "Dh’fhàillig a chur"
 msgid "Failed to send email, please try again."
 msgstr "Cha b’ urrainn dhuinn am post-d a chur, feuch ris a-rithist."
 
+#: src/components/live/GoLiveDisabledDialog.tsx:76
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 #: src/screens/Messages/components/ChatDisabled.tsx:99
 msgid "Failed to submit appeal, please try again."
 msgstr "Cha b’ urrainn dhuinn an t-ath-thagradh a chur, feuch ris a-rithist."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:224
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:238
 msgid "Failed to toggle thread mute, please try again"
 msgstr "Cha b’ urrainn dhuinn mùchadh an t-snàithlein a thoglachadh, feuch ris a-rithist"
 
@@ -3848,7 +3875,7 @@ msgstr "Cha b’ urrainn dhuinn roghainnean 2FA a’ phuist-d ùrachadh"
 msgid "Failed to update email, please try again."
 msgstr "Cha b’ urrainn dhuinn am post-d ùrachadh, feuch ris a-rithist."
 
-#: src/components/FeedCard.tsx:285
+#: src/components/FeedCard.tsx:317
 msgid "Failed to update feeds"
 msgstr "Cha b’ urrainn dhuinn na h-inbhirean ùrachadh"
 
@@ -3887,7 +3914,7 @@ msgstr "Fiosrachadh brèige mu thaghadh"
 msgid "Feed"
 msgstr "Inbhir"
 
-#: src/components/FeedCard.tsx:139
+#: src/components/FeedCard.tsx:171
 #: src/view/com/feeds/FeedSourceCard.tsx:150
 msgid "Feed by {0}"
 msgstr "Inbhir le {0}"
@@ -3912,14 +3939,14 @@ msgstr "Toglaiche nan inbhirean"
 msgid "Feed unavailable"
 msgstr "Chan eil an t-inbhir ri fhaighinn"
 
-#: src/view/shell/desktop/RightNav.tsx:105
-#: src/view/shell/desktop/RightNav.tsx:106
+#: src/view/shell/desktop/RightNav.tsx:107
+#: src/view/shell/desktop/RightNav.tsx:108
 #: src/view/shell/Drawer.tsx:368
 msgid "Feedback"
 msgstr "Innis dhuinn dè do bheachd"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:276
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:294
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:296
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:320
 msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr "Chaidh do bheachd a chur gu muinntir an inbhir"
@@ -3939,7 +3966,7 @@ msgstr "Inbhirean"
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0>See this guide</0> for more information."
 msgstr "Tha inbhirean nan algairimean gnàthaichte as urrainn do luchd-cleachdaidh a chruthachadh ma tha beagean de sgil aca air còdachadh. <0>Faic an treòir seo</0> airson barrachd fiosrachaidh."
 
-#: src/components/FeedCard.tsx:282
+#: src/components/FeedCard.tsx:314
 #: src/screens/SavedFeeds.tsx:90
 msgctxt "toast"
 msgid "Feeds updated!"
@@ -4015,9 +4042,9 @@ msgid "Find my friends"
 msgstr "Lorg mo charaidean"
 
 #. Starter packs suggested to the user for them to follow
-#: src/components/ProgressGuide/FollowDialog.tsx:72
-#: src/components/ProgressGuide/FollowDialog.tsx:82
-#: src/components/ProgressGuide/FollowDialog.tsx:426
+#: src/components/ProgressGuide/FollowDialog.tsx:78
+#: src/components/ProgressGuide/FollowDialog.tsx:86
+#: src/components/ProgressGuide/FollowDialog.tsx:431
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:42
 msgid "Find people to follow"
 msgstr "Lorg daoine airson an leantainn"
@@ -4068,9 +4095,9 @@ msgstr "Cuir fòcas air bogsa ion-chur a’ chòd"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:559
-#: src/components/ProfileHoverCard/index.web.tsx:496
-#: src/components/ProfileHoverCard/index.web.tsx:507
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
+#: src/components/ProfileHoverCard/index.web.tsx:497
+#: src/components/ProfileHoverCard/index.web.tsx:508
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:140
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:378
 #: src/screens/VideoFeed/index.tsx:879
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
@@ -4078,7 +4105,7 @@ msgstr "Cuir fòcas air bogsa ion-chur a’ chòd"
 msgid "Follow"
 msgstr "Lean"
 
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:113
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:127
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:366
 msgid "Follow {0}"
 msgstr "Lean ri {0}"
@@ -4087,17 +4114,20 @@ msgstr "Lean ri {0}"
 msgid "Follow {handle}"
 msgstr "Lean ri {handle}"
 
-#: src/components/ProgressGuide/List.tsx:52
 #: src/state/shell/progress-guide.tsx:231
 msgid "Follow 10 accounts"
 msgstr "Lean ri 10 cunntasan"
 
-#: src/components/ProgressGuide/List.tsx:69
+#: src/components/ProgressGuide/List.tsx:60
+msgid "Follow 10 people to get started"
+msgstr ""
+
+#: src/components/ProgressGuide/List.tsx:102
 msgid "Follow 7 accounts"
 msgstr "Lean ri 7 cunntasan"
 
-#: src/view/com/profile/ProfileMenu.tsx:292
-#: src/view/com/profile/ProfileMenu.tsx:303
+#: src/view/com/profile/ProfileMenu.tsx:310
+#: src/view/com/profile/ProfileMenu.tsx:321
 msgid "Follow account"
 msgstr "Lean ris a’ chunntas"
 
@@ -4119,7 +4149,7 @@ msgstr "Lean a h-uile cunntas"
 
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:553
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:138
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:376
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
 #: src/view/com/notifications/NotificationFeedItem.tsx:848
@@ -4162,9 +4192,9 @@ msgstr "Luchd-leantainn as aithne dhut"
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:546
-#: src/components/ProfileHoverCard/index.web.tsx:495
-#: src/components/ProfileHoverCard/index.web.tsx:506
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
+#: src/components/ProfileHoverCard/index.web.tsx:496
+#: src/components/ProfileHoverCard/index.web.tsx:507
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:143
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:374
 #: src/screens/VideoFeed/index.tsx:877
 #: src/view/com/notifications/NotificationFeedItem.tsx:819
@@ -4188,8 +4218,8 @@ msgstr "A’ leantainn {0} a-nis"
 msgid "Following {handle}"
 msgstr "A’ leantainn {handle}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
-#: src/screens/Settings/ContentAndMediaSettings.tsx:79
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Following feed preferences"
 msgstr "Roghainnean inbhir nan daoine a tha thu a’ leantainn"
 
@@ -4268,7 +4298,7 @@ msgstr "Saor an t-inbhir agad"
 msgid "From"
 msgstr "O"
 
-#: src/screens/Hashtag.tsx:127
+#: src/screens/Hashtag.tsx:136
 msgid "From @{sanitizedAuthor}"
 msgstr "O @{sanitizedAuthor}"
 
@@ -4317,7 +4347,7 @@ msgstr "Faigh brathan nuair a dh’ath-phostaicheas daoine rud a dh’ath-phosta
 msgid "Get notifications when people repost your posts."
 msgstr "Faigh brathan nuair a dh’ath-phostaicheas daoine rud a phostaich thusa."
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:91
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:93
 msgid "Get notified about new posts"
 msgstr "Faigh brathan mu phuist ùra"
 
@@ -4333,7 +4363,7 @@ msgstr "Faigh brath nuair a dh’fhoillsicheas {name} post ùr"
 msgid "Get notified of this account’s activity"
 msgstr "Faigh brathan mu ghnìomhachd a’ chunntais seo"
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:84
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:86
 msgid "Get notified when {name} posts"
 msgstr "Faigh brath nuair a dh’fhoillsicheas {name} post ùr"
 
@@ -4345,10 +4375,6 @@ msgstr "Faigh brath nuair a dh’fhoillsicheas cuideigin post ùr"
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
 msgid "Get started"
 msgstr "Dèan toiseach-tòiseachaidh"
-
-#: src/components/ProgressGuide/List.tsx:35
-msgid "Getting started"
-msgstr "A’ dèanamh toiseach-tòiseachaidh"
 
 #: src/components/MediaPreview.tsx:114
 msgid "GIF"
@@ -4412,19 +4438,24 @@ msgstr "Dhachaigh"
 msgid "Go Home"
 msgstr "Dhachaigh"
 
-#: src/view/com/profile/ProfileMenu.tsx:335
-#: src/view/com/profile/ProfileMenu.tsx:342
+#: src/view/com/profile/ProfileMenu.tsx:355
+#: src/view/com/profile/ProfileMenu.tsx:376
 msgid "Go live"
 msgstr "Cuir struth beò"
 
-#: src/components/live/GoLiveDialog.tsx:90
 #: src/components/live/GoLiveDialog.tsx:95
-#: src/components/live/GoLiveDialog.tsx:229
-#: src/components/live/GoLiveDialog.tsx:238
+#: src/components/live/GoLiveDialog.tsx:100
+#: src/components/live/GoLiveDialog.tsx:228
+#: src/components/live/GoLiveDialog.tsx:237
 msgid "Go Live"
 msgstr "Cuir struth beò"
 
-#: src/components/live/GoLiveDialog.tsx:171
+#: src/view/com/profile/ProfileMenu.tsx:352
+#: src/view/com/profile/ProfileMenu.tsx:372
+msgid "Go live (disabled)"
+msgstr ""
+
+#: src/components/live/GoLiveDialog.tsx:170
 msgid "Go live for"
 msgstr "Cuir struth beò fad"
 
@@ -4432,9 +4463,9 @@ msgstr "Cuir struth beò fad"
 msgid "Go to {firstAuthorName}'s profile"
 msgstr "Tadhail air a’ phròifil aig {firstAuthorName}"
 
-#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:87
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:64
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
+#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:91
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:71
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:80
 #: src/screens/Moderation/index.tsx:219
 msgid "Go to account settings"
 msgstr "Tadhail air roghainnean a’ chunntais"
@@ -4460,6 +4491,10 @@ msgstr "Tadhail air a’ phròifil aca"
 #: src/components/dms/ConvoMenu.tsx:238
 msgid "Go to user's profile"
 msgstr "Tadhail air pròifil a’ chleachdaiche"
+
+#: src/components/live/GoLiveDisabledDialog.tsx:104
+msgid "Going live is currently disabled for your account"
+msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -4503,6 +4538,11 @@ msgstr "Chaidh an làmhrachan atharrachadh!"
 msgid "Handle too long. Please try a shorter one."
 msgstr "Tha an làmhrachan ro fhada. Feuch fear nas giorra."
 
+#: src/components/FeedCard.tsx:157
+#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:120
+msgid "Happening now"
+msgstr ""
+
 #: src/screens/Settings/AccessibilitySettings.tsx:85
 msgid "Haptics"
 msgstr "Haptaigeachd"
@@ -4523,7 +4563,7 @@ msgstr "A’ cur mion-aoisich an cunnart no gan dochann"
 msgid "Hashtag"
 msgstr "Taga-hais"
 
-#: src/components/RichTextTag.tsx:51
+#: src/components/RichTextTag.tsx:52
 msgid "Hashtag {tag}"
 msgstr "Taga-hais {tag}"
 
@@ -4536,6 +4576,10 @@ msgstr "Gràin-chainnt"
 msgid "Have a code? <0>Click here.</0>"
 msgstr "A bheil còd agad? <0>Briog an-seo.</0>"
 
+#: src/screens/Signup/StepInfo/index.tsx:332
+msgid "Have we got your location wrong? <0>Tap here to confirm your location with GPS.</0>"
+msgstr ""
+
 #: src/screens/Signup/index.tsx:220
 msgid "Having trouble?"
 msgstr "A bheil duilgheadasan agad?"
@@ -4546,8 +4590,8 @@ msgstr "Cumaidh Bluesky seo fad 7 làithean airson casg a chur air mì-ghnàthac
 
 #: src/screens/Settings/Settings.tsx:254
 #: src/screens/Settings/Settings.tsx:258
-#: src/view/shell/desktop/RightNav.tsx:123
-#: src/view/shell/desktop/RightNav.tsx:124
+#: src/view/shell/desktop/RightNav.tsx:128
+#: src/view/shell/desktop/RightNav.tsx:131
 #: src/view/shell/Drawer.tsx:381
 msgid "Help"
 msgstr "Cobhair"
@@ -4569,7 +4613,7 @@ msgstr "Shin thu 👋"
 msgid "Hey there!"
 msgstr "Shin thu!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:201
+#: src/ageAssurance/components/NoAccessScreen.tsx:210
 msgid "Hi there!"
 msgstr "Shin thu!"
 
@@ -4586,17 +4630,17 @@ msgstr "Falaichte ri linn nan roghainnean modarataireachd agad."
 msgid "Hidden list"
 msgstr "Liosta fhalaichte"
 
-#: src/components/interstitials/Trending.tsx:131
+#: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:138
 #: src/components/moderation/ContentHider.tsx:208
 #: src/components/moderation/LabelPreference.tsx:140
 #: src/components/moderation/PostHider.tsx:137
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:747
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:773
 #: src/lib/moderation/useLabelBehaviorDescription.ts:18
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:111
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:129
 msgid "Hide"
 msgstr "Falaich"
 
@@ -4604,6 +4648,11 @@ msgstr "Falaich"
 msgctxt "action"
 msgid "Hide"
 msgstr "Falaich"
+
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:140
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:147
+msgid "Hide all events"
+msgstr ""
 
 #: src/components/dialogs/Embed.tsx:128
 msgid "Hide customization options"
@@ -4613,18 +4662,18 @@ msgstr "Falaich gach roghainn gnàthachaidh"
 msgid "Hide lists"
 msgstr "Falaich na liostaichean"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:584
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:604
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:610
 msgid "Hide post for me"
 msgstr "Falaich am post seo uam-sa"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:595
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:605
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:631
 msgid "Hide reply for everyone"
 msgstr "Falaich an fhreagairt seo on a h-uile duine"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:577
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:583
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:603
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:609
 msgid "Hide reply for me"
 msgstr "Falaich an fhreagairt seo uam-sa"
 
@@ -4632,22 +4681,26 @@ msgstr "Falaich an fhreagairt seo uam-sa"
 msgid "Hide this card"
 msgstr "Falaich a’ chairt seo"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:742
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:128
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:135
+msgid "Hide this event"
+msgstr ""
+
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:768
 msgid "Hide this post?"
 msgstr "A bheil thu airson am post seo a chur am falach?"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:742
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:777
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:768
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:803
 msgid "Hide this reply?"
 msgstr "A bheil thu airson an fhreagairt seo a chur am falach?"
 
-#: src/components/interstitials/Trending.tsx:113
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
+#: src/components/interstitials/Trending.tsx:112
 msgid "Hide trending topics"
 msgstr "Falaich na cuspairean a tha a’ treandadh"
 
-#: src/components/interstitials/Trending.tsx:129
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
+#: src/components/interstitials/Trending.tsx:128
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:127
 msgid "Hide trending topics?"
 msgstr "A bheil thu airson na cuspairean a tha a’ treandadh a chur am falach?"
 
@@ -4770,7 +4823,7 @@ msgstr "Tha mi air Bluesky mar {0} – tiugainn! https://bsky.app/download"
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Ma tha an roghainn teacsa ro fhada, dùisgidh seo staid na roghainn teacsa leudaichte"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:110
+#: src/screens/Signup/StepInfo/index.tsx:351
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Mur eil thu nad inbheach fhathast a-rèir laghan do dhùthcha, feumaidh am pàrant no neach-glèidhidh laghail agad na teirmichean seo a leughadh as do leth."
 
@@ -4781,6 +4834,10 @@ msgstr "Ma tha thu dhen bheachd gu bheil latha do bhreith ceàrr, <0>cuir fios g
 #: src/ageAssurance/components/NoAccessScreen.tsx:100
 msgid "If you believe your birthdate is incorrect, you can update it by <0>clicking here</0>."
 msgstr "Ma tha thu dhen bheachd gu bheil latha do bhreith ceàrr, ’s urrainn dhut ùrachadh <0>le bhith a’ briogadh an-seo</0>."
+
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:119
+msgid "If you choose to hide all events, you can always re-enable them from <0>Settings → Content & Media</0>."
+msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:277
 msgid "If you delete this list, you won't be able to recover it."
@@ -4794,7 +4851,7 @@ msgstr "Ma tha àrainn agad fhèin, ’s urrainn dhut sin a chleachdadh mar an l
 msgid "If you need to update your email, <0>click here</0>."
 msgstr "Ma tha agad ris am post-d agad ùrachadh, <0>briog an-seo</0>."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:733
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:759
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "Ma bheir thu am post seo air falbh, chan urrainn dhut aiseag às a dhèidh."
 
@@ -4819,7 +4876,7 @@ msgstr "Mas e neach-leasachaidh a th’ annad, is urrainn dhut frithealaiche a c
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr "Ma tha thu airson an làmhrachan no post-d agad atharrachadh, dèan sin mus tèid e à comas."
 
-#: src/view/com/util/images/Gallery.tsx:75
+#: src/components/images/Gallery.tsx:75
 msgid "Image"
 msgstr "Dealbh"
 
@@ -4866,7 +4923,7 @@ msgstr "Ion-phortaich luchd-aithne ’s faigh lorg air do charaidean"
 msgid "Imported on {0}"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:204
+#: src/ageAssurance/components/NoAccessScreen.tsx:213
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "Airson ’s gun urrainn dhuinn cùisean a chumail iomchaidh a rèir d’ aoise, feumaidh fios a bhith againn cuin a rugadh tu. Cha leig thu leas seo a dhèanamh ach aon turas agus cumaidh sinn am fiosrachadh seo prìobhaideach."
 
@@ -4956,7 +5013,7 @@ msgstr "Tha an còd dearbhaidh 2FA mì-dhligheach."
 msgid "Invalid handle. Please try a different one."
 msgstr "Feuch fear eile."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:365
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:391
 msgctxt "toast"
 msgid "Invalid interaction settings."
 msgstr "Roghainnean eadar-ghabhalach mì-dhligheach."
@@ -4966,7 +5023,7 @@ msgstr "Roghainnean eadar-ghabhalach mì-dhligheach."
 msgid "Invalid phone number"
 msgstr "Àireamh fòn mhì-dhligheach"
 
-#: src/components/moderation/ReportDialog/index.tsx:80
+#: src/components/moderation/ReportDialog/index.tsx:92
 msgid "Invalid report subject"
 msgstr "Tha cuspair na h-aithrise mì-dhligheach"
 
@@ -4982,7 +5039,7 @@ msgstr "Thoir cuireadh"
 msgid "Invite {name} to join Bluesky"
 msgstr "Thoir cuireadh dha {name} gu Bluesky"
 
-#: src/screens/Signup/StepInfo/index.tsx:166
+#: src/screens/Signup/StepInfo/index.tsx:195
 msgid "Invite code"
 msgstr "Còd a’ chuiridh"
 
@@ -5011,8 +5068,8 @@ msgstr "Thoir cuireadh dha do charaidean na h-inbhirean is daoine as fheàrr lea
 msgid "Invites, but personal"
 msgstr "Cuiridhean ach pearsanta"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:356
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
+#: src/ageAssurance/components/NoAccessScreen.tsx:365
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:92
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr "Nach eil an t-ionad agad ceart? <0>Briog an-seo ’s dearbh càit a bheil thu.</0>"
 
@@ -5020,7 +5077,7 @@ msgstr "Nach eil an t-ionad agad ceart? <0>Briog an-seo ’s dearbh càit a bhei
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
 msgstr "Tha coltas nach eil do charaidean air fad agad an-seo aig an ìre-sa. ’S urrainn dhut teachdaireachd a sgrìobhadh airson cuireadh pearsanta a thoirt dhaibh."
 
-#: src/screens/Signup/StepInfo/index.tsx:292
+#: src/screens/Signup/StepInfo/index.tsx:384
 msgid "It's correct"
 msgstr "Tha e ceart"
 
@@ -5108,17 +5165,17 @@ msgstr "Cànain"
 msgid "Larger"
 msgstr "Nas motha"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:339
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
+#: src/ageAssurance/components/NoAccessScreen.tsx:348
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:193
 msgid "Last initiated {timeAgo} ago"
 msgstr "Air a thòiseachadh {timeAgo} air ais turas mu dheireadh"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:337
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:183
+#: src/ageAssurance/components/NoAccessScreen.tsx:346
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:191
 msgid "Last initiated just now"
 msgstr "Air a thòiseachadh diog air ais turas mu dheireadh"
 
-#: src/screens/Hashtag.tsx:102
+#: src/screens/Hashtag.tsx:111
 #: src/screens/Search/SearchResults.tsx:62
 #: src/screens/Topic.tsx:78
 msgid "Latest"
@@ -5138,7 +5195,7 @@ msgstr "Barrachd fiosrachaidh"
 msgid "Learn More"
 msgstr "Barrachd fiosrachaidh"
 
-#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:64
+#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:65
 msgid "Learn more about age assurance"
 msgstr "Barrachd fiosrachadh mu dhearbhadh na h-aoise"
 
@@ -5190,7 +5247,7 @@ msgstr "Barrachd fiosrachaidh mun dearbhadh air Bluesky"
 msgid "Learn more about what is public on Bluesky."
 msgstr "Barrachd fiosrachaidh mu na rudan a tha poblach air Bluesky."
 
-#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:84
+#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:88
 msgid "Learn more in your <0>account settings.</0>"
 msgstr "Faigh barrachd fiosrachaidh ann an <0>roghainnean a’ chunntais</0> agad."
 
@@ -5258,11 +5315,11 @@ msgid "Like"
 msgstr "’S toil"
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
-#: src/components/PostControls/index.tsx:270
+#: src/components/PostControls/index.tsx:286
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "’S toil ({0, plural, one {’s toil le # seo} two {’s toil le # seo} few {’s toil le # seo} other {’s toil le # seo}})"
 
-#: src/components/ProgressGuide/List.tsx:63
+#: src/components/ProgressGuide/List.tsx:96
 msgid "Like 10 posts"
 msgstr "Nochd gur toil leat 10 puist"
 
@@ -5294,7 +5351,7 @@ msgstr "Daoine as toil leotha seo"
 msgid "Liked By"
 msgstr "Daoine as toil leotha seo"
 
-#: src/components/FeedCard.tsx:218
+#: src/components/FeedCard.tsx:250
 #: src/view/com/feeds/FeedSourceCard.tsx:172
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "’S toil le {0, plural, one {# seo} two {# seo} few {# seo} other {# seo}}"
@@ -5323,7 +5380,7 @@ msgstr "’S toil le cuideigin rud a dh’ath-phostaich thu"
 msgid "Likes of your reposts notifications"
 msgstr "Brathan mu dhaoine a dh’innis gur toil leotha rud a dh’ath-phostaich thu"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:470
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:482
 msgid "Likes on this post"
 msgstr "Daoine as toil leotha am post seo"
 
@@ -5434,23 +5491,36 @@ msgstr "Liostaichean a tha a’ bacadh a’ chleachdaiche seo:"
 msgid "LIVE"
 msgstr "Beò"
 
-#: src/components/live/LiveStatusDialog.tsx:215
-msgid "Live feature is in beta testing"
-msgstr "’S e gleus beta a tha sna sruthan beòtha"
+#: src/features/liveEvents/components/LiveEventFeedCardCompact.tsx:52
+#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:52
+msgid "Live event happening now: {0}"
+msgstr ""
 
-#: src/components/live/EditLiveDialog.tsx:148
-#: src/components/live/EditLiveDialog.tsx:152
-#: src/components/live/GoLiveDialog.tsx:121
-#: src/components/live/GoLiveDialog.tsx:125
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:107
+msgid "Live event options"
+msgstr ""
+
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:111
+msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
+msgstr ""
+
+#: src/components/live/LiveStatusDialog.tsx:235
+msgid "Live feature is in beta"
+msgstr ""
+
+#: src/components/live/EditLiveDialog.tsx:147
+#: src/components/live/EditLiveDialog.tsx:151
+#: src/components/live/GoLiveDialog.tsx:126
+#: src/components/live/GoLiveDialog.tsx:130
 msgid "Live link"
 msgstr "Ceangal ris an t-sruth bheò"
 
-#: src/screens/Search/Explore.tsx:83
+#: src/screens/Search/Explore.tsx:84
 msgid "Load more"
 msgstr "Luchdaich barrachd dheth"
 
-#: src/screens/Search/Explore.tsx:501
-#: src/screens/Search/Explore.tsx:578
+#: src/screens/Search/Explore.tsx:506
+#: src/screens/Search/Explore.tsx:583
 msgid "Load more suggested feeds"
 msgstr "Luchdaich barrachd inbhirean a mholamaid"
 
@@ -5489,18 +5559,18 @@ msgstr "Air clàradh a-mach"
 msgid "Logged-out visibility"
 msgstr "Faicsinneachd do dhaoine a chlàraich a-mach"
 
-#: src/view/shell/desktop/RightNav.tsx:133
+#: src/view/shell/desktop/RightNav.tsx:140
 msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "An suaicheantas le @sawaratsuki.bsky.social"
 
-#: src/view/shell/desktop/RightNav.tsx:130
+#: src/view/shell/desktop/RightNav.tsx:137
 #: src/view/shell/Drawer.tsx:709
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "An suaicheantas le <0>@sawaratsuki.bsky.social</0>"
 
-#: src/components/RichTextTag.tsx:53
-msgid "Long press to open tag menu for #{tag}"
-msgstr "Dèan brùthadh fada airson clàr-taice nan tagaichean airson #{tag} fhosgladh"
+#: src/components/RichTextTag.tsx:54
+msgid "Long press to open tag menu for {0}"
+msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
@@ -5530,8 +5600,8 @@ msgstr "Dèan fear dhomh"
 msgid "Make sure this is where you intend to go!"
 msgstr "Dèan cinnteach gur e seo a tha fa-near dhut!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
-#: src/screens/Settings/ContentAndMediaSettings.tsx:63
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
 msgid "Manage saved feeds"
 msgstr "Stiùirich na h-inbhirean a shàbhail thu"
 
@@ -5707,8 +5777,8 @@ msgstr "Innealan modarataireachd"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Thagh modaratair rabhadh coitcheann dhan t-susbaint."
 
-#: src/view/shell/desktop/Feeds.tsx:113
-#: src/view/shell/desktop/Feeds.tsx:123
+#: src/view/shell/desktop/Feeds.tsx:109
+#: src/view/shell/desktop/Feeds.tsx:156
 msgid "More feeds"
 msgstr "Barrachd inbhirean"
 
@@ -5718,8 +5788,8 @@ msgid "More languages..."
 msgstr "Barrachd chànan…"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:149
-#: src/view/com/profile/ProfileMenu.tsx:228
-#: src/view/com/profile/ProfileMenu.tsx:234
+#: src/view/com/profile/ProfileMenu.tsx:241
+#: src/view/com/profile/ProfileMenu.tsx:248
 msgid "More options"
 msgstr "Barrachd roghainnean"
 
@@ -5745,15 +5815,15 @@ msgctxt "video"
 msgid "Mute"
 msgstr "Mùch"
 
-#: src/components/RichTextTag.tsx:141
-#: src/components/RichTextTag.tsx:154
+#: src/components/RichTextTag.tsx:150
+#: src/components/RichTextTag.tsx:163
 msgid "Mute {tag}"
 msgstr "Mùch {tag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:660
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:666
-#: src/view/com/profile/ProfileMenu.tsx:380
-#: src/view/com/profile/ProfileMenu.tsx:387
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:686
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:692
+#: src/view/com/profile/ProfileMenu.tsx:433
+#: src/view/com/profile/ProfileMenu.tsx:440
 msgid "Mute account"
 msgstr "Mùch an cunntas"
 
@@ -5803,13 +5873,13 @@ msgstr "Mùch am facal seo ann an tagaichean a-mhàin"
 msgid "Mute this word until you unmute it"
 msgstr "Mùch am facal seo gus an neo-mhùch thu e"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:544
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:570
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:574
 msgid "Mute thread"
 msgstr "Mùch an snàithlean"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:558
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:560
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:584
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:586
 msgid "Mute words & tags"
 msgstr "Mùch faclan ⁊ tagaichean"
 
@@ -5873,8 +5943,8 @@ msgstr "Bheir seo thu gun ath-sgrìn"
 msgid "Navigates to your profile"
 msgstr "Bheir seo thu gun phròifil agad"
 
-#: src/components/moderation/ReportDialog/index.tsx:319
-#: src/components/moderation/ReportDialog/index.tsx:336
+#: src/components/moderation/ReportDialog/index.tsx:333
+#: src/components/moderation/ReportDialog/index.tsx:350
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
 msgstr "A bheil agad ri aithris a dhèanamh air briseadh còrach-lethbhreac, iarrtas laghail no cùis a thaobh gèilleadh ri riaghailt?"
 
@@ -5883,6 +5953,7 @@ msgid "Nevermind, create a handle for me"
 msgstr "Coma, cruthaichibh làmhrachan dhomh"
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
+#: src/view/com/profile/ProfileMenu.tsx:388
 msgid "New"
 msgstr "Ùr"
 
@@ -6043,7 +6114,7 @@ msgstr "Gun inbhir gnàthaichte fhathast"
 msgid "No DNS Panel"
 msgstr "Gun phanail DNS"
 
-#: src/components/live/EditLiveDialog.tsx:140
+#: src/components/live/EditLiveDialog.tsx:139
 msgid "No expiry set"
 msgstr "Cha deach suidheachadh cuin a dh’fhalbhas an ùine air"
 
@@ -6138,11 +6209,11 @@ msgid "No result"
 msgstr "Cha robh toradh ann"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:223
-#: src/components/ProgressGuide/FollowDialog.tsx:224
+#: src/components/ProgressGuide/FollowDialog.tsx:229
 msgid "No results"
 msgstr "Cha robh toradh ann"
 
-#: src/screens/Search/Explore.tsx:793
+#: src/screens/Search/Explore.tsx:800
 msgid "No results for \"{0}\"."
 msgstr "Cha d’fhuair sinn toradh sam bith airson “{0}”."
 
@@ -6159,7 +6230,7 @@ msgstr "Cha deach toradh a lorg airson “{query}”"
 msgid "No results found for \"<0>{query}</0>\"."
 msgstr "Cha deach toradh a lorg airson “<0>{query}</0>”."
 
-#: src/screens/Search/Explore.tsx:797
+#: src/screens/Search/Explore.tsx:804
 msgid "No results."
 msgstr "Gun toradh."
 
@@ -6227,7 +6298,7 @@ msgstr "Chan eil neach sam bith a tha thusa a’ leantainn ga leantainn"
 msgid "Not Found"
 msgstr "Cha deach a lorg"
 
-#: src/view/com/profile/ProfileMenu.tsx:502
+#: src/view/com/profile/ProfileMenu.tsx:555
 msgid "Note about sharing"
 msgstr "Fiosrachadh mu cho-roinneadh"
 
@@ -6327,7 +6398,7 @@ msgid "OK"
 msgstr "Ceart ma-thà"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:693
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:705
 msgid "Okay"
 msgstr "Ceart ma-thà"
 
@@ -6405,7 +6476,7 @@ msgstr "Ìoc!"
 msgid "Open avatar creator"
 msgstr "Fosgail cruthadair nan avatar"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:200
+#: src/view/com/feeds/ComposerPrompt.tsx:198
 msgid "Open camera"
 msgstr "Fosgail an camara"
 
@@ -6456,16 +6527,16 @@ msgstr "Fosgail roghainnean nam faclan is tagaichean mùchte"
 msgid "Open pack"
 msgstr "Fosgail a’ phacaid"
 
-#: src/components/PostControls/PostMenu/index.tsx:64
+#: src/components/PostControls/PostMenu/index.tsx:66
 msgid "Open post options menu"
 msgstr "Fosgail clàr-taice roghainnean a’ phuist"
 
-#: src/components/live/LiveStatusDialog.tsx:189
-#: src/components/live/LiveStatusDialog.tsx:203
+#: src/components/live/LiveStatusDialog.tsx:205
+#: src/components/live/LiveStatusDialog.tsx:219
 msgid "Open profile"
 msgstr "Fosgail a’ phròifil"
 
-#: src/components/PostControls/ShareMenu/index.tsx:89
+#: src/components/PostControls/ShareMenu/index.tsx:107
 msgid "Open share menu"
 msgstr "Fosgail clàr-taice a’ cho-roinnidh"
 
@@ -6481,6 +6552,10 @@ msgstr "Fosgail duilleag an leabhair-sgeulachd"
 #: src/screens/Settings/Settings.tsx:457
 msgid "Open system log"
 msgstr "Fosgail log an t-siostaim"
+
+#: src/view/shell/desktop/Feeds.tsx:188
+msgid "Opens {0} feed"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:62
 msgid "Opens a dialog to add a content warning to your post"
@@ -6514,7 +6589,7 @@ msgstr "Fosglaidh seo an còmhradh airson atharrachadh an làmhrachain"
 msgid "Opens composer"
 msgstr "Fosglaidh seo an gleus-sgrìobhaidh"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:201
+#: src/view/com/feeds/ComposerPrompt.tsx:199
 msgid "Opens device camera"
 msgstr "Fosglaidh seo camara an uidheim"
 
@@ -6545,7 +6620,7 @@ msgstr "Fosglaidh seo an còmhradh airson GIF a thaghadh"
 msgid "Opens helpdesk in browser"
 msgstr "Fosglaidh seo an taic sa bhrabhsair"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:223
+#: src/view/com/feeds/ComposerPrompt.tsx:221
 msgid "Opens image picker"
 msgstr "Fosglaidh seo ròghnaichear nan dealbhan"
 
@@ -6666,7 +6741,7 @@ msgstr "Cha deach an duilleag a lorg"
 #: src/screens/Login/LoginForm.tsx:229
 #: src/screens/Settings/AccountSettings.tsx:121
 #: src/screens/Settings/AccountSettings.tsx:125
-#: src/screens/Signup/StepInfo/index.tsx:231
+#: src/screens/Signup/StepInfo/index.tsx:260
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
@@ -6764,7 +6839,7 @@ msgstr "Dealbhan do dh’inbhich."
 msgid "Pin feed"
 msgstr "Prìnich an t-inbhir"
 
-#: src/components/FeedCard.tsx:329
+#: src/components/FeedCard.tsx:361
 msgid "Pin Feed"
 msgstr "Prìnich an t-inbhir"
 
@@ -6777,8 +6852,8 @@ msgstr "Prìnich ris an dachaigh"
 msgid "Pin to Home"
 msgstr "Prìnich ris an dachaigh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:459
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:478
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:485
 msgid "Pin to your profile"
 msgstr "Prìnich ris a’ phròifil agad"
 
@@ -6847,7 +6922,7 @@ msgid "Please choose your handle."
 msgstr "Tagh làmhrachan dhut."
 
 #: src/screens/Signup/state.ts:281
-#: src/screens/Signup/StepInfo/index.tsx:122
+#: src/screens/Signup/StepInfo/index.tsx:151
 msgid "Please choose your password."
 msgstr "Tagh facal-faire."
 
@@ -6860,7 +6935,7 @@ msgid "Please complete the verification captcha."
 msgstr "Coilean an Captcha airson dearbhadh a dhèanamh."
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:101
-#: src/screens/Signup/StepInfo/index.tsx:111
+#: src/screens/Signup/StepInfo/index.tsx:140
 msgid "Please double-check that you have entered your email address correctly."
 msgstr "Dèan cinnteach nach eil mearachd sa phost- agad."
 
@@ -6908,11 +6983,11 @@ msgid "Please enter the security code we sent to your previous email address."
 msgstr "Cuir a-steach an còd tèarainteachd a chuir sinn gu seòladh an t-seann phuist-d agad."
 
 #: src/screens/Signup/state.ts:265
-#: src/screens/Signup/StepInfo/index.tsx:93
+#: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr "Cuir a-steach an seòladh puist-d agad."
 
-#: src/screens/Signup/StepInfo/index.tsx:86
+#: src/screens/Signup/StepInfo/index.tsx:115
 msgid "Please enter your invite code."
 msgstr "Cuir a-steach an còd cuiridh agad."
 
@@ -6939,6 +7014,10 @@ msgstr "Mìnich carson a chuir {0} an leubail seo ris air mhearachd nad bheachd-
 #: src/screens/Messages/components/ChatDisabled.tsx:122
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr "Mìnich carson a chaidh a’ chabadaich agad a chur à comas air mhearachd nad bheachd-sa"
+
+#: src/components/live/GoLiveDisabledDialog.tsx:123
+msgid "Please explain why you think your Go Live access was incorrectly disabled."
+msgstr ""
 
 #: src/components/FocusScope/index.tsx:91
 #: src/components/FocusScope/index.tsx:115
@@ -7027,7 +7106,7 @@ msgstr "Chaidh am post a bhacadh"
 msgid "Post by @{0}"
 msgstr "Post le @{0}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:184
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:186
 msgctxt "toast"
 msgid "Post deleted"
 msgstr "Chaidh am post a sguabadh às"
@@ -7077,7 +7156,7 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Chaidh am post a phrìneachadh"
 
-#: src/components/PostControls/BookmarkButton.tsx:59
+#: src/components/PostControls/BookmarkButton.tsx:66
 msgid "Post saved"
 msgstr "Chaidh am post a shàbhaladh"
 
@@ -7134,6 +7213,10 @@ msgstr "Dèan brùthadh airson feuchainn ris a-rithist"
 msgid "Press to view followers of this account that you also follow"
 msgstr "Dèan brùthadh is chì thu na daoine a leanas ris a’ chunntas seo a tha thusa a’ leantainn riutha cuideachd"
 
+#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:118
+msgid "Preview"
+msgstr ""
+
 #: src/view/com/lightbox/Lightbox.web.tsx:151
 msgid "Previous image"
 msgstr "An dealbh roimhe"
@@ -7146,8 +7229,8 @@ msgstr "Am prìomh-chànan"
 msgid "Primary Language"
 msgstr "Am prìomh-chànan"
 
-#: src/view/shell/desktop/RightNav.tsx:113
-#: src/view/shell/desktop/RightNav.tsx:114
+#: src/view/shell/desktop/RightNav.tsx:116
+#: src/view/shell/desktop/RightNav.tsx:117
 msgid "Privacy"
 msgstr "Prìobhaideachd"
 
@@ -7280,11 +7363,11 @@ msgstr "Brathan mu luaidh"
 msgid "Quote post"
 msgstr "Dèan luaidh air a’ phost"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:314
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:340
 msgid "Quote post was re-attached"
 msgstr "Chaidh an luaidh air a’ phost a cheangal ris as ùr"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:313
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:339
 msgid "Quote post was successfully detached"
 msgstr "Chaidh an luaidh air a’ phost a dhealachadh"
 
@@ -7302,7 +7385,7 @@ msgstr "Tha luaidhean air puist à comas"
 msgid "Quotes"
 msgstr "Luaidhean"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:454
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:466
 msgid "Quotes of this post"
 msgstr "Luaidhean air a’ phost seo"
 
@@ -7314,8 +7397,8 @@ msgstr "Seachad air a’ chrìoch – dh’atharraich thu an làmhrachan agad ro
 msgid "Rate limit exceeded. Please try again later."
 msgstr "Seachad air a’ chrìoch. Feuch ris a-rithist an ceann greis."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:646
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:656
 msgid "Re-attach quote"
 msgstr "Ceangail an luaidh ris as ùr"
 
@@ -7361,13 +7444,13 @@ msgstr "Leugh am post sa bhloga againn"
 msgid "Read the Bluesky blog"
 msgstr "Leugh am bloga aig Bluesky"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:56
-#: src/screens/Signup/StepInfo/Policies.tsx:82
+#: src/screens/Signup/StepInfo/Policies.tsx:52
+#: src/screens/Signup/StepInfo/Policies.tsx:78
 msgid "Read the Bluesky Privacy Policy"
 msgstr "Leugh poileasaidh prìobhaideachd Bhluesky"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:49
-#: src/screens/Signup/StepInfo/Policies.tsx:69
+#: src/screens/Signup/StepInfo/Policies.tsx:45
+#: src/screens/Signup/StepInfo/Policies.tsx:65
 msgid "Read the Bluesky Terms of Service"
 msgstr "Leugh teirmichean na seirbheise aig Bluesky"
 
@@ -7426,7 +7509,7 @@ msgstr "Ath-luchdaich na còmhraidhean"
 #: src/components/dialogs/MutedWords.tsx:443
 #: src/components/dialogs/StarterPackDialog.tsx:374
 #: src/components/dialogs/StarterPackDialog.tsx:380
-#: src/components/FeedCard.tsx:343
+#: src/components/FeedCard.tsx:375
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:105
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:112
 #: src/screens/Bookmarks/index.tsx:266
@@ -7499,12 +7582,12 @@ msgstr "A bheil thu airson a thoirt air falbh on ghrad-inntrigeadh?"
 msgid "Remove from saved feeds"
 msgstr "Thoir air falbh o na h-inbhirean a shàbhail thu"
 
-#: src/components/PostControls/BookmarkButton.tsx:128
+#: src/components/PostControls/BookmarkButton.tsx:140
 #: src/screens/Bookmarks/index.tsx:260
 msgid "Remove from saved posts"
 msgstr "Air a thoirt air falbh o na puist a shàbhail thu"
 
-#: src/components/FeedCard.tsx:338
+#: src/components/FeedCard.tsx:370
 msgid "Remove from your feeds?"
 msgstr "A bheil thu airson a thoirt air falbh o na h-inbhirean agad?"
 
@@ -7512,8 +7595,8 @@ msgstr "A bheil thu airson a thoirt air falbh o na h-inbhirean agad?"
 msgid "Remove image"
 msgstr "Thoir an dealbh air falbh"
 
-#: src/components/live/EditLiveDialog.tsx:240
-#: src/components/live/EditLiveDialog.tsx:247
+#: src/components/live/EditLiveDialog.tsx:226
+#: src/components/live/EditLiveDialog.tsx:233
 msgid "Remove live status"
 msgstr "Sguir dhen t-sruth bheò"
 
@@ -7549,8 +7632,8 @@ msgstr "Thoir an cleachdaiche air falbh on liosta"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:46
 #: src/components/verification/VerificationsDialog.tsx:252
-#: src/view/com/profile/ProfileMenu.tsx:353
-#: src/view/com/profile/ProfileMenu.tsx:356
+#: src/view/com/profile/ProfileMenu.tsx:406
+#: src/view/com/profile/ProfileMenu.tsx:409
 msgid "Remove verification"
 msgstr "Thoir an dearbhadh air falbh"
 
@@ -7575,7 +7658,7 @@ msgstr "Air a thoirt air falbh on liosta"
 msgid "Removed from saved feeds"
 msgstr "Air a thoirt air falbh o na h-inbhirean a shàbhail thu"
 
-#: src/components/PostControls/BookmarkButton.tsx:94
+#: src/components/PostControls/BookmarkButton.tsx:106
 #: src/screens/Bookmarks/index.tsx:218
 msgid "Removed from saved posts"
 msgstr "Air a thoirt air falbh o na puist a shàbhail thu"
@@ -7643,7 +7726,7 @@ msgid "Reply"
 msgstr "Freagair"
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
-#: src/components/PostControls/index.tsx:224
+#: src/components/PostControls/index.tsx:240
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr "Freagair ({0, plural, one {# fhreagairt} two {# fhreagairt} few {# freagairtean} other {# freagairt}})"
 
@@ -7669,23 +7752,24 @@ msgstr "’S e ùghdar an t-snàithlein a thaghas roghainnean nam freagairtean"
 msgid "Reply sorting"
 msgstr "Seòrsachadh nam freagairtean"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:351
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:377
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr "Chaidh faicsinneachd na freagairt ùrachadh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:350
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:376
 msgid "Reply was successfully hidden"
 msgstr "Chaidh an fhreagairt a chur am falach"
 
 #: src/components/dms/MessageContextMenu.tsx:168
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
+#: src/components/live/LiveStatusDialog.tsx:257
 msgid "Report"
 msgstr "Dèan aithris"
 
-#: src/view/com/profile/ProfileMenu.tsx:420
-#: src/view/com/profile/ProfileMenu.tsx:423
+#: src/view/com/profile/ProfileMenu.tsx:473
+#: src/view/com/profile/ProfileMenu.tsx:476
 msgid "Report account"
 msgstr "Dèan aithris air a’ chunntas"
 
@@ -7697,8 +7781,8 @@ msgstr "Dèan aithris air a’ chunntas"
 msgid "Report conversation"
 msgstr "Dèan aithris air a’ chòmhradh"
 
-#: src/components/moderation/ReportDialog/index.tsx:78
-#: src/components/moderation/ReportDialog/index.tsx:239
+#: src/components/moderation/ReportDialog/index.tsx:90
+#: src/components/moderation/ReportDialog/index.tsx:253
 msgid "Report dialog"
 msgstr "Dèan aithris air a’ chòmhradh"
 
@@ -7716,8 +7800,8 @@ msgstr "Dèan aithris air an liosta"
 msgid "Report message"
 msgstr "Dèan aithris air an teachdaireachd"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:686
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:688
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:712
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:714
 msgid "Report post"
 msgstr "Dèan aithris air a’ phost"
 
@@ -7731,27 +7815,32 @@ msgstr "Dèan aithris air a’ phacaid tòiseachaidh"
 msgid "Report submitted"
 msgstr "Chaidh aithris a chur a-steach"
 
-#: src/components/moderation/ReportDialog/copy.ts:45
+#: src/components/moderation/ReportDialog/copy.ts:51
 msgid "Report this conversation"
 msgstr "Dèan aithris air a’ chòmhradh seo"
 
-#: src/components/moderation/ReportDialog/copy.ts:31
+#: src/components/moderation/ReportDialog/copy.ts:37
 msgid "Report this feed"
 msgstr "Dèan aithris air an inbhir seo"
 
-#: src/components/moderation/ReportDialog/copy.ts:25
+#: src/components/moderation/ReportDialog/copy.ts:31
 msgid "Report this list"
 msgstr "Dèan aithris air an liosta seo"
 
-#: src/components/moderation/ReportDialog/copy.ts:51
+#: src/components/live/LiveStatusDialog.tsx:240
+#: src/components/moderation/ReportDialog/copy.ts:19
+msgid "Report this livestream"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:57
 msgid "Report this message"
 msgstr "Dèan aithris air an teachdaireachd seo"
 
-#: src/components/moderation/ReportDialog/copy.ts:19
+#: src/components/moderation/ReportDialog/copy.ts:25
 msgid "Report this post"
 msgstr "Dèan aithris air a’ phost seo"
 
-#: src/components/moderation/ReportDialog/copy.ts:37
+#: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Report this starter pack"
 msgstr "Dèan aithris air a’ phacaid tòiseachaidh seo"
 
@@ -7803,7 +7892,7 @@ msgstr "Rinn thu ath-phostadh"
 msgid "Reposts"
 msgstr "Ath-phostadh"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:436
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:448
 msgid "Reposts of this post"
 msgstr "Ath-phostaidh a’ phuist seo"
 
@@ -7831,7 +7920,7 @@ msgstr "Spàrr air daoine roghainn teacsa a chur an sàs mus gabh rud a phostadh
 msgid "Require an email code to sign in to your account."
 msgstr "Spàrr ort fhèin còd puist-d a chleachdadh airson clàradh a-steach gun chunntas agad."
 
-#: src/screens/Signup/StepInfo/index.tsx:180
+#: src/screens/Signup/StepInfo/index.tsx:209
 msgid "Required for this provider"
 msgstr "Riatanach aig an t-solaraiche seo"
 
@@ -7897,12 +7986,14 @@ msgstr "Feuchaidh seo ri clàradh a-steach a-rithist"
 msgid "Retries the last action, which errored out"
 msgstr "Feuchaidh seo ris a’ ghnìomh mu dheireadh a-rithist is e air fàilligeadh"
 
+#: src/components/ageAssurance/AgeAssuranceErrors.tsx:27
+#: src/components/ageAssurance/AgeAssuranceErrors.tsx:30
 #: src/components/contacts/screens/VerifyNumber.tsx:347
 #: src/components/contacts/screens/VerifyNumber.tsx:352
 #: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:114
-#: src/components/moderation/ReportDialog/index.tsx:273
+#: src/components/moderation/ReportDialog/index.tsx:287
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:58
 #: src/components/StarterPack/ProfileStarterPacks.tsx:374
@@ -7924,7 +8015,7 @@ msgstr "Feuchaidh seo ris a’ ghnìomh mu dheireadh a-rithist is e air fàillig
 msgid "Retry"
 msgstr "Feuch ris a-rithist"
 
-#: src/components/moderation/ReportDialog/index.tsx:270
+#: src/components/moderation/ReportDialog/index.tsx:284
 #: src/view/screens/Storybook/Admonitions.tsx:60
 msgid "Retry loading report options"
 msgstr "Feuch is luchdaich roghainnean na h-aithrise as ùr"
@@ -7956,8 +8047,8 @@ msgstr "Tillidh seo thu gun cheum roimhe"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:662
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:667
-#: src/components/live/EditLiveDialog.tsx:216
-#: src/components/live/EditLiveDialog.tsx:223
+#: src/components/live/EditLiveDialog.tsx:202
+#: src/components/live/EditLiveDialog.tsx:209
 #: src/components/StarterPack/QrCodeDialog.tsx:204
 #: src/screens/Profile/Header/EditProfileDialog.tsx:236
 #: src/screens/Profile/Header/EditProfileDialog.tsx:250
@@ -8073,7 +8164,7 @@ msgstr "Lorg"
 msgid "Search @{0}'s posts"
 msgstr "Dèan lorg sna puist aig {0}"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:657
+#: src/components/ProgressGuide/FollowDialog.tsx:662
 msgid "Search by name or interest"
 msgstr "Lorg a-rèir ainm no ùidh"
 
@@ -8086,12 +8177,12 @@ msgid "Search feeds"
 msgstr "Lorg sna h-inbhirean"
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.
-#: src/components/ProgressGuide/FollowDialog.tsx:486
+#: src/components/ProgressGuide/FollowDialog.tsx:491
 msgid "Search for \"{interestsDisplayName}\""
 msgstr "Lorg “{interestsDisplayName}”"
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
-#: src/components/ProgressGuide/FollowDialog.tsx:479
+#: src/components/ProgressGuide/FollowDialog.tsx:484
 msgid "Search for \"{interestsDisplayName}\" (active)"
 msgstr "Lorg “{interestsDisplayName}” (gnìomhach)"
 
@@ -8107,11 +8198,11 @@ msgstr "Lorg “{searchText}”"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Lorg inbhirean a bu toil leat moladh do dhaoine eile."
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:362
 msgid "Search for more accounts"
 msgstr "Lorg barrachd chunntasan"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:439
 msgid "Search for more feeds"
 msgstr "Lorg barrachd inbhirean"
 
@@ -8123,7 +8214,7 @@ msgstr "Lorg puist, cleachdaichean no inbhirean"
 msgid "Search GIFs"
 msgstr "Lorg GIFs"
 
-#: src/screens/Hashtag.tsx:223
+#: src/screens/Hashtag.tsx:236
 #: src/screens/Search/SearchResults.tsx:292
 msgid "Search is currently unavailable when logged out"
 msgstr "Chan urrainn dhut lorg a dhèanamh ’s tu gun chlàradh a-steach aig an àm seo"
@@ -8137,13 +8228,13 @@ msgstr "Lorg cànain"
 msgid "Search my posts"
 msgstr "Lorg sna puist agam"
 
-#: src/view/com/profile/ProfileMenu.tsx:271
-#: src/view/com/profile/ProfileMenu.tsx:274
+#: src/view/com/profile/ProfileMenu.tsx:289
+#: src/view/com/profile/ProfileMenu.tsx:292
 msgid "Search posts"
 msgstr "Lorg sna puist"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:534
-#: src/components/ProgressGuide/FollowDialog.tsx:676
+#: src/components/ProgressGuide/FollowDialog.tsx:681
 msgid "Search profiles"
 msgstr "Lorg sna pròifilean"
 
@@ -8156,7 +8247,7 @@ msgid "Search..."
 msgstr "Lorg..."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:535
-#: src/components/ProgressGuide/FollowDialog.tsx:677
+#: src/components/ProgressGuide/FollowDialog.tsx:682
 msgid "Searches for profiles"
 msgstr "Luirg airson pròifilean"
 
@@ -8164,19 +8255,27 @@ msgstr "Luirg airson pròifilean"
 msgid "Security step required"
 msgstr "Tha feum air ceum tèarainteachd"
 
-#: src/components/RichTextTag.tsx:112
+#: src/components/RichTextTag.tsx:113
+msgid "See {0} posts"
+msgstr ""
+
+#: src/components/RichTextTag.tsx:130
+msgid "See {0} posts by user"
+msgstr ""
+
+#: src/components/RichTextTag.tsx:121
 msgid "See {tag} posts"
 msgstr "Seall puist ris a bheil taga {tag}"
 
-#: src/components/RichTextTag.tsx:125
+#: src/components/RichTextTag.tsx:139
 msgid "See {tag} posts by user"
 msgstr "Seall puist ris a bheil taga {tag} leis a’ chleachdaiche"
 
-#: src/components/RichTextTag.tsx:119
+#: src/components/RichTextTag.tsx:123
 msgid "See #{tag} posts"
 msgstr "Seall puist ris a bheil taga #{tag}"
 
-#: src/components/RichTextTag.tsx:133
+#: src/components/RichTextTag.tsx:141
 msgid "See #{tag} posts by user"
 msgstr "Seall puist ris a bheil taga #{tag} leis a’ chleachdaiche"
 
@@ -8224,7 +8323,7 @@ msgstr "Tagh {langName}"
 msgid "Select a color"
 msgstr "Tagh dath"
 
-#: src/components/moderation/ReportDialog/index.tsx:358
+#: src/components/moderation/ReportDialog/index.tsx:372
 msgid "Select a reason"
 msgstr "Tagh adhbhar"
 
@@ -8256,7 +8355,7 @@ msgstr "Tagh cànan dhan aplacaid"
 msgid "Select content languages"
 msgstr "Tagh cànain na susbainte"
 
-#: src/components/live/GoLiveDialog.tsx:176
+#: src/components/live/GoLiveDialog.tsx:175
 msgid "Select duration"
 msgstr "Tagh dè cho fada"
 
@@ -8299,7 +8398,7 @@ msgstr "Tagh cànan…"
 msgid "Select languages"
 msgstr "Tagh cànain"
 
-#: src/components/moderation/ReportDialog/index.tsx:408
+#: src/components/moderation/ReportDialog/index.tsx:422
 msgid "Select moderation service"
 msgstr "Tagh seirbheis modarataireachd"
 
@@ -8340,7 +8439,7 @@ msgstr "Tagh cànan airson eadar-aghaidh na h-aplacaid."
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "Tagh na cànain a bu toil leat sna h-inbhirean aig an dèan thu fo-sgrìobhadh. Mur an tagh thu gin, chì thu cànan sam bith."
 
-#: src/screens/Signup/StepInfo/index.tsx:273
+#: src/screens/Signup/StepInfo/index.tsx:302
 msgid "Select your date of birth"
 msgstr "Tagh latha do bhreith"
 
@@ -8403,7 +8502,7 @@ msgstr "Cuir am post gu {name}"
 msgid "Send post to..."
 msgstr "Cuir am post gu…"
 
-#: src/components/moderation/ReportDialog/index.tsx:799
+#: src/components/moderation/ReportDialog/index.tsx:813
 msgid "Send report to {title}"
 msgstr "Cuir an aithris gu {title}"
 
@@ -8456,7 +8555,7 @@ msgstr "Suidhich an cunntas agad"
 msgid "Set who can reply to your post"
 msgstr "Suidhich cò aig am bi cead am post agad a fhreagairt"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:211
+#: src/ageAssurance/components/NoAccessScreen.tsx:220
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr "Suidhich latha do bhreith gu h-ìosal agus chan fhada gus am bi cead agad stuth a phostadh is a rùrachadh a-rithist!"
 
@@ -8529,7 +8628,7 @@ msgid "Sexually Suggestive"
 msgstr "Leth-fheiseil"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:192
-#: src/screens/Hashtag.tsx:133
+#: src/screens/Hashtag.tsx:142
 #: src/screens/StarterPack/StarterPackScreen.tsx:433
 #: src/screens/Topic.tsx:103
 msgid "Share"
@@ -8548,7 +8647,7 @@ msgstr "Co-roinn sgeul smodaig!"
 msgid "Share a fun fact!"
 msgstr "Co-roinn fiosrachadh spòrsail!"
 
-#: src/view/com/profile/ProfileMenu.tsx:507
+#: src/view/com/profile/ProfileMenu.tsx:560
 msgid "Share anyway"
 msgstr "Co-roinn e co-dhiù"
 
@@ -8596,8 +8695,8 @@ msgstr "Co-roinn a’ phacaid tòiseachaidh seo agus cuidich daoine nad choimhea
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:171
 #: src/screens/StarterPack/StarterPackScreen.tsx:613
 #: src/screens/StarterPack/StarterPackScreen.tsx:621
-#: src/view/com/profile/ProfileMenu.tsx:251
-#: src/view/com/profile/ProfileMenu.tsx:264
+#: src/view/com/profile/ProfileMenu.tsx:269
+#: src/view/com/profile/ProfileMenu.tsx:282
 msgid "Share via..."
 msgstr "Co-roinn air…"
 
@@ -8644,8 +8743,8 @@ msgstr "Seall a’ bhaidse is criathraich às na h-inbhirean e"
 msgid "Show customization options"
 msgstr "Seall na roghainnean gnàthachaidh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:515
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:517
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:541
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:543
 msgid "Show less like this"
 msgstr "Seall nas lugha mar seo"
 
@@ -8657,12 +8756,17 @@ msgstr "Seall an liosta co-dhiù"
 msgid "Show lists of users to select from"
 msgstr "Seall liostaichean luchd-cleachdaidh airson taghadh a dhèanamh"
 
+#: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:27
+#: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:37
+msgid "Show live events in your Discover Feed"
+msgstr ""
+
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
 msgstr "Seall barrachd"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:507
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:509
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:533
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:535
 msgid "Show more like this"
 msgstr "Seall barrachd mar seo"
 
@@ -8688,8 +8792,8 @@ msgstr "Seall na freagairtean"
 msgid "Show replies as"
 msgstr "Seall na freagairtean mar"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:604
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
 msgid "Show reply for everyone"
 msgstr "Seall an fhreagairt dhan a h-uile duine"
 
@@ -8711,7 +8815,12 @@ msgstr "Seall rabhadh"
 msgid "Show warning and filter from feeds"
 msgstr "Seall rabhadh is criathraich às na h-inbhirean e"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:629
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:60
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:170
+msgid "Show when you’re live"
+msgstr ""
+
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:641
 msgid "Shows information about when this post was created"
 msgstr "Innsidh seo cuin a chaidh am post seo a chruthachadh"
 
@@ -8728,7 +8837,7 @@ msgstr "Seallaidh seo an t-susbaint"
 #: src/components/dialogs/Signin.tsx:99
 #: src/components/WelcomeModal.tsx:194
 #: src/components/WelcomeModal.tsx:206
-#: src/screens/Hashtag.tsx:227
+#: src/screens/Hashtag.tsx:240
 #: src/screens/Login/index.tsx:136
 #: src/screens/Login/index.tsx:157
 #: src/screens/Login/LoginForm.tsx:181
@@ -8771,8 +8880,8 @@ msgstr "Clàraich a-steach gu cunntas nach eil air an liosta"
 msgid "Sign in to Bluesky or create a new account"
 msgstr "Clàraich a-steach gu Bluesky no cruthaich cunntas ùr"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:493
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:495
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:519
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:521
 msgid "Sign in to view post"
 msgstr "Clàraich a-steach airson am post seo fhaicinn"
 
@@ -8858,7 +8967,7 @@ msgstr "Luchd-leasachaidh a’ bhathair-bhuig"
 msgid "Some of your verifications are invalid."
 msgstr "Tha cuid dhen dearbhadh a rinn thu mì-dhligheach."
 
-#: src/components/FeedInterstitials.tsx:870
+#: src/components/FeedInterstitials.tsx:871
 msgid "Some other feeds you might like"
 msgstr "Inbhir eile a chòrdas riut ma dh’fhaoidte"
 
@@ -8874,7 +8983,7 @@ msgstr "Chuir cuideigin {0} mar fhrith-fhreagairt"
 msgid "Someone reacted {0} to {1}"
 msgstr "Chuir cuideigin {0} mar fhrith-fhreagairt dha {1}"
 
-#: src/components/moderation/ReportDialog/index.tsx:83
+#: src/components/moderation/ReportDialog/index.tsx:95
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Bha rudeigin ann nach robh buileach ceart leis an dàta a bha thu airson aithris a dhèanamh air. Cuir fios gu sgioba na taice."
 
@@ -8883,7 +8992,7 @@ msgid "Something went wrong"
 msgstr "Chaidh rudeigin ceàrr"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:138
-#: src/components/moderation/ReportDialog/index.tsx:265
+#: src/components/moderation/ReportDialog/index.tsx:279
 #: src/screens/Deactivated.tsx:85
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 #: src/view/screens/Storybook/Admonitions.tsx:55
@@ -8903,7 +9012,7 @@ msgstr "Chaidh rudeigin ceàrr!"
 msgid "Something went wrong. Please try again in a moment."
 msgstr "Chaidh rudeigin ceàrr. Feuch ris a-rithist ann am mionaid."
 
-#: src/components/moderation/ReportDialog/index.tsx:219
+#: src/components/moderation/ReportDialog/index.tsx:233
 msgid "Something went wrong. Please try again."
 msgstr "Chaidh rudeigin ceàrr. Feuch ris a-rithist."
 
@@ -8915,8 +9024,8 @@ msgstr "Mearachd air choireigin? Innis dhuinn."
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "Tha sinn duilich ach cha b’ urrainn dhuinn na cunntasan a mholamaid a luchdadh aig an ìre-sa."
 
-#: src/App.native.tsx:126
-#: src/App.web.tsx:99
+#: src/App.native.tsx:131
+#: src/App.web.tsx:104
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Tha sinn duilich! Dh’fhalbh an ùine air an t-seisean agad. Clàraich a-steach a-rithist."
 
@@ -8995,7 +9104,7 @@ msgstr "Pacaid tòiseachaidh leat fhèin"
 msgid "Starter pack is invalid"
 msgstr "Tha a’ phacaid tòiseachaidh seo mì-dhligheach"
 
-#: src/screens/Search/Explore.tsx:625
+#: src/screens/Search/Explore.tsx:630
 #: src/view/screens/Profile.tsx:240
 msgid "Starter Packs"
 msgstr "Pacaidean tòiseachaidh"
@@ -9031,8 +9140,14 @@ msgstr "Ga chumail mar phàirt de chòd tèarainte airson maidseadh le daoine ei
 msgid "Storybook"
 msgstr "Leabhar-sgeulachd"
 
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:181
+msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
+msgstr ""
+
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123
+#: src/components/live/GoLiveDisabledDialog.tsx:138
+#: src/components/live/GoLiveDisabledDialog.tsx:139
 #: src/components/moderation/LabelsOnMeDialog.tsx:342
 #: src/components/moderation/LabelsOnMeDialog.tsx:343
 #: src/screens/Messages/components/ChatDisabled.tsx:154
@@ -9048,9 +9163,9 @@ msgstr "Cuir an t-ath-thagradh"
 msgid "Submit Appeal"
 msgstr "Cuir an t-ath-thagradh"
 
-#: src/components/moderation/ReportDialog/index.tsx:486
-#: src/components/moderation/ReportDialog/index.tsx:547
-#: src/components/moderation/ReportDialog/index.tsx:554
+#: src/components/moderation/ReportDialog/index.tsx:500
+#: src/components/moderation/ReportDialog/index.tsx:561
+#: src/components/moderation/ReportDialog/index.tsx:568
 msgid "Submit report"
 msgstr "Cuir an aithris thugainn"
 
@@ -9092,7 +9207,7 @@ msgstr "Soirbheas!"
 msgid "Successfully verified"
 msgstr "Chaidh a dhearbhadh"
 
-#: src/screens/Search/Explore.tsx:354
+#: src/screens/Search/Explore.tsx:359
 msgid "Suggested Accounts"
 msgstr "Cunntasan a mholamaid"
 
@@ -9177,6 +9292,10 @@ msgstr "Thoir gnogag airson fiosrachadh"
 msgid "Tap for more information"
 msgstr "Thoir gnogag airson barrachd fiosrachaidh"
 
+#: src/screens/Signup/StepInfo/index.tsx:336
+msgid "Tap here to confirm your location with GPS."
+msgstr ""
+
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:164
 msgid "Tap to acknowledge that you understand and agree to these updates and continue using Bluesky"
 msgstr "Thoir gnogag airson innse gu bheil thu a’ tuigsinn na tha ùr agus ag aontachadh ris airson cumail a’ dol le Bluesky"
@@ -9203,7 +9322,7 @@ msgstr "Rinn thu a’ chùis air, tha thu a’ leantainn deichnear!"
 msgid "Task complete - 10 likes!"
 msgstr "Rinn thu a’ chùis air, dh’innis thu gur toil leat 10 rudan!"
 
-#: src/components/ProgressGuide/List.tsx:64
+#: src/components/ProgressGuide/List.tsx:97
 msgid "Teach our algorithm what you like"
 msgstr "Teagaisg dhan algairim againn dè na rudan as toil leat"
 
@@ -9223,8 +9342,8 @@ msgstr "Innis dhuinn beagan mu do dhèidhinn"
 msgid "Tell us a little more"
 msgstr "Innis dhuinn beagan a bharrachd"
 
-#: src/view/shell/desktop/RightNav.tsx:119
-#: src/view/shell/desktop/RightNav.tsx:120
+#: src/view/shell/desktop/RightNav.tsx:123
+#: src/view/shell/desktop/RightNav.tsx:124
 msgid "Terms"
 msgstr "Na teirmichean"
 
@@ -9244,6 +9363,7 @@ msgstr "Teirmichean na seirbheise"
 msgid "Text & tags"
 msgstr "Teacsa ⁊ tagaichean"
 
+#: src/components/live/GoLiveDisabledDialog.tsx:121
 #: src/components/moderation/LabelsOnMeDialog.tsx:306
 #: src/screens/Messages/components/ChatDisabled.tsx:120
 msgid "Text input field"
@@ -9257,8 +9377,8 @@ msgstr "Mòran taing airson seo a chur thugainn! Shìn sinn air adhart chun an n
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Tapadh leat, dhearbh thu an seòladh puist-d agad. ’S urrainn dhut an còmhradh seo a dhùnadh."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:385
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:113
+#: src/ageAssurance/components/NoAccessScreen.tsx:394
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:121
 msgid "Thanks! You're all set."
 msgstr "Mòran taing! Sin agad e."
 
@@ -9289,7 +9409,7 @@ msgstr "Sin e!"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:391
-#: src/view/com/profile/ProfileMenu.tsx:483
+#: src/view/com/profile/ProfileMenu.tsx:536
 msgid "The account will be able to interact with you after unblocking."
 msgstr "’S urrainn dhan chunntas seo eadar-ghabhail a dhèanamh leat a-rithist an dèidh dhut a dhì-bhacadh."
 
@@ -9342,6 +9462,10 @@ msgstr "Chaidh na leubailean a leanas a chur ris a’ chunntas agad."
 #: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to your content."
 msgstr "Chaidh na leubailean a leanas a chur ris an t-susbaint agad."
+
+#: src/components/live/GoLiveDialog.tsx:157
+msgid "The following services are enabled for your account: {allowedServices}"
+msgstr ""
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
@@ -9431,7 +9555,7 @@ msgstr "Cha b’ urrainn dhuinn conaltradh leis an fhrithealaiche, thoir sùil a
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Cha b’ urrainn dhuinn na brathan fhaighinn dhut. Thoir gnogag airson feuchainn ris a-rithist."
 
-#: src/screens/Search/Explore.tsx:992
+#: src/screens/Search/Explore.tsx:999
 #: src/view/com/posts/PostFeed.tsx:759
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Cha b’ urrainn dhuinn na puist fhaighinn dhut. Thoir gnogag airson feuchainn ris a-rithist."
@@ -9463,21 +9587,21 @@ msgstr "Cha b’ urrainn dhuinn an t-inbhir seo a thoirt air falbh. Thoir sùil 
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
 msgstr "Cha b’ urrainn dhuinn na h-inbhirean agad ùrachadh, thoir sùil air a’ cheangal ris an eadar-lìon is feuch ris a-rithist."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:397
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:410
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:420
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:90
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:101
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:423
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:436
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:104
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:115
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:88
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:253
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:294
-#: src/view/com/profile/ProfileMenu.tsx:136
-#: src/view/com/profile/ProfileMenu.tsx:146
-#: src/view/com/profile/ProfileMenu.tsx:160
-#: src/view/com/profile/ProfileMenu.tsx:170
-#: src/view/com/profile/ProfileMenu.tsx:183
-#: src/view/com/profile/ProfileMenu.tsx:195
+#: src/view/com/profile/ProfileMenu.tsx:151
+#: src/view/com/profile/ProfileMenu.tsx:161
+#: src/view/com/profile/ProfileMenu.tsx:175
+#: src/view/com/profile/ProfileMenu.tsx:185
+#: src/view/com/profile/ProfileMenu.tsx:198
+#: src/view/com/profile/ProfileMenu.tsx:210
 msgid "There was an issue! {0}"
 msgstr "Bha duilgheadas ann! {0}"
 
@@ -9540,6 +9664,7 @@ msgstr "’S urrainn dhut seo a neo-dhèanamh uair sam bith."
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr "Thèid an t-ath-thagradh seo a chur gu <0>{sourceName}</0>."
 
+#: src/components/live/GoLiveDisabledDialog.tsx:113
 #: src/screens/Messages/components/ChatDisabled.tsx:116
 msgid "This appeal will be sent to Bluesky's moderation service."
 msgstr "Thèid an t-ath-thagradh seo a chur gu seirbheis modarataireachd Bhluesky."
@@ -9636,8 +9761,8 @@ msgstr "Tha am fiosrachadh seo prìobhaideach is chan fhaic luchd-cleachdaidh ei
 msgid "This is an empty state"
 msgstr "Seo staid bhàn"
 
-#: src/components/live/EditLiveDialog.tsx:189
-#: src/components/live/GoLiveDialog.tsx:157
+#: src/components/live/EditLiveDialog.tsx:176
+#: src/components/live/GoLiveDialog.tsx:150
 msgid "This is not a valid link"
 msgstr "Chan e ceangal dligheach a tha seo"
 
@@ -9673,7 +9798,7 @@ msgstr "Tha an liosta seo falamh."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Chan eil an t-seirbheis modarataireachd seo ri làimh. Chì thu barrachd fiosrachaidh mu dhèidhinn gu h-ìosal. Ma mhaireas an duilgheadas seo, cuir fios thugainn."
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:669
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:681
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Tha am post seo a’ cumail a-mach gun deach a chruthachadh <0>{0}</0> ach chunnacas e air Bluesky <1>{1}</1> an toiseach."
 
@@ -9689,7 +9814,7 @@ msgstr "Chan fhaic ach luchd-cleachdaidh a tha clàraichte a-staigh seo."
 msgid "This post was deleted by its author"
 msgstr "Sguab ùghdar a’ phuist seo às e"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:744
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:770
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Bidh am post seo am falach o inbhirean is snàithleanan. Cha ghabh seo neo-dhèanamh."
 
@@ -9697,17 +9822,21 @@ msgstr "Bidh am post seo am falach o inbhirean is snàithleanan. Cha ghabh seo n
 msgid "This post's author has disabled quote posts."
 msgstr "Chuir ùghdar a’ phuist seo à comas luaidhean air a’ phost."
 
-#: src/view/com/profile/ProfileMenu.tsx:504
+#: src/view/com/profile/ProfileMenu.tsx:557
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Chan fhaic ach luchd-cleachdaidh clàraichte a-staigh a’ phròifil seo. Chan fhaic daoine nach eil clàraichte a-staigh e."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:779
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:805
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "Thèid an fhreagairt seo a chur ann an earrann fhalaichte aig bonn an t-snàithlein agad is mùchaidh e brathan mu fhreagairtean na dhèidh – an dà chuid dhut-sa is do dhaoine eile."
 
-#: src/screens/Signup/StepInfo/Policies.tsx:35
+#: src/screens/Signup/StepInfo/Policies.tsx:31
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Cha tug an t-seirbheis seo seachad teirmichean seirbheise no poileasaidh prìobhaideachd."
+
+#: src/components/live/queries.ts:38
+msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "This should create a domain record at:"
@@ -9762,7 +9891,7 @@ msgstr "Sguabaidh seo “{0}” às na faclan mùchte agad. ’S urrainn dhut a 
 msgid "This will remove @{0} from the quick access list."
 msgstr "Bheir seo air falbh @{0} o liosta a’ ghrad-inntrigidh."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:769
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:795
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Bheir seo air falbh am post agad on luaidh seo air post mu choinneamh an luchd-chleachdaidh air fad agus cuiridh e glèidheadair-àite na àite."
 
@@ -9771,8 +9900,8 @@ msgstr "Bheir seo air falbh am post agad on luaidh seo air post mu choinneamh an
 msgid "Thread options"
 msgstr "Roghainnean an t-snàithlein"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
-#: src/screens/Settings/ContentAndMediaSettings.tsx:71
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:72
 msgid "Thread preferences"
 msgstr "Roghainnean an t-snàithlein"
 
@@ -9806,7 +9935,7 @@ msgstr "Airson 2FA air a’ phost-d a chur à comas, dearbh gu bheil cead-inntri
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "Airson 2FA air a’ phost-d a chur à comas, dearbh gu bheil cead-inntrigidh agad gu <0>{0}</0>"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:233
+#: src/ageAssurance/components/NoAccessScreen.tsx:242
 msgid "To log out, <0>click here</0>."
 msgstr "Airson clàradh a-mach, <0>briog an-seo</0>."
 
@@ -9838,7 +9967,7 @@ msgstr "Chaidh cus chòdaichean a chur. Fuirich mionaid no dhà mus fheuch thu r
 msgid "Too many contacts - you've exceeded the number of contacts you can import to find your friends"
 msgstr "Chan urrainn dhut uiread a neach-aithne ion-phortadh airson caraidean a lorg"
 
-#: src/screens/Hashtag.tsx:91
+#: src/screens/Hashtag.tsx:100
 #: src/screens/Search/SearchResults.tsx:52
 #: src/screens/Topic.tsx:72
 msgid "Top"
@@ -9857,10 +9986,10 @@ msgstr "Cuspair"
 
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/dms/MessageContextMenu.tsx:141
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:476
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:478
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:591
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:594
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:502
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:504
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:603
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:606
 msgid "Translate"
 msgstr "Eadar-theangaich"
 
@@ -9869,9 +9998,13 @@ msgstr "Eadar-theangaich"
 msgid "Tree view"
 msgstr "Seall mar chraobh"
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:48
 msgid "Trending"
 msgstr "Air bilean an t-sluaigh"
+
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:55
+msgid "Trending options"
+msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:86
 msgid "Trending Videos"
@@ -9945,7 +10078,7 @@ msgstr "Neo-dhèan an t-iarrtas pull"
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Neo-dhèan an t-iarrtas pull {currentChannel}"
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:40
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:41
 msgid "Unavailable"
 msgstr "Chan eil seo ri làimh"
 
@@ -9962,7 +10095,7 @@ msgstr "Chan eil fiosrachadh mun inbhir ri fhaighinn"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:394
 #: src/screens/ProfileList/components/Header.tsx:171
 #: src/screens/ProfileList/components/Header.tsx:178
-#: src/view/com/profile/ProfileMenu.tsx:495
+#: src/view/com/profile/ProfileMenu.tsx:548
 msgid "Unblock"
 msgstr "Dì-bhac"
 
@@ -9973,14 +10106,14 @@ msgstr "Dì-bhac"
 
 #: src/components/dms/ConvoMenu.tsx:261
 #: src/components/dms/ConvoMenu.tsx:264
-#: src/view/com/profile/ProfileMenu.tsx:400
-#: src/view/com/profile/ProfileMenu.tsx:406
+#: src/view/com/profile/ProfileMenu.tsx:453
+#: src/view/com/profile/ProfileMenu.tsx:459
 msgid "Unblock account"
 msgstr "Dì-bhac an cunntas"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:389
-#: src/view/com/profile/ProfileMenu.tsx:477
+#: src/view/com/profile/ProfileMenu.tsx:530
 msgid "Unblock Account?"
 msgstr "A bheil thu airson an cunntas a dhì-bhacadh?"
 
@@ -9989,8 +10122,13 @@ msgstr "A bheil thu airson an cunntas a dhì-bhacadh?"
 msgid "Unblock list"
 msgstr "Dì-bhac an liosta"
 
-#: src/components/PostControls/BookmarkButton.tsx:40
+#: src/components/PostControls/BookmarkButton.tsx:42
 msgctxt "Button label to undo saving/removing a post from saved posts."
+msgid "Undo"
+msgstr "Neo-dhèan"
+
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
 msgid "Undo"
 msgstr "Neo-dhèan"
 
@@ -10008,8 +10146,8 @@ msgstr "Neo-dhèan an t-ath-phostadh ({0, plural, one {air ath-phostadh # turas}
 msgid "Unfollow {0}"
 msgstr "Na lean ri {0} tuilleadh"
 
-#: src/view/com/profile/ProfileMenu.tsx:291
-#: src/view/com/profile/ProfileMenu.tsx:301
+#: src/view/com/profile/ProfileMenu.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:319
 msgid "Unfollow account"
 msgstr "Na lean an cunntas tuilleadh"
 
@@ -10017,13 +10155,17 @@ msgstr "Na lean an cunntas tuilleadh"
 msgid "Unfollows the user"
 msgstr "Ma nì thu seo, cha lean thu ris a’ chleachdaiche tuilleadh"
 
-#: src/components/moderation/ReportDialog/index.tsx:470
+#: src/components/moderation/ReportDialog/index.tsx:484
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "Gu mì-fhortanach, chan eil taic do dh’aithrisean dhen t-seòrsa seo aig gin dhe na leubailichean a tha fo-sgrìobhadh agad aca."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:188
+#: src/ageAssurance/components/NoAccessScreen.tsx:197
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr "Gu mì-fhortanach, a rèir latha do bhreith a shàbhail thu sa chunntas agad, tha thu ro òg is chan urrainn dhut Bluesky a chleachdadh."
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:182
+msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
+msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:211
 msgid "Unknown verifier"
@@ -10042,7 +10184,7 @@ msgid "Unlike"
 msgstr "Cha toil tuilleadh"
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
-#: src/components/PostControls/index.tsx:260
+#: src/components/PostControls/index.tsx:276
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Cha toil tuilleadh ({0, plural, one {’s toil le # seo} two {’s toil le # seo} few {’s toil le # seo} other {’s toil le # seo}})"
 
@@ -10057,15 +10199,15 @@ msgstr "Neo-mhùch"
 msgid "Unmute"
 msgstr "Neo-mhùch"
 
-#: src/components/RichTextTag.tsx:141
-#: src/components/RichTextTag.tsx:154
+#: src/components/RichTextTag.tsx:150
+#: src/components/RichTextTag.tsx:163
 msgid "Unmute {tag}"
 msgstr "Neo-mhùch {tag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:659
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:665
-#: src/view/com/profile/ProfileMenu.tsx:379
-#: src/view/com/profile/ProfileMenu.tsx:385
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:685
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:691
+#: src/view/com/profile/ProfileMenu.tsx:432
+#: src/view/com/profile/ProfileMenu.tsx:438
 msgid "Unmute account"
 msgstr "Neo-mhùch an cunntas"
 
@@ -10078,8 +10220,8 @@ msgstr "Neo-mhùch an còmhradh"
 msgid "Unmute list"
 msgstr "Neo-mhùch an liosta"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:544
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:570
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:574
 msgid "Unmute thread"
 msgstr "Neo-mhùch an snàithlean"
 
@@ -10098,7 +10240,7 @@ msgstr "Dì-phrìnich"
 msgid "Unpin feed"
 msgstr "Dì-phrìnich an t-inbhir"
 
-#: src/components/FeedCard.tsx:320
+#: src/components/FeedCard.tsx:352
 msgid "Unpin Feed"
 msgstr "Dì-phrìnich an t-inbhir"
 
@@ -10107,8 +10249,8 @@ msgstr "Dì-phrìnich an t-inbhir"
 msgid "Unpin from home"
 msgstr "Dì-phrìnich on dachaigh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:451
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:458
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:477
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:484
 msgid "Unpin from profile"
 msgstr "Dì-phrìnich on phròifil"
 
@@ -10180,12 +10322,12 @@ msgstr "Ùraich air {domain}"
 msgid "Update your email"
 msgstr "Ùraich am post-d agad"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:318
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:344
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr "Cha b’ urrainn dhuinn ceangladh na luaidh ùrachadh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:370
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:396
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "Cha b’ urrainn dhuinn faicsinneachd na freagairt ùrachadh"
@@ -10247,8 +10389,8 @@ msgstr "Cleachd an solaraiche bunaiteach"
 msgid "Use in-app browser"
 msgstr "Cleachd am brabhsair am broinn na h-aplacaid"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:102
-#: src/screens/Settings/ContentAndMediaSettings.tsx:108
+#: src/screens/Settings/ContentAndMediaSettings.tsx:103
+#: src/screens/Settings/ContentAndMediaSettings.tsx:109
 msgid "Use in-app browser to open links"
 msgstr "Cleachd am brabhsair am broinn na h-aplacaid airson ceanglaichean fhosgladh"
 
@@ -10373,13 +10515,13 @@ msgstr "Air a dhearbhadh le:"
 
 #: src/components/verification/VerificationCreatePrompt.tsx:84
 #: src/components/verification/VerificationCreatePrompt.tsx:86
-#: src/view/com/profile/ProfileMenu.tsx:363
-#: src/view/com/profile/ProfileMenu.tsx:366
+#: src/view/com/profile/ProfileMenu.tsx:416
+#: src/view/com/profile/ProfileMenu.tsx:419
 msgid "Verify account"
 msgstr "Dearbh an cunntas seo"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:322
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:168
+#: src/ageAssurance/components/NoAccessScreen.tsx:331
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:176
 msgid "Verify again"
 msgstr "Dearbh as ùr"
 
@@ -10405,10 +10547,10 @@ msgstr "Dearbh còd a’ phuist-d"
 msgid "Verify email dialog"
 msgstr "Còmhradh dearbhadh a’ phuist-d"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:310
-#: src/ageAssurance/components/NoAccessScreen.tsx:324
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:156
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
+#: src/ageAssurance/components/NoAccessScreen.tsx:319
+#: src/ageAssurance/components/NoAccessScreen.tsx:333
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:164
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:178
 msgid "Verify now"
 msgstr "Dearbh an-dràsta"
 
@@ -10530,7 +10672,7 @@ msgstr "Seall a’ phròifil aig {0}"
 msgid "View {displayName}'s profile"
 msgstr "Seall a’ phròifil aig {displayName}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:480
+#: src/components/ProfileHoverCard/index.web.tsx:481
 msgid "View blocked user's profile"
 msgstr "Seall pròifil a’ chleachdaiche bhacte"
 
@@ -10570,9 +10712,9 @@ msgstr "Seall barrachd videothan a tha a’ treandadh"
 msgid "View post"
 msgstr "Seall am post"
 
-#: src/components/ProfileHoverCard/index.web.tsx:466
-#: src/components/ProfileHoverCard/index.web.tsx:486
-#: src/components/ProfileHoverCard/index.web.tsx:513
+#: src/components/ProfileHoverCard/index.web.tsx:467
+#: src/components/ProfileHoverCard/index.web.tsx:487
+#: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/view/com/posts/PostFeedErrorMessage.tsx:182
 #: src/view/com/util/PostMeta.tsx:90
 #: src/view/com/util/PostMeta.tsx:127
@@ -10624,8 +10766,8 @@ msgstr "Seall na cunntasan a mhùch thu"
 msgid "View your verifications"
 msgstr "Seall an dearbhadh a rinn thu"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:205
-#: src/view/com/util/images/AutoSizedImage.tsx:232
+#: src/components/images/AutoSizedImage.tsx:206
+#: src/components/images/AutoSizedImage.tsx:233
 msgid "Views full image"
 msgstr "Seallaidh seo an dealbh slàn"
 
@@ -10668,8 +10810,8 @@ msgstr "Rabhadh ron t-susbaint"
 msgid "Warn content and filter from feeds"
 msgstr "Thoir rabhadh ron t-susbaint is criathraich às na h-inbhirean e"
 
-#: src/components/live/LiveStatusDialog.tsx:156
-#: src/components/live/LiveStatusDialog.tsx:169
+#: src/components/live/LiveStatusDialog.tsx:172
+#: src/components/live/LiveStatusDialog.tsx:185
 msgid "Watch now"
 msgstr "Coimhead an-dràsta"
 
@@ -10685,9 +10827,9 @@ msgstr "Cha b’ urrainn dhuinn do cheangal ris an t-seirbheis a sholaireas an t
 msgid "We could not find this list. It was probably deleted."
 msgstr "Cha d’fhuair sinn lorg air an liosta seo. Dh’fhaoidte gun deach a sguabadh às."
 
-#: src/screens/Hashtag.tsx:258
-msgid "We couldn't find any results for that hashtag."
-msgstr "Cha d’fhuair sinn lorg air toradh sam bith aig a bheil an taga-hais sin."
+#: src/screens/Hashtag.tsx:271
+msgid "We couldn't find any results for that tag."
+msgstr ""
 
 #: src/screens/Topic.tsx:180
 msgid "We couldn't find any results for that topic."
@@ -10745,6 +10887,10 @@ msgstr "Chuir sinn post-d gu <0>{0}</0> sa bheil ceangal. Briog air a’ cheanga
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Cha b’ urrainn dhuinn dearbhadh a bheil cead agad videothan a luchdadh suas. Feuch ris a-rithist."
 
+#: src/components/ageAssurance/AgeAssuranceErrors.tsx:18
+msgid "We were unable to load the age assurance configuration for your region, probably due to a network error. Some content and features may be unavailable temporarily. Please try again later."
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:67
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr "Cha b’ urrainn dhuinn roghainnean latha do bhreith a luchdadh. Feuch ris a-rithist."
@@ -10792,7 +10938,7 @@ msgid "We're having issues initializing the age assurance process for your accou
 msgstr "Chan urrainn dhuinn tòiseachadh air d’ aois a dhearbhadh sa chunntas agad. Cuir fios gu <0>sgioba na taice</0>."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:107
-#: src/components/ProgressGuide/FollowDialog.tsx:184
+#: src/components/ProgressGuide/FollowDialog.tsx:189
 msgid "We're having network issues, try again"
 msgstr "Tha duilgheadasan aig an lìonra againn, feuch ris a-rithist"
 
@@ -10804,8 +10950,8 @@ msgstr "Tha sinn a’ toirt a-steach ìre eile de dhearbhadh air Bluesky – cro
 msgid "We're so excited to have you join us!"
 msgstr "Tha sinn cho toilichte gu bheil thu an-seo a-nis!"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:378
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:106
+#: src/ageAssurance/components/NoAccessScreen.tsx:387
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:114
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "Tha sinn duilich ach a rèir ionad an uidheim agad, tha thu am badeigin a tha a’ sparradh oirnn dearbhadh dè an aois a tha thu."
 
@@ -10875,7 +11021,7 @@ msgstr "Dè an t-ainm a chuireas sinn air a’ phacaid tòiseachaidh agad?"
 #: src/view/com/auth/SplashScreen.tsx:51
 #: src/view/com/auth/SplashScreen.web.tsx:103
 #: src/view/com/composer/Composer.tsx:857
-#: src/view/com/feeds/ComposerPrompt.tsx:191
+#: src/view/com/feeds/ComposerPrompt.tsx:189
 msgid "What's up?"
 msgstr "Dè do naidheachd?"
 
@@ -10915,27 +11061,31 @@ msgstr "Oich! Cha b’ urrainn dhuinn na videothan a tha a’ treandadh a luchda
 msgid "Why are you appealing?"
 msgstr "Carson a tha thu a’ togail ath-thagradh?"
 
-#: src/components/moderation/ReportDialog/copy.ts:46
+#: src/components/moderation/ReportDialog/copy.ts:52
 msgid "Why should this conversation be reviewed?"
 msgstr "Carson bu chòir dhuinn lèirmheas a dhèanamh air a’ chòmhradh seo?"
 
-#: src/components/moderation/ReportDialog/copy.ts:32
+#: src/components/moderation/ReportDialog/copy.ts:38
 msgid "Why should this feed be reviewed?"
 msgstr "Carson bu chòir dhuinn lèirmheas a dhèanamh air an inbhir seo?"
 
-#: src/components/moderation/ReportDialog/copy.ts:26
+#: src/components/moderation/ReportDialog/copy.ts:32
 msgid "Why should this list be reviewed?"
 msgstr "Carson bu chòir dhuinn lèirmheas a dhèanamh air an liosta seo?"
 
-#: src/components/moderation/ReportDialog/copy.ts:52
+#: src/components/moderation/ReportDialog/copy.ts:20
+msgid "Why should this livestream be reviewed?"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:58
 msgid "Why should this message be reviewed?"
 msgstr "Carson bu chòir dhuinn lèirmheas a dhèanamh air an teachdaireachd seo?"
 
-#: src/components/moderation/ReportDialog/copy.ts:20
+#: src/components/moderation/ReportDialog/copy.ts:26
 msgid "Why should this post be reviewed?"
 msgstr "Carson bu chòir dhuinn lèirmheas a dhèanamh air a’ phost seo?"
 
-#: src/components/moderation/ReportDialog/copy.ts:38
+#: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
 msgstr "Carson bu chòir dhuinn lèirmheas a dhèanamh air a’ phacaid tòiseachaidh seo?"
 
@@ -10974,8 +11124,8 @@ msgstr "Sgrìobhadairean"
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "Chaidh an DID ceàrr a thilleadh leis an fhrithealaiche. Na fhuaras: {0}"
 
-#: src/components/live/EditLiveDialog.tsx:153
-#: src/components/live/GoLiveDialog.tsx:126
+#: src/components/live/EditLiveDialog.tsx:152
+#: src/components/live/GoLiveDialog.tsx:131
 msgid "www.mylivestream.tv"
 msgstr "www.mylivestream.tv"
 
@@ -10992,11 +11142,11 @@ msgstr "Tha, cuiribh à gnìomh seo"
 msgid "Yes, delete this starter pack"
 msgstr "Tha, sguabaibh às a’ phacaid tòiseachaidh seo"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:772
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:798
 msgid "Yes, detach"
 msgstr "Tha, dealaichibh seo"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:782
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:808
 msgid "Yes, hide"
 msgstr "Tha, falaichibh seo"
 
@@ -11020,8 +11170,12 @@ msgstr "Tha thu airson Bluesky a chleachdadh ann an àite far a bheil an lagh a 
 msgid "You are creating an account on"
 msgstr "Tha thu a’ cruthachadh cunntas air"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:292
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:126
+#: src/components/live/GoLiveDisabledDialog.tsx:107
+msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
+msgstr ""
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:301
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:134
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "Chan eil cead-inntrigidh agad do shruth dearbhadh na h-aoise aig Bluesky. <0>Cuir fios gu sgioba na modarataireachd againn</0> mas e mearachd a tha seo nad bheachd."
 
@@ -11029,18 +11183,14 @@ msgstr "Chan eil cead-inntrigidh agad do shruth dearbhadh na h-aoise aig Bluesky
 msgid "You are in line."
 msgstr "Tha thu sa chiutha."
 
-#: src/components/live/EditLiveDialog.tsx:119
-#: src/components/live/EditLiveDialog.tsx:124
+#: src/components/live/EditLiveDialog.tsx:118
+#: src/components/live/EditLiveDialog.tsx:123
 msgid "You are Live"
 msgstr "Tha thu ri sruthadh beò"
 
-#: src/components/live/queries.ts:211
+#: src/components/live/queries.ts:212
 msgid "You are no longer live"
 msgstr "Chan eil thu ri sruthadh beò tuilleadh"
-
-#: src/components/live/queries.ts:35
-msgid "You are not allowed to go live"
-msgstr "Chan eil cead agad a dhol beò"
 
 #: src/view/com/composer/state/video.ts:411
 msgid "You are not allowed to upload videos."
@@ -11050,7 +11200,7 @@ msgstr "Chan eil cead agad videothan a luchdadh."
 msgid "You are not following anyone yet"
 msgstr "Chan eil thu a’ leantainn duine sam bith fhathast"
 
-#: src/components/live/queries.ts:156
+#: src/components/live/queries.ts:157
 msgid "You are now live!"
 msgstr "Tha thu ri sruthadh beò a-nis!"
 
@@ -11091,7 +11241,7 @@ msgstr "Tha e an urra riut fhèin an dèan brathan cabadaich fuaim ann an roghai
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr "’S urrainn dhut còmhradh beò a leigeil seachad, ge be dè an roghainn a thaghas tu."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:357
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:383
 msgctxt "toast"
 msgid "You can hide a maximum of {MAX_HIDDEN_REPLIES} replies."
 msgstr ""
@@ -11122,9 +11272,9 @@ msgstr "Cuir an cunntas agad an gnìomh as ùr airson clàradh a-steach. Chì da
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "’S urrainn dhut suas ri {MAX_IMAGES, plural, one {# dealbh} two {# dhealbh} few {# dealbhan}other {# dealbh}} a thaghadh uile gu lèir."
 
-#: src/components/interstitials/Trending.tsx:130
+#: src/components/interstitials/Trending.tsx:129
 #: src/components/interstitials/TrendingVideos.tsx:137
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:128
 msgid "You can update this later from your settings."
 msgstr "’S urrainn dhut seo ùrachadh sna roghainnean agad uair sam bith."
 
@@ -11275,9 +11425,13 @@ msgstr "Chan fhaod thu barrachd air {STARTER_PACK_MAX_SIZE, plural, one {{STARTE
 msgid "You may only add up to 3 feeds"
 msgstr "Chan fhaod thu barrachd air trì inbhirean a chur ris"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:104
-msgid "You must be 13 years of age or older to create an account."
-msgstr "Feumaidh tu a bhith co-dhiù 13 bliadhna mus urrainn dhut cunntas a chruthachadh."
+#: src/screens/Signup/StepInfo/index.tsx:322
+msgid "You must be {0} years of age or older to create an account in your region."
+msgstr ""
+
+#: src/screens/Signup/StepInfo/index.tsx:317
+msgid "You must be {MIN_ACCESS_AGE} years of age or older to create an account."
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:178
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
@@ -11287,7 +11441,7 @@ msgstr "Feumaidh tu a bhith co-dhiù 13 bliadhna a dh’aois mus urrainn dhut Bl
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "Feumaidh tu co-dhiù seachdnar a leantainn mus urrainn dhut pacaid tòiseachaidh a ghintinn."
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:53
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:60
 msgid "You must complete age assurance in order to access this screen."
 msgstr "Feumaidh tu d’ aois a dhearbhadh mus fhaigh thu cothrom air an sgrìn seo."
 
@@ -11333,11 +11487,11 @@ msgstr "Thèid do chlàradh a-mach às gach cunntas agad."
 msgid "You will no longer receive notifications for {0}"
 msgstr "Chan fhaigh thu brathan mun ghnìomhachd aig {0} tuilleadh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:217
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:231
 msgid "You will no longer receive notifications for this thread"
 msgstr "Chan fhaigh thu brathan mun t-snàithlean seo tuilleadh"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:213
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:221
 msgid "You will now receive notifications for this thread"
 msgstr "Gheibh thu brathan mun t-snàithlean seo a-nis"
 
@@ -11467,7 +11621,7 @@ msgstr "Chaidh co-dhùnadh gu bheil an cunntas agad a’ briseadh <0>teirmichean
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr "Chaidh an t-ath-thagradh agad a chur. Ma thèid leis an ath-thagradh agad, gheibh thu post-d."
 
-#: src/screens/Signup/StepInfo/index.tsx:260
+#: src/screens/Signup/StepInfo/index.tsx:289
 msgid "Your birth date"
 msgstr "Latha do bhreith"
 
@@ -11512,7 +11666,7 @@ msgstr "Am post-d agad"
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:81
 #: src/screens/Signup/state.ts:273
-#: src/screens/Signup/StepInfo/index.tsx:100
+#: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr "Tha coltas nach eil am post-d agad dligheach."
 
@@ -11538,8 +11692,8 @@ msgstr "’S e <0>@{0}</0> an làmhrachan slàn a bhios agad"
 
 #: src/Navigation.tsx:526
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
-#: src/screens/Settings/ContentAndMediaSettings.tsx:92
-#: src/screens/Settings/ContentAndMediaSettings.tsx:95
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:96
 #: src/screens/Settings/InterestsSettings.tsx:46
 msgid "Your interests"
 msgstr "Na rudan sa bheil ùidh agad"
@@ -11553,9 +11707,17 @@ msgstr "Chaidh na rudan sa bheil ùidh agad ùrachadh!"
 msgid "Your interests help us find what you like!"
 msgstr "Ma bhios fhios againn dè na rudan sa bheil ùidh agad, bidh e nas fhasa dhuinn stuth a shealltainn dhut a chòrdas riut!"
 
+#: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:68
+msgid "Your live event preferences have been updated."
+msgstr ""
+
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:123
 msgid "Your location data is not tracked and does not leave your device."
 msgstr "Cha tracaich sinn dàta an ionaid agad is chan fhàg e an t-uidheam agad uair sam bith."
+
+#: src/screens/Signup/StepInfo/index.tsx:367
+msgid "Your location has been updated."
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:374
 msgid "Your muted words"
@@ -11565,7 +11727,7 @@ msgstr "Na faclan a mhùch thu"
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
 msgstr "Chaidh am facal-faire agad atharrachadh! Cleachd am fear ùr o seo a-mach airson clàradh a-steach gu Bluesky."
 
-#: src/screens/Signup/StepInfo/index.tsx:129
+#: src/screens/Signup/StepInfo/index.tsx:158
 msgid "Your password must be at least 8 characters long."
 msgstr "Feumaidh co-dhiù 8 caractaran bhith san fhacal-faire agad."
 
@@ -11598,7 +11760,7 @@ msgstr "Chan fhaic luchd-cleachdaidh Bhluesky eile a’ phròifil, na puist, inb
 msgid "Your reply was sent"
 msgstr "Chaidh do fhreagairt a chur"
 
-#: src/components/moderation/ReportDialog/index.tsx:497
+#: src/components/moderation/ReportDialog/index.tsx:511
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "Thèid an aithris agad a chur gu <0>{0}</0>."
 
