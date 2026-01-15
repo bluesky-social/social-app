@@ -8,6 +8,10 @@ import * as Layout from '#/components/Layout'
 export const atoms = {
   ...baseAtoms,
 
+  rounded_sheet: {
+    borderRadius: 40,
+  },
+
   h_full_vh: web({
     height: '100vh',
   }),

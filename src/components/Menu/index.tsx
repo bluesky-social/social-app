@@ -272,7 +272,8 @@ export function ContainerItem({
         a.align_center,
         a.gap_sm,
         a.px_md,
-        a.rounded_md,
+        a.rounded_lg,
+        a.curve_continuous,
         a.border,
         t.atoms.bg_contrast_25,
         t.atoms.border_contrast_low,
@@ -310,7 +311,8 @@ export function Group({children, style}: GroupProps) {
   return (
     <View
       style={[
-        a.rounded_md,
+        a.rounded_lg,
+        a.curve_continuous,
         a.overflow_hidden,
         a.border,
         t.atoms.border_contrast_low,
