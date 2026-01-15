@@ -1,5 +1,5 @@
-import {type JSX, useCallback, useRef} from 'react'
-import {Linking} from 'react-native'
+import {type JSX, useCallback, useRef, useState} from 'react'
+import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
@@ -14,6 +14,7 @@ import {
   DefaultTheme,
   type LinkingOptions,
   NavigationContainer,
+  type NavigationState,
   StackActions,
 } from '@react-navigation/native'
 
@@ -139,6 +140,7 @@ import {
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
+import {device} from '#/storage'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -873,11 +875,6 @@ const LINKING = {
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
-/**
- * Used to ensure we don't handle the same notification twice
- */
-let lastHandledNotificationDateDedupe: number | undefined
-
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount, accounts} = useSession()
@@ -886,6 +883,41 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const prevLoggedRouteName = useRef<string | undefined>(undefined)
   const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const linkingUrl = Linking.useLinkingURL()
+  const notificationResponse = Notifications.getLastNotificationResponse()
+
+  const [initialState] = useState(() => {
+    if (!isNative) return
+
+    const previousNavState = device.get(['navigationState'])
+    if (previousNavState) {
+      // we want to clear it asap - even if we don't use it
+      // if they're opening it via an intent, we obviously prioritize the intent
+      // but also the *subsequent* open after that, it would be weird if it restored to the
+      // nav state *before* that, hence the aggressive clearing -sfn
+      device.remove(['navigationState'])
+
+      // we only want to use it if the current state is more-or-less where they left off:
+      // - logged in to the same account
+      // - no intent
+      // - not handling a notification
+      if (linkingUrl) return
+      if (notificationResponse) return
+      if (previousNavState.did !== currentAccount?.did) {
+        return
+      }
+
+      return previousNavState.state
+    }
+  })
+
+  const persistState = (state?: NavigationState) => {
+    if (!isNative) return
+    if (!currentAccount) return
+    if (!state) return
+
+    device.set(['navigationState'], {did: currentAccount.did, state})
+  }
 
   /**
    * Handle navigation to a conversation, or prepares for account switch.
@@ -920,29 +952,28 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     },
   )
 
-  async function handlePushNotificationEntry() {
+  function handlePushNotificationEntry() {
     if (!isNative) return
 
-    // deep links take precedence - on android,
-    // getLastNotificationResponseAsync returns a "notification"
-    // that is actually a deep link. avoid handling it twice -sfn
-    if (await Linking.getInitialURL()) {
-      return
-    }
+    // intent urls are handled by `useIntentHandler`
+    if (linkingUrl) return
 
-    /**
-     * The notification that caused the app to open, if applicable
-     */
-    const response = await Notifications.getLastNotificationResponseAsync()
+    if (notificationResponse) {
+      notyLogger.debug(`handlePushNotificationEntry: response`, {
+        response: notificationResponse,
+      })
 
-    if (response) {
-      notyLogger.debug(`handlePushNotificationEntry: response`, {response})
+      // Clear the last notification response to ensure it's not used again
+      try {
+        Notifications.clearLastNotificationResponse()
+      } catch (error) {
+        notyLogger.error(
+          `handlePushNotificationEntry: error clearing notification response`,
+          {error},
+        )
+      }
 
-      if (response.notification.date === lastHandledNotificationDateDedupe)
-        return
-      lastHandledNotificationDateDedupe = response.notification.date
-
-      const payload = getNotificationPayload(response.notification)
+      const payload = getNotificationPayload(notificationResponse.notification)
 
       if (payload) {
         notyLogger.metric(
@@ -984,36 +1015,36 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   }
 
   return (
-    <>
-      <NavigationContainer
-        ref={navigationRef}
-        linking={LINKING}
-        theme={theme}
-        onStateChange={() => {
-          logger.metric(
-            'router:navigate',
-            {from: prevLoggedRouteName.current},
-            {statsig: false},
-          )
-          prevLoggedRouteName.current = getCurrentRouteName()
-        }}
-        onReady={() => {
-          attachRouteToLogEvents(getCurrentRouteName)
-          logModuleInitTime()
-          onReady()
-          logger.metric('router:navigate', {}, {statsig: false})
-          handlePushNotificationEntry()
-        }}
-        // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
-        // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
-        // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
-        // I'm scared of missing a spot (esp. with push notifications etc) so let's enable this legacy behaviour for now.
-        // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
-        // -sfn
-        navigationInChildEnabled>
-        {children}
-      </NavigationContainer>
-    </>
+    <NavigationContainer
+      initialState={initialState}
+      ref={navigationRef}
+      linking={LINKING}
+      theme={theme}
+      onStateChange={state => {
+        logger.metric(
+          'router:navigate',
+          {from: prevLoggedRouteName.current},
+          {statsig: false},
+        )
+        prevLoggedRouteName.current = getCurrentRouteName()
+        persistState(state)
+      }}
+      onReady={() => {
+        attachRouteToLogEvents(getCurrentRouteName)
+        logModuleInitTime()
+        onReady()
+        logger.metric('router:navigate', {}, {statsig: false})
+        handlePushNotificationEntry()
+      }}
+      // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
+      // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
+      // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
+      // I'm scared of missing a spot (esp. with push notifications etc) so let's enable this legacy behaviour for now.
+      // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
+      // -sfn
+      navigationInChildEnabled>
+      {children}
+    </NavigationContainer>
   )
 }
 
