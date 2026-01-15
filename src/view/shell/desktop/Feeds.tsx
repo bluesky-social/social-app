@@ -74,9 +74,11 @@ export function DesktopFeeds() {
           overflowY: 'auto',
         }),
       ]}>
-      {pinnedFeedInfos.map(feedInfo => {
+      {pinnedFeedInfos.map((feedInfo, index) => {
         const feed = feedInfo.feedDescriptor
-        const current = route.name === 'Home' && feed === selectedFeed
+        const current =
+          route.name === 'Home' &&
+          (selectedFeed ? feed === selectedFeed : index === 0)
 
         return (
           <FeedItem
