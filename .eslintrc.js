@@ -35,6 +35,7 @@ module.exports = {
           'Admonition',
           'Admonition.Admonition',
           'Toast.Action',
+          'toast.Action',
           'AgeAssuranceAdmonition',
           'Span',
           'StackedButton',

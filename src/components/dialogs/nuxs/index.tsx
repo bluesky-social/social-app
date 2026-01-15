@@ -20,9 +20,9 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {
-  enabled as isFindContactsAnnouncementEnabled,
-  FindContactsAnnouncement,
-} from '#/components/dialogs/nuxs/FindContactsAnnouncement'
+  enabled as isLiveNowBetaDialogEnabled,
+  LiveNowBetaDialog,
+} from '#/components/dialogs/nuxs/LiveNowBetaDialog'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
 import {useGeolocation} from '#/geolocation'
@@ -37,8 +37,8 @@ const queuedNuxs: {
   enabled?: (props: EnabledCheckProps) => boolean
 }[] = [
   {
-    id: Nux.FindContactsAnnouncement,
-    enabled: isFindContactsAnnouncementEnabled,
+    id: Nux.LiveNowBetaDialog,
+    enabled: isLiveNowBetaDialogEnabled,
   },
 ]
 
@@ -186,9 +186,7 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.FindContactsAnnouncement && (
-        <FindContactsAnnouncement />
-      )}
+      {activeNux === Nux.LiveNowBetaDialog && <LiveNowBetaDialog />}
     </Context.Provider>
   )
 }

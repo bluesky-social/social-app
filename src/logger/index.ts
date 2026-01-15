@@ -16,6 +16,8 @@ import {enabledLogLevels} from '#/logger/util'
 import {isNative} from '#/platform/detection'
 import {ENV} from '#/env'
 
+export {type MetricEvents as Metrics} from '#/logger/metrics'
+
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (ENV) {
     case 'production': {

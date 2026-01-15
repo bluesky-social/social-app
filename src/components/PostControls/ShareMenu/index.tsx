@@ -16,6 +16,7 @@ import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {native} from '#/alf'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
@@ -35,6 +36,7 @@ let ShareMenuButton = ({
   threadgateRecord,
   onShare,
   hitSlop,
+  logContext,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -45,9 +47,11 @@ let ShareMenuButton = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShare: () => void
   hitSlop?: Insets
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }): React.ReactNode => {
   const {_} = useLingui()
   const gate = useGate()
+  const {feedDescriptor} = useFeedFeedbackContext()
 
   const ShareIcon = gate('alt_share_icon')
     ? ArrowShareRightIcon
@@ -65,13 +69,27 @@ let ShareMenuButton = ({
         setTimeout(menuControl.open)
 
         logger.metric(
-          'share:open',
-          {context: big ? 'thread' : 'feed'},
+          'post:share',
+          {
+            uri: post.uri,
+            authorDid: post.author.did,
+            logContext,
+            feedDescriptor,
+            postContext: big ? 'thread' : 'feed',
+          },
           {statsig: true},
         )
       },
     }),
-    [menuControl, setHasBeenOpen, big],
+    [
+      menuControl,
+      setHasBeenOpen,
+      big,
+      logContext,
+      feedDescriptor,
+      post.uri,
+      post.author.did,
+    ],
   )
 
   const onNativeLongPress = () => {

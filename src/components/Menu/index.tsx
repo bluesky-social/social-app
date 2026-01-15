@@ -167,6 +167,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         a.gap_sm,
         a.px_md,
         a.rounded_md,
+        a.overflow_hidden,
         a.border,
         t.atoms.bg_contrast_25,
         t.atoms.border_contrast_low,
@@ -193,7 +194,6 @@ export function ItemText({children, style}: ItemTextProps) {
         a.text_md,
         a.font_semi_bold,
         t.atoms.text_contrast_high,
-        {paddingTop: 3},
         style,
         disabled && t.atoms.text_contrast_low,
       ]}>
@@ -202,16 +202,18 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp}: ItemIconProps) {
+export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
   const t = useTheme()
   const {disabled} = useMenuItemContext()
   return (
     <Comp
       size="lg"
       fill={
-        disabled
-          ? t.atoms.text_contrast_low.color
-          : t.atoms.text_contrast_medium.color
+        fill
+          ? fill({disabled})
+          : disabled
+            ? t.atoms.text_contrast_low.color
+            : t.atoms.text_contrast_medium.color
       }
     />
   )

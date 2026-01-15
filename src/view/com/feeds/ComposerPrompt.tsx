@@ -148,8 +148,6 @@ export function ComposerPrompt() {
         a.relative,
         a.flex_row,
         a.align_start,
-        a.border_t,
-        t.atoms.border_contrast_low,
         {
           paddingLeft: 18,
           paddingRight: 15,

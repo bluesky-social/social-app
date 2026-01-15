@@ -98,6 +98,7 @@ let PostMenuItems = ({
   richText,
   threadgateRecord,
   onShowLess,
+  logContext,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -111,6 +112,7 @@ let PostMenuItems = ({
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
@@ -210,9 +212,21 @@ let PostMenuItems = ({
     try {
       if (isThreadMuted) {
         unmuteThread()
+        logger.metric('post:unmute', {
+          uri: postUri,
+          authorDid: postAuthor.did,
+          logContext,
+          feedDescriptor: feedFeedback.feedDescriptor,
+        })
         Toast.show(_(msg`You will now receive notifications for this thread`))
       } else {
         muteThread()
+        logger.metric('post:mute', {
+          uri: postUri,
+          authorDid: postAuthor.did,
+          logContext,
+          feedDescriptor: feedFeedback.feedDescriptor,
+        })
         Toast.show(
           _(msg`You will no longer receive notifications for this thread`),
         )
@@ -272,6 +286,12 @@ let PostMenuItems = ({
       feedContext: postFeedContext,
       reqId: postReqId,
     })
+    logger.metric('post:showMore', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
     Toast.show(
       _(msg({message: 'Feedback sent to feed operator', context: 'toast'})),
     )
@@ -283,6 +303,12 @@ let PostMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
       reqId: postReqId,
+    })
+    logger.metric('post:showLess', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
     })
     if (onShowLess) {
       onShowLess({

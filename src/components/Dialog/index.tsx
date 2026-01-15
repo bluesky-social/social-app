@@ -359,7 +359,13 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
   )
 }
 
-export function Handle({difference = false}: {difference?: boolean}) {
+export function Handle({
+  difference = false,
+  fill,
+}: {
+  difference?: boolean
+  fill?: string
+}) {
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
@@ -390,7 +396,7 @@ export function Handle({difference = false}: {difference?: boolean}) {
                   opacity: 0.75,
                 }
               : {
-                  backgroundColor: t.palette.contrast_975,
+                  backgroundColor: fill || t.palette.contrast_975,
                   opacity: 0.5,
                 },
           ]}

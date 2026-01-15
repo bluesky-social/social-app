@@ -82,12 +82,12 @@
     "@atproto/xrpc" "^0.7.6"
     "@atproto/xrpc-server" "^0.10.0"
 
-"@atproto/api@^0.18.13":
-  version "0.18.13"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.13.tgz#63eee310e6715752eb87748323cf9ab57dd91e4b"
-  integrity sha512-CULZ01pSJDltLS/Gc9MMrhFzB6OM3ezyZw7KoeLT/sBfwgA1ddA4mWdTh7DIRosPRigXtA05bnoiCutZbQDo+Q==
+"@atproto/api@^0.18.13", "@atproto/api@^0.18.15":
+  version "0.18.15"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.15.tgz#25ce82081216bdefbf5397220de76ac3ba9e3f5d"
+  integrity sha512-GeaTP7HMRZa8jD6trMuTACa8t2jkFtRmcwWgrB0FT7l9jVCXrKpYupWeIeauEgWHNwWUUiaq3LmCox+HBy8ZMQ==
   dependencies:
-    "@atproto/common-web" "^0.4.11"
+    "@atproto/common-web" "^0.4.12"
     "@atproto/lexicon" "^0.6.0"
     "@atproto/syntax" "^0.4.2"
     "@atproto/xrpc" "^0.7.7"
@@ -194,16 +194,7 @@
     pino-http "^8.2.1"
     typed-emitter "^2.1.0"
 
-"@atproto/common-web@^0.4.11":
-  version "0.4.11"
-  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.11.tgz#eb41dc02c1ea4221388630e193d181fb098186e0"
-  integrity sha512-VHejNmSABU8/03VrQ3e36AmT5U3UIeio+qSUqCrO1oNgrJcWfGy1rpj0FVtUugWF8Un29+yzkukzWGZfXL70rQ==
-  dependencies:
-    "@atproto/lex-data" "0.0.7"
-    "@atproto/lex-json" "0.0.7"
-    zod "^3.23.8"
-
-"@atproto/common-web@^0.4.12":
+"@atproto/common-web@^0.4.11", "@atproto/common-web@^0.4.12":
   version "0.4.12"
   resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.12.tgz#04135bef480d9e12cfef124ee45d8236764e7509"
   integrity sha512-3aCJemqM/fkHQrVPbTCHCdiVstKFI+2LkFLvUhO6XZP0EqUZa/rg/CIZBKTFUWu9I5iYiaEiXL9VwcDRpEevSw==
@@ -437,17 +428,6 @@
     uint8arrays "3.0.0"
     unicode-segmenter "^0.14.0"
 
-"@atproto/lex-data@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@atproto/lex-data/-/lex-data-0.0.7.tgz#6aa87423f6d47849bec8ff3ca0b00ce93964adc8"
-  integrity sha512-W/Q5o9o7n2Sv3UywckChu01X5lwQUtaiiOkGJLnRsdkQTyC6813nPgY+p2sG7NwwM+82lu+FUV9fE/Ul3VqaJw==
-  dependencies:
-    "@atproto/syntax" "0.4.2"
-    multiformats "^9.9.0"
-    tslib "^2.8.1"
-    uint8arrays "3.0.0"
-    unicode-segmenter "^0.14.0"
-
 "@atproto/lex-data@0.0.8", "@atproto/lex-data@^0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@atproto/lex-data/-/lex-data-0.0.8.tgz#46cc261efbfa6cc05bf04439d2d73cd8386b467d"
@@ -482,14 +462,6 @@
   integrity sha512-ZVcY7XlRfdPYvQQ2WroKUepee0+NCovrSXgXURM3Xv+n5jflJCoczguROeRr8sN0xvT0ZbzMrDNHCUYKNnxcjw==
   dependencies:
     "@atproto/lex-data" "0.0.3"
-    tslib "^2.8.1"
-
-"@atproto/lex-json@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@atproto/lex-json/-/lex-json-0.0.7.tgz#c06e1fc3e06d739bbb74694f5d846055bed37866"
-  integrity sha512-bjNPD5M/MhLfjNM7tcxuls80UgXpHqxdOxDXEUouAtZQV/nIDhGjmNUvKxOmOgnDsiZRnT2g5y3onrnjH3a44g==
-  dependencies:
-    "@atproto/lex-data" "0.0.7"
     tslib "^2.8.1"
 
 "@atproto/lex-json@0.0.8":
@@ -6212,17 +6184,10 @@
   resolved "https://registry.yarnpkg.com/@radix-ui/rect/-/rect-1.1.1.tgz#78244efe12930c56fd255d7923865857c41ac8cb"
   integrity sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==
 
-"@react-native-async-storage/async-storage@2.2.0":
+"@react-native-async-storage/async-storage@2.2.0", "@react-native-async-storage/async-storage@^1.15.2":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-2.2.0.tgz#a3aa565253e46286655560172f4e366e8969f5ad"
   integrity sha512-gvRvjR5JAaUZF8tv2Kcq/Gbt3JHwbKFYfmb445rhOj6NUMx3qPLixmDx5pZAyb9at1bYvJ4/eTUipU5aki45xw==
-  dependencies:
-    merge-options "^3.0.4"
-
-"@react-native-async-storage/async-storage@^1.15.2":
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.22.0.tgz#202a9afd15a5b829c39b709d0ca3942612441efc"
-  integrity sha512-b5KD010iiZnot86RbAaHpLuHwmPW2qA3SSN/OSZhd1kBoINEQEVBuv+uFtcaTxAhX27bT0wd13GOb2IOSDUXSA==
   dependencies:
     merge-options "^3.0.4"
 
