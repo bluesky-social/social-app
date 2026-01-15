@@ -506,7 +506,7 @@ msgstr ""
 msgid "<0>{date}</0> at {time}"
 msgstr ""
 
-#: src/screens/Hashtag.tsx:225
+#: src/screens/Hashtag.tsx:238
 #: src/screens/Search/SearchResults.tsx:294
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr ""
@@ -1830,6 +1830,10 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
+#: src/components/RichTextTag.tsx:52
+msgid "Cashtag {tag}"
+msgstr ""
+
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
 msgstr ""
@@ -2062,8 +2066,8 @@ msgstr ""
 msgid "Click here to update your email"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:54
-msgid "Click to open tag menu for {tag}"
+#: src/components/RichTextTag.tsx:55
+msgid "Click to open tag menu for {0}"
 msgstr ""
 
 #: src/components/dms/MessageItem.tsx:318
@@ -2662,7 +2666,7 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
-#: src/screens/Hashtag.tsx:234
+#: src/screens/Hashtag.tsx:247
 #: src/screens/Search/SearchResults.tsx:303
 msgid "Create an account"
 msgstr ""
@@ -4289,7 +4293,7 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: src/screens/Hashtag.tsx:127
+#: src/screens/Hashtag.tsx:136
 msgid "From @{sanitizedAuthor}"
 msgstr ""
 
@@ -4338,7 +4342,7 @@ msgstr ""
 msgid "Get notifications when people repost your posts."
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:91
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:93
 msgid "Get notified about new posts"
 msgstr ""
 
@@ -4354,7 +4358,7 @@ msgstr ""
 msgid "Get notified of this account’s activity"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:84
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:86
 msgid "Get notified when {name} posts"
 msgstr ""
 
@@ -4554,7 +4558,7 @@ msgstr ""
 msgid "Hashtag"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:51
+#: src/components/RichTextTag.tsx:52
 msgid "Hashtag {tag}"
 msgstr ""
 
@@ -4867,7 +4871,7 @@ msgstr ""
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr ""
 
-#: src/view/com/util/images/Gallery.tsx:75
+#: src/components/images/Gallery.tsx:75
 msgid "Image"
 msgstr ""
 
@@ -5166,7 +5170,7 @@ msgstr ""
 msgid "Last initiated just now"
 msgstr ""
 
-#: src/screens/Hashtag.tsx:102
+#: src/screens/Hashtag.tsx:111
 #: src/screens/Search/SearchResults.tsx:62
 #: src/screens/Topic.tsx:78
 msgid "Latest"
@@ -5559,8 +5563,8 @@ msgstr ""
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:53
-msgid "Long press to open tag menu for #{tag}"
+#: src/components/RichTextTag.tsx:54
+msgid "Long press to open tag menu for {0}"
 msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:122
@@ -5806,8 +5810,8 @@ msgctxt "video"
 msgid "Mute"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:141
-#: src/components/RichTextTag.tsx:154
+#: src/components/RichTextTag.tsx:150
+#: src/components/RichTextTag.tsx:163
 msgid "Mute {tag}"
 msgstr ""
 
@@ -8205,7 +8209,7 @@ msgstr ""
 msgid "Search GIFs"
 msgstr ""
 
-#: src/screens/Hashtag.tsx:223
+#: src/screens/Hashtag.tsx:236
 #: src/screens/Search/SearchResults.tsx:292
 msgid "Search is currently unavailable when logged out"
 msgstr ""
@@ -8246,19 +8250,27 @@ msgstr ""
 msgid "Security step required"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:112
+#: src/components/RichTextTag.tsx:113
+msgid "See {0} posts"
+msgstr ""
+
+#: src/components/RichTextTag.tsx:130
+msgid "See {0} posts by user"
+msgstr ""
+
+#: src/components/RichTextTag.tsx:121
 msgid "See {tag} posts"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:125
+#: src/components/RichTextTag.tsx:139
 msgid "See {tag} posts by user"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:119
+#: src/components/RichTextTag.tsx:123
 msgid "See #{tag} posts"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:133
+#: src/components/RichTextTag.tsx:141
 msgid "See #{tag} posts by user"
 msgstr ""
 
@@ -8611,7 +8623,7 @@ msgid "Sexually Suggestive"
 msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:192
-#: src/screens/Hashtag.tsx:133
+#: src/screens/Hashtag.tsx:142
 #: src/screens/StarterPack/StarterPackScreen.tsx:433
 #: src/screens/Topic.tsx:103
 msgid "Share"
@@ -8820,7 +8832,7 @@ msgstr ""
 #: src/components/dialogs/Signin.tsx:99
 #: src/components/WelcomeModal.tsx:194
 #: src/components/WelcomeModal.tsx:206
-#: src/screens/Hashtag.tsx:227
+#: src/screens/Hashtag.tsx:240
 #: src/screens/Login/index.tsx:136
 #: src/screens/Login/index.tsx:157
 #: src/screens/Login/LoginForm.tsx:181
@@ -9950,7 +9962,7 @@ msgstr ""
 msgid "Too many contacts - you've exceeded the number of contacts you can import to find your friends"
 msgstr ""
 
-#: src/screens/Hashtag.tsx:91
+#: src/screens/Hashtag.tsx:100
 #: src/screens/Search/SearchResults.tsx:52
 #: src/screens/Topic.tsx:72
 msgid "Top"
@@ -10182,8 +10194,8 @@ msgstr ""
 msgid "Unmute"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:141
-#: src/components/RichTextTag.tsx:154
+#: src/components/RichTextTag.tsx:150
+#: src/components/RichTextTag.tsx:163
 msgid "Unmute {tag}"
 msgstr ""
 
@@ -10749,8 +10761,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/view/com/util/images/AutoSizedImage.tsx:205
-#: src/view/com/util/images/AutoSizedImage.tsx:232
+#: src/components/images/AutoSizedImage.tsx:206
+#: src/components/images/AutoSizedImage.tsx:233
 msgid "Views full image"
 msgstr ""
 
@@ -10810,8 +10822,8 @@ msgstr ""
 msgid "We could not find this list. It was probably deleted."
 msgstr ""
 
-#: src/screens/Hashtag.tsx:258
-msgid "We couldn't find any results for that hashtag."
+#: src/screens/Hashtag.tsx:271
+msgid "We couldn't find any results for that tag."
 msgstr ""
 
 #: src/screens/Topic.tsx:180
