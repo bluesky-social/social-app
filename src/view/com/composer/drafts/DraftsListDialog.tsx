@@ -9,6 +9,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
+import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {DraftItem} from './DraftItem'
 import {useDeleteDraftMutation, useDraftsQuery} from './state/queries'
@@ -23,7 +24,8 @@ export function DraftsListDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {data, isLoading} = useDraftsQuery()
+  const {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
+    useDraftsQuery()
   const {mutate: deleteDraft} = useDeleteDraftMutation()
 
   const drafts = useMemo(
@@ -89,6 +91,12 @@ export function DraftsListDialog({
     [backButton],
   )
 
+  const onEndReached = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+
   const emptyComponent = useMemo(() => {
     if (isLoading) {
       return (
@@ -106,6 +114,17 @@ export function DraftsListDialog({
     )
   }, [isLoading, _])
 
+  const footerComponent = useMemo(
+    () => (
+      <ListFooter
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+        style={[a.border_0]}
+      />
+    ),
+    [isFetchingNextPage, hasNextPage],
+  )
+
   return (
     <Dialog.Outer control={control}>
       {isNative && header}
@@ -116,6 +135,9 @@ export function DraftsListDialog({
         ListHeaderComponent={web(header)}
         stickyHeaderIndices={web([0])}
         ListEmptyComponent={emptyComponent}
+        ListFooterComponent={footerComponent}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
         style={[t.atoms.bg_contrast_50, a.px_0, web({minHeight: 500})]}
         webInnerContentContainerStyle={[a.py_0]}
         contentContainerStyle={[a.pb_xl]}
