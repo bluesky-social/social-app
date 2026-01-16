@@ -223,6 +223,13 @@ export default defineConfig(
 
       // Import rules
       'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],
+      'import-x/no-unresolved': ['error', {
+        /*
+         * The `postinstall` hook runs `compile-if-needed` locally, but not in
+         * CI. For CI-sake, ignore this.
+         */
+        ignore: ['^#\/locale\/locales\/.+\/messages'],
+      }],
 
       // Turn off rules that weren't enforced in previous config
       'no-empty-pattern': 'off',
@@ -249,7 +256,7 @@ export default defineConfig(
     languageOptions: {
       globals: {
         ...globals.jest,
-      },
+      }
     },
   },
 )
