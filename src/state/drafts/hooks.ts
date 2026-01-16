@@ -25,6 +25,8 @@ export function useDrafts() {
   return useQuery<DraftSummary[]>({
     queryKey: DRAFTS_QUERY_KEY,
     queryFn: async () => {
+      // Ensure media cache is populated before checking which media exists
+      await storage.ensureMediaCachePopulated()
       const res = await agent.app.bsky.draft.getDrafts({})
       return res.data.drafts.map(view =>
         draftViewToSummary(view, path => storage.mediaExists(path)),
