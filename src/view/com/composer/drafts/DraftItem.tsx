@@ -50,7 +50,6 @@ export function DraftItem({
           (pressed || hovered) && t.atoms.bg_contrast_25,
         ]}>
         <View style={[a.p_md, a.gap_sm]}>
-          {/* Missing media warning */}
           {draft.hasMissingMedia && (
             <View
               style={[
@@ -66,7 +65,6 @@ export function DraftItem({
             </View>
           )}
 
-          {/* Posts */}
           {draft.posts.map((post, index) => (
             <DraftPostRow
               key={post.id}
@@ -117,10 +115,8 @@ function DraftPostRow({
 
   return (
     <View style={[a.flex_row, a.gap_sm]}>
-      {/* Avatar column with thread line */}
       <View style={[a.align_center]}>
         <UserAvatar type="user" size={42} avatar={avatarUrl} />
-        {/* Thread line connecting posts */}
         {!isLast && (
           <View
             style={[
@@ -136,9 +132,7 @@ function DraftPostRow({
         )}
       </View>
 
-      {/* Content column */}
       <View style={[a.flex_1, a.gap_2xs]}>
-        {/* Header row: name, handle, timestamp, menu */}
         <View style={[a.flex_row, a.align_center, a.gap_xs]}>
           <View style={[a.flex_row, a.align_center, a.flex_1, a.gap_xs]}>
             {displayName && (
@@ -167,7 +161,6 @@ function DraftPostRow({
             </TimeElapsed>
           </View>
 
-          {/* Overflow menu (only on first post) */}
           {isFirst && (
             <Button
               label={_(msg`More options`)}
@@ -184,7 +177,6 @@ function DraftPostRow({
           )}
         </View>
 
-        {/* Post text - full, not truncated */}
         {post.text ? (
           <Text style={[a.text_md, a.leading_snug, t.atoms.text]}>
             {post.text}
@@ -201,7 +193,6 @@ function DraftPostRow({
           </Text>
         )}
 
-        {/* Media preview */}
         <DraftMediaPreview post={post} />
       </View>
     </View>
@@ -219,7 +210,6 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
 
   useEffect(() => {
     async function loadMedia() {
-      // Load images
       if (post.images && post.images.length > 0) {
         const loaded: LoadedImage[] = []
         for (const image of post.images) {
@@ -233,7 +223,6 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
         setLoadedImages(loaded)
       }
 
-      // Load video thumbnail
       if (post.video?.exists && post.video.localPath) {
         try {
           const url = await storage.loadMediaFromLocal(post.video.localPath)
