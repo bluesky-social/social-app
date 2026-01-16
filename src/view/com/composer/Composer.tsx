@@ -78,13 +78,6 @@ import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {
-  type DraftSummary,
-  draftToComposerPosts,
-  threadgateToUISettings,
-  useLoadDraft,
-  useSaveDraft,
-} from '#/state/drafts'
 import {emitPostCreated} from '#/state/events'
 import {
   type ComposerImage,
@@ -139,6 +132,13 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {
+  draftToComposerPosts,
+  threadgateToUISettings,
+  useLoadDraft,
+  useSaveDraft,
+} from './drafts/state/hooks'
+import {type DraftSummary} from './drafts/state/schema'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
   type AssetType,

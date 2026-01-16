@@ -4,14 +4,15 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
-import {type DraftSummary, useDeleteDraft, useDrafts} from '#/state/drafts'
+import {EmptyState} from '#/view/com/util/EmptyState'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
 import {Loader} from '#/components/Loader'
-import {EmptyState} from '../../util/EmptyState'
 import {DraftItem} from './DraftItem'
+import {useDeleteDraft, useDrafts} from './state/hooks'
+import {type DraftSummary} from './state/schema'
 
 export function DraftsListDialog({
   control,

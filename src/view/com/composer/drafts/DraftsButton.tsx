@@ -1,12 +1,13 @@
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {type DraftSummary, useSaveDraft} from '#/state/drafts'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import {DraftsListDialog} from './DraftsListDialog'
+import {useSaveDraft} from './state/hooks'
+import {type DraftSummary} from './state/schema'
 
 export function DraftsButton({
   onSelectDraft,
