@@ -1237,11 +1237,11 @@ msgstr "应用密码名称不得与现有的重复"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr "应用密码只能包含字母、数字、空格、连字符（-）及下划线（_）"
+msgstr "应用密码名称只能包含字母、数字、空格、连字符（-）及下划线（_）"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
-msgstr "应用密码至少应包含 4 个字符"
+msgstr "应用密码名称至少应包含 4 个字符"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:71
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
