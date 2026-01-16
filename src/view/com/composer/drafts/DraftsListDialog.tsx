@@ -127,6 +127,7 @@ export function DraftsListDialog({
 
   return (
     <Dialog.Outer control={control}>
+      {/* We really really need to figure out a nice, consistent API for doing a header cross-platform -sfn */}
       {isNative && header}
       <Dialog.InnerFlatList
         data={drafts}
