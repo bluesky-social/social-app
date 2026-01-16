@@ -38,7 +38,31 @@ async function getDB(): Promise<IDBPDatabase<DraftMediaDB>> {
  * Convert a path/URL to a Blob
  */
 async function toBlob(sourcePath: string): Promise<Blob> {
+  // Handle data URIs directly
+  if (sourcePath.startsWith('data:')) {
+    const response = await fetch(sourcePath)
+    return response.blob()
+  }
+
+  // Handle blob URLs
+  if (sourcePath.startsWith('blob:')) {
+    try {
+      const response = await fetch(sourcePath)
+      return response.blob()
+    } catch (e) {
+      logger.error('Failed to fetch blob URL - it may have been revoked', {
+        error: e,
+        sourcePath,
+      })
+      throw e
+    }
+  }
+
+  // Handle regular URLs
   const response = await fetch(sourcePath)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch media: ${response.status}`)
+  }
   return response.blob()
 }
 
@@ -50,7 +74,18 @@ export async function saveMediaToLocal(
   sourcePath: string,
 ): Promise<void> {
   const db = await getDB()
-  const blob = await toBlob(sourcePath)
+
+  let blob: Blob
+  try {
+    blob = await toBlob(sourcePath)
+  } catch (error) {
+    logger.error('Failed to convert source to blob', {
+      error,
+      localRefPath,
+      sourcePath,
+    })
+    throw error
+  }
 
   try {
     await db.put(

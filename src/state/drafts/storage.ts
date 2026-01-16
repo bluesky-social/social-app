@@ -50,13 +50,21 @@ export async function saveMediaToLocal(
 
   const destPath = getMediaPath(localRefPath)
 
+  // Ensure source path has file:// prefix for expo-file-system
+  let normalizedSource = sourcePath
+  if (!sourcePath.startsWith('file://') && sourcePath.startsWith('/')) {
+    normalizedSource = `file://${sourcePath}`
+  }
+
   try {
-    await copyAsync({from: sourcePath, to: destPath})
+    await copyAsync({from: normalizedSource, to: destPath})
+    // Update cache after successful save
+    mediaExistsCache.set(localRefPath, true)
   } catch (error) {
     logger.error('Failed to save media to drafts storage', {
       error,
       localRefPath,
-      sourcePath,
+      sourcePath: normalizedSource,
       destPath,
     })
     throw error
