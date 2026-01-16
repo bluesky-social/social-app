@@ -17,7 +17,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
   const config = useLiveNowConfig()
 
   return useMemo(() => {
-    tick! // revalidate every minute
+    void tick // revalidate every minute
 
     if (shadowed && 'status' in shadowed && shadowed.status) {
       const isValid = validateStatus(shadowed.status, config)

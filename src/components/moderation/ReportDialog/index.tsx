@@ -211,8 +211,8 @@ function Inner(props: ReportDialogProps) {
       logger.metric(
         'reportDialog:success',
         {
-          reason: state.selectedOption?.reason!,
-          labeler: state.selectedLabeler?.creator.handle!,
+          reason: state.selectedOption?.reason ?? '',
+          labeler: state.selectedLabeler?.creator.handle ?? '',
           details: !!state.details,
         },
         {statsig: false},

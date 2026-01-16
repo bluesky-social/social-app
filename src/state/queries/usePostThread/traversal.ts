@@ -1,4 +1,3 @@
-/* eslint-disable no-labels */
 import {AppBskyUnspeccedDefs, type ModerationOpts} from '@atproto/api'
 
 import {

@@ -13,7 +13,11 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import {getLiveServiceNames} from '#/components/live/utils'
+import {
+  displayDuration,
+  getLiveServiceNames,
+  useDebouncedValue,
+} from '#/components/live/utils'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
@@ -21,7 +25,6 @@ import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import {LinkPreview} from './LinkPreview'
 import {useLiveLinkMetaQuery, useUpsertLiveStatusMutation} from './queries'
-import {displayDuration, useDebouncedValue} from './utils'
 
 export function GoLiveDialog({
   control,
@@ -57,7 +60,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
 
   const time = useCallback(
     (offset: number) => {
-      tick!
+      void tick
 
       const date = new Date()
       date.setMinutes(date.getMinutes() + offset)

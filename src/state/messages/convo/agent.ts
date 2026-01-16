@@ -95,7 +95,7 @@ export class Convo {
     this.convoId = params.convoId
     this.agent = params.agent
     this.events = params.events
-    this.senderUserDid = params.agent.session?.did!
+    this.senderUserDid = params.agent.assertDid
 
     if (params.placeholderData) {
       this.setupPlaceholderData(params.placeholderData)

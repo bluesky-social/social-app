@@ -9,7 +9,7 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
-import * as toast from '#/components/Toast'
+import * as Toast from '#/components/Toast'
 import {Span, Text} from '#/components/Typography'
 import {useUpdateLiveEventPreferences} from '#/features/liveEvents/preferences'
 import {
@@ -61,14 +61,14 @@ function Inner({
     feed,
     metricContext,
     onUpdateSuccess({undoAction}) {
-      toast.show(
-        <toast.Outer>
-          <toast.Icon />
-          <toast.Text>
+      Toast.show(
+        <Toast.Outer>
+          <Toast.Icon />
+          <Toast.Text>
             <Trans>Your live event preferences have been updated.</Trans>
-          </toast.Text>
+          </Toast.Text>
           {undoAction && (
-            <toast.Action
+            <Toast.Action
               label={_(msg`Undo`)}
               onPress={() => {
                 if (undoAction) {
@@ -76,12 +76,10 @@ function Inner({
                 }
               }}>
               <Trans>Undo</Trans>
-            </toast.Action>
+            </Toast.Action>
           )}
-        </toast.Outer>,
-        {
-          type: 'success',
-        },
+        </Toast.Outer>,
+        {type: 'success'},
       )
 
       /*

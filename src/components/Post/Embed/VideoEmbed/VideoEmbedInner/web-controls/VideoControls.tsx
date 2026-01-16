@@ -215,18 +215,18 @@ export function Controls({
 
   const seekLeft = useCallback(() => {
     if (!videoRef.current) return
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     const currentTime = videoRef.current.currentTime
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     const duration = videoRef.current.duration || 0
     onSeek(clamp(currentTime - 5, 0, duration))
   }, [onSeek, videoRef])
 
   const seekRight = useCallback(() => {
     if (!videoRef.current) return
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     const currentTime = videoRef.current.currentTime
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     const duration = videoRef.current.duration || 0
     onSeek(clamp(currentTime + 5, 0, duration))
   }, [onSeek, videoRef])
