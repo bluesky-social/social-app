@@ -207,6 +207,9 @@ export default defineConfig(
         {prefer: 'type-imports', fixStyle: 'inline-type-imports'},
       ],
       '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-unused-expressions': ['error', {
+        allowTernary: true,
+      }],
       /**
        * Maintain previous behavior - these are stricter in typescript-eslint
        * v8 `warn` ones are probably worth fixing. `off` ones are a bit too
