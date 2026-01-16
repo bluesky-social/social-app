@@ -35,10 +35,10 @@ function ensureDirectory(): void {
 /**
  * Save a media file to local storage by localRefPath key
  */
-export function saveMediaToLocal(
+export async function saveMediaToLocal(
   localRefPath: string,
   sourcePath: string,
-): void {
+): Promise<void> {
   ensureDirectory()
 
   const destFile = getMediaFile(localRefPath)
@@ -69,7 +69,9 @@ export function saveMediaToLocal(
  * Load a media file path from local storage
  * @returns The file URI for the saved media
  */
-export function loadMediaFromLocal(localRefPath: string): string {
+export async function loadMediaFromLocal(
+  localRefPath: string,
+): Promise<string> {
   const file = getMediaFile(localRefPath)
 
   if (!file.exists) {
@@ -82,7 +84,9 @@ export function loadMediaFromLocal(localRefPath: string): string {
 /**
  * Delete a media file from local storage
  */
-export function deleteMediaFromLocal(localRefPath: string): void {
+export async function deleteMediaFromLocal(
+  localRefPath: string,
+): Promise<void> {
   const file = getMediaFile(localRefPath)
   // Idempotent: only delete if file exists
   if (file.exists) {
