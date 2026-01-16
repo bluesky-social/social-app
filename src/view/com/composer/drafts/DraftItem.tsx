@@ -5,12 +5,6 @@ import {type AppBskyEmbedImages} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {
-  type DraftPostDisplay,
-  type DraftSummary,
-  type LocalMediaDisplay,
-} from '#/state/drafts'
-import * as storage from '#/state/drafts/storage'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
@@ -22,6 +16,12 @@ import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {
+  type DraftPostDisplay,
+  type DraftSummary,
+  type LocalMediaDisplay,
+} from './state/schema'
+import * as storage from './state/storage'
 
 export function DraftItem({
   draft,
@@ -193,9 +193,17 @@ function DraftPostRow({
 
         {/* Post text - full, not truncated */}
         {post.text ? (
-          <Text style={[a.text_md, t.atoms.text]}>{post.text}</Text>
+          <Text style={[a.text_md, a.leading_snug, t.atoms.text]}>
+            {post.text}
+          </Text>
         ) : (
-          <Text style={[a.text_md, t.atoms.text_contrast_medium, a.italic]}>
+          <Text
+            style={[
+              a.text_md,
+              a.leading_snug,
+              t.atoms.text_contrast_medium,
+              a.italic,
+            ]}>
             <Trans>(No text)</Trans>
           </Text>
         )}
@@ -267,7 +275,7 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
   }
 
   return (
-    <View style={[a.pt_xs, a.pointer_events_none]}>
+    <View style={[a.pt_sm, a.pointer_events_none]}>
       {/* Images - use real embed components */}
       {viewImages.length === 1 && (
         <AutoSizedImage image={viewImages[0]} hideBadge />

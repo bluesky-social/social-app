@@ -76,13 +76,6 @@ import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {
-  type DraftSummary,
-  draftToComposerPosts,
-  threadgateToUISettings,
-  useLoadDraft,
-  useSaveDraft,
-} from '#/state/drafts'
 import {emitPostCreated} from '#/state/events'
 import {
   type ComposerImage,
@@ -139,6 +132,13 @@ import {Text as NewText} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {
+  draftToComposerPosts,
+  threadgateToUISettings,
+  useLoadDraft,
+  useSaveDraft,
+} from './drafts/state/hooks'
+import {type DraftSummary} from './drafts/state/schema'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
   type AssetType,
