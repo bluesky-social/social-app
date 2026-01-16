@@ -85,7 +85,11 @@ export function useTrendingConfig() {
   return useContext(TrendingContext)
 }
 
-const DEFAULT_LIVE_ALLOWED_DOMAINS = ['twitch.tv', 'www.twitch.tv']
+const DEFAULT_LIVE_ALLOWED_DOMAINS = [
+  'twitch.tv',
+  'www.twitch.tv',
+  'stream.place',
+]
 export type LiveNowConfig = {
   allowedDomains: Set<string>
 }
