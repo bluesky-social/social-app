@@ -240,7 +240,7 @@ import {Text, H1, H2, P} from '#/components/Typography'
 <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>Custom text</Text>
 
 // For text with emoji, add the emoji prop
-<Text emoji>Hello! 👋</Text>
+<Text emoji>Hello! </Text>
 ```
 
 ### TextField
@@ -575,6 +575,8 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 6. **Types**: Define explicit types for props, use `NativeStackScreenProps` for screens
 
 7. **Testing**: Components should have `testID` props for E2E testing
+
+8. **Licensing**: Code is released under a MIT license; ensure all license notices are preserved
 
 ## Key Files Reference
 
