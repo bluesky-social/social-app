@@ -1,7 +1,7 @@
 /**
  * Type converters for Draft API - convert between ComposerState and server Draft types.
  */
-import {type AppBskyDraftDefs} from '@atproto/api'
+import {type AppBskyDraftDefs, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type ComposerImage} from '#/state/gallery'
@@ -341,11 +341,9 @@ export function draftToComposerPosts(
   draft: AppBskyDraftDefs.Draft,
   loadedMedia: Map<string, string>,
 ): PostDraft[] {
-  // Import these dynamically to avoid circular dependencies
-  const {RichText} = require('@atproto/api')
-
   return draft.posts.map((post, index) => {
     const richtext = new RichText({text: post.text || ''})
+    richtext.detectFacetsWithoutResolution()
 
     const embed: EmbedDraft = {
       quote: undefined,
@@ -434,7 +432,7 @@ export function draftToComposerPosts(
     // Parse labels
     const labels: string[] = []
     if (post.labels && 'values' in post.labels) {
-      for (const val of (post.labels as {values: {val: string}[]}).values) {
+      for (const val of post.labels.values) {
         labels.push(val.val)
       }
     }

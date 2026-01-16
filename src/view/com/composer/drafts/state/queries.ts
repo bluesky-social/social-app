@@ -1,18 +1,16 @@
 import {useCallback} from 'react'
 import {AppBskyDraftCreateDraft, type AppBskyDraftDefs} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {useAgent} from '#/state/session'
 import {type ComposerState} from '#/view/com/composer/state/composer'
-import {
-  composerStateToDraft,
-  draftToComposerPosts,
-  draftViewToSummary,
-  threadgateToUISettings,
-} from './api'
+import {composerStateToDraft, draftViewToSummary} from './api'
 import {logger} from './logger'
-import {type DraftSummary} from './schema'
 import * as storage from './storage'
 
 const DRAFTS_QUERY_KEY = ['drafts']
@@ -20,19 +18,24 @@ const DRAFTS_QUERY_KEY = ['drafts']
 /**
  * Hook to list all drafts for the current account
  */
-export function useDrafts() {
+export function useDraftsQuery() {
   const agent = useAgent()
 
-  return useQuery<DraftSummary[]>({
+  return useInfiniteQuery({
     queryKey: DRAFTS_QUERY_KEY,
-    queryFn: async () => {
+    queryFn: async ({pageParam}) => {
       // Ensure media cache is populated before checking which media exists
       await storage.ensureMediaCachePopulated()
-      const res = await agent.app.bsky.draft.getDrafts({})
-      return res.data.drafts.map(view =>
-        draftViewToSummary(view, path => storage.mediaExists(path)),
-      )
+      const res = await agent.app.bsky.draft.getDrafts({cursor: pageParam})
+      return {
+        cursor: res.data.cursor,
+        drafts: res.data.drafts.map(view =>
+          draftViewToSummary(view, path => storage.mediaExists(path)),
+        ),
+      }
     },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: page => page.cursor,
   })
 }
 
@@ -99,7 +102,7 @@ export function useLoadDraft() {
 /**
  * Hook to save a draft
  */
-export function useSaveDraft() {
+export function useSaveDraftMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
 
@@ -157,7 +160,7 @@ export function useSaveDraft() {
 /**
  * Hook to delete a draft
  */
-export function useDeleteDraft() {
+export function useDeleteDraftMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
 
@@ -191,6 +194,3 @@ export function useDeleteDraft() {
     },
   })
 }
-
-// Re-export utilities for use in composer
-export {draftToComposerPosts, threadgateToUISettings}

@@ -130,12 +130,8 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
-import {
-  draftToComposerPosts,
-  threadgateToUISettings,
-  useLoadDraft,
-  useSaveDraft,
-} from './drafts/state/hooks'
+import {draftToComposerPosts} from './drafts/state/api'
+import {useLoadDraft, useSaveDraftMutation} from './drafts/state/queries'
 import {type DraftSummary} from './drafts/state/schema'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
@@ -195,7 +191,8 @@ export const ComposePost = ({
   const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
-  const {mutateAsync: saveDraft, isPending: _isSavingDraft} = useSaveDraft()
+  const {mutateAsync: saveDraft, isPending: _isSavingDraft} =
+    useSaveDraftMutation()
   const loadDraft = useLoadDraft()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
@@ -338,14 +335,14 @@ export const ComposePost = ({
 
       // Convert server draft to composer posts
       const posts = draftToComposerPosts(draft, loadedMedia)
-      const threadgate = threadgateToUISettings(draft.threadgateAllow)
 
       // Dispatch restore action (this also sets draftId in state)
       composerDispatch({
         type: 'restore_from_draft',
         draftId: draftSummary.id,
         posts,
-        threadgate,
+        threadgateAllow: draft.threadgateAllow,
+        postgateEmbeddingRules: draft.postgateEmbeddingRules,
         loadedMedia,
       })
     },
@@ -402,8 +399,11 @@ export const ComposePost = ({
 
   // Clear the composer (discard current content)
   const handleClearComposer = React.useCallback(() => {
-    composerDispatch({type: 'clear'})
-  }, [composerDispatch])
+    composerDispatch({
+      type: 'clear',
+      initInteractionSettings: preferences?.postInteractionSettings,
+    })
+  }, [composerDispatch, preferences?.postInteractionSettings])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(

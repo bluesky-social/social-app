@@ -11,7 +11,7 @@ import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
 import {Loader} from '#/components/Loader'
 import {DraftItem} from './DraftItem'
-import {useDeleteDraft, useDrafts} from './state/hooks'
+import {useDeleteDraftMutation, useDraftsQuery} from './state/queries'
 import {type DraftSummary} from './state/schema'
 
 export function DraftsListDialog({
@@ -23,8 +23,13 @@ export function DraftsListDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {data: drafts, isLoading} = useDrafts()
-  const {mutate: deleteDraft} = useDeleteDraft()
+  const {data, isLoading} = useDraftsQuery()
+  const {mutate: deleteDraft} = useDeleteDraftMutation()
+
+  const drafts = useMemo(
+    () => data?.pages.flatMap(page => page.drafts) ?? [],
+    [data],
+  )
 
   const handleSelectDraft = useCallback(
     (summary: DraftSummary) => {
@@ -105,7 +110,7 @@ export function DraftsListDialog({
     <Dialog.Outer control={control}>
       {isNative && header}
       <Dialog.InnerFlatList
-        data={drafts ?? []}
+        data={drafts}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         ListHeaderComponent={web(header)}
