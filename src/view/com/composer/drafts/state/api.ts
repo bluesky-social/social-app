@@ -321,7 +321,13 @@ function parseGifFromUrl(
       return undefined
     }
 
-    return {url: uri, width, height, alt}
+    // Strip our custom params to get clean base URL
+    // This prevents double query strings when resolveGif() adds params again
+    url.searchParams.delete('ww')
+    url.searchParams.delete('hh')
+    url.searchParams.delete('alt')
+
+    return {url: url.toString(), width, height, alt}
   } catch {
     return undefined
   }
