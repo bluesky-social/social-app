@@ -96,7 +96,6 @@
     "@haileyok/bluesky-video": "0.3.2",
     "@ipld/dag-cbor": "^9.2.0",
     "@lingui/react": "^4.14.1",
-    "@mattermost/react-native-paste-input": "mattermost/react-native-paste-input",
     "@miblanchard/react-native-slider": "^2.6.0",
     "@mozzius/expo-dynamic-app-icon": "^1.8.0",
     "@react-native-async-storage/async-storage": "2.2.0",

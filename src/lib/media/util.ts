@@ -8,6 +8,10 @@ export function getDataUriSize(uri: string): number {
   return Math.round((uri.length * 3) / 4)
 }
 
+export function isAcceptedImageMimeType(type: string): boolean {
+  return ['image/jpeg', 'image/png', 'image/webp'].includes(type)
+}
+
 export function isUriImage(uri: string): boolean {
   return /\.(jpg|jpeg|png|webp).*$/.test(uri)
 }

@@ -1,0 +1,719 @@
+diff --git a/node_modules/react-native/Libraries/Components/TextInput/AndroidTextInputNativeComponent.js b/node_modules/react-native/Libraries/Components/TextInput/AndroidTextInputNativeComponent.js
+index 8cc1369..6b42a26 100644
+--- a/node_modules/react-native/Libraries/Components/TextInput/AndroidTextInputNativeComponent.js
++++ b/node_modules/react-native/Libraries/Components/TextInput/AndroidTextInputNativeComponent.js
+@@ -449,6 +449,21 @@ export type AndroidTextInputNativeProps = $ReadOnly<{
+     }>,
+   >,
+ 
++  /**
++   * Invoked when the user performs the paste action.
++   */
++  onPaste?: ?DirectEventHandler<
++    $ReadOnly<{
++      target: Int32,
++      items: $ReadOnlyArray<
++        $ReadOnly<{
++          type: string,
++          data: string,
++        }>,
++      >,
++    }>,
++  >,
++
+   /**
+    * The string that will be rendered before text input has been entered.
+    */
+@@ -640,6 +655,9 @@ export const __INTERNAL_VIEW_CONFIG: PartialViewConfig = {
+     topScroll: {
+       registrationName: 'onScroll',
+     },
++    topPaste: {
++      registrationName: 'onPaste',
++    },
+   },
+   validAttributes: {
+     acceptDragAndDropTypes: true,
+@@ -694,6 +712,7 @@ export const __INTERNAL_VIEW_CONFIG: PartialViewConfig = {
+     secureTextEntry: true,
+     textBreakStrategy: true,
+     onScroll: true,
++    onPaste: true,
+     onContentSizeChange: true,
+     disableFullscreenUI: true,
+     includeFontPadding: true,
+diff --git a/node_modules/react-native/Libraries/Components/TextInput/RCTTextInputViewConfig.js b/node_modules/react-native/Libraries/Components/TextInput/RCTTextInputViewConfig.js
+index 05bddcb..69c11a2 100644
+--- a/node_modules/react-native/Libraries/Components/TextInput/RCTTextInputViewConfig.js
++++ b/node_modules/react-native/Libraries/Components/TextInput/RCTTextInputViewConfig.js
+@@ -82,6 +82,9 @@ const RCTTextInputViewConfig: PartialViewConfigWithoutName = {
+     topContentSizeChange: {
+       registrationName: 'onContentSizeChange',
+     },
++    topPaste: {
++      registrationName: 'onPaste',
++    },
+     topChangeSync: {
+       registrationName: 'onChangeSync',
+     },
+@@ -160,6 +163,7 @@ const RCTTextInputViewConfig: PartialViewConfigWithoutName = {
+       onSelectionChange: true,
+       onContentSizeChange: true,
+       onScroll: true,
++      onPaste: true,
+       onChangeSync: true,
+       onKeyPressSync: true,
+     }),
+diff --git a/node_modules/react-native/Libraries/Components/TextInput/TextInput.d.ts b/node_modules/react-native/Libraries/Components/TextInput/TextInput.d.ts
+index b3ca156..2807af2 100644
+--- a/node_modules/react-native/Libraries/Components/TextInput/TextInput.d.ts
++++ b/node_modules/react-native/Libraries/Components/TextInput/TextInput.d.ts
+@@ -565,6 +565,16 @@ export interface TextInputSubmitEditingEventData {
+ export type TextInputSubmitEditingEvent =
+   NativeSyntheticEvent<TextInputSubmitEditingEventData>;
+ 
++/**
++  * @see TextInputProps.onPaste
++  */
++export interface TextInputPasteEventData extends TargetedEvent {
++items: Array<{
++    type: string;
++    data: string;
++  }>;
++}
++
+ /**
+  * @see https://reactnative.dev/docs/textinput#props
+  */
+@@ -896,6 +906,13 @@ export interface TextInputProps
+    */
+   onKeyPress?: ((e: TextInputKeyPressEvent) => void) | undefined;
+ 
++  /**
++    * Invoked when the user performs the paste action.
++    */
++  onPaste?:
++    | ((e: NativeSyntheticEvent<TextInputPasteEventData>) => void)
++    | undefined;
++
+   /**
+    * The string that will be rendered before text input has been entered
+    */
+diff --git a/node_modules/react-native/Libraries/Components/TextInput/TextInput.flow.js b/node_modules/react-native/Libraries/Components/TextInput/TextInput.flow.js
+index 5fa8811..ad2bf61 100644
+--- a/node_modules/react-native/Libraries/Components/TextInput/TextInput.flow.js
++++ b/node_modules/react-native/Libraries/Components/TextInput/TextInput.flow.js
+@@ -137,6 +137,18 @@ export type TextInputSubmitEditingEvent =
+ export type TextInputEditingEvent =
+   NativeSyntheticEvent<TextInputEndEditingEventData>;
+ 
++export type PasteEvent = SyntheticEvent<
++  $ReadOnly<{
++    target: number,
++    items: $ReadOnlyArray<
++      $ReadOnly<{
++        type: string,
++        data: string,
++      }>,
++    >,
++  }>,
++>;
++
+ type DataDetectorTypesType =
+   | 'phoneNumber'
+   | 'link'
+@@ -884,6 +896,11 @@ type TextInputBaseProps = $ReadOnly<{
+    */
+   onScroll?: ?(e: ScrollEvent) => mixed,
+ 
++  /**
++   * Invoked when the user performs the paste action.
++   */
++  onPaste?: ?(e: PasteEvent) => mixed,
++
+   /**
+    * The string that will be rendered before text input has been entered.
+    */
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/Multiline/RCTUITextView.mm b/node_modules/react-native/Libraries/Text/TextInput/Multiline/RCTUITextView.mm
+index 6e9c384..2c509eb 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/Multiline/RCTUITextView.mm
++++ b/node_modules/react-native/Libraries/Text/TextInput/Multiline/RCTUITextView.mm
+@@ -13,6 +13,10 @@
+ #import <React/RCTBackedTextInputDelegateAdapter.h>
+ #import <React/RCTTextAttributes.h>
+ 
++#import <MobileCoreServices/MobileCoreServices.h>
++#import <MobileCoreServices/UTType.h>
++#import <UIKit/UIKit.h>
++
+ @implementation RCTUITextView {
+   UILabel *_placeholderView;
+   UITextView *_detachedTextView;
+@@ -209,7 +213,31 @@ - (void)scrollRangeToVisible:(NSRange)range
+ - (void)paste:(id)sender
+ {
+   _textWasPasted = YES;
+-  [super paste:sender];
++  UIPasteboard *clipboard = [UIPasteboard generalPasteboard];
++  if (clipboard.hasImages) {
++    for (NSItemProvider *itemProvider in clipboard.itemProviders) {
++      if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
++        for (NSString *identifier in itemProvider.registeredTypeIdentifiers) {
++          if (UTTypeConformsTo((__bridge CFStringRef)identifier, kUTTypeImage)) {
++            NSString *MIMEType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)identifier, kUTTagClassMIMEType);
++            NSString *fileExtension = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)identifier, kUTTagClassFilenameExtension);
++            NSString *filePath = RCTTempFilePath(fileExtension, nil);
++            NSURL *fileURL = [NSURL fileURLWithPath:filePath];
++            NSData *fileData = [clipboard dataForPasteboardType:identifier];
++            [fileData writeToFile:filePath atomically:YES];
++            [_textInputDelegateAdapter didPaste:MIMEType withData:[fileURL absoluteString]];
++            break;
++          }
++        }
++        break;
++      }
++    }
++  } else {
++    if (clipboard.hasStrings) {
++      [_textInputDelegateAdapter didPaste:@"text/plain" withData:clipboard.string];
++    }
++    [super paste:sender];
++  }
+ }
+ 
+ // Turn off scroll animation to fix flaky scrolling.
+@@ -301,6 +329,10 @@ - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+     return NO;
+   }
+ 
++  if (action == @selector(paste:) && [UIPasteboard generalPasteboard].hasImages) {
++    return YES;
++  }
++
+   return [super canPerformAction:action withSender:sender];
+ }
+ 
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegate.h b/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegate.h
+index 7187177..da00893 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegate.h
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegate.h
+@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
+ 
+ - (void)textInputDidChangeSelection;
+ 
++- (void)textInputDidPaste:(NSString *)type withData:(NSString *)data;
++
+ @optional
+ 
+ - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.h b/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.h
+index f1c32e6..0ce9dfe 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.h
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.h
+@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
+ 
+ - (void)skipNextTextInputDidChangeSelectionEventWithTextRange:(UITextRange *)textRange;
+ - (void)selectedTextRangeWasSet;
++- (void)didPaste:(NSString *)type withData:(NSString *)data;
+ 
+ @end
+ 
+@@ -30,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
+ - (instancetype)initWithTextView:(UITextView<RCTBackedTextInputViewProtocol> *)backedTextInputView;
+ 
+ - (void)skipNextTextInputDidChangeSelectionEventWithTextRange:(UITextRange *)textRange;
++- (void)didPaste:(NSString *)type withData:(NSString *)data;
+ 
+ @end
+ 
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.mm
+index 82d9a79..8cc48ec 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.mm
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.mm
+@@ -148,6 +148,11 @@ - (void)selectedTextRangeWasSet
+   [self textFieldProbablyDidChangeSelection];
+ }
+ 
++- (void)didPaste:(NSString *)type withData:(NSString *)data
++{
++  [_backedTextInputView.textInputDelegate textInputDidPaste:type withData:data];
++}
++
+ #pragma mark - Generalization
+ 
+ - (void)textFieldProbablyDidChangeSelection
+@@ -330,6 +335,11 @@ - (void)skipNextTextInputDidChangeSelectionEventWithTextRange:(UITextRange *)tex
+   _previousSelectedTextRange = textRange;
+ }
+ 
++- (void)didPaste:(NSString *)type withData:(NSString *)data
++{
++  [_backedTextInputView.textInputDelegate textInputDidPaste:type withData:data];
++}
++
+ #pragma mark - Generalization
+ 
+ - (void)textViewProbablyDidChangeSelection
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.h b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.h
+index 4804624..90b7081 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.h
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.h
+@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
+ @property (nonatomic, copy, nullable) RCTDirectEventBlock onChange;
+ @property (nonatomic, copy, nullable) RCTDirectEventBlock onChangeSync;
+ @property (nonatomic, copy, nullable) RCTDirectEventBlock onScroll;
++@property (nonatomic, copy, nullable) RCTDirectEventBlock onPaste;
+ 
+ @property (nonatomic, assign) NSInteger mostRecentEventCount;
+ @property (nonatomic, assign, readonly) NSInteger nativeEventCount;
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
+index 6a2d4f8..b6e6060 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
+@@ -599,6 +599,26 @@ - (void)textInputDidChangeSelection
+   });
+ }
+ 
++- (void)textInputDidPaste:(NSString *)type withData:(NSString *)data
++{
++  if (!_onPaste) {
++    return;
++  }
++
++  NSMutableArray *items = [NSMutableArray new];
++  [items addObject:@{
++    @"type" : type,
++    @"data" : data,
++  }];
++
++  NSDictionary *payload = @{
++    @"target" : self.reactTag,
++    @"items" : items,
++  };
++
++  _onPaste(payload);
++}
++
+ - (void)updateLocalData
+ {
+   [self enforceTextAttributesIfNeeded];
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputViewManager.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputViewManager.mm
+index 47adc53..1865e0a 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputViewManager.mm
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputViewManager.mm
+@@ -70,6 +70,7 @@ @implementation RCTBaseTextInputViewManager {
+ RCT_EXPORT_VIEW_PROPERTY(onChangeSync, RCTDirectEventBlock)
+ RCT_EXPORT_VIEW_PROPERTY(onSelectionChange, RCTDirectEventBlock)
+ RCT_EXPORT_VIEW_PROPERTY(onScroll, RCTDirectEventBlock)
++RCT_EXPORT_VIEW_PROPERTY(onPaste, RCTDirectEventBlock)
+ 
+ RCT_EXPORT_SHADOW_PROPERTY(text, NSString)
+ RCT_EXPORT_SHADOW_PROPERTY(placeholder, NSString)
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/Singleline/RCTUITextField.mm b/node_modules/react-native/Libraries/Text/TextInput/Singleline/RCTUITextField.mm
+index 377f41e..b8f48e6 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/Singleline/RCTUITextField.mm
++++ b/node_modules/react-native/Libraries/Text/TextInput/Singleline/RCTUITextField.mm
+@@ -12,6 +12,10 @@
+ #import <React/RCTUtils.h>
+ #import <React/UIView+React.h>
+ 
++#import <MobileCoreServices/MobileCoreServices.h>
++#import <MobileCoreServices/UTType.h>
++#import <UIKit/UIKit.h>
++
+ @implementation RCTUITextField {
+   RCTBackedTextFieldDelegateAdapter *_textInputDelegateAdapter;
+   NSDictionary<NSAttributedStringKey, id> *_defaultTextAttributes;
+@@ -180,6 +184,10 @@ - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+     return NO;
+   }
+ 
++  if (action == @selector(paste:) && [UIPasteboard generalPasteboard].hasImages) {
++    return YES;
++  }
++
+   return [super canPerformAction:action withSender:sender];
+ }
+ 
+@@ -263,7 +271,31 @@ - (void)scrollRangeToVisible:(NSRange)range
+ - (void)paste:(id)sender
+ {
+   _textWasPasted = YES;
+-  [super paste:sender];
++  UIPasteboard *clipboard = [UIPasteboard generalPasteboard];
++  if (clipboard.hasImages) {
++    for (NSItemProvider *itemProvider in clipboard.itemProviders) {
++      if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
++        for (NSString *identifier in itemProvider.registeredTypeIdentifiers) {
++          if (UTTypeConformsTo((__bridge CFStringRef)identifier, kUTTypeImage)) {
++            NSString *MIMEType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)identifier, kUTTagClassMIMEType);
++            NSString *fileExtension = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)identifier, kUTTagClassFilenameExtension);
++            NSString *filePath = RCTTempFilePath(fileExtension, nil);
++            NSURL *fileURL = [NSURL fileURLWithPath:filePath];
++            NSData *fileData = [clipboard dataForPasteboardType:identifier];
++            [fileData writeToFile:filePath atomically:YES];
++            [_textInputDelegateAdapter didPaste:MIMEType withData:[fileURL absoluteString]];
++            break;
++          }
++        }
++        break;
++      }
++    }
++  } else {
++    if (clipboard.hasStrings) {
++      [_textInputDelegateAdapter didPaste:@"text/plain" withData:clipboard.string];
++    }
++    [super paste:sender];
++  }
+ }
+ 
+ #pragma mark - Layout
+diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+index 577bebe..bbde7fd 100644
+--- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
++++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+@@ -516,6 +516,13 @@ - (void)textInputDidChangeSelection
+   }
+ }
+ 
++- (void)textInputDidPaste:(NSString *)type withData:(NSString *)data
++{
++  if (_eventEmitter) {
++    static_cast<const TextInputEventEmitter &>(*_eventEmitter).onPaste(std::string([type UTF8String]), std::string([data UTF8String]));
++  }
++}
++
+ #pragma mark - RCTBackedTextInputDelegate (UIScrollViewDelegate)
+ 
+ - (void)scrollViewDidScroll:(UIScrollView *)scrollView
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/PasteWatcher.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/PasteWatcher.kt
+new file mode 100644
+index 0000000..a684b87
+--- /dev/null
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/PasteWatcher.kt
+@@ -0,0 +1,17 @@
++/*
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * This source code is licensed under the MIT license found in the
++ * LICENSE file in the root directory of this source tree.
++ */
++
++package com.facebook.react.views.textinput
++
++/**
++ * Implement this interface to be informed of paste event in the
++ * ReactTextEdit This is used by the ReactTextInputManager to forward events
++ * from the EditText to JS
++ */
++public fun interface PasteWatcher {
++  public fun onPaste(type: String, data: String)
++}
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
+index 42f6e03..158e4e4 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
+@@ -8,6 +8,10 @@
+ package com.facebook.react.views.textinput
+ 
+ import android.annotation.SuppressLint
++import android.content.ClipboardManager
++import android.content.ClipData
++import android.content.ClipDescription
++import android.content.ContentResolver
+ import android.content.Context
+ import android.content.res.Configuration
+ import android.graphics.Canvas
+@@ -15,7 +19,12 @@ import android.graphics.Color
+ import android.graphics.Paint
+ import android.graphics.Rect
+ import android.graphics.drawable.Drawable
++import android.net.Uri
++import com.facebook.react.uimanager.UIManagerHelper.getReactContext
+ import android.os.Build
++import java.io.File
++import java.io.FileOutputStream
++import java.io.InputStream
+ import android.os.Bundle
+ import android.text.Editable
+ import android.text.InputType
+@@ -128,6 +137,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+   private var selectionWatcher: SelectionWatcher? = null
+   private var contentSizeWatcher: ContentSizeWatcher? = null
+   private var scrollWatcher: ScrollWatcher?
++  private var pasteWatcher: PasteWatcher?
+   private var keyListener: InternalKeyListener? = null
+   private var detectScrollMovement = false
+   private var onKeyPress = false
+@@ -212,6 +222,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+       keyListener = InternalKeyListener()
+     }
+     scrollWatcher = null
++    pasteWatcher = null
+     textAttributes = TextAttributes()
+ 
+     applyTextAttributes()
+@@ -356,9 +367,57 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+    * Called when a context menu option for the text view is selected.
+    * React Native replaces copy (as rich text) with copy as plain text.
+    */
+-  override fun onTextContextMenuItem(id: Int): Boolean =
+-      super.onTextContextMenuItem(
+-          if (id == android.R.id.paste) android.R.id.pasteAsPlainText else id)
++  override fun onTextContextMenuItem(id: Int): Boolean {
++    val modifiedId = if (id == android.R.id.paste || id == android.R.id.pasteAsPlainText) {
++        android.R.id.pasteAsPlainText
++    } else {
++        id
++    }
++
++    if (modifiedId == android.R.id.pasteAsPlainText) {
++      val clipboardManager = getContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
++      val clipData = clipboardManager.primaryClip
++      if (clipData != null) {
++          val item = clipData.getItemAt(0)
++          val itemUri = item.uri
++          var type: String? = null
++          var data: String? = null
++
++          if (itemUri != null) {
++              // First try to get MIME type from ClipData description (more reliable for FileProvider URIs)
++              type = if (clipData.description.mimeTypeCount > 0) {
++                  clipData.description.getMimeType(0)
++              } else {
++                  // Fall back to ContentResolver
++                  val cr = getReactContext(this).contentResolver
++                  cr.getType(itemUri)
++              }
++              if (type != null && type != ClipDescription.MIMETYPE_TEXT_PLAIN) {
++                  // Copy content URI to cache and get file:// URI
++                  data = copyContentUriToCache(itemUri, type)
++                  if (data != null && pasteWatcher != null) {
++                      pasteWatcher?.onPaste(type, data)
++                  }
++                  // Prevents default behavior to avoid inserting raw binary data into the text field
++                  return true
++              }
++          }
++
++          if (clipData.description.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
++              type = ClipDescription.MIMETYPE_TEXT_PLAIN
++              val text: CharSequence? = item.text
++              if (text != null) {
++                  data = text.toString()
++                  if (pasteWatcher != null) {
++                      pasteWatcher?.onPaste(type, data)
++                  }
++              // Don't return - let the system proceed with default text pasting behavior
++          }
++      }
++    }
++  }
++    return super.onTextContextMenuItem(id)
++  }
+ 
+   internal fun clearFocusAndMaybeRefocus() {
+     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P || !isInTouchMode) {
+@@ -421,6 +480,45 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+     this.scrollWatcher = scrollWatcher
+   }
+ 
++  public fun setPasteWatcher(pasteWatcher: PasteWatcher?) {
++    this.pasteWatcher = pasteWatcher
++  }
++
++  /**
++   * Copies a content URI to the cache directory and returns a file:// URI
++   */
++  private fun copyContentUriToCache(contentUri: Uri, mimeType: String?): String? {
++    try {
++      val cr = getReactContext(this).contentResolver
++      val inputStream: InputStream = cr.openInputStream(contentUri) ?: return null
++
++      // Generate filename with appropriate extension
++      val extension = when (mimeType) {
++        "image/jpeg", "image/jpg" -> "jpg"
++        "image/png" -> "png"
++        "image/gif" -> "gif"
++        "image/webp" -> "webp"
++        else -> "jpg"
++      }
++      val fileName = "paste_${System.currentTimeMillis()}.$extension"
++
++      val cacheDir = context.cacheDir
++      val outputFile = File(cacheDir, fileName)
++      val outputStream = FileOutputStream(outputFile)
++
++      inputStream.use { input ->
++        outputStream.use { output ->
++          input.copyTo(output)
++        }
++      }
++
++      return "file://${outputFile.absolutePath}"
++    } catch (e: Exception) {
++      e.printStackTrace()
++      return null
++    }
++  }
++
+   /**
+    * Attempt to set a selection or fail silently. Intentionally meant to handle bad inputs.
+    * EventCounter is the same one used as with text.
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputManager.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputManager.kt
+index 42c13a1..c39e240 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputManager.kt
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputManager.kt
+@@ -133,6 +133,8 @@ public open class ReactTextInputManager public constructor() :
+     val eventTypeConstants = baseEventTypeConstants ?: mutableMapOf()
+     eventTypeConstants.putAll(
+         mapOf(getJSEventName(ScrollEventType.SCROLL) to mapOf("registrationName" to "onScroll")))
++    eventTypeConstants.putAll(
++            mapOf("topPaste" to mapOf("registrationName" to "onPaste")))
+     return eventTypeConstants
+   }
+ 
+@@ -327,6 +329,15 @@ public open class ReactTextInputManager public constructor() :
+     }
+   }
+ 
++  @ReactProp(name = "onPaste", defaultBoolean = false)
++  public fun setOnPaste(view: ReactEditText, onPaste: Boolean) {
++    if (onPaste) {
++      view.setPasteWatcher(ReactPasteWatcher(view))
++    } else {
++      view.setPasteWatcher(null)
++    }
++  }
++
+   @ReactProp(name = "onKeyPress", defaultBoolean = false)
+   public fun setOnKeyPress(view: ReactEditText, onKeyPress: Boolean) {
+     view.setOnKeyPress(onKeyPress)
+@@ -944,6 +955,24 @@ public open class ReactTextInputManager public constructor() :
+     }
+   }
+ 
++  private class ReactPasteWatcher(editText: ReactEditText) : PasteWatcher {
++    private val mReactEditText: ReactEditText = editText
++    private val mEventDispatcher: EventDispatcher?
++    private val mSurfaceId: Int
++
++    init {
++      val reactContext = UIManagerHelper.getReactContext(editText)
++      mEventDispatcher = getEventDispatcher(reactContext, editText)
++      mSurfaceId = UIManagerHelper.getSurfaceId(reactContext)
++    }
++
++    override fun onPaste(type: String, data: String) {
++      mEventDispatcher?.dispatchEvent(
++        ReactTextInputPasteEvent(mSurfaceId, mReactEditText.id, type, data)
++      )
++    }
++  }
++
+   override fun getExportedViewConstants(): Map<String, Any> =
+       mapOf(
+           "AutoCapitalizationType" to
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputPasteEvent.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputPasteEvent.kt
+new file mode 100644
+index 0000000..6f5b10b
+--- /dev/null
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactTextInputPasteEvent.kt
+@@ -0,0 +1,61 @@
++/*
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * This source code is licensed under the MIT license found in the
++ * LICENSE file in the root directory of this source tree.
++ */
++
++package com.facebook.react.views.textinput
++
++import androidx.annotation.Nullable
++import com.facebook.react.bridge.Arguments
++import com.facebook.react.bridge.WritableMap
++import com.facebook.react.bridge.WritableArray
++import com.facebook.react.uimanager.common.ViewUtil
++import com.facebook.react.uimanager.events.Event
++
++/**
++ * Event emitted by EditText native view when clipboard content is pasted
++ */
++public class ReactTextInputPasteEvent : Event<ReactTextInputPasteEvent> {
++
++    public companion object {
++        private const val EVENT_NAME = "topPaste"
++    }
++
++    private val mType: String
++    private val mData: String
++
++    @Deprecated("Use constructor with surfaceId")
++    public constructor(viewId: Int, type: String, data: String) :
++        this(ViewUtil.NO_SURFACE_ID, viewId, type, data)
++
++    public constructor(surfaceId: Int, viewId: Int, type: String, data: String) :
++        super(surfaceId, viewId) {
++        mType = type
++        mData = data
++    }
++
++    override fun getEventName(): String {
++        return EVENT_NAME
++    }
++
++    override fun canCoalesce(): Boolean {
++        return false
++    }
++
++    @Nullable
++    override fun getEventData(): WritableMap? {
++        val eventData = Arguments.createMap()
++
++        val items: WritableArray = Arguments.createArray()
++        val item: WritableMap = Arguments.createMap()
++        item.putString("type", mType)
++        item.putString("data", mData)
++        items.pushMap(item)
++
++        eventData.putArray("items", items)
++
++        return eventData
++    }
++}
+diff --git a/node_modules/react-native/ReactCommon/react/renderer/components/textinput/TextInputEventEmitter.cpp b/node_modules/react-native/ReactCommon/react/renderer/components/textinput/TextInputEventEmitter.cpp
+index a9bc219..7ebec12 100644
+--- a/node_modules/react-native/ReactCommon/react/renderer/components/textinput/TextInputEventEmitter.cpp
++++ b/node_modules/react-native/ReactCommon/react/renderer/components/textinput/TextInputEventEmitter.cpp
+@@ -177,6 +177,19 @@ void TextInputEventEmitter::onScroll(const Metrics& textInputMetrics) const {
+   });
+ }
+ 
++void TextInputEventEmitter::onPaste(const std::string& type, const std::string& data) const {
++  dispatchEvent("onPaste", [type, data](jsi::Runtime& runtime) {
++    auto payload = jsi::Object(runtime);
++    auto items = jsi::Array(runtime, 1);
++    auto item = jsi::Object(runtime);
++    item.setProperty(runtime, "type", type);
++    item.setProperty(runtime, "data", data);
++    items.setValueAtIndex(runtime, 0, item);
++    payload.setProperty(runtime, "items", items);
++    return payload;
++  });
++}
++
+ void TextInputEventEmitter::dispatchTextInputEvent(
+     const std::string& name,
+     const Metrics& textInputMetrics,
+diff --git a/node_modules/react-native/ReactCommon/react/renderer/components/textinput/TextInputEventEmitter.h b/node_modules/react-native/ReactCommon/react/renderer/components/textinput/TextInputEventEmitter.h
+index dbce575..5b03581 100644
+--- a/node_modules/react-native/ReactCommon/react/renderer/components/textinput/TextInputEventEmitter.h
++++ b/node_modules/react-native/ReactCommon/react/renderer/components/textinput/TextInputEventEmitter.h
+@@ -44,6 +44,7 @@ class TextInputEventEmitter : public ViewEventEmitter {
+   void onSubmitEditing(const Metrics& textInputMetrics) const;
+   void onKeyPress(const KeyPressMetrics& keyPressMetrics) const;
+   void onScroll(const Metrics& textInputMetrics) const;
++  void onPaste(const std::string& type, const std::string& data) const;
+ 
+  private:
+   void dispatchTextInputEvent(
