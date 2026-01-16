@@ -776,6 +776,7 @@ export const ComposePost = ({
               <React.Fragment key={post.id}>
                 <ComposerPost
                   post={post}
+                  postLanguage={langPrefs.postLanguage}
                   dispatch={composerDispatch}
                   textInput={post.id === activePost.id ? textInput : null}
                   isFirstPost={index === 0}
@@ -816,6 +817,7 @@ let ComposerPost = React.memo(function ComposerPost({
   post,
   dispatch,
   textInput,
+  postLanguage,
   isActive,
   isReply,
   isFirstPost,
@@ -829,6 +831,7 @@ let ComposerPost = React.memo(function ComposerPost({
   onPublish,
 }: {
   post: PostDraft
+  postLanguage: string
   dispatch: (action: ComposerAction) => void
   textInput: React.Ref<TextInputRef>
   isActive: boolean
@@ -934,6 +937,7 @@ let ComposerPost = React.memo(function ComposerPost({
           ref={textInput}
           style={[a.pt_xs]}
           richtext={richtext}
+          language={postLanguage}
           placeholder={selectTextInputPlaceholder}
           autoFocus
           webForceMinHeight={forceMinHeight}
