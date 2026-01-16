@@ -6,7 +6,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import {DraftsListDialog} from './DraftsListDialog'
-import {useSaveDraft} from './state/hooks'
+import {useSaveDraftMutation} from './state/queries'
 import {type DraftSummary} from './state/schema'
 
 export function DraftsButton({
@@ -27,7 +27,7 @@ export function DraftsButton({
   const {_} = useLingui()
   const draftsDialogControl = Dialog.useDialogControl()
   const savePromptControl = Prompt.usePromptControl()
-  const {isPending: isSaving} = useSaveDraft()
+  const {isPending: isSaving} = useSaveDraftMutation()
 
   const handlePress = () => {
     if (isEmpty || !isDirty) {
