@@ -4,7 +4,7 @@
  */
 import {type DBSchema, type IDBPDatabase, openDB} from 'idb'
 
-import {logger} from '#/logger'
+import {logger} from './logger'
 
 const DB_NAME = 'bsky-draft-media'
 const DB_VERSION = 1
