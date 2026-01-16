@@ -40,29 +40,19 @@ export function useDraftsQuery() {
 }
 
 /**
- * Hook to load a specific draft for editing
+ * Hook to load a draft's local media for editing.
+ * Takes the full Draft object (from DraftSummary) to avoid re-fetching.
  */
 export function useLoadDraft() {
-  const agent = useAgent()
-
   return useCallback(
     async (
-      draftId: string,
+      draft: AppBskyDraftDefs.Draft,
     ): Promise<{
-      draft: AppBskyDraftDefs.Draft
       loadedMedia: Map<string, string>
-    } | null> => {
-      // Fetch the draft from server
-      const res = await agent.app.bsky.draft.getDrafts({})
-      const draftView = res.data.drafts.find(d => d.id === draftId)
-
-      if (!draftView) {
-        return null
-      }
-
+    }> => {
       // Load local media files
       const loadedMedia = new Map<string, string>()
-      for (const post of draftView.draft.posts) {
+      for (const post of draft.posts) {
         // Load images
         if (post.embedImages) {
           for (const img of post.embedImages) {
@@ -93,9 +83,9 @@ export function useLoadDraft() {
         }
       }
 
-      return {draft: draftView.draft, loadedMedia}
+      return {loadedMedia}
     },
-    [agent],
+    [],
   )
 }
 
@@ -158,30 +148,31 @@ export function useSaveDraftMutation() {
 }
 
 /**
- * Hook to delete a draft
+ * Hook to delete a draft.
+ * Takes the full draft data to avoid re-fetching for media cleanup.
  */
 export function useDeleteDraftMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (draftId: string) => {
-      // First fetch the draft to get media paths for cleanup
-      const res = await agent.app.bsky.draft.getDrafts({})
-      const draftView = res.data.drafts.find(d => d.id === draftId)
-
-      if (draftView) {
-        // Delete local media files
-        for (const post of draftView.draft.posts) {
-          if (post.embedImages) {
-            for (const img of post.embedImages) {
-              await storage.deleteMediaFromLocal(img.localRef.path)
-            }
+    mutationFn: async ({
+      draftId,
+      draft,
+    }: {
+      draftId: string
+      draft: AppBskyDraftDefs.Draft
+    }) => {
+      // Delete local media files
+      for (const post of draft.posts) {
+        if (post.embedImages) {
+          for (const img of post.embedImages) {
+            await storage.deleteMediaFromLocal(img.localRef.path)
           }
-          if (post.embedVideos) {
-            for (const vid of post.embedVideos) {
-              await storage.deleteMediaFromLocal(vid.localRef.path)
-            }
+        }
+        if (post.embedVideos) {
+          for (const vid of post.embedVideos) {
+            await storage.deleteMediaFromLocal(vid.localRef.path)
           }
         }
       }

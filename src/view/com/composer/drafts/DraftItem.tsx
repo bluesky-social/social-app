@@ -30,15 +30,15 @@ export function DraftItem({
 }: {
   draft: DraftSummary
   onSelect: (draft: DraftSummary) => void
-  onDelete: (draftId: string) => void
+  onDelete: (draft: DraftSummary) => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
   const discardPromptControl = Prompt.usePromptControl()
 
   const handleDelete = useCallback(() => {
-    onDelete(draft.id)
-  }, [onDelete, draft.id])
+    onDelete(draft)
+  }, [onDelete, draft])
 
   return (
     <>

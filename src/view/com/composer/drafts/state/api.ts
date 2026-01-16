@@ -289,12 +289,12 @@ export function draftViewToSummary(
 
   return {
     id: view.id,
+    draft: view.draft,
     previewText,
     hasMedia,
     hasMissingMedia,
     mediaCount,
     postCount: view.draft.posts.length,
-    isReply: false, // Reply drafts not supported
     updatedAt: view.updatedAt,
     posts,
   }
