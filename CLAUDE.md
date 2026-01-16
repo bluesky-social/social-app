@@ -352,6 +352,26 @@ STALE.HOURS.ONE        // 1 hour
 STALE.INFINITY         // Never stale
 ```
 
+**Paginated APIs:** Many atproto APIs return paginated results with a `cursor`. Use `useInfiniteQuery` for these:
+
+```tsx
+export function useDraftsQuery() {
+  const agent = useAgent()
+
+  return useInfiniteQuery({
+    queryKey: ['drafts'],
+    queryFn: async ({pageParam}) => {
+      const res = await agent.app.bsky.draft.getDrafts({cursor: pageParam})
+      return res.data
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: page => page.cursor,
+  })
+}
+```
+
+To get all items from pages: `data?.pages.flatMap(page => page.items) ?? []`
+
 ### Preferences (React Context)
 
 ```tsx
@@ -437,7 +457,19 @@ Example from Dialog:
 - `src/components/Dialog/index.tsx` - Native (uses BottomSheet)
 - `src/components/Dialog/index.web.tsx` - Web (uses modal with Radix primitives)
 
-Platform detection:
+**Important:** The bundler automatically resolves platform-specific files. Just import normally:
+
+```tsx
+// CORRECT - bundler picks storage.ts or storage.web.ts automatically
+import * as storage from '#/state/drafts/storage'
+
+// WRONG - don't use require() or conditional imports for platform files
+const storage = isNative
+  ? require('#/state/drafts/storage')
+  : require('#/state/drafts/storage.web')
+```
+
+Platform detection (for runtime logic, not imports):
 ```tsx
 import {IS_WEB, IS_NATIVE, IS_IOS, IS_ANDROID} from '#/env'
 
