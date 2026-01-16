@@ -50,7 +50,6 @@ import {
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -68,7 +67,6 @@ import {
 } from '#/lib/constants'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -117,9 +115,9 @@ import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
-import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
@@ -128,7 +126,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {Text as NewText} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
@@ -1174,7 +1172,7 @@ function ComposerTopBar({
   topBarAnimatedStyle: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   return (
     <Animated.View
@@ -1187,7 +1185,8 @@ function ComposerTopBar({
           color="primary"
           shape="default"
           size="small"
-          style={[a.rounded_full, a.py_sm, {paddingLeft: 7, paddingRight: 7}]}
+          style={[{paddingLeft: 7, paddingRight: 7}]}
+          hoverStyle={[a.bg_transparent, {opacity: 0.5}]}
           onPress={onCancel}
           accessibilityHint={_(
             msg`Closes post composer and discards post draft`,
@@ -1197,77 +1196,75 @@ function ComposerTopBar({
           </ButtonText>
         </Button>
         <View style={a.flex_1} />
-        {/* Drafts not supported for replies */}
-        {!isReply && (
-          <DraftsButton
-            onSelectDraft={onSelectDraft}
-            onSaveDraft={onSaveDraft}
-            onDiscard={onDiscard}
-            isEmpty={isEmpty}
-            isDirty={isDirty}
-            isEditingDraft={isEditingDraft}
-          />
-        )}
         {isPublishing ? (
           <>
-            <Text style={pal.textLight}>{publishingStage}</Text>
+            <Text style={[t.atoms.text_contrast_low]}>{publishingStage}</Text>
             <View style={styles.postBtn}>
               <ActivityIndicator />
             </View>
           </>
         ) : (
-          <Button
-            testID="composerPublishBtn"
-            label={
-              isReply
-                ? isThread
-                  ? _(
-                      msg({
-                        message: 'Publish replies',
-                        comment:
-                          'Accessibility label for button to publish multiple replies in a thread',
-                      }),
-                    )
-                  : _(
-                      msg({
-                        message: 'Publish reply',
-                        comment:
-                          'Accessibility label for button to publish a single reply',
-                      }),
-                    )
-                : isThread
-                  ? _(
-                      msg({
-                        message: 'Publish posts',
-                        comment:
-                          'Accessibility label for button to publish multiple posts in a thread',
-                      }),
-                    )
-                  : _(
-                      msg({
-                        message: 'Publish post',
-                        comment:
-                          'Accessibility label for button to publish a single post',
-                      }),
-                    )
-            }
-            variant="solid"
-            color="primary"
-            shape="default"
-            size="small"
-            style={[a.rounded_full, a.py_sm]}
-            onPress={onPublish}
-            disabled={!canPost || isPublishQueued}>
-            <ButtonText style={[a.text_md]}>
-              {isReply ? (
-                <Trans context="action">Reply</Trans>
-              ) : isThread ? (
-                <Trans context="action">Post All</Trans>
-              ) : (
-                <Trans context="action">Post</Trans>
-              )}
-            </ButtonText>
-          </Button>
+          <>
+            {!isReply && (
+              <DraftsButton
+                onSelectDraft={onSelectDraft}
+                onSaveDraft={onSaveDraft}
+                onDiscard={onDiscard}
+                isEmpty={isEmpty}
+                isDirty={isDirty}
+                isEditingDraft={isEditingDraft}
+              />
+            )}
+            <Button
+              testID="composerPublishBtn"
+              label={
+                isReply
+                  ? isThread
+                    ? _(
+                        msg({
+                          message: 'Publish replies',
+                          comment:
+                            'Accessibility label for button to publish multiple replies in a thread',
+                        }),
+                      )
+                    : _(
+                        msg({
+                          message: 'Publish reply',
+                          comment:
+                            'Accessibility label for button to publish a single reply',
+                        }),
+                      )
+                  : isThread
+                    ? _(
+                        msg({
+                          message: 'Publish posts',
+                          comment:
+                            'Accessibility label for button to publish multiple posts in a thread',
+                        }),
+                      )
+                    : _(
+                        msg({
+                          message: 'Publish post',
+                          comment:
+                            'Accessibility label for button to publish a single post',
+                        }),
+                      )
+              }
+              color="primary"
+              size="small"
+              onPress={onPublish}
+              disabled={!canPost || isPublishQueued}>
+              <ButtonText style={[a.text_md]}>
+                {isReply ? (
+                  <Trans context="action">Reply</Trans>
+                ) : isThread ? (
+                  <Trans context="action">Post All</Trans>
+                ) : (
+                  <Trans context="action">Post</Trans>
+                )}
+              </ButtonText>
+            </Button>
+          </>
         )}
       </View>
       {children}
@@ -1276,18 +1273,10 @@ function ComposerTopBar({
 }
 
 function AltTextReminder({error}: {error: string}) {
-  const pal = usePalette('default')
   return (
-    <View style={[styles.reminderLine, pal.viewLight]}>
-      <View style={styles.errorIcon}>
-        <FontAwesomeIcon
-          icon="exclamation"
-          style={{color: colors.red4}}
-          size={10}
-        />
-      </View>
-      <Text style={[pal.text, a.flex_1]}>{error}</Text>
-    </View>
+    <Admonition type="error" style={[a.mt_2xs, a.mb_sm, a.mx_lg]}>
+      {error}
+    </Admonition>
   )
 }
 
@@ -1954,9 +1943,9 @@ function ErrorBanner({
         ]}>
         <View style={[a.relative, a.flex_row, a.gap_sm, {paddingRight: 48}]}>
           <CircleInfoIcon fill={t.palette.negative_400} />
-          <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
+          <Text style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
             {error}
-          </NewText>
+          </Text>
           <Button
             label={_(msg`Dismiss error`)}
             size="tiny"
@@ -1969,7 +1958,7 @@ function ErrorBanner({
           </Button>
         </View>
         {videoError && videoState.jobId && (
-          <NewText
+          <Text
             style={[
               {paddingLeft: 28},
               a.text_xs,
@@ -1978,7 +1967,7 @@ function ErrorBanner({
               t.atoms.text_contrast_low,
             ]}>
             <Trans>Job ID: {videoState.jobId}</Trans>
-          </NewText>
+          </Text>
         )}
       </View>
     </Animated.View>
@@ -2066,7 +2055,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
           progress={wheelProgress}
         />
       </Animated.View>
-      <NewText style={[a.font_semi_bold, a.ml_sm]}>{text}</NewText>
+      <Text style={[a.font_semi_bold, a.ml_sm]}>{text}</Text>
     </ToolbarWrapper>
   )
 }
