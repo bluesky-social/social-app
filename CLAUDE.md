@@ -240,7 +240,7 @@ import {Text, H1, H2, P} from '#/components/Typography'
 <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>Custom text</Text>
 
 // For text with emoji, add the emoji prop
-<Text emoji>Hello! </Text>
+<Text emoji>Hello! 👋</Text>
 ```
 
 ### TextField
