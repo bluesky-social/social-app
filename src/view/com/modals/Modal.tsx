@@ -8,7 +8,6 @@ import {useModalControls, useModals} from '#/state/modals'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as DeleteAccountModal from './DeleteAccount'
-import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
 
 const DEFAULT_SNAPPOINTS = ['90%']
@@ -48,9 +47,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />
-  } else if (activeModal?.name === 'content-languages-settings') {
-    snapPoints = ContentLanguagesSettingsModal.snapPoints
-    element = <ContentLanguagesSettingsModal.Component />
   } else {
     return null
   }
