@@ -65,7 +65,7 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
-import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {Provider as VideoMuteProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
 import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
 import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
@@ -139,7 +139,7 @@ function InnerApp() {
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
           <Splash isReady={isReady && hasCheckedReferrer}>
-            <VideoVolumeProvider>
+            <VideoMuteProvider>
               <React.Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
@@ -195,7 +195,7 @@ function InnerApp() {
                   </PolicyUpdateOverlayProvider>
                 </QueryProvider>
               </React.Fragment>
-            </VideoVolumeProvider>
+            </VideoMuteProvider>
           </Splash>
         </ContextMenuProvider>
       </ThemeProvider>
