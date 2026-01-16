@@ -5,12 +5,12 @@ import {type AppBskyEmbedImages} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
 import {
   type DraftPostDisplay,
   type DraftSummary,
   type LocalMediaDisplay,
 } from '#/state/drafts'
+import * as storage from '#/state/drafts/storage'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
@@ -22,11 +22,6 @@ import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-
-// Platform-specific storage import
-const storage = isNative
-  ? require('#/state/drafts/storage')
-  : require('#/state/drafts/storage.web')
 
 export function DraftItem({
   draft,
@@ -215,6 +210,8 @@ function DraftPostRow({
 type LoadedImage = {
   url: string
   meta: LocalMediaDisplay
+  width?: number
+  height?: number
 }
 
 function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
@@ -223,17 +220,25 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
 
   useEffect(() => {
     async function loadMedia() {
-      // Load images that exist locally
+      // Try to load all images - the exists flag may be stale due to async cache
       if (post.images && post.images.length > 0) {
         const loaded: LoadedImage[] = []
         for (const image of post.images) {
-          if (image.exists) {
+          try {
+            const url = await storage.loadMediaFromLocal(image.localPath)
+            // Get dimensions using expo-image's loadAsync
+            let width: number | undefined
+            let height: number | undefined
             try {
-              const url = await storage.loadMediaFromLocal(image.localPath)
-              loaded.push({url, meta: image})
-            } catch (e) {
-              console.warn('Failed to load draft image', e)
+              const imageRef = await Image.loadAsync(url)
+              width = imageRef.width
+              height = imageRef.height
+            } catch {
+              // Dimensions unavailable, will use default aspect ratio
             }
+            loaded.push({url, meta: {...image, exists: true}, width, height})
+          } catch (e) {
+            // Image doesn't exist locally, skip it
           }
         }
         setLoadedImages(loaded)
@@ -245,16 +250,16 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
 
   // Convert loaded images to ViewImage format for the embed components
   const viewImages = useMemo<AppBskyEmbedImages.ViewImage[]>(() => {
-    return loadedImages.map(({url}) => ({
+    return loadedImages.map(({url, width, height, meta}) => ({
       thumb: url,
       fullsize: url,
-      alt: '',
-      aspectRatio: undefined, // No dimensions stored in new schema
+      alt: meta.altText || '',
+      aspectRatio: width && height ? {width, height} : {width: 1, height: 1},
     }))
   }, [loadedImages])
 
-  // Count missing images
-  const missingImageCount = post.images?.filter(img => !img.exists).length ?? 0
+  // Count missing images (images we tried to load but couldn't)
+  const missingImageCount = (post.images?.length ?? 0) - loadedImages.length
 
   // Nothing to show
   if (viewImages.length === 0 && !post.gif && !post.video) {
