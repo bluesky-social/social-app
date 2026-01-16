@@ -181,7 +181,7 @@ function serializeVideo(
 
 /**
  * Serialize GIF to server format as external embed.
- * URL format: https://media.tenor.com/{id}/{filename}.gif?hh=HEIGHT&ww=WIDTH
+ * URL format: https://media.tenor.com/{id}/{filename}.gif?hh=HEIGHT&ww=WIDTH&alt=ALT_TEXT
  */
 function serializeGif(gifMedia: {
   type: 'gif'
@@ -195,11 +195,15 @@ function serializeGif(gifMedia: {
     return undefined
   }
 
-  // Build URL with dimensions in query params
+  // Build URL with dimensions and alt text in query params
   const url = new URL(gifFormat.url)
   if (gifFormat.dims) {
     url.searchParams.set('ww', String(gifFormat.dims[0]))
     url.searchParams.set('hh', String(gifFormat.dims[1]))
+  }
+  // Store alt text if present
+  if (gifMedia.alt) {
+    url.searchParams.set('alt', gifMedia.alt)
   }
 
   return {
@@ -298,11 +302,11 @@ export function draftViewToSummary(
 
 /**
  * Parse GIF data from a Tenor URL.
- * URL format: https://media.tenor.com/{id}/{filename}.gif?hh=HEIGHT&ww=WIDTH
+ * URL format: https://media.tenor.com/{id}/{filename}.gif?hh=HEIGHT&ww=WIDTH&alt=ALT_TEXT
  */
 function parseGifFromUrl(
   uri: string,
-): {url: string; width: number; height: number} | undefined {
+): {url: string; width: number; height: number; alt: string} | undefined {
   try {
     const url = new URL(uri)
     if (url.hostname !== TENOR_HOSTNAME) {
@@ -311,12 +315,13 @@ function parseGifFromUrl(
 
     const height = parseInt(url.searchParams.get('hh') || '', 10)
     const width = parseInt(url.searchParams.get('ww') || '', 10)
+    const alt = url.searchParams.get('alt') || ''
 
     if (!height || !width) {
       return undefined
     }
 
-    return {url: uri, width, height}
+    return {url: uri, width, height, alt}
   } catch {
     return undefined
   }
@@ -370,20 +375,33 @@ export function draftToComposerPosts(
       for (const ext of post.embedExternals) {
         const gifData = parseGifFromUrl(ext.uri)
         if (gifData) {
-          // Reconstruct a minimal Gif object
-          // The full Gif object will need to be re-fetched from Tenor if needed
+          // Reconstruct a Gif object with all required properties
+          const mediaObject = {
+            url: gifData.url,
+            dims: [gifData.width, gifData.height] as [number, number],
+            duration: 0,
+            size: 0,
+          }
           embed.media = {
             type: 'gif',
             gif: {
               id: '',
+              created: 0,
+              hasaudio: false,
+              hascaption: false,
+              flags: '',
+              tags: [],
+              title: '',
+              content_description: gifData.alt || '',
+              itemurl: '',
+              url: gifData.url, // Required for useResolveGifQuery
               media_formats: {
-                gif: {
-                  url: gifData.url,
-                  dims: [gifData.width, gifData.height],
-                },
+                gif: mediaObject,
+                tinygif: mediaObject,
+                preview: mediaObject,
               },
             } as Gif,
-            alt: '',
+            alt: gifData.alt,
           }
           break
         }
