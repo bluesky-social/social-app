@@ -28,7 +28,7 @@ export function VerifierDialog({
   verificationState: FullVerificationState
 }) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Inner
         control={control}
@@ -128,9 +128,7 @@ function Inner({
             onPress={() => {
               logger.metric(
                 'verification:learn-more',
-                {
-                  location: 'verifierDialog',
-                },
+                {location: 'verifierDialog'},
                 {statsig: true},
               )
             }}>

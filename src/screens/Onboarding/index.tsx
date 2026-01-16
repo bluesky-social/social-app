@@ -2,7 +2,6 @@ import {useMemo, useReducer} from 'react'
 import {View} from 'react-native'
 import * as bcp47Match from 'bcp-47-match'
 
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -63,8 +62,6 @@ export function Onboarding() {
     createInitialOnboardingState,
   )
   const [contactsFlowState, contactsFlowDispatch] = useFindContactsFlowState()
-
-  useEnableKeyboardControllerScreen(true)
 
   return (
     <Portal>
