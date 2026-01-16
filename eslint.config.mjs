@@ -17,7 +17,9 @@ import globals from 'globals'
 import tsParser from '@typescript-eslint/parser'
 
 export default defineConfig(
-  // Global ignores
+  /**
+   * Global ignores
+   */
   {
     ignores: [
       '**/__mocks__/*.ts',
@@ -40,22 +42,20 @@ export default defineConfig(
     ],
   },
 
-  // Base JS recommended rules
+  /**
+   * Base configurations
+   */
   js.configs.recommended,
-
-  // TypeScript rules
   tseslint.configs.recommendedTypeChecked,
-
-  // React Hooks rules
   reactHooks.configs.flat.recommended,
-
-  // Import X
   // @ts-expect-error https://github.com/un-ts/eslint-plugin-import-x/issues/439
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
   importX.flatConfigs['react-native'],
 
-  // Main configuration for all JS/TS/JSX/TSX files
+  /**
+   * Main configuration for all JS/TS/JSX/TSX files
+   */
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
@@ -88,20 +88,9 @@ export default defineConfig(
       componentWrapperFunctions: ['observer'],
     },
     rules: {
-      // React rules
-      ...react.configs.recommended.rules,
-      ...react.configs['jsx-runtime'].rules,
-      'react/no-unescaped-entities': 'off',
-      'react/prop-types': 'off',
-
-
-      // React Native rules
-      'react-native/no-inline-styles': 'off',
-
-      // React Native A11y rules
-      ...reactNativeA11y.configs.all.rules,
-
-      // Bsky internal rules
+      /**
+       * Custom rules
+       */
       'bsky-internal/avoid-unwrapped-text': [
         'error',
         {
@@ -132,7 +121,25 @@ export default defineConfig(
       'bsky-internal/use-typed-gates': 'error',
       'bsky-internal/use-prefixed-imports': 'error',
 
-      // Import sorting
+      /**
+       * React & React Native
+       */
+      ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
+      'react/no-unescaped-entities': 'off',
+      'react/prop-types': 'off',
+      'react-native/no-inline-styles': 'off',
+      ...reactNativeA11y.configs.all.rules,
+      'react-compiler/react-compiler': 'warn',
+      // TODO: Fix these and set to error
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/purity': 'warn',
+      'react-hooks/refs': 'warn',
+      'react-hooks/immutability': 'warn',
+
+      /**
+       * Import sorting
+       */
       'simple-import-sort/imports': [
         'error',
         {
@@ -170,18 +177,22 @@ export default defineConfig(
       ],
       'simple-import-sort/exports': 'error',
 
-      // React Compiler
-      'react-compiler/react-compiler': 'warn',
+      /**
+       * Import linting
+       */
+      'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],
+      'import-x/no-unresolved': ['error', {
+        /*
+         * The `postinstall` hook runs `compile-if-needed` locally, but not in
+         * CI. For CI-sake, ignore this.
+         */
+        ignore: ['^#\/locale\/locales\/.+\/messages'],
+      }],
 
-      // React - new version is much stricter, so warn for now
-      // TODO: Fix and set to error
-      'react-hooks/set-state-in-effect': 'warn',
-      'react-hooks/purity': 'warn',
-      'react-hooks/refs': 'warn',
-      'react-hooks/immutability': 'warn',
-
-      // TypeScript rules
-      'no-unused-vars': 'off',
+      /**
+       * TypeScript-specific rules
+       */
+      'no-unused-vars': 'off', // off, we use TS-specific rule below
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -196,8 +207,11 @@ export default defineConfig(
         {prefer: 'type-imports', fixStyle: 'inline-type-imports'},
       ],
       '@typescript-eslint/no-require-imports': 'off',
-      // Maintain previous behavior - these are stricter in typescript-eslint v8
-      // `warn` ones are probably worth fixing. `off` ones are a bit too nit-picky
+      /**
+       * Maintain previous behavior - these are stricter in typescript-eslint
+       * v8 `warn` ones are probably worth fixing. `off` ones are a bit too
+       * nit-picky
+       */
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
@@ -219,17 +233,9 @@ export default defineConfig(
       '@typescript-eslint/prefer-promise-reject-errors': 'warn',
       '@typescript-eslint/await-thenable': 'warn',
 
-      // Import rules
-      'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],
-      'import-x/no-unresolved': ['error', {
-        /*
-         * The `postinstall` hook runs `compile-if-needed` locally, but not in
-         * CI. For CI-sake, ignore this.
-         */
-        ignore: ['^#\/locale\/locales\/.+\/messages'],
-      }],
-
-      // Turn off rules that weren't enforced in previous config
+      /**
+       * Turn off rules that we haven't enforced thus far
+       */
       'no-empty-pattern': 'off',
       'no-async-promise-executor': 'off',
       'no-constant-binary-expression': 'warn',
@@ -248,7 +254,9 @@ export default defineConfig(
     },
   },
 
-  // Test files configuration
+  /**
+   * Test files configuration
+   */
   {
     files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.test.{js,jsx,ts,tsx}'],
     languageOptions: {
