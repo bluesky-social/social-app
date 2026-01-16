@@ -2,30 +2,20 @@
  * Native file system storage for draft media.
  * Media is stored by localRefPath key (unique identifier stored in server draft).
  */
-import {
-  copyAsync,
-  deleteAsync,
-  documentDirectory,
-  getInfoAsync,
-  makeDirectoryAsync,
-} from 'expo-file-system/legacy'
+import {Directory, File, Paths} from 'expo-file-system'
 
-import {logger} from '#/logger'
+import {logger} from './logger'
 
 const MEDIA_DIR = 'bsky-draft-media'
 
-function joinPath(...segments: string[]): string {
-  return segments.join('/').replace(/\/+/g, '/')
+function getMediaDirectory(): Directory {
+  return new Directory(Paths.document, MEDIA_DIR)
 }
 
-function getMediaDirectory(): string {
-  return joinPath(documentDirectory!, MEDIA_DIR)
-}
-
-function getMediaPath(localRefPath: string): string {
+function getMediaFile(localRefPath: string): File {
   // Use localRefPath as filename (replace unsafe chars)
   const safeFilename = localRefPath.replace(/[/:]/g, '_')
-  return joinPath(getMediaDirectory(), safeFilename)
+  return new File(getMediaDirectory(), safeFilename)
 }
 
 let dirCreated = false
@@ -33,22 +23,25 @@ let dirCreated = false
 /**
  * Ensure the media directory exists
  */
-async function ensureDirectory(): Promise<void> {
+function ensureDirectory(): void {
   if (dirCreated) return
-  await makeDirectoryAsync(getMediaDirectory(), {intermediates: true})
+  const dir = getMediaDirectory()
+  if (!dir.exists) {
+    dir.create()
+  }
   dirCreated = true
 }
 
 /**
  * Save a media file to local storage by localRefPath key
  */
-export async function saveMediaToLocal(
+export function saveMediaToLocal(
   localRefPath: string,
   sourcePath: string,
-): Promise<void> {
-  await ensureDirectory()
+): void {
+  ensureDirectory()
 
-  const destPath = getMediaPath(localRefPath)
+  const destFile = getMediaFile(localRefPath)
 
   // Ensure source path has file:// prefix for expo-file-system
   let normalizedSource = sourcePath
@@ -57,7 +50,8 @@ export async function saveMediaToLocal(
   }
 
   try {
-    await copyAsync({from: normalizedSource, to: destPath})
+    const sourceFile = new File(normalizedSource)
+    sourceFile.copy(destFile)
     // Update cache after successful save
     mediaExistsCache.set(localRefPath, true)
   } catch (error) {
@@ -65,7 +59,7 @@ export async function saveMediaToLocal(
       error,
       localRefPath,
       sourcePath: normalizedSource,
-      destPath,
+      destPath: destFile.uri,
     })
     throw error
   }
@@ -73,29 +67,27 @@ export async function saveMediaToLocal(
 
 /**
  * Load a media file path from local storage
- * @returns The file path for the saved media
+ * @returns The file URI for the saved media
  */
-export async function loadMediaFromLocal(
-  localRefPath: string,
-): Promise<string> {
-  const path = getMediaPath(localRefPath)
-  const info = await getInfoAsync(path)
+export function loadMediaFromLocal(localRefPath: string): string {
+  const file = getMediaFile(localRefPath)
 
-  if (!info.exists) {
+  if (!file.exists) {
     throw new Error(`Media file not found: ${localRefPath}`)
   }
 
-  return path
+  return file.uri
 }
 
 /**
  * Delete a media file from local storage
  */
-export async function deleteMediaFromLocal(
-  localRefPath: string,
-): Promise<void> {
-  const path = getMediaPath(localRefPath)
-  await deleteAsync(path, {idempotent: true})
+export function deleteMediaFromLocal(localRefPath: string): void {
+  const file = getMediaFile(localRefPath)
+  // Idempotent: only delete if file exists
+  if (file.exists) {
+    file.delete()
+  }
 }
 
 /**
@@ -107,34 +99,48 @@ let cachePopulated = false
 
 export function mediaExists(localRefPath: string): boolean {
   // For native, we need an async check but the API requires sync
-  // Use cached result if available, otherwise assume exists (will fail on load if not)
+  // Use cached result if available, otherwise assume doesn't exist
   if (mediaExistsCache.has(localRefPath)) {
     return mediaExistsCache.get(localRefPath)!
   }
-  // If cache not populated yet, trigger async population and return true optimistically
-  if (!cachePopulated) {
-    populateCache()
+  // If cache not populated yet, trigger async population
+  if (!cachePopulated && !populateCachePromise) {
+    populateCachePromise = populateCacheInternal()
   }
   return false // Conservative: assume doesn't exist if not in cache
 }
 
-async function populateCache(): Promise<void> {
-  try {
-    const {readDirectoryAsync} = await import('expo-file-system/legacy')
-    const dir = getMediaDirectory()
-    const info = await getInfoAsync(dir)
-    if (info.exists) {
-      const files = await readDirectoryAsync(dir)
-      for (const file of files) {
-        // Reverse the safe filename transformation
-        const localRefPath = file.replace(/_/g, ':').replace(/_/g, '/')
-        mediaExistsCache.set(localRefPath, true)
+let populateCachePromise: Promise<void> | null = null
+
+function populateCacheInternal(): Promise<void> {
+  return new Promise(resolve => {
+    try {
+      const dir = getMediaDirectory()
+      if (dir.exists) {
+        const items = dir.list()
+        for (const item of items) {
+          // Reverse the safe filename transformation
+          const localRefPath = item.name.replace(/_/g, ':').replace(/_/g, '/')
+          mediaExistsCache.set(localRefPath, true)
+        }
       }
+      cachePopulated = true
+    } catch (e) {
+      logger.warn('Failed to populate media cache', {error: e})
     }
-    cachePopulated = true
-  } catch (e) {
-    logger.warn('Failed to populate media cache', {error: e})
+    resolve()
+  })
+}
+
+/**
+ * Ensure the media cache is populated. Call this before checking mediaExists.
+ */
+export async function ensureMediaCachePopulated(): Promise<void> {
+  if (cachePopulated) return
+  if (!populateCachePromise) {
+    populateCachePromise = populateCacheInternal()
   }
+  await populateCachePromise
 }
 
 /**
@@ -143,4 +149,5 @@ async function populateCache(): Promise<void> {
 export function clearMediaCache(): void {
   mediaExistsCache.clear()
   cachePopulated = false
+  populateCachePromise = null
 }
