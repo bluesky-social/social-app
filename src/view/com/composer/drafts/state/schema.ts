@@ -2,6 +2,7 @@
  * Types for draft display and local media tracking.
  * Server draft types come from @atproto/api.
  */
+import {type AppBskyDraftDefs} from '@atproto/api'
 
 /**
  * Reference to locally cached media file for display
@@ -47,6 +48,8 @@ export type DraftPostDisplay = {
  */
 export type DraftSummary = {
   id: string
+  /** The full draft data from the server */
+  draft: AppBskyDraftDefs.Draft
   /** First ~100 chars of first post */
   previewText: string
   /** Whether the draft has media */
@@ -57,8 +60,6 @@ export type DraftSummary = {
   mediaCount: number
   /** Number of posts in thread */
   postCount: number
-  /** Whether this is a reply (always false - replies not supported) */
-  isReply: boolean
   /** ISO timestamp of last update */
   updatedAt: string
   /** All posts in the draft for full display */

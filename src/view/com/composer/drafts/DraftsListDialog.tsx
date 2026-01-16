@@ -41,8 +41,8 @@ export function DraftsListDialog({
   )
 
   const handleDeleteDraft = useCallback(
-    (draftId: string) => {
-      deleteDraft(draftId)
+    (draftSummary: DraftSummary) => {
+      deleteDraft({draftId: draftSummary.id, draft: draftSummary.draft})
     },
     [deleteDraft],
   )

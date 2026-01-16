@@ -327,22 +327,19 @@ export const ComposePost = ({
 
   const handleSelectDraft = React.useCallback(
     async (draftSummary: DraftSummary) => {
-      // Load full draft from server with media
-      const result = await loadDraft(draftSummary.id)
-      if (!result) return
-
-      const {draft, loadedMedia} = result
+      // Load local media files for the draft
+      const {loadedMedia} = await loadDraft(draftSummary.draft)
 
       // Convert server draft to composer posts
-      const posts = draftToComposerPosts(draft, loadedMedia)
+      const posts = draftToComposerPosts(draftSummary.draft, loadedMedia)
 
       // Dispatch restore action (this also sets draftId in state)
       composerDispatch({
         type: 'restore_from_draft',
         draftId: draftSummary.id,
         posts,
-        threadgateAllow: draft.threadgateAllow,
-        postgateEmbeddingRules: draft.postgateEmbeddingRules,
+        threadgateAllow: draftSummary.draft.threadgateAllow,
+        postgateEmbeddingRules: draftSummary.draft.postgateEmbeddingRules,
         loadedMedia,
       })
     },
