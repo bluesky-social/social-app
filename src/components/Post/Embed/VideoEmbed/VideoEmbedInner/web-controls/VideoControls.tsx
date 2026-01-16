@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
 
-import {isTouchDevice} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
 import {
   useAutoplayDisabled,
@@ -27,7 +26,7 @@ import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Paus
 import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_WEB_MOBILE_IOS} from '#/env'
+import {IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {TimeIndicator} from '../TimeIndicator'
 import {ControlButton} from './ControlButton'
 import {Scrubber} from './Scrubber'
@@ -342,7 +341,7 @@ export function Controls({
           {opacity: showControls ? 1 : 0},
           {transition: 'opacity 0.2s ease-in-out'},
         ]}>
-        {(!volumeHovered || isTouchDevice) && (
+        {(!volumeHovered || IS_WEB_TOUCH_DEVICE) && (
           <Scrubber
             duration={duration}
             currentTime={currentTime}

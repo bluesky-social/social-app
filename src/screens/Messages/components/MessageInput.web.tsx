@@ -6,7 +6,6 @@ import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
-import {isSafari, isTouchDevice} from '#/lib/browser'
 import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {
@@ -24,6 +23,7 @@ import {Button} from '#/components/Button'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 export function MessageInput({
@@ -85,7 +85,7 @@ export function MessageInput({
       // far too long of a delay, and a subsequent enter press would often just end up doing nothing. A shorter time
       // frame was also not great, since it was too short to be reliable (i.e. an older system might have a larger
       // time gap between the two events firing.
-      if (isSafari && e.key === 'Enter' && e.keyCode === 229) {
+      if (IS_WEB_SAFARI && e.key === 'Enter' && e.keyCode === 229) {
         return
       }
 
@@ -228,7 +228,7 @@ export function MessageInput({
           onChange={onChange}
           // On mobile web phones, we want to keep the same behavior as the native app. Do not submit the message
           // in these cases.
-          onKeyDown={isTouchDevice && isMobile ? undefined : onKeyDown}
+          onKeyDown={IS_WEB_TOUCH_DEVICE && isMobile ? undefined : onKeyDown}
         />
         <Pressable
           accessibilityRole="button"

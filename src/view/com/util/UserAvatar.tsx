@@ -16,7 +16,6 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useActorStatus} from '#/lib/actor-status'
-import {isTouchDevice} from '#/lib/browser'
 import {useHaptics} from '#/lib/haptics'
 import {
   useCameraPermission,
@@ -53,7 +52,7 @@ import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
@@ -571,7 +570,7 @@ let PreviewableUserAvatar = ({
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       {disableNavigation ? (
         avatarEl
-      ) : status.isActive && (IS_NATIVE || isTouchDevice) ? (
+      ) : status.isActive && (IS_NATIVE || IS_WEB_TOUCH_DEVICE) ? (
         <>
           <Button
             label={_(

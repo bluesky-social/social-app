@@ -1,7 +1,6 @@
 import {Dimensions} from 'react-native'
 
-import {isSafari} from '#/lib/browser'
-import {IS_WEB} from '#/env'
+import {IS_WEB, IS_WEB_SAFARI} from '#/env'
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -560,7 +559,7 @@ export function parseTenorGif(urlp: URL):
   }
 
   if (IS_WEB) {
-    if (isSafari) {
+    if (IS_WEB_SAFARI) {
       id = id.replace('AAAAC', 'AAAP1')
       filename = filename.replace('.gif', '.mp4')
     } else {
