@@ -3,12 +3,12 @@ export type Gate =
   | 'alt_share_icon'
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'
+  | 'disable_live_now_beta'
   | 'disable_onboarding_find_contacts'
   | 'disable_settings_find_contacts'
   | 'explore_show_suggested_feeds'
   | 'feed_reply_button_open_thread'
   | 'is_bsky_team_member' // special, do not remove
-  | 'live_now_beta'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
   | 'onboarding_suggested_starterpacks'
