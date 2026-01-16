@@ -72,8 +72,6 @@ export default defineConfig(
       sourceType: 'module',
       globals: {
         ...globals.browser,
-        ...globals.node,
-        ...globals.es2021,
       },
       parserOptions: {
         parser: tsParser,
