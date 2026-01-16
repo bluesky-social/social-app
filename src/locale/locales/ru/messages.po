@@ -8106,7 +8106,7 @@ msgstr "Сохранить в мои ленты"
 #: src/view/shell/Drawer.tsx:571
 msgctxt "link to bookmarks screen"
 msgid "Saved"
-msgstr ""
+msgstr "Закладки"
 
 #: src/screens/SavedFeeds.tsx:184
 msgid "Saved Feeds"
