@@ -24,7 +24,7 @@ import {
   type PagerRef,
   type RenderTabBarFnProps,
 } from '#/view/com/pager/Pager'
-import {useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {type ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
@@ -273,11 +273,15 @@ let PagerTabBar = ({
   const headerRef = useRef(null)
   return (
     <Animated.View
-      pointerEvents={isIOS ? 'auto' : 'box-none'}
-      style={[styles.tabBarMobile, headerTransform, t.atoms.bg]}>
+      style={[
+        isIOS ? a.pointer_events_auto : a.pointer_events_box_none,
+        styles.tabBarMobile,
+        headerTransform,
+        t.atoms.bg,
+      ]}>
       <View
         ref={headerRef}
-        pointerEvents={isIOS ? 'auto' : 'box-none'}
+        style={isIOS ? a.pointer_events_auto : a.pointer_events_box_none}
         collapsable={false}>
         {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
         {

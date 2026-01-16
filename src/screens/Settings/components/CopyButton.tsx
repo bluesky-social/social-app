@@ -48,14 +48,14 @@ export function CopyButton({
           entering={ZoomIn.duration(100)}
           exiting={FadeOutUp.duration(2000)}
           style={[
+            a.pointer_events_none,
             a.absolute,
             {bottom: '100%', right: 0},
             a.justify_center,
             a.gap_sm,
             a.z_10,
             a.pb_sm,
-          ]}
-          pointerEvents="none">
+          ]}>
           <Text
             style={[
               a.font_medium,

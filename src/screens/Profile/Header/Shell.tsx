@@ -167,10 +167,17 @@ let ProfileHeaderShell = ({
   }, [profile.banner, moderation, _openLightbox, bannerRef])
 
   return (
-    <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
+    <View
+      style={[
+        t.atoms.bg,
+        isIOS ? a.pointer_events_auto : a.pointer_events_box_none,
+      ]}>
       <View
-        pointerEvents={isIOS ? 'auto' : 'box-none'}
-        style={[a.relative, {height: 150}]}>
+        style={[
+          a.relative,
+          {height: 150},
+          isIOS ? a.pointer_events_auto : a.pointer_events_box_none,
+        ]}>
         <StatusBarShadow />
         <GrowableBanner
           onPress={isPlaceholderProfile ? undefined : onPressBanner}
@@ -244,7 +251,7 @@ let ProfileHeaderShell = ({
               a.px_lg,
               a.pt_xs,
               a.pb_sm,
-              isIOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
+              isIOS ? a.pointer_events_auto : a.pointer_events_box_none,
             ]}
           />
         ) : (
@@ -254,7 +261,7 @@ let ProfileHeaderShell = ({
               a.px_lg,
               a.pt_xs,
               a.pb_sm,
-              isIOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
+              isIOS ? a.pointer_events_auto : a.pointer_events_box_none,
             ]}
           />
         ))}

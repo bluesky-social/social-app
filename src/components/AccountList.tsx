@@ -44,8 +44,8 @@ export function AccountList({
 
   return (
     <View
-      pointerEvents={pendingDid ? 'none' : 'auto'}
       style={[
+        pendingDid ? a.pointer_events_none : a.pointer_events_auto,
         a.rounded_lg,
         a.overflow_hidden,
         a.border,

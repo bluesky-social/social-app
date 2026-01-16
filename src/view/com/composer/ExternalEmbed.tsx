@@ -44,7 +44,7 @@ export const ExternalEmbedGif = ({
   return (
     <View style={[a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {linkInfo ? (
-        <View style={{pointerEvents: 'auto'}}>
+        <View style={a.pointer_events_auto}>
           <ExternalEmbed link={linkInfo} hideAlt />
         </View>
       ) : error ? (
@@ -129,7 +129,7 @@ export const ExternalEmbedLink = ({
   return (
     <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {linkComponent ? (
-        <View style={{pointerEvents: 'none'}}>{linkComponent}</View>
+        <View style={a.pointer_events_none}>{linkComponent}</View>
       ) : error ? (
         <Container style={[a.align_start, a.p_md, a.gap_xs]}>
           <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
