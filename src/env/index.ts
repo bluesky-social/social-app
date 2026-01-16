@@ -26,5 +26,18 @@ export const IS_IOS: boolean = Platform.OS === 'ios'
 export const IS_ANDROID: boolean = Platform.OS === 'android'
 export const IS_NATIVE: boolean = true
 export const IS_WEB: boolean = false
+
+/**
+ * Web-specific platform detection
+ */
+export const IS_WEB_TOUCH_DEVICE: boolean = true
 export const IS_WEB_MOBILE: boolean = false
 export const IS_WEB_MOBILE_IOS: boolean = false
+export const IS_WEB_MOBILE_ANDROID: boolean = false
+export const IS_WEB_SAFARI: boolean = false
+export const IS_WEB_FIREFOX: boolean = false
+
+/**
+ * Misc
+ */
+export const IS_HIGH_DPI: boolean = true

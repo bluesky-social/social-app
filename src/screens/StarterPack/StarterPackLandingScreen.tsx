@@ -11,7 +11,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {IS_ANDROIDWeb} from '#/lib/browser'
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -37,7 +36,7 @@ import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
+import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -142,7 +141,7 @@ function LandingScreenLoaded({
       postAppClipMessage({
         action: 'present',
       })
-    } else if (IS_ANDROIDWeb) {
+    } else if (IS_WEB_MOBILE_ANDROID) {
       androidDialogControl.open()
     } else {
       onContinue()
