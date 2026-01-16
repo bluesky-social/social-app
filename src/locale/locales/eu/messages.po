@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-15 15:41\n"
+"PO-Revision-Date: 2026-01-16 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -569,7 +569,7 @@ msgstr "Egiaztatzeko modu berri bat"
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:147
 msgid "A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: \"Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!\""
-msgstr ""
+msgstr "@esb.lol-ek idatzitako post baten pantaila-argazkia, erabiltzailea Twitch-en edukia zuzenean emititzen ari dela erakusten duena. Postak honela dio: \"Kaixo! Twitch-en zuzenean nago, eta Bluesky-ren azken ezaugarria ere probatzen ari naiz!\""
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
@@ -1158,7 +1158,7 @@ msgstr "Bluesky aplikazioa irekita erakusten duen iPhone baten maketa egiaztatut
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:166
 msgid "An unknown error occurred."
-msgstr ""
+msgstr "Errore ezezagun bat gertatu da."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:136
 #: src/lib/moderation/useModerationCauseDescription.ts:145
@@ -1469,7 +1469,7 @@ msgstr "Bete beheko eremuak adinaren berme prozesua hasteko."
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:99
 msgid "Beta Feature"
-msgstr ""
+msgstr "Beta Ezaugarria"
 
 #: src/components/dialogs/BirthDateSettings.tsx:162
 msgid "Birthdate"
@@ -1837,7 +1837,7 @@ msgstr "Epigrafeak eta aukerazko testua"
 
 #: src/components/RichTextTag.tsx:52
 msgid "Cashtag {tag}"
-msgstr ""
+msgstr "{tag} diru-etiketa"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
@@ -2073,7 +2073,7 @@ msgstr "Egin klik hemen zure posta elektronikoa eguneratzeko"
 
 #: src/components/RichTextTag.tsx:55
 msgid "Click to open tag menu for {0}"
-msgstr ""
+msgstr "Egin klik {0} etiketa-menua irekitzeko"
 
 #: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
@@ -2266,7 +2266,7 @@ msgstr "Konfiguratu edukia iragazteko ezarpena kategoriarako: {name}"
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
-msgstr ""
+msgstr "Konfiguratu zuzeneko gertaeraren bannerra"
 
 #: src/components/moderation/LabelPreference.tsx:253
 msgid "Configured in <0>moderation settings</0>."
@@ -4541,7 +4541,7 @@ msgstr "Handle luzeegia. Mesedez, saiatu laburrago batekin."
 #: src/components/FeedCard.tsx:157
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:120
 msgid "Happening now"
-msgstr ""
+msgstr "Orain gertatzen ari da"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:85
 msgid "Haptics"
@@ -4652,7 +4652,7 @@ msgstr "Ezkutatu"
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:140
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:147
 msgid "Hide all events"
-msgstr ""
+msgstr "Ezkutatu gertaera guztiak"
 
 #: src/components/dialogs/Embed.tsx:128
 msgid "Hide customization options"
@@ -4684,7 +4684,7 @@ msgstr "Ezkutatu txartel hau"
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:128
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:135
 msgid "Hide this event"
-msgstr ""
+msgstr "Ezkutatu gertaera hau"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:768
 msgid "Hide this post?"
@@ -4837,7 +4837,7 @@ msgstr "Zure jaiotze data okerra dela uste baduzu, egunera dezakezu <0>hemen kli
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:119
 msgid "If you choose to hide all events, you can always re-enable them from <0>Settings → Content & Media</0>."
-msgstr ""
+msgstr "Gertaera guztiak ezkutatzea aukeratzen baduzu, berriro gaitu ditzakezu <0>Ezarpenak → Edukia eta Multimedia</0> atalean."
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:277
 msgid "If you delete this list, you won't be able to recover it."
@@ -5494,15 +5494,15 @@ msgstr "ZUZENEAN"
 #: src/features/liveEvents/components/LiveEventFeedCardCompact.tsx:52
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:52
 msgid "Live event happening now: {0}"
-msgstr ""
+msgstr "Zuzeneko gertaera orain gertatzen ari da: {0}"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:107
 msgid "Live event options"
-msgstr ""
+msgstr "Zuzeneko gertaera aukerak"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:111
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
-msgstr ""
+msgstr "Zuzeneko gertaerak noizean behin agertzen dira zerbait zirraragarria gertatzen ari denean. Nahi izanez gero, gertaera zehatz hau edo kokapen honetako gertaera guztiak ezkutatu ditzakezu zure aplikazioaren interfazean."
 
 #: src/components/live/LiveStatusDialog.tsx:235
 msgid "Live feature is in beta"
@@ -5570,7 +5570,7 @@ msgstr "<0>@sawaratsuki.bsky.social</0>-ren logotipoa"
 
 #: src/components/RichTextTag.tsx:54
 msgid "Long press to open tag menu for {0}"
-msgstr ""
+msgstr "Luze sakatu {0} etiketa-menua irekitzeko"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
@@ -7215,7 +7215,7 @@ msgstr "Sakatu zuk ere jarraitzen duzun kontu honen jarraitzaileak ikusteko"
 
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:118
 msgid "Preview"
-msgstr ""
+msgstr "Aurrebista"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:151
 msgid "Previous image"
@@ -8257,11 +8257,11 @@ msgstr "Segurtasun urratsa behar da"
 
 #: src/components/RichTextTag.tsx:113
 msgid "See {0} posts"
-msgstr ""
+msgstr "Ikusi {0} postak"
 
 #: src/components/RichTextTag.tsx:130
 msgid "See {0} posts by user"
-msgstr ""
+msgstr "Ikusi erabiltzailearen {0} postak"
 
 #: src/components/RichTextTag.tsx:121
 msgid "See {tag} posts"
@@ -8759,7 +8759,7 @@ msgstr "Erakutsi aukeran dauden erabiltzaileen zerrendak"
 #: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:27
 #: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:37
 msgid "Show live events in your Discover Feed"
-msgstr ""
+msgstr "Erakutsi zuzeneko gertaerak zure Discover Feedean"
 
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
@@ -8818,7 +8818,7 @@ msgstr "Erakutsi feedetako abisua eta iragazkia"
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:60
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:170
 msgid "Show when you’re live"
-msgstr ""
+msgstr "Erakutsi zuzenean zaudenean"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:641
 msgid "Shows information about when this post was created"
@@ -9142,7 +9142,7 @@ msgstr "Ipuin liburua"
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:181
 msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
-msgstr ""
+msgstr "Twitch-en erreproduzitzen ari zara? Ezarri zure zuzeneko egoera Bluesky-n zure avatarrari txapa bat gehitzeko. Sakatzean jendea zuzenean zure erreprodukziora eramango du."
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123
@@ -9465,7 +9465,7 @@ msgstr "Etiketa hauek aplikatu zaizkio zure edukiari."
 
 #: src/components/live/GoLiveDialog.tsx:157
 msgid "The following services are enabled for your account: {allowedServices}"
-msgstr ""
+msgstr "Zerbitzu hauek gaituta daude zure kontuan: {allowedServices}"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
@@ -9836,7 +9836,7 @@ msgstr "Zerbitzu honek ez du zerbitzu-baldintzarik edo pribatutasun-politikarik 
 
 #: src/components/live/queries.ts:38
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
-msgstr ""
+msgstr "Zerbitzu hau ez da onartzen Zuzeneko funtzioa beta bertsioan dagoen bitartean. Onartutako zerbitzuak: {formatted}."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "This should create a domain record at:"
@@ -10829,7 +10829,7 @@ msgstr "Ezin izan dugu zerrenda hau aurkitu. Seguruenik ezabatu egin zen."
 
 #: src/screens/Hashtag.tsx:271
 msgid "We couldn't find any results for that tag."
-msgstr ""
+msgstr "Ezin izan dugu etiketa horren emaitzarik aurkitu."
 
 #: src/screens/Topic.tsx:180
 msgid "We couldn't find any results for that topic."
@@ -11709,7 +11709,7 @@ msgstr "Zure interesek gustatzen zaizuna aurkitzen laguntzen digute!"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:68
 msgid "Your live event preferences have been updated."
-msgstr ""
+msgstr "Zure zuzeneko gertaeraren hobespenak eguneratu dira."
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:123
 msgid "Your location data is not tracked and does not leave your device."

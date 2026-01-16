@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-15 15:41\n"
+"PO-Revision-Date: 2026-01-16 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -569,7 +569,7 @@ msgstr "Uma nova forma de verificação"
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:147
 msgid "A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: \"Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!\""
-msgstr ""
+msgstr "Uma captura de tela de uma postagem do @esb.lol, mostrando que o usuário está transmitindo conteúdo ao vivo na Twitch. A postagem diz: \"Olá! Estou ao vivo na Twitch, e estou testando o recurso mais recente do Bluesky também!\""
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
@@ -1158,7 +1158,7 @@ msgstr "Um mockup de um iPhone mostrando o aplicativo Bluesky aberto ao perfil d
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:166
 msgid "An unknown error occurred."
-msgstr ""
+msgstr "Ocorreu um erro desconhecido."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:136
 #: src/lib/moderation/useModerationCauseDescription.ts:145
@@ -1469,7 +1469,7 @@ msgstr "Comece o processo de verificação de idade preenchendo os campos abaixo
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:99
 msgid "Beta Feature"
-msgstr ""
+msgstr "Recurso em Teste"
 
 #: src/components/dialogs/BirthDateSettings.tsx:162
 msgid "Birthdate"
@@ -1837,7 +1837,7 @@ msgstr "Legendas e texto alternativo"
 
 #: src/components/RichTextTag.tsx:52
 msgid "Cashtag {tag}"
-msgstr ""
+msgstr "Cashtag {tag}"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
@@ -2073,7 +2073,7 @@ msgstr "Clique aqui para atualizar seu email"
 
 #: src/components/RichTextTag.tsx:55
 msgid "Click to open tag menu for {0}"
-msgstr ""
+msgstr "Clique para abrir o menu de tag para {0}"
 
 #: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
@@ -2266,7 +2266,7 @@ msgstr "Configure o filtro de conteúdo por categoria: {name}"
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
-msgstr ""
+msgstr "Configurar banner de eventos ao vivo"
 
 #: src/components/moderation/LabelPreference.tsx:253
 msgid "Configured in <0>moderation settings</0>."
@@ -4541,7 +4541,7 @@ msgstr "Nome de usuário muito longo. Por favor tente um nome de usuário mais c
 #: src/components/FeedCard.tsx:157
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:120
 msgid "Happening now"
-msgstr ""
+msgstr "Acontecendo agora"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:85
 msgid "Haptics"
@@ -4652,7 +4652,7 @@ msgstr "Ocultar"
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:140
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:147
 msgid "Hide all events"
-msgstr ""
+msgstr "Ocultar todos os eventos"
 
 #: src/components/dialogs/Embed.tsx:128
 msgid "Hide customization options"
@@ -4684,7 +4684,7 @@ msgstr "Ocultar este cartão"
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:128
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:135
 msgid "Hide this event"
-msgstr ""
+msgstr "Ocultar este evento"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:768
 msgid "Hide this post?"
@@ -4837,7 +4837,7 @@ msgstr "Se você acredita que sua data de nascimento está incorreta, você pode
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:119
 msgid "If you choose to hide all events, you can always re-enable them from <0>Settings → Content & Media</0>."
-msgstr ""
+msgstr "Se optar por ocultar todos os eventos, você pode sempre reativá-los em <0>Configurações → Conteúdo e Mídia</0>."
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:277
 msgid "If you delete this list, you won't be able to recover it."
@@ -5494,15 +5494,15 @@ msgstr "AO VIVO"
 #: src/features/liveEvents/components/LiveEventFeedCardCompact.tsx:52
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:52
 msgid "Live event happening now: {0}"
-msgstr ""
+msgstr "Evento ao vivo acontecendo agora: {0}"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:107
 msgid "Live event options"
-msgstr ""
+msgstr "Opções do evento ao vivo"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:111
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
-msgstr ""
+msgstr "Eventos ao vivo aparecem ocasionalmente quando algo interessante está acontecendo. Se quiser, você pode ocultar este evento em particular, ou todos os eventos para esta seção na interface do seu aplicativo."
 
 #: src/components/live/LiveStatusDialog.tsx:235
 msgid "Live feature is in beta"
@@ -5570,7 +5570,7 @@ msgstr "Logo por <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichTextTag.tsx:54
 msgid "Long press to open tag menu for {0}"
-msgstr ""
+msgstr "Toque e segure para abrir o menu de tag para {0}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
@@ -7215,7 +7215,7 @@ msgstr "Toque para ver os seguidores desta conta que você também segue"
 
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:118
 msgid "Preview"
-msgstr ""
+msgstr "Prévia"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:151
 msgid "Previous image"
@@ -8257,11 +8257,11 @@ msgstr "Etapa de segurança necessária"
 
 #: src/components/RichTextTag.tsx:113
 msgid "See {0} posts"
-msgstr ""
+msgstr "Ver postagens com {0}"
 
 #: src/components/RichTextTag.tsx:130
 msgid "See {0} posts by user"
-msgstr ""
+msgstr "Ver postagens com {0} deste usuário"
 
 #: src/components/RichTextTag.tsx:121
 msgid "See {tag} posts"
@@ -8269,7 +8269,7 @@ msgstr "Ver postagens com {tag}"
 
 #: src/components/RichTextTag.tsx:139
 msgid "See {tag} posts by user"
-msgstr "Ver postagens com {tag} por usuário"
+msgstr "Ver postagens com {tag} deste usuário"
 
 #: src/components/RichTextTag.tsx:123
 msgid "See #{tag} posts"
@@ -8277,7 +8277,7 @@ msgstr "Ver postagens com #{tag}"
 
 #: src/components/RichTextTag.tsx:141
 msgid "See #{tag} posts by user"
-msgstr "Ver postagens com #{tag} por usuário"
+msgstr "Ver postagens com #{tag} deste usuário"
 
 #: src/view/com/auth/SplashScreen.web.tsx:182
 msgid "See jobs at Bluesky"
@@ -8759,7 +8759,7 @@ msgstr "Mostrar listas de usuários para selecionar"
 #: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:27
 #: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:37
 msgid "Show live events in your Discover Feed"
-msgstr ""
+msgstr "Mostrar eventos ao vivo no seu feed Descobrir"
 
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
@@ -8818,7 +8818,7 @@ msgstr "Mostrar aviso e filtrar dos feeds"
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:60
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:170
 msgid "Show when you’re live"
-msgstr ""
+msgstr "Mostrar quando você estiver ao vivo"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:641
 msgid "Shows information about when this post was created"
@@ -9142,7 +9142,7 @@ msgstr "Storybook"
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:181
 msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
-msgstr ""
+msgstr "Transmitindo na Twitch? Defina seu status ao vivo no Bluesky para adicionar um emblema ao seu avatar. Tocar nele leva as pessoas direto para a sua transmissão."
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123
@@ -9465,7 +9465,7 @@ msgstr "Os seguintes rótulos foram aplicados sobre seu conteúdo."
 
 #: src/components/live/GoLiveDialog.tsx:157
 msgid "The following services are enabled for your account: {allowedServices}"
-msgstr ""
+msgstr "Os serviços a seguir estão habilitados para sua conta: {allowedServices}"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
@@ -9721,7 +9721,7 @@ msgstr "Esta função permite que usuários recebam notificações das suas post
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
-msgstr "Este recurso está em beta. Você pode ler mais sobre exportação de repositórios <0>nesta postagem</0> do nosso blog."
+msgstr "Este recurso está em fase de testes. Você pode ler mais sobre exportação de repositórios <0>nesta postagem</0> do nosso blog."
 
 #: src/lib/hooks/useCleanError.ts:64
 msgid "This feature is not available while using an app password. Please sign in with your main password."
@@ -9836,7 +9836,7 @@ msgstr "Este serviço não proveu termos de serviço ou política de privacidade
 
 #: src/components/live/queries.ts:38
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
-msgstr ""
+msgstr "Este serviço não é suportado enquanto o recurso Ao Vivo estiver em testes. Serviços permitidos: {formatted}."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "This should create a domain record at:"
@@ -10829,7 +10829,7 @@ msgstr "Não conseguimos encontrar esta lista. Provavelmente ela foi excluída."
 
 #: src/screens/Hashtag.tsx:271
 msgid "We couldn't find any results for that tag."
-msgstr ""
+msgstr "Não encontramos nenhum resultado para esta tag."
 
 #: src/screens/Topic.tsx:180
 msgid "We couldn't find any results for that topic."
@@ -11709,7 +11709,7 @@ msgstr "Seus interesses nos ajudam a encontrar o que você gosta!"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:68
 msgid "Your live event preferences have been updated."
-msgstr ""
+msgstr "Suas preferências de eventos ao vivo foram atualizadas."
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:123
 msgid "Your location data is not tracked and does not leave your device."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-15 15:41\n"
+"PO-Revision-Date: 2026-01-16 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -438,7 +438,7 @@ msgstr "{notificationCount, plural, one {# nì gun leughadh} two {# nì gun leug
 
 #: src/screens/Settings/FindContactsSettings.tsx:430
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
-msgstr ""
+msgstr "{numMatches, plural, one {Chaidh # neach-aithne a lorg} two {Chaidh # neach-aithne a lorg} few {Chaidh # luchd-aithne a lorg} other {Chaidh # neach-aithne a lorg}}"
 
 #: src/components/NewskieDialog.tsx:113
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
@@ -1043,7 +1043,7 @@ msgstr "Mìnichidh roghainn teacsa na tha san dealbh do dhaoine a tha dall no ai
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:133
 msgid "Alt text must be less than {MAX_ALT_TEXT} characters."
-msgstr ""
+msgstr "Feumaidh an roghainn teacsa a bhith nas lugha na {MAX_ALT_TEXT} caractar."
 
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:138
@@ -1158,7 +1158,7 @@ msgstr "Dealbh mas fhìor dhe iPhone a tha a’ sealltainn aplacaid Bluesky agus
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:166
 msgid "An unknown error occurred."
-msgstr ""
+msgstr "Dh’èirich mearachd nach aithne dhuinn."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:136
 #: src/lib/moderation/useModerationCauseDescription.ts:145
@@ -1264,7 +1264,7 @@ msgstr "Tog ath-thagradh an aghaidh na leubail “{0}”"
 
 #: src/components/live/GoLiveDisabledDialog.tsx:92
 msgid "Appeal livestream suspension"
-msgstr ""
+msgstr "Ath-thagair an aghaidh dùnadh an t-srutha bheò"
 
 #: src/components/live/GoLiveDisabledDialog.tsx:82
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
@@ -1469,7 +1469,7 @@ msgstr "Tòisich air dearbhadh d’ aoise le bhith a’ lìonadh nan raointean g
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:99
 msgid "Beta Feature"
-msgstr ""
+msgstr "Gleus beta"
 
 #: src/components/dialogs/BirthDateSettings.tsx:162
 msgid "Birthdate"
@@ -1837,7 +1837,7 @@ msgstr "Caipseanan ⁊ roghainn teacsa"
 
 #: src/components/RichTextTag.tsx:52
 msgid "Cashtag {tag}"
-msgstr ""
+msgstr "Cashtag {tag}"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
@@ -2073,7 +2073,7 @@ msgstr "Briog an-seo airson am post-d agad ùrachadh"
 
 #: src/components/RichTextTag.tsx:55
 msgid "Click to open tag menu for {0}"
-msgstr ""
+msgstr "Dèan briogadh airson clàr-taice an taga airson {0} fhosgladh"
 
 #: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
@@ -2266,7 +2266,7 @@ msgstr "Rèitich roghainn criathradh na susbainte aig an roinn-seòrsa seo: {nam
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
-msgstr ""
+msgstr "Rèitich bratach an tachartais bheò"
 
 #: src/components/moderation/LabelPreference.tsx:253
 msgid "Configured in <0>moderation settings</0>."
@@ -2337,7 +2337,7 @@ msgstr "Cuir fios thugainn"
 
 #: src/screens/Settings/FindContactsSettings.tsx:498
 msgid "Contacts imported"
-msgstr ""
+msgstr "Chaidh an luchd-aithne ion-phortadh"
 
 #: src/screens/Settings/FindContactsSettings.tsx:471
 msgid "Contacts removed"
@@ -4120,7 +4120,7 @@ msgstr "Lean ri 10 cunntasan"
 
 #: src/components/ProgressGuide/List.tsx:60
 msgid "Follow 10 people to get started"
-msgstr ""
+msgstr "Lean deichnear an toiseach"
 
 #: src/components/ProgressGuide/List.tsx:102
 msgid "Follow 7 accounts"
@@ -4453,7 +4453,7 @@ msgstr "Cuir struth beò"
 #: src/view/com/profile/ProfileMenu.tsx:352
 #: src/view/com/profile/ProfileMenu.tsx:372
 msgid "Go live (disabled)"
-msgstr ""
+msgstr "Dèan craoladh beò (à comas)"
 
 #: src/components/live/GoLiveDialog.tsx:170
 msgid "Go live for"
@@ -4494,7 +4494,7 @@ msgstr "Tadhail air pròifil a’ chleachdaiche"
 
 #: src/components/live/GoLiveDisabledDialog.tsx:104
 msgid "Going live is currently disabled for your account"
-msgstr ""
+msgstr "Chaidh an craoladh beò a chur à comas sa chunntas agad"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -4541,7 +4541,7 @@ msgstr "Tha an làmhrachan ro fhada. Feuch fear nas giorra."
 #: src/components/FeedCard.tsx:157
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:120
 msgid "Happening now"
-msgstr ""
+msgstr "A’ tachairt an-dràsta fhèin"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:85
 msgid "Haptics"
@@ -4578,7 +4578,7 @@ msgstr "A bheil còd agad? <0>Briog an-seo.</0>"
 
 #: src/screens/Signup/StepInfo/index.tsx:332
 msgid "Have we got your location wrong? <0>Tap here to confirm your location with GPS.</0>"
-msgstr ""
+msgstr "A bheil an t-ionad ceàrr againn? <0>Thoir gnogag an-seo ’s daingnich d’ ionad le GPS.</0>"
 
 #: src/screens/Signup/index.tsx:220
 msgid "Having trouble?"
@@ -4652,7 +4652,7 @@ msgstr "Falaich"
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:140
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:147
 msgid "Hide all events"
-msgstr ""
+msgstr "Falaich gach tachartas"
 
 #: src/components/dialogs/Embed.tsx:128
 msgid "Hide customization options"
@@ -4684,7 +4684,7 @@ msgstr "Falaich a’ chairt seo"
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:128
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:135
 msgid "Hide this event"
-msgstr ""
+msgstr "Falaich an tachartas seo"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:768
 msgid "Hide this post?"
@@ -4837,7 +4837,7 @@ msgstr "Ma tha thu dhen bheachd gu bheil latha do bhreith ceàrr, ’s urrainn d
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:119
 msgid "If you choose to hide all events, you can always re-enable them from <0>Settings → Content & Media</0>."
-msgstr ""
+msgstr "Ma chuireas tu romhad gach tachartas a chur am falach, is urrainn dhut an cur an comas as ùr o <0>“Roghainnean” → “Susbaint ⁊ meadhanan”</0>."
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:277
 msgid "If you delete this list, you won't be able to recover it."
@@ -4921,7 +4921,7 @@ msgstr "Ion-phortaich luchd-aithne ’s faigh lorg air do charaidean"
 
 #: src/screens/Settings/FindContactsSettings.tsx:507
 msgid "Imported on {0}"
-msgstr ""
+msgstr "Air ion-phortadh {0}"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:213
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
@@ -5494,7 +5494,7 @@ msgstr "Beò"
 #: src/features/liveEvents/components/LiveEventFeedCardCompact.tsx:52
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:52
 msgid "Live event happening now: {0}"
-msgstr ""
+msgstr "Tha tachartas beò a’ dol: {0}"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:107
 msgid "Live event options"
@@ -5506,7 +5506,7 @@ msgstr ""
 
 #: src/components/live/LiveStatusDialog.tsx:235
 msgid "Live feature is in beta"
-msgstr ""
+msgstr "Tha gleus nan tachartasan beòtha na ghleus beta"
 
 #: src/components/live/EditLiveDialog.tsx:147
 #: src/components/live/EditLiveDialog.tsx:151
@@ -5570,7 +5570,7 @@ msgstr "An suaicheantas le <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichTextTag.tsx:54
 msgid "Long press to open tag menu for {0}"
-msgstr ""
+msgstr "Dèan brùthadh fada airson clàr-taice nan tagaichean airson {0} fhosgladh"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
@@ -6555,7 +6555,7 @@ msgstr "Fosgail log an t-siostaim"
 
 #: src/view/shell/desktop/Feeds.tsx:188
 msgid "Opens {0} feed"
-msgstr ""
+msgstr "Fosglaidh seo an t-inbhir {0}"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:62
 msgid "Opens a dialog to add a content warning to your post"
@@ -7017,7 +7017,7 @@ msgstr "Mìnich carson a chaidh a’ chabadaich agad a chur à comas air mhearac
 
 #: src/components/live/GoLiveDisabledDialog.tsx:123
 msgid "Please explain why you think your Go Live access was incorrectly disabled."
-msgstr ""
+msgstr "Mìnich carson nach bu chòir dhuinn casg a chur air a’ chead-inntrigidh agad do ghleus a’ chraolaidh bheò."
 
 #: src/components/FocusScope/index.tsx:91
 #: src/components/FocusScope/index.tsx:115
@@ -7047,7 +7047,7 @@ msgstr "Clàraich a-steach mar @{0}"
 
 #: src/screens/Settings/FindContactsSettings.tsx:102
 msgid "Please use the native app to import your contacts."
-msgstr ""
+msgstr "Cleachd an aplacaid stannardach airson luchd-aithne ion-phortach."
 
 #: src/screens/FindContactsFlowScreen.tsx:71
 msgid "Please use the native app to sync your contacts."
@@ -7215,7 +7215,7 @@ msgstr "Dèan brùthadh is chì thu na daoine a leanas ris a’ chunntas seo a t
 
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:118
 msgid "Preview"
-msgstr ""
+msgstr "Ro-sheall"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:151
 msgid "Previous image"
@@ -7830,7 +7830,7 @@ msgstr "Dèan aithris air an liosta seo"
 #: src/components/live/LiveStatusDialog.tsx:240
 #: src/components/moderation/ReportDialog/copy.ts:19
 msgid "Report this livestream"
-msgstr ""
+msgstr "Dèan aithris air an t-sruth bheò seo"
 
 #: src/components/moderation/ReportDialog/copy.ts:57
 msgid "Report this message"
@@ -8759,7 +8759,7 @@ msgstr "Seall liostaichean luchd-cleachdaidh airson taghadh a dhèanamh"
 #: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:27
 #: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:37
 msgid "Show live events in your Discover Feed"
-msgstr ""
+msgstr "Seall tachartasan beòtha san inbhir “Fidir”"
 
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
@@ -8818,7 +8818,7 @@ msgstr "Seall rabhadh is criathraich às na h-inbhirean e"
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:60
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:170
 msgid "Show when you’re live"
-msgstr ""
+msgstr "Leig ris nuair a bhios tu ri craoladh beò"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:641
 msgid "Shows information about when this post was created"
@@ -9142,7 +9142,7 @@ msgstr "Leabhar-sgeulachd"
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:181
 msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
-msgstr ""
+msgstr "Ri sruthadh air Twitch? Leig ris air Bluesky gu bheil thu beò agus nochd baidse air an avatar agad. Ma bhriogas cuideigin air, thèid an ath-stiùireadh chun an t-srutha agad."
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123
@@ -9294,7 +9294,7 @@ msgstr "Thoir gnogag airson barrachd fiosrachaidh"
 
 #: src/screens/Signup/StepInfo/index.tsx:336
 msgid "Tap here to confirm your location with GPS."
-msgstr ""
+msgstr "Thoir gnogag an-seo ’s daingnich d’ ionad le GPS."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:164
 msgid "Tap to acknowledge that you understand and agree to these updates and continue using Bluesky"
@@ -9465,7 +9465,7 @@ msgstr "Chaidh na leubailean a leanas a chur ris an t-susbaint agad."
 
 #: src/components/live/GoLiveDialog.tsx:157
 msgid "The following services are enabled for your account: {allowedServices}"
-msgstr ""
+msgstr "Chaidh na seirbheisean a leanas a chur an comas dhan chunntas agad: {allowedServices}"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
@@ -9672,7 +9672,7 @@ msgstr "Thèid an t-ath-thagradh seo a chur gu seirbheis modarataireachd Bhluesk
 #: src/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated.tsx:27
 #: src/screens/PostThread/components/ThreadItemPostNoUnauthenticated.tsx:47
 msgid "This author has chosen to make their posts visible only to people who are signed in."
-msgstr ""
+msgstr "Cho-dhùin an t-ùghdar seo nach fhaic ach daoine a tha clàraichte a-staigh na puist aca."
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -9836,7 +9836,7 @@ msgstr "Cha tug an t-seirbheis seo seachad teirmichean seirbheise no poileasaidh
 
 #: src/components/live/queries.ts:38
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
-msgstr ""
+msgstr "Cha bhi an t-seirbheis seo ri làimh fhad ’s a bhios gleus a’ chraolaidh bheò na ghleus beta. Seirbheisean a tha ceadaichte: {formatted}."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "This should create a domain record at:"
@@ -10004,7 +10004,7 @@ msgstr "Air bilean an t-sluaigh"
 
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:55
 msgid "Trending options"
-msgstr ""
+msgstr "Roghainnean a tha a’ treandadh"
 
 #: src/components/interstitials/TrendingVideos.tsx:86
 msgid "Trending Videos"
@@ -10165,7 +10165,7 @@ msgstr "Gu mì-fhortanach, a rèir latha do bhreith a shàbhail thu sa chunntas 
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:182
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
-msgstr ""
+msgstr "Gu mì-fhortanach, a rèir na h-aoise a thug thu dhuinn, chan eil thu aosta gu leòr ’s chan fhaigh thu cothrom air Bluesky far a bheil thusa."
 
 #: src/components/verification/VerificationsDialog.tsx:211
 msgid "Unknown verifier"
@@ -10829,7 +10829,7 @@ msgstr "Cha d’fhuair sinn lorg air an liosta seo. Dh’fhaoidte gun deach a sg
 
 #: src/screens/Hashtag.tsx:271
 msgid "We couldn't find any results for that tag."
-msgstr ""
+msgstr "Cha d’fhuair sinn toradh sam bith leis an taga sin."
 
 #: src/screens/Topic.tsx:180
 msgid "We couldn't find any results for that topic."
@@ -11075,7 +11075,7 @@ msgstr "Carson bu chòir dhuinn lèirmheas a dhèanamh air an liosta seo?"
 
 #: src/components/moderation/ReportDialog/copy.ts:20
 msgid "Why should this livestream be reviewed?"
-msgstr ""
+msgstr "Carson bu chòir dhuinn sùil a thoirt air an t-sruth bheò seo?"
 
 #: src/components/moderation/ReportDialog/copy.ts:58
 msgid "Why should this message be reviewed?"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-15 15:41\n"
+"PO-Revision-Date: 2026-01-16 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -569,7 +569,7 @@ msgstr "En ny form av verifiering"
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:147
 msgid "A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: \"Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!\""
-msgstr "En skärmdump av ett inlägg från @esb.lol som visar att användaren just nu livesänder på Twitch. Inlägget lyder, översatt från engelska: ”Hej! Jag sänder live från Twitch, och jag testar Blueskys senaste funktion också!”"
+msgstr "En skärmdump av ett inlägg från @esb.lol som visar att användaren just nu livesänder på Twitch. Inlägget lyder, översatt från engelska: ”Hej! Jag sänder live på Twitch, och jag testar också den senaste funktionen på Bluesky!”"
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
@@ -721,7 +721,7 @@ msgstr "Lägg till innehållsvarning"
 
 #: src/components/live/GoLiveDialog.tsx:103
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
-msgstr "Lägg till en tillfällig livesändningsstatus på din profil. När någon klickar på din avatar får de se information om ditt liveevenemang."
+msgstr "Lägg till en tillfällig livesändningsstatus på din profil. Den som klickar på din avatar får se information om ditt liveevenemang."
 
 #: src/screens/ProfileList/AboutSection.tsx:63
 #: src/screens/ProfileList/AboutSection.tsx:81
@@ -2266,7 +2266,7 @@ msgstr "Konfigurera innehållsfiltrering för kategorin: {name}"
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
-msgstr "Konfigurera banderoll för liveevent"
+msgstr "Konfigurera banderoll för liveevenemang"
 
 #: src/components/moderation/LabelPreference.tsx:253
 msgid "Configured in <0>moderation settings</0>."
@@ -5598,7 +5598,7 @@ msgstr "Skapa ett åt mig"
 
 #: src/components/dialogs/LinkWarning.tsx:85
 msgid "Make sure this is where you intend to go!"
-msgstr "Se till att du är säker på att du navigeras dit du har tänkt!"
+msgstr "Försäkra dig om att det här är den webbplats du tänkt besöka!"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:61
 #: src/screens/Settings/ContentAndMediaSettings.tsx:64
@@ -9142,7 +9142,7 @@ msgstr "Storybook"
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:181
 msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
-msgstr "Sänder du på Twitch? Ställ in din livestatus på Bluesky för att lägga till ett märke vid din avatar. De som trycker på märket tas direkt till din sändning."
+msgstr "Streamar du på Twitch? Ställ in din livestatus på Bluesky för att lägga till ett märke vid din avatar. De som trycker på märket tas direkt till din stream."
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123

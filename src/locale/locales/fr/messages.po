@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-15 15:41\n"
+"PO-Revision-Date: 2026-01-16 16:20\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -1837,7 +1837,7 @@ msgstr "Sous-titres et texte alt"
 
 #: src/components/RichTextTag.tsx:52
 msgid "Cashtag {tag}"
-msgstr "Mot-clé cash {tag}"
+msgstr "Mot-blé {tag}"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
@@ -5489,7 +5489,7 @@ msgstr "Listes qui bloquent ce compte :"
 #. Live status indicator on avatar. Should be extremely short, not much space for more than 4 characters
 #: src/components/live/LiveIndicator.tsx:46
 msgid "LIVE"
-msgstr "LIVE"
+msgstr "DIRECT"
 
 #: src/features/liveEvents/components/LiveEventFeedCardCompact.tsx:52
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:52
@@ -8818,7 +8818,7 @@ msgstr "Afficher l’avertissement et filtrer des fils d’actu"
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:60
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:170
 msgid "Show when you’re live"
-msgstr "Rendez visible vos streams"
+msgstr "Rendez visibles vos streams"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:641
 msgid "Shows information about when this post was created"
@@ -9142,7 +9142,7 @@ msgstr "Historique"
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:181
 msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
-msgstr "Vous streamez sur Twitch ? Affichez votre le fait que vous êtes en direct sur Bluesky : cela ajoutera un badge à votre avatar qui mènera directement les gens sur votre stream."
+msgstr "Vous streamez sur Twitch ? Affichez le fait que vous êtes en direct sur Bluesky : cela ajoutera un badge à votre avatar qui mènera directement les gens sur votre stream."
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123

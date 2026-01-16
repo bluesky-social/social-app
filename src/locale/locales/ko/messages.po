@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-15 15:41\n"
+"PO-Revision-Date: 2026-01-16 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -721,7 +721,7 @@ msgstr "콘텐츠 경고 추가"
 
 #: src/components/live/GoLiveDialog.tsx:103
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
-msgstr "프로필에 임시 라이브 상태를 추가합니다. 누군가 내 아바타를 클릭하면 내 라이브 이벤트에 대한 정보를 볼 수 있습니다."
+msgstr "프로필에 임시로 라이브 상태를 추가합니다. 누군가 내 아바타를 클릭하면 내 라이브 이벤트에 대한 정보를 볼 수 있습니다."
 
 #: src/screens/ProfileList/AboutSection.tsx:63
 #: src/screens/ProfileList/AboutSection.tsx:81
@@ -9836,7 +9836,7 @@ msgstr "이 서비스는 서비스 이용약관이나 개인정보 처리방침�
 
 #: src/components/live/queries.ts:38
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
-msgstr "라이브 기능이 베타 버전인 동안에는 이 서비스가 지원되지 않습니다. 사용할 수 있는 서비스: {formatted}."
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "This should create a domain record at:"

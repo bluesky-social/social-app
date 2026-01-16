@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-15 15:41\n"
+"PO-Revision-Date: 2026-01-16 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -569,7 +569,7 @@ msgstr "En ny form for verifikation"
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:147
 msgid "A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: \"Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!\""
-msgstr ""
+msgstr "Et skærmdump af et indlæg fra @esb.lol, der viser brugeren livestreame indhold på Twitch. Indlægget lyder: \"Hej! Jeg er live på Twitch og tester samtidig Blueskys nyeste feature!\""
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
@@ -1158,7 +1158,7 @@ msgstr "Et mockup af en iPhone, der viser Bluesky-appen åbnet på profilen for 
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:166
 msgid "An unknown error occurred."
-msgstr ""
+msgstr "Der opstod en ukendt fejl."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:136
 #: src/lib/moderation/useModerationCauseDescription.ts:145
@@ -1264,7 +1264,7 @@ msgstr "Klag over mærkatet \"{0}\""
 
 #: src/components/live/GoLiveDisabledDialog.tsx:92
 msgid "Appeal livestream suspension"
-msgstr ""
+msgstr "Klag over livestreamblokering"
 
 #: src/components/live/GoLiveDisabledDialog.tsx:82
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
@@ -1469,7 +1469,7 @@ msgstr "Begynd alderstjek ved at udfylde felterne herunder."
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:99
 msgid "Beta Feature"
-msgstr ""
+msgstr "Betafunktion"
 
 #: src/components/dialogs/BirthDateSettings.tsx:162
 msgid "Birthdate"
@@ -1837,7 +1837,7 @@ msgstr "Undertekster og alt-tekst"
 
 #: src/components/RichTextTag.tsx:52
 msgid "Cashtag {tag}"
-msgstr ""
+msgstr "Cashtag {tag}"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
@@ -2073,7 +2073,7 @@ msgstr "Klik her for at opdatere din e-mail"
 
 #: src/components/RichTextTag.tsx:55
 msgid "Click to open tag menu for {0}"
-msgstr ""
+msgstr "Klik for at åbne tagmenuen for {0}"
 
 #: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
@@ -2266,7 +2266,7 @@ msgstr "Konfigurer filtreringsindstillinger for kategorien: {name}"
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
-msgstr ""
+msgstr "Konfigurer livebegivenhedsbanner"
 
 #: src/components/moderation/LabelPreference.tsx:253
 msgid "Configured in <0>moderation settings</0>."
@@ -4120,7 +4120,7 @@ msgstr "Følg 10 konti"
 
 #: src/components/ProgressGuide/List.tsx:60
 msgid "Follow 10 people to get started"
-msgstr ""
+msgstr "Følg 10 personer for at komme i gang"
 
 #: src/components/ProgressGuide/List.tsx:102
 msgid "Follow 7 accounts"
@@ -4453,7 +4453,7 @@ msgstr "Gå live"
 #: src/view/com/profile/ProfileMenu.tsx:352
 #: src/view/com/profile/ProfileMenu.tsx:372
 msgid "Go live (disabled)"
-msgstr ""
+msgstr "Gå live (deaktiveret)"
 
 #: src/components/live/GoLiveDialog.tsx:170
 msgid "Go live for"
@@ -4494,7 +4494,7 @@ msgstr "Gå til brugers profil"
 
 #: src/components/live/GoLiveDisabledDialog.tsx:104
 msgid "Going live is currently disabled for your account"
-msgstr ""
+msgstr "Din konto er i øjeblikket spærret for at gå live"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -4541,7 +4541,7 @@ msgstr "Handle er for langt. Prøv med et kortere."
 #: src/components/FeedCard.tsx:157
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:120
 msgid "Happening now"
-msgstr ""
+msgstr "Sker lige nu"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:85
 msgid "Haptics"
@@ -4652,7 +4652,7 @@ msgstr "Skjul"
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:140
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:147
 msgid "Hide all events"
-msgstr ""
+msgstr "Skjul alle begivenheder"
 
 #: src/components/dialogs/Embed.tsx:128
 msgid "Hide customization options"
@@ -4684,7 +4684,7 @@ msgstr "Skjul dette kort"
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:128
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:135
 msgid "Hide this event"
-msgstr ""
+msgstr "Skjul denne begivenhed"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:768
 msgid "Hide this post?"
@@ -4837,7 +4837,7 @@ msgstr "Hvis du mener, at din fødselsdato er forkert, kan du opdatere den ved a
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:119
 msgid "If you choose to hide all events, you can always re-enable them from <0>Settings → Content & Media</0>."
-msgstr ""
+msgstr "Hvis du vælger at skjule alle begivenheder, kan du altid aktivere dem igen under <0>Indstillinger → Indhold og medier</0>."
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:277
 msgid "If you delete this list, you won't be able to recover it."
@@ -5494,19 +5494,19 @@ msgstr "LIVE"
 #: src/features/liveEvents/components/LiveEventFeedCardCompact.tsx:52
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:52
 msgid "Live event happening now: {0}"
-msgstr ""
+msgstr "Livebegivenhed foregår nu: {0}"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:107
 msgid "Live event options"
-msgstr ""
+msgstr "Livebegivenhedsindstillinger"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:111
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
-msgstr ""
+msgstr "Livebegivenheder vises indimellem, når der sker noget spændende. Hvis du ønsker det, kan du skjule enten denne ene begivenhed eller alle begivenheder fra dette sted i appen."
 
 #: src/components/live/LiveStatusDialog.tsx:235
 msgid "Live feature is in beta"
-msgstr ""
+msgstr "Livefunktion er i beta"
 
 #: src/components/live/EditLiveDialog.tsx:147
 #: src/components/live/EditLiveDialog.tsx:151
@@ -5570,7 +5570,7 @@ msgstr "Logo af <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichTextTag.tsx:54
 msgid "Long press to open tag menu for {0}"
-msgstr ""
+msgstr "Langt tryk for at åbne tagmenu for {0}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
@@ -6555,7 +6555,7 @@ msgstr "Åbn systemlog"
 
 #: src/view/shell/desktop/Feeds.tsx:188
 msgid "Opens {0} feed"
-msgstr ""
+msgstr "Åbner feedet {0}"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:62
 msgid "Opens a dialog to add a content warning to your post"
@@ -7017,7 +7017,7 @@ msgstr "Forklar, hvorfor du mener, at dine chats er deaktiveret fejlagtigt"
 
 #: src/components/live/GoLiveDisabledDialog.tsx:123
 msgid "Please explain why you think your Go Live access was incorrectly disabled."
-msgstr ""
+msgstr "Forklar, hvorfor du mener, at din adgang til at gå live fejlagtigt er blevet spærret."
 
 #: src/components/FocusScope/index.tsx:91
 #: src/components/FocusScope/index.tsx:115
@@ -7830,7 +7830,7 @@ msgstr "Anmeld denne liste"
 #: src/components/live/LiveStatusDialog.tsx:240
 #: src/components/moderation/ReportDialog/copy.ts:19
 msgid "Report this livestream"
-msgstr ""
+msgstr "Anmeld denne livestream"
 
 #: src/components/moderation/ReportDialog/copy.ts:57
 msgid "Report this message"
@@ -8257,11 +8257,11 @@ msgstr "Sikkerhedstjek krævet"
 
 #: src/components/RichTextTag.tsx:113
 msgid "See {0} posts"
-msgstr ""
+msgstr "Se opslag med {0}"
 
 #: src/components/RichTextTag.tsx:130
 msgid "See {0} posts by user"
-msgstr ""
+msgstr "Se opslag med {0} af bruger"
 
 #: src/components/RichTextTag.tsx:121
 msgid "See {tag} posts"
@@ -8759,7 +8759,7 @@ msgstr "Vis liste over brugere at vælge fra"
 #: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:27
 #: src/features/liveEvents/components/LiveEventFeedsSettingsToggle.tsx:37
 msgid "Show live events in your Discover Feed"
-msgstr ""
+msgstr "Vis livebegivenheder i dit Discover-feed"
 
 #: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
@@ -8818,7 +8818,7 @@ msgstr "Vis advarsel og filtrer fra feeds"
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:60
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:170
 msgid "Show when you’re live"
-msgstr ""
+msgstr "Vis, når nu er live"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:641
 msgid "Shows information about when this post was created"
@@ -9465,7 +9465,7 @@ msgstr "Følgende labels er blevet sat på dit indhold."
 
 #: src/components/live/GoLiveDialog.tsx:157
 msgid "The following services are enabled for your account: {allowedServices}"
-msgstr ""
+msgstr "Følgende tjenester er aktiveret for din konto: {allowedServices}"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
@@ -9836,7 +9836,7 @@ msgstr "Denne tjeneste har ikke angivet tjenestevilkår eller privatlivspolitik.
 
 #: src/components/live/queries.ts:38
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
-msgstr ""
+msgstr "Denne tjeneste er ikke understøttet, mens Live-funktionen er i beta. Tilladte tjenester: {formatted}."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "This should create a domain record at:"
@@ -10829,7 +10829,7 @@ msgstr "Vi kunne ikke finde denne liste. Den er sikkert blevet slettet."
 
 #: src/screens/Hashtag.tsx:271
 msgid "We couldn't find any results for that tag."
-msgstr ""
+msgstr "Vi kunne ikke finde nogen resultater for dette tag."
 
 #: src/screens/Topic.tsx:180
 msgid "We couldn't find any results for that topic."
@@ -11075,7 +11075,7 @@ msgstr "Hvorfor skal denne liste gennemgås?"
 
 #: src/components/moderation/ReportDialog/copy.ts:20
 msgid "Why should this livestream be reviewed?"
-msgstr ""
+msgstr "Hvorfor skal denne livestream gennemgås?"
 
 #: src/components/moderation/ReportDialog/copy.ts:58
 msgid "Why should this message be reviewed?"
@@ -11172,7 +11172,7 @@ msgstr "Du er ved at oprette en konto på"
 
 #: src/components/live/GoLiveDisabledDialog.tsx:107
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
-msgstr ""
+msgstr "Du er i øjeblikket blokeret fra at gå live."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:301
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:134
@@ -11709,7 +11709,7 @@ msgstr "Dine interesser hjælper os med at finde noget, du kan lide!"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:68
 msgid "Your live event preferences have been updated."
-msgstr ""
+msgstr "Dine livebegivenhedsindstillinger blev opdateret."
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:123
 msgid "Your location data is not tracked and does not leave your device."

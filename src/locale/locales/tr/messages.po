@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-15 15:41\n"
+"PO-Revision-Date: 2026-01-16 16:20\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1837,7 +1837,7 @@ msgstr "Altyazılar ve alternatif metin"
 
 #: src/components/RichTextTag.tsx:52
 msgid "Cashtag {tag}"
-msgstr ""
+msgstr "{tag} finans etiketi"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
@@ -2073,7 +2073,7 @@ msgstr "E-postanızı güncellemek için buraya tıklayın"
 
 #: src/components/RichTextTag.tsx:55
 msgid "Click to open tag menu for {0}"
-msgstr ""
+msgstr "{0} etiket menüsünü açmak için tıklayın"
 
 #: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
@@ -5570,7 +5570,7 @@ msgstr "Logo: <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichTextTag.tsx:54
 msgid "Long press to open tag menu for {0}"
-msgstr ""
+msgstr "{0} etiket menüsünü açmak için uzun basın"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
@@ -8257,11 +8257,11 @@ msgstr "Güvenlik adımı gerekiyor"
 
 #: src/components/RichTextTag.tsx:113
 msgid "See {0} posts"
-msgstr ""
+msgstr "{0} gönderilerini gör"
 
 #: src/components/RichTextTag.tsx:130
 msgid "See {0} posts by user"
-msgstr ""
+msgstr "Kullanıcının {0} gönderilerini gör"
 
 #: src/components/RichTextTag.tsx:121
 msgid "See {tag} posts"
@@ -10829,7 +10829,7 @@ msgstr "Bu listeyi bulamadık. Muhtemelen silinmiş."
 
 #: src/screens/Hashtag.tsx:271
 msgid "We couldn't find any results for that tag."
-msgstr ""
+msgstr "Bu etiket için herhangi bir sonuç bulamadık."
 
 #: src/screens/Topic.tsx:180
 msgid "We couldn't find any results for that topic."
