@@ -33,7 +33,7 @@ export function GrowthHack({
         a.relative,
         a.justify_center,
         align === 'right' ? a.align_end : a.align_start,
-        width === undefined ? {opacity: 0} : {minWidth: width},
+        {minWidth: width ?? iconSizes[ICON_SIZE]},
       ]}>
       <PrivacySensitive
         style={[
@@ -46,14 +46,15 @@ export function GrowthHack({
           // when finding the size of the button, we need the containing
           // element to have a concrete size otherwise the text will
           // collapse to 0 width. so set it to a really big number
-          // and hide the entire thing (see above)
-          width === undefined && {width: 10000},
+          // and just use `pointer-events: box-none` so it doesn't interfere with the UI
+          {width: 1000},
+          a.pointer_events_box_none,
         ]}>
         <View
           onLayout={evt => setWidth(evt.nativeEvent.layout.width)}
           style={[
             t.atoms.bg,
-            // make sure it covers the icon! the won't always be a button
+            // make sure it covers the icon! children might be undefined
             {minWidth: iconSizes[ICON_SIZE], minHeight: iconSizes[ICON_SIZE]},
           ]}>
           {children}
