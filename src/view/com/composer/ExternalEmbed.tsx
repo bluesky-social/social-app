@@ -37,7 +37,13 @@ export const ExternalEmbedGif = ({
   )
 
   const loadingStyle: ViewStyle = {
-    aspectRatio: gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
+    aspectRatio: (() => {
+      const dims = gif.media_formats.gif?.dims
+      if (dims && dims[0] > 0 && dims[1] > 0) {
+        return dims[0] / dims[1]
+      }
+      return 16 / 9 // Default aspect ratio
+    })(),
     width: '100%',
   }
 
