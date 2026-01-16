@@ -137,19 +137,20 @@ export async function deleteMediaFromLocal(
  */
 const mediaExistsCache = new Map<string, boolean>()
 let cachePopulated = false
+let populateCachePromise: Promise<void> | null = null
 
 export function mediaExists(localRefPath: string): boolean {
   if (mediaExistsCache.has(localRefPath)) {
     return mediaExistsCache.get(localRefPath)!
   }
   // If cache not populated yet, trigger async population
-  if (!cachePopulated) {
-    populateCache()
+  if (!cachePopulated && !populateCachePromise) {
+    populateCachePromise = populateCacheInternal()
   }
   return false // Conservative: assume doesn't exist if not in cache
 }
 
-async function populateCache(): Promise<void> {
+async function populateCacheInternal(): Promise<void> {
   try {
     const db = await getDB()
     const keys = await db.getAllKeys('media')
@@ -163,11 +164,23 @@ async function populateCache(): Promise<void> {
 }
 
 /**
+ * Ensure the media cache is populated. Call this before checking mediaExists.
+ */
+export async function ensureMediaCachePopulated(): Promise<void> {
+  if (cachePopulated) return
+  if (!populateCachePromise) {
+    populateCachePromise = populateCacheInternal()
+  }
+  await populateCachePromise
+}
+
+/**
  * Clear the media exists cache (call when media is added/deleted)
  */
 export function clearMediaCache(): void {
   mediaExistsCache.clear()
   cachePopulated = false
+  populateCachePromise = null
 }
 
 /**
