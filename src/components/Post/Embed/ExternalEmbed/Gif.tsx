@@ -114,11 +114,10 @@ export function GifEmbed({
 
   let aspectRatio = 1
   if (params.dimensions) {
-    aspectRatio = clamp(
-      params.dimensions.width / params.dimensions.height,
-      0.75,
-      4,
-    )
+    const ratio = params.dimensions.width / params.dimensions.height
+    if (!isNaN(ratio) && isFinite(ratio)) {
+      aspectRatio = clamp(ratio, 0.75, 4)
+    }
   }
 
   return (

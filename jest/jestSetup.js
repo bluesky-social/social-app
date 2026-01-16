@@ -99,6 +99,12 @@ jest.mock('expo-modules-core', () => ({
   requireNativeViewManager: jest.fn().mockImplementation(_ => {
     return () => null
   }),
+  createPermissionHook: jest.fn().mockImplementation(() => {
+    return () => [
+      {granted: true, canAskAgain: true, status: 'granted'},
+      jest.fn().mockResolvedValue({granted: true, status: 'granted'}),
+    ]
+  }),
 }))
 
 jest.mock('expo-localization', () => ({
@@ -116,3 +122,42 @@ jest.mock('statsig-react-native-expo', () => ({
 
 jest.mock('../src/logger/bitdrift/lib', () => ({}))
 jest.mock('../src/lib/statsig/statsig', () => ({}))
+
+// Mock local bottom-sheet module to avoid Platform.Version issues
+jest.mock('../modules/bottom-sheet', () => {
+  const React = require('react')
+  const {View} = require('react-native')
+
+  class MockBottomSheet extends React.Component {
+    present() {}
+    dismiss() {}
+    static dismissAll() {}
+    render() {
+      return null
+    }
+  }
+
+  class MockBottomSheetNativeComponent extends React.Component {
+    present() {}
+    dismiss() {}
+    static dismissAll() {}
+    render() {
+      return null
+    }
+  }
+
+  return {
+    BottomSheet: MockBottomSheet,
+    BottomSheetNativeComponent: MockBottomSheetNativeComponent,
+    BottomSheetOutlet: props => React.createElement(View, props),
+    BottomSheetPortalProvider: props =>
+      React.createElement(View, null, props.children),
+    BottomSheetProvider: props =>
+      React.createElement(View, null, props.children),
+    BottomSheetSnapPoint: {
+      Medium: 'medium',
+      Full: 'full',
+      Hidden: 'hidden',
+    },
+  }
+})

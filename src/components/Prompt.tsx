@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, useCallback, useContext, useId, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,12 +20,14 @@ export {
   useDialogControl as usePromptControl,
 } from '#/components/Dialog'
 
-const Context = React.createContext<{
+const Context = createContext<{
   titleId: string
   descriptionId: string
+  vertical?: boolean
 }>({
   titleId: '',
   descriptionId: '',
+  vertical: false,
 })
 Context.displayName = 'PromptContext'
 
@@ -34,17 +36,29 @@ export function Outer({
   control,
   testID,
   nativeOptions,
+  webOptions,
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
+  /**
+   * Native-specific options for the prompt. Extends `BottomSheetViewProps`
+   */
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
+  /**
+   * Web-specific options for the prompt
+   *
+   * - `vertical`: `boolean` - uses a narrower, vertically stack presentation with large buttons
+   */
+  webOptions?: {vertical?: boolean}
 }>) {
-  const titleId = React.useId()
-  const descriptionId = React.useId()
+  const titleId = useId()
+  const descriptionId = useId()
 
-  const context = React.useMemo(
-    () => ({titleId, descriptionId}),
-    [titleId, descriptionId],
+  const vertical = webOptions?.vertical || false
+
+  const context = useMemo(
+    () => ({titleId, descriptionId, vertical}),
+    [titleId, descriptionId, vertical],
   )
 
   return (
@@ -58,7 +72,7 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={web({maxWidth: 400})}>
+          style={web({maxWidth: vertical ? 350 : 400})}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -70,7 +84,7 @@ export function TitleText({
   children,
   style,
 }: React.PropsWithChildren<ViewStyleProp>) {
-  const {titleId} = React.useContext(Context)
+  const {titleId} = useContext(Context)
   return (
     <Text
       nativeID={titleId}
@@ -92,7 +106,7 @@ export function DescriptionText({
   selectable,
 }: React.PropsWithChildren<{selectable?: boolean}>) {
   const t = useTheme()
-  const {descriptionId} = React.useContext(Context)
+  const {descriptionId} = useContext(Context)
   return (
     <Text
       nativeID={descriptionId}
@@ -103,8 +117,9 @@ export function DescriptionText({
   )
 }
 
-export function Actions({children}: React.PropsWithChildren<{}>) {
+export function Actions({children}: {children: React.ReactNode}) {
   const {gtMobile} = useBreakpoints()
+  const {vertical} = useContext(Context)
 
   return (
     <View
@@ -112,7 +127,7 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
         a.w_full,
         a.gap_md,
         a.justify_end,
-        gtMobile
+        gtMobile && !vertical
           ? [a.flex_row, a.flex_row_reverse, a.justify_start]
           : [a.flex_col],
       ]}>
@@ -129,10 +144,11 @@ export function Cancel({
    */
   cta?: string
 }) {
+  const {vertical} = useContext(Context)
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     close()
   }, [close])
 
@@ -140,7 +156,7 @@ export function Cancel({
     <Button
       variant="solid"
       color="secondary"
-      size={gtMobile ? 'small' : 'large'}
+      size={gtMobile && !vertical ? 'small' : 'large'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
       <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
@@ -171,8 +187,9 @@ export function Action({
 }) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
+  const {vertical} = useContext(Context)
   const {close} = Dialog.useDialogContext()
-  const handleOnPress = React.useCallback(
+  const handleOnPress = useCallback(
     (e: GestureResponderEvent) => {
       close(() => onPress?.(e))
     },
@@ -181,9 +198,8 @@ export function Action({
 
   return (
     <Button
-      variant="solid"
       color={color}
-      size={gtMobile ? 'small' : 'large'}
+      size={gtMobile && !vertical ? 'small' : 'large'}
       label={cta || _(msg`Confirm`)}
       onPress={handleOnPress}
       testID={testID}>
