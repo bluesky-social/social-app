@@ -1,8 +1,9 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
+  type AppBskyActorDefs,
+  type AppBskyDraftDefs,
   type AppBskyFeedPostgate,
   AppBskyRichtextFacet,
-  type BskyPreferences,
   RichText,
 } from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
@@ -132,12 +133,17 @@ export type ComposerAction =
       type: 'restore_from_draft'
       draftId: string
       posts: PostDraft[]
-      threadgate: Array<{type: string; list?: string}>
+      threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow']
+      postgateEmbeddingRules: AppBskyDraftDefs.Draft['postgateEmbeddingRules']
+
       /** Map of localRefPath -> loaded media path/URL */
       loadedMedia: Map<string, string>
     }
   | {
       type: 'clear'
+      initInteractionSettings:
+        | AppBskyActorDefs.PostInteractionSettingsPref
+        | undefined
     }
   | {
       type: 'mark_saved'
@@ -256,23 +262,13 @@ export function composerReducer(
       }
     }
     case 'restore_from_draft': {
-      const {draftId, posts, threadgate, loadedMedia} = action
-
-      // Convert threadgate to UI settings format
-      const threadgateSettings: ThreadgateAllowUISetting[] = threadgate.map(
-        rule => {
-          if (rule.type === 'mention') {
-            return {type: 'mention'} as ThreadgateAllowUISetting
-          } else if (rule.type === 'following') {
-            return {type: 'following'} as ThreadgateAllowUISetting
-          } else if (rule.type === 'followers') {
-            return {type: 'followers'} as ThreadgateAllowUISetting
-          } else if (rule.type === 'list' && rule.list) {
-            return {type: 'list', list: rule.list} as ThreadgateAllowUISetting
-          }
-          return {type: 'mention'} as ThreadgateAllowUISetting // fallback
-        },
-      )
+      const {
+        draftId,
+        posts,
+        threadgateAllow,
+        postgateEmbeddingRules,
+        loadedMedia,
+      } = action
 
       return {
         activePostIndex: 0,
@@ -282,40 +278,27 @@ export function composerReducer(
         loadedMediaMap: loadedMedia,
         thread: {
           posts,
-          postgate: state.thread.postgate,
-          threadgate:
-            threadgateSettings.length > 0
-              ? threadgateSettings
-              : state.thread.threadgate,
+          postgate: createPostgateRecord({
+            post: '',
+            embeddingRules: postgateEmbeddingRules,
+          }),
+          threadgate: threadgateRecordToAllowUISetting({
+            $type: 'app.bsky.feed.threadgate',
+            post: '',
+            createdAt: new Date().toString(),
+            allow: threadgateAllow,
+          }),
         },
       }
     }
     case 'clear': {
-      return {
-        activePostIndex: 0,
-        mutableNeedsFocusActive: true,
-        draftId: undefined,
-        isDirty: false,
-        loadedMediaMap: undefined,
-        thread: {
-          posts: [
-            {
-              id: nanoid(),
-              richtext: new RichText({text: ''}),
-              shortenedGraphemeLength: 0,
-              labels: [],
-              embed: {
-                quote: undefined,
-                media: undefined,
-                link: undefined,
-              },
-            },
-          ],
-          // Keep the user's default interaction settings
-          postgate: state.thread.postgate,
-          threadgate: state.thread.threadgate,
-        },
-      }
+      return createComposerState({
+        initText: undefined,
+        initMention: undefined,
+        initImageUris: [],
+        initQuoteUri: undefined,
+        initInteractionSettings: action.postInteractionSettings,
+      })
     }
     case 'mark_saved': {
       return {
@@ -589,7 +572,7 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    | BskyPreferences['postInteractionSettings']
+    | AppBskyActorDefs.PostInteractionSettingsPref
     | undefined
 }): ComposerState {
   let media: ImagesMedia | undefined
