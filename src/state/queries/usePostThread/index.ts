@@ -1,7 +1,9 @@
 import {useCallback, useMemo, useState} from 'react'
+import {AppBskyUnspeccedDefs} from '@atproto/api'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isWeb} from '#/platform/detection'
+import {updatePostShadow} from '#/state/cache/post-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {
@@ -77,6 +79,24 @@ export function usePostThread({anchor}: {anchor?: string}) {
         below,
         sort: sort,
       })
+
+      /*
+       * Sync fresh thread data back to feed cache
+       * Find the anchor post and update its shadow with fresh
+       * like and repost counts.
+       */
+      const anchorItem = data.thread?.find(item => item.depth === 0)
+
+      if (
+        anchorItem &&
+        AppBskyUnspeccedDefs.isThreadItemPost(anchorItem.value)
+      ) {
+        const post = anchorItem.value.post
+        updatePostShadow(qc, post.uri, {
+          optimisticLikeCount: post.likeCount,
+          optimisticRepostCount: post.repostCount,
+        })
+      }
 
       /*
        * Initialize `ctx.meta` to track if we know we have additional replies

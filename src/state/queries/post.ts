@@ -145,19 +145,23 @@ export function usePostLikeMutationQueue(
 
   const queueLike = useCallback(() => {
     // optimistically update
+    const currentCount = post.likeCount ?? 0
     updatePostShadow(queryClient, postUri, {
       likeUri: 'pending',
+      optimisticLikeCount: currentCount + 1,
     })
     return queueToggle(true)
-  }, [queryClient, postUri, queueToggle])
+  }, [queryClient, postUri, queueToggle, post.likeCount])
 
   const queueUnlike = useCallback(() => {
     // optimistically update
+    const currentCount = post.likeCount ?? 0
     updatePostShadow(queryClient, postUri, {
       likeUri: undefined,
+      optimisticLikeCount: Math.max(0, currentCount - 1),
     })
     return queueToggle(false)
-  }, [queryClient, postUri, queueToggle])
+  }, [queryClient, postUri, queueToggle, post.likeCount])
 
   return [queueLike, queueUnlike]
 }
@@ -272,19 +276,23 @@ export function usePostRepostMutationQueue(
 
   const queueRepost = useCallback(() => {
     // optimistically update
+    const currentCount = post.repostCount ?? 0
     updatePostShadow(queryClient, postUri, {
       repostUri: 'pending',
+      optimisticRepostCount: currentCount + 1,
     })
     return queueToggle(true)
-  }, [queryClient, postUri, queueToggle])
+  }, [queryClient, postUri, queueToggle, post.repostCount])
 
   const queueUnrepost = useCallback(() => {
     // optimistically update
+    const currentCount = post.repostCount ?? 0
     updatePostShadow(queryClient, postUri, {
       repostUri: undefined,
+      optimisticRepostCount: Math.max(0, currentCount - 1),
     })
     return queueToggle(false)
-  }, [queryClient, postUri, queueToggle])
+  }, [queryClient, postUri, queueToggle, post.repostCount])
 
   return [queueRepost, queueUnrepost]
 }
