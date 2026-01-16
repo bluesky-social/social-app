@@ -15,7 +15,6 @@ import {useHaptics} from '#/lib/haptics'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {type Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   useProfileBlockMutationQueue,
@@ -39,6 +38,7 @@ import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
+import {IS_IOS} from '#/env'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
@@ -103,7 +103,7 @@ let ProfileHeaderStandard = ({
         isPlaceholderProfile={isPlaceholderProfile}>
         <View
           style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
-          pointerEvents={isIOS ? 'auto' : 'box-none'}>
+          pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
           <View
             style={[
               {paddingLeft: 90},
@@ -114,7 +114,7 @@ let ProfileHeaderStandard = ({
               a.pb_sm,
               a.flex_wrap,
             ]}
-            pointerEvents={isIOS ? 'auto' : 'box-none'}>
+            pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
             <HeaderStandardButtons
               profile={profile}
               moderation={moderation}

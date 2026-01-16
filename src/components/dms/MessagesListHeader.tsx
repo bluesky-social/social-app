@@ -10,7 +10,6 @@ import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {isWeb} from '#/platform/detection'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
@@ -24,8 +23,9 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {IS_WEB} from '#/env'
 
-const PFP_SIZE = isWeb ? 40 : Layout.HEADER_SLOT_SIZE
+const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
 
 export function MessagesListHeader({
   profile,

@@ -49,7 +49,6 @@ import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
 import {atoms as a, platform, tokens, useTheme} from '#/alf'
 import {
   Context,
@@ -71,6 +70,7 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {Backdrop} from './Backdrop'
 
 export {
@@ -81,14 +81,14 @@ export {
 const {Provider: PortalProvider, Outlet, Portal} = createPortalGroup()
 
 const SPRING_IN: WithSpringConfig = {
-  mass: isIOS ? 1.25 : 0.75,
+  mass: IS_IOS ? 1.25 : 0.75,
   damping: 50,
   stiffness: 1100,
   restDisplacementThreshold: 0.01,
 }
 
 const SPRING_OUT: WithSpringConfig = {
-  mass: isIOS ? 1.25 : 0.75,
+  mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 1000,
   restDisplacementThreshold: 0.01,
@@ -209,7 +209,7 @@ export function Root({children}: {children: React.ReactNode}) {
   )
 
   useEffect(() => {
-    if (isAndroid && context.isOpen) {
+    if (IS_ANDROID && context.isOpen) {
       const listener = BackHandler.addEventListener('hardwareBackPress', () => {
         context.close()
         return true
@@ -331,7 +331,7 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
       <GestureDetector gesture={composedGestures}>
         <View ref={ref} style={[{opacity: context.isOpen ? 0 : 1}, style]}>
           {children({
-            isNative: true,
+            IS_NATIVE: true,
             control: {isOpen: context.isOpen, open},
             state: {
               pressed: false,

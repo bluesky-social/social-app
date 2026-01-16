@@ -10,8 +10,6 @@ import {
 } from '#/lib/hooks/useCreateSupportLink'
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {isNative} from '#/platform/detection'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useSessionApi} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -38,6 +36,8 @@ import {
   isLegacyBirthdateBug,
   useAgeAssuranceRegionConfig,
 } from '#/ageAssurance/util'
+import {IS_WEB} from '#/env'
+import {IS_NATIVE} from '#/env'
 import {useDeviceGeolocationApi} from '#/geolocation'
 
 const textStyles = [a.text_md, a.leading_snug]
@@ -74,7 +74,7 @@ export function NoAccessScreen() {
   }, [])
 
   const onPressLogout = useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       // We're switching accounts, which remounts the entire app.
       // On mobile, this gets us Home, but on the web we also need reset the URL.
       // We can't change the URL via a navigate() call because the navigator
@@ -139,7 +139,7 @@ export function NoAccessScreen() {
           contentContainerStyle={[
             a.px_2xl,
             {
-              paddingTop: isWeb
+              paddingTop: IS_WEB
                 ? a.p_5xl.padding
                 : insets.top + a.p_2xl.padding,
               paddingBottom: 100,
@@ -359,7 +359,7 @@ function AccessSection() {
         )}
 
         <View style={[a.gap_xs]}>
-          {isNative && (
+          {IS_NATIVE && (
             <>
               <Admonition>
                 <Trans>

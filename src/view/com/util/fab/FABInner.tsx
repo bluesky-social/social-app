@@ -12,9 +12,9 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
-import {isWeb} from '#/platform/detection'
 import {ios, useBreakpoints, useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
+import {IS_WEB} from '#/env'
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   outer: {
     // @ts-ignore web-only
-    position: isWeb ? 'fixed' : 'absolute',
+    position: IS_WEB ? 'fixed' : 'absolute',
     zIndex: 1,
     cursor: 'pointer',
   },

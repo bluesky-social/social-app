@@ -3,11 +3,11 @@ import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {isNative} from '#/platform/detection'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import * as Toast from '#/view/com/util/Toast'
 import {type DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
+import {IS_NATIVE} from '#/env'
 
 export function LeaveConvoPrompt({
   control,
@@ -27,7 +27,7 @@ export function LeaveConvoPrompt({
     onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(
-          StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
+          StackActions.replace('Messages', IS_NATIVE ? {animation: 'pop'} : {}),
         )
       }
     },

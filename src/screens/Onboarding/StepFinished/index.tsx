@@ -22,7 +22,6 @@ import {
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {preferencesQueryKey} from '#/state/queries/preferences'
@@ -47,6 +46,7 @@ import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Loader} from '#/components/Loader'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 import {ValuePropositionPager} from './ValuePropositionPager'
 
@@ -305,7 +305,7 @@ function ValueProposition({
 
       <OnboardingControls.Portal>
         <View style={gtMobile && [a.gap_md, a.flex_row]}>
-          {gtMobile && (isWeb ? subStep !== 2 : true) && (
+          {gtMobile && (IS_WEB ? subStep !== 2 : true) && (
             <Button
               disabled={saving}
               color="secondary"

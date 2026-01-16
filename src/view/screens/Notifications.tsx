@@ -14,7 +14,6 @@ import {
 } from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {emitSoftReset, listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
@@ -39,6 +38,7 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/component
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {IS_NATIVE} from '#/env'
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
@@ -197,7 +197,7 @@ function NotificationsTab({
   // event handlers
   // =
   const scrollToTop = useCallback(() => {
-    scrollElRef.current?.scrollToOffset({animated: isNative, offset: 0})
+    scrollElRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
     setMinimalShellMode(false)
   }, [scrollElRef, setMinimalShellMode])
 
@@ -227,7 +227,7 @@ function NotificationsTab({
     // on focus, check for latest, but only invalidate if the user
     // isnt scrolled down to avoid moving content underneath them
     let currentIsScrolledDown
-    if (isNative) {
+    if (IS_NATIVE) {
       currentIsScrolledDown = isScrolledDown
     } else {
       // On the web, this isn't always updated in time so

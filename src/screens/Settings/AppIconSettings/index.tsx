@@ -8,7 +8,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
-import {isAndroid} from '#/platform/detection'
 import {AppIconImage} from '#/screens/Settings/AppIconSettings/AppIconImage'
 import {type AppIconSet} from '#/screens/Settings/AppIconSettings/types'
 import {useAppIconSets} from '#/screens/Settings/AppIconSettings/useAppIconSets'
@@ -16,6 +15,7 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID} from '#/env'
 import {IS_INTERNAL} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
@@ -29,7 +29,7 @@ export function AppIconSettingsScreen({}: Props) {
   )
 
   const onSetAppIcon = (icon: DynamicAppIcon.IconName) => {
-    if (isAndroid) {
+    if (IS_ANDROID) {
       const next =
         sets.defaults.find(i => i.id === icon) ??
         sets.core.find(i => i.id === icon)
@@ -221,7 +221,7 @@ function AppIcon({icon, size = 50}: {icon: AppIconSet; size: number}) {
       accessibilityHint={_(msg`Changes app icon`)}
       targetScale={0.95}
       onPress={() => {
-        if (isAndroid) {
+        if (IS_ANDROID) {
           Alert.alert(
             _(msg`Change app icon to "${icon.name}"`),
             _(msg`The app will be restarted`),

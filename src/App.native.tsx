@@ -23,7 +23,6 @@ import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -69,6 +68,7 @@ import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbe
 import {ToastOutlet} from '#/components/Toast'
 import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
 import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
@@ -79,10 +79,10 @@ import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 SplashScreen.preventAutoHideAsync()
-if (isIOS) {
+if (IS_IOS) {
   SystemUI.setBackgroundColorAsync('black')
 }
-if (isAndroid) {
+if (IS_ANDROID) {
   // iOS is handled by the config plugin -sfn
   ScreenOrientation.lockAsync(
     ScreenOrientation.OrientationLock.PORTRAIT_UP,

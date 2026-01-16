@@ -18,7 +18,6 @@ import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-disp
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
 import {useAgent} from '#/state/session'
@@ -37,6 +36,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 export function SubscribeProfileDialog({
@@ -195,7 +195,7 @@ function DialogInner({
       }
     } else {
       // on web, a disabled save button feels more natural than a massive close button
-      if (isWeb) {
+      if (IS_WEB) {
         return {
           label: _(msg`Save changes`),
           color: 'secondary',

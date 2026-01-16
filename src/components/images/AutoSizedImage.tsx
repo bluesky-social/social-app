@@ -11,12 +11,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {type Dimensions} from '#/lib/media/types'
-import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export function ConstrainedImage({
   aspectRatio,
@@ -35,7 +35,7 @@ export function ConstrainedImage({
    * the height of the image.
    */
   const outerAspectRatio = useMemo<DimensionValue>(() => {
-    const ratio = isNative
+    const ratio = IS_NATIVE
       ? Math.min(1 / aspectRatio, minMobileAspectRatio ?? 16 / 9) // 9:16 bounding box
       : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
     return `${ratio * 100}%`

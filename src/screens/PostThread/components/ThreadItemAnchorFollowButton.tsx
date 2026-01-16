@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   useProfileFollowMutationQueue,
@@ -17,10 +16,11 @@ import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {IS_IOS} from '#/env'
 import {GrowthHack} from './GrowthHack'
 
 export function ThreadItemAnchorFollowButton({did}: {did: string}) {
-  if (isIOS) {
+  if (IS_IOS) {
     return (
       <GrowthHack>
         <ThreadItemAnchorFollowButtonInner did={did} />

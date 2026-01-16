@@ -5,7 +5,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {
   usePreferencesQuery,
   useRemoveMutedWordMutation,
@@ -32,6 +31,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 
@@ -406,7 +406,7 @@ function MutedWordsInner() {
           )}
         </View>
 
-        {isNative && <View style={{height: 20}} />}
+        {IS_NATIVE && <View style={{height: 20}} />}
       </View>
 
       <Dialog.Close />

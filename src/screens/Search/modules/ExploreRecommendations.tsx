@@ -3,7 +3,6 @@ import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
   useTrendingTopics,
@@ -17,6 +16,7 @@ import {
   TrendingTopicSkeleton,
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 // Note: This module is not currently used and may be removed in the future.
 
@@ -37,7 +37,7 @@ function Inner() {
       <View
         style={[
           a.flex_row,
-          isWeb
+          IS_WEB
             ? [a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
             : [a.p_lg, a.pt_2xl, a.gap_md],
           a.border_b,

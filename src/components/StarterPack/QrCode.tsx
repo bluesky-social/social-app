@@ -6,13 +6,13 @@ import type ViewShot from 'react-native-view-shot'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {isWeb} from '#/platform/detection'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 const LazyViewShot = lazy(
@@ -121,7 +121,7 @@ export function QrCodeInner({link}: {link: string}) {
   return (
     <View style={{position: 'relative'}}>
       {/* An SVG version of the logo is placed on top of normal `QRCode` `logo` prop, since the PNG fails to load before the export completes on web. */}
-      {isWeb && logoArea && (
+      {IS_WEB && logoArea && (
         <View
           style={{
             position: 'absolute',
@@ -139,9 +139,9 @@ export function QrCodeInner({link}: {link: string}) {
           a.rounded_sm,
           {height: 225, width: 225, backgroundColor: '#f3f3f3'},
         ]}
-        pieceSize={isWeb ? 8 : 6}
+        pieceSize={IS_WEB ? 8 : 6}
         padding={20}
-        pieceBorderRadius={isWeb ? 4.5 : 3.5}
+        pieceBorderRadius={IS_WEB ? 4.5 : 3.5}
         outerEyesOptions={{
           topLeft: {
             borderRadius: [12, 12, 0, 12],
@@ -159,11 +159,11 @@ export function QrCodeInner({link}: {link: string}) {
         innerEyesOptions={{borderRadius: 3}}
         logo={{
           href: require('../../../assets/logo.png'),
-          ...(isWeb && {
+          ...(IS_WEB && {
             onChange: onLogoAreaChange,
             padding: 28,
           }),
-          ...(!isWeb && {
+          ...(!IS_WEB && {
             padding: 2,
             scale: 0.95,
           }),

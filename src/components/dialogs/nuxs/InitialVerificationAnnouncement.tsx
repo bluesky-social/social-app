@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -15,6 +14,7 @@ import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Span, Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export function InitialVerificationAnnouncement() {
   const t = useTheme()
@@ -173,7 +173,7 @@ export function InitialVerificationAnnouncement() {
                 <Trans>Read blog post</Trans>
               </ButtonText>
             </Link>
-            {isNative && (
+            {IS_NATIVE && (
               <Button
                 label={_(msg`Close`)}
                 size="small"

@@ -439,9 +439,9 @@ Example from Dialog:
 
 Platform detection:
 ```tsx
-import {isWeb, isNative, isIOS, isAndroid} from '#/platform/detection'
+import {IS_WEB, IS_NATIVE, IS_IOS, IS_ANDROID} from '#/env'
 
-if (isNative) {
+if (IS_NATIVE) {
   // Native-specific logic
 }
 ```

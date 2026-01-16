@@ -17,7 +17,6 @@ import {useRequestNotificationsPermission} from '#/lib/notifications/notificatio
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
 import {
   OnboardingControls,
   OnboardingDescriptionText,
@@ -38,6 +37,7 @@ import * as Dialog from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {type AvatarColor, avatarColors, type Emoji, emojiItems} from './types'
 
 export interface Avatar {
@@ -183,7 +183,7 @@ export function StepProfile() {
     let image = items[0]
     if (!image) return
 
-    if (!isWeb) {
+    if (!IS_WEB) {
       try {
         image = await openCropper({
           imageUri: image.path,
@@ -200,7 +200,7 @@ export function StepProfile() {
 
     // If we are on mobile, prefetching the image will load the image into memory before we try and display it,
     // stopping any brief flickers.
-    if (isNative) {
+    if (IS_NATIVE) {
       await ExpoImage.prefetch(image.path)
     }
 

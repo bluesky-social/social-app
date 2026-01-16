@@ -34,7 +34,6 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -70,6 +69,7 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
@@ -243,7 +243,7 @@ let PostFeed = ({
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
-  const areVideoFeedsEnabled = isNative
+  const areVideoFeedsEnabled = IS_NATIVE
 
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
@@ -873,7 +873,7 @@ let PostFeed = ({
      * reach the end, so that content isn't cut off by the bottom of the
      * screen.
      */
-    const offset = Math.max(headerOffset, 32) * (isWeb ? 1 : 2)
+    const offset = Math.max(headerOffset, 32) * (IS_WEB ? 1 : 2)
 
     return isFetchingNextPage ? (
       <View style={[styles.feedFooter]}>
@@ -1024,7 +1024,7 @@ let PostFeed = ({
         }
         initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={9}
-        maxToRenderPerBatch={isIOS ? 5 : 1}
+        maxToRenderPerBatch={IS_IOS ? 5 : 1}
         updateCellsBatchingPeriod={40}
         onItemSeen={onItemSeen}
       />

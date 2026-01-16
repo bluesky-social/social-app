@@ -8,12 +8,12 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_10} from '#/lib/constants'
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import {Link} from '../Link'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from './country-allowlist'
 
@@ -92,7 +92,7 @@ function useInternalState() {
   const gate = useGate()
 
   const visible = useMemo(() => {
-    if (isWeb) return false
+    if (IS_WEB) return false
     if (hidden) return false
     if (nux && nux.completed) return false
     if (!isFeatureEnabled) return false

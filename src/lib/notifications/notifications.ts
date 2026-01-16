@@ -13,10 +13,10 @@ import {
 } from '#/lib/constants'
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNetworkError} from '#/lib/strings/errors'
-import {isNative} from '#/platform/detection'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
 import {useAgeAssurance} from '#/ageAssurance'
+import {IS_NATIVE} from '#/env'
 import {IS_DEV} from '#/env'
 
 /**
@@ -140,7 +140,7 @@ export function useGetAndRegisterPushToken() {
     }: {
       isAgeRestricted?: boolean
     } = {}) => {
-      if (!isNative || IS_DEV) return
+      if (!IS_NATIVE || IS_DEV) return
 
       /**
        * This will also fire the listener added via `addPushTokenListener`. That
@@ -236,7 +236,7 @@ export function useRequestNotificationsPermission() {
     const permissions = await Notifications.getPermissionsAsync()
 
     if (
-      !isNative ||
+      !IS_NATIVE ||
       permissions?.status === 'granted' ||
       (permissions?.status === 'denied' && !permissions.canAskAgain)
     ) {
@@ -277,7 +277,7 @@ export function useRequestNotificationsPermission() {
 }
 
 export async function decrementBadgeCount(by: number) {
-  if (!isNative) return
+  if (!IS_NATIVE) return
 
   let count = await getBadgeCountAsync()
   count -= by
@@ -295,7 +295,7 @@ export async function resetBadgeCount() {
 }
 
 export async function unregisterPushToken(agents: AtpAgent[]) {
-  if (!isNative) return
+  if (!IS_NATIVE) return
 
   try {
     const token = await getPushToken()

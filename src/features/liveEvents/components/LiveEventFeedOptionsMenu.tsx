@@ -3,7 +3,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
-import {isNative} from '#/platform/detection'
 import {atoms as a, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -11,6 +10,7 @@ import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Span, Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {useUpdateLiveEventPreferences} from '#/features/liveEvents/preferences'
 import {
   type LiveEventFeed,
@@ -146,7 +146,7 @@ function Inner({
           </ButtonText>
           {isHidingAllFeeds && <ButtonIcon icon={Loader} />}
         </Button>
-        {isNative && (
+        {IS_NATIVE && (
           <Button
             label={_(msg`Cancel`)}
             size="large"

@@ -15,7 +15,6 @@ import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
@@ -35,6 +34,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {IS_IOS} from '#/env'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -111,10 +111,10 @@ let ProfileHeaderLabeler = ({
       isPlaceholderProfile={isPlaceholderProfile}>
       <View
         style={[a.px_lg, a.pt_md, a.pb_sm]}
-        pointerEvents={isIOS ? 'auto' : 'box-none'}>
+        pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
         <View
           style={[a.flex_row, a.justify_end, a.align_center, a.gap_xs, a.pb_lg]}
-          pointerEvents={isIOS ? 'auto' : 'box-none'}>
+          pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
           <HeaderLabelerButtons profile={profile} />
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}>

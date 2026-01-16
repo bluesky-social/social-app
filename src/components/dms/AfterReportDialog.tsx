@@ -7,7 +7,6 @@ import {StackActions, useNavigation} from '@react-navigation/native'
 import type React from 'react'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {
@@ -21,6 +20,7 @@ import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 type ReportDialogParams = {
   convoId: string
@@ -130,7 +130,7 @@ function DoneStep({
     onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(
-          StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
+          StackActions.replace('Messages', IS_NATIVE ? {animation: 'pop'} : {}),
         )
       }
     },

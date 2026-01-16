@@ -17,7 +17,6 @@ import {
 import {useIsFocused} from '@react-navigation/native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
@@ -26,6 +25,7 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme} from '#/alf'
 import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
+import {IS_NATIVE} from '#/env'
 import {
   HeaderLabelerButtons,
   ProfileHeaderLabeler,
@@ -83,7 +83,7 @@ let ProfileHeader = ({setMinimumHeight, ...props}: Props): React.ReactNode => {
 
   return (
     <>
-      {isNative && (
+      {IS_NATIVE && (
         <MinimalHeader
           onLayout={evt => setMinimumHeight(evt.nativeEvent.layout.height)}
           profile={props.profile}

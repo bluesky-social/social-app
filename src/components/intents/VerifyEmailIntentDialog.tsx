@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -15,6 +14,7 @@ import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Resend} from '#/c
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export function VerifyEmailIntentDialog() {
   const {verifyEmailDialogControl: control} = useIntentDialogs()
@@ -68,7 +68,7 @@ function Inner({}: {control: DialogControlProps}) {
             <Loader size="xl" fill={t.atoms.text_contrast_low.color} />
           </View>
         ) : status === 'success' ? (
-          <View style={[a.gap_sm, isNative && a.pb_xl]}>
+          <View style={[a.gap_sm, IS_NATIVE && a.pb_xl]}>
             <Text style={[a.font_bold, a.text_2xl]}>
               <Trans>Email Verified</Trans>
             </Text>
@@ -93,7 +93,7 @@ function Inner({}: {control: DialogControlProps}) {
             </Text>
           </View>
         ) : (
-          <View style={[a.gap_sm, isNative && a.pb_xl]}>
+          <View style={[a.gap_sm, IS_NATIVE && a.pb_xl]}>
             <Text style={[a.font_bold, a.text_2xl]}>
               <Trans>Email Resent</Trans>
             </Text>

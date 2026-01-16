@@ -12,7 +12,6 @@ import {useLingui} from '@lingui/react'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -37,6 +36,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ProgressGuideTask} from './Task'
 
@@ -431,7 +431,7 @@ function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
         <Trans>Find people to follow</Trans>
       </Text>
       {guide && (
-        <View style={isWeb && {paddingRight: 36}}>
+        <View style={IS_WEB && {paddingRight: 36}}>
           <ProgressGuideTask
             current={guide.numFollows + 1}
             total={10 + 1}
@@ -440,12 +440,12 @@ function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
           />
         </View>
       )}
-      {isWeb ? (
+      {IS_WEB ? (
         <Button
           label={_(msg`Close`)}
           size="small"
           shape="round"
-          variant={isWeb ? 'ghost' : 'solid'}
+          variant={IS_WEB ? 'ghost' : 'solid'}
           color="secondary"
           style={[
             a.absolute,
@@ -579,7 +579,7 @@ function FollowProfileCardInner({
           <ProfileCard.Outer>
             <ProfileCard.Header>
               <ProfileCard.Avatar
-                disabledPreview={!isWeb}
+                disabledPreview={!IS_WEB}
                 profile={profile}
                 moderationOpts={moderationOpts}
               />

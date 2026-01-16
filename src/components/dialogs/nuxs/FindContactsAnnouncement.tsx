@@ -6,7 +6,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {isFindContactsFeatureEnabled} from '#/components/contacts/country-allowlist'
@@ -17,13 +16,14 @@ import {
   isExistingUserAsOf,
 } from '#/components/dialogs/nuxs/utils'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {IS_E2E} from '#/env'
 import {navigate} from '#/Navigation'
 
 export const enabled = createIsEnabledCheck(props => {
   return (
     !IS_E2E &&
-    isNative &&
+    IS_NATIVE &&
     isExistingUserAsOf(
       '2025-12-16T00:00:00.000Z',
       props.currentProfile.createdAt,
@@ -89,7 +89,7 @@ export function FindContactsAnnouncement() {
                 a.font_bold,
                 a.text_center,
                 {
-                  fontSize: isWeb ? 28 : 32,
+                  fontSize: IS_WEB ? 28 : 32,
                   maxWidth: 300,
                 },
               ]}>

@@ -4,6 +4,6 @@ export const isSafari = /^((?!chrome|android).)*safari/i.test(
 )
 export const isFirefox = /firefox|fxios/i.test(navigator.userAgent)
 export const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
-export const isAndroidWeb =
+export const IS_ANDROIDWeb =
   /android/i.test(navigator.userAgent) && isTouchDevice
 export const isHighDPI = window.matchMedia('(min-resolution: 2dppx)').matches

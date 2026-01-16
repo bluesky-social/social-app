@@ -4,7 +4,6 @@ import * as bcp47Match from 'bcp-47-match'
 
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {useGate} from '#/lib/statsig/statsig'
-import {isNative} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
 import {
   Layout,
@@ -24,6 +23,7 @@ import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/co
 import {useFindContactsFlowState} from '#/components/contacts/state'
 import {Portal} from '#/components/Portal'
 import {ScreenTransition} from '#/components/ScreenTransition'
+import {IS_NATIVE} from '#/env'
 import {ENV} from '#/env'
 import {StepFindContacts} from './StepFindContacts'
 import {StepFindContactsIntro} from './StepFindContactsIntro'
@@ -50,7 +50,7 @@ export function Onboarding() {
     useIsFindContactsFeatureEnabledBasedOnGeolocation()
   const showFindContacts =
     ENV !== 'e2e' &&
-    isNative &&
+    IS_NATIVE &&
     findContactsEnabled &&
     !gate('disable_onboarding_find_contacts')
 

@@ -9,7 +9,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {type NavigationProp} from '#/lib/routes/types'
-import {isAndroid, isIOS} from '#/platform/detection'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
@@ -17,6 +16,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {resetToTab} from '#/Navigation'
 import {router} from '#/routes'
 
@@ -90,7 +90,7 @@ export function useNotificationsHandler() {
   // channels allow for the mute/unmute functionality we want for the background
   // handler.
   useEffect(() => {
-    if (!isAndroid) return
+    if (!IS_ANDROID) return
     // assign both chat notifications to a group
     // NOTE: I don't think that it will retroactively move them into the group
     // if the channels already exist. no big deal imo -sfn
@@ -379,7 +379,7 @@ export function getNotificationPayload(
   }
 
   const payload = (
-    isIOS ? e.request.trigger.payload : e.request.content.data
+    IS_IOS ? e.request.trigger.payload : e.request.content.data
   ) as NotificationPayload
 
   if (payload && payload.reason) {

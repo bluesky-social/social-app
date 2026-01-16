@@ -41,13 +41,13 @@ import {Trans} from '@lingui/macro'
 
 import {type Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
 import {type Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
+import {IS_IOS} from '#/env'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {type ImageSource, type Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -59,13 +59,13 @@ const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
 
 const SLOW_SPRING: WithSpringConfig = {
-  mass: isIOS ? 1.25 : 0.75,
+  mass: IS_IOS ? 1.25 : 0.75,
   damping: 300,
   stiffness: 800,
   restDisplacementThreshold: 0.01,
 }
 const FAST_SPRING: WithSpringConfig = {
-  mass: isIOS ? 1.25 : 0.75,
+  mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 900,
   restDisplacementThreshold: 0.01,
@@ -248,7 +248,7 @@ function ImageView({
       )
       opacity -= dragProgress
     }
-    const factor = isIOS ? 100 : 50
+    const factor = IS_IOS ? 100 : 50
     return {
       opacity: Math.round(opacity * factor) / factor,
     }
@@ -686,7 +686,7 @@ const styles = StyleSheet.create({
     maxHeight: '100%',
   },
   footerText: {
-    paddingBottom: isIOS ? 20 : 16,
+    paddingBottom: IS_IOS ? 20 : 16,
   },
   footerBtns: {
     flexDirection: 'row',

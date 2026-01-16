@@ -8,13 +8,13 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
 import {FindContactsBannerNUX} from '#/components/contacts/FindContactsBannerNUX'
 import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {IS_WEB} from '#/env'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 
@@ -49,7 +49,7 @@ export function ProfileFollows({name}: {name: string}) {
   const navigation = useNavigation<NavigationProp>()
 
   const onPressFindAccounts = React.useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       navigation.navigate('Search', {})
     } else {
       navigation.navigate('SearchTab')

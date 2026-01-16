@@ -20,7 +20,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
 import {useSession} from '#/state/session'
@@ -33,6 +32,7 @@ import {atoms as a, ios, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import {ListFooter} from '#/components/Lists'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -111,7 +111,7 @@ export function ProfileFeedgens({
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: -headerOffset,
     })
     queryClient.invalidateQueries({queryKey: RQKEY(did)})
@@ -194,7 +194,7 @@ export function ProfileFeedgens({
         return (
           <View
             style={[
-              (index !== 0 || isWeb) && a.border_t,
+              (index !== 0 || IS_WEB) && a.border_t,
               t.atoms.border_contrast_low,
               a.px_lg,
               a.py_lg,
@@ -218,7 +218,7 @@ export function ProfileFeedgens({
   )
 
   useEffect(() => {
-    if (isIOS && enabled && scrollElRef.current) {
+    if (IS_IOS && enabled && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }

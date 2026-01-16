@@ -16,7 +16,6 @@ import {
   isNetworkError,
 } from '#/lib/strings/errors'
 import {Logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
@@ -37,6 +36,7 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
+import {IS_NATIVE} from '#/env'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -639,7 +639,7 @@ export class Convo {
           {
             cursor: nextCursor,
             convoId: this.convoId,
-            limit: isNative ? 30 : 60,
+            limit: IS_NATIVE ? 30 : 60,
           },
           {headers: DM_SERVICE_HEADERS},
         )

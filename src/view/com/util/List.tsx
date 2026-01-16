@@ -11,9 +11,9 @@ import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
 import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
+import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -94,7 +94,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
           }
         }
 
-        if (isIOS) {
+        if (IS_IOS) {
           runOnJS(dedupe)(updateActiveVideoViewAsync)
         }
       },
@@ -184,7 +184,7 @@ export {List}
 
 // We only want to use this context value on iOS because the `scrollsToTop` prop is iOS-only
 // removing it saves us a re-render on Android
-const useAllowScrollToTop = isIOS ? useAllowScrollToTopIOS : () => undefined
+const useAllowScrollToTop = IS_IOS ? useAllowScrollToTopIOS : () => undefined
 function useAllowScrollToTopIOS() {
   const {activeLightbox} = useLightbox()
   return !activeLightbox

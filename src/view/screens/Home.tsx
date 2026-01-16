@@ -12,7 +12,6 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
-import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {
   type SavedFeedSourceInfo,
@@ -37,6 +36,7 @@ import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
+import {IS_WEB} from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
@@ -48,7 +48,7 @@ export function HomeScreen(props: Props) {
     usePinnedFeedsInfos()
 
   React.useEffect(() => {
-    if (isWeb && !currentAccount) {
+    if (IS_WEB && !currentAccount) {
       const getParams = new URLSearchParams(window.location.search)
       const splash = getParams.get('splash')
       if (splash === 'true') {

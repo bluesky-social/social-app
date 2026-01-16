@@ -25,13 +25,13 @@ import {isUriImage} from '#/lib/media/util'
 import {cleanError} from '#/lib/strings/errors'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
 import {useTheme} from '#/lib/ThemeContext'
-import {isAndroid, isNative} from '#/platform/detection'
 import {
   type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
+import {IS_ANDROID, IS_NATIVE} from '#/env'
 import {Autocomplete} from './mobile/Autocomplete'
 import {type TextInputProps} from './TextInput.types'
 
@@ -179,14 +179,14 @@ export function TextInput({
     /**
      * PasteInput doesn't like `lineHeight`, results in jumpiness
      */
-    if (isNative) {
+    if (IS_NATIVE) {
       style.lineHeight = undefined
     }
 
     /*
      * Android impl of `PasteInput` doesn't support the array syntax for `fontVariant`
      */
-    if (isAndroid) {
+    if (IS_ANDROID) {
       // @ts-ignore
       style.fontVariant = style.fontVariant
         ? style.fontVariant.join(' ')

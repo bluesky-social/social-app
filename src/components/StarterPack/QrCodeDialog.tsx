@@ -9,7 +9,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -20,6 +19,7 @@ import {FloppyDisk_Stroke2_Corner0_Rounded as FloppyDiskIcon} from '#/components
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
 import * as Toast from '#/components/Toast'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 export function QrCodeDialog({
@@ -56,7 +56,7 @@ export function QrCodeDialog({
 
   const onSavePress = async () => {
     ref.current?.capture?.().then(async (uri: string) => {
-      if (isNative) {
+      if (IS_NATIVE) {
         const res = await requestMediaLibraryPermissionsAsync()
 
         if (!res.granted) {
@@ -111,7 +111,7 @@ export function QrCodeDialog({
       })
       setIsSaveProcessing(false)
       Toast.show(
-        isWeb
+        IS_WEB
           ? _(msg`QR code has been downloaded!`)
           : _(msg`QR code saved to your camera roll!`),
       )
@@ -178,18 +178,18 @@ export function QrCodeDialog({
                     label={_(msg`Copy QR code`)}
                     color="primary_subtle"
                     size="large"
-                    onPress={isWeb ? onCopyPress : onSharePress}>
+                    onPress={IS_WEB ? onCopyPress : onSharePress}>
                     <ButtonIcon
                       icon={
                         isCopyProcessing
                           ? Loader
-                          : isWeb
+                          : IS_WEB
                             ? ChainLinkIcon
                             : ShareIcon
                       }
                     />
                     <ButtonText>
-                      {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
+                      {IS_WEB ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
                     </ButtonText>
                   </Button>
                   <Button

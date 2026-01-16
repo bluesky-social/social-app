@@ -3,8 +3,8 @@ import * as MediaLibrary from 'expo-media-library'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
 import * as Toast from '#/components/Toast'
+import {IS_NATIVE} from '#/env'
 import {saveImageToMediaLibrary} from './manip'
 
 /**
@@ -18,7 +18,7 @@ export function useSaveImageToMediaLibrary() {
     })
   return useCallback(
     async (uri: string) => {
-      if (!isNative) {
+      if (!IS_NATIVE) {
         throw new Error('useSaveImageToMediaLibrary is native only')
       }
 

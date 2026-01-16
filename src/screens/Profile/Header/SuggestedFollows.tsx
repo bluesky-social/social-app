@@ -2,7 +2,6 @@ import React from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
 
 import {AccordionAnimation} from '#/lib/custom-animations/AccordionAnimation'
-import {isAndroid} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   useSuggestedFollowsByActorQuery,
@@ -10,6 +9,7 @@ import {
 } from '#/state/queries/suggested-follows'
 import {useBreakpoints} from '#/alf'
 import {ProfileGrid} from '#/components/FeedInterstitials'
+import {IS_ANDROID} from '#/env'
 
 const DISMISS_ANIMATION_DURATION = 200
 
@@ -210,7 +210,7 @@ export function AnimatedProfileHeaderSuggestedFollows({
    * This issue stems from Android not allowing dragging on clickable elements in the profile header.
    * Blocking the ability to scroll on Android is too much of a trade-off for now.
    **/
-  if (isAndroid) return null
+  if (IS_ANDROID) return null
 
   return (
     <AccordionAnimation isExpanded={isExpanded}>

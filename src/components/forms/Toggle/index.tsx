@@ -10,7 +10,6 @@ import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {isNative} from '#/platform/detection'
 import {
   atoms as a,
   native,
@@ -22,6 +21,7 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export * from './Panel'
 
@@ -562,4 +562,4 @@ export function BaseRadio({
   )
 }
 
-export const Platform = isNative ? Switch : Checkbox
+export const Platform = IS_NATIVE ? Switch : Checkbox
