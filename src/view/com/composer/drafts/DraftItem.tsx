@@ -1,7 +1,5 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {Image} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,15 +10,10 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
-import {AutoSizedImage} from '#/components/images/AutoSizedImage'
-import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
+import * as MediaPreview from '#/components/MediaPreview'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {
-  type DraftPostDisplay,
-  type DraftSummary,
-  type LocalMediaDisplay,
-} from './state/schema'
+import {type DraftPostDisplay, type DraftSummary} from './state/schema'
 import * as storage from './state/storage'
 
 export function DraftItem({
@@ -217,124 +210,62 @@ function DraftPostRow({
 
 type LoadedImage = {
   url: string
-  meta: LocalMediaDisplay
-  width?: number
-  height?: number
+  alt: string
 }
 
 function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
-  const t = useTheme()
   const [loadedImages, setLoadedImages] = useState<LoadedImage[]>([])
+  const [videoThumbnail, setVideoThumbnail] = useState<string | undefined>()
 
   useEffect(() => {
     async function loadMedia() {
-      // Try to load all images - the exists flag may be stale due to async cache
+      // Load images
       if (post.images && post.images.length > 0) {
         const loaded: LoadedImage[] = []
         for (const image of post.images) {
           try {
             const url = await storage.loadMediaFromLocal(image.localPath)
-            // Get dimensions using expo-image's loadAsync
-            let width: number | undefined
-            let height: number | undefined
-            try {
-              const imageRef = await Image.loadAsync(url)
-              width = imageRef.width
-              height = imageRef.height
-            } catch {
-              // Dimensions unavailable, will use default aspect ratio
-            }
-            loaded.push({url, meta: {...image, exists: true}, width, height})
+            loaded.push({url, alt: image.altText || ''})
           } catch (e) {
             // Image doesn't exist locally, skip it
           }
         }
         setLoadedImages(loaded)
       }
+
+      // Load video thumbnail
+      if (post.video?.exists && post.video.localPath) {
+        try {
+          const url = await storage.loadMediaFromLocal(post.video.localPath)
+          setVideoThumbnail(url)
+        } catch (e) {
+          // Video doesn't exist locally
+        }
+      }
     }
 
     loadMedia()
-  }, [post.images])
-
-  // Convert loaded images to ViewImage format for the embed components
-  const viewImages = useMemo<AppBskyEmbedImages.ViewImage[]>(() => {
-    return loadedImages.map(({url, width, height, meta}) => ({
-      thumb: url,
-      fullsize: url,
-      alt: meta.altText || '',
-      aspectRatio: width && height ? {width, height} : {width: 1, height: 1},
-    }))
-  }, [loadedImages])
-
-  // Count missing images (images we tried to load but couldn't)
-  const missingImageCount = (post.images?.length ?? 0) - loadedImages.length
+  }, [post.images, post.video])
 
   // Nothing to show
-  if (viewImages.length === 0 && !post.gif && !post.video) {
+  if (loadedImages.length === 0 && !post.gif && !post.video) {
     return null
   }
 
   return (
-    <View style={[a.pt_sm, a.pointer_events_none]}>
-      {/* Images - use real embed components */}
-      {viewImages.length === 1 && (
-        <AutoSizedImage image={viewImages[0]} hideBadge />
-      )}
-      {viewImages.length > 1 && <ImageLayoutGrid images={viewImages} />}
-
-      {/* Missing images note */}
-      {missingImageCount > 0 && (
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium, a.mt_xs]}>
-          <Trans>
-            {missingImageCount} image{missingImageCount > 1 ? 's' : ''} not
-            available
-          </Trans>
-        </Text>
-      )}
-
-      {/* GIF preview */}
+    <MediaPreview.Outer style={[a.pt_xs]}>
+      {loadedImages.map((image, i) => (
+        <MediaPreview.ImageItem key={i} thumbnail={image.url} alt={image.alt} />
+      ))}
       {post.gif && (
-        <View
-          style={[
-            a.rounded_md,
-            a.overflow_hidden,
-            t.atoms.bg_contrast_25,
-            {
-              aspectRatio:
-                post.gif.width && post.gif.height
-                  ? post.gif.width / post.gif.height
-                  : 16 / 9,
-            },
-          ]}>
-          <Image
-            source={{uri: post.gif.url}}
-            style={[a.flex_1]}
-            contentFit="cover"
-            accessibilityIgnoresInvertColors
-          />
-        </View>
+        <MediaPreview.GifItem thumbnail={post.gif.url} alt={post.gif.alt} />
       )}
-
-      {/* Video indicator */}
       {post.video && (
-        <View
-          style={[
-            a.rounded_md,
-            a.p_md,
-            a.align_center,
-            a.justify_center,
-            t.atoms.bg_contrast_50,
-            {aspectRatio: 16 / 9},
-          ]}>
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            {post.video.exists ? (
-              <Trans>Video attached</Trans>
-            ) : (
-              <Trans>Video not available</Trans>
-            )}
-          </Text>
-        </View>
+        <MediaPreview.VideoItem
+          thumbnail={videoThumbnail}
+          alt={post.video.altText}
+        />
       )}
-    </View>
+    </MediaPreview.Outer>
   )
 }

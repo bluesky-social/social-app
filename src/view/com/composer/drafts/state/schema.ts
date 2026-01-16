@@ -26,6 +26,8 @@ export type GifDisplay = {
   width: number
   /** Height */
   height: number
+  /** Alt text */
+  alt: string
 }
 
 /**
