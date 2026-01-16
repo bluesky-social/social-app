@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {type AppBskyDraftDefs} from '@atproto/api'
+import {AppBskyDraftCreateDraft, type AppBskyDraftDefs} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
@@ -141,13 +141,8 @@ export function useSaveDraft() {
     },
     onError: error => {
       // Check for draft limit error
-      if (
-        error &&
-        typeof error === 'object' &&
-        'error' in error &&
-        (error as {error: string}).error === 'DraftLimitReached'
-      ) {
-        logger.error('Draft limit reached', {error})
+      if (error instanceof AppBskyDraftCreateDraft.DraftLimitReachedError) {
+        logger.error('Draft limit reached', {safeMessage: error.message})
         // Error will be handled by caller
       }
     },
