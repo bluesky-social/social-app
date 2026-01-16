@@ -2,7 +2,6 @@ import {useCallback} from 'react'
 import {type AppBskyDraftDefs} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {type ComposerState} from '#/view/com/composer/state/composer'
 import {
@@ -11,6 +10,7 @@ import {
   draftViewToSummary,
   threadgateToUISettings,
 } from './api'
+import {logger} from './logger'
 import {type DraftSummary} from './schema'
 import * as storage from './storage'
 
