@@ -2,6 +2,7 @@ import React from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
+import {prewarmUrl} from '#/lib/hooks/useOpenLink'
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, flatten, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
@@ -111,7 +112,7 @@ export function RichText({
             style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
-            shouldProxy={shouldProxyLinks}
+            shouldProxy={false}
             onPress={onLinkPress}>
             {segment.text}
           </InlineLinkText>
@@ -132,6 +133,7 @@ export function RichText({
             dataSet={WORD_WRAP}
             shareOnLongPress
             shouldProxy={shouldProxyLinks}
+            onPressIn={() => prewarmUrl(link.uri, shouldProxyLinks)}
             onPress={onLinkPress}
             emoji>
             {toShortUrl(segment.text)}

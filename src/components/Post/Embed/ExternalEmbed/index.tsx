@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {useHaptics} from '#/lib/haptics'
+import {prewarmUrl} from '#/lib/hooks/useOpenLink'
 import {shareUrl} from '#/lib/sharing'
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
@@ -79,6 +80,7 @@ export const ExternalEmbed = ({
       label={link.title || _(msg`Open link to ${niceUrl}`)}
       to={link.uri}
       shouldProxy={true}
+      onPressIn={() => prewarmUrl(link.uri)}
       onPress={onPress}
       onLongPress={onShareExternal}>
       {({hovered}) => (
