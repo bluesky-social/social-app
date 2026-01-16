@@ -40,7 +40,15 @@ export function Outer({
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
+  /**
+   * Native-specific options for the prompt. Extends `BottomSheetViewProps`
+   */
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
+  /**
+   * Web-specific options for the prompt
+   *
+   * - `vertical`: `boolean` - uses a narrower, vertically stack presentation with large buttons
+   */
   webOptions?: {vertical?: boolean}
 }>) {
   const titleId = useId()
