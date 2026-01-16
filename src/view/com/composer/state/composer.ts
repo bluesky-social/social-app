@@ -297,7 +297,7 @@ export function composerReducer(
         initMention: undefined,
         initImageUris: [],
         initQuoteUri: undefined,
-        initInteractionSettings: action.postInteractionSettings,
+        initInteractionSettings: action.initInteractionSettings,
       })
     }
     case 'mark_saved': {
