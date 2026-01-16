@@ -65,7 +65,7 @@ export function DraftItem({
                 a.px_sm,
                 a.py_xs,
                 a.mb_xs,
-                t.atoms.bg_contrast_100,
+                t.atoms.bg_contrast_50,
               ]}>
               <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
                 <Trans>Some media unavailable (saved on another device)</Trans>
