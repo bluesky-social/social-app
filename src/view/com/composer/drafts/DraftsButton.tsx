@@ -14,12 +14,14 @@ export function DraftsButton({
   onDiscard,
   isEmpty,
   isDirty,
+  isEditingDraft,
 }: {
   onSelectDraft: (draft: DraftSummary) => void
   onSaveDraft: () => Promise<void>
   onDiscard: () => void
   isEmpty: boolean
   isDirty: boolean
+  isEditingDraft: boolean
 }) {
   const {_} = useLingui()
   const draftsDialogControl = Dialog.useDialogControl()
@@ -69,17 +71,27 @@ export function DraftsButton({
 
       <Prompt.Outer control={savePromptControl} webOptions={{vertical: true}}>
         <Prompt.TitleText>
-          <Trans>Save current draft?</Trans>
+          {isEditingDraft ? (
+            <Trans>Save changes?</Trans>
+          ) : (
+            <Trans>Save draft?</Trans>
+          )}
         </Prompt.TitleText>
         <Prompt.DescriptionText>
-          <Trans>
-            You have unsaved changes. Would you like to save them before viewing
-            your drafts?
-          </Trans>
+          {isEditingDraft ? (
+            <Trans>
+              You have unsaved changes. Would you like to save them before
+              viewing your drafts?
+            </Trans>
+          ) : (
+            <Trans>
+              Would you like to save this as a draft before viewing your drafts?
+            </Trans>
+          )}
         </Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
-            cta={_(msg`Save changes`)}
+            cta={isEditingDraft ? _(msg`Save changes`) : _(msg`Save draft`)}
             onPress={handleSaveAndOpen}
             color="primary"
           />

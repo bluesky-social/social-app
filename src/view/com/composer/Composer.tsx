@@ -843,7 +843,8 @@ export const ComposePost = ({
             onSaveDraft={saveCurrentDraft}
             onDiscard={handleClearComposer}
             isEmpty={isComposerEmpty}
-            isDirty={composerState.isDirty}>
+            isDirty={composerState.isDirty}
+            isEditingDraft={!!composerState.draftId}>
             {missingAltError && <AltTextReminder error={missingAltError} />}
             <ErrorBanner
               error={error}
@@ -898,14 +899,24 @@ export const ComposePost = ({
           control={discardPromptControl}
           webOptions={{vertical: true}}>
           <Prompt.TitleText>
-            <Trans>Save draft?</Trans>{' '}
+            {composerState.draftId ? (
+              <Trans>Save changes?</Trans>
+            ) : (
+              <Trans>Save draft?</Trans>
+            )}
           </Prompt.TitleText>
           <Prompt.DescriptionText>
-            {_(msg`You can save this draft to continue later.`)}
+            {composerState.draftId
+              ? _(msg`You have unsaved changes to this draft.`)
+              : _(msg`You can save this draft to continue later.`)}
           </Prompt.DescriptionText>
           <Prompt.Actions>
             <Prompt.Action
-              cta={_(msg`Save Draft`)}
+              cta={
+                composerState.draftId
+                  ? _(msg`Save changes`)
+                  : _(msg`Save draft`)
+              }
               onPress={handleSaveDraft}
               color="primary"
             />
@@ -1140,6 +1151,7 @@ function ComposerTopBar({
   onDiscard,
   isEmpty,
   isDirty,
+  isEditingDraft,
   topBarAnimatedStyle,
   children,
 }: {
@@ -1156,6 +1168,7 @@ function ComposerTopBar({
   onDiscard: () => void
   isEmpty: boolean
   isDirty: boolean
+  isEditingDraft: boolean
   topBarAnimatedStyle: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
@@ -1190,6 +1203,7 @@ function ComposerTopBar({
             onDiscard={onDiscard}
             isEmpty={isEmpty}
             isDirty={isDirty}
+            isEditingDraft={isEditingDraft}
           />
         )}
         {isPublishing ? (
