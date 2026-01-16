@@ -43,7 +43,7 @@ func ExpandPostText(post *appbsky.FeedPost) string {
 			charsAdded += len(linkUri) - int(facet.Index.ByteEnd-facet.Index.ByteStart)
 		}
 	}
-	// if the post has an embeded link and its url doesn't already appear in postText, append it to
+	// if the post has an embedded link and its url doesn't already appear in postText, append it to
 	// the end to avoid social cards with missing links
 	if post.Embed != nil && post.Embed.EmbedExternal != nil && post.Embed.EmbedExternal.External != nil {
 		externalURI := post.Embed.EmbedExternal.External.Uri
