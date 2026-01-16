@@ -112,6 +112,7 @@ export function DraftsListDialog({
         ListEmptyComponent={emptyComponent}
         style={[t.atoms.bg_contrast_50, a.px_0, web({minHeight: 500})]}
         webInnerContentContainerStyle={[a.py_0]}
+        contentContainerStyle={[a.pb_xl]}
       />
     </Dialog.Outer>
   )
