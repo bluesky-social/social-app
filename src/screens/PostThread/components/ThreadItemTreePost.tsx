@@ -29,8 +29,10 @@ import {
   TREE_INDENT,
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {CircleMinus_Stroke2_Corner0_Rounded as CollapseIcon} from '#/components/icons/CircleMinus'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -54,6 +56,8 @@ export function ThreadItemTreePost({
   overrides,
   onPostSuccess,
   threadgateRecord,
+  isPostCollapsed,
+  togglePostCollapse,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   overrides?: {
@@ -62,8 +66,20 @@ export function ThreadItemTreePost({
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  isPostCollapsed: (item: Extract<ThreadItem, {type: 'threadPost'}>) => boolean
+  togglePostCollapse: (item: Extract<ThreadItem, {type: 'threadPost'}>) => void
 }) {
   const postShadow = usePostShadow(item.value.post)
+
+  const isCollapsed = useMemo(
+    () => isPostCollapsed(item),
+    [isPostCollapsed, item],
+  )
+
+  const toggleCollapse = useCallback(
+    () => togglePostCollapse(item),
+    [togglePostCollapse, item],
+  )
 
   if (postShadow === POST_TOMBSTONE) {
     return <ThreadItemTreePostDeleted item={item} />
@@ -78,6 +94,8 @@ export function ThreadItemTreePost({
       threadgateRecord={threadgateRecord}
       overrides={overrides}
       onPostSuccess={onPostSuccess}
+      isCollapsed={isCollapsed}
+      toggleCollapse={toggleCollapse}
     />
   )
 }
@@ -214,20 +232,36 @@ const ThreadItemTreePostInnerWrapper = memo(
 const ThreadItemTreeReplyChildReplyLine = memo(
   function ThreadItemTreeReplyChildReplyLine({
     item,
+    onCollapse,
   }: {
     item: Extract<ThreadItem, {type: 'threadPost'}>
+    onCollapse?: () => void
   }) {
     const t = useTheme()
     return (
       <View style={[a.relative, a.pt_2xs, {width: TREE_AVI_PLUS_SPACE}]}>
         {item.ui.showChildReplyLine && (
-          <View
-            style={[
-              a.flex_1,
-              t.atoms.border_contrast_low,
-              {borderRightWidth: 2, width: '50%', left: -1},
-            ]}
-          />
+          <>
+            <View
+              style={[
+                a.flex_1,
+                t.atoms.border_contrast_low,
+                {borderRightWidth: 2, width: '50%', left: -1},
+              ]}
+            />
+            {onCollapse && (
+              <Button
+                label={'Collapse branch'}
+                onPress={onCollapse}
+                style={[
+                  a.bg_transparent,
+                  a.align_start,
+                  {width: TREE_AVI_WIDTH, height: TREE_AVI_WIDTH},
+                ]}>
+                <CollapseIcon fill={t.atoms.text_contrast_low.color} />
+              </Button>
+            )}
+          </>
         )}
       </View>
     )
@@ -240,6 +274,8 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   overrides,
   onPostSuccess,
   threadgateRecord,
+  isCollapsed,
+  toggleCollapse,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   postShadow: Shadow<AppBskyFeedDefs.PostView>
@@ -249,6 +285,8 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  isCollapsed: boolean
+  toggleCollapse: () => void
 }): React.ReactNode {
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
@@ -331,54 +369,62 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                 avatarSize={TREE_AVI_WIDTH}
                 style={[a.pb_0]}
                 showAvatar
+                onExpand={isCollapsed ? toggleCollapse : undefined}
               />
               <View style={[a.flex_row]}>
-                <ThreadItemTreeReplyChildReplyLine item={item} />
-                <View style={[a.flex_1, a.pl_2xs]}>
-                  <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
-                  <PostAlerts
-                    modui={moderation.ui('contentList')}
-                    style={[a.pb_2xs]}
-                    additionalCauses={additionalPostAlerts}
-                  />
-                  {richText?.text ? (
-                    <>
-                      <RichText
-                        enableTags
-                        value={richText}
-                        style={[a.flex_1, a.text_md]}
-                        numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                        authorHandle={post.author.handle}
-                        shouldProxyLinks={true}
-                      />
-                      {limitLines && (
-                        <ShowMoreTextButton
-                          style={[a.text_md]}
-                          onPress={onPressShowMore}
+                <ThreadItemTreeReplyChildReplyLine
+                  item={item}
+                  onCollapse={!isCollapsed ? toggleCollapse : undefined}
+                />
+                {!isCollapsed && (
+                  <View style={[a.flex_1, a.pl_2xs]}>
+                    <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
+                    <PostAlerts
+                      modui={moderation.ui('contentList')}
+                      style={[a.pb_2xs]}
+                      additionalCauses={additionalPostAlerts}
+                    />
+                    {richText?.text ? (
+                      <>
+                        <RichText
+                          enableTags
+                          value={richText}
+                          style={[a.flex_1, a.text_md]}
+                          numberOfLines={
+                            limitLines ? MAX_POST_LINES : undefined
+                          }
+                          authorHandle={post.author.handle}
+                          shouldProxyLinks={true}
                         />
-                      )}
-                    </>
-                  ) : null}
-                  {post.embed && (
-                    <View style={[a.pb_xs]}>
-                      <Embed
-                        embed={post.embed}
-                        moderation={moderation}
-                        viewContext={PostEmbedViewContext.Feed}
-                      />
-                    </View>
-                  )}
-                  <PostControls
-                    variant="compact"
-                    post={postShadow}
-                    record={record}
-                    richText={richText}
-                    onPressReply={onPressReply}
-                    logContext="PostThreadItem"
-                    threadgateRecord={threadgateRecord}
-                  />
-                  <DebugFieldDisplay subject={post} />
-                </View>
+                        {limitLines && (
+                          <ShowMoreTextButton
+                            style={[a.text_md]}
+                            onPress={onPressShowMore}
+                          />
+                        )}
+                      </>
+                    ) : null}
+                    {post.embed && (
+                      <View style={[a.pb_xs]}>
+                        <Embed
+                          embed={post.embed}
+                          moderation={moderation}
+                          viewContext={PostEmbedViewContext.Feed}
+                        />
+                      </View>
+                    )}
+                    <PostControls
+                      variant="compact"
+                      post={postShadow}
+                      record={record}
+                      richText={richText}
+                      onPressReply={onPressReply}
+                      logContext="PostThreadItem"
+                      threadgateRecord={threadgateRecord}
+                    />
+                    <DebugFieldDisplay subject={post} />
+                  </View>
+                )}
               </View>
             </View>
           </ThreadItemTreePostInnerWrapper>
