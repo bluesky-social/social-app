@@ -32,6 +32,7 @@ import {
   AppBskyFeedPost,
   AtUri,
   type ModerationDecision,
+  type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -53,7 +54,6 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
@@ -69,6 +69,7 @@ import {
   useFeedFeedbackContext,
 } from '#/state/feed-feedback'
 import {useFeedFeedback} from '#/state/feed-feedback'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useFeedInfo} from '#/state/queries/feed'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
@@ -94,10 +95,10 @@ import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSla
 import {Leaf_Stroke2_Corner0_Rounded as LeafIcon} from '#/components/icons/Leaf'
 import {KeepAwake} from '#/components/KeepAwake'
 import * as Layout from '#/components/Layout'
-import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
 import {PostControls} from '#/components/PostControls'
+import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
@@ -188,6 +189,7 @@ function Feed() {
   const isFocused = useIsFocused()
   const {hasSession} = useSession()
   const {height} = useSafeAreaFrame()
+  const moderationOpts = useModerationOpts()
 
   const feedDesc = useMemo(() => {
     switch (params.type) {
@@ -279,13 +281,21 @@ function Feed() {
           }
           adjacent={index === currentIndex - 1 || index === currentIndex + 1}
           moderation={item.moderation}
+          moderationOpts={moderationOpts}
           scrollGesture={scrollGesture}
           feedContext={item.feedContext}
           reqId={item.reqId}
         />
       )
     },
-    [players, currentIndex, isFocused, currentSources, scrollGesture],
+    [
+      players,
+      currentIndex,
+      isFocused,
+      currentSources,
+      scrollGesture,
+      moderationOpts,
+    ],
   )
 
   const updateVideoState = useCallback(
@@ -477,6 +487,7 @@ let VideoItem = ({
   adjacent,
   scrollGesture,
   moderation,
+  moderationOpts,
   feedContext,
   reqId,
 }: {
@@ -487,6 +498,7 @@ let VideoItem = ({
   adjacent: boolean
   scrollGesture: NativeGesture
   moderation?: ModerationDecision
+  moderationOpts?: ModerationOpts
   feedContext: string | undefined
   reqId: string | undefined
 }): React.ReactNode => {
@@ -571,6 +583,7 @@ let VideoItem = ({
               active={active}
               scrollGesture={scrollGesture}
               moderation={moderation}
+              moderationOpts={moderationOpts}
               feedContext={feedContext}
               reqId={reqId}
             />
@@ -717,6 +730,7 @@ function Overlay({
   active,
   scrollGesture,
   moderation,
+  moderationOpts,
   feedContext,
   reqId,
 }: {
@@ -726,11 +740,11 @@ function Overlay({
   active: boolean
   scrollGesture: NativeGesture
   moderation: ModerationDecision
+  moderationOpts?: ModerationOpts
   feedContext: string | undefined
   reqId: string | undefined
 }) {
   const {_} = useLingui()
-  const t = useTheme()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
@@ -813,75 +827,57 @@ function Overlay({
             ]}
             style={[a.w_full, a.pt_md]}>
             <Animated.View style={[a.px_md, animatedStyle]}>
-              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
-                <Link
-                  label={_(
-                    msg`View ${sanitizeDisplayName(
-                      post.author.displayName || post.author.handle,
-                    )}'s profile`,
-                  )}
-                  to={{
-                    screen: 'Profile',
-                    params: {name: post.author.did},
-                  }}
-                  style={[a.flex_1, a.flex_row, a.gap_md, a.align_center]}>
-                  <UserAvatar
-                    type="user"
-                    avatar={post.author.avatar}
-                    size={32}
-                  />
-                  <View style={[a.flex_1]}>
-                    <Text
-                      style={[a.text_md, a.font_bold]}
-                      emoji
-                      numberOfLines={1}>
-                      {sanitizeDisplayName(
-                        post.author.displayName || post.author.handle,
-                      )}
-                    </Text>
-                    <Text
-                      style={[a.text_sm, t.atoms.text_contrast_high]}
-                      numberOfLines={1}>
-                      {handle}
-                    </Text>
-                  </View>
-                </Link>
-                {/* show button based on non-reactive version, so it doesn't hide on press */}
-                {post.author.did !== currentAccount?.did &&
-                  !post.author.viewer?.following && (
-                    <Button
-                      label={
-                        profile.viewer?.following
-                          ? _(msg`Following ${handle}`)
-                          : _(msg`Follow ${handle}`)
-                      }
-                      accessibilityHint={
-                        profile.viewer?.following
-                          ? _(msg`Unfollows the user`)
-                          : ''
-                      }
-                      size="small"
-                      variant="solid"
-                      color="secondary_inverted"
-                      style={[a.mb_xs]}
-                      onPress={() =>
-                        profile.viewer?.following
-                          ? queueUnfollow()
-                          : queueFollow()
-                      }>
-                      {!!profile.viewer?.following && (
-                        <ButtonIcon icon={CheckIcon} />
-                      )}
-                      <ButtonText>
-                        {profile.viewer?.following ? (
-                          <Trans>Following</Trans>
-                        ) : (
-                          <Trans>Follow</Trans>
+              {moderationOpts && (
+                <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
+                  <ProfileCard.Link profile={profile} style={[a.flex_1]}>
+                    <ProfileCard.Header>
+                      <ProfileCard.Avatar
+                        profile={profile}
+                        moderationOpts={moderationOpts}
+                      />
+                      <ProfileCard.NameAndHandle
+                        profile={profile}
+                        moderationOpts={moderationOpts}
+                      />
+                    </ProfileCard.Header>
+                  </ProfileCard.Link>
+                  {/* show button based on non-reactive version, so it doesn't hide on press */}
+                  {post.author.did !== currentAccount?.did &&
+                    !post.author.viewer?.following && (
+                      <Button
+                        label={
+                          profile.viewer?.following
+                            ? _(msg`Following ${handle}`)
+                            : _(msg`Follow ${handle}`)
+                        }
+                        accessibilityHint={
+                          profile.viewer?.following
+                            ? _(msg`Unfollows the user`)
+                            : ''
+                        }
+                        size="small"
+                        variant="solid"
+                        color="secondary_inverted"
+                        style={[a.mb_xs]}
+                        onPress={() =>
+                          profile.viewer?.following
+                            ? queueUnfollow()
+                            : queueFollow()
+                        }>
+                        {!!profile.viewer?.following && (
+                          <ButtonIcon icon={CheckIcon} />
                         )}
-                      </ButtonText>
-                    </Button>
-                  )}
-              </View>
+                        <ButtonText>
+                          {profile.viewer?.following ? (
+                            <Trans>Following</Trans>
+                          ) : (
+                            <Trans>Follow</Trans>
+                          )}
+                        </ButtonText>
+                      </Button>
+                    )}
+                </View>
+              )}
               {record?.text?.trim() && (
                 <ExpandableRichTextView
                   value={richText}
