@@ -380,11 +380,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               </ProfileHoverCard>
             </View>
           </Link>
-          {showFollowButton && (
-            <View collapsable={false} style={[a.self_center]}>
-              <ThreadItemAnchorFollowButton did={post.author.did} />
-            </View>
-          )}
+          <View collapsable={false} style={[a.self_center]}>
+            <ThreadItemAnchorFollowButton
+              did={post.author.did}
+              enabled={showFollowButton}
+            />
+          </View>
         </View>
         <View style={[a.pb_sm]}>
           <LabelsOnMyPost post={post} style={[a.pb_sm]} />
