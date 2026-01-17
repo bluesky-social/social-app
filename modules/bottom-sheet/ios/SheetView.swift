@@ -73,7 +73,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   required init (appContext: AppContext? = nil) {
     super.init(appContext: appContext)
-    self.maxHeight = Util.getScreenHeight()
+    self.maxHeight = Util.getScreenHeight() ?? UIScreen.main.bounds.height
     self.touchHandler = RCTTouchHandler(bridge: appContext?.reactBridge)
     SheetManager.shared.add(self)
   }
@@ -124,6 +124,10 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
           let contentHeight = innerView.subviews.first?.frame.height,
           let rvc = self.reactViewController() else {
       return
+    }
+
+    if let screenHeight = Util.getScreenHeight() {
+      self.maxHeight = screenHeight
     }
 
     let sheetVc = SheetViewController()
