@@ -3,6 +3,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '../session'
+import {pdsAgent} from '../session/agent'
 
 const RQKEY_ROOT = 'app-passwords'
 export const RQKEY = () => [RQKEY_ROOT]
@@ -13,7 +14,7 @@ export function useAppPasswordsQuery() {
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(),
     queryFn: async () => {
-      const res = await agent.com.atproto.server.listAppPasswords({})
+      const res = await pdsAgent(agent).com.atproto.server.listAppPasswords({})
       return res.data.passwords
     },
   })
@@ -29,7 +30,7 @@ export function useAppPasswordCreateMutation() {
   >({
     mutationFn: async ({name, privileged}) => {
       return (
-        await agent.com.atproto.server.createAppPassword({
+        await pdsAgent(agent).com.atproto.server.createAppPassword({
           name,
           privileged,
         })
@@ -48,7 +49,7 @@ export function useAppPasswordDeleteMutation() {
   const agent = useAgent()
   return useMutation<void, Error, {name: string}>({
     mutationFn: async ({name}) => {
-      await agent.com.atproto.server.revokeAppPassword({
+      await pdsAgent(agent).com.atproto.server.revokeAppPassword({
         name,
       })
     },

@@ -21,6 +21,7 @@ import {
   POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util'
 import {useAgent} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 import * as bsky from '#/types/bsky'
 
 export async function getPostgateRecord({
@@ -96,7 +97,7 @@ export async function writePostgateRecord({
   const postUrip = new AtUri(postUri)
 
   await networkRetry(2, () =>
-    agent.api.com.atproto.repo.putRecord({
+    pdsAgent(agent).com.atproto.repo.putRecord({
       repo: agent.session!.did,
       collection: POSTGATE_COLLECTION,
       rkey: postUrip.rkey,

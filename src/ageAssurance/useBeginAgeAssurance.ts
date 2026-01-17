@@ -10,6 +10,7 @@ import {
 } from '#/lib/constants'
 import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {useAgent} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 import {usePatchAgeAssuranceServerState} from '#/ageAssurance'
 import {logger} from '#/ageAssurance/logger'
 import {BLUESKY_PROXY_DID} from '#/env'
@@ -38,7 +39,7 @@ export function useBeginAgeAssurance() {
 
       const {
         data: {token},
-      } = await agent.com.atproto.server.getServiceAuth({
+      } = await pdsAgent(agent).com.atproto.server.getServiceAuth({
         aud: BLUESKY_PROXY_DID,
         lxm: `app.bsky.ageassurance.begin`,
       })

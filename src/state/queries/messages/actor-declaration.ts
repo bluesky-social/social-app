@@ -3,6 +3,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -19,7 +20,7 @@ export function useUpdateActorDeclaration({
   return useMutation({
     mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
       if (!currentAccount) throw new Error('Not signed in')
-      const result = await agent.com.atproto.repo.putRecord({
+      const result = await pdsAgent(agent).com.atproto.repo.putRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
@@ -69,7 +70,7 @@ export function useDeleteActorDeclaration() {
   return useMutation({
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not signed in')
-      const result = await agent.api.com.atproto.repo.deleteRecord({
+      const result = await pdsAgent(agent).com.atproto.repo.deleteRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',

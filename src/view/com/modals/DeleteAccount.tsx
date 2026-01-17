@@ -18,6 +18,7 @@ import {colors, gradients, s} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
 import {useModalControls} from '#/state/modals'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 import {atoms as a, useTheme as useNewTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text as NewText} from '#/components/Typography'
@@ -49,7 +50,7 @@ export function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.requestAccountDelete()
+      await pdsAgent(agent).com.atproto.server.requestAccountDelete()
       setIsEmailSent(true)
     } catch (e: any) {
       setError(cleanError(e))
@@ -76,7 +77,7 @@ export function Component({}: {}) {
       if (!success) {
         throw new Error('Failed to inform chat service of account deletion')
       }
-      await agent.com.atproto.server.deleteAccount({
+      await pdsAgent(agent).com.atproto.server.deleteAccount({
         did: currentAccount.did,
         password,
         token,

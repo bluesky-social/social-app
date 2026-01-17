@@ -5,6 +5,7 @@ import {msg} from '@lingui/macro'
 import {VIDEO_SERVICE_DID} from '#/lib/constants'
 import {UploadLimitError} from '#/lib/media/video/errors'
 import {getServiceAuthAudFromUrl} from '#/lib/strings/url-helpers'
+import {pdsAgent} from '#/state/session/agent'
 import {createVideoAgent} from './util'
 
 export async function getServiceAuthToken({
@@ -22,7 +23,9 @@ export async function getServiceAuthToken({
   if (!pdsAud) {
     throw new Error('Agent does not have a PDS URL')
   }
-  const {data: serviceAuth} = await agent.com.atproto.server.getServiceAuth({
+  const {data: serviceAuth} = await pdsAgent(
+    agent,
+  ).com.atproto.server.getServiceAuth({
     aud: aud ?? pdsAud,
     lxm,
     exp,

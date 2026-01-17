@@ -1,6 +1,7 @@
 import {useMutation} from '@tanstack/react-query'
 
 import {useAgent, useSession} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 
 export function useManageEmail2FA() {
   const agent = useAgent()
@@ -17,7 +18,7 @@ export function useManageEmail2FA() {
         throw new Error('No email found for the current account')
       }
 
-      await agent.com.atproto.server.updateEmail({
+      await pdsAgent(agent).com.atproto.server.updateEmail({
         email: currentAccount.email,
         emailAuthFactor: enabled,
         token,

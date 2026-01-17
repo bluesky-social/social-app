@@ -9,6 +9,7 @@ import {TID} from '@atproto/common-web'
 import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
+import {pdsAgent} from '#/state/session/agent'
 
 export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
   const session = agent.session
@@ -35,7 +36,7 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
 
   const chunks = chunk(followWrites, 50)
   for (const chunk of chunks) {
-    await agent.com.atproto.repo.applyWrites({
+    await pdsAgent(agent).com.atproto.repo.applyWrites({
       repo: session.did,
       writes: chunk,
     })

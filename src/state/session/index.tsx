@@ -12,6 +12,7 @@ import {
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
+  pdsAgent,
   sessionAccountToSession,
 } from './agent'
 import {type Action, getInitialState, reducer, type State} from './reducer'
@@ -248,7 +249,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   >(async () => {
     const agent = state.currentAgentState.agent as BskyAppAgent
     const signal = cancelPendingTask()
-    const {data} = await agent.com.atproto.server.getSession()
+    const {data} = await pdsAgent(agent).com.atproto.server.getSession()
     if (signal.aborted) return
     store.dispatch({
       type: 'partial-refresh-session',
