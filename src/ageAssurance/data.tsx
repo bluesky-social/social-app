@@ -11,6 +11,7 @@ import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persist
 import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
 import {persistQueryClient} from '@tanstack/react-query-persist-client'
 import debounce from 'lodash.debounce'
+import * as AgeRange from 'expo-age-range';
 
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
@@ -453,6 +454,99 @@ export function useOtherRequiredDataQuery() {
   )
 }
 
+export function createDeviceSignalsQueryKey({did}: {did: string}) {
+  return ['device-signals', did]
+}
+export async function getDeviceSignals(): Promise<AgeRange.AgeRangeResponse | undefined> {
+  if (debug.enabled) return debug.resolve(debug.deviceSignals)
+  try {
+    return AgeRange.requestAgeRangeAsync({
+      threshold1: 13,
+      threshold2: 16,
+      threshold3: 18,
+    });
+  } catch (e: any) {
+    logger.error(`getDeviceSignals: failed to get device signals`, {
+      safeMessage: e.message,
+    })
+    return undefined
+  }
+}
+export function getDeviceSignalsFromCache({
+  did,
+}: {
+  did: string
+}):
+  | AgeRange.AgeRangeResponse
+  | undefined {
+  return qc.getQueryData<AgeRange.AgeRangeResponse>(
+    createDeviceSignalsQueryKey({did}),
+  )
+}
+let deviceSignalsPrefetchPromise: Promise<void> | undefined
+export async function prefetchDeviceSignals({
+  agent,
+}: {
+  agent: AtpAgent
+}) {
+  const did = getDidFromAgentSession(agent)
+  if (!did) return
+
+  /**
+   * If we don't have a cache, it's possible the user hasn't granted access.
+   * We don't want to do this during the prefetch phase, so just exit early,
+   * the user can potentially enable it later.
+   */
+  const cached = getDeviceSignalsFromCache({did})
+  if (!cached) return
+
+  if (deviceSignalsPrefetchPromise) {
+    logger.debug(`prefetchDeviceSignals: already in progress`)
+    return
+  }
+
+  deviceSignalsPrefetchPromise = new Promise(async resolve => {
+    await cacheHydrationPromise
+    const cached = getDeviceSignalsFromCache({did})
+
+    if (cached) {
+      logger.debug(`prefetchDeviceSignals: using cache`)
+      resolve()
+    } else {
+      try {
+        logger.debug(`prefetchDeviceSignals: resolving...`)
+        const res = await getDeviceSignals()
+        qc.setQueryData<AgeRange.AgeRangeResponse>(
+          createDeviceSignalsQueryKey({did}),
+          res,
+        )
+      } catch (e: any) {
+        logger.warn(`prefetchDeviceSignals: failed`, {
+          safeMessage: e.message,
+        })
+      } finally {
+        resolve()
+      }
+    }
+  })
+}
+export function useDeviceSignalsQuery() {
+  const agent = useAgent()
+  const did = getDidFromAgentSession(agent)
+  return useQuery(
+    {
+      enabled: !!did,
+      initialData: getDeviceSignalsFromCache({did: did!}),
+      queryKey: createDeviceSignalsQueryKey({did: did!}),
+      async queryFn() {
+        logger.debug(`useDeviceSignalsQuery: fetching device signals`)
+        return getDeviceSignals()
+      },
+    },
+    qc,
+  )
+}
+
 /**
  * Helper to prefetch all age assurance data.
  */
@@ -462,6 +556,7 @@ export function prefetchAgeAssuranceData({agent}: {agent: AtpAgent}) {
     configPrefetchPromise,
     prefetchServerState({agent}),
     prefetchOtherRequiredData({agent}),
+    prefetchDeviceSignals({agent}),
   ])
 }
 
