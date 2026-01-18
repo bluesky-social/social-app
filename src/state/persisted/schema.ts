@@ -106,6 +106,7 @@ const schema = z.object({
       appleMusic: z.enum(externalEmbedOptions).optional(),
       soundcloud: z.enum(externalEmbedOptions).optional(),
       flickr: z.enum(externalEmbedOptions).optional(),
+      bandcamp: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   invites: z.object({
