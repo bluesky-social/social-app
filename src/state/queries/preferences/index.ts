@@ -8,6 +8,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
+import {preferencesQueryKeyRoot} from '#/lib/react-query'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
@@ -29,7 +30,6 @@ export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/types'
 
-const preferencesQueryKeyRoot = 'getPreferences'
 export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
