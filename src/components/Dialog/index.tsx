@@ -409,3 +409,7 @@ export function Handle({
 export function Close() {
   return null
 }
+
+export function Backdrop() {
+  return null
+}
