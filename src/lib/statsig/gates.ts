@@ -3,4 +3,5 @@ export type Gate =
   | 'debug_show_feedcontext'
   | 'is_bsky_team_member' // special, do not remove
   | 'disable_onboarding_find_contacts'
+  | 'disable_settings_find_contacts'
   | 'disable_live_now_beta'
