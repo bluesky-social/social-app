@@ -7,7 +7,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {AppIconImage} from '#/screens/Settings/AppIconSettings/AppIconImage'
 import {type AppIconSet} from '#/screens/Settings/AppIconSettings/types'
 import {useAppIconSets} from '#/screens/Settings/AppIconSettings/useAppIconSets'
@@ -15,15 +14,13 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID} from '#/env'
-import {IS_INTERNAL} from '#/env'
+import {IS_ANDROID, IS_INTERNAL} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
 export function AppIconSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const sets = useAppIconSets()
-  const gate = useGate()
   const [currentAppIcon, setCurrentAppIcon] = useState(() =>
     getAppIconName(DynamicAppIcon.getAppIcon()),
   )
@@ -86,7 +83,7 @@ export function AppIconSettingsScreen({}: Props) {
           ))}
         </Group>
 
-        {IS_INTERNAL && gate('debug_subscriptions') && (
+        {IS_INTERNAL && (
           <>
             <Text
               style={[

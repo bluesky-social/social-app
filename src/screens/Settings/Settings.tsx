@@ -1,6 +1,5 @@
 import {useState} from 'react'
-import {Alert, LayoutAnimation, Pressable, View} from 'react-native'
-import {Linking} from 'react-native'
+import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -16,7 +15,6 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -70,8 +68,7 @@ import {
   shouldShowVerificationCheckButton,
   VerificationCheckButton,
 } from '#/components/verification/VerificationCheckButton'
-import {IS_IOS, IS_NATIVE} from '#/env'
-import {IS_INTERNAL} from '#/env'
+import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
@@ -94,7 +91,6 @@ export function SettingsScreen({}: Props) {
   const [showDevOptions, setShowDevOptions] = useState(false)
   const findContactsEnabled =
     useIsFindContactsFeatureEnabledBasedOnGeolocation()
-  const gate = useGate()
 
   return (
     <Layout.Screen>
@@ -213,18 +209,16 @@ export function SettingsScreen({}: Props) {
               <Trans>Content and media</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          {IS_NATIVE &&
-            findContactsEnabled &&
-            !gate('disable_settings_find_contacts') && (
-              <SettingsList.LinkItem
-                to="/settings/find-contacts"
-                label={_(msg`Find friends from contacts`)}>
-                <SettingsList.ItemIcon icon={ContactsIcon} />
-                <SettingsList.ItemText>
-                  <Trans>Find friends from contacts</Trans>
-                </SettingsList.ItemText>
-              </SettingsList.LinkItem>
-            )}
+          {IS_NATIVE && findContactsEnabled && (
+            <SettingsList.LinkItem
+              to="/settings/find-contacts"
+              label={_(msg`Find friends from contacts`)}>
+              <SettingsList.ItemIcon icon={ContactsIcon} />
+              <SettingsList.ItemText>
+                <Trans>Find friends from contacts</Trans>
+              </SettingsList.ItemText>
+            </SettingsList.LinkItem>
+          )}
           <SettingsList.LinkItem
             to="/settings/appearance"
             label={_(msg`Appearance`)}>

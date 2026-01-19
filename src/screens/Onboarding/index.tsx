@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import * as bcp47Match from 'bcp-47-match'
 
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
-import {useGate} from '#/lib/statsig/statsig'
 import {useLanguagePrefs} from '#/state/preferences'
 import {
   Layout,
@@ -23,15 +22,13 @@ import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/co
 import {useFindContactsFlowState} from '#/components/contacts/state'
 import {Portal} from '#/components/Portal'
 import {ScreenTransition} from '#/components/ScreenTransition'
-import {IS_NATIVE} from '#/env'
-import {ENV} from '#/env'
+import {ENV, IS_NATIVE} from '#/env'
 import {StepFindContacts} from './StepFindContacts'
 import {StepFindContactsIntro} from './StepFindContactsIntro'
 import {StepSuggestedAccounts} from './StepSuggestedAccounts'
 import {StepSuggestedStarterpacks} from './StepSuggestedStarterpacks'
 
 export function Onboarding() {
-  const gate = useGate()
   const t = useTheme()
 
   const {contentLanguages} = useLanguagePrefs()
@@ -41,18 +38,11 @@ export function Onboarding() {
   }, [contentLanguages])
 
   // starter packs screen is currently geared towards english-speaking accounts
-  const showSuggestedStarterpacks =
-    ENV !== 'e2e' &&
-    probablySpeaksEnglish &&
-    gate('onboarding_suggested_starterpacks')
+  const showSuggestedStarterpacks = ENV !== 'e2e' && probablySpeaksEnglish
 
   const findContactsEnabled =
     useIsFindContactsFeatureEnabledBasedOnGeolocation()
-  const showFindContacts =
-    ENV !== 'e2e' &&
-    IS_NATIVE &&
-    findContactsEnabled &&
-    !gate('disable_onboarding_find_contacts')
+  const showFindContacts = ENV !== 'e2e' && IS_NATIVE && findContactsEnabled
 
   const [state, dispatch] = useReducer(
     reducer,

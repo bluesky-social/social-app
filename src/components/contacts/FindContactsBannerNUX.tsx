@@ -6,7 +6,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, useTheme} from '#/alf'
@@ -89,16 +88,14 @@ function useInternalState() {
   const {mutate: save, variables} = useSaveNux()
   const hidden = !!variables
   const isFeatureEnabled = useIsFindContactsFeatureEnabledBasedOnGeolocation()
-  const gate = useGate()
 
   const visible = useMemo(() => {
     if (IS_WEB) return false
     if (hidden) return false
     if (nux && nux.completed) return false
     if (!isFeatureEnabled) return false
-    if (gate('disable_settings_find_contacts')) return false
     return true
-  }, [hidden, nux, isFeatureEnabled, gate])
+  }, [hidden, nux, isFeatureEnabled])
 
   const close = () => {
     save({

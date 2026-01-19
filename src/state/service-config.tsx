@@ -1,10 +1,8 @@
 import {createContext, useContext, useMemo} from 'react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useServiceConfigQuery} from '#/state/queries/service-config'
 import {useSession} from '#/state/session'
-import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
 type TrendingContext = {
@@ -107,10 +105,9 @@ export function useLiveNowConfig(): LiveNowConfig {
 }
 
 export function useCanGoLive() {
-  const gate = useGate()
   const {hasSession} = useSession()
   if (!hasSession) return false
-  return IS_DEV ? true : !gate('disable_live_now_beta')
+  return true
 }
 
 export function useCheckEmailConfirmed() {
