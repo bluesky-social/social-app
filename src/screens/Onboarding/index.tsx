@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import * as bcp47Match from 'bcp-47-match'
 
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
+import {useGate} from '#/lib/statsig/statsig'
 import {useLanguagePrefs} from '#/state/preferences'
 import {
   Layout,
@@ -30,6 +31,7 @@ import {StepSuggestedStarterpacks} from './StepSuggestedStarterpacks'
 
 export function Onboarding() {
   const t = useTheme()
+  const gate = useGate()
 
   const {contentLanguages} = useLanguagePrefs()
   const probablySpeaksEnglish = useMemo(() => {
@@ -42,7 +44,11 @@ export function Onboarding() {
 
   const findContactsEnabled =
     useIsFindContactsFeatureEnabledBasedOnGeolocation()
-  const showFindContacts = ENV !== 'e2e' && IS_NATIVE && findContactsEnabled
+  const showFindContacts =
+    ENV !== 'e2e' &&
+    IS_NATIVE &&
+    findContactsEnabled &&
+    !gate('disable_onboarding_find_contacts')
 
   const [state, dispatch] = useReducer(
     reducer,

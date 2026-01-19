@@ -15,6 +15,7 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -91,6 +92,7 @@ export function SettingsScreen({}: Props) {
   const [showDevOptions, setShowDevOptions] = useState(false)
   const findContactsEnabled =
     useIsFindContactsFeatureEnabledBasedOnGeolocation()
+  const gate = useGate()
 
   return (
     <Layout.Screen>
@@ -209,16 +211,18 @@ export function SettingsScreen({}: Props) {
               <Trans>Content and media</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          {IS_NATIVE && findContactsEnabled && (
-            <SettingsList.LinkItem
-              to="/settings/find-contacts"
-              label={_(msg`Find friends from contacts`)}>
-              <SettingsList.ItemIcon icon={ContactsIcon} />
-              <SettingsList.ItemText>
-                <Trans>Find friends from contacts</Trans>
-              </SettingsList.ItemText>
-            </SettingsList.LinkItem>
-          )}
+          {IS_NATIVE &&
+            findContactsEnabled &&
+            !gate('disable_settings_find_contacts') && (
+              <SettingsList.LinkItem
+                to="/settings/find-contacts"
+                label={_(msg`Find friends from contacts`)}>
+                <SettingsList.ItemIcon icon={ContactsIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Find friends from contacts</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.LinkItem>
+            )}
           <SettingsList.LinkItem
             to="/settings/appearance"
             label={_(msg`Appearance`)}>
