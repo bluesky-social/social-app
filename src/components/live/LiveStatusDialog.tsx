@@ -226,7 +226,7 @@ export function LiveStatus({
             a.flex_row,
             a.align_center,
             a.justify_between,
-            a.flex_1,
+            a.w_full,
             a.pt_sm,
           ]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
