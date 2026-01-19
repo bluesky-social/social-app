@@ -25,7 +25,6 @@ import {
   type NativeStackNavigatorProps,
 } from '@react-navigation/native-stack'
 
-import {PWI_ENABLED} from '#/lib/build-flags'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
@@ -115,7 +114,7 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || IS_NATIVE)) {
+  if (!hasSession && (activeRouteRequiresAuth || IS_NATIVE)) {
     return <LoggedOut />
   }
   if (hasSession && currentAccount?.signupQueued) {
