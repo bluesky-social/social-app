@@ -259,6 +259,12 @@ module.exports = function (_config) {
           },
         ],
         'react-native-compressor',
+        [
+          '@bitdrift/react-native',
+          {
+            networkInstrumentation: true,
+          },
+        ],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withGradleJVMHeapSizeIncrease.js',
         './plugins/withAndroidManifestLargeHeapPlugin.js',
