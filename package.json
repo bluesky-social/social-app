@@ -74,7 +74,6 @@
   },
   "dependencies": {
     "@atproto/api": "^0.18.15",
-    "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.6",
     "@bsky.app/expo-image-crop-tool": "^0.5.0",
