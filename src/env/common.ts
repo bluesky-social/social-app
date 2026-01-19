@@ -85,6 +85,17 @@ export const CHAT_PROXY_DID: Did =
   process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
 
 /**
+ * Growthbook API host
+ */
+export const GROWTHBOOK_API_HOST: string | undefined = process.env.EXPO_PUBLIC_GROWTHBOOK_API_HOST
+
+/**
+ * Growthbook client key
+ */
+export const GROWTHBOOK_CLIENT_KEY: string | undefined = process.env.EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY
+
+
+/**
  * Sentry DSN for telemetry
  */
 export const SENTRY_DSN: string | undefined = process.env.EXPO_PUBLIC_SENTRY_DSN

@@ -12,7 +12,8 @@ import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
-import {logger} from '#/logger'
+import {logger, Provider as LoggingProvider} from '#/logger'
+import {initializer as growthbookInitializer} from '#/logger/growthbook/context'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -85,6 +86,7 @@ function InnerApp() {
   useEffect(() => {
     async function onLaunch(account?: SessionAccount) {
       try {
+        await growthbookInitializer
         if (account) {
           await resumeSession(account)
         }
@@ -205,7 +207,9 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <InnerApp />
+                            <LoggingProvider>
+                              <InnerApp />
+                            </LoggingProvider>
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>

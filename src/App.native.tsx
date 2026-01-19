@@ -21,7 +21,7 @@ import {Provider as StatsigProvider, tryFetchGates} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
-import {logger} from '#/logger'
+import {logger, Provider as LoggingProvider} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -238,7 +238,9 @@ function App() {
                               <StarterPackProvider>
                                 <SafeAreaProvider
                                   initialMetrics={initialWindowMetrics}>
-                                  <InnerApp />
+                                  <LoggingProvider>
+                                    <InnerApp />
+                                  </LoggingProvider>
                                 </SafeAreaProvider>
                               </StarterPackProvider>
                             </BottomSheetProvider>

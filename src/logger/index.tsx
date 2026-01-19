@@ -1,5 +1,6 @@
 import {nanoid} from 'nanoid/non-secure'
 
+import {Provider as GrowthbookProvider} from '#/logger/growthbook/context'
 import {logEvent} from '#/lib/statsig/statsig'
 import {add} from '#/logger/logDump'
 import {type MetricEvents} from '#/logger/metrics'
@@ -171,3 +172,10 @@ export class Logger {
  *   `logger.error(error[, metadata])`
  */
 export const logger = Logger.create(Logger.Context.Default)
+
+/**
+ * Logger context provider
+ */
+export function Provider({children}: {children: React.ReactNode}) {
+  return <GrowthbookProvider>{children}</GrowthbookProvider>
+}
