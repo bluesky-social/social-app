@@ -15,8 +15,7 @@ import {
 } from '#/components/dialogs/nuxs/utils'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
-import {IS_E2E} from '#/env'
+import {IS_E2E, IS_WEB} from '#/env'
 
 export const enabled = createIsEnabledCheck(props => {
   return (

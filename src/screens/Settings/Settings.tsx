@@ -1,6 +1,5 @@
 import {useState} from 'react'
-import {Alert, LayoutAnimation, Pressable, View} from 'react-native'
-import {Linking} from 'react-native'
+import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -70,8 +69,7 @@ import {
   shouldShowVerificationCheckButton,
   VerificationCheckButton,
 } from '#/components/verification/VerificationCheckButton'
-import {IS_IOS, IS_NATIVE} from '#/env'
-import {IS_INTERNAL} from '#/env'
+import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 

@@ -1,5 +1,4 @@
 import '#/logger/sentry/setup'
-import '#/logger/bitdrift/setup'
 import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
@@ -66,8 +65,10 @@ import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdate
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
-import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
-import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
+import {
+  prefetchAgeAssuranceConfig,
+  Provider as AgeAssuranceV2Provider,
+} from '#/ageAssurance'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   prefetchLiveEvents,

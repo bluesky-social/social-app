@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -435,7 +435,6 @@ export function ProfileGrid({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const gate = useGate()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
   const followDialogControl = useDialogControl()
@@ -443,7 +442,6 @@ export function ProfileGrid({
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
   const isFeedContext = viewContext === 'feed'
-  const showDismissButton = onDismiss && gate('suggested_users_dismiss')
 
   const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6
   const minLength = gtMobile ? 3 : 4
@@ -584,12 +582,12 @@ export function ProfileGrid({
                     (hovered || pressed) && t.atoms.border_contrast_high,
                   ]}>
                   <ProfileCard.Outer>
-                    {showDismissButton && (
+                    {onDismiss && (
                       <Button
                         label={_(msg`Dismiss this suggestion`)}
                         onPress={e => {
                           e.preventDefault()
-                          onDismiss!(profile.did)
+                          onDismiss(profile.did)
                           logEvent('suggestedUser:dismiss', {
                             logContext: isFeedContext
                               ? 'InterstitialDiscover'

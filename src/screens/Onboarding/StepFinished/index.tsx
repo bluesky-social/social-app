@@ -20,7 +20,7 @@ import {
   VIDEO_SAVED_FEED,
 } from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {getAllListMembers} from '#/state/queries/list-members'
@@ -61,7 +61,6 @@ export function StepFinished() {
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
   const {startProgressGuide} = useProgressGuideControls()
-  const gate = useGate()
 
   const finishOnboarding = useCallback(async () => {
     setSaving(true)
@@ -114,13 +113,11 @@ export function StepFinished() {
               ...TIMELINE_SAVED_FEED,
               id: TID.nextStr(),
             },
-          ]
-          if (gate('onboarding_add_video_feed')) {
-            feedsToSave.push({
+            {
               ...VIDEO_SAVED_FEED,
               id: TID.nextStr(),
-            })
-          }
+            },
+          ]
 
           // Any starter pack feeds will be pinned _after_ the defaults
           if (starterPack && starterPack.feeds?.length) {
@@ -200,9 +197,7 @@ export function StepFinished() {
     setSaving(false)
     setActiveStarterPack(undefined)
     setHasCheckedForStarterPack(true)
-    startProgressGuide(
-      gate('old_postonboarding') ? 'like-10-and-follow-7' : 'follow-10',
-    )
+    startProgressGuide('follow-10')
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     logEvent('onboarding:finished:nextPressed', {
@@ -238,7 +233,6 @@ export function StepFinished() {
     setActiveStarterPack,
     setHasCheckedForStarterPack,
     startProgressGuide,
-    gate,
   ])
 
   return (
