@@ -1,0 +1,2 @@
+Dockerfile.* linguist-language=Dockerfile
+.eslintrc linguist-language=JSON
