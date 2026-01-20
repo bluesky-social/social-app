@@ -16,7 +16,6 @@ import {logger} from '#/logger'
 import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
-import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -149,14 +148,11 @@ export function MessagesScreenInner({navigation, route}: Props) {
   useRefreshOnFocus(refetch)
   useRefreshOnFocus(refetchInbox)
 
-  const leftConvos = useLeftConvos()
-
   const inboxAllConvos =
     inboxData?.pages
       .flatMap(page => page.convos)
       .filter(
         convo =>
-          !leftConvos.includes(convo.id) &&
           !convo.muted &&
           convo.members.every(member => member.handle !== 'missing.invalid'),
       ) ?? []
@@ -172,10 +168,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
 
   const conversations = useMemo(() => {
     if (data?.pages) {
-      const conversations = data.pages
-        .flatMap(page => page.convos)
-        // filter out convos that are actively being left
-        .filter(convo => !leftConvos.includes(convo.id))
+      const flattenedConvos = data.pages.flatMap(page => page.convos)
 
       return [
         ...(hasInboxConvos
@@ -187,13 +180,13 @@ export function MessagesScreenInner({navigation, route}: Props) {
               },
             ]
           : []),
-        ...conversations.map(
+        ...flattenedConvos.map(
           convo => ({type: 'CONVERSATION', conversation: convo}) as const,
         ),
       ] satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, hasInboxConvos, inboxUnreadConvoMembers])
+  }, [data, hasInboxConvos, inboxUnreadConvoMembers])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
