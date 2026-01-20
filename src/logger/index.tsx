@@ -1,6 +1,6 @@
 import {nanoid} from 'nanoid/non-secure'
 
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent} from '#/logger/growthbook'
 import {add} from '#/logger/logDump'
 import {type MetricEvents} from '#/logger/metrics'
 import {consoleTransport} from '#/logger/transports/console'

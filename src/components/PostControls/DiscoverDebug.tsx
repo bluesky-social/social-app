@@ -4,7 +4,7 @@ import {t} from '@lingui/macro'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useGate} from '#/lib/statsig/statsig'
-import {logEvent} from '#/logger/growthbook/context'
+import {logEvent} from '#/logger/growthbook'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toast from '#/components/Toast'

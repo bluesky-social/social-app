@@ -1,20 +1,19 @@
-import {useCallback, useEffect} from 'react'
+import {useCallback} from 'react'
 import {Platform} from 'react-native'
 import {growthbookTrackingPlugin} from '@growthbook/growthbook/plugins'
-import {GrowthBook, GrowthBookProvider} from '@growthbook/growthbook-react'
+import {GrowthBook} from '@growthbook/growthbook-react'
 
 import {BSKY_SERVICE} from '#/lib/constants'
 import {
   getAndMigrateStableId,
   getSessionId,
   getStableId,
-  getStableIdOrThrow,
 } from '#/logger/growthbook/identifiers'
 import * as referrer from '#/logger/growthbook/util/referrer'
 import * as persisted from '#/state/persisted'
-import {type SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount} from '#/state/session'
 import * as env from '#/env'
-import {type Geolocation, useGeolocation} from '#/geolocation'
+import {device} from '#/storage'
 
 const TIMEOUT_INIT = 500 // TODO should base on p99 or something
 const TIMEOUT_PREFER_LOW_LATENCY = 250
@@ -63,18 +62,12 @@ type UserAttributes = GrowthBookDefaultUserAttributes & {
 }
 type Attributes = DefaultAttributes & UserAttributes
 
-/**
- * We cache the geolocation outside of React to use when setting
- * default attributes outside React, such as during `refresh()`.
- */
-let unsafeGeolocation: Geolocation | null = null
-
 const gb = new GrowthBook({
   apiHost: env.GROWTHBOOK_API_HOST,
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
   plugins: [growthbookTrackingPlugin()],
   trackingCallback: (experiment, result) => {
-    console.log('Experiment Viewed', {
+    console.debug('Experiment Viewed', {
       experimentId: experiment.key,
       variationId: result.key,
     })
@@ -83,10 +76,7 @@ const gb = new GrowthBook({
       variationId: result.key,
     })
   },
-  attributes: {
-    device_id: getStableId() || 'unset',
-    session_id: getSessionId(),
-  } satisfies GrowthBookDefaultAttributes,
+  attributes: getDefaultAttributes(),
 })
 
 /**
@@ -148,46 +138,14 @@ export function useGate() {
 }
 
 /**
- * Main provider for GrowthBook and feature flag context. Should be rendered
- * _after_ `initializer` is complete, and _after_ the Session provider.
- */
-export function Provider({children}: {children: React.ReactNode}) {
-  const geo = useGeolocation()
-  const {currentAccount} = useSession()
-
-  /**
-   * Decorate existing attributes with any new default attributes
-   */
-  useEffect(() => {
-    // cache outside react
-    unsafeGeolocation = geo
-    const attr = {
-      ...gb.getAttributes(),
-      ...getDefaultAttributes(),
-    }
-    gb.setAttributes(attr)
-    console.debug(`update attributes`, {attributes: attr})
-  }, [geo])
-
-  /**
-   * Update user attributes on session change, and clear them on logout
-   */
-  useEffect(() => {
-    setAttributesForAccount(currentAccount)
-  }, [currentAccount])
-
-  return <GrowthBookProvider growthbook={gb}>{children}</GrowthBookProvider>
-}
-
-/**
  * Get the default attributes that should always be set
  * on the GrowthBook instance
  */
 function getDefaultAttributes() {
   return {
-    device_id: getStableIdOrThrow(),
+    device_id: getStableId() || 'unset',
     session_id: getSessionId(),
-    country: unsafeGeolocation?.countryCode || 'unknown',
+    country: device.get(['mergedGeolocation'])?.countryCode || 'unknown',
   }
 }
 

@@ -24,7 +24,7 @@ import {
 } from '#/lib/constants'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {refresh as refreshGates} from '#/logger/growthbook/context'
+import {refresh as refreshGates} from '#/logger/growthbook'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {
