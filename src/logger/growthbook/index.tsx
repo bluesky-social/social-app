@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
 import {Platform} from 'react-native'
-import {growthbookTrackingPlugin} from '@growthbook/growthbook/plugins'
 import {GrowthBook} from '@growthbook/growthbook-react'
 
 import {BSKY_SERVICE} from '#/lib/constants'
@@ -14,6 +13,13 @@ import * as persisted from '#/state/persisted'
 import {type SessionAccount} from '#/state/session'
 import * as env from '#/env'
 import {device} from '#/storage'
+
+const debugEnabled = env.IS_DEV && true
+const debug = (message: string, attributes?: Record<string, any>) => {
+  if (debugEnabled) {
+    console.debug(`(growthbook) ${message}`, attributes || {})
+  }
+}
 
 const TIMEOUT_INIT = 500 // TODO should base on p99 or something
 const TIMEOUT_PREFER_LOW_LATENCY = 250
@@ -60,21 +66,17 @@ type UserAttributes = GrowthBookDefaultUserAttributes & {
   appLanguage: string
   contentLanguages: string[]
 }
-type Attributes = DefaultAttributes & UserAttributes
+export type Attributes = DefaultAttributes & Partial<UserAttributes>
 
 const gb = new GrowthBook({
   apiHost: env.GROWTHBOOK_API_HOST,
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
-  plugins: [growthbookTrackingPlugin()],
   trackingCallback: (experiment, result) => {
-    console.debug('Experiment Viewed', {
+    debug(`Experiment Viewed`, {
       experimentId: experiment.key,
       variationId: result.key,
     })
-    gb.logEvent('Experiment Viewed', {
-      experimentId: experiment.key,
-      variationId: result.key,
-    })
+    // TODO
   },
   attributes: getDefaultAttributes(),
 })
@@ -101,6 +103,14 @@ export const initializer = new Promise<void>(async y => {
   y()
 })
 
+export function getGrowthBook() {
+  return gb
+}
+
+export function getGrowthBookAttributes(): Attributes {
+  return gb.getAttributes() as Attributes
+}
+
 /**
  * Refresh feature gates from GrowthBook. Updates attributes based on the
  * provided account, if any.
@@ -112,6 +122,7 @@ export async function refresh({
   account?: SessionAccount
   strategy: FeatureFetchStrategy
 }) {
+  debug(`refresh`, {account: !!account, strategy})
   setAttributesForAccount(account)
   await gb.refreshFeatures({
     timeout:
@@ -119,13 +130,6 @@ export async function refresh({
         ? TIMEOUT_PREFER_LOW_LATENCY
         : TIMEOUT_PREFER_FRESH_GATES,
   })
-}
-
-/**
- * Log a custom event to our backend, using GrowthBook's event logging system.
- */
-export function logEvent(eventName: string, metadata?: Record<string, any>) {
-  gb.logEvent(eventName, metadata)
 }
 
 /**
@@ -160,11 +164,11 @@ function setAttributesForAccount(account?: SessionAccount) {
       ...(getUserAttributes(account) || {}),
     }
     gb.setAttributes(attr)
-    console.debug(`setAttributesForAccount: has account`, {attributes: attr})
+    debug(`setAttributesForAccount: has account`, {attributes: attr})
   } else {
     const attr = getDefaultAttributes()
     gb.setAttributes(attr)
-    console.debug(`setAttributesForAccount: no account`, {attributes: attr})
+    debug(`setAttributesForAccount: no account`, {attributes: attr})
   }
 }
 

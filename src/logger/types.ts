@@ -15,7 +15,6 @@ export enum LogContext {
   AgeAssurance = 'age-assurance',
   PolicyUpdate = 'policy-update',
   Geolocation = 'geolocation',
-  GrowthBook = 'growthbook',
 
   /**
    * METRIC IS FOR INTERNAL USE ONLY, don't create any other loggers using this

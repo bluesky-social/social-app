@@ -3,8 +3,7 @@ import {Platform} from 'react-native'
 import {AppState, type AppStateStatus} from 'react-native'
 import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
-import {logger} from '#/logger'
-import {type MetricEvents} from '#/logger/metrics'
+import {logger, type Metrics} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {IS_WEB} from '#/env'
 import * as env from '#/env'
@@ -43,7 +42,7 @@ if (IS_WEB && typeof window !== 'undefined') {
   refUrl = decodeURIComponent(params.get('ref_url') ?? '')
 }
 
-export type {MetricEvents as LogEvents}
+export type {Metrics as LogEvents}
 
 function createStatsigOptions(prefetchUsers: StatsigUser[]) {
   return {
@@ -94,9 +93,9 @@ export function toClout(n: number | null | undefined): number | undefined {
 /**
  * @deprecated use `logger.metric()` instead
  */
-export function logEvent<E extends keyof MetricEvents>(
+export function logEvent<E extends keyof Metrics>(
   eventName: E & string,
-  rawMetadata: MetricEvents[E] & FlatJSONRecord,
+  rawMetadata: Metrics[E] & FlatJSONRecord,
   options: {
     /**
      * Send to our data lake only, not to StatSig
@@ -127,8 +126,8 @@ export function logEvent<E extends keyof MetricEvents>(
   }
 }
 
-function toStringRecord<E extends keyof MetricEvents>(
-  metadata: MetricEvents[E] & FlatJSONRecord,
+function toStringRecord<E extends keyof Metrics>(
+  metadata: Metrics[E] & FlatJSONRecord,
 ): Record<string, string> {
   const record: Record<string, string> = {}
   for (let key in metadata) {

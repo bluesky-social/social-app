@@ -1,15 +1,6 @@
-import {useEffect, useState} from 'react'
-import {AppState} from 'react-native'
+import {useAppState as useAppStateBase} from '#/lib/appState'
 
-export function useAppState() {
-  const [state, setState] = useState(AppState.currentState)
-
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', nextAppState => {
-      setState(nextAppState)
-    })
-    return () => sub.remove()
-  }, [])
-
-  return state
-}
+/**
+ * @deprecated use `useAppState` from `#/lib/appState` instead
+ */
+export const useAppState = useAppStateBase

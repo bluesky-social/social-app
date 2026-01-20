@@ -8,8 +8,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
-import {type MetricEvents} from '#/logger/metrics'
+import {logger, type Metrics} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
@@ -450,12 +449,11 @@ export function ProfileGrid({
   const seenProfilesRef = useRef<Set<string>>(new Set())
   const containerRef = useRef<View>(null)
   const hasTrackedRef = useRef(false)
-  const logContext: MetricEvents['suggestedUser:seen']['logContext'] =
-    isFeedContext
-      ? 'InterstitialDiscover'
-      : isProfileHeaderContext
-        ? 'Profile'
-        : 'InterstitialProfile'
+  const logContext: Metrics['suggestedUser:seen']['logContext'] = isFeedContext
+    ? 'InterstitialDiscover'
+    : isProfileHeaderContext
+      ? 'Profile'
+      : 'InterstitialProfile'
 
   // Callback to fire seen events
   const fireSeen = useCallback(() => {

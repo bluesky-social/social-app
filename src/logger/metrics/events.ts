@@ -2,7 +2,7 @@ import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
-export type MetricEvents = {
+export type Metrics = {
   // App events
   init: {
     initMs: number
@@ -374,7 +374,6 @@ export type MetricEvents = {
       | 'AvatarButton'
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
-      | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
@@ -468,7 +467,6 @@ export type MetricEvents = {
       | 'AvatarButton'
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
-      | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'

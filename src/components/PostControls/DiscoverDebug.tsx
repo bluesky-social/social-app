@@ -4,7 +4,7 @@ import {t} from '@lingui/macro'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useGate} from '#/lib/statsig/statsig'
-import {logEvent} from '#/logger/growthbook'
+import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toast from '#/components/Toast'
@@ -33,7 +33,7 @@ export function DiscoverDebug({
         style={[a.absolute, {zIndex: 1000, maxWidth: 65, bottom: -4}, a.left_0]}
         onPress={e => {
           e.stopPropagation()
-          logEvent('discover_debug:copy_feed_context', {feedContext})
+          logger.metric('debug', {feedContext})
           Clipboard.setStringAsync(feedContext)
           Toast.show(t`Copied to clipboard`)
         }}>

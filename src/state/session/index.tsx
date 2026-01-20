@@ -170,6 +170,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     SessionApiContext['logoutCurrentAccount']
   >(
     logContext => {
+      // TODO
+      // const gates = refreshGates({account, strategy: 'prefer-fresh-gates'})
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
       const prevState = store.getState()

@@ -13,8 +13,7 @@ import * as bcp47Match from 'bcp-47-match'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {type MetricEvents} from '#/logger/metrics'
+import {logger, type Metrics} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {RQKEY_ROOT as useActorSearchQueryKeyRoot} from '#/state/queries/actor-search'
@@ -124,7 +123,7 @@ type ExploreScreenItems =
       bottomBorder?: boolean
       searchButton?: {
         label: string
-        metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
+        metricsTag: Metrics['explore:module:searchButtonPress']['module']
         tab: 'user' | 'profile' | 'feed'
       }
     }
@@ -135,7 +134,7 @@ type ExploreScreenItems =
       icon: React.ComponentType<SVGIconProps>
       searchButton?: {
         label: string
-        metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
+        metricsTag: Metrics['explore:module:searchButtonPress']['module']
         tab: 'user' | 'profile' | 'feed'
       }
       hideDefaultTab?: boolean
@@ -729,12 +728,7 @@ export function Explore({
                 <ModuleHeader.SearchButton
                   {...item.searchButton}
                   onPress={() =>
-                    focusSearchInput(
-                      (item.searchButton?.tab || 'user') as
-                        | 'user'
-                        | 'profile'
-                        | 'feed',
-                    )
+                    focusSearchInput(item.searchButton?.tab || 'user')
                   }
                 />
               )}
@@ -751,12 +745,7 @@ export function Explore({
                   <ModuleHeader.SearchButton
                     {...item.searchButton}
                     onPress={() =>
-                      focusSearchInput(
-                        (item.searchButton?.tab || 'user') as
-                          | 'user'
-                          | 'profile'
-                          | 'feed',
-                      )
+                      focusSearchInput(item.searchButton?.tab || 'user')
                     }
                   />
                 )}
@@ -1043,7 +1032,7 @@ export function Explore({
   const seenProfilesRef = useRef<Set<string>>(new Set())
   const onItemSeen = useCallback(
     (item: ExploreScreenItems) => {
-      let module: MetricEvents['explore:module:seen']['module']
+      let module: Metrics['explore:module:seen']['module']
       if (item.type === 'trendingTopics' || item.type === 'trendingVideos') {
         module = item.type
       } else if (item.type === 'profile') {

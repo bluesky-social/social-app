@@ -85,10 +85,16 @@ export const CHAT_PROXY_DID: Did =
   process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
 
 /**
+ * Metrics API host
+ */
+export const METRICS_API_HOST: string =
+  process.env.EXPO_PUBLIC_METRICS_API_HOST || 'https://events.bsky.app'
+
+/**
  * Growthbook API host
  */
-export const GROWTHBOOK_API_HOST: string | undefined =
-  process.env.EXPO_PUBLIC_GROWTHBOOK_API_HOST
+export const GROWTHBOOK_API_HOST: string =
+  process.env.EXPO_PUBLIC_GROWTHBOOK_API_HOST || `${METRICS_API_HOST}/gb`
 
 /**
  * Growthbook client key
