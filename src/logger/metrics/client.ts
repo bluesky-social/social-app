@@ -1,10 +1,7 @@
 import {onAppStateChange} from '#/lib/appState'
 import {isNetworkError} from '#/lib/strings/errors'
-import {
-  type Attributes,
-  getGrowthBook,
-  getGrowthBookAttributes,
-} from '#/logger/growthbook'
+import {getGrowthBook} from '#/logger/growthbook'
+import {getMetadata, type Metadata} from '#/logger/metadata'
 import {type Metrics} from '#/logger/metrics/events'
 import {Sentry} from '#/logger/sentry/lib'
 import * as env from '#/env'
@@ -13,7 +10,7 @@ type Event<M extends Metrics> = {
   time: number
   event: keyof M
   payload: M[keyof M]
-  metadata: Attributes
+  metadata: Metadata
 }
 
 const TRACKING_ENDPOINT = env.METRICS_API_HOST + '/track'
@@ -47,7 +44,7 @@ export class MetricsClient {
       time: Date.now(),
       event,
       payload,
-      metadata: getGrowthBookAttributes(),
+      metadata: getMetadata(),
     })
 
     if (this.queue.length > 100) {

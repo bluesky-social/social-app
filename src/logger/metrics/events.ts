@@ -7,6 +7,11 @@ export type Metrics = {
   init: {
     initMs: number
   }
+  'experiment:viewed': {
+    experimentId: string
+    variationId: string
+  }
+
   'account:loggedIn': {
     logContext:
       | 'LoginForm'

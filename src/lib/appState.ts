@@ -7,6 +7,7 @@ export function onAppStateChange(cb: (state: AppStateStatus) => void) {
   let prev = AppState.currentState
   return AppState.addEventListener('change', next => {
     if (next === prev) return
+    prev = next
     cb(next)
   })
 }

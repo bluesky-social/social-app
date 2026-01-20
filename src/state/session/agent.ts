@@ -25,6 +25,7 @@ import {
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {refresh as refreshGates} from '#/logger/growthbook'
+import {updateUserMetadata} from '#/logger/metadata'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {
@@ -63,8 +64,8 @@ export async function createAgentAndResume(
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
+  updateUserMetadata(storedAccount)
   const gates = refreshGates({
-    account: storedAccount,
     strategy: 'prefer-low-latency',
   })
   const moderation = configureModerationForAccount(agent, storedAccount)
@@ -126,7 +127,8 @@ export async function createAgentAndLogin(
   })
 
   const account = agentToSessionAccountOrThrow(agent)
-  const gates = refreshGates({account, strategy: 'prefer-fresh-gates'})
+  updateUserMetadata(account)
+  const gates = refreshGates({strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(agent, account)
   const aa = prefetchAgeAssuranceData({agent})
 
@@ -174,7 +176,8 @@ export async function createAgentAndCreateAccount(
     verificationCode,
   })
   const account = agentToSessionAccountOrThrow(agent)
-  const gates = refreshGates({account, strategy: 'prefer-fresh-gates'})
+  updateUserMetadata(account)
+  const gates = refreshGates({strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(agent, account)
 
   const createdAt = new Date().toISOString()

@@ -14,6 +14,7 @@ import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {initializer as growthbookInitializer} from '#/logger/growthbook'
+import {setupDeviceId} from '#/logger/metadata'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -88,9 +89,10 @@ function InnerApp() {
   useEffect(() => {
     async function onLaunch(account?: SessionAccount) {
       try {
-        await growthbookInitializer
         if (account) {
           await resumeSession(account)
+        } else {
+          await growthbookInitializer
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
@@ -183,7 +185,7 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([initPersistedState(), Geo.resolve()]).then(() =>
+    Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(() =>
       setReady(true),
     )
   }, [])
