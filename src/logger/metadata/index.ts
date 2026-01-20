@@ -41,12 +41,13 @@ let baseMetadata: BaseMetadata = {
   country: device.get(['mergedGeolocation'])?.countryCode || 'unknown',
 }
 export function updateBaseMetadata(
-  metadata: Omit<BaseMetadata, 'deviceId' | 'sessionId'>,
+  metadata: Partial<Omit<BaseMetadata, 'deviceId'>>,
 ) {
   baseMetadata = {
-    deviceId: getDeviceId() || 'unknown',
-    sessionId: getSessionId(),
+    ...baseMetadata,
     ...metadata,
+    sessionId: metadata.sessionId || getSessionId(),
+    deviceId: getDeviceId() || 'unknown',
   }
   __onMetadataChange()
 }

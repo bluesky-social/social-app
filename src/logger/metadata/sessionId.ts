@@ -1,6 +1,7 @@
 import uuid from 'react-native-uuid'
 
 import {onAppStateChange} from '#/lib/appState'
+import {updateBaseMetadata} from '#/logger/metadata'
 import {device} from '#/storage'
 
 const TTL = 5 * 60 * 1e3 // 5 min on native
@@ -14,6 +15,7 @@ let sessionId = (() => {
   const lastEvent = device.get(['nativeSessionIdLastEventAt'])
   const id = existing && !expired(lastEvent) ? existing : uuid.v4()
   device.set(['nativeSessionId'], id)
+  updateBaseMetadata({sessionId: id})
   return id
 })()
 
@@ -23,6 +25,7 @@ onAppStateChange(state => {
     if (expired(lastEvent)) {
       sessionId = uuid.v4()
       device.set(['nativeSessionId'], sessionId)
+      updateBaseMetadata({sessionId})
     }
   } else {
     device.set(['nativeSessionIdLastEventAt'], Date.now())
