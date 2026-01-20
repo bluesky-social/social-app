@@ -437,6 +437,13 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     'https://www.flickr.com/groups/898944@N23/',
     'https://www.flickr.com/groups',
+
+    'https://scaniverse.com/test/fail/',
+    'https://scaniverse.com/test_fail',
+    'https://scaniverse.com',
+    'https://scaniverse.com/scan/complete',
+    'https://scaniverse.com/scan/complete/',
+    'https://scaniverse.com/scan/complete?embed=1',
   ]
 
   const outputs = [
@@ -815,6 +822,25 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     undefined,
     undefined,
+
+    undefined,
+    undefined,
+    undefined,
+    {
+      type: 'scaniverse_model',
+      source: 'scaniverse',
+      playerUri: 'https://scaniverse.com/scan/complete?embed=1',
+    },
+    {
+      type: 'scaniverse_model',
+      source: 'scaniverse',
+      playerUri: 'https://scaniverse.com/scan/complete?embed=1',
+    },
+    {
+      type: 'scaniverse_model',
+      source: 'scaniverse',
+      playerUri: 'https://scaniverse.com/scan/complete?embed=1',
+    },
   ]
 
   it('correctly grabs the correct id from uri', () => {

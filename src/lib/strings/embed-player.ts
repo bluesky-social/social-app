@@ -24,6 +24,7 @@ export const embedPlayerSources = [
   'giphy',
   'tenor',
   'flickr',
+  'scaniverse',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -44,6 +45,7 @@ export type EmbedPlayerType =
   | 'giphy_gif'
   | 'tenor_gif'
   | 'flickr_album'
+  | 'scaniverse_model'
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
@@ -56,6 +58,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
+  scaniverse: 'Scaniverse',
 }
 
 export interface EmbedPlayerParams {
@@ -457,6 +460,32 @@ export function parseEmbedPlayerFromUrl(
       default:
         // we don't know what this is so we can't embed it
         return undefined
+    }
+  }
+
+  // scaniverse link
+  if (urlp.hostname == 'scaniverse.com') {
+    let i = urlp.pathname.length - 1
+    while (i > 0 && urlp.pathname.charAt(i) === '/') {
+      --i
+    }
+
+    const path_components = urlp.pathname.slice(1, i + 1).split('/')
+    if (path_components.length === 2) {
+      const [scan_embed_type, scan_id] = path_components
+      if (scan_embed_type === 'scan') {
+        return {
+          type: 'scaniverse_model',
+          source: 'scaniverse',
+          playerUri: `https://scaniverse.com/scan/${scan_id}?embed=1`,
+        }
+      } else {
+        // unknown path component
+        return undefined
+      }
+    } else {
+      // unknown path format
+      return undefined
     }
   }
 }
