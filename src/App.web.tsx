@@ -12,8 +12,11 @@ import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
-import {logger, Provider as LoggingProvider} from '#/logger'
-import {initializer as growthbookInitializer} from '#/logger/growthbook/context'
+import {logger} from '#/logger'
+import {
+  initializer as growthbookInitializer,
+  Provider as GrowthBookProvider,
+} from '#/logger/growthbook/context'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -56,8 +59,10 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
-import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
-import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
+import {
+  prefetchAgeAssuranceConfig,
+  Provider as AgeAssuranceV2Provider,
+} from '#/ageAssurance'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
@@ -121,53 +126,55 @@ function InnerApp() {
               <React.Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <PolicyUpdateOverlayProvider>
-                    <StatsigProvider>
-                      <LiveEventsProvider>
-                        <AgeAssuranceV2Provider>
-                          <ComposerProvider>
-                            <MessagesProvider>
-                              {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                              <LabelDefsProvider>
-                                <ModerationOptsProvider>
-                                  <LoggedOutViewProvider>
-                                    <SelectedFeedProvider>
-                                      <HiddenRepliesProvider>
-                                        <HomeBadgeProvider>
-                                          <UnreadNotifsProvider>
-                                            <BackgroundNotificationPreferencesProvider>
-                                              <MutedThreadsProvider>
-                                                <SafeAreaProvider>
-                                                  <ProgressGuideProvider>
-                                                    <ServiceConfigProvider>
-                                                      <EmailVerificationProvider>
-                                                        <HideBottomBarBorderProvider>
-                                                          <IntentDialogProvider>
-                                                            <Shell />
-                                                            <ToastOutlet />
-                                                          </IntentDialogProvider>
-                                                        </HideBottomBarBorderProvider>
-                                                      </EmailVerificationProvider>
-                                                    </ServiceConfigProvider>
-                                                  </ProgressGuideProvider>
-                                                </SafeAreaProvider>
-                                              </MutedThreadsProvider>
-                                            </BackgroundNotificationPreferencesProvider>
-                                          </UnreadNotifsProvider>
-                                        </HomeBadgeProvider>
-                                      </HiddenRepliesProvider>
-                                    </SelectedFeedProvider>
-                                  </LoggedOutViewProvider>
-                                </ModerationOptsProvider>
-                              </LabelDefsProvider>
-                            </MessagesProvider>
-                          </ComposerProvider>
-                        </AgeAssuranceV2Provider>
-                      </LiveEventsProvider>
-                    </StatsigProvider>
-                  </PolicyUpdateOverlayProvider>
-                </QueryProvider>
+                <GrowthBookProvider>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <PolicyUpdateOverlayProvider>
+                      <StatsigProvider>
+                        <LiveEventsProvider>
+                          <AgeAssuranceV2Provider>
+                            <ComposerProvider>
+                              <MessagesProvider>
+                                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                                <LabelDefsProvider>
+                                  <ModerationOptsProvider>
+                                    <LoggedOutViewProvider>
+                                      <SelectedFeedProvider>
+                                        <HiddenRepliesProvider>
+                                          <HomeBadgeProvider>
+                                            <UnreadNotifsProvider>
+                                              <BackgroundNotificationPreferencesProvider>
+                                                <MutedThreadsProvider>
+                                                  <SafeAreaProvider>
+                                                    <ProgressGuideProvider>
+                                                      <ServiceConfigProvider>
+                                                        <EmailVerificationProvider>
+                                                          <HideBottomBarBorderProvider>
+                                                            <IntentDialogProvider>
+                                                              <Shell />
+                                                              <ToastOutlet />
+                                                            </IntentDialogProvider>
+                                                          </HideBottomBarBorderProvider>
+                                                        </EmailVerificationProvider>
+                                                      </ServiceConfigProvider>
+                                                    </ProgressGuideProvider>
+                                                  </SafeAreaProvider>
+                                                </MutedThreadsProvider>
+                                              </BackgroundNotificationPreferencesProvider>
+                                            </UnreadNotifsProvider>
+                                          </HomeBadgeProvider>
+                                        </HiddenRepliesProvider>
+                                      </SelectedFeedProvider>
+                                    </LoggedOutViewProvider>
+                                  </ModerationOptsProvider>
+                                </LabelDefsProvider>
+                              </MessagesProvider>
+                            </ComposerProvider>
+                          </AgeAssuranceV2Provider>
+                        </LiveEventsProvider>
+                      </StatsigProvider>
+                    </PolicyUpdateOverlayProvider>
+                  </QueryProvider>
+                </GrowthBookProvider>
               </React.Fragment>
             </ActiveVideoProvider>
           </VideoVolumeProvider>
@@ -207,9 +214,7 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <LoggingProvider>
-                              <InnerApp />
-                            </LoggingProvider>
+                            <InnerApp />
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>

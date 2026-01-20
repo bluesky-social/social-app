@@ -87,13 +87,14 @@ export const CHAT_PROXY_DID: Did =
 /**
  * Growthbook API host
  */
-export const GROWTHBOOK_API_HOST: string | undefined = process.env.EXPO_PUBLIC_GROWTHBOOK_API_HOST
+export const GROWTHBOOK_API_HOST: string | undefined =
+  process.env.EXPO_PUBLIC_GROWTHBOOK_API_HOST
 
 /**
  * Growthbook client key
  */
-export const GROWTHBOOK_CLIENT_KEY: string | undefined = process.env.EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY
-
+export const GROWTHBOOK_CLIENT_KEY: string =
+  process.env.EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY || 'sdk-7gkUkGy9wguUjyFe'
 
 /**
  * Sentry DSN for telemetry

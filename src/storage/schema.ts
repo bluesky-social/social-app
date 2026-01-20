@@ -5,6 +5,12 @@ import {type Geolocation} from '#/geolocation/types'
  * Device data that's specific to the device and does not vary based account
  */
 export type Device = {
+  /**
+   * Formerly managed by StatSig, this is the migrated stable ID for the
+   * device, used with our logging and metrics tracking.
+   */
+  stableId: string | undefined
+
   fontScale: '-2' | '-1' | '0' | '1' | '2'
   fontFamily: 'system' | 'theme'
   lastNuxDialog: string | undefined

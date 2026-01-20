@@ -22,9 +22,9 @@ import {
   PUBLIC_BSKY_SERVICE,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
-import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
+import {refresh as refreshGates} from '#/logger/growthbook/context'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {
@@ -63,7 +63,10 @@ export async function createAgentAndResume(
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
-  const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
+  const gates = refreshGates({
+    account: storedAccount,
+    strategy: 'prefer-low-latency',
+  })
   const moderation = configureModerationForAccount(agent, storedAccount)
   const prevSession: AtpSessionData = sessionAccountToSession(storedAccount)
   if (isSessionExpired(storedAccount)) {
@@ -123,7 +126,7 @@ export async function createAgentAndLogin(
   })
 
   const account = agentToSessionAccountOrThrow(agent)
-  const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
+  const gates = refreshGates({account, strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(agent, account)
   const aa = prefetchAgeAssuranceData({agent})
 
@@ -171,7 +174,7 @@ export async function createAgentAndCreateAccount(
     verificationCode,
   })
   const account = agentToSessionAccountOrThrow(agent)
-  const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
+  const gates = refreshGates({account, strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(agent, account)
 
   const createdAt = new Date().toISOString()
@@ -322,7 +325,7 @@ export function agentToSessionAccount(
     return undefined
   }
   return {
-    service: agent.service.toString(),
+    service: agent.serviceUrl.toString(),
     did: agent.session.did,
     handle: agent.session.handle,
     email: agent.session.email,
@@ -332,7 +335,7 @@ export function agentToSessionAccount(
     accessJwt: agent.session.accessJwt,
     signupQueued: isSignupQueued(agent.session.accessJwt),
     active: agent.session.active,
-    status: agent.session.status as SessionAccount['status'],
+    status: agent.session.status,
     pdsUrl: agent.pdsUrl?.toString(),
     isSelfHosted: !agent.serviceUrl.toString().startsWith(BSKY_SERVICE),
   }
