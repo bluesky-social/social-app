@@ -285,15 +285,17 @@ export function linkRequiresWarning(uri: string, label: string) {
  * @see https://www.rfc-editor.org/rfc/rfc3986#section-3.2.2
  */
 export function labelToDomain(label: string): string | undefined {
-  // any spaces just immediately consider the label a non-url
-  if (/\s/.test(label)) {
+  // any external spaces can be removed without any effect, just wrong facets
+  const labelTrimmed = label.trim()
+  // any internal spaces just immediately consider the label a non-url
+  if (/\s/.test(labelTrimmed)) {
     return undefined
   }
   try {
-    return new URL(label).hostname.toLowerCase()
+    return new URL(labelTrimmed).hostname.toLowerCase()
   } catch {}
   try {
-    return new URL('https://' + label).hostname.toLowerCase()
+    return new URL('https://' + labelTrimmed).hostname.toLowerCase()
   } catch {}
   return undefined
 }
