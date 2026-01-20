@@ -3,6 +3,7 @@ import {
   Image,
   type ImageStyle,
   Pressable,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -180,7 +181,7 @@ function LightboxInner({
         )}
       </TouchableWithoutFeedback>
       {img.alt ? (
-        <View style={styles.footer}>
+        <ScrollView style={styles.footer}>
           <Pressable
             accessibilityLabel={_(msg`Expand alt text`)}
             accessibilityHint={_(
@@ -196,7 +197,7 @@ function LightboxInner({
               {img.alt}
             </Text>
           </Pressable>
-        </View>
+        </ScrollView>
       ) : null}
       <View style={styles.closeBtn}>
         <ImageDefaultHeader onRequestClose={onClose} />
@@ -278,6 +279,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingVertical: 24,
     backgroundColor: colors.black,
+    maxHeight: 80,
+    overflow: 'hidden',
   },
   blurredBackground: {
     backdropFilter: 'blur(10px)',
