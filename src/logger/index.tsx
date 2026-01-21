@@ -12,7 +12,6 @@ import {
 import {enabledLogLevels} from '#/logger/util'
 import {type Events as Metrics} from '#/analytics/metrics/types'
 import {ENV} from '#/env'
-export {type Events as Metrics} from '#/analytics/metrics/types'
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (ENV) {
