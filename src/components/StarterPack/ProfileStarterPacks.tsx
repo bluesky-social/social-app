@@ -163,17 +163,18 @@ export function ProfileStarterPacks({
     if (!data || items?.length === 0) {
       return null
     }
+    // Show CreateAnother only at the end of the list on own profile
+    if (isMe && !hasNextPage && !isFetchingNextPage) {
+      return <CreateAnother style={{paddingBottom: bottomBarOffset}} />
+    }
     return (
-      <>
-        <ListFooter
-          isFetchingNextPage={isFetchingNextPage}
-          hasNextPage={hasNextPage}
-          error={isError ? 'Could not load more starter packs' : undefined}
-          onRetry={fetchNextPage}
-          style={!isMe ? {paddingBottom: bottomBarOffset} : undefined}
-        />
-        {isMe && <CreateAnother style={{paddingBottom: bottomBarOffset}} />}
-      </>
+      <ListFooter
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+        error={isError ? 'Could not load more starter packs' : undefined}
+        onRetry={fetchNextPage}
+        style={{paddingBottom: bottomBarOffset}}
+      />
     )
   }, [
     data,
