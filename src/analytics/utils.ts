@@ -4,6 +4,10 @@ import {BSKY_SERVICE} from '#/lib/constants'
 import {type SessionAccount} from '#/state/session'
 import {type MergeableMetadata, type SessionMetadata} from '#/analytics/types'
 
+/**
+ * Thin `useMemo` wrapper that marks the metadata as memoized and provides a
+ * type guard.
+ */
 export function useMeta(metadata: MergeableMetadata) {
   const m = useMemo(() => metadata, [metadata])
   // @ts-ignore

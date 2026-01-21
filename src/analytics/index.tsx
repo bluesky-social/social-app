@@ -61,8 +61,17 @@ const Context = createContext<AnalyticsBaseContextType>({
   },
 })
 
+/**
+ * Ensures that deviceId is set and migrated from legacy storage. Handled on
+ * startup in `App.<platform>.tsx`. This must be awaited prior to the app
+ * booting up.
+ */
 export const setupDeviceId = getAndMigrateDeviceId()
 
+/**
+ * Analytics context provider. Decorates the parent analytics context with
+ * additional metadata. Nesting should be done carefully and sparingly.
+ */
 export function AnalyticsContext({
   children,
   metadata,
@@ -102,6 +111,11 @@ export function AnalyticsContext({
   return <Context.Provider value={childContext}>{children}</Context.Provider>
 }
 
+/**
+ * Feature gates provider. Decorates the parent analytics context with
+ * feature gate capabilities. Should be mounted within `AnalyticsContext`,
+ * and below the `<Fragment key={did} />` breaker in `App.<platform>.tsx`.
+ */
 export function AnalyticsFeaturesContext({
   children,
 }: {
@@ -133,10 +147,18 @@ export function AnalyticsFeaturesContext({
   return <Context.Provider value={childContext}>{children}</Context.Provider>
 }
 
+/**
+ * Basic analytics context without feature gates. Should really only be used
+ * above the `AnalyticsFeaturesContext` provider.
+ */
 export function useAnalyticsBase() {
   return useContext(Context)
 }
 
+/**
+ * The main analytics context, including feature gates. Use this everywhere you
+ * need metrics, features, or logging within the React tree.
+ */
 export function useAnalytics() {
   const ctx = useContext(Context)
   if (!('feature' in ctx) || !('Features' in ctx)) {

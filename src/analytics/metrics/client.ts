@@ -3,7 +3,7 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {Sentry} from '#/logger/sentry/lib'
 import * as env from '#/env'
 
-// TODO just fucken use logger in here
+// TODO debug logging
 
 type Event<M extends Record<string, any>> = {
   time: number
