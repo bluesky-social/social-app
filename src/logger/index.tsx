@@ -10,7 +10,6 @@ import {
   type Transport,
 } from '#/logger/types'
 import {enabledLogLevels} from '#/logger/util'
-import {type Events as Metrics} from '#/analytics/metrics/types'
 import {ENV} from '#/env'
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
@@ -95,21 +94,6 @@ export class Logger {
 
   error(error: Error | string, metadata: Metadata = {}) {
     this.transport({level: LogLevel.Error, message: error, metadata})
-  }
-
-  metric<E extends keyof Metrics>(
-    event: E & string,
-    metadata: Metrics[E],
-    _: {
-      /**
-       * Optionally also send to StatSig
-       */
-      statsig?: boolean
-    } = {statsig: true},
-  ) {
-    for (const transport of this.transports) {
-      transport(LogLevel.Info, LogContext.Metric, event, metadata, Date.now())
-    }
   }
 
   addTransport(transport: Transport) {
