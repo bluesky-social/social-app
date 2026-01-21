@@ -168,7 +168,7 @@ export function ProfileStarterPacks({
       <ListFooter
         isFetchingNextPage={isFetchingNextPage}
         hasNextPage={hasNextPage}
-        error={isError ? 'Could not load more starter packs' : undefined}
+        error={isError ? _(msg`Could not load more starter packs`) : undefined}
         onRetry={fetchNextPage}
         style={{paddingBottom: bottomBarOffset}}
       />
