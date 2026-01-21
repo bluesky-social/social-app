@@ -12,7 +12,7 @@ type Event<M extends Record<string, any>> = {
   metadata: Record<string, any>
 }
 
-const TRACKING_ENDPOINT = env.METRICS_API_HOST + '/track'
+const TRACKING_ENDPOINT = env.METRICS_API_HOST + '/t'
 
 export class MetricsClient<M extends Record<string, any>> {
   private started: boolean = false
