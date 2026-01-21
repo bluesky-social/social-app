@@ -160,6 +160,9 @@ export function ProfileStarterPacks({
   )
 
   const renderFooter = useCallback(() => {
+    if (!data || items?.length === 0) {
+      return null
+    }
     if (isMe) {
       return <CreateAnother style={{paddingBottom: bottomBarOffset}} />
     }
@@ -173,6 +176,8 @@ export function ProfileStarterPacks({
       />
     )
   }, [
+    data,
+    items?.length,
     isMe,
     bottomBarOffset,
     isFetchingNextPage,
