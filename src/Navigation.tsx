@@ -41,7 +41,7 @@ import {
   type SearchTabNavigatorParams,
   type State,
 } from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
+import {useRunCallbackOnce} from '#/lib/runCallbackOnce'
 import {bskyTitle} from '#/lib/strings/headings'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
@@ -980,15 +980,64 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     }
   }
 
-  function onReady() {
+  const onNavigationReady = useRunCallbackOnce(() => {
     prevLoggedRouteName.current = getCurrentRouteName()
+    handlePushNotificationEntry()
+
+    ax.metric(
+      'router:navigate',
+      {},
+      {
+        navigation: {
+          previousScreen: prevLoggedRouteName.current,
+          currentScreen: getCurrentRouteName(),
+        },
+      },
+    )
+
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
       emailDialogControl.open({
         id: EmailDialogScreenID.VerificationReminder,
       })
       snoozeEmailConfirmationPrompt()
     }
-  }
+
+    ax.metric(
+      'init',
+      {
+        initMs: Math.round(
+          // @ts-ignore Emitted by Metro in the bundle prelude
+          performance.now() - global.__BUNDLE_START_TIME__,
+        ),
+      },
+      {
+        navigation: {
+          previousScreen: prevLoggedRouteName.current,
+          currentScreen: getCurrentRouteName(),
+        },
+      },
+    )
+
+    if (IS_WEB) {
+      const referrerInfo = Referrer.getReferrerInfo()
+      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+        ax.metric(
+          'deepLink:referrerReceived',
+          {
+            to: window.location.href,
+            referrer: referrerInfo?.referrer,
+            hostname: referrerInfo?.hostname,
+          },
+          {
+            navigation: {
+              previousScreen: prevLoggedRouteName.current,
+              currentScreen: getCurrentRouteName(),
+            },
+          },
+        )
+      }
+    }
+  })
 
   return (
     <NavigationContainer
@@ -1008,21 +1057,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         )
         prevLoggedRouteName.current = getCurrentRouteName()
       }}
-      onReady={() => {
-        logModuleInitTime()
-        onReady()
-        ax.metric(
-          'router:navigate',
-          {},
-          {
-            navigation: {
-              previousScreen: prevLoggedRouteName.current,
-              currentScreen: getCurrentRouteName(),
-            },
-          },
-        )
-        handlePushNotificationEntry()
-      }}
+      onReady={onNavigationReady}
       // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
       // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
       // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
@@ -1110,44 +1145,6 @@ function reset(): Promise<void> {
     ])
   } else {
     return Promise.resolve()
-  }
-}
-
-let didInit = false
-function logModuleInitTime() {
-  if (didInit) {
-    return
-  }
-  didInit = true
-
-  const initMs = Math.round(
-    // @ts-ignore Emitted by Metro in the bundle prelude
-    performance.now() - global.__BUNDLE_START_TIME__,
-  )
-  console.log(`Time to first paint: ${initMs} ms`)
-  logEvent('init', {
-    initMs,
-  })
-
-  if (IS_WEB) {
-    const referrerInfo = Referrer.getReferrerInfo()
-    if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-      logEvent('deepLink:referrerReceived', {
-        to: window.location.href,
-        referrer: referrerInfo?.referrer,
-        hostname: referrerInfo?.hostname,
-      })
-    }
-  }
-
-  if (__DEV__) {
-    // This log is noisy, so keep false committed
-    const shouldLog = false
-    // Relies on our patch to polyfill.js in metro-runtime
-    const initLogs = (global as any).__INIT_LOGS__
-    if (shouldLog && Array.isArray(initLogs)) {
-      console.log(initLogs.join('\n'))
-    }
   }
 }
 
