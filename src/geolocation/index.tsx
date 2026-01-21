@@ -6,7 +6,6 @@ import {
   useMemo,
 } from 'react'
 
-import {updateBaseMetadata} from '#/logger/metadata'
 import {useSyncDeviceGeolocationOnStartup} from '#/geolocation/device'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
 import {type Geolocation} from '#/geolocation/types'
@@ -54,9 +53,6 @@ export function Provider({children}: {children: ReactNode}) {
      * Needs to be available for the data prefetching we do on boot.
      */
     device.set(['mergedGeolocation'], geolocation)
-    updateBaseMetadata({
-      country: geolocation.countryCode || 'unknown',
-    })
   }, [geolocation])
 
   useSyncDeviceGeolocationOnStartup(setDeviceGeolocation)

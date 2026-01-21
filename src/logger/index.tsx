@@ -1,7 +1,6 @@
 import {nanoid} from 'nanoid/non-secure'
 
 import {add} from '#/logger/logDump'
-import {type Metrics, metrics} from '#/logger/metrics'
 import {consoleTransport} from '#/logger/transports/console'
 import {sentryTransport} from '#/logger/transports/sentry'
 import {
@@ -11,9 +10,9 @@ import {
   type Transport,
 } from '#/logger/types'
 import {enabledLogLevels} from '#/logger/util'
+import {type Events as Metrics} from '#/analytics/metrics/types'
 import {ENV} from '#/env'
-
-export {type Metrics} from '#/logger/metrics'
+export {type Events as Metrics} from '#/analytics/metrics/types'
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (ENV) {
@@ -104,7 +103,6 @@ export class Logger {
       statsig?: boolean
     } = {statsig: true},
   ) {
-    metrics.track(event, metadata)
     for (const transport of this.transports) {
       transport(LogLevel.Info, LogContext.Metric, event, metadata, Date.now())
     }
