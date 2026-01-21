@@ -13,6 +13,11 @@ export type BaseMetadata = {
 
 export type GeolocationMetadata = Geolocation
 
+export type NavigationMetadata = {
+  previousScreen?: string
+  currentScreen?: string
+}
+
 export type SessionMetadata = {
   did: string
   isBskyPds: boolean
@@ -24,6 +29,7 @@ export type PreferencesMetadata = {
 }
 
 export type MergeableMetadata = {
+  navigation?: NavigationMetadata
   session?: SessionMetadata
   preferences?: PreferencesMetadata
 }

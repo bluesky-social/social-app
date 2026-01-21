@@ -76,12 +76,6 @@ type FlatJSONRecord = Record<
 
 let getCurrentRouteName: () => string | null | undefined = () => null
 
-export function attachRouteToLogEvents(
-  getRouteName: () => string | null | undefined,
-) {
-  getCurrentRouteName = getRouteName
-}
-
 export function toClout(n: number | null | undefined): number | undefined {
   if (n == null) {
     return undefined

@@ -28,7 +28,6 @@ import {
   storePayloadForAccountSwitch,
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
-import {logger as notyLogger} from '#/lib/notifications/util'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
@@ -38,12 +37,12 @@ import {
   type MessagesTabNavigatorParams,
   type MyProfileTabNavigatorParams,
   type NotificationsTabNavigatorParams,
+  type RouteParams,
   type SearchTabNavigatorParams,
+  type State,
 } from '#/lib/routes/types'
-import {type RouteParams, type State} from '#/lib/routes/types'
-import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
-import {logger} from '#/logger'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -137,6 +136,7 @@ import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
+import {AnalyticsContext, useAnalytics, utils} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
@@ -879,6 +879,8 @@ const LINKING = {
 let lastHandledNotificationDateDedupe: number | undefined
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
+  const ax = useAnalytics()
+  const notyLogger = ax.logger.useContext(ax.logger.Context.Notifications)
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
@@ -945,10 +947,15 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       const payload = getNotificationPayload(response.notification)
 
       if (payload) {
-        notyLogger.metric(
+        ax.metric(
           'notifications:openApp',
           {reason: payload.reason, causedBoot: true},
-          {statsig: false},
+          {
+            navigation: {
+              previousScreen: prevLoggedRouteName.current,
+              currentScreen: getCurrentRouteName(),
+            },
+          },
         )
 
         if (payload.reason === 'chat-message') {
@@ -984,36 +991,55 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   }
 
   return (
-    <>
-      <NavigationContainer
-        ref={navigationRef}
-        linking={LINKING}
-        theme={theme}
-        onStateChange={() => {
-          logger.metric(
-            'router:navigate',
-            {from: prevLoggedRouteName.current},
-            {statsig: false},
-          )
-          prevLoggedRouteName.current = getCurrentRouteName()
-        }}
-        onReady={() => {
-          attachRouteToLogEvents(getCurrentRouteName)
-          logModuleInitTime()
-          onReady()
-          logger.metric('router:navigate', {}, {statsig: false})
-          handlePushNotificationEntry()
-        }}
-        // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
-        // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
-        // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
-        // I'm scared of missing a spot (esp. with push notifications etc) so let's enable this legacy behaviour for now.
-        // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
-        // -sfn
-        navigationInChildEnabled>
+    <NavigationContainer
+      ref={navigationRef}
+      linking={LINKING}
+      theme={theme}
+      onStateChange={() => {
+        ax.metric(
+          'router:navigate',
+          {from: prevLoggedRouteName.current},
+          {
+            navigation: {
+              previousScreen: prevLoggedRouteName.current,
+              currentScreen: getCurrentRouteName(),
+            },
+          },
+        )
+        prevLoggedRouteName.current = getCurrentRouteName()
+      }}
+      onReady={() => {
+        logModuleInitTime()
+        onReady()
+        ax.metric(
+          'router:navigate',
+          {},
+          {
+            navigation: {
+              previousScreen: prevLoggedRouteName.current,
+              currentScreen: getCurrentRouteName(),
+            },
+          },
+        )
+        handlePushNotificationEntry()
+      }}
+      // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
+      // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
+      // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
+      // I'm scared of missing a spot (esp. with push notifications etc) so let's enable this legacy behaviour for now.
+      // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
+      // -sfn
+      navigationInChildEnabled>
+      <AnalyticsContext
+        metadata={utils.useMeta({
+          navigation: {
+            previousScreen: prevLoggedRouteName.current,
+            currentScreen: getCurrentRouteName(),
+          },
+        })}>
         {children}
-      </NavigationContainer>
-    </>
+      </AnalyticsContext>
+    </NavigationContainer>
   )
 }
 
