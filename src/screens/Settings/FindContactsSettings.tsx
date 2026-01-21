@@ -171,6 +171,7 @@ function SyncStatus({
   info: AppBskyContactDefs.SyncStatus
   refetchStatus: () => Promise<any>
 }) {
+  const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
   const {_} = useLingui()

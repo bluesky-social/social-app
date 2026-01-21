@@ -234,15 +234,12 @@ function Inner(props: ReportDialogProps) {
     }
   }, [_, submitReport, state, dispatch, props, setPending, setSuccess])
 
+  // TODO once
   React.useEffect(() => {
-    ax.metric(
-      'reportDialog:open',
-      {
-        subjectType: props.subject.type,
-      },
-      {statsig: false},
-    )
-  }, [props.subject])
+    ax.metric('reportDialog:open', {
+      subjectType: props.subject.type,
+    })
+  }, [ax, props.subject])
 
   return (
     <Dialog.ScrollableInner

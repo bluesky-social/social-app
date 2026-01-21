@@ -127,13 +127,9 @@ function Inner({
             color="primary"
             style={[a.justify_center]}
             onPress={() => {
-              ax.metric(
-                'verification:learn-more',
-                {
-                  location: 'verifierDialog',
-                },
-                {statsig: true},
-              )
+              ax.metric('verification:learn-more', {
+                location: 'verifierDialog',
+              })
             }}>
             <ButtonText>
               <Trans context="english-only-resource">Learn more</Trans>

@@ -38,7 +38,7 @@ type LoggerType = {
   useContext: (context: Exclude<Logger['context'], undefined>) => LoggerType
   Context: typeof Logger.Context
 }
-type AnalyticsContextType = {
+export type AnalyticsContextType = {
   metadata: Metadata
   logger: LoggerType
   metric: <E extends keyof Metrics>(
@@ -49,7 +49,7 @@ type AnalyticsContextType = {
   feature: (feature: Features) => boolean
   Features: typeof Features
 }
-type AnalyticsBaseContextType = Omit<
+export type AnalyticsBaseContextType = Omit<
   AnalyticsContextType,
   'feature' | 'Features'
 >
