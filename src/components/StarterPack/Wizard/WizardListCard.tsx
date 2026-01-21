@@ -13,7 +13,6 @@ import {useLingui} from '@lingui/react'
 import {DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
@@ -25,6 +24,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 function WizardListCard({
@@ -130,6 +130,7 @@ export function WizardProfileCard({
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
 
   // Determine the "main" profile for this starter pack - either targetDid or current account
@@ -151,10 +152,10 @@ export function WizardProfileCard({
     if (profile.did === targetProfileDid) return
 
     if (!included) {
-      logger.metric('starterPack:addUser', {})
+      ax.metric('starterPack:addUser', {})
       dispatch({type: 'AddProfile', profile})
     } else {
-      logger.metric('starterPack:removeUser', {})
+      ax.metric('starterPack:removeUser', {})
       dispatch({type: 'RemoveProfile', profileDid: profile.did})
     }
   }

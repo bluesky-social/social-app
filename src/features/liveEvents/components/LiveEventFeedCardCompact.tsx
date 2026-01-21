@@ -6,11 +6,11 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isBskyCustomFeedUrl} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
 import {atoms as a, utils} from '#/alf'
 import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,
@@ -26,6 +26,7 @@ export function LiveEventFeedCardCompact({
   metricContext: LiveEventFeedMetricContext
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
 
   const layout = feed.layouts.compact
   const overlayColor = layout.overlayColor
@@ -39,7 +40,7 @@ export function LiveEventFeedCardCompact({
   }, [feed.url])
 
   useEffect(() => {
-    logger.metric('liveEvents:feedBanner:seen', {
+    ax.metric('liveEvents:feedBanner:seen', {
       feed: feed.url,
       context: metricContext,
     })
@@ -52,7 +53,7 @@ export function LiveEventFeedCardCompact({
       label={_(msg`Live event happening now: ${feed.title}`)}
       style={[a.w_full]}
       onPress={() => {
-        logger.metric('liveEvents:feedBanner:click', {
+        ax.metric('liveEvents:feedBanner:click', {
           feed: feed.url,
           context: metricContext,
         })

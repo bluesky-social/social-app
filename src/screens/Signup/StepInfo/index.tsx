@@ -30,6 +30,7 @@ import {
   MIN_ACCESS_AGE,
   useAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {
   useDeviceGeolocationApi,
@@ -59,6 +60,7 @@ export function StepInfo({
   isLoadingStarterPack: boolean
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {state, dispatch} = useSignupContext()
   const preemptivelyCompleteActivePolicyUpdate =
     usePreemptivelyCompleteActivePolicyUpdate()
@@ -165,13 +167,9 @@ export function StepInfo({
     dispatch({type: 'setEmail', value: email})
     dispatch({type: 'setPassword', value: password})
     dispatch({type: 'next'})
-    logger.metric(
-      'signup:nextPressed',
-      {
-        activeStep: state.activeStep,
-      },
-      {statsig: true},
-    )
+    ax.metric('signup:nextPressed', {
+      activeStep: state.activeStep,
+    })
   }
 
   return (

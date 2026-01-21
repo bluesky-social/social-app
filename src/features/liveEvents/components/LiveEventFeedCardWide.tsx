@@ -6,10 +6,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isBskyCustomFeedUrl} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
 import {atoms as a, useBreakpoints, utils} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,
@@ -24,6 +24,7 @@ export function LiveEventFeedCardWide({
   feed: LiveEventFeed
   metricContext: LiveEventFeedMetricContext
 }) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtPhone} = useBreakpoints()
 
@@ -38,8 +39,9 @@ export function LiveEventFeedCardWide({
     return '/'
   }, [feed.url])
 
+  // TODO double check this
   useEffect(() => {
-    logger.metric('liveEvents:feedBanner:seen', {
+    ax.metric('liveEvents:feedBanner:seen', {
       feed: feed.url,
       context: metricContext,
     })
@@ -52,7 +54,7 @@ export function LiveEventFeedCardWide({
       label={_(msg`Live event happening now: ${feed.title}`)}
       style={[a.w_full]}
       onPress={() => {
-        logger.metric('liveEvents:feedBanner:click', {
+        ax.metric('liveEvents:feedBanner:click', {
           feed: feed.url,
           context: metricContext,
         })

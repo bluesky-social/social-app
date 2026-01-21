@@ -8,6 +8,7 @@ const called: Record<OnceKey, boolean> = {
   [OnceKey.PreferencesThread]: false,
 }
 
+// TODO dedupe with runCallbackOnce
 export function useCallOnce(key: OnceKey) {
   return useCallback(
     (cb: () => void) => {

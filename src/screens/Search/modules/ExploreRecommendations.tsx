@@ -2,7 +2,6 @@ import {View} from 'react-native'
 import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {logger} from '#/logger'
 import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
   useTrendingTopics,
@@ -16,6 +15,7 @@ import {
   TrendingTopicSkeleton,
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 // Note: This module is not currently used and may be removed in the future.
@@ -27,6 +27,7 @@ export function ExploreRecommendations() {
 
 function Inner() {
   const t = useTheme()
+  const ax = useAnalytics()
   const gutters = useGutters([0, 'compact'])
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noRecs = !isLoading && !error && !trending?.suggested?.length
@@ -88,11 +89,7 @@ function Inner() {
                   key={topic.link}
                   topic={topic}
                   onPress={() => {
-                    logger.metric(
-                      'recommendedTopic:click',
-                      {context: 'explore'},
-                      {statsig: true},
-                    )
+                    ax.metric('recommendedTopic:click', {context: 'explore'})
                   }}>
                   {({hovered}) => (
                     <TrendingTopic

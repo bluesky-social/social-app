@@ -17,7 +17,6 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
-import {logger} from '#/logger'
 import {
   type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
@@ -36,6 +35,7 @@ import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Glo
 import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -46,8 +46,9 @@ interface WhoCanReplyProps {
 }
 
 export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
-  const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const {_} = useLingui()
   const infoDialogControl = useDialogControl()
   const editDialogControl = useDialogControl()
 
@@ -90,7 +91,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
       Keyboard.dismiss()
     }
     if (isThreadAuthor) {
-      logger.metric('thread:click:editOwnThreadgate', {})
+      ax.metric('thread:click:editOwnThreadgate', {})
 
       // wait on prefetch if it manages to resolve in under 200ms
       // otherwise, proceed immediately and show the spinner -sfn
@@ -101,7 +102,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         editDialogControl.open()
       })
     } else {
-      logger.metric('thread:click:viewSomeoneElsesThreadgate', {})
+      ax.metric('thread:click:viewSomeoneElsesThreadgate', {})
 
       infoDialogControl.open()
     }
