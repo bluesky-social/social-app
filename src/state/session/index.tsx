@@ -1,6 +1,7 @@
 import React from 'react'
 import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
 
+import {setUserMetadata} from '#/logger/metadata'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
@@ -15,7 +16,6 @@ import {
   sessionAccountToSession,
 } from './agent'
 import {type Action, getInitialState, reducer, type State} from './reducer'
-
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
@@ -111,6 +111,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         accountDid,
         sessionEvent,
       })
+      if (!refreshedAccount) {
+        setUserMetadata(null)
+      }
     },
     [store],
   )
@@ -170,8 +173,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     SessionApiContext['logoutCurrentAccount']
   >(
     logContext => {
-      // TODO
-      // const gates = refreshGates({account, strategy: 'prefer-fresh-gates'})
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
       const prevState = store.getState()
@@ -184,6 +185,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         {statsig: true},
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
+      setUserMetadata(null)
       if (prevState.currentAgentState.did) {
         clearAgeAssuranceDataForDid({did: prevState.currentAgentState.did})
       }
@@ -208,6 +210,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         {statsig: true},
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
+      setUserMetadata(null)
       clearAgeAssuranceData()
       // reset onboarding flow on logout
       onboardingDispatch({type: 'skip'})

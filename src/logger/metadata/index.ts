@@ -67,7 +67,7 @@ if (env.IS_WEB) {
 }
 
 let userMetadata: UserMetadata | null = null
-export function updateUserMetadata(account: persisted.PersistedAccount | null) {
+export function setUserMetadata(account: persisted.PersistedAccount | null) {
   if (account === null) {
     userMetadata = null
   } else {
