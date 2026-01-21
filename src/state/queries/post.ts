@@ -3,12 +3,12 @@ import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {type LogEvents, toClout} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
+import {type Metrics, toClout} from '#/analytics/metrics'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
 
@@ -103,8 +103,7 @@ export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
-  logContext: LogEvents['post:like']['logContext'] &
-    LogEvents['post:unlike']['logContext'],
+  logContext: Metrics['post:like']['logContext'],
 ) {
   const queryClient = useQueryClient()
   const postUri = post.uri
@@ -164,7 +163,7 @@ export function usePostLikeMutationQueue(
 
 function usePostLikeMutation(
   feedDescriptor: string | undefined,
-  logContext: LogEvents['post:like']['logContext'],
+  logContext: Metrics['post:like']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const {currentAccount} = useSession()
@@ -207,7 +206,7 @@ function usePostLikeMutation(
 
 function usePostUnlikeMutation(
   feedDescriptor: string | undefined,
-  logContext: LogEvents['post:unlike']['logContext'],
+  logContext: Metrics['post:unlike']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
@@ -228,8 +227,7 @@ export function usePostRepostMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
-  logContext: LogEvents['post:repost']['logContext'] &
-    LogEvents['post:unrepost']['logContext'],
+  logContext: Metrics['post:repost']['logContext'],
 ) {
   const queryClient = useQueryClient()
   const postUri = post.uri
@@ -291,7 +289,7 @@ export function usePostRepostMutationQueue(
 
 function usePostRepostMutation(
   feedDescriptor: string | undefined,
-  logContext: LogEvents['post:repost']['logContext'],
+  logContext: Metrics['post:repost']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
@@ -314,7 +312,7 @@ function usePostRepostMutation(
 
 function usePostUnrepostMutation(
   feedDescriptor: string | undefined,
-  logContext: LogEvents['post:unrepost']['logContext'],
+  logContext: Metrics['post:unrepost']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
