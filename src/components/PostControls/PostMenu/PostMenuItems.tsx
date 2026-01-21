@@ -26,7 +26,6 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
@@ -463,11 +462,10 @@ let PostMenuItems = ({
 
   const onSignIn = () => requireSignIn(() => {})
 
-  const gate = useGate()
   const isDiscoverDebugUser =
     IS_INTERNAL ||
     DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
-    gate('debug_show_feedcontext')
+    ax.feature(ax.Features.DebugFeedContext)
 
   return (
     <>

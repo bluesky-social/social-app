@@ -1,9 +1,9 @@
 import {createContext, useContext, useMemo} from 'react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useServiceConfigQuery} from '#/state/queries/service-config'
 import {useSession} from '#/state/session'
+import {useAnalytics} from '#/analytics'
 import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
@@ -107,10 +107,10 @@ export function useLiveNowConfig(): LiveNowConfig {
 }
 
 export function useCanGoLive() {
-  const gate = useGate()
+  const ax = useAnalytics()
   const {hasSession} = useSession()
   if (!hasSession) return false
-  return IS_DEV ? true : !gate('disable_live_now_beta')
+  return IS_DEV ? true : !ax.feature(ax.Features.DisableLiveNowBeta)
 }
 
 export function useCheckEmailConfirmed() {

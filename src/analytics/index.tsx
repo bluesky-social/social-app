@@ -24,6 +24,7 @@ import {device} from '#/storage'
 
 export * as utils from '#/analytics/utils'
 export const features = {init, refresh}
+export {Features} from '#/analytics/features'
 export {type Metrics} from '#/analytics/metrics'
 
 type LoggerType = {
