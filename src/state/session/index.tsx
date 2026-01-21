@@ -4,7 +4,7 @@ import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {AnalyticsContext, useAnalytics, utils} from '#/analytics'
+import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
@@ -92,7 +92,7 @@ class SessionStore {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const ax = useAnalytics()
+  const ax = useAnalyticsBase()
   const cancelPendingTask = useOneTaskAtATime()
   const [store] = React.useState(() => new SessionStore())
   const state = React.useSyncExternalStore(store.subscribe, store.getState)

@@ -24,7 +24,6 @@ import {
 } from '#/lib/constants'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {refresh as refreshGates} from '#/logger/growthbook'
 import {setUserMetadata} from '#/logger/metadata'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
@@ -33,6 +32,7 @@ import {
   setBirthdateForDid,
   setCreatedAtForDid,
 } from '#/ageAssurance/data'
+import {features} from '#/analytics'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
@@ -65,7 +65,7 @@ export async function createAgentAndResume(
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
   setUserMetadata(storedAccount)
-  const gates = refreshGates({
+  const gates = features.refresh({
     strategy: 'prefer-low-latency',
   })
   const moderation = configureModerationForAccount(agent, storedAccount)
@@ -128,7 +128,7 @@ export async function createAgentAndLogin(
 
   const account = agentToSessionAccountOrThrow(agent)
   setUserMetadata(account)
-  const gates = refreshGates({strategy: 'prefer-fresh-gates'})
+  const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(agent, account)
   const aa = prefetchAgeAssuranceData({agent})
 
@@ -177,7 +177,7 @@ export async function createAgentAndCreateAccount(
   })
   const account = agentToSessionAccountOrThrow(agent)
   setUserMetadata(account)
-  const gates = refreshGates({strategy: 'prefer-fresh-gates'})
+  const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(agent, account)
 
   const createdAt = new Date().toISOString()

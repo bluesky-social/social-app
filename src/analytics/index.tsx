@@ -1,6 +1,13 @@
-import {createContext, useContext, useMemo} from 'react'
+import {createContext, useContext, useEffect, useMemo} from 'react'
 import {Platform} from 'react-native'
 
+import {
+  Features,
+  features as feats,
+  init,
+  refresh,
+  setAttributes,
+} from '#/analytics/features'
 import {
   getAndMigrateDeviceId,
   getDeviceIdOrThrow,
@@ -15,17 +22,24 @@ import {useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
 
 export * as utils from '#/analytics/utils'
+export const features = {init, refresh}
 
-type ContextType = {
+type AnalyticsContextType = {
+  metadata: Metadata
   metric: <E extends keyof Metrics>(
     event: E,
     payload: Metrics[E],
     metadata?: MergeableMetadata,
   ) => void
-  metadata: Metadata
+  feature: (feature: Features) => boolean
+  Features: typeof Features
 }
+type AnalyticsBaseContextType = Omit<
+  AnalyticsContextType,
+  'feature' | 'Features'
+>
 
-const Context = createContext<ContextType>({
+const Context = createContext<AnalyticsBaseContextType>({
   metric: (event, payload, metadata) => {
     metrics.track(event, payload, metadata)
   },
@@ -74,7 +88,7 @@ export function AnalyticsContext({
     }
     combinedMetadata.base.sessionId = sessionId
     combinedMetadata.geolocation = geolocation
-    const context: ContextType = {
+    const context: AnalyticsBaseContextType = {
       metadata: combinedMetadata,
       metric: (event, payload, extraMetadata) => {
         parentContext.metric(event, payload, {
@@ -88,6 +102,47 @@ export function AnalyticsContext({
   return <Context.Provider value={childContext}>{children}</Context.Provider>
 }
 
-export function useAnalytics() {
+export function AnalyticsFeaturesContext({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const parentContext = useContext(Context)
+
+  useEffect(() => {
+    feats.setTrackingCallback((experiment, result) => {
+      parentContext.metric('experiment:viewed', {
+        experimentId: experiment.key,
+        variationId: result.key,
+      })
+    })
+  }, [parentContext.metric])
+
+  useEffect(() => {
+    setAttributes(parentContext.metadata)
+  }, [parentContext.metadata])
+
+  const childContext = useMemo<AnalyticsContextType>(() => {
+    return {
+      ...parentContext,
+      feature: feats.isOn.bind(feats),
+      Features,
+    }
+  }, [parentContext])
+
+  return <Context.Provider value={childContext}>{children}</Context.Provider>
+}
+
+export function useAnalyticsBase() {
   return useContext(Context)
+}
+
+export function useAnalytics() {
+  const ctx = useContext(Context)
+  if (!('feature' in ctx) || !('Features' in ctx)) {
+    throw new Error(
+      'useAnalytics must be used within an AnalyticsFeaturesContext',
+    )
+  }
+  return ctx as AnalyticsContextType
 }

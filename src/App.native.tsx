@@ -22,7 +22,6 @@ import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
-import {initializer as growthbookInitializer} from '#/logger/growthbook'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -70,7 +69,12 @@ import {
   prefetchAgeAssuranceConfig,
   Provider as AgeAssuranceV2Provider,
 } from '#/ageAssurance'
-import {AnalyticsContext, setupDeviceId} from '#/analytics'
+import {
+  AnalyticsContext,
+  AnalyticsFeaturesContext,
+  features,
+  setupDeviceId,
+} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   prefetchLiveEvents,
@@ -116,7 +120,7 @@ function InnerApp() {
         if (account) {
           await resumeSession(account)
         } else {
-          await growthbookInitializer
+          await features.init
         }
       } catch (e) {
         logger.error(`session: resume failed`, {message: e})
@@ -146,57 +150,59 @@ function InnerApp() {
               <React.Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <PolicyUpdateOverlayProvider>
-                    <StatsigProvider>
-                      <LiveEventsProvider>
-                        <AgeAssuranceV2Provider>
-                          <ComposerProvider>
-                            <MessagesProvider>
-                              {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                              <LabelDefsProvider>
-                                <ModerationOptsProvider>
-                                  <LoggedOutViewProvider>
-                                    <SelectedFeedProvider>
-                                      <HiddenRepliesProvider>
-                                        <HomeBadgeProvider>
-                                          <UnreadNotifsProvider>
-                                            <BackgroundNotificationPreferencesProvider>
-                                              <MutedThreadsProvider>
-                                                <ProgressGuideProvider>
-                                                  <ServiceAccountManager>
-                                                    <EmailVerificationProvider>
-                                                      <HideBottomBarBorderProvider>
-                                                        <GestureHandlerRootView
-                                                          style={s.h100pct}>
-                                                          <GlobalGestureEventsProvider>
-                                                            <IntentDialogProvider>
-                                                              <TestCtrls />
-                                                              <Shell />
-                                                              <ToastOutlet />
-                                                            </IntentDialogProvider>
-                                                          </GlobalGestureEventsProvider>
-                                                        </GestureHandlerRootView>
-                                                      </HideBottomBarBorderProvider>
-                                                    </EmailVerificationProvider>
-                                                  </ServiceAccountManager>
-                                                </ProgressGuideProvider>
-                                              </MutedThreadsProvider>
-                                            </BackgroundNotificationPreferencesProvider>
-                                          </UnreadNotifsProvider>
-                                        </HomeBadgeProvider>
-                                      </HiddenRepliesProvider>
-                                    </SelectedFeedProvider>
-                                  </LoggedOutViewProvider>
-                                </ModerationOptsProvider>
-                              </LabelDefsProvider>
-                            </MessagesProvider>
-                          </ComposerProvider>
-                        </AgeAssuranceV2Provider>
-                      </LiveEventsProvider>
-                    </StatsigProvider>
-                  </PolicyUpdateOverlayProvider>
-                </QueryProvider>
+                <AnalyticsFeaturesContext>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <PolicyUpdateOverlayProvider>
+                      <StatsigProvider>
+                        <LiveEventsProvider>
+                          <AgeAssuranceV2Provider>
+                            <ComposerProvider>
+                              <MessagesProvider>
+                                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                                <LabelDefsProvider>
+                                  <ModerationOptsProvider>
+                                    <LoggedOutViewProvider>
+                                      <SelectedFeedProvider>
+                                        <HiddenRepliesProvider>
+                                          <HomeBadgeProvider>
+                                            <UnreadNotifsProvider>
+                                              <BackgroundNotificationPreferencesProvider>
+                                                <MutedThreadsProvider>
+                                                  <ProgressGuideProvider>
+                                                    <ServiceAccountManager>
+                                                      <EmailVerificationProvider>
+                                                        <HideBottomBarBorderProvider>
+                                                          <GestureHandlerRootView
+                                                            style={s.h100pct}>
+                                                            <GlobalGestureEventsProvider>
+                                                              <IntentDialogProvider>
+                                                                <TestCtrls />
+                                                                <Shell />
+                                                                <ToastOutlet />
+                                                              </IntentDialogProvider>
+                                                            </GlobalGestureEventsProvider>
+                                                          </GestureHandlerRootView>
+                                                        </HideBottomBarBorderProvider>
+                                                      </EmailVerificationProvider>
+                                                    </ServiceAccountManager>
+                                                  </ProgressGuideProvider>
+                                                </MutedThreadsProvider>
+                                              </BackgroundNotificationPreferencesProvider>
+                                            </UnreadNotifsProvider>
+                                          </HomeBadgeProvider>
+                                        </HiddenRepliesProvider>
+                                      </SelectedFeedProvider>
+                                    </LoggedOutViewProvider>
+                                  </ModerationOptsProvider>
+                                </LabelDefsProvider>
+                              </MessagesProvider>
+                            </ComposerProvider>
+                          </AgeAssuranceV2Provider>
+                        </LiveEventsProvider>
+                      </StatsigProvider>
+                    </PolicyUpdateOverlayProvider>
+                  </QueryProvider>
+                </AnalyticsFeaturesContext>
               </React.Fragment>
             </VideoVolumeProvider>
           </Splash>

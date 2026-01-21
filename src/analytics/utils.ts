@@ -5,6 +5,7 @@ import {type SessionAccount} from '#/state/session'
 import {type MergeableMetadata, type SessionMetadata} from '#/analytics/types'
 
 export function meta(metadata: MergeableMetadata) {
+  // I don't care
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const m = useMemo(() => metadata, [metadata])
   // @ts-ignore
