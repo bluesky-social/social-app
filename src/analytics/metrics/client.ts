@@ -1,5 +1,6 @@
 import {onAppStateChange} from '#/lib/appState'
 import {isNetworkError} from '#/lib/strings/errors'
+import {Logger} from '#/logger'
 import {Sentry} from '#/logger/sentry/lib'
 import * as env from '#/env'
 
@@ -13,6 +14,7 @@ type Event<M extends Record<string, any>> = {
 }
 
 const TRACKING_ENDPOINT = env.METRICS_API_HOST + '/t'
+const logger = Logger.create(Logger.Context.Metric, {})
 
 export class MetricsClient<M extends Record<string, any>> {
   private started: boolean = false
@@ -49,6 +51,11 @@ export class MetricsClient<M extends Record<string, any>> {
       metadata,
     })
 
+    logger.debug(`event: ${event as string}`, {
+      payload,
+      metadata,
+    })
+
     if (this.queue.length > 100) {
       this.flush()
     }
@@ -62,6 +69,10 @@ export class MetricsClient<M extends Record<string, any>> {
   }
 
   private async sendBatch(events: Event<M>[], isRetry: boolean = false) {
+    logger.debug(`sendBatch: ${events.length}`, {
+      isRetry,
+    })
+
     try {
       const body = JSON.stringify(events)
       if (env.IS_WEB && 'navigator' in globalThis && navigator.sendBeacon) {

@@ -131,6 +131,8 @@ export function AnalyticsContext({
     combinedMetadata.base.sessionId = sessionId
     combinedMetadata.geolocation = geolocation
     const context: AnalyticsBaseContextType = {
+      ...parentContext,
+      // TODO trim down metadata
       logger: createLogger(Logger.Context.Default, combinedMetadata),
       metadata: combinedMetadata,
       metric: (event, payload, extraMetadata) => {
@@ -196,6 +198,7 @@ export function useAnalyticsBase() {
 export function useAnalytics() {
   const ctx = useContext(Context)
   if (!('feature' in ctx) || !('Features' in ctx)) {
+    console.log(ctx)
     throw new Error(
       'useAnalytics must be used within an AnalyticsFeaturesContext',
     )

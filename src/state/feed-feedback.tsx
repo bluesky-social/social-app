@@ -11,7 +11,6 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
 import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
-import {Logger} from '#/logger'
 import {
   type FeedSourceFeedInfo,
   type FeedSourceInfo,
@@ -22,6 +21,7 @@ import {
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
+import {useAnalytics} from '#/analytics'
 import {useAgent} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
@@ -41,8 +41,6 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
   // so it is fine to send. It is crucial for third party algorithmic feeds to receive these.
   'app.bsky.feed.defs#interactionSeen',
 ])
-
-const logger = Logger.create(Logger.Context.FeedFeedback)
 
 export type StateContext = {
   enabled: boolean
@@ -65,6 +63,8 @@ export function useFeedFeedback(
   feedSourceInfo: FeedSourceInfo | undefined,
   hasSession: boolean,
 ) {
+  const ax = useAnalytics()
+  const logger = ax.logger.useContext(ax.logger.Context.FeedFeedback)
   const agent = useAgent()
 
   const feed =
@@ -85,22 +85,55 @@ export function useFeedFeedback(
     WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
   >(new WeakSet())
 
+  const flushEvents = useCallback(
+    (stats: AggregatedStats | null, feedDescriptor: string) => {
+      if (stats === null) {
+        return
+      }
+
+      if (stats.clickthroughCount > 0) {
+        ax.metric('feed:clickthrough', {
+          count: stats.clickthroughCount,
+          feed: feedDescriptor,
+        })
+        stats.clickthroughCount = 0
+      }
+
+      if (stats.engagedCount > 0) {
+        ax.metric('feed:engaged', {
+          count: stats.engagedCount,
+          feed: feedDescriptor,
+        })
+        stats.engagedCount = 0
+      }
+
+      if (stats.seenCount > 0) {
+        ax.metric('feed:seen', {
+          count: stats.seenCount,
+          feed: feedDescriptor,
+        })
+        stats.seenCount = 0
+      }
+    },
+    [ax],
+  )
+
   const aggregatedStats = useRef<AggregatedStats | null>(null)
   const throttledFlushAggregatedStats = useMemo(
     () =>
       throttle(
         () =>
-          flushToStatsig(
+          flushEvents(
             aggregatedStats.current,
             feed?.feedDescriptor ?? 'unknown',
           ),
-        45e3,
+        5e3,
         {
           leading: true, // The outer call is already throttled somewhat.
           trailing: true,
         },
       ),
-    [feed?.feedDescriptor],
+    [feed?.feedDescriptor, flushEvents],
   )
 
   const sendToFeedNoDelay = useCallback(() => {
@@ -297,39 +330,5 @@ function sendOrAggregateInteractionsForStats(
         break
       }
     }
-  }
-}
-
-function flushToStatsig(stats: AggregatedStats | null, feedDescriptor: string) {
-  if (stats === null) {
-    return
-  }
-
-  if (stats.clickthroughCount > 0) {
-    logger.metric('feed:clickthrough', {
-      count: stats.clickthroughCount,
-      feed: feedDescriptor,
-    })
-    stats.clickthroughCount = 0
-  }
-
-  if (stats.engagedCount > 0) {
-    logger.metric('feed:engaged', {
-      count: stats.engagedCount,
-      feed: feedDescriptor,
-    })
-    stats.engagedCount = 0
-  }
-
-  if (stats.seenCount > 0) {
-    logger.metric(
-      'feed:seen',
-      {
-        count: stats.seenCount,
-        feed: feedDescriptor,
-      },
-      {statsig: false},
-    )
-    stats.seenCount = 0
   }
 }
