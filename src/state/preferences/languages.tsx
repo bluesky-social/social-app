@@ -127,7 +127,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     <stateContext.Provider value={state}>
       <apiContext.Provider value={api}>
         <AnalyticsContext
-          metadata={utils.meta({
+          metadata={utils.useMeta({
             preferences: {
               appLanguage: state.appLanguage,
               contentLanguages: state.contentLanguages,

@@ -376,7 +376,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       <StateContext.Provider value={stateContext}>
         <ApiContext.Provider value={api}>
           <AnalyticsContext
-            metadata={utils.meta({
+            metadata={utils.useMeta({
               session: utils.accountToSessionMetadata(
                 stateContext.currentAccount,
               ),

@@ -74,7 +74,7 @@ export function AnalyticsContext({
     // @ts-ignore
     if (metadata.__meta !== true) {
       throw new Error(
-        'Use the meta() helper when passing metadata to AnalyticsContext',
+        'Use the useMeta() helper when passing metadata to AnalyticsContext',
       )
     }
   }
