@@ -148,6 +148,7 @@ export type Events = {
     feedUrl: string
     feedType: string
     index: number
+    reason?: string
   }
   'feed:endReached': {
     feedUrl: string

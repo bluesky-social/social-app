@@ -11,7 +11,6 @@ import {
   type HomeTabNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {
   type SavedFeedSourceInfo,
@@ -36,6 +35,7 @@ import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 
@@ -105,6 +105,7 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
+  const ax = useAnalytics()
   const allFeeds = React.useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
@@ -147,7 +148,7 @@ function HomeScreenReady({
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (maybeSelectedFeed) {
-        logEvent('home:feedDisplayed', {
+        ax.metric('home:feedDisplayed', {
           index: selectedIndex,
           feedType: maybeSelectedFeed.split('|')[0],
           feedUrl: maybeSelectedFeed,
@@ -168,14 +169,14 @@ function HomeScreenReady({
       setSelectedFeed(maybeFeed)
 
       if (maybeFeed) {
-        logEvent('home:feedDisplayed', {
+        ax.metric('home:feedDisplayed', {
           index,
           feedType: maybeFeed.split('|')[0],
           feedUrl: maybeFeed,
         })
       }
     },
-    [setSelectedFeed, setMinimalShellMode, allFeeds],
+    [ax, setSelectedFeed, setMinimalShellMode, allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {

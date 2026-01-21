@@ -5,7 +5,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
-import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {type SessionAccount, useSession} from '#/state/session'
@@ -17,6 +16,7 @@ import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
 import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
 import {atoms as a, native} from '#/alf'
 import {ScreenTransition} from '#/components/ScreenTransition'
+import {useAnalytics} from '#/analytics'
 import {ChooseAccountForm} from './ChooseAccountForm'
 
 enum Forms {
@@ -64,6 +64,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     'Forward' | 'Backward'
   >('Forward')
 
+  const ax = useAnalytics()
   const {
     data: serviceDescription,
     error: serviceError,
@@ -96,7 +97,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
         error: String(serviceError),
       })
-      logEvent('signin:hostingProviderFailedResolution', {})
+      ax.metric('signin:hostingProviderFailedResolution', {})
     } else {
       setError('')
     }
@@ -104,19 +105,19 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
 
   const onPressForgotPassword = () => {
     gotoForm(Forms.ForgotPassword)
-    logEvent('signin:forgotPasswordPressed', {})
+    ax.metric('signin:forgotPasswordPressed', {})
   }
 
   const handlePressBack = () => {
     onPressBack()
     setScreenTransitionDirection('Backward')
-    logEvent('signin:backPressed', {
+    ax.metric('signin:backPressed', {
       failedAttemptsCount: failedAttemptCountRef.current,
     })
   }
 
   const onAttemptSuccess = () => {
-    logEvent('signin:success', {
+    ax.metric('signin:success', {
       isUsingCustomProvider: serviceUrl !== DEFAULT_SERVICE,
       timeTakenSeconds: Math.round((Date.now() - startTimeRef.current) / 1000),
       failedAttemptsCount: failedAttemptCountRef.current,
