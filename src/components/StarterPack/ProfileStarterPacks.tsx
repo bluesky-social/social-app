@@ -159,6 +159,17 @@ export function ProfileStarterPacks({
     [isTabletOrDesktop, t.atoms.border_contrast_low],
   )
 
+  const renderFooter = useCallback(() => {
+    if (!data || items?.length === 0) {
+      return null
+    }
+    return (
+      <View style={[{paddingBottom: bottomBarOffset}]}>
+        {isMe && <CreateAnother />}
+      </View>
+    )
+  }, [data, items?.length, isMe, bottomBarOffset])
+
   return (
     <View testID={testID} style={style}>
       <List
@@ -172,7 +183,6 @@ export function ProfileStarterPacks({
         progressViewOffset={ios(0)}
         contentContainerStyle={{
           minHeight: height + headerOffset,
-          paddingBottom: bottomBarOffset,
         }}
         removeClippedSubviews={true}
         desktopFixedHeight
@@ -181,9 +191,7 @@ export function ProfileStarterPacks({
         ListEmptyComponent={
           data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
         }
-        ListFooterComponent={
-          !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
-        }
+        ListFooterComponent={renderFooter}
       />
     </View>
   )
