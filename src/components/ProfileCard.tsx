@@ -46,7 +46,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {type Metrics} from '#/analytics/metrics'
+import {type Metrics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function Default({
