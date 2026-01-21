@@ -160,11 +160,8 @@ export function ProfileStarterPacks({
   )
 
   const renderFooter = useCallback(() => {
-    if (!data || items?.length === 0) {
-      return null
-    }
     // Show CreateAnother only at the end of the list on own profile
-    if (isMe && !hasNextPage && !isFetchingNextPage) {
+    if (isMe && !hasNextPage && !isFetchingNextPage && data && items?.length) {
       return <CreateAnother style={{paddingBottom: bottomBarOffset}} />
     }
     return (
