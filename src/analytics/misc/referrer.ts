@@ -1,3 +1,5 @@
+// TODO check Referrer.getReferrerInfo()
+
 import * as env from '#/env'
 
 let refSrc = ''

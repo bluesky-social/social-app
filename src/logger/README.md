@@ -1,6 +1,8 @@
-# Logging & Metrics
+# Logger
 
-## Logging
+Simple logger for Bluesky.
+
+## At a Glance
 
 ```typescript
 import { logger, Logger } from '#/logger'
@@ -41,17 +43,3 @@ Debug logs are dev-only, and not enabled by default. Once enabled, they can get
 noisy. So you can filter them by setting the `EXPO_PUBLIC_LOG_DEBUG` env var
 e.g. `EXPO_PUBLIC_LOG_DEBUG=notifications`. These values can be comma-separated
 and include wildcards.
-
-## Metrics
-
-Metrics are emit using `logger.metric(event, payload)`.
-
-## Metadata
-
-We've implemented a shared metadata cache, which is used by the logger and by
-our feature-flagging system, GrowthBook.
-
-## Initialization
-
-We manage our own device and session IDs, which are initialized at app startup
-via `await setupDeviceId`.
