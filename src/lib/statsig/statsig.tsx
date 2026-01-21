@@ -19,8 +19,9 @@ export function logEvent<E extends keyof Metrics>(
   } = {lake: false},
 ) {}
 
+const fn = () => false
 export function useGate(): (_gateName: Gate, _options?: any) => boolean {
-  return () => false
+  return fn
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
