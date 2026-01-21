@@ -86,7 +86,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         web(a.user_select_text),
       ]}
       onPress={onPress}
-      accessibilityRole="button"
+      accessibilityRole="text"
       accessibilityLabel={_(
         msg`Expand or collapse the full post you are replying to`,
       )}
