@@ -2,6 +2,7 @@ import {useCallback, useState} from 'react'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useRunCallbackOnce} from '#/lib/runCallbackOnce'
 import {FindContactsFlow} from '#/components/contacts/FindContactsFlow'
 import {type Action, type State} from '#/components/contacts/state'
 import {ScreenTransition} from '#/components/ScreenTransition'
@@ -17,6 +18,10 @@ export function StepFindContacts({
 }) {
   const {dispatch} = useOnboardingInternalState()
   const ax = useAnalytics()
+
+  useRunCallbackOnce(() => {
+    ax.metric('onboarding:contacts:begin', {})
+  })
 
   const [transitionDirection, setTransitionDirection] = useState<
     'Forward' | 'Backward'
