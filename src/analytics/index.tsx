@@ -1,6 +1,7 @@
 import {createContext, useContext, useEffect, useMemo} from 'react'
 import {Platform} from 'react-native'
 
+import {Logger} from '#/logger'
 import {
   Features,
   features as feats,
@@ -24,8 +25,21 @@ import {device} from '#/storage'
 export * as utils from '#/analytics/utils'
 export const features = {init, refresh}
 
+type LoggerType = {
+  debug: Logger['debug']
+  info: Logger['info']
+  log: Logger['log']
+  warn: Logger['warn']
+  error: Logger['error']
+  /**
+   * Creates a clone of the existing logger and overrides the `context` value
+   */
+  useContext: (context: Exclude<Logger['context'], undefined>) => LoggerType
+  Context: typeof Logger.Context
+}
 type AnalyticsContextType = {
   metadata: Metadata
+  logger: LoggerType
   metric: <E extends keyof Metrics>(
     event: E,
     payload: Metrics[E],
@@ -39,7 +53,26 @@ type AnalyticsBaseContextType = Omit<
   'feature' | 'Features'
 >
 
+function createLogger(
+  context: Logger['context'],
+  metadata: Partial<Metadata>,
+): LoggerType {
+  const logger = Logger.create(context, metadata)
+  return {
+    debug: logger.debug.bind(logger),
+    info: logger.info.bind(logger),
+    log: logger.log.bind(logger),
+    warn: logger.warn.bind(logger),
+    error: logger.error.bind(logger),
+    useContext: (context: Exclude<Logger['context'], undefined>) => {
+      return useMemo(() => createLogger(context, metadata), [context, metadata])
+    },
+    Context: Logger.Context,
+  }
+}
+
 const Context = createContext<AnalyticsBaseContextType>({
+  logger: createLogger(Logger.Context.Default, {}),
   metric: (event, payload, metadata) => {
     metrics.track(event, payload, metadata)
   },
@@ -98,6 +131,7 @@ export function AnalyticsContext({
     combinedMetadata.base.sessionId = sessionId
     combinedMetadata.geolocation = geolocation
     const context: AnalyticsBaseContextType = {
+      logger: createLogger(Logger.Context.Default, combinedMetadata),
       metadata: combinedMetadata,
       metric: (event, payload, extraMetadata) => {
         parentContext.metric(event, payload, {
