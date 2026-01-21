@@ -32,6 +32,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
+import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
@@ -163,10 +164,11 @@ export function ProfileStarterPacks({
     if (!data || items?.length === 0) {
       return null
     }
+    if (isMe) {
+      return <CreateAnother style={{paddingBottom: bottomBarOffset}} />
+    }
     return (
-      <View style={[{paddingBottom: bottomBarOffset}]}>
-        {isMe && <CreateAnother />}
-      </View>
+      <ListFooter style={{paddingBottom: bottomBarOffset, borderTopWidth: 0}} />
     )
   }, [data, items?.length, isMe, bottomBarOffset])
 
@@ -197,7 +199,7 @@ export function ProfileStarterPacks({
   )
 }
 
-function CreateAnother() {
+function CreateAnother({style}: {style?: StyleProp<ViewStyle>}) {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
@@ -210,6 +212,7 @@ function CreateAnother() {
         a.gap_lg,
         a.border_t,
         t.atoms.border_contrast_low,
+        style,
       ]}>
       <Button
         label={_(msg`Create a starter pack`)}
