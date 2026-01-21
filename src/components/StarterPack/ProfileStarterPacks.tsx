@@ -175,6 +175,7 @@ export function ProfileStarterPacks({
       />
     )
   }, [
+    _,
     data,
     items?.length,
     isMe,
