@@ -50,7 +50,7 @@ export const BUNDLE_IDENTIFIER: string =
 
 /**
  * This will always be in the format of YYMMDDHH, so that it always increases
- * for each build. This should only be used for StatSig reporting and shouldn't
+ * for each build. This should only be used for analytics reporting and shouldn't
  * be used to identify a specific bundle.
  */
 export const BUNDLE_DATE: number =

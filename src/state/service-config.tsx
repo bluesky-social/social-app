@@ -52,10 +52,6 @@ export function Provider({children}: {children: React.ReactNode}) {
       return {enabled: Boolean(cachedEnabled)}
     }
 
-    /*
-     * Doing an extra check here to reduce hits to statsig. If it's disabled on
-     * the server, we can exit early.
-     */
     const enabled = Boolean(config?.topicsEnabled)
 
     // update cache

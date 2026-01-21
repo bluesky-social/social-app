@@ -163,7 +163,6 @@ export function useFeedFeedback(
       )
       .catch(() => {}) // ignore upstream errors
 
-    // Send to Statsig
     if (aggregatedStats.current === null) {
       aggregatedStats.current = createAggregatedStats()
     }

@@ -104,14 +104,3 @@ jest.mock('expo-modules-core', () => ({
 jest.mock('expo-localization', () => ({
   getLocales: () => [],
 }))
-
-jest.mock('statsig-react-native-expo', () => ({
-  Statsig: {
-    initialize() {},
-    initializeCalled() {
-      return false
-    },
-  },
-}))
-
-jest.mock('../src/lib/statsig/statsig', () => ({}))
