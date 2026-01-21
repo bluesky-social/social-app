@@ -167,9 +167,24 @@ export function ProfileStarterPacks({
       return <CreateAnother style={{paddingBottom: bottomBarOffset}} />
     }
     return (
-      <ListFooter style={{paddingBottom: bottomBarOffset, borderTopWidth: 0}} />
+      <ListFooter
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+        error={isError ? 'Could not load more starter packs' : undefined}
+        onRetry={fetchNextPage}
+        style={{paddingBottom: bottomBarOffset}}
+      />
     )
-  }, [data, items?.length, isMe, bottomBarOffset])
+  }, [
+    data,
+    items?.length,
+    isMe,
+    bottomBarOffset,
+    isFetchingNextPage,
+    hasNextPage,
+    isError,
+    fetchNextPage,
+  ])
 
   return (
     <View testID={testID} style={style}>
