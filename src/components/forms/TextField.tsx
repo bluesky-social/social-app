@@ -22,6 +22,8 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {normalizeTextStyles} from '#/alf/typography'
+import {isMobileWeb} from '#/platform/detection'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
@@ -203,7 +205,7 @@ export function createInput(Component: typeof TextInput) {
 
     const refs = mergeRefs([ctx.inputRef, inputRef!].filter(Boolean))
 
-    const flattened = StyleSheet.flatten([
+    const flattened = normalizeTextStyles([
       a.relative,
       a.z_20,
       a.flex_1,
@@ -234,19 +236,11 @@ export function createInput(Component: typeof TextInput) {
         marginBottom: 2,
       }),
       style,
-    ])
-
-    applyFonts(flattened, fonts.family)
-
-    // should always be defined on `typography`
-    // @ts-ignore
-    if (flattened.fontSize) {
-      // @ts-ignore
-      flattened.fontSize = Math.round(
-        // @ts-ignore
-        flattened.fontSize * fonts.scaleMultiplier,
-      )
-    }
+    ], {
+      fontScale: isMobileWeb ? 1 : fonts.scaleMultiplier,
+      fontFamily: fonts.family,
+      flags: {},
+    })
 
     return (
       <>
