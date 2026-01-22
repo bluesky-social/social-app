@@ -1,9 +1,25 @@
+import {MMKV} from '@bsky.app/react-native-mmkv'
+import {setPolyfills} from '@growthbook/growthbook'
 import {GrowthBook} from '@growthbook/growthbook-react'
 
 import {getNavigationMetadata, type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
 
 export {Features} from '#/analytics/features/types'
+
+const CACHE = new MMKV({id: 'bsky_features_cache'})
+
+setPolyfills({
+  localStorage: {
+    getItem: key => {
+      const value = CACHE.getString(key)
+      return value != null ? JSON.parse(value) : null
+    },
+    setItem: async (key, value) => {
+      CACHE.set(key, JSON.stringify(value))
+    },
+  },
+})
 
 /**
  * We vary the amount of time we wait for GrowthBook to fetch feature
