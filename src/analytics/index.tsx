@@ -16,7 +16,7 @@ import {
   useSessionId,
 } from '#/analytics/identifiers'
 import {type Metrics, metrics} from '#/analytics/metrics'
-import * as referrer from '#/analytics/misc/referrer'
+import * as refParams from '#/analytics/misc/refParams'
 import {type MergeableMetadata, type Metadata} from '#/analytics/types'
 import * as env from '#/env'
 import {useGeolocation} from '#/geolocation'
@@ -89,8 +89,8 @@ const Context = createContext<AnalyticsBaseContextType>({
       appVersion: env.APP_VERSION,
       bundleIdentifier: env.BUNDLE_IDENTIFIER,
       bundleDate: env.BUNDLE_DATE,
-      referrerSrc: referrer.src,
-      referrerUrl: referrer.url,
+      referrerSrc: refParams.src,
+      referrerUrl: refParams.url,
     },
     geolocation: device.get(['mergedGeolocation']) || {
       countryCode: '',

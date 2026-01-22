@@ -1,4 +1,8 @@
-// TODO check Referrer.getReferrerInfo()
+/**
+ * This is used for our own Bluesky post embeds, and maybe other things.
+ *
+ * In the case of our embeds, `ref_src=embed`. Not sure if `ref_url` is used.
+ */
 
 import * as env from '#/env'
 
