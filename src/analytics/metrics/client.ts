@@ -43,17 +43,15 @@ export class MetricsClient<M extends Record<string, any>> {
   ) {
     this.start()
 
-    this.queue.push({
+    const e = {
       time: Date.now(),
       event,
       payload,
       metadata,
-    })
+    }
+    this.queue.push(e)
 
-    logger.info(`event: ${event as string}`, {
-      payload,
-      __metadata__: metadata, // special logger field
-    })
+    logger.info(`event: ${e.event as string}`, e)
 
     if (this.queue.length > this.maxBatchSize) {
       this.flush()
