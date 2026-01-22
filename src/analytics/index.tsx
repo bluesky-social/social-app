@@ -11,7 +11,7 @@ import {
 } from '#/analytics/features'
 import {
   getAndMigrateDeviceId,
-  getDeviceIdOrThrow,
+  getDeviceId,
   getInitialSessionId,
   useSessionId,
 } from '#/analytics/identifiers'
@@ -83,7 +83,7 @@ const Context = createContext<AnalyticsBaseContextType>({
   },
   metadata: {
     base: {
-      deviceId: getDeviceIdOrThrow() ?? 'unknown',
+      deviceId: getDeviceId() ?? 'unknown',
       sessionId: getInitialSessionId(),
       platform: Platform.OS,
       appVersion: env.APP_VERSION,

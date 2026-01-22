@@ -99,6 +99,7 @@ jest.mock('expo-modules-core', () => ({
   requireNativeViewManager: jest.fn().mockImplementation(_ => {
     return () => null
   }),
+  createPermissionHook: () => () => [true],
 }))
 
 jest.mock('expo-localization', () => ({
