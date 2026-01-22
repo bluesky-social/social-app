@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
 
 import {urls} from '#/lib/constants'
-import {useRunCallbackOnce} from '#/lib/runCallbackOnce'
+import {useCallOnce} from '#/lib/once'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
@@ -25,9 +25,9 @@ export function StepFindContactsIntro() {
   const {_} = useLingui()
   const {dispatch} = useOnboardingInternalState()
 
-  useRunCallbackOnce(() => {
+  useCallOnce(() => {
     ax.metric('onboarding:contacts:presented', {})
-  })
+  })()
 
   const {data: isAvailable, isSuccess} = useQuery({
     queryKey: ['contacts-available'],

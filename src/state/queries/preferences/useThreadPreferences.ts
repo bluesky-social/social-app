@@ -2,7 +2,7 @@ import {useCallback, useMemo, useRef, useState} from 'react'
 import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
-import {OnceKey, useCallOnce} from '#/lib/hooks/useCallOnce'
+import {useCallOnce} from '#/lib/once'
 import {
   usePreferencesQuery,
   useSetThreadViewPreferencesMutation,
@@ -31,7 +31,7 @@ export function useThreadPreferences({
   const ax = useAnalytics()
   const {data: preferences} = usePreferencesQuery()
   const serverPrefs = preferences?.threadViewPrefs
-  const once = useCallOnce(OnceKey.PreferencesThread)
+  const once = useCallOnce()
 
   /*
    * Create local state representations of server state

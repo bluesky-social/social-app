@@ -28,6 +28,7 @@ import {
   storePayloadForAccountSwitch,
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
+import {useCallOnce} from '#/lib/once'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
@@ -41,7 +42,6 @@ import {
   type SearchTabNavigatorParams,
   type State,
 } from '#/lib/routes/types'
-import {useRunCallbackOnce} from '#/lib/runCallbackOnce'
 import {bskyTitle} from '#/lib/strings/headings'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
@@ -980,7 +980,8 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     }
   }
 
-  const onNavigationReady = useRunCallbackOnce(() => {
+  const onNavigationReady = useCallOnce(() => {
+    alert('test')
     prevLoggedRouteName.current = getCurrentRouteName()
     handlePushNotificationEntry()
 
