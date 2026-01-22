@@ -981,7 +981,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   }
 
   const onNavigationReady = useCallOnce(() => {
-    alert('test')
     prevLoggedRouteName.current = getCurrentRouteName()
     handlePushNotificationEntry()
 
