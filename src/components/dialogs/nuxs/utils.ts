@@ -6,7 +6,7 @@ import {type AnalyticsContextType} from '#/analytics'
 import {type Geolocation} from '#/geolocation'
 
 export type EnabledCheckProps = {
-  feature: AnalyticsContextType['feature']
+  features: AnalyticsContextType['features']
   currentAccount: SessionAccount
   currentProfile: AppBskyActorDefs.ProfileViewDetailed
   preferences: UsePreferencesQueryResponse

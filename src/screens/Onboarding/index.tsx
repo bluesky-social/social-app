@@ -48,7 +48,7 @@ export function Onboarding() {
     ENV !== 'e2e' &&
     IS_NATIVE &&
     findContactsEnabled &&
-    !ax.feature(ax.Features.DisableOnboardingFindContacts)
+    !ax.features.enabled(ax.features.DisableOnboardingFindContacts)
 
   const [state, dispatch] = useReducer(
     reducer,

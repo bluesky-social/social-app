@@ -133,7 +133,7 @@ function Inner({
       if (
         enabled &&
         !enabled({
-          feature: ax.feature,
+          features: ax.features,
           currentAccount,
           currentProfile,
           preferences,
@@ -165,7 +165,7 @@ function Inner({
       break
     }
   }, [
-    ax.feature,
+    ax.features,
     nuxs,
     snoozed,
     snoozeNuxDialog,

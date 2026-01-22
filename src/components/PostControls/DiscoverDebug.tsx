@@ -20,7 +20,7 @@ export function DiscoverDebug({
   const isDiscoverDebugUser =
     IS_INTERNAL ||
     DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
-    ax.feature(ax.Features.DebugFeedContext)
+    ax.features.enabled(ax.features.DebugFeedContext)
   const theme = useTheme()
 
   return (

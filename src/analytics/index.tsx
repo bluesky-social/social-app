@@ -58,13 +58,11 @@ export type AnalyticsContextType = {
     payload: Metrics[E],
     metadata?: MergeableMetadata,
   ) => void
-  feature: (feature: Features) => boolean
-  Features: typeof Features
+  features: typeof Features & {
+    enabled(feature: Features): boolean
+  }
 }
-export type AnalyticsBaseContextType = Omit<
-  AnalyticsContextType,
-  'feature' | 'Features'
->
+export type AnalyticsBaseContextType = Omit<AnalyticsContextType, 'features'>
 
 function createLogger(
   context: Logger['context'],
@@ -198,8 +196,10 @@ export function AnalyticsFeaturesContext({
   const childContext = useMemo<AnalyticsContextType>(() => {
     return {
       ...parentContext,
-      feature: feats.isOn.bind(feats),
-      Features,
+      features: {
+        enabled: feats.isOn.bind(feats),
+        ...Features,
+      },
     }
   }, [parentContext])
 
@@ -220,7 +220,7 @@ export function useAnalyticsBase() {
  */
 export function useAnalytics() {
   const ctx = useContext(Context)
-  if (!('feature' in ctx) || !('Features' in ctx)) {
+  if (!('features' in ctx)) {
     throw new Error(
       'useAnalytics must be used within an AnalyticsFeaturesContext',
     )

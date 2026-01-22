@@ -106,7 +106,7 @@ export function useCanGoLive() {
   const ax = useAnalytics()
   const {hasSession} = useSession()
   if (!hasSession) return false
-  return IS_DEV ? true : !ax.feature(ax.Features.DisableLiveNowBeta)
+  return IS_DEV ? true : !ax.features.enabled(ax.features.DisableLiveNowBeta)
 }
 
 export function useCheckEmailConfirmed() {
