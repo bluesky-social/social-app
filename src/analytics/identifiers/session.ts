@@ -10,6 +10,7 @@ let sessionId = (() => {
   const lastEvent = device.get(['nativeSessionIdLastEventAt'])
   const id = existing && !isSessionIdExpired(lastEvent) ? existing : uuid.v4()
   device.set(['nativeSessionId'], id)
+  device.set(['nativeSessionIdLastEventAt'], Date.now())
   return id
 })()
 
@@ -29,9 +30,8 @@ export function useSessionId() {
           device.set(['nativeSessionId'], sessionId)
           setId(sessionId)
         }
-      } else {
-        device.set(['nativeSessionIdLastEventAt'], Date.now())
       }
+      device.set(['nativeSessionIdLastEventAt'], Date.now())
     })
     return () => sub.remove()
   }, [])

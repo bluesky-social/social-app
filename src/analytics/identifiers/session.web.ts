@@ -13,6 +13,7 @@ let sessionId = (() => {
   const lastEvent = lastEventStr ? Number(lastEventStr) : undefined
   const id = existing && !isSessionIdExpired(lastEvent) ? existing : uuid.v4()
   window.sessionStorage.setItem(SESSION_ID_KEY, id)
+  window.sessionStorage.setItem(LAST_EVENT_KEY, String(Date.now()))
   return id
 })()
 
@@ -33,9 +34,8 @@ export function useSessionId() {
           window.sessionStorage.setItem(SESSION_ID_KEY, sessionId)
           setId(sessionId)
         }
-      } else {
-        window.sessionStorage.setItem(LAST_EVENT_KEY, String(Date.now()))
       }
+      window.sessionStorage.setItem(LAST_EVENT_KEY, String(Date.now()))
     })
     return () => sub.remove()
   }, [])
