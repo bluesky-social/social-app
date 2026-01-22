@@ -103,7 +103,7 @@ function Invalid() {
 
 function Inner(props: ReportDialogProps) {
   const ax = useAnalytics()
-  const logger = ax.logger.useContext(ax.logger.Context.ReportDialog)
+  const logger = ax.logger.useChild(ax.logger.Context.ReportDialog)
   const t = useTheme()
   const {_} = useLingui()
   const ref = React.useRef<ScrollView>(null)

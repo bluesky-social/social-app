@@ -64,7 +64,7 @@ export function useFeedFeedback(
   hasSession: boolean,
 ) {
   const ax = useAnalytics()
-  const logger = ax.logger.useContext(ax.logger.Context.FeedFeedback)
+  const logger = ax.logger.useChild(ax.logger.Context.FeedFeedback)
   const agent = useAgent()
 
   const feed =

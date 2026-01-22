@@ -18,6 +18,7 @@ import {
 import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
 import {type MergeableMetadata, type Metadata} from '#/analytics/types'
+import {getMetadataForLogger} from '#/analytics/utils'
 import * as env from '#/env'
 import {useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
@@ -34,9 +35,15 @@ type LoggerType = {
   warn: Logger['warn']
   error: Logger['error']
   /**
-   * Creates a clone of the existing logger and overrides the `context` value
+   * Clones the existing logger and overrides the `context` value. Existing
+   * metadata is inherited.
+   *
+   * ```ts
+   * const ax = useAnalytics()
+   * const logger = ax.logger.useChild(ax.logger.Context.Notifications)
+   * ```
    */
-  useContext: (context: Exclude<Logger['context'], undefined>) => LoggerType
+  useChild: (context: Exclude<Logger['context'], undefined>) => LoggerType
   Context: typeof Logger.Context
 }
 export type AnalyticsContextType = {
@@ -66,7 +73,7 @@ function createLogger(
     log: logger.log.bind(logger),
     warn: logger.warn.bind(logger),
     error: logger.error.bind(logger),
-    useContext: (context: Exclude<Logger['context'], undefined>) => {
+    useChild: (context: Exclude<Logger['context'], undefined>) => {
       return useMemo(() => createLogger(context, metadata), [context, metadata])
     },
     Context: Logger.Context,
@@ -131,13 +138,18 @@ export function AnalyticsContext({
     const combinedMetadata = {
       ...parentContext.metadata,
       ...metadata,
+      base: {
+        ...parentContext.metadata.base,
+        sessionId,
+      },
+      geolocation,
     }
-    combinedMetadata.base.sessionId = sessionId
-    combinedMetadata.geolocation = geolocation
     const context: AnalyticsBaseContextType = {
       ...parentContext,
-      // TODO trim down metadata
-      logger: createLogger(Logger.Context.Default, combinedMetadata),
+      logger: createLogger(
+        Logger.Context.Default,
+        getMetadataForLogger(combinedMetadata),
+      ),
       metadata: combinedMetadata,
       metric: (event, payload, extraMetadata) => {
         parentContext.metric(event, payload, {
@@ -202,7 +214,6 @@ export function useAnalyticsBase() {
 export function useAnalytics() {
   const ctx = useContext(Context)
   if (!('feature' in ctx) || !('Features' in ctx)) {
-    console.log(ctx)
     throw new Error(
       'useAnalytics must be used within an AnalyticsFeaturesContext',
     )

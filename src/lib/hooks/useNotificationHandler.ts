@@ -77,7 +77,7 @@ let lastHandledNotificationDateDedupe = 0
 
 export function useNotificationsHandler() {
   const ax = useAnalytics()
-  const logger = ax.logger.useContext(ax.logger.Context.Notifications)
+  const logger = ax.logger.useChild(ax.logger.Context.Notifications)
   const queryClient = useQueryClient()
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
