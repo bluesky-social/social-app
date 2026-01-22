@@ -45,7 +45,29 @@ describe('general functionality', () => {
 
     logger.addTransport(mockTransport)
 
-    const extra = {foo: true, metadata: {}}
+    const extra = {foo: true, __metadata__: {}}
+    logger.warn('message', extra)
+
+    expect(mockTransport).toHaveBeenCalledWith(
+      LogLevel.Warn,
+      undefined,
+      'message',
+      extra,
+      timestamp,
+    )
+  })
+
+  test('supports inherited metadata', () => {
+    const timestamp = Date.now()
+    const logger = new Logger({
+      metadata: {bar: true},
+    })
+
+    const mockTransport = jest.fn()
+
+    logger.addTransport(mockTransport)
+
+    const extra = {foo: true, __metadata__: {bar: true}}
     logger.warn('message', extra)
 
     expect(mockTransport).toHaveBeenCalledWith(
@@ -71,7 +93,7 @@ describe('general functionality', () => {
       LogLevel.Warn,
       undefined,
       'a',
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -81,7 +103,7 @@ describe('general functionality', () => {
       LogLevel.Warn,
       undefined,
       'b',
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -91,7 +113,7 @@ describe('general functionality', () => {
       LogLevel.Warn,
       undefined,
       'c',
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -256,7 +278,7 @@ describe('general functionality', () => {
       LogLevel.Warn,
       undefined,
       'warn',
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -276,7 +298,7 @@ describe('create', () => {
       LogLevel.Info,
       Logger.Context.Default,
       message,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -300,7 +322,7 @@ describe('debug contexts', () => {
       LogLevel.Debug,
       'specific',
       message,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -323,7 +345,7 @@ describe('debug contexts', () => {
       LogLevel.Debug,
       'namespace:foo',
       message,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -345,7 +367,7 @@ describe('debug contexts', () => {
       LogLevel.Debug,
       'namespace:bar:baz',
       message,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -367,7 +389,7 @@ describe('supports levels', () => {
       LogLevel.Debug,
       undefined,
       message,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -376,7 +398,7 @@ describe('supports levels', () => {
       LogLevel.Info,
       undefined,
       message,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -385,7 +407,7 @@ describe('supports levels', () => {
       LogLevel.Warn,
       undefined,
       message,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -395,7 +417,7 @@ describe('supports levels', () => {
       LogLevel.Error,
       undefined,
       e,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -418,7 +440,7 @@ describe('supports levels', () => {
       LogLevel.Info,
       undefined,
       message,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -444,7 +466,7 @@ describe('supports levels', () => {
       LogLevel.Warn,
       undefined,
       message,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -474,7 +496,7 @@ describe('supports levels', () => {
       LogLevel.Error,
       undefined,
       e,
-      {metadata: {}},
+      {__metadata__: {}},
       timestamp,
     )
   })
