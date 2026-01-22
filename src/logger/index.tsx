@@ -33,7 +33,7 @@ export class Logger {
   level: LogLevel
   context: LogContext | undefined = undefined
   contextFilter: string = ''
-  inheritedMetadata: Record<string, unknown> = {}
+  ambientMetadata: Record<string, unknown> = {}
 
   protected debugContextRegexes: RegExp[] = []
   protected transports: Transport[] = []
@@ -55,7 +55,7 @@ export class Logger {
     level,
     context,
     contextFilter,
-    metadata: inheritedMetadata = {},
+    metadata: ambientMetadata = {},
   }: {
     level?: LogLevel
     context?: LogContext
@@ -65,7 +65,7 @@ export class Logger {
     this.context = context
     this.level = level || LogLevel.Info
     this.contextFilter = contextFilter || ''
-    this.inheritedMetadata = inheritedMetadata
+    this.ambientMetadata = ambientMetadata
     if (this.contextFilter) {
       this.level = LogLevel.Debug
     }
@@ -122,8 +122,8 @@ export class Logger {
 
     const timestamp = Date.now()
     const meta: Metadata = {
+      __metadata__: this.ambientMetadata,
       ...metadata,
-      metadata: this.inheritedMetadata,
     }
 
     // send every log to syslog

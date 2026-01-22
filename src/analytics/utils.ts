@@ -6,7 +6,7 @@ import {
   type MergeableMetadata,
   type Metadata,
   type SessionMetadata,
-} from '#/analytics/types'
+} from '#/analytics/metadata'
 
 /**
  * Thin `useMemo` wrapper that marks the metadata as memoized and provides a
@@ -14,9 +14,9 @@ import {
  */
 export function useMeta(metadata?: MergeableMetadata) {
   const m = useMemo(() => metadata, [metadata])
+  if (!m) return
   // @ts-ignore
   m.__meta = true
-  console.log('useMeta', JSON.stringify(m, null, 2))
   return m
 }
 

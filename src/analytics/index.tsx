@@ -15,9 +15,13 @@ import {
   getInitialSessionId,
   useSessionId,
 } from '#/analytics/identifiers'
+import {
+  getNavigationMetadata,
+  type MergeableMetadata,
+  type Metadata,
+} from '#/analytics/metadata'
 import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
-import {type MergeableMetadata, type Metadata} from '#/analytics/types'
 import {getMetadataForLogger} from '#/analytics/utils'
 import * as env from '#/env'
 import {useGeolocation} from '#/geolocation'
@@ -86,7 +90,10 @@ const Context = createContext<AnalyticsBaseContextType>({
     if (metadata && '__meta' in metadata) {
       delete metadata.__meta
     }
-    metrics.track(event, payload, metadata)
+    metrics.track(event, payload, {
+      ...metadata,
+      navigation: getNavigationMetadata(),
+    })
   },
   metadata: {
     base: {

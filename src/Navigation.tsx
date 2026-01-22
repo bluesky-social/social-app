@@ -1,4 +1,4 @@
-import {type JSX, useCallback, useEffect, useRef, useState} from 'react'
+import {type JSX, useCallback, useRef} from 'react'
 import {Linking} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
@@ -14,9 +14,7 @@ import {
   DefaultTheme,
   type LinkingOptions,
   NavigationContainer,
-  type NavigationState,
   StackActions,
-  useNavigation,
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
@@ -138,12 +136,8 @@ import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
-import {
-  AnalyticsContext,
-  type AnalyticsContextType,
-  useAnalytics,
-  utils,
-} from '#/analytics'
+import {useAnalytics} from '#/analytics'
+import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
@@ -892,7 +886,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
-  const prevLoggedRouteName = useRef<string | undefined>(undefined)
+  const previousScreen = useRef<string | undefined>(undefined)
   const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
 
@@ -954,16 +948,10 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       const payload = getNotificationPayload(response.notification)
 
       if (payload) {
-        ax.metric(
-          'notifications:openApp',
-          {reason: payload.reason, causedBoot: true},
-          {
-            navigation: {
-              previousScreen: prevLoggedRouteName.current,
-              currentScreen: getCurrentRouteName(),
-            },
-          },
-        )
+        ax.metric('notifications:openApp', {
+          reason: payload.reason,
+          causedBoot: true,
+        })
 
         if (payload.reason === 'chat-message') {
           handleChatMessage(payload)
@@ -988,19 +976,16 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   }
 
   const onNavigationReady = useCallOnce(() => {
-    prevLoggedRouteName.current = getCurrentRouteName()
+    const currentScreen = getCurrentRouteName()
+    setNavigationMetadata({
+      previousScreen: currentScreen,
+      currentScreen,
+    })
+    previousScreen.current = currentScreen
+
     handlePushNotificationEntry()
 
-    ax.metric(
-      'router:navigate',
-      {},
-      {
-        navigation: {
-          previousScreen: prevLoggedRouteName.current,
-          currentScreen: getCurrentRouteName(),
-        },
-      },
-    )
+    ax.metric('router:navigate', {})
 
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
       emailDialogControl.open({
@@ -1009,39 +994,21 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       snoozeEmailConfirmationPrompt()
     }
 
-    ax.metric(
-      'init',
-      {
-        initMs: Math.round(
-          // @ts-ignore Emitted by Metro in the bundle prelude
-          performance.now() - global.__BUNDLE_START_TIME__,
-        ),
-      },
-      {
-        navigation: {
-          previousScreen: prevLoggedRouteName.current,
-          currentScreen: getCurrentRouteName(),
-        },
-      },
-    )
+    ax.metric('init', {
+      initMs: Math.round(
+        // @ts-ignore Emitted by Metro in the bundle prelude
+        performance.now() - global.__BUNDLE_START_TIME__,
+      ),
+    })
 
     if (IS_WEB) {
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        ax.metric(
-          'deepLink:referrerReceived',
-          {
-            to: window.location.href,
-            referrer: referrerInfo?.referrer,
-            hostname: referrerInfo?.hostname,
-          },
-          {
-            navigation: {
-              previousScreen: prevLoggedRouteName.current,
-              currentScreen: getCurrentRouteName(),
-            },
-          },
-        )
+        ax.metric('deepLink:referrerReceived', {
+          to: window.location.href,
+          referrer: referrerInfo?.referrer,
+          hostname: referrerInfo?.hostname,
+        })
       }
     }
   })
@@ -1052,17 +1019,14 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        ax.metric(
-          'router:navigate',
-          {from: prevLoggedRouteName.current},
-          {
-            navigation: {
-              previousScreen: prevLoggedRouteName.current,
-              currentScreen: getCurrentRouteName(),
-            },
-          },
-        )
-        prevLoggedRouteName.current = getCurrentRouteName()
+        const currentScreen = getCurrentRouteName()
+        // do this before metric
+        setNavigationMetadata({
+          previousScreen: previousScreen.current,
+          currentScreen,
+        })
+        ax.metric('router:navigate', {from: previousScreen.current})
+        previousScreen.current = currentScreen
       }}
       onReady={onNavigationReady}
       // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
@@ -1072,49 +1036,8 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
       // -sfn
       navigationInChildEnabled>
-      <NavigationAnalyticsContext>{children}</NavigationAnalyticsContext>
-    </NavigationContainer>
-  )
-}
-
-function getActiveRouteFromNavigationState(state?: NavigationState) {
-  if (!state) return undefined
-  const currentRoute = state?.routes[state.index]
-  return currentRoute.name
-}
-
-function NavigationAnalyticsContext({children}: {children: React.ReactNode}) {
-  const nav = useNavigation()
-  const [previousScreen, setPreviousScreen] = useState<string | undefined>(
-    () => getActiveRouteFromNavigationState(nav.getState()) ?? 'Home',
-  )
-  const [metadata, setMetadata] = useState<
-    Pick<AnalyticsContextType['metadata'], 'navigation'>
-  >(() => {
-    return {
-      navigation: {
-        previousScreen,
-        currentScreen: previousScreen,
-      },
-    }
-  })
-  useEffect(() => {
-    return nav.addListener('state', payload => {
-      const curr =
-        getActiveRouteFromNavigationState(payload.data.state) ?? 'Home'
-      setMetadata({
-        navigation: {
-          previousScreen,
-          currentScreen: curr,
-        },
-      })
-      setPreviousScreen(curr)
-    })
-  }, [nav, previousScreen])
-  return (
-    <AnalyticsContext metadata={utils.useMeta(metadata)}>
       {children}
-    </AnalyticsContext>
+    </NavigationContainer>
   )
 }
 

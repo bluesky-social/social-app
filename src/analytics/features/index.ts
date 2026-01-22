@@ -1,6 +1,6 @@
 import {GrowthBook} from '@growthbook/growthbook-react'
 
-import {type Metadata} from '#/analytics/types'
+import {type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
 
 export {Features} from '#/analytics/features/types'

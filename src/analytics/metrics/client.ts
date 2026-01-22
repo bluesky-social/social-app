@@ -52,7 +52,7 @@ export class MetricsClient<M extends Record<string, any>> {
 
     logger.info(`event: ${event as string}`, {
       payload,
-      metadata,
+      __metadata__: metadata, // special logger field
     })
 
     if (this.queue.length > this.maxBatchSize) {
