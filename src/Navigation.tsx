@@ -1,4 +1,4 @@
-import {type JSX, useCallback, useRef} from 'react'
+import {type JSX, useCallback, useEffect, useRef, useState} from 'react'
 import {Linking} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
@@ -14,7 +14,9 @@ import {
   DefaultTheme,
   type LinkingOptions,
   NavigationContainer,
+  type NavigationState,
   StackActions,
+  useNavigation,
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
@@ -136,7 +138,12 @@ import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
-import {useAnalytics} from '#/analytics'
+import {
+  AnalyticsContext,
+  type AnalyticsContextType,
+  useAnalytics,
+  utils,
+} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
@@ -1065,8 +1072,49 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
       // -sfn
       navigationInChildEnabled>
-      {children}
+      <NavigationAnalyticsContext>{children}</NavigationAnalyticsContext>
     </NavigationContainer>
+  )
+}
+
+function getActiveRouteFromNavigationState(state?: NavigationState) {
+  if (!state) return undefined
+  const currentRoute = state?.routes[state.index]
+  return currentRoute.name
+}
+
+function NavigationAnalyticsContext({children}: {children: React.ReactNode}) {
+  const nav = useNavigation()
+  const [previousScreen, setPreviousScreen] = useState<string | undefined>(
+    () => getActiveRouteFromNavigationState(nav.getState()) ?? 'Home',
+  )
+  const [metadata, setMetadata] = useState<
+    Pick<AnalyticsContextType['metadata'], 'navigation'>
+  >(() => {
+    return {
+      navigation: {
+        previousScreen,
+        currentScreen: previousScreen,
+      },
+    }
+  })
+  useEffect(() => {
+    return nav.addListener('state', payload => {
+      const curr =
+        getActiveRouteFromNavigationState(payload.data.state) ?? 'Home'
+      setMetadata({
+        navigation: {
+          previousScreen,
+          currentScreen: curr,
+        },
+      })
+      setPreviousScreen(curr)
+    })
+  }, [nav, previousScreen])
+  return (
+    <AnalyticsContext metadata={utils.useMeta(metadata)}>
+      {children}
+    </AnalyticsContext>
   )
 }
 

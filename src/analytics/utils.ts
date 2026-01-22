@@ -12,10 +12,11 @@ import {
  * Thin `useMemo` wrapper that marks the metadata as memoized and provides a
  * type guard.
  */
-export function useMeta(metadata: MergeableMetadata) {
+export function useMeta(metadata?: MergeableMetadata) {
   const m = useMemo(() => metadata, [metadata])
   // @ts-ignore
   m.__meta = true
+  console.log('useMeta', JSON.stringify(m, null, 2))
   return m
 }
 
