@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {wait} from '#/lib/async/wait'
 import {getLabelingServiceTitle} from '#/lib/moderation'
+import {useCallOnce} from '#/lib/once'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -234,12 +235,11 @@ function Inner(props: ReportDialogProps) {
     }
   }, [_, submitReport, state, dispatch, props, setPending, setSuccess])
 
-  // TODO once
-  React.useEffect(() => {
+  useCallOnce(() => {
     ax.metric('reportDialog:open', {
       subjectType: props.subject.type,
     })
-  }, [ax, props.subject])
+  })()
 
   return (
     <Dialog.ScrollableInner
