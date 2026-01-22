@@ -16,7 +16,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icon
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {refetchAgeAssuranceServerState} from '#/ageAssurance'
-import {logger} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 export type AgeAssuranceRedirectDialogState = {
@@ -81,6 +81,7 @@ export function AgeAssuranceRedirectDialog() {
 
 export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const agent = useAgent()
   const polling = useRef(false)
@@ -94,7 +95,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
 
     polling.current = true
 
-    logger.metric('ageAssurance:redirectDialogOpen', {})
+    ax.metric('ageAssurance:redirectDialogOpen', {})
 
     wait(
       3e3,
@@ -125,18 +126,18 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
 
         setSuccess(true)
 
-        logger.metric('ageAssurance:redirectDialogSuccess', {})
+        ax.metric('ageAssurance:redirectDialogSuccess', {})
       })
       .catch(() => {
         if (unmounted.current) return
         setError(true)
-        logger.metric('ageAssurance:redirectDialogFail', {})
+        ax.metric('ageAssurance:redirectDialogFail', {})
       })
 
     return () => {
       unmounted.current = true
     }
-  }, [agent, control])
+  }, [ax, agent, control])
 
   if (success) {
     return (

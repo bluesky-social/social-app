@@ -14,6 +14,7 @@ import {useSession} from '#/state/session'
 import {FindContactsBannerNUX} from '#/components/contacts/FindContactsBannerNUX'
 import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
@@ -44,6 +45,7 @@ function keyExtractor(item: ActorDefs.ProfileViewBasic) {
 
 export function ProfileFollows({name}: {name: string}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
@@ -100,14 +102,14 @@ export function ProfileFollows({name}: {name: string}) {
       currentPageCount >= 3 &&
       currentPageCount > paginationTrackingRef.current.page
     ) {
-      logger.metric('profile:following:paginate', {
+      ax.metric('profile:following:paginate', {
         contextProfileDid: resolvedDid,
         itemCount: follows.length,
         page: currentPageCount,
       })
     }
     paginationTrackingRef.current.page = currentPageCount
-  }, [data?.pages?.length, resolvedDid, follows.length])
+  }, [ax, data?.pages?.length, resolvedDid, follows.length])
 
   const onRefresh = React.useCallback(async () => {
     setIsPTRing(true)
@@ -137,12 +139,12 @@ export function ProfileFollows({name}: {name: string}) {
   // track pageview
   React.useEffect(() => {
     if (resolvedDid) {
-      logger.metric('profile:following:view', {
+      ax.metric('profile:following:view', {
         contextProfileDid: resolvedDid,
         isOwnProfile: isMe,
       })
     }
-  }, [resolvedDid, isMe])
+  }, [ax, resolvedDid, isMe])
 
   // track seen items
   const seenItemsRef = React.useRef<Set<string>>(new Set())
@@ -159,17 +161,13 @@ export function ProfileFollows({name}: {name: string}) {
       if (position === 0) {
         return
       }
-      logger.metric(
-        'profileCard:seen',
-        {
-          profileDid: item.did,
-          position,
-          ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
-        },
-        {statsig: false},
-      )
+      ax.metric('profileCard:seen', {
+        profileDid: item.did,
+        position,
+        ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
+      })
     },
-    [follows, resolvedDid],
+    [ax, follows, resolvedDid],
   )
 
   if (follows.length < 1) {

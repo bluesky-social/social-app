@@ -6,7 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/hooks/useAppState'
+import {useAppState} from '#/lib/appState'
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,

@@ -14,7 +14,6 @@ import {compressIfNeeded} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {
@@ -37,6 +36,7 @@ import * as Dialog from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {type AvatarColor, avatarColors, type Emoji, emojiItems} from './types'
 
@@ -66,11 +66,11 @@ const randomColor =
   avatarColors[Math.floor(Math.random() * avatarColors.length)]
 
 export function StepProfile() {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
-  const gate = useGate()
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const creatorControl = Dialog.useDialogControl()
@@ -89,7 +89,7 @@ export function StepProfile() {
 
   React.useEffect(() => {
     requestNotificationsPermission('StartOnboarding')
-  }, [gate, requestNotificationsPermission])
+  }, [requestNotificationsPermission])
 
   const sheetWrapper = useSheetWrapper()
   const openPicker = React.useCallback(
@@ -156,8 +156,8 @@ export function StepProfile() {
     }
 
     dispatch({type: 'next'})
-    logEvent('onboarding:profile:nextPressed', {})
-  }, [avatar, dispatch])
+    ax.metric('onboarding:profile:nextPressed', {})
+  }, [ax, avatar, dispatch])
 
   const onDoneCreating = React.useCallback(() => {
     setAvatar(prev => ({

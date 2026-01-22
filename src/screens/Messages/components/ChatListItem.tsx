@@ -13,7 +13,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
 import {decrementBadgeCount} from '#/lib/notifications/notifications'
-import {logEvent} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {
   postUriToRelativePath,
@@ -45,6 +44,7 @@ import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
@@ -96,6 +96,7 @@ function ChatListItemReady({
   showMenu?: boolean
   children?: React.ReactNode
 }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -290,10 +291,10 @@ function ChatListItemReady({
         menuControl.open()
         return false
       } else {
-        logEvent('chat:open', {logContext: 'ChatsList'})
+        ax.metric('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [isDeletedAccount, menuControl, queryClient, profile, convo],
+    [ax, isDeletedAccount, menuControl, queryClient, profile, convo],
   )
 
   const onLongPress = useCallback(() => {

@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
-import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -20,6 +19,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -55,6 +55,7 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
 
@@ -158,13 +159,9 @@ function Inner({
           color="secondary"
           style={[a.justify_center]}
           onPress={() => {
-            logger.metric(
-              'verification:learn-more',
-              {
-                location: 'verificationsDialog',
-              },
-              {statsig: true},
-            )
+            ax.metric('verification:learn-more', {
+              location: 'verificationsDialog',
+            })
           }}>
           <ButtonText>
             <Trans context="english-only-resource">Learn more</Trans>

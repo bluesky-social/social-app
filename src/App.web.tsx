@@ -9,7 +9,6 @@ import {useLingui} from '@lingui/react'
 import * as Sentry from '@sentry/react-native'
 
 import {QueryProvider} from '#/lib/react-query'
-import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
@@ -55,8 +54,16 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
-import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
-import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
+import {
+  prefetchAgeAssuranceConfig,
+  Provider as AgeAssuranceV2Provider,
+} from '#/ageAssurance'
+import {
+  AnalyticsContext,
+  AnalyticsFeaturesContext,
+  features,
+  setupDeviceId,
+} from '#/analytics'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
@@ -87,6 +94,8 @@ function InnerApp() {
       try {
         if (account) {
           await resumeSession(account)
+        } else {
+          await features.init
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
@@ -119,9 +128,9 @@ function InnerApp() {
               <React.Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <PolicyUpdateOverlayProvider>
-                    <StatsigProvider>
+                <AnalyticsFeaturesContext>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <PolicyUpdateOverlayProvider>
                       <LiveEventsProvider>
                         <AgeAssuranceV2Provider>
                           <ComposerProvider>
@@ -163,9 +172,9 @@ function InnerApp() {
                           </ComposerProvider>
                         </AgeAssuranceV2Provider>
                       </LiveEventsProvider>
-                    </StatsigProvider>
-                  </PolicyUpdateOverlayProvider>
-                </QueryProvider>
+                    </PolicyUpdateOverlayProvider>
+                  </QueryProvider>
+                </AnalyticsFeaturesContext>
               </React.Fragment>
             </ActiveVideoProvider>
           </VideoVolumeProvider>
@@ -179,7 +188,7 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([initPersistedState(), Geo.resolve()]).then(() =>
+    Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(() =>
       setReady(true),
     )
   }, [])
@@ -196,25 +205,27 @@ function App() {
     <Geo.Provider>
       <A11yProvider>
         <OnboardingProvider>
-          <SessionProvider>
-            <PrefsStateProvider>
-              <I18nProvider>
-                <ShellStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <StarterPackProvider>
-                            <InnerApp />
-                          </StarterPackProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </ShellStateProvider>
-              </I18nProvider>
-            </PrefsStateProvider>
-          </SessionProvider>
+          <AnalyticsContext>
+            <SessionProvider>
+              <PrefsStateProvider>
+                <I18nProvider>
+                  <ShellStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <StarterPackProvider>
+                              <InnerApp />
+                            </StarterPackProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </ShellStateProvider>
+                </I18nProvider>
+              </PrefsStateProvider>
+            </SessionProvider>
+          </AnalyticsContext>
         </OnboardingProvider>
       </A11yProvider>
     </Geo.Provider>

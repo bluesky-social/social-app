@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useAppState} from '#/lib/hooks/useAppState'
+import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type MessagesTabNavigatorParams} from '#/lib/routes/types'

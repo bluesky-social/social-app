@@ -3,7 +3,6 @@ import {ScrollView, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {
   useTrendingSettings,
   useTrendingSettingsApi,
@@ -19,6 +18,7 @@ import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Tre
 import * as Prompt from '#/components/Prompt'
 import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 export function TrendingInterstitial() {
   const {enabled} = useTrendingConfig()
@@ -29,6 +29,7 @@ export function TrendingInterstitial() {
 export function Inner() {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const gutters = useGutters([0, 'base', 0, 'base'])
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
@@ -36,9 +37,9 @@ export function Inner() {
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
   const onConfirmHide = React.useCallback(() => {
-    logEvent('trendingTopics:hide', {context: 'interstitial'})
+    ax.metric('trendingTopics:hide', {context: 'interstitial'})
     setTrendingDisabled(true)
-  }, [setTrendingDisabled])
+  }, [ax, setTrendingDisabled])
 
   return error || noTopics ? null : (
     <View style={[t.atoms.border_contrast_low, a.border_t, a.border_b]}>
@@ -94,7 +95,9 @@ export function Inner() {
                     key={topic.link}
                     topic={topic}
                     onPress={() => {
-                      logEvent('trendingTopic:click', {context: 'interstitial'})
+                      ax.metric('trendingTopic:click', {
+                        context: 'interstitial',
+                      })
                     }}>
                     <View style={[a.py_lg]}>
                       <Text

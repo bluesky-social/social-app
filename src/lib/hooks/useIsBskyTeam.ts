@@ -1,8 +1,8 @@
 import {useMemo} from 'react'
 
-import {useGate} from '#/lib/statsig/statsig'
+import {useAnalytics} from '#/analytics'
 
 export function useIsBskyTeam() {
-  const gate = useGate()
-  return useMemo(() => gate('is_bsky_team_member'), [gate])
+  const ax = useAnalytics()
+  return useMemo(() => ax.features.enabled(ax.features.IsBskyTeam), [ax])
 }

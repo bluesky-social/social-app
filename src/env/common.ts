@@ -50,7 +50,7 @@ export const BUNDLE_IDENTIFIER: string =
 
 /**
  * This will always be in the format of YYMMDDHH, so that it always increases
- * for each build. This should only be used for StatSig reporting and shouldn't
+ * for each build. This should only be used for analytics reporting and shouldn't
  * be used to identify a specific bundle.
  */
 export const BUNDLE_DATE: number =
@@ -83,6 +83,24 @@ export const BLUESKY_PROXY_DID: Did =
  */
 export const CHAT_PROXY_DID: Did =
   process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
+
+/**
+ * Metrics API host
+ */
+export const METRICS_API_HOST: string =
+  process.env.EXPO_PUBLIC_METRICS_API_HOST || 'https://events.bsky.app'
+
+/**
+ * Growthbook API host
+ */
+export const GROWTHBOOK_API_HOST: string =
+  process.env.EXPO_PUBLIC_GROWTHBOOK_API_HOST || `${METRICS_API_HOST}/gb`
+
+/**
+ * Growthbook client key
+ */
+export const GROWTHBOOK_CLIENT_KEY: string =
+  process.env.EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY || 'sdk-7gkUkGy9wguUjyFe'
 
 /**
  * Sentry DSN for telemetry

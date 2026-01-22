@@ -4678,6 +4678,20 @@
   dependencies:
     nanoid "^3.3.1"
 
+"@growthbook/growthbook-react@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@growthbook/growthbook-react/-/growthbook-react-1.6.2.tgz#847135be0c46b167f980dbe6015e5f4ed010475c"
+  integrity sha512-96Bo2Jwd4NBn/kBLN4ceF299PhTw8fQltRykD32hu2xMW8/LXhB8swxbPshGK+Xfa2gjgt24kpZ5oSvaVLLT7w==
+  dependencies:
+    "@growthbook/growthbook" "^1.6.2"
+
+"@growthbook/growthbook@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@growthbook/growthbook/-/growthbook-1.6.2.tgz#6a25122deac8a09955f6bddeb134af62b209809b"
+  integrity sha512-x3sK6Lff4BVusIzcdBeHZqA3B4kLs3kM/pJ7vvLTJwb6N/+Yn99EF1yc0XU6cfDVqFq6uFkvIFhMwDWUaKD73g==
+  dependencies:
+    dom-mutator "^0.6.0"
+
 "@grpc/grpc-js@^1.8.20":
   version "1.13.3"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.13.3.tgz#6ad08d186c2a8651697085f790c5c68eaca45904"
@@ -6262,7 +6276,7 @@
   resolved "https://registry.yarnpkg.com/@radix-ui/rect/-/rect-1.1.1.tgz#78244efe12930c56fd255d7923865857c41ac8cb"
   integrity sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==
 
-"@react-native-async-storage/async-storage@2.2.0", "@react-native-async-storage/async-storage@^1.15.2":
+"@react-native-async-storage/async-storage@2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-2.2.0.tgz#a3aa565253e46286655560172f4e366e8969f5ad"
   integrity sha512-gvRvjR5JAaUZF8tv2Kcq/Gbt3JHwbKFYfmb445rhOj6NUMx3qPLixmDx5pZAyb9at1bYvJ4/eTUipU5aki45xw==
@@ -10517,6 +10531,11 @@ dom-converter@^0.2.0:
   dependencies:
     utila "~0.4"
 
+dom-mutator@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/dom-mutator/-/dom-mutator-0.6.0.tgz#079d7a4b3e8981a562cd777548b99baab51d65c5"
+  integrity sha512-iCt9o0aYfXMUkz/43ZOAUFQYotjGB+GNbYJiJdz4TgXkyToXbbRy5S6FbTp72lRBtfpUMwEc1KmpFEU4CZeoNg==
+
 dom-serializer@^1.0.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-1.4.1.tgz#de5d41b1aea290215dc45a6dae8adcf1d32e2d30"
@@ -11604,7 +11623,7 @@ expo-clipboard@~8.0.8:
   resolved "https://registry.yarnpkg.com/expo-clipboard/-/expo-clipboard-8.0.8.tgz#5e52054a4bbaebef090ec6fe5eaa200072ff94f7"
   integrity sha512-VKoBkHIpZZDJTB0jRO4/PZskHdMNOEz3P/41tmM6fDuODMpqhvyWK053X0ebspkxiawJX9lX33JXHBCvVsTTOA==
 
-expo-constants@18.0.8, expo-constants@^13.0.2, expo-constants@~18.0.11:
+expo-constants@18.0.8, expo-constants@~18.0.11:
   version "18.0.8"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-18.0.8.tgz#14f8388136de6e83d651bd68b326a675dfb7051c"
   integrity sha512-Tetphsx6RVImCTZeBAclRQMy0WOODY3y6qrUoc88YGUBVm8fAKkErCSWxLTCc6nFcJxdoOMYi62LgNIUFjZCLA==
@@ -11649,7 +11668,7 @@ expo-dev-menu@7.0.18:
   dependencies:
     expo-dev-menu-interface "2.0.0"
 
-expo-device@7.1.4, expo-device@~4.1.1:
+expo-device@7.1.4:
   version "7.1.4"
   resolved "https://registry.yarnpkg.com/expo-device/-/expo-device-7.1.4.tgz#84ae7c2520cc45f15a9cb0433ae1226c33f7a8ef"
   integrity sha512-HS04IiE1Fy0FRjBLurr9e5A6yj3kbmQB+2jCZvbSGpsjBnCLdSk/LCii4f5VFhPIBWJLyYuN5QqJyEAw6BcS4Q==
@@ -17271,13 +17290,6 @@ react-native-gesture-handler@~2.28.0:
     hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
 
-react-native-get-random-values@^1.6.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/react-native-get-random-values/-/react-native-get-random-values-1.10.0.tgz#c2c5f12a4ef8b1175145347b4a4b9f9a40d9ffc8"
-  integrity sha512-gZ1zbXhbb8+Jy9qYTV8c4Nf45/VB4g1jmXuavY5rPfUn7x3ok9Vl3FTl0dnE92Z4FFtfbUNNwtSfcmomdtWg+A==
-  dependencies:
-    fast-base64-decode "^1.0.0"
-
 react-native-get-random-values@~1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/react-native-get-random-values/-/react-native-get-random-values-1.11.0.tgz#1ca70d1271f4b08af92958803b89dccbda78728d"
@@ -18716,14 +18728,6 @@ standard-as-callback@^2.1.0:
   resolved "https://registry.yarnpkg.com/standard-as-callback/-/standard-as-callback-2.1.0.tgz#8953fc05359868a77b5b9739a665c5977bb7df45"
   integrity sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==
 
-statsig-js@4.45.1:
-  version "4.45.1"
-  resolved "https://registry.yarnpkg.com/statsig-js/-/statsig-js-4.45.1.tgz#b1f5b9c52adc4a8aece376fb011416c89227932f"
-  integrity sha512-h94RzFQsJCQCNwQXpZ9OBXcvCxDnkXF6OrCekd81ySvY2l4JSowpxMWX3Iw6IDFzfTfKdER9JQzFLhMSQbT+YQ==
-  dependencies:
-    js-sha256 "^0.10.1"
-    uuid "^8.3.2"
-
 statsig-node@^5.23.1:
   version "5.25.1"
   resolved "https://registry.yarnpkg.com/statsig-node/-/statsig-node-5.25.1.tgz#6d8ea9ecaad6c09250e5ff7d33eda9fd0f9c05f4"
@@ -18733,26 +18737,6 @@ statsig-node@^5.23.1:
     node-fetch "^2.6.13"
     ua-parser-js "^1.0.2"
     uuid "^8.3.2"
-
-statsig-react-native-expo@^4.6.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/statsig-react-native-expo/-/statsig-react-native-expo-4.6.1.tgz#0bdf49fee7112f7f28bff2405f4ba0c1727bb3d6"
-  integrity sha512-rB60c+WSrQPmjW9j75d+acUtwSOe38PE2KTDHiOv1Mf+0TCcFtGYlJmKCibWvbeXR7ZAyjjGeroh23bCSEZauQ==
-  dependencies:
-    "@react-native-async-storage/async-storage" "^1.15.2"
-    expo-constants "^13.0.2"
-    expo-device "~4.1.1"
-    js-sha256 "^0.9.0"
-    react-native-get-random-values "^1.6.0"
-    statsig-react "^1.21.1"
-    uuid "^8.3.2"
-
-statsig-react@^1.21.1:
-  version "1.35.0"
-  resolved "https://registry.yarnpkg.com/statsig-react/-/statsig-react-1.35.0.tgz#ad5730b83f564c640623e954fcbcbe848e939946"
-  integrity sha512-KLN7dhq6FvAl25Z0QN6IINFBgM3yn0GMafoE698tYZqRf911xvevFaR7qUXiTz3W9vmFYrmFRouqVMfCv7DW0A==
-  dependencies:
-    statsig-js "4.45.1"
 
 statuses@2.0.1:
   version "2.0.1"

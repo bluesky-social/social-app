@@ -17,7 +17,6 @@ import * as Sentry from '@sentry/react-native'
 import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
-import {Provider as StatsigProvider, tryFetchGates} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
@@ -69,6 +68,12 @@ import {
   prefetchAgeAssuranceConfig,
   Provider as AgeAssuranceV2Provider,
 } from '#/ageAssurance'
+import {
+  AnalyticsContext,
+  AnalyticsFeaturesContext,
+  features,
+  setupDeviceId,
+} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   prefetchLiveEvents,
@@ -114,7 +119,7 @@ function InnerApp() {
         if (account) {
           await resumeSession(account)
         } else {
-          await tryFetchGates(undefined, 'prefer-fresh-gates')
+          await features.init
         }
       } catch (e) {
         logger.error(`session: resume failed`, {message: e})
@@ -144,9 +149,9 @@ function InnerApp() {
               <React.Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <PolicyUpdateOverlayProvider>
-                    <StatsigProvider>
+                <AnalyticsFeaturesContext>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <PolicyUpdateOverlayProvider>
                       <LiveEventsProvider>
                         <AgeAssuranceV2Provider>
                           <ComposerProvider>
@@ -192,9 +197,9 @@ function InnerApp() {
                           </ComposerProvider>
                         </AgeAssuranceV2Provider>
                       </LiveEventsProvider>
-                    </StatsigProvider>
-                  </PolicyUpdateOverlayProvider>
-                </QueryProvider>
+                    </PolicyUpdateOverlayProvider>
+                  </QueryProvider>
+                </AnalyticsFeaturesContext>
               </React.Fragment>
             </VideoVolumeProvider>
           </Splash>
@@ -208,7 +213,7 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([initPersistedState(), Geo.resolve()]).then(() =>
+    Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(() =>
       setReady(true),
     )
   }, [])
@@ -226,30 +231,32 @@ function App() {
       <A11yProvider>
         <KeyboardControllerProvider>
           <OnboardingProvider>
-            <SessionProvider>
-              <PrefsStateProvider>
-                <I18nProvider>
-                  <ShellStateProvider>
-                    <ModalStateProvider>
-                      <DialogStateProvider>
-                        <LightboxStateProvider>
-                          <PortalProvider>
-                            <BottomSheetProvider>
-                              <StarterPackProvider>
-                                <SafeAreaProvider
-                                  initialMetrics={initialWindowMetrics}>
-                                  <InnerApp />
-                                </SafeAreaProvider>
-                              </StarterPackProvider>
-                            </BottomSheetProvider>
-                          </PortalProvider>
-                        </LightboxStateProvider>
-                      </DialogStateProvider>
-                    </ModalStateProvider>
-                  </ShellStateProvider>
-                </I18nProvider>
-              </PrefsStateProvider>
-            </SessionProvider>
+            <AnalyticsContext>
+              <SessionProvider>
+                <PrefsStateProvider>
+                  <I18nProvider>
+                    <ShellStateProvider>
+                      <ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <BottomSheetProvider>
+                                <StarterPackProvider>
+                                  <SafeAreaProvider
+                                    initialMetrics={initialWindowMetrics}>
+                                    <InnerApp />
+                                  </SafeAreaProvider>
+                                </StarterPackProvider>
+                              </BottomSheetProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
+                      </ModalStateProvider>
+                    </ShellStateProvider>
+                  </I18nProvider>
+                </PrefsStateProvider>
+              </SessionProvider>
+            </AnalyticsContext>
           </OnboardingProvider>
         </KeyboardControllerProvider>
       </A11yProvider>

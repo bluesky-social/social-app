@@ -1,15 +1,16 @@
-import {useEffect, useMemo} from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useCallOnce} from '#/lib/once'
 import {isBskyCustomFeedUrl} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
 import {atoms as a, useBreakpoints, utils} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,
@@ -24,6 +25,7 @@ export function LiveEventFeedCardWide({
   feed: LiveEventFeed
   metricContext: LiveEventFeedMetricContext
 }) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtPhone} = useBreakpoints()
 
@@ -38,13 +40,12 @@ export function LiveEventFeedCardWide({
     return '/'
   }, [feed.url])
 
-  useEffect(() => {
-    logger.metric('liveEvents:feedBanner:seen', {
+  useCallOnce(() => {
+    ax.metric('liveEvents:feedBanner:seen', {
       feed: feed.url,
       context: metricContext,
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })()
 
   return (
     <Link
@@ -52,7 +53,7 @@ export function LiveEventFeedCardWide({
       label={_(msg`Live event happening now: ${feed.title}`)}
       style={[a.w_full]}
       onPress={() => {
-        logger.metric('liveEvents:feedBanner:click', {
+        ax.metric('liveEvents:feedBanner:click', {
           feed: feed.url,
           context: metricContext,
         })

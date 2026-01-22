@@ -34,6 +34,7 @@ import {WelcomeModal} from '#/components/WelcomeModal'
 import {useAgeAssurance} from '#/ageAssurance'
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
+import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer.web'
 import {DrawerContent} from './Drawer'
@@ -181,6 +182,8 @@ export function Shell() {
           <RedirectOverlay />
         </>
       )}
+
+      <PassiveAnalytics />
     </View>
   )
 }

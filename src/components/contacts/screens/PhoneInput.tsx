@@ -31,6 +31,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {useGeolocation} from '#/geolocation'
 import {isFindContactsFeatureEnabled} from '../country-allowlist'
 import {
@@ -52,6 +53,7 @@ export function PhoneInput({
   onSkip: () => void
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const agent = useAgent()
   const location = useGeolocation()
@@ -85,7 +87,7 @@ export function PhoneInput({
         payload: {phoneCountryCode, phoneNumber},
       })
 
-      logger.metric('contacts:phone:phoneEntered', {entryPoint: context})
+      ax.metric('contacts:phone:phoneEntered', {entryPoint: context})
     },
     onMutate: () => {
       Keyboard.dismiss()

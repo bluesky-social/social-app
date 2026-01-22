@@ -1,8 +1,6 @@
 import {nanoid} from 'nanoid/non-secure'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {add} from '#/logger/logDump'
-import {type MetricEvents} from '#/logger/metrics'
 import {consoleTransport} from '#/logger/transports/console'
 import {sentryTransport} from '#/logger/transports/sentry'
 import {
@@ -13,8 +11,6 @@ import {
 } from '#/logger/types'
 import {enabledLogLevels} from '#/logger/util'
 import {ENV} from '#/env'
-
-export {type MetricEvents as Metrics} from '#/logger/metrics'
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (ENV) {
@@ -37,15 +33,17 @@ export class Logger {
   level: LogLevel
   context: LogContext | undefined = undefined
   contextFilter: string = ''
+  ambientMetadata: Record<string, unknown> = {}
 
   protected debugContextRegexes: RegExp[] = []
   protected transports: Transport[] = []
 
-  static create(context?: LogContext) {
+  static create(context?: LogContext, metadata: Record<string, unknown> = {}) {
     const logger = new Logger({
       level: process.env.EXPO_PUBLIC_LOG_LEVEL as LogLevel,
       context,
       contextFilter: process.env.EXPO_PUBLIC_LOG_DEBUG || '',
+      metadata,
     })
     for (const transport of TRANSPORTS) {
       logger.addTransport(transport)
@@ -57,14 +55,17 @@ export class Logger {
     level,
     context,
     contextFilter,
+    metadata: ambientMetadata = {},
   }: {
     level?: LogLevel
     context?: LogContext
     contextFilter?: string
+    metadata?: Record<string, unknown>
   } = {}) {
     this.context = context
     this.level = level || LogLevel.Info
     this.contextFilter = contextFilter || ''
+    this.ambientMetadata = ambientMetadata
     if (this.contextFilter) {
       this.level = LogLevel.Debug
     }
@@ -95,25 +96,6 @@ export class Logger {
     this.transport({level: LogLevel.Error, message: error, metadata})
   }
 
-  metric<E extends keyof MetricEvents>(
-    event: E & string,
-    metadata: MetricEvents[E],
-    options: {
-      /**
-       * Optionally also send to StatSig
-       */
-      statsig?: boolean
-    } = {statsig: true},
-  ) {
-    logEvent(event, metadata, {
-      lake: !options.statsig,
-    })
-
-    for (const transport of this.transports) {
-      transport(LogLevel.Info, LogContext.Metric, event, metadata, Date.now())
-    }
-  }
-
   addTransport(transport: Transport) {
     this.transports.push(transport)
     return () => {
@@ -139,7 +121,10 @@ export class Logger {
       return
 
     const timestamp = Date.now()
-    const meta = metadata || {}
+    const meta: Metadata = {
+      __metadata__: this.ambientMetadata,
+      ...metadata,
+    }
 
     // send every log to syslog
     add({

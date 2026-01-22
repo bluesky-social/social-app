@@ -24,7 +24,7 @@ export const enabled = createIsEnabledCheck(props => {
       '2026-01-16T00:00:00.000Z',
       props.currentProfile.createdAt,
     ) &&
-    !props.gate('disable_live_now_beta')
+    !props.features.enabled(props.features.DisableLiveNowBeta)
   )
 })
 

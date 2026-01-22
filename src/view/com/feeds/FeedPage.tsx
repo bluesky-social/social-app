@@ -18,7 +18,6 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type AllNavigatorParams} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
@@ -33,6 +32,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {PostFeed} from '../posts/PostFeed'
 import {FAB} from '../util/fab/FAB'
@@ -63,6 +63,7 @@ export function FeedPage({
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   feedInfo: FeedSourceInfo
 }) {
+  const ax = useAnalytics()
   const {hasSession} = useSession()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
@@ -105,13 +106,13 @@ export function FeedPage({
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
-      logEvent('feed:refresh', {
+      ax.metric('feed:refresh', {
         feedType: feed.split('|')[0],
         feedUrl: feed,
         reason: 'soft-reset',
       })
     }
-  }, [navigation, isPageFocused, scrollToTop, queryClient, feed])
+  }, [ax, navigation, isPageFocused, scrollToTop, queryClient, feed])
 
   // fires when page within screen is activated/deactivated
   useEffect(() => {
@@ -129,12 +130,12 @@ export function FeedPage({
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
-    logEvent('feed:refresh', {
+    ax.metric('feed:refresh', {
       feedType: feed.split('|')[0],
       feedUrl: feed,
       reason: 'load-latest',
     })
-  }, [scrollToTop, feed, queryClient])
+  }, [ax, scrollToTop, feed, queryClient])
 
   const shouldPrefetch = IS_NATIVE && isPageAdjacent
   const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI

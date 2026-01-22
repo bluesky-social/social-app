@@ -5,7 +5,6 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logger} from '#/logger'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {isFindContactsFeatureEnabled} from '#/components/contacts/country-allowlist'
@@ -16,8 +15,8 @@ import {
   isExistingUserAsOf,
 } from '#/components/dialogs/nuxs/utils'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
-import {IS_E2E} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {IS_E2E, IS_NATIVE, IS_WEB} from '#/env'
 import {navigate} from '#/Navigation'
 
 export const enabled = createIsEnabledCheck(props => {
@@ -35,6 +34,7 @@ export const enabled = createIsEnabledCheck(props => {
 export function FindContactsAnnouncement() {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
 
@@ -115,7 +115,7 @@ export function FindContactsAnnouncement() {
             size="large"
             color="primary"
             onPress={() => {
-              logger.metric('contacts:nux:ctaPressed', {})
+              ax.metric('contacts:nux:ctaPressed', {})
               control.close(() => {
                 navigate('FindContactsFlow')
               })

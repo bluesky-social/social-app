@@ -13,7 +13,6 @@ import {useLingui} from '@lingui/react'
 
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {logEvent} from '#/lib/statsig/statsig'
 import {createStarterPackGooglePlayUri} from '#/lib/strings/starter-pack'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
@@ -36,6 +35,7 @@ import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -119,6 +119,7 @@ function LandingScreenLoaded({
 }) {
   const {creator, listItemsSample, feeds} = starterPack
   const {_, i18n} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
@@ -146,7 +147,7 @@ function LandingScreenLoaded({
     } else {
       onContinue()
     }
-    logEvent('starterPack:ctaPress', {
+    ax.metric('starterPack:ctaPress', {
       starterPack: starterPack.uri,
     })
   }

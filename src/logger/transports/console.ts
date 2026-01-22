@@ -36,7 +36,7 @@ export const consoleTransport: Transport = (
   if (IS_WEB) {
     if (hasMetadata) {
       console.groupCollapsed(msg)
-      console.log(metadata)
+      console.log(prepareMetadata(metadata))
       console.groupEnd()
     } else {
       console.log(msg)

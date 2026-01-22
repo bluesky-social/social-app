@@ -42,6 +42,7 @@ import {Outlet as PortalOutlet} from '#/components/Portal'
 import {useAgeAssurance} from '#/ageAssurance'
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
+import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
@@ -245,6 +246,8 @@ export function Shell() {
           <RedirectOverlay />
         </>
       )}
+
+      <PassiveAnalytics />
     </View>
   )
 }

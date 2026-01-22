@@ -99,19 +99,9 @@ jest.mock('expo-modules-core', () => ({
   requireNativeViewManager: jest.fn().mockImplementation(_ => {
     return () => null
   }),
+  createPermissionHook: () => () => [true],
 }))
 
 jest.mock('expo-localization', () => ({
   getLocales: () => [],
 }))
-
-jest.mock('statsig-react-native-expo', () => ({
-  Statsig: {
-    initialize() {},
-    initializeCalled() {
-      return false
-    },
-  },
-}))
-
-jest.mock('../src/lib/statsig/statsig', () => ({}))

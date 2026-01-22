@@ -4,6 +4,7 @@ import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
@@ -15,11 +16,9 @@ import {
   sessionAccountToSession,
 } from './agent'
 import {type Action, getInitialState, reducer, type State} from './reducer'
-
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
-import {logger} from '#/logger'
 import {
   type SessionApiContext,
   type SessionStateContext,
@@ -93,6 +92,7 @@ class SessionStore {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const ax = useAnalyticsBase()
   const cancelPendingTask = useOneTaskAtATime()
   const [store] = React.useState(() => new SessionStore())
   const state = React.useSyncExternalStore(store.subscribe, store.getState)
@@ -119,7 +119,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async (params, metrics) => {
       addSessionDebugLog({type: 'method:start', method: 'createAccount'})
       const signal = cancelPendingTask()
-      logger.metric('account:create:begin', {}, {statsig: true})
+      ax.metric('account:create:begin', {})
       const {agent, account} = await createAgentAndCreateAccount(
         params,
         onAgentSessionChange,
@@ -133,10 +133,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
-      logger.metric('account:create:success', metrics, {statsig: true})
+      ax.metric('account:create:success', metrics, {
+        session: utils.accountToSessionMetadata(account),
+      })
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
-    [store, onAgentSessionChange, cancelPendingTask],
+    [ax, store, onAgentSessionChange, cancelPendingTask],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
@@ -156,14 +158,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
-      logger.metric(
+      ax.metric(
         'account:loggedIn',
         {logContext, withPassword: true},
-        {statsig: true},
+        {session: utils.accountToSessionMetadata(account)},
       )
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
-    [store, onAgentSessionChange, cancelPendingTask],
+    [ax, store, onAgentSessionChange, cancelPendingTask],
   )
 
   const logoutCurrentAccount = React.useCallback<
@@ -176,10 +178,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       store.dispatch({
         type: 'logged-out-current-account',
       })
-      logger.metric(
+      ax.metric(
         'account:loggedOut',
         {logContext, scope: 'current'},
-        {statsig: true},
+        {
+          session: utils.accountToSessionMetadata(
+            prevState.accounts.find(
+              a => a.did === prevState.currentAgentState.did,
+            ),
+          ),
+        },
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
       if (prevState.currentAgentState.did) {
@@ -188,7 +196,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // reset onboarding flow on logout
       onboardingDispatch({type: 'skip'})
     },
-    [store, cancelPendingTask, onboardingDispatch],
+    [ax, store, cancelPendingTask, onboardingDispatch],
   )
 
   const logoutEveryAccount = React.useCallback<
@@ -197,13 +205,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     logContext => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
+      const prevState = store.getState()
       store.dispatch({
         type: 'logged-out-every-account',
       })
-      logger.metric(
+      ax.metric(
         'account:loggedOut',
         {logContext, scope: 'every'},
-        {statsig: true},
+        {
+          session: utils.accountToSessionMetadata(
+            prevState.accounts.find(
+              a => a.did === prevState.currentAgentState.did,
+            ),
+          ),
+        },
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
       clearAgeAssuranceData()
@@ -359,7 +374,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <AgentContext.Provider value={agent}>
       <StateContext.Provider value={stateContext}>
-        <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
+        <ApiContext.Provider value={api}>
+          <AnalyticsContext
+            metadata={utils.useMeta({
+              session: utils.accountToSessionMetadata(
+                stateContext.currentAccount,
+              ),
+            })}>
+            {children}
+          </AnalyticsContext>
+        </ApiContext.Provider>
       </StateContext.Provider>
     </AgentContext.Provider>
   )

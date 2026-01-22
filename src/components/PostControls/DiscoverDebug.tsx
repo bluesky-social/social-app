@@ -3,11 +3,11 @@ import * as Clipboard from 'expo-clipboard'
 import {t} from '@lingui/macro'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
-import {useGate} from '#/lib/statsig/statsig'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
 
 export function DiscoverDebug({
@@ -15,12 +15,12 @@ export function DiscoverDebug({
 }: {
   feedContext: string | undefined
 }) {
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const gate = useGate()
   const isDiscoverDebugUser =
     IS_INTERNAL ||
     DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
-    gate('debug_show_feedcontext')
+    ax.features.enabled(ax.features.DebugFeedContext)
   const theme = useTheme()
 
   return (
