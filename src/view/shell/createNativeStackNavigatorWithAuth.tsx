@@ -47,6 +47,8 @@ type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
   requireAuth?: boolean
 }
 
+let prevActiveRouteName: string | undefined
+
 function NativeStackNavigator({
   id,
   initialRouteName,
@@ -115,10 +117,6 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  const prevActiveRouteName = React.useRef<string | undefined>(undefined)
-  React.useEffect(() => {
-    prevActiveRouteName.current = activeRoute.name
-  }, [activeRoute.name])
 
   if (!hasSession && (activeRouteRequiresAuth || IS_NATIVE)) {
     return <LoggedOut />
@@ -157,7 +155,7 @@ function NativeStackNavigator({
       <AnalyticsContext
         metadata={utils.useMeta({
           navigation: {
-            previousScreen: prevActiveRouteName.current,
+            previousScreen: prevActiveRouteName || activeRoute.name,
             currentScreen: activeRoute.name,
           },
         })}>
