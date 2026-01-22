@@ -37,6 +37,7 @@ import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {PolicyUpdateOverlay} from '#/components/PolicyUpdateOverlay'
+import {AnalyticsContext, utils} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
@@ -114,6 +115,11 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
+  const prevActiveRouteName = React.useRef<string | undefined>(undefined)
+  React.useEffect(() => {
+    prevActiveRouteName.current = activeRoute.name
+  }, [activeRoute.name])
+
   if (!hasSession && (activeRouteRequiresAuth || IS_NATIVE)) {
     return <LoggedOut />
   }
@@ -148,24 +154,32 @@ function NativeStackNavigator({
 
   return (
     <NavigationContent>
-      <View role="main" style={a.flex_1}>
-        <NativeStackView
-          {...rest}
-          state={state}
-          navigation={navigation}
-          descriptors={descriptors}
-          describe={describe}
-        />
-      </View>
-      {IS_WEB && (
-        <>
-          {showBottomBar ? <BottomBarWeb /> : <DesktopLeftNav />}
-          {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
-        </>
-      )}
+      <AnalyticsContext
+        metadata={utils.useMeta({
+          navigation: {
+            previousScreen: prevActiveRouteName.current,
+            currentScreen: activeRoute.name,
+          },
+        })}>
+        <View role="main" style={a.flex_1}>
+          <NativeStackView
+            {...rest}
+            state={state}
+            navigation={navigation}
+            descriptors={descriptors}
+            describe={describe}
+          />
+        </View>
+        {IS_WEB && (
+          <>
+            {showBottomBar ? <BottomBarWeb /> : <DesktopLeftNav />}
+            {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
+          </>
+        )}
 
-      {/* Only shown after logged in and onboaring etc are complete */}
-      {hasSession && <PolicyUpdateOverlay />}
+        {/* Only shown after logged in and onboaring etc are complete */}
+        {hasSession && <PolicyUpdateOverlay />}
+      </AnalyticsContext>
     </NavigationContent>
   )
 }

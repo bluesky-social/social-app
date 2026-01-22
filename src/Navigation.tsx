@@ -136,7 +136,7 @@ import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
-import {AnalyticsContext, useAnalytics, utils} from '#/analytics'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
@@ -1065,15 +1065,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
       // -sfn
       navigationInChildEnabled>
-      <AnalyticsContext
-        metadata={utils.useMeta({
-          navigation: {
-            previousScreen: prevLoggedRouteName.current,
-            currentScreen: getCurrentRouteName(),
-          },
-        })}>
-        {children}
-      </AnalyticsContext>
+      {children}
     </NavigationContainer>
   )
 }
