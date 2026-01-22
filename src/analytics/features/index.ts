@@ -1,6 +1,6 @@
 import {GrowthBook} from '@growthbook/growthbook-react'
 
-import {type Metadata} from '#/analytics/metadata'
+import {getNavigationMetadata, type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
 
 export {Features} from '#/analytics/features/types'
@@ -46,7 +46,10 @@ export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
 }
 
 /**
- * Converts our metadata into GrowthBook attributes and sets them.
+ * Converts our metadata into GrowthBook attributes and sets them. GrowthBook
+ * attributes are manually configured in the GrowthBook dashboard. So these
+ * values need to match exactly. Therefore, let's add them here manually to and
+ * not spread them to avoid mistakes.
  */
 export function setAttributes({
   base,
@@ -55,9 +58,16 @@ export function setAttributes({
   preferences,
 }: Metadata) {
   features.setAttributes({
-    ...base,
-    ...geolocation,
-    ...(session || {}),
-    ...(preferences || {}),
+    deviceId: base.deviceId,
+    sessionId: base.sessionId,
+    platform: base.platform,
+    appVersion: base.appVersion,
+    countryCode: geolocation.countryCode,
+    regionCode: geolocation.regionCode,
+    did: session?.did,
+    isBskyPds: session?.isBskyPds,
+    appLanguage: preferences?.appLanguage,
+    contentLanguages: preferences?.contentLanguages,
+    currentScreen: getNavigationMetadata()?.currentScreen,
   })
 }
