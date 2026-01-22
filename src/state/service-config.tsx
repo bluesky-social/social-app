@@ -85,6 +85,8 @@ const DEFAULT_LIVE_ALLOWED_DOMAINS = [
   'twitch.tv',
   'www.twitch.tv',
   'stream.place',
+  'bluecast.app',
+  'www.bluecast.app',
 ]
 export type LiveNowConfig = {
   allowedDomains: Set<string>
