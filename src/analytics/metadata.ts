@@ -53,7 +53,6 @@ export type NavigationMetadata = {
 }
 let navigationMetadata: NavigationMetadata | undefined
 export function getNavigationMetadata() {
-  console.log('metadata', JSON.stringify(navigationMetadata, null, 2))
   return navigationMetadata
 }
 export function setNavigationMetadata(meta: NavigationMetadata | undefined) {

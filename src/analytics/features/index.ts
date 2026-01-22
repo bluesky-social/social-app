@@ -48,14 +48,15 @@ export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
 /**
  * Converts our metadata into GrowthBook attributes and sets them.
  */
-export function setAttributes({base, session, preferences}: Metadata) {
-  const {deviceId, sessionId, ...br} = base
+export function setAttributes({
+  base,
+  geolocation,
+  session,
+  preferences,
+}: Metadata) {
   features.setAttributes({
-    device_id: deviceId, // GrowthBook special field
-    session_id: sessionId, // GrowthBook special field
-    user_id: session?.did, // GrowthBook special field
-    id: session?.did, // GrowthBook special field
-    ...br,
+    ...base,
+    ...geolocation,
     ...(session || {}),
     ...(preferences || {}),
   })
