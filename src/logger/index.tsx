@@ -123,7 +123,7 @@ export class Logger {
     const timestamp = Date.now()
     const meta: Metadata = {
       ...metadata,
-      inherited: this.inheritedMetadata,
+      metadata: this.inheritedMetadata,
     }
 
     // send every log to syslog
