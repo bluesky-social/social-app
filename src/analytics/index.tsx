@@ -16,13 +16,13 @@ import {
   useSessionId,
 } from '#/analytics/identifiers'
 import {
+  getMetadataForLogger,
   getNavigationMetadata,
   type MergeableMetadata,
   type Metadata,
 } from '#/analytics/metadata'
 import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
-import {getMetadataForLogger} from '#/analytics/utils'
 import * as env from '#/env'
 import {useGeolocation} from '#/geolocation'
 import {device} from '#/storage'

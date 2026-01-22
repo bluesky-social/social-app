@@ -53,9 +53,27 @@ export type NavigationMetadata = {
 }
 let navigationMetadata: NavigationMetadata | undefined
 export function getNavigationMetadata() {
-  console.log('metadata', JSON.stringify(navigationMetadata, null, 2))
   return navigationMetadata
 }
 export function setNavigationMetadata(meta: NavigationMetadata | undefined) {
   navigationMetadata = meta
+}
+
+/**
+ * We don't want or need to send all data to the logger
+ */
+export function getMetadataForLogger({
+  base,
+  geolocation,
+  session,
+}: Metadata): Record<string, any> {
+  return {
+    deviceId: base.deviceId,
+    sessionId: base.sessionId,
+    platform: base.platform,
+    appVersion: base.appVersion,
+    countryCode: geolocation.countryCode,
+    regionCode: geolocation.regionCode,
+    isBskyPds: session?.isBskyPds || 'anonymous',
+  }
 }
