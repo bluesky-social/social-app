@@ -76,6 +76,9 @@ function createLogger(
 const Context = createContext<AnalyticsBaseContextType>({
   logger: createLogger(Logger.Context.Default, {}),
   metric: (event, payload, metadata) => {
+    if (metadata && '__meta' in metadata) {
+      delete metadata.__meta
+    }
     metrics.track(event, payload, metadata)
   },
   metadata: {
@@ -115,8 +118,7 @@ export function AnalyticsContext({
   metadata?: MergeableMetadata
 }) {
   if (metadata) {
-    // @ts-ignore
-    if (metadata.__meta !== true) {
+    if (!('__meta' in metadata)) {
       throw new Error(
         'Use the useMeta() helper when passing metadata to AnalyticsContext',
       )
