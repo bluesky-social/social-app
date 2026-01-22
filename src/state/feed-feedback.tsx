@@ -127,7 +127,7 @@ export function useFeedFeedback(
             aggregatedStats.current,
             feed?.feedDescriptor ?? 'unknown',
           ),
-        5e3,
+        45e3,
         {
           leading: true, // The outer call is already throttled somewhat.
           trailing: true,
