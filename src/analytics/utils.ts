@@ -4,7 +4,6 @@ import {BSKY_SERVICE} from '#/lib/constants'
 import {type SessionAccount} from '#/state/session'
 import {
   type MergeableMetadata,
-  type Metadata,
   type SessionMetadata,
 } from '#/analytics/metadata'
 
@@ -30,21 +29,5 @@ export function accountToSessionMetadata(
       did: account.did,
       isBskyPds: account.service.startsWith(BSKY_SERVICE),
     }
-  }
-}
-
-export function getMetadataForLogger({
-  base,
-  geolocation,
-  session,
-}: Metadata): Record<string, any> {
-  return {
-    deviceId: base.deviceId,
-    sessionId: base.sessionId,
-    platform: base.platform,
-    appVersion: base.appVersion,
-    countryCode: geolocation.countryCode,
-    regionCode: geolocation.regionCode,
-    isBskyPds: session?.isBskyPds || 'anonymous',
   }
 }
