@@ -1,10 +1,7 @@
 import {onAppStateChange} from '#/lib/appState'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
-import {Sentry} from '#/logger/sentry/lib'
 import * as env from '#/env'
-
-// TODO debug logging
 
 type Event<M extends Record<string, any>> = {
   time: number
@@ -17,6 +14,8 @@ const TRACKING_ENDPOINT = env.METRICS_API_HOST + '/t'
 const logger = Logger.create(Logger.Context.Metric, {})
 
 export class MetricsClient<M extends Record<string, any>> {
+  maxBatchSize = 100
+
   private started: boolean = false
   private queue: Event<M>[] = []
   private failedQueue: Event<M>[] = []
@@ -51,12 +50,12 @@ export class MetricsClient<M extends Record<string, any>> {
       metadata,
     })
 
-    logger.debug(`event: ${event as string}`, {
+    logger.info(`event: ${event as string}`, {
       payload,
       metadata,
     })
 
-    if (this.queue.length > 100) {
+    if (this.queue.length > this.maxBatchSize) {
       this.flush()
     }
   }
@@ -64,7 +63,6 @@ export class MetricsClient<M extends Record<string, any>> {
   flush() {
     if (!this.queue.length) return
     const events = this.queue.splice(0, this.queue.length)
-    this.queue = []
     this.sendBatch(events)
   }
 
@@ -76,17 +74,21 @@ export class MetricsClient<M extends Record<string, any>> {
     try {
       const body = JSON.stringify({events})
       if (env.IS_WEB && 'navigator' in globalThis && navigator.sendBeacon) {
-        navigator.sendBeacon(
+        const success = navigator.sendBeacon(
           TRACKING_ENDPOINT,
           new Blob([body], {type: 'application/json'}),
         )
+        if (!success) {
+          // construct a "network error" for `isNetworkError` to work
+          throw new Error(`Failed to fetch: sendBeacon returned false`)
+        }
       } else {
         const res = await fetch(TRACKING_ENDPOINT, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(events),
+          body: JSON.stringify({events}),
           keepalive: true,
         })
 
@@ -102,10 +104,8 @@ export class MetricsClient<M extends Record<string, any>> {
         this.failedQueue.push(...events)
         return
       }
-      Sentry.captureException(`Failed to send metrics`, {
-        extra: {
-          safeMessage: e.toString(),
-        },
+      logger.error(`Failed to send metrics`, {
+        safeMessage: e.toString(),
       })
     }
   }
@@ -113,7 +113,6 @@ export class MetricsClient<M extends Record<string, any>> {
   private retryFailedLogs() {
     if (!this.failedQueue.length) return
     const events = this.failedQueue.splice(0, this.failedQueue.length)
-    this.failedQueue = []
     this.sendBatch(events, true)
   }
 }
