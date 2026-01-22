@@ -202,7 +202,9 @@ module.exports = function (_config) {
         ],
       },
       web: {
-        favicon: './assets/favicon.png',
+        favicon: IS_DEV
+          ? './assets/favicon_dev_bug.png'
+          : './assets/favicon.png',
       },
       updates: {
         url: 'https://updates.bsky.app/manifest',
