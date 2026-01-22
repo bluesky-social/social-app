@@ -12,7 +12,7 @@ import {
   type UseInfiniteQueryResult,
 } from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/hooks/useAppState'
+import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {
   type CommonNavigatorParams,
