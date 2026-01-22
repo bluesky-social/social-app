@@ -5,10 +5,10 @@ import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
-import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
@@ -22,6 +22,7 @@ let previousIntentUrl = ''
 
 export function useIntentHandler() {
   const incomingUrl = Linking.useLinkingURL()
+  const ax = useAnalytics()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
   const {currentAccount} = useSession()
@@ -36,7 +37,7 @@ export function useIntentHandler() {
 
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        logger.metric('deepLink:referrerReceived', {
+        ax.metric('deepLink:referrerReceived', {
           to: url,
           referrer: referrerInfo?.referrer,
           hostname: referrerInfo?.hostname,
@@ -95,6 +96,7 @@ export function useIntentHandler() {
     }
   }, [
     incomingUrl,
+    ax,
     composeIntent,
     verifyEmailIntent,
     currentAccount,

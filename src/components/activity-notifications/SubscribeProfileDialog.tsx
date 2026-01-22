@@ -17,13 +17,11 @@ import {
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {platform, useTheme, web} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {
   Button,
@@ -36,6 +34,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 
@@ -71,6 +70,7 @@ function DialogInner({
   moderationOpts: ModerationOpts
   includeProfile?: boolean
 }) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const agent = useAgent()
@@ -133,7 +133,7 @@ function DialogInner({
         })
 
         if (!activitySubscription.post && !activitySubscription.reply) {
-          logger.metric('activitySubscription:disable', {})
+          ax.metric('activitySubscription:disable', {})
           Toast.show(
             _(
               msg`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
@@ -160,7 +160,7 @@ function DialogInner({
             },
           )
         } else {
-          logger.metric('activitySubscription:enable', {
+          ax.metric('activitySubscription:enable', {
             setting: activitySubscription.reply ? 'posts_and_replies' : 'posts',
           })
           if (!initialState.post && !initialState.reply) {
@@ -177,7 +177,7 @@ function DialogInner({
       })
     },
     onError: err => {
-      logger.error('Could not save activity subscription', {message: err})
+      ax.logger.error('Could not save activity subscription', {message: err})
     },
   })
 

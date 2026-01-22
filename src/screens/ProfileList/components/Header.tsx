@@ -21,6 +21,7 @@ import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Loader} from '#/components/Loader'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
 import {MoreOptionsMenu} from './MoreOptionsMenu'
 import {SubscribeMenu} from './SubscribeMenu'
 
@@ -34,6 +35,7 @@ export function Header({
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
   const isModList = list.purpose === AppBskyGraphDefs.MODLIST
@@ -96,11 +98,7 @@ export function Header({
     try {
       await muteList({uri: list.uri, mute: false})
       Toast.show(_(msg({message: 'List unmuted', context: 'toast'})))
-      logger.metric(
-        'moderation:unsubscribedFromList',
-        {listType: 'mute'},
-        {statsig: true},
-      )
+      ax.metric('moderation:unsubscribedFromList', {listType: 'mute'})
     } catch {
       Toast.show(
         _(
@@ -114,11 +112,7 @@ export function Header({
     try {
       await blockList({uri: list.uri, block: false})
       Toast.show(_(msg({message: 'List unblocked', context: 'toast'})))
-      logger.metric(
-        'moderation:unsubscribedFromList',
-        {listType: 'block'},
-        {statsig: true},
-      )
+      ax.metric('moderation:unsubscribedFromList', {listType: 'block'})
     } catch {
       Toast.show(
         _(

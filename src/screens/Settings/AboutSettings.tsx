@@ -1,4 +1,3 @@
-import {useMemo} from 'react'
 import {Platform} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import * as FileSystem from 'expo-file-system/legacy'
@@ -7,7 +6,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useMutation} from '@tanstack/react-query'
-import {Statsig} from 'statsig-react-native-expo'
 
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -21,6 +19,7 @@ import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/i
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {getDeviceId} from '#/analytics/identifiers'
 import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
 import * as env from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
@@ -32,7 +31,6 @@ export function AboutSettingsScreen({}: Props) {
   const {_, i18n} = useLingui()
   const [devModeEnabled, setDevModeEnabled] = useDevMode()
   const [demoModeEnabled, setDemoModeEnabled] = useDemoMode()
-  const stableID = useMemo(() => Statsig.getStableID(), [])
 
   const {mutate: onClearImageCache, isPending: isClearingImageCache} =
     useMutation({
@@ -146,7 +144,7 @@ export function AboutSettingsScreen({}: Props) {
             }}
             onPress={() => {
               setStringAsync(
-                `Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Anonymous ID: ${stableID}`,
+                `Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Device ID: ${getDeviceId() ?? 'N/A'}`,
               )
               Toast.show(_(msg`Copied build version to clipboard`))
             }}>

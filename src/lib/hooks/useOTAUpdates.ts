@@ -12,8 +12,7 @@ import {
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {IS_ANDROID, IS_IOS} from '#/env'
-import {IS_TESTFLIGHT} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_TESTFLIGHT} from '#/env'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 
@@ -170,7 +169,7 @@ export function useOTAUpdates() {
       return
     }
 
-    // We use this setTimeout to allow Statsig to initialize before we check for an update
+    // We use this setTimeout to allow analytics to initialize before we check for an update
     // For Testflight users, we can prompt the user to update immediately whenever there's an available update. This
     // is suspect however with the Apple App Store guidelines, so we don't want to prompt production users to update
     // immediately.

@@ -11,7 +11,6 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {android, atoms as a, platform, tokens, useTheme, web} from '#/alf'
@@ -22,6 +21,7 @@ import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {useGlobalReportDialogControl} from '#/components/moderation/ReportDialog'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 import {Globe_Stroke2_Corner0_Rounded} from '../icons/Globe'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon} from '../icons/SquareArrowTopRight'
@@ -103,6 +103,7 @@ export function LiveStatus({
   padding?: 'lg' | 'xl'
   onPressOpenProfile: () => void
 }) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const queryClient = useQueryClient()
@@ -174,11 +175,7 @@ export function LiveStatus({
           color="primary"
           variant="solid"
           onPress={() => {
-            logger.metric(
-              'live:card:watch',
-              {subject: profile.did},
-              {statsig: true},
-            )
+            ax.metric('live:card:watch', {subject: profile.did})
             openLink(embed.external.uri, false)
           }}>
           <ButtonText>
@@ -207,11 +204,7 @@ export function LiveStatus({
               color="secondary"
               variant="solid"
               onPress={() => {
-                logger.metric(
-                  'live:card:openProfile',
-                  {subject: profile.did},
-                  {statsig: true},
-                )
+                ax.metric('live:card:openProfile', {subject: profile.did})
                 unstableCacheProfileView(queryClient, profile)
                 onPressOpenProfile()
               }}>

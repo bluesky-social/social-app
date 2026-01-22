@@ -11,7 +11,7 @@ import {
 } from '#/analytics/features'
 import {
   getAndMigrateDeviceId,
-  getDeviceIdOrThrow,
+  getDeviceId,
   getInitialSessionId,
   useSessionId,
 } from '#/analytics/identifiers'
@@ -24,6 +24,7 @@ import {device} from '#/storage'
 
 export * as utils from '#/analytics/utils'
 export const features = {init, refresh}
+export {Features} from '#/analytics/features'
 export {type Metrics} from '#/analytics/metrics'
 
 type LoggerType = {
@@ -38,7 +39,7 @@ type LoggerType = {
   useContext: (context: Exclude<Logger['context'], undefined>) => LoggerType
   Context: typeof Logger.Context
 }
-type AnalyticsContextType = {
+export type AnalyticsContextType = {
   metadata: Metadata
   logger: LoggerType
   metric: <E extends keyof Metrics>(
@@ -49,7 +50,7 @@ type AnalyticsContextType = {
   feature: (feature: Features) => boolean
   Features: typeof Features
 }
-type AnalyticsBaseContextType = Omit<
+export type AnalyticsBaseContextType = Omit<
   AnalyticsContextType,
   'feature' | 'Features'
 >
@@ -75,11 +76,14 @@ function createLogger(
 const Context = createContext<AnalyticsBaseContextType>({
   logger: createLogger(Logger.Context.Default, {}),
   metric: (event, payload, metadata) => {
+    if (metadata && '__meta' in metadata) {
+      delete metadata.__meta
+    }
     metrics.track(event, payload, metadata)
   },
   metadata: {
     base: {
-      deviceId: getDeviceIdOrThrow() ?? 'unknown',
+      deviceId: getDeviceId() ?? 'unknown',
       sessionId: getInitialSessionId(),
       platform: Platform.OS,
       appVersion: env.APP_VERSION,
@@ -114,8 +118,7 @@ export function AnalyticsContext({
   metadata?: MergeableMetadata
 }) {
   if (metadata) {
-    // @ts-ignore
-    if (metadata.__meta !== true) {
+    if (!('__meta' in metadata)) {
       throw new Error(
         'Use the useMeta() helper when passing metadata to AnalyticsContext',
       )

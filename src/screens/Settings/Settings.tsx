@@ -15,7 +15,6 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -69,12 +68,14 @@ import {
   shouldShowVerificationCheckButton,
   VerificationCheckButton,
 } from '#/components/verification/VerificationCheckButton'
+import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const reducedMotion = useReducedMotion()
   const {logoutEveryAccount} = useSessionApi()
@@ -92,7 +93,6 @@ export function SettingsScreen({}: Props) {
   const [showDevOptions, setShowDevOptions] = useState(false)
   const findContactsEnabled =
     useIsFindContactsFeatureEnabledBasedOnGeolocation()
-  const gate = useGate()
 
   return (
     <Layout.Screen>
@@ -213,7 +213,7 @@ export function SettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           {IS_NATIVE &&
             findContactsEnabled &&
-            !gate('disable_settings_find_contacts') && (
+            !ax.feature(ax.Features.DisableSettingsFindContacts) && (
               <SettingsList.LinkItem
                 to="/settings/find-contacts"
                 label={_(msg`Find friends from contacts`)}>

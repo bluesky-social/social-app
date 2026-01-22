@@ -9,11 +9,11 @@ import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {SubtleHover} from '#/components/SubtleHover'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function useLoadEnoughProfiles({
@@ -62,6 +62,7 @@ export function SuggestedAccountsTabBar({
   defaultTabLabel?: string
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
   const personalizedInterests = preferences?.interests?.tags
@@ -77,11 +78,7 @@ export function SuggestedAccountsTabBar({
           selectedInterest || (hideDefaultTab ? interests[0] : 'all')
         }
         onSelectTab={tab => {
-          logger.metric(
-            'explore:suggestedAccounts:tabPressed',
-            {tab: tab},
-            {statsig: true},
-          )
+          ax.metric('explore:suggestedAccounts:tabPressed', {tab: tab})
           onSelectInterest(tab === 'all' ? null : tab)
         }}
         interestsDisplayNames={
@@ -112,22 +109,19 @@ let SuggestedProfileCard = ({
   position: number
 }): React.ReactNode => {
   const t = useTheme()
+  const ax = useAnalytics()
   return (
     <ProfileCard.Link
       profile={profile}
       style={[a.flex_1]}
       onPress={() => {
-        logger.metric(
-          'suggestedUser:press',
-          {
-            logContext: 'Explore',
-            recId,
-            position,
-            suggestedDid: profile.did,
-            category: null,
-          },
-          {statsig: true},
-        )
+        ax.metric('suggestedUser:press', {
+          logContext: 'Explore',
+          recId,
+          position,
+          suggestedDid: profile.did,
+          category: null,
+        })
       }}>
       {s => (
         <>
@@ -157,18 +151,14 @@ let SuggestedProfileCard = ({
                   withIcon={false}
                   logContext="ExploreSuggestedAccounts"
                   onFollow={() => {
-                    logger.metric(
-                      'suggestedUser:follow',
-                      {
-                        logContext: 'Explore',
-                        location: 'Card',
-                        recId,
-                        position,
-                        suggestedDid: profile.did,
-                        category: null,
-                      },
-                      {statsig: true},
-                    )
+                    ax.metric('suggestedUser:follow', {
+                      logContext: 'Explore',
+                      location: 'Card',
+                      recId,
+                      position,
+                      suggestedDid: profile.did,
+                      category: null,
+                    })
                   }}
                 />
               </ProfileCard.Header>

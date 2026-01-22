@@ -15,6 +15,7 @@ import {
 } from '#/components/dialogs/nuxs/utils'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Text} from '#/components/Typography'
+import {Features} from '#/analytics'
 import {IS_E2E, IS_WEB} from '#/env'
 
 export const enabled = createIsEnabledCheck(props => {
@@ -24,7 +25,7 @@ export const enabled = createIsEnabledCheck(props => {
       '2026-01-16T00:00:00.000Z',
       props.currentProfile.createdAt,
     ) &&
-    !props.gate('disable_live_now_beta')
+    !props.feature(Features.DisableLiveNowBeta)
   )
 })
 
