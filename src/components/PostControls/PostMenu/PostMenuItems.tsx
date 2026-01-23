@@ -13,7 +13,7 @@ import {
   AtUri,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
@@ -384,9 +384,8 @@ let PostMenuItems = ({
       if (e instanceof MaxHiddenRepliesError) {
         Toast.show(
           _(
-            msg({
-              message: `You can hide a maximum of ${MAX_HIDDEN_REPLIES} replies.`,
-              context: 'toast',
+            plural(MAX_HIDDEN_REPLIES, {
+              other: 'You can hide a maximum of # replies.',
             }),
           ),
         )
