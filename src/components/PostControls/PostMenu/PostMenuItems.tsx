@@ -95,7 +95,6 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
-import {useDevMode} from '#/storage/hooks/dev-mode'
 import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
@@ -125,7 +124,6 @@ let PostMenuItems = ({
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const ax = useAnalytics()
-  const [devModeEnabled] = useDevMode()
   const langPrefs = useLanguagePrefs()
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
   const {mutateAsync: pinPostMutate, isPending: isPinPending} =
@@ -256,16 +254,6 @@ let PostMenuItems = ({
     const str = richTextToString(richText, true)
 
     Clipboard.setStringAsync(str)
-    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
-  }
-
-  const onCopyATURI = async () => {
-    await Clipboard.setStringAsync(postUri)
-    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
-  }
-
-  const onCopyAuthorDID = async () => {
-    await Clipboard.setStringAsync(postAuthor.did)
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }
 
@@ -762,28 +750,6 @@ let PostMenuItems = ({
                   </Menu.Item>
                 </>
               )}
-            </Menu.Group>
-          </>
-        )}
-
-        {devModeEnabled && (
-          <>
-            <Menu.Divider />
-            <Menu.Group>
-              <Menu.Item
-                testID="postAtUriCopyBtn"
-                label={_(msg`Copy post at:// URI`)}
-                onPress={onCopyATURI}>
-                <Menu.ItemText>{_(msg`Copy post at:// URI`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-              </Menu.Item>
-              <Menu.Item
-                testID="postAuthorDIDCopyBtn"
-                label={_(msg`Copy author DID`)}
-                onPress={onCopyAuthorDID}>
-                <Menu.ItemText>{_(msg`Copy author DID`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-              </Menu.Item>
             </Menu.Group>
           </>
         )}
