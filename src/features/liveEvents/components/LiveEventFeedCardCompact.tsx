@@ -1,10 +1,11 @@
-import {useEffect, useMemo} from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useCallOnce} from '#/lib/once'
 import {isBskyCustomFeedUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, utils} from '#/alf'
 import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
@@ -39,13 +40,12 @@ export function LiveEventFeedCardCompact({
     return '/'
   }, [feed.url])
 
-  useEffect(() => {
+  useCallOnce(() => {
     ax.metric('liveEvents:feedBanner:seen', {
       feed: feed.url,
       context: metricContext,
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })()
 
   return (
     <Link

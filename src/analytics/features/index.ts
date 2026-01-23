@@ -16,7 +16,7 @@ setPolyfills({
       return value != null ? JSON.parse(value) : null
     },
     setItem: async (key, value) => {
-      CACHE.set(key, JSON.stringify(value))
+      CACHE.set(key, value)
     },
   },
 })
