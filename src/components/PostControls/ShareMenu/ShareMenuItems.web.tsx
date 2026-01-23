@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
+import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
@@ -15,14 +15,12 @@ import {useDialogControl} from '#/components/Dialog'
 import {EmbedDialog} from '#/components/dialogs/Embed'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
-import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {useDevMode} from '#/storage/hooks/dev-mode'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
 
 let ShareMenuItems = ({
@@ -38,7 +36,6 @@ let ShareMenuItems = ({
   const navigation = useNavigation<NavigationProp>()
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
-  const [devModeEnabled] = useDevMode()
   const aa = useAgeAssurance()
 
   const postUri = post.uri
@@ -72,14 +69,6 @@ let ShareMenuItems = ({
   }
 
   const canEmbed = IS_WEB && gtMobile && !hideInPWI
-
-  const onShareATURI = () => {
-    shareText(postUri)
-  }
-
-  const onShareAuthorDID = () => {
-    shareText(postAuthor.did)
-  }
 
   const copyLinkItem = (
     <Menu.Item
@@ -133,30 +122,6 @@ let ShareMenuItems = ({
             <Menu.LabelText style={{maxWidth: 220}}>
               <Trans>Note: This post is only visible to logged-in users.</Trans>
             </Menu.LabelText>
-          </>
-        )}
-
-        {devModeEnabled && (
-          <>
-            <Menu.Divider />
-            <Menu.Item
-              testID="postAtUriShareBtn"
-              label={_(msg`Copy post at:// URI`)}
-              onPress={onShareATURI}>
-              <Menu.ItemText>
-                <Trans>Copy post at:// URI</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-            </Menu.Item>
-            <Menu.Item
-              testID="postAuthorDIDShareBtn"
-              label={_(msg`Copy author DID`)}
-              onPress={onShareAuthorDID}>
-              <Menu.ItemText>
-                <Trans>Copy author DID</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-            </Menu.Item>
           </>
         )}
       </Menu.Outer>
