@@ -46,7 +46,11 @@ function Inner({feed}: {feed: LiveEventFeed}) {
         <Toast.Outer>
           <Toast.Icon />
           <Toast.Text>
-            <Trans>You got it ;)</Trans>
+            {undoAction ? (
+              <Trans>Live event hidden</Trans>
+            ) : (
+              <Trans>Live event unhidden</Trans>
+            )}
           </Toast.Text>
           {undoAction && (
             <Toast.Action
