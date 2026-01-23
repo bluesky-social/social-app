@@ -180,6 +180,13 @@ export function AnalyticsFeaturesContext({
 }) {
   const parentContext = useContext(Context)
 
+  /**
+   * Side-effect: we need to synchronously set this during the
+   * same render cycle. It does not trigger a re-render, it just
+   * sets properties on the singleton GrowthBook instance.
+   */
+  setAttributes(parentContext.metadata)
+
   useEffect(() => {
     feats.setTrackingCallback((experiment, result) => {
       parentContext.metric('experiment:viewed', {
@@ -188,10 +195,6 @@ export function AnalyticsFeaturesContext({
       })
     })
   }, [parentContext.metric])
-
-  useEffect(() => {
-    setAttributes(parentContext.metadata)
-  }, [parentContext.metadata])
 
   const childContext = useMemo<AnalyticsContextType>(() => {
     return {
