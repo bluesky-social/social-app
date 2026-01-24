@@ -41,6 +41,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // keep this, prefectching handles initial load
       staleTime: 1000 * 15,
       queryKey: liveEventsQueryKey,
+      refetchInterval: 1000 * 60 * 5, // refetch every 5 minutes
       async queryFn() {
         return fetchLiveEvents()
       },
