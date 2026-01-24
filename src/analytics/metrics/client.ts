@@ -51,7 +51,7 @@ export class MetricsClient<M extends Record<string, any>> {
     }
     this.queue.push(e)
 
-    logger.info(`event: ${e.event as string}`, e)
+    logger.debug(`event: ${e.event as string}`, e)
 
     if (this.queue.length > this.maxBatchSize) {
       this.flush()
