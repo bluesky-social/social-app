@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-22 23:01\n"
+"PO-Revision-Date: 2026-01-24 19:42\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1382,8 +1382,8 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Sarki Fény"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-#: src/screens/Settings/ContentAndMediaSettings.tsx:124
+#: src/screens/Settings/ContentAndMediaSettings.tsx:117
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
 msgid "Autoplay videos and GIFs"
 msgstr "Videók és GIF-ek automatikus lejátszása"
 
@@ -2263,10 +2263,9 @@ msgstr "Videó tömörítése folyamatban…"
 msgid "Configure content filtering setting for category: {name}"
 msgstr "A(z) „{name}” tartalomkategória szűrési beállításai"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
-msgstr "Élő adásos reklámcsík testreszabása"
+msgstr "Élőeseményes reklámcsík testreszabása"
 
 #: src/components/moderation/LabelPreference.tsx:253
 msgid "Configured in <0>moderation settings</0>."
@@ -2343,7 +2342,7 @@ msgstr "Névjegyek importálva"
 msgid "Contacts removed"
 msgstr "Névjegyek eltávolítva"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:53
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Content & Media"
 msgstr "Tartalom és média"
 
@@ -3049,6 +3048,10 @@ msgstr "Gyorstalpaló bezárása"
 msgid "Dismiss interests"
 msgstr "Érdeklődési körök bezárása"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:81
+msgid "Dismiss live event banner"
+msgstr "Élőeseményes reklámcsík elrejtése"
+
 #: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr "Szakasz bezárása"
@@ -3421,13 +3424,13 @@ msgstr "Feliratok engedélyezése"
 msgid "Enable this source only"
 msgstr "Csak ezen forrás engedélyezése"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:134
-#: src/screens/Settings/ContentAndMediaSettings.tsx:148
+#: src/screens/Settings/ContentAndMediaSettings.tsx:133
+#: src/screens/Settings/ContentAndMediaSettings.tsx:147
 msgid "Enable trending topics"
 msgstr "Felkapott témakörök megjelenítése"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:156
-#: src/screens/Settings/ContentAndMediaSettings.tsx:170
+#: src/screens/Settings/ContentAndMediaSettings.tsx:154
+#: src/screens/Settings/ContentAndMediaSettings.tsx:168
 msgid "Enable trending videos in your Discover feed"
 msgstr "Felkapott videók megjelenítése a Követett hírfolyamon"
 
@@ -3657,8 +3660,8 @@ msgstr "Adatok exportálása"
 msgid "Export My Data"
 msgstr "Adatok exportálása"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:86
-#: src/screens/Settings/ContentAndMediaSettings.tsx:89
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:88
 msgid "External media"
 msgstr "Külső médiatartalmak"
 
@@ -4218,8 +4221,8 @@ msgstr "Mostantól követed: {0}"
 msgid "Following {handle}"
 msgstr "Mostantól követed: {handle}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:78
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Following feed preferences"
 msgstr "Követett hírfolyam"
 
@@ -5496,9 +5499,17 @@ msgstr "ÉLŐ"
 msgid "Live event happening now: {0}"
 msgstr "Jelenlegi élő esemény: {0}"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+msgid "Live event hidden"
+msgstr "Élő esemény elrejtve"
+
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:105
 msgid "Live event options"
 msgstr "Élő esemény beállításai"
+
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:52
+msgid "Live event unhidden"
+msgstr "Élő esemény ismét megjelenítve"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:109
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
@@ -5600,8 +5611,8 @@ msgstr "Automatikus létrehozás"
 msgid "Make sure this is where you intend to go!"
 msgstr "Ellenőrizd, hogy biztosan ide akarsz-e menni!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:62
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
 msgid "Manage saved feeds"
 msgstr "Mentett hírfolyamok kezelése"
 
@@ -9902,8 +9913,8 @@ msgstr "Ezzel el fogod távolítani a bejegyzést az idézésből mindenki szám
 msgid "Thread options"
 msgstr "Válaszlánc-beállítások"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:70
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:72
 msgid "Thread preferences"
 msgstr "Válaszláncok"
 
@@ -10129,6 +10140,8 @@ msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr "Visszavonás"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:57
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:63
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
 msgid "Undo"
@@ -10391,8 +10404,8 @@ msgstr "Alapértelmezett adattárszolgáltató használata"
 msgid "Use in-app browser"
 msgstr "Alkalmazáson belüli böngésző használata"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:104
-#: src/screens/Settings/ContentAndMediaSettings.tsx:110
+#: src/screens/Settings/ContentAndMediaSettings.tsx:103
+#: src/screens/Settings/ContentAndMediaSettings.tsx:109
 msgid "Use in-app browser to open links"
 msgstr "Hivatkozások megnyitása az alkalmazáson belüli böngészővel"
 
@@ -11694,8 +11707,8 @@ msgstr "A teljes felhasználóneved: <0>@{0}</0>"
 
 #: src/Navigation.tsx:527
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
-#: src/screens/Settings/ContentAndMediaSettings.tsx:94
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:96
 #: src/screens/Settings/InterestsSettings.tsx:46
 msgid "Your interests"
 msgstr "Saját érdeklődési körök"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-22 23:01\n"
+"PO-Revision-Date: 2026-01-24 19:42\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1382,8 +1382,8 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Nordobrilo"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-#: src/screens/Settings/ContentAndMediaSettings.tsx:124
+#: src/screens/Settings/ContentAndMediaSettings.tsx:117
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
 msgid "Autoplay videos and GIFs"
 msgstr "Aŭtomate ludi videaĵojn kaj GIF-ojn"
 
@@ -2263,7 +2263,6 @@ msgstr "Densigado de videaĵo..."
 msgid "Configure content filtering setting for category: {name}"
 msgstr "Konfiguru enhavan filtradon por kategorio: {name}"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
 msgstr ""
@@ -2343,7 +2342,7 @@ msgstr "Kontaktoj importitaj"
 msgid "Contacts removed"
 msgstr "Kontaktoj forigitaj"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:53
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Content & Media"
 msgstr "Enhavo kaj aŭdvidaĵoj"
 
@@ -3049,6 +3048,10 @@ msgstr "Ignori enkondukon"
 msgid "Dismiss interests"
 msgstr "Forĵeti interesojn"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:81
+msgid "Dismiss live event banner"
+msgstr ""
+
 #: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr "Ignori ĉi tiun sekcion"
@@ -3421,13 +3424,13 @@ msgstr "Ŝalti subtekstojn"
 msgid "Enable this source only"
 msgstr "Ŝalti nur ĉi tiun fonton"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:134
-#: src/screens/Settings/ContentAndMediaSettings.tsx:148
+#: src/screens/Settings/ContentAndMediaSettings.tsx:133
+#: src/screens/Settings/ContentAndMediaSettings.tsx:147
 msgid "Enable trending topics"
 msgstr "Videbligi popularajn temojn"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:156
-#: src/screens/Settings/ContentAndMediaSettings.tsx:170
+#: src/screens/Settings/ContentAndMediaSettings.tsx:154
+#: src/screens/Settings/ContentAndMediaSettings.tsx:168
 msgid "Enable trending videos in your Discover feed"
 msgstr "Videbligi popularajn videaĵojn en via fluo Discover"
 
@@ -3657,8 +3660,8 @@ msgstr "Eksporti miajn datumojn"
 msgid "Export My Data"
 msgstr "Eksporti miajn datumojn"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:86
-#: src/screens/Settings/ContentAndMediaSettings.tsx:89
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:88
 msgid "External media"
 msgstr "Eksteraj aŭdvidaĵoj"
 
@@ -4218,8 +4221,8 @@ msgstr "Sekvas {0}"
 msgid "Following {handle}"
 msgstr "Sekvas {handle}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:78
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Following feed preferences"
 msgstr "Preferoj de la fluo pri sekvatoj"
 
@@ -5496,8 +5499,16 @@ msgstr "TUJELSENDAS"
 msgid "Live event happening now: {0}"
 msgstr ""
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+msgid "Live event hidden"
+msgstr ""
+
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:105
 msgid "Live event options"
+msgstr ""
+
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:52
+msgid "Live event unhidden"
 msgstr ""
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:109
@@ -5600,8 +5611,8 @@ msgstr "Faru ĝin por mi"
 msgid "Make sure this is where you intend to go!"
 msgstr "Certiĝu, ke vi volas iri tien!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:62
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
 msgid "Manage saved feeds"
 msgstr "Administri la konservitajn fluojn"
 
@@ -9900,8 +9911,8 @@ msgstr "Ĉi tio forigos vian afiŝon el ĉi tiu citafiŝo por ĉiuj uzantoj kaj 
 msgid "Thread options"
 msgstr "Fadenaj agordoj"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:70
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:72
 msgid "Thread preferences"
 msgstr "Fadenaj preferoj"
 
@@ -10127,6 +10138,8 @@ msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr "Malfari"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:57
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:63
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
 msgid "Undo"
@@ -10389,8 +10402,8 @@ msgstr "Uzi defaŭltan provizanton"
 msgid "Use in-app browser"
 msgstr "Uzi en-apan retumilon"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:104
-#: src/screens/Settings/ContentAndMediaSettings.tsx:110
+#: src/screens/Settings/ContentAndMediaSettings.tsx:103
+#: src/screens/Settings/ContentAndMediaSettings.tsx:109
 msgid "Use in-app browser to open links"
 msgstr "Uzi en-apan retumilon por malfermi ligilojn"
 
@@ -11692,8 +11705,8 @@ msgstr "Via tuta identigilo estos <0>@{0}</0>"
 
 #: src/Navigation.tsx:527
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
-#: src/screens/Settings/ContentAndMediaSettings.tsx:94
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:96
 #: src/screens/Settings/InterestsSettings.tsx:46
 msgid "Your interests"
 msgstr "Viaj interesoj"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-22 23:01\n"
+"PO-Revision-Date: 2026-01-24 19:42\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1382,8 +1382,8 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-#: src/screens/Settings/ContentAndMediaSettings.tsx:124
+#: src/screens/Settings/ContentAndMediaSettings.tsx:117
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
 msgid "Autoplay videos and GIFs"
 msgstr "Reprodueix automàticament vídeos i GIFs"
 
@@ -2263,7 +2263,6 @@ msgstr "Comprimint el vídeo..."
 msgid "Configure content filtering setting for category: {name}"
 msgstr "Configura els filtres de continguts per la categoria: {name}"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
 msgstr "Configura el bàner d'esdeveniment en directe"
@@ -2343,7 +2342,7 @@ msgstr "Contactes importats"
 msgid "Contacts removed"
 msgstr "Contactes eliminats"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:53
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Content & Media"
 msgstr "Contingut i multimèdia"
 
@@ -3049,6 +3048,10 @@ msgstr "Ignora la guia d'inici"
 msgid "Dismiss interests"
 msgstr "Descarta interessos"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:81
+msgid "Dismiss live event banner"
+msgstr "Ignora el bàner d'esdeveniment en directe"
+
 #: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr "Amaga aquesta secció"
@@ -3421,13 +3424,13 @@ msgstr "Habilita els subtítols"
 msgid "Enable this source only"
 msgstr "Habilita només per aquesta font"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:134
-#: src/screens/Settings/ContentAndMediaSettings.tsx:148
+#: src/screens/Settings/ContentAndMediaSettings.tsx:133
+#: src/screens/Settings/ContentAndMediaSettings.tsx:147
 msgid "Enable trending topics"
 msgstr "Activa els temes del moment "
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:156
-#: src/screens/Settings/ContentAndMediaSettings.tsx:170
+#: src/screens/Settings/ContentAndMediaSettings.tsx:154
+#: src/screens/Settings/ContentAndMediaSettings.tsx:168
 msgid "Enable trending videos in your Discover feed"
 msgstr "Activa els vídeos populars al canal Discover"
 
@@ -3657,8 +3660,8 @@ msgstr "Exporta les meves dades"
 msgid "Export My Data"
 msgstr "Exporta les meves dades"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:86
-#: src/screens/Settings/ContentAndMediaSettings.tsx:89
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:88
 msgid "External media"
 msgstr "Contingut extern"
 
@@ -4218,8 +4221,8 @@ msgstr "Seguint {0}"
 msgid "Following {handle}"
 msgstr "Seguint {handle}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:78
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Following feed preferences"
 msgstr "Preferències del canal Seguint"
 
@@ -5496,9 +5499,17 @@ msgstr "EN DIRECTE"
 msgid "Live event happening now: {0}"
 msgstr "Esdeveniment en directe que té lloc ara: {0}"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+msgid "Live event hidden"
+msgstr "Esdeveniment en directe amagat"
+
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:105
 msgid "Live event options"
 msgstr "Opcions d'esdeveniment en directe"
+
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:52
+msgid "Live event unhidden"
+msgstr "Esdeveniment en directe mostrat"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:109
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
@@ -5600,8 +5611,8 @@ msgstr "Fes-ne un per mi"
 msgid "Make sure this is where you intend to go!"
 msgstr "Assegura't que és aquí on vols anar!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:62
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
 msgid "Manage saved feeds"
 msgstr "Gestiona els canals desats"
 
@@ -9900,8 +9911,8 @@ msgstr "Això eliminarà la teva publicació d'aquesta citació per a tots els u
 msgid "Thread options"
 msgstr "Opcions dels fils de debat"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:70
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:72
 msgid "Thread preferences"
 msgstr "Preferències dels fils de debat"
 
@@ -10127,6 +10138,8 @@ msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr "Desfés"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:57
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:63
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
 msgid "Undo"
@@ -10389,8 +10402,8 @@ msgstr "Utilitza el proveïdor predeterminat"
 msgid "Use in-app browser"
 msgstr "Utilitza el navegador de l'aplicació"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:104
-#: src/screens/Settings/ContentAndMediaSettings.tsx:110
+#: src/screens/Settings/ContentAndMediaSettings.tsx:103
+#: src/screens/Settings/ContentAndMediaSettings.tsx:109
 msgid "Use in-app browser to open links"
 msgstr "Utilitza el navegador de l'aplicació per obrir enllaços"
 
@@ -11692,8 +11705,8 @@ msgstr "El teu identificador complet serà <0>@{0}</0>"
 
 #: src/Navigation.tsx:527
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
-#: src/screens/Settings/ContentAndMediaSettings.tsx:94
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:96
 #: src/screens/Settings/InterestsSettings.tsx:46
 msgid "Your interests"
 msgstr "Els teus interessos"

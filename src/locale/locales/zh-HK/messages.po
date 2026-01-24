@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-22 23:01\n"
+"PO-Revision-Date: 2026-01-24 19:42\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -721,7 +721,7 @@ msgstr "新增內容警告"
 
 #: src/components/live/GoLiveDialog.tsx:106
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
-msgstr "喺你嘅個人檔案度加入暫時嘅直播狀態，喺人撳開你嘅頭像嗰陣，佢哋就會睇到你相關嘅直播活動資訊。"
+msgstr "喺你嘅個人檔案度加入臨時直播狀態，喺人撳開你嘅頭像嗰陣，佢哋就會睇到你相關嘅直播活動資訊喇。"
 
 #: src/screens/ProfileList/AboutSection.tsx:63
 #: src/screens/ProfileList/AboutSection.tsx:81
@@ -1382,8 +1382,8 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "極光"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-#: src/screens/Settings/ContentAndMediaSettings.tsx:124
+#: src/screens/Settings/ContentAndMediaSettings.tsx:117
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
 msgid "Autoplay videos and GIFs"
 msgstr "自動播放影片同 GIF"
 
@@ -2263,7 +2263,6 @@ msgstr "壓縮緊條片……"
 msgid "Configure content filtering setting for category: {name}"
 msgstr "設定 {name} 類別嘅內容篩選"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
 msgstr "設定直播活動 Banner"
@@ -2343,7 +2342,7 @@ msgstr "已匯入聯絡人"
 msgid "Contacts removed"
 msgstr "已刪除聯絡人"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:53
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Content & Media"
 msgstr "內容同媒體"
 
@@ -3049,6 +3048,10 @@ msgstr "跳過入門指南"
 msgid "Dismiss interests"
 msgstr "唔啱心水"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:81
+msgid "Dismiss live event banner"
+msgstr ""
+
 #: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr "忽略此部分"
@@ -3421,13 +3424,13 @@ msgstr "啓用字幕"
 msgid "Enable this source only"
 msgstr "只啓用呢個來源"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:134
-#: src/screens/Settings/ContentAndMediaSettings.tsx:148
+#: src/screens/Settings/ContentAndMediaSettings.tsx:133
+#: src/screens/Settings/ContentAndMediaSettings.tsx:147
 msgid "Enable trending topics"
 msgstr "啓用時興話題"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:156
-#: src/screens/Settings/ContentAndMediaSettings.tsx:170
+#: src/screens/Settings/ContentAndMediaSettings.tsx:154
+#: src/screens/Settings/ContentAndMediaSettings.tsx:168
 msgid "Enable trending videos in your Discover feed"
 msgstr "喺你「Discover」動態源度啓用時興影片"
 
@@ -3657,8 +3660,8 @@ msgstr "匯出我嘅數據"
 msgid "Export My Data"
 msgstr "匯出我嘅數據"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:86
-#: src/screens/Settings/ContentAndMediaSettings.tsx:89
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:88
 msgid "External media"
 msgstr "外部媒體"
 
@@ -4218,8 +4221,8 @@ msgstr "跟緊 {0}"
 msgid "Following {handle}"
 msgstr "跟緊 {handle}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:78
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Following feed preferences"
 msgstr "「Following」動態源偏好設定"
 
@@ -5496,9 +5499,17 @@ msgstr "直播"
 msgid "Live event happening now: {0}"
 msgstr "進行緊嘅直播活動：{0}"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+msgid "Live event hidden"
+msgstr ""
+
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:105
 msgid "Live event options"
 msgstr "直播活動選項"
+
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:52
+msgid "Live event unhidden"
+msgstr ""
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:109
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
@@ -5600,8 +5611,8 @@ msgstr "幫我整一個"
 msgid "Make sure this is where you intend to go!"
 msgstr "睇清楚呢度係咪你真係想去嘅網站！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:62
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
 msgid "Manage saved feeds"
 msgstr "管理儲存咗嘅動態源"
 
@@ -8521,7 +8532,7 @@ msgstr "傳送驗證電郵"
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:104
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:110
 msgid "Send via direct message"
-msgstr "將呢件嘢同人傾偈單獨講"
+msgstr "透過私人訊息傳送"
 
 #: src/view/com/modals/DeleteAccount.tsx:147
 msgid "Sends email with confirmation code for account deletion"
@@ -9142,7 +9153,7 @@ msgstr "故仔書"
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:180
 msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
-msgstr "喺 Twitch 開緊 Live？去 Bluesky 設定你嘅直播狀態，你個頭像就會顯示直播徽章。撳一下就可以直入你個台。"
+msgstr "喺 Twitch 開緊 Live？去 Bluesky 設定你嘅直播狀態，你頭像嗰度就會顯示直播徽章，同時一撳就可以直入你個直播台喇。"
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:119
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:125
@@ -9900,8 +9911,8 @@ msgstr "你嘅帖文會喺呢篇引用嘅帖文度刪除，兼且將佢換成一
 msgid "Thread options"
 msgstr "討論串選項"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:70
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:72
 msgid "Thread preferences"
 msgstr "討論串偏好設定"
 
@@ -10127,6 +10138,8 @@ msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr "咪喇"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:57
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:63
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
 msgid "Undo"
@@ -10389,8 +10402,8 @@ msgstr "使用預設服務提供者"
 msgid "Use in-app browser"
 msgstr "使用內建瀏覽器"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:104
-#: src/screens/Settings/ContentAndMediaSettings.tsx:110
+#: src/screens/Settings/ContentAndMediaSettings.tsx:103
+#: src/screens/Settings/ContentAndMediaSettings.tsx:109
 msgid "Use in-app browser to open links"
 msgstr "使用內建瀏覽器打開連結"
 
@@ -11692,8 +11705,8 @@ msgstr "你嘅完整帳號代碼會係 <0>@{0}</0>"
 
 #: src/Navigation.tsx:527
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
-#: src/screens/Settings/ContentAndMediaSettings.tsx:94
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:96
 #: src/screens/Settings/InterestsSettings.tsx:46
 msgid "Your interests"
 msgstr "你嘅心水主題"
@@ -11733,11 +11746,11 @@ msgstr "你輸入嘅密碼必須至少要 8 個字元。"
 
 #: src/view/com/composer/Composer.tsx:578
 msgid "Your post was sent"
-msgstr "你嘅帖文經已發布"
+msgstr "已發布你嘅帖文"
 
 #: src/view/com/composer/Composer.tsx:575
 msgid "Your posts were sent"
-msgstr "你嘅帖文經已發布"
+msgstr "已發布你嘅帖文"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:288
 msgid "Your preferred language"

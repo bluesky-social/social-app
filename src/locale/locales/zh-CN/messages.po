@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-22 23:01\n"
+"PO-Revision-Date: 2026-01-24 19:42\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1237,11 +1237,11 @@ msgstr "应用密码名称不得与现有的重复"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr "应用密码只能包含字母、数字、空格、连字符（-）及下划线（_）"
+msgstr "应用密码名称只能包含字母、数字、空格、连字符（-）及下划线（_）"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
-msgstr "应用密码至少应包含 4 个字符"
+msgstr "应用密码名称至少应包含 4 个字符"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:71
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
@@ -1382,8 +1382,8 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "极光"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-#: src/screens/Settings/ContentAndMediaSettings.tsx:124
+#: src/screens/Settings/ContentAndMediaSettings.tsx:117
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
 msgid "Autoplay videos and GIFs"
 msgstr "自动播放视频及 GIF"
 
@@ -2263,7 +2263,6 @@ msgstr "正在压缩视频……"
 msgid "Configure content filtering setting for category: {name}"
 msgstr "配置 {name} 类别的内容过滤设置"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
 msgstr "配置直播活动横幅"
@@ -2343,7 +2342,7 @@ msgstr "已导入通讯录"
 msgid "Contacts removed"
 msgstr "已删除通讯录"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:53
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Content & Media"
 msgstr "内容与媒体"
 
@@ -3049,6 +3048,10 @@ msgstr "跳过入门指南"
 msgid "Dismiss interests"
 msgstr "忽略兴趣"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:81
+msgid "Dismiss live event banner"
+msgstr "关闭直播活动横幅"
+
 #: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr "忽略此部分"
@@ -3421,13 +3424,13 @@ msgstr "启用字幕"
 msgid "Enable this source only"
 msgstr "仅启用此来源"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:134
-#: src/screens/Settings/ContentAndMediaSettings.tsx:148
+#: src/screens/Settings/ContentAndMediaSettings.tsx:133
+#: src/screens/Settings/ContentAndMediaSettings.tsx:147
 msgid "Enable trending topics"
 msgstr "启用热门话题"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:156
-#: src/screens/Settings/ContentAndMediaSettings.tsx:170
+#: src/screens/Settings/ContentAndMediaSettings.tsx:154
+#: src/screens/Settings/ContentAndMediaSettings.tsx:168
 msgid "Enable trending videos in your Discover feed"
 msgstr "在你的“Discover”动态源中启用热门视频"
 
@@ -3657,8 +3660,8 @@ msgstr "导出账户数据"
 msgid "Export My Data"
 msgstr "导出账户数据"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:86
-#: src/screens/Settings/ContentAndMediaSettings.tsx:89
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:88
 msgid "External media"
 msgstr "外部媒体"
 
@@ -4218,8 +4221,8 @@ msgstr "已关注 {0}"
 msgid "Following {handle}"
 msgstr "已关注 {handle}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:78
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Following feed preferences"
 msgstr "“Following”动态源偏好设置"
 
@@ -5496,9 +5499,17 @@ msgstr "直播"
 msgid "Live event happening now: {0}"
 msgstr "正在进行的直播活动：{0}"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+msgid "Live event hidden"
+msgstr "已隐藏直播活动"
+
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:105
 msgid "Live event options"
 msgstr "直播活动选项"
+
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:52
+msgid "Live event unhidden"
+msgstr "已取消隐藏直播活动"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:109
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
@@ -5600,8 +5611,8 @@ msgstr "帮我选择"
 msgid "Make sure this is where you intend to go!"
 msgstr "请确认目标页面地址是否正确！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:62
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
 msgid "Manage saved feeds"
 msgstr "管理已保存的动态源"
 
@@ -9900,8 +9911,8 @@ msgstr "你的帖文将从这则引用中删除，并替换为一个占位符。
 msgid "Thread options"
 msgstr "讨论串选项"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:70
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:72
 msgid "Thread preferences"
 msgstr "讨论串偏好设置"
 
@@ -10127,6 +10138,8 @@ msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr "撤消"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:57
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:63
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
 msgid "Undo"
@@ -10389,8 +10402,8 @@ msgstr "使用默认提供商"
 msgid "Use in-app browser"
 msgstr "使用应用内浏览器"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:104
-#: src/screens/Settings/ContentAndMediaSettings.tsx:110
+#: src/screens/Settings/ContentAndMediaSettings.tsx:103
+#: src/screens/Settings/ContentAndMediaSettings.tsx:109
 msgid "Use in-app browser to open links"
 msgstr "使用应用内浏览器开启链接"
 
@@ -11281,7 +11294,7 @@ msgstr "你可以随时在设置里重新更改。"
 #: src/lib/hooks/useCleanError.ts:55
 #: src/lib/strings/errors.ts:28
 msgid "You cannot update your birthdate while using an app password. Please sign in with your main password to update your birthdate."
-msgstr "当使用应用程序密码登录时，无法更新出生日期信息，请改用主密码登录以更新你的出生日期。"
+msgstr "使用应用密码登录时，无法更改出生日期，请改用主密码登录以更改你的出生日期。"
 
 #: src/screens/Profile/KnownFollowers.tsx:112
 msgid "You don't follow any users who follow @{name}."
@@ -11692,8 +11705,8 @@ msgstr "你的完整账户代码将修改为 <0>@{0}</0>"
 
 #: src/Navigation.tsx:527
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
-#: src/screens/Settings/ContentAndMediaSettings.tsx:94
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:96
 #: src/screens/Settings/InterestsSettings.tsx:46
 msgid "Your interests"
 msgstr "你的兴趣"
