@@ -12,15 +12,15 @@ export function onAppStateChange(cb: (state: AppStateStatus) => void) {
   })
 }
 
+export function useOnAppStateChange(cb: (state: AppStateStatus) => void) {
+  useEffect(() => {
+    const sub = onAppStateChange(next => cb(next))
+    return () => sub.remove()
+  }, [cb])
+}
+
 export function useAppState() {
   const [state, setState] = useState(AppState.currentState)
-
-  useEffect(() => {
-    const sub = onAppStateChange(next => {
-      setState(next)
-    })
-    return () => sub.remove()
-  }, [])
-
+  useOnAppStateChange(setState)
   return state
 }
