@@ -35,7 +35,7 @@ export function useDraftsQuery() {
       }
     },
     initialPageParam: undefined as string | undefined,
-    getNextPageParam: page => page.cursor,
+    getNextPageParam: page => page.cursor || undefined,
   })
 }
 
