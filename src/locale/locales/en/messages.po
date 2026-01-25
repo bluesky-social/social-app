@@ -3044,6 +3044,7 @@ msgid "Dismiss interests"
 msgstr ""
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:81
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:63
 msgid "Dismiss live event banner"
 msgstr ""
 
@@ -5495,6 +5496,7 @@ msgid "Live event happening now: {0}"
 msgstr ""
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:32
 msgid "Live event hidden"
 msgstr ""
 
@@ -5503,6 +5505,7 @@ msgid "Live event options"
 msgstr ""
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:52
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:34
 msgid "Live event unhidden"
 msgstr ""
 
@@ -10137,6 +10140,8 @@ msgstr ""
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:63
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:39
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:45
 msgid "Undo"
 msgstr ""
 
