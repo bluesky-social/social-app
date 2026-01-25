@@ -236,7 +236,7 @@ export async function createAgentAndCreateAccount(
         }),
         getAge(birthDate) < 18 &&
           networkRetry(3, () => {
-            return agent.com.atproto.repo.putRecord({
+            return pdsAgent(agent).com.atproto.repo.putRecord({
               repo: account.did,
               collection: 'chat.bsky.actor.declaration',
               rkey: 'self',
@@ -439,6 +439,17 @@ class BskyAppAgent extends BskyAgent {
     this.sessionManager.session = undefined
     this.persistSessionHandler = undefined
   }
+}
+
+/**
+ * Returns an agent configured to make requests directly to the user's PDS
+ * without the appview proxy header. Use this for com.atproto.* methods and
+ * other PDS-specific operations like preferences.
+ */
+export function pdsAgent<T extends BaseAgent>(agent: T): T {
+  const clone = agent.clone() as T
+  clone.configureProxy(null)
+  return clone
 }
 
 export type {BskyAppAgent}

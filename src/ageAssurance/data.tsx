@@ -20,6 +20,7 @@ import {
   snoozeBirthdateUpdateAllowedForDid,
 } from '#/state/birthdate'
 import {useAgent, useSession} from '#/state/session'
+import {pdsAgent} from '#/state/session/agent'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
 import {
@@ -336,7 +337,7 @@ export async function getOtherRequiredData({
   agent: AtpAgent
 }): Promise<OtherRequiredData> {
   if (debug.enabled) return debug.resolve(debug.otherRequiredData)
-  const [prefs] = await Promise.all([agent.getPreferences()])
+  const [prefs] = await Promise.all([pdsAgent(agent).getPreferences()])
   const data: OtherRequiredData = {
     birthdate: prefs.birthDate ? prefs.birthDate.toISOString() : undefined,
   }
