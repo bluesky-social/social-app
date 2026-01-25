@@ -26,11 +26,13 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {BackNextButtons} from '../BackNextButtons'
 import {HandleSuggestions} from './HandleSuggestions'
 
 export function StepHandle() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const {state, dispatch} = useSignupContext()
   const [draftValue, setDraftValue] = useState(state.handle)
@@ -68,16 +70,19 @@ export function StepHandle() {
       const {available: handleAvailable} = await checkHandleAvailability(
         createFullHandle(handle, state.userDomain),
         state.serviceDescription?.did ?? 'UNKNOWN',
-        {typeahead: false},
+        {},
       )
 
       if (!handleAvailable) {
+        ax.metric('signup:handleTaken', {typeahead: false})
         dispatch({
           type: 'setError',
           value: _(msg`That username is already taken`),
           field: 'handle',
         })
         return
+      } else {
+        ax.metric('signup:handleAvailable', {typeahead: false})
       }
     } catch (error) {
       logger.error('Failed to check handle availability on next press', {
@@ -88,15 +93,11 @@ export function StepHandle() {
       dispatch({type: 'setIsLoading', value: false})
     }
 
-    logger.metric(
-      'signup:nextPressed',
-      {
-        activeStep: state.activeStep,
-        phoneVerificationRequired:
-          state.serviceDescription?.phoneVerificationRequired,
-      },
-      {statsig: true},
-    )
+    ax.metric('signup:nextPressed', {
+      activeStep: state.activeStep,
+      phoneVerificationRequired:
+        state.serviceDescription?.phoneVerificationRequired,
+    })
     // phoneVerificationRequired is actually whether a captcha is required
     if (!state.serviceDescription?.phoneVerificationRequired) {
       dispatch({
@@ -115,11 +116,7 @@ export function StepHandle() {
       value: handle,
     })
     dispatch({type: 'prev'})
-    logger.metric(
-      'signup:backPressed',
-      {activeStep: state.activeStep},
-      {statsig: true},
-    )
+    ax.metric('signup:backPressed', {activeStep: state.activeStep})
   }
 
   const hasDebounceSettled = draftValue === debouncedDraftValue
@@ -202,7 +199,7 @@ export function StepHandle() {
                             state.userDomain.length * -1,
                           ),
                         )
-                        logger.metric('signup:handleSuggestionSelected', {
+                        ax.metric('signup:handleSuggestionSelected', {
                           method: suggestion.method,
                         })
                       }}

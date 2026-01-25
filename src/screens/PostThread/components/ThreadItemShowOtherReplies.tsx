@@ -2,22 +2,23 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 export function ThreadItemShowOtherReplies({onPress}: {onPress: () => void}) {
-  const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const {_} = useLingui()
   const label = _(msg`Show more replies`)
 
   return (
     <Button
       onPress={() => {
         onPress()
-        logger.metric('thread:click:showOtherReplies', {})
+        ax.metric('thread:click:showOtherReplies', {})
       }}
       label={label}>
       {({hovered, pressed}) => (

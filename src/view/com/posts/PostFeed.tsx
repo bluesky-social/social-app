@@ -31,7 +31,6 @@ import {isStatusStillActive, validateStatus} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
@@ -69,6 +68,7 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {ComposerPrompt} from '../feeds/ComposerPrompt'
@@ -232,10 +232,10 @@ let PostFeed = ({
   initialNumToRender?: number
   isVideoFeed?: boolean
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
-  const gate = useGate()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -522,8 +522,7 @@ let PostFeed = ({
                     if (
                       hasSession &&
                       (feedUriOrActorDid === DISCOVER_FEED_URI ||
-                        feed === 'following') &&
-                      gate('show_composer_prompt')
+                        feed === 'following')
                     ) {
                       arr.push({
                         type: 'composerPrompt',
@@ -546,7 +545,7 @@ let PostFeed = ({
                 } else if (feedKind === 'following') {
                   if (sliceIndex === 0) {
                     // Show composer prompt for Following feed
-                    if (hasSession && gate('show_composer_prompt')) {
+                    if (hasSession) {
                       arr.push({
                         type: 'composerPrompt',
                         key: 'composerPrompt-' + sliceIndex,
@@ -680,7 +679,6 @@ let PostFeed = ({
     hasPressedShowLessUris,
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
-    gate,
     blockedOrMutedAuthors,
   ])
 
@@ -688,7 +686,7 @@ let PostFeed = ({
   // =
 
   const onRefresh = useCallback(async () => {
-    logEvent('feed:refresh', {
+    ax.metric('feed:refresh', {
       feedType: feedType,
       feedUrl: feed,
       reason: 'pull-to-refresh',
@@ -701,12 +699,12 @@ let PostFeed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, setIsPTRing, onHasNew, feed, feedType])
+  }, [ax, refetch, setIsPTRing, onHasNew, feed, feedType])
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
-    logEvent('feed:endReached', {
+    ax.metric('feed:endReached', {
       feedType: feedType,
       feedUrl: feed,
       itemCount: feedItems.length,
@@ -717,6 +715,7 @@ let PostFeed = ({
       logger.error('Failed to load more posts', {message: err})
     }
   }, [
+    ax,
     isFetching,
     hasNextPage,
     isError,
@@ -936,17 +935,13 @@ let PostFeed = ({
 
           const position = getPostPosition('sliceItem', item.key)
 
-          logger.metric(
-            'post:view',
-            {
-              uri: post.uri,
-              authorDid: post.author.did,
-              logContext: 'FeedItem',
-              feedDescriptor: feedFeedback.feedDescriptor || feed,
-              position,
-            },
-            {statsig: false},
-          )
+          ax.metric('post:view', {
+            uri: post.uri,
+            authorDid: post.author.did,
+            logContext: 'FeedItem',
+            feedDescriptor: feedFeedback.feedDescriptor || feed,
+            position,
+          })
         }
 
         // Live status tracking (existing code)
@@ -958,14 +953,10 @@ let PostFeed = ({
         ) {
           if (!seenActorWithStatusRef.current.has(actor.did)) {
             seenActorWithStatusRef.current.add(actor.did)
-            logger.metric(
-              'live:view:post',
-              {
-                subject: actor.did,
-                feed,
-              },
-              {statsig: false},
-            )
+            ax.metric('live:view:post', {
+              subject: actor.did,
+              feed,
+            })
           }
         }
       } else if (item.type === 'videoGridRow') {
@@ -979,17 +970,13 @@ let PostFeed = ({
 
             const position = getPostPosition('videoGridRow', item.key)
 
-            logger.metric(
-              'post:view',
-              {
-                uri: post.uri,
-                authorDid: post.author.did,
-                logContext: 'FeedItem',
-                feedDescriptor: feedFeedback.feedDescriptor || feed,
-                position,
-              },
-              {statsig: false},
-            )
+            ax.metric('post:view', {
+              uri: post.uri,
+              authorDid: post.author.did,
+              logContext: 'FeedItem',
+              feedDescriptor: feedFeedback.feedDescriptor || feed,
+              position,
+            })
           }
         }
       }

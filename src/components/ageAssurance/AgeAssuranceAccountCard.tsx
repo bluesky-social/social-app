@@ -20,8 +20,9 @@ import {Divider} from '#/components/Divider'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {logger, useAgeAssurance} from '#/ageAssurance'
+import {useAgeAssurance} from '#/ageAssurance'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useDeviceGeolocationApi} from '#/geolocation'
 
@@ -41,6 +42,7 @@ export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
 function Inner({style}: ViewStyleProp & {}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
+  const ax = useAnalytics()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
   const locationControl = Dialog.useDialogControl()
@@ -138,7 +140,7 @@ function Inner({style}: ViewStyleProp & {}) {
                   label={_(msg`Contact our moderation team`)}
                   {...createStaticClick(() => {
                     appealControl.open()
-                    logger.metric('ageAssurance:appealDialogOpen', {})
+                    ax.metric('ageAssurance:appealDialogOpen', {})
                   })}>
                   contact our moderation team
                 </InlineLinkText>{' '}
@@ -167,7 +169,7 @@ function Inner({style}: ViewStyleProp & {}) {
                   color={hasInitiated ? 'secondary' : 'primary'}
                   onPress={() => {
                     control.open()
-                    logger.metric('ageAssurance:initDialogOpen', {
+                    ax.metric('ageAssurance:initDialogOpen', {
                       hasInitiatedPreviously: hasInitiated,
                     })
                   }}>

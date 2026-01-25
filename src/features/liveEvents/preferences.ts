@@ -2,12 +2,12 @@ import {useEffect} from 'react'
 import {type Agent, AppBskyActorDefs, asPredicate} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
 import {
   preferencesQueryKey,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import * as env from '#/env'
 import {
@@ -63,6 +63,7 @@ export function useUpdateLiveEventPreferences(props: {
     undoAction: LiveEventPreferencesAction | null
   }) => void
 }) {
+  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -116,7 +117,7 @@ export function useUpdateLiveEventPreferences(props: {
         case 'hideFeed':
         case 'unhideFeed': {
           if (!props.feed) {
-            logger.error(
+            ax.logger.error(
               `useUpdateLiveEventPreferences: feed is missing, but required for hiding/unhiding`,
               {
                 action,
@@ -125,7 +126,7 @@ export function useUpdateLiveEventPreferences(props: {
             break
           }
 
-          logger.metric(
+          ax.metric(
             action.type === 'hideFeed'
               ? 'liveEvents:feedBanner:hide'
               : 'liveEvents:feedBanner:unhide',
@@ -138,11 +139,11 @@ export function useUpdateLiveEventPreferences(props: {
         }
         case 'toggleHideAllFeeds': {
           if (prefs!.hideAllFeeds) {
-            logger.metric('liveEvents:hideAllFeedBanners', {
+            ax.metric('liveEvents:hideAllFeedBanners', {
               context: props.metricContext,
             })
           } else {
-            logger.metric('liveEvents:unhideAllFeedBanners', {
+            ax.metric('liveEvents:unhideAllFeedBanners', {
               context: props.metricContext,
             })
           }

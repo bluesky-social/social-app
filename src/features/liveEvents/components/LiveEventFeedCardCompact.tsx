@@ -1,16 +1,17 @@
-import {useEffect, useMemo} from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useCallOnce} from '#/lib/once'
 import {isBskyCustomFeedUrl} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
 import {atoms as a, utils} from '#/alf'
 import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,
@@ -26,6 +27,7 @@ export function LiveEventFeedCardCompact({
   metricContext: LiveEventFeedMetricContext
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
 
   const layout = feed.layouts.compact
   const overlayColor = layout.overlayColor
@@ -38,13 +40,12 @@ export function LiveEventFeedCardCompact({
     return '/'
   }, [feed.url])
 
-  useEffect(() => {
-    logger.metric('liveEvents:feedBanner:seen', {
+  useCallOnce(() => {
+    ax.metric('liveEvents:feedBanner:seen', {
       feed: feed.url,
       context: metricContext,
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })()
 
   return (
     <Link
@@ -52,7 +53,7 @@ export function LiveEventFeedCardCompact({
       label={_(msg`Live event happening now: ${feed.title}`)}
       style={[a.w_full]}
       onPress={() => {
-        logger.metric('liveEvents:feedBanner:click', {
+        ax.metric('liveEvents:feedBanner:click', {
           feed: feed.url,
           context: metricContext,
         })

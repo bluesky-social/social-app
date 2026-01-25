@@ -8,7 +8,6 @@ import {
 } from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
@@ -25,6 +24,7 @@ import {
 } from '#/components/dialogs/nuxs/LiveNowBetaDialog'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
+import {useAnalytics} from '#/analytics'
 import {useGeolocation} from '#/geolocation'
 
 type Context = {
@@ -88,7 +88,7 @@ function Inner({
   currentProfile: AppBskyActorDefs.ProfileViewDetailed
   preferences: UsePreferencesQueryResponse
 }) {
-  const gate = useGate()
+  const ax = useAnalytics()
   const geolocation = useGeolocation()
   const {nuxs} = useNuxs()
   const [snoozed, setSnoozed] = useState(() => {
@@ -133,7 +133,7 @@ function Inner({
       if (
         enabled &&
         !enabled({
-          gate,
+          features: ax.features,
           currentAccount,
           currentProfile,
           preferences,
@@ -165,11 +165,11 @@ function Inner({
       break
     }
   }, [
+    ax.features,
     nuxs,
     snoozed,
     snoozeNuxDialog,
     saveNux,
-    gate,
     currentAccount,
     currentProfile,
     preferences,

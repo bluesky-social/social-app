@@ -1,12 +1,21 @@
+/*
+ * Do not import runtime code into this file
+ */
+
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
-export type MetricEvents = {
+export type Events = {
   // App events
   init: {
     initMs: number
   }
+  'experiment:viewed': {
+    experimentId: string
+    variationId: string
+  }
+
   'account:loggedIn': {
     logContext:
       | 'LoginForm'
@@ -139,6 +148,7 @@ export type MetricEvents = {
     feedUrl: string
     feedType: string
     index: number
+    reason?: string
   }
   'feed:endReached': {
     feedUrl: string
@@ -374,7 +384,6 @@ export type MetricEvents = {
       | 'AvatarButton'
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
-      | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
@@ -468,7 +477,6 @@ export type MetricEvents = {
       | 'AvatarButton'
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
-      | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'

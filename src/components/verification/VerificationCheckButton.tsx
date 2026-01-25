@@ -2,7 +2,6 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -12,6 +11,7 @@ import {type FullVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationsDialog} from '#/components/verification/VerificationsDialog'
 import {VerifierDialog} from '#/components/verification/VerifierDialog'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function shouldShowVerificationCheckButton(
@@ -77,6 +77,7 @@ export function Badge({
   size: 'lg' | 'md' | 'sm'
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const verifierDialogControl = useDialogControl()
@@ -101,7 +102,7 @@ export function Badge({
         hitSlop={20}
         onPress={evt => {
           evt.preventDefault()
-          logger.metric('verification:badge:click', {}, {statsig: true})
+          ax.metric('verification:badge:click', {})
           if (state.profile.role === 'verifier') {
             verifierDialogControl.open()
           } else {

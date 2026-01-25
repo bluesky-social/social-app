@@ -26,15 +26,17 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {useLanguagePrefs} from '#/state/preferences'
-import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
+import {
+  useHiddenPosts,
+  useHiddenPostsApi,
+  useLanguagePrefs,
+} from '#/state/preferences'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -71,13 +73,17 @@ import {
 import {Eye_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/Eye'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
-import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
-import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
+import {
+  Mute_Stroke2_Corner0_Rounded as Mute,
+  Mute_Stroke2_Corner0_Rounded as MuteIcon,
+} from '#/components/icons/Mute'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import {
+  SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute,
+  SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon,
+} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
@@ -87,6 +93,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -116,6 +123,7 @@ let PostMenuItems = ({
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const langPrefs = useLanguagePrefs()
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
   const {mutateAsync: pinPostMutate, isPending: isPinPending} =
@@ -212,7 +220,7 @@ let PostMenuItems = ({
     try {
       if (isThreadMuted) {
         unmuteThread()
-        logger.metric('post:unmute', {
+        ax.metric('post:unmute', {
           uri: postUri,
           authorDid: postAuthor.did,
           logContext,
@@ -221,7 +229,7 @@ let PostMenuItems = ({
         Toast.show(_(msg`You will now receive notifications for this thread`))
       } else {
         muteThread()
-        logger.metric('post:mute', {
+        ax.metric('post:mute', {
           uri: postUri,
           authorDid: postAuthor.did,
           logContext,
@@ -258,21 +266,17 @@ let PostMenuItems = ({
         AppBskyFeedPost.isRecord,
       )
     ) {
-      logger.metric(
-        'translate',
-        {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
-        },
-        {statsig: false},
-      )
+      ax.metric('translate', {
+        sourceLanguages: post.record.langs ?? [],
+        targetLanguage: langPrefs.primaryLanguage,
+        textLength: post.record.text.length,
+      })
     }
   }
 
   const onHidePost = () => {
     hidePost({uri: postUri})
-    logEvent('thread:click:hideReplyForMe', {})
+    ax.metric('thread:click:hideReplyForMe', {})
   }
 
   const hideInPWI = !!postAuthor.labels?.find(
@@ -286,7 +290,7 @@ let PostMenuItems = ({
       feedContext: postFeedContext,
       reqId: postReqId,
     })
-    logger.metric('post:showMore', {
+    ax.metric('post:showMore', {
       uri: postUri,
       authorDid: postAuthor.did,
       logContext,
@@ -304,7 +308,7 @@ let PostMenuItems = ({
       feedContext: postFeedContext,
       reqId: postReqId,
     })
-    logger.metric('post:showLess', {
+    ax.metric('post:showLess', {
       uri: postUri,
       authorDid: postAuthor.did,
       logContext,
@@ -368,7 +372,7 @@ let PostMenuItems = ({
 
       // Log metric only when hiding (not when showing)
       if (isHide) {
-        logEvent('thread:click:hideReplyForEveryone', {})
+        ax.metric('thread:click:hideReplyForEveryone', {})
       }
 
       Toast.show(
@@ -405,7 +409,7 @@ let PostMenuItems = ({
   }
 
   const onPressPin = () => {
-    logEvent(isPinned ? 'post:unpin' : 'post:pin', {})
+    ax.metric(isPinned ? 'post:unpin' : 'post:pin', {})
     pinPostMutate({
       postUri,
       postCid,
@@ -458,11 +462,10 @@ let PostMenuItems = ({
 
   const onSignIn = () => requireSignIn(() => {})
 
-  const gate = useGate()
   const isDiscoverDebugUser =
     IS_INTERNAL ||
     DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
-    gate('debug_show_feedcontext')
+    ax.features.enabled(ax.features.DebugFeedContext)
 
   return (
     <>

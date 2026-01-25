@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {interests, useInterestsDisplayNames} from '#/lib/interests'
-import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
 import {
@@ -19,9 +18,11 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
+import {useAnalytics} from '#/analytics'
 
 export function StepInterests() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
 
   const {state, dispatch} = useOnboardingInternalState()
@@ -40,7 +41,7 @@ export function StepInterests() {
         selectedInterests,
       })
       dispatch({type: 'next'})
-      logEvent('onboarding:interests:nextPressed', {
+      ax.metric('onboarding:interests:nextPressed', {
         selectedInterests,
         selectedInterestsLength: selectedInterests.length,
       })
@@ -48,7 +49,7 @@ export function StepInterests() {
       logger.info(`onboading: error saving interests`)
       logger.error(e)
     }
-  }, [selectedInterests, setSaving, dispatch])
+  }, [ax, selectedInterests, setSaving, dispatch])
 
   return (
     <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">

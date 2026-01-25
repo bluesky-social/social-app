@@ -24,6 +24,7 @@ import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Glo
 import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 import * as Tooltip from '#/components/Tooltip'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useThreadgateNudged} from '#/storage/hooks/threadgate-nudged'
 
@@ -42,6 +43,7 @@ export function ThreadgateBtn({
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const control = Dialog.useDialogControl()
   const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
   const [showTooltip, setShowTooltip] = useState(false)
@@ -66,7 +68,7 @@ export function ThreadgateBtn({
   const [persist, setPersist] = useState(false)
 
   const onPress = () => {
-    logger.metric('composer:threadgate:open', {
+    ax.metric('composer:threadgate:open', {
       nudged: tooltipWasShown,
     })
 

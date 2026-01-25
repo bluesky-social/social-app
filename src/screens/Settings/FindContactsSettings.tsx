@@ -47,6 +47,7 @@ import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../Onboarding/util'
@@ -54,13 +55,14 @@ import {bulkWriteFollows} from '../Onboarding/util'
 type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsSettings'>
 export function FindContactsSettingsScreen({}: Props) {
   const {_} = useLingui()
+  const ax = useAnalytics()
 
   const {data, error, refetch} = useContactsSyncStatusQuery()
 
   const isFocused = useIsFocused()
   useEffect(() => {
     if (data && isFocused) {
-      logger.metric('contacts:settings:presented', {
+      ax.metric('contacts:settings:presented', {
         hasPreviouslySynced: !!data.syncStatus,
         matchCount: data.syncStatus?.matchesCount,
       })
@@ -169,6 +171,7 @@ function SyncStatus({
   info: AppBskyContactDefs.SyncStatus
   refetchStatus: () => Promise<any>
 }) {
+  const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
   const {_} = useLingui()
@@ -197,7 +200,7 @@ function SyncStatus({
       await agent.app.bsky.contact.dismissMatch({subject: did})
     },
     onMutate: async (did: string) => {
-      logger.metric('contacts:settings:dismiss', {})
+      ax.metric('contacts:settings:dismiss', {})
       optimisticRemoveMatch(queryClient, did)
     },
     onError: err => {
@@ -278,6 +281,7 @@ function MatchItem({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const shadow = useProfileShadow(profile)
 
   return (
@@ -314,7 +318,7 @@ function MatchItem({
             profile={profile}
             moderationOpts={moderationOpts}
             logContext="FindContacts"
-            onFollow={() => logger.metric('contacts:settings:follow', {})}
+            onFollow={() => ax.metric('contacts:settings:follow', {})}
           />
           {!shadow.viewer?.following && (
             <Button
@@ -343,6 +347,7 @@ function StatusHeader({
   isAnyUnfollowed: boolean
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
@@ -374,7 +379,7 @@ function StatusHeader({
         }
       } while (cursor)
 
-      logger.metric('contacts:settings:followAll', {
+      ax.metric('contacts:settings:followAll', {
         followCount: didsToFollow.length,
       })
 
@@ -459,6 +464,7 @@ function StatusHeader({
 function StatusFooter({syncedAt}: {syncedAt: string}) {
   const {_, i18n} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
 
@@ -466,7 +472,7 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
     mutationFn: async () => {
       await agent.app.bsky.contact.removeData({})
     },
-    onMutate: () => logger.metric('contacts:settings:removeData', {}),
+    onMutate: () => ax.metric('contacts:settings:removeData', {}),
     onSuccess: () => {
       Toast.show(_(msg`Contacts removed`))
       queryClient.setQueryData<AppBskyContactGetSyncStatus.OutputSchema>(
@@ -520,7 +526,7 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
               (Date.now() - new Date(syncedAt).getTime()) /
                 (1000 * 60 * 60 * 24),
             )
-            logger.metric('contacts:settings:resync', {
+            ax.metric('contacts:settings:resync', {
               daysSinceLastSync,
             })
           }}

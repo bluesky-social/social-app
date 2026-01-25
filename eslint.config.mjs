@@ -72,6 +72,7 @@ export default defineConfig(
       sourceType: 'module',
       globals: {
         ...globals.browser,
+        ...globals.node,
       },
       parserOptions: {
         parser: tsParser,
@@ -118,7 +119,6 @@ export default defineConfig(
         },
       ],
       'bsky-internal/use-exact-imports': 'error',
-      'bsky-internal/use-typed-gates': 'error',
       'bsky-internal/use-prefixed-imports': 'error',
 
       /**

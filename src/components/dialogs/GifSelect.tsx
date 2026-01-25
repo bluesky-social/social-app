@@ -11,7 +11,6 @@ import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {
   type Gif,
@@ -30,6 +29,7 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 export function GifSelectDialog({
@@ -280,14 +280,15 @@ export function GifPreview({
   gif: Gif
   onSelectGif: (gif: Gif) => void
 }) {
+  const ax = useAnalytics()
   const {gtTablet} = useBreakpoints()
   const {_} = useLingui()
   const t = useTheme()
 
   const onPress = useCallback(() => {
-    logEvent('composer:gif:select', {})
+    ax.metric('composer:gif:select', {})
     onSelectGif(gif)
-  }, [onSelectGif, gif])
+  }, [ax, onSelectGif, gif])
 
   return (
     <Button

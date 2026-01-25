@@ -1330,10 +1330,10 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.45.0.tgz#0a7eecae41f463d6591c8fecd7a5c5087345ee36"
   integrity sha512-SRf1cytG7wqcHVLrBc9VtPK4pU5wxiB/lNIkNmW2ApKXIg+RpqwHfsaEK+e7eH4A1BpI6BX/aBWXxZCIrJg3uA==
 
-"@types/estree@1.0.8", "@types/estree@^1.0.6":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.8.tgz#958b91c991b1867ced318bedea0e215ee050726e"
-  integrity sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==
+"@types/estree@1.0.6", "@types/estree@1.0.8", "@types/estree@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.6.tgz#628effeeae2064a1b4e79f78e81d87b7e5fc7b50"
+  integrity sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==
 
 "@types/json-schema@^7.0.15":
   version "7.0.15"

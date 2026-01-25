@@ -16,7 +16,6 @@ import {useLingui} from '@lingui/react'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {getModerationCauseKey} from '#/lib/moderation'
-import {type LogEvents} from '#/lib/statsig/statsig'
 import {forceLTR} from '#/lib/strings/bidi'
 import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -47,6 +46,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {type Metrics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function Default({
@@ -461,8 +461,8 @@ export function DescriptionPlaceholder({
 export type FollowButtonProps = {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  logContext: LogEvents['profile:follow']['logContext'] &
-    LogEvents['profile:unfollow']['logContext']
+  logContext: Metrics['profile:follow']['logContext'] &
+    Metrics['profile:unfollow']['logContext']
   colorInverted?: boolean
   onFollow?: () => void
   withIcon?: boolean

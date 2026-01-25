@@ -16,6 +16,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {resetToTab} from '#/Navigation'
 import {router} from '#/routes'
@@ -75,6 +76,8 @@ let storedAccountSwitchPayload: NotificationPayload
 let lastHandledNotificationDateDedupe = 0
 
 export function useNotificationsHandler() {
+  const ax = useAnalytics()
+  const logger = ax.logger.useChild(ax.logger.Context.Notifications)
   const queryClient = useQueryClient()
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
@@ -190,7 +193,7 @@ export function useNotificationsHandler() {
       if (!payload) return
 
       if (payload.reason === 'chat-message') {
-        notyLogger.debug(`useNotificationsHandler: handling chat message`, {
+        logger.debug(`useNotificationsHandler: handling chat message`, {
           payload,
         })
 
@@ -250,7 +253,7 @@ export function useNotificationsHandler() {
           const [screen, params] = router.matchPath(url)
           // @ts-expect-error router is not typed :/ -sfn
           navigation.navigate('HomeTab', {screen, params})
-          notyLogger.debug(`useNotificationsHandler: navigate`, {
+          logger.debug(`useNotificationsHandler: navigate`, {
             screen,
             params,
           })
@@ -264,7 +267,7 @@ export function useNotificationsHandler() {
 
         if (!payload) return DEFAULT_HANDLER_OPTIONS
 
-        notyLogger.debug('useNotificationsHandler: incoming', {e, payload})
+        logger.debug('useNotificationsHandler: incoming', {e, payload})
 
         if (
           payload.reason === 'chat-message' &&
@@ -290,7 +293,7 @@ export function useNotificationsHandler() {
         if (e.notification.date === lastHandledNotificationDateDedupe) return
         lastHandledNotificationDateDedupe = e.notification.date
 
-        notyLogger.debug('useNotificationsHandler: response received', {
+        logger.debug('useNotificationsHandler: response received', {
           actionIdentifier: e.actionIdentifier,
         })
 
@@ -301,15 +304,14 @@ export function useNotificationsHandler() {
         const payload = getNotificationPayload(e.notification)
 
         if (payload) {
-          notyLogger.debug(
+          logger.debug(
             'User pressed a notification, opening notifications tab',
             {},
           )
-          notyLogger.metric(
-            'notifications:openApp',
-            {reason: payload.reason, causedBoot: false},
-            {statsig: false},
-          )
+          ax.metric('notifications:openApp', {
+            reason: payload.reason,
+            causedBoot: false,
+          })
 
           invalidateCachedUnreadPage()
           truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
@@ -322,7 +324,7 @@ export function useNotificationsHandler() {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
           }
 
-          notyLogger.debug('Notifications: handleNotification', {
+          logger.debug('Notifications: handleNotification', {
             content: e.notification.request.content,
             payload: payload,
           })
@@ -330,7 +332,7 @@ export function useNotificationsHandler() {
           handleNotification(payload)
           Notifications.dismissAllNotificationsAsync()
         } else {
-          notyLogger.error('useNotificationsHandler: received no payload', {
+          logger.error('useNotificationsHandler: received no payload', {
             identifier: e.notification.request.identifier,
           })
         }
@@ -350,6 +352,8 @@ export function useNotificationsHandler() {
       responseReceivedListener.remove()
     }
   }, [
+    ax,
+    logger,
     queryClient,
     currentAccount,
     currentConvoId,

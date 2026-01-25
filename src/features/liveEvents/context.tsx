@@ -1,6 +1,7 @@
 import {createContext, useContext, useMemo} from 'react'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
+import {useOnAppStateChange} from '#/lib/appState'
 import {useIsBskyTeam} from '#/lib/hooks/useIsBskyTeam'
 import {
   convertBskyAppUrlIfNeeded,
@@ -35,18 +36,22 @@ const Context = createContext<LiveEventsWorkerResponse>(DEFAULT_LIVE_EVENTS)
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [isDevMode] = useDevMode()
   const isBskyTeam = useIsBskyTeam()
-  const {data} = useQuery(
+  const {data, refetch} = useQuery(
     {
       // keep this, prefectching handles initial load
       staleTime: 1000 * 15,
       queryKey: liveEventsQueryKey,
-      refetchInterval: 1000 * 60 * 5,
+      refetchInterval: 1000 * 60 * 5, // refetch every 5 minutes
       async queryFn() {
         return fetchLiveEvents()
       },
     },
     qc,
   )
+
+  useOnAppStateChange(state => {
+    if (state === 'active') refetch()
+  })
 
   const ctx = useMemo(() => {
     if (!data) return DEFAULT_LIVE_EVENTS

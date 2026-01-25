@@ -13,7 +13,6 @@ import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -30,6 +29,7 @@ import {atoms as a, useBreakpoints} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
+import {useAnalytics} from '#/analytics'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
@@ -71,6 +71,7 @@ let PostControls = ({
   viaRepost?: {uri: string; cid: string}
   variant?: 'compact' | 'normal' | 'large'
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const {feedDescriptor} = useFeedFeedbackContext()
@@ -175,7 +176,7 @@ let PostControls = ({
       feedContext,
       reqId,
     })
-    logger.metric('post:clickQuotePost', {
+    ax.metric('post:clickQuotePost', {
       uri: post.uri,
       authorDid: post.author.did,
       logContext,
@@ -226,7 +227,7 @@ let PostControls = ({
               !replyDisabled
                 ? () =>
                     requireAuth(() => {
-                      logger.metric('post:clickReply', {
+                      ax.metric('post:clickReply', {
                         uri: post.uri,
                         authorDid: post.author.did,
                         logContext,

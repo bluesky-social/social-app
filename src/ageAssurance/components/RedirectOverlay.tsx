@@ -25,9 +25,8 @@ import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icon
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {refetchAgeAssuranceServerState} from '#/ageAssurance'
-import {logger} from '#/ageAssurance'
-import {IS_WEB} from '#/env'
-import {IS_IOS} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_WEB} from '#/env'
 
 export type RedirectOverlayState = {
   result: 'success' | 'unknown'
@@ -174,6 +173,7 @@ export function RedirectOverlay() {
 
 function Inner() {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const agent = useAgent()
   const polling = useRef(false)
@@ -187,7 +187,7 @@ function Inner() {
 
     polling.current = true
 
-    logger.metric('ageAssurance:redirectDialogOpen', {})
+    ax.metric('ageAssurance:redirectDialogOpen', {})
 
     wait(
       3e3,
@@ -218,18 +218,18 @@ function Inner() {
 
         setSuccess(true)
 
-        logger.metric('ageAssurance:redirectDialogSuccess', {})
+        ax.metric('ageAssurance:redirectDialogSuccess', {})
       })
       .catch(() => {
         if (unmounted.current) return
         setError(true)
-        logger.metric('ageAssurance:redirectDialogFail', {})
+        ax.metric('ageAssurance:redirectDialogFail', {})
       })
 
     return () => {
       unmounted.current = true
     }
-  }, [agent])
+  }, [ax, agent])
 
   if (success) {
     return (

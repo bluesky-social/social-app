@@ -50,6 +50,11 @@ export type Metadata = {
   __context__?: undefined
 
   /**
+   * Reserved for inherited metadata gathered in ambient context
+   */
+  __metadata__?: Record<string, unknown>
+
+  /**
    * Applied as Sentry breadcrumb types. Defaults to `default`.
    *
    * @see https://develop.sentry.dev/sdk/event-payloads/breadcrumbs/#breadcrumb-types

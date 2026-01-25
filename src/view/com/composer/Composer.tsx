@@ -58,6 +58,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
+import {useAppState} from '#/lib/appState'
 import {retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
 import {
@@ -65,14 +66,12 @@ import {
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
 } from '#/lib/constants'
-import {useAppState} from '#/lib/hooks/useAppState'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
 import {type NavigationProp} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -129,6 +128,7 @@ import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
@@ -178,6 +178,7 @@ export const ComposePost = ({
   cancelRef?: React.RefObject<CancelRef | null>
 }) => {
   const {currentAccount} = useSession()
+  const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
@@ -520,7 +521,7 @@ export const ComposePost = ({
       if (postUri) {
         let index = 0
         for (let post of thread.posts) {
-          logEvent('post:create', {
+          ax.metric('post:create', {
             imageCount:
               post.embed.media?.type === 'images'
                 ? post.embed.media.images.length
@@ -536,7 +537,7 @@ export const ComposePost = ({
         }
       }
       if (thread.posts.length > 1) {
-        logEvent('thread:create', {
+        ax.metric('thread:create', {
           postCount: thread.posts.length,
           isReply: !!replyTo,
         })
@@ -594,6 +595,7 @@ export const ComposePost = ({
     }, 500)
   }, [
     _,
+    ax,
     agent,
     thread,
     canPost,

@@ -8,7 +8,6 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
-import {useGate} from '#/lib/statsig/statsig'
 import {useSession} from '#/state/session'
 import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -39,11 +38,6 @@ export function LoadLatestBtn({
 
   // move button inline if it starts overlapping the left nav
   const isTallViewport = useMediaQuery({minHeight: 700})
-
-  const gate = useGate()
-  if (gate('remove_show_latest_button')) {
-    return null
-  }
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)

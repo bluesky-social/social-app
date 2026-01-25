@@ -2,7 +2,6 @@ import {useCallback} from 'react'
 import {Linking} from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {
   createBskyAppAbsoluteUrl,
   createProxiedUrl,
@@ -16,9 +15,11 @@ import {useInAppBrowser} from '#/state/preferences/in-app-browser'
 import {useTheme} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 export function useOpenLink() {
+  const ax = useAnalytics()
   const enabled = useInAppBrowser()
   const t = useTheme()
   const dialogContext = useDialogContext()
@@ -31,7 +32,7 @@ export function useOpenLink() {
       }
 
       if (!isBskyAppUrl(url)) {
-        logEvent('link:clicked', {
+        ax.metric('link:clicked', {
           domain: toNiceDomain(url),
           url,
         })
@@ -72,7 +73,7 @@ export function useOpenLink() {
       }
       Linking.openURL(url)
     },
-    [enabled, inAppBrowserConsentControl, t, dialogContext],
+    [ax, enabled, inAppBrowserConsentControl, t, dialogContext],
   )
 
   return openLink

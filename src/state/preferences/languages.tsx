@@ -2,6 +2,7 @@ import React from 'react'
 
 import {type AppLanguage} from '#/locale/languages'
 import * as persisted from '#/state/persisted'
+import {AnalyticsContext, utils} from '#/analytics'
 
 type SetStateCb = (
   s: persisted.Schema['languagePrefs'],
@@ -124,7 +125,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   return (
     <stateContext.Provider value={state}>
-      <apiContext.Provider value={api}>{children}</apiContext.Provider>
+      <apiContext.Provider value={api}>
+        <AnalyticsContext
+          metadata={utils.useMeta({
+            preferences: {
+              appLanguage: state.appLanguage,
+              contentLanguages: state.contentLanguages,
+            },
+          })}>
+          {children}
+        </AnalyticsContext>
+      </apiContext.Provider>
     </stateContext.Provider>
   )
 }

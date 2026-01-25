@@ -5,7 +5,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
-import {logEvent} from '#/lib/statsig/statsig'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
@@ -18,6 +17,7 @@ import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, native, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {useAnalytics} from '#/analytics'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
@@ -30,6 +30,7 @@ export {ScreenState as LoggedOutScreenState}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -94,11 +95,11 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           <SplashScreen
             onPressSignin={() => {
               setScreenState(ScreenState.S_Login)
-              logEvent('splash:signInPressed', {})
+              ax.metric('splash:signInPressed', {})
             }}
             onPressCreateAccount={() => {
               setScreenState(ScreenState.S_CreateAccount)
-              logEvent('splash:createAccountPressed', {})
+              ax.metric('splash:createAccountPressed', {})
             }}
           />
         ) : undefined}

@@ -6,8 +6,8 @@ import {useLingui} from '@lingui/react'
 
 import {wait} from '#/lib/async/wait'
 import {getLabelingServiceTitle} from '#/lib/moderation'
+import {useCallOnce} from '#/lib/once'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {Logger} from '#/logger'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -28,6 +28,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useSubmitReportMutation} from './action'
 import {
@@ -53,8 +54,6 @@ export function useGlobalReportDialogControl() {
   return useGlobalDialogsControlContext().reportDialogControl
 }
 
-const logger = Logger.create(Logger.Context.ReportDialog)
-
 export function GlobalReportDialog() {
   const {value, control} = useGlobalReportDialogControl()
   return <ReportDialog control={control} subject={value?.subject} />
@@ -65,13 +64,14 @@ export function ReportDialog(
     subject?: ReportSubject
   },
 ) {
+  const ax = useAnalytics()
   const subject = React.useMemo(
     () => (props.subject ? parseReportSubject(props.subject) : undefined),
     [props.subject],
   )
   const onClose = React.useCallback(() => {
-    logger.metric('reportDialog:close', {}, {statsig: false})
-  }, [])
+    ax.metric('reportDialog:close', {})
+  }, [ax])
   return (
     <Dialog.Outer control={props.control} onClose={onClose}>
       <Dialog.Handle />
@@ -103,6 +103,8 @@ function Invalid() {
 }
 
 function Inner(props: ReportDialogProps) {
+  const ax = useAnalytics()
+  const logger = ax.logger.useChild(ax.logger.Context.ReportDialog)
   const t = useTheme()
   const {_} = useLingui()
   const ref = React.useRef<ScrollView>(null)
@@ -208,15 +210,11 @@ function Inner(props: ReportDialogProps) {
         }),
       )
       setSuccess(true)
-      logger.metric(
-        'reportDialog:success',
-        {
-          reason: state.selectedOption?.reason ?? '',
-          labeler: state.selectedLabeler?.creator.handle ?? '',
-          details: !!state.details,
-        },
-        {statsig: false},
-      )
+      ax.metric('reportDialog:success', {
+        reason: state.selectedOption?.reason ?? '',
+        labeler: state.selectedLabeler?.creator.handle ?? '',
+        details: !!state.details,
+      })
       // give time for user feedback
       setTimeout(() => {
         props.control.close(() => {
@@ -224,7 +222,7 @@ function Inner(props: ReportDialogProps) {
         })
       }, 1e3)
     } catch (e: any) {
-      logger.metric('reportDialog:failure', {}, {statsig: false})
+      ax.metric('reportDialog:failure', {})
       logger.error(e, {
         source: 'ReportDialog',
       })
@@ -237,15 +235,11 @@ function Inner(props: ReportDialogProps) {
     }
   }, [_, submitReport, state, dispatch, props, setPending, setSuccess])
 
-  React.useEffect(() => {
-    logger.metric(
-      'reportDialog:open',
-      {
-        subjectType: props.subject.type,
-      },
-      {statsig: false},
-    )
-  }, [props.subject])
+  useCallOnce(() => {
+    ax.metric('reportDialog:open', {
+      subjectType: props.subject.type,
+    })
+  })()
 
   return (
     <Dialog.ScrollableInner

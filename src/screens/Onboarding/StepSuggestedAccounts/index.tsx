@@ -9,7 +9,6 @@ import * as bcp47Match from 'bcp-47-match'
 import {wait} from '#/lib/async/wait'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
-import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -30,12 +29,14 @@ import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../util'
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
@@ -92,7 +93,7 @@ export function StepSuggestedAccounts() {
 
   const {mutate: followAll, isPending: isFollowingAll} = useMutation({
     onMutate: () => {
-      logger.metric('onboarding:suggestedAccounts:followAllPressed', {
+      ax.metric('onboarding:suggestedAccounts:followAllPressed', {
         tab: selectedInterest ?? 'all',
         numAccounts: followableDids.length,
       })
@@ -132,20 +133,16 @@ export function StepSuggestedAccounts() {
     (did: string, position: number) => {
       if (!seenProfilesRef.current.has(did)) {
         seenProfilesRef.current.add(did)
-        logger.metric(
-          'suggestedUser:seen',
-          {
-            logContext: 'Onboarding',
-            recId: undefined,
-            position,
-            suggestedDid: did,
-            category: selectedInterest,
-          },
-          {statsig: true},
-        )
+        ax.metric('suggestedUser:seen', {
+          logContext: 'Onboarding',
+          recId: undefined,
+          position,
+          suggestedDid: did,
+          category: selectedInterest,
+        })
       }
     },
-    [selectedInterest],
+    [ax, selectedInterest],
   )
 
   return (
@@ -297,6 +294,7 @@ function TabBar({
   defaultTabLabel?: string
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
@@ -309,11 +307,7 @@ function TabBar({
         selectedInterest || (hideDefaultTab ? interests[0] : 'all')
       }
       onSelectTab={tab => {
-        logger.metric(
-          'onboarding:suggestedAccounts:tabPressed',
-          {tab: tab},
-          {statsig: true},
-        )
+        ax.metric('onboarding:suggestedAccounts:tabPressed', {tab: tab})
         onSelectInterest(tab === 'all' ? null : tab)
       }}
       interestsDisplayNames={
@@ -343,6 +337,7 @@ function SuggestedProfileCard({
   onSeen: (did: string, position: number) => void
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const cardRef = useRef<View>(null)
   const hasTrackedRef = useRef(false)
 
@@ -403,18 +398,14 @@ function SuggestedProfileCard({
             withIcon={false}
             logContext="OnboardingSuggestedAccounts"
             onFollow={() => {
-              logger.metric(
-                'suggestedUser:follow',
-                {
-                  logContext: 'Onboarding',
-                  location: 'Card',
-                  recId: undefined,
-                  position,
-                  suggestedDid: profile.did,
-                  category,
-                },
-                {statsig: true},
-              )
+              ax.metric('suggestedUser:follow', {
+                logContext: 'Onboarding',
+                location: 'Card',
+                recId: undefined,
+                position,
+                suggestedDid: profile.did,
+                category,
+              })
             }}
           />
         </ProfileCard.Header>
