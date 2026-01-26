@@ -1,6 +1,6 @@
 // default implementation fallback for web
 
-import React from 'react'
+import {memo} from 'react'
 import {View} from 'react-native'
 import {type PanGesture} from 'react-native-gesture-handler'
 import {type SharedValue} from 'react-native-reanimated'
@@ -44,4 +44,4 @@ const ImageItem = (_props: Props) => {
   return <View />
 }
 
-export default React.memo(ImageItem)
+export default memo(ImageItem)

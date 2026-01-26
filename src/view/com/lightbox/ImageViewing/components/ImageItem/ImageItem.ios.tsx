@@ -6,8 +6,8 @@
  *
  */
 
-import React, {useState} from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
+import {memo, useState} from 'react'
+import {ActivityIndicator} from 'react-native'
 import {
   Gesture,
   GestureDetector,
@@ -26,6 +26,7 @@ import Animated, {
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 
+import {atoms as a} from '#/alf'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,
@@ -230,7 +231,11 @@ const ImageItem = ({
         animatedProps={scrollViewProps}
         centerContent>
         {showLoader && (
-          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+          <ActivityIndicator
+            size="small"
+            color="#FFF"
+            style={[a.absolute, a.inset_0]}
+          />
         )}
         <Animated.View style={imageCropStyle}>
           <Animated.View style={imageStyle}>
@@ -260,19 +265,6 @@ const ImageItem = ({
     </GestureDetector>
   )
 }
-
-const styles = StyleSheet.create({
-  loading: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  image: {
-    flex: 1,
-  },
-})
 
 const getZoomRectAfterDoubleTap = (
   imageAspect: number | undefined,
@@ -363,4 +355,4 @@ const getZoomRectAfterDoubleTap = (
   }
 }
 
-export default React.memo(ImageItem)
+export default memo(ImageItem)
