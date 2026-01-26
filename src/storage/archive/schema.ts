@@ -6,5 +6,5 @@
  * See `#/storage/schema.ts` for examples.
  */
 export type Device = Partial<{
-  test: string
+  // add values here
 }>
