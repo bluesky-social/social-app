@@ -4,7 +4,7 @@ import * as env from '#/env'
 
 init({
   enabled: !env.IS_DEV && !!env.SENTRY_DSN,
-  autoSessionTracking: false,
+  enableAutoSessionTracking: false,
   dsn: env.SENTRY_DSN,
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: env.ENV,
