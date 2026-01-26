@@ -1,6 +1,7 @@
+type MaybePromise<T> = T | Promise<T>
 export type DB = {
-  get(key: string): Promise<string | undefined>
-  set(key: string, value: string): Promise<void>
-  delete(key: string): Promise<void>
-  clear(): Promise<void>
+  get(key: string): MaybePromise<string | undefined>
+  set(key: string, value: string): MaybePromise<void>
+  delete(key: string): MaybePromise<void>
+  clear(): MaybePromise<void>
 }
