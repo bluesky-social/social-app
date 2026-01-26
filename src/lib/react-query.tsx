@@ -1,6 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query'
 import {
@@ -9,6 +8,7 @@ import {
 } from '@tanstack/react-query-persist-client'
 import {SuperJSON} from 'superjson'
 
+import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-// any query keys in this array will be persisted to AsyncStorage.
+// any query keys in this array will be persisted to storage.
 // keys are here for require cycle reasons ¯\_(ツ)_/¯
 export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
 export const preferencesQueryKeyRoot = 'get-preferences'
@@ -187,8 +187,9 @@ function QueryProviderInner({
   // Do not move the query client creation outside of this component.
   const [queryClient, _setQueryClient] = useState(() => createQueryClient())
   const [persistOptions, _setPersistOptions] = useState(() => {
+    const storage = createPersistedQueryStorage('persisted_queries')
     const asyncPersister = createAsyncStoragePersister({
-      storage: AsyncStorage,
+      storage,
       key:
         'queryClient-' + (currentDid ?? 'logged-out') + `-v${PERSIST_VERSION}`,
       serialize: SuperJSON.stringify,
