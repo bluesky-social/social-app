@@ -8,9 +8,8 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
-import {preferencesQueryKeyRoot} from '#/lib/react-query'
 import {getAge} from '#/lib/strings/time'
-import {STALE} from '#/state/queries'
+import {PERSISTED_QUERY_ROOT, STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
@@ -30,13 +29,13 @@ export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/types'
 
-export const preferencesQueryKey = [preferencesQueryKeyRoot]
+export const preferencesQueryKey = [PERSISTED_QUERY_ROOT, 'getPreferences']
 
 export function usePreferencesQuery() {
   const agent = useAgent()
   const aa = useAgeAssurance()
 
-  return useQuery({
+  const query = useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
     structuralSharing: replaceEqualDeep,
     refetchOnWindowFocus: true,
@@ -92,6 +91,15 @@ export function usePreferencesQuery() {
       [aa],
     ),
   })
+
+  if (query.data?.birthDate) {
+    /**
+     * The persisted query cache stores dates as strings, but our code expects a `Date`.
+     */
+    query.data.birthDate = new Date(query.data.birthDate)
+  }
+
+  return query
 }
 
 export function useClearPreferencesMutation() {

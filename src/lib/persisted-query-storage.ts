@@ -1,10 +1,4 @@
-/**
- * Persisted Query Storage - Native Implementation (MMKV)
- *
- * This module provides a storage abstraction for persisting react-query cache.
- * On native platforms, it uses MMKV for high-performance synchronous storage.
- */
-import {MMKV} from '@bsky.app/react-native-mmkv'
+import {create as createArchiveDB} from '#/storage/archive/db'
 
 /**
  * Interface for async storage compatible with @tanstack/query-async-storage-persister
@@ -23,17 +17,16 @@ export interface PersistedQueryStorage {
  * @param id - Unique identifier for this storage instance (used as MMKV store id)
  */
 export function createPersistedQueryStorage(id: string): PersistedQueryStorage {
-  const mmkv = new MMKV({id})
-
+  const store = createArchiveDB({id})
   return {
     getItem: async (key: string): Promise<string | null> => {
-      return mmkv.getString(key) ?? null
+      return (await store.get(key)) ?? null
     },
     setItem: async (key: string, value: string): Promise<void> => {
-      mmkv.set(key, value)
+      await store.set(key, value)
     },
     removeItem: async (key: string): Promise<void> => {
-      mmkv.delete(key)
+      await store.delete(key)
     },
   }
 }

@@ -45,7 +45,7 @@ const qc = new QueryClient({
   },
 })
 const persister = createAsyncStoragePersister({
-  storage: createPersistedQueryStorage('age_assurance'),
+  storage: createPersistedQueryStorage('age_assurance_cache'),
   key: 'age-assurance-query-client',
 })
 const [, cacheHydrationPromise] = persistQueryClient({

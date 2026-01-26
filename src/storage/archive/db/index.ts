@@ -7,16 +7,16 @@ export function create({id}: {id: string}): DB {
 
   return {
     async get(key: string): Promise<string | undefined> {
-      return store.getString(key) ?? undefined
+      return store.getString(key)
     },
     async set(key: string, value: string): Promise<void> {
-      store.set(key, value)
+      return store.set(key, value)
     },
     async delete(key: string): Promise<void> {
-      store.delete(key)
+      return store.delete(key)
     },
     async clear(): Promise<void> {
-      store.clearAll()
+      return store.clearAll()
     },
   }
 }
