@@ -98,6 +98,8 @@ export default function ImageViewRoot({
     'portrait',
   )
   const openProgress = useSharedValue(0)
+  // mirrors `openProgress`, but just a bool, used for deferring rendering other images
+  const [isCompletelyOpen, setIsCompletelyOpen] = useState(false)
 
   if (!activeLightbox && nextLightbox) {
     setActiveLightbox(nextLightbox)
@@ -135,16 +137,23 @@ export default function ImageViewRoot({
     },
   )
 
+  const onOpenProgressChange = useCallback((isOpen: boolean) => {
+    setIsCompletelyOpen(isOpen)
+    if (isOpen) {
+      ScreenOrientation.unlockAsync()
+    } else {
+      // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
+      ScreenOrientation.lockAsync(PORTRAIT_UP)
+    }
+  }, [])
+
   // Delay the unlock until after we've finished the scale up animation.
   // It's complicated to do the same for locking it back so we don't attempt that.
   useAnimatedReaction(
     () => openProgress.get() === 1,
     (isOpen, wasOpen) => {
-      if (isOpen && !wasOpen) {
-        runOnJS(ScreenOrientation.unlockAsync)()
-      } else if (!isOpen && wasOpen) {
-        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
-        runOnJS(ScreenOrientation.lockAsync)(PORTRAIT_UP)
+      if (isOpen !== wasOpen) {
+        runOnJS(onOpenProgressChange)(isOpen)
       }
     },
   )
@@ -183,6 +192,7 @@ export default function ImageViewRoot({
             onFlyAway={onFlyAway}
             safeAreaRef={ref}
             openProgress={openProgress}
+            isCompletelyOpen={isCompletelyOpen}
           />
         )}
       </Animated.View>
@@ -199,6 +209,7 @@ function ImageView({
   onFlyAway,
   safeAreaRef,
   openProgress,
+  isCompletelyOpen,
 }: {
   lightbox: Lightbox
   orientation: 'portrait' | 'landscape'
@@ -208,6 +219,7 @@ function ImageView({
   onFlyAway: () => void
   safeAreaRef: AnimatedRef<View>
   openProgress: SharedValue<number>
+  isCompletelyOpen: boolean
 }) {
   const {images, index: initialImageIndex} = lightbox
   const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
@@ -350,20 +362,22 @@ function ImageView({
         style={styles.pager}>
         {images.map((imageSrc, i) => (
           <View key={imageSrc.uri}>
-            <LightboxImage
-              onTap={onTap}
-              onZoom={onZoom}
-              imageSrc={imageSrc}
-              onRequestClose={onRequestClose}
-              isScrollViewBeingDragged={isDragging}
-              showControls={showControls}
-              safeAreaRef={safeAreaRef}
-              isScaled={isScaled}
-              isFlyingAway={isFlyingAway}
-              isActive={i === imageIndex}
-              dismissSwipeTranslateY={dismissSwipeTranslateY}
-              openProgress={openProgress}
-            />
+            {(isCompletelyOpen || i === imageIndex) && (
+              <LightboxImage
+                onTap={onTap}
+                onZoom={onZoom}
+                imageSrc={imageSrc}
+                onRequestClose={onRequestClose}
+                isScrollViewBeingDragged={isDragging}
+                showControls={showControls}
+                safeAreaRef={safeAreaRef}
+                isScaled={isScaled}
+                isFlyingAway={isFlyingAway}
+                isActive={i === imageIndex}
+                dismissSwipeTranslateY={dismissSwipeTranslateY}
+                openProgress={openProgress}
+              />
+            )}
           </View>
         ))}
       </PagerView>
