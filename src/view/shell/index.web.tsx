@@ -36,6 +36,7 @@ import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
+import {deviceArchive} from '#/storage/archive'
 import {Composer} from './Composer.web'
 import {DrawerContent} from './Drawer'
 
@@ -49,6 +50,14 @@ function ShellInner() {
   useIntentHandler()
 
   useEffect(() => {
+    deviceArchive
+      .set(['test'], true)
+      .then(() => {
+        console.log('stored')
+      })
+      .catch(e => {
+        console.error(e)
+      })
     const unsubscribe = navigator.addListener('state', () => {
       closeAllActiveElements()
     })

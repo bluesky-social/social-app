@@ -171,6 +171,7 @@
     "fast-text-encoding": "^1.0.6",
     "history": "^5.3.0",
     "hls.js": "^1.6.2",
+    "idb-keyval": "^6.2.2",
     "js-sha256": "^0.9.0",
     "jwt-decode": "^4.0.0",
     "lande": "^1.0.10",
