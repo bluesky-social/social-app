@@ -2,7 +2,7 @@ import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/up
 import {type Geolocation} from '#/geolocation/types'
 
 /**
- * Device data that's specific to the device and does not vary based account
+ * Data that's specific to the device and does not vary based account
  */
 export type Device = {
   /**
