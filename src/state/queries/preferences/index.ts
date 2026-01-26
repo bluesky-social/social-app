@@ -435,3 +435,49 @@ export function useSetVerificationPrefsMutation() {
     },
   })
 }
+
+export function useSetAutoplayDisabledMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation<void, unknown, {autoplayDisabled: boolean}>({
+    mutationFn: async ({autoplayDisabled}) => {
+      // Get current preferences
+      const prefs = await agent.app.bsky.actor.getPreferences()
+      const currentPrefs = prefs.data.preferences
+
+      // Find or create bskyAppStatePref
+      const BSKY_APP_STATE_PREF_TYPE = 'app.bsky.actor.defs#bskyAppStatePref'
+      let bskyAppStatePref = currentPrefs.find(
+        p => p.$type === BSKY_APP_STATE_PREF_TYPE,
+      ) as (Record<string, unknown> & {$type: string}) | undefined
+
+      if (bskyAppStatePref) {
+        // Update existing pref
+        bskyAppStatePref.autoplayDisabled = autoplayDisabled
+      } else {
+        // Create new pref
+        bskyAppStatePref = {
+          $type: BSKY_APP_STATE_PREF_TYPE,
+          autoplayDisabled,
+        }
+        currentPrefs.push(bskyAppStatePref)
+      }
+
+      // Save preferences
+      await agent.app.bsky.actor.putPreferences({preferences: currentPrefs})
+
+      // Log the change
+      if (autoplayDisabled) {
+        logger.metric('autoplay:disabled', {}, {statsig: true})
+      } else {
+        logger.metric('autoplay:enabled', {}, {statsig: true})
+      }
+
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
