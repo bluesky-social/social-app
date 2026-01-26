@@ -6,10 +6,10 @@ import {
   PersistQueryClientProvider,
   type PersistQueryClientProviderProps,
 } from '@tanstack/react-query-persist-client'
-import {SuperJSON} from 'superjson'
 
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
+import {PERSISTED_QUERY_ROOT} from '#/state/queries'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
 declare global {
@@ -17,18 +17,6 @@ declare global {
     __TANSTACK_QUERY_CLIENT__: import('@tanstack/query-core').QueryClient
   }
 }
-
-// any query keys in this array will be persisted to storage.
-// keys are here for require cycle reasons ¯\_(ツ)_/¯
-export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
-export const preferencesQueryKeyRoot = 'get-preferences'
-export const pinnedFeedInfosQueryKeyRoot = 'pinned-feeds-infos'
-
-const STORED_CACHE_QUERY_KEY_ROOTS = [
-  labelersDetailedInfoQueryKeyRoot,
-  preferencesQueryKeyRoot,
-  pinnedFeedInfosQueryKeyRoot,
-]
 
 async function checkIsOnline(): Promise<boolean> {
   try {
@@ -146,7 +134,8 @@ const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehyd
   {
     shouldDehydrateMutation: (_: any) => false,
     shouldDehydrateQuery: query => {
-      return STORED_CACHE_QUERY_KEY_ROOTS.includes(String(query.queryKey[0]))
+      const root = String(query.queryKey[0])
+      return root === PERSISTED_QUERY_ROOT
     },
   }
 
@@ -187,13 +176,11 @@ function QueryProviderInner({
   // Do not move the query client creation outside of this component.
   const [queryClient, _setQueryClient] = useState(() => createQueryClient())
   const [persistOptions, _setPersistOptions] = useState(() => {
-    const storage = createPersistedQueryStorage('persisted_queries')
+    const storage = createPersistedQueryStorage('react-query-cache')
     const asyncPersister = createAsyncStoragePersister({
       storage,
       key:
         'queryClient-' + (currentDid ?? 'logged-out') + `-v${PERSIST_VERSION}`,
-      serialize: SuperJSON.stringify,
-      deserialize: SuperJSON.parse,
     })
     return {
       persister: asyncPersister,

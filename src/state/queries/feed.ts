@@ -20,10 +20,9 @@ import {
 } from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
-import {pinnedFeedInfosQueryKeyRoot} from '#/lib/react-query'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {STALE} from '#/state/queries'
+import {PERSISTED_QUERY_ROOT, STALE} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
@@ -419,6 +418,12 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   contentMode: undefined,
 }
 
+const createPinnedFeedInfosQueryKeyRoot = (...args: any[]) => [
+  PERSISTED_QUERY_ROOT,
+  'feed-info',
+  ...args,
+]
+
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const agent = useAgent()
@@ -428,11 +433,10 @@ export function usePinnedFeedsInfos() {
   return useQuery({
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
-    queryKey: [
-      pinnedFeedInfosQueryKeyRoot,
-      (hasSession ? 'authed:' : 'unauthed:') +
-        pinnedItems.map(f => f.value).join(','),
-    ],
+    queryKey: createPinnedFeedInfosQueryKeyRoot(
+      'pinned',
+      ...pinnedItems.map(f => f.value),
+    ),
     queryFn: async () => {
       if (!hasSession) {
         return [PWI_DISCOVER_FEED_STUB]
@@ -536,7 +540,10 @@ export function useSavedFeeds() {
   return useQuery({
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
-    queryKey: [pinnedFeedInfosQueryKeyRoot, ...savedItems],
+    queryKey: createPinnedFeedInfosQueryKeyRoot(
+      'saved',
+      ...savedItems.map(f => f.value),
+    ),
     placeholderData: previousData => {
       return (
         previousData || {
