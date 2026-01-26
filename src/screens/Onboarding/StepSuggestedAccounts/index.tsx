@@ -97,6 +97,17 @@ export function StepSuggestedAccounts() {
         tab: selectedInterest ?? 'all',
         numAccounts: followableDids.length,
       })
+      for (let i = 0; i < followableDids.length; i++) {
+        const did = followableDids[i]
+        ax.metric('suggestedUser:follow', {
+          logContext: 'Onboarding',
+          location: 'FollowAll',
+          recId: suggestedUsers?.recId,
+          position: i,
+          suggestedDid: did,
+          category: selectedInterest,
+        })
+      }
     },
     mutationFn: async () => {
       for (const did of followableDids) {
@@ -135,14 +146,14 @@ export function StepSuggestedAccounts() {
         seenProfilesRef.current.add(did)
         ax.metric('suggestedUser:seen', {
           logContext: 'Onboarding',
-          recId: undefined,
+          recId: suggestedUsers?.recId,
           position,
           suggestedDid: did,
           category: selectedInterest,
         })
       }
     },
-    [ax, selectedInterest],
+    [ax, selectedInterest, suggestedUsers?.recId],
   )
 
   return (
@@ -220,6 +231,7 @@ export function StepSuggestedAccounts() {
                 position={index}
                 category={selectedInterest}
                 onSeen={onProfileSeen}
+                recId={suggestedUsers.recId}
               />
             ))}
           </View>
@@ -234,7 +246,7 @@ export function StepSuggestedAccounts() {
               color="secondary"
               size="large"
               label={_(msg`Retry`)}
-              onPress={() => refetch()}>
+              onPress={() => void refetch()}>
               <ButtonText>
                 <Trans>Retry</Trans>
               </ButtonText>
@@ -329,12 +341,14 @@ function SuggestedProfileCard({
   position,
   category,
   onSeen,
+  recId,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   position: number
   category: string | null
   onSeen: (did: string, position: number) => void
+  recId?: number | string
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -401,7 +415,7 @@ function SuggestedProfileCard({
               ax.metric('suggestedUser:follow', {
                 logContext: 'Onboarding',
                 location: 'Card',
-                recId: undefined,
+                recId,
                 position,
                 suggestedDid: profile.did,
                 category,

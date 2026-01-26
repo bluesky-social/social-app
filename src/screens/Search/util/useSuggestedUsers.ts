@@ -45,6 +45,7 @@ export function useSuggestedUsers({
         data: searched?.data
           ? {
               actors: searched.data.pages.flatMap(p => p.actors) ?? [],
+              recId: undefined,
             }
           : undefined,
         isLoading: searched.isLoading,
