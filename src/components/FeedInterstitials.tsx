@@ -404,7 +404,6 @@ export function ProfileGrid({
   profiles: {actor: bsky.profile.AnyProfileView; recId?: number}[]
   totalProfileCount?: number
   error: Error | null
-  dismissingDids?: Set<string>
   viewContext: 'profile' | 'profileHeader' | 'feed'
   onDismiss?: (did: string) => void
   isVisible?: boolean
