@@ -208,6 +208,15 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
       }
     }
 
+    if (
+      hasSearchText &&
+      !isFetchingSearchResults &&
+      !_items.length &&
+      !isSearchResultsError
+    ) {
+      _items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
+    }
+
     return _items
   }, [
     _,
@@ -220,16 +229,8 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
     currentAccount?.did,
     hasSearchText,
     resultsKey,
+    isSearchResultsError,
   ])
-
-  if (
-    searchText &&
-    !isFetchingSearchResults &&
-    !items.length &&
-    !isSearchResultsError
-  ) {
-    items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
-  }
 
   const renderItems = useCallback(
     ({item, index}: {item: Item; index: number}) => {
@@ -284,10 +285,13 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
         }
       }
     },
-  ).current
-  const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 50,
-  }).current
+  )
+  const viewabilityConfig = useMemo(
+    () => ({
+      itemVisiblePercentThreshold: 50,
+    }),
+    [],
+  )
 
   const onSelectTab = useCallback(
     (interest: string) => {
