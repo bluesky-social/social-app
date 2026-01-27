@@ -108,6 +108,8 @@ export type ComposerState = {
   isDirty: boolean
   /** Map of localId -> loaded media path/URL for the current draft. Used for re-saving without re-copying media. */
   loadedMediaMap?: Map<string, string>
+  /** Set of original localRef paths from the draft being edited. Used to identify orphaned media on save. */
+  originalLocalRefs?: Set<string>
 }
 
 export type ComposerAction =
@@ -138,6 +140,8 @@ export type ComposerAction =
 
       /** Map of localRefPath -> loaded media path/URL */
       loadedMedia: Map<string, string>
+      /** Set of original localRef paths from the draft. Used to identify orphaned media on save. */
+      originalLocalRefs: Set<string>
     }
   | {
       type: 'clear'
@@ -268,6 +272,7 @@ export function composerReducer(
         threadgateAllow,
         postgateEmbeddingRules,
         loadedMedia,
+        originalLocalRefs,
       } = action
 
       return {
@@ -276,6 +281,7 @@ export function composerReducer(
         draftId,
         isDirty: false,
         loadedMediaMap: loadedMedia,
+        originalLocalRefs,
         thread: {
           posts,
           postgate: createPostgateRecord({

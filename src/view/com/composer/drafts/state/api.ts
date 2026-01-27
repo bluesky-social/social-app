@@ -12,6 +12,7 @@ import {
   type PostDraft,
 } from '#/view/com/composer/state/composer'
 import {type VideoState} from '#/view/com/composer/state/video'
+import {logger} from './logger'
 import {type DraftPostDisplay, type DraftSummary} from './schema'
 
 const TENOR_HOSTNAME = 'media.tenor.com'
@@ -131,6 +132,8 @@ function postDraftToServerPost(
 
 /**
  * Serialize images to server format with localRef paths.
+ * Reuses existing localRefPath if present (when editing a draft),
+ * otherwise generates a new one.
  */
 function serializeImages(
   images: ComposerImage[],
@@ -138,9 +141,16 @@ function serializeImages(
 ): AppBskyDraftDefs.DraftEmbedImage[] {
   return images.map(image => {
     const sourcePath = image.transformed?.path || image.source.path
-    // Use a unique key for the localRef path
-    const localRefPath = `image:${nanoid()}`
+    // Reuse existing localRefPath if present (editing draft), otherwise generate new
+    const isReusing = !!image.localRefPath
+    const localRefPath = image.localRefPath || `image:${nanoid()}`
     localRefPaths.set(localRefPath, sourcePath)
+
+    logger.debug('serializing image', {
+      localRefPath,
+      isReusing,
+      sourcePath,
+    })
 
     return {
       $type: 'app.bsky.draft.defs#draftEmbedImage',
@@ -357,8 +367,14 @@ export function draftToComposerPosts(
       for (const img of post.embedImages) {
         const path = loadedMedia.get(img.localRef.path)
         if (path) {
+          logger.debug('restoring image with localRefPath', {
+            localRefPath: img.localRef.path,
+            loadedPath: path,
+          })
           images.push({
             alt: img.alt || '',
+            // Preserve the original localRefPath for reuse when saving
+            localRefPath: img.localRef.path,
             source: {
               id: nanoid(),
               path,
@@ -479,4 +495,29 @@ export function threadgateToUISettings(
       return null
     })
     .filter((s): s is {type: string; list?: string} => s !== null)
+}
+
+/**
+ * Extract all localRef paths from a draft.
+ * Used to identify which media files belong to a draft for cleanup.
+ */
+export function extractLocalRefs(draft: AppBskyDraftDefs.Draft): Set<string> {
+  const refs = new Set<string>()
+  for (const post of draft.posts) {
+    if (post.embedImages) {
+      for (const img of post.embedImages) {
+        refs.add(img.localRef.path)
+      }
+    }
+    if (post.embedVideos) {
+      for (const vid of post.embedVideos) {
+        refs.add(vid.localRef.path)
+      }
+    }
+  }
+  logger.debug('extracted localRefs from draft', {
+    count: refs.size,
+    refs: Array.from(refs),
+  })
+  return refs
 }

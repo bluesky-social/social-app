@@ -130,8 +130,12 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
-import {draftToComposerPosts} from './drafts/state/api'
-import {loadDraft, useSaveDraftMutation} from './drafts/state/queries'
+import {draftToComposerPosts, extractLocalRefs} from './drafts/state/api'
+import {
+  loadDraft,
+  useCleanupPublishedDraftMutation,
+  useSaveDraftMutation,
+} from './drafts/state/queries'
 import {type DraftSummary} from './drafts/state/schema'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
@@ -193,6 +197,7 @@ export const ComposePost = ({
   const discardPromptControl = Prompt.usePromptControl()
   const {mutateAsync: saveDraft, isPending: _isSavingDraft} =
     useSaveDraftMutation()
+  const {mutate: cleanupPublishedDraft} = useCleanupPublishedDraftMutation()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
@@ -326,8 +331,21 @@ export const ComposePost = ({
 
   const handleSelectDraft = React.useCallback(
     async (draftSummary: DraftSummary) => {
+      logger.debug('loading draft for editing', {
+        draftId: draftSummary.id,
+      })
+
       // Load local media files for the draft
       const {loadedMedia} = await loadDraft(draftSummary.draft)
+
+      // Extract original localRefs for orphan detection on save
+      const originalLocalRefs = extractLocalRefs(draftSummary.draft)
+
+      logger.debug('draft loaded', {
+        draftId: draftSummary.id,
+        loadedMediaCount: loadedMedia.size,
+        originalLocalRefCount: originalLocalRefs.size,
+      })
 
       // Convert server draft to composer posts
       const posts = draftToComposerPosts(draftSummary.draft, loadedMedia)
@@ -340,6 +358,7 @@ export const ComposePost = ({
         threadgateAllow: draftSummary.draft.threadgateAllow,
         postgateEmbeddingRules: draftSummary.draft.postgateEmbeddingRules,
         loadedMedia,
+        originalLocalRefs,
       })
     },
     [composerDispatch],
@@ -354,11 +373,11 @@ export const ComposePost = ({
 
   const handleSaveDraft = React.useCallback(async () => {
     try {
-      const draftId = await saveDraft({
+      const result = await saveDraft({
         composerState,
         existingDraftId: composerState.draftId,
       })
-      composerDispatch({type: 'mark_saved', draftId})
+      composerDispatch({type: 'mark_saved', draftId: result.draftId})
       onClose()
     } catch (e) {
       logger.error('Failed to save draft', {error: e})
@@ -368,11 +387,11 @@ export const ComposePost = ({
 
   // Save without closing - for use by DraftsButton
   const saveCurrentDraft = React.useCallback(async () => {
-    const draftId = await saveDraft({
+    const result = await saveDraft({
       composerState,
       existingDraftId: composerState.draftId,
     })
-    composerDispatch({type: 'mark_saved', draftId})
+    composerDispatch({type: 'mark_saved', draftId: result.draftId})
   }, [saveDraft, composerState, composerDispatch])
 
   // Check if composer is empty (no content to save)
@@ -630,6 +649,17 @@ export const ComposePost = ({
     if (postUri && !replyTo) {
       emitPostCreated()
     }
+    // Clean up draft and its media after successful publish
+    if (composerState.draftId && composerState.originalLocalRefs) {
+      logger.debug('post published, cleaning up draft', {
+        draftId: composerState.draftId,
+        mediaFileCount: composerState.originalLocalRefs.size,
+      })
+      cleanupPublishedDraft({
+        draftId: composerState.draftId,
+        originalLocalRefs: composerState.originalLocalRefs,
+      })
+    }
     setLangPrefs.savePostLanguageToHistory()
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
@@ -693,6 +723,9 @@ export const ComposePost = ({
     setLangPrefs,
     queryClient,
     navigation,
+    composerState.draftId,
+    composerState.originalLocalRefs,
+    cleanupPublishedDraft,
   ])
 
   // Preserves the referential identity passed to each post item.

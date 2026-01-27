@@ -82,7 +82,11 @@ export async function loadDraft(draft: AppBskyDraftDefs.Draft): Promise<{
 }
 
 /**
- * Hook to save a draft
+ * Hook to save a draft.
+ *
+ * IMPORTANT: Network operations happen first in mutationFn.
+ * Local storage operations (save new media, delete orphaned media) happen in onSuccess.
+ * This ensures we don't lose data if the network request fails.
  */
 export function useSaveDraftMutation() {
   const agent = useAgent()
@@ -95,34 +99,79 @@ export function useSaveDraftMutation() {
     }: {
       composerState: ComposerState
       existingDraftId?: string
-    }): Promise<string> => {
+    }): Promise<{
+      draftId: string
+      localRefPaths: Map<string, string>
+      originalLocalRefs: Set<string> | undefined
+    }> => {
       // Convert composer state to server draft format
       const {draft, localRefPaths} = composerStateToDraft(composerState)
 
-      // Save media files locally
-      for (const [localRefPath, sourcePath] of localRefPaths) {
-        // Check if this media is already saved (re-saving existing draft)
-        if (!storage.mediaExists(localRefPath)) {
-          await storage.saveMediaToLocal(localRefPath, sourcePath)
-        }
-      }
+      logger.debug('saving draft', {
+        existingDraftId,
+        localRefPathCount: localRefPaths.size,
+        originalLocalRefCount: composerState.originalLocalRefs?.size ?? 0,
+      })
 
+      // 1. NETWORK FIRST - Update/create server draft
+      let draftId: string
       if (existingDraftId) {
         // Update existing draft
+        logger.debug('updating existing draft on server', {
+          draftId: existingDraftId,
+        })
         await agent.app.bsky.draft.updateDraft({
           draft: {
             id: existingDraftId,
             draft,
           },
         })
-        return existingDraftId
+        draftId = existingDraftId
       } else {
         // Create new draft
+        logger.debug('creating new draft on server')
         const res = await agent.app.bsky.draft.createDraft({draft})
-        return res.data.id
+        draftId = res.data.id
+        logger.debug('created new draft', {draftId})
+      }
+
+      // Return data needed for onSuccess
+      return {
+        draftId,
+        localRefPaths,
+        originalLocalRefs: composerState.originalLocalRefs,
       }
     },
-    onSuccess: () => {
+    onSuccess: async ({draftId, localRefPaths, originalLocalRefs}) => {
+      // 2. LOCAL STORAGE ONLY AFTER NETWORK SUCCEEDS
+      logger.debug('network save succeeded, processing local storage', {
+        draftId,
+      })
+
+      // Save new/changed media files
+      for (const [localRefPath, sourcePath] of localRefPaths) {
+        // Only save if this media doesn't already exist (reusing localRefPath)
+        if (!storage.mediaExists(localRefPath)) {
+          logger.debug('saving new media file', {localRefPath})
+          await storage.saveMediaToLocal(localRefPath, sourcePath)
+        } else {
+          logger.debug('skipping existing media file', {localRefPath})
+        }
+      }
+
+      // Delete orphaned media (old refs not in new)
+      if (originalLocalRefs) {
+        const newLocalRefs = new Set(localRefPaths.keys())
+        for (const oldRef of originalLocalRefs) {
+          if (!newLocalRefs.has(oldRef)) {
+            logger.debug('deleting orphaned media file', {
+              localRefPath: oldRef,
+            })
+            await storage.deleteMediaFromLocal(oldRef)
+          }
+        }
+      }
+
       queryClient.invalidateQueries({queryKey: DRAFTS_QUERY_KEY})
     },
     onError: error => {
@@ -172,6 +221,51 @@ export function useDeleteDraftMutation() {
         }
       }
       queryClient.invalidateQueries({queryKey: DRAFTS_QUERY_KEY})
+    },
+  })
+}
+
+/**
+ * Hook to clean up a draft after it has been published.
+ * Deletes the draft from server and all associated local media.
+ * Takes draftId and originalLocalRefs from composer state.
+ */
+export function useCleanupPublishedDraftMutation() {
+  const agent = useAgent()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      draftId,
+      originalLocalRefs,
+    }: {
+      draftId: string
+      originalLocalRefs: Set<string>
+    }) => {
+      logger.debug('cleaning up published draft', {
+        draftId,
+        mediaFileCount: originalLocalRefs.size,
+      })
+      // Delete from server first
+      await agent.app.bsky.draft.deleteDraft({id: draftId})
+      logger.debug('deleted draft from server', {draftId})
+    },
+    onSuccess: async (_, {originalLocalRefs}) => {
+      // Delete all local media files for this draft
+      for (const localRef of originalLocalRefs) {
+        logger.debug('deleting media file after publish', {
+          localRefPath: localRef,
+        })
+        await storage.deleteMediaFromLocal(localRef)
+      }
+      queryClient.invalidateQueries({queryKey: DRAFTS_QUERY_KEY})
+      logger.debug('cleanup after publish complete')
+    },
+    onError: error => {
+      // Log but don't throw - the post was already published successfully
+      logger.warn('Failed to clean up published draft', {
+        safeMessage: error instanceof Error ? error.message : String(error),
+      })
     },
   })
 }

@@ -39,6 +39,8 @@ export type ImageSource = ImageMeta & {
 type ComposerImageBase = {
   alt: string
   source: ImageSource
+  /** Original localRef path from draft, if editing an existing draft. Used to reuse the same storage key. */
+  localRefPath?: string
 }
 type ComposerImageWithoutTransformation = ComposerImageBase & {
   transformed?: undefined
