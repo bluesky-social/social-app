@@ -256,6 +256,7 @@ export function ListMembers({
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
+        contentInset={{ bottom: 200 }}
         onScrolledDownChange={onScrolledDownChange}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
