@@ -9,6 +9,10 @@ export interface PersistedQueryStorage {
   removeItem: (key: string) => Promise<void>
 }
 
+function createId(id: string) {
+  return `react-query-cache-${id}`
+}
+
 /**
  * Creates an MMKV-based storage adapter for persisting react-query cache on native platforms.
  * Each storage instance uses a separate MMKV store identified by the provided id.
@@ -17,7 +21,7 @@ export interface PersistedQueryStorage {
  * @param id - Unique identifier for this storage instance (used as MMKV store id)
  */
 export function createPersistedQueryStorage(id: string): PersistedQueryStorage {
-  const store = createArchiveDB({id})
+  const store = createArchiveDB({id: createId(id)})
   return {
     getItem: async (key: string): Promise<string | null> => {
       return (await store.get(key)) ?? null
@@ -29,4 +33,9 @@ export function createPersistedQueryStorage(id: string): PersistedQueryStorage {
       await store.delete(key)
     },
   }
+}
+
+export async function clearPersistedQueryStorage(id: string) {
+  const store = createArchiveDB({id: createId(id)})
+  await store.clear()
 }
