@@ -13,8 +13,8 @@ function getMediaDirectory(): Directory {
 }
 
 function getMediaFile(localRefPath: string): File {
-  // Use localRefPath as filename (replace unsafe chars)
-  const safeFilename = localRefPath.replace(/[/:]/g, '_')
+  // Use localRefPath as filename (URL-encoded for filesystem safety)
+  const safeFilename = encodeURIComponent(localRefPath)
   return new File(getMediaDirectory(), safeFilename)
 }
 
@@ -123,8 +123,8 @@ function populateCacheInternal(): Promise<void> {
       if (dir.exists) {
         const items = dir.list()
         for (const item of items) {
-          // Reverse the safe filename transformation
-          const localRefPath = item.name.replace(/_/g, ':').replace(/_/g, '/')
+          // Reverse the URL encoding to get the original localRefPath
+          const localRefPath = decodeURIComponent(item.name)
           mediaExistsCache.set(localRefPath, true)
         }
       }
