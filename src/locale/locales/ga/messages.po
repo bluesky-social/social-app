@@ -9848,7 +9848,7 @@ msgstr "Cuirfear an freagra seo i rannán speisialta a bheidh i bhfolach ag bun 
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Níor chuir an tseirbhís seo téarmaí seirbhíse ná polasaí príobháideachta ar fáil."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -11206,7 +11206,7 @@ msgstr "Tá tú sa scuaine."
 msgid "You are Live"
 msgstr ""
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr ""
 
@@ -11218,7 +11218,7 @@ msgstr "Níl cead agat físeáin a uaslódáil."
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr ""
 

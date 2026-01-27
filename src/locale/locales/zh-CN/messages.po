@@ -9848,7 +9848,7 @@ msgstr "这则回复将被折叠到你讨论串底部的隐藏部分，并且会
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "该服务没有提供服务条款或隐私政策。"
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "直播功能仍处于测试阶段，此服务暂不可用。可用的服务包括：{formatted}。"
 
@@ -11206,7 +11206,7 @@ msgstr "你已在等待名单中。"
 msgid "You are Live"
 msgstr "你已开始直播"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "你已停止直播"
 
@@ -11218,7 +11218,7 @@ msgstr "你目前无法上传视频。"
 msgid "You are not following anyone yet"
 msgstr "你还没有关注任何账户"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "你正在直播中！"
 

@@ -9848,7 +9848,7 @@ msgstr "Cette réponse sera classée dans une section cachée au bas de votre fi
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Ce service n’a pas fourni de conditions générales ni de politique de confidentialité."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Ce service n’est pas disponible tant que la fonction de direct est en bêta. Services autorisés : {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "Vous êtes dans la file d’attente."
 msgid "You are Live"
 msgstr "Vous êtes en direct"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Vous n’êtes plus en direct"
 
@@ -11218,7 +11218,7 @@ msgstr "Vous n’êtes pas autorisé à envoyer des vidéos."
 msgid "You are not following anyone yet"
 msgstr "Vous ne suivez personne pour l’instant"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Vous êtes désormais en direct !"
 

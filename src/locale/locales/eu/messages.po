@@ -9848,7 +9848,7 @@ msgstr "Erantzun hau zure hariaren beheko aldean ezkutuko atal batean ordenatuko
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Zerbitzu honek ez du zerbitzu-baldintzarik edo pribatutasun-politikarik eman."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Zerbitzu hau ez da onartzen Zuzeneko funtzioa beta bertsioan dagoen bitartean. Onartutako zerbitzuak: {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "Ilaran zaude."
 msgid "You are Live"
 msgstr "Zuzenean zaude"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Jada ez zaude zuzenean"
 
@@ -11218,7 +11218,7 @@ msgstr "Ezin dituzu bideoak kargatu."
 msgid "You are not following anyone yet"
 msgstr "Ez zara inor jarraitzen ari oraindik"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Orain zuzenean zaude!"
 

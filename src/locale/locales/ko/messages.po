@@ -9848,7 +9848,7 @@ msgstr "이 답글은 스레드 하단의 숨겨진 위치에 정렬되며 자�
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "이 서비스는 서비스 이용약관이나 개인정보 처리방침을 제공하지 않습니다."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "라이브 기능이 베타 버전인 동안에는 이 서비스가 지원되지 않습니다. 사용할 수 있는 서비스: {formatted}"
 
@@ -11206,7 +11206,7 @@ msgstr "대기 중입니다."
 msgid "You are Live"
 msgstr "라이브 중"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "더 이상 라이브 중이 아닙니다"
 
@@ -11218,7 +11218,7 @@ msgstr "동영상을 업로드할 수 없습니다."
 msgid "You are not following anyone yet"
 msgstr "아직 아무도 팔로우하지 않았습니다"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "라이브 중입니다!"
 

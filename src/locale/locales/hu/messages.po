@@ -9850,7 +9850,7 @@ msgstr "Ez a válasz egy rejtett részlegbe lesz sorolva a válaszláncok legalj
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Ez a szolgáltatás nem osztotta meg a felhasználási feltételeit vagy az adatvédelmi irányelveit."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Az élőadásos funkció kísérleti fázisa alatt ez a szolgáltatás még nem elérhető. Elérhető szolgáltatások: {formatted}."
 
@@ -11208,7 +11208,7 @@ msgstr "Sorban állsz."
 msgid "You are Live"
 msgstr "Élő adásban vagy"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Az élő adásod véget ért"
 
@@ -11220,7 +11220,7 @@ msgstr "Nincs jogosultságod a videófeltöltésre."
 msgid "You are not following anyone yet"
 msgstr "Még senkit sem követsz"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Elkezdődött az élő adás!"
 

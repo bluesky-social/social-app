@@ -9848,7 +9848,7 @@ msgstr "Diese Antwort wird in einen ausgeblendeten Bereich am Ende deines Thread
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Dieser Dienst hat keine Nutzungsbedingungen oder Datenschutzerklärung bereitgestellt."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Dieser Service wird nicht unterstützt, solange die Live-Funktion in der Beta ist. Erlaubte Services: {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "Du befindest dich in der Warteschlange."
 msgid "You are Live"
 msgstr "Du bist live"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Du bist nicht mehr live"
 
@@ -11218,7 +11218,7 @@ msgstr "Du darfst keine Videos hochladen."
 msgid "You are not following anyone yet"
 msgstr "Du folgst noch niemandem"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Du bist jetzt live!"
 

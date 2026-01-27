@@ -9848,7 +9848,7 @@ msgstr "Thèid an fhreagairt seo a chur ann an earrann fhalaichte aig bonn an t-
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Cha tug an t-seirbheis seo seachad teirmichean seirbheise no poileasaidh prìobhaideachd."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Cha bhi an t-seirbheis seo ri làimh fhad ’s a bhios gleus a’ chraolaidh bheò na ghleus beta. Seirbheisean a tha ceadaichte: {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "Tha thu sa chiutha."
 msgid "You are Live"
 msgstr "Tha thu ri sruthadh beò"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Chan eil thu ri sruthadh beò tuilleadh"
 
@@ -11218,7 +11218,7 @@ msgstr "Chan eil cead agad videothan a luchdadh."
 msgid "You are not following anyone yet"
 msgstr "Chan eil thu a’ leantainn duine sam bith fhathast"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Tha thu ri sruthadh beò a-nis!"
 

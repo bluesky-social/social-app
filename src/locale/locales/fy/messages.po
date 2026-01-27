@@ -9848,7 +9848,7 @@ msgstr "Dizze reaksje wurdt sortearre yn in ferstoppe seksje ûnderoan it petear
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Dizze tsjinst hat gjin tsjinstbetingsten of in privacybelied."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -11206,7 +11206,7 @@ msgstr "Do stiest yn de rige."
 msgid "You are Live"
 msgstr "Do bist live"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Do bist net langer live"
 
@@ -11218,7 +11218,7 @@ msgstr "Do meist gjin fideo’s oplade."
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Do bist no live!"
 

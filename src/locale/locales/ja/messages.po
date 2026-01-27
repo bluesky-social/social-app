@@ -9848,7 +9848,7 @@ msgstr "この返信はスレッドの一番下にある非表示のセクショ
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "このサービスには、利用規約もプライバシーポリシーもありません。"
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "このサービスは、Live機能がベータ版の間はサポートされません。許可されているサービス: {formatted}"
 
@@ -11206,7 +11206,7 @@ msgstr "あなたは並んでいます。"
 msgid "You are Live"
 msgstr "ライブ中"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "もうライブ中ではありません"
 
@@ -11218,7 +11218,7 @@ msgstr "あなたはビデオのアップロードを許可されていません
 msgid "You are not following anyone yet"
 msgstr "まだ誰もフォローしていません"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "現在ライブ中です！"
 

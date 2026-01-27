@@ -9848,7 +9848,7 @@ msgstr "Dette svar vil blive vist i en skjult sektion nederst i din tråd og vil
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Denne tjeneste har ikke angivet tjenestevilkår eller privatlivspolitik."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Denne tjeneste er ikke understøttet, mens Live-funktionen er i beta. Tilladte tjenester: {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "Du er i kø."
 msgid "You are Live"
 msgstr "Du er live"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Du er ikke længere live"
 
@@ -11218,7 +11218,7 @@ msgstr "Du har ikke adgang til at uploade videoer."
 msgid "You are not following anyone yet"
 msgstr "Du følger endnu ingen"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Du er nu live!"
 

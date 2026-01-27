@@ -9848,7 +9848,7 @@ msgstr "This reply will be sorted into a hidden section at the bottom of your th
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "This service has not provided terms of service or a privacy policy."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "You are in line."
 msgid "You are Live"
 msgstr "You are Live"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "You are no longer live"
 
@@ -11218,7 +11218,7 @@ msgstr "You are not allowed to upload videos."
 msgid "You are not following anyone yet"
 msgstr "You are not following anyone yet"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "You are now live!"
 

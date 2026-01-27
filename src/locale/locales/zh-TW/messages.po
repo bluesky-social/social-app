@@ -9848,7 +9848,7 @@ msgstr "這則回覆將被折疊到您討論串底部的隱藏部分，並將為
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "這個服務尚未提供服務條款或隱私權政策。"
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "直播功能仍處於測試階段，尚不支援此服務。目前可使用的服務：{formatted}。"
 
@@ -11206,7 +11206,7 @@ msgstr "您已在等待名單中。"
 msgid "You are Live"
 msgstr "您已開始直播"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "您已停止直播"
 
@@ -11218,7 +11218,7 @@ msgstr "您沒有上傳影片的權限。"
 msgid "You are not following anyone yet"
 msgstr "您尚未跟隨任何人"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "您現在開始直播了！"
 

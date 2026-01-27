@@ -9848,7 +9848,7 @@ msgstr "Acest răspuns va fi sortat într-o secțiune ascunsă în partea de jos
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Acest serviciu nu a furnizat termeni de serviciu sau o politică de confidențialitate."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Acest serviciu nu este acceptat cât timp caracteristica în direct este în beta. Serviciile permise: {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "Sunteți la coadă."
 msgid "You are Live"
 msgstr "Sunteți în direct"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Nu mai sunteți în direct"
 
@@ -11218,7 +11218,7 @@ msgstr "Nu aveți voie să încărcați videoclipuri."
 msgid "You are not following anyone yet"
 msgstr "Nu urmăriți pe nimeni încă"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Acum sunteți în direct!"
 

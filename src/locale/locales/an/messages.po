@@ -9848,7 +9848,7 @@ msgstr "Esta respuesta será clasificada en una sección amagada a la fin d'o tu
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Este servicio no ha proporcionau termins de servicio ni una politica de privacidat."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -11206,7 +11206,7 @@ msgstr "Yes en ringlera."
 msgid "You are Live"
 msgstr ""
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr ""
 
@@ -11218,7 +11218,7 @@ msgstr "No tiens permiso pa puyar videos."
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr ""
 

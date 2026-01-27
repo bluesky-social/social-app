@@ -9848,7 +9848,7 @@ msgstr "Esta resposta será classificada em uma seção oculta na parte inferior
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Este serviço não proveu termos de serviço ou política de privacidade."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Este serviço não é suportado enquanto o recurso Ao Vivo estiver em testes. Serviços permitidos: {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "Você está na fila."
 msgid "You are Live"
 msgstr "Você está ao vivo"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Você não está mais ao vivo"
 
@@ -11218,7 +11218,7 @@ msgstr "Você não tem permissão para enviar vídeos."
 msgid "You are not following anyone yet"
 msgstr "Você ainda não está seguindo ninguém"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Agora você está ao vivo!"
 

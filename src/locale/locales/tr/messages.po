@@ -9848,7 +9848,7 @@ msgstr "Bu yanıt konunuzun altındaki gizli bir bölüme sıralanacaktır ve on
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Bu hizmet, kullanım şartları veya bir gizlilik politikası sunmamış."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Canlı özelliği betada olduğu müddetçe bu servis desteklenmemektedir. İzin verilen servisler: {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "Sıradasınız."
 msgid "You are Live"
 msgstr "Canlı yayındasınız"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Artık canlı yayında değilsiniz"
 
@@ -11218,7 +11218,7 @@ msgstr "Video yükleme izniniz yok."
 msgid "You are not following anyone yet"
 msgstr "Henüz kimseyi takip etmiyorsunuz"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Canlı yayındasınız!"
 

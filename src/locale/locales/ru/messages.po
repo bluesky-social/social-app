@@ -9848,7 +9848,7 @@ msgstr "Этот ответ будет отсортирован в скрыты�
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Этот сервис не предоставил условия обслуживания или политику конфиденциальности."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -11206,7 +11206,7 @@ msgstr "Вы в очереди."
 msgid "You are Live"
 msgstr "Вы в прямом эфире"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Вы больше не в прямом эфире"
 
@@ -11218,7 +11218,7 @@ msgstr "Вы не можете загружать видео."
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Вы в прямом эфире!"
 

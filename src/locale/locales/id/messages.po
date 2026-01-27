@@ -9848,7 +9848,7 @@ msgstr "Balasan ini akan disortir ke bagian tersembunyi di bawah utas Anda dan a
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Layanan ini tidak menyediakan ketentuan layanan atau kebijakan privasi."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -11206,7 +11206,7 @@ msgstr "Anda sedang dalam antrian."
 msgid "You are Live"
 msgstr "Anda sedang siaran langsung"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Anda tidak lagi bersiaran langsung"
 
@@ -11218,7 +11218,7 @@ msgstr "Anda tidak diizinkan untuk mengunggah video."
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Anda sekarang bersiaran langsung!"
 

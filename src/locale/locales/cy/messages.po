@@ -9848,7 +9848,7 @@ msgstr "Bydd yr ateb hwn yn cael ei drefnu mewn adran gudd ar waelod eich edefyn
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Dyw'r gwasanaeth hwn heb ddarparu telerau gwasanaeth na pholisi preifatrwydd."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Dyw'r gwasanaeth yma ddim yn cael ei gefnogi tra bod y nodwedd Byw yn y cyflwr beta. Gwasanaethu sy'n cael eu caniatáu: {formatted}."
 
@@ -11206,7 +11206,7 @@ msgstr "Rydych mewn llinell."
 msgid "You are Live"
 msgstr "Rydych chi'n Fyw"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Dydych chi ddim yn fyw mwyach"
 
@@ -11218,7 +11218,7 @@ msgstr "Does dim caniatâd i chi lwytho fideos i fyny."
 msgid "You are not following anyone yet"
 msgstr "Dydych chi ddim yn dilyn neb eto"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Rydych chi nawr yn fyw!"
 
