@@ -19,13 +19,14 @@ const TENOR_HOSTNAME = 'media.tenor.com'
 
 /**
  * Video data from a draft that needs to be restored by re-processing.
- * Contains the local file URI, alt text, and mime type to restore.
+ * Contains the local file URI, alt text, mime type, and captions to restore.
  */
 export type RestoredVideo = {
   uri: string
   altText: string
   mimeType: string
   localRefPath: string
+  captions: Array<{lang: string; content: string}>
 }
 
 /**
@@ -46,15 +47,17 @@ function parseVideoMimeType(localRefPath: string): string {
  * Convert ComposerState to server Draft format for saving.
  * Returns both the draft and a map of localRef paths to their source paths.
  */
-export function composerStateToDraft(state: ComposerState): {
+export async function composerStateToDraft(state: ComposerState): Promise<{
   draft: AppBskyDraftDefs.Draft
   localRefPaths: Map<string, string>
-} {
+}> {
   const localRefPaths = new Map<string, string>()
 
-  const posts: AppBskyDraftDefs.DraftPost[] = state.thread.posts.map(post => {
-    return postDraftToServerPost(post, localRefPaths)
-  })
+  const posts: AppBskyDraftDefs.DraftPost[] = await Promise.all(
+    state.thread.posts.map(post => {
+      return postDraftToServerPost(post, localRefPaths)
+    }),
+  )
 
   // Convert threadgate settings to server format
   const threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow'] = []
@@ -92,10 +95,10 @@ export function composerStateToDraft(state: ComposerState): {
 /**
  * Convert a single PostDraft to server DraftPost format.
  */
-function postDraftToServerPost(
+async function postDraftToServerPost(
   post: PostDraft,
   localRefPaths: Map<string, string>,
-): AppBskyDraftDefs.DraftPost {
+): Promise<AppBskyDraftDefs.DraftPost> {
   const draftPost: AppBskyDraftDefs.DraftPost = {
     $type: 'app.bsky.draft.defs#draftPost',
     text: post.richtext.text,
@@ -117,7 +120,7 @@ function postDraftToServerPost(
         localRefPaths,
       )
     } else if (post.embed.media.type === 'video') {
-      const video = serializeVideo(post.embed.media.video, localRefPaths)
+      const video = await serializeVideo(post.embed.media.video, localRefPaths)
       if (video) {
         draftPost.embedVideos = [video]
       }
@@ -192,10 +195,10 @@ function serializeImages(
  * Serialize video to server format with localRef path.
  * The localRef path encodes the mime type: `video:${mimeType}:${nanoid()}`
  */
-function serializeVideo(
+async function serializeVideo(
   videoState: VideoState,
   localRefPaths: Map<string, string>,
-): AppBskyDraftDefs.DraftEmbedVideo | undefined {
+): Promise<AppBskyDraftDefs.DraftEmbedVideo | undefined> {
   // Only save videos that have been compressed (have a video file)
   if (!videoState.video) {
     return undefined
@@ -206,6 +209,19 @@ function serializeVideo(
   const localRefPath = `video:${mimeType}:${nanoid()}`
   localRefPaths.set(localRefPath, videoState.video.uri)
 
+  // Read caption file contents as text
+  const captions: AppBskyDraftDefs.DraftEmbedCaption[] = []
+  for (const caption of videoState.captions) {
+    if (caption.lang) {
+      const content = await caption.file.text()
+      captions.push({
+        $type: 'app.bsky.draft.defs#draftEmbedCaption',
+        lang: caption.lang,
+        content,
+      })
+    }
+  }
+
   return {
     $type: 'app.bsky.draft.defs#draftEmbedVideo',
     localRef: {
@@ -213,7 +229,7 @@ function serializeVideo(
       path: localRefPath,
     },
     alt: videoState.altText || undefined,
-    // TODO: Add captions if needed
+    captions: captions.length > 0 ? captions : undefined,
   }
 }
 
@@ -473,12 +489,15 @@ export function draftToComposerPosts(
           videoUri,
           altText: vid.alt,
           mimeType,
+          captionCount: vid.captions?.length ?? 0,
         })
         restoredVideos.set(index, {
           uri: videoUri,
           altText: vid.alt || '',
           mimeType,
           localRefPath: vid.localRef.path,
+          captions:
+            vid.captions?.map(c => ({lang: c.lang, content: c.content})) ?? [],
         })
       }
     }

@@ -340,6 +340,7 @@ export const ComposePost = ({
           postId,
           videoUri: videoInfo.uri,
           altText: videoInfo.altText,
+          captionCount: videoInfo.captions.length,
         })
 
         let asset: ImagePickerAsset
@@ -385,6 +386,28 @@ export const ComposePost = ({
               videoAction: {
                 type: 'update_alt_text',
                 altText: videoInfo.altText,
+                signal: abortController.signal,
+              },
+            },
+          })
+        }
+
+        // Restore captions (web only - captions use File objects)
+        if (IS_WEB && videoInfo.captions.length > 0) {
+          const captionTracks = videoInfo.captions.map(c => ({
+            lang: c.lang,
+            file: new File([c.content], `caption-${c.lang}.vtt`, {
+              type: 'text/vtt',
+            }),
+          }))
+          composerDispatch({
+            type: 'update_post',
+            postId,
+            postAction: {
+              type: 'embed_update_video',
+              videoAction: {
+                type: 'update_captions',
+                updater: () => captionTracks,
                 signal: abortController.signal,
               },
             },

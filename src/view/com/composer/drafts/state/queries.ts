@@ -105,7 +105,7 @@ export function useSaveDraftMutation() {
       originalLocalRefs: Set<string> | undefined
     }> => {
       // Convert composer state to server draft format
-      const {draft, localRefPaths} = composerStateToDraft(composerState)
+      const {draft, localRefPaths} = await composerStateToDraft(composerState)
 
       logger.debug('saving draft', {
         existingDraftId,
