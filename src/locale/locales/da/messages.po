@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-24 19:42\n"
+"PO-Revision-Date: 2026-01-27 18:19\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -3049,8 +3049,9 @@ msgid "Dismiss interests"
 msgstr "Luk interesser"
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:81
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:63
 msgid "Dismiss live event banner"
-msgstr ""
+msgstr "Fjern banner om livebegivenheder"
 
 #: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
@@ -5500,16 +5501,18 @@ msgid "Live event happening now: {0}"
 msgstr "Livebegivenhed foregår nu: {0}"
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:32
 msgid "Live event hidden"
-msgstr ""
+msgstr "Livebegivenhed blev skjult"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:105
 msgid "Live event options"
 msgstr "Livebegivenhedsindstillinger"
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:52
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:34
 msgid "Live event unhidden"
-msgstr ""
+msgstr "Livebegivenhed ikke længere skjult"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:109
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
@@ -9153,7 +9156,7 @@ msgstr "Storybook"
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:180
 msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
-msgstr ""
+msgstr "Streamer du på Twitch? Aktiver livetilstand på Bluesky for at tilføje en markering til din avatar. Når man trykker på den, kommer man direkte til din stream."
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:119
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:125
@@ -10011,11 +10014,11 @@ msgstr "Trævisning"
 
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:49
 msgid "Trending"
-msgstr "Trends"
+msgstr "Populære emner"
 
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:56
 msgid "Trending options"
-msgstr ""
+msgstr "Indstillinger for populære emner"
 
 #: src/components/interstitials/TrendingVideos.tsx:86
 msgid "Trending Videos"
@@ -10142,6 +10145,8 @@ msgstr "Fortryd"
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:63
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:39
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:45
 msgid "Undo"
 msgstr "Fortryd"
 
