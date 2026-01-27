@@ -3,6 +3,7 @@ import {AppState, type AppStateStatus} from 'react-native'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query'
 import {
+  type PersistQueryClientOptions,
   PersistQueryClientProvider,
   type PersistQueryClientProviderProps,
 } from '@tanstack/react-query-persist-client'
@@ -10,10 +11,12 @@ import {
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
 import {PERSISTED_QUERY_ROOT} from '#/state/queries'
+import * as env from '#/env'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
 declare global {
   interface Window {
+    // eslint-disable-next-line  @typescript-eslint/consistent-type-imports
     __TANSTACK_QUERY_CLIENT__: import('@tanstack/query-core').QueryClient
   }
 }
@@ -157,8 +160,6 @@ export function QueryProvider({
   )
 }
 
-const PERSIST_VERSION = 2
-
 function QueryProviderInner({
   children,
   currentDid,
@@ -176,16 +177,16 @@ function QueryProviderInner({
   // Do not move the query client creation outside of this component.
   const [queryClient, _setQueryClient] = useState(() => createQueryClient())
   const [persistOptions, _setPersistOptions] = useState(() => {
-    const storage = createPersistedQueryStorage('react-query-cache')
+    const storage = createPersistedQueryStorage(currentDid ?? 'logged-out')
     const asyncPersister = createAsyncStoragePersister({
       storage,
-      key:
-        'queryClient-' + (currentDid ?? 'logged-out') + `-v${PERSIST_VERSION}`,
+      key: 'queryClient-' + (currentDid ?? 'logged-out'),
     })
     return {
       persister: asyncPersister,
       dehydrateOptions,
-    }
+      buster: env.APP_VERSION,
+    } satisfies Omit<PersistQueryClientOptions, 'queryClient'>
   })
   useEffect(() => {
     if (IS_WEB) {
