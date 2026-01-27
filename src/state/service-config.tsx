@@ -96,17 +96,21 @@ export function useLiveNowConfig(): LiveNowConfig {
   const ctx = useContext(LiveNowContext)
   const canGoLive = useCanGoLive()
   const {currentAccount} = useSession()
-  if (!currentAccount?.did || !canGoLive)
-    return {allowedDomains: new Set(), allSupportedDomains: new Set()}
-  const vip = ctx.find(live => live.did === currentAccount.did)
   const allVipDomains = new Set(ctx.flatMap(live => live.domains))
+  const allSupportedDomains = new Set(
+    DEFAULT_LIVE_ALLOWED_DOMAINS.concat(Array.from(allVipDomains)),
+  )
+  if (!currentAccount?.did || !canGoLive)
+    return {
+      allowedDomains: new Set(),
+      allSupportedDomains,
+    }
+  const vip = ctx.find(live => live.did === currentAccount.did)
   return {
     allowedDomains: new Set(
       DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
     ),
-    allSupportedDomains: new Set(
-      DEFAULT_LIVE_ALLOWED_DOMAINS.concat(Array.from(allVipDomains)),
-    ),
+    allSupportedDomains,
   }
 }
 
