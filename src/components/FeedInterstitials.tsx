@@ -695,11 +695,7 @@ export function ProfileGrid({
         ]}
         pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
         <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
-          {isFeedContext ? (
-            <Trans>Suggested for you</Trans>
-          ) : (
-            <Trans>Similar accounts</Trans>
-          )}
+          <Trans>Suggested for you</Trans>
         </Text>
         {!isProfileHeaderContext && (
           <Button
