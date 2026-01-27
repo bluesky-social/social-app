@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   outer: {
     // @ts-ignore web-only
     position: IS_WEB ? 'fixed' : 'absolute',
-    zIndex: 100,
+    zIndex: 1,
     cursor: 'pointer',
   },
 })
