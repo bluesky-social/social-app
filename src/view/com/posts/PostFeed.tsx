@@ -27,7 +27,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isStatusStillActive, validateStatus} from '#/lib/actor-status'
+import {isStatusStillActive, isStatusValidForViewers} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -948,7 +948,7 @@ let PostFeed = ({
         const actor = post.author
         if (
           actor.status &&
-          validateStatus(actor.status, liveNowConfig) &&
+          isStatusValidForViewers(actor.status, liveNowConfig) &&
           isStatusStillActive(actor.status.expiresAt)
         ) {
           if (!seenActorWithStatusRef.current.has(actor.did)) {
