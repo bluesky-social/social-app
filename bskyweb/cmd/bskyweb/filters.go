@@ -38,15 +38,23 @@ func filterJSONEscape(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *po
 	// Marshal adds quotes around the string, so we need to remove them
 	escaped, err := json.Marshal(str)
 	if err != nil {
-		// If marshaling fails, return the original string
-		return in, nil
+		// If marshaling fails (which should be rare for strings),
+		// return an empty string to avoid JSON syntax errors
+		result := pongo2.AsSafeValue("")
+		return result, nil
 	}
 
 	// Remove the surrounding quotes added by json.Marshal
-	// escaped is guaranteed to be at least 2 bytes (the quotes) if Marshal succeeded
-	if len(escaped) >= 2 {
-		escaped = escaped[1 : len(escaped)-1]
+	// json.Marshal always wraps strings in quotes, even for empty strings ("")
+	// So we need at least 2 bytes for the quotes
+	if len(escaped) < 2 {
+		// This should never happen with json.Marshal, but handle it defensively
+		result := pongo2.AsSafeValue("")
+		return result, nil
 	}
+	
+	// Strip the first and last characters (the quotes)
+	escaped = escaped[1 : len(escaped)-1]
 
 	// Mark the result as safe to prevent pongo2 from HTML-escaping it
 	result := pongo2.AsSafeValue(string(escaped))
