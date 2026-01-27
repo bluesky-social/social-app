@@ -20,7 +20,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
     void tick // revalidate every minute
 
     if (shadowed && 'status' in shadowed && shadowed.status) {
-      const isValid = validateStatus(shadowed.status, config)
+      const isValid = isStatusValidForViewers(shadowed.status, config)
       const isDisabled = shadowed.status.isDisabled || false
       const isActive = isStatusStillActive(shadowed.status.expiresAt)
       if (isValid && !isDisabled && isActive) {
@@ -64,7 +64,11 @@ export function isStatusStillActive(timeStr: string | undefined) {
   return isAfter(expiry, now)
 }
 
-export function validateStatus(
+/**
+ * Validates whether the live status is valid for display in the app. Does NOT
+ * validate if the status is valid for the acting user e.g. as they go live.
+ */
+export function isStatusValidForViewers(
   status: AppBskyActorDefs.StatusView,
   config: LiveNowConfig,
 ) {
