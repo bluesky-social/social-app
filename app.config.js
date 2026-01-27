@@ -1,5 +1,10 @@
+// @ts-check
 const pkg = require('./package.json')
 
+/**
+ * @param {import('@expo/config-types').ExpoConfig} _config
+ * @returns {{ expo: import('@expo/config-types').ExpoConfig }}
+ */
 module.exports = function (_config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
@@ -192,10 +197,14 @@ module.exports = function (_config) {
                 scheme: 'https',
                 host: 'bsky.app',
               },
-              IS_DEV && {
-                scheme: 'http',
-                host: 'localhost:19006',
-              },
+              ...(IS_DEV
+                ? [
+                    {
+                      scheme: 'http',
+                      host: 'localhost:19006',
+                    },
+                  ]
+                : []),
             ],
             category: ['BROWSABLE', 'DEFAULT'],
           },
@@ -227,14 +236,18 @@ module.exports = function (_config) {
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
         ],
-        USE_SENTRY && [
-          '@sentry/react-native/expo',
-          {
-            organization: 'blueskyweb',
-            project: 'app',
-            url: 'https://sentry.io',
-          },
-        ],
+        ...(USE_SENTRY
+          ? [
+              /** @type {[string, any]} */ ([
+                '@sentry/react-native/expo',
+                {
+                  organization: 'blueskyweb',
+                  project: 'app',
+                  url: 'https://sentry.io',
+                },
+              ]),
+            ]
+          : []),
         [
           'expo-build-properties',
           {
@@ -396,7 +409,7 @@ module.exports = function (_config) {
               'I agree to allow Bluesky to use my contacts for friend discovery until I opt out.',
           },
         ],
-      ].filter(Boolean),
+      ],
       extra: {
         eas: {
           build: {
