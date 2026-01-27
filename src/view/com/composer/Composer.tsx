@@ -130,7 +130,11 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
-import {draftToComposerPosts, extractLocalRefs} from './drafts/state/api'
+import {
+  draftToComposerPosts,
+  extractLocalRefs,
+  type RestoredVideo,
+} from './drafts/state/api'
 import {
   loadDraft,
   useCleanupPublishedDraftMutation,
@@ -329,6 +333,92 @@ export const ComposePost = ({
     [composerDispatch],
   )
 
+  const restoreVideo = React.useCallback(
+    async (postId: string, videoInfo: RestoredVideo) => {
+      try {
+        logger.debug('restoring video from draft', {
+          postId,
+          videoUri: videoInfo.uri,
+          altText: videoInfo.altText,
+        })
+
+        let asset: ImagePickerAsset
+
+        if (IS_WEB) {
+          // Web: Convert blob URL to a File, then get video metadata (returns data URL)
+          const response = await fetch(videoInfo.uri)
+          const blob = await response.blob()
+          const file = new File([blob], 'restored-video', {
+            type: videoInfo.mimeType,
+          })
+          asset = await getVideoMetadata(file)
+        } else {
+          // Native: Use file URI directly with minimal asset properties
+          // The native compressVideo only needs uri and mimeType
+          asset = {
+            uri: videoInfo.uri,
+            mimeType: videoInfo.mimeType,
+            width: 0,
+            height: 0,
+          }
+        }
+
+        // Start video processing using existing flow
+        const abortController = new AbortController()
+        composerDispatch({
+          type: 'update_post',
+          postId,
+          postAction: {
+            type: 'embed_add_video',
+            asset,
+            abortController,
+          },
+        })
+
+        // Restore alt text immediately
+        if (videoInfo.altText) {
+          composerDispatch({
+            type: 'update_post',
+            postId,
+            postAction: {
+              type: 'embed_update_video',
+              videoAction: {
+                type: 'update_alt_text',
+                altText: videoInfo.altText,
+                signal: abortController.signal,
+              },
+            },
+          })
+        }
+
+        // Start video compression and upload
+        processVideo(
+          asset,
+          videoAction => {
+            composerDispatch({
+              type: 'update_post',
+              postId,
+              postAction: {
+                type: 'embed_update_video',
+                videoAction,
+              },
+            })
+          },
+          agent,
+          currentDid,
+          abortController.signal,
+          _,
+        )
+      } catch (e) {
+        logger.error('Failed to restore video from draft', {
+          postId,
+          error: e,
+        })
+      }
+    },
+    [_, agent, currentDid, composerDispatch],
+  )
+
   const handleSelectDraft = React.useCallback(
     async (draftSummary: DraftSummary) => {
       logger.debug('loading draft for editing', {
@@ -347,8 +437,11 @@ export const ComposePost = ({
         originalLocalRefCount: originalLocalRefs.size,
       })
 
-      // Convert server draft to composer posts
-      const posts = draftToComposerPosts(draftSummary.draft, loadedMedia)
+      // Convert server draft to composer posts (videos returned separately)
+      const {posts, restoredVideos} = draftToComposerPosts(
+        draftSummary.draft,
+        loadedMedia,
+      )
 
       // Dispatch restore action (this also sets draftId in state)
       composerDispatch({
@@ -360,8 +453,15 @@ export const ComposePost = ({
         loadedMedia,
         originalLocalRefs,
       })
+
+      // Initiate video processing for any restored videos
+      // This is async but we don't await - videos process in the background
+      for (const [postIndex, videoInfo] of restoredVideos) {
+        const postId = posts[postIndex].id
+        restoreVideo(postId, videoInfo)
+      }
     },
-    [composerDispatch],
+    [composerDispatch, restoreVideo],
   )
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)

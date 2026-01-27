@@ -18,6 +18,31 @@ import {type DraftPostDisplay, type DraftSummary} from './schema'
 const TENOR_HOSTNAME = 'media.tenor.com'
 
 /**
+ * Video data from a draft that needs to be restored by re-processing.
+ * Contains the local file URI, alt text, and mime type to restore.
+ */
+export type RestoredVideo = {
+  uri: string
+  altText: string
+  mimeType: string
+  localRefPath: string
+}
+
+/**
+ * Parse mime type from video localRefPath.
+ * Format: `video:${mimeType}:${nanoid()}` (new) or `video:${nanoid()}` (legacy)
+ */
+function parseVideoMimeType(localRefPath: string): string {
+  const parts = localRefPath.split(':')
+  // New format: video:video/mp4:abc123 -> parts[1] is mime type
+  // Legacy format: video:abc123 -> no mime type, default to video/mp4
+  if (parts.length >= 3 && parts[1].includes('/')) {
+    return parts[1]
+  }
+  return 'video/mp4' // Default for legacy drafts
+}
+
+/**
  * Convert ComposerState to server Draft format for saving.
  * Returns both the draft and a map of localRef paths to their source paths.
  */
@@ -165,6 +190,7 @@ function serializeImages(
 
 /**
  * Serialize video to server format with localRef path.
+ * The localRef path encodes the mime type: `video:${mimeType}:${nanoid()}`
  */
 function serializeVideo(
   videoState: VideoState,
@@ -175,7 +201,9 @@ function serializeVideo(
     return undefined
   }
 
-  const localRefPath = `video:${nanoid()}`
+  // Encode mime type in the path for restoration
+  const mimeType = videoState.video.mimeType || 'video/mp4'
+  const localRefPath = `video:${mimeType}:${nanoid()}`
   localRefPaths.set(localRefPath, videoState.video.uri)
 
   return {
@@ -345,13 +373,19 @@ function parseGifFromUrl(
 
 /**
  * Convert server Draft back to composer-compatible format for restoration.
- * Returns partial state that can be merged with initial composer state.
+ * Returns posts and a map of videos that need to be restored by re-processing.
+ *
+ * Videos cannot be restored synchronously like images because they need to go through
+ * the compression and upload pipeline. The caller should handle the restoredVideos
+ * by initiating video processing for each entry.
  */
 export function draftToComposerPosts(
   draft: AppBskyDraftDefs.Draft,
   loadedMedia: Map<string, string>,
-): PostDraft[] {
-  return draft.posts.map((post, index) => {
+): {posts: PostDraft[]; restoredVideos: Map<number, RestoredVideo>} {
+  const restoredVideos = new Map<number, RestoredVideo>()
+
+  const posts = draft.posts.map((post, index) => {
     const richtext = new RichText({text: post.text || ''})
     richtext.detectFacetsWithoutResolution()
 
@@ -428,6 +462,27 @@ export function draftToComposerPosts(
       }
     }
 
+    // Collect video for restoration (processed async by caller)
+    if (post.embedVideos && post.embedVideos.length > 0) {
+      const vid = post.embedVideos[0]
+      const videoUri = loadedMedia.get(vid.localRef.path)
+      if (videoUri) {
+        const mimeType = parseVideoMimeType(vid.localRef.path)
+        logger.debug('found video to restore', {
+          localRefPath: vid.localRef.path,
+          videoUri,
+          altText: vid.alt,
+          mimeType,
+        })
+        restoredVideos.set(index, {
+          uri: videoUri,
+          altText: vid.alt || '',
+          mimeType,
+          localRefPath: vid.localRef.path,
+        })
+      }
+    }
+
     // Restore quote embed
     if (post.embedRecords && post.embedRecords.length > 0) {
       const record = post.embedRecords[0]
@@ -461,6 +516,8 @@ export function draftToComposerPosts(
       embed,
     } as PostDraft
   })
+
+  return {posts, restoredVideos}
 }
 
 /**
