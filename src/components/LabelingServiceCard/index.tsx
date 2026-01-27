@@ -157,7 +157,7 @@ export function Link({
       to={{
         screen: 'Profile',
         params: {
-          name: labeler.creator.handle,
+          name: labeler.creator.did,
         },
       }}
       label={_(
