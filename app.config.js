@@ -310,26 +310,24 @@ module.exports = function (_config) {
         [
           'expo-splash-screen',
           {
-            ios: {
-              enableFullScreenImage_legacy: true,
-              backgroundColor: '#ffffff',
-              image: './assets/splash.png',
+            enableFullScreenImage_legacy: true, // iOS only
+            backgroundColor: '#EEF5FF',
+            image: './assets/splash/splash-mobile.png',
+            resizeMode: 'cover',
+            dark: {
+              enableFullScreenImage_legacy: true, // iOS only
+              backgroundColor: '#446DA9',
+              image: './assets/splash/splash-mobile-dark.png',
               resizeMode: 'cover',
-              dark: {
-                enableFullScreenImage_legacy: true,
-                backgroundColor: '#001429',
-                image: './assets/splash-dark.png',
-                resizeMode: 'cover',
-              },
             },
             android: {
-              backgroundColor: '#0c7cff',
-              image: './assets/splash-android-icon.png',
-              imageWidth: 150,
+              backgroundColor: '#EEF5FF',
+              image: './assets/splash/android-splash-logo-light.png',
+              imageWidth: 100,
               dark: {
-                backgroundColor: '#0c2a49',
-                image: './assets/splash-android-icon-dark.png',
-                imageWidth: 150,
+                backgroundColor: '#335890',
+                image: './assets/splash/android-splash-logo-dark.png',
+                imageWidth: 100,
               },
             },
           },
