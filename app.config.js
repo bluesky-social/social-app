@@ -255,6 +255,13 @@ module.exports = function (_config) {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
               ccacheEnabled: IS_DEV,
+              extraPods: [
+                {
+                  name: 'MCEmojiPicker',
+                  git: 'https://github.com/bluesky-social/MCEmojiPicker.git',
+                  branch: 'main',
+                },
+              ],
             },
             android: {
               compileSdkVersion: 35,
@@ -289,7 +296,6 @@ module.exports = function (_config) {
         './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
-        './plugins/withMCEmojiPickerFork.js',
         [
           'expo-font',
           {
