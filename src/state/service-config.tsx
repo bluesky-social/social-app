@@ -97,28 +97,30 @@ export function useLiveNowConfig(): LiveNowConfig {
   const ctx = useContext(LiveNowContext)
   const canGoLive = useCanGoLive()
   const {currentAccount} = useSession()
-  const defaultAllowedHosts = new Set(DEFAULT_LIVE_ALLOWED_DOMAINS)
-  const allowedHostsExceptionsByDid = new Map<string, Set<string>>()
-  for (const live of ctx) {
-    allowedHostsExceptionsByDid.set(
-      live.did,
-      new Set(DEFAULT_LIVE_ALLOWED_DOMAINS.concat(live.domains)),
-    )
-  }
-  if (!currentAccount?.did || !canGoLive)
+  return useMemo(() => {
+    const defaultAllowedHosts = new Set(DEFAULT_LIVE_ALLOWED_DOMAINS)
+    const allowedHostsExceptionsByDid = new Map<string, Set<string>>()
+    for (const live of ctx) {
+      allowedHostsExceptionsByDid.set(
+        live.did,
+        new Set(DEFAULT_LIVE_ALLOWED_DOMAINS.concat(live.domains)),
+      )
+    }
+    if (!currentAccount?.did || !canGoLive)
+      return {
+        currentAccountAllowedHosts: new Set(),
+        defaultAllowedHosts,
+        allowedHostsExceptionsByDid,
+      }
+    const vip = ctx.find(live => live.did === currentAccount.did)
     return {
-      currentAccountAllowedHosts: new Set(),
+      currentAccountAllowedHosts: new Set(
+        DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
+      ),
       defaultAllowedHosts,
       allowedHostsExceptionsByDid,
     }
-  const vip = ctx.find(live => live.did === currentAccount.did)
-  return {
-    currentAccountAllowedHosts: new Set(
-      DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
-    ),
-    defaultAllowedHosts,
-    allowedHostsExceptionsByDid,
-  }
+  }, [ctx, currentAccount, canGoLive])
 }
 
 export function useCanGoLive() {
