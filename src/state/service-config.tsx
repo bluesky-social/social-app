@@ -89,29 +89,38 @@ const DEFAULT_LIVE_ALLOWED_DOMAINS = [
   'www.bluecast.app',
 ]
 export type LiveNowConfig = {
-  allowedDomains: Set<string>
-  allSupportedDomains: Set<string>
+  currentAccountAllowedHosts: Set<string>
+  defaultAllowedHosts: Set<string>
+  allowedHostsExceptionsByDid: Map<string, Set<string>>
 }
 export function useLiveNowConfig(): LiveNowConfig {
   const ctx = useContext(LiveNowContext)
   const canGoLive = useCanGoLive()
   const {currentAccount} = useSession()
-  const allVipDomains = new Set(ctx.flatMap(live => live.domains))
-  const allSupportedDomains = new Set(
-    DEFAULT_LIVE_ALLOWED_DOMAINS.concat(Array.from(allVipDomains)),
-  )
-  if (!currentAccount?.did || !canGoLive)
-    return {
-      allowedDomains: new Set(),
-      allSupportedDomains,
+  return useMemo(() => {
+    const defaultAllowedHosts = new Set(DEFAULT_LIVE_ALLOWED_DOMAINS)
+    const allowedHostsExceptionsByDid = new Map<string, Set<string>>()
+    for (const live of ctx) {
+      allowedHostsExceptionsByDid.set(
+        live.did,
+        new Set(DEFAULT_LIVE_ALLOWED_DOMAINS.concat(live.domains)),
+      )
     }
-  const vip = ctx.find(live => live.did === currentAccount.did)
-  return {
-    allowedDomains: new Set(
-      DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
-    ),
-    allSupportedDomains,
-  }
+    if (!currentAccount?.did || !canGoLive)
+      return {
+        currentAccountAllowedHosts: new Set(),
+        defaultAllowedHosts,
+        allowedHostsExceptionsByDid,
+      }
+    const vip = ctx.find(live => live.did === currentAccount.did)
+    return {
+      currentAccountAllowedHosts: new Set(
+        DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
+      ),
+      defaultAllowedHosts,
+      allowedHostsExceptionsByDid,
+    }
+  }, [ctx, currentAccount, canGoLive])
 }
 
 export function useCanGoLive() {
