@@ -48,5 +48,7 @@ func filterJSONEscape(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *po
 		escaped = escaped[1 : len(escaped)-1]
 	}
 
-	return pongo2.AsValue(string(escaped)), nil
+	// Mark the result as safe to prevent pongo2 from HTML-escaping it
+	result := pongo2.AsSafeValue(string(escaped))
+	return result, nil
 }
