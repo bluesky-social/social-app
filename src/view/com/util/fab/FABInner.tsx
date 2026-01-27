@@ -37,6 +37,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
 
   return (
     <Animated.View
+      testID="fab-outer"
       style={[
         styles.outer,
         size,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   outer: {
     // @ts-ignore web-only
     position: IS_WEB ? 'fixed' : 'absolute',
-    zIndex: 1,
+    zIndex: 100,
     cursor: 'pointer',
   },
 })

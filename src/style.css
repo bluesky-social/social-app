@@ -56,6 +56,11 @@ a[role='link'][data-no-underline='1']:hover {
 *[data-stable-gutters] {
   scrollbar-gutter: stable both-edges;
 }
+/* Remove auto z-index applied by react-native-web for FAB */
+/* see: https://github.com/necolas/react-native-web/discussions/2547 */
+[class^="css-view-"]:not([data-testid="fab-outer"]) {
+    z-index: auto;
+}
 
 /* ProseMirror */
 .ProseMirror {
