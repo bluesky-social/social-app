@@ -2,37 +2,19 @@
  * Web IndexedDB storage for draft media.
  * Media is stored by localRefPath key (unique identifier stored in server draft).
  */
-import {type DBSchema, type IDBPDatabase, openDB} from 'idb'
+import {createStore, del, get, keys, set} from 'idb-keyval'
 
 import {logger} from './logger'
 
 const DB_NAME = 'bsky-draft-media'
-const DB_VERSION = 1
+const STORE_NAME = 'media'
 
-interface DraftMediaDB extends DBSchema {
-  media: {
-    key: string // localRefPath
-    value: {
-      blob: Blob
-      createdAt: string
-    }
-  }
+type MediaRecord = {
+  blob: Blob
+  createdAt: string
 }
 
-let dbPromise: Promise<IDBPDatabase<DraftMediaDB>> | null = null
-
-async function getDB(): Promise<IDBPDatabase<DraftMediaDB>> {
-  if (!dbPromise) {
-    dbPromise = openDB<DraftMediaDB>(DB_NAME, DB_VERSION, {
-      upgrade(db) {
-        if (!db.objectStoreNames.contains('media')) {
-          db.createObjectStore('media')
-        }
-      },
-    })
-  }
-  return dbPromise
-}
+const store = createStore(DB_NAME, STORE_NAME)
 
 /**
  * Convert a path/URL to a Blob
@@ -73,8 +55,6 @@ export async function saveMediaToLocal(
   localRefPath: string,
   sourcePath: string,
 ): Promise<void> {
-  const db = await getDB()
-
   let blob: Blob
   try {
     blob = await toBlob(sourcePath)
@@ -88,13 +68,13 @@ export async function saveMediaToLocal(
   }
 
   try {
-    await db.put(
-      'media',
+    await set(
+      localRefPath,
       {
         blob,
         createdAt: new Date().toISOString(),
       },
-      localRefPath,
+      store,
     )
     // Update cache
     mediaExistsCache.set(localRefPath, true)
@@ -111,8 +91,7 @@ export async function saveMediaToLocal(
 export async function loadMediaFromLocal(
   localRefPath: string,
 ): Promise<string> {
-  const db = await getDB()
-  const record = await db.get('media', localRefPath)
+  const record = await get<MediaRecord>(localRefPath, store)
 
   if (!record) {
     throw new Error(`Media file not found: ${localRefPath}`)
@@ -127,8 +106,7 @@ export async function loadMediaFromLocal(
 export async function deleteMediaFromLocal(
   localRefPath: string,
 ): Promise<void> {
-  const db = await getDB()
-  await db.delete('media', localRefPath)
+  await del(localRefPath, store)
   mediaExistsCache.delete(localRefPath)
 }
 
@@ -152,10 +130,9 @@ export function mediaExists(localRefPath: string): boolean {
 
 async function populateCacheInternal(): Promise<void> {
   try {
-    const db = await getDB()
-    const keys = await db.getAllKeys('media')
-    for (const key of keys) {
-      mediaExistsCache.set(key, true)
+    const allKeys = await keys(store)
+    for (const key of allKeys) {
+      mediaExistsCache.set(key as string, true)
     }
     cachePopulated = true
   } catch (e) {
