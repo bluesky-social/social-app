@@ -77,7 +77,7 @@ export default defineConfig(
       parserOptions: {
         parser: tsParser,
         projectService: true,
-        tsconfigRootDir: import.meta.url,
+        tsconfigRootDir: import.meta.dirname,
         ecmaFeatures: {
           jsx: true,
         },
