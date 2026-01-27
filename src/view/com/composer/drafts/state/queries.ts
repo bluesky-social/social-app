@@ -1,4 +1,3 @@
-import {useCallback} from 'react'
 import {AppBskyDraftCreateDraft, type AppBskyDraftDefs} from '@atproto/api'
 import {
   useInfiniteQuery,
@@ -40,53 +39,46 @@ export function useDraftsQuery() {
 }
 
 /**
- * Hook to load a draft's local media for editing.
+ * Load a draft's local media for editing.
  * Takes the full Draft object (from DraftSummary) to avoid re-fetching.
  */
-export function useLoadDraft() {
-  return useCallback(
-    async (
-      draft: AppBskyDraftDefs.Draft,
-    ): Promise<{
-      loadedMedia: Map<string, string>
-    }> => {
-      // Load local media files
-      const loadedMedia = new Map<string, string>()
-      for (const post of draft.posts) {
-        // Load images
-        if (post.embedImages) {
-          for (const img of post.embedImages) {
-            try {
-              const url = await storage.loadMediaFromLocal(img.localRef.path)
-              loadedMedia.set(img.localRef.path, url)
-            } catch (e) {
-              logger.warn('Failed to load draft image', {
-                path: img.localRef.path,
-                error: e,
-              })
-            }
-          }
-        }
-        // Load videos
-        if (post.embedVideos) {
-          for (const vid of post.embedVideos) {
-            try {
-              const url = await storage.loadMediaFromLocal(vid.localRef.path)
-              loadedMedia.set(vid.localRef.path, url)
-            } catch (e) {
-              logger.warn('Failed to load draft video', {
-                path: vid.localRef.path,
-                error: e,
-              })
-            }
-          }
+export async function loadDraft(draft: AppBskyDraftDefs.Draft): Promise<{
+  loadedMedia: Map<string, string>
+}> {
+  // Load local media files
+  const loadedMedia = new Map<string, string>()
+  for (const post of draft.posts) {
+    // Load images
+    if (post.embedImages) {
+      for (const img of post.embedImages) {
+        try {
+          const url = await storage.loadMediaFromLocal(img.localRef.path)
+          loadedMedia.set(img.localRef.path, url)
+        } catch (e) {
+          logger.warn('Failed to load draft image', {
+            path: img.localRef.path,
+            error: e,
+          })
         }
       }
+    }
+    // Load videos
+    if (post.embedVideos) {
+      for (const vid of post.embedVideos) {
+        try {
+          const url = await storage.loadMediaFromLocal(vid.localRef.path)
+          loadedMedia.set(vid.localRef.path, url)
+        } catch (e) {
+          logger.warn('Failed to load draft video', {
+            path: vid.localRef.path,
+            error: e,
+          })
+        }
+      }
+    }
+  }
 
-      return {loadedMedia}
-    },
-    [],
-  )
+  return {loadedMedia}
 }
 
 /**
@@ -158,12 +150,15 @@ export function useDeleteDraftMutation() {
   return useMutation({
     mutationFn: async ({
       draftId,
-      draft,
     }: {
       draftId: string
       draft: AppBskyDraftDefs.Draft
     }) => {
-      // Delete local media files
+      // Delete from server first - if this fails, we keep local media for retry
+      await agent.app.bsky.draft.deleteDraft({id: draftId})
+    },
+    onSuccess: async (_, {draft}) => {
+      // Only delete local media after server deletion succeeds
       for (const post of draft.posts) {
         if (post.embedImages) {
           for (const img of post.embedImages) {
@@ -176,11 +171,6 @@ export function useDeleteDraftMutation() {
           }
         }
       }
-
-      // Delete from server
-      await agent.app.bsky.draft.deleteDraft({id: draftId})
-    },
-    onSuccess: () => {
       queryClient.invalidateQueries({queryKey: DRAFTS_QUERY_KEY})
     },
   })
