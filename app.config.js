@@ -241,6 +241,7 @@ module.exports = function (_config) {
             ios: {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
+              ccacheEnabled: IS_DEV,
             },
             android: {
               compileSdkVersion: 35,
