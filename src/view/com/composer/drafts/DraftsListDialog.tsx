@@ -119,7 +119,7 @@ export function DraftsListDialog({
       <ListFooter
         isFetchingNextPage={isFetchingNextPage}
         hasNextPage={hasNextPage}
-        style={[a.border_0]}
+        style={[a.border_transparent]}
       />
     ),
     [isFetchingNextPage, hasNextPage],
