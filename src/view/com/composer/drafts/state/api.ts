@@ -86,7 +86,11 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
     $type: 'app.bsky.draft.defs#draft',
     posts,
     threadgateAllow: threadgateAllow.length > 0 ? threadgateAllow : undefined,
-    // TODO: Add postgate embedding rules if needed
+    postgateEmbeddingRules:
+      state.thread.postgate.embeddingRules &&
+      state.thread.postgate.embeddingRules.length > 0
+        ? state.thread.postgate.embeddingRules
+        : undefined,
   }
 
   return {draft, localRefPaths}
