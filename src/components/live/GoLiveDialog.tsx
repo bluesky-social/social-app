@@ -55,7 +55,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const tick = useTickEveryMinute()
   const liveNowConfig = useLiveNowConfig()
   const {formatted: allowedServices} = getLiveServiceNames(
-    liveNowConfig.allowedDomains,
+    liveNowConfig.currentAccountAllowedHosts,
   )
 
   const time = useCallback(

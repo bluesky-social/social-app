@@ -89,7 +89,7 @@ const DEFAULT_LIVE_ALLOWED_DOMAINS = [
   'www.bluecast.app',
 ]
 export type LiveNowConfig = {
-  allowedDomains: Set<string>
+  currentAccountAllowedHosts: Set<string>
   defaultAllowedHosts: Set<string>
   allowedHostsExceptionsByDid: Map<string, Set<string>>
 }
@@ -107,13 +107,13 @@ export function useLiveNowConfig(): LiveNowConfig {
   }
   if (!currentAccount?.did || !canGoLive)
     return {
-      allowedDomains: new Set(),
+      currentAccountAllowedHosts: new Set(),
       defaultAllowedHosts,
       allowedHostsExceptionsByDid,
     }
   const vip = ctx.find(live => live.did === currentAccount.did)
   return {
-    allowedDomains: new Set(
+    currentAccountAllowedHosts: new Set(
       DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
     ),
     defaultAllowedHosts,
