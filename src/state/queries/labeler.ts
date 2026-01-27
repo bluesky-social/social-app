@@ -3,7 +3,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
 import {MAX_LABELERS} from '#/lib/constants'
-import {PERSISTED_QUERY_ROOT, STALE} from '#/state/queries'
+import {persist, STALE} from '#/state/queries'
 import {
   preferencesQueryKey,
   usePreferencesQuery,
@@ -22,8 +22,7 @@ export const labelersInfoQueryKey = (dids: string[]) => [
   dids.slice().sort(),
 ]
 
-export const persistedLabelersDetailedInfoQueryKey = (dids: string[]) => [
-  PERSISTED_QUERY_ROOT,
+const persistedLabelersDetailedInfoQueryKey = (dids: string[]) => [
   'labelers-detailed-info',
   dids,
 ]
@@ -64,8 +63,8 @@ export function useLabelersInfoQuery({dids}: {dids: string[]}) {
 export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
   const agent = useAgent()
   return useQuery({
+    ...persist(persistedLabelersDetailedInfoQueryKey(dids)),
     enabled: !!dids.length,
-    queryKey: persistedLabelersDetailedInfoQueryKey(dids),
     gcTime: 1000 * 60 * 60 * 6, // 6 hours
     staleTime: STALE.MINUTES.ONE,
     queryFn: async () => {
