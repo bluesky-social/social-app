@@ -3,7 +3,7 @@ import {type TextInput, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
-import type tldts from 'tldts'
+import type * as tldts from 'tldts'
 
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'

@@ -41,7 +41,7 @@
     "test-watch": "NODE_ENV=test jest --watchAll",
     "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "NODE_ENV=test jest --coverage",
-    "lint": "eslint --cache --quiet src",
+    "lint": "oxlint --quiet src",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsc --project ./tsconfig.check.json",
@@ -275,6 +275,8 @@
     "jest-junit": "^16.0.0",
     "lint-staged": "^13.2.3",
     "lockfile-lint": "^4.14.0",
+    "oxlint": "^1.42.0",
+    "oxlint-tsgolint": "^0.11.2",
     "prettier": "^3.6.0",
     "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
@@ -346,7 +348,7 @@
   },
   "lint-staged": {
     "*{.js,.jsx,.ts,.tsx}": [
-      "eslint --cache --fix"
+      "oxlint --fix"
     ],
     "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"
