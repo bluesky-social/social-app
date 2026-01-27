@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -11,6 +10,7 @@ import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
+import {IS_NATIVE} from '#/env'
 import {DraftItem} from './DraftItem'
 import {useDeleteDraftMutation, useDraftsQuery} from './state/queries'
 import {type DraftSummary} from './state/schema'
@@ -128,7 +128,7 @@ export function DraftsListDialog({
   return (
     <Dialog.Outer control={control}>
       {/* We really really need to figure out a nice, consistent API for doing a header cross-platform -sfn */}
-      {isNative && header}
+      {IS_NATIVE && header}
       <Dialog.InnerFlatList
         data={drafts}
         renderItem={renderItem}

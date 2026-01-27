@@ -1195,7 +1195,9 @@ function ComposerTopBar({
         <View style={a.flex_1} />
         {isPublishing ? (
           <>
-            <Text style={[t.atoms.text_contrast_low]}>{publishingStage}</Text>
+            <Text style={[t.atoms.text_contrast_medium]}>
+              {publishingStage}
+            </Text>
             <View style={styles.postBtn}>
               <ActivityIndicator />
             </View>
