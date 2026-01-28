@@ -25,6 +25,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import type * as bsky from '#/types/bsky'
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
@@ -60,6 +61,8 @@ export function ListMembers({
   const {openModal} = useModalControls()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
+
+  const bottomTabBarHeight = useBottomTabBarHeight()
 
   const {
     data,
@@ -254,8 +257,7 @@ export function ListMembers({
         onRefresh={onRefresh}
         headerOffset={headerOffset}
         contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
-          paddingBottom: 200,
+          paddingBottom: bottomTabBarHeight * 2,
         }}
         onScrolledDownChange={onScrolledDownChange}
         onEndReached={onEndReached}
