@@ -558,6 +558,16 @@ export function parseTenorGif(urlp: URL):
     width: Number(w),
   }
 
+  // Validate dimensions are valid positive numbers
+  if (
+    isNaN(dimensions.height) ||
+    isNaN(dimensions.width) ||
+    dimensions.height <= 0 ||
+    dimensions.width <= 0
+  ) {
+    return {success: false}
+  }
+
   if (IS_WEB) {
     if (IS_WEB_SAFARI) {
       id = id.replace('AAAAC', 'AAAP1')

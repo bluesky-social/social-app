@@ -29,7 +29,7 @@ yarn lint               # Run ESLint
 yarn typecheck          # Run TypeScript type checking
 
 # Internationalization
-yarn intl:extract       # Extract translation strings
+yarn intl:extract       # Extract translation strings (you don't typically need to run this manually, we have CI for it)
 yarn intl:compile       # Compile translations for runtime
 
 # Build
@@ -119,7 +119,7 @@ if (gtMobile) {
 
 ### Naming Conventions
 
-- Spacing: `xxs`, `xs`, `sm`, `md`, `lg`, `xl`, `xxl` (t-shirt sizes)
+- Spacing: `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl` (t-shirt sizes)
 - Text: `text_xs`, `text_sm`, `text_md`, `text_lg`, `text_xl`
 - Gaps/Padding: `gap_sm`, `p_md`, `px_lg`, `py_xl`
 - Flex: `flex_row`, `flex_1`, `align_center`, `justify_between`
@@ -144,7 +144,8 @@ function MyFeature() {
       </Button>
 
       <Dialog.Outer control={control}>
-        <Dialog.Handle />  {/* Native drag handle */}
+        {/* Typically the inner part is in its own component */}
+        <Dialog.Handle />  {/* Native-only drag handle */}
         <Dialog.ScrollableInner label={_(msg`My Dialog`)}>
           <Dialog.Header>
             <Dialog.HeaderText>Title</Dialog.HeaderText>
@@ -152,9 +153,10 @@ function MyFeature() {
 
           <Text>Dialog content here</Text>
 
-          <Button label="Close" onPress={() => control.close()}>
-            <ButtonText>Close</ButtonText>
+          <Button label="Done" onPress={() => control.close()}>
+            <ButtonText>Done</ButtonText>
           </Button>
+          <Dialog.Close /> {/* Web-only X button in top left */}
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
@@ -215,7 +217,7 @@ import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 
 // Icon-only button
 <Button label="Close" onPress={handleClose} color="secondary" size="small" shape="round">
-  <ButtonIcon icon={X} />
+  <ButtonIcon icon={XIcon} />
 </Button>
 
 // Ghost variant (deprecated - use color prop)
@@ -225,7 +227,7 @@ import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 ```
 
 **Button Props:**
-- `color`: `'primary'` | `'secondary'` | `'negative'` | `'primary_subtle'` | `'negative_subtle'`
+- `color`: `'primary'` | `'secondary'` | `'negative'` | `'primary_subtle'` | `'negative_subtle'` | `'secondary_inverted'`
 - `size`: `'tiny'` | `'small'` | `'large'`
 - `shape`: `'default'` (pill) | `'round'` | `'square'` | `'rectangular'`
 - `variant`: `'solid'` | `'outline'` | `'ghost'` (deprecated, use `color`)
@@ -339,6 +341,16 @@ export function useUpdateProfile() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({queryKey: RQKEY(variables.did)})
     },
+    onError: (error) => {
+      if (isNetworkError(error)) {
+        // don't log, but inform user
+      } else if (error instanceof AppBskyExampleProcedure.ExampleError) {
+        // XRPC APIs often have typed errors, allows nicer handling
+      } else {
+        // Log unexpected errors to Sentry
+        logger.error('Error updating profile', {safeMessage: error})
+      }
+    }
   })
 }
 ```
@@ -351,6 +363,26 @@ STALE.MINUTES.FIVE     // 5 minutes
 STALE.HOURS.ONE        // 1 hour
 STALE.INFINITY         // Never stale
 ```
+
+**Paginated APIs:** Many atproto APIs return paginated results with a `cursor`. Use `useInfiniteQuery` for these:
+
+```tsx
+export function useDraftsQuery() {
+  const agent = useAgent()
+
+  return useInfiniteQuery({
+    queryKey: ['drafts'],
+    queryFn: async ({pageParam}) => {
+      const res = await agent.app.bsky.draft.getDrafts({cursor: pageParam})
+      return res.data
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: page => page.cursor,
+  })
+}
+```
+
+To get all items from pages: `data?.pages.flatMap(page => page.items) ?? []`
 
 ### Preferences (React Context)
 
@@ -437,7 +469,19 @@ Example from Dialog:
 - `src/components/Dialog/index.tsx` - Native (uses BottomSheet)
 - `src/components/Dialog/index.web.tsx` - Web (uses modal with Radix primitives)
 
-Platform detection:
+**Important:** The bundler automatically resolves platform-specific files. Just import normally:
+
+```tsx
+// CORRECT - bundler picks storage.ts or storage.web.ts automatically
+import * as storage from '#/state/drafts/storage'
+
+// WRONG - don't use require() or conditional imports for platform files
+const storage = IS_NATIVE
+  ? require('#/state/drafts/storage')
+  : require('#/state/drafts/storage.web')
+```
+
+Platform detection (for runtime logic, not imports):
 ```tsx
 import {IS_WEB, IS_NATIVE, IS_IOS, IS_ANDROID} from '#/env'
 

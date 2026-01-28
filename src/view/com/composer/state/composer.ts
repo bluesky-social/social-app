@@ -1,8 +1,9 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
+  type AppBskyActorDefs,
+  type AppBskyDraftDefs,
   type AppBskyFeedPostgate,
   AppBskyRichtextFacet,
-  type BskyPreferences,
   RichText,
 } from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
@@ -101,6 +102,14 @@ export type ComposerState = {
   thread: ThreadDraft
   activePostIndex: number
   mutableNeedsFocusActive: boolean
+  /** ID of the draft being edited, if any. Used to update existing draft on save. */
+  draftId?: string
+  /** Whether the composer has been modified since loading a draft. */
+  isDirty: boolean
+  /** Map of localId -> loaded media path/URL for the current draft. Used for re-saving without re-copying media. */
+  loadedMediaMap?: Map<string, string>
+  /** Set of original localRef paths from the draft being edited. Used to identify orphaned media on save. */
+  originalLocalRefs?: Set<string>
 }
 
 export type ComposerAction =
@@ -122,6 +131,28 @@ export type ComposerAction =
       type: 'focus_post'
       postId: string
     }
+  | {
+      type: 'restore_from_draft'
+      draftId: string
+      posts: PostDraft[]
+      threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow']
+      postgateEmbeddingRules: AppBskyDraftDefs.Draft['postgateEmbeddingRules']
+
+      /** Map of localRefPath -> loaded media path/URL */
+      loadedMedia: Map<string, string>
+      /** Set of original localRef paths from the draft. Used to identify orphaned media on save. */
+      originalLocalRefs: Set<string>
+    }
+  | {
+      type: 'clear'
+      initInteractionSettings:
+        | AppBskyActorDefs.PostInteractionSettingsPref
+        | undefined
+    }
+  | {
+      type: 'mark_saved'
+      draftId: string
+    }
 
 export const MAX_IMAGES = 4
 
@@ -133,6 +164,7 @@ export function composerReducer(
     case 'update_postgate': {
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           postgate: action.postgate,
@@ -142,6 +174,7 @@ export function composerReducer(
     case 'update_threadgate': {
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           threadgate: action.threadgate,
@@ -162,6 +195,7 @@ export function composerReducer(
       }
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -184,6 +218,7 @@ export function composerReducer(
       })
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -209,6 +244,7 @@ export function composerReducer(
       }
       return {
         ...state,
+        isDirty: true,
         activePostIndex: nextActivePostIndex,
         mutableNeedsFocusActive: true,
         thread: {
@@ -227,6 +263,54 @@ export function composerReducer(
       return {
         ...state,
         activePostIndex: nextActivePostIndex,
+      }
+    }
+    case 'restore_from_draft': {
+      const {
+        draftId,
+        posts,
+        threadgateAllow,
+        postgateEmbeddingRules,
+        loadedMedia,
+        originalLocalRefs,
+      } = action
+
+      return {
+        activePostIndex: 0,
+        mutableNeedsFocusActive: true,
+        draftId,
+        isDirty: false,
+        loadedMediaMap: loadedMedia,
+        originalLocalRefs,
+        thread: {
+          posts,
+          postgate: createPostgateRecord({
+            post: '',
+            embeddingRules: postgateEmbeddingRules,
+          }),
+          threadgate: threadgateRecordToAllowUISetting({
+            $type: 'app.bsky.feed.threadgate',
+            post: '',
+            createdAt: new Date().toString(),
+            allow: threadgateAllow,
+          }),
+        },
+      }
+    }
+    case 'clear': {
+      return createComposerState({
+        initText: undefined,
+        initMention: undefined,
+        initImageUris: [],
+        initQuoteUri: undefined,
+        initInteractionSettings: action.initInteractionSettings,
+      })
+    }
+    case 'mark_saved': {
+      return {
+        ...state,
+        isDirty: false,
+        draftId: action.draftId,
       }
     }
   }
@@ -494,7 +578,7 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    | BskyPreferences['postInteractionSettings']
+    | AppBskyActorDefs.PostInteractionSettingsPref
     | undefined
 }): ComposerState {
   let media: ImagesMedia | undefined
@@ -591,6 +675,7 @@ export function createComposerState({
   return {
     activePostIndex: 0,
     mutableNeedsFocusActive: false,
+    isDirty: false,
     thread: {
       posts: [
         {

@@ -95,12 +95,13 @@ export function EmptyState({
           a.leading_snug,
           a.text_center,
           a.self_center,
+          !button && a.mb_5xl,
           textStyle,
         ]}>
         {message}
       </Text>
       {button && (
-        <View style={[a.flex_shrink, a.mt_xl, a.self_center]}>
+        <View style={[a.flex_shrink, a.mt_xl, a.self_center, a.mb_5xl]}>
           <Button {...button}>
             <ButtonText>{button.text}</ButtonText>
           </Button>

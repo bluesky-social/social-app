@@ -4,7 +4,11 @@ import {type ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ADULT_CONTENT_LABELS, isJustAMute} from '#/lib/moderation'
+import {
+  ADULT_CONTENT_LABELS,
+  type AdultSelfLabel,
+  isJustAMute,
+} from '#/lib/moderation'
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {getDefinition, getLabelStrings} from '#/lib/moderation/useLabelInfo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
@@ -101,7 +105,7 @@ function ContentHiderActive({
         if (cause.source.type !== 'user') {
           return false
         }
-        if (ADULT_CONTENT_LABELS.includes(cause.label.val)) {
+        if (ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel)) {
           if (hasAdultContentLabel) {
             return false
           }
