@@ -71,13 +71,15 @@ export function DraftsButton({
       />
 
       <Prompt.Outer control={savePromptControl} webOptions={{vertical: true}}>
-        <Prompt.TitleText>
-          {isEditingDraft ? (
-            <Trans>Save changes?</Trans>
-          ) : (
-            <Trans>Save draft?</Trans>
-          )}
-        </Prompt.TitleText>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            {isEditingDraft ? (
+              <Trans>Save changes?</Trans>
+            ) : (
+              <Trans>Save draft?</Trans>
+            )}
+          </Prompt.TitleText>
+        </Prompt.Content>
         <Prompt.DescriptionText>
           {isEditingDraft ? (
             <Trans>

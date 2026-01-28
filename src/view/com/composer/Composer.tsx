@@ -1050,18 +1050,22 @@ export const ComposePost = ({
         <Prompt.Outer
           control={discardPromptControl}
           webOptions={{vertical: true}}>
-          <Prompt.TitleText>
-            {composerState.draftId ? (
-              <Trans>Save changes?</Trans>
-            ) : (
-              <Trans>Save draft?</Trans>
-            )}
-          </Prompt.TitleText>
-          <Prompt.DescriptionText>
-            {composerState.draftId
-              ? _(msg`You have unsaved changes to this draft.`)
-              : _(msg`You can save this draft to continue later.`)}
-          </Prompt.DescriptionText>
+          <Prompt.Content>
+            <Prompt.TitleText>
+              {composerState.draftId ? (
+                <Trans>Save changes?</Trans>
+              ) : (
+                <Trans>Save draft?</Trans>
+              )}
+            </Prompt.TitleText>
+            <Prompt.DescriptionText>
+              {composerState.draftId
+                ? _(
+                    msg`You have unsaved changes to this draft, would you like to save them?`,
+                  )
+                : _(msg`Would you like to save this as a draft to edit later?`)}
+            </Prompt.DescriptionText>
+          </Prompt.Content>
           <Prompt.Actions>
             <Prompt.Action
               cta={
