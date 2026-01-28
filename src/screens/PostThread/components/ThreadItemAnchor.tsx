@@ -677,33 +677,29 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
       </Button>
 
       <Prompt.Outer control={control}>
-        <Prompt.TitleText>
-          <Trans>Archived post</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText>
-          <Trans>
-            This post claims to have been created on{' '}
-            <RNText style={[a.font_semi_bold]}>
-              {niceDate(i18n, createdAt)}
-            </RNText>
-            , but was first seen by Bluesky on{' '}
-            <RNText style={[a.font_semi_bold]}>
-              {niceDate(i18n, indexedAt)}
-            </RNText>
-            .
-          </Trans>
-        </Prompt.DescriptionText>
-        <Text
-          style={[
-            a.text_md,
-            a.leading_snug,
-            t.atoms.text_contrast_high,
-            a.pb_xl,
-          ]}>
-          <Trans>
-            Bluesky cannot confirm the authenticity of the claimed date.
-          </Trans>
-        </Text>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Archived post</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>
+              This post claims to have been created on{' '}
+              <RNText style={[a.font_semi_bold]}>
+                {niceDate(i18n, createdAt)}
+              </RNText>
+              , but was first seen by Bluesky on{' '}
+              <RNText style={[a.font_semi_bold]}>
+                {niceDate(i18n, indexedAt)}
+              </RNText>
+              .
+            </Trans>
+          </Prompt.DescriptionText>
+          <Prompt.DescriptionText>
+            <Trans>
+              Bluesky cannot confirm the authenticity of the claimed date.
+            </Trans>
+          </Prompt.DescriptionText>
+        </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
         </Prompt.Actions>

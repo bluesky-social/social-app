@@ -198,10 +198,12 @@ function AltText({text}: {text: string}) {
         </Text>
       </TouchableOpacity>
       <Prompt.Outer control={control}>
-        <Prompt.TitleText>
-          <Trans>Alt Text</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Alt Text</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
+        </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action
             onPress={() => control.close()}
