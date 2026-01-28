@@ -31,8 +31,10 @@ export function useLiveLinkMetaQuery(url: string | null) {
     queryFn: async () => {
       if (!url) return undefined
       const urlp = new URL(url)
-      if (!liveNowConfig.allowedDomains.has(urlp.hostname)) {
-        const {formatted} = getLiveServiceNames(liveNowConfig.allowedDomains)
+      if (!liveNowConfig.currentAccountAllowedHosts.has(urlp.hostname)) {
+        const {formatted} = getLiveServiceNames(
+          liveNowConfig.currentAccountAllowedHosts,
+        )
         throw new Error(
           _(
             msg`This service is not supported while the Live feature is in beta. Allowed services: ${formatted}.`,

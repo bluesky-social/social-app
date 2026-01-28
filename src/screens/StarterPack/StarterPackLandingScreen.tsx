@@ -326,15 +326,17 @@ function LandingScreenLoaded({
         setIsVisible={setAppClipOverlayVisible}
       />
       <Prompt.Outer control={androidDialogControl}>
-        <Prompt.TitleText>
-          <Trans>Download Bluesky</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText>
-          <Trans>
-            The experience is better in the app. Download Bluesky now and we'll
-            pick back up where you left off.
-          </Trans>
-        </Prompt.DescriptionText>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Download Bluesky</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>
+              The experience is better in the app. Download Bluesky now and
+              we'll pick back up where you left off.
+            </Trans>
+          </Prompt.DescriptionText>
+        </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action
             cta="Download on Google Play"

@@ -1028,7 +1028,7 @@ msgstr ""
 msgid "Alt text"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:202
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:203
 msgid "Alt Text"
 msgstr ""
 
@@ -1071,7 +1071,7 @@ msgstr ""
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:371
+#: src/components/StarterPack/ProfileStarterPacks.tsx:373
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
@@ -1306,7 +1306,7 @@ msgid "Archived from {0}"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:642
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:681
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:682
 msgid "Archived post"
 msgstr ""
 
@@ -1573,7 +1573,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:703
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:698
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -1618,7 +1618,7 @@ msgstr ""
 msgid "Bluesky stores your contacts as encoded data. Removing your contacts will immediately delete this data."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:338
+#: src/components/StarterPack/ProfileStarterPacks.tsx:339
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
@@ -1659,20 +1659,20 @@ msgstr ""
 msgid "Browse custom feeds"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:771
+#: src/components/FeedInterstitials.tsx:767
 msgid "Browse more accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:901
+#: src/components/FeedInterstitials.tsx:897
 msgid "Browse more feeds on the Explore page"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:882
-#: src/components/FeedInterstitials.tsx:885
+#: src/components/FeedInterstitials.tsx:878
+#: src/components/FeedInterstitials.tsx:881
 msgid "Browse more suggestions"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:910
+#: src/components/FeedInterstitials.tsx:906
 msgid "Browse more suggestions on the Explore page"
 msgstr ""
 
@@ -1765,8 +1765,8 @@ msgstr ""
 #: src/components/live/GoLiveDialog.tsx:252
 #: src/components/Menu/index.tsx:352
 #: src/components/PostControls/RepostButton.tsx:209
-#: src/components/Prompt.tsx:144
-#: src/components/Prompt.tsx:146
+#: src/components/Prompt.tsx:130
+#: src/components/Prompt.tsx:132
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:151
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:156
 #: src/lib/media/picker.tsx:38
@@ -1984,7 +1984,7 @@ msgstr ""
 msgid "Choose Feeds"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:346
+#: src/components/StarterPack/ProfileStarterPacks.tsx:348
 msgid "Choose for me"
 msgstr ""
 
@@ -2106,7 +2106,7 @@ msgstr ""
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:208
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:210
 #: src/components/ProgressGuide/FollowDialog.tsx:442
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2266,8 +2266,8 @@ msgstr ""
 msgid "Configured in <0>moderation settings</0>."
 msgstr ""
 
-#: src/components/Prompt.tsx:187
-#: src/components/Prompt.tsx:190
+#: src/components/Prompt.tsx:171
+#: src/components/Prompt.tsx:174
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:188
 msgid "Confirm"
@@ -2766,7 +2766,7 @@ msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:161
 #: src/screens/Settings/AccountSettings.tsx:166
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:72
 msgid "Deactivate account"
 msgstr ""
 
@@ -3150,7 +3150,7 @@ msgstr ""
 msgid "Double tap to like"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:330
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:331
 msgid "Download Bluesky"
 msgstr ""
 
@@ -3284,12 +3284,12 @@ msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:268
 #: src/screens/Profile/Header/EditProfileDialog.tsx:274
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:293
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:321
 msgid "Edit profile"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:296
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:323
 msgid "Edit Profile"
 msgstr ""
@@ -4306,7 +4306,7 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:335
+#: src/components/StarterPack/ProfileStarterPacks.tsx:336
 msgid "Generate a starter pack"
 msgstr ""
 
@@ -4871,7 +4871,7 @@ msgstr ""
 msgid "If you're a developer, you can host your own server."
 msgstr ""
 
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:91
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr ""
 
@@ -5285,7 +5285,7 @@ msgstr ""
 msgid "left to go."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:351
+#: src/components/StarterPack/ProfileStarterPacks.tsx:353
 msgid "Let me choose"
 msgstr ""
 
@@ -6399,7 +6399,7 @@ msgstr ""
 
 #. Confirm button text.
 #: src/components/contacts/screens/GetContacts.tsx:316
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:223
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:225
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:45
 #: src/screens/Settings/AppIconSettings/index.tsx:231
@@ -6407,7 +6407,7 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:708
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:704
 msgid "Okay"
 msgstr ""
 
@@ -6473,8 +6473,8 @@ msgid "Oops, something went wrong!"
 msgstr ""
 
 #: src/components/Lists.tsx:183
-#: src/components/StarterPack/ProfileStarterPacks.tsx:360
-#: src/components/StarterPack/ProfileStarterPacks.tsx:369
+#: src/components/StarterPack/ProfileStarterPacks.tsx:362
+#: src/components/StarterPack/ProfileStarterPacks.tsx:371
 #: src/screens/Settings/AppPasswords.tsx:58
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:106
 #: src/view/screens/Profile.tsx:132
@@ -8005,7 +8005,7 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:281
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:58
-#: src/components/StarterPack/ProfileStarterPacks.tsx:374
+#: src/components/StarterPack/ProfileStarterPacks.tsx:376
 #: src/screens/Login/LoginForm.tsx:326
 #: src/screens/Login/LoginForm.tsx:333
 #: src/screens/Messages/ChatList.tsx:292
@@ -8292,12 +8292,12 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:724
-#: src/components/FeedInterstitials.tsx:785
+#: src/components/FeedInterstitials.tsx:720
+#: src/components/FeedInterstitials.tsx:781
 msgid "See more"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:706
+#: src/components/FeedInterstitials.tsx:702
 msgid "See more suggested profiles"
 msgstr ""
 
@@ -8925,10 +8925,6 @@ msgstr ""
 msgid "Signed in as @{0}"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:701
-msgid "Similar accounts"
-msgstr ""
-
 #: src/components/contacts/screens/PhoneInput.tsx:162
 #: src/components/contacts/screens/VerifyNumber.tsx:204
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:85
@@ -8976,7 +8972,7 @@ msgstr ""
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:864
+#: src/components/FeedInterstitials.tsx:860
 msgid "Some other feeds you might like"
 msgstr ""
 
@@ -9003,7 +8999,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:138
 #: src/components/moderation/ReportDialog/index.tsx:273
 #: src/screens/Deactivated.tsx:85
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:58
 #: src/view/screens/Storybook/Admonitions.tsx:55
 msgid "Something went wrong, please try again"
 msgstr ""
@@ -9190,11 +9186,11 @@ msgstr ""
 msgid "Subscribe to account activity"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:344
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "Subscribe to Labeler"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:310
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:312
 msgid "Subscribe to this labeler"
 msgstr ""
 
@@ -9221,7 +9217,7 @@ msgid "Suggested Accounts"
 msgstr ""
 
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:699
+#: src/components/FeedInterstitials.tsx:698
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:152
 msgid "Suggested for you"
 msgstr ""
@@ -9456,7 +9452,7 @@ msgstr ""
 msgid "The Discover feed now knows what you like"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:333
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:334
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
 msgstr ""
 
@@ -9536,7 +9532,7 @@ msgstr ""
 msgid "There is a limit to how often you can change your birthdate. You may need to wait a day or two before updating it again."
 msgstr ""
 
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:85
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr ""
 
@@ -9807,7 +9803,7 @@ msgstr ""
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:684
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:685
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -9843,7 +9839,7 @@ msgstr ""
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr ""
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -10289,7 +10285,7 @@ msgstr ""
 msgid "Unsnooze email reminder"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:342
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:344
 msgid "Unsubscribe"
 msgstr ""
 
@@ -10298,7 +10294,7 @@ msgstr ""
 msgid "Unsubscribe from list"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:311
 msgid "Unsubscribe from this labeler"
 msgstr ""
 
@@ -10990,7 +10986,7 @@ msgstr ""
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:217
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:218
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr ""
 
@@ -11146,8 +11142,8 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:104
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
 msgid "Yes, deactivate"
 msgstr ""
 
@@ -11201,7 +11197,7 @@ msgstr ""
 msgid "You are Live"
 msgstr ""
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr ""
 
@@ -11213,7 +11209,7 @@ msgstr ""
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr ""
 
@@ -11450,7 +11446,7 @@ msgstr ""
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:362
+#: src/components/StarterPack/ProfileStarterPacks.tsx:364
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
@@ -11557,7 +11553,7 @@ msgid "You're in line"
 msgstr ""
 
 #: src/screens/Deactivated.tsx:80
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:53
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr ""
 
@@ -11765,7 +11761,7 @@ msgstr ""
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
 msgstr ""
 
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:74
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
