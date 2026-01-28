@@ -1,6 +1,5 @@
 import React, {type JSX, useCallback} from 'react'
 import {
-  Dimensions,
   type GestureResponderEvent,
   type StyleProp,
   View,
@@ -9,6 +8,7 @@ import {
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -25,7 +25,6 @@ import {Button, ButtonText} from '#/components/Button'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import type * as bsky from '#/types/bsky'
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
