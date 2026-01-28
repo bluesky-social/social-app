@@ -40,6 +40,7 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
+import {useCollapsibleThreadItems} from '#/screens/PostThread/useCollapsibleThreadItems'
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -315,6 +316,9 @@ export function PostThread({uri}: {uri: string}) {
     [thread, prepareForParamsUpdate],
   )
 
+  const {filterCollapsedChildren, isPostCollapsed, togglePostCollapse} =
+    useCollapsibleThreadItems()
+
   const onStartReached = () => {
     if (thread.state.isFetching) return
     // can be true after `prepareForParamsUpdate` is called
@@ -333,7 +337,7 @@ export function PostThread({uri}: {uri: string}) {
     setMaxChildrenCount(prev => prev + CHILDREN_CHUNK_SIZE)
   }
 
-  const slices = useMemo(() => {
+  const pagedSlices = useMemo(() => {
     const results: ThreadItem[] = []
 
     if (!thread.data.items.length) return results
@@ -389,11 +393,19 @@ export function PostThread({uri}: {uri: string}) {
   }, [thread, deferParents, maxParentCount, maxChildrenCount])
 
   const isTombstoneView = useMemo(() => {
-    if (slices.length > 1) return false
-    return slices.every(
+    if (pagedSlices.length > 1) return false
+    return pagedSlices.every(
       s => s.type === 'threadPostBlocked' || s.type === 'threadPostNotFound',
     )
-  }, [slices])
+  }, [pagedSlices])
+
+  const slices = useMemo(
+    () =>
+      thread.state.view === 'tree'
+        ? filterCollapsedChildren(pagedSlices)
+        : pagedSlices,
+    [pagedSlices, thread.state.view, filterCollapsedChildren],
+  )
 
   const renderItem = useCallback(
     ({item, index}: {item: ThreadItem; index: number}) => {
@@ -449,6 +461,8 @@ export function PostThread({uri}: {uri: string}) {
                   moderation: thread.state.otherItemsVisible && item.depth > 0,
                 }}
                 onPostSuccess={optimisticOnPostReply}
+                isPostCollapsed={isPostCollapsed}
+                togglePostCollapse={togglePostCollapse}
               />
             )
           } else {
@@ -514,6 +528,8 @@ export function PostThread({uri}: {uri: string}) {
       onReplyToAnchor,
       gtMobile,
       anchorPostSource,
+      isPostCollapsed,
+      togglePostCollapse,
     ],
   )
 
