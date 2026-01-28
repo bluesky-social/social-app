@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
+import * as DynamicAppIcon from '@bsky.app/expo-dynamic-app-icon'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useAppIconSets} from '#/screens/Settings/AppIconSettings/useAppIconSets'

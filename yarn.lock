@@ -3683,6 +3683,14 @@
   dependencies:
     react-responsive "^10.0.1"
 
+"@bsky.app/expo-dynamic-app-icon@^1.8.2":
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@bsky.app/expo-dynamic-app-icon/-/expo-dynamic-app-icon-1.8.2.tgz#7c0015f4a05139da1b30ee901604b219543cfbb7"
+  integrity sha512-yqop/qQrlxwEbdy1icCnILcRspaI+kD+d4Q2Ei1rZ27qw4Dh9wG7wCZPz6AVJfDZ2lHHJ7xzTc4JqNjghzLYVw==
+  dependencies:
+    "@expo/image-utils" "^0.8.7"
+    xcode "^3.0.1"
+
 "@bsky.app/expo-image-crop-tool@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@bsky.app/expo-image-crop-tool/-/expo-image-crop-tool-0.5.0.tgz#4308fbde5c15e6be9122601797bc3d9549c95e31"
@@ -5467,14 +5475,6 @@
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@miblanchard/react-native-slider/-/react-native-slider-2.6.0.tgz#9f78c805d637ffaff0e3e7429932d2995a67edc9"
   integrity sha512-o7hk/f/8vkqh6QNR5L52m+ws846fQeD/qNCC9CCSRdBqjq66KiCgbxzlhRzKM/gbtxcvMYMIEEJ1yes5cr6I3A==
-
-"@mozzius/expo-dynamic-app-icon@^1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@mozzius/expo-dynamic-app-icon/-/expo-dynamic-app-icon-1.8.0.tgz#3e98b6dc6d2a90a4274f8d975231f71e1f765142"
-  integrity sha512-b8/OGbTWrEhNKi8fro9MEpS2aqfP/3uIjgMTlSmEPggwKSVho61sf86t8k1g2BsVt6T+pMbS3FTMsPAVeROiJQ==
-  dependencies:
-    "@expo/image-utils" "^0.8.7"
-    xcode "^3.0.1"
 
 "@napi-rs/wasm-runtime@^0.2.11":
   version "0.2.12"
