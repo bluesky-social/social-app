@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
+import {logger} from '#/view/com/composer/drafts/state/logger'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -247,12 +248,12 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
             // can't generate thumbnails on web
             setVideoThumbnail("yep, there's a video")
           } else {
-            console.log('generating thumbnail of ', url)
+            logger.debug('generating thumbnail of ', {url})
             const thumbnail = await VideoThumbnails.getThumbnailAsync(url, {
               time: 0,
               quality: 0.2,
             })
-            console.log(thumbnail)
+            logger.debug('thumbnail generated', {thumbnail})
             setVideoThumbnail(thumbnail.uri)
           }
         } catch (e) {
