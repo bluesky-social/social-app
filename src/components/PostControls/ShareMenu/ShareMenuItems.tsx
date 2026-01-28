@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
+import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
@@ -81,12 +81,14 @@ let ShareMenuItems = ({
     })
   }
 
-  const onShareATURI = () => {
-    shareText(postUri)
+  const onCopyATURI = async () => {
+    await ExpoClipboard.setStringAsync(postUri)
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }
 
-  const onShareAuthorDID = () => {
-    shareText(postAuthor.did)
+  const onCopyAuthorDID = async () => {
+    await ExpoClipboard.setStringAsync(postAuthor.did)
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }
 
   return (
@@ -149,20 +151,20 @@ let ShareMenuItems = ({
         {devModeEnabled && (
           <Menu.Group>
             <Menu.Item
-              testID="postAtUriShareBtn"
-              label={_(msg`Share post at:// URI`)}
-              onPress={onShareATURI}>
+              testID="postAtUriCopyBtn"
+              label={_(msg`Copy post at:// URI`)}
+              onPress={onCopyATURI}>
               <Menu.ItemText>
-                <Trans>Share post at:// URI</Trans>
+                <Trans>Copy post at:// URI</Trans>
               </Menu.ItemText>
               <Menu.ItemIcon icon={ClipboardIcon} position="right" />
             </Menu.Item>
             <Menu.Item
-              testID="postAuthorDIDShareBtn"
-              label={_(msg`Share author DID`)}
-              onPress={onShareAuthorDID}>
+              testID="postAuthorDIDCopyBtn"
+              label={_(msg`Copy author DID`)}
+              onPress={onCopyAuthorDID}>
               <Menu.ItemText>
-                <Trans>Share author DID</Trans>
+                <Trans>Copy author DID</Trans>
               </Menu.ItemText>
               <Menu.ItemIcon icon={ClipboardIcon} position="right" />
             </Menu.Item>

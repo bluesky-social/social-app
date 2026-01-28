@@ -1,3 +1,4 @@
+import {useRef, useState} from 'react'
 import {Platform} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import * as FileSystem from 'expo-file-system/legacy'
@@ -31,6 +32,8 @@ export function AboutSettingsScreen({}: Props) {
   const {_, i18n} = useLingui()
   const [devModeEnabled, setDevModeEnabled] = useDevMode()
   const [demoModeEnabled, setDemoModeEnabled] = useDemoMode()
+  const [devModeTapCount, setDevModeTapCount] = useState(0)
+  const devModeTapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const {mutate: onClearImageCache, isPending: isClearingImageCache} =
     useMutation({
@@ -123,26 +126,57 @@ export function AboutSettingsScreen({}: Props) {
           <SettingsList.PressableItem
             label={_(msg`Version ${env.APP_VERSION}`)}
             accessibilityHint={_(msg`Copies build version to clipboard`)}
-            onLongPress={() => {
-              const newDevModeEnabled = !devModeEnabled
-              setDevModeEnabled(newDevModeEnabled)
-              Toast.show(
-                newDevModeEnabled
-                  ? _(
+            onPress={() => {
+              // Clear any existing timer
+              if (devModeTapTimerRef.current) {
+                clearTimeout(devModeTapTimerRef.current)
+              }
+
+              const newTapCount = devModeTapCount + 1
+
+              if (newTapCount >= 5) {
+                // Toggle dev mode after 5 taps
+                const newDevModeEnabled = !devModeEnabled
+                setDevModeEnabled(newDevModeEnabled)
+                Toast.show(
+                  newDevModeEnabled
+                    ? _(
+                        msg({
+                          message: 'Developer mode enabled',
+                          context: 'toast',
+                        }),
+                      )
+                    : _(
+                        msg({
+                          message: 'Developer mode disabled',
+                          context: 'toast',
+                        }),
+                      ),
+                )
+                setDevModeTapCount(0)
+              } else {
+                setDevModeTapCount(newTapCount)
+
+                // Show countdown toast after 2 taps
+                if (newTapCount >= 2) {
+                  const tapsRemaining = 5 - newTapCount
+                  Toast.show(
+                    _(
                       msg({
-                        message: 'Developer mode enabled',
-                        context: 'toast',
-                      }),
-                    )
-                  : _(
-                      msg({
-                        message: 'Developer mode disabled',
+                        message: `${tapsRemaining} taps to ${devModeEnabled ? 'disable' : 'enable'} developer mode`,
                         context: 'toast',
                       }),
                     ),
-              )
+                  )
+                }
+
+                // Reset tap count after 2 seconds of inactivity
+                devModeTapTimerRef.current = setTimeout(() => {
+                  setDevModeTapCount(0)
+                }, 2000)
+              }
             }}
-            onPress={() => {
+            onLongPress={() => {
               setStringAsync(
                 `Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Device ID: ${getDeviceId() ?? 'N/A'}`,
               )

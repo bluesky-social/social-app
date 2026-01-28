@@ -1,4 +1,5 @@
 import React, {memo} from 'react'
+import * as ExpoClipboard from 'expo-clipboard'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -9,7 +10,7 @@ import {useActorStatus} from '#/lib/actor-status'
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
+import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
@@ -217,13 +218,15 @@ let ProfileMenu = ({
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  const onPressShareATUri = React.useCallback(() => {
-    shareText(`at://${profile.did}`)
-  }, [profile.did])
+  const onPressCopyATUri = React.useCallback(async () => {
+    await ExpoClipboard.setStringAsync(`at://${profile.did}`)
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+  }, [_, profile.did])
 
-  const onPressShareDID = React.useCallback(() => {
-    shareText(profile.did)
-  }, [profile.did])
+  const onPressCopyDID = React.useCallback(async () => {
+    await ExpoClipboard.setStringAsync(profile.did)
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+  }, [_, profile.did])
 
   const onPressSearch = React.useCallback(() => {
     navigation.navigate('ProfileSearch', {name: profile.handle})
@@ -490,18 +493,18 @@ let ProfileMenu = ({
               <Menu.Divider />
               <Menu.Group>
                 <Menu.Item
-                  testID="profileHeaderDropdownShareATURIBtn"
+                  testID="profileHeaderDropdownCopyATURIBtn"
                   label={_(msg`Copy at:// URI`)}
-                  onPress={onPressShareATUri}>
+                  onPress={onPressCopyATUri}>
                   <Menu.ItemText>
                     <Trans>Copy at:// URI</Trans>
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={ClipboardIcon} />
                 </Menu.Item>
                 <Menu.Item
-                  testID="profileHeaderDropdownShareDIDBtn"
+                  testID="profileHeaderDropdownCopyDIDBtn"
                   label={_(msg`Copy DID`)}
-                  onPress={onPressShareDID}>
+                  onPress={onPressCopyDID}>
                   <Menu.ItemText>
                     <Trans>Copy DID</Trans>
                   </Menu.ItemText>
