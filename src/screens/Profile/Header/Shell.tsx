@@ -78,7 +78,7 @@ let ProfileHeaderShell = ({
     (
       uri: string,
       thumbRect: MeasuredDimensions | null,
-      type: 'circle-avi' | 'image' = 'circle-avi',
+      type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi',
     ) => {
       openLightbox({
         images: [
@@ -87,7 +87,7 @@ let ProfileHeaderShell = ({
             thumbUri: uri,
             thumbRect,
             dimensions:
-              type === 'circle-avi'
+              type === 'circle-avi' || type === 'rect-avi'
                 ? {
                     // It's fine if it's actually smaller but we know it's 1:1.
                     height: 1000,
@@ -129,11 +129,12 @@ let ProfileHeaderShell = ({
     } else {
       const modui = moderation.ui('avatar')
       const avatar = profile.avatar
+      const type = profile.associated?.labeler ? 'rect-avi' : 'circle-avi'
       if (avatar && !(modui.blur && modui.noOverride)) {
         runOnUI(() => {
           'worklet'
           const rect = measure(aviRef)
-          runOnJS(_openLightbox)(avatar, rect)
+          runOnJS(_openLightbox)(avatar, rect, type)
         })()
       }
     }

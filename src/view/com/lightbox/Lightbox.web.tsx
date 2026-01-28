@@ -1,28 +1,30 @@
-import React, {useCallback, useEffect, useState} from 'react'
-import {
-  Image,
-  type ImageStyle,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {useCallback, useEffect, useState} from 'react'
+import {Pressable, StyleSheet, View} from 'react-native'
+import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {colors, s} from '#/lib/styles'
+import {useA11y} from '#/state/a11y'
 import {useLightbox, useLightboxControls} from '#/state/lightbox'
-import {Text} from '../util/text/Text'
+import {
+  atoms as a,
+  flatten,
+  ThemeProvider,
+  useBreakpoints,
+  useTheme,
+} from '#/alf'
+import {Button} from '#/components/Button'
+import {Backdrop} from '#/components/Dialog'
+import {
+  ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
+  ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
+} from '#/components/icons/Chevron'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import {type ImageSource} from './ImageViewing/@types'
-import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 export function Lightbox() {
   const {activeLightbox} = useLightbox()
@@ -36,18 +38,44 @@ export function Lightbox() {
   const initialIndex = activeLightbox.index
   const imgs = activeLightbox.images
   return (
-    <>
-      <RemoveScrollBar />
-      <LightboxInner
-        imgs={imgs}
-        initialIndex={initialIndex}
-        onClose={closeLightbox}
-      />
-    </>
+    <ThemeProvider theme="dark">
+      <LightboxContainer handleBackgroundPress={closeLightbox}>
+        <LightboxGallery
+          key={activeLightbox.id}
+          imgs={imgs}
+          initialIndex={initialIndex}
+          onClose={closeLightbox}
+        />
+      </LightboxContainer>
+    </ThemeProvider>
   )
 }
 
-function LightboxInner({
+function LightboxContainer({
+  children,
+  handleBackgroundPress,
+}: {
+  children: React.ReactNode
+  handleBackgroundPress: () => void
+}) {
+  const {_} = useLingui()
+  FocusGuards.useFocusGuards()
+  return (
+    <Pressable
+      accessibilityHint={undefined}
+      accessibilityLabel={_(msg`Close image lightbox`)}
+      onPress={handleBackgroundPress}
+      style={[a.fixed, a.inset_0, a.z_10]}>
+      <Backdrop />
+      <RemoveScrollBar />
+      <FocusScope.FocusScope loop trapped asChild>
+        <div style={{position: 'absolute', inset: 0}}>{children}</div>
+      </FocusScope.FocusScope>
+    </Pressable>
+  )
+}
+
+function LightboxGallery({
   imgs,
   initialIndex = 0,
   onClose,
@@ -56,9 +84,14 @@ function LightboxInner({
   initialIndex: number
   onClose: () => void
 }) {
+  const t = useTheme()
   const {_} = useLingui()
-  const [index, setIndex] = useState<number>(initialIndex)
+  const {reduceMotionEnabled} = useA11y()
+  const [index, setIndex] = useState(initialIndex)
+  const [hasAnyLoaded, setAnyHasLoaded] = useState(false)
   const [isAltExpanded, setAltExpanded] = useState(false)
+
+  const {gtPhone} = useBreakpoints()
 
   const canGoLeft = index >= 1
   const canGoRight = index < imgs.length - 1
@@ -92,95 +125,69 @@ function LightboxInner({
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [onKeyDown])
 
-  const {isTabletOrDesktop} = useWebMediaQueries()
-  const btnStyle = React.useMemo(() => {
-    return isTabletOrDesktop ? styles.btnTablet : styles.btnMobile
-  }, [isTabletOrDesktop])
-  const iconSize = React.useMemo(() => {
-    return isTabletOrDesktop ? 32 : 24
-  }, [isTabletOrDesktop])
+  const delayedFadeInAnim = !reduceMotionEnabled && [
+    a.fade_in,
+    {animationDelay: '0.2s', animationFillMode: 'both'},
+  ]
 
   const img = imgs[index]
-  const isAvi = img.type === 'circle-avi' || img.type === 'rect-avi'
+
   return (
-    <View style={styles.mask}>
-      <TouchableWithoutFeedback
-        onPress={onClose}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Close image viewer`)}
-        accessibilityHint={_(msg`Exits image view`)}
-        onAccessibilityEscape={onClose}>
-        {isAvi ? (
-          <View style={styles.aviCenterer}>
-            <img
-              src={img.uri}
-              // @ts-ignore web-only
-              style={
-                {
-                  ...styles.avi,
-                  borderRadius:
-                    img.type === 'circle-avi'
-                      ? '50%'
-                      : img.type === 'rect-avi'
-                        ? '10%'
-                        : 0,
-                } as ImageStyle
-              }
-              alt={img.alt}
+    <View style={[a.absolute, a.inset_0]}>
+      <View style={[a.flex_1, a.justify_center, a.align_center]}>
+        <LightboxGalleryItem
+          key={index}
+          source={img.uri}
+          alt={img.alt}
+          type={img.type}
+          hasAnyLoaded={hasAnyLoaded}
+          onLoad={() => setAnyHasLoaded(true)}
+        />
+        {canGoLeft && (
+          <Button
+            onPress={onPressLeft}
+            style={[
+              a.absolute,
+              styles.leftBtn,
+              styles.blurredBackdrop,
+              a.transition_color,
+              delayedFadeInAnim,
+            ]}
+            hoverStyle={styles.blurredBackdropHover}
+            color="secondary"
+            label={_(msg`Previous image`)}
+            shape="round"
+            size={gtPhone ? 'large' : 'small'}>
+            <ChevronLeftIcon
+              size={gtPhone ? 'md' : 'sm'}
+              style={{color: t.palette.white}}
             />
-          </View>
-        ) : (
-          <View style={styles.imageCenterer}>
-            <Image
-              accessibilityIgnoresInvertColors
-              source={img}
-              style={styles.image as ImageStyle}
-              accessibilityLabel={img.alt}
-              accessibilityHint=""
-            />
-            {canGoLeft && (
-              <TouchableOpacity
-                onPress={onPressLeft}
-                style={[
-                  styles.btn,
-                  btnStyle,
-                  styles.leftBtn,
-                  styles.blurredBackground,
-                ]}
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Previous image`)}
-                accessibilityHint="">
-                <FontAwesomeIcon
-                  icon="angle-left"
-                  style={styles.icon as FontAwesomeIconStyle}
-                  size={iconSize}
-                />
-              </TouchableOpacity>
-            )}
-            {canGoRight && (
-              <TouchableOpacity
-                onPress={onPressRight}
-                style={[
-                  styles.btn,
-                  btnStyle,
-                  styles.rightBtn,
-                  styles.blurredBackground,
-                ]}
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Next image`)}
-                accessibilityHint="">
-                <FontAwesomeIcon
-                  icon="angle-right"
-                  style={styles.icon as FontAwesomeIconStyle}
-                  size={iconSize}
-                />
-              </TouchableOpacity>
-            )}
-          </View>
+          </Button>
         )}
-      </TouchableWithoutFeedback>
+        {canGoRight && (
+          <Button
+            onPress={onPressRight}
+            style={[
+              a.absolute,
+              styles.rightBtn,
+              styles.blurredBackdrop,
+              a.transition_color,
+              delayedFadeInAnim,
+            ]}
+            hoverStyle={styles.blurredBackdropHover}
+            color="secondary"
+            label={_(msg`Next image`)}
+            shape="round"
+            size={gtPhone ? 'large' : 'small'}>
+            <ChevronRightIcon
+              size={gtPhone ? 'md' : 'sm'}
+              style={{color: t.palette.white}}
+            />
+          </Button>
+        )}
+      </View>
       {img.alt ? (
-        <View style={styles.footer}>
+        <View style={[a.px_4xl, a.py_2xl, t.atoms.bg, delayedFadeInAnim]}>
           <Pressable
             accessibilityLabel={_(msg`Expand alt text`)}
             accessibilityHint={_(
@@ -190,7 +197,7 @@ function LightboxInner({
               setAltExpanded(!isAltExpanded)
             }}>
             <Text
-              style={s.white}
+              style={[a.text_md, a.leading_snug]}
               numberOfLines={isAltExpanded ? 0 : 3}
               ellipsizeMode="tail">
               {img.alt}
@@ -198,38 +205,125 @@ function LightboxInner({
           </Pressable>
         </View>
       ) : null}
-      <View style={styles.closeBtn}>
-        <ImageDefaultHeader onRequestClose={onClose} />
-      </View>
+      <Button
+        onPress={onClose}
+        style={[
+          a.absolute,
+          styles.closeBtn,
+          styles.blurredBackdrop,
+          a.transition_color,
+          delayedFadeInAnim,
+        ]}
+        hoverStyle={styles.blurredBackdropHover}
+        color="secondary"
+        label={_(msg`Close lightbox`)}
+        shape="round"
+        size={gtPhone ? 'large' : 'small'}>
+        <XIcon size={gtPhone ? 'md' : 'sm'} style={{color: t.palette.white}} />
+      </Button>
     </View>
   )
 }
 
+function LightboxGalleryItem({
+  source,
+  alt,
+  type,
+  onLoad,
+  hasAnyLoaded,
+}: {
+  source: string
+  alt: string | undefined
+  type: ImageSource['type']
+  onLoad: () => void
+  hasAnyLoaded: boolean
+}) {
+  const {reduceMotionEnabled} = useA11y()
+  const [hasLoaded, setHasLoaded] = useState(false)
+  const [isFirstToLoad] = useState(!hasAnyLoaded)
+
+  /**
+   * We want to show a zoom/fade in animation when the lightbox first opens.
+   * To avoid showing it as we switch between images, we keep track in the parent
+   * whether any image has loaded yet. We then save what the value of this is on first
+   * render (as when it changes, we don't want to then *remove* then animation). when
+   * the image loads, if this is the first image to load, we play the animation.
+   *
+   * We also use this `hasLoaded` state to show a loading indicator. This is on a 1s
+   * delay and then a slow fade in to avoid flicker. -sfn
+   */
+  const zoomInWhenReady =
+    !reduceMotionEnabled &&
+    isFirstToLoad &&
+    (hasAnyLoaded
+      ? [a.zoom_fade_in, {animationDuration: '0.5s'}]
+      : {opacity: 0})
+
+  const handleLoad = () => {
+    setHasLoaded(true)
+    onLoad()
+  }
+
+  let image = null
+  switch (type) {
+    case 'circle-avi':
+    case 'rect-avi':
+      image = (
+        <img
+          src={source}
+          style={flatten([
+            styles.avi,
+            {
+              borderRadius:
+                type === 'circle-avi' ? '50%' : type === 'rect-avi' ? '10%' : 0,
+            },
+            zoomInWhenReady,
+          ])}
+          alt={alt}
+          onLoad={handleLoad}
+        />
+      )
+      break
+    case 'image':
+      image = (
+        <Image
+          source={{uri: source}}
+          alt={alt}
+          style={[a.w_full, a.h_full, zoomInWhenReady]}
+          onLoad={handleLoad}
+          contentFit="contain"
+          accessibilityIgnoresInvertColors
+        />
+      )
+      break
+  }
+
+  return (
+    <>
+      {image}
+      {!hasLoaded && (
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.justify_center,
+            a.align_center,
+            a.fade_in,
+            {
+              opacity: 0,
+              animationDuration: '500ms',
+              animationDelay: '1s',
+              animationFillMode: 'both',
+            },
+          ]}>
+          <Loader size="xl" />
+        </View>
+      )}
+    </>
+  )
+}
+
 const styles = StyleSheet.create({
-  mask: {
-    // @ts-ignore
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#000c',
-  },
-  imageCenterer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-  },
-  aviCenterer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   avi: {
     // @ts-ignore web-only
     maxWidth: `calc(min(400px, 100vw))`,
@@ -238,49 +332,26 @@ const styles = StyleSheet.create({
     padding: 16,
     boxSizing: 'border-box',
   },
-  icon: {
-    color: colors.white,
-  },
   closeBtn: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-  },
-  btn: {
-    position: 'absolute',
-    backgroundColor: '#00000077',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  btnTablet: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    left: 30,
-    right: 30,
-  },
-  btnMobile: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    left: 20,
+    top: 20,
     right: 20,
   },
   leftBtn: {
+    left: 20,
     right: 'auto',
     top: '50%',
   },
   rightBtn: {
+    right: 20,
     left: 'auto',
     top: '50%',
   },
-  footer: {
-    paddingHorizontal: 32,
-    paddingVertical: 24,
-    backgroundColor: colors.black,
-  },
-  blurredBackground: {
+  blurredBackdrop: {
+    backgroundColor: '#00000077',
+    // @ts-expect-error web only -sfn
     backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-  } as ViewStyle,
+  },
+  blurredBackdropHover: {
+    backgroundColor: '#00000088',
+  },
 })
