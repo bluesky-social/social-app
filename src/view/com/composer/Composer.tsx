@@ -1047,9 +1047,7 @@ export const ComposePost = ({
           {!IS_WEBFooterSticky && footer}
         </View>
 
-        <Prompt.Outer
-          control={discardPromptControl}
-          webOptions={{vertical: true}}>
+        <Prompt.Outer control={discardPromptControl}>
           <Prompt.Content>
             <Prompt.TitleText>
               {composerState.draftId ? (

@@ -70,7 +70,7 @@ export function DraftsButton({
         onSelectDraft={onSelectDraft}
       />
 
-      <Prompt.Outer control={savePromptControl} webOptions={{vertical: true}}>
+      <Prompt.Outer control={savePromptControl}>
         <Prompt.Content>
           <Prompt.TitleText>
             {isEditingDraft ? (
