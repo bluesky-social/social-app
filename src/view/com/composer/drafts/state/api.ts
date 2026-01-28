@@ -4,6 +4,7 @@
 import {type AppBskyDraftDefs, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
+import {getImageDim} from '#/lib/media/manip'
 import {type ComposerImage} from '#/state/gallery'
 import {type Gif} from '#/state/queries/tenor'
 import {
@@ -399,146 +400,170 @@ function parseGifFromUrl(
  * the compression and upload pipeline. The caller should handle the restoredVideos
  * by initiating video processing for each entry.
  */
-export function draftToComposerPosts(
+export async function draftToComposerPosts(
   draft: AppBskyDraftDefs.Draft,
   loadedMedia: Map<string, string>,
-): {posts: PostDraft[]; restoredVideos: Map<number, RestoredVideo>} {
+): Promise<{posts: PostDraft[]; restoredVideos: Map<number, RestoredVideo>}> {
   const restoredVideos = new Map<number, RestoredVideo>()
 
-  const posts = draft.posts.map((post, index) => {
-    const richtext = new RichText({text: post.text || ''})
-    richtext.detectFacetsWithoutResolution()
+  const posts = await Promise.all(
+    draft.posts.map(async (post, index) => {
+      const richtext = new RichText({text: post.text || ''})
+      richtext.detectFacetsWithoutResolution()
 
-    const embed: EmbedDraft = {
-      quote: undefined,
-      link: undefined,
-      media: undefined,
-    }
+      const embed: EmbedDraft = {
+        quote: undefined,
+        link: undefined,
+        media: undefined,
+      }
 
-    // Restore images
-    if (post.embedImages && post.embedImages.length > 0) {
-      const images: ComposerImage[] = []
-      for (const img of post.embedImages) {
-        const path = loadedMedia.get(img.localRef.path)
-        if (path) {
+      // Restore images
+      if (post.embedImages && post.embedImages.length > 0) {
+        const imagePromises = post.embedImages.map(async img => {
+          const path = loadedMedia.get(img.localRef.path)
+          if (!path) {
+            return null
+          }
+
+          let width = 0
+          let height = 0
+          try {
+            const dims = await getImageDim(path)
+            width = dims.width
+            height = dims.height
+          } catch (e) {
+            logger.warn('Failed to get image dimensions', {
+              path,
+              error: e,
+            })
+          }
+
           logger.debug('restoring image with localRefPath', {
             localRefPath: img.localRef.path,
             loadedPath: path,
+            width,
+            height,
           })
-          images.push({
+
+          return {
             alt: img.alt || '',
             // Preserve the original localRefPath for reuse when saving
             localRefPath: img.localRef.path,
             source: {
               id: nanoid(),
               path,
-              width: 0, // Will be recalculated when loaded
-              height: 0,
-              mime: 'image/jpeg', // Default, will be detected
+              width,
+              height,
+              mime: 'image/jpeg',
             },
+          } as ComposerImage
+        })
+
+        const images = (await Promise.all(imagePromises)).filter(
+          (img): img is ComposerImage => img !== null,
+        )
+        if (images.length > 0) {
+          embed.media = {type: 'images', images}
+        }
+      }
+
+      // Restore GIF from external embed
+      if (post.embedExternals) {
+        for (const ext of post.embedExternals) {
+          const gifData = parseGifFromUrl(ext.uri)
+          if (gifData) {
+            // Reconstruct a Gif object with all required properties
+            const mediaObject = {
+              url: gifData.url,
+              dims: [gifData.width, gifData.height] as [number, number],
+              duration: 0,
+              size: 0,
+            }
+            embed.media = {
+              type: 'gif',
+              gif: {
+                id: '',
+                created: 0,
+                hasaudio: false,
+                hascaption: false,
+                flags: '',
+                tags: [],
+                title: '',
+                content_description: gifData.alt || '',
+                itemurl: '',
+                url: gifData.url, // Required for useResolveGifQuery
+                media_formats: {
+                  gif: mediaObject,
+                  tinygif: mediaObject,
+                  preview: mediaObject,
+                },
+              } as Gif,
+              alt: gifData.alt,
+            }
+            break
+          }
+        }
+      }
+
+      // Collect video for restoration (processed async by caller)
+      if (post.embedVideos && post.embedVideos.length > 0) {
+        const vid = post.embedVideos[0]
+        const videoUri = loadedMedia.get(vid.localRef.path)
+        if (videoUri) {
+          const mimeType = parseVideoMimeType(vid.localRef.path)
+          logger.debug('found video to restore', {
+            localRefPath: vid.localRef.path,
+            videoUri,
+            altText: vid.alt,
+            mimeType,
+            captionCount: vid.captions?.length ?? 0,
+          })
+          restoredVideos.set(index, {
+            uri: videoUri,
+            altText: vid.alt || '',
+            mimeType,
+            localRefPath: vid.localRef.path,
+            captions:
+              vid.captions?.map(c => ({lang: c.lang, content: c.content})) ??
+              [],
           })
         }
       }
-      if (images.length > 0) {
-        embed.media = {type: 'images', images}
-      }
-    }
 
-    // Restore GIF from external embed
-    if (post.embedExternals) {
-      for (const ext of post.embedExternals) {
-        const gifData = parseGifFromUrl(ext.uri)
-        if (gifData) {
-          // Reconstruct a Gif object with all required properties
-          const mediaObject = {
-            url: gifData.url,
-            dims: [gifData.width, gifData.height] as [number, number],
-            duration: 0,
-            size: 0,
+      // Restore quote embed
+      if (post.embedRecords && post.embedRecords.length > 0) {
+        const record = post.embedRecords[0]
+        embed.quote = {type: 'link', uri: record.record.uri}
+      }
+
+      // Restore link embed (only if not a GIF)
+      if (post.embedExternals && !embed.media) {
+        for (const ext of post.embedExternals) {
+          const gifData = parseGifFromUrl(ext.uri)
+          if (!gifData) {
+            embed.link = {type: 'link', uri: ext.uri}
+            break
           }
-          embed.media = {
-            type: 'gif',
-            gif: {
-              id: '',
-              created: 0,
-              hasaudio: false,
-              hascaption: false,
-              flags: '',
-              tags: [],
-              title: '',
-              content_description: gifData.alt || '',
-              itemurl: '',
-              url: gifData.url, // Required for useResolveGifQuery
-              media_formats: {
-                gif: mediaObject,
-                tinygif: mediaObject,
-                preview: mediaObject,
-              },
-            } as Gif,
-            alt: gifData.alt,
-          }
-          break
         }
       }
-    }
 
-    // Collect video for restoration (processed async by caller)
-    if (post.embedVideos && post.embedVideos.length > 0) {
-      const vid = post.embedVideos[0]
-      const videoUri = loadedMedia.get(vid.localRef.path)
-      if (videoUri) {
-        const mimeType = parseVideoMimeType(vid.localRef.path)
-        logger.debug('found video to restore', {
-          localRefPath: vid.localRef.path,
-          videoUri,
-          altText: vid.alt,
-          mimeType,
-          captionCount: vid.captions?.length ?? 0,
-        })
-        restoredVideos.set(index, {
-          uri: videoUri,
-          altText: vid.alt || '',
-          mimeType,
-          localRefPath: vid.localRef.path,
-          captions:
-            vid.captions?.map(c => ({lang: c.lang, content: c.content})) ?? [],
-        })
-      }
-    }
-
-    // Restore quote embed
-    if (post.embedRecords && post.embedRecords.length > 0) {
-      const record = post.embedRecords[0]
-      embed.quote = {type: 'link', uri: record.record.uri}
-    }
-
-    // Restore link embed (only if not a GIF)
-    if (post.embedExternals && !embed.media) {
-      for (const ext of post.embedExternals) {
-        const gifData = parseGifFromUrl(ext.uri)
-        if (!gifData) {
-          embed.link = {type: 'link', uri: ext.uri}
-          break
+      // Parse labels
+      const labels: string[] = []
+      if (post.labels && 'values' in post.labels) {
+        for (const val of post.labels.values) {
+          labels.push(val.val)
         }
       }
-    }
 
-    // Parse labels
-    const labels: string[] = []
-    if (post.labels && 'values' in post.labels) {
-      for (const val of post.labels.values) {
-        labels.push(val.val)
-      }
-    }
-
-    return {
-      id: `draft-post-${index}`,
-      richtext,
-      shortenedGraphemeLength: richtext.graphemeLength,
-      labels,
-      embed,
-    } as PostDraft
-  })
+      return {
+        id: `draft-post-${index}`,
+        richtext,
+        shortenedGraphemeLength: richtext.graphemeLength,
+        labels,
+        embed,
+      } as PostDraft
+    }),
+  )
 
   return {posts, restoredVideos}
 }

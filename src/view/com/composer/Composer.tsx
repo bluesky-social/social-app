@@ -461,7 +461,7 @@ export const ComposePost = ({
       })
 
       // Convert server draft to composer posts (videos returned separately)
-      const {posts, restoredVideos} = draftToComposerPosts(
+      const {posts, restoredVideos} = await draftToComposerPosts(
         draftSummary.draft,
         loadedMedia,
       )
