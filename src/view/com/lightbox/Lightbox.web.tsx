@@ -155,7 +155,7 @@ function LightboxGallery({
             ]}
             hoverStyle={styles.blurredBackdropHover}
             color="secondary"
-            label={_('Previous image')}
+            label={_(msg`Previous image`)}
             shape="round"
             size={gtPhone ? 'large' : 'small'}>
             <ChevronLeftIcon
@@ -176,7 +176,7 @@ function LightboxGallery({
             ]}
             hoverStyle={styles.blurredBackdropHover}
             color="secondary"
-            label={_('Next image')}
+            label={_(msg`Next image`)}
             shape="round"
             size={gtPhone ? 'large' : 'small'}>
             <ChevronRightIcon
@@ -216,7 +216,7 @@ function LightboxGallery({
         ]}
         hoverStyle={styles.blurredBackdropHover}
         color="secondary"
-        label={_('Close lightbox')}
+        label={_(msg`Close lightbox`)}
         shape="round"
         size={gtPhone ? 'large' : 'small'}>
         <XIcon size={gtPhone ? 'md' : 'sm'} style={{color: t.palette.white}} />
