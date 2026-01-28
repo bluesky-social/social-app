@@ -125,7 +125,7 @@ function LandingScreenLoaded({
   const setActiveStarterPack = useSetActiveStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const androidDialogControl = useDialogControl()
-  const [descriptionRt] = useRichText(record.description || '')
+  const descriptionRt = useRichText(record.description || '')
 
   const [appClipOverlayVisible, setAppClipOverlayVisible] =
     React.useState(false)

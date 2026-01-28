@@ -394,7 +394,7 @@ function DialogInner({
   const playHaptic = useHaptics()
   const control = Dialog.useDialogContext()
   const reportDialogControl = useReportDialogControl()
-  const [rt] = useRichText(info.description.text)
+  const rt = useRichText(info.description.text)
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
