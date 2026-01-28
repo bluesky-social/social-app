@@ -476,7 +476,7 @@ Example from Dialog:
 import * as storage from '#/state/drafts/storage'
 
 // WRONG - don't use require() or conditional imports for platform files
-const storage = isNative
+const storage = IS_NATIVE
   ? require('#/state/drafts/storage')
   : require('#/state/drafts/storage.web')
 ```

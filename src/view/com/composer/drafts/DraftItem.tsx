@@ -4,8 +4,9 @@ import * as VideoThumbnails from 'expo-video-thumbnails'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -108,17 +109,11 @@ function DraftPostRow({
   const {_} = useLingui()
   const t = useTheme()
   const profile = useCurrentAccountProfile()
-  const {currentAccount} = useSession()
-
-  const displayName =
-    profile?.displayName || profile?.handle || currentAccount?.handle || ''
-  const handle = profile?.handle || currentAccount?.handle || ''
-  const avatarUrl = profile?.avatar
 
   return (
     <View style={[a.flex_row, a.gap_sm]}>
       <View style={[a.align_center]}>
-        <UserAvatar type="user" size={42} avatar={avatarUrl} />
+        <UserAvatar type="user" size={42} avatar={profile?.avatar} />
         {!isLast && (
           <View
             style={[
@@ -137,25 +132,45 @@ function DraftPostRow({
       <View style={[a.flex_1, a.gap_2xs]}>
         <View style={[a.flex_row, a.align_center, a.gap_xs]}>
           <View style={[a.flex_row, a.align_center, a.flex_1, a.gap_xs]}>
-            {displayName && (
-              <Text
-                style={[a.text_md, a.font_semi_bold, t.atoms.text]}
-                numberOfLines={1}>
-                {displayName}
-              </Text>
+            {profile && (
+              <>
+                <Text
+                  style={[
+                    a.text_md,
+                    a.font_semi_bold,
+                    t.atoms.text,
+                    a.leading_snug,
+                  ]}
+                  numberOfLines={1}>
+                  {createSanitizedDisplayName(profile)}
+                </Text>
+                <Text
+                  style={[
+                    a.text_md,
+                    t.atoms.text_contrast_medium,
+                    a.leading_snug,
+                  ]}
+                  numberOfLines={1}>
+                  {sanitizeHandle(profile.handle)}
+                </Text>
+                <Text
+                  style={[
+                    a.text_md,
+                    t.atoms.text_contrast_medium,
+                    a.leading_snug,
+                  ]}>
+                  &middot;
+                </Text>
+              </>
             )}
-            <Text
-              style={[a.text_md, t.atoms.text_contrast_medium]}
-              numberOfLines={1}>
-              @{handle}
-            </Text>
-            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-              &middot;
-            </Text>
             <TimeElapsed timestamp={timestamp}>
               {({timeElapsed}) => (
                 <Text
-                  style={[a.text_md, t.atoms.text_contrast_medium]}
+                  style={[
+                    a.text_md,
+                    t.atoms.text_contrast_medium,
+                    a.leading_snug,
+                  ]}
                   numberOfLines={1}>
                   {timeElapsed}
                 </Text>
