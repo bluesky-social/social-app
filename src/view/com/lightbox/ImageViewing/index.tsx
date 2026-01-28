@@ -9,7 +9,13 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import {LayoutAnimation, PixelRatio, StyleSheet, View} from 'react-native'
+import {
+  LayoutAnimation,
+  PixelRatio,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
@@ -30,11 +36,7 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
-import {
-  SafeAreaView,
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
@@ -427,8 +429,10 @@ function LightboxImage({
     }
   }
 
-  const safeFrameDelayedForJSThreadOnly = useSafeAreaFrame()
-  const safeInsetsDelayedForJSThreadOnly = useSafeAreaInsets()
+  const {
+    width: widthDelayedForJSThreadOnly,
+    height: heightDelayedForJSThreadOnly,
+  } = useWindowDimensions()
   const measureSafeArea = React.useCallback(() => {
     'worklet'
     let safeArea: Rect | null = measure(safeAreaRef)
@@ -436,21 +440,15 @@ function LightboxImage({
       if (_WORKLET) {
         console.error('Expected to always be able to measure safe area.')
       }
-      const frame = safeFrameDelayedForJSThreadOnly
-      const insets = safeInsetsDelayedForJSThreadOnly
       safeArea = {
-        x: frame.x + insets.left,
-        y: frame.y + insets.top,
-        width: frame.width - insets.left - insets.right,
-        height: frame.height - insets.top - insets.bottom,
+        x: 0,
+        y: 0,
+        width: widthDelayedForJSThreadOnly,
+        height: heightDelayedForJSThreadOnly,
       }
     }
     return safeArea
-  }, [
-    safeFrameDelayedForJSThreadOnly,
-    safeInsetsDelayedForJSThreadOnly,
-    safeAreaRef,
-  ])
+  }, [safeAreaRef, heightDelayedForJSThreadOnly, widthDelayedForJSThreadOnly])
 
   const {thumbRect} = imageSrc
   const transforms = useDerivedValue(() => {
