@@ -12,8 +12,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
-import {ios, useBreakpoints, useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
 import {IS_WEB} from '#/env'
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
@@ -61,7 +60,6 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
           {backgroundColor: t.palette.primary_500},
           a.align_center,
           a.justify_center,
-          a.shadow_sm,
           style,
         ]}
         {...props}>

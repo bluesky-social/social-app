@@ -354,13 +354,14 @@ export const ComposePost = ({
           })
           asset = await getVideoMetadata(file)
         } else {
-          // Native: Use file URI directly with minimal asset properties
-          // The native compressVideo only needs uri and mimeType
+          // Native: Get video metadata using react-native-compressor
+          const {getVideoMetaData} = require('react-native-compressor')
+          const metadata = await getVideoMetaData(videoInfo.uri)
           asset = {
             uri: videoInfo.uri,
             mimeType: videoInfo.mimeType,
-            width: 0,
-            height: 0,
+            width: metadata.width,
+            height: metadata.height,
           }
         }
 

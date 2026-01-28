@@ -5,6 +5,7 @@ import {type AppBskyDraftDefs, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {getImageDim} from '#/lib/media/manip'
+import {mimeToExt} from '#/lib/media/video/util'
 import {type ComposerImage} from '#/state/gallery'
 import {type Gif} from '#/state/queries/tenor'
 import {
@@ -211,7 +212,8 @@ async function serializeVideo(
 
   // Encode mime type in the path for restoration
   const mimeType = videoState.video.mimeType || 'video/mp4'
-  const localRefPath = `video:${mimeType}:${nanoid()}`
+  const ext = mimeToExt(mimeType)
+  const localRefPath = `video:${mimeType}:${nanoid()}.${ext}`
   localRefPaths.set(localRefPath, videoState.video.uri)
 
   // Read caption file contents as text

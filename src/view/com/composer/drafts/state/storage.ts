@@ -13,7 +13,6 @@ function getMediaDirectory(): Directory {
 }
 
 function getMediaFile(localRefPath: string): File {
-  // Use localRefPath as filename (URL-encoded for filesystem safety)
   const safeFilename = encodeURIComponent(localRefPath)
   return new File(getMediaDirectory(), safeFilename)
 }

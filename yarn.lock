@@ -9495,6 +9495,11 @@ expo-updates@~29.0.14:
     ignore "^5.3.1"
     resolve-from "^5.0.0"
 
+expo-video-thumbnails@^10.0.8:
+  version "10.0.8"
+  resolved "https://registry.yarnpkg.com/expo-video-thumbnails/-/expo-video-thumbnails-10.0.8.tgz#a6313cea8e58dd0d5041d389a4fe4fa182eab176"
+  integrity sha512-nPUtP7ERLf5DY5V2A6gquRP5rP3Uvq6+FVkDwG9R3KKhFeTYkWZ5Ce1iQ7Yt5qDNQqcUcgEqmRpGCbJmn9ckKA==
+
 expo-video@~3.0.15:
   version "3.0.15"
   resolved "https://registry.yarnpkg.com/expo-video/-/expo-video-3.0.15.tgz#38921dab5bc877572b64728acb58097716239aa7"

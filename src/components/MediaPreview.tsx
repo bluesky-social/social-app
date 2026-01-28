@@ -135,6 +135,7 @@ export function VideoItem({
           {maxWidth: 100},
           a.justify_center,
           a.align_center,
+          a.rounded_xs,
         ]}>
         <PlayButtonIcon size={24} />
       </View>
