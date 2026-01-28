@@ -42,6 +42,7 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyUnspeccedDefs,
@@ -320,7 +321,7 @@ export const ComposePost = ({
     onInitVideo()
   }, [onInitVideo])
 
-  const clearVideo = React.useCallback(
+  const clearVideo = useCallback(
     (postId: string) => {
       composerDispatch({
         type: 'update_post',
@@ -333,7 +334,7 @@ export const ComposePost = ({
     [composerDispatch],
   )
 
-  const restoreVideo = React.useCallback(
+  const restoreVideo = useCallback(
     async (postId: string, videoInfo: RestoredVideo) => {
       try {
         logger.debug('restoring video from draft', {
@@ -354,15 +355,25 @@ export const ComposePost = ({
           })
           asset = await getVideoMetadata(file)
         } else {
-          // Native: Get video metadata using react-native-compressor
-          const {getVideoMetaData} = require('react-native-compressor')
-          const metadata = await getVideoMetaData(videoInfo.uri)
-          asset = {
-            uri: videoInfo.uri,
-            mimeType: videoInfo.mimeType,
-            width: metadata.width,
-            height: metadata.height,
+          let uri = videoInfo.uri
+          if (IS_ANDROID) {
+            // Android: expo-file-system double-encodes filenames with special chars.
+            // The file exists, but react-native-compressor's MediaMetadataRetriever
+            // can't handle the double-encoded URI. Copy to a temp file with a simple name.
+            const sourceFile = new FileSystem.File(videoInfo.uri)
+            const tempFileName = `draft-video-${Date.now()}.${mimeToExt(videoInfo.mimeType)}`
+            const tempFile = new FileSystem.File(
+              FileSystem.Paths.cache,
+              tempFileName,
+            )
+            sourceFile.copy(tempFile)
+            logger.debug('restoreVideo: copied to temp file', {
+              source: videoInfo.uri,
+              temp: tempFile.uri,
+            })
+            uri = tempFile.uri
           }
+          asset = await getVideoMetadata(uri)
         }
 
         // Start video processing using existing flow
