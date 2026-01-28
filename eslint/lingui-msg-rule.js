@@ -1,0 +1,73 @@
+'use strict'
+
+/**
+ * @type {import('eslint').Rule.RuleModule}
+ */
+module.exports = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description:
+        'Enforce that Lingui _() function is called with msg`` template literal or plural/select macros',
+      recommended: true,
+    },
+    messages: {
+      missingMsg:
+        'Lingui _() must be called with msg`...` template literal or plural/select/selectOrdinal. Example: _(msg`Hello`)',
+    },
+    schema: [],
+  },
+
+  create(context) {
+    // Valid Lingui macro functions that can be passed to _()
+    const VALID_MACRO_FUNCTIONS = new Set([
+      'plural',
+      'select',
+      'selectOrdinal',
+    ])
+
+    return {
+      CallExpression(node) {
+        // Check if this is a call to _()
+        if (node.callee.type !== 'Identifier' || node.callee.name !== '_') {
+          return
+        }
+
+        // Must have at least one argument
+        if (node.arguments.length === 0) {
+          context.report({
+            node,
+            messageId: 'missingMsg',
+          })
+          return
+        }
+
+        const firstArg = node.arguments[0]
+
+        // Valid: _(msg`...`)
+        if (
+          firstArg.type === 'TaggedTemplateExpression' &&
+          firstArg.tag.type === 'Identifier' &&
+          firstArg.tag.name === 'msg'
+        ) {
+          return
+        }
+
+        // Valid: _(plural(...)), _(select(...)), _(selectOrdinal(...))
+        if (
+          firstArg.type === 'CallExpression' &&
+          firstArg.callee.type === 'Identifier' &&
+          VALID_MACRO_FUNCTIONS.has(firstArg.callee.name)
+        ) {
+          return
+        }
+
+        // Everything else is invalid
+        context.report({
+          node,
+          messageId: 'missingMsg',
+        })
+      },
+    }
+  },
+}
