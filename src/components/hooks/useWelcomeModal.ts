@@ -35,7 +35,7 @@ export function useWelcomeModal() {
         localStorage.setItem('welcomeModalShown', 'true')
         // Small delay to ensure the page has loaded
         const timer = setTimeout(() => {
-          setIsOpen(true)
+          open()
         }, 1000)
 
         return () => clearTimeout(timer)
