@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import {forwardRef, memo, useDeferredValue, useMemo} from 'react'
 import {RefreshControl, type ViewToken} from 'react-native'
 import {
   type FlatListPropsWithLayout,
@@ -9,6 +9,7 @@ import {
 import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useLightbox} from '#/state/lightbox'
@@ -43,7 +44,7 @@ export type ListRef = React.RefObject<FlatList_INTERNAL | null>
 
 const SCROLLED_DOWN_LIMIT = 200
 
-let List = React.forwardRef<ListMethods, ListProps>(
+let List = forwardRef<ListMethods, ListProps>(
   (
     {
       onScrolledDownChange,
@@ -63,9 +64,11 @@ let List = React.forwardRef<ListMethods, ListProps>(
     const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
 
-    function handleScrolledDownChange(didScrollDown: boolean) {
-      onScrolledDownChange?.(didScrollDown)
-    }
+    const handleScrolledDownChange = useNonReactiveCallback(
+      (didScrollDown: boolean) => {
+        onScrolledDownChange?.(didScrollDown)
+      },
+    )
 
     // Intentionally destructured outside the main thread closure.
     // See https://github.com/bluesky-social/social-app/pull/4108.
@@ -106,7 +109,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
       },
     })
 
-    const [onViewableItemsChanged, viewabilityConfig] = React.useMemo(() => {
+    const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
       if (!onItemSeen) {
         return [undefined, undefined]
       }
@@ -187,5 +190,5 @@ export {List}
 const useAllowScrollToTop = IS_IOS ? useAllowScrollToTopIOS : () => undefined
 function useAllowScrollToTopIOS() {
   const {activeLightbox} = useLightbox()
-  return !activeLightbox
+  return useDeferredValue(!activeLightbox)
 }
