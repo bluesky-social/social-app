@@ -1411,9 +1411,7 @@ function ComposerFooter({
 
       if (assets.length) {
         if (type === 'image') {
-          const images: ComposerImage[] = []
-
-          await Promise.all(
+          const images: ComposerImage[] = await Promise.allSettled(
             assets.map(async image => {
               const composerImage = await createComposerImage({
                 path: image.uri,
@@ -1421,13 +1419,18 @@ function ComposerFooter({
                 height: image.height,
                 mime: image.mimeType!,
               })
-              images.push(composerImage)
+              return composerImage
             }),
-          ).catch(e => {
-            logger.error(`createComposerImage failed`, {
-              safeMessage: e.message,
-            })
-          })
+          ).then(res =>
+            res
+              .map<ComposerImage | undefined>(result => {
+                if (result.status === 'fulfilled') return result.value
+                logger.error(`createComposerImage failed`, {
+                  safeMessage: result.reason.message,
+                })
+              })
+              .filter((img): img is ComposerImage => img != null),
+          )
 
           onImageAdd(images)
         } else if (type === 'video') {
