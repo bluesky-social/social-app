@@ -37,6 +37,7 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
     queuedNudges: [],
     activeProgressGuide: undefined,
     nuxs: [],
+    autoplayDisabled: undefined,
   },
   postInteractionSettings: {
     threadgateAllowRules: undefined,
