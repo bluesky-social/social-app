@@ -8,29 +8,21 @@ export function useWelcomeModal() {
   const [isOpen, setIsOpen] = useState(false)
 
   const open = () => setIsOpen(true)
-  const close = () => {
-    setIsOpen(false)
-    // Mark that user has actively closed the modal, don't show again
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('welcomeModalClosed', 'true')
-    }
-  }
+  const close = () => setIsOpen(false)
 
   useEffect(() => {
     // Only show modal if:
     // 1. User is not logged in
     // 2. We're on the web (this is a web-only feature)
     // 3. We're on the homepage (path is '/' or '/home')
-    // 4. Modal hasn't been shown or closed before
+    // 4. Modal hasn't been shown before
     if (IS_WEB && !hasSession && typeof window !== 'undefined') {
       const currentPath = window.location.pathname
       const isHomePage = currentPath === '/'
-      const hasUserClosedModal =
-        localStorage.getItem('welcomeModalClosed') === 'true'
       const hasModalBeenShown =
         localStorage.getItem('welcomeModalShown') === 'true'
 
-      if (isHomePage && !hasUserClosedModal && !hasModalBeenShown) {
+      if (isHomePage && !hasModalBeenShown) {
         // Mark that the modal has been shown, don't show again
         localStorage.setItem('welcomeModalShown', 'true')
         // Small delay to ensure the page has loaded
