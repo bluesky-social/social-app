@@ -307,7 +307,7 @@ export function QuoteEmbed({
               onBeforePress={onBeforePress}
               onPressIn={onPressIn}
               onPressOut={onPressOut}>
-              <View pointerEvents="none">
+              <View style={a.pointer_events_none}>
                 <PostMeta
                   author={quote.author}
                   moderation={moderation}

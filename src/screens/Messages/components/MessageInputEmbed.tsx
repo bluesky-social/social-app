@@ -167,6 +167,7 @@ export function MessageInputEmbed({
       content = (
         <View
           style={[
+            a.pointer_events_none,
             a.flex_1,
             t.atoms.bg,
             t.atoms.border_contrast_low,
@@ -174,8 +175,7 @@ export function MessageInputEmbed({
             a.border,
             a.p_sm,
             a.mb_sm,
-          ]}
-          pointerEvents="none">
+          ]}>
           <PostMeta
             showAvatar
             author={post.author}

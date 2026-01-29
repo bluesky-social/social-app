@@ -917,13 +917,13 @@ function Overlay({
         {IS_ANDROID && status === 'loading' && (
           <View
             style={[
+              a.pointer_events_none,
               a.absolute,
               a.inset_0,
               a.align_center,
               a.justify_center,
               a.z_10,
-            ]}
-            pointerEvents="none">
+            ]}>
             <Loader size="2xl" />
           </View>
         )}

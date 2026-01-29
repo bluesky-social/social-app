@@ -153,15 +153,14 @@ function GrowableBannerInner({
           </Animated.View>
         </Pressable>
         <AnimatedBlurView
-          pointerEvents="none"
-          style={[a.absolute, a.inset_0]}
+          style={[a.pointer_events_none, a.absolute, a.inset_0]}
           tint="dark"
           animatedProps={animatedBlurViewProps}
         />
       </Animated.View>
       <View
-        pointerEvents="none"
         style={[
+          a.pointer_events_none,
           a.absolute,
           a.inset_0,
           {top: topInset - (IS_IOS ? 15 : 0)},
