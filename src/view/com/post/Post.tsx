@@ -198,7 +198,7 @@ function PostInner({
               style={[a.pb_xs]}
             />
             {richText.text ? (
-              <View>
+              <View style={[a.mb_2xs]}>
                 <RichText
                   enableTags
                   testID="postText"
