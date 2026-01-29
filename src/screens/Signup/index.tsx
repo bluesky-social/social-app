@@ -6,6 +6,7 @@ import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
@@ -21,8 +22,11 @@ import {
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
+import {Divider} from '#/components/Divider'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
+import {InlineLinkText} from '#/components/Link'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -37,6 +41,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     ...initialState,
     analytics: ax,
   })
+  const {gtMobile} = useBreakpoints()
   const submit = useSubmitSignup()
 
   useEffect(() => {
@@ -162,7 +167,13 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               <ScreenTransition
                 key={state.activeStep}
                 direction={state.screenTransitionDirection}>
-                <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
+                <View
+                  style={[
+                    a.flex_1,
+                    a.px_xl,
+                    a.pt_2xl,
+                    !gtMobile && {paddingBottom: 100},
+                  ]}>
                   <View style={[a.gap_sm, a.pb_3xl]}>
                     <Text
                       style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
@@ -199,6 +210,33 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                   ) : (
                     <StepCaptcha />
                   )}
+
+                  <Divider />
+
+                  <View
+                    style={[
+                      a.w_full,
+                      a.py_lg,
+                      a.flex_row,
+                      a.gap_md,
+                      a.align_center,
+                    ]}>
+                    <AppLanguageDropdown />
+                    <Text
+                      style={[
+                        a.flex_1,
+                        t.atoms.text_contrast_medium,
+                        !gtMobile && a.text_md,
+                      ]}>
+                      <Trans>Having trouble?</Trans>{' '}
+                      <InlineLinkText
+                        label={_(msg`Contact support`)}
+                        to={FEEDBACK_FORM_URL({email: state.email})}
+                        style={[!gtMobile && a.text_md]}>
+                        <Trans>Contact support</Trans>
+                      </InlineLinkText>
+                    </Text>
+                  </View>
                 </View>
               </ScreenTransition>
             </LayoutAnimationConfig>

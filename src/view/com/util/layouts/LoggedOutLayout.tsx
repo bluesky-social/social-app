@@ -1,18 +1,11 @@
 import {ScrollView, StyleSheet, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import type React from 'react'
 
-import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
-import {Divider} from '#/components/Divider'
-import {InlineLinkText} from '#/components/Link'
-import {Text as NewText} from '#/components/Typography'
+import {atoms as a} from '#/alf'
 import {IS_WEB} from '#/env'
 import {Text} from '../text/Text'
 
@@ -28,9 +21,6 @@ export const LoggedOutLayout = ({
   description: string
   scrollable?: boolean
 }>) => {
-  const t = useTheme()
-  const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const pal = usePalette('default')
   const sideBg = useColorSchemeStyle(pal.viewLight, pal.view)
@@ -43,29 +33,6 @@ export const LoggedOutLayout = ({
   const [isKeyboardVisible] = useIsKeyboardVisible()
 
   if (isMobile) {
-    const footer = (
-      <View style={[a.px_lg]}>
-        <Divider />
-
-        <View style={[a.w_full, a.py_lg, a.flex_row, a.gap_md, a.align_center]}>
-          <AppLanguageDropdown />
-          <NewText
-            style={[
-              a.flex_1,
-              t.atoms.text_contrast_medium,
-              !gtMobile && a.text_md,
-            ]}>
-            <Trans>Having trouble?</Trans>{' '}
-            <InlineLinkText
-              label={_(msg`Contact support`)}
-              to={FEEDBACK_FORM_URL({})}
-              style={[!gtMobile && a.text_md]}>
-              <Trans>Contact support</Trans>
-            </InlineLinkText>
-          </NewText>
-        </View>
-      </View>
-    )
     if (scrollable) {
       return (
         <ScrollView
@@ -76,16 +43,10 @@ export const LoggedOutLayout = ({
             {paddingBottom: isKeyboardVisible ? 300 : 0},
           ]}>
           <View style={a.pt_md}>{children}</View>
-          {footer}
         </ScrollView>
       )
     } else {
-      return (
-        <>
-          <View style={a.pt_md}>{children}</View>
-          {footer}
-        </>
-      )
+      return <View style={a.pt_md}>{children}</View>
     }
   }
   return (
