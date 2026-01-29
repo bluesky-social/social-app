@@ -1,0 +1,16 @@
+diff --git a/node_modules/expo-age-range/ios/AgeRangeModule.swift b/node_modules/expo-age-range/ios/AgeRangeModule.swift
+index faf1089..dafd2ad 100644
+--- a/node_modules/expo-age-range/ios/AgeRangeModule.swift
++++ b/node_modules/expo-age-range/ios/AgeRangeModule.swift
+@@ -11,8 +11,9 @@ public class AgeRangeModule: Module {
+         return AgeRangeResponse()
+       }
+ 
+-      let currentVc: UIViewController? = await MainActor.run { [appContext] in
+-        appContext?.utilities?.currentViewController()
++      nonisolated(unsafe) let utilities = appContext?.utilities
++      let currentVc: UIViewController? = await MainActor.run {
++        utilities?.currentViewController()
+       }
+ 
+       guard let currentVc else {
