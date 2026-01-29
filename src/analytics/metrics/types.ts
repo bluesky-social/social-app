@@ -234,6 +234,60 @@ export type Events = {
     hasChanged: boolean
   }
 
+  'composer:open': {
+    logContext:
+      | 'Fab'
+      | 'PostReply'
+      | 'QuotePost'
+      | 'ProfileFeed'
+      | 'Deeplink'
+      | 'Other'
+    isReply: boolean
+    hasQuote: boolean
+    hasDraft: boolean
+  }
+
+  'draft:save': {
+    isNewDraft: boolean
+    hasText: boolean
+    hasImages: boolean
+    hasVideo: boolean
+    hasGif: boolean
+    hasQuote: boolean
+    hasLink: boolean
+    postCount: number
+    textLength: number
+  }
+
+  'draft:load': {
+    draftAgeMs: number
+    hasText: boolean
+    hasImages: boolean
+    hasVideo: boolean
+    hasGif: boolean
+    postCount: number
+  }
+
+  'draft:delete': {
+    logContext: 'DraftsList'
+    draftAgeMs: number
+  }
+
+  'draft:listOpen': {
+    draftCount: number
+  }
+
+  'draft:post': {
+    draftAgeMs: number
+    wasEdited: boolean
+  }
+
+  'draft:discard': {
+    logContext: 'ComposerClose' | 'BeforeDraftsList'
+    hadContent: boolean
+    textLength: number
+  }
+
   // Data events
   'account:create:begin': {}
   'account:create:success': {

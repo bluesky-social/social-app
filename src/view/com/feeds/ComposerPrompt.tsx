@@ -37,7 +37,7 @@ export function ComposerPrompt() {
 
   const onPress = useCallback(() => {
     ax.metric('composerPrompt:press', {})
-    openComposer({})
+    openComposer({logContext: 'Fab'})
   }, [ax, openComposer])
 
   const onPressImage = useCallback(async () => {
@@ -45,7 +45,7 @@ export function ComposerPrompt() {
 
     // On web, open the composer with the gallery picker auto-opening
     if (!IS_NATIVE) {
-      openComposer({openGallery: true})
+      openComposer({openGallery: true, logContext: 'Fab'})
       return
     }
 
@@ -83,7 +83,7 @@ export function ComposerPrompt() {
           }))
 
         if (imageUris.length > 0) {
-          openComposer({imageUris})
+          openComposer({imageUris, logContext: 'Fab'})
         }
       }
     } catch (err: any) {
@@ -125,6 +125,7 @@ export function ComposerPrompt() {
 
       openComposer({
         imageUris: IS_NATIVE ? imageUris : undefined,
+        logContext: 'Fab',
       })
     } catch (err: any) {
       if (!String(err).toLowerCase().includes('cancel')) {

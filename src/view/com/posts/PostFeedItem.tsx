@@ -189,6 +189,7 @@ let FeedItemInner = ({
         moderation,
         langs: record.langs,
       },
+      logContext: 'PostReply',
     })
   }
 

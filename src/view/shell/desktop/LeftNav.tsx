@@ -560,7 +560,7 @@ function ComposeBtn() {
   }
 
   const onPressCompose = async () =>
-    openComposer({mention: await getProfileHandle()})
+    openComposer({mention: await getProfileHandle(), logContext: 'Fab'})
 
   if (leftNavMinimal) {
     return null

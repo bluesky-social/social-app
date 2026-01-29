@@ -138,6 +138,7 @@ function PostInner({
         moderation,
         langs: record.langs,
       },
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record, moderation])
 
