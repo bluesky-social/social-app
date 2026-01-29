@@ -1,4 +1,4 @@
-import React from 'react'
+import {useRef, useState} from 'react'
 import {
   Pressable,
   type StyleProp,
@@ -91,9 +91,9 @@ export function GifEmbed({
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
 
-  const playerRef = React.useRef<GifView>(null)
+  const playerRef = useRef<GifView>(null)
 
-  const [playerState, setPlayerState] = React.useState<{
+  const [playerState, setPlayerState] = useState<{
     isPlaying: boolean
     isLoaded: boolean
   }>({
@@ -101,23 +101,18 @@ export function GifEmbed({
     isLoaded: false,
   })
 
-  const onPlayerStateChange = React.useCallback(
-    (e: GifViewStateChangeEvent) => {
-      setPlayerState(e.nativeEvent)
-    },
-    [],
-  )
+  const onPlayerStateChange = (e: GifViewStateChangeEvent) => {
+    setPlayerState(e.nativeEvent)
+  }
 
-  const onPress = React.useCallback(() => {
-    playerRef.current?.toggleAsync()
-  }, [])
+  const onPress = () => {
+    void playerRef.current?.toggleAsync()
+  }
 
   let aspectRatio = 1
   if (params.dimensions) {
     const ratio = params.dimensions.width / params.dimensions.height
-    if (!isNaN(ratio) && isFinite(ratio)) {
-      aspectRatio = clamp(ratio, 0.75, 4)
-    }
+    aspectRatio = clamp(ratio, 0.75, 4)
   }
 
   return (

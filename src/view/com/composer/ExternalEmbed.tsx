@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -25,7 +25,7 @@ export const ExternalEmbedGif = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveGifQuery(gif)
-  const linkInfo = React.useMemo(
+  const linkInfo = useMemo(
     () =>
       data && {
         title: data.title ?? data.uri,
@@ -83,7 +83,7 @@ export const ExternalEmbedLink = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveLinkQuery(uri)
-  const linkComponent = React.useMemo(() => {
+  const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
         return (
