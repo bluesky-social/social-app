@@ -409,7 +409,7 @@ export function Description({
   const profile = useProfileShadow(profileUnshadowed)
   const rt = useMemo(() => {
     if (!('description' in profile)) return
-    const rt = new RichTextApi({text: profile.description || ''})
+    const rt = new RichTextApi({text: (profile.description || '').trim()})
     rt.detectFacetsWithoutResolution()
     return rt
   }, [profile])
