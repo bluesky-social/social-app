@@ -1109,7 +1109,7 @@ function PlayPauseTapArea({
         isPlaying ? _(msg`Video is playing`) : _(msg`Video is paused`)
       }
       label={_(
-        `Video from ${sanitizeHandle(
+        msg`Video from ${sanitizeHandle(
           post.author.handle,
           '@',
         )}. Tap to play or pause the video`,

@@ -312,13 +312,13 @@ export function Controls({
         onPointerEnter={onPointerMoveEmptySpace}
         onPointerMove={onPointerMoveEmptySpace}
         onPointerLeave={onPointerLeaveEmptySpace}
-        accessibilityLabel={_(
+        accessibilityLabel={
           !focused
-            ? msg`Unmute video`
+            ? _(msg`Unmute video`)
             : playing
-              ? msg`Pause video`
-              : msg`Play video`,
-        )}
+              ? _(msg`Pause video`)
+              : _(msg`Play video`)
+        }
         accessibilityHint=""
         style={[
           a.flex_1,
