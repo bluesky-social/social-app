@@ -14,7 +14,6 @@ import {IS_NATIVE} from '#/env'
 import {DraftItem} from './DraftItem'
 import {useDeleteDraftMutation, useDraftsQuery} from './state/queries'
 import {type DraftSummary} from './state/schema'
-import {revokeAllMediaUrls} from './state/storage'
 
 export function DraftsListDialog({
   control,
@@ -37,12 +36,6 @@ export function DraftsListDialog({
   const handleSelectDraft = useCallback(
     (summary: DraftSummary) => {
       control.close(() => {
-        // Revoke preview URLs
-        // It would be neater to do it in the `onClose` callback
-        // on the dialog itself, but this would wipe out the new ones
-        // that will be created by `onSelectDraft`
-        // ndb: if we miss any, it'll be handled by the composer closing
-        revokeAllMediaUrls()
         onSelectDraft(summary)
       })
     },
@@ -60,11 +53,7 @@ export function DraftsListDialog({
     () => (
       <Button
         label={_(msg`Back`)}
-        onPress={() => {
-          control.close(() => {
-            revokeAllMediaUrls()
-          })
-        }}
+        onPress={() => control.close()}
         size="small"
         color="primary"
         variant="ghost">
