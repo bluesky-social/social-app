@@ -517,7 +517,7 @@ export function parseEmbedPlayerFromUrl(
   if (urlp.hostname === 'play.sooplive.co.kr') {
     const [__, station, id] = urlp.pathname.split('/')
 
-    if (id && station) {
+    if (station) {
       return {
         type: 'soop_video',
         source: 'soop',
