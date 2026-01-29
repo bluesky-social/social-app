@@ -57,79 +57,128 @@ const position = 1
 const x = _(selectOrdinal(position, {one: '#st', two: '#nd', few: '#rd', other: '#th'}))
         `,
       },
-      // Different function named _ (not from useLingui context, but rule doesn't track that)
-      // This is fine - the rule just checks the pattern
+      // msg function call with object (descriptor form)
       {
         code: `
-const _ = (x) => x
-const x = _(someValue)
+const {_} = useLingui()
+const x = _(msg({message: 'Hello'}))
+        `,
+      },
+      // msg function call with object and context
+      {
+        code: `
+const {_} = useLingui()
+const x = _(msg({message: 'Hello', context: 'greeting'}))
         `,
       },
     ],
     invalid: [
-      // Plain string literal (single quotes)
+      // Plain string literal (single quotes) - with auto-fix
       {
         code: `
 const {_} = useLingui()
 const x = _('Bad')
         `,
+        output: `
+const {_} = useLingui()
+const x = _(msg\`Bad\`)
+        `,
         errors: [{messageId: 'missingMsg'}],
       },
-      // Plain string literal (double quotes)
+      // Plain string literal (double quotes) - with auto-fix
       {
         code: `
 const {_} = useLingui()
 const x = _("Bad")
         `,
+        output: `
+const {_} = useLingui()
+const x = _(msg\`Bad\`)
+        `,
         errors: [{messageId: 'missingMsg'}],
       },
-      // Template literal without msg tag
+      // Template literal without msg tag - with auto-fix
       {
         code: `
 const {_} = useLingui()
 const x = _(\`Bad\`)
         `,
+        output: `
+const {_} = useLingui()
+const x = _(msg\`Bad\`)
+        `,
         errors: [{messageId: 'missingMsg'}],
       },
-      // Variable/identifier
+      // Template literal with interpolation - with auto-fix
+      {
+        code: `
+const {_} = useLingui()
+const name = 'World'
+const x = _(\`Hello \${name}\`)
+        `,
+        output: `
+const {_} = useLingui()
+const name = 'World'
+const x = _(msg\`Hello \${name}\`)
+        `,
+        errors: [{messageId: 'missingMsg'}],
+      },
+      // String with backticks that need escaping
+      {
+        code: `
+const {_} = useLingui()
+const x = _('Use \\\`code\\\` here')
+        `,
+        output: `
+const {_} = useLingui()
+const x = _(msg\`Use \\\`code\\\` here\`)
+        `,
+        errors: [{messageId: 'missingMsg'}],
+      },
+      // Variable/identifier - no auto-fix possible
       {
         code: `
 const {_} = useLingui()
 const message = 'Hello'
 const x = _(message)
         `,
+        output: null,
         errors: [{messageId: 'missingMsg'}],
       },
-      // Arbitrary function call
+      // Arbitrary function call - no auto-fix possible
       {
         code: `
 const {_} = useLingui()
 const x = _(getMessage())
         `,
+        output: null,
         errors: [{messageId: 'missingMsg'}],
       },
-      // Empty call
+      // Empty call - no auto-fix possible
       {
         code: `
 const {_} = useLingui()
 const x = _()
         `,
+        output: null,
         errors: [{messageId: 'missingMsg'}],
       },
-      // Tagged template with wrong tag
+      // Tagged template with wrong tag - no auto-fix (would need to replace tag)
       {
         code: `
 const {_} = useLingui()
 const x = _(html\`Hello\`)
         `,
+        output: null,
         errors: [{messageId: 'missingMsg'}],
       },
-      // Number literal
+      // Number literal - no auto-fix possible
       {
         code: `
 const {_} = useLingui()
 const x = _(123)
         `,
+        output: null,
         errors: [{messageId: 'missingMsg'}],
       },
     ],
