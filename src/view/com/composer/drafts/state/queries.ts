@@ -55,7 +55,7 @@ export async function loadDraft(draft: AppBskyDraftDefs.Draft): Promise<{
           const url = await storage.loadMediaFromLocal(img.localRef.path)
           loadedMedia.set(img.localRef.path, url)
         } catch (e) {
-          logger.warn('Failed to load draft image', {
+          logger.debug('Failed to load draft image', {
             path: img.localRef.path,
             error: e,
           })
@@ -69,7 +69,7 @@ export async function loadDraft(draft: AppBskyDraftDefs.Draft): Promise<{
           const url = await storage.loadMediaFromLocal(vid.localRef.path)
           loadedMedia.set(vid.localRef.path, url)
         } catch (e) {
-          logger.warn('Failed to load draft video', {
+          logger.debug('Failed to load draft video', {
             path: vid.localRef.path,
             error: e,
           })
