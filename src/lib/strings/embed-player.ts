@@ -24,6 +24,10 @@ export const embedPlayerSources = [
   'giphy',
   'tenor',
   'flickr',
+  'kakaoTv',
+  'naverTv',
+  'chzzk',
+  'soop',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -44,6 +48,12 @@ export type EmbedPlayerType =
   | 'giphy_gif'
   | 'tenor_gif'
   | 'flickr_album'
+  | 'kakaoTv_video'
+  | 'naverTv_video'
+  | 'naverTv_clip'
+  | 'chzzk_video'
+  | 'soop_video'
+  | 'soop_catch'
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
@@ -56,6 +66,10 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
+  kakaoTv: 'Kakao TV',
+  naverTv: 'Naver TV',
+  chzzk: 'Chzzk',
+  soop: 'SOOP',
 }
 
 export interface EmbedPlayerParams {
@@ -459,6 +473,98 @@ export function parseEmbedPlayerFromUrl(
         return undefined
     }
   }
+
+  if (urlp.hostname === 'tv.kakao.com') {
+    const [__, channel, channelId, type, videoId] = urlp.pathname.split('/')
+    const isLive = type === 'livelink'
+    const isVideo = type === 'cliplink'
+
+    if (channel === 'channel' && channelId && videoId && (isLive || isVideo)) {
+      return {
+        type: 'kakaoTv_video',
+        source: 'kakaoTv',
+        playerUri: `https://tv.kakao.com/embed/player/${type}/${videoId}?autoplay=1`,
+      }
+    }
+  }
+
+  if (urlp.hostname === 'tv.naver.com') {
+    const [__, type, id] = urlp.pathname.split('/')
+    const isVideo = type === 'v'
+    const isClip = type === 'h'
+
+    if (id && (isVideo || isClip)) {
+      return {
+        type: isClip ? 'naverTv_clip' : 'naverTv_video',
+        source: 'naverTv',
+        playerUri: `https://tv.naver.com/embed/${id}?autoPlay=true`,
+      }
+    }
+  }
+
+  if (urlp.hostname === 'chzzk.naver.com') {
+    const [__, type, id] = urlp.pathname.split('/')
+
+    if (id && type === 'clips') {
+      return {
+        type: 'chzzk_video',
+        source: 'chzzk',
+        playerUri: `https://chzzk.naver.com/embed/clip/${id}?autoplay=1`,
+      }
+    }
+  }
+
+  if (urlp.hostname === 'play.sooplive.co.kr') {
+    const [__, station, id] = urlp.pathname.split('/')
+
+    if (id && station) {
+      return {
+        type: 'soop_video',
+        source: 'soop',
+        playerUri: id
+          ? `https://play.sooplive.co.kr/${station}/${id}/embed?autoPlay=true&mutePlay=true`
+          : `https://play.sooplive.co.kr/${station}/embed?autoPlay=true&mutePlay=true`,
+      }
+    }
+  }
+  if (urlp.hostname === 'vod.sooplive.co.kr') {
+    const [__, player, id, type] = urlp.pathname.split('/')
+    const isCatch = type === 'catch'
+
+    if (id && player === 'player') {
+      return {
+        type: isCatch ? 'soop_catch' : 'soop_video',
+        source: 'soop',
+        playerUri: isCatch
+          ? `https://vod.sooplive.co.kr/player/${id}/embed?autoPlay=true&mutePlay=true&type=catch`
+          : `https://vod.sooplive.co.kr/player/${id}/embed?autoPlay=true&mutePlay=true`,
+      }
+    }
+  }
+  if (
+    urlp.hostname === 'sooplive.com' ||
+    urlp.hostname === 'www.sooplive.com'
+  ) {
+    const [__, channelOrType, id] = urlp.pathname.split('/')
+
+    if (channelOrType === 'video') {
+      if (id) {
+        return {
+          type: 'soop_video',
+          source: 'soop',
+          playerUri: `https://www.sooplive.com/player/embed/video/${id}`,
+        }
+      }
+    } else {
+      if (channelOrType) {
+        return {
+          type: 'soop_video',
+          source: 'soop',
+          playerUri: `https://www.sooplive.com/player/embed/${channelOrType}`,
+        }
+      }
+    }
+  }
 }
 
 export function getPlayerAspect({
@@ -476,8 +582,14 @@ export function getPlayerAspect({
     case 'youtube_video':
     case 'twitch_video':
     case 'vimeo_video':
+    case 'kakaoTv_video':
+    case 'naverTv_video':
+    case 'chzzk_video':
+    case 'soop_video':
       return {aspectRatio: 16 / 9}
     case 'youtube_short':
+    case 'naverTv_clip':
+    case 'soop_catch':
       if (SCREEN_HEIGHT < 600) {
         return {aspectRatio: (9 / 16) * 1.75}
       } else {

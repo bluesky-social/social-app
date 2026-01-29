@@ -106,6 +106,10 @@ const schema = z.object({
       appleMusic: z.enum(externalEmbedOptions).optional(),
       soundcloud: z.enum(externalEmbedOptions).optional(),
       flickr: z.enum(externalEmbedOptions).optional(),
+      kakaoTv: z.enum(externalEmbedOptions).optional(),
+      naverTv: z.enum(externalEmbedOptions).optional(),
+      chzzk: z.enum(externalEmbedOptions).optional(),
+      soop: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   invites: z.object({
