@@ -13,8 +13,10 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
-import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {type NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {listenSoftReset} from '#/state/events'
@@ -236,7 +238,7 @@ export function ProfileFeedScreenInner({
       {hasSession && (
         <FAB
           testID="composeFAB"
-          onPress={() => openComposer({})}
+          onPress={() => openComposer({logContext: 'Fab'})}
           icon={
             <ComposeIcon2
               strokeWidth={1.5}

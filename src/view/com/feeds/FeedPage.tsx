@@ -123,7 +123,7 @@ export function FeedPage({
   }, [onSoftReset, isPageFocused])
 
   const onPressCompose = useCallback(() => {
-    openComposer({})
+    openComposer({logContext: 'Fab'})
   }, [openComposer])
 
   const onPressLoadLatest = useCallback(() => {

@@ -234,7 +234,7 @@ function ProfileListScreenLoaded({
             </PagerWithHeader>
             <FAB
               testID="composeFAB"
-              onPress={() => openComposer({})}
+              onPress={() => openComposer({logContext: 'Fab'})}
               icon={
                 <ComposeIcon2
                   strokeWidth={1.5}
@@ -272,7 +272,7 @@ function ProfileListScreenLoaded({
           />
           <FAB
             testID="composeFAB"
-            onPress={() => openComposer({})}
+            onPress={() => openComposer({logContext: 'Fab'})}
             icon={
               <ComposeIcon2
                 strokeWidth={1.5}

@@ -777,6 +777,7 @@ function Overlay({
         embed: post.embed,
         langs: record?.langs,
       },
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record])
 

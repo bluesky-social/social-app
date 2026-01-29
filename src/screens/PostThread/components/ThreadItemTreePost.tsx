@@ -302,6 +302,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
         langs: post.record.langs,
       },
       onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record, onPostSuccess, moderation])
 
