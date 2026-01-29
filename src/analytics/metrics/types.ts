@@ -233,7 +233,6 @@ export type Events = {
     persist: boolean
     hasChanged: boolean
   }
-
   'composer:open': {
     logContext:
       | 'Fab'
@@ -246,7 +245,6 @@ export type Events = {
     hasQuote: boolean
     hasDraft: boolean
   }
-
   'draft:save': {
     isNewDraft: boolean
     hasText: boolean
@@ -258,7 +256,6 @@ export type Events = {
     postCount: number
     textLength: number
   }
-
   'draft:load': {
     draftAgeMs: number
     hasText: boolean
@@ -267,21 +264,17 @@ export type Events = {
     hasGif: boolean
     postCount: number
   }
-
   'draft:delete': {
     logContext: 'DraftsList'
     draftAgeMs: number
   }
-
   'draft:listOpen': {
     draftCount: number
   }
-
   'draft:post': {
     draftAgeMs: number
     wasEdited: boolean
   }
-
   'draft:discard': {
     logContext: 'ComposerClose' | 'BeforeDraftsList'
     hadContent: boolean
