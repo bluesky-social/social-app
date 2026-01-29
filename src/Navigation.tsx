@@ -226,6 +226,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: bskyTitle(`@${route.params.name}`, unreadCountLabel),
         })}
+        getId={({params}) => params.name}
       />
       <Stack.Screen
         name="ProfileFollowers"
