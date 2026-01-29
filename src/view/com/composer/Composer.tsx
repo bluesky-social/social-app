@@ -70,6 +70,7 @@ import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
+import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
@@ -332,15 +333,14 @@ export const ComposePost = ({
   }, [onInitVideo])
 
   // Fire composer:open metric on mount
-  useEffect(() => {
+  useCallOnce(() => {
     ax.metric('composer:open', {
       logContext: logContext ?? 'Other',
       isReply: !!replyTo,
       hasQuote: !!initQuote,
       hasDraft: false,
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })()
 
   const clearVideo = useCallback(
     (postId: string) => {
