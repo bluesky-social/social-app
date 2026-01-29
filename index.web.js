@@ -1,3 +1,4 @@
+import '@expo/metro-runtime'
 import '#/platform/markBundleStartTime'
 import '#/platform/polyfills'
 
