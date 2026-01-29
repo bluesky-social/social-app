@@ -9,6 +9,7 @@ export enum PostEmbedViewContext {
 
 export enum QuoteEmbedViewContext {
   FeedEmbedRecordWithMedia = PostEmbedViewContext.FeedEmbedRecordWithMedia,
+  CompactWithMedia = 'CompactWithMedia',
 }
 
 export type CommonProps = {
