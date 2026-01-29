@@ -9,8 +9,8 @@ import {
   type Facet,
   type Un$Typed,
 } from '@atproto/api'
+import {chunkArray} from '@atproto/common-web'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
-import chunk from 'lodash.chunk'
 
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
@@ -230,7 +230,7 @@ export function useListDeleteMutation() {
         .concat([createDel(uri)])
 
       // apply in chunks
-      for (const writesChunk of chunk(writes, 10)) {
+      for (const writesChunk of chunkArray(writes, 10)) {
         await agent.com.atproto.repo.applyWrites({
           repo: currentAccount.did,
           writes: writesChunk,
