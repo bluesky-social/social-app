@@ -1,8 +1,9 @@
 /**
  * Type converters for Draft API - convert between ComposerState and server Draft types.
  */
-import {type AppBskyDraftDefs, AtUri, RichText} from '@atproto/api'
+import {type AppBskyDraftDefs, type AppBskyFeedDefs, AtUri, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
+import * as VideoThumbnails from 'expo-video-thumbnails'
 
 import {resolveLink} from '#/lib/api/resolve'
 import {getImageDim} from '#/lib/media/manip'
@@ -18,6 +19,7 @@ import {
 import {type VideoState} from '#/view/com/composer/state/video'
 import {logger} from './logger'
 import {type DraftPostDisplay, type DraftSummary} from './schema'
+import * as storage from './storage'
 
 const TENOR_HOSTNAME = 'media.tenor.com'
 
@@ -285,16 +287,95 @@ function serializeGif(gifMedia: {
  * Convert server DraftView to DraftSummary for list display.
  * Also checks which media files exist locally.
  */
-export function draftViewToSummary(
+export async function draftViewToSummary(
   view: AppBskyDraftDefs.DraftView,
   localMediaExists: (path: string) => boolean,
-): DraftSummary {
+): Promise<DraftSummary> {
   const firstPost = view.draft.posts[0]
   const previewText = firstPost?.text?.slice(0, 100) || ''
 
   let mediaCount = 0
   let hasMedia = false
   let hasMissingMedia = false
+
+  const postsWithEmbed = await Promise.all(
+    view.draft.posts.map(async (post, i) => {
+      let embed: AppBskyFeedDefs.PostView['embed']
+
+      if (post.embedImages) {
+        embed = {
+          $type: 'app.bsky.embed.images#view',
+          images: await Promise.all(
+            post.embedImages.map(async image => {
+              const exists = localMediaExists(image.localRef.path)
+              const uri = exists ? await storage.loadMediaFromLocal(image.localRef.path) : ''
+              return {
+                $type: 'app.bsky.embed.images#viewImage',
+                thumb: uri,
+                fullsize: uri,
+                alt: image.alt || '',
+              }
+            })
+          )
+        }
+      } else if (post.embedVideos) {
+        const video = post.embedVideos[0]
+        const thumbnail = await VideoThumbnails.getThumbnailAsync(video.localRef.path, {
+          time: 0,
+          quality: 0.2,
+        })
+        embed = {
+          $type: 'app.bsky.embed.video#view',
+          cid: 'lol',
+          playlist: 'lol',
+          thumbnail: thumbnail.uri,
+          presentation: 'default', // TODO what about GIFs
+        }
+      } else if (post.embedExternals) {
+        const ext = post.embedExternals[0]
+        const resolved = await resolveLink(
+          createPublicAgent(),
+          ext.uri,
+        )
+        if (resolved.type === 'external') {
+          embed = {
+            $type: 'app.bsky.embed.external#view',
+            external: {
+              $type: 'app.bsky.embed.external#viewExternal',
+              uri: resolved.uri,
+              title: resolved.title,
+              description: resolved.description,
+              thumb: resolved.thumb?.source.path,
+            }
+          }
+        }
+      }
+      if (post.embedRecords) {
+        const quote = post.embedRecords[0]
+        const urip = new AtUri(quote.record.uri)
+        const url = `https://bsky.app/profile/${urip.host}/post/${urip.rkey}`
+        const resolvedQuote = await resolveLink(
+          createPublicAgent(),
+          url,
+        )
+        if (resolvedQuote.type === 'record') {
+          embed = {
+            $type: 'app.bsky.embed.record#view',
+            record: {
+              ...resolvedQuote.view,
+              $type: 'app.bsky.embed.record#viewRecord', // TODO map to other types
+            }
+          }
+        }
+      }
+      return {
+        text: post.text,
+        embed,
+      }
+    })
+  )
+
+  console.log({postsWithEmbed})
 
   const posts: DraftPostDisplay[] = view.draft.posts.map((post, index) => {
     const images: DraftPostDisplay['images'] = []

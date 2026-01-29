@@ -408,7 +408,7 @@ async function resolveMedia(
   return undefined
 }
 
-async function resolveRecord(
+export async function resolveRecord(
   agent: BskyAgent,
   queryClient: QueryClient,
   uri: string,

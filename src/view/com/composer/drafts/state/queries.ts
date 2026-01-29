@@ -28,9 +28,9 @@ export function useDraftsQuery() {
       const res = await agent.app.bsky.draft.getDrafts({cursor: pageParam})
       return {
         cursor: res.data.cursor,
-        drafts: res.data.drafts.map(view =>
+        drafts: await Promise.all(res.data.drafts.map(view =>
           draftViewToSummary(view, path => storage.mediaExists(path)),
-        ),
+        )),
       }
     },
     initialPageParam: undefined as string | undefined,
