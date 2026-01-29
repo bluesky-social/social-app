@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -38,13 +39,16 @@ export function DraftsListDialog({
   // Fire draft:listOpen metric when dialog opens and data is loaded
   const draftCount = drafts.length
   const isDataReady = !isLoading && data !== undefined
+  const onDraftListOpen = useCallOnce()
   useEffect(() => {
     if (isDataReady) {
-      ax.metric('draft:listOpen', {
-        draftCount,
+      onDraftListOpen(() => {
+        ax.metric('draft:listOpen', {
+          draftCount,
+        })
       })
     }
-  }, [isDataReady, draftCount, ax])
+  }, [onDraftListOpen, isDataReady, draftCount, ax])
 
   const handleSelectDraft = useCallback(
     (summary: DraftSummary) => {
