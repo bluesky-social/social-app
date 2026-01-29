@@ -15,6 +15,8 @@ import {niceDate} from '#/lib/strings/time'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, platform, useTheme, web} from '#/alf'
+import {Button} from '#/components/Button'
+import {CirclePlus_Stroke2_Corner0_Rounded as ExpandIcon} from '#/components/icons/CirclePlus'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
@@ -33,6 +35,7 @@ interface PostMetaOpts {
   avatarSize?: number
   onOpenAuthor?: () => void
   style?: StyleProp<ViewStyle>
+  onExpand?: () => void
 }
 
 let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
@@ -68,16 +71,29 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         a.z_20,
         opts.style,
       ]}>
-      {opts.showAvatar && (
+      {(opts.onExpand || opts.showAvatar) && (
         <View style={[a.self_center, a.mr_2xs]}>
-          <PreviewableUserAvatar
-            size={opts.avatarSize || 16}
-            profile={author}
-            moderation={opts.moderation?.ui('avatar')}
-            type={author.associated?.labeler ? 'labeler' : 'user'}
-            live={live}
-            hideLiveBadge
-          />
+          {opts.onExpand ? (
+            <Button
+              label="Expand branch"
+              onPress={opts.onExpand}
+              style={[
+                {width: opts.avatarSize || 16, height: opts.avatarSize || 16},
+              ]}>
+              <ExpandIcon fill={t.atoms.text_contrast_low.color} />
+            </Button>
+          ) : (
+            opts.showAvatar && (
+              <PreviewableUserAvatar
+                size={opts.avatarSize || 16}
+                profile={author}
+                moderation={opts.moderation?.ui('avatar')}
+                type={author.associated?.labeler ? 'labeler' : 'user'}
+                live={live}
+                hideLiveBadge
+              />
+            )
+          )}
         </View>
       )}
       <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
