@@ -261,6 +261,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
         langs: record.langs,
       },
       onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
     })
 
     if (postSource) {

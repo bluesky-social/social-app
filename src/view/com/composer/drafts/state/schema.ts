@@ -62,6 +62,8 @@ export type DraftSummary = {
   mediaCount: number
   /** Number of posts in thread */
   postCount: number
+  /** ISO timestamp of creation */
+  createdAt: string
   /** ISO timestamp of last update */
   updatedAt: string
   /** All posts in the draft for full display */

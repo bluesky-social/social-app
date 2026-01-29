@@ -1,8 +1,9 @@
-import {useCallback, useMemo} from 'react'
+import {useCallback, useEffect, useMemo} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -10,6 +11,7 @@ import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {DraftItem} from './DraftItem'
 import {useDeleteDraftMutation, useDraftsQuery} from './state/queries'
@@ -24,6 +26,7 @@ export function DraftsListDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
   const {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
     useDraftsQuery()
   const {mutate: deleteDraft} = useDeleteDraftMutation()
@@ -32,6 +35,20 @@ export function DraftsListDialog({
     () => data?.pages.flatMap(page => page.drafts) ?? [],
     [data],
   )
+
+  // Fire draft:listOpen metric when dialog opens and data is loaded
+  const draftCount = drafts.length
+  const isDataReady = !isLoading && data !== undefined
+  const onDraftListOpen = useCallOnce()
+  useEffect(() => {
+    if (isDataReady) {
+      onDraftListOpen(() => {
+        ax.metric('draft:listOpen', {
+          draftCount,
+        })
+      })
+    }
+  }, [onDraftListOpen, isDataReady, draftCount, ax])
 
   const handleSelectDraft = useCallback(
     (summary: DraftSummary) => {
@@ -44,9 +61,15 @@ export function DraftsListDialog({
 
   const handleDeleteDraft = useCallback(
     (draftSummary: DraftSummary) => {
+      // Fire draft:delete metric
+      const draftAgeMs = Date.now() - new Date(draftSummary.createdAt).getTime()
+      ax.metric('draft:delete', {
+        logContext: 'DraftsList',
+        draftAgeMs,
+      })
       deleteDraft({draftId: draftSummary.id, draft: draftSummary.draft})
     },
-    [deleteDraft],
+    [deleteDraft, ax],
   )
 
   const backButton = useCallback(
@@ -93,7 +116,7 @@ export function DraftsListDialog({
 
   const onEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
+      void fetchNextPage()
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
@@ -132,7 +155,7 @@ export function DraftsListDialog({
       <Dialog.InnerFlatList
         data={drafts}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item: DraftSummary) => item.id}
         ListHeaderComponent={web(header)}
         stickyHeaderIndices={web([0])}
         ListEmptyComponent={emptyComponent}

@@ -356,6 +356,7 @@ export function draftViewToSummary(
     hasMissingMedia,
     mediaCount,
     postCount: view.draft.posts.length,
+    createdAt: view.createdAt,
     updatedAt: view.updatedAt,
     posts,
   }

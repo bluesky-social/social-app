@@ -85,6 +85,11 @@ export async function saveMediaToLocal(
 }
 
 /**
+ * Track blob URLs created by loadMediaFromLocal for cleanup
+ */
+const createdBlobUrls = new Set<string>()
+
+/**
  * Load a media file from IndexedDB
  * @returns A blob URL for the saved media
  */
@@ -97,7 +102,10 @@ export async function loadMediaFromLocal(
     throw new Error(`Media file not found: ${localRefPath}`)
   }
 
-  return URL.createObjectURL(record.blob)
+  const url = URL.createObjectURL(record.blob)
+  logger.debug('Created blob URL', {url})
+  createdBlobUrls.add(url)
+  return url
 }
 
 /**
@@ -165,6 +173,20 @@ export function clearMediaCache(): void {
  */
 export function revokeMediaUrl(url: string): void {
   if (url.startsWith('blob:')) {
+    logger.debug('Revoking blob URL', {url})
+    URL.revokeObjectURL(url)
+    createdBlobUrls.delete(url)
+  }
+}
+
+/**
+ * Revoke all blob URLs created by loadMediaFromLocal.
+ * Call this when closing the drafts list dialog to prevent memory leaks.
+ */
+export function revokeAllMediaUrls(): void {
+  logger.debug(`Revoking ${createdBlobUrls.size} blob URLs`)
+  for (const url of createdBlobUrls) {
     URL.revokeObjectURL(url)
   }
+  createdBlobUrls.clear()
 }

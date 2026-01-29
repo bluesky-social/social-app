@@ -70,6 +70,7 @@ import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
+import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
@@ -142,6 +143,7 @@ import {
   useSaveDraftMutation,
 } from './drafts/state/queries'
 import {type DraftSummary} from './drafts/state/schema'
+import {revokeAllMediaUrls} from './drafts/state/storage'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
   type AssetType,
@@ -184,6 +186,7 @@ export const ComposePost = ({
   imageUris: initImageUris,
   videoUri: initVideoUri,
   openGallery,
+  logContext,
   cancelRef,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef | null>
@@ -212,6 +215,14 @@ export const ComposePost = ({
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
+
+  /**
+   * Track when a draft was created so we can measure draft age in metrics.
+   * Set when a draft is loaded via handleSelectDraft.
+   */
+  const [loadedDraftCreatedAt, setLoadedDraftCreatedAt] = useState<
+    string | null
+  >(null)
 
   /**
    * A temporary local reference to a language suggestion that the user has
@@ -320,6 +331,16 @@ export const ComposePost = ({
   useEffect(() => {
     onInitVideo()
   }, [onInitVideo])
+
+  // Fire composer:open metric on mount
+  useCallOnce(() => {
+    ax.metric('composer:open', {
+      logContext: logContext ?? 'Other',
+      isReply: !!replyTo,
+      hasQuote: !!initQuote,
+      hasDraft: false,
+    })
+  })()
 
   const clearVideo = useCallback(
     (postId: string) => {
@@ -489,6 +510,21 @@ export const ComposePost = ({
         originalLocalRefs,
       })
 
+      // Track when the draft was created for metrics
+      setLoadedDraftCreatedAt(draftSummary.createdAt)
+
+      // Fire draft:load metric
+      const draftPosts = draftSummary.posts
+      const draftAgeMs = Date.now() - new Date(draftSummary.createdAt).getTime()
+      ax.metric('draft:load', {
+        draftAgeMs,
+        hasText: draftPosts.some(p => p.text.trim().length > 0),
+        hasImages: draftPosts.some(p => p.images && p.images.length > 0),
+        hasVideo: draftPosts.some(p => !!p.video),
+        hasGif: draftPosts.some(p => !!p.gif),
+        postCount: draftPosts.length,
+      })
+
       // Initiate video processing for any restored videos
       // This is async but we don't await - videos process in the background
       for (const [postIndex, videoInfo] of restoredVideos) {
@@ -496,7 +532,7 @@ export const ComposePost = ({
         restoreVideo(postId, videoInfo)
       }
     },
-    [composerDispatch, restoreVideo],
+    [composerDispatch, restoreVideo, ax],
   )
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
@@ -504,21 +540,38 @@ export const ComposePost = ({
   const onClose = useCallback(() => {
     closeComposer()
     clearThumbnailCache(queryClient)
+    revokeAllMediaUrls()
   }, [closeComposer, queryClient])
 
   const handleSaveDraft = React.useCallback(async () => {
+    const isNewDraft = !composerState.draftId
     try {
       const result = await saveDraft({
         composerState,
         existingDraftId: composerState.draftId,
       })
       composerDispatch({type: 'mark_saved', draftId: result.draftId})
+
+      // Fire draft:save metric
+      const posts = composerState.thread.posts
+      ax.metric('draft:save', {
+        isNewDraft,
+        hasText: posts.some(p => p.richtext.text.trim().length > 0),
+        hasImages: posts.some(p => p.embed.media?.type === 'images'),
+        hasVideo: posts.some(p => p.embed.media?.type === 'video'),
+        hasGif: posts.some(p => p.embed.media?.type === 'gif'),
+        hasQuote: posts.some(p => !!p.embed.quote),
+        hasLink: posts.some(p => !!p.embed.link),
+        postCount: posts.length,
+        textLength: posts[0].richtext.text.length,
+      })
+
       onClose()
     } catch (e) {
       logger.error('Failed to save draft', {error: e})
       setError(_(msg`Failed to save draft`))
     }
-  }, [saveDraft, composerState, composerDispatch, onClose, _])
+  }, [saveDraft, composerState, composerDispatch, onClose, _, ax])
 
   // Save without closing - for use by DraftsButton
   const saveCurrentDraft = React.useCallback(async () => {
@@ -528,6 +581,23 @@ export const ComposePost = ({
     })
     composerDispatch({type: 'mark_saved', draftId: result.draftId})
   }, [saveDraft, composerState, composerDispatch])
+
+  // Handle discard action - fires metric and closes composer
+  const handleDiscard = React.useCallback(() => {
+    const posts = thread.posts
+    const hasContent = posts.some(
+      post =>
+        post.richtext.text.trim().length > 0 ||
+        post.embed.media ||
+        post.embed.link,
+    )
+    ax.metric('draft:discard', {
+      logContext: 'ComposerClose',
+      hadContent: hasContent,
+      textLength: posts[0].richtext.text.length,
+    })
+    onClose()
+  }, [thread.posts, ax, onClose])
 
   // Check if composer is empty (no content to save)
   const isComposerEmpty = React.useMemo(() => {
@@ -786,6 +856,15 @@ export const ComposePost = ({
     }
     // Clean up draft and its media after successful publish
     if (composerState.draftId && composerState.originalLocalRefs) {
+      // Fire draft:post metric
+      if (loadedDraftCreatedAt) {
+        const draftAgeMs = Date.now() - new Date(loadedDraftCreatedAt).getTime()
+        ax.metric('draft:post', {
+          draftAgeMs,
+          wasEdited: composerState.isDirty,
+        })
+      }
+
       logger.debug('post published, cleaning up draft', {
         draftId: composerState.draftId,
         mediaFileCount: composerState.originalLocalRefs.size,
@@ -860,7 +939,9 @@ export const ComposePost = ({
     navigation,
     composerState.draftId,
     composerState.originalLocalRefs,
+    composerState.isDirty,
     cleanupPublishedDraft,
+    loadedDraftCreatedAt,
   ])
 
   // Preserves the referential identity passed to each post item.
@@ -1008,7 +1089,8 @@ export const ComposePost = ({
             onDiscard={handleClearComposer}
             isEmpty={isComposerEmpty}
             isDirty={composerState.isDirty}
-            isEditingDraft={!!composerState.draftId}>
+            isEditingDraft={!!composerState.draftId}
+            textLength={thread.posts[0].richtext.text.length}>
             {missingAltError && <AltTextReminder error={missingAltError} />}
             <ErrorBanner
               error={error}
@@ -1088,7 +1170,7 @@ export const ComposePost = ({
             />
             <Prompt.Action
               cta={_(msg`Discard`)}
-              onPress={onClose}
+              onPress={handleDiscard}
               color="negative_subtle"
             />
             <Prompt.Cancel />
@@ -1318,6 +1400,7 @@ function ComposerTopBar({
   isEmpty,
   isDirty,
   isEditingDraft,
+  textLength,
   topBarAnimatedStyle,
   children,
 }: {
@@ -1335,6 +1418,7 @@ function ComposerTopBar({
   isEmpty: boolean
   isDirty: boolean
   isEditingDraft: boolean
+  textLength: number
   topBarAnimatedStyle: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
@@ -1381,6 +1465,7 @@ function ComposerTopBar({
                 isEmpty={isEmpty}
                 isDirty={isDirty}
                 isEditingDraft={isEditingDraft}
+                textLength={textLength}
               />
             )}
             <Button
