@@ -91,6 +91,7 @@ export async function deleteMediaFromLocal(
   if (file.exists) {
     file.delete()
   }
+  mediaExistsCache.delete(localRefPath)
 }
 
 /**
