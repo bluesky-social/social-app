@@ -21,9 +21,9 @@ import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
 // @ts-ignore
-import splashImagePointer from '../assets/splash.png'
+import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore
-import darkSplashImagePointer from '../assets/splash-dark.png'
+import darkSplashImagePointer from '../assets/splash/splash-dark.png'
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
