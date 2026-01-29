@@ -108,6 +108,18 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
               replyTo.author.displayName ||
                 sanitizeHandle(replyTo.author.handle),
             )}
+            {typeof replyTo.author.pronouns === 'string' && (
+              <Text
+                style={[
+                  a.pl_xs,
+                  a.font_normal,
+                  a.flex_shrink,
+                  t.atoms.text_contrast_medium,
+                ]}
+                numberOfLines={1}>
+                ({replyTo.author.pronouns})
+              </Text>
+            )}
           </Text>
           {verification.showBadge && (
             <View style={[a.pl_xs]}>
