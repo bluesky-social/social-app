@@ -26,6 +26,10 @@ msgstr ""
 msgid "(no email)"
 msgstr ""
 
+#: src/view/com/composer/drafts/DraftItem.tsx:210
+msgid "(No text)"
+msgstr ""
+
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr ""
@@ -137,7 +141,7 @@ msgctxt "date and time formatted like this: [time] · [date]"
 msgid "{0} · {1}"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:89
+#: src/components/moderation/ContentHider.tsx:93
 msgid "{0} (Account)"
 msgstr ""
 
@@ -709,8 +713,8 @@ msgstr ""
 msgid "Add {displayName} to starter pack"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:102
-#: src/view/com/composer/labels/LabelsBtn.tsx:107
+#: src/view/com/composer/labels/LabelsBtn.tsx:106
+#: src/view/com/composer/labels/LabelsBtn.tsx:111
 msgid "Add a content warning"
 msgstr ""
 
@@ -749,11 +753,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:858
+#: src/view/com/composer/Composer.tsx:1143
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1498
+#: src/view/com/composer/Composer.tsx:1799
 msgid "Add another post to thread"
 msgstr ""
 
@@ -866,7 +870,7 @@ msgstr ""
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:154
+#: src/view/com/composer/labels/LabelsBtn.tsx:158
 msgid "Adult"
 msgstr ""
 
@@ -874,10 +878,10 @@ msgstr ""
 msgid "Adult content"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:120
+#: src/components/moderation/ContentHider.tsx:124
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:149
-#: src/view/com/composer/labels/LabelsBtn.tsx:122
+#: src/view/com/composer/labels/LabelsBtn.tsx:126
 msgid "Adult Content"
 msgstr ""
 
@@ -889,8 +893,8 @@ msgstr ""
 msgid "Adult content is disabled."
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:133
-#: src/view/com/composer/labels/LabelsBtn.tsx:191
+#: src/view/com/composer/labels/LabelsBtn.tsx:137
+#: src/view/com/composer/labels/LabelsBtn.tsx:195
 msgid "Adult Content labels"
 msgstr ""
 
@@ -1012,7 +1016,7 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:196
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1028,7 +1032,7 @@ msgstr ""
 msgid "Alt text"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:203
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:202
 msgid "Alt Text"
 msgstr ""
 
@@ -1176,7 +1180,7 @@ msgstr ""
 msgid "Animals"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:160
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:159
 msgid "Animated GIF"
 msgstr ""
 
@@ -1339,11 +1343,7 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:807
-msgid "Are you sure you'd like to discard this draft?"
-msgstr ""
-
-#: src/view/com/composer/Composer.tsx:997
+#: src/view/com/composer/Composer.tsx:1282
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1359,7 +1359,7 @@ msgstr ""
 msgid "Art"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:166
+#: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
@@ -1399,11 +1399,13 @@ msgstr ""
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Messages/components/ChatDisabled.tsx:145
 #: src/screens/Messages/components/ChatDisabled.tsx:146
-#: src/screens/Profile/Header/Shell.tsx:178
+#: src/screens/Profile/Header/Shell.tsx:179
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:272
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:281
 #: src/screens/Signup/BackNextButtons.tsx:41
 #: src/screens/StarterPack/Wizard/index.tsx:324
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:55
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:61
 msgid "Back"
 msgstr ""
 
@@ -1783,8 +1785,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:305
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1052
-#: src/view/com/composer/Composer.tsx:1063
+#: src/view/com/composer/Composer.tsx:1349
+#: src/view/com/composer/Composer.tsx:1361
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:52
 #: src/view/shell/desktop/LeftNav.tsx:213
@@ -2106,7 +2108,7 @@ msgstr ""
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:210
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:209
 #: src/components/ProgressGuide/FollowDialog.tsx:442
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2163,8 +2165,12 @@ msgstr ""
 msgid "Close image"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:110
-msgid "Close image viewer"
+#: src/view/com/lightbox/Lightbox.web.tsx:66
+msgid "Close image lightbox"
+msgstr ""
+
+#: src/view/com/lightbox/Lightbox.web.tsx:219
+msgid "Close lightbox"
 msgstr ""
 
 #: src/components/ContextMenu/Backdrop.ios.tsx:53
@@ -2185,7 +2191,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1060
+#: src/view/com/composer/Composer.tsx:1358
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2242,7 +2248,7 @@ msgstr ""
 msgid "Compose new post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:1246
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2250,7 +2256,7 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1893
+#: src/view/com/composer/Composer.tsx:2194
 msgid "Compressing video..."
 msgstr ""
 
@@ -2383,7 +2389,7 @@ msgstr ""
 msgid "Content Warning"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:60
+#: src/view/com/composer/labels/LabelsBtn.tsx:64
 msgid "Content warnings"
 msgstr ""
 
@@ -2648,7 +2654,7 @@ msgstr ""
 
 #: src/components/WelcomeModal.tsx:157
 #: src/components/WelcomeModal.tsx:165
-#: src/view/com/auth/SplashScreen.tsx:72
+#: src/view/com/auth/SplashScreen.tsx:106
 #: src/view/com/auth/SplashScreen.web.tsx:121
 #: src/view/shell/bottom-bar/BottomBar.tsx:342
 #: src/view/shell/bottom-bar/BottomBar.tsx:347
@@ -2687,7 +2693,7 @@ msgstr ""
 msgid "Create moderation list"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:64
+#: src/view/com/auth/SplashScreen.tsx:99
 #: src/view/com/auth/SplashScreen.web.tsx:113
 msgid "Create new account"
 msgstr ""
@@ -2865,7 +2871,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:746
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:748
-#: src/view/com/composer/Composer.tsx:971
+#: src/view/com/composer/Composer.tsx:1256
 msgid "Delete post"
 msgstr ""
 
@@ -2990,8 +2996,10 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:92
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
-#: src/view/com/composer/Composer.tsx:809
-#: src/view/com/composer/Composer.tsx:1004
+#: src/view/com/composer/Composer.tsx:1090
+#: src/view/com/composer/Composer.tsx:1289
+#: src/view/com/composer/drafts/DraftItem.tsx:90
+#: src/view/com/composer/drafts/DraftsButton.tsx:102
 msgid "Discard"
 msgstr ""
 
@@ -3000,11 +3008,11 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:806
+#: src/view/com/composer/drafts/DraftItem.tsx:87
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:996
+#: src/view/com/composer/Composer.tsx:1281
 msgid "Discard post?"
 msgstr ""
 
@@ -3031,7 +3039,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1817
+#: src/view/com/composer/Composer.tsx:2118
 msgid "Dismiss error"
 msgstr ""
 
@@ -3120,8 +3128,8 @@ msgstr ""
 #: src/screens/Onboarding/StepProfile/index.tsx:340
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:214
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:221
-#: src/view/com/composer/labels/LabelsBtn.tsx:218
-#: src/view/com/composer/labels/LabelsBtn.tsx:225
+#: src/view/com/composer/labels/LabelsBtn.tsx:222
+#: src/view/com/composer/labels/LabelsBtn.tsx:229
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:303
 #: src/view/com/composer/videos/SubtitleDialog.tsx:188
 #: src/view/com/composer/videos/SubtitleDialog.tsx:199
@@ -3161,6 +3169,12 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:115
 msgid "Doxxing"
+msgstr ""
+
+#: src/view/com/composer/drafts/DraftsButton.tsx:55
+#: src/view/com/composer/drafts/DraftsButton.tsx:64
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:87
+msgid "Drafts"
 msgstr ""
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:375
@@ -3508,7 +3522,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1902
+#: src/view/com/composer/Composer.tsx:2203
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr ""
@@ -3577,11 +3591,7 @@ msgstr ""
 msgid "Exits account deletion process"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:111
-msgid "Exits image view"
-msgstr ""
-
-#: src/view/com/lightbox/Lightbox.web.tsx:185
+#: src/view/com/lightbox/Lightbox.web.tsx:192
 msgid "Expand alt text"
 msgstr ""
 
@@ -3826,6 +3836,10 @@ msgstr ""
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:80
 msgid "Failed to resolve location. Please try again."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:519
+msgid "Failed to save draft"
 msgstr ""
 
 #: src/lib/media/save-image.ios.ts:27
@@ -4497,8 +4511,8 @@ msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
-#: src/view/com/composer/labels/LabelsBtn.tsx:196
-#: src/view/com/composer/labels/LabelsBtn.tsx:199
+#: src/view/com/composer/labels/LabelsBtn.tsx:200
+#: src/view/com/composer/labels/LabelsBtn.tsx:203
 msgid "Graphic Media"
 msgstr ""
 
@@ -4631,7 +4645,7 @@ msgstr ""
 
 #: src/components/interstitials/Trending.tsx:133
 #: src/components/interstitials/TrendingVideos.tsx:138
-#: src/components/moderation/ContentHider.tsx:208
+#: src/components/moderation/ContentHider.tsx:212
 #: src/components/moderation/LabelPreference.tsx:140
 #: src/components/moderation/PostHider.tsx:137
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:776
@@ -4716,7 +4730,7 @@ msgstr ""
 msgid "Hide verification badges"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:159
+#: src/components/moderation/ContentHider.tsx:163
 #: src/components/moderation/PostHider.tsx:91
 msgid "Hides the content"
 msgstr ""
@@ -4818,7 +4832,7 @@ msgstr ""
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:187
+#: src/view/com/lightbox/Lightbox.web.tsx:194
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr ""
 
@@ -5088,7 +5102,7 @@ msgstr ""
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1836
+#: src/view/com/composer/Composer.tsx:2137
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -5121,20 +5135,20 @@ msgstr ""
 msgid "KWS website"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:239
+#: src/components/moderation/ContentHider.tsx:243
 msgid "Labeled by {0}."
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:237
+#: src/components/moderation/ContentHider.tsx:241
 msgid "Labeled by the author."
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:69
+#: src/view/com/composer/labels/LabelsBtn.tsx:73
 #: src/view/screens/Profile.tsx:232
 msgid "Labels"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:67
+#: src/view/com/composer/labels/LabelsBtn.tsx:71
 msgid "Labels added"
 msgstr ""
 
@@ -5217,8 +5231,8 @@ msgstr ""
 msgid "Learn more about self hosting your PDS."
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:157
-#: src/components/moderation/ContentHider.tsx:223
+#: src/components/moderation/ContentHider.tsx:161
+#: src/components/moderation/ContentHider.tsx:227
 msgid "Learn more about the moderation applied to this content"
 msgstr ""
 
@@ -5251,7 +5265,7 @@ msgid "Learn more in your <0>account settings.</0>"
 msgstr ""
 
 #: src/components/dialogs/ServerInput.tsx:225
-#: src/components/moderation/ContentHider.tsx:247
+#: src/components/moderation/ContentHider.tsx:251
 msgid "Learn more."
 msgstr ""
 
@@ -5647,7 +5661,7 @@ msgstr ""
 msgid "Media"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:205
+#: src/view/com/composer/labels/LabelsBtn.tsx:209
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
 
@@ -5797,6 +5811,7 @@ msgid "More languages..."
 msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:143
+#: src/view/com/composer/drafts/DraftItem.tsx:184
 #: src/view/com/profile/ProfileMenu.tsx:242
 #: src/view/com/profile/ProfileMenu.tsx:249
 msgid "More options"
@@ -6094,7 +6109,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:170
+#: src/view/com/lightbox/Lightbox.web.tsx:179
 msgid "Next image"
 msgstr ""
 
@@ -6121,6 +6136,10 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:408
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:410
 msgid "No DNS Panel"
+msgstr ""
+
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:111
+msgid "No drafts yet"
 msgstr ""
 
 #: src/components/live/EditLiveDialog.tsx:139
@@ -6377,8 +6396,8 @@ msgstr ""
 msgid "Now"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:145
-#: src/view/com/composer/labels/LabelsBtn.tsx:148
+#: src/view/com/composer/labels/LabelsBtn.tsx:149
+#: src/view/com/composer/labels/LabelsBtn.tsx:152
 msgid "Nudity"
 msgstr ""
 
@@ -6426,11 +6445,11 @@ msgstr ""
 msgid "Onboarding reset"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:399
+#: src/view/com/composer/Composer.tsx:637
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:396
+#: src/view/com/composer/Composer.tsx:634
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -6442,7 +6461,7 @@ msgstr ""
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:406
+#: src/view/com/composer/Composer.tsx:644
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -6494,12 +6513,16 @@ msgstr ""
 msgid "Open conversation options"
 msgstr ""
 
+#: src/view/com/composer/drafts/DraftItem.tsx:44
+msgid "Open draft"
+msgstr ""
+
 #: src/components/Layout/Header/index.tsx:160
 msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1483
+#: src/view/com/composer/Composer.tsx:1784
 msgid "Open emoji picker"
 msgstr ""
 
@@ -6566,7 +6589,7 @@ msgstr ""
 msgid "Opens {0} feed"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:62
+#: src/view/com/composer/labels/LabelsBtn.tsx:66
 msgid "Opens a dialog to add a content warning to your post"
 msgstr ""
 
@@ -6607,16 +6630,16 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1484
+#: src/view/com/composer/Composer.tsx:1785
 msgid "Opens emoji picker"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:66
+#: src/view/com/auth/SplashScreen.tsx:101
 #: src/view/com/auth/SplashScreen.web.tsx:115
 msgid "Opens flow to create a new Bluesky account"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:83
+#: src/view/com/auth/SplashScreen.tsx:119
 #: src/view/com/auth/SplashScreen.web.tsx:129
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
@@ -6651,6 +6674,10 @@ msgstr ""
 
 #: src/view/com/feeds/ComposerPrompt.tsx:146
 msgid "Opens the post composer"
+msgstr ""
+
+#: src/view/com/composer/drafts/DraftItem.tsx:45
+msgid "Opens this draft in the composer"
 msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:1027
@@ -6688,7 +6715,7 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:242
-#: src/view/com/composer/labels/LabelsBtn.tsx:180
+#: src/view/com/composer/labels/LabelsBtn.tsx:184
 msgid "Other"
 msgstr ""
 
@@ -6838,7 +6865,7 @@ msgstr ""
 msgid "Photography"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:164
+#: src/view/com/composer/labels/LabelsBtn.tsx:168
 msgid "Pictures meant for adults."
 msgstr ""
 
@@ -6918,7 +6945,7 @@ msgstr ""
 msgid "Plays the video"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:110
+#: src/view/com/composer/labels/LabelsBtn.tsx:114
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr ""
 
@@ -7075,7 +7102,7 @@ msgstr ""
 msgid "Politics"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:151
+#: src/view/com/composer/labels/LabelsBtn.tsx:155
 msgid "Porn"
 msgstr ""
 
@@ -7084,7 +7111,7 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1123
+#: src/view/com/composer/Composer.tsx:1431
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -7099,7 +7126,7 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1121
+#: src/view/com/composer/Composer.tsx:1429
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -7226,7 +7253,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:151
+#: src/view/com/lightbox/Lightbox.web.tsx:158
 msgid "Previous image"
 msgstr ""
 
@@ -7275,7 +7302,7 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1899
+#: src/view/com/composer/Composer.tsx:2200
 msgid "Processing video..."
 msgstr ""
 
@@ -7314,22 +7341,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1103
+#: src/view/com/composer/Composer.tsx:1414
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1096
+#: src/view/com/composer/Composer.tsx:1407
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1081
+#: src/view/com/composer/Composer.tsx:1392
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1088
+#: src/view/com/composer/Composer.tsx:1399
 msgid "Publish reply"
 msgstr ""
 
@@ -7729,7 +7756,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1119
+#: src/view/com/composer/Composer.tsx:1427
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -8072,7 +8099,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:614
+#: src/view/com/lightbox/ImageViewing/index.tsx:612
 msgctxt "action"
 msgid "Save"
 msgstr ""
@@ -8085,7 +8112,24 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:200
 #: src/screens/SavedFeeds.tsx:116
 #: src/screens/SavedFeeds.tsx:120
+#: src/view/com/composer/Composer.tsx:1083
+#: src/view/com/composer/drafts/DraftsButton.tsx:97
 msgid "Save changes"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:1066
+#: src/view/com/composer/drafts/DraftsButton.tsx:77
+msgid "Save changes?"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:1084
+#: src/view/com/composer/drafts/DraftsButton.tsx:97
+msgid "Save draft"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:1068
+#: src/view/com/composer/drafts/DraftsButton.tsx:79
+msgid "Save draft?"
 msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:143
@@ -8628,7 +8672,7 @@ msgctxt "toast"
 msgid "Settings saved"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:168
+#: src/view/com/composer/labels/LabelsBtn.tsx:172
 msgid "Sexual activity or erotic nudity."
 msgstr ""
 
@@ -8643,7 +8687,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:623
+#: src/view/com/lightbox/ImageViewing/index.tsx:621
 msgctxt "action"
 msgid "Share"
 msgstr ""
@@ -8721,13 +8765,13 @@ msgstr ""
 msgid "Shared Preferences Tester"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:208
+#: src/components/moderation/ContentHider.tsx:212
 #: src/components/moderation/LabelPreference.tsx:142
 #: src/components/moderation/PostHider.tsx:137
 msgid "Show"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:189
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:188
 msgid "Show alt text"
 msgstr ""
 
@@ -8837,7 +8881,7 @@ msgstr ""
 msgid "Shows other accounts you can switch to"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:160
+#: src/components/moderation/ContentHider.tsx:164
 #: src/components/moderation/PostHider.tsx:91
 msgid "Shows the content"
 msgstr ""
@@ -8851,8 +8895,8 @@ msgstr ""
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/LoginForm.tsx:181
 #: src/screens/Search/SearchResults.tsx:296
-#: src/view/com/auth/SplashScreen.tsx:81
-#: src/view/com/auth/SplashScreen.tsx:89
+#: src/view/com/auth/SplashScreen.tsx:117
+#: src/view/com/auth/SplashScreen.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:127
 #: src/view/com/auth/SplashScreen.web.tsx:135
 #: src/view/shell/bottom-bar/BottomBar.tsx:352
@@ -8966,6 +9010,10 @@ msgstr ""
 
 #: src/lib/interests.ts:58
 msgid "Software Dev"
+msgstr ""
+
+#: src/view/com/composer/drafts/DraftItem.tsx:67
+msgid "Some media unavailable (saved on another device)"
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:121
@@ -9222,8 +9270,8 @@ msgstr ""
 msgid "Suggested for you"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:139
-#: src/view/com/composer/labels/LabelsBtn.tsx:142
+#: src/view/com/composer/labels/LabelsBtn.tsx:143
+#: src/view/com/composer/labels/LabelsBtn.tsx:146
 msgid "Suggestive"
 msgstr ""
 
@@ -9716,6 +9764,10 @@ msgstr ""
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
+#: src/view/com/composer/drafts/DraftItem.tsx:88
+msgid "This draft will be permanently deleted."
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:156
 msgid "This email is already associated with your account."
 msgstr ""
@@ -9823,7 +9875,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:515
+#: src/view/com/composer/Composer.tsx:753
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -10302,7 +10354,7 @@ msgstr ""
 msgid "Unsubscribed from list"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:899
+#: src/view/com/composer/Composer.tsx:1184
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -10381,7 +10433,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1896
+#: src/view/com/composer/Composer.tsx:2197
 msgid "Uploading video..."
 msgstr ""
 
@@ -10644,7 +10696,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1906
+#: src/view/com/composer/Composer.tsx:2207
 msgid "Video uploaded"
 msgstr ""
 
@@ -10660,12 +10712,12 @@ msgstr ""
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:587
+#: src/view/com/composer/Composer.tsx:836
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:261
+#: src/screens/Profile/Header/Shell.tsx:262
 msgid "View {0}'s avatar"
 msgstr ""
 
@@ -10717,7 +10769,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:582
+#: src/view/com/composer/Composer.tsx:831
 msgid "View post"
 msgstr ""
 
@@ -10977,7 +11029,7 @@ msgstr ""
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:512
+#: src/view/com/composer/Composer.tsx:750
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -11027,9 +11079,8 @@ msgstr ""
 msgid "What do you want to call your starter pack?"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:51
 #: src/view/com/auth/SplashScreen.web.tsx:103
-#: src/view/com/composer/Composer.tsx:859
+#: src/view/com/composer/Composer.tsx:1144
 #: src/view/com/feeds/ComposerPrompt.tsx:191
 msgid "What's up?"
 msgstr ""
@@ -11106,6 +11157,14 @@ msgstr ""
 msgid "Would you like to block this user and/or delete this conversation?"
 msgstr ""
 
+#: src/view/com/composer/drafts/DraftsButton.tsx:90
+msgid "Would you like to save this as a draft before viewing your drafts?"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:1076
+msgid "Would you like to save this as a draft to edit later?"
+msgstr ""
+
 #: src/screens/Messages/components/MessageInput.tsx:154
 #: src/screens/Messages/components/MessageInput.web.tsx:214
 msgid "Write a message"
@@ -11116,12 +11175,12 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:90
-#: src/view/com/composer/Composer.tsx:857
+#: src/view/com/composer/Composer.tsx:1142
 msgid "Write your reply"
 msgstr ""
 
@@ -11383,6 +11442,14 @@ msgstr ""
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:1074
+msgid "You have unsaved changes to this draft, would you like to save them?"
+msgstr ""
+
+#: src/view/com/composer/drafts/DraftsButton.tsx:85
+msgid "You have unsaved changes. Would you like to save them before viewing your drafts?"
 msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:291
@@ -11740,11 +11807,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:578
+#: src/view/com/composer/Composer.tsx:827
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:575
+#: src/view/com/composer/Composer.tsx:824
 msgid "Your posts were sent"
 msgstr ""
 
@@ -11765,7 +11832,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:577
+#: src/view/com/composer/Composer.tsx:826
 msgid "Your reply was sent"
 msgstr ""
 
