@@ -155,3 +155,17 @@ export function clearMediaCache(): void {
   cachePopulated = false
   populateCachePromise = null
 }
+
+/**
+ * Revoke a media URL (no-op on native - only needed for web blob URLs)
+ */
+export function revokeMediaUrl(_url: string): void {
+  // No-op on native - file URIs don't need revocation
+}
+
+/**
+ * Revoke all media URLs (no-op on native - only needed for web blob URLs)
+ */
+export function revokeAllMediaUrls(): void {
+  // No-op on native - file URIs don't need revocation
+}

@@ -14,6 +14,7 @@ import {IS_NATIVE} from '#/env'
 import {DraftItem} from './DraftItem'
 import {useDeleteDraftMutation, useDraftsQuery} from './state/queries'
 import {type DraftSummary} from './state/schema'
+import {revokeAllMediaUrls} from './state/storage'
 
 export function DraftsListDialog({
   control,
@@ -36,6 +37,12 @@ export function DraftsListDialog({
   const handleSelectDraft = useCallback(
     (summary: DraftSummary) => {
       control.close(() => {
+        // Revoke preview URLs
+        // It would be neater to do it in the `onClose` callback
+        // on the dialog itself, but this would wipe out the new ones
+        // that will be created by `onSelectDraft`
+        // ndb: if we miss any, it'll be handled by the composer closing
+        revokeAllMediaUrls()
         onSelectDraft(summary)
       })
     },
@@ -53,7 +60,11 @@ export function DraftsListDialog({
     () => (
       <Button
         label={_(msg`Back`)}
-        onPress={() => control.close()}
+        onPress={() => {
+          control.close(() => {
+            revokeAllMediaUrls()
+          })
+        }}
         size="small"
         color="primary"
         variant="ghost">
@@ -93,7 +104,7 @@ export function DraftsListDialog({
 
   const onEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
+      void fetchNextPage()
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
@@ -132,7 +143,7 @@ export function DraftsListDialog({
       <Dialog.InnerFlatList
         data={drafts}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item: DraftSummary) => item.id}
         ListHeaderComponent={web(header)}
         stickyHeaderIndices={web([0])}
         ListEmptyComponent={emptyComponent}

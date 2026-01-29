@@ -142,6 +142,7 @@ import {
   useSaveDraftMutation,
 } from './drafts/state/queries'
 import {type DraftSummary} from './drafts/state/schema'
+import {revokeAllMediaUrls} from './drafts/state/storage'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
   type AssetType,
@@ -504,6 +505,7 @@ export const ComposePost = ({
   const onClose = useCallback(() => {
     closeComposer()
     clearThumbnailCache(queryClient)
+    revokeAllMediaUrls()
   }, [closeComposer, queryClient])
 
   const handleSaveDraft = React.useCallback(async () => {
