@@ -298,6 +298,7 @@ let FeedItemInner = ({
       href={href}
       noFeedback
       accessible={false}
+      asAnchor
       onBeforePress={onBeforePress}
       dataSet={{feedContext}}
       onPointerEnter={() => {
