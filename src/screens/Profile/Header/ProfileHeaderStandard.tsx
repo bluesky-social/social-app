@@ -317,7 +317,10 @@ export function HeaderStandardButtons({
             testID="profileHeaderEditProfileButton"
             size="small"
             color="secondary"
-            onPress={editProfileControl.open}
+            onPress={() => {
+              playHaptic('Light')
+              editProfileControl.open()
+            }}
             label={_(msg`Edit profile`)}>
             <ButtonText>
               <Trans>Edit Profile</Trans>
