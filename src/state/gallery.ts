@@ -270,27 +270,29 @@ async function moveIfNecessary(from: string) {
  * On web, converts blob URLs to data URIs immediately to prevent revocation issues.
  */
 async function copyToCache(from: string): Promise<string> {
-  // Handle web blob URLs - convert to data URI immediately before they can be revoked
-  if (IS_WEB && from.startsWith('blob:')) {
-    try {
-      const response = await fetch(from)
-      const blob = await response.blob()
-      return await blobToDataUri(blob)
-    } catch (e) {
-      // If fetch fails, the blob URL was likely already revoked
-      // Return as-is and let downstream code handle the error
-      return from
-    }
-  }
-
   // Data URIs don't need any conversion
   if (from.startsWith('data:')) {
     return from
   }
 
-  const cacheDir = IS_WEB && getImageCacheDirectory()
+  if (IS_WEB) {
+    // Web: convert blob URLs to data URIs before they can be revoked
+    if (from.startsWith('blob:')) {
+      try {
+        const response = await fetch(from)
+        const blob = await response.blob()
+        return await blobToDataUri(blob)
+      } catch (e) {
+        // Blob URL was likely revoked, return as-is for downstream error handling
+        return from
+      }
+    }
+    // Other URLs on web don't need conversion
+    return from
+  }
 
-  // On web (non-blob URLs) or if already in cache dir, no need to copy
+  // Native: copy to cache directory to survive OS temp file cleanup
+  const cacheDir = getImageCacheDirectory()
   if (!cacheDir || from.startsWith(cacheDir)) {
     return from
   }
@@ -298,7 +300,6 @@ async function copyToCache(from: string): Promise<string> {
   const to = joinPath(cacheDir, nanoid(36))
   await makeDirectoryAsync(cacheDir, {intermediates: true})
 
-  // Normalize the source path for expo-file-system
   let normalizedFrom = from
   if (!from.startsWith('file://') && from.startsWith('/')) {
     normalizedFrom = `file://${from}`
