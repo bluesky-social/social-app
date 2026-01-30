@@ -52,7 +52,12 @@ export function DraftItem({
       case device.FALLBACK_IOS:
       case device.FALLBACK_ANDROID:
       case device.FALLBACK_WEB:
-        name = _(msg`another device`)
+        name = _(
+          msg({
+            message: `another device`,
+            comment: `Prefixed with "This media is stored on...". Example: "This media is stored on another device"`,
+          }),
+        )
         break
     }
     return name
@@ -110,7 +115,12 @@ export function DraftItem({
                 {mediaExistsOnOtherDevice && (
                   <DraftMetadataTag
                     icon={WarningIcon}
-                    text={_(msg`Media stored on ${deviceName}`)}
+                    text={_(
+                      msg({
+                        message: `Media stored on ${deviceName}`,
+                        comment: `This media is stored on... Example: "This media is stored on John's iPhone"`,
+                      }),
+                    )}
                   />
                 )}
                 {mediaIsMissing && (
