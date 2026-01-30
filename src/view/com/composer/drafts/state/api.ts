@@ -1,6 +1,7 @@
 /**
  * Type converters for Draft API - convert between ComposerState and server Draft types.
  */
+import {Platform} from 'react-native'
 import {type AppBskyDraftDefs, AtUri, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -17,6 +18,7 @@ import {
   type PostDraft,
 } from '#/view/com/composer/state/composer'
 import {type VideoState} from '#/view/com/composer/state/video'
+import {getDeviceId} from '#/analytics/identifiers'
 import {logger} from './logger'
 import {type DraftPostDisplay, type DraftSummary} from './schema'
 
@@ -66,6 +68,8 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
 
   const draft: AppBskyDraftDefs.Draft = {
     $type: 'app.bsky.draft.defs#draft',
+    deviceId: getDeviceId(),
+    platform: Platform.OS,
     posts,
     threadgateAllow: threadgateAllowUISettingToAllowRecordValue(
       state.thread.threadgate,
