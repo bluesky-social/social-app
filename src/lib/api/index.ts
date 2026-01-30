@@ -354,6 +354,8 @@ async function resolveMedia(
       alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
       aspectRatio,
+      presentation:
+        videoDraft.video.mimeType === 'image/gif' ? 'gif' : 'default',
     }
   }
   if (embedDraft.media?.type === 'gif') {
