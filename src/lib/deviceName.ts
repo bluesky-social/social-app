@@ -2,15 +2,17 @@ import * as Device from 'expo-device'
 
 import * as env from '#/env'
 
+export const FALLBACK_ANDROID = 'Android'
+export const FALLBACK_IOS = 'iOS'
+export const FALLBACK_WEB = 'Web'
+
 export function getDeviceName(): string {
   const deviceName = Device.deviceName
   if (env.IS_ANDROID) {
-    return deviceName || 'Android'
+    return deviceName || FALLBACK_ANDROID
   } else if (env.IS_IOS) {
-    // we need an entitlement to get the real device name on iOS, so just
-    // return a generic name for now
-    return 'iOS'
+    return deviceName || FALLBACK_IOS
   } else {
-    return 'Web' // could append browser info here
+    return FALLBACK_WEB // could append browser info here
   }
 }

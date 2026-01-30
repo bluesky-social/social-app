@@ -8,6 +8,7 @@ import {
 import {isNetworkError} from '#/lib/strings/errors'
 import {useAgent} from '#/state/session'
 import {type ComposerState} from '#/view/com/composer/state/composer'
+import {useAnalytics} from '#/analytics'
 import {getDeviceId} from '#/analytics/identifiers'
 import {composerStateToDraft, draftViewToSummary} from './api'
 import {logger} from './logger'
@@ -20,6 +21,7 @@ const DRAFTS_QUERY_KEY = ['drafts']
  */
 export function useDraftsQuery() {
   const agent = useAgent()
+  const ax = useAnalytics()
 
   return useInfiniteQuery({
     queryKey: DRAFTS_QUERY_KEY,
@@ -30,7 +32,10 @@ export function useDraftsQuery() {
       return {
         cursor: res.data.cursor,
         drafts: res.data.drafts.map(view =>
-          draftViewToSummary(view, path => storage.mediaExists(path)),
+          draftViewToSummary({
+            view,
+            analytics: ax,
+          }),
         ),
       }
     },

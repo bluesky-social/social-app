@@ -36,7 +36,7 @@ export type RichTextProps = TextStyleProp &
      *
      * Use with care - only use if you're rendering facets you're generating yourself.
      */
-    validateMentionFacets?: boolean
+    disableMentionFacetValidation?: true
   }
 
 export function RichText({
@@ -54,7 +54,7 @@ export function RichText({
   onLayout,
   onTextLayout,
   shouldProxyLinks,
-  validateMentionFacets,
+  disableMentionFacetValidation,
 }: RichTextProps) {
   const richText = useMemo(() => {
     if (value instanceof RichTextAPI) {
@@ -116,7 +116,7 @@ export function RichText({
 
     if (
       mention &&
-      (!validateMentionFacets ||
+      (disableMentionFacetValidation ||
         AppBskyRichtextFacet.validateMention(mention).success) &&
       !disableLinks
     ) {
