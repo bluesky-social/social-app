@@ -94,6 +94,7 @@ export const SplashScreen = ({
             style={[
               t.atoms.shadow_md,
               {
+                elevation: 2,
                 shadowOpacity: 0.1,
                 shadowOffset: {
                   width: 0,
