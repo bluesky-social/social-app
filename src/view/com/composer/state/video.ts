@@ -79,6 +79,8 @@ type ErrorState = {
   pendingPublish?: undefined
   altText: string
   captions: CaptionsTrack[]
+  /** Path used to store/restore this video in drafts. Preserves identity across saves. */
+  localRefPath?: string
 }
 
 type CompressingState = {
@@ -91,6 +93,8 @@ type CompressingState = {
   pendingPublish?: undefined
   altText: string
   captions: CaptionsTrack[]
+  /** Path used to store/restore this video in drafts. Preserves identity across saves. */
+  localRefPath?: string
 }
 
 type UploadingState = {
@@ -103,6 +107,8 @@ type UploadingState = {
   pendingPublish?: undefined
   altText: string
   captions: CaptionsTrack[]
+  /** Path used to store/restore this video in drafts. Preserves identity across saves. */
+  localRefPath?: string
 }
 
 type ProcessingState = {
@@ -116,6 +122,8 @@ type ProcessingState = {
   pendingPublish?: undefined
   altText: string
   captions: CaptionsTrack[]
+  /** Path used to store/restore this video in drafts. Preserves identity across saves. */
+  localRefPath?: string
 }
 
 type DoneState = {
@@ -128,6 +136,8 @@ type DoneState = {
   pendingPublish: {blobRef: BlobRef}
   altText: string
   captions: CaptionsTrack[]
+  /** Path used to store/restore this video in drafts. Preserves identity across saves. */
+  localRefPath?: string
 }
 
 export type VideoState =
@@ -140,6 +150,7 @@ export type VideoState =
 export function createVideoState(
   asset: ImagePickerAsset,
   abortController: AbortController,
+  localRefPath?: string,
 ): CompressingState {
   return {
     status: 'compressing',
@@ -148,6 +159,29 @@ export function createVideoState(
     asset,
     altText: '',
     captions: [],
+    localRefPath,
+  }
+}
+
+/**
+ * Create a video state starting at "uploading" status.
+ * Used when restoring a draft with a pre-compressed video.
+ */
+export function createRestoredVideoState(
+  asset: ImagePickerAsset,
+  video: CompressedVideo,
+  abortController: AbortController,
+  localRefPath?: string,
+): UploadingState {
+  return {
+    status: 'uploading',
+    progress: 0,
+    abortController,
+    asset,
+    video,
+    altText: '',
+    captions: [],
+    localRefPath,
   }
 }
 
@@ -170,6 +204,7 @@ export function videoReducer(
       jobId: state.jobId ?? null,
       altText: state.altText,
       captions: state.captions,
+      localRefPath: state.localRefPath,
     }
   } else if (action.type === 'update_progress') {
     if (state.status === 'compressing' || state.status === 'uploading') {
@@ -198,6 +233,7 @@ export function videoReducer(
         video: action.video,
         altText: state.altText,
         captions: state.captions,
+        localRefPath: state.localRefPath,
       }
     }
     return state
@@ -213,6 +249,7 @@ export function videoReducer(
         jobStatus: null,
         altText: state.altText,
         captions: state.captions,
+        localRefPath: state.localRefPath,
       }
     }
   } else if (action.type === 'update_job_status') {
@@ -239,6 +276,7 @@ export function videoReducer(
         },
         altText: state.altText,
         captions: state.captions,
+        localRefPath: state.localRefPath,
       }
     }
   }
@@ -289,6 +327,115 @@ export async function processVideo(
     signal,
   })
 
+  let uploadResponse: AppBskyVideoDefs.JobStatus | undefined
+  try {
+    uploadResponse = await uploadVideo({
+      video,
+      agent,
+      did,
+      signal,
+      _,
+      setProgress: p => {
+        dispatch({type: 'update_progress', progress: p, signal})
+      },
+    })
+  } catch (e) {
+    const message = getUploadErrorMessage(e, _)
+    if (message !== null) {
+      dispatch({
+        type: 'to_error',
+        error: message,
+        signal,
+      })
+    }
+    return
+  }
+
+  const jobId = uploadResponse.jobId
+  dispatch({
+    type: 'uploading_to_processing',
+    jobId,
+    signal,
+  })
+
+  let pollFailures = 0
+  while (true) {
+    if (signal.aborted) {
+      return // Exit async loop
+    }
+
+    const videoAgent = createVideoAgent()
+    let status: AppBskyVideoDefs.JobStatus | undefined
+    let blob: BlobRef | undefined
+    try {
+      const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
+      status = response.data.jobStatus
+      pollFailures = 0
+
+      if (status.state === 'JOB_STATE_COMPLETED') {
+        blob = status.blob
+        if (!blob) {
+          throw new Error('Job completed, but did not return a blob')
+        }
+      } else if (status.state === 'JOB_STATE_FAILED') {
+        throw new Error(status.error ?? 'Job failed to process')
+      }
+    } catch (e) {
+      if (!status) {
+        pollFailures++
+        if (pollFailures < 50) {
+          await new Promise(resolve => setTimeout(resolve, 5000))
+          continue // Continue async loop
+        }
+      }
+
+      logger.error('Error processing video', {safeMessage: e})
+      dispatch({
+        type: 'to_error',
+        error: _(msg`Video failed to process`),
+        signal,
+      })
+      return // Exit async loop
+    }
+
+    if (blob) {
+      dispatch({
+        type: 'to_done',
+        blobRef: blob,
+        signal,
+      })
+    } else {
+      dispatch({
+        type: 'update_job_status',
+        jobStatus: status,
+        signal,
+      })
+    }
+
+    if (
+      status.state !== 'JOB_STATE_COMPLETED' &&
+      status.state !== 'JOB_STATE_FAILED'
+    ) {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      continue // Continue async loop
+    }
+
+    return // Exit async loop
+  }
+}
+
+/**
+ * Upload a pre-compressed video (skip compression step).
+ * Used when restoring a draft with an already-compressed video.
+ */
+export async function uploadPrecompressedVideo(
+  video: CompressedVideo,
+  dispatch: (action: VideoAction) => void,
+  agent: BskyAgent,
+  did: string,
+  signal: AbortSignal,
+  _: I18n['_'],
+) {
   let uploadResponse: AppBskyVideoDefs.JobStatus | undefined
   try {
     uploadResponse = await uploadVideo({
