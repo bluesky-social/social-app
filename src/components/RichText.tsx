@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
@@ -27,6 +27,16 @@ export type RichTextProps = TextStyleProp &
     interactiveStyle?: StyleProp<TextStyle>
     emojiMultiplier?: number
     shouldProxyLinks?: boolean
+    /**
+     * DANGEROUS: Disable facet lexicon validation
+     *
+     * `detectFacetsWithoutResolution()` generates technically invalid facets,
+     * with a handle in place of the DID. This means that RichText that uses it
+     * won't be able to render links.
+     *
+     * Use with care - only use if you're rendering facets you're generating yourself.
+     */
+    disableMentionFacetValidation?: true
   }
 
 export function RichText({
@@ -44,12 +54,17 @@ export function RichText({
   onLayout,
   onTextLayout,
   shouldProxyLinks,
+  disableMentionFacetValidation,
 }: RichTextProps) {
-  const richText = React.useMemo(
-    () =>
-      value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
-    [value],
-  )
+  const richText = useMemo(() => {
+    if (value instanceof RichTextAPI) {
+      return value
+    } else {
+      const rt = new RichTextAPI({text: value})
+      rt.detectFacetsWithoutResolution()
+      return rt
+    }
+  }, [value])
 
   const plainStyles = [a.leading_snug, style]
   const interactiveStyles = [plainStyles, interactiveStyle]
@@ -98,9 +113,11 @@ export function RichText({
     const link = segment.link
     const mention = segment.mention
     const tag = segment.tag
+
     if (
       mention &&
-      AppBskyRichtextFacet.validateMention(mention).success &&
+      (disableMentionFacetValidation ||
+        AppBskyRichtextFacet.validateMention(mention).success) &&
       !disableLinks
     ) {
       els.push(

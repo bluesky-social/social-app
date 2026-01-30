@@ -50,22 +50,31 @@ export type DraftPostDisplay = {
  */
 export type DraftSummary = {
   id: string
-  /** The full draft data from the server */
-  draft: AppBskyDraftDefs.Draft
-  /** First ~100 chars of first post */
-  previewText: string
-  /** Whether the draft has media */
-  hasMedia: boolean
-  /** Whether some media is missing (saved on another device) */
-  hasMissingMedia?: boolean
-  /** Number of media items */
-  mediaCount: number
-  /** Number of posts in thread */
-  postCount: number
   /** ISO timestamp of creation */
   createdAt: string
   /** ISO timestamp of last update */
   updatedAt: string
+  /** The full draft data from the server */
+  draft: AppBskyDraftDefs.Draft
   /** All posts in the draft for full display */
   posts: DraftPostDisplay[]
+  /** Metadata about the draft for display purposes */
+  meta: {
+    /** Whether this device is the originating device for the draft */
+    isOriginatingDevice: boolean
+    /** Number of posts in thread */
+    postCount: number
+    /** Number of replies to anchor post */
+    replyCount: number
+    /** Whether the draft has media */
+    hasMedia: boolean
+    /** Whether some media is missing (saved on another device) */
+    hasMissingMedia?: boolean
+    /** Number of media items */
+    mediaCount: number
+    /** Whether any posts in the draft has quotes */
+    hasQuotes: boolean
+    /** Number of quotes in the draft */
+    quoteCount: number
+  }
 }

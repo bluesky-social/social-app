@@ -138,7 +138,7 @@ import {
   type RestoredVideo,
 } from './drafts/state/api'
 import {
-  loadDraft,
+  loadDraftMedia,
   useCleanupPublishedDraftMutation,
   useSaveDraftMutation,
 } from './drafts/state/queries'
@@ -482,7 +482,7 @@ export const ComposePost = ({
       })
 
       // Load local media files for the draft
-      const {loadedMedia} = await loadDraft(draftSummary.draft)
+      const {loadedMedia} = await loadDraftMedia(draftSummary.draft)
 
       // Extract original localRefs for orphan detection on save
       const originalLocalRefs = extractLocalRefs(draftSummary.draft)
