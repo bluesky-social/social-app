@@ -72,7 +72,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER yarn build-web
 
 # DEBUG
-RUN find ./bskyweb/static && find ./web-build/static
+RUN find ./bskyweb/static && find ./dist
 
 #
 # Generate the bskyweb Go binary.

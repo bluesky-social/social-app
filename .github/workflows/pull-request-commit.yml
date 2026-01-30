@@ -19,7 +19,7 @@ permissions:
   contents: read
 
 jobs:
-  webpack-analyzer:
+  bundle-analyzer:
     runs-on: ubuntu-22.04
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
@@ -59,48 +59,61 @@ jobs:
           yarn install
           yarn intl:build
 
-      - name: 🔦 Generate stats file for PR
+      - name: 🔦 Build and measure PR bundle
+        id: pr-size
         run: |
-          yarn generate-webpack-stats-file
-          mv stats.json ../stats-new.json
+          yarn build-web
+          PR_SIZE=$(find dist/_expo/static/js -name '*.js' ! -name '*.map' -exec cat {} + | wc -c | tr -d ' ')
+          echo "size=$PR_SIZE" >> "$GITHUB_OUTPUT"
+          echo "size_hr=$(echo "$PR_SIZE" | awk '{printf "%.2f KB", $1/1024}')" >> "$GITHUB_OUTPUT"
 
-      - name: ⬇️ Get base stats from cache
-        id: get-base-stats
+      - name: ⬇️ Get base size from cache
+        id: get-base-size
         uses: actions/cache@v4
         with:
-          path: stats-base.json
-          key: stats-base-${{ steps.base-commit.outputs.base-commit }}
+          path: base-bundle-size.txt
+          key: base-bundle-size-${{ steps.base-commit.outputs.base-commit }}
 
       - name: Restore to base commit
-        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        if: ${{ !steps.get-base-size.outputs.cache-hit }}
         run: |
+          rm -rf dist
           git reset HEAD~
           git restore .
 
-      - name: 🔦 Generate stats file from base commit
-        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+      - name: 🔦 Build and measure base bundle
+        if: ${{ !steps.get-base-size.outputs.cache-hit }}
         run: |
           yarn install
           yarn intl:build
-          yarn generate-webpack-stats-file
-          mv stats.json stats-base.json
+          yarn build-web
+          find dist/_expo/static/js -name '*.js' ! -name '*.map' -exec cat {} + | wc -c | tr -d ' ' > base-bundle-size.txt
 
-      - name: ％ Get diff
+      - name: ％ Calculate diff
         id: get-diff
-        uses: NejcZdovc/bundle-size-diff@v1
-        with:
-          base_path: "stats-base.json"
-          pr_path: "../stats-new.json"
-          excluded_assets: "(.+).chunk.js|(.+).js.map|(.+).json|(.+).png|(.+).svg|(.+).webp|(.+).jpg|(.+).ico"
+        run: |
+          BASE_SIZE=$(cat base-bundle-size.txt)
+          PR_SIZE=${{ steps.pr-size.outputs.size }}
+          DIFF=$((PR_SIZE - BASE_SIZE))
+          if [ "$BASE_SIZE" -gt 0 ]; then
+            PERCENT=$(awk "BEGIN {printf \"%.2f\", ($DIFF / $BASE_SIZE) * 100}")
+          else
+            PERCENT="0.00"
+          fi
+          BASE_HR=$(awk "BEGIN {printf \"%.2f KB\", $BASE_SIZE / 1024}")
+          DIFF_HR=$(awk "BEGIN {printf \"%+.2f KB\", $DIFF / 1024}")
+          echo "base_hr=$BASE_HR" >> "$GITHUB_OUTPUT"
+          echo "diff_hr=$DIFF_HR" >> "$GITHUB_OUTPUT"
+          echo "percent=$PERCENT" >> "$GITHUB_OUTPUT"
 
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: bundle-diff
           message: |
-            | Old size | New size | Diff                  |
-            |----------|----------|-----------------------|
-            | ${{ steps.get-diff.outputs.base_file_string }} | ${{ steps.get-diff.outputs.pr_file_string }} | ${{ steps.get-diff.outputs.diff_file_string }} (${{ steps.get-diff.outputs.percent }}%) |
+            | Old size | New size | Diff |
+            |----------|----------|------|
+            | ${{ steps.get-diff.outputs.base_hr }} | ${{ steps.pr-size.outputs.size_hr }} | ${{ steps.get-diff.outputs.diff_hr }} (${{ steps.get-diff.outputs.percent }}%) |
             ---
 
   fingerprint-native:
