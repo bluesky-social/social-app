@@ -15,6 +15,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
 import * as MediaPreview from '#/components/MediaPreview'
 import * as Prompt from '#/components/Prompt'
+import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import {type DraftPostDisplay, type DraftSummary} from './state/schema'
@@ -330,9 +331,12 @@ function DraftPostRow({
         </View>
 
         {post.text ? (
-          <Text style={[a.text_md, a.leading_snug, t.atoms.text]}>
-            {post.text}
-          </Text>
+          <RichText
+            style={[a.text_md, a.leading_snug, a.pointer_events_none]}
+            value={post.text}
+            enableTags
+            validateMentionFacets={false}
+          />
         ) : (
           <Text
             style={[
