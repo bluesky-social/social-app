@@ -63,7 +63,19 @@ for (const src of jsEntries) {
 console.log(`Writing ${templateFile}`)
 fs.writeFileSync(templateFile, outputLines.join('\n'))
 
-// Recursively copy a directory
+// Clean previous build output to avoid stale files
+function cleanDir(dir) {
+  if (fs.existsSync(dir)) {
+    fs.rmSync(dir, {recursive: true})
+    console.log(`Cleaned ${dir}`)
+  }
+}
+
+cleanDir(path.join(bskywebStatic, 'js', 'web'))
+cleanDir(path.join(bskywebStatic, 'css'))
+cleanDir(path.join(bskywebStatic, 'assets'))
+
+// Recursively copy a directory, skipping source map files
 function copyDir(sourceDir, targetDir) {
   if (!fs.existsSync(sourceDir)) {
     console.log(`Skipping ${sourceDir} (does not exist)`)
@@ -76,7 +88,7 @@ function copyDir(sourceDir, targetDir) {
     const targetPath = path.join(targetDir, entry.name)
     if (entry.isDirectory()) {
       copyDir(sourcePath, targetPath)
-    } else {
+    } else if (!entry.name.endsWith('.map')) {
       fs.copyFileSync(sourcePath, targetPath)
       console.log(`Copied ${sourcePath} to ${targetPath}`)
     }
