@@ -1,11 +1,11 @@
 /**
  * Type converters for Draft API - convert between ComposerState and server Draft types.
  */
-import {Platform} from 'react-native'
 import {type AppBskyDraftDefs, AtUri, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {resolveLink} from '#/lib/api/resolve'
+import {getDeviceName} from '#/lib/deviceName'
 import {getImageDim} from '#/lib/media/manip'
 import {mimeToExt} from '#/lib/media/video/util'
 import {type ComposerImage} from '#/state/gallery'
@@ -69,7 +69,7 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
   const draft: AppBskyDraftDefs.Draft = {
     $type: 'app.bsky.draft.defs#draft',
     deviceId: getDeviceId(),
-    platform: Platform.OS,
+    deviceName: getDeviceName().slice(0, 100), // max length of 100 in lex
     posts,
     threadgateAllow: threadgateAllowUISettingToAllowRecordValue(
       state.thread.threadgate,

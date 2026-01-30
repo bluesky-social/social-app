@@ -8,6 +8,7 @@ import {
 import {isNetworkError} from '#/lib/strings/errors'
 import {useAgent} from '#/state/session'
 import {type ComposerState} from '#/view/com/composer/state/composer'
+import {getDeviceId} from '#/analytics/identifiers'
 import {composerStateToDraft, draftViewToSummary} from './api'
 import {logger} from './logger'
 import * as storage from './storage'
@@ -42,11 +43,17 @@ export function useDraftsQuery() {
  * Load a draft's local media for editing.
  * Takes the full Draft object (from DraftSummary) to avoid re-fetching.
  */
-export async function loadDraft(draft: AppBskyDraftDefs.Draft): Promise<{
+export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
   loadedMedia: Map<string, string>
 }> {
   // Load local media files
   const loadedMedia = new Map<string, string>()
+
+  // can't load media from another device
+  if (draft.deviceId && draft.deviceId !== getDeviceId()) {
+    return {loadedMedia}
+  }
+
   for (const post of draft.posts) {
     // Load images
     if (post.embedImages) {
@@ -54,10 +61,10 @@ export async function loadDraft(draft: AppBskyDraftDefs.Draft): Promise<{
         try {
           const url = await storage.loadMediaFromLocal(img.localRef.path)
           loadedMedia.set(img.localRef.path, url)
-        } catch (e) {
-          logger.debug('Failed to load draft image', {
+        } catch (e: any) {
+          logger.error('Failed to load draft image', {
             path: img.localRef.path,
-            error: e,
+            safeMessage: e.message,
           })
         }
       }
@@ -68,10 +75,10 @@ export async function loadDraft(draft: AppBskyDraftDefs.Draft): Promise<{
         try {
           const url = await storage.loadMediaFromLocal(vid.localRef.path)
           loadedMedia.set(vid.localRef.path, url)
-        } catch (e) {
-          logger.debug('Failed to load draft video', {
+        } catch (e: any) {
+          logger.error('Failed to load draft video', {
             path: vid.localRef.path,
-            error: e,
+            safeMessage: e.message,
           })
         }
       }
