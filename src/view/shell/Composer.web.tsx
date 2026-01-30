@@ -1,6 +1,8 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
+import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
+import {useFocusGuards} from '@radix-ui/react-focus-guards'
+import {FocusScope} from '@radix-ui/react-focus-scope'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useA11y} from '#/state/a11y'
@@ -64,11 +66,11 @@ function Inner({state}: {state: ComposerOpts}) {
     }))
   }, [])
 
-  FocusGuards.useFocusGuards()
+  useFocusGuards()
 
   return (
-    <FocusScope.FocusScope loop trapped asChild>
-      <DismissableLayer.DismissableLayer
+    <FocusScope loop trapped asChild>
+      <DismissableLayer
         role="dialog"
         aria-modal
         style={flatten([
@@ -114,8 +116,8 @@ function Inner({state}: {state: ComposerOpts}) {
           />
         </View>
         <EmojiPicker state={pickerState} close={onClosePicker} />
-      </DismissableLayer.DismissableLayer>
-    </FocusScope.FocusScope>
+      </DismissableLayer>
+    </FocusScope>
   )
 }
 

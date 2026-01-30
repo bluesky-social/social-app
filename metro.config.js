@@ -10,6 +10,9 @@ if (cfg.resolver.resolveRequest) {
   throw Error('Update this override because it is conflicting now.')
 }
 
+// Enforce "no RNGH on web"
+cfg.resolver.blockList = [/react-native-gesture-handler\/.*/]
+
 if (process.env.BSKY_PROFILE) {
   cfg.cacheVersion += ':PROFILE'
 }
@@ -34,6 +37,22 @@ cfg.resolver.resolveRequest = (context, moduleName, platform) => {
   }
   if (moduleName === '@ipld/dag-cbor') {
     return context.resolveRequest(context, '@ipld/dag-cbor/src', platform)
+  }
+  if (platform === 'web') {
+    if (moduleName === 'react-native-webview') {
+      return context.resolveRequest(
+        context,
+        'react-native-web-webview',
+        platform,
+      )
+    }
+    if (moduleName === 'unicode-segmenter/grapheme') {
+      return context.resolveRequest(
+        context,
+        'unicode-segmenter/grapheme.js',
+        platform,
+      )
+    }
   }
   if (process.env.BSKY_PROFILE) {
     if (moduleName.endsWith('ReactNativeRenderer-prod')) {
