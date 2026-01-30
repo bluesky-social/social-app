@@ -98,6 +98,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
             setActive={setActive}
             onScreen={onScreen}
             lastKnownTime={lastKnownTime}
+            isGif={embed.presentation === 'gif'}
           />
         </OnlyNearScreen>
       </ErrorBoundary>
