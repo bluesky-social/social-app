@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'
-import {atoms as a, useTheme, web, select} from '#/alf'
+import {atoms as a, select, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
@@ -26,6 +26,7 @@ export function DraftsListDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const {gtPhone} = useBreakpoints()
   const ax = useAnalytics()
   const {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
     useDraftsQuery()
@@ -91,7 +92,7 @@ export function DraftsListDialog({
   const renderItem = useCallback(
     ({item}: {item: DraftSummary}) => {
       return (
-        <View style={[a.px_lg, a.mt_lg]}>
+        <View style={[gtPhone ? [a.px_md, a.pt_md] : [a.px_sm, a.pt_sm]]}>
           <DraftItem
             draft={item}
             onSelect={handleSelectDraft}
@@ -100,7 +101,7 @@ export function DraftsListDialog({
         </View>
       )
     },
-    [handleSelectDraft, handleDeleteDraft],
+    [handleSelectDraft, handleDeleteDraft, gtPhone],
   )
 
   const header = useMemo(
