@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(git -C /Users/pope/dev/bsky.app/social-app log --oneline --all -- 'bskyweb/static/media/Inter*')",
+      "Bash(git -C /Users/pope/dev/bsky.app/social-app ls-files:*)",
+      "Bash(node -e:*)",
+      "Bash(npx expo-atlas:*)",
+      "Bash(git diff:*)",
+      "Bash(python3:*)"
+    ]
+  }
+}

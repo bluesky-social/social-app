@@ -47,7 +47,7 @@
     "web": "expo start --web",
     "use-build-number": "./scripts/useBuildNumberEnv.sh",
     "use-build-number-with-bump": "./scripts/useBuildNumberEnvWithBump.sh",
-    "build-web": "expo export --platform web && node ./scripts/post-web-build.js",
+    "build-web": "expo export --platform web --source-maps && node ./scripts/post-web-build.js",
     "build-all": "pnpm intl:build && pnpm use-build-number-with-bump eas build --platform all",
     "build-ios": "pnpm use-build-number-with-bump eas build -p ios",
     "build-android": "pnpm use-build-number-with-bump eas build -p android",
@@ -87,8 +87,8 @@
     "export": "expo export --dump-sourcemap && pnpm upload-native-sourcemaps",
     "upload-native-sourcemaps": "pnpm exec sentry-expo-upload-sourcemaps dist",
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
-    "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 pnpm build-web",
-    "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 pnpm build-web",
+    "generate-web-stats": "EXPO_ATLAS=1 yarn build-web",
+    "open-analyzer": "npx expo-atlas .expo/atlas.jsonl",
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
@@ -110,7 +110,6 @@
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
     "@expo/metro-runtime": "^56.0.10",
-    "@expo/webpack-config": "^19.0.1",
     "@floating-ui/dom": "^1.6.3",
     "@floating-ui/react-dom": "^2.0.8",
     "@formatjs/intl-displaynames": "^6.8.13",
@@ -262,10 +261,8 @@
     "@eslint/js": "^9.39.2",
     "@lingui/babel-plugin-lingui-macro": "^5.9.2",
     "@lingui/cli": "^5.9.2",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@react-native/babel-preset": "0.81.5",
     "@react-native/typescript-config": "^0.81.5",
-    "@sentry/webpack-plugin": "^3.2.2",
     "@testing-library/react-native": "^13.2.0",
     "@types/jest": "29.5.14",
     "@types/lodash.chunk": "^4.2.7",
@@ -290,6 +287,7 @@
     "eslint-plugin-react-native": "^5.0.0",
     "eslint-plugin-react-native-a11y": "^3.5.1",
     "eslint-plugin-simple-import-sort": "^13.0.0",
+    "expo-atlas": "^0.4.0",
     "file-loader": "6.2.0",
     "globals": "^17.0.0",
     "husky": "^9.1.7",
@@ -304,8 +302,7 @@
     "svgo": "^3.3.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.0",
-    "webpack-bundle-analyzer": "^4.10.1"
+    "typescript-eslint": "^8.58.0"
   },
   "jest": {
     "preset": "jest-expo/ios",
