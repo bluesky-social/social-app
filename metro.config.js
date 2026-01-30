@@ -11,6 +11,9 @@ if (cfg.resolver.resolveRequest) {
   throw Error('Update this override because it is conflicting now.')
 }
 
+// Enforce "no RNGH on web"
+cfg.resolver.blockList = [/react-native-gesture-handler\/.*/]
+
 if (process.env.BSKY_PROFILE) {
   cfg.cacheVersion += ':PROFILE'
 }
