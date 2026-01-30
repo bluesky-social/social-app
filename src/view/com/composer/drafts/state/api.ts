@@ -1,13 +1,16 @@
 /**
  * Type converters for Draft API - convert between ComposerState and server Draft types.
  */
-import {type AppBskyDraftDefs, RichText} from '@atproto/api'
+import {type AppBskyDraftDefs, AtUri, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
+import {resolveLink} from '#/lib/api/resolve'
 import {getImageDim} from '#/lib/media/manip'
 import {mimeToExt} from '#/lib/media/video/util'
 import {type ComposerImage} from '#/state/gallery'
 import {type Gif} from '#/state/queries/tenor'
+import {threadgateAllowUISettingToAllowRecordValue} from '#/state/queries/threadgate/util'
+import {createPublicAgent} from '#/state/session/agent'
 import {
   type ComposerState,
   type EmbedDraft,
@@ -61,33 +64,12 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
     }),
   )
 
-  // Convert threadgate settings to server format
-  const threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow'] = []
-  for (const setting of state.thread.threadgate) {
-    if (setting.type === 'mention') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#mentionRule' as const,
-      })
-    } else if (setting.type === 'following') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#followingRule' as const,
-      })
-    } else if (setting.type === 'followers') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#followerRule' as const,
-      })
-    } else if (setting.type === 'list') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#listRule' as const,
-        list: setting.list,
-      })
-    }
-  }
-
   const draft: AppBskyDraftDefs.Draft = {
     $type: 'app.bsky.draft.defs#draft',
     posts,
-    threadgateAllow: threadgateAllow.length > 0 ? threadgateAllow : undefined,
+    threadgateAllow: threadgateAllowUISettingToAllowRecordValue(
+      state.thread.threadgate,
+    ),
     postgateEmbeddingRules:
       state.thread.postgate.embeddingRules &&
       state.thread.postgate.embeddingRules.length > 0
@@ -140,15 +122,21 @@ async function postDraftToServerPost(
 
   // Add quote record embed
   if (post.embed.quote) {
-    draftPost.embedRecords = [
-      {
-        $type: 'app.bsky.draft.defs#draftEmbedRecord',
-        record: {
-          uri: post.embed.quote.uri,
-          cid: '', // We don't have the CID at draft time
+    const resolved = await resolveLink(
+      createPublicAgent(),
+      post.embed.quote.uri,
+    )
+    if (resolved && resolved.type === 'record') {
+      draftPost.embedRecords = [
+        {
+          $type: 'app.bsky.draft.defs#draftEmbedRecord',
+          record: {
+            uri: resolved.record.uri,
+            cid: resolved.record.cid,
+          },
         },
-      },
-    ]
+      ]
+    }
   }
 
   // Add external link embed (only if no media, otherwise it's ignored)
@@ -536,7 +524,9 @@ export async function draftToComposerPosts(
       // Restore quote embed
       if (post.embedRecords && post.embedRecords.length > 0) {
         const record = post.embedRecords[0]
-        embed.quote = {type: 'link', uri: record.record.uri}
+        const urip = new AtUri(record.record.uri)
+        const url = `https://bsky.app/profile/${urip.host}/post/${urip.rkey}`
+        embed.quote = {type: 'link', uri: url}
       }
 
       // Restore link embed (only if not a GIF)
