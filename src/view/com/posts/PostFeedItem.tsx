@@ -466,7 +466,7 @@ let PostContent = ({
         additionalCauses={additionalPostAlerts}
       />
       {richText.text ? (
-        <>
+        <View style={[a.mb_2xs]}>
           <RichText
             enableTags
             testID="postText"
@@ -479,7 +479,7 @@ let PostContent = ({
           {limitLines && (
             <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />
           )}
-        </>
+        </View>
       ) : undefined}
       {postEmbed ? (
         <View style={[a.pb_xs]}>
