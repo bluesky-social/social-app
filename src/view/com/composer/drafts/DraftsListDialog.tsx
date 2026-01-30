@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web, select} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
@@ -162,7 +162,17 @@ export function DraftsListDialog({
         ListFooterComponent={footerComponent}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.5}
-        style={[t.atoms.bg_contrast_50, a.px_0, web({minHeight: 500})]}
+        style={[
+          a.px_0,
+          web({minHeight: 500}),
+          {
+            backgroundColor: select(t.name, {
+              light: t.palette.contrast_50,
+              dark: t.palette.contrast_0,
+              dim: '#000000',
+            }),
+          },
+        ]}
         webInnerContentContainerStyle={[a.py_0]}
         contentContainerStyle={[a.pb_xl]}
       />

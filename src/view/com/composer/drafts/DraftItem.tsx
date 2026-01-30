@@ -10,7 +10,7 @@ import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile
 import {logger} from '#/view/com/composer/drafts/state/logger'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, select} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
 import * as MediaPreview from '#/components/MediaPreview'
@@ -21,6 +21,140 @@ import {type DraftPostDisplay, type DraftSummary} from './state/schema'
 import * as storage from './state/storage'
 
 export function DraftItem({
+  draft,
+  onSelect,
+  onDelete,
+}: {
+  draft: DraftSummary
+  onSelect: (draft: DraftSummary) => void
+  onDelete: (draft: DraftSummary) => void
+}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const discardPromptControl = Prompt.usePromptControl()
+
+  const handleDelete = useCallback(() => {
+    onDelete(draft)
+  }, [onDelete, draft])
+
+  return (
+    <>
+      <View style={[a.relative]}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Open draft`)}
+          accessibilityHint={_(msg`Opens this draft in the composer`)}
+          onPress={() => onSelect(draft)}
+          style={({pressed, hovered}) => [
+            a.rounded_md,
+            t.atoms.shadow_sm,
+            {
+              backgroundColor: select(t.name, {
+                light: t.atoms.bg.backgroundColor,
+                dark: t.atoms.bg_contrast_25.backgroundColor,
+                dim: t.atoms.bg_contrast_25.backgroundColor,
+              }),
+            },
+            (pressed || hovered) && t.atoms.bg_contrast_50,
+          ]}>
+          <View
+            style={[
+              a.rounded_md,
+              a.overflow_hidden,
+              a.p_lg,
+              {
+                paddingTop: 20 + a.pt_md.paddingTop,
+              },
+            ]}>
+
+          </View>
+        </Pressable>
+
+        <View
+          pointerEvents="none"
+          style={[
+            a.absolute,
+            a.pointer_events_none,
+            {
+              top: a.pt_md.paddingTop,
+              left: a.pl_lg.paddingLeft,
+            },
+          ]}>
+          <TimeElapsed timestamp={draft.updatedAt}>
+            {({timeElapsed}) => (
+              <Text
+                style={[
+                  a.text_md,
+                  t.atoms.text_contrast_medium,
+                  a.leading_snug,
+                ]}
+                numberOfLines={1}>
+                {timeElapsed}
+              </Text>
+            )}
+          </TimeElapsed>
+        </View>
+
+        <View
+          style={[
+            a.absolute,
+            {
+              top: a.pt_md.paddingTop,
+              right: a.pr_md.paddingRight,
+            },
+          ]}>
+          <Button
+            label={_(msg`More options`)}
+            hitSlop={8}
+            onPress={e => {
+              e.stopPropagation()
+              discardPromptControl.open()
+            }}
+            style={[
+              a.pointer,
+              a.rounded_full,
+              {
+                height: 20,
+                width: 20,
+              },
+            ]}>
+            {({pressed, hovered}) => (
+              <>
+                <View
+                  style={[
+                    a.absolute,
+                    a.rounded_full,
+                    {
+                      top: -4,
+                      bottom: -4,
+                      left: -4,
+                      right: -4,
+                      backgroundColor:
+                        pressed || hovered
+                          ? select(t.name, {
+                              light: t.atoms.bg_contrast_50.backgroundColor,
+                              dark: t.atoms.bg_contrast_100.backgroundColor,
+                              dim: t.atoms.bg_contrast_100.backgroundColor,
+                            })
+                          : 'transparent',
+                    },
+                  ]}
+                />
+                <DotsIcon
+                  width={16}
+                  fill={t.atoms.text_contrast_low.color}
+                  style={[a.z_20]}
+                />
+              </>
+            )}
+          </Button>
+        </View>
+      </View>
+    </>
+  )
+}
+
+export function DraftItemOld({
   draft,
   onSelect,
   onDelete,
