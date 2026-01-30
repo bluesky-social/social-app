@@ -82,6 +82,8 @@ export type PostAction =
       type: 'embed_add_video'
       asset: ImagePickerAsset
       abortController: AbortController
+      /** Optional localRefPath for draft restoration */
+      localRefPath?: string
     }
   | {type: 'embed_remove_video'}
   | {type: 'embed_update_video'; videoAction: VideoAction}
@@ -117,6 +119,13 @@ export type ComposerAction =
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {
       type: 'update_post'
+      postId: string
+      postAction: PostAction
+    }
+  | {
+      /** Like update_post but doesn't mark the composer as dirty.
+       * Used when restoring video from draft to avoid triggering "unsaved changes" prompt. */
+      type: 'restore_video_to_post'
       postId: string
       postAction: PostAction
     }
@@ -196,6 +205,29 @@ export function composerReducer(
       return {
         ...state,
         isDirty: true,
+        thread: {
+          ...state.thread,
+          posts: nextPosts,
+        },
+      }
+    }
+    case 'restore_video_to_post': {
+      // Same as update_post but WITHOUT setting isDirty: true
+      // Used when restoring video from draft to avoid triggering "unsaved changes" prompt
+      let nextPosts = state.thread.posts
+      const postIndex = state.thread.posts.findIndex(
+        p => p.id === action.postId,
+      )
+      if (postIndex !== -1) {
+        nextPosts = state.thread.posts.slice()
+        nextPosts[postIndex] = postReducer(
+          state.thread.posts[postIndex],
+          action.postAction,
+        )
+      }
+      return {
+        ...state,
+        // isDirty intentionally NOT set to true
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -413,7 +445,11 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       if (!prevMedia) {
         nextMedia = {
           type: 'video',
-          video: createVideoState(action.asset, action.abortController),
+          video: createVideoState(
+            action.asset,
+            action.abortController,
+            action.localRefPath,
+          ),
         }
       }
       return {
