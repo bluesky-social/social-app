@@ -31,21 +31,50 @@ export type RestoredVideo = {
   altText: string
   mimeType: string
   localRefPath: string
+  /** Whether the stored video is already compressed (can skip compression step) */
+  compressed: boolean
   captions: Array<{lang: string; content: string}>
 }
 
 /**
- * Parse mime type from video localRefPath.
- * Format: `video:${mimeType}:${nanoid()}` (new) or `video:${nanoid()}` (legacy)
+ * Parse video metadata from localRefPath.
+ * Format: `video:${mimeType}:c:${nanoid()}.ext` (compressed, new)
+ *      or `video:${mimeType}:u:${nanoid()}.ext` (uncompressed, new)
+ *      or `video:${mimeType}:${nanoid()}.ext` (legacy format 2)
+ *      or `video:${nanoid()}` (legacy format 1)
+ *
+ * Returns mimeType and whether the video was stored compressed.
  */
-function parseVideoMimeType(localRefPath: string): string {
+export function parseVideoLocalRef(localRefPath: string): {
+  mimeType: string
+  compressed: boolean
+} {
   const parts = localRefPath.split(':')
-  // New format: video:video/mp4:abc123 -> parts[1] is mime type
-  // Legacy format: video:abc123 -> no mime type, default to video/mp4
-  if (parts.length >= 3 && parts[1].includes('/')) {
-    return parts[1]
+
+  // New format with compressed flag: video:mimeType:c|u:id.ext
+  if (parts.length >= 4 && parts[1].includes('/')) {
+    const flag = parts[2]
+    if (flag === 'c' || flag === 'u') {
+      return {
+        mimeType: parts[1],
+        compressed: flag === 'c',
+      }
+    }
   }
-  return 'video/mp4' // Default for legacy drafts
+
+  // Legacy format 2: video:mimeType:id.ext (no compressed flag)
+  if (parts.length >= 3 && parts[1].includes('/')) {
+    return {
+      mimeType: parts[1],
+      compressed: false, // Assume uncompressed for backwards compat
+    }
+  }
+
+  // Legacy format 1: video:id (no mime type, no compressed flag)
+  return {
+    mimeType: 'video/mp4',
+    compressed: false,
+  }
 }
 
 /**
@@ -187,7 +216,9 @@ function serializeImages(
 
 /**
  * Serialize video to server format with localRef path.
- * The localRef path encodes the mime type: `video:${mimeType}:${nanoid()}`
+ * The localRef path encodes the mime type and compressed flag:
+ *   `video:${mimeType}:c:${nanoid()}.ext` (compressed video stored)
+ * Reuses existing localRefPath if present (when editing a draft).
  */
 async function serializeVideo(
   videoState: VideoState,
@@ -198,11 +229,20 @@ async function serializeVideo(
     return undefined
   }
 
-  // Encode mime type in the path for restoration
+  // Encode mime type and compressed flag in the path for restoration
+  // Reuse existing localRefPath if present (editing draft), otherwise generate new
   const mimeType = videoState.video.mimeType || 'video/mp4'
   const ext = mimeToExt(mimeType)
-  const localRefPath = `video:${mimeType}:${nanoid()}.${ext}`
+  // Always mark as compressed since we only save after compression
+  const localRefPath =
+    videoState.localRefPath || `video:${mimeType}:c:${nanoid()}.${ext}`
   localRefPaths.set(localRefPath, videoState.video.uri)
+
+  logger.debug('serializing video', {
+    localRefPath,
+    isReusing: !!videoState.localRefPath,
+    sourcePath: videoState.video.uri,
+  })
 
   // Read caption file contents as text
   const captions: AppBskyDraftDefs.DraftEmbedCaption[] = []
@@ -501,12 +541,13 @@ export async function draftToComposerPosts(
         const vid = post.embedVideos[0]
         const videoUri = loadedMedia.get(vid.localRef.path)
         if (videoUri) {
-          const mimeType = parseVideoMimeType(vid.localRef.path)
+          const {mimeType, compressed} = parseVideoLocalRef(vid.localRef.path)
           logger.debug('found video to restore', {
             localRefPath: vid.localRef.path,
             videoUri,
             altText: vid.alt,
             mimeType,
+            compressed,
             captionCount: vid.captions?.length ?? 0,
           })
           restoredVideos.set(index, {
@@ -514,6 +555,7 @@ export async function draftToComposerPosts(
             altText: vid.alt || '',
             mimeType,
             localRefPath: vid.localRef.path,
+            compressed,
             captions:
               vid.captions?.map(c => ({lang: c.lang, content: c.content})) ??
               [],
