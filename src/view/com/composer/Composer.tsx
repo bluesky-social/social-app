@@ -69,6 +69,7 @@ import {
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -164,6 +165,7 @@ import {
   NO_VIDEO,
   type NoVideoState,
   processVideo,
+  uploadPrecompressedVideo,
   type VideoState,
 } from './state/video'
 import {type TextInputRef} from './text-input/TextInput.types'
@@ -362,10 +364,14 @@ export const ComposePost = ({
           postId,
           videoUri: videoInfo.uri,
           altText: videoInfo.altText,
+          compressed: videoInfo.compressed,
           captionCount: videoInfo.captions.length,
         })
 
         let asset: ImagePickerAsset
+        let videoUri = videoInfo.uri
+        let videoSize = 0
+        let videoBytes: ArrayBuffer | undefined
 
         if (IS_WEB) {
           // Web: Convert blob URL to a File, then get video metadata (returns data URL)
@@ -375,8 +381,11 @@ export const ComposePost = ({
             type: videoInfo.mimeType,
           })
           asset = await getVideoMetadata(file)
+          // For web, the data URL is used directly
+          videoUri = asset.uri
+          videoSize = blob.size
+          videoBytes = await blob.arrayBuffer()
         } else {
-          let uri = videoInfo.uri
           if (IS_ANDROID) {
             // Android: expo-file-system double-encodes filenames with special chars.
             // The file exists, but react-native-compressor's MediaMetadataRetriever
@@ -392,79 +401,190 @@ export const ComposePost = ({
               source: videoInfo.uri,
               temp: tempFile.uri,
             })
-            uri = tempFile.uri
+            videoUri = tempFile.uri
+            videoSize = tempFile.size ?? 0
+          } else {
+            // iOS
+            const sourceFile = new FileSystem.File(videoInfo.uri)
+            videoSize = sourceFile.size ?? 0
           }
-          asset = await getVideoMetadata(uri)
+          asset = await getVideoMetadata(videoUri)
         }
 
-        // Start video processing using existing flow
         const abortController = new AbortController()
-        composerDispatch({
-          type: 'update_post',
-          postId,
-          postAction: {
-            type: 'embed_add_video',
-            asset,
-            abortController,
-          },
-        })
 
-        // Restore alt text immediately
-        if (videoInfo.altText) {
+        if (videoInfo.compressed) {
+          // Video is already compressed - skip compression step
+          logger.debug('restoreVideo: using pre-compressed video', {
+            postId,
+            localRefPath: videoInfo.localRefPath,
+          })
+
+          // Create CompressedVideo object from stored data
+          const compressedVideo: CompressedVideo = {
+            uri: videoUri,
+            mimeType: videoInfo.mimeType,
+            size: videoSize,
+            bytes: videoBytes,
+          }
+
+          // Add video to post (at compressing status initially)
           composerDispatch({
-            type: 'update_post',
+            type: 'restore_video_to_post',
+            postId,
+            postAction: {
+              type: 'embed_add_video',
+              asset,
+              abortController,
+              localRefPath: videoInfo.localRefPath,
+            },
+          })
+
+          // Manually update to uploading state with the compressed video
+          composerDispatch({
+            type: 'restore_video_to_post',
             postId,
             postAction: {
               type: 'embed_update_video',
               videoAction: {
-                type: 'update_alt_text',
-                altText: videoInfo.altText,
+                type: 'compressing_to_uploading',
+                video: compressedVideo,
                 signal: abortController.signal,
               },
             },
           })
-        }
 
-        // Restore captions (web only - captions use File objects)
-        if (IS_WEB && videoInfo.captions.length > 0) {
-          const captionTracks = videoInfo.captions.map(c => ({
-            lang: c.lang,
-            file: new File([c.content], `caption-${c.lang}.vtt`, {
-              type: 'text/vtt',
-            }),
-          }))
-          composerDispatch({
-            type: 'update_post',
-            postId,
-            postAction: {
-              type: 'embed_update_video',
-              videoAction: {
-                type: 'update_captions',
-                updater: () => captionTracks,
-                signal: abortController.signal,
-              },
-            },
-          })
-        }
-
-        // Start video compression and upload
-        processVideo(
-          asset,
-          videoAction => {
+          // Restore alt text
+          if (videoInfo.altText) {
             composerDispatch({
-              type: 'update_post',
+              type: 'restore_video_to_post',
               postId,
               postAction: {
                 type: 'embed_update_video',
-                videoAction,
+                videoAction: {
+                  type: 'update_alt_text',
+                  altText: videoInfo.altText,
+                  signal: abortController.signal,
+                },
               },
             })
-          },
-          agent,
-          currentDid,
-          abortController.signal,
-          _,
-        )
+          }
+
+          // Restore captions (web only)
+          if (IS_WEB && videoInfo.captions.length > 0) {
+            const captionTracks = videoInfo.captions.map(c => ({
+              lang: c.lang,
+              file: new File([c.content], `caption-${c.lang}.vtt`, {
+                type: 'text/vtt',
+              }),
+            }))
+            composerDispatch({
+              type: 'restore_video_to_post',
+              postId,
+              postAction: {
+                type: 'embed_update_video',
+                videoAction: {
+                  type: 'update_captions',
+                  updater: () => captionTracks,
+                  signal: abortController.signal,
+                },
+              },
+            })
+          }
+
+          // Start upload (skip compression)
+          uploadPrecompressedVideo(
+            compressedVideo,
+            videoAction => {
+              composerDispatch({
+                type: 'restore_video_to_post',
+                postId,
+                postAction: {
+                  type: 'embed_update_video',
+                  videoAction,
+                },
+              })
+            },
+            agent,
+            currentDid,
+            abortController.signal,
+            _,
+          )
+        } else {
+          // Video not compressed yet - start from beginning
+          logger.debug('restoreVideo: starting full compression', {
+            postId,
+            localRefPath: videoInfo.localRefPath,
+          })
+
+          composerDispatch({
+            type: 'restore_video_to_post',
+            postId,
+            postAction: {
+              type: 'embed_add_video',
+              asset,
+              abortController,
+              localRefPath: videoInfo.localRefPath,
+            },
+          })
+
+          // Restore alt text immediately
+          if (videoInfo.altText) {
+            composerDispatch({
+              type: 'restore_video_to_post',
+              postId,
+              postAction: {
+                type: 'embed_update_video',
+                videoAction: {
+                  type: 'update_alt_text',
+                  altText: videoInfo.altText,
+                  signal: abortController.signal,
+                },
+              },
+            })
+          }
+
+          // Restore captions (web only - captions use File objects)
+          if (IS_WEB && videoInfo.captions.length > 0) {
+            const captionTracks = videoInfo.captions.map(c => ({
+              lang: c.lang,
+              file: new File([c.content], `caption-${c.lang}.vtt`, {
+                type: 'text/vtt',
+              }),
+            }))
+            composerDispatch({
+              type: 'restore_video_to_post',
+              postId,
+              postAction: {
+                type: 'embed_update_video',
+                videoAction: {
+                  type: 'update_captions',
+                  updater: () => captionTracks,
+                  signal: abortController.signal,
+                },
+              },
+            })
+          }
+
+          // Start video compression and upload
+          processVideo(
+            asset,
+            videoAction => {
+              composerDispatch({
+                type: 'restore_video_to_post',
+                postId,
+                postAction: {
+                  type: 'embed_update_video',
+                  videoAction,
+                },
+              })
+            },
+            agent,
+            currentDid,
+            abortController.signal,
+            _,
+          )
+        }
       } catch (e) {
         logger.error('Failed to restore video from draft', {
           postId,
