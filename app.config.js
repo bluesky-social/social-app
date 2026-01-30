@@ -325,11 +325,11 @@ module.exports = function (_config) {
             android: {
               backgroundColor: '#A8CCFF', // primary_200
               image: './assets/splash/android-splash-logo-white.png',
-              imageWidth: 105,
+              imageWidth: 102, // even division of 306px
               dark: {
                 backgroundColor: '#00398A', // primary_800
                 image: './assets/splash/android-splash-logo-white.png',
-                imageWidth: 105,
+                imageWidth: 102,
               },
             },
           },
