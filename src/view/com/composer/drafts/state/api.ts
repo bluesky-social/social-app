@@ -9,6 +9,7 @@ import {getImageDim} from '#/lib/media/manip'
 import {mimeToExt} from '#/lib/media/video/util'
 import {type ComposerImage} from '#/state/gallery'
 import {type Gif} from '#/state/queries/tenor'
+import {threadgateAllowUISettingToAllowRecordValue} from '#/state/queries/threadgate/util'
 import {createPublicAgent} from '#/state/session/agent'
 import {
   type ComposerState,
@@ -63,33 +64,12 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
     }),
   )
 
-  // Convert threadgate settings to server format
-  const threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow'] = []
-  for (const setting of state.thread.threadgate) {
-    if (setting.type === 'mention') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#mentionRule' as const,
-      })
-    } else if (setting.type === 'following') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#followingRule' as const,
-      })
-    } else if (setting.type === 'followers') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#followerRule' as const,
-      })
-    } else if (setting.type === 'list') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#listRule' as const,
-        list: setting.list,
-      })
-    }
-  }
-
   const draft: AppBskyDraftDefs.Draft = {
     $type: 'app.bsky.draft.defs#draft',
     posts,
-    threadgateAllow: threadgateAllow.length > 0 ? threadgateAllow : undefined,
+    threadgateAllow: threadgateAllowUISettingToAllowRecordValue(
+      state.thread.threadgate,
+    ),
     postgateEmbeddingRules:
       state.thread.postgate.embeddingRules &&
       state.thread.postgate.embeddingRules.length > 0
