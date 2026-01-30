@@ -79,7 +79,18 @@ export const SplashScreen = ({
         <View
           testID="signinOrCreateAccount"
           style={[a.px_5xl, a.gap_md, a.pb_sm]}>
-          <View
+          <Button
+            testID="createAccountButton"
+            onPress={() => {
+              onPressCreateAccount()
+              playHaptic('Light')
+            }}
+            label={_(msg`Create new account`)}
+            accessibilityHint={_(
+              msg`Opens flow to create a new Bluesky account`,
+            )}
+            size="large"
+            color={isDarkMode ? 'secondary_inverted' : 'secondary'}
             style={[
               t.atoms.shadow_md,
               {
@@ -90,23 +101,10 @@ export const SplashScreen = ({
                 },
               },
             ]}>
-            <Button
-              testID="createAccountButton"
-              onPress={() => {
-                onPressCreateAccount()
-                playHaptic('Light')
-              }}
-              label={_(msg`Create new account`)}
-              accessibilityHint={_(
-                msg`Opens flow to create a new Bluesky account`,
-              )}
-              size="large"
-              color={isDarkMode ? 'secondary_inverted' : 'secondary'}>
-              <ButtonText>
-                <Trans>Create account</Trans>
-              </ButtonText>
-            </Button>
-          </View>
+            <ButtonText>
+              <Trans>Create account</Trans>
+            </ButtonText>
+          </Button>
 
           <Button
             testID="signInButton"
