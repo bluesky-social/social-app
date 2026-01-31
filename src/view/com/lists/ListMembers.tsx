@@ -1,6 +1,5 @@
 import React, {type JSX, useCallback} from 'react'
 import {
-  Dimensions,
   type GestureResponderEvent,
   type StyleProp,
   View,
@@ -9,6 +8,7 @@ import {
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -60,6 +60,8 @@ export function ListMembers({
   const {openModal} = useModalControls()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
+
+  const bottomTabBarHeight = useBottomTabBarHeight()
 
   const {
     data,
@@ -254,7 +256,7 @@ export function ListMembers({
         onRefresh={onRefresh}
         headerOffset={headerOffset}
         contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
+          paddingBottom: bottomTabBarHeight * 2,
         }}
         onScrolledDownChange={onScrolledDownChange}
         onEndReached={onEndReached}
