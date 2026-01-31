@@ -1,7 +1,11 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  type AppBskyEmbedExternal,
+  moderateStatus,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -111,6 +115,27 @@ export function LiveStatus({
   const moderationOpts = useModerationOpts()
   const reportDialogControl = useGlobalReportDialogControl()
   const dialogContext = Dialog.useDialogContext()
+
+  const moderation = moderateStatus(
+    {
+      ...status,
+      labels: [
+        {
+          cts: '2024-05-12T04:33:57.138Z',
+          src: 'did:plc:ar7c4by46qjdydhdevvrndac',
+          cid: status.cid!,
+          uri: status.uri!,
+          val: 'porn',
+          ver: 1,
+        },
+      ],
+    },
+    moderationOpts!,
+  )
+  console.log({
+    contentMedia: moderation.ui('contentMedia'),
+    profileView: moderation.ui('profileView'),
+  })
 
   return (
     <>
