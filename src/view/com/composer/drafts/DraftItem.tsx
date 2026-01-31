@@ -45,23 +45,17 @@ export function DraftItem({
     mediaExistsOnOtherDevice ||
     draft.meta.hasQuotes
 
-  const deviceName = useMemo(() => {
+  const isUnknownDevice = useMemo(() => {
     const raw = draft.draft.deviceName
-    let name = raw
     switch (raw) {
       case device.FALLBACK_IOS:
       case device.FALLBACK_ANDROID:
       case device.FALLBACK_WEB:
-        name = _(
-          msg({
-            message: `another device`,
-            comment: `Prefixed with "This media is stored on...". Example: "This media is stored on another device"`,
-          }),
-        )
-        break
+        return true
+      default:
+        return false
     }
-    return name
-  }, [_, draft])
+  }, [draft])
 
   const handleDelete = useCallback(() => {
     onDelete(draft)
@@ -115,12 +109,16 @@ export function DraftItem({
                 {mediaExistsOnOtherDevice && (
                   <DraftMetadataTag
                     icon={WarningIcon}
-                    text={_(
-                      msg({
-                        message: `Media stored on ${deviceName}`,
-                        comment: `This media is stored on... Example: "This media is stored on John's iPhone"`,
-                      }),
-                    )}
+                    text={
+                      isUnknownDevice
+                        ? _(msg`Media stored on another device`)
+                        : _(
+                            msg({
+                              message: `Media stored on ${draft.draft.deviceName}`,
+                              comment: `Example: "Media stored on John's iPhone"`,
+                            }),
+                          )
+                    }
                   />
                 )}
                 {mediaIsMissing && (
