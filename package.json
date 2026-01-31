@@ -235,6 +235,7 @@
     "@babel/runtime": "^7.26.0",
     "@eslint/js": "^9.39.2",
     "@expo/config-plugins": "~54.0.1",
+    "@expo/metro-runtime": "~6.1.2",
     "@lingui/cli": "^4.14.1",
     "@lingui/macro": "^4.14.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
