@@ -26,10 +26,6 @@ msgstr ""
 msgid "(no email)"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:210
-msgid "(No text)"
-msgstr ""
-
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr ""
@@ -82,8 +78,8 @@ msgstr ""
 msgid "{0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:222
-#: src/view/shell/bottom-bar/BottomBar.tsx:254
+#: src/view/shell/bottom-bar/BottomBar.tsx:223
+#: src/view/shell/bottom-bar/BottomBar.tsx:255
 #: src/view/shell/Drawer.tsx:500
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
@@ -91,6 +87,10 @@ msgstr ""
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:182
 msgid "{0, plural, one {#mo} other {#mo}}"
+msgstr ""
+
+#: src/view/com/composer/drafts/DraftItem.tsx:142
+msgid "{0, plural, one {1 more post} other {# more posts}}"
 msgstr ""
 
 #: src/components/ProfileHoverCard/index.web.tsx:445
@@ -431,7 +431,7 @@ msgstr ""
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:277
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:299
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -1192,6 +1192,11 @@ msgstr ""
 msgid "Announcing verification on Bluesky"
 msgstr ""
 
+#. Prefixed with "This media is stored on...". Example: "This media is stored on another device"
+#: src/view/com/composer/drafts/DraftItem.tsx:56
+msgid "another device"
+msgstr ""
+
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:454
 msgid "Anyone"
 msgstr ""
@@ -1404,8 +1409,8 @@ msgstr ""
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:281
 #: src/screens/Signup/BackNextButtons.tsx:41
 #: src/screens/StarterPack/Wizard/index.tsx:324
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:78
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:84
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:79
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:85
 msgid "Back"
 msgstr ""
 
@@ -1898,7 +1903,7 @@ msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:102
 #: src/Navigation.tsx:560
-#: src/view/shell/bottom-bar/BottomBar.tsx:218
+#: src/view/shell/bottom-bar/BottomBar.tsx:219
 #: src/view/shell/desktop/LeftNav.tsx:608
 #: src/view/shell/Drawer.tsx:468
 msgid "Chat"
@@ -2656,10 +2661,10 @@ msgstr ""
 #: src/components/WelcomeModal.tsx:165
 #: src/view/com/auth/SplashScreen.tsx:106
 #: src/view/com/auth/SplashScreen.web.tsx:121
-#: src/view/shell/bottom-bar/BottomBar.tsx:342
-#: src/view/shell/bottom-bar/BottomBar.tsx:347
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:201
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:206
+#: src/view/shell/bottom-bar/BottomBar.tsx:322
+#: src/view/shell/bottom-bar/BottomBar.tsx:327
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:220
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:225
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Create account"
@@ -2998,7 +3003,7 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
 #: src/view/com/composer/Composer.tsx:1172
 #: src/view/com/composer/Composer.tsx:1371
-#: src/view/com/composer/drafts/DraftItem.tsx:90
+#: src/view/com/composer/drafts/DraftItem.tsx:241
 #: src/view/com/composer/drafts/DraftsButton.tsx:112
 msgid "Discard"
 msgstr ""
@@ -3008,7 +3013,7 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:87
+#: src/view/com/composer/drafts/DraftItem.tsx:238
 msgid "Discard draft?"
 msgstr ""
 
@@ -3173,7 +3178,7 @@ msgstr ""
 
 #: src/view/com/composer/drafts/DraftsButton.tsx:65
 #: src/view/com/composer/drafts/DraftsButton.tsx:74
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:110
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:111
 msgid "Drafts"
 msgstr ""
 
@@ -4773,7 +4778,7 @@ msgstr ""
 
 #: src/Navigation.tsx:784
 #: src/Navigation.tsx:804
-#: src/view/shell/bottom-bar/BottomBar.tsx:175
+#: src/view/shell/bottom-bar/BottomBar.tsx:176
 #: src/view/shell/desktop/LeftNav.tsx:669
 #: src/view/shell/Drawer.tsx:442
 msgid "Home"
@@ -5661,6 +5666,11 @@ msgstr ""
 msgid "Media"
 msgstr ""
 
+#. This media is stored on... Example: "This media is stored on John's iPhone"
+#: src/view/com/composer/drafts/DraftItem.tsx:119
+msgid "Media stored on {deviceName}"
+msgstr ""
+
 #: src/view/com/composer/labels/LabelsBtn.tsx:209
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
@@ -5739,6 +5749,10 @@ msgstr ""
 msgid "Misleading"
 msgstr ""
 
+#: src/view/com/composer/drafts/DraftItem.tsx:130
+msgid "Missing media"
+msgstr ""
+
 #: src/Navigation.tsx:180
 #: src/screens/Moderation/index.tsx:99
 #: src/screens/Settings/Settings.tsx:192
@@ -5811,7 +5825,7 @@ msgid "More languages..."
 msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:143
-#: src/view/com/composer/drafts/DraftItem.tsx:184
+#: src/view/com/composer/drafts/DraftItem.tsx:189
 #: src/view/com/profile/ProfileMenu.tsx:242
 #: src/view/com/profile/ProfileMenu.tsx:249
 msgid "More options"
@@ -6138,7 +6152,7 @@ msgstr ""
 msgid "No DNS Panel"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:134
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:135
 msgid "No drafts yet"
 msgstr ""
 
@@ -6378,7 +6392,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:200
 #: src/screens/Settings/Settings.tsx:203
 #: src/view/screens/Notifications.tsx:129
-#: src/view/shell/bottom-bar/BottomBar.tsx:249
+#: src/view/shell/bottom-bar/BottomBar.tsx:250
 #: src/view/shell/desktop/LeftNav.tsx:706
 #: src/view/shell/Drawer.tsx:495
 msgid "Notifications"
@@ -6513,7 +6527,7 @@ msgstr ""
 msgid "Open conversation options"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:44
+#: src/view/com/composer/drafts/DraftItem.tsx:75
 msgid "Open draft"
 msgstr ""
 
@@ -6676,7 +6690,7 @@ msgstr ""
 msgid "Opens the post composer"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:45
+#: src/view/com/composer/drafts/DraftItem.tsx:76
 msgid "Opens this draft in the composer"
 msgstr ""
 
@@ -7316,7 +7330,7 @@ msgstr ""
 msgid "profile"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:313
+#: src/view/shell/bottom-bar/BottomBar.tsx:293
 #: src/view/shell/desktop/LeftNav.tsx:784
 #: src/view/shell/Drawer.tsx:79
 #: src/view/shell/Drawer.tsx:598
@@ -7396,6 +7410,7 @@ msgstr ""
 #: src/components/PostControls/RepostButton.tsx:198
 #: src/components/PostControls/RepostButton.web.tsx:85
 #: src/components/PostControls/RepostButton.web.tsx:92
+#: src/view/com/composer/drafts/DraftItem.tsx:136
 msgid "Quote post"
 msgstr ""
 
@@ -8208,7 +8223,7 @@ msgstr ""
 #: src/components/forms/SearchInput.tsx:36
 #: src/screens/Search/Shell.tsx:327
 #: src/screens/Search/Shell.tsx:514
-#: src/view/shell/bottom-bar/BottomBar.tsx:195
+#: src/view/shell/bottom-bar/BottomBar.tsx:196
 msgid "Search"
 msgstr ""
 
@@ -8899,10 +8914,10 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:127
 #: src/view/com/auth/SplashScreen.web.tsx:135
-#: src/view/shell/bottom-bar/BottomBar.tsx:352
-#: src/view/shell/bottom-bar/BottomBar.tsx:357
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:211
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:216
+#: src/view/shell/bottom-bar/BottomBar.tsx:332
+#: src/view/shell/bottom-bar/BottomBar.tsx:337
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:230
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:235
 #: src/view/shell/NavSignupCard.tsx:57
 #: src/view/shell/NavSignupCard.tsx:62
 msgid "Sign in"
@@ -9010,10 +9025,6 @@ msgstr ""
 
 #: src/lib/interests.ts:58
 msgid "Software Dev"
-msgstr ""
-
-#: src/view/com/composer/drafts/DraftItem.tsx:67
-msgid "Some media unavailable (saved on another device)"
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:121
@@ -9768,7 +9779,7 @@ msgstr ""
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:88
+#: src/view/com/composer/drafts/DraftItem.tsx:239
 msgid "This draft will be permanently deleted."
 msgstr ""
 
