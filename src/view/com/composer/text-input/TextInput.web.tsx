@@ -43,6 +43,7 @@ import {TagDecorator} from './web/TagDecorator'
 export function TextInput({
   ref,
   richtext,
+  language,
   placeholder,
   webForceMinHeight,
   hasRightPadding,
@@ -56,6 +57,7 @@ export function TextInput({
   const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
+  const lang = language.includes(',') ? 'mul' : language
 
   const [isDropping, setIsDropping] = useState(false)
   const autocompleteRef = useRef<AutocompleteRef>(null)
@@ -349,7 +351,7 @@ export function TextInput({
     <>
       <View style={[styles.container, hasRightPadding && styles.rightPadding]}>
         {/* @ts-ignore inputStyle is fine */}
-        <EditorContent editor={editor} style={inputStyle} />
+        <EditorContent editor={editor} lang={lang} style={inputStyle} />
       </View>
 
       {isDropping && (
