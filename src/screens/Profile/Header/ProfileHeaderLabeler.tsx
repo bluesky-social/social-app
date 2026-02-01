@@ -111,11 +111,21 @@ let ProfileHeaderLabeler = ({
       hideBackButton={hideBackButton}
       isPlaceholderProfile={isPlaceholderProfile}>
       <View
-        style={[a.px_lg, a.pt_md, a.pb_sm]}
-        pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+        style={[
+          a.px_lg,
+          a.pt_md,
+          a.pb_sm,
+          IS_IOS ? a.pointer_events_auto : a.pointer_events_box_none,
+        ]}>
         <View
-          style={[a.flex_row, a.justify_end, a.align_center, a.gap_xs, a.pb_lg]}
-          pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+          style={[
+            a.flex_row,
+            a.justify_end,
+            a.align_center,
+            a.gap_xs,
+            a.pb_lg,
+            IS_IOS ? a.pointer_events_auto : a.pointer_events_box_none,
+          ]}>
           <HeaderLabelerButtons profile={profile} />
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}>
@@ -126,7 +136,7 @@ let ProfileHeaderLabeler = ({
           <>
             {isSelf && <ProfileHeaderMetrics profile={profile} />}
             {descriptionRT && !moderation.ui('profileView').blur ? (
-              <View pointerEvents="auto">
+              <View style={a.pointer_events_auto}>
                 <RichText
                   testID="profileHeaderDescription"
                   style={[a.text_md]}

@@ -6,7 +6,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {s} from '#/lib/styles'
-import {useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
   Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
@@ -90,7 +90,7 @@ export function AnimatedLikeIcon({
           </Animated.View>
         ) : (
           <HeartIconOutline
-            style={[{color: t.palette.contrast_500}, {pointerEvents: 'none'}]}
+            style={[{color: t.palette.contrast_500}, a.pointer_events_none]}
             width={size}
           />
         )}
@@ -98,31 +98,35 @@ export function AnimatedLikeIcon({
           <>
             <Animated.View
               entering={circle1Keyframe.duration(300)}
-              style={{
-                position: 'absolute',
-                backgroundColor: s.likeColor.color,
-                top: 0,
-                left: 0,
-                width: size,
-                height: size,
-                zIndex: -1,
-                pointerEvents: 'none',
-                borderRadius: size / 2,
-              }}
+              style={[
+                a.pointer_events_none,
+                {
+                  position: 'absolute',
+                  backgroundColor: s.likeColor.color,
+                  top: 0,
+                  left: 0,
+                  width: size,
+                  height: size,
+                  zIndex: -1,
+                  borderRadius: size / 2,
+                },
+              ]}
             />
             <Animated.View
               entering={circle2Keyframe.duration(300)}
-              style={{
-                position: 'absolute',
-                backgroundColor: t.atoms.bg.backgroundColor,
-                top: 0,
-                left: 0,
-                width: size,
-                height: size,
-                zIndex: -1,
-                pointerEvents: 'none',
-                borderRadius: size / 2,
-              }}
+              style={[
+                a.pointer_events_none,
+                {
+                  position: 'absolute',
+                  backgroundColor: t.atoms.bg.backgroundColor,
+                  top: 0,
+                  left: 0,
+                  width: size,
+                  height: size,
+                  zIndex: -1,
+                  borderRadius: size / 2,
+                },
+              ]}
             />
           </>
         ) : null}

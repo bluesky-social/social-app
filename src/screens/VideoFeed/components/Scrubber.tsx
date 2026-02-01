@@ -171,6 +171,7 @@ export function Scrubber({
       )}
       <Animated.View
         style={[
+          a.pointer_events_none,
           a.absolute,
           {
             left: 0,
@@ -178,8 +179,7 @@ export function Scrubber({
             bottom: insets.bottom + 80,
           },
           timeStyle,
-        ]}
-        pointerEvents="none">
+        ]}>
         <Text style={[a.text_center, a.font_semi_bold]}>
           <Text style={[a.text_5xl, {fontVariant: ['tabular-nums']}]}>
             {formatTime(currentSeekTime)}

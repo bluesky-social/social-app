@@ -262,11 +262,11 @@ function LandingScreenLoaded({
                       <View
                         key={item.subject.did}
                         style={[
+                          a.pointer_events_none,
                           a.py_lg,
                           a.px_md,
                           (!isTabletOrDesktop || i !== 0) && a.border_t,
                           t.atoms.border_contrast_low,
-                          {pointerEvents: 'none'},
                         ]}>
                         <ProfileCard
                           profile={item.subject}
@@ -285,7 +285,7 @@ function LandingScreenLoaded({
 
                 <View
                   style={[
-                    {pointerEvents: 'none'},
+                    a.pointer_events_none,
                     isTabletOrDesktop && [
                       a.border,
                       a.rounded_md,
