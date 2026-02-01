@@ -1,39 +1,35 @@
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {InfoCircleIcon} from '#/lib/icons'
-import {TextLink} from '../util/Link'
-import {Text} from '../util/text/Text'
+import {atoms as a, useTheme} from '#/alf'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {InlineLinkText} from '#/components/Link'
+import {Text} from '#/components/Typography'
 
 export function DiscoverFallbackHeader() {
-  const pal = usePalette('default')
+  const t = useTheme()
+  const {_} = useLingui()
+
   return (
-    <View
-      style={[
-        {
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingVertical: 12,
-          paddingHorizontal: 12,
-          borderTopWidth: 1,
-        },
-        pal.border,
-        pal.viewLight,
-      ]}>
-      <View style={{width: 68, paddingLeft: 12}}>
-        <InfoCircleIcon size={36} style={pal.textLight} strokeWidth={1.5} />
+    <View style={[a.flex_row, a.py_lg, t.atoms.bg_contrast_25]}>
+      <View
+        style={[
+          {width: 70, paddingLeft: 18, paddingRight: 10},
+          a.align_center,
+        ]}>
+        <CircleInfoIcon width={36} style={t.atoms.text_contrast_medium} />
       </View>
-      <View style={{flex: 1}}>
-        <Text type="md" style={pal.text}>
+      <View style={[a.flex_1, a.pr_lg]}>
+        <Text style={[a.text_md, a.leading_snug]}>
           <Trans>
             We ran out of posts from your follows. Here's the latest from{' '}
-            <TextLink
-              type="md-medium"
-              href="/profile/bsky.app/feed/whats-hot"
-              text="Discover"
-              style={pal.link}
-            />
+            <InlineLinkText
+              label={_(msg`Discover`)}
+              to="/profile/bsky.app/feed/whats-hot"
+              style={[a.text_md, a.leading_snug, a.font_medium]}>
+              Discover
+            </InlineLinkText>
             .
           </Trans>
         </Text>
