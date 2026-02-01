@@ -336,12 +336,16 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
               <View style={[a.flex_row]}>
                 <ThreadItemTreeReplyChildReplyLine item={item} />
                 <View style={[a.flex_1, a.pl_2xs]}>
-                  <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
-                  <PostAlerts
-                    modui={moderation.ui('contentList')}
-                    style={[a.pb_2xs]}
-                    additionalCauses={additionalPostAlerts}
-                  />
+                  {item.ui.isAnchor && (
+                    <>
+                      <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
+                      <PostAlerts
+                        modui={moderation.ui('contentList')}
+                        style={[a.pb_2xs]}
+                        additionalCauses={additionalPostAlerts}
+                      />
+                    </>
+                  )}
                   {richText?.text ? (
                     <View style={[a.mb_2xs]}>
                       <RichText
