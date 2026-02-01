@@ -63,7 +63,7 @@ function LightboxContainer({
   return (
     <Pressable
       accessibilityHint={undefined}
-      accessibilityLabel={_(msg`Close image lightbox`)}
+      accessibilityLabel={_(msg`Close image viewer`)}
       onPress={handleBackgroundPress}
       style={[a.fixed, a.inset_0, a.z_10]}>
       <Backdrop />
@@ -216,7 +216,7 @@ function LightboxGallery({
         ]}
         hoverStyle={styles.blurredBackdropHover}
         color="secondary"
-        label={_(msg`Close lightbox`)}
+        label={_(msg`Close image viewer`)}
         shape="round"
         size={gtPhone ? 'large' : 'small'}>
         <XIcon size={gtPhone ? 'md' : 'sm'} style={{color: t.palette.white}} />
