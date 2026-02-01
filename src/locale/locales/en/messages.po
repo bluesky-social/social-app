@@ -2166,11 +2166,8 @@ msgid "Close image"
 msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:66
-msgid "Close image lightbox"
-msgstr ""
-
 #: src/view/com/lightbox/Lightbox.web.tsx:219
-msgid "Close lightbox"
+msgid "Close image viewer"
 msgstr ""
 
 #: src/components/ContextMenu/Backdrop.ios.tsx:53
