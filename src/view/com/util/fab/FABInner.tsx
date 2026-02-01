@@ -36,6 +36,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
 
   return (
     <Animated.View
+      testID="fab-outer"
       style={[
         styles.outer,
         size,
