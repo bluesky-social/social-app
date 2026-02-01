@@ -89,7 +89,7 @@ msgstr ""
 msgid "{0, plural, one {#mo} other {#mo}}"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:142
+#: src/view/com/composer/drafts/DraftItem.tsx:140
 msgid "{0, plural, one {1 more post} other {# more posts}}"
 msgstr ""
 
@@ -1190,11 +1190,6 @@ msgstr ""
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:38
 msgid "Announcing verification on Bluesky"
-msgstr ""
-
-#. Prefixed with "This media is stored on...". Example: "This media is stored on another device"
-#: src/view/com/composer/drafts/DraftItem.tsx:56
-msgid "another device"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:454
@@ -3003,7 +2998,7 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
 #: src/view/com/composer/Composer.tsx:1172
 #: src/view/com/composer/Composer.tsx:1371
-#: src/view/com/composer/drafts/DraftItem.tsx:241
+#: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:112
 msgid "Discard"
 msgstr ""
@@ -3013,7 +3008,7 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:238
+#: src/view/com/composer/drafts/DraftItem.tsx:236
 msgid "Discard draft?"
 msgstr ""
 
@@ -5666,9 +5661,13 @@ msgstr ""
 msgid "Media"
 msgstr ""
 
-#. This media is stored on... Example: "This media is stored on John's iPhone"
-#: src/view/com/composer/drafts/DraftItem.tsx:119
-msgid "Media stored on {deviceName}"
+#. Example: "Media stored on John's iPhone"
+#: src/view/com/composer/drafts/DraftItem.tsx:116
+msgid "Media stored on {0}"
+msgstr ""
+
+#: src/view/com/composer/drafts/DraftItem.tsx:114
+msgid "Media stored on another device"
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:209
@@ -5749,7 +5748,7 @@ msgstr ""
 msgid "Misleading"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:130
+#: src/view/com/composer/drafts/DraftItem.tsx:128
 msgid "Missing media"
 msgstr ""
 
@@ -5825,7 +5824,7 @@ msgid "More languages..."
 msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:143
-#: src/view/com/composer/drafts/DraftItem.tsx:189
+#: src/view/com/composer/drafts/DraftItem.tsx:187
 #: src/view/com/profile/ProfileMenu.tsx:242
 #: src/view/com/profile/ProfileMenu.tsx:249
 msgid "More options"
@@ -6527,7 +6526,7 @@ msgstr ""
 msgid "Open conversation options"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:75
+#: src/view/com/composer/drafts/DraftItem.tsx:69
 msgid "Open draft"
 msgstr ""
 
@@ -6690,7 +6689,7 @@ msgstr ""
 msgid "Opens the post composer"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:76
+#: src/view/com/composer/drafts/DraftItem.tsx:70
 msgid "Opens this draft in the composer"
 msgstr ""
 
@@ -7410,7 +7409,7 @@ msgstr ""
 #: src/components/PostControls/RepostButton.tsx:198
 #: src/components/PostControls/RepostButton.web.tsx:85
 #: src/components/PostControls/RepostButton.web.tsx:92
-#: src/view/com/composer/drafts/DraftItem.tsx:136
+#: src/view/com/composer/drafts/DraftItem.tsx:134
 msgid "Quote post"
 msgstr ""
 
@@ -9779,7 +9778,7 @@ msgstr ""
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:239
+#: src/view/com/composer/drafts/DraftItem.tsx:237
 msgid "This draft will be permanently deleted."
 msgstr ""
 
