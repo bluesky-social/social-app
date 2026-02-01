@@ -76,16 +76,12 @@ export function QrCode({
             <QrCodeInner link={link} />
           </View>
 
-          <Text
-            style={[
-              a.flex,
-              a.flex_row,
-              a.align_center,
-              a.font_semi_bold,
-              {color: 'white', fontSize: 18, gap: 6},
-            ]}>
+          <View style={[a.flex, a.flex_row, a.align_center, {gap: 6}]}>
+            {/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
             <Trans>
-              on
+              <Text style={[{color: 'white', fontSize: 18}, a.font_semi_bold]}>
+                on
+              </Text>
               <View style={[a.flex_row, a.align_center, {gap: 6}]}>
                 <Logo width={25} fill="white" />
                 <View style={[{marginTop: 3.5}]}>
@@ -93,7 +89,7 @@ export function QrCode({
                 </View>
               </View>
             </Trans>
-          </Text>
+          </View>
         </View>
       </LinearGradientBackground>
     </LazyViewShot>
