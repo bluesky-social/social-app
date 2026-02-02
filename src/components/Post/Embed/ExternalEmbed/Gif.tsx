@@ -1,6 +1,5 @@
 import {useRef, useState} from 'react'
 import {
-  Pressable,
   type StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -17,60 +16,13 @@ import {useAutoplayDisabled} from '#/state/preferences'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
-import {Loader} from '#/components/Loader'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {IS_WEB} from '#/env'
 import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
 import {type GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
-
-function PlaybackControls({
-  onPress,
-  isPlaying,
-  isLoaded,
-}: {
-  onPress: () => void
-  isPlaying: boolean
-  isLoaded: boolean
-}) {
-  const {_} = useLingui()
-  const t = useTheme()
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityHint={_(msg`Plays or pauses the GIF`)}
-      accessibilityLabel={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
-      style={[
-        a.absolute,
-        a.align_center,
-        a.justify_center,
-        !isLoaded && a.border,
-        t.atoms.border_contrast_medium,
-        a.inset_0,
-        a.w_full,
-        a.h_full,
-        {
-          zIndex: 2,
-          backgroundColor: !isLoaded
-            ? t.atoms.bg_contrast_25.backgroundColor
-            : undefined,
-        },
-      ]}
-      onPress={onPress}>
-      {!isLoaded ? (
-        <View>
-          <View style={[a.align_center, a.justify_center]}>
-            <Loader size="xl" />
-          </View>
-        </View>
-      ) : !isPlaying ? (
-        <PlayButtonIcon />
-      ) : undefined}
-    </Pressable>
-  )
-}
+import {GifPresentationControls} from '../VideoEmbed/GifPresentationControls'
 
 export function GifEmbed({
   params,
@@ -120,8 +72,6 @@ export function GifEmbed({
       style={[
         a.rounded_md,
         a.overflow_hidden,
-        a.border,
-        t.atoms.border_contrast_low,
         {backgroundColor: t.palette.black},
         {aspectRatio},
         style,
@@ -139,10 +89,11 @@ export function GifEmbed({
             right: -2,
           },
         ]}>
-        <PlaybackControls
+        <MediaInsetBorder />
+        <GifPresentationControls
           onPress={onPress}
           isPlaying={playerState.isPlaying}
-          isLoaded={playerState.isLoaded}
+          isLoading={!playerState.isLoaded}
         />
         <GifView
           source={params.playerUri}

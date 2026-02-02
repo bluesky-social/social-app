@@ -33,9 +33,7 @@ export function GifPresentationControls({
           a.inset_0,
           a.w_full,
           a.h_full,
-          {
-            zIndex: 2,
-          },
+          {zIndex: 2},
         ]}
         onPress={onPress}>
         {isLoading ? (
@@ -51,7 +49,7 @@ export function GifPresentationControls({
           style={[
             t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
             {
-              opacity: 0.3,
+              opacity: 0.2,
               zIndex: 1,
             },
           ]}
