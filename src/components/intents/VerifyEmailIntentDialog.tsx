@@ -1,19 +1,20 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
+import {useConfirmEmail} from '#/components/dialogs/EmailDialog/data/useConfirmEmail'
 import {Divider} from '#/components/Divider'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Resend} from '#/components/icons/ArrowRotateCounterClockwise'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Resend} from '#/components/icons/ArrowRotate'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export function VerifyEmailIntentDialog() {
   const {verifyEmailDialogControl: control} = useIntentDialogs()
@@ -31,29 +32,22 @@ function Inner({}: {control: DialogControlProps}) {
   const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const {verifyEmailState: state} = useIntentDialogs()
-  const [status, setStatus] = React.useState<
+  const [status, setStatus] = useState<
     'loading' | 'success' | 'failure' | 'resent'
   >('loading')
-  const [sending, setSending] = React.useState(false)
+  const [sending, setSending] = useState(false)
   const agent = useAgent()
   const {currentAccount} = useSession()
+  const {mutate: confirmEmail} = useConfirmEmail({
+    onSuccess: () => setStatus('success'),
+    onError: () => setStatus('failure'),
+  })
 
-  React.useEffect(() => {
-    ;(async () => {
-      if (!state?.code) {
-        return
-      }
-      try {
-        await agent.com.atproto.server.confirmEmail({
-          email: (currentAccount?.email || '').trim(),
-          token: state.code.trim(),
-        })
-        setStatus('success')
-      } catch (e) {
-        setStatus('failure')
-      }
-    })()
-  }, [agent.com.atproto.server, currentAccount?.email, state?.code])
+  useEffect(() => {
+    if (state?.code) {
+      confirmEmail({token: state.code})
+    }
+  }, [state?.code, confirmEmail])
 
   const onPressResendEmail = async () => {
     setSending(true)
@@ -74,8 +68,8 @@ function Inner({}: {control: DialogControlProps}) {
             <Loader size="xl" fill={t.atoms.text_contrast_low.color} />
           </View>
         ) : status === 'success' ? (
-          <View style={[a.gap_sm, isNative && a.pb_xl]}>
-            <Text style={[a.font_heavy, a.text_2xl]}>
+          <View style={[a.gap_sm, IS_NATIVE && a.pb_xl]}>
+            <Text style={[a.font_bold, a.text_2xl]}>
               <Trans>Email Verified</Trans>
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
@@ -87,7 +81,7 @@ function Inner({}: {control: DialogControlProps}) {
           </View>
         ) : status === 'failure' ? (
           <View style={[a.gap_sm]}>
-            <Text style={[a.font_heavy, a.text_2xl]}>
+            <Text style={[a.font_bold, a.text_2xl]}>
               <Trans>Invalid Verification Code</Trans>
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
@@ -99,14 +93,14 @@ function Inner({}: {control: DialogControlProps}) {
             </Text>
           </View>
         ) : (
-          <View style={[a.gap_sm, isNative && a.pb_xl]}>
-            <Text style={[a.font_heavy, a.text_2xl]}>
+          <View style={[a.gap_sm, IS_NATIVE && a.pb_xl]}>
+            <Text style={[a.font_bold, a.text_2xl]}>
               <Trans>Email Resent</Trans>
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
                 We have sent another verification email to{' '}
-                <Text style={[a.text_md, a.font_bold]}>
+                <Text style={[a.text_md, a.font_semi_bold]}>
                   {currentAccount?.email}
                 </Text>
                 .
@@ -121,11 +115,10 @@ function Inner({}: {control: DialogControlProps}) {
             <Button
               label={_(msg`Resend Verification Email`)}
               onPress={onPressResendEmail}
-              variant="solid"
               color="secondary_inverted"
               size="large"
               disabled={sending}>
-              <ButtonIcon icon={sending ? Loader : Resend} position="left" />
+              <ButtonIcon icon={sending ? Loader : Resend} />
               <ButtonText>
                 <Trans>Resend Email</Trans>
               </ButtonText>

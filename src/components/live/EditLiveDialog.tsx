@@ -18,7 +18,6 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Clock_Stroke2_Corner0_Rounded as ClockIcon} from '#/components/icons/Clock'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {LinkPreview} from './LinkPreview'
@@ -99,7 +98,7 @@ function DialogInner({
   } = useRemoveLiveStatusMutation()
 
   const {minutesUntilExpiry, expiryDateTime} = useMemo(() => {
-    tick!
+    void tick
 
     const expiry = new Date(status.expiresAt ?? new Date())
     return {
@@ -120,7 +119,7 @@ function DialogInner({
       style={web({maxWidth: 420})}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_bold, a.text_2xl]}>
+          <Text style={[a.font_semi_bold, a.text_2xl]}>
             <Trans>You are Live</Trans>
           </Text>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -172,26 +171,13 @@ function DialogInner({
             </TextField.Root>
           </View>
           {(liveLinkError || linkMetaError) && (
-            <View style={[a.flex_row, a.gap_xs, a.align_center]}>
-              <WarningIcon
-                style={[{color: t.palette.negative_500}]}
-                size="sm"
-              />
-              <Text
-                style={[
-                  a.text_sm,
-                  a.leading_snug,
-                  a.flex_1,
-                  a.font_bold,
-                  {color: t.palette.negative_500},
-                ]}>
-                {liveLinkError ? (
-                  <Trans>This is not a valid link</Trans>
-                ) : (
-                  cleanError(linkMetaError)
-                )}
-              </Text>
-            </View>
+            <Admonition type="error">
+              {liveLinkError ? (
+                <Trans>This is not a valid link</Trans>
+              ) : (
+                cleanError(linkMetaError)
+              )}
+            </Admonition>
           )}
 
           <LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />

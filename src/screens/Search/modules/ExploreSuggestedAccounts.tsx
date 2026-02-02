@@ -5,20 +5,15 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type InfiniteData} from '@tanstack/react-query'
 
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
-import {Button} from '#/components/Button'
+import {atoms as a, useTheme} from '#/alf'
+import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
-import {boostInterests, Tabs} from '#/components/ProgressGuide/FollowDialog'
 import {SubtleHover} from '#/components/SubtleHover'
-import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function useLoadEnoughProfiles({
@@ -59,108 +54,45 @@ export function SuggestedAccountsTabBar({
   selectedInterest,
   onSelectInterest,
   hideDefaultTab,
+  defaultTabLabel,
 }: {
   selectedInterest: string | null
   onSelectInterest: (interest: string | null) => void
   hideDefaultTab?: boolean
+  defaultTabLabel?: string
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
   const personalizedInterests = preferences?.interests?.tags
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
     .sort(boostInterests(personalizedInterests))
+
   return (
     <BlockDrawerGesture>
-      <Tabs
+      <InterestTabs
         interests={hideDefaultTab ? interests : ['all', ...interests]}
         selectedInterest={
           selectedInterest || (hideDefaultTab ? interests[0] : 'all')
         }
         onSelectTab={tab => {
-          logger.metric(
-            'explore:suggestedAccounts:tabPressed',
-            {tab: tab},
-            {statsig: true},
-          )
+          ax.metric('explore:suggestedAccounts:tabPressed', {tab: tab})
           onSelectInterest(tab === 'all' ? null : tab)
         }}
-        hasSearchText={false}
         interestsDisplayNames={
           hideDefaultTab
             ? interestsDisplayNames
             : {
-                all: _(msg`For You`),
+                all: defaultTabLabel || _(msg`For You`),
                 ...interestsDisplayNames,
               }
         }
-        TabComponent={Tab}
-        contentContainerStyle={[
-          {
-            // visual alignment
-            paddingLeft: a.px_md.paddingLeft,
-          },
-        ]}
       />
     </BlockDrawerGesture>
   )
 }
-
-let Tab = ({
-  onSelectTab,
-  interest,
-  active,
-  index,
-  interestsDisplayName,
-  onLayout,
-}: {
-  onSelectTab: (index: number) => void
-  interest: string
-  active: boolean
-  index: number
-  interestsDisplayName: string
-  onLayout: (index: number, x: number, width: number) => void
-}): React.ReactNode => {
-  const t = useTheme()
-  const {_} = useLingui()
-  const activeText = active ? _(msg` (active)`) : ''
-  return (
-    <View
-      key={interest}
-      onLayout={e =>
-        onLayout(index, e.nativeEvent.layout.x, e.nativeEvent.layout.width)
-      }>
-      <Button
-        label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
-        onPress={() => onSelectTab(index)}>
-        {({hovered, pressed, focused}) => (
-          <View
-            style={[
-              a.rounded_full,
-              a.px_lg,
-              a.py_sm,
-              a.border,
-              active || hovered || pressed || focused
-                ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_medium]
-                : [t.atoms.bg, t.atoms.border_contrast_low],
-            ]}>
-            <Text
-              style={[
-                a.font_medium,
-                active || hovered || pressed || focused
-                  ? t.atoms.text
-                  : t.atoms.text_contrast_medium,
-              ]}>
-              {interestsDisplayName}
-            </Text>
-          </View>
-        )}
-      </Button>
-    </View>
-  )
-}
-Tab = memo(Tab)
 
 /**
  * Profile card for suggested accounts. Note: border is on the bottom edge
@@ -177,20 +109,19 @@ let SuggestedProfileCard = ({
   position: number
 }): React.ReactNode => {
   const t = useTheme()
+  const ax = useAnalytics()
   return (
     <ProfileCard.Link
       profile={profile}
       style={[a.flex_1]}
       onPress={() => {
-        logger.metric(
-          'suggestedUser:press',
-          {
-            logContext: 'Explore',
-            recId,
-            position,
-          },
-          {statsig: true},
-        )
+        ax.metric('suggestedUser:press', {
+          logContext: 'Explore',
+          recId,
+          position,
+          suggestedDid: profile.did,
+          category: null,
+        })
       }}>
       {s => (
         <>
@@ -220,16 +151,14 @@ let SuggestedProfileCard = ({
                   withIcon={false}
                   logContext="ExploreSuggestedAccounts"
                   onFollow={() => {
-                    logger.metric(
-                      'suggestedUser:follow',
-                      {
-                        logContext: 'Explore',
-                        location: 'Card',
-                        recId,
-                        position,
-                      },
-                      {statsig: true},
-                    )
+                    ax.metric('suggestedUser:follow', {
+                      logContext: 'Explore',
+                      location: 'Card',
+                      recId,
+                      position,
+                      suggestedDid: profile.did,
+                      category: null,
+                    })
                   }}
                 />
               </ProfileCard.Header>

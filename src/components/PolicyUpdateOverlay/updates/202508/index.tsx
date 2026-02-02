@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -12,6 +11,7 @@ import {Badge} from '#/components/PolicyUpdateOverlay/Badge'
 import {Overlay} from '#/components/PolicyUpdateOverlay/Overlay'
 import {type PolicyUpdateState} from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID} from '#/env'
 
 export function Content({state}: {state: PolicyUpdateState}) {
   const t = useTheme()
@@ -56,7 +56,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
     size: 'small',
   } as const
 
-  const label = isAndroid
+  const label = IS_ANDROID
     ? _(
         msg`We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post.`,
       )
@@ -69,7 +69,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
 
         {screenReaderEnabled ? (
           <View style={[a.gap_sm]}>
-            <Text emoji style={[a.text_2xl, a.font_bold, a.leading_snug]}>
+            <Text emoji style={[a.text_2xl, a.font_semi_bold, a.leading_snug]}>
               <Trans>Hey there 👋</Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
@@ -115,7 +115,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
           </View>
         ) : (
           <View style={[a.gap_sm]}>
-            <Text emoji style={[a.text_2xl, a.font_bold, a.leading_snug]}>
+            <Text emoji style={[a.text_2xl, a.font_semi_bold, a.leading_snug]}>
               <Trans>Hey there 👋</Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>

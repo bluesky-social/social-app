@@ -6,13 +6,18 @@ import {useLingui} from '@lingui/react'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useLiveNowConfig} from '#/state/service-config'
 import {useTickEveryMinute} from '#/state/shell'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
+import {
+  displayDuration,
+  getLiveServiceNames,
+  useDebouncedValue,
+} from '#/components/live/utils'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
@@ -20,7 +25,6 @@ import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import {LinkPreview} from './LinkPreview'
 import {useLiveLinkMetaQuery, useUpsertLiveStatusMutation} from './queries'
-import {displayDuration, useDebouncedValue} from './utils'
 
 export function GoLiveDialog({
   control,
@@ -49,17 +53,18 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
+  const liveNowConfig = useLiveNowConfig()
+  const {formatted: allowedServices} = getLiveServiceNames(
+    liveNowConfig.currentAccountAllowedHosts,
+  )
 
   const time = useCallback(
     (offset: number) => {
-      tick!
+      void tick
 
       const date = new Date()
       date.setMinutes(date.getMinutes() + offset)
-      return i18n
-        .date(date, {hour: 'numeric', minute: '2-digit', hour12: true})
-        .toLocaleUpperCase()
-        .replace(' ', '')
+      return i18n.date(date, {hour: 'numeric', minute: '2-digit', hour12: true})
     },
     [tick, i18n],
   )
@@ -94,7 +99,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
       style={web({maxWidth: 420})}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_bold, a.text_2xl]}>
+          <Text style={[a.font_semi_bold, a.text_2xl]}>
             <Trans>Go Live</Trans>
           </Text>
           <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
@@ -142,27 +147,21 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               />
             </TextField.Root>
           </View>
-          {(liveLinkError || linkMetaError) && (
-            <View style={[a.flex_row, a.gap_xs, a.align_center]}>
-              <WarningIcon
-                style={[{color: t.palette.negative_500}]}
-                size="sm"
-              />
-              <Text
-                style={[
-                  a.text_sm,
-                  a.leading_snug,
-                  a.flex_1,
-                  a.font_bold,
-                  {color: t.palette.negative_500},
-                ]}>
-                {liveLinkError ? (
-                  <Trans>This is not a valid link</Trans>
-                ) : (
-                  cleanError(linkMetaError)
-                )}
-              </Text>
-            </View>
+          {liveLinkError || linkMetaError ? (
+            <Admonition type="error">
+              {liveLinkError ? (
+                <Trans>This is not a valid link</Trans>
+              ) : (
+                cleanError(linkMetaError)
+              )}
+            </Admonition>
+          ) : (
+            <Admonition type="tip">
+              <Trans>
+                The following services are enabled for your account:{' '}
+                {allowedServices}
+              </Trans>
+            </Admonition>
           )}
 
           <LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />

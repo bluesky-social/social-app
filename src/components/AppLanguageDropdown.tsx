@@ -48,6 +48,7 @@ export function AppLanguageDropdown() {
             })}
             variant="ghost"
             color="secondary"
+            shape="rectangular"
             style={[
               a.pr_xs,
               a.pl_sm,
@@ -65,6 +66,7 @@ export function AppLanguageDropdown() {
         )}
       </Select.Trigger>
       <Select.Content
+        label={_(msg`Select language`)}
         renderItem={({label, value}) => (
           <Select.Item value={value} label={label}>
             <Select.ItemIndicator />

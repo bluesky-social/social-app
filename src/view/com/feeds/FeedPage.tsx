@@ -1,4 +1,11 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {
+  type JSX,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -6,24 +13,27 @@ import {useLingui} from '@lingui/react'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {VIDEO_FEED_URIS} from '#/lib/constants'
+import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type AllNavigatorParams} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
-import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
-import {type SavedFeedSourceInfo} from '#/state/queries/feed'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
+import {type FeedSourceInfo} from '#/state/queries/feed'
+import {
+  type FeedDescriptor,
+  type FeedParams,
+  RQKEY as FEED_RQKEY,
+} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import {PostFeed} from '../posts/PostFeed'
 import {FAB} from '../util/fab/FAB'
 import {type ListMethods} from '../util/List'
@@ -51,8 +61,9 @@ export function FeedPage({
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
-  feedInfo: SavedFeedSourceInfo
+  feedInfo: FeedSourceInfo
 }) {
+  const ax = useAnalytics()
   const {hasSession} = useSession()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
@@ -61,7 +72,7 @@ export function FeedPage({
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
   const headerOffset = useHeaderOffset()
-  const feedFeedback = useFeedFeedback(feed, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
   const [hasNew, setHasNew] = useState(false)
   const setHomeBadge = useSetHomeBadge()
@@ -70,7 +81,7 @@ export function FeedPage({
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
-    return isNative && _isVideoFeed
+    return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
 
   useEffect(() => {
@@ -81,7 +92,7 @@ export function FeedPage({
 
   const scrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: -headerOffset,
     })
     setMinimalShellMode(false)
@@ -95,13 +106,13 @@ export function FeedPage({
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
-      logEvent('feed:refresh', {
+      ax.metric('feed:refresh', {
         feedType: feed.split('|')[0],
         feedUrl: feed,
         reason: 'soft-reset',
       })
     }
-  }, [navigation, isPageFocused, scrollToTop, queryClient, feed])
+  }, [ax, navigation, isPageFocused, scrollToTop, queryClient, feed])
 
   // fires when page within screen is activated/deactivated
   useEffect(() => {
@@ -112,23 +123,27 @@ export function FeedPage({
   }, [onSoftReset, isPageFocused])
 
   const onPressCompose = useCallback(() => {
-    openComposer({})
+    openComposer({logContext: 'Fab'})
   }, [openComposer])
 
   const onPressLoadLatest = useCallback(() => {
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
-    logEvent('feed:refresh', {
+    ax.metric('feed:refresh', {
       feedType: feed.split('|')[0],
       feedUrl: feed,
       reason: 'load-latest',
     })
-  }, [scrollToTop, feed, queryClient])
+  }, [ax, scrollToTop, feed, queryClient])
 
-  const shouldPrefetch = isNative && isPageAdjacent
+  const shouldPrefetch = IS_NATIVE && isPageAdjacent
+  const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI
   return (
-    <View testID={testID}>
+    <View
+      testID={testID}
+      // @ts-expect-error web only -sfn
+      dataSet={{nosnippet: isDiscoverFeed ? '' : undefined}}>
       <MainScrollProvider>
         <FeedFeedbackProvider value={feedFeedback}>
           <PostFeed

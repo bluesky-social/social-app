@@ -1,14 +1,14 @@
-import React from 'react'
 import {
-  AccessibilityProps,
-  AccessibilityRole,
-  GestureResponderEvent,
-  PressableProps,
+  type AccessibilityProps,
+  type AccessibilityRole,
+  type GestureResponderEvent,
+  type PressableProps,
 } from 'react-native'
+import type React from 'react'
 
-import {TextStyleProp, ViewStyleProp} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type TextStyleProp, type ViewStyleProp} from '#/alf'
+import type * as Dialog from '#/components/Dialog'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']
@@ -43,7 +43,7 @@ export type TriggerProps = {
 }
 export type TriggerChildProps =
   | {
-      isNative: true
+      IS_NATIVE: true
       control: Dialog.DialogOuterProps['control']
       state: {
         /**
@@ -73,7 +73,7 @@ export type TriggerChildProps =
       }
     }
   | {
-      isNative: false
+      IS_NATIVE: false
       control: Dialog.DialogOuterProps['control']
       state: {
         hovered: boolean
@@ -107,6 +107,7 @@ export type ItemTextProps = React.PropsWithChildren<TextStyleProp & {}>
 export type ItemIconProps = React.PropsWithChildren<{
   icon: React.ComponentType<SVGIconProps>
   position?: 'left' | 'right'
+  fill?: (props: {disabled: boolean}) => string
 }>
 
 export type GroupProps = React.PropsWithChildren<ViewStyleProp & {}>

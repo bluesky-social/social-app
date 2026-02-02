@@ -3,7 +3,7 @@ import {BSKY_LABELER_DID, BskyAgent} from '@atproto/api'
 import {IS_TEST_USER} from '#/lib/constants'
 import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
 import {readLabelers} from './agent-config'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 
 export function configureModerationForGuest() {
   // This global mutation is *only* OK because this code is only relevant for testing.

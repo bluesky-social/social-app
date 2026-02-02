@@ -4,7 +4,11 @@ import {type ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ADULT_CONTENT_LABELS, isJustAMute} from '#/lib/moderation'
+import {
+  ADULT_CONTENT_LABELS,
+  type AdultSelfLabel,
+  isJustAMute,
+} from '#/lib/moderation'
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {getDefinition, getLabelStrings} from '#/lib/moderation/useLabelInfo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
@@ -85,7 +89,11 @@ function ContentHiderActive({
       blur.type !== 'label' ||
       (blur.type === 'label' && blur.source.type !== 'user')
     ) {
-      return desc.name
+      if (desc.isSubjectAccount) {
+        return _(msg`${desc.name} (Account)`)
+      } else {
+        return desc.name
+      }
     }
 
     let hasAdultContentLabel = false
@@ -97,7 +105,7 @@ function ContentHiderActive({
         if (cause.source.type !== 'user') {
           return false
         }
-        if (ADULT_CONTENT_LABELS.includes(cause.label.val)) {
+        if (ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel)) {
           if (hasAdultContentLabel) {
             return false
           }
@@ -127,6 +135,7 @@ function ContentHiderActive({
     modui?.blurs,
     blur,
     desc.name,
+    desc.isSubjectAccount,
     labelDefs,
     i18n.locale,
     globalLabelStrings,
@@ -178,9 +187,9 @@ function ContentHiderActive({
               style={[
                 a.flex_1,
                 a.text_left,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_snug,
-                gtMobile && [a.font_bold],
+                gtMobile && [a.font_semi_bold],
                 t.atoms.text_contrast_medium,
                 web({
                   marginBottom: 1,
@@ -192,9 +201,9 @@ function ContentHiderActive({
             {!modui.noOverride && (
               <Text
                 style={[
-                  a.font_bold,
+                  a.font_semi_bold,
                   a.leading_snug,
-                  gtMobile && [a.font_bold],
+                  gtMobile && [a.font_semi_bold],
                   t.atoms.text_contrast_high,
                   web({
                     marginBottom: 1,
@@ -215,7 +224,7 @@ function ContentHiderActive({
             control.open()
           }}
           label={_(
-            msg`Learn more about the moderation applied to this content.`,
+            msg`Learn more about the moderation applied to this content`,
           )}
           style={[a.pt_sm]}>
           {state => (

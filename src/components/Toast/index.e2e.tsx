@@ -1,3 +1,11 @@
+export const DURATION = 0
+
+export const Action = () => null
+export const Icon = () => null
+export const Outer = () => null
+export const Text = () => null
+export const ToastConfigProvider = () => null
+
 export function ToastOutlet() {
   return null
 }

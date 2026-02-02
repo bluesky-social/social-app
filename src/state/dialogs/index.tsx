@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {type DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
+import {IS_WEB} from '#/env'
 import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet'
 
 interface IDialogContext {
@@ -62,7 +62,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const openDialogs = React.useRef<Set<string>>(new Set())
 
   const closeAllDialogs = React.useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       openDialogs.current.forEach(id => {
         const dialog = activeDialogs.current.get(id)
         if (dialog) dialog.current.close()

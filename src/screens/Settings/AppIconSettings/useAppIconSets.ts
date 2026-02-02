@@ -14,12 +14,12 @@ export function useAppIconSets() {
         name: _(msg({context: 'Name of app icon variant', message: 'Light'})),
         iosImage: () => {
           return require(
-            `../../../../assets/app-icons/ios_icon_default_light.png`,
+            `../../../../assets/app-icons/ios_icon_legacy_light.png`,
           )
         },
         androidImage: () => {
           return require(
-            `../../../../assets/app-icons/android_icon_default_light.png`,
+            `../../../../assets/app-icons/android_icon_legacy_light.png`,
           )
         },
       },
@@ -28,12 +28,12 @@ export function useAppIconSets() {
         name: _(msg({context: 'Name of app icon variant', message: 'Dark'})),
         iosImage: () => {
           return require(
-            `../../../../assets/app-icons/ios_icon_default_dark.png`,
+            `../../../../assets/app-icons/ios_icon_legacy_dark.png`,
           )
         },
         androidImage: () => {
           return require(
-            `../../../../assets/app-icons/android_icon_default_dark.png`,
+            `../../../../assets/app-icons/android_icon_legacy_dark.png`,
           )
         },
       },

@@ -110,7 +110,7 @@ function AutocompleteProfileCard({
               platform({ios: a.flex_1}),
             ]}>
             <Text
-              style={[a.text_md, a.font_bold, a.leading_snug]}
+              style={[a.text_md, a.font_semi_bold, a.leading_snug]}
               emoji
               numberOfLines={1}>
               {displayName}

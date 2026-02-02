@@ -99,7 +99,6 @@ export function getTraversalMetadata({
     repliesCount,
     repliesUnhydrated,
     repliesSeenCounter: 0,
-    repliesIndexCounter: 0,
     replyIndex: 0,
     skippedIndentIndices: new Set<number>(),
   }

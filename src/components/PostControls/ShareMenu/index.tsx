@@ -1,4 +1,5 @@
 import {memo, useMemo, useState} from 'react'
+import {type Insets} from 'react-native'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
@@ -8,20 +9,18 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
-import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {native} from '#/alf'
-import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
+import {useAnalytics} from '#/analytics'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
 import {ShareMenuItems} from './ShareMenuItems'
 
@@ -34,6 +33,8 @@ let ShareMenuButton = ({
   timestamp,
   threadgateRecord,
   onShare,
+  hitSlop,
+  logContext,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -43,13 +44,12 @@ let ShareMenuButton = ({
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShare: () => void
+  hitSlop?: Insets
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const {_} = useLingui()
-  const gate = useGate()
-
-  const ShareIcon = gate('alt_share_icon')
-    ? ArrowShareRightIcon
-    : ArrowOutOfBoxIcon
+  const {feedDescriptor} = useFeedFeedbackContext()
 
   const menuControl = useMenuControl()
   const [hasBeenOpen, setHasBeenOpen] = useState(false)
@@ -62,18 +62,29 @@ let ShareMenuButton = ({
         // menuControl.open() fires but RN doesn't expose flushSync.
         setTimeout(menuControl.open)
 
-        logger.metric(
-          'share:open',
-          {context: big ? 'thread' : 'feed'},
-          {statsig: true},
-        )
+        ax.metric('post:share', {
+          uri: post.uri,
+          authorDid: post.author.did,
+          logContext,
+          feedDescriptor,
+          postContext: big ? 'thread' : 'feed',
+        })
       },
     }),
-    [menuControl, setHasBeenOpen, big],
+    [
+      ax,
+      menuControl,
+      setHasBeenOpen,
+      big,
+      logContext,
+      feedDescriptor,
+      post.uri,
+      post.author.did,
+    ],
   )
 
   const onNativeLongPress = () => {
-    logger.metric('share:press:nativeShare', {}, {statsig: true})
+    ax.metric('share:press:nativeShare', {})
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
@@ -92,8 +103,9 @@ let ShareMenuButton = ({
                 big={big}
                 label={props.accessibilityLabel}
                 {...props}
-                onLongPress={native(onNativeLongPress)}>
-                <PostControlButtonIcon icon={ShareIcon} />
+                onLongPress={native(onNativeLongPress)}
+                hitSlop={hitSlop}>
+                <PostControlButtonIcon icon={ArrowShareRightIcon} />
               </PostControlButton>
             )
           }}

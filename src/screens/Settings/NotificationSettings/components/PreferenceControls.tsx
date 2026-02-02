@@ -1,16 +1,15 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {type FilterablePreference} from '@atproto/api/dist/client/types/app/bsky/notification/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logger} from '#/logger'
 import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
 import {atoms as a, platform, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {Divider} from '../../components/SettingsList'
 
 export function PreferenceControls({
@@ -25,7 +24,9 @@ export function PreferenceControls({
    * which groups starterpack joins + verified + unverified notifications into a single toggle.
    */
   syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference?: AppBskyNotificationDefs.Preference | FilterablePreference
+  preference?:
+    | AppBskyNotificationDefs.Preference
+    | AppBskyNotificationDefs.FilterablePreference
   allowDisableInApp?: boolean
 }) {
   if (!preference)
@@ -53,11 +54,14 @@ export function Inner({
 }: {
   name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
   syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference: AppBskyNotificationDefs.Preference | FilterablePreference
+  preference:
+    | AppBskyNotificationDefs.Preference
+    | AppBskyNotificationDefs.FilterablePreference
   allowDisableInApp: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {mutate} = useNotificationSettingsUpdateMutation()
 
   const channels = useMemo(() => {
@@ -74,7 +78,7 @@ export function Inner({
       push: change.includes('push'),
     } satisfies typeof preference
 
-    logger.metric('activityPreference:changeChannels', {
+    ax.metric('activityPreference:changeChannels', {
       name,
       push: newPreference.push,
       list: newPreference.list,
@@ -95,7 +99,7 @@ export function Inner({
       include: change,
     } satisfies typeof preference
 
-    logger.metric('activityPreference:changeFilter', {name, value: change})
+    ax.metric('activityPreference:changeFilter', {name, value: change})
 
     mutate({
       [name]: newPreference,
@@ -150,7 +154,7 @@ export function Inner({
       {'include' in preference && (
         <>
           <Divider />
-          <Text style={[a.font_bold, a.text_md]}>
+          <Text style={[a.font_semi_bold, a.text_md]}>
             <Trans>From</Trans>
           </Text>
           <Toggle.Group

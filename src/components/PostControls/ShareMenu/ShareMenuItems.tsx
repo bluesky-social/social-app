@@ -9,9 +9,6 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
-import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -24,6 +21,9 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
+import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS} from '#/env'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {RecentChats} from './RecentChats'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
@@ -32,12 +32,13 @@ let ShareMenuItems = ({
   post,
   onShare: onShareProp,
 }: ShareMenuItemsProps): React.ReactNode => {
+  const ax = useAnalytics()
   const {hasSession} = useSession()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
-  const {isAgeRestricted} = useAgeAssurance()
+  const aa = useAgeAssurance()
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
@@ -54,16 +55,16 @@ let ShareMenuItems = ({
   }, [postAuthor])
 
   const onSharePost = () => {
-    logger.metric('share:press:nativeShare', {}, {statsig: true})
+    ax.metric('share:press:nativeShare', {})
     const url = toShareUrl(href)
     shareUrl(url)
     onShareProp()
   }
 
   const onCopyLink = async () => {
-    logger.metric('share:press:copyLink', {}, {statsig: true})
+    ax.metric('share:press:copyLink', {})
     const url = toShareUrl(href)
-    if (isIOS) {
+    if (IS_IOS) {
       // iOS only
       await ExpoClipboard.setUrlAsync(url)
     } else {
@@ -91,7 +92,7 @@ let ShareMenuItems = ({
   return (
     <>
       <Menu.Outer>
-        {hasSession && !isAgeRestricted && (
+        {hasSession && aa.state.access === aa.Access.Full && (
           <Menu.Group>
             <Menu.ContainerItem>
               <RecentChats postUri={postUri} />
@@ -100,7 +101,7 @@ let ShareMenuItems = ({
               testID="postDropdownSendViaDMBtn"
               label={_(msg`Send via direct message`)}
               onPress={() => {
-                logger.metric('share:press:openDmSearch', {}, {statsig: true})
+                ax.metric('share:press:openDmSearch', {})
                 sendViaChatControl.open()
               }}>
               <Menu.ItemText>
@@ -136,7 +137,9 @@ let ShareMenuItems = ({
         {hideInPWI && (
           <Menu.Group>
             <Menu.ContainerItem>
-              <Admonition type="warning" style={[a.flex_1, a.border_0, a.p_0]}>
+              <Admonition
+                type="warning"
+                style={[a.flex_1, a.border_0, a.p_0, a.bg_transparent]}>
                 <Trans>This post is only visible to logged-in users.</Trans>
               </Admonition>
             </Menu.ContainerItem>

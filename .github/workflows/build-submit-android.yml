@@ -15,7 +15,10 @@ jobs:
   build:
     if: github.repository == 'bluesky-social/social-app'
     name: Build and Submit Android
-    runs-on: ubuntu-latest
+    runs-on: Linux-x64-32core
+    concurrency:
+      group: android-build
+      cancel-in-progress: false
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -30,7 +33,7 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -39,7 +42,7 @@ jobs:
         uses: dcarbone/install-jq-action@v2
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         with:
           expo-version: latest
           eas-version: latest
@@ -50,11 +53,11 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: ⚙️ Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: 🔤 Compile translations
         run: yarn intl:build 2>&1 | tee i18n.log
@@ -79,13 +82,15 @@ jobs:
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
+        env:
+          PROFILE: ${{ inputs.profile || 'testflight-android' }}
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           yarn use-build-number-with-bump
           eas build -p android
-          --profile ${{ inputs.profile || 'testflight-android' }}
+          --profile $PROFILE
           --local --output build.aab --non-interactive
 
       - name: ✍️ Rename Testflight bundle
@@ -96,7 +101,7 @@ jobs:
         id: timestamp
         uses: nanzm/get-time-action@master
         with:
-          format: 'MM-DD-HH-mm-ss'
+          format: "MM-DD-HH-mm-ss"
 
       - name: 🚀 Upload Production Artifact
         id: upload-artifact-production
@@ -146,6 +151,11 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
+      - name: 🧹 Clear Metro cache
+        if: ${{ inputs.profile == 'production' }}
+        # https://github.com/expo/eas-cli/issues/2959#issuecomment-2749791326
+        run: rm -rf ${TMPDIR:-/tmp}/metro-cache
+
       - name: 🏗️ Build Production APK
         if: ${{ inputs.profile == 'production' }}
         run: >
@@ -182,11 +192,13 @@ jobs:
       - name: ⬇️ Restore Cache
         id: get-base-commit
         uses: actions/cache@v4
-        if: ${{ inputs.profile == 'testflight' }}
+        if: ${{ inputs.profile == 'testflight-android' }}
         with:
           path: most-recent-testflight-commit.txt
           key: most-recent-testflight-commit
 
       - name: ✏️ Write commit hash to cache
-        if: ${{ inputs.profile == 'testflight' }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        if: ${{ inputs.profile == 'testflight-android' }}
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt

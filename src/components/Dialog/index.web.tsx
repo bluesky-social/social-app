@@ -2,8 +2,9 @@ import React, {useImperativeHandle} from 'react'
 import {
   FlatList,
   type FlatListProps,
+  type GestureResponderEvent,
+  Pressable,
   type StyleProp,
-  TouchableWithoutFeedback,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -31,6 +32,9 @@ export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
+
+// 100 minus 10vh of paddingVertical
+export const WEB_DIALOG_HEIGHT = '80vh'
 
 const stopPropagation = (e: any) => e.stopPropagation()
 const preventDefault = (e: any) => e.preventDefault()
@@ -75,9 +79,12 @@ export function Outer({
     [control.id, onClose, setDialogIsOpen],
   )
 
-  const handleBackgroundPress = React.useCallback(async () => {
-    close()
-  }, [close])
+  const handleBackgroundPress = React.useCallback(
+    async (e: GestureResponderEvent) => {
+      webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
+    },
+    [webOptions, close],
+  )
 
   useImperativeHandle(
     control.ref,
@@ -91,7 +98,7 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
-      isNativeDialog: false,
+      IS_NATIVEDialog: false,
       nativeSnapPoint: 0,
       disableDrag: false,
       setDisableDrag: () => {},
@@ -106,7 +113,7 @@ export function Outer({
         <Portal>
           <Context.Provider value={context}>
             <RemoveScrollBar />
-            <TouchableWithoutFeedback
+            <Pressable
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
               onPress={handleBackgroundPress}>
@@ -139,7 +146,7 @@ export function Outer({
                   {children}
                 </View>
               </View>
-            </TouchableWithoutFeedback>
+            </Pressable>
           </Context.Provider>
         </Portal>
       )}
@@ -173,6 +180,7 @@ export function Inner({
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
+        // note: flatten is required for some reason -sfn
         style={flatten([
           a.relative,
           a.rounded_md,
@@ -193,7 +201,7 @@ export function Inner({
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
           onDismiss={close}
-          style={{display: 'flex', flexDirection: 'column'}}>
+          style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
           {header}
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
             {children}
@@ -211,9 +219,17 @@ export const InnerFlatList = React.forwardRef<
   FlatListProps<any> & {label: string} & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
+    footer?: React.ReactNode
   }
 >(function InnerFlatList(
-  {label, style, webInnerStyle, webInnerContentContainerStyle, ...props},
+  {
+    label,
+    style,
+    webInnerStyle,
+    webInnerContentContainerStyle,
+    footer,
+    ...props
+  },
   ref,
 ) {
   const {gtMobile} = useBreakpoints()
@@ -223,19 +239,40 @@ export const InnerFlatList = React.forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        // 100 minus 10vh of paddingVertical
-        web({maxHeight: '80vh'}),
+        web({maxHeight: WEB_DIALOG_HEIGHT}),
         webInnerStyle,
       ]}
-      contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
+      contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
-        style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
+        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, style]}
         {...props}
       />
+      {footer}
     </Inner>
   )
 })
+
+export function FlatListFooter({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.absolute,
+        a.bottom_0,
+        a.w_full,
+        a.z_10,
+        t.atoms.bg,
+        a.border_t,
+        t.atoms.border_contrast_low,
+        a.px_lg,
+        a.py_md,
+      ]}>
+      {children}
+    </View>
+  )
+}
 
 export function Close() {
   const {_} = useLingui()
@@ -267,7 +304,7 @@ export function Handle() {
   return null
 }
 
-function Backdrop() {
+export function Backdrop() {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
   return (

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
+import {StyleSheet, TouchableOpacity, type ViewStyle} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'

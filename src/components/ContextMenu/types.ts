@@ -5,7 +5,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type SharedValue} from 'react-native-reanimated'
-import type React from 'react'
 
 import type * as Dialog from '#/components/Dialog'
 import {
@@ -86,7 +85,7 @@ export type TriggerProps = {
 }
 export type TriggerChildProps =
   | {
-      isNative: true
+      IS_NATIVE: true
       control: {
         isOpen: boolean
         open: (mode: 'full' | 'auxiliary-only') => void
@@ -116,7 +115,7 @@ export type TriggerChildProps =
       }
     }
   | {
-      isNative: false
+      IS_NATIVE: false
       control: Dialog.DialogOuterProps['control']
       state: {
         hovered: false

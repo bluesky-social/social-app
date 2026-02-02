@@ -39,10 +39,12 @@ jobs:
 
       # Validate the version if one is supplied. This should generally happen if the update is for a production client
       - name: 🧐 Validate version
+        env:
+          RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
         if: ${{ inputs.runtimeVersion }}
         run: |
-          if [ -z "${{ inputs.runtimeVersion }}" ]; then
-            [[ "${{ inputs.runtimeVersion }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
+          if [ -z "$RUNTIME_VERSION" ]; then
+            [[ "$RUNTIME_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
           fi
 
       - name: ⬇️ Checkout
@@ -55,7 +57,7 @@ jobs:
         run: git fetch origin main:main --depth 100
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -86,7 +88,7 @@ jobs:
         run: yarn typecheck
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           expo-version: latest
@@ -103,12 +105,15 @@ jobs:
 
       # eas.json not used here, set EXPO_PUBLIC_ENV
       - name: Env
+        env:
+          CHANNEL: ${{ inputs.channel || 'testflight' }}
+          GITHUB_SHA: ${{ github.sha }}
         id: env
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
-          echo "EXPO_PUBLIC_ENV=${{ inputs.channel || 'testflight' }}" >> .env
+          echo "EXPO_PUBLIC_ENV=$CHANNEL" >> .env
           echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> .env
           echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> .env
@@ -145,15 +150,15 @@ jobs:
 
       - name: ✏️ Write commit hash to cache
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
 
   # GitHub actions are horrible so let's just copy paste this in
   buildIfNecessaryIOS:
     name: Build and Submit iOS
-    runs-on: macos-15
+    runs-on: macos-26
     concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-ios
-      cancel-in-progress: true
+      group: ios-build
+      cancel-in-progress: false
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
@@ -172,13 +177,13 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         with:
           expo-version: latest
           eas-version: latest
@@ -188,19 +193,19 @@ jobs:
         run: yarn global add eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.2'
+          xcode-version: "26.0"
 
       - name: ☕️ Setup Cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
         with:
-          version: 1.14.3
+          version: 1.16.2
 
       - name: 💾 Cache Pods
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -249,13 +254,15 @@ jobs:
 
       - name: ✏️ Write commit hash to cache
         if: ${{ inputs.channel == 'testflight' }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
 
   buildIfNecessaryAndroid:
     name: Build and Submit Android
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-android
+      group: android-build
       cancel-in-progress: false
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
@@ -276,13 +283,13 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         with:
           expo-version: latest
           eas-version: latest
@@ -293,11 +300,11 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: ⚙️ Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: 🔤 Compile translations
         run: yarn intl:build
@@ -332,7 +339,7 @@ jobs:
         id: timestamp
         uses: nanzm/get-time-action@master
         with:
-          format: 'MM-DD-HH-mm-ss'
+          format: "MM-DD-HH-mm-ss"
 
       - name: 🚀 Upload Artifact
         id: upload-artifact
@@ -363,5 +370,7 @@ jobs:
           key: most-recent-testflight-commit
 
       - name: ✏️ Write commit hash to cache
+        env:
+          GITHUB_SHA: ${{ github.sha }}
         if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt

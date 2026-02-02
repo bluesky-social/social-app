@@ -1,10 +1,6 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect, useRef} from 'react'
 import {Keyboard} from 'react-native'
-import {
-  type ImagePickerAsset,
-  launchImageLibraryAsync,
-  UIImagePickerPreferredAssetRepresentationMode,
-} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,14 +9,15 @@ import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
+import {openUnifiedPicker} from '#/lib/media/picker'
 import {extractDataUriMime} from '#/lib/media/util'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as toast from '#/components/Toast'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export type SelectMediaButtonProps = {
   disabled?: boolean
@@ -34,6 +31,10 @@ export type SelectMediaButtonProps = {
     assets: ImagePickerAsset[]
     errors: string[]
   }) => void
+  /**
+   * If true, automatically open the media picker when the component mounts.
+   */
+  autoOpen?: boolean
 }
 
 /**
@@ -90,7 +91,7 @@ const SUPPORTED_IMAGE_MIME_TYPES = (
     'image/svg+xml',
     'image/webp',
     'image/avif',
-    isNative && 'image/heic',
+    IS_NATIVE && 'image/heic',
   ] as const
 ).filter(Boolean)
 type SupportedImageMimeType = Exclude<
@@ -260,7 +261,7 @@ async function processImagePickerAssets(
        * We don't care too much about mimeType at this point on native,
        * since the `processVideo` step later on will convert to `.mp4`.
        */
-      if (isWeb && !isSupportedVideoMimeType(mimeType)) {
+      if (IS_WEB && !isSupportedVideoMimeType(mimeType)) {
         errors.add(SelectedAssetError.Unsupported)
         continue
       }
@@ -270,7 +271,7 @@ async function processImagePickerAssets(
        * to filter out large files on web. On native, we compress these anyway,
        * so we only check on web.
        */
-      if (isWeb && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -289,7 +290,7 @@ async function processImagePickerAssets(
        * to filter out large files on web. On native, we compress GIFs as
        * videos anyway, so we only check on web.
        */
-      if (isWeb && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -307,7 +308,7 @@ async function processImagePickerAssets(
        * base64 data-uri, so we construct it here for web only.
        */
       uri:
-        isWeb && asset.base64
+        IS_WEB && asset.base64
           ? `data:${mimeType};base64,${asset.base64}`
           : asset.uri,
     })
@@ -326,7 +327,7 @@ async function processImagePickerAssets(
       }
 
       if (supportedAssets[0].duration) {
-        if (isWeb) {
+        if (IS_WEB) {
           /*
            * Web reports duration as seconds
            */
@@ -361,12 +362,14 @@ export function SelectMediaButton({
   allowedAssetTypes,
   selectedAssetsCount,
   onSelectAssets,
+  autoOpen,
 }: SelectMediaButtonProps) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
   const t = useTheme()
+  const hasAutoOpened = useRef(false)
 
   const selectionCountRemaining = MAX_IMAGES - selectedAssetsCount
 
@@ -410,7 +413,7 @@ export function SelectMediaButton({
             msg`You can only select one GIF at a time.`,
           ),
           [SelectedAssetError.FileTooBig]: _(
-            msg`One or more of your selected files is too large. Maximum size is 100 MB.`,
+            msg`One or more of your selected files are too large. Maximum size is 100 MB.`,
           ),
         }[error]
       })
@@ -429,7 +432,7 @@ export function SelectMediaButton({
   )
 
   const onPressSelectMedia = useCallback(async () => {
-    if (isNative) {
+    if (IS_NATIVE) {
       const [photoAccess, videoAccess] = await Promise.all([
         requestPhotoAccessIfNeeded(),
         requestVideoAccessIfNeeded(),
@@ -443,23 +446,12 @@ export function SelectMediaButton({
       }
     }
 
-    if (isNative && Keyboard.isVisible()) {
+    if (IS_NATIVE && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
 
     const {assets, canceled} = await sheetWrapper(
-      launchImageLibraryAsync({
-        exif: false,
-        mediaTypes: ['images', 'videos'],
-        quality: 1,
-        allowsMultipleSelection: true,
-        legacy: true,
-        base64: isWeb,
-        selectionLimit: isIOS ? selectionCountRemaining : undefined,
-        preferredAssetRepresentationMode:
-          UIImagePickerPreferredAssetRepresentationMode.Current,
-        videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
-      }),
+      openUnifiedPicker({selectionCountRemaining}),
     )
 
     if (canceled) return
@@ -474,6 +466,13 @@ export function SelectMediaButton({
     selectionCountRemaining,
   ])
 
+  useEffect(() => {
+    if (autoOpen && !hasAutoOpened.current && !disabled) {
+      hasAutoOpened.current = true
+      onPressSelectMedia()
+    }
+  }, [autoOpen, disabled, onPressSelectMedia])
+
   return (
     <Button
       testID="openMediaBtn"
@@ -481,34 +480,17 @@ export function SelectMediaButton({
       label={_(
         msg({
           message: `Add media to post`,
-          comment: `Accessibility label for button in composer to add photos or a video to a post`,
+          comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,
         }),
       )}
-      accessibilityHint={
-        isNative
-          ? _(
-              msg({
-                message: `Opens device gallery to select up to ${plural(
-                  MAX_IMAGES,
-                  {
-                    other: '# images',
-                  },
-                )}, or a single video.`,
-                comment: `Accessibility hint on native for button in composer to add images or a video to a post. Maximum number of images that can be selected is currently 4 but may change.`,
-              }),
-            )
-          : _(
-              msg({
-                message: `Opens device gallery to select up to ${plural(
-                  MAX_IMAGES,
-                  {
-                    other: '# images',
-                  },
-                )}, or a single video or GIF.`,
-                comment: `Accessibility hint on web for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
-              }),
-            )
-      }
+      accessibilityHint={_(
+        msg({
+          message: `Opens device gallery to select up to ${plural(MAX_IMAGES, {
+            other: '# images',
+          })}, or a single video or GIF.`,
+          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
+        }),
+      )}
       style={a.p_sm}
       variant="ghost"
       shape="round"

@@ -8,12 +8,11 @@ import Animated, {
   SlideInRight,
   SlideOutLeft,
 } from 'react-native-reanimated'
-import {ComAtprotoServerCreateAppPassword} from '@atproto/api'
+import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
-import {isWeb} from '#/platform/detection'
 import {useAppPasswordCreateMutation} from '#/state/queries/app-passwords'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -24,6 +23,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import {CopyButton} from './CopyButton'
 
 export function AddAppPasswordDialog({
@@ -107,7 +107,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
               style={[a.gap_lg]}
               exiting={native(SlideOutLeft)}
               key={0}>
-              <Text style={[a.text_2xl, a.font_bold]}>
+              <Text style={[a.text_2xl, a.font_semi_bold]}>
                 <Trans>Add App Password</Trans>
               </Text>
               <Text style={[a.text_md, a.leading_snug]}>
@@ -181,9 +181,9 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
           ) : (
             <Animated.View
               style={[a.gap_lg]}
-              entering={isWeb ? FadeIn.delay(200) : SlideInRight}
+              entering={IS_WEB ? FadeIn.delay(200) : SlideInRight}
               key={1}>
-              <Text style={[a.text_2xl, a.font_bold]}>
+              <Text style={[a.text_2xl, a.font_semi_bold]}>
                 <Trans>Here is your app password!</Trans>
               </Text>
               <Text style={[a.text_md, a.leading_snug]}>
@@ -195,7 +195,6 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                 value={data.password}
                 label={_(msg`Copy App Password`)}
                 size="large"
-                variant="solid"
                 color="secondary">
                 <ButtonText>{data.password}</ButtonText>
                 <ButtonIcon icon={CopyIcon} />

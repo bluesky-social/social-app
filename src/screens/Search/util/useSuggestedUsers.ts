@@ -1,8 +1,8 @@
 import {useMemo} from 'react'
 
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {useInterestsDisplayNames} from '#/lib/interests'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
-import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 
 /**
  * Conditional hook, used in case a user is a non-english speaker, in which
@@ -11,6 +11,7 @@ import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 export function useSuggestedUsers({
   category = null,
   search = false,
+  overrideInterests,
 }: {
   category?: string | null
   /**
@@ -18,13 +19,19 @@ export function useSuggestedUsers({
    * based on the user's "app language setting
    */
   search?: boolean
+  /**
+   * In onboarding, interests haven't been saved to prefs yet, so we need to
+   * pass them down through here
+   */
+  overrideInterests?: string[]
 }) {
   const interestsDisplayNames = useInterestsDisplayNames()
   const curated = useGetSuggestedUsersQuery({
     enabled: !search,
     category,
+    overrideInterests,
   })
-  const searched = useActorSearchPaginated({
+  const searched = useActorSearch({
     enabled: !!search,
     // use user's app language translation for this value
     query: category ? interestsDisplayNames[category] : '',
@@ -43,6 +50,7 @@ export function useSuggestedUsers({
         isLoading: searched.isLoading,
         error: searched.error,
         isRefetching: searched.isRefetching,
+        refetch: searched.refetch,
       }
     } else {
       return {
@@ -50,6 +58,7 @@ export function useSuggestedUsers({
         isLoading: curated.isLoading,
         error: curated.error,
         isRefetching: curated.isRefetching,
+        refetch: curated.refetch,
       }
     }
   }, [curated, searched, search])

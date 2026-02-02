@@ -4,7 +4,6 @@ import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
@@ -19,6 +18,7 @@ import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/ic
 import {Link} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 const TOPIC_COUNT = 5
 
@@ -29,6 +29,7 @@ export function ExploreTrendingTopics() {
 }
 
 function Inner() {
+  const ax = useAnalytics()
   const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
@@ -44,11 +45,7 @@ function Inner() {
           trend={trend}
           rank={index + 1}
           onPress={() => {
-            logger.metric(
-              'trendingTopic:click',
-              {context: 'explore'},
-              {statsig: true},
-            )
+            ax.metric('trendingTopic:click', {context: 'explore'})
           }}
         />
       ))}
@@ -97,14 +94,14 @@ export function TrendRow({
       PressableComponent={Pressable}>
       {({hovered, pressed}) => (
         <>
-          <SubtleHover hover={hovered || pressed} />
+          <SubtleHover hover={hovered || pressed} native />
           <View style={[gutters, a.w_full, a.py_lg, a.flex_row, a.gap_2xs]}>
             <View style={[a.flex_1, a.gap_xs]}>
               <View style={[a.flex_row]}>
                 <Text
                   style={[
                     a.text_md,
-                    a.font_bold,
+                    a.font_semi_bold,
                     a.leading_tight,
                     {width: 20},
                   ]}>
@@ -113,7 +110,7 @@ export function TrendRow({
                   </Trans>
                 </Text>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_tight]}
+                  style={[a.text_md, a.font_semi_bold, a.leading_tight]}
                   numberOfLines={1}>
                   {trend.displayName}
                 </Text>
@@ -194,7 +191,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
     case 'new': {
       Icon = TrendingIcon
       text = _(msg`New`)
-      color = t.palette.positive_700
+      color = t.palette.positive_600
       backgroundColor = t.palette.positive_50
       break
     }

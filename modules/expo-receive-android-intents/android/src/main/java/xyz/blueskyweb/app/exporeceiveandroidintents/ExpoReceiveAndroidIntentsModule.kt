@@ -23,6 +23,10 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     ModuleDefinition {
       Name("ExpoReceiveAndroidIntents")
 
+      OnCreate {
+        handleIntent(appContext.currentActivity?.intent)
+      }
+
       OnNewIntent {
         handleIntent(it)
       }
@@ -74,10 +78,12 @@ class ExpoReceiveAndroidIntentsModule : Module() {
         intent.getParcelableExtra(Intent.EXTRA_STREAM)
       }
 
+    val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+
     uri?.let {
       when (type) {
-        AttachmentType.IMAGE -> handleImageIntents(listOf(it))
-        AttachmentType.VIDEO -> handleVideoIntents(listOf(it))
+        AttachmentType.IMAGE -> handleImageIntents(listOf(it), text)
+        AttachmentType.VIDEO -> handleVideoIntents(listOf(it), text)
       }
     }
   }
@@ -99,15 +105,20 @@ class ExpoReceiveAndroidIntentsModule : Module() {
           ?.take(4)
       }
 
+    val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+
     uris?.let {
       when (type) {
-        AttachmentType.IMAGE -> handleImageIntents(it)
+        AttachmentType.IMAGE -> handleImageIntents(it, text)
         else -> return
       }
     }
   }
 
-  private fun handleImageIntents(uris: List<Uri>) {
+  private fun handleImageIntents(
+    uris: List<Uri>,
+    text: String?
+  ) {
     var allParams = ""
 
     uris.forEachIndexed { index, uri ->
@@ -120,15 +131,22 @@ class ExpoReceiveAndroidIntentsModule : Module() {
       }
     }
 
-    val encoded = URLEncoder.encode(allParams, "UTF-8")
+    val encodedUris = URLEncoder.encode(allParams, "UTF-8")
+    val encodedText = text?.let { URLEncoder.encode(it, "UTF-8") }
 
-    "bluesky://intent/compose?imageUris=$encoded".toUri().let {
+    var composeIntent = "bluesky://intent/compose?imageUris=$encodedUris"
+    encodedText?.let { composeIntent += "&text=$it" }
+
+    composeIntent.toUri().let {
       val newIntent = Intent(Intent.ACTION_VIEW, it)
       appContext.currentActivity?.startActivity(newIntent)
     }
   }
 
-  private fun handleVideoIntents(uris: List<Uri>) {
+  private fun handleVideoIntents(
+    uris: List<Uri>,
+    text: String?
+  ) {
     val uri = uris[0]
     // If there is no extension for the file, substringAfterLast returns the original string - not
     // null, so we check for that below
@@ -147,7 +165,12 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
     val info = getVideoInfo(uri) ?: return
 
-    "bluesky://intent/compose?videoUri=${URLEncoder.encode(file.path, "UTF-8")}|${info["width"]}|${info["height"]}".toUri().let {
+    val encodedText = text?.let { URLEncoder.encode(it, "UTF-8") }
+
+    var composeIntent = "bluesky://intent/compose?videoUri=${URLEncoder.encode(file.path, "UTF-8")}|${info["width"]}|${info["height"]}"
+    encodedText?.let { composeIntent += "&text=$it" }
+
+    composeIntent.toUri().let {
       val newIntent = Intent(Intent.ACTION_VIEW, it)
       appContext.currentActivity?.startActivity(newIntent)
     }

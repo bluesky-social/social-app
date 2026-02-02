@@ -4,7 +4,6 @@ import {useLingui} from '@lingui/react'
 import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {useTheme} from '#/alf'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
@@ -14,6 +13,7 @@ import {
   PostControlButtonIcon,
   PostControlButtonText,
 } from './PostControlButton'
+import {useFormatPostStatCount} from './util'
 
 interface Props {
   isReposted: boolean
@@ -33,9 +33,10 @@ export const RepostButton = ({
   embeddingDisabled,
 }: Props) => {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const {hasSession} = useSession()
   const requireAuth = useRequireAuth()
+  const formatPostStatCount = useFormatPostStatCount()
 
   return hasSession ? (
     <EventStopper onKeyDown={false}>
@@ -46,14 +47,14 @@ export const RepostButton = ({
               <PostControlButton
                 testID="repostBtn"
                 active={isReposted}
-                activeColor={t.palette.positive_600}
+                activeColor={t.palette.positive_500}
                 label={props.accessibilityLabel}
                 big={big}
                 {...props}>
                 <PostControlButtonIcon icon={Repost} />
                 {typeof repostCount !== 'undefined' && repostCount > 0 && (
                   <PostControlButtonText testID="repostCount">
-                    {formatCount(i18n, repostCount)}
+                    {formatPostStatCount(repostCount)}
                   </PostControlButtonText>
                 )}
               </PostControlButton>
@@ -99,13 +100,13 @@ export const RepostButton = ({
     <PostControlButton
       onPress={() => requireAuth(() => {})}
       active={isReposted}
-      activeColor={t.palette.positive_600}
+      activeColor={t.palette.positive_500}
       label={_(msg`Repost or quote post`)}
       big={big}>
       <PostControlButtonIcon icon={Repost} />
       {typeof repostCount !== 'undefined' && repostCount > 0 && (
         <PostControlButtonText testID="repostCount">
-          {formatCount(i18n, repostCount)}
+          {formatPostStatCount(repostCount)}
         </PostControlButtonText>
       )}
     </PostControlButton>

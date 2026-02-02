@@ -3,7 +3,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
-import {logger} from '#/logger'
 import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,
@@ -17,9 +16,11 @@ import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/i
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {useAnalytics} from '#/analytics'
 
 export function Screen() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const gutters = useGutters(['base'])
   const {data: preferences} = usePreferencesQuery()
 
@@ -44,15 +45,16 @@ export function Screen() {
                 <InlineLinkText
                   overridePresentation
                   to={urls.website.blog.initialVerificationAnnouncement}
-                  label={_(msg`Learn more`)}
+                  label={_(
+                    msg({
+                      message: `Learn more`,
+                      context: `english-only-resource`,
+                    }),
+                  )}
                   onPress={() => {
-                    logger.metric(
-                      'verification:learn-more',
-                      {
-                        location: 'verificationSettings',
-                      },
-                      {statsig: true},
-                    )
+                    ax.metric('verification:learn-more', {
+                      location: 'verificationSettings',
+                    })
                   }}>
                   Learn more here.
                 </InlineLinkText>

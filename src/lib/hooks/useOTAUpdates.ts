@@ -10,15 +10,15 @@ import {
   useUpdates,
 } from 'expo-updates'
 
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
-import {IS_TESTFLIGHT} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_TESTFLIGHT} from '#/env'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 
 async function setExtraParams() {
   await setExtraParamAsync(
-    isIOS ? 'ios-build-number' : 'android-build-number',
+    IS_IOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
     // This just ensures it gets passed as a string
     `${nativeBuildVersion}`,
@@ -31,7 +31,7 @@ async function setExtraParams() {
 
 async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync(
-    isIOS ? 'ios-build-number' : 'android-build-number',
+    IS_IOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
     // This just ensures it gets passed as a string
     `${nativeBuildVersion}`,
@@ -127,7 +127,7 @@ export function useOTAUpdates() {
   const appState = React.useRef<AppStateStatus>('active')
   const lastMinimize = React.useRef(0)
   const ranInitialCheck = React.useRef(false)
-  const timeout = React.useRef<NodeJS.Timeout>()
+  const timeout = React.useRef<NodeJS.Timeout>(undefined)
   const {currentlyRunning, isUpdatePending} = useUpdates()
   const currentChannel = currentlyRunning?.channel
 
@@ -145,8 +145,10 @@ export function useOTAUpdates() {
         } else {
           logger.debug('No update available.')
         }
-      } catch (e) {
-        logger.error('OTA Update Error', {error: `${e}`})
+      } catch (err) {
+        if (!isNetworkError(err)) {
+          logger.error('OTA Update Error', {safeMessage: err})
+        }
       }
     }, 10e3)
   }, [])
@@ -154,8 +156,10 @@ export function useOTAUpdates() {
   const onIsTestFlight = React.useCallback(async () => {
     try {
       await updateTestflight()
-    } catch (e: any) {
-      logger.error('Internal OTA Update Error', {error: `${e}`})
+    } catch (err: any) {
+      if (!isNetworkError(err)) {
+        logger.error('Internal OTA Update Error', {safeMessage: err})
+      }
     }
   }, [])
 
@@ -165,7 +169,7 @@ export function useOTAUpdates() {
       return
     }
 
-    // We use this setTimeout to allow Statsig to initialize before we check for an update
+    // We use this setTimeout to allow analytics to initialize before we check for an update
     // For Testflight users, we can prompt the user to update immediately whenever there's an available update. This
     // is suspect however with the Apple App Store guidelines, so we don't want to prompt production users to update
     // immediately.
@@ -187,6 +191,13 @@ export function useOTAUpdates() {
     if (!isEnabled || currentChannel?.startsWith('pull-request')) {
       return
     }
+
+    // TEMP: disable wake-from-background OTA loading on Android.
+    // This is causing a crash when the thread view is open due to
+    // `maintainVisibleContentPosition`. See repro repo for more details:
+    // https://github.com/mozzius/ota-crash-repro
+    // Old Arch only - re-enable once we're on the New Archictecture! -sfn
+    if (IS_ANDROID) return
 
     const subscription = AppState.addEventListener(
       'change',

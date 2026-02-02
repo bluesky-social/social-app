@@ -21,7 +21,7 @@ import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
@@ -31,6 +31,7 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_IOS} from '#/env'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -64,12 +65,12 @@ export const LoginForm = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
     useState<boolean>(false)
-  const [isAuthFactorTokenValueEmpty, setIsAuthFactorTokenValueEmpty] =
-    useState<boolean>(true)
   const identifierValueRef = useRef<string>(initialHandle || '')
   const passwordValueRef = useRef<string>('')
-  const authFactorTokenValueRef = useRef<string>('')
+  const [authFactorToken, setAuthFactorToken] = useState('')
+  const identifierRef = useRef<TextInput>(null)
   const passwordRef = useRef<TextInput>(null)
+  const hasFocusedOnce = useRef<boolean>(false)
   const {_} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -88,7 +89,6 @@ export const LoginForm = ({
 
     const identifier = identifierValueRef.current.toLowerCase().trim()
     const password = passwordValueRef.current
-    const authFactorToken = authFactorTokenValueRef.current
 
     if (!identifier) {
       setError(_(msg`Please enter your username`))
@@ -198,9 +198,10 @@ export const LoginForm = ({
             <TextField.Icon icon={At} />
             <TextField.Input
               testID="loginUsernameInput"
+              inputRef={identifierRef}
               label={_(msg`Username or email address`)}
               autoCapitalize="none"
-              autoFocus
+              autoFocus={!IS_IOS}
               autoCorrect={false}
               autoComplete="username"
               returnKeyType="next"
@@ -228,11 +229,10 @@ export const LoginForm = ({
               label={_(msg`Password`)}
               autoCapitalize="none"
               autoCorrect={false}
-              autoComplete="password"
+              autoComplete="current-password"
               returnKeyType="done"
               enablesReturnKeyAutomatically={true}
               secureTextEntry={true}
-              textContentType="password"
               clearButtonMode="while-editing"
               onChangeText={v => {
                 passwordValueRef.current = v
@@ -241,6 +241,16 @@ export const LoginForm = ({
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
               editable={!isProcessing}
               accessibilityHint={_(msg`Enter your password`)}
+              onLayout={ios(() => {
+                if (hasFocusedOnce.current) return
+                hasFocusedOnce.current = true
+                // kinda dumb, but if we use `autoFocus` to focus
+                // the username input, it happens before the password
+                // input gets rendered. this breaks the password autofill
+                // on iOS (it only does the username part). delaying
+                // it until both inputs are rendered fixes the autofill -sfn
+                identifierRef.current?.focus()
+              })}
             />
             <Button
               testID="forgotPasswordButton"
@@ -277,24 +287,17 @@ export const LoginForm = ({
               autoCorrect={false}
               autoComplete="one-time-code"
               returnKeyType="done"
-              textContentType="username"
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-              onChangeText={v => {
-                setIsAuthFactorTokenValueEmpty(v === '')
-                authFactorTokenValueRef.current = v
-              }}
+              onChangeText={setAuthFactorToken}
+              value={authFactorToken} // controlled input due to uncontrolled input not receiving pasted values properly
               onSubmitEditing={onPressNext}
               editable={!isProcessing}
               accessibilityHint={_(
                 msg`Input the code which has been emailed to you`,
               )}
-              style={[
-                {
-                  textTransform: isAuthFactorTokenValueEmpty
-                    ? 'none'
-                    : 'uppercase',
-                },
-              ]}
+              style={{
+                textTransform: authFactorToken === '' ? 'none' : 'uppercase',
+              }}
             />
           </TextField.Root>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_sm]}>

@@ -139,7 +139,7 @@ export function FeedSourceCardLoaded({
         <View style={[a.flex_1]}>
           <Text
             emoji
-            style={[a.text_sm, a.font_bold, a.leading_snug]}
+            style={[a.text_sm, a.font_semi_bold, a.leading_snug]}
             numberOfLines={1}>
             {feed.displayName}
           </Text>
@@ -165,7 +165,7 @@ export function FeedSourceCardLoaded({
         <Text
           style={[
             a.text_sm,
-            a.font_bold,
+            a.font_semi_bold,
             t.atoms.text_contrast_medium,
             a.leading_snug,
           ]}>
@@ -182,11 +182,15 @@ export function FeedSourceCardLoaded({
     return (
       <Link
         testID={`feed-${feed.displayName}`}
-        label={_(
+        label={
           feed.type === 'feed'
-            ? msg`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, liked by ${feed.likeCount || 0}`
-            : msg`${feed.displayName}, a list by ${sanitizeHandle(feed.creatorHandle, '@')}`,
-        )}
+            ? _(
+                msg`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, liked by ${feed.likeCount || 0}`,
+              )
+            : _(
+                msg`${feed.displayName}, a list by ${sanitizeHandle(feed.creatorHandle, '@')}`,
+              )
+        }
         to={{
           screen: feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList',
           params: {name: feed.creatorDid, rkey: new AtUri(feed.uri).rkey},

@@ -12,9 +12,13 @@ import {
 import {
   KeyboardAwareScrollView,
   useKeyboardHandler,
+  useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller'
-import {runOnJS} from 'react-native-reanimated'
-import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import Animated, {
+  runOnJS,
+  type ScrollEvent,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -22,11 +26,10 @@ import {useLingui} from '@lingui/react'
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, ios, platform, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -35,6 +38,7 @@ import {
   type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   type BottomSheetSnapPointChangeEvent,
@@ -150,7 +154,7 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
-      isNativeDialog: true,
+      IS_NATIVEDialog: true,
       nativeSnapPoint: snapPoint,
       disableDrag,
       setDisableDrag,
@@ -205,7 +209,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
 
-    useEnableKeyboardController(isIOS)
+    useEnableKeyboardController(IS_IOS)
 
     const [keyboardHeight, setKeyboardHeight] = React.useState(0)
 
@@ -220,7 +224,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     )
 
     let paddingBottom = 0
-    if (isIOS) {
+    if (IS_IOS) {
       paddingBottom += keyboardHeight / 4
       if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
         paddingBottom += insets.bottom + tokens.space.md
@@ -236,7 +240,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     }
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (!isAndroid) {
+      if (!IS_ANDROID) {
         return
       }
       const {contentOffset} = e.nativeEvent
@@ -256,13 +260,17 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
           contentContainerStyle,
         ]}
         ref={ref}
+        showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}
         scrollEventThrottle={50}
-        onScroll={isAndroid ? onScroll : undefined}
+        onScroll={IS_ANDROID ? onScroll : undefined}
         keyboardShouldPersistTaps="handled"
-        stickyHeaderIndices={header ? [0] : undefined}>
+        // TODO: figure out why this positions the header absolutely (rather than stickily)
+        // on Android. fine to disable for now, because we don't have any
+        // dialogs that use this that actually scroll -sfn
+        stickyHeaderIndices={ios(header ? [0] : undefined)}>
         {header}
         {children}
       </KeyboardAwareScrollView>
@@ -275,14 +283,17 @@ export const InnerFlatList = React.forwardRef<
   ListProps<any> & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
+    footer?: React.ReactNode
   }
->(function InnerFlatList({style, ...props}, ref) {
+>(function InnerFlatList({footer, style, ...props}, ref) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
 
-  const onScroll = (e: ReanimatedScrollEvent) => {
+  useEnableKeyboardController(IS_IOS)
+
+  const onScroll = (e: ScrollEvent) => {
     'worklet'
-    if (!isAndroid) {
+    if (!IS_ANDROID) {
       return
     }
     const {contentOffset} = e
@@ -300,14 +311,61 @@ export const InnerFlatList = React.forwardRef<
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         ListFooterComponent={<View style={{height: insets.bottom + 100}} />}
         ref={ref}
+        showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
-        style={[style]}
+        style={[a.h_full, style]}
       />
+      {footer}
     </ScrollProvider>
   )
 })
 
-export function Handle({difference = false}: {difference?: boolean}) {
+export function FlatListFooter({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  const {top, bottom} = useSafeAreaInsets()
+  const {height} = useReanimatedKeyboardAnimation()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    if (!IS_IOS) return {}
+    return {
+      transform: [{translateY: Math.min(0, height.get() + bottom - 10)}],
+    }
+  })
+
+  return (
+    <Animated.View
+      style={[
+        a.absolute,
+        a.bottom_0,
+        a.w_full,
+        a.z_10,
+        a.border_t,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        a.px_lg,
+        a.pt_md,
+        {
+          paddingBottom: platform({
+            ios: tokens.space.md + bottom,
+            android: tokens.space.md + bottom + top,
+          }),
+        },
+        // TODO: had to admit defeat here, but we should
+        // try and get this to work for Android as well -sfn
+        ios(animatedStyle),
+      ]}>
+      {children}
+    </Animated.View>
+  )
+}
+
+export function Handle({
+  difference = false,
+  fill,
+}: {
+  difference?: boolean
+  fill?: string
+}) {
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
@@ -338,7 +396,7 @@ export function Handle({difference = false}: {difference?: boolean}) {
                   opacity: 0.75,
                 }
               : {
-                  backgroundColor: t.palette.contrast_975,
+                  backgroundColor: fill || t.palette.contrast_975,
                   opacity: 0.5,
                 },
           ]}
@@ -349,5 +407,9 @@ export function Handle({difference = false}: {difference?: boolean}) {
 }
 
 export function Close() {
+  return null
+}
+
+export function Backdrop() {
   return null
 }

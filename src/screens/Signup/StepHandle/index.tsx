@@ -9,7 +9,6 @@ import Animated, {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {
   createFullHandle,
   MAX_SERVICE_HANDLE_LENGTH,
@@ -20,7 +19,6 @@ import {
   checkHandleAvailability,
   useHandleAvailabilityQuery,
 } from '#/state/queries/handle-availability'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, native, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
@@ -28,14 +26,14 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
-import {IS_INTERNAL} from '#/env'
+import {useAnalytics} from '#/analytics'
 import {BackNextButtons} from '../BackNextButtons'
 import {HandleSuggestions} from './HandleSuggestions'
 
 export function StepHandle() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
-  const gate = useGate()
   const {state, dispatch} = useSignupContext()
   const [draftValue, setDraftValue] = useState(state.handle)
   const isNextLoading = useThrottledValue(state.isLoading, 500)
@@ -72,16 +70,19 @@ export function StepHandle() {
       const {available: handleAvailable} = await checkHandleAvailability(
         createFullHandle(handle, state.userDomain),
         state.serviceDescription?.did ?? 'UNKNOWN',
-        {typeahead: false},
+        {},
       )
 
       if (!handleAvailable) {
+        ax.metric('signup:handleTaken', {typeahead: false})
         dispatch({
           type: 'setError',
           value: _(msg`That username is already taken`),
           field: 'handle',
         })
         return
+      } else {
+        ax.metric('signup:handleAvailable', {typeahead: false})
       }
     } catch (error) {
       logger.error('Failed to check handle availability on next press', {
@@ -92,15 +93,11 @@ export function StepHandle() {
       dispatch({type: 'setIsLoading', value: false})
     }
 
-    logger.metric(
-      'signup:nextPressed',
-      {
-        activeStep: state.activeStep,
-        phoneVerificationRequired:
-          state.serviceDescription?.phoneVerificationRequired,
-      },
-      {statsig: true},
-    )
+    ax.metric('signup:nextPressed', {
+      activeStep: state.activeStep,
+      phoneVerificationRequired:
+        state.serviceDescription?.phoneVerificationRequired,
+    })
     // phoneVerificationRequired is actually whether a captcha is required
     if (!state.serviceDescription?.phoneVerificationRequired) {
       dispatch({
@@ -119,11 +116,7 @@ export function StepHandle() {
       value: handle,
     })
     dispatch({type: 'prev'})
-    logger.metric(
-      'signup:backPressed',
-      {activeStep: state.activeStep},
-      {statsig: true},
-    )
+    ax.metric('signup:backPressed', {activeStep: state.activeStep})
   }
 
   const hasDebounceSettled = draftValue === debouncedDraftValue
@@ -144,7 +137,7 @@ export function StepHandle() {
     !validCheck.totalLength
 
   return (
-    <ScreenTransition>
+    <>
       <View style={[a.gap_sm, a.pt_lg, a.z_10]}>
         <View>
           <TextField.Root isInvalid={textFieldInvalid}>
@@ -171,7 +164,10 @@ export function StepHandle() {
               </TextField.GhostText>
             )}
             {isHandleAvailable?.available && (
-              <CheckIcon style={[{color: t.palette.positive_600}, a.z_20]} />
+              <CheckIcon
+                testID="handleAvailableCheck"
+                style={[{color: t.palette.positive_500}, a.z_20]}
+              />
             )}
           </TextField.Root>
         </View>
@@ -193,8 +189,7 @@ export function StepHandle() {
                   </RequirementText>
                 </Requirement>
                 {isHandleAvailable.suggestions &&
-                  isHandleAvailable.suggestions.length > 0 &&
-                  (gate('handle_suggestions') || IS_INTERNAL) && (
+                  isHandleAvailable.suggestions.length > 0 && (
                     <HandleSuggestions
                       suggestions={isHandleAvailable.suggestions}
                       onSelect={suggestion => {
@@ -204,7 +199,7 @@ export function StepHandle() {
                             state.userDomain.length * -1,
                           ),
                         )
-                        logger.metric('signup:handleSuggestionSelected', {
+                        ax.metric('signup:handleSuggestionSelected', {
                           method: suggestion.method,
                         })
                       }}
@@ -253,7 +248,7 @@ export function StepHandle() {
           onNextPress={onNextPress}
         />
       </Animated.View>
-    </ScreenTransition>
+    </>
   )
 }
 

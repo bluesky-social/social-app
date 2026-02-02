@@ -3,7 +3,11 @@ import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {isNetworkError} from '#/lib/strings/errors'
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
+import {
+  isErrorMaybeAppPasswordPermissions,
+  isNetworkError,
+} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
 import {
   BACKGROUND_POLL_INTERVAL,
@@ -17,7 +21,6 @@ import {
   type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 const logger = Logger.create(Logger.Context.DMsAgent)
 
@@ -260,7 +263,7 @@ export class MessagesEventBus {
 
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
     } catch (e: any) {
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`init failed`, {
           safeMessage: e.message,
         })
@@ -375,7 +378,7 @@ export class MessagesEventBus {
         this.emitter.emit('event', {type: 'logs', logs: batch})
       }
     } catch (e: any) {
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`poll events failed`, {
           safeMessage: e.message,
         })

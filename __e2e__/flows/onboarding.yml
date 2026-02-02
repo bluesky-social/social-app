@@ -3,27 +3,44 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: "?users"
+      SERVER_PATH: "?users"
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
+
 - tapOn:
     id: "e2eStartOnboarding"
 - tapOn: "Select an avatar"
 - waitForAnimationToEnd
-- assertVisible: "Search your library…"
+- assertVisible: "Photos"
+- assertVisible: "Collections"
 - tapOn:
     point: "50%,22%"
 - waitForAnimationToEnd
 - tapOn: "Done"
 - waitForAnimationToEnd
-- tapOn: "Continue to next step"
+- tapOn:
+    id: "onboardingContinue"
 - assertVisible: "What are your interests?"
 - tapOn:
-    label: "Tap on continue"
-    point: "50%,92%"
-- assertVisible: "You're ready to go!"
+    id: "onboardingContinue"
+- assertVisible: "Suggested for you"
+# mock server doesn't have suggestions api
+- tapOn: "Skip to next step"
+- swipe:
+    direction: "LEFT"
+- swipe:
+    direction: "LEFT"
+- assertVisible: "Complete onboarding and start using your account"
 - tapOn:
-    label: "Tap on Lets go"
-    point: "50%,92%"
+    id: "onboardingFinish"
+- tapOn:
+    label: "NUX, if applicable"
+    text: "Close"
+    optional: true
+- waitForAnimationToEnd
+- assertVisible: "Following"

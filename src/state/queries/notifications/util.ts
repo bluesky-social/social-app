@@ -273,7 +273,8 @@ function toKnownType(
     notif.reason === 'unverified' ||
     notif.reason === 'like-via-repost' ||
     notif.reason === 'repost-via-repost' ||
-    notif.reason === 'subscribed-post'
+    notif.reason === 'subscribed-post' ||
+    notif.reason === 'contact-match'
   ) {
     return notif.reason as NotificationType
   }

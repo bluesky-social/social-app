@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Logo} from '#/view/icons/Logo'
@@ -13,6 +12,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export function SigninDialog() {
   const {signinDialogControl: control} = useGlobalDialogsControlContext()
@@ -45,7 +45,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
     <Dialog.ScrollableInner
       label={_(msg`Sign in to Bluesky or create a new account`)}
       style={[gtMobile ? {width: 'auto', maxWidth: 420} : a.w_full]}>
-      <View style={[!isNative && a.p_2xl]}>
+      <View style={[!IS_NATIVE && a.p_2xl]}>
         <View
           style={[
             a.flex_row,
@@ -101,7 +101,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
           </Button>
         </View>
 
-        {isNative && <View style={{height: 10}} />}
+        {IS_NATIVE && <View style={{height: 10}} />}
       </View>
 
       <Dialog.Close />

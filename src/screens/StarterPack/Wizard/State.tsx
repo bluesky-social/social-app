@@ -7,7 +7,6 @@ import {
 import {msg, plural} from '@lingui/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
-import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import * as bsky from '#/types/bsky'
 
@@ -37,6 +36,7 @@ interface State {
   processing: boolean
   error?: string
   transitionDirection: 'Backward' | 'Forward'
+  targetDid?: string
 }
 
 type TStateContext = [State, (action: Action) => void]
@@ -118,15 +118,17 @@ function reducer(state: State, action: Action): State {
 export function Provider({
   starterPack,
   listItems,
+  targetProfile,
   children,
 }: {
   starterPack?: AppBskyGraphDefs.StarterPackView
   listItems?: AppBskyGraphDefs.ListItemView[]
+  targetProfile: bsky.profile.AnyProfileView
   children: React.ReactNode
 }) {
-  const {currentAccount} = useSession()
-
   const createInitialState = (): State => {
+    const targetDid = targetProfile?.did
+
     if (
       starterPack &&
       bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
@@ -136,23 +138,22 @@ export function Provider({
         currentStep: 'Details',
         name: starterPack.record.name,
         description: starterPack.record.description,
-        profiles:
-          listItems
-            ?.map(i => i.subject)
-            .filter(p => p.did !== currentAccount?.did) ?? [],
+        profiles: listItems?.map(i => i.subject) ?? [],
         feeds: starterPack.feeds ?? [],
         processing: false,
         transitionDirection: 'Forward',
+        targetDid,
       }
     }
 
     return {
       canNext: true,
       currentStep: 'Details',
-      profiles: [],
+      profiles: [targetProfile],
       feeds: [],
       processing: false,
       transitionDirection: 'Forward',
+      targetDid,
     }
   }
 

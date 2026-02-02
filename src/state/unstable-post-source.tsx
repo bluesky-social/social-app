@@ -2,7 +2,7 @@ import {useEffect, useId, useState} from 'react'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
 import {Logger} from '#/logger'
-import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {type FeedSourceInfo} from '#/state/queries/feed'
 
 /**
  * Separate logger for better debugging
@@ -11,7 +11,7 @@ const logger = Logger.create(Logger.Context.PostSource)
 
 export type PostSource = {
   post: AppBskyFeedDefs.FeedViewPost
-  feed?: FeedDescriptor
+  feedSourceInfo?: FeedSourceInfo
 }
 
 /**
@@ -81,6 +81,7 @@ export function useUnstablePostSource(key: string) {
  */
 export function buildPostSourceKey(key: string, handle: string) {
   const urip = new AtUri(key)
+  // @ts-expect-error TODO new-sdk-migration
   urip.host = handle
   return urip.toString()
 }

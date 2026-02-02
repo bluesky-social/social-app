@@ -138,7 +138,7 @@ export function Trigger({
       <RadixTriggerPassThrough>
         {props =>
           children({
-            isNative: false,
+            IS_NATIVE: false,
             control,
             state: {
               hovered,
@@ -262,6 +262,7 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
           a.gap_lg,
           a.py_sm,
           a.rounded_xs,
+          a.overflow_hidden,
           {minHeight: 32, paddingHorizontal: 10},
           web({outline: 0}),
           (hovered || focused) &&
@@ -292,7 +293,7 @@ export function ItemText({children, style}: ItemTextProps) {
     <Text
       style={[
         a.flex_1,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_high,
         style,
         disabled && t.atoms.text_contrast_low,
@@ -302,7 +303,7 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
+export function ItemIcon({icon: Comp, position = 'left', fill}: ItemIconProps) {
   const t = useTheme()
   const {disabled} = useMenuItemContext()
   return (
@@ -319,9 +320,11 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
       <Comp
         size="md"
         fill={
-          disabled
-            ? t.atoms.text_contrast_low.color
-            : t.atoms.text_contrast_medium.color
+          fill
+            ? fill({disabled})
+            : disabled
+              ? t.atoms.text_contrast_low.color
+              : t.atoms.text_contrast_medium.color
         }
       />
     </View>
@@ -372,7 +375,7 @@ export function LabelText({
   return (
     <Text
       style={[
-        a.font_bold,
+        a.font_semi_bold,
         a.p_sm,
         t.atoms.text_contrast_low,
         a.leading_snug,

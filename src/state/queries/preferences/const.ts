@@ -16,7 +16,6 @@ export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs
 
 export const DEFAULT_THREAD_VIEW_PREFS: ThreadViewPreferences = {
   sort: 'hotness',
-  prioritizeFollowedUsers: true,
   lab_treeViewEnabled: false,
 }
 
@@ -45,5 +44,9 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   },
   verificationPrefs: {
     hideBadges: false,
+  },
+  liveEventPreferences: {
+    hideAllFeeds: false,
+    hiddenFeedIds: [],
   },
 }

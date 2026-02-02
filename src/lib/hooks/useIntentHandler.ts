@@ -1,17 +1,15 @@
 import React from 'react'
 import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
-import {
-  parseAgeAssuranceRedirectDialogState,
-  useAgeAssuranceRedirectDialogControl,
-} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
@@ -23,35 +21,30 @@ const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 let previousIntentUrl = ''
 
 export function useIntentHandler() {
-  const incomingUrl = Linking.useURL()
+  const incomingUrl = Linking.useLinkingURL()
+  const ax = useAnalytics()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
-  const ageAssuranceRedirectDialogControl =
-    useAgeAssuranceRedirectDialogControl()
   const {currentAccount} = useSession()
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
   React.useEffect(() => {
-    const handleIncomingURL = (url: string) => {
+    const handleIncomingURL = async (url: string) => {
+      if (IS_IOS) {
+        // Close in-app browser if it's open (iOS only)
+        await WebBrowser.dismissBrowser().catch(() => {})
+      }
+
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        logger.metric('deepLink:referrerReceived', {
+        ax.metric('deepLink:referrerReceived', {
           to: url,
           referrer: referrerInfo?.referrer,
           hostname: referrerInfo?.hostname,
         })
       }
-
-      // We want to be able to support bluesky:// deeplinks. It's unnatural for someone to use a deeplink with three
-      // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care
-      // of two cases when parsing the url. If we ensure there is a third slash, we can always ensure the first
-      // path parameter is in pathname rather than in hostname.
-      if (url.startsWith('bluesky://') && !url.startsWith('bluesky:///')) {
-        url = url.replace('bluesky://', 'bluesky:///')
-      }
-
-      const urlp = new URL(url)
-      const [_, intent, intentType] = urlp.pathname.split('/')
+      const urlp = parseLinkingUrl(url)
+      const [, intent, intentType] = urlp.pathname.split('/')
 
       // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
       // intent check. On web, we have to check the first part of the path since we have an actual hostname
@@ -76,23 +69,7 @@ export function useIntentHandler() {
           return
         }
         case 'age-assurance': {
-          const state = parseAgeAssuranceRedirectDialogState({
-            result: params.get('result') ?? undefined,
-            actorDid: params.get('actorDid') ?? undefined,
-          })
-
-          /*
-           * If we don't have an account or the account doesn't match, do
-           * nothing. By the time the user switches to their other account, AA
-           * state should be ready for them.
-           */
-          if (
-            state &&
-            currentAccount &&
-            state.actorDid === currentAccount.did
-          ) {
-            ageAssuranceRedirectDialogControl.open(state)
-          }
+          // Handled in `#/ageAssurance/components/RedirectOverlay.tsx`
           return
         }
         case 'apply-ota': {
@@ -102,6 +79,7 @@ export function useIntentHandler() {
           } else {
             tryApplyUpdate(channel)
           }
+          return
         }
         default: {
           return
@@ -118,9 +96,9 @@ export function useIntentHandler() {
     }
   }, [
     incomingUrl,
+    ax,
     composeIntent,
     verifyEmailIntent,
-    ageAssuranceRedirectDialogControl,
     currentAccount,
     tryApplyUpdate,
   ])
@@ -150,6 +128,7 @@ export function useComposeIntent() {
         openComposer({
           text: text ?? undefined,
           videoUri: {uri, width: Number(width), height: Number(height)},
+          logContext: 'Deeplink',
         })
         return
       }
@@ -174,7 +153,8 @@ export function useComposeIntent() {
       setTimeout(() => {
         openComposer({
           text: text ?? undefined,
-          imageUris: isNative ? imageUris : undefined,
+          imageUris: IS_NATIVE ? imageUris : undefined,
+          logContext: 'Deeplink',
         })
       }, 500)
     },

@@ -1,12 +1,11 @@
 import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import Graphemer from 'graphemer'
 import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
-import {isSafari, isTouchDevice} from '#/lib/browser'
 import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {
@@ -19,11 +18,12 @@ import {
   type EmojiPickerPosition,
 } from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, flatten, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 export function MessageInput({
@@ -56,7 +56,7 @@ export function MessageInput({
     if (!hasEmbed && message.trim() === '') {
       return
     }
-    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+    if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
@@ -85,7 +85,7 @@ export function MessageInput({
       // far too long of a delay, and a subsequent enter press would often just end up doing nothing. A shorter time
       // frame was also not great, since it was too short to be reliable (i.e. an older system might have a larger
       // time gap between the two events firing.
-      if (isSafari && e.key === 'Enter' && e.keyCode === 229) {
+      if (IS_WEB_SAFARI && e.key === 'Enter' && e.keyCode === 229) {
         return
       }
 
@@ -199,7 +199,7 @@ export function MessageInput({
         </Button>
         <TextareaAutosize
           ref={textAreaRef}
-          style={StyleSheet.flatten([
+          style={flatten([
             a.flex_1,
             a.px_sm,
             a.border_0,
@@ -228,7 +228,7 @@ export function MessageInput({
           onChange={onChange}
           // On mobile web phones, we want to keep the same behavior as the native app. Do not submit the message
           // in these cases.
-          onKeyDown={isTouchDevice && isMobile ? undefined : onKeyDown}
+          onKeyDown={IS_WEB_TOUCH_DEVICE && isMobile ? undefined : onKeyDown}
         />
         <Pressable
           accessibilityRole="button"

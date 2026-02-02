@@ -57,7 +57,7 @@ export function InboxPreview({
         )}
       </View>
       <ButtonText
-        style={[a.flex_1, a.font_bold, a.text_left]}
+        style={[a.flex_1, a.font_semi_bold, a.text_left]}
         numberOfLines={1}>
         <Trans>Chat requests</Trans>
       </ButtonText>

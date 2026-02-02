@@ -10,39 +10,34 @@ import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
-import {isFirefox} from '#/lib/browser'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
+import {ConstrainedImage} from '#/components/images/AutoSizedImage'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
   VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
+import {IS_WEB_FIREFOX} from '#/env'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-export function VideoEmbed({
-  embed,
-  crop,
-}: {
-  embed: AppBskyEmbedVideo.View
-  crop?: 'none' | 'square' | 'constrained'
-}) {
+export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
+  const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
-  const lastKnownTime = useRef<number | undefined>()
+  const lastKnownTime = useRef<number | undefined>(undefined)
 
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen && !isFirefox) return
+    if (isFullscreen && !IS_WEB_FIREFOX) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
@@ -76,18 +71,24 @@ export function VideoEmbed({
   }
 
   let constrained: number | undefined
-  let max: number | undefined
   if (aspectRatio !== undefined) {
     const ratio = 1 / 2 // max of 1:2 ratio in feeds
     constrained = Math.max(aspectRatio, ratio)
-    max = Math.max(aspectRatio, 0.25) // max of 1:4 in thread
   }
-  const cropDisabled = crop === 'none'
 
   const contents = (
     <div
       ref={ref}
-      style={{display: 'flex', flex: 1, cursor: 'default'}}
+      style={{
+        display: 'flex',
+        flex: 1,
+        cursor: 'default',
+        backgroundColor: t.palette.black,
+        backgroundImage: `url(${embed.thumbnail})`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
       onClick={evt => evt.stopPropagation()}>
       <ErrorBoundary renderError={renderError} key={key}>
         <OnlyNearScreen>
@@ -108,17 +109,15 @@ export function VideoEmbed({
       <ViewportObserver
         sendPosition={sendPosition}
         isAnyViewActive={currentActiveView !== null}>
-        {cropDisabled ? (
-          <View style={[a.w_full, a.overflow_hidden, {aspectRatio: max ?? 1}]}>
-            {contents}
-          </View>
-        ) : (
-          <ConstrainedImage
-            fullBleed={crop === 'square'}
-            aspectRatio={constrained || 1}>
-            {contents}
-          </ConstrainedImage>
-        )}
+        <ConstrainedImage
+          fullBleed
+          aspectRatio={constrained || 1}
+          // slightly smaller max height than images
+          // images use 16 / 9, for reference
+          minMobileAspectRatio={14 / 9}>
+          {contents}
+          <MediaInsetBorder />
+        </ConstrainedImage>
       </ViewportObserver>
     </View>
   )
@@ -151,7 +150,7 @@ function ViewportObserver({
   // observing a div of 100vh height
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen && !isFirefox) return
+    if (isFullscreen && !IS_WEB_FIREFOX) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]

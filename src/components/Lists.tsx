@@ -2,11 +2,14 @@ import {memo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {cleanError} from '#/lib/strings/errors'
+import {
+  EmptyState,
+  type EmptyStateButtonProps,
+} from '#/view/com/util/EmptyState'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Error} from '#/components/Error'
 import {Loader} from '#/components/Loader'
@@ -44,7 +47,7 @@ export function ListFooter({
         a.pb_lg,
         t.atoms.border_contrast_low,
         {height: height ?? 180, paddingTop: 30},
-        flatten(style),
+        style,
       ]}>
       {isFetchingNextPage ? (
         <Loader size="xl" />
@@ -130,6 +133,9 @@ let ListMaybePlaceholder = ({
   hideBackButton,
   sideBorders,
   topBorder = false,
+  emptyStateIcon,
+  emptyStateButton,
+  useEmptyState = false,
 }: {
   isLoading: boolean
   noEmpty?: boolean
@@ -144,6 +150,9 @@ let ListMaybePlaceholder = ({
   hideBackButton?: boolean
   sideBorders?: boolean
   topBorder?: boolean
+  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
+  emptyStateButton?: EmptyStateButtonProps
+  useEmptyState?: boolean
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -178,6 +187,25 @@ let ListMaybePlaceholder = ({
         sideBorders={sideBorders}
         hideBackButton={hideBackButton}
       />
+    )
+  }
+
+  if (useEmptyState) {
+    return (
+      <CenteredView
+        style={[t.atoms.border_contrast_low]}
+        sideBorders={sideBorders ?? gtMobile}>
+        <EmptyState
+          icon={emptyStateIcon}
+          message={
+            emptyMessage ??
+            (emptyType === 'results'
+              ? _(msg`No results found`)
+              : _(msg`Page not found`))
+          }
+          button={emptyStateButton}
+        />
+      </CenteredView>
     )
   }
 

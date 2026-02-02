@@ -18,7 +18,6 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
-import {logger} from '#/logger'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -32,9 +31,8 @@ import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
-import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
@@ -43,6 +41,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
+import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -51,7 +50,8 @@ import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
-import {PostControls} from '#/components/PostControls'
+import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
+import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -59,6 +59,7 @@ import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
+import {useAnalytics} from '#/analytics'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -128,7 +129,8 @@ function ThreadItemAnchorDeleted({isRoot}: {isRoot: boolean}) {
             ]}>
             <TrashIcon style={[t.atoms.text_contrast_medium]} />
           </View>
-          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+          <Text
+            style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
             <Trans>Post has been deleted</Trans>
           </Text>
         </View>
@@ -175,10 +177,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   postSource?: PostSource
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const ax = useAnalytics()
+  const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(postSource?.feed, hasSession)
+  const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
+  const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow
   const record = item.value.post.record
@@ -257,6 +261,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
         langs: record.langs,
       },
       onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
     })
 
     if (postSource) {
@@ -278,6 +283,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   ])
 
   const onOpenAuthor = () => {
+    ax.metric('post:clickthroughAuthor', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'PostThreadItem',
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
@@ -289,6 +300,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   }
 
   const onOpenEmbed = () => {
+    ax.metric('post:clickthroughEmbed', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'PostThreadItem',
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
@@ -338,7 +355,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     style={[
                       a.flex_shrink,
                       a.text_lg,
-                      a.font_bold,
+                      a.font_semi_bold,
                       a.leading_snug,
                     ]}
                     numberOfLines={1}>
@@ -349,7 +366,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     )}
                   </Text>
 
-                  <View style={[{paddingLeft: 3, top: -1}]}>
+                  <View style={[a.pl_xs]}>
                     <VerificationCheckButton profile={authorShadow} size="md" />
                   </View>
                 </View>
@@ -365,11 +382,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               </ProfileHoverCard>
             </View>
           </Link>
-          {showFollowButton && (
-            <View collapsable={false}>
-              <PostThreadFollowBtn did={post.author.did} />
-            </View>
-          )}
+          <View collapsable={false} style={[a.self_center]}>
+            <ThreadItemAnchorFollowButton
+              did={post.author.did}
+              enabled={showFollowButton}
+            />
+          </View>
         </View>
         <View style={[a.pb_sm]}>
           <LabelsOnMyPost post={post} style={[a.pb_sm]} />
@@ -389,7 +407,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 enableTags
                 selectable
                 value={richText}
-                style={[a.flex_1, a.text_xl]}
+                style={[a.flex_1, a.text_lg]}
                 authorHandle={post.author.handle}
                 shouldProxyLinks={true}
               />
@@ -411,13 +429,18 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           />
           {post.repostCount !== 0 ||
           post.likeCount !== 0 ||
-          post.quoteCount !== 0 ? (
+          post.quoteCount !== 0 ||
+          post.bookmarkCount !== 0 ? (
             // Show this section unless we're *sure* it has no engagement.
             <View
               style={[
                 a.flex_row,
+                a.flex_wrap,
                 a.align_center,
-                a.gap_lg,
+                {
+                  rowGap: a.gap_sm.gap,
+                  columnGap: a.gap_lg.gap,
+                },
                 a.border_t,
                 a.border_b,
                 a.mt_md,
@@ -429,8 +452,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <Text
                     testID="repostCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatCount(i18n, post.repostCount)}
+                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                      {formatPostStatCount(post.repostCount)}
                     </Text>{' '}
                     <Plural
                       value={post.repostCount}
@@ -447,8 +470,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <Text
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatCount(i18n, post.quoteCount)}
+                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                      {formatPostStatCount(post.quoteCount)}
                     </Text>{' '}
                     <Plural
                       value={post.quoteCount}
@@ -463,12 +486,22 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <Text
                     testID="likeCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatCount(i18n, post.likeCount)}
+                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                      {formatPostStatCount(post.likeCount)}
                     </Text>{' '}
                     <Plural value={post.likeCount} one="like" other="likes" />
                   </Text>
                 </Link>
+              ) : null}
+              {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
+                <Text
+                  testID="bookmarkCount-expanded"
+                  style={[a.text_md, t.atoms.text_contrast_medium]}>
+                  <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                    {formatPostStatCount(post.bookmarkCount)}
+                  </Text>{' '}
+                  <Plural value={post.bookmarkCount} one="save" other="saves" />
+                </Text>
               ) : null}
             </View>
           ) : null}
@@ -495,6 +528,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               />
             </FeedFeedbackProvider>
           </View>
+          <DebugFieldDisplay subject={post} />
         </View>
       </View>
     </>
@@ -509,6 +543,7 @@ function ExpandedPostDetails({
   isThreadAuthor: boolean
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_, i18n} = useLingui()
   const translate = useTranslate()
   const isRootPost = !('reply' in post.record)
@@ -534,7 +569,7 @@ function ExpandedPostDetails({
           AppBskyFeedPost.isRecord,
         )
       ) {
-        logger.metric('translate', {
+        ax.metric('translate', {
           sourceLanguages: post.record.langs ?? [],
           targetLanguage: langPrefs.primaryLanguage,
           textLength: post.record.text.length,
@@ -543,7 +578,7 @@ function ExpandedPostDetails({
 
       return false
     },
-    [translate, langPrefs, post],
+    [ax, translate, langPrefs, post],
   )
 
   return (
@@ -551,7 +586,7 @@ function ExpandedPostDetails({
       <BackdatedPostIndicator post={post} />
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt)}
+          {niceDate(i18n, post.indexedAt, 'dot separated')}
         </Text>
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
@@ -600,7 +635,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
 
   if (!isBackdated) return null
 
-  const orange = t.name === 'light' ? colors.warning.dark : colors.warning.light
+  const orange = colors.warning
 
   return (
     <>
@@ -632,39 +667,40 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
             <Text
               style={[
                 a.text_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
               ]}>
-              <Trans>Archived from {niceDate(i18n, createdAt)}</Trans>
+              <Trans>Archived from {niceDate(i18n, createdAt, 'medium')}</Trans>
             </Text>
           </View>
         )}
       </Button>
 
       <Prompt.Outer control={control}>
-        <Prompt.TitleText>
-          <Trans>Archived post</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText>
-          <Trans>
-            This post claims to have been created on{' '}
-            <RNText style={[a.font_bold]}>{niceDate(i18n, createdAt)}</RNText>,
-            but was first seen by Bluesky on{' '}
-            <RNText style={[a.font_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
-          </Trans>
-        </Prompt.DescriptionText>
-        <Text
-          style={[
-            a.text_md,
-            a.leading_snug,
-            t.atoms.text_contrast_high,
-            a.pb_xl,
-          ]}>
-          <Trans>
-            Bluesky cannot confirm the authenticity of the claimed date.
-          </Trans>
-        </Text>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Archived post</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>
+              This post claims to have been created on{' '}
+              <RNText style={[a.font_semi_bold]}>
+                {niceDate(i18n, createdAt)}
+              </RNText>
+              , but was first seen by Bluesky on{' '}
+              <RNText style={[a.font_semi_bold]}>
+                {niceDate(i18n, indexedAt)}
+              </RNText>
+              .
+            </Trans>
+          </Prompt.DescriptionText>
+          <Prompt.DescriptionText>
+            <Trans>
+              Bluesky cannot confirm the authenticity of the claimed date.
+            </Trans>
+          </Prompt.DescriptionText>
+        </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
         </Prompt.Actions>
@@ -706,13 +742,7 @@ export function ThreadItemAnchorSkeleton() {
 
       <Skele.Text style={[a.text_sm, {width: '50%'}]} />
 
-      <Skele.Row style={[a.justify_between]}>
-        <Skele.Pill blend size={24} />
-        <Skele.Pill blend size={24} />
-        <Skele.Pill blend size={24} />
-        <Skele.Circle blend size={24} />
-        <Skele.Circle blend size={24} />
-      </Skele.Row>
+      <PostControlsSkeleton big />
     </View>
   )
 }

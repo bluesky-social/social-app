@@ -10,8 +10,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {isWeb} from '#/platform/detection'
-import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
 import {
   type WizardAction,
@@ -25,6 +23,7 @@ import {
   WizardProfileCard,
 } from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 function keyExtractor(
   item: AppBskyActorDefs.ProfileViewBasic | AppBskyFeedDefs.GeneratorView,
@@ -48,7 +47,6 @@ export function WizardEditListDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
 
   const listRef = useRef<ListMethods>(null)
@@ -56,10 +54,7 @@ export function WizardEditListDialog({
   const getData = () => {
     if (state.currentStep === 'Feeds') return state.feeds
 
-    return [
-      profile,
-      ...state.profiles.filter(p => p.did !== currentAccount?.did),
-    ]
+    return [profile, ...state.profiles.filter(p => p.did !== profile.did)]
   }
 
   const renderItem = ({item}: ListRenderItemInfo<any>) =>
@@ -100,7 +95,7 @@ export function WizardEditListDialog({
               a.mb_sm,
               t.atoms.bg,
               t.atoms.border_contrast_medium,
-              isWeb
+              IS_WEB
                 ? [
                     a.align_center,
                     {
@@ -110,7 +105,7 @@ export function WizardEditListDialog({
                 : [a.pb_sm, a.align_end],
             ]}>
             <View style={{width: 60}} />
-            <Text style={[a.font_bold, a.text_xl]}>
+            <Text style={[a.font_semi_bold, a.text_xl]}>
               {state.currentStep === 'Profiles' ? (
                 <Trans>Edit People</Trans>
               ) : (
@@ -118,7 +113,7 @@ export function WizardEditListDialog({
               )}
             </Text>
             <View style={{width: 60}}>
-              {isWeb && (
+              {IS_WEB && (
                 <Button
                   label={_(msg`Close`)}
                   variant="ghost"

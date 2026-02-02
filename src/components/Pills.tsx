@@ -1,11 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import {BSKY_LABELER_DID, ModerationCause} from '@atproto/api'
+import {BSKY_LABELER_DID, type ModerationCause} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ModerationDetailsDialog,
@@ -133,7 +133,7 @@ export function Label({
               emoji
               style={[
                 text,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
                 {paddingRight: 3},
@@ -170,7 +170,7 @@ export function FollowsYou({size = 'sm'}: CommonProps) {
   }, [size])
 
   return (
-    <View style={[variantStyles, a.justify_center, t.atoms.bg_contrast_25]}>
+    <View style={[variantStyles, a.justify_center, t.atoms.bg_contrast_50]}>
       <Text style={[a.text_xs, a.leading_tight]}>
         <Trans>Follows You</Trans>
       </Text>

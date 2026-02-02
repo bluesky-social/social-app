@@ -70,6 +70,8 @@ Bluesky is an open social network built on the AT Protocol, a flexible technolog
 
 See [./LICENSE](./LICENSE) for the full license.
 
+Bluesky Social PBC has committed to a software patent non-aggression pledge. For details see [the original announcement](https://bsky.social/about/blog/10-01-2025-patent-pledge).
+
 ## P.S.
 
 We ❤️ you and all of the ways you support us. Thank you for making Bluesky a great place!

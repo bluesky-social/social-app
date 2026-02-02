@@ -92,7 +92,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         t.atoms.border_contrast_low,
         a.border_t,
       ]}>
-      <Text style={[a.text_5xl, a.font_bold, t.atoms.text, a.text_center]}>
+      <Text style={[a.text_5xl, a.font_semi_bold, t.atoms.text, a.text_center]}>
         :(
       </Text>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text, a.text_center]}>

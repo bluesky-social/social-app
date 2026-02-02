@@ -1,4 +1,4 @@
-import {Agent, ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
+import {ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {
@@ -7,9 +7,10 @@ import {
   PUBLIC_BSKY_SERVICE,
 } from '#/lib/constants'
 import {createFullHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
 import {useDebouncedValue} from '#/components/live/utils'
+import {useAnalytics} from '#/analytics'
 import * as bsky from '#/types/bsky'
+import {Agent} from '../session/agent'
 
 export const RQKEY_handleAvailability = (
   handle: string,
@@ -35,6 +36,7 @@ export function useHandleAvailabilityQuery(
   },
   debounceDelayMs = 500,
 ) {
+  const ax = useAnalytics()
   const name = username.trim()
   const debouncedHandle = useDebouncedValue(name, debounceDelayMs)
 
@@ -50,11 +52,16 @@ export function useHandleAvailabilityQuery(
       ),
       queryFn: async () => {
         const handle = createFullHandle(name, serviceDomain)
-        return await checkHandleAvailability(handle, serviceDid, {
+        const res = await checkHandleAvailability(handle, serviceDid, {
           email,
           birthDate,
-          typeahead: true,
         })
+        if (res.available) {
+          ax.metric('signup:handleAvailable', {typeahead: true})
+        } else {
+          ax.metric('signup:handleTaken', {typeahead: true})
+        }
+        return res
       },
     }),
   }
@@ -66,15 +73,13 @@ export async function checkHandleAvailability(
   {
     email,
     birthDate,
-    typeahead,
   }: {
     email?: string
     birthDate?: string
-    typeahead?: boolean
   },
 ) {
   if (serviceDid === BSKY_SERVICE_DID) {
-    const agent = new Agent({service: BSKY_SERVICE})
+    const agent = new Agent(null, {service: BSKY_SERVICE})
     // entryway has a special API for handle availability
     const {data} = await agent.com.atproto.temp.checkHandleAvailability({
       handle,
@@ -88,8 +93,6 @@ export async function checkHandleAvailability(
         ComAtprotoTempCheckHandleAvailability.isResultAvailable,
       )
     ) {
-      logger.metric('signup:handleAvailable', {typeahead}, {statsig: true})
-
       return {available: true} as const
     } else if (
       bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultUnavailable>(
@@ -97,7 +100,6 @@ export async function checkHandleAvailability(
         ComAtprotoTempCheckHandleAvailability.isResultUnavailable,
       )
     ) {
-      logger.metric('signup:handleTaken', {typeahead}, {statsig: true})
       return {
         available: false,
         suggestions: data.result.suggestions,
@@ -109,18 +111,16 @@ export async function checkHandleAvailability(
     }
   } else {
     // 3rd party PDSes won't have this API so just try and resolve the handle
-    const agent = new Agent({service: PUBLIC_BSKY_SERVICE})
+    const agent = new Agent(null, {service: PUBLIC_BSKY_SERVICE})
     try {
       const res = await agent.resolveHandle({
         handle,
       })
 
       if (res.data.did) {
-        logger.metric('signup:handleTaken', {typeahead}, {statsig: true})
         return {available: false} as const
       }
     } catch {}
-    logger.metric('signup:handleAvailable', {typeahead}, {statsig: true})
     return {available: true} as const
   }
 }

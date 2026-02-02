@@ -20,9 +20,6 @@ export function useDraggableScroll<Scrollable extends ScrollView = ScrollView>({
       return
     }
     const slider = ref.current as unknown as HTMLDivElement
-    if (!slider) {
-      return
-    }
     let isDragging = false
     let isMouseDown = false
     let startX = 0
@@ -61,6 +58,9 @@ export function useDraggableScroll<Scrollable extends ScrollView = ScrollView>({
       e.preventDefault()
       const walk = x - startX
       slider.scrollLeft = scrollLeft - walk
+
+      if (slider.contains(document.activeElement))
+        (document.activeElement as HTMLElement)?.blur?.()
     }
 
     slider.addEventListener('mousedown', mouseDown)

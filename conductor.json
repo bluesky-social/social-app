@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "setup": "yarn install",
+        "run": "yarn web --port $CONDUCTOR_PORT"
+    }
+}

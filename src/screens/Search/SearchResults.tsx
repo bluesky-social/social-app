@@ -4,7 +4,9 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
+import {urls} from '#/lib/constants'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
+import {cleanError} from '#/lib/strings/errors'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
@@ -21,6 +23,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
+import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 
@@ -30,12 +33,14 @@ let SearchResults = ({
   activeTab,
   onPageSelected,
   headerHeight,
+  initialPage = 0,
 }: {
   query: string
   queryWithParams: string
   activeTab: number
   onPageSelected: (page: number) => void
   headerHeight: number
+  initialPage?: number
 }): React.ReactNode => {
   const {_} = useLingui()
 
@@ -89,7 +94,7 @@ let SearchResults = ({
           <TabBar items={sections.map(section => section.title)} {...props} />
         </Layout.Center>
       )}
-      initialPage={0}>
+      initialPage={initialPage}>
       {sections.map((section, i) => (
         <View key={i}>{section.component}</View>
       ))}
@@ -110,11 +115,11 @@ function Loader() {
 }
 
 function EmptyState({
-  message,
+  messageText,
   error,
   children,
 }: {
-  message: string
+  messageText: React.ReactNode
   error?: string
   children?: React.ReactNode
 }) {
@@ -124,7 +129,7 @@ function EmptyState({
     <Layout.Content>
       <View style={[a.p_xl]}>
         <View style={[t.atoms.bg_contrast_25, a.rounded_sm, a.p_lg]}>
-          <Text style={[a.text_md]}>{message}</Text>
+          <Text style={[a.text_md]}>{messageText}</Text>
 
           {error && (
             <>
@@ -153,6 +158,41 @@ function EmptyState({
   )
 }
 
+function NoResultsText({query}: {query: string}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <>
+      <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
+        <Trans>
+          No results found for "
+          <Text style={[a.text_lg, t.atoms.text, a.font_medium]}>{query}</Text>
+          ".
+        </Trans>
+      </Text>
+      {'\n\n'}
+      <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+        <Trans context="english-only-resource">
+          Try a different search term, or{' '}
+          <InlineLinkText
+            label={_(
+              msg({
+                message: 'read about how to use search filters',
+                context: 'english-only-resource',
+              }),
+            )}
+            to={urls.website.blog.searchTipsAndTricks}
+            style={[a.text_md, a.leading_snug]}>
+            read about how to use search filters
+          </InlineLinkText>
+          .
+        </Trans>
+      </Text>
+    </>
+  )
+}
+
 type SearchResultSlice =
   | {
       type: 'post'
@@ -174,9 +214,9 @@ let SearchScreenPostResults = ({
   active: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
-  const isLoggedin = Boolean(currentAccount?.did)
+  const trackPostView = usePostViewTracking('SearchResults')
 
   const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -193,7 +233,6 @@ let SearchScreenPostResults = ({
     hasNextPage,
   } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
 
-  const pal = usePalette('default')
   const t = useTheme()
   const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
@@ -247,14 +286,13 @@ let SearchScreenPostResults = ({
     requestSwitchToAccount({requestedAccount: 'new'})
   }
 
-  if (!isLoggedin) {
+  if (!hasSession) {
     return (
       <SearchError
         title={_(msg`Search is currently unavailable when logged out`)}>
         <Text style={[a.text_md, a.text_center, a.leading_snug]}>
           <Trans>
             <InlineLinkText
-              style={[pal.link]}
               label={_(msg`Sign in`)}
               to={'#'}
               onPress={showSignIn}>
@@ -262,7 +300,6 @@ let SearchScreenPostResults = ({
             </InlineLinkText>
             <Text style={t.atoms.text_contrast_medium}> or </Text>
             <InlineLinkText
-              style={[pal.link]}
               label={_(msg`Create an account`)}
               to={'#'}
               onPress={showCreateAccount}>
@@ -281,10 +318,10 @@ let SearchScreenPostResults = ({
 
   return error ? (
     <EmptyState
-      message={_(
+      messageText={_(
         msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
       )}
-      error={error.toString()}
+      error={cleanError(error)}
     />
   ) : (
     <>
@@ -304,11 +341,21 @@ let SearchScreenPostResults = ({
               refreshing={isPTR}
               onRefresh={onPullToRefresh}
               onEndReached={onEndReached}
+              onItemSeen={item => {
+                if (item.type === 'post') {
+                  trackPostView(item.post)
+                }
+              }}
               desktopFixedHeight
-              contentContainerStyle={{paddingBottom: 100}}
+              ListFooterComponent={
+                <ListFooter
+                  isFetchingNextPage={isFetchingNextPage}
+                  hasNextPage={hasNextPage}
+                />
+              }
             />
           ) : (
-            <EmptyState message={_(msg`No results found for ${query}`)} />
+            <EmptyState messageText={<NoResultsText query={query} />} />
           )}
         </>
       ) : (
@@ -327,24 +374,69 @@ let SearchScreenUserResults = ({
   active: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
+  const {hasSession} = useSession()
+  const [isPTR, setIsPTR] = useState(false)
 
-  const {data: results, isFetched} = useActorSearch({
+  const {
+    isFetched,
+    data: results,
+    isFetching,
+    error,
+    refetch,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useActorSearch({
     query,
     enabled: active,
   })
 
-  return isFetched && results ? (
+  const onPullToRefresh = useCallback(async () => {
+    setIsPTR(true)
+    await refetch()
+    setIsPTR(false)
+  }, [setIsPTR, refetch])
+  const onEndReached = useCallback(() => {
+    if (!hasSession) return
+    if (isFetching || !hasNextPage || error) return
+    fetchNextPage()
+  }, [isFetching, error, hasNextPage, fetchNextPage, hasSession])
+
+  const profiles = useMemo(() => {
+    return results?.pages.flatMap(page => page.actors) || []
+  }, [results])
+
+  if (error) {
+    return (
+      <EmptyState
+        messageText={_(
+          msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
+        )}
+        error={error.toString()}
+      />
+    )
+  }
+
+  return isFetched && profiles ? (
     <>
-      {results.length ? (
+      {profiles.length ? (
         <List
-          data={results}
+          data={profiles}
           renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} />}
           keyExtractor={item => item.did}
+          refreshing={isPTR}
+          onRefresh={onPullToRefresh}
+          onEndReached={onEndReached}
           desktopFixedHeight
-          contentContainerStyle={{paddingBottom: 100}}
+          ListFooterComponent={
+            <ListFooter
+              hasNextPage={hasNextPage && hasSession}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          }
         />
       ) : (
-        <EmptyState message={_(msg`No results found for ${query}`)} />
+        <EmptyState messageText={<NoResultsText query={query} />} />
       )}
     </>
   ) : (
@@ -361,7 +453,6 @@ let SearchScreenFeedsResults = ({
   active: boolean
 }): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
 
   const {data: results, isFetched} = usePopularFeedsSearch({
     query,
@@ -376,7 +467,7 @@ let SearchScreenFeedsResults = ({
           renderItem={({item}) => (
             <View
               style={[
-                a.border_b,
+                a.border_t,
                 t.atoms.border_contrast_low,
                 a.px_lg,
                 a.py_lg,
@@ -386,10 +477,10 @@ let SearchScreenFeedsResults = ({
           )}
           keyExtractor={item => item.uri}
           desktopFixedHeight
-          contentContainerStyle={{paddingBottom: 100}}
+          ListFooterComponent={<ListFooter />}
         />
       ) : (
-        <EmptyState message={_(msg`No results found for ${query}`)} />
+        <EmptyState messageText={<NoResultsText query={query} />} />
       )}
     </>
   ) : (

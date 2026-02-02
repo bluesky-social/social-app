@@ -14,6 +14,8 @@ export enum LogContext {
   PostSource = 'post-source',
   AgeAssurance = 'age-assurance',
   PolicyUpdate = 'policy-update',
+  Geolocation = 'geolocation',
+  Drafts = 'drafts',
 
   /**
    * METRIC IS FOR INTERNAL USE ONLY, don't create any other loggers using this
@@ -47,6 +49,11 @@ export type Metadata = {
    * Reserved for appending `LogContext` in logging payloads
    */
   __context__?: undefined
+
+  /**
+   * Reserved for inherited metadata gathered in ambient context
+   */
+  __metadata__?: Record<string, unknown>
 
   /**
    * Applied as Sentry breadcrumb types. Defaults to `default`.

@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
-import {isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getFeedTypeFromUri} from '#/state/queries/feed'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -15,6 +14,7 @@ import {Divider} from '#/components/Divider'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function MissingFeed({
   style,
@@ -67,7 +67,7 @@ export function MissingFeed({
           <View style={[a.flex_1]}>
             <Text
               emoji
-              style={[a.text_sm, a.font_bold, a.leading_snug, a.italic]}
+              style={[a.text_sm, a.font_semi_bold, a.leading_snug, a.italic]}
               numberOfLines={1}>
               {type === 'feed' ? (
                 <Trans>Feed unavailable</Trans>
@@ -83,7 +83,7 @@ export function MissingFeed({
                 a.italic,
               ]}
               numberOfLines={1}>
-              {isWeb ? (
+              {IS_WEB ? (
                 <Trans>Click for information</Trans>
               ) : (
                 <Trans>Tap for information</Trans>
@@ -128,7 +128,7 @@ function DialogInner({
       }
       style={web({maxWidth: 500})}>
       <View style={[a.gap_sm]}>
-        <Text style={[a.font_heavy, a.text_2xl]}>
+        <Text style={[a.font_bold, a.text_2xl]}>
           {type === 'feed' ? (
             <Trans>Could not connect to feed service</Trans>
           ) : (
@@ -147,7 +147,7 @@ function DialogInner({
           )}
         </Text>
         <Divider style={[a.my_md]} />
-        <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+        <Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
           {type === 'feed' ? (
             <Trans>Feed creator</Trans>
           ) : (
@@ -184,7 +184,8 @@ function DialogInner({
         )}
         {type === 'feed' && (
           <>
-            <Text style={[a.font_bold, t.atoms.text_contrast_high, a.mt_md]}>
+            <Text
+              style={[a.font_semi_bold, t.atoms.text_contrast_high, a.mt_md]}>
               <Trans>Feed identifier</Trans>
             </Text>
             <Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>
@@ -194,7 +195,8 @@ function DialogInner({
         )}
         {error instanceof Error && (
           <>
-            <Text style={[a.font_bold, t.atoms.text_contrast_high, a.mt_md]}>
+            <Text
+              style={[a.font_semi_bold, t.atoms.text_contrast_high, a.mt_md]}>
               <Trans>Error message</Trans>
             </Text>
             <Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>
@@ -203,7 +205,7 @@ function DialogInner({
           </>
         )}
       </View>
-      {isNative && (
+      {IS_NATIVE && (
         <Button
           label={_(msg`Close`)}
           onPress={() => control.close()}

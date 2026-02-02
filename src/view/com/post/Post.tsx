@@ -35,7 +35,7 @@ import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import * as bsky from '#/types/bsky'
 
 export function Post({
@@ -43,11 +43,13 @@ export function Post({
   showReplyLine,
   hideTopBorder,
   style,
+  onBeforePress,
 }: {
   post: AppBskyFeedDefs.PostView
   showReplyLine?: boolean
   hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
+  onBeforePress?: () => void
 }) {
   const moderationOpts = useModerationOpts()
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
@@ -85,6 +87,7 @@ export function Post({
         showReplyLine={showReplyLine}
         hideTopBorder={hideTopBorder}
         style={style}
+        onBeforePress={onBeforePress}
       />
     )
   }
@@ -99,6 +102,7 @@ function PostInner({
   showReplyLine,
   hideTopBorder,
   style,
+  onBeforePress: outerOnBeforePress,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
@@ -107,6 +111,7 @@ function PostInner({
   showReplyLine?: boolean
   hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
+  onBeforePress?: () => void
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
@@ -133,6 +138,7 @@ function PostInner({
         moderation,
         langs: record.langs,
       },
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record, moderation])
 
@@ -142,7 +148,8 @@ function PostInner({
 
   const onBeforePress = useCallback(() => {
     unstableCacheProfileView(queryClient, post.author)
-  }, [queryClient, post.author])
+    outerOnBeforePress?.()
+  }, [queryClient, post.author, outerOnBeforePress])
 
   const [hover, setHover] = useState(false)
   return (
@@ -161,7 +168,7 @@ function PostInner({
       onPointerLeave={() => {
         setHover(false)
       }}>
-      <SubtleWebHover hover={hover} />
+      <SubtleHover hover={hover} />
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
@@ -189,10 +196,10 @@ function PostInner({
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               modui={moderation.ui('contentView')}
-              style={[a.py_xs]}
+              style={[a.pb_xs]}
             />
             {richText.text ? (
-              <View>
+              <View style={[a.mb_2xs]}>
                 <RichText
                   enableTags
                   testID="postText"

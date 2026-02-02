@@ -9,7 +9,13 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import {LayoutAnimation, PixelRatio, StyleSheet, View} from 'react-native'
+import {
+  LayoutAnimation,
+  PixelRatio,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
@@ -18,6 +24,7 @@ import Animated, {
   cancelAnimation,
   interpolate,
   measure,
+  ReduceMotion,
   runOnJS,
   type SharedValue,
   useAnimatedReaction,
@@ -29,24 +36,20 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
-import {
-  SafeAreaView,
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
 import {type Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
 import {type Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
+import {IS_IOS} from '#/env'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {type ImageSource, type Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -58,16 +61,16 @@ const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
 
 const SLOW_SPRING: WithSpringConfig = {
-  mass: isIOS ? 1.25 : 0.75,
+  mass: IS_IOS ? 1.25 : 0.75,
   damping: 300,
   stiffness: 800,
-  restDisplacementThreshold: 0.01,
+  restDisplacementThreshold: 0.001,
 }
 const FAST_SPRING: WithSpringConfig = {
-  mass: isIOS ? 1.25 : 0.75,
+  mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 900,
-  restDisplacementThreshold: 0.01,
+  restDisplacementThreshold: 0.001,
 }
 
 function canAnimate(lightbox: Lightbox): boolean {
@@ -247,7 +250,7 @@ function ImageView({
       )
       opacity -= dragProgress
     }
-    const factor = isIOS ? 100 : 50
+    const factor = IS_IOS ? 100 : 50
     return {
       opacity: Math.round(opacity * factor) / factor,
     }
@@ -426,8 +429,10 @@ function LightboxImage({
     }
   }
 
-  const safeFrameDelayedForJSThreadOnly = useSafeAreaFrame()
-  const safeInsetsDelayedForJSThreadOnly = useSafeAreaInsets()
+  const {
+    width: widthDelayedForJSThreadOnly,
+    height: heightDelayedForJSThreadOnly,
+  } = useWindowDimensions()
   const measureSafeArea = React.useCallback(() => {
     'worklet'
     let safeArea: Rect | null = measure(safeAreaRef)
@@ -435,21 +440,15 @@ function LightboxImage({
       if (_WORKLET) {
         console.error('Expected to always be able to measure safe area.')
       }
-      const frame = safeFrameDelayedForJSThreadOnly
-      const insets = safeInsetsDelayedForJSThreadOnly
       safeArea = {
-        x: frame.x + insets.left,
-        y: frame.y + insets.top,
-        width: frame.width - insets.left - insets.right,
-        height: frame.height - insets.top - insets.bottom,
+        x: 0,
+        y: 0,
+        width: widthDelayedForJSThreadOnly,
+        height: heightDelayedForJSThreadOnly,
       }
     }
     return safeArea
-  }, [
-    safeFrameDelayedForJSThreadOnly,
-    safeInsetsDelayedForJSThreadOnly,
-    safeAreaRef,
-  ])
+  }, [safeAreaRef, heightDelayedForJSThreadOnly, widthDelayedForJSThreadOnly])
 
   const {thumbRect} = imageSrc
   const transforms = useDerivedValue(() => {
@@ -516,6 +515,7 @@ function LightboxImage({
             velocity: e.velocityY,
             velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
             deceleration: 1, // Danger! This relies on the reaction below stopping it.
+            reduceMotion: ReduceMotion.Never, // If this animation doesn't run, the image gets stuck - therefore override Reduce Motion
           })
         })
       } else {
@@ -524,6 +524,7 @@ function LightboxImage({
           return withSpring(0, {
             stiffness: 700,
             damping: 50,
+            reduceMotion: ReduceMotion.Never,
           })
         })
       }
@@ -595,7 +596,8 @@ function LightboxFooter({
                 })
                 toggleAltExpanded()
               }}
-              onLongPress={() => {}}>
+              onLongPress={() => {}}
+              emoji>
               {altText}
             </Text>
           </View>
@@ -682,7 +684,7 @@ const styles = StyleSheet.create({
     maxHeight: '100%',
   },
   footerText: {
-    paddingBottom: isIOS ? 20 : 16,
+    paddingBottom: IS_IOS ? 20 : 16,
   },
   footerBtns: {
     flexDirection: 'row',
