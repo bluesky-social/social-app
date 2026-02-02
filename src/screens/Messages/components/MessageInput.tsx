@@ -146,6 +146,7 @@ export function MessageInput({
     try {
       const pickedImages = await openPicker({
         selectionLimit: 4 - imageCount,
+        allowsMultipleSelection: true,
       })
       if (pickedImages.length === 0) return
 
