@@ -58,7 +58,7 @@ export function GifPresentationControls({
         />
       )}
       <View style={styles.gifBadgeContainer}>
-        <Text style={styles.gifBadge}>
+        <Text style={[{color: 'white'}, a.font_bold, a.text_xs]}>
           <Trans>GIF</Trans>
         </Text>
       </View>
@@ -70,16 +70,11 @@ const styles = StyleSheet.create({
   gifBadgeContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
-    paddingHorizontal: 6,
+    paddingHorizontal: 4,
     paddingVertical: 3,
     position: 'absolute',
-    right: 5,
-    bottom: 5,
+    left: 6,
+    bottom: 6,
     zIndex: 2,
-  },
-  gifBadge: {
-    color: 'white',
-    fontSize: 7,
-    fontWeight: '600',
   },
 })
