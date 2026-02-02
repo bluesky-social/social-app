@@ -50,10 +50,10 @@ import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
-import {IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
+import {MessageInputImages, useMessageImages} from './MessageInputImages'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -106,6 +106,7 @@ export function MessagesList({
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
+  const {images, addImages, removeImage, clearImages} = useMessageImages()
 
   useHideBottomBarBorderForScreen()
 
@@ -315,9 +316,35 @@ export function MessagesList({
       // we want to remove the post link from the text, re-trim, then detect facets
       rt.detectFacetsWithoutResolution()
 
-      let embed: $Typed<AppBskyEmbedRecord.Main> | undefined
+      let embed:
+        | $Typed<AppBskyEmbedRecord.Main>
+        | $Typed<{$type: 'app.bsky.embed.images'; images: any[]}>
+        | undefined
 
-      if (embedUri) {
+      // Handle image embeds
+      if (images.length > 0) {
+        const {compressImage} = await import('#/state/gallery')
+        const {uploadBlob} = await import('#/lib/api/upload-blob')
+
+        const uploadedImages = await Promise.all(
+          images.map(async image => {
+            const {path, width, height, mime} = await compressImage(image)
+            const res = await uploadBlob(agent, path, mime)
+            return {
+              image: res.data.blob,
+              alt: image.alt || '',
+              aspectRatio: {width, height},
+            }
+          }),
+        )
+
+        embed = {
+          $type: 'app.bsky.embed.images',
+          images: uploadedImages,
+        }
+
+        clearImages()
+      } else if (embedUri) {
         try {
           const post = await getPost({uri: embedUri})
           if (post) {
@@ -382,7 +409,16 @@ export function MessagesList({
         embed,
       })
     },
-    [agent, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
+    [
+      agent,
+      convoState,
+      embedUri,
+      getPost,
+      hasScrolled,
+      setHasScrolled,
+      images,
+      clearImages,
+    ],
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
@@ -459,10 +495,13 @@ export function MessagesList({
             hasAcceptOverride={hasAcceptOverride}>
             <MessageInput
               onSendMessage={onSendMessage}
-              hasEmbed={!!embedUri}
+              hasEmbed={!!embedUri || images.length > 0}
               setEmbed={setEmbed}
-              openEmojiPicker={onOpenEmojiPicker}>
+              openEmojiPicker={onOpenEmojiPicker}
+              onSelectImages={addImages}
+              imageCount={images.length}>
               <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+              <MessageInputImages images={images} onRemove={removeImage} />
             </MessageInput>
           </ConversationFooter>
         )}
