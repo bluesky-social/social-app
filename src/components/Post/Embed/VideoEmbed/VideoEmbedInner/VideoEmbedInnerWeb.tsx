@@ -21,7 +21,7 @@ export function VideoEmbedInnerWeb({
   active: boolean
   setActive: () => void
   onScreen: boolean
-  lastKnownTime: React.MutableRefObject<number | undefined>
+  lastKnownTime: React.RefObject<number | undefined>
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -37,7 +37,7 @@ export function VideoEmbedInnerWeb({
     throw error
   }
 
-  const hlsRef = useHLS({
+  const {hlsRef, loop} = useHLS({
     playlist: embed.playlist,
     setHasSubtitleTrack,
     setError,
@@ -69,6 +69,7 @@ export function VideoEmbedInnerWeb({
             onTimeUpdate={e => {
               lastKnownTime.current = e.currentTarget.currentTime
             }}
+            loop={loop}
           />
           {embed.alt && (
             <figcaption
@@ -193,29 +194,6 @@ function useHLS({
     },
   )
 
-  const flushOnLoop = useNonReactiveCallback(() => {
-    if (!Hls) return
-    if (!hlsRef.current) return
-    const hls = hlsRef.current
-    // the above callback will catch most stale frags, but there's a corner case -
-    // if there's only one segment in the video, it won't get flushed because it avoids
-    // flushing the currently active segment. Therefore, we have to catch it when we loop
-    if (
-      hls.nextAutoLevel > 0 &&
-      lowQualityFragments.length === 1 &&
-      lowQualityFragments[0].start === 0
-    ) {
-      const lowQualFrag = lowQualityFragments[0]
-
-      hls.trigger(Hls.Events.BUFFER_FLUSHING, {
-        startOffset: lowQualFrag.start,
-        endOffset: lowQualFrag.end,
-        type: 'video',
-      })
-      setLowQualityFragments([])
-    }
-  })
-
   useEffect(() => {
     if (!videoRef.current) return
     if (!Hls) return
@@ -242,20 +220,6 @@ function useHLS({
 
     hls.attachMedia(videoRef.current)
     hls.loadSource(playlist)
-
-    // manually loop, so if we've flushed the first buffer it doesn't get confused
-    const abortController = new AbortController()
-    const {signal} = abortController
-    const videoNode = videoRef.current
-    videoNode.addEventListener(
-      'ended',
-      () => {
-        flushOnLoop()
-        videoNode.currentTime = 0
-        videoNode.play()
-      },
-      {signal},
-    )
 
     hls.on(Hls.Events.FRAG_LOADED, () => {
       BandwidthEstimate.set(hls.bandwidthEstimate)
@@ -294,17 +258,65 @@ function useHLS({
       hlsRef.current = undefined
       hls.detachMedia()
       hls.destroy()
+    }
+  }, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange, Hls])
+
+  const flushOnLoop = useNonReactiveCallback(() => {
+    if (!Hls) return
+    if (!hlsRef.current) return
+    const hls = hlsRef.current
+    // the above callback will catch most stale frags, but there's a corner case -
+    // if there's only one segment in the video, it won't get flushed because it avoids
+    // flushing the currently active segment. Therefore, we have to catch it when we loop
+    if (
+      hls.nextAutoLevel > 0 &&
+      lowQualityFragments.length === 1 &&
+      lowQualityFragments[0].start === 0
+    ) {
+      const lowQualFrag = lowQualityFragments[0]
+
+      hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+        startOffset: lowQualFrag.start,
+        endOffset: lowQualFrag.end,
+        type: 'video',
+      })
+      setLowQualityFragments([])
+    }
+  })
+
+  // manually loop, so if we've flushed the first buffer it doesn't get confused
+  const hasLowQualityFragmentAtStart = lowQualityFragments.some(
+    frag => frag.start === 0,
+  )
+  useEffect(() => {
+    if (!videoRef.current) return
+
+    // use `loop` prop on `<video>` element if the starting frag is high quality.
+    // otherwise, we need to do it with an event listener as we may need to manually flush the frag
+    if (!hasLowQualityFragmentAtStart) return
+
+    const abortController = new AbortController()
+    const {signal} = abortController
+    const videoNode = videoRef.current
+    videoNode.addEventListener(
+      'ended',
+      () => {
+        flushOnLoop()
+        videoNode.currentTime = 0
+        const maybePromise = videoNode.play() as Promise<void> | undefined
+        if (maybePromise) {
+          maybePromise.catch(() => {})
+        }
+      },
+      {signal},
+    )
+    return () => {
       abortController.abort()
     }
-  }, [
-    playlist,
-    setError,
-    setHasSubtitleTrack,
-    videoRef,
-    handleFragChange,
-    flushOnLoop,
-    Hls,
-  ])
+  }, [videoRef, flushOnLoop, hasLowQualityFragmentAtStart])
 
-  return hlsRef
+  return {
+    hlsRef,
+    loop: !hasLowQualityFragmentAtStart,
+  }
 }
