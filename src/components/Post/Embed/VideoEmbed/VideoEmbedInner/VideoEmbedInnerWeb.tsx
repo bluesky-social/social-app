@@ -265,7 +265,7 @@ function useHLS({
     if (!Hls) return
     if (!hlsRef.current) return
     const hls = hlsRef.current
-    // the above callback will catch most stale frags, but there's a corner case -
+    // `handleFragChange` will catch most stale frags, but there's a corner case -
     // if there's only one segment in the video, it won't get flushed because it avoids
     // flushing the currently active segment. Therefore, we have to catch it when we loop
     if (
