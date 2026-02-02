@@ -22,7 +22,11 @@ import {
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {persist, STALE} from '#/state/queries'
+import {
+  PERSISTED_QUERY_GCTIME,
+  PERSISTED_QUERY_ROOT,
+  STALE,
+} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
@@ -415,7 +419,7 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
 const createPinnedFeedInfosQueryKeyRoot = (
   kind: 'pinned' | 'saved',
   feedUris: string[],
-) => ['feed-info', kind, feedUris]
+) => [PERSISTED_QUERY_ROOT, 'feed-info', kind, feedUris]
 
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
@@ -424,12 +428,11 @@ export function usePinnedFeedsInfos() {
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
 
   return useQuery({
-    ...persist(
-      createPinnedFeedInfosQueryKeyRoot(
-        'pinned',
-        pinnedItems.map(f => f.value),
-      ),
+    queryKey: createPinnedFeedInfosQueryKeyRoot(
+      'pinned',
+      pinnedItems.map(f => f.value),
     ),
+    gcTime: PERSISTED_QUERY_GCTIME,
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
     queryFn: async () => {
@@ -533,12 +536,11 @@ export function useSavedFeeds() {
   const queryClient = useQueryClient()
 
   return useQuery({
-    ...persist(
-      createPinnedFeedInfosQueryKeyRoot(
-        'saved',
-        savedItems.map(f => f.value),
-      ),
+    queryKey: createPinnedFeedInfosQueryKeyRoot(
+      'saved',
+      savedItems.map(f => f.value),
     ),
+    gcTime: PERSISTED_QUERY_GCTIME,
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
     placeholderData: previousData => {

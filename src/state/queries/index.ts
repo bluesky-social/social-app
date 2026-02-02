@@ -1,5 +1,3 @@
-import {type QueryKey, queryOptions} from '@tanstack/react-query'
-
 const SECOND = 1e3
 const MINUTE = SECOND * 60
 const HOUR = MINUTE * 60
@@ -40,28 +38,3 @@ export const STALE = {
  */
 export const PERSISTED_QUERY_ROOT = 'PERSISTED'
 export const PERSISTED_QUERY_GCTIME = Infinity
-
-/**
- * Sets up a query to be persisted automatically by the `PersistQueryClientProvider`.
- * This automatically adjusts the query key, and sets the `gcTime` to be infinite.
- *
- * Be careful when using this, since it will change the query key and may
- * break any cases where we call `invalidateQueries` or `refetchQueries`
- * with the old key.
- *
- * Also, only use this for queries that are safe to persist between
- * app launches (like user preferences).
- *
- * Use like this:
- * ```ts
- * useQuery({
- *   ...persist(['user', userId]),
- *   queryFn: () => fetchUser(userId),
- * })
- */
-export function persist<T extends QueryKey>(key: T) {
-  return queryOptions({
-    queryKey: [PERSISTED_QUERY_ROOT, ...key],
-    gcTime: PERSISTED_QUERY_GCTIME,
-  })
-}
