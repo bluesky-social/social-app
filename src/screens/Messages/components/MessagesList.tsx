@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useKeyboardHandler} from 'react-native-keyboard-controller'
 import Animated, {
@@ -15,6 +15,8 @@ import {
   AppBskyRichtextFacet,
   RichText,
 } from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorder'
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -34,6 +36,7 @@ import {
   type ConvoState,
   ConvoStatus,
 } from '#/state/messages/convo/types'
+import {useRequireAltTextEnabled} from '#/state/preferences'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -42,6 +45,7 @@ import {
   type EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker'
 import {List, type ListMethods} from '#/view/com/util/List'
+import * as Toast from '#/view/com/util/Toast'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
@@ -102,11 +106,14 @@ export function MessagesList({
   footer?: React.ReactNode
   hasAcceptOverride?: boolean
 }) {
+  const {_} = useLingui()
   const convoState = useConvoActive()
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
-  const {images, addImages, removeImage, clearImages} = useMessageImages()
+  const {images, addImages, updateImage, removeImage, clearImages} =
+    useMessageImages()
+  const requireAltTextEnabled = useRequireAltTextEnabled()
 
   useHideBottomBarBorderForScreen()
 
@@ -306,6 +313,17 @@ export function MessagesList({
     ],
   }))
 
+  // -- Alt text validation
+  const missingAltTextError = useMemo(() => {
+    if (!requireAltTextEnabled || images.length === 0) {
+      return undefined
+    }
+    if (images.some(img => !img.alt)) {
+      return _(msg`One or more images is missing alt text.`)
+    }
+    return undefined
+  }, [images, requireAltTextEnabled, _])
+
   // -- Message sending
   const onSendMessage = useCallback(
     async (text: string) => {
@@ -323,27 +341,40 @@ export function MessagesList({
 
       // Handle image embeds
       if (images.length > 0) {
-        const {compressImage} = await import('#/state/gallery')
-        const {uploadBlob} = await import('#/lib/api/upload-blob')
+        try {
+          const {compressImage} = await import('#/state/gallery')
+          const {uploadBlob} = await import('#/lib/api/upload-blob')
 
-        const uploadedImages = await Promise.all(
-          images.map(async image => {
-            const {path, width, height, mime} = await compressImage(image)
-            const res = await uploadBlob(agent, path, mime)
-            return {
-              image: res.data.blob,
-              alt: image.alt || '',
-              aspectRatio: {width, height},
-            }
-          }),
-        )
+          const uploadedImages = await Promise.all(
+            images.map(async image => {
+              const compressed = await compressImage(image)
+              const res = await uploadBlob(
+                agent,
+                compressed.path,
+                compressed.mime,
+              )
+              return {
+                image: res.data.blob,
+                alt: image.alt || '',
+                aspectRatio: {
+                  width: compressed.width,
+                  height: compressed.height,
+                },
+              }
+            }),
+          )
 
-        embed = {
-          $type: 'app.bsky.embed.images',
-          images: uploadedImages,
+          embed = {
+            $type: 'app.bsky.embed.images',
+            images: uploadedImages,
+          }
+
+          clearImages()
+        } catch (error) {
+          logger.error('Failed to upload images for DM', {error})
+          Toast.show(_(msg`Failed to upload images`), 'xmark')
+          return
         }
-
-        clearImages()
       } else if (embedUri) {
         try {
           const post = await getPost({uri: embedUri})
@@ -499,9 +530,15 @@ export function MessagesList({
               setEmbed={setEmbed}
               openEmojiPicker={onOpenEmojiPicker}
               onSelectImages={addImages}
-              imageCount={images.length}>
+              imageCount={images.length}
+              error={missingAltTextError}
+              disabled={!!missingAltTextError}>
               <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-              <MessageInputImages images={images} onRemove={removeImage} />
+              <MessageInputImages
+                images={images}
+                onUpdate={updateImage}
+                onRemove={removeImage}
+              />
             </MessageInput>
           </ConversationFooter>
         )}

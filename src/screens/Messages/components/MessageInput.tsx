@@ -31,6 +31,7 @@ import {android, atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {Text} from '#/components/Typography'
 import {IS_IOS, IS_WEB} from '#/env'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
@@ -43,6 +44,8 @@ export function MessageInput({
   children,
   onSelectImages,
   imageCount = 0,
+  error,
+  disabled = false,
 }: {
   onSendMessage: (message: string) => void
   hasEmbed: boolean
@@ -51,6 +54,8 @@ export function MessageInput({
   openEmojiPicker?: (pos: EmojiPickerPosition) => void
   onSelectImages?: (images: ComposerImage[]) => void
   imageCount?: number
+  error?: string
+  disabled?: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -164,6 +169,13 @@ export function MessageInput({
   return (
     <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
       {children}
+      {error && (
+        <View style={[a.px_sm, a.pb_xs]}>
+          <Text style={[a.text_sm, t.atoms.text_contrast_high, {color: t.palette.negative_500}]}>
+            {error}
+          </Text>
+        </View>
+      )}
       <View
         style={[
           a.w_full,
@@ -250,10 +262,17 @@ export function MessageInput({
             a.rounded_full,
             a.align_center,
             a.justify_center,
-            {height: 30, width: 30, backgroundColor: t.palette.primary_500},
+            {
+              height: 30,
+              width: 30,
+              backgroundColor:
+                disabled || needsEmailVerification
+                  ? t.palette.contrast_300
+                  : t.palette.primary_500,
+            },
           ]}
           onPress={onSubmit}
-          disabled={needsEmailVerification}>
+          disabled={disabled || needsEmailVerification}>
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>
