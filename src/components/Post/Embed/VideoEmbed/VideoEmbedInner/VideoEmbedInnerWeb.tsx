@@ -64,7 +64,7 @@ export function VideoEmbedInnerWeb({
             style={{width: '100%', height: '100%', objectFit: 'contain'}}
             playsInline
             preload="none"
-            muted={!focused}
+            muted={embed.presentation === 'gif' || !focused}
             aria-labelledby={embed.alt ? figId : undefined}
             onTimeUpdate={e => {
               lastKnownTime.current = e.currentTarget.currentTime
