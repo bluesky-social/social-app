@@ -35,6 +35,12 @@ cfg.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName === '@ipld/dag-cbor') {
     return context.resolveRequest(context, '@ipld/dag-cbor/src', platform)
   }
+  if (moduleName === 'copy-anything') {
+    return context.resolveRequest(context, 'copy-anything/dist', platform)
+  }
+  if (moduleName === 'is-what') {
+    return context.resolveRequest(context, 'is-what/dist', platform)
+  }
   if (process.env.BSKY_PROFILE) {
     if (moduleName.endsWith('ReactNativeRenderer-prod')) {
       return context.resolveRequest(

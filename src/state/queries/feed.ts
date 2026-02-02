@@ -8,11 +8,11 @@ import {
   moderateFeedGenerator,
   RichText,
 } from '@atproto/api'
+import {t} from '@lingui/macro'
 import {
   type InfiniteData,
   keepPreviousData,
   type QueryClient,
-  type QueryKey,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -22,7 +22,11 @@ import {
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {STALE} from '#/state/queries'
+import {
+  PERSISTED_QUERY_GCTIME,
+  PERSISTED_QUERY_ROOT,
+  STALE,
+} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
@@ -114,7 +118,7 @@ export function hydrateFeedGenerator(
     avatar: view.avatar,
     displayName: view.displayName
       ? sanitizeDisplayName(view.displayName)
-      : `Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
+      : t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
     description: new RichText({
       text: view.description || '',
       facets: (view.descriptionFacets || [])?.slice(),
@@ -155,7 +159,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
     creatorHandle: view.creator.handle,
     displayName: view.name
       ? sanitizeDisplayName(view.name)
-      : `User List by ${sanitizeHandle(view.creator.handle, '@')}`,
+      : t`User List by ${sanitizeHandle(view.creator.handle, '@')}`,
     contentMode: undefined,
   }
 }
@@ -238,13 +242,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
   )
   const lastPageCountRef = useRef(0)
 
-  const query = useInfiniteQuery<
-    AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
-    Error,
-    InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
-    QueryKey,
-    string | undefined
-  >({
+  const query = useInfiniteQuery({
     enabled: Boolean(moderationOpts) && options?.enabled !== false,
     queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
@@ -261,7 +259,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 
       return res.data
     },
-    initialPageParam: undefined,
+    initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     select: useCallback(
       (
@@ -418,7 +416,10 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   contentMode: undefined,
 }
 
-const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
+const createPinnedFeedInfosQueryKeyRoot = (
+  kind: 'pinned' | 'saved',
+  feedUris: string[],
+) => [PERSISTED_QUERY_ROOT, 'feed-info', kind, feedUris]
 
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
@@ -427,13 +428,13 @@ export function usePinnedFeedsInfos() {
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
 
   return useQuery({
+    queryKey: createPinnedFeedInfosQueryKeyRoot(
+      'pinned',
+      pinnedItems.map(f => f.value),
+    ),
+    gcTime: PERSISTED_QUERY_GCTIME,
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
-    queryKey: [
-      pinnedFeedInfosQueryKeyRoot,
-      (hasSession ? 'authed:' : 'unauthed:') +
-        pinnedItems.map(f => f.value).join(','),
-    ],
     queryFn: async () => {
       if (!hasSession) {
         return [PWI_DISCOVER_FEED_STUB]
@@ -535,9 +536,13 @@ export function useSavedFeeds() {
   const queryClient = useQueryClient()
 
   return useQuery({
+    queryKey: createPinnedFeedInfosQueryKeyRoot(
+      'saved',
+      savedItems.map(f => f.value),
+    ),
+    gcTime: PERSISTED_QUERY_GCTIME,
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
-    queryKey: [pinnedFeedInfosQueryKeyRoot, ...savedItems],
     placeholderData: previousData => {
       return (
         previousData || {
