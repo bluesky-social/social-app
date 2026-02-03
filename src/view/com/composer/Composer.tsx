@@ -1141,41 +1141,57 @@ export const ComposePost = ({
           {!IS_WEBFooterSticky && footer}
         </View>
 
-        <Prompt.Outer control={discardPromptControl}>
-          <Prompt.Content>
-            <Prompt.TitleText>
-              {composerState.draftId ? (
-                <Trans>Save changes?</Trans>
-              ) : (
-                <Trans>Save draft?</Trans>
-              )}
-            </Prompt.TitleText>
-            <Prompt.DescriptionText>
-              {composerState.draftId
-                ? _(
-                    msg`You have unsaved changes to this draft, would you like to save them?`,
-                  )
-                : _(msg`Would you like to save this as a draft to edit later?`)}
-            </Prompt.DescriptionText>
-          </Prompt.Content>
-          <Prompt.Actions>
-            <Prompt.Action
-              cta={
-                composerState.draftId
-                  ? _(msg`Save changes`)
-                  : _(msg`Save draft`)
-              }
-              onPress={handleSaveDraft}
-              color="primary"
-            />
-            <Prompt.Action
-              cta={_(msg`Discard`)}
-              onPress={handleDiscard}
-              color="negative_subtle"
-            />
-            <Prompt.Cancel />
-          </Prompt.Actions>
-        </Prompt.Outer>
+        {replyTo ? (
+          <Prompt.Basic
+            control={discardPromptControl}
+            title={_(msg`Discard draft?`)}
+            description=""
+            confirmButtonCta={_(msg`Discard`)}
+            confirmButtonColor="negative"
+            onConfirm={handleDiscard}
+          />
+        ) : (
+          <Prompt.Outer control={discardPromptControl}>
+            <Prompt.Content>
+              <Prompt.TitleText>
+                {composerState.draftId ? (
+                  <Trans>Save changes?</Trans>
+                ) : (
+                  <Trans>Save draft?</Trans>
+                )}
+              </Prompt.TitleText>
+              <Prompt.DescriptionText>
+                {composerState.draftId ? (
+                  <Trans>
+                    You have unsaved changes to this draft, would you like to
+                    save them?
+                  </Trans>
+                ) : (
+                  <Trans>
+                    Would you like to save this as a draft to edit later?
+                  </Trans>
+                )}
+              </Prompt.DescriptionText>
+            </Prompt.Content>
+            <Prompt.Actions>
+              <Prompt.Action
+                cta={
+                  composerState.draftId
+                    ? _(msg`Save changes`)
+                    : _(msg`Save draft`)
+                }
+                onPress={handleSaveDraft}
+                color="primary"
+              />
+              <Prompt.Action
+                cta={_(msg`Discard`)}
+                onPress={handleDiscard}
+                color="negative_subtle"
+              />
+              <Prompt.Cancel />
+            </Prompt.Actions>
+          </Prompt.Outer>
+        )}
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
   )
