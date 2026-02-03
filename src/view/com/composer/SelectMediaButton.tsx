@@ -130,9 +130,7 @@ const extensionToMimeType: Record<
  * `mimeType`. If `mimeType` is not available, we try to infer it through
  * various means.
  */
-export async function classifyImagePickerAsset(
-  asset: ImagePickerAsset,
-): Promise<
+async function classifyImagePickerAsset(asset: ImagePickerAsset): Promise<
   | {
       success: true
       type: AssetType
