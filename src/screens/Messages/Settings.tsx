@@ -5,6 +5,12 @@ import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {
+  useDmImageAlwaysBlur,
+  useDmImageBlurFromNonFollows,
+  useSetDmImageAlwaysBlur,
+  useSetDmImageBlurFromNonFollows,
+} from '#/state/preferences'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -33,6 +39,10 @@ export function MessagesSettingsScreenInner({}: Props) {
     did: currentAccount!.did,
   })
   const {preferences, setPref} = useBackgroundNotificationPreferences()
+  const blurFromNonFollows = useDmImageBlurFromNonFollows()
+  const setBlurFromNonFollows = useSetDmImageBlurFromNonFollows()
+  const alwaysBlur = useDmImageAlwaysBlur()
+  const setAlwaysBlur = useSetDmImageAlwaysBlur()
 
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
     onError: () => {
@@ -152,6 +162,46 @@ export function MessagesSettingsScreenInner({}: Props) {
               </Toggle.Group>
             </>
           )}
+          <Divider style={a.my_md} />
+          <Text style={[a.text_lg, a.font_semi_bold]}>
+            <Trans>Image Privacy</Trans>
+          </Text>
+          <Text style={[a.text_sm, a.pb_md, a.leading_snug]}>
+            <Trans>
+              Control when images in messages are blurred. Your own images are
+              never blurred.
+            </Trans>
+          </Text>
+          <View>
+            <Toggle.Item
+              name="dmImageBlurFromNonFollows"
+              label={_(msg`Blur images from accounts you don't follow`)}
+              value={blurFromNonFollows ?? false}
+              onChange={setBlurFromNonFollows}
+              style={[a.justify_between, a.py_sm]}>
+              <Toggle.LabelText>
+                <Trans>Blur images from accounts you don't follow</Trans>
+              </Toggle.LabelText>
+              <Toggle.Checkbox />
+            </Toggle.Item>
+            <Toggle.Item
+              name="dmImageAlwaysBlur"
+              label={_(msg`Always blur images in messages`)}
+              value={alwaysBlur ?? false}
+              onChange={setAlwaysBlur}
+              style={[a.justify_between, a.py_sm]}>
+              <Toggle.LabelText>
+                <Trans>Always blur images in messages</Trans>
+              </Toggle.LabelText>
+              <Toggle.Checkbox />
+            </Toggle.Item>
+          </View>
+          <Admonition type="tip" style={[a.mt_md]}>
+            <Trans>
+              When available, platform moderation will also apply to message
+              images based on your content filter preferences.
+            </Trans>
+          </Admonition>
         </View>
       </Layout.Content>
     </Layout.Screen>

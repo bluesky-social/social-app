@@ -184,7 +184,11 @@ let MessageItem = ({
         <ActionsWrapper isFromSelf={isFromSelf} message={message}>
           {(AppBskyEmbedRecord.isView(message.embed) ||
             AppBskyEmbedImages.isView(message.embed)) && (
-            <MessageItemEmbed embed={message.embed} />
+            <MessageItemEmbed
+              embed={message.embed}
+              message={message}
+              convo={convo}
+            />
           )}
           {rt.text.length > 0 && (
             <View

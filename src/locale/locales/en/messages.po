@@ -180,7 +180,7 @@ msgstr ""
 msgid "{0} out of 50"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:143
+#: src/components/dms/MessageItem.tsx:144
 msgid "{0} reacted {1}"
 msgstr ""
 
@@ -732,6 +732,7 @@ msgstr ""
 msgid "Add account"
 msgstr ""
 
+#: src/screens/Messages/components/MessageInputImages.tsx:118
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:144
 #: src/view/com/composer/GifAltText.tsx:211
@@ -771,12 +772,20 @@ msgstr ""
 msgid "Add App Password"
 msgstr ""
 
+#: src/screens/Messages/components/MessageInputImages.tsx:120
+msgid "Add descriptive alt text for accessibility"
+msgstr ""
+
 #: src/components/dms/EmojiReactionPicker.web.tsx:35
 msgid "Add emoji reaction"
 msgstr ""
 
 #: src/view/com/feeds/ComposerPrompt.tsx:223
 msgid "Add image"
+msgstr ""
+
+#: src/screens/Messages/components/MessageInput.tsx:235
+msgid "Add images"
 msgstr ""
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
@@ -968,8 +977,8 @@ msgstr ""
 msgid "Allow location access"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:75
-#: src/screens/Messages/Settings.tsx:78
+#: src/screens/Messages/Settings.tsx:85
+#: src/screens/Messages/Settings.tsx:88
 msgid "Allow new messages from"
 msgstr ""
 
@@ -1047,6 +1056,11 @@ msgstr ""
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:138
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:189
+#: src/screens/Messages/Settings.tsx:194
+msgid "Always blur images in messages"
 msgstr ""
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
@@ -1648,6 +1662,11 @@ msgstr ""
 msgid "Blur images and filter from feeds"
 msgstr ""
 
+#: src/screens/Messages/Settings.tsx:178
+#: src/screens/Messages/Settings.tsx:183
+msgid "Blur images from accounts you don't follow"
+msgstr ""
+
 #: src/lib/interests.ts:54
 msgid "Books"
 msgstr ""
@@ -1942,7 +1961,7 @@ msgstr ""
 msgid "Chat settings"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:67
+#: src/screens/Messages/Settings.tsx:77
 msgid "Chat Settings"
 msgstr ""
 
@@ -2072,7 +2091,7 @@ msgstr ""
 msgid "Click to open tag menu for {0}"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:318
+#: src/components/dms/MessageItem.tsx:324
 msgid "Click to retry failed message"
 msgstr ""
 
@@ -2421,6 +2440,10 @@ msgstr ""
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:113
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:170
+msgid "Control when images in messages are blurred. Your own images are never blurred."
 msgstr ""
 
 #: src/screens/Messages/Conversation.tsx:57
@@ -2985,8 +3008,8 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
 #: src/lib/moderation/useLabelBehaviorDescription.ts:45
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
-#: src/screens/Messages/Settings.tsx:144
-#: src/screens/Messages/Settings.tsx:147
+#: src/screens/Messages/Settings.tsx:154
+#: src/screens/Messages/Settings.tsx:157
 #: src/screens/Moderation/index.tsx:384
 msgid "Disabled"
 msgstr ""
@@ -3143,7 +3166,7 @@ msgstr ""
 msgid "Done{extraText}"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:161
+#: src/components/dms/MessageItem.tsx:162
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
@@ -3441,8 +3464,8 @@ msgstr ""
 msgid "Enable trending videos in your Discover feed"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:135
-#: src/screens/Messages/Settings.tsx:138
+#: src/screens/Messages/Settings.tsx:145
+#: src/screens/Messages/Settings.tsx:148
 #: src/screens/Moderation/index.tsx:382
 msgid "Enabled"
 msgstr ""
@@ -3560,8 +3583,8 @@ msgstr ""
 msgid "Everybody can reply to this post."
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:88
-#: src/screens/Messages/Settings.tsx:91
+#: src/screens/Messages/Settings.tsx:98
+#: src/screens/Messages/Settings.tsx:101
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:168
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:178
 msgid "Everyone"
@@ -3853,7 +3876,11 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:311
+#: src/screens/Messages/components/MessageInput.tsx:165
+msgid "Failed to select images"
+msgstr ""
+
+#: src/components/dms/MessageItem.tsx:317
 msgid "Failed to send"
 msgstr ""
 
@@ -3893,8 +3920,12 @@ msgstr ""
 msgid "Failed to update notification declaration"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:39
+#: src/screens/Messages/Settings.tsx:49
 msgid "Failed to update settings"
+msgstr ""
+
+#: src/screens/Messages/components/MessagesList.tsx:375
+msgid "Failed to upload images"
 msgstr ""
 
 #: src/lib/media/video/upload.ts:72
@@ -3925,6 +3956,7 @@ msgid "Feed"
 msgstr ""
 
 #: src/components/FeedCard.tsx:171
+#: src/state/queries/feed.ts:121
 #: src/view/com/feeds/FeedSourceCard.tsx:150
 msgid "Feed by {0}"
 msgstr ""
@@ -4899,6 +4931,10 @@ msgstr ""
 msgid "Image cache cleared, freed {0}"
 msgstr ""
 
+#: src/screens/Messages/Settings.tsx:167
+msgid "Image Privacy"
+msgstr ""
+
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
@@ -5711,11 +5747,11 @@ msgstr ""
 msgid "Message from server: {0}"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:152
+#: src/screens/Messages/components/MessageInput.tsx:194
 msgid "Message input field"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:79
+#: src/screens/Messages/components/MessageInput.tsx:91
 #: src/screens/Messages/components/MessageInput.web.tsx:60
 msgid "Message is too long"
 msgstr ""
@@ -6208,8 +6244,8 @@ msgstr ""
 msgid "No notifications yet!"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:106
-#: src/screens/Messages/Settings.tsx:109
+#: src/screens/Messages/Settings.tsx:116
+#: src/screens/Messages/Settings.tsx:119
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:159
@@ -6363,11 +6399,11 @@ msgstr ""
 msgid "Notification settings"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:128
+#: src/screens/Messages/Settings.tsx:138
 msgid "Notification sounds"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:125
+#: src/screens/Messages/Settings.tsx:135
 msgid "Notification Sounds"
 msgstr ""
 
@@ -6402,7 +6438,7 @@ msgstr ""
 msgid "now"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:275
+#: src/components/dms/MessageItem.tsx:281
 msgid "Now"
 msgstr ""
 
@@ -6459,6 +6495,7 @@ msgstr ""
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
+#: src/screens/Messages/components/MessagesList.tsx:322
 #: src/view/com/composer/Composer.tsx:704
 msgid "One or more images is missing alt text."
 msgstr ""
@@ -7638,6 +7675,7 @@ msgstr ""
 msgid "Remove from your feeds?"
 msgstr ""
 
+#: src/screens/Messages/components/MessageInputImages.tsx:133
 #: src/view/com/composer/photos/Gallery.tsx:204
 msgid "Remove image"
 msgstr ""
@@ -7722,6 +7760,10 @@ msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:32
 msgid "Removed verification"
+msgstr ""
+
+#: src/screens/Messages/components/MessageInputImages.tsx:134
+msgid "Removes this image from the message"
 msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
@@ -8037,7 +8079,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceErrors.tsx:30
 #: src/components/contacts/screens/VerifyNumber.tsx:349
 #: src/components/contacts/screens/VerifyNumber.tsx:354
-#: src/components/dms/MessageItem.tsx:322
+#: src/components/dms/MessageItem.tsx:328
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:114
 #: src/components/moderation/ReportDialog/index.tsx:281
@@ -8447,6 +8489,10 @@ msgstr ""
 msgid "Select how long to mute this word for."
 msgstr ""
 
+#: src/screens/Messages/components/MessageInput.tsx:236
+msgid "Select images to send"
+msgstr ""
+
 #: src/components/AppLanguageDropdown.tsx:69
 #: src/components/LanguageSelect.tsx:37
 #: src/components/LanguageSelect.tsx:38
@@ -8520,6 +8566,10 @@ msgstr ""
 msgid "Select your preferred notification channels"
 msgstr ""
 
+#: src/screens/Messages/components/MessageInputImages.tsx:111
+msgid "Selected image"
+msgstr ""
+
 #: src/view/com/composer/SelectMediaButton.tsx:396
 msgid "Selecting multiple media types is not supported."
 msgstr ""
@@ -8553,7 +8603,7 @@ msgstr ""
 msgid "Send feedback"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:192
+#: src/screens/Messages/components/MessageInput.tsx:258
 #: src/screens/Messages/components/MessageInput.web.tsx:235
 msgid "Send message"
 msgstr ""
@@ -9035,7 +9085,7 @@ msgstr ""
 msgid "Some people can reply"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:148
+#: src/components/dms/MessageItem.tsx:149
 msgid "Someone reacted {0}"
 msgstr ""
 
@@ -10104,7 +10154,7 @@ msgstr ""
 msgid "Two-factor authentication (2FA)"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:153
+#: src/screens/Messages/components/MessageInput.tsx:195
 msgid "Type your message here"
 msgstr ""
 
@@ -10517,6 +10567,10 @@ msgstr ""
 msgid "User list by {0}"
 msgstr ""
 
+#: src/state/queries/feed.ts:162
+msgid "User List by {0}"
+msgstr ""
+
 #: src/view/com/modals/UserAddRemoveLists.tsx:212
 msgid "User list by you"
 msgstr ""
@@ -10555,8 +10609,8 @@ msgstr ""
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:97
-#: src/screens/Messages/Settings.tsx:100
+#: src/screens/Messages/Settings.tsx:107
+#: src/screens/Messages/Settings.tsx:110
 msgid "Users I follow"
 msgstr ""
 
@@ -11100,6 +11154,10 @@ msgstr ""
 msgid "What's up?"
 msgstr ""
 
+#: src/screens/Messages/Settings.tsx:200
+msgid "When available, platform moderation will also apply to message images based on your content filter preferences."
+msgstr ""
+
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:147
 msgid "When you tap on a check, you’ll see which organizations have granted verification."
 msgstr ""
@@ -11180,7 +11238,7 @@ msgstr ""
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:154
+#: src/screens/Messages/components/MessageInput.tsx:196
 #: src/screens/Messages/components/MessageInput.web.tsx:214
 msgid "Write a message"
 msgstr ""
@@ -11320,7 +11378,7 @@ msgstr ""
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:116
+#: src/screens/Messages/Settings.tsx:126
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr ""
 
@@ -11336,6 +11394,10 @@ msgstr ""
 #: src/screens/Login/index.tsx:197
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
 msgid "You can now sign in with your new password."
+msgstr ""
+
+#: src/screens/Messages/components/MessageInput.tsx:148
+msgid "You can only add up to 4 images"
 msgstr ""
 
 #: src/view/com/composer/SelectMediaButton.tsx:413
@@ -11556,7 +11618,7 @@ msgstr ""
 msgid "You probably want to restart the app now."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:135
+#: src/components/dms/MessageItem.tsx:136
 msgid "You reacted {0}"
 msgstr ""
 
