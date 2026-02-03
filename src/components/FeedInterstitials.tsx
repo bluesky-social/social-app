@@ -1,6 +1,12 @@
-import React, {useCallback, useEffect, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {ScrollView, View} from 'react-native'
-import Animated, {LinearTransition} from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeOut,
+  LayoutAnimationConfig,
+  LinearTransition,
+} from 'react-native-reanimated'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -21,6 +27,7 @@ import {type SeenPost} from '#/state/userActionHistory'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {
   atoms as a,
+  native,
   useBreakpoints,
   useTheme,
   type ViewStyleProp,
@@ -152,7 +159,7 @@ function sortSeenPosts(postA: SeenPost, postB: SeenPost): 0 | 1 | -1 {
 function useExperimentalSuggestedUsersQuery() {
   const {currentAccount} = useSession()
   const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
-  const dids = React.useMemo(() => {
+  const dids = useMemo(() => {
     const {likes, follows, followSuggestions, seen} = userActionSnapshot
     const likeDids = likes
       .map(l => new AtUri(l))
@@ -225,67 +232,54 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
     isFetchingNextPage,
   } = useSuggestedFollowsQuery({limit: 25})
 
-  const [dismissedDids, setDismissedDids] = React.useState<Set<string>>(
-    new Set(),
-  )
-  const [dismissingDids, setDismissingDids] = React.useState<Set<string>>(
-    new Set(),
-  )
+  const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
 
-  const onDismiss = React.useCallback((dismissedDid: string) => {
-    // Start the fade animation
-    setDismissingDids(prev => new Set(prev).add(dismissedDid))
-    // After animation completes, actually remove from list
-    setTimeout(() => {
-      setDismissedDids(prev => new Set(prev).add(dismissedDid))
-      setDismissingDids(prev => {
-        const next = new Set(prev)
-        next.delete(dismissedDid)
-        return next
-      })
-    }, DISMISS_ANIMATION_DURATION)
+  const onDismiss = useCallback((dismissedDid: string) => {
+    setDismissedDids(prev => new Set(prev).add(dismissedDid))
   }, [])
 
   // Combine profiles from the actor-specific query with fallback suggestions
-  const allProfiles = React.useMemo(() => {
+  const allProfiles = useMemo(() => {
     const actorProfiles = data?.suggestions ?? []
     const fallbackProfiles =
-      moreSuggestions?.pages.flatMap(page => page.actors) ?? []
+      moreSuggestions?.pages.flatMap(page =>
+        page.actors.map(actor => ({actor, recId: page.recId})),
+      ) ?? []
 
     // Dedupe by did, preferring actor-specific profiles
     const seen = new Set<string>()
-    const combined: bsky.profile.AnyProfileView[] = []
+    const combined: {actor: bsky.profile.AnyProfileView; recId?: number}[] = []
 
     for (const profile of actorProfiles) {
       if (!seen.has(profile.did)) {
         seen.add(profile.did)
-        combined.push(profile)
+        combined.push({actor: profile, recId: data?.recId})
       }
     }
 
     for (const profile of fallbackProfiles) {
-      if (!seen.has(profile.did) && profile.did !== did) {
-        seen.add(profile.did)
+      if (!seen.has(profile.actor.did) && profile.actor.did !== did) {
+        seen.add(profile.actor.did)
         combined.push(profile)
       }
     }
 
     return combined
-  }, [data?.suggestions, moreSuggestions?.pages, did])
+  }, [data?.suggestions, moreSuggestions?.pages, did, data?.recId])
 
-  const filteredProfiles = React.useMemo(() => {
-    return allProfiles.filter(p => !dismissedDids.has(p.did))
+  const filteredProfiles = useMemo(() => {
+    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
   }, [allProfiles, dismissedDids])
 
   // Fetch more when running low
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       moderationOpts &&
       filteredProfiles.length < maxLength &&
       hasNextPage &&
       !isFetchingNextPage
     ) {
-      fetchNextPage()
+      void fetchNextPage()
     }
   }, [
     filteredProfiles.length,
@@ -301,11 +295,9 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
       isSuggestionsLoading={isSuggestionsLoading}
       profiles={filteredProfiles}
       totalProfileCount={allProfiles.length}
-      recId={data?.recId}
       error={error}
       viewContext="profile"
       onDismiss={onDismiss}
-      dismissingDids={dismissingDids}
     />
   )
 }
@@ -327,46 +319,36 @@ export function SuggestedFollowsHome() {
     error: suggestionsError,
   } = useSuggestedFollowsQuery({limit: 25})
 
-  const [dismissedDids, setDismissedDids] = React.useState<Set<string>>(
-    new Set(),
-  )
-  const [dismissingDids, setDismissingDids] = React.useState<Set<string>>(
-    new Set(),
-  )
+  const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
 
-  const onDismiss = React.useCallback((did: string) => {
-    // Start the fade animation
-    setDismissingDids(prev => new Set(prev).add(did))
-    // After animation completes, actually remove from list
-    setTimeout(() => {
-      setDismissedDids(prev => new Set(prev).add(did))
-      setDismissingDids(prev => {
-        const next = new Set(prev)
-        next.delete(did)
-        return next
-      })
-    }, DISMISS_ANIMATION_DURATION)
+  const onDismiss = useCallback((did: string) => {
+    setDismissedDids(prev => new Set(prev).add(did))
   }, [])
 
   // Combine profiles from experimental query with paginated suggestions
-  const allProfiles = React.useMemo(() => {
+  const allProfiles = useMemo(() => {
     const fallbackProfiles =
-      moreSuggestions?.pages.flatMap(page => page.actors) ?? []
+      moreSuggestions?.pages.flatMap(page =>
+        page.actors.map(actor => ({actor, recId: page.recId})),
+      ) ?? []
 
     // Dedupe by did, preferring experimental profiles
     const seen = new Set<string>()
-    const combined: bsky.profile.AnyProfileView[] = []
+    const combined: Array<{
+      actor: bsky.profile.AnyProfileView
+      recId?: number
+    }> = []
 
     for (const profile of experimentalProfiles) {
       if (!seen.has(profile.did)) {
         seen.add(profile.did)
-        combined.push(profile)
+        combined.push({actor: profile, recId: undefined})
       }
     }
 
     for (const profile of fallbackProfiles) {
-      if (!seen.has(profile.did)) {
-        seen.add(profile.did)
+      if (!seen.has(profile.actor.did)) {
+        seen.add(profile.actor.did)
         combined.push(profile)
       }
     }
@@ -374,19 +356,19 @@ export function SuggestedFollowsHome() {
     return combined
   }, [experimentalProfiles, moreSuggestions?.pages])
 
-  const filteredProfiles = React.useMemo(() => {
-    return allProfiles.filter(p => !dismissedDids.has(p.did))
+  const filteredProfiles = useMemo(() => {
+    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
   }, [allProfiles, dismissedDids])
 
   // Fetch more when running low
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       moderationOpts &&
       filteredProfiles.length < maxLength &&
       hasNextPage &&
       !isFetchingNextPage
     ) {
-      fetchNextPage()
+      void fetchNextPage()
     }
   }, [
     filteredProfiles.length,
@@ -405,7 +387,6 @@ export function SuggestedFollowsHome() {
       error={experimentalError || suggestionsError}
       viewContext="feed"
       onDismiss={onDismiss}
-      dismissingDids={dismissingDids}
     />
   )
 }
@@ -415,18 +396,14 @@ export function ProfileGrid({
   error,
   profiles,
   totalProfileCount,
-  recId,
   viewContext = 'feed',
   onDismiss,
-  dismissingDids,
   isVisible = true,
 }: {
   isSuggestionsLoading: boolean
-  profiles: bsky.profile.AnyProfileView[]
+  profiles: {actor: bsky.profile.AnyProfileView; recId?: number}[]
   totalProfileCount?: number
-  recId?: number
   error: Error | null
-  dismissingDids?: Set<string>
   viewContext: 'profile' | 'profileHeader' | 'feed'
   onDismiss?: (did: string) => void
   isVisible?: boolean
@@ -463,18 +440,18 @@ export function ProfileGrid({
 
     const profilesToShow = profiles.slice(0, maxLength)
     profilesToShow.forEach((profile, index) => {
-      if (!seenProfilesRef.current.has(profile.did)) {
-        seenProfilesRef.current.add(profile.did)
+      if (!seenProfilesRef.current.has(profile.actor.did)) {
+        seenProfilesRef.current.add(profile.actor.did)
         ax.metric('suggestedUser:seen', {
           logContext,
-          recId,
+          recId: profile.recId,
           position: index,
-          suggestedDid: profile.did,
+          suggestedDid: profile.actor.did,
           category: null,
         })
       }
     })
-  }, [ax, isLoading, error, profiles, maxLength, logContext, recId])
+  }, [ax, isLoading, error, profiles, maxLength, logContext])
 
   // For profile header, fire when isVisible becomes true
   useEffect(() => {
@@ -540,8 +517,15 @@ export function ProfileGrid({
       ? null
       : profiles.slice(0, maxLength).map((profile, index) => (
           <Animated.View
-            key={profile.did}
-            layout={LinearTransition.duration(DISMISS_ANIMATION_DURATION)}
+            key={profile.actor.did}
+            layout={native(
+              LinearTransition.delay(DISMISS_ANIMATION_DURATION).easing(
+                Easing.out(Easing.exp),
+              ),
+            )}
+            exiting={FadeOut.duration(DISMISS_ANIMATION_DURATION)}
+            // for web, as the cards are static, not in a list
+            entering={web(FadeIn.delay(DISMISS_ANIMATION_DURATION * 2))}
             style={[
               a.flex_1,
               gtMobile &&
@@ -550,22 +534,17 @@ export function ProfileGrid({
                   a.flex_grow,
                   {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
                 ]),
-              {
-                opacity: dismissingDids?.has(profile.did) ? 0 : 1,
-                transitionProperty: 'opacity',
-                transitionDuration: `${DISMISS_ANIMATION_DURATION}ms`,
-              },
             ]}>
             <ProfileCard.Link
-              profile={profile}
+              profile={profile.actor}
               onPress={() => {
                 ax.metric('suggestedUser:press', {
                   logContext: isFeedContext
                     ? 'InterstitialDiscover'
                     : 'InterstitialProfile',
-                  recId,
+                  recId: profile.recId,
                   position: index,
-                  suggestedDid: profile.did,
+                  suggestedDid: profile.actor.did,
                   category: null,
                 })
               }}
@@ -581,14 +560,14 @@ export function ProfileGrid({
                         label={_(msg`Dismiss this suggestion`)}
                         onPress={e => {
                           e.preventDefault()
-                          onDismiss(profile.did)
+                          onDismiss(profile.actor.did)
                           ax.metric('suggestedUser:dismiss', {
                             logContext: isFeedContext
                               ? 'InterstitialDiscover'
                               : 'InterstitialProfile',
                             position: index,
-                            suggestedDid: profile.did,
-                            recId,
+                            suggestedDid: profile.actor.did,
+                            recId: profile.recId,
                           })
                         }}
                         style={[
@@ -621,18 +600,18 @@ export function ProfileGrid({
                         a.mb_auto,
                       ]}>
                       <ProfileCard.Avatar
-                        profile={profile}
+                        profile={profile.actor}
                         moderationOpts={moderationOpts}
                         disabledPreview
                         size={88}
                       />
                       <View style={[a.flex_col, a.align_center, a.max_w_full]}>
                         <ProfileCard.Name
-                          profile={profile}
+                          profile={profile.actor}
                           moderationOpts={moderationOpts}
                         />
                         <ProfileCard.Description
-                          profile={profile}
+                          profile={profile.actor}
                           numberOfLines={2}
                           style={[
                             t.atoms.text_contrast_medium,
@@ -644,7 +623,7 @@ export function ProfileGrid({
                     </View>
 
                     <ProfileCard.FollowButton
-                      profile={profile}
+                      profile={profile.actor}
                       moderationOpts={moderationOpts}
                       logContext="FeedInterstitial"
                       withIcon={false}
@@ -655,9 +634,9 @@ export function ProfileGrid({
                             ? 'InterstitialDiscover'
                             : 'InterstitialProfile',
                           location: 'Card',
-                          recId,
+                          recId: profile.recId,
                           position: index,
-                          suggestedDid: profile.did,
+                          suggestedDid: profile.actor.did,
                           category: null,
                         })
                       }}
@@ -726,35 +705,37 @@ export function ProfileGrid({
 
       <FollowDialogWithoutGuide control={followDialogControl} />
 
-      {gtMobile ? (
-        <View style={[a.p_lg, a.pt_md]}>
-          <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>
-            {content}
+      <LayoutAnimationConfig skipExiting skipEntering>
+        {gtMobile ? (
+          <View style={[a.p_lg, a.pt_md]}>
+            <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>
+              {content}
+            </View>
           </View>
-        </View>
-      ) : (
-        <BlockDrawerGesture>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}
-            snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-            decelerationRate="fast">
-            {content}
+        ) : (
+          <BlockDrawerGesture>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}
+              snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+              decelerationRate="fast">
+              {content}
 
-            {!isProfileHeaderContext && (
-              <SeeMoreSuggestedProfilesCard
-                onPress={() => {
-                  followDialogControl.open()
-                  ax.metric('suggestedUser:seeMore', {
-                    logContext: 'Explore',
-                  })
-                }}
-              />
-            )}
-          </ScrollView>
-        </BlockDrawerGesture>
-      )}
+              {!isProfileHeaderContext && (
+                <SeeMoreSuggestedProfilesCard
+                  onPress={() => {
+                    followDialogControl.open()
+                    ax.metric('suggestedUser:seeMore', {
+                      logContext: 'Explore',
+                    })
+                  }}
+                />
+              )}
+            </ScrollView>
+          </BlockDrawerGesture>
+        )}
+      </LayoutAnimationConfig>
     </View>
   )
 }
@@ -795,7 +776,7 @@ export function SuggestedFeeds() {
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
 
-  const feeds = React.useMemo(() => {
+  const feeds = useMemo(() => {
     const items: AppBskyFeedDefs.GeneratorView[] = []
 
     if (!data) return items
