@@ -2,8 +2,6 @@ const {withAndroidManifest} = require('@expo/config-plugins')
 
 module.exports = function withProfileableAndroid(config) {
   return withAndroidManifest(config, mod => {
-    if (process.env.BSKY_PROFILE !== '1') return mod
-
     const manifest = mod.modResults.manifest
 
     // Ensure <manifest xmlns:tools="...">
