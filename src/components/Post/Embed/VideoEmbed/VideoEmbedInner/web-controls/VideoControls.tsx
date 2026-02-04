@@ -6,7 +6,7 @@ import type Hls from 'hls.js'
 
 import {clamp} from '#/lib/numbers'
 import {
-  useAutoplayDisabled,
+  useAutoplayDisabledPref,
   useSetSubtitlesEnabled,
   useSubtitlesEnabled,
 } from '#/state/preferences'
@@ -122,16 +122,16 @@ export function Controls({
 
   // autoplay/pause based on visibility
   const isWithinMessage = useIsWithinMessage()
-  const autoplayDisabled = useAutoplayDisabled() || isWithinMessage
+  const {videoAutoplayState} = useAutoplayDisabledPref() || isWithinMessage
   useEffect(() => {
     if (active) {
       if (onScreen) {
-        if (!autoplayDisabled) play()
+        if (!videoAutoplayState) play()
       } else {
         pause()
       }
     }
-  }, [onScreen, pause, active, play, autoplayDisabled])
+  }, [onScreen, pause, active, play, videoAutoplayState])
 
   // use minimal quality when not focused
   useEffect(() => {
@@ -165,11 +165,11 @@ export function Controls({
   const onPressEmptySpace = useCallback(() => {
     if (!focused) {
       drawFocus()
-      if (autoplayDisabled) play()
+      if (videoAutoplayState) play()
     } else {
       togglePlayPause()
     }
-  }, [togglePlayPause, drawFocus, focused, autoplayDisabled, play])
+  }, [togglePlayPause, drawFocus, focused, videoAutoplayState, play])
 
   const onPressPlayPause = useCallback(() => {
     drawFocus()
@@ -284,7 +284,7 @@ export function Controls({
   )
 
   const showControls =
-    ((focused || autoplayDisabled) && !playing) ||
+    ((focused || videoAutoplayState) && !playing) ||
     (interactingViaKeypress ? hasFocus : hovered)
 
   return (

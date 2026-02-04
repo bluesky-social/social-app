@@ -3,7 +3,10 @@ import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {useAutoplayDisabled, useSetAutoplayDisabled} from '#/state/preferences'
+import {
+  useAutoplayDisabledPref,
+  useSetAutoplayDisabledPref,
+} from '#/state/preferences'
 import {
   useInAppBrowser,
   useSetInAppBrowser,
@@ -34,8 +37,9 @@ type Props = NativeStackScreenProps<
 export function ContentAndMediaSettingsScreen({}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()
-  const autoplayDisabledPref = useAutoplayDisabled()
-  const setAutoplayDisabledPref = useSetAutoplayDisabled()
+  const {videoAutoplayState, gifAutoplayState} = useAutoplayDisabledPref()
+  const {setVideoAutoplayDisabled, setGifAutoplayDisabled} =
+    useSetAutoplayDisabledPref()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
   const {enabled: trendingEnabled} = useTrendingConfig()
@@ -113,14 +117,27 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             </Toggle.Item>
           )}
           <Toggle.Item
-            name="disable_autoplay"
-            label={_(msg`Autoplay videos and GIFs`)}
-            value={!autoplayDisabledPref}
-            onChange={value => setAutoplayDisabledPref(!value)}>
+            name="disable_video_autoplay"
+            label={_(msg`Autoplay videos`)}
+            value={!videoAutoplayState}
+            onChange={value => setVideoAutoplayDisabled(!value)}>
             <SettingsList.Item>
               <SettingsList.ItemIcon icon={PlayIcon} />
               <SettingsList.ItemText>
-                <Trans>Autoplay videos and GIFs</Trans>
+                <Trans>Autoplay videos</Trans>
+              </SettingsList.ItemText>
+              <Toggle.Platform />
+            </SettingsList.Item>
+          </Toggle.Item>
+          <Toggle.Item
+            name="disable_gif_autoplay"
+            label={_(msg`Autoplay GIFs`)}
+            value={!gifAutoplayState}
+            onChange={value => setGifAutoplayDisabled(!value)}>
+            <SettingsList.Item>
+              <SettingsList.ItemIcon icon={PlayIcon} />
+              <SettingsList.ItemText>
+                <Trans>Autoplay GIFs</Trans>
               </SettingsList.ItemText>
               <Toggle.Platform />
             </SettingsList.Item>
