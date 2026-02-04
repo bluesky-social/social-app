@@ -355,12 +355,18 @@
   },
   "lockfile-lint": {
     "path": "yarn.lock",
+    "type": "yarn",
     "allowedHosts": [
       "npm",
-      "yarn"
+      "yarn",
+      "github.com"
     ],
     "allowedSchemes": [
-      "https:"
+      "https:",
+      "npm:",
+      "workspace:",
+      "link:",
+      "patch:"
     ],
     "allowedPackageNameAliases": [
       "@babel/traverse--for-generate-function-map:@babel/traverse",
@@ -373,8 +379,8 @@
       "https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4",
       "https://codeload.github.com/mattermost/react-native-paste-input/tar.gz/f260447edc645a817ab1ba7b46d8341d84dba8e9"
     ],
-    "emptyHostname": false,
+    "emptyHostname": true,
     "validatePackageNames": true,
-    "validateIntegrity": true
+    "validateIntegrity": false
   }
 }

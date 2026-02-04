@@ -39,7 +39,7 @@ jobs:
         with:
           # Fine to skip scripts since we don't run any code
           # Hardened mode validates lockfile security (no mismatched metadata, valid resolutions)
-          command: YARN_ENABLE_HARDENED_MODE=1 yarn install --skip-builds
+          command: YARN_ENABLE_HARDENED_MODE=1 yarn install --mode skip-build
           attempt_limit: 3
           attempt_delay: 2000
 
