@@ -16,13 +16,13 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+      - name: 📦 Enable Corepack
+        run: corepack enable
       - name: Install node
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
-      - name: 📦 Enable Corepack
-        run: corepack enable
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
@@ -45,13 +45,13 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+      - name: 📦 Enable Corepack
+        run: corepack enable
       - name: Install node
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
-      - name: 📦 Enable Corepack
-        run: corepack enable
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:

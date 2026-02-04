@@ -21,13 +21,13 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: git fetch origin $BASE_REF --depth=1
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: Install node
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-
-      - name: 📦 Enable Corepack
-        run: corepack enable
 
       - name: Reset yarn.lock to base
         env:

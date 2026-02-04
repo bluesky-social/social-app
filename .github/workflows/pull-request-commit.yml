@@ -28,14 +28,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
-
-      - name: 📦 Enable Corepack
-        run: corepack enable
 
       - name: Ensure tracking relevant branches and checkout base
         env:
@@ -123,6 +123,9 @@ jobs:
       - name: ⬇️ Fetch commits from base branch
         run: git fetch origin main:main --depth 100
         if: github.event_name == 'pull_request'
+
+      - name: 📦 Enable Corepack
+        run: corepack enable
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6

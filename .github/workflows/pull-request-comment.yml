@@ -117,6 +117,9 @@ jobs:
         with:
           ref: ${{ steps.pr-info.outputs.head-sha }}
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
@@ -124,7 +127,7 @@ jobs:
           cache: yarn
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Lint check
         run: yarn lint
@@ -149,7 +152,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup Expo
-        run: yarn global add eas-cli-local-build-plugin
+        run: npx eas-cli-local-build-plugin@latest
 
       - name: 🪛 Setup jq
         uses: dcarbone/install-jq-action@v2

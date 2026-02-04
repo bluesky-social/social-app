@@ -32,6 +32,9 @@ jobs:
         with:
           fetch-depth: 5
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
@@ -50,9 +53,6 @@ jobs:
 
       - name: ⛏️ Setup EAS local builds
         run: npx eas-cli-local-build-plugin@latest
-
-      - name: 📦 Enable Corepack
-        run: corepack enable
 
       - name: ⚙️ Install dependencies
         run: yarn install --immutable
