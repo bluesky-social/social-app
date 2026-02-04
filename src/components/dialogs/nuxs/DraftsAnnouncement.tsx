@@ -115,7 +115,7 @@ export function DraftsAnnouncement() {
                   maxWidth: 300,
                 },
               ]}>
-              <Trans>Draft posts</Trans>
+              <Trans>Drafts</Trans>
             </Text>
             <Text
               style={[
