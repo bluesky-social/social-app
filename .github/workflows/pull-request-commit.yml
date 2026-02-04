@@ -34,6 +34,9 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: Ensure tracking relevant branches and checkout base
         env:
           HEAD_REF: ${{ github.head_ref }}

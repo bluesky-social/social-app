@@ -49,10 +49,13 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
+        run: npx eas-cli-local-build-plugin@latest
+
+      - name: 📦 Enable Corepack
+        run: corepack enable
 
       - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:

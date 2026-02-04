@@ -26,6 +26,9 @@ jobs:
         with:
           node-version-file: .nvmrc
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: Reset yarn.lock to base
         env:
           BASE_REF: ${{ github.base_ref }}
@@ -35,7 +38,7 @@ jobs:
         uses: Wandalen/wretry.action@master
         with:
           # Fine to skip scripts since we don't run any code
-          command: yarn install --ignore-scripts
+          command: yarn install --skip-builds
           attempt_limit: 3
           attempt_delay: 2000
 

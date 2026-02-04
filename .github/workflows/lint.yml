@@ -21,10 +21,12 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: yarn
+      - name: 📦 Enable Corepack
+        run: corepack enable
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
-          command: yarn --frozen-lockfile
+          command: yarn install --immutable
           attempt_limit: 3
           attempt_delay: 2000
       - name: Lint check
@@ -48,10 +50,12 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: yarn
+      - name: 📦 Enable Corepack
+        run: corepack enable
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
-          command: yarn --frozen-lockfile
+          command: yarn install --immutable
           attempt_limit: 3
           attempt_delay: 2000
       - name: Check & compile i18n

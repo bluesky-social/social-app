@@ -49,15 +49,18 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
+        run: npx eas-cli-local-build-plugin@latest
 
       - uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: "17"
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: 🔤 Compile translations
         run: yarn intl:build 2>&1 | tee i18n.log
