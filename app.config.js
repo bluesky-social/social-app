@@ -313,22 +313,22 @@ module.exports = function (_config) {
           {
             ios: {
               enableFullScreenImage_legacy: true, // iOS only
-              backgroundColor: '#A8CCFF', // primary_200
+              backgroundColor: '#006AFF', // primary_500
               image: './assets/splash/splash.png',
               resizeMode: 'cover',
               dark: {
                 enableFullScreenImage_legacy: true, // iOS only
-                backgroundColor: '#00398A', // primary_800
+                backgroundColor: '#002861', // primary_900
                 image: './assets/splash/splash-dark.png',
                 resizeMode: 'cover',
               },
             },
             android: {
-              backgroundColor: '#A8CCFF', // primary_200
+              backgroundColor: '#006AFF', // primary_500
               image: './assets/splash/android-splash-logo-white.png',
               imageWidth: 102, // even division of 306px
               dark: {
-                backgroundColor: '#00398A', // primary_800
+                backgroundColor: '#002861', // primary_900
                 image: './assets/splash/android-splash-logo-white.png',
                 imageWidth: 102,
               },
