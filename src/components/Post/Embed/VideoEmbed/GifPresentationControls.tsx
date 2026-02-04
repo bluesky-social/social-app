@@ -1,10 +1,12 @@
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HITSLOP_20} from '#/lib/constants'
 import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
 import {Loader} from '#/components/Loader'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
@@ -12,10 +14,12 @@ export function GifPresentationControls({
   onPress,
   isPlaying,
   isLoading,
+  altText,
 }: {
   onPress: () => void
   isPlaying: boolean
   isLoading?: boolean
+  altText?: string
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -60,6 +64,46 @@ export function GifPresentationControls({
           <Trans>GIF</Trans>
         </Text>
       </View>
+      {altText && <AltBadge text={altText} />}
+    </>
+  )
+}
+
+function AltBadge({text}: {text: string}) {
+  const control = Prompt.usePromptControl()
+  const {_} = useLingui()
+
+  return (
+    <>
+      <TouchableOpacity
+        testID="altTextButton"
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Show alt text`)}
+        accessibilityHint=""
+        hitSlop={HITSLOP_20}
+        onPress={control.open}
+        style={styles.altBadgeContainer}>
+        <Text
+          style={[{color: 'white'}, a.font_bold, a.text_xs]}
+          accessible={false}>
+          <Trans>ALT</Trans>
+        </Text>
+      </TouchableOpacity>
+      <Prompt.Outer control={control}>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Alt Text</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
+        </Prompt.Content>
+        <Prompt.Actions>
+          <Prompt.Action
+            onPress={() => control.close()}
+            cta={_(msg`Close`)}
+            color="secondary"
+          />
+        </Prompt.Actions>
+      </Prompt.Outer>
     </>
   )
 }
@@ -72,6 +116,16 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     position: 'absolute',
     left: 6,
+    bottom: 6,
+    zIndex: 2,
+  },
+  altBadgeContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderRadius: 6,
+    paddingHorizontal: 4,
+    paddingVertical: 3,
+    position: 'absolute',
+    right: 6,
     bottom: 6,
     zIndex: 2,
   },

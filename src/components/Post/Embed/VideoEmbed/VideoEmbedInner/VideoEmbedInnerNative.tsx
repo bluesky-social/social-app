@@ -92,6 +92,7 @@ export function VideoEmbedInnerNative({
           }}
           isPlaying={isPlaying}
           isLoading={false}
+          altText={embed.alt}
         />
       ) : (
         <VideoPresentationControls
