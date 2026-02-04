@@ -34,11 +34,12 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: git show "origin/$BASE_REF:yarn.lock" > yarn.lock
 
-      - name: Yarn install
+      - name: Yarn install (with hardened mode)
         uses: Wandalen/wretry.action@master
         with:
           # Fine to skip scripts since we don't run any code
-          command: yarn install --skip-builds
+          # Hardened mode validates lockfile security (no mismatched metadata, valid resolutions)
+          command: YARN_ENABLE_HARDENED_MODE=1 yarn install --skip-builds
           attempt_limit: 3
           attempt_delay: 2000
 
