@@ -135,15 +135,13 @@ export function DraftsAnnouncement() {
 
           {!IS_WEB && (
             <Button
-              label={_(msg`Okay`)}
+              label={_(msg`Close`)}
               size="large"
               color="primary"
-              onPress={() => {
-                control.close()
-              }}
+              onPress={() => control.close()}
               style={[a.w_full]}>
               <ButtonText>
-                <Trans>Okay</Trans>
+                <Trans>Finally!</Trans>
               </ButtonText>
             </Button>
           )}
