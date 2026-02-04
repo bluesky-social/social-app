@@ -18,7 +18,9 @@ import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {openPicker} from '#/lib/media/picker'
 import {useEmail} from '#/state/email-verification'
+import {type ComposerImage, createComposerImage} from '#/state/gallery'
 import {
   useMessageDraft,
   useSaveMessageDraft,
@@ -27,7 +29,9 @@ import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/Emoji
 import * as Toast from '#/view/com/util/Toast'
 import {android, atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
+import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {Text} from '#/components/Typography'
 import {IS_IOS, IS_WEB} from '#/env'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
@@ -38,12 +42,20 @@ export function MessageInput({
   hasEmbed,
   setEmbed,
   children,
+  onSelectImages,
+  imageCount = 0,
+  error,
+  disabled = false,
 }: {
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
   openEmojiPicker?: (pos: EmojiPickerPosition) => void
+  onSelectImages?: (images: ComposerImage[]) => void
+  imageCount?: number
+  error?: string
+  disabled?: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -131,9 +143,39 @@ export function MessageInput({
     scrollEnabled: isInputScrollable.get(),
   }))
 
+  const onPressSelectImages = useCallback(async () => {
+    if (imageCount >= 4) {
+      Toast.show(_(msg`You can only add up to 4 images`), 'xmark')
+      return
+    }
+    try {
+      const pickedImages = await openPicker({
+        selectionLimit: 4 - imageCount,
+        allowsMultipleSelection: true,
+      })
+      if (pickedImages.length === 0) return
+
+      const composerImages = await Promise.all(
+        pickedImages.map(img => createComposerImage(img)),
+      )
+      onSelectImages?.(composerImages)
+    } catch (err) {
+      // User cancelled or error occurred
+      if (String(err).includes('cancel')) return
+      Toast.show(_(msg`Failed to select images`), 'xmark')
+    }
+  }, [_, imageCount, onSelectImages])
+
   return (
     <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
       {children}
+      {error && (
+        <View style={[a.px_sm, a.pb_xs]}>
+          <Text style={[a.text_sm, t.atoms.text_contrast_high, {color: t.palette.negative_500}]}>
+            {error}
+          </Text>
+        </View>
+      )}
       <View
         style={[
           a.w_full,
@@ -187,6 +229,30 @@ export function MessageInput({
           animatedProps={animatedProps}
           editable={!needsEmailVerification}
         />
+        {onSelectImages && (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Add images`)}
+            accessibilityHint={_(msg`Select images to send`)}
+            hitSlop={HITSLOP_10}
+            style={[
+              a.rounded_full,
+              a.align_center,
+              a.justify_center,
+              {height: 30, width: 30},
+            ]}
+            onPress={onPressSelectImages}
+            disabled={needsEmailVerification || imageCount >= 4}>
+            <ImageIcon
+              size="lg"
+              fill={
+                imageCount >= 4
+                  ? t.palette.contrast_300
+                  : t.palette.contrast_600
+              }
+            />
+          </Pressable>
+        )}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={_(msg`Send message`)}
@@ -196,10 +262,17 @@ export function MessageInput({
             a.rounded_full,
             a.align_center,
             a.justify_center,
-            {height: 30, width: 30, backgroundColor: t.palette.primary_500},
+            {
+              height: 30,
+              width: 30,
+              backgroundColor:
+                disabled || needsEmailVerification
+                  ? t.palette.contrast_300
+                  : t.palette.primary_500,
+            },
           ]}
           onPress={onSubmit}
-          disabled={needsEmailVerification}>
+          disabled={disabled || needsEmailVerification}>
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>

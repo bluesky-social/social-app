@@ -1099,7 +1099,7 @@ export class Convo {
         key: m.id,
         message: {
           ...m.message,
-          embed: undefined,
+          embed: undefined, // Hide embeds in pending messages - they use input format, not view format
           $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',

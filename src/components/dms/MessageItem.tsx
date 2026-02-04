@@ -12,6 +12,7 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {
+  AppBskyEmbedImages,
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   RichText as RichTextAPI,
@@ -181,8 +182,13 @@ let MessageItem = ({
           nextIsMessage && !isNextFromSameSender && a.mb_md,
         ]}>
         <ActionsWrapper isFromSelf={isFromSelf} message={message}>
-          {AppBskyEmbedRecord.isView(message.embed) && (
-            <MessageItemEmbed embed={message.embed} />
+          {(AppBskyEmbedRecord.isView(message.embed) ||
+            AppBskyEmbedImages.isView(message.embed)) && (
+            <MessageItemEmbed
+              embed={message.embed}
+              message={message}
+              convo={convo}
+            />
           )}
           {rt.text.length > 0 && (
             <View
