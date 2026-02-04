@@ -785,7 +785,7 @@ msgid "Add image"
 msgstr "新增圖片"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:481
+#: src/view/com/composer/SelectMediaButton.tsx:499
 msgid "Add media to post"
 msgstr "加入媒體到貼文"
 
@@ -1021,7 +1021,7 @@ msgstr "已經有帳號了？"
 msgid "Already signed in as @{0}"
 msgstr "已經以 @{0} 的身分登入"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:191
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:142
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1037,7 +1037,7 @@ msgstr "替代文字"
 msgid "Alt text"
 msgstr "替代文字"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:148
 msgid "Alt Text"
 msgstr "替代文字"
 
@@ -1063,7 +1063,7 @@ msgstr "一封電子郵件已傳送至 {0}。請查看郵件並在下方輸入�
 msgid "An error has occurred"
 msgstr "發生錯誤"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:421
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
 msgid "An error occurred"
 msgstr "發生錯誤"
 
@@ -1185,7 +1185,7 @@ msgstr "虐待動物"
 msgid "Animals"
 msgstr "動物"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:154
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:105
 msgid "Animated GIF"
 msgstr "GIF 動畫"
 
@@ -2113,7 +2113,7 @@ msgstr "達達的馬蹄 🐴 是美麗的錯誤 🐴"
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:204
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:155
 #: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2258,7 +2258,11 @@ msgstr "撰寫最多 {0, plural,other {# 個字元}}的貼文"
 msgid "Compose reply"
 msgstr "撰寫回覆"
 
-#: src/view/com/composer/Composer.tsx:2295
+#: src/view/com/composer/Composer.tsx:2298
+msgid "Compressing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2300
 msgid "Compressing video..."
 msgstr "正在壓縮影片……"
 
@@ -2983,7 +2987,7 @@ msgstr "拒絕其他人引用這則貼文"
 msgid "Disable replies entirely"
 msgstr "完全關閉回覆"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:387
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
 msgid "Disable subtitles"
 msgstr "關閉字幕"
 
@@ -3430,7 +3434,7 @@ msgstr "啟用推播通知"
 msgid "Enable quote posts of this post"
 msgstr "允許其他人引用這則貼文"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
 msgid "Enable subtitles"
 msgstr "開啟字幕"
 
@@ -3481,7 +3485,7 @@ msgstr "輸入字詞或標籤"
 msgid "Enter code"
 msgstr "輸入驗證碼"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:406
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
 msgid "Enter fullscreen"
 msgstr "進入全螢幕"
 
@@ -3518,7 +3522,7 @@ msgstr "輸入您的密碼"
 msgid "Enter your username and password"
 msgstr "輸入您的用戶名稱和密碼"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:132
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Enters full screen"
 msgstr "進入全螢幕"
 
@@ -3526,7 +3530,7 @@ msgstr "進入全螢幕"
 msgid "Entertainment"
 msgstr "娛樂"
 
-#: src/view/com/composer/Composer.tsx:2304
+#: src/view/com/composer/Composer.tsx:2318
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "錯誤"
@@ -3587,7 +3591,7 @@ msgstr "排除已跟隨的用戶"
 msgid "Excludes users you follow"
 msgstr "排除已跟隨的用戶"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
 msgid "Exit fullscreen"
 msgstr "退出全螢幕"
 
@@ -3615,7 +3619,7 @@ msgstr "展開貼文文字"
 msgid "Expands or collapses post text"
 msgstr "展開或摺疊貼文文字"
 
-#: src/lib/api/index.ts:418
+#: src/lib/api/index.ts:420
 msgid "Expected uri to resolve to a record"
 msgstr "URI 應解析為記錄"
 
@@ -4394,9 +4398,14 @@ msgstr "在某人發布貼文時收到通知"
 msgid "Get started"
 msgstr "開始吧"
 
-#: src/components/MediaPreview.tsx:114
+#: src/components/MediaPreview.tsx:136
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:60
 msgid "GIF"
 msgstr "GIF"
+
+#: src/view/com/composer/Composer.tsx:2323
+msgid "GIF uploaded"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:242
 msgid "Give your profile a face"
@@ -5851,7 +5860,7 @@ msgstr "電影"
 msgid "Music"
 msgstr "音樂"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:153
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -6471,11 +6480,11 @@ msgstr "至少有一張 GIF 缺少了替代文字。"
 msgid "One or more images is missing alt text."
 msgstr "至少有一張圖片缺少了替代文字。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:411
 msgid "One or more of your selected files are not supported."
 msgstr "至少有一個選擇的檔案為不支援的格式。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:416
+#: src/view/com/composer/SelectMediaButton.tsx:434
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "至少有一個選擇的檔案太大了。最大檔案尺寸為 100 MB。"
 
@@ -6644,7 +6653,7 @@ msgid "Opens device camera"
 msgstr "開啟裝置相機"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:487
+#: src/view/com/composer/SelectMediaButton.tsx:505
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "開啟裝置相簿以選擇最多 {MAX_IMAGES, plural, other {# 張圖片}}、1 段影片或 1 張 GIF。"
 
@@ -6817,13 +6826,13 @@ msgstr "已更新密碼"
 msgid "Password updated!"
 msgstr "成功更新密碼！"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:368
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
 msgid "Pause"
 msgstr "暫停"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:319
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
 msgid "Pause video"
 msgstr "暫停影片"
 
@@ -6928,9 +6937,9 @@ msgstr "釘選中的動態源"
 msgid "Pinned to your feeds"
 msgstr "成功釘選到您的動態源"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:369
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Play"
 msgstr "播放"
 
@@ -6939,7 +6948,7 @@ msgid "Play {0}"
 msgstr "播放 {0}"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:320
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
 msgid "Play video"
 msgstr "播放影片"
 
@@ -6947,11 +6956,11 @@ msgstr "播放影片"
 msgid "Play Video"
 msgstr "播放影片"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:43
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:27
 msgid "Plays or pauses the GIF"
 msgstr "播放或暫停 GIF"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:138
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Plays or pauses the video"
 msgstr "播放或暫停影片"
 
@@ -7320,7 +7329,11 @@ msgstr "隱私權政策"
 msgid "Privacy violation of a minor"
 msgstr "侵犯未成年者隱私"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2312
+msgid "Processing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2314
 msgid "Processing video..."
 msgstr "正在處理影片……"
 
@@ -8528,7 +8541,7 @@ msgstr "選擇您在動態中翻譯的偏好目標語言。"
 msgid "Select your preferred notification channels"
 msgstr "選擇您偏好的通知類型"
 
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:414
 msgid "Selecting multiple media types is not supported."
 msgstr "不支援選擇多種媒體類型。"
 
@@ -8790,7 +8803,7 @@ msgstr "共用偏好測試器"
 msgid "Show"
 msgstr "顯示"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:183
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:134
 msgid "Show alt text"
 msgstr "顯示替代文字"
 
@@ -10027,7 +10040,7 @@ msgstr "今天"
 msgid "Toggle to enable or disable adult content"
 msgstr "切換以啟用或停用成人內容"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 msgid "Toggles the sound"
 msgstr "切換聲音"
 
@@ -10268,7 +10281,7 @@ msgstr "取消喜歡"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "取消喜歡（{0, plural, other {# 個喜歡}}）"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10305,7 +10318,7 @@ msgstr "取消靜音列表"
 msgid "Unmute thread"
 msgstr "取消靜音討論串"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:317
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
 msgid "Unmute video"
 msgstr "取消靜音影片"
 
@@ -10443,16 +10456,20 @@ msgstr "從檔案上傳"
 msgid "Upload from Library"
 msgstr "從相簿上傳"
 
+#: src/view/com/composer/Composer.tsx:2305
+msgid "Uploading GIF..."
+msgstr ""
+
 #: src/lib/api/index.ts:302
 msgid "Uploading images..."
 msgstr "正在上傳圖片……"
 
-#: src/lib/api/index.ts:368
-#: src/lib/api/index.ts:392
+#: src/lib/api/index.ts:370
+#: src/lib/api/index.ts:394
 msgid "Uploading link thumbnail..."
 msgstr "正在上傳連結縮圖……"
 
-#: src/view/com/composer/Composer.tsx:2298
+#: src/view/com/composer/Composer.tsx:2307
 msgid "Uploading video..."
 msgstr "正在上傳影片……"
 
@@ -10681,8 +10698,8 @@ msgstr "正在驗證……"
 msgid "Version {0}"
 msgstr "版本 {0}"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:131
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
 msgid "Video"
 msgstr "影片"
 
@@ -10723,11 +10740,11 @@ msgstr "找不到影片。"
 msgid "Video settings"
 msgstr "影片設定"
 
-#: src/view/com/composer/Composer.tsx:2308
+#: src/view/com/composer/Composer.tsx:2325
 msgid "Video uploaded"
 msgstr "影片上傳成功"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
 msgstr "影片：{0}"
 
@@ -10735,7 +10752,7 @@ msgstr "影片：{0}"
 msgid "Videos"
 msgstr "影片"
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:428
 msgid "Videos must be less than 3 minutes long."
 msgstr "影片長度不得超過 3 分鐘。"
 
@@ -11350,11 +11367,11 @@ msgstr "您現在可以選擇在其他人發布貼文時收到通知了。如果
 msgid "You can now sign in with your new password."
 msgstr "您可以使用新密碼登入了。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:431
 msgid "You can only select one GIF at a time."
 msgstr "您一次只能選擇一個 GIF。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:425
 msgid "You can only select one video at a time."
 msgstr "您一次只能選擇一段影片。"
 
@@ -11363,7 +11380,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "您可以登入以重新啟用帳號。其他用戶將可以重新看到您的個人檔案和貼文。"
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:399
+#: src/view/com/composer/SelectMediaButton.tsx:417
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "您最多只能選擇 {MAX_IMAGES, plural, other {# 張圖片}}。"
 
@@ -11552,7 +11569,7 @@ msgstr "您必須完成年齡驗證以存取這個畫面。"
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "您必須授予相簿權限才能儲存 QR Code"
 
-#: src/view/com/composer/SelectMediaButton.tsx:442
+#: src/view/com/composer/SelectMediaButton.tsx:460
 msgid "You need to allow access to your media library."
 msgstr "您必須授予權限以存取媒體內容。"
 

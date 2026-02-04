@@ -785,7 +785,7 @@ msgid "Add image"
 msgstr "Lägg till bild"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:481
+#: src/view/com/composer/SelectMediaButton.tsx:499
 msgid "Add media to post"
 msgstr "Lägg till media i inlägg"
 
@@ -1021,7 +1021,7 @@ msgstr "Har du redan ett konto?"
 msgid "Already signed in as @{0}"
 msgstr "Redan inloggad som @{0}"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:191
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:142
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1037,7 +1037,7 @@ msgstr "ALT"
 msgid "Alt text"
 msgstr "Alternativtext"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:148
 msgid "Alt Text"
 msgstr "Alternativtext"
 
@@ -1063,7 +1063,7 @@ msgstr "Ett e-postmeddelande har skickats till {0}. Det innehåller en bekräfte
 msgid "An error has occurred"
 msgstr "Ett fel har uppstått"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:421
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
 msgid "An error occurred"
 msgstr "Ett fel uppstod"
 
@@ -1185,7 +1185,7 @@ msgstr "Djurplågeri eller vanvård av djur"
 msgid "Animals"
 msgstr "Djur"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:154
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:105
 msgid "Animated GIF"
 msgstr "Animerade gif-bilder"
 
@@ -2113,7 +2113,7 @@ msgstr "Galopp 🐴 galopp 🐴"
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:204
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:155
 #: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2258,7 +2258,11 @@ msgstr "Skriv inlägg som är upp till {0, plural, other {# tecken}} långa"
 msgid "Compose reply"
 msgstr "Skriv svar"
 
-#: src/view/com/composer/Composer.tsx:2295
+#: src/view/com/composer/Composer.tsx:2298
+msgid "Compressing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2300
 msgid "Compressing video..."
 msgstr "Komprimerar videoklipp…"
 
@@ -2983,7 +2987,7 @@ msgstr "Inaktivera citatinlägg för det här inlägget"
 msgid "Disable replies entirely"
 msgstr "Inaktivera svar helt"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:387
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
 msgid "Disable subtitles"
 msgstr "Stäng av undertexter"
 
@@ -3430,7 +3434,7 @@ msgstr "Aktivera pushnotiser"
 msgid "Enable quote posts of this post"
 msgstr "Aktivera citatinlägg för det här inlägget"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
 msgid "Enable subtitles"
 msgstr "Aktivera undertexter"
 
@@ -3481,7 +3485,7 @@ msgstr "Ange ett ord eller en tagg"
 msgid "Enter code"
 msgstr "Ange kod"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:406
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
 msgid "Enter fullscreen"
 msgstr "Öppna helskärm"
 
@@ -3518,7 +3522,7 @@ msgstr "Ange ditt lösenord"
 msgid "Enter your username and password"
 msgstr "Ange ditt användarnamn och lösenord"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:132
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Enters full screen"
 msgstr "Öppnar helskärm"
 
@@ -3526,7 +3530,7 @@ msgstr "Öppnar helskärm"
 msgid "Entertainment"
 msgstr "Underhållning"
 
-#: src/view/com/composer/Composer.tsx:2304
+#: src/view/com/composer/Composer.tsx:2318
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Fel"
@@ -3587,7 +3591,7 @@ msgstr "Undanta användare som du följer"
 msgid "Excludes users you follow"
 msgstr "Undantar användare som du följer"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
 msgid "Exit fullscreen"
 msgstr "Stäng helskärm"
 
@@ -3615,7 +3619,7 @@ msgstr "Utöka inläggstext"
 msgid "Expands or collapses post text"
 msgstr "Utökar eller fäller ihop inläggstext"
 
-#: src/lib/api/index.ts:418
+#: src/lib/api/index.ts:420
 msgid "Expected uri to resolve to a record"
 msgstr "Förväntade att URI:n skulle lösa till en post"
 
@@ -4394,9 +4398,14 @@ msgstr "Bli notifierad när någon publicerar inlägg"
 msgid "Get started"
 msgstr "Kom igång"
 
-#: src/components/MediaPreview.tsx:114
+#: src/components/MediaPreview.tsx:136
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:60
 msgid "GIF"
 msgstr "Gif-bild"
+
+#: src/view/com/composer/Composer.tsx:2323
+msgid "GIF uploaded"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:242
 msgid "Give your profile a face"
@@ -5851,7 +5860,7 @@ msgstr "Filmer"
 msgid "Music"
 msgstr "Musik"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:153
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -6471,11 +6480,11 @@ msgstr "En eller flera gif-bilder saknar alternativtext."
 msgid "One or more images is missing alt text."
 msgstr "En eller flera bilder saknar alternativtext."
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:411
 msgid "One or more of your selected files are not supported."
 msgstr "En eller flera av de filer du valt stöds inte."
 
-#: src/view/com/composer/SelectMediaButton.tsx:416
+#: src/view/com/composer/SelectMediaButton.tsx:434
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "En eller flera av de filer du valt är för stora. Maxstorlek är 100 MB."
 
@@ -6644,7 +6653,7 @@ msgid "Opens device camera"
 msgstr "Öppnar enhetens kamera"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:487
+#: src/view/com/composer/SelectMediaButton.tsx:505
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Öppnar enhetens galleri där du kan välja upp till {MAX_IMAGES, plural, other {# bilder}}, ett enskilt videoklipp eller en enskild gif-bild."
 
@@ -6817,13 +6826,13 @@ msgstr "Lösenordet har uppdaterats"
 msgid "Password updated!"
 msgstr "Lösenordet har uppdaterats!"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:368
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
 msgid "Pause"
 msgstr "Pausa"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:319
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
 msgid "Pause video"
 msgstr "Pausa video"
 
@@ -6928,9 +6937,9 @@ msgstr "Fästa flöden"
 msgid "Pinned to your feeds"
 msgstr "Fäst i dina flöden"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:369
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Play"
 msgstr "Spela"
 
@@ -6939,7 +6948,7 @@ msgid "Play {0}"
 msgstr "Spela {0}"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:320
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
 msgid "Play video"
 msgstr "Spela upp videoklipp"
 
@@ -6947,11 +6956,11 @@ msgstr "Spela upp videoklipp"
 msgid "Play Video"
 msgstr "Spela upp videoklipp"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:43
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:27
 msgid "Plays or pauses the GIF"
 msgstr "Spelar upp eller pausar gif-bilden"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:138
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Plays or pauses the video"
 msgstr "Spelar upp eller pausar videoklippet"
 
@@ -7320,7 +7329,11 @@ msgstr "Integritetspolicy"
 msgid "Privacy violation of a minor"
 msgstr "Kränkning av minderårigs integritet"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2312
+msgid "Processing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2314
 msgid "Processing video..."
 msgstr "Bearbetar videoklipp…"
 
@@ -8528,7 +8541,7 @@ msgstr "Välj önskat språk för översättningar i ditt flöde."
 msgid "Select your preferred notification channels"
 msgstr "Välj önskade notiskanaler"
 
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:414
 msgid "Selecting multiple media types is not supported."
 msgstr "Val av flera medietyper stöds inte."
 
@@ -8790,7 +8803,7 @@ msgstr "Testare för delade inställningar"
 msgid "Show"
 msgstr "Visa"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:183
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:134
 msgid "Show alt text"
 msgstr "Visa alternativtext"
 
@@ -10027,7 +10040,7 @@ msgstr "Idag"
 msgid "Toggle to enable or disable adult content"
 msgstr "Växla mellan att tillåta eller inaktivera vuxet innehåll"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 msgid "Toggles the sound"
 msgstr "Sätter på eller stänger av ljudet"
 
@@ -10268,7 +10281,7 @@ msgstr "Sluta gilla"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Sluta gilla ({0, plural, one {# gillamarkering} other {# gillamarkeringar}})"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10305,7 +10318,7 @@ msgstr "Sluta ignorera lista"
 msgid "Unmute thread"
 msgstr "Sluta ignorera tråd"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:317
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
 msgid "Unmute video"
 msgstr "Sätt på ljudet på videoklippet"
 
@@ -10443,16 +10456,20 @@ msgstr "Ladda upp från Filer"
 msgid "Upload from Library"
 msgstr "Ladda upp från Bibliotek"
 
+#: src/view/com/composer/Composer.tsx:2305
+msgid "Uploading GIF..."
+msgstr ""
+
 #: src/lib/api/index.ts:302
 msgid "Uploading images..."
 msgstr "Laddar upp bilder…"
 
-#: src/lib/api/index.ts:368
-#: src/lib/api/index.ts:392
+#: src/lib/api/index.ts:370
+#: src/lib/api/index.ts:394
 msgid "Uploading link thumbnail..."
 msgstr "Laddar upp miniatyrbild av länk…"
 
-#: src/view/com/composer/Composer.tsx:2298
+#: src/view/com/composer/Composer.tsx:2307
 msgid "Uploading video..."
 msgstr "Laddar upp video…"
 
@@ -10681,8 +10698,8 @@ msgstr "Verifierar…"
 msgid "Version {0}"
 msgstr "Version {0}"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:131
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
 msgid "Video"
 msgstr "Videoklipp"
 
@@ -10723,11 +10740,11 @@ msgstr "Videoklippet hittades inte."
 msgid "Video settings"
 msgstr "Inställningar för videoklipp"
 
-#: src/view/com/composer/Composer.tsx:2308
+#: src/view/com/composer/Composer.tsx:2325
 msgid "Video uploaded"
 msgstr "Videoklipp uppladdat"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
 msgstr "Videoklipp: {0}"
 
@@ -10735,7 +10752,7 @@ msgstr "Videoklipp: {0}"
 msgid "Videos"
 msgstr "Videoklipp"
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:428
 msgid "Videos must be less than 3 minutes long."
 msgstr "Videoklipp får inte vara längre än 3 minuter."
 
@@ -11350,11 +11367,11 @@ msgstr "Du kan nu välja att få notiser när specifika personer publicerar inl�
 msgid "You can now sign in with your new password."
 msgstr "Du kan nu logga in med ditt nya lösenord."
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:431
 msgid "You can only select one GIF at a time."
 msgstr "Du kan endast välja en gif-bild åt gången."
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:425
 msgid "You can only select one video at a time."
 msgstr "Du kan endast välja ett videoklipp åt gången."
 
@@ -11363,7 +11380,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Du kan återaktivera ditt konto för att fortsätta logga in. Din profil och dina inlägg kommer att vara synliga för andra användare."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:399
+#: src/view/com/composer/SelectMediaButton.tsx:417
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "Du kan välja upp till {MAX_IMAGES, plural, other {# bilder}} totalt."
 
@@ -11552,7 +11569,7 @@ msgstr "Du måste slutföra en ålderskontroll för att få tillgång till den h
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "Du måste ge åtkomst till ditt fotobibliotek för att spara en QR-kod"
 
-#: src/view/com/composer/SelectMediaButton.tsx:442
+#: src/view/com/composer/SelectMediaButton.tsx:460
 msgid "You need to allow access to your media library."
 msgstr "Du måste tillåta åtkomst till ditt mediebibliotek."
 

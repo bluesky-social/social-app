@@ -785,7 +785,7 @@ msgid "Add image"
 msgstr "Добавить изображение"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:481
+#: src/view/com/composer/SelectMediaButton.tsx:499
 msgid "Add media to post"
 msgstr "Добавить медиа к посту"
 
@@ -1021,7 +1021,7 @@ msgstr "Уже есть учётная запись?"
 msgid "Already signed in as @{0}"
 msgstr "Уже вошли как @{0}"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:191
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:142
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1037,7 +1037,7 @@ msgstr "АЛЬТ"
 msgid "Alt text"
 msgstr "Альтернативный текст"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:148
 msgid "Alt Text"
 msgstr "Альтернативный текст"
 
@@ -1063,7 +1063,7 @@ msgstr "Было отправлено письмо на адрес {0}. Оно �
 msgid "An error has occurred"
 msgstr "Возникла ошибка"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:421
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
 msgid "An error occurred"
 msgstr "Возникла ошибка"
 
@@ -1185,7 +1185,7 @@ msgstr ""
 msgid "Animals"
 msgstr "Животные"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:154
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:105
 msgid "Animated GIF"
 msgstr "Анимированные GIF"
 
@@ -2113,7 +2113,7 @@ msgstr "Клип 🐴 клоп 🐴"
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:204
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:155
 #: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2258,7 +2258,11 @@ msgstr "Пишите посты длиной до {0, plural, one {# симво�
 msgid "Compose reply"
 msgstr "Составить ответ"
 
-#: src/view/com/composer/Composer.tsx:2295
+#: src/view/com/composer/Composer.tsx:2298
+msgid "Compressing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2300
 msgid "Compressing video..."
 msgstr "Сжатие видео..."
 
@@ -2983,7 +2987,7 @@ msgstr ""
 msgid "Disable replies entirely"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:387
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
 msgid "Disable subtitles"
 msgstr "Отключить субтитры"
 
@@ -3430,7 +3434,7 @@ msgstr "Включить push-уведомления"
 msgid "Enable quote posts of this post"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
 msgid "Enable subtitles"
 msgstr "Включить субтитры"
 
@@ -3481,7 +3485,7 @@ msgstr "Введите слово или тег"
 msgid "Enter code"
 msgstr "Введите код"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:406
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
 msgid "Enter fullscreen"
 msgstr "Перейти в полноэкранный режим"
 
@@ -3518,7 +3522,7 @@ msgstr "Введите ваш пароль"
 msgid "Enter your username and password"
 msgstr "Введите псевдоним и пароль"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:132
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Enters full screen"
 msgstr "Переходит в полноэкранный режим"
 
@@ -3526,7 +3530,7 @@ msgstr "Переходит в полноэкранный режим"
 msgid "Entertainment"
 msgstr "Развлечения"
 
-#: src/view/com/composer/Composer.tsx:2304
+#: src/view/com/composer/Composer.tsx:2318
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Ошибка"
@@ -3587,7 +3591,7 @@ msgstr "Исключить пользователей, на которых вы 
 msgid "Excludes users you follow"
 msgstr "Исключает пользователей, на которых вы подписаны"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
 msgid "Exit fullscreen"
 msgstr "Выйти из полноэкранного режима"
 
@@ -3615,7 +3619,7 @@ msgstr ""
 msgid "Expands or collapses post text"
 msgstr "Разворачивает или сворачивает текст поста"
 
-#: src/lib/api/index.ts:418
+#: src/lib/api/index.ts:420
 msgid "Expected uri to resolve to a record"
 msgstr "Ожидалось, что uri разрешиться в запись"
 
@@ -4394,9 +4398,14 @@ msgstr ""
 msgid "Get started"
 msgstr "Приступить"
 
-#: src/components/MediaPreview.tsx:114
+#: src/components/MediaPreview.tsx:136
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:60
 msgid "GIF"
 msgstr "GIF"
+
+#: src/view/com/composer/Composer.tsx:2323
+msgid "GIF uploaded"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:242
 msgid "Give your profile a face"
@@ -5851,7 +5860,7 @@ msgstr "Кино"
 msgid "Music"
 msgstr "Музыка"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:153
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -6471,11 +6480,11 @@ msgstr "В одном или нескольких GIF-файлах отсутс�
 msgid "One or more images is missing alt text."
 msgstr "Для одного или нескольких изображений отсутствует альтернативный текст."
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:411
 msgid "One or more of your selected files are not supported."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:416
+#: src/view/com/composer/SelectMediaButton.tsx:434
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr ""
 
@@ -6644,7 +6653,7 @@ msgid "Opens device camera"
 msgstr ""
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:487
+#: src/view/com/composer/SelectMediaButton.tsx:505
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
@@ -6817,13 +6826,13 @@ msgstr "Пароль изменён"
 msgid "Password updated!"
 msgstr "Пароль изменён!"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:368
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
 msgid "Pause"
 msgstr "Приостановить"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:319
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
 msgid "Pause video"
 msgstr "Приостановить видео"
 
@@ -6928,9 +6937,9 @@ msgstr "Закрепленные ленты"
 msgid "Pinned to your feeds"
 msgstr "Закрепить в своих лентах"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:369
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Play"
 msgstr "Воспроизвести"
 
@@ -6939,7 +6948,7 @@ msgid "Play {0}"
 msgstr "Воспроизвести {0}"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:320
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
 msgid "Play video"
 msgstr "Воспроизвести видео"
 
@@ -6947,11 +6956,11 @@ msgstr "Воспроизвести видео"
 msgid "Play Video"
 msgstr "Воспроизвести видео"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:43
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:27
 msgid "Plays or pauses the GIF"
 msgstr "Воспроизводит или приостанавливает GIF"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:138
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Plays or pauses the video"
 msgstr "Воспроизводит или приостанавливает видео"
 
@@ -7320,7 +7329,11 @@ msgstr "Политика конфиденциальности"
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2312
+msgid "Processing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2314
 msgid "Processing video..."
 msgstr "Обработка видео..."
 
@@ -8528,7 +8541,7 @@ msgstr "Выберите желаемый язык для переводов в 
 msgid "Select your preferred notification channels"
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:414
 msgid "Selecting multiple media types is not supported."
 msgstr ""
 
@@ -8790,7 +8803,7 @@ msgstr "Тестер общих настроек"
 msgid "Show"
 msgstr "Показать"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:183
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:134
 msgid "Show alt text"
 msgstr "Показать альтернативный текст"
 
@@ -10027,7 +10040,7 @@ msgstr "Сегодня"
 msgid "Toggle to enable or disable adult content"
 msgstr "Включить или отключить контент для взрослых"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 msgid "Toggles the sound"
 msgstr "Переключает звук"
 
@@ -10268,7 +10281,7 @@ msgstr "Дизлайк"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Дизлайк ({0, plural, one {# лайк} few {# лайка} other {# лайков}})"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10305,7 +10318,7 @@ msgstr "Перестать игнорировать список"
 msgid "Unmute thread"
 msgstr "Перестать игнорировать ветку"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:317
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
 msgid "Unmute video"
 msgstr "Включить звук видео"
 
@@ -10443,16 +10456,20 @@ msgstr "Загрузить из файлов"
 msgid "Upload from Library"
 msgstr "Загрузить из библиотеки"
 
+#: src/view/com/composer/Composer.tsx:2305
+msgid "Uploading GIF..."
+msgstr ""
+
 #: src/lib/api/index.ts:302
 msgid "Uploading images..."
 msgstr "Загрузка изображений..."
 
-#: src/lib/api/index.ts:368
-#: src/lib/api/index.ts:392
+#: src/lib/api/index.ts:370
+#: src/lib/api/index.ts:394
 msgid "Uploading link thumbnail..."
 msgstr "Загрузка миниатюры ссылки..."
 
-#: src/view/com/composer/Composer.tsx:2298
+#: src/view/com/composer/Composer.tsx:2307
 msgid "Uploading video..."
 msgstr "Загрузка видео..."
 
@@ -10681,8 +10698,8 @@ msgstr ""
 msgid "Version {0}"
 msgstr "Версия {0}"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:131
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
 msgid "Video"
 msgstr "Видео"
 
@@ -10723,11 +10740,11 @@ msgstr "Видео не найдено."
 msgid "Video settings"
 msgstr "Настройки видео"
 
-#: src/view/com/composer/Composer.tsx:2308
+#: src/view/com/composer/Composer.tsx:2325
 msgid "Video uploaded"
 msgstr "Видео загружено"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
 msgstr "Видео: {0}"
 
@@ -10735,7 +10752,7 @@ msgstr "Видео: {0}"
 msgid "Videos"
 msgstr "Видео"
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:428
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
@@ -11350,11 +11367,11 @@ msgstr "Теперь вы можете выбирать, получать ли �
 msgid "You can now sign in with your new password."
 msgstr "Теперь вы можете войти с помощью нового пароля."
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:431
 msgid "You can only select one GIF at a time."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:425
 msgid "You can only select one video at a time."
 msgstr ""
 
@@ -11363,7 +11380,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Вы можете реактивировать свою учётную запись, чтобы продолжить вход в систему. Ваш профиль и посты будут видны другим пользователям."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:399
+#: src/view/com/composer/SelectMediaButton.tsx:417
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
@@ -11552,7 +11569,7 @@ msgstr ""
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "Чтобы сохранить QR-код, необходимо предоставить доступ к библиотеке фотографий"
 
-#: src/view/com/composer/SelectMediaButton.tsx:442
+#: src/view/com/composer/SelectMediaButton.tsx:460
 msgid "You need to allow access to your media library."
 msgstr ""
 

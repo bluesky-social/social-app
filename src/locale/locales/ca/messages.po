@@ -785,7 +785,7 @@ msgid "Add image"
 msgstr "Afegeix imatge"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:481
+#: src/view/com/composer/SelectMediaButton.tsx:499
 msgid "Add media to post"
 msgstr "Afegeix imatges a la publicació"
 
@@ -1021,7 +1021,7 @@ msgstr "Ja tens un compte?"
 msgid "Already signed in as @{0}"
 msgstr "Ja estàs registrat com a @{0}"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:191
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:142
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1037,7 +1037,7 @@ msgstr "ALT"
 msgid "Alt text"
 msgstr "Text alternatiu"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:148
 msgid "Alt Text"
 msgstr "Text alternatiu"
 
@@ -1063,7 +1063,7 @@ msgstr "S'ha enviat un correu a {0}. Inclou un codi de confirmació que has d'en
 msgid "An error has occurred"
 msgstr "Hi ha hagut un error"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:421
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
 msgid "An error occurred"
 msgstr "Hi ha hagut un error"
 
@@ -1185,7 +1185,7 @@ msgstr "Benestar animal"
 msgid "Animals"
 msgstr "Animals"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:154
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:105
 msgid "Animated GIF"
 msgstr "GIF animat"
 
@@ -2113,7 +2113,7 @@ msgstr "Clop 🐴 clop 🐴"
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:204
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:155
 #: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2258,7 +2258,11 @@ msgstr "Crear publicacions de fins a {0, plural, one {}other {# caràcters}} de 
 msgid "Compose reply"
 msgstr "Redacta una resposta"
 
-#: src/view/com/composer/Composer.tsx:2295
+#: src/view/com/composer/Composer.tsx:2298
+msgid "Compressing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2300
 msgid "Compressing video..."
 msgstr "Comprimint el vídeo..."
 
@@ -2983,7 +2987,7 @@ msgstr "Desactiva les publicacions que citen aquesta publicació"
 msgid "Disable replies entirely"
 msgstr "Desactiva del tot les respostes"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:387
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
 msgid "Disable subtitles"
 msgstr "Deshabilita els subtítols"
 
@@ -3430,7 +3434,7 @@ msgstr "Activa les notificacions push"
 msgid "Enable quote posts of this post"
 msgstr "Activa les publicacions que citen aquesta publicació"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
 msgid "Enable subtitles"
 msgstr "Habilita els subtítols"
 
@@ -3481,7 +3485,7 @@ msgstr "Introdueix una lletra o etiqueta"
 msgid "Enter code"
 msgstr "Entra el codi"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:406
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
 msgid "Enter fullscreen"
 msgstr "Entra a pantalla completa"
 
@@ -3518,7 +3522,7 @@ msgstr "Introdueix la teva contrasenya"
 msgid "Enter your username and password"
 msgstr "Introdueix el teu usuari i contrasenya"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:132
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Enters full screen"
 msgstr "Canvia a pantalla completa"
 
@@ -3526,7 +3530,7 @@ msgstr "Canvia a pantalla completa"
 msgid "Entertainment"
 msgstr "Entreteniment"
 
-#: src/view/com/composer/Composer.tsx:2304
+#: src/view/com/composer/Composer.tsx:2318
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Error"
@@ -3587,7 +3591,7 @@ msgstr "Exclou els usuaris que segueixes"
 msgid "Excludes users you follow"
 msgstr "Exclou els usuaris que segueixes"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
 msgid "Exit fullscreen"
 msgstr "Surt de la pantalla completa"
 
@@ -3615,7 +3619,7 @@ msgstr "Expandeix el text de la publicació"
 msgid "Expands or collapses post text"
 msgstr "Amplia o redueix el text de la publicació"
 
-#: src/lib/api/index.ts:418
+#: src/lib/api/index.ts:420
 msgid "Expected uri to resolve to a record"
 msgstr "S'esperava que l'uri es resolgués en un registre"
 
@@ -4394,9 +4398,14 @@ msgstr "Rep notificacions quan algú publiqui"
 msgid "Get started"
 msgstr "Comença"
 
-#: src/components/MediaPreview.tsx:114
+#: src/components/MediaPreview.tsx:136
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:60
 msgid "GIF"
 msgstr "GIF"
+
+#: src/view/com/composer/Composer.tsx:2323
+msgid "GIF uploaded"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:242
 msgid "Give your profile a face"
@@ -5851,7 +5860,7 @@ msgstr "Pel·lícules"
 msgid "Music"
 msgstr "Música"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:153
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -6471,11 +6480,11 @@ msgstr "Falta el text alternatiu a un o més GIFs."
 msgid "One or more images is missing alt text."
 msgstr "Falta el text alternatiu a una o més imatges."
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:411
 msgid "One or more of your selected files are not supported."
 msgstr "Un o més dels fitxers seleccionats no són compatibles."
 
-#: src/view/com/composer/SelectMediaButton.tsx:416
+#: src/view/com/composer/SelectMediaButton.tsx:434
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "Un o més dels fitxers seleccionats són massa grans. La mida màxima és de 100 MB."
 
@@ -6644,7 +6653,7 @@ msgid "Opens device camera"
 msgstr "Obre la càmera del dispositiu"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:487
+#: src/view/com/composer/SelectMediaButton.tsx:505
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Obre la galeria del dispositiu per seleccionar fins a {MAX_IMAGES, plural, other{# imatges}} o un sol vídeo o GIF."
 
@@ -6817,13 +6826,13 @@ msgstr "Contrasenya actualitzada"
 msgid "Password updated!"
 msgstr "Contrasenya actualitzada!"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:368
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
 msgid "Pause"
 msgstr "Posa en pausa"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:319
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
 msgid "Pause video"
 msgstr "Posa en pausa el vídeo"
 
@@ -6928,9 +6937,9 @@ msgstr "Canals de notícies fixats"
 msgid "Pinned to your feeds"
 msgstr "Fixat als teus canals"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:369
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Play"
 msgstr "Reprodueix"
 
@@ -6939,7 +6948,7 @@ msgid "Play {0}"
 msgstr "Reprodueix {0}"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:320
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
 msgid "Play video"
 msgstr "Reprodueix el vídeo"
 
@@ -6947,11 +6956,11 @@ msgstr "Reprodueix el vídeo"
 msgid "Play Video"
 msgstr "Reprodueix el vídeo"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:43
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:27
 msgid "Plays or pauses the GIF"
 msgstr "Reprodueix o posa en pausa el GIF"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:138
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Plays or pauses the video"
 msgstr "Reprodueix o posa en pausa el GIF"
 
@@ -7320,7 +7329,11 @@ msgstr "Política de privacitat"
 msgid "Privacy violation of a minor"
 msgstr "Violació de la privadesa d'un menor"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2312
+msgid "Processing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2314
 msgid "Processing video..."
 msgstr "Processant el vídeo..."
 
@@ -8528,7 +8541,7 @@ msgstr "Selecciona el teu idioma preferit per a les traduccions al teu canal."
 msgid "Select your preferred notification channels"
 msgstr "Selecciona els teus canals de notificació preferits"
 
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:414
 msgid "Selecting multiple media types is not supported."
 msgstr "No es permet seleccionar diversos tipus de suports."
 
@@ -8790,7 +8803,7 @@ msgstr "Comprovador de preferències compartides"
 msgid "Show"
 msgstr "Mostra"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:183
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:134
 msgid "Show alt text"
 msgstr "Mostra el text alternatiu"
 
@@ -10027,7 +10040,7 @@ msgstr "Avui"
 msgid "Toggle to enable or disable adult content"
 msgstr "Commuta per a habilitar o deshabilitar el contingut per a adults"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 msgid "Toggles the sound"
 msgstr "Commuta el so"
 
@@ -10268,7 +10281,7 @@ msgstr "Desfés el m'agrada"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Desfés els m'agrades ({0, plural, one {# m'agrada} other {# m'agrades}})"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10305,7 +10318,7 @@ msgstr "Deixa de silenciar la llista"
 msgid "Unmute thread"
 msgstr "Deixa de silenciar el fil de debat"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:317
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
 msgid "Unmute video"
 msgstr "Deixa de silenciar el vídeo"
 
@@ -10443,16 +10456,20 @@ msgstr "Puja dels Fitxers"
 msgid "Upload from Library"
 msgstr "Puja de la biblioteca"
 
+#: src/view/com/composer/Composer.tsx:2305
+msgid "Uploading GIF..."
+msgstr ""
+
 #: src/lib/api/index.ts:302
 msgid "Uploading images..."
 msgstr "S'estan penjant imatges..."
 
-#: src/lib/api/index.ts:368
-#: src/lib/api/index.ts:392
+#: src/lib/api/index.ts:370
+#: src/lib/api/index.ts:394
 msgid "Uploading link thumbnail..."
 msgstr "S'està penjant la miniatura de l'enllaç..."
 
-#: src/view/com/composer/Composer.tsx:2298
+#: src/view/com/composer/Composer.tsx:2307
 msgid "Uploading video..."
 msgstr "S'està penjant el vídeo..."
 
@@ -10681,8 +10698,8 @@ msgstr "Verificant..."
 msgid "Version {0}"
 msgstr "Versió {0}"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:131
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
 msgid "Video"
 msgstr "Vídeo"
 
@@ -10723,11 +10740,11 @@ msgstr "No s'ha trobat el vídeo."
 msgid "Video settings"
 msgstr "Configuració de vídeo"
 
-#: src/view/com/composer/Composer.tsx:2308
+#: src/view/com/composer/Composer.tsx:2325
 msgid "Video uploaded"
 msgstr "Vídeo penjat"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
 msgstr "Vídeo: {0}"
 
@@ -10735,7 +10752,7 @@ msgstr "Vídeo: {0}"
 msgid "Videos"
 msgstr "Vídeos"
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:428
 msgid "Videos must be less than 3 minutes long."
 msgstr "Els vídeos han de tenir una durada inferior a 3 minuts."
 
@@ -11350,11 +11367,11 @@ msgstr "Ara pots triar rebre notificacions quan publiquin persones específiques
 msgid "You can now sign in with your new password."
 msgstr "Ara pots iniciar sessió amb la nova contrasenya."
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:431
 msgid "You can only select one GIF at a time."
 msgstr "Només pots seleccionar un GIF alhora."
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:425
 msgid "You can only select one video at a time."
 msgstr "Només pots seleccionar un vídeo alhora."
 
@@ -11363,7 +11380,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Pots reactivar el teu compte per continuar iniciant la sessió. El teu perfil i les publicacions seran visibles per a altres usuaris."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:399
+#: src/view/com/composer/SelectMediaButton.tsx:417
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "Pots seleccionar fins a {MAX_IMAGES, plural, other {# imatges}} en total."
 
@@ -11552,7 +11569,7 @@ msgstr "Has de completar la garantia d'edat per accedir a aquesta pantalla."
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "Has de concedir accés a la teva galeria per desar un codi QR"
 
-#: src/view/com/composer/SelectMediaButton.tsx:442
+#: src/view/com/composer/SelectMediaButton.tsx:460
 msgid "You need to allow access to your media library."
 msgstr "Has de permetre l'accés a la teva biblioteca multimèdia."
 
