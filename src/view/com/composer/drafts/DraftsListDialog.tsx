@@ -11,6 +11,7 @@ import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {DraftItem} from './DraftItem'
@@ -140,13 +141,22 @@ export function DraftsListDialog({
 
   const footerComponent = useMemo(
     () => (
-      <ListFooter
-        isFetchingNextPage={isFetchingNextPage}
-        hasNextPage={hasNextPage}
-        style={[a.border_transparent]}
-      />
+      <>
+        {drafts.length > 5 && (
+          <View style={[a.align_center, a.py_2xl]}>
+            <Text style={[a.text_center, t.atoms.text_contrast_medium]}>
+              <Trans>So many thoughts, you should post one</Trans>
+            </Text>
+          </View>
+        )}
+        <ListFooter
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage}
+          style={[a.border_transparent]}
+        />
+      </>
     ),
-    [isFetchingNextPage, hasNextPage],
+    [isFetchingNextPage, hasNextPage, drafts.length, t],
   )
 
   return (
