@@ -584,6 +584,11 @@ msgstr "Captura de pantalla d’una publicació amb un nou botó al costat del b
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr "Una captura de pantalla d'una pàgina de perfil amb una icona de campana al costat del botó de seguir, que indica la funció de notificacions de nova activitat."
 
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:97
+msgid "A screenshot of a the post composer with a new button next to the post button that says \"Drafts\", with a rainbow firework effect. Below, the text in the composer reads \"Hey, did you hear the news? Bluesky has drafts now???\"."
+msgstr ""
+
 #: src/Navigation.tsx:535
 #: src/screens/Settings/AboutSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:260
@@ -1021,7 +1026,7 @@ msgstr "Ja tens un compte?"
 msgid "Already signed in as @{0}"
 msgstr "Ja estàs registrat com a @{0}"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:142
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1037,7 +1042,7 @@ msgstr "ALT"
 msgid "Alt text"
 msgstr "Text alternatiu"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:148
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:95
 msgid "Alt Text"
 msgstr "Text alternatiu"
 
@@ -1063,7 +1068,7 @@ msgstr "S'ha enviat un correu a {0}. Inclou un codi de confirmació que has d'en
 msgid "An error has occurred"
 msgstr "Hi ha hagut un error"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:438
 msgid "An error occurred"
 msgstr "Hi ha hagut un error"
 
@@ -1092,7 +1097,7 @@ msgstr "S'ha produït un error en ocultar el suggeriment. {0}"
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "Hi ha hagut un error mentre es carregava el vídeo. Prova-ho més tard."
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:226
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:239
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Hi ha hagut un error mentre es carregava el vídeo. Prova-ho més tard."
 
@@ -1185,7 +1190,7 @@ msgstr "Benestar animal"
 msgid "Animals"
 msgstr "Animals"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:105
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:95
 msgid "Animated GIF"
 msgstr "GIF animat"
 
@@ -2098,6 +2103,7 @@ msgstr "Clop 🐴 clop 🐴"
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:163
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:138
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:184
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:190
@@ -2113,7 +2119,7 @@ msgstr "Clop 🐴 clop 🐴"
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:155
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:102
 #: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2987,7 +2993,7 @@ msgstr "Desactiva les publicacions que citen aquesta publicació"
 msgid "Disable replies entirely"
 msgstr "Desactiva del tot les respostes"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Disable subtitles"
 msgstr "Deshabilita els subtítols"
 
@@ -3179,6 +3185,7 @@ msgstr "Descarrega el fitxer CAR"
 msgid "Doxxing"
 msgstr "Comportament depredador o de manipulació grooming"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:118
 #: src/view/com/composer/drafts/DraftsButton.tsx:65
 #: src/view/com/composer/drafts/DraftsButton.tsx:74
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:111
@@ -3434,7 +3441,7 @@ msgstr "Activa les notificacions push"
 msgid "Enable quote posts of this post"
 msgstr "Activa les publicacions que citen aquesta publicació"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enable subtitles"
 msgstr "Habilita els subtítols"
 
@@ -3485,7 +3492,7 @@ msgstr "Introdueix una lletra o etiqueta"
 msgid "Enter code"
 msgstr "Entra el codi"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:423
 msgid "Enter fullscreen"
 msgstr "Entra a pantalla completa"
 
@@ -3522,7 +3529,7 @@ msgstr "Introdueix la teva contrasenya"
 msgid "Enter your username and password"
 msgstr "Introdueix el teu usuari i contrasenya"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:146
 msgid "Enters full screen"
 msgstr "Canvia a pantalla completa"
 
@@ -3591,7 +3598,7 @@ msgstr "Exclou els usuaris que segueixes"
 msgid "Excludes users you follow"
 msgstr "Exclou els usuaris que segueixes"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:422
 msgid "Exit fullscreen"
 msgstr "Surt de la pantalla completa"
 
@@ -4030,6 +4037,10 @@ msgstr "Filtra de qui reps notificacions"
 msgid "Finalizing"
 msgstr "Finalitzant"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:144
+msgid "Finally!"
+msgstr ""
+
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:154
 msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
 msgstr "Per fi! Tingues a mà les publicacions que t'interessen. Desa-les per a tornar-les a consultar en qualsevol moment."
@@ -4399,7 +4410,7 @@ msgid "Get started"
 msgstr "Comença"
 
 #: src/components/MediaPreview.tsx:136
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:60
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:64
 msgid "GIF"
 msgstr "GIF"
 
@@ -5022,6 +5033,10 @@ msgstr "Configuració de les interaccions"
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
 msgstr "Introducció a les notificacions d'activitat"
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:48
+msgid "Introducing drafts"
+msgstr ""
 
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
@@ -5860,7 +5875,7 @@ msgstr "Pel·lícules"
 msgid "Music"
 msgstr "Música"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:167
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -6034,6 +6049,7 @@ msgstr "Adreça de correu nova"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:74
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:73
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:84
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:64
 msgid "New Feature"
 msgstr "Funció nova"
@@ -6352,6 +6368,10 @@ msgstr "No el segueix ningú a qui segueixes"
 #: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr "No s'ha trobat"
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:129
+msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
+msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:558
 msgid "Note about sharing"
@@ -6826,13 +6846,13 @@ msgstr "Contrasenya actualitzada"
 msgid "Password updated!"
 msgstr "Contrasenya actualitzada!"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:385
 msgid "Pause"
 msgstr "Posa en pausa"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:336
 msgid "Pause video"
 msgstr "Posa en pausa el vídeo"
 
@@ -6937,9 +6957,9 @@ msgstr "Canals de notícies fixats"
 msgid "Pinned to your feeds"
 msgstr "Fixat als teus canals"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Play"
 msgstr "Reprodueix"
 
@@ -6948,7 +6968,7 @@ msgid "Play {0}"
 msgstr "Reprodueix {0}"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:337
 msgid "Play video"
 msgstr "Reprodueix el vídeo"
 
@@ -6956,11 +6976,11 @@ msgstr "Reprodueix el vídeo"
 msgid "Play Video"
 msgstr "Reprodueix el vídeo"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:27
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Plays or pauses the GIF"
 msgstr "Reprodueix o posa en pausa el GIF"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
 msgid "Plays or pauses the video"
 msgstr "Reprodueix o posa en pausa el GIF"
 
@@ -8803,7 +8823,7 @@ msgstr "Comprovador de preferències compartides"
 msgid "Show"
 msgstr "Mostra"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:134
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:81
 msgid "Show alt text"
 msgstr "Mostra el text alternatiu"
 
@@ -10040,7 +10060,7 @@ msgstr "Avui"
 msgid "Toggle to enable or disable adult content"
 msgstr "Commuta per a habilitar o deshabilitar el contingut per a adults"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
 msgid "Toggles the sound"
 msgstr "Commuta el so"
 
@@ -10281,7 +10301,7 @@ msgstr "Desfés el m'agrada"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Desfés els m'agrades ({0, plural, one {# m'agrada} other {# m'agrades}})"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10318,7 +10338,7 @@ msgstr "Deixa de silenciar la llista"
 msgid "Unmute thread"
 msgstr "Deixa de silenciar el fil de debat"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:334
 msgid "Unmute video"
 msgstr "Deixa de silenciar el vídeo"
 
@@ -10699,7 +10719,7 @@ msgid "Version {0}"
 msgstr "Versió {0}"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Video"
 msgstr "Vídeo"
 
@@ -10732,7 +10752,7 @@ msgstr "Vídeo en pausa"
 msgid "Video is playing"
 msgstr "Vídeo en reproducció"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:219
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:232
 msgid "Video not found."
 msgstr "No s'ha trobat el vídeo."
 
@@ -11745,7 +11765,7 @@ msgstr "S'ha enviat l'apel·lació. Si s'accepta l'apel·lació, rebràs un corr
 msgid "Your birth date"
 msgstr "La teva data de naixement"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:223
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "El teu navegador no admet el format de vídeo. Prova amb un altre navegador."
 
