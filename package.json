@@ -382,6 +382,6 @@
     ],
     "emptyHostname": true,
     "validatePackageNames": true,
-    "validateIntegrity": false
+    "validateIntegrity": true
   }
 }
