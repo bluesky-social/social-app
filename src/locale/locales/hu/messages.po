@@ -584,6 +584,11 @@ msgstr "Bejegyzés egy új gomb társaságában, amely lehetővé teszi egy adot
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr "Képernyőkép egy felhasználói profilról, amelyen egy harang ikon látható a Követés gomb mellett. Ez az új, tevékenységértesítési funkciót ábrázolja."
 
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:97
+msgid "A screenshot of a the post composer with a new button next to the post button that says \"Drafts\", with a rainbow firework effect. Below, the text in the composer reads \"Hey, did you hear the news? Bluesky has drafts now???\"."
+msgstr ""
+
 #: src/Navigation.tsx:535
 #: src/screens/Settings/AboutSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:260
@@ -1021,7 +1026,7 @@ msgstr "Már van fiókod?"
 msgid "Already signed in as @{0}"
 msgstr "Már bejelentkeztél, mint @{0}"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:142
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1037,7 +1042,7 @@ msgstr "HLYT"
 msgid "Alt text"
 msgstr "Helyettesítő szöveg"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:148
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:95
 msgid "Alt Text"
 msgstr "Helyettesítő szöveg"
 
@@ -1063,7 +1068,7 @@ msgstr "Küldtünk egy e-mailt a(z) {0} címre. Ez a levél egy ellenőrzőkódo
 msgid "An error has occurred"
 msgstr "Hiba történt"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:438
 msgid "An error occurred"
 msgstr "Hiba történt"
 
@@ -1092,7 +1097,7 @@ msgstr "Hiba történt a javaslat elrejtése közben. {0}"
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "A videó betöltése meghiúsult. Próbáld újra később."
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:226
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:239
 msgid "An error occurred while loading the video. Please try again."
 msgstr "A videó betöltése meghiúsult. Próbáld újra."
 
@@ -1185,7 +1190,7 @@ msgstr "Állatkínzás"
 msgid "Animals"
 msgstr "Állatok"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:105
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:95
 msgid "Animated GIF"
 msgstr "Animált GIF"
 
@@ -2098,6 +2103,7 @@ msgstr "Kipp 🐴 kopp 🐴"
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:163
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:138
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:184
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:190
@@ -2113,7 +2119,7 @@ msgstr "Kipp 🐴 kopp 🐴"
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:155
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:102
 #: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2987,7 +2993,7 @@ msgstr "A bejegyzés idézésének letiltása"
 msgid "Disable replies entirely"
 msgstr "Válaszadás letiltása"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Disable subtitles"
 msgstr "Feliratok letiltása"
 
@@ -3179,6 +3185,7 @@ msgstr "CAR fájl letöltése"
 msgid "Doxxing"
 msgstr "Személyes információ kiszivárogtatása"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:118
 #: src/view/com/composer/drafts/DraftsButton.tsx:65
 #: src/view/com/composer/drafts/DraftsButton.tsx:74
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:111
@@ -3434,7 +3441,7 @@ msgstr "Leküldéses értesítések engedélyezése"
 msgid "Enable quote posts of this post"
 msgstr "A bejegyzés idézésének engedélyezése"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enable subtitles"
 msgstr "Feliratok engedélyezése"
 
@@ -3485,7 +3492,7 @@ msgstr "Szó vagy címke megadása"
 msgid "Enter code"
 msgstr "Kód megadása"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:423
 msgid "Enter fullscreen"
 msgstr "Belépés teljes képernyős módba"
 
@@ -3522,7 +3529,7 @@ msgstr "Jelszó megadása"
 msgid "Enter your username and password"
 msgstr "Add meg a felhasználóneved és a jelszavad"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:146
 msgid "Enters full screen"
 msgstr "Teljes képernyős mód"
 
@@ -3591,7 +3598,7 @@ msgstr "Követett felhasználók kihagyása a szűrésből"
 msgid "Excludes users you follow"
 msgstr "A követett felhasználók bejegyzéseit nem szűri"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:422
 msgid "Exit fullscreen"
 msgstr "Kilépés a teljes képernyős módból"
 
@@ -4030,6 +4037,10 @@ msgstr "Értesítések forrásainak szűrése"
 msgid "Finalizing"
 msgstr "Befejezés folyamatban…"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:144
+msgid "Finally!"
+msgstr ""
+
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:154
 msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
 msgstr "Végre nyomon követheted a számodra fontos bejegyzéseket! Ha szeretnél könnyen újra megtalálni egy bejegyzést, mostantól elmentheted azt."
@@ -4399,7 +4410,7 @@ msgid "Get started"
 msgstr "Rendben"
 
 #: src/components/MediaPreview.tsx:136
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:60
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:64
 msgid "GIF"
 msgstr "GIF"
 
@@ -5022,6 +5033,10 @@ msgstr "Kapcsolatbalépési beállítások"
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
 msgstr "Tevékenységértesítések"
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:48
+msgid "Introducing drafts"
+msgstr ""
 
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
@@ -5860,7 +5875,7 @@ msgstr "Filmek"
 msgid "Music"
 msgstr "Zene"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:167
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -6034,6 +6049,7 @@ msgstr "Új e-mail-cím"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:74
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:73
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:84
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:64
 msgid "New Feature"
 msgstr "Új funkció"
@@ -6352,6 +6368,10 @@ msgstr "Nincsenek ismert követők"
 #: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr "Ez a tartalom nem található"
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:129
+msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
+msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:558
 msgid "Note about sharing"
@@ -6826,13 +6846,13 @@ msgstr "Megváltoztattad a jelszavad"
 msgid "Password updated!"
 msgstr "Megváltoztattad a jelszavad!"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:385
 msgid "Pause"
 msgstr "Szünet"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:336
 msgid "Pause video"
 msgstr "Videó szüneteltetése"
 
@@ -6937,9 +6957,9 @@ msgstr "Kitűzött hírfolyamok"
 msgid "Pinned to your feeds"
 msgstr "Kitűzted a hírfolyamot"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Play"
 msgstr "Lejátszás"
 
@@ -6948,7 +6968,7 @@ msgid "Play {0}"
 msgstr "{0} lejátszása"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:337
 msgid "Play video"
 msgstr "Videó lejátszása"
 
@@ -6956,11 +6976,11 @@ msgstr "Videó lejátszása"
 msgid "Play Video"
 msgstr "Videó lejátszása"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:27
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Plays or pauses the GIF"
 msgstr "GIF lejátszása/szüneteltetése"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
 msgid "Plays or pauses the video"
 msgstr "Videó lejátszása/szüneteltetése"
 
@@ -8803,7 +8823,7 @@ msgstr "„Megosztott beállítások” tesztelő"
 msgid "Show"
 msgstr "Megjelenítés"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:134
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:81
 msgid "Show alt text"
 msgstr "Helyettesítő szöveg megjelenítése"
 
@@ -10042,7 +10062,7 @@ msgstr "Ma"
 msgid "Toggle to enable or disable adult content"
 msgstr "Felnőtt tartalmak ki-/bekapcsolása"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
 msgid "Toggles the sound"
 msgstr "Hang némítása"
 
@@ -10283,7 +10303,7 @@ msgstr "Mégse tetszik"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Kedvelés visszavonása ({0, plural, one {# kedvelés} other {# kedvelés}})"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10320,7 +10340,7 @@ msgstr "Lista némításának feloldása"
 msgid "Unmute thread"
 msgstr "Válaszlánc némításának feloldása"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:334
 msgid "Unmute video"
 msgstr "Videó némításának feloldása"
 
@@ -10701,7 +10721,7 @@ msgid "Version {0}"
 msgstr "Verziószám: {0}"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Video"
 msgstr "Videó"
 
@@ -10734,7 +10754,7 @@ msgstr "Videó szüneteltetve"
 msgid "Video is playing"
 msgstr "Videó lejátszása folyamatban"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:219
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:232
 msgid "Video not found."
 msgstr "A videó nem található."
 
@@ -11747,7 +11767,7 @@ msgstr "A fellebbezést megkaptuk. Pozitív elbírálás esetén fogsz kapni egy
 msgid "Your birth date"
 msgstr "Születési dátum"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:223
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "A jelenlegi böngésződ nem támogatja ezt a videóformátumot. Próbáld meg egy másik böngészőben."
 
