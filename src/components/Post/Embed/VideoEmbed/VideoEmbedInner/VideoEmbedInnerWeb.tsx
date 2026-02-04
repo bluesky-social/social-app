@@ -101,6 +101,7 @@ export function VideoEmbedInnerWeb({
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
           isGif={embed.presentation === 'gif'}
+          altText={embed.alt}
         />
       </div>
     </View>

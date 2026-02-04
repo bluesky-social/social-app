@@ -46,6 +46,7 @@ export function Controls({
   hlsLoading,
   hasSubtitleTrack,
   isGif,
+  altText,
 }: {
   videoRef: React.RefObject<HTMLVideoElement | null>
   hlsRef: React.RefObject<Hls | undefined | null>
@@ -58,6 +59,7 @@ export function Controls({
   hlsLoading: boolean
   hasSubtitleTrack: boolean
   isGif: boolean
+  altText?: string
 }) {
   const {
     play,
@@ -296,6 +298,7 @@ export function Controls({
         isPlaying={playing}
         isLoading={showSpinner}
         onPress={onPressPlayPause}
+        altText={altText}
       />
     )
   }
