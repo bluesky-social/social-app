@@ -130,13 +130,14 @@ export function Controls({
   const autoplayDisabled = useAutoplayDisabled() || isWithinMessage
   useEffect(() => {
     if (active) {
-      if (onScreen) {
+      // GIFs play immediately, videos wait until onScreen
+      if (onScreen || isGif) {
         if (!autoplayDisabled) play()
       } else {
         pause()
       }
     }
-  }, [onScreen, pause, active, play, autoplayDisabled])
+  }, [onScreen, pause, active, play, autoplayDisabled, isGif])
 
   // use minimal quality when not focused
   useEffect(() => {
