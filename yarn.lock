@@ -10756,7 +10756,6 @@ __metadata:
     nanoid: "npm:^5.0.5"
     normalize-url: "npm:^8.0.0"
     patch-package: "npm:^8.0.1"
-    postinstall-postinstall: "npm:^2.1.0"
     prettier: "npm:^3.6.0"
     psl: "npm:^1.9.0"
     radix-ui: "npm:^1.4.3"
@@ -19811,13 +19810,6 @@ __metadata:
   dependencies:
     xtend: "npm:^4.0.0"
   checksum: 10c0/c1734c3cb79e7f22579af0b268a463b1fa1d084e742a02a7a290c4f041e349456f3bee3b4ee0bb3f226828597f7b76deb615c1b857db9a742c45520100456272
-  languageName: node
-  linkType: hard
-
-"postinstall-postinstall@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "postinstall-postinstall@npm:2.1.0"
-  checksum: 10c0/70488447292c712afa7806126824d6fe93362392cbe261ae60166d9119a350713e0dbf4deb2ca91637c1037bc030ed1de78d61d9041bf2504513070f1caacdfd
   languageName: node
   linkType: hard
 
