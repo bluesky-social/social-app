@@ -23,6 +23,7 @@ import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
 
+import {communityXrpc} from '#/lib/api/community'
 import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
@@ -47,6 +48,8 @@ import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
 
+const COMMUNITY_POST_COLLECTION = 'community.blacksky.feed.post'
+
 interface PostOpts {
   thread: ThreadDraft
   replyTo?: string
@@ -61,6 +64,10 @@ export async function post(
 ) {
   const thread = opts.thread
   opts.onStateChange?.(t`Processing...`)
+
+  if (thread.blackskyOnly) {
+    return postCommunity(agent, queryClient, opts)
+  }
 
   let replyPromise:
     | Promise<AppBskyFeedPost.Record['reply']>
@@ -184,6 +191,156 @@ export async function post(
     const e = err as Error
     logger.error(`Failed to create post`, {
       safeMessage: e.message,
+    })
+    if (isNetworkError(e)) {
+      throw new Error(
+        t`Post failed to upload. Please check your Internet connection and try again.`,
+      )
+    } else {
+      throw e
+    }
+  }
+
+  return {uris}
+}
+
+async function postCommunity(
+  agent: AtpAgent,
+  queryClient: QueryClient,
+  opts: PostOpts,
+) {
+  const thread = opts.thread
+
+  let replyPromise:
+    | Promise<AppBskyFeedPost.Record['reply']>
+    | AppBskyFeedPost.Record['reply']
+    | undefined
+  if (opts.replyTo) {
+    replyPromise = resolveReply(agent, opts.replyTo)
+  }
+
+  let langs = opts.langs
+  if (opts.langs) {
+    langs = opts.langs.slice(0, 3)
+  }
+
+  const did = agent.assertDid
+  const writes: $Typed<ComAtprotoRepoApplyWrites.Create>[] = []
+  const uris: string[] = []
+
+  let now = new Date()
+  let tid: TID | undefined
+
+  for (let i = 0; i < thread.posts.length; i++) {
+    const draft = thread.posts[i]
+
+    const rtPromise = resolveRT(agent, draft.richtext)
+    const embedPromise = resolveEmbed(
+      agent,
+      queryClient,
+      draft,
+      opts.onStateChange,
+    )
+    let labels: $Typed<ComAtprotoLabelDefs.SelfLabels> | undefined
+    if (draft.labels.length) {
+      labels = {
+        $type: 'com.atproto.label.defs#selfLabels',
+        values: draft.labels.map(val => ({val})),
+      }
+    }
+
+    now.setMilliseconds(now.getMilliseconds() + 1)
+    tid = TID.next(tid)
+    const rkey = tid.toString()
+    const uri = `at://${did}/${COMMUNITY_POST_COLLECTION}/${rkey}`
+    uris.push(uri)
+
+    const rt = await rtPromise
+    const embed = await embedPromise
+    const reply = await replyPromise
+
+    // Step 1: Submit full content to appview via PDS proxy
+    opts.onStateChange?.(t`Submitting to community...`)
+    const submitBody: Record<string, unknown> = {
+      rkey,
+      text: rt.text,
+      createdAt: now.toISOString(),
+    }
+    if (rt.facets?.length) {
+      submitBody.facets = rt.facets
+    }
+    if (reply) {
+      submitBody.reply = reply
+    }
+    if (embed) {
+      submitBody.embed = embed
+    }
+    if (langs?.length) {
+      submitBody.langs = langs
+    }
+    if (labels) {
+      submitBody.labels = labels
+    }
+
+    let cid: string | undefined
+    try {
+      const submitRes = await communityXrpc(
+        agent,
+        'community.blacksky.feed.submitPost',
+        {body: submitBody},
+      )
+      if (!submitRes.ok) {
+        const errBody = (await submitRes.json().catch(() => ({}))) as {
+          message?: string
+        }
+        throw new Error(errBody.message || `HTTP ${submitRes.status}`)
+      }
+      const submitData = (await submitRes.json()) as {cid?: string}
+      cid = submitData?.cid
+    } catch (e) {
+      logger.error(`Failed to submit community post content`, {
+        safeMessage: e instanceof Error ? e.message : String(e),
+      })
+      throw new Error(t`Failed to submit community post. Please try again.`)
+    }
+
+    // Step 2: Build stub record for PDS
+    const stubRecord: Record<string, unknown> = {
+      $type: COMMUNITY_POST_COLLECTION,
+      createdAt: now.toISOString(),
+    }
+    if (cid) {
+      stubRecord.cid = cid
+    }
+
+    writes.push({
+      $type: 'com.atproto.repo.applyWrites#create',
+      collection: COMMUNITY_POST_COLLECTION,
+      rkey,
+      value: stubRecord,
+    })
+
+    // Prepare ref for next post in thread
+    const ref = {
+      cid: await computeCid(stubRecord as unknown as AppBskyFeedPost.Record),
+      uri,
+    }
+    replyPromise = {
+      root: reply?.root ?? ref,
+      parent: ref,
+    }
+  }
+
+  // Write stubs to PDS
+  try {
+    await agent.com.atproto.repo.applyWrites({
+      repo: agent.assertDid,
+      writes,
+      validate: false,
+    })
+  } catch (e) {
+    logger.error(`Failed to write community post stubs`, {
+      safeMessage: e instanceof Error ? e.message : String(e),
     })
     if (isNetworkError(e)) {
       throw new Error(
