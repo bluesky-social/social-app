@@ -17,7 +17,7 @@ import {
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {Person_Filled as PersonIcon} from '#/components/icons/Person'
+import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -133,7 +133,7 @@ function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
   const visiblePortions = TOTAL_AVATARS - overlapRatio * (TOTAL_AVATARS - 1)
   const avatarSize = containerWidth > 0 ? containerWidth / visiblePortions : 0
   const overlap = avatarSize * overlapRatio
-  const iconSize = avatarSize * 0.45
+  const iconSize = avatarSize * 0.5
 
   const followedAvatars = follows?.slice(0, TOTAL_AVATARS) ?? []
   const remainingSlots = TOTAL_AVATARS - followedAvatars.length
