@@ -1409,8 +1409,8 @@ msgstr ""
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:281
 #: src/screens/Signup/BackNextButtons.tsx:41
 #: src/screens/StarterPack/Wizard/index.tsx:324
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:79
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:85
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:80
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:86
 msgid "Back"
 msgstr ""
 
@@ -3183,7 +3183,7 @@ msgstr ""
 #: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:118
 #: src/view/com/composer/drafts/DraftsButton.tsx:65
 #: src/view/com/composer/drafts/DraftsButton.tsx:74
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:111
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:112
 msgid "Drafts"
 msgstr ""
 
@@ -6176,7 +6176,7 @@ msgstr ""
 msgid "No DNS Panel"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:135
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:136
 msgid "No drafts yet"
 msgstr ""
 
@@ -9049,6 +9049,10 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:91
 msgid "Snoozes the reminder"
+msgstr ""
+
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:148
+msgid "So many thoughts, you should post one"
 msgstr ""
 
 #: src/components/WelcomeModal.tsx:150
