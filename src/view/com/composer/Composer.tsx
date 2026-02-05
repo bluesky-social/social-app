@@ -2290,22 +2290,40 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
 
   let text = ''
 
+  const isGif = state.video?.mimeType === 'image/gif'
+
   switch (state.status) {
     case 'compressing':
-      text = _(msg`Compressing video...`)
+      if (isGif) {
+        text = _(msg`Compressing GIF...`)
+      } else {
+        text = _(msg`Compressing video...`)
+      }
       break
     case 'uploading':
-      text = _(msg`Uploading video...`)
+      if (isGif) {
+        text = _(msg`Uploading GIF...`)
+      } else {
+        text = _(msg`Uploading video...`)
+      }
       break
     case 'processing':
-      text = _(msg`Processing video...`)
+      if (isGif) {
+        text = _(msg`Processing GIF...`)
+      } else {
+        text = _(msg`Processing video...`)
+      }
       break
     case 'error':
       text = _(msg`Error`)
       wheelProgress = 100
       break
     case 'done':
-      text = _(msg`Video uploaded`)
+      if (isGif) {
+        text = _(msg`GIF uploaded`)
+      } else {
+        text = _(msg`Video uploaded`)
+      }
       break
   }
 

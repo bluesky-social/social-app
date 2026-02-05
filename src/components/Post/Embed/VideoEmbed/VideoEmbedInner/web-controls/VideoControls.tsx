@@ -27,6 +27,7 @@ import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE} from '#/env'
+import {GifPresentationControls} from '../../GifPresentationControls'
 import {TimeIndicator} from '../TimeIndicator'
 import {ControlButton} from './ControlButton'
 import {Scrubber} from './Scrubber'
@@ -44,6 +45,8 @@ export function Controls({
   fullscreenRef,
   hlsLoading,
   hasSubtitleTrack,
+  isGif,
+  altText,
 }: {
   videoRef: React.RefObject<HTMLVideoElement | null>
   hlsRef: React.RefObject<Hls | undefined | null>
@@ -55,6 +58,8 @@ export function Controls({
   fullscreenRef: React.RefObject<HTMLDivElement | null>
   hlsLoading: boolean
   hasSubtitleTrack: boolean
+  isGif: boolean
+  altText?: string
 }) {
   const {
     play,
@@ -125,13 +130,14 @@ export function Controls({
   const autoplayDisabled = useAutoplayDisabled() || isWithinMessage
   useEffect(() => {
     if (active) {
-      if (onScreen) {
+      // GIFs play immediately, videos wait until onScreen
+      if (onScreen || isGif) {
         if (!autoplayDisabled) play()
       } else {
         pause()
       }
     }
-  }, [onScreen, pause, active, play, autoplayDisabled])
+  }, [onScreen, pause, active, play, autoplayDisabled, isGif])
 
   // use minimal quality when not focused
   useEffect(() => {
@@ -286,6 +292,17 @@ export function Controls({
   const showControls =
     ((focused || autoplayDisabled) && !playing) ||
     (interactingViaKeypress ? hasFocus : hovered)
+
+  if (isGif) {
+    return (
+      <GifPresentationControls
+        isPlaying={playing}
+        isLoading={showSpinner}
+        onPress={onPressPlayPause}
+        altText={altText}
+      />
+    )
+  }
 
   return (
     <div

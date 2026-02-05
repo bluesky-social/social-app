@@ -50,7 +50,11 @@ export function Embed({
   } else if (e.type === 'video') {
     return (
       <Outer style={style}>
-        <VideoItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
+        {e.view.presentation === 'gif' ? (
+          <GifItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
+        ) : (
+          <VideoItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
+        )}
       </Outer>
     )
   } else if (
@@ -81,11 +85,29 @@ export function ImageItem({
   alt,
   children,
 }: {
-  thumbnail: string
+  thumbnail?: string
   alt?: string
   children?: React.ReactNode
 }) {
   const t = useTheme()
+
+  if (!thumbnail) {
+    return (
+      <View
+        style={[
+          {backgroundColor: 'black'},
+          a.flex_1,
+          a.aspect_square,
+          {maxWidth: 100},
+          a.rounded_xs,
+        ]}
+        accessibilityLabel={alt}
+        accessibilityHint="">
+        {children}
+      </View>
+    )
+  }
+
   return (
     <View style={[a.relative, a.flex_1, a.aspect_square, {maxWidth: 100}]}>
       <Image
@@ -103,7 +125,7 @@ export function ImageItem({
   )
 }
 
-export function GifItem({thumbnail, alt}: {thumbnail: string; alt?: string}) {
+export function GifItem({thumbnail, alt}: {thumbnail?: string; alt?: string}) {
   return (
     <ImageItem thumbnail={thumbnail} alt={alt}>
       <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
@@ -125,22 +147,6 @@ export function VideoItem({
   thumbnail?: string
   alt?: string
 }) {
-  if (!thumbnail) {
-    return (
-      <View
-        style={[
-          {backgroundColor: 'black'},
-          a.flex_1,
-          a.aspect_square,
-          {maxWidth: 100},
-          a.justify_center,
-          a.align_center,
-          a.rounded_xs,
-        ]}>
-        <PlayButtonIcon size={24} />
-      </View>
-    )
-  }
   return (
     <ImageItem thumbnail={thumbnail} alt={alt}>
       <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
@@ -157,7 +163,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
-    right: 5,
+    left: 5,
     bottom: 5,
     zIndex: 2,
   },

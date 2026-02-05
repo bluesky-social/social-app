@@ -1,76 +1,17 @@
 import {useRef, useState} from 'react'
-import {
-  Pressable,
-  type StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_20} from '#/lib/constants'
 import {clamp} from '#/lib/numbers'
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {useAutoplayDisabled} from '#/state/preferences'
-import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
-import {Loader} from '#/components/Loader'
-import * as Prompt from '#/components/Prompt'
-import {Text} from '#/components/Typography'
-import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {IS_WEB} from '#/env'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
 import {type GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
-
-function PlaybackControls({
-  onPress,
-  isPlaying,
-  isLoaded,
-}: {
-  onPress: () => void
-  isPlaying: boolean
-  isLoaded: boolean
-}) {
-  const {_} = useLingui()
-  const t = useTheme()
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityHint={_(msg`Plays or pauses the GIF`)}
-      accessibilityLabel={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
-      style={[
-        a.absolute,
-        a.align_center,
-        a.justify_center,
-        !isLoaded && a.border,
-        t.atoms.border_contrast_medium,
-        a.inset_0,
-        a.w_full,
-        a.h_full,
-        {
-          zIndex: 2,
-          backgroundColor: !isLoaded
-            ? t.atoms.bg_contrast_25.backgroundColor
-            : undefined,
-        },
-      ]}
-      onPress={onPress}>
-      {!isLoaded ? (
-        <View>
-          <View style={[a.align_center, a.justify_center]}>
-            <Loader size="xl" />
-          </View>
-        </View>
-      ) : !isPlaying ? (
-        <PlayButtonIcon />
-      ) : undefined}
-    </Pressable>
-  )
-}
+import {GifPresentationControls} from '../VideoEmbed/GifPresentationControls'
 
 export function GifEmbed({
   params,
@@ -120,8 +61,6 @@ export function GifEmbed({
       style={[
         a.rounded_md,
         a.overflow_hidden,
-        a.border,
-        t.atoms.border_contrast_low,
         {backgroundColor: t.palette.black},
         {aspectRatio},
         style,
@@ -139,10 +78,12 @@ export function GifEmbed({
             right: -2,
           },
         ]}>
-        <PlaybackControls
+        <MediaInsetBorder />
+        <GifPresentationControls
           onPress={onPress}
           isPlaying={playerState.isPlaying}
-          isLoaded={playerState.isLoaded}
+          isLoading={!playerState.isLoaded}
+          altText={!hideAlt && isPreferredAltText ? altText : undefined}
         />
         <GifView
           source={params.playerUri}
@@ -164,68 +105,7 @@ export function GifEmbed({
             ]}
           />
         )}
-        {!hideAlt && isPreferredAltText && <AltText text={altText} />}
       </View>
     </View>
   )
 }
-
-function AltText({text}: {text: string}) {
-  const control = Prompt.usePromptControl()
-  const largeAltBadge = useLargeAltBadgeEnabled()
-
-  const {_} = useLingui()
-  return (
-    <>
-      <TouchableOpacity
-        testID="altTextButton"
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Show alt text`)}
-        accessibilityHint=""
-        hitSlop={HITSLOP_20}
-        onPress={control.open}
-        style={styles.altContainer}>
-        <Text
-          style={[styles.alt, largeAltBadge && a.text_xs]}
-          accessible={false}>
-          <Trans>ALT</Trans>
-        </Text>
-      </TouchableOpacity>
-      <Prompt.Outer control={control}>
-        <Prompt.Content>
-          <Prompt.TitleText>
-            <Trans>Alt Text</Trans>
-          </Prompt.TitleText>
-          <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
-        </Prompt.Content>
-        <Prompt.Actions>
-          <Prompt.Action
-            onPress={() => control.close()}
-            cta={_(msg`Close`)}
-            color="secondary"
-          />
-        </Prompt.Actions>
-      </Prompt.Outer>
-    </>
-  )
-}
-
-const styles = StyleSheet.create({
-  altContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 6,
-    paddingHorizontal: IS_WEB ? 8 : 6,
-    paddingVertical: IS_WEB ? 6 : 3,
-    position: 'absolute',
-    // Related to margin/gap hack. This keeps the alt label in the same position
-    // on all platforms
-    right: IS_WEB ? 8 : 5,
-    bottom: IS_WEB ? 8 : 5,
-    zIndex: 2,
-  },
-  alt: {
-    color: 'white',
-    fontSize: IS_WEB ? 10 : 7,
-    fontWeight: '600',
-  },
-})
