@@ -259,12 +259,39 @@ async function postCommunity(
     const embed = await embedPromise
     const reply = await replyPromise
 
-    // Step 1: Submit full content to appview via PDS proxy
+    // Step 1: Build the canonical record for CID computation
+    // This MUST match the structure the appview uses for CID verification
+    const createdAt = now.toISOString()
+    const canonicalRecord: Record<string, unknown> = {
+      $type: COMMUNITY_POST_COLLECTION,
+      text: rt.text,
+      createdAt,
+    }
+    if (rt.facets?.length) {
+      canonicalRecord.facets = rt.facets
+    }
+    if (langs?.length) {
+      canonicalRecord.langs = langs
+    }
+    if (embed) {
+      canonicalRecord.embed = embed
+    }
+    if (reply) {
+      canonicalRecord.reply = reply
+    }
+
+    // Step 2: Compute CID locally - this is the SOURCE OF TRUTH for integrity
+    const cid = await computeCid(
+      canonicalRecord as unknown as AppBskyFeedPost.Record,
+    )
+
+    // Step 3: Submit to appview with expectedCid for verification
     opts.onStateChange?.(t`Submitting to community...`)
     const submitBody: Record<string, unknown> = {
       rkey,
       text: rt.text,
-      createdAt: now.toISOString(),
+      createdAt,
+      expectedCid: cid, // Appview will verify this matches
     }
     if (rt.facets?.length) {
       submitBody.facets = rt.facets
@@ -282,7 +309,6 @@ async function postCommunity(
       submitBody.labels = labels
     }
 
-    let cid: string | undefined
     try {
       const submitRes = await communityXrpc(
         agent,
@@ -295,8 +321,11 @@ async function postCommunity(
         }
         throw new Error(errBody.message || `HTTP ${submitRes.status}`)
       }
+      // Appview returns the verified CID - should match our local computation
       const submitData = (await submitRes.json()) as {cid?: string}
-      cid = submitData?.cid
+      if (submitData?.cid !== cid) {
+        logger.warn(`CID mismatch: local=${cid}, server=${submitData?.cid}`)
+      }
     } catch (e) {
       logger.error(`Failed to submit community post content`, {
         safeMessage: e instanceof Error ? e.message : String(e),
@@ -304,13 +333,11 @@ async function postCommunity(
       throw new Error(t`Failed to submit community post. Please try again.`)
     }
 
-    // Step 2: Build stub record for PDS
+    // Step 4: Build stub record for PDS with CLIENT-COMPUTED CID
     const stubRecord: Record<string, unknown> = {
       $type: COMMUNITY_POST_COLLECTION,
-      createdAt: now.toISOString(),
-    }
-    if (cid) {
-      stubRecord.cid = cid
+      createdAt,
+      cid, // Client's own CID - source of truth for integrity verification
     }
 
     writes.push({
