@@ -1,11 +1,16 @@
-import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {Fill} from '#/components/Fill'
-import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
@@ -26,28 +31,27 @@ export function GifPresentationControls({
 
   return (
     <>
-      <Pressable
-        accessibilityRole="button"
+      <Button
+        label={isPlaying ? _(msg`Pause GIF`) : _(msg`Play GIF`)}
         accessibilityHint={_(msg`Plays or pauses the GIF`)}
-        accessibilityLabel={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
         style={[
           a.absolute,
           a.align_center,
           a.justify_center,
           a.inset_0,
-          a.w_full,
-          a.h_full,
           {zIndex: 2},
         ]}
         onPress={onPress}>
         {isLoading ? (
           <View style={[a.align_center, a.justify_center]}>
-            <Loader size="xl" />
+            <ActivityIndicator size="large" color="white" />
           </View>
         ) : !isPlaying ? (
           <PlayButtonIcon />
-        ) : undefined}
-      </Pressable>
+        ) : (
+          <></>
+        )}
+      </Button>
       {!isPlaying && (
         <Fill
           style={[
