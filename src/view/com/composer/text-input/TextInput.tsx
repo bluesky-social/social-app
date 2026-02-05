@@ -224,7 +224,7 @@ export function TextInput({
         onPaste={onPaste}
         onSelectionChange={onSelectionChange}
         placeholder={placeholder}
-        placeholderTextColor={t.atoms.text_contrast_medium.color}
+        placeholderTextColor={t.atoms.text_contrast_low.color}
         keyboardAppearance={theme.colorScheme}
         autoFocus={props.autoFocus !== undefined ? props.autoFocus : true}
         allowFontScaling
