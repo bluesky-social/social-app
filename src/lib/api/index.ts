@@ -402,6 +402,41 @@ export class ReplyDeletedError extends Error {
 }
 
 async function resolveReply(agent: AtpAgent, replyTo: string) {
+  const replyToUrip = new AtUri(replyTo)
+
+  // Community posts are fetched from the appview, not the standard feed API.
+  if (replyToUrip.collection === COMMUNITY_POST_COLLECTION) {
+    const res = await communityXrpc(
+      agent,
+      'community.blacksky.feed.getCommunityPost',
+      {params: {uri: replyTo}},
+    )
+    if (!res.ok) {
+      logger.error('Failed to fetch parent community post for reply', {
+        uri: replyTo,
+      })
+      return undefined
+    }
+    const data = (await res.json()) as {
+      post?: {
+        uri: string
+        cid: string
+        replyRoot?: string
+        replyRootCid?: string
+      }
+    }
+    if (data.post) {
+      const parentRef = {uri: data.post.uri, cid: data.post.cid}
+      const rootRef =
+        data.post.replyRoot && data.post.replyRootCid
+          ? {uri: data.post.replyRoot, cid: data.post.replyRootCid}
+          : parentRef
+      return {root: rootRef, parent: parentRef}
+    }
+    return undefined
+  }
+
+  // Standard Bluesky post
   const {data} = await agent.app.bsky.feed.getPosts({
     uris: [replyTo],
   })
