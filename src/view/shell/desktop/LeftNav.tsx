@@ -823,7 +823,7 @@ const styles = StyleSheet.create({
     overflowY: 'auto',
   },
   leftNavWide: {
-    width: 280,
+    width: 245,
   },
   leftNavMinimal: {
     paddingTop: 0,
