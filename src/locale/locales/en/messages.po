@@ -579,6 +579,11 @@ msgstr ""
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr ""
 
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:97
+msgid "A screenshot of a the post composer with a new button next to the post button that says \"Drafts\", with a rainbow firework effect. Below, the text in the composer reads \"Hey, did you hear the news? Bluesky has drafts now???\"."
+msgstr ""
+
 #: src/Navigation.tsx:535
 #: src/screens/Settings/AboutSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:260
@@ -1016,7 +1021,7 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:142
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1032,7 +1037,7 @@ msgstr ""
 msgid "Alt text"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:148
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:95
 msgid "Alt Text"
 msgstr ""
 
@@ -1058,7 +1063,7 @@ msgstr ""
 msgid "An error has occurred"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:438
 msgid "An error occurred"
 msgstr ""
 
@@ -1087,7 +1092,7 @@ msgstr ""
 msgid "An error occurred while loading the video. Please try again later."
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:226
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:239
 msgid "An error occurred while loading the video. Please try again."
 msgstr ""
 
@@ -1180,7 +1185,7 @@ msgstr ""
 msgid "Animals"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:105
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:95
 msgid "Animated GIF"
 msgstr ""
 
@@ -1404,8 +1409,8 @@ msgstr ""
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:281
 #: src/screens/Signup/BackNextButtons.tsx:41
 #: src/screens/StarterPack/Wizard/index.tsx:324
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:79
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:85
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:80
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:86
 msgid "Back"
 msgstr ""
 
@@ -2093,6 +2098,7 @@ msgstr ""
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:163
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:138
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:184
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:190
@@ -2108,7 +2114,7 @@ msgstr ""
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:155
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:102
 #: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2982,7 +2988,7 @@ msgstr ""
 msgid "Disable replies entirely"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Disable subtitles"
 msgstr ""
 
@@ -3174,9 +3180,10 @@ msgstr ""
 msgid "Doxxing"
 msgstr ""
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:118
 #: src/view/com/composer/drafts/DraftsButton.tsx:65
 #: src/view/com/composer/drafts/DraftsButton.tsx:74
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:111
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:112
 msgid "Drafts"
 msgstr ""
 
@@ -3429,7 +3436,7 @@ msgstr ""
 msgid "Enable quote posts of this post"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enable subtitles"
 msgstr ""
 
@@ -3480,7 +3487,7 @@ msgstr ""
 msgid "Enter code"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:423
 msgid "Enter fullscreen"
 msgstr ""
 
@@ -3517,7 +3524,7 @@ msgstr ""
 msgid "Enter your username and password"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:146
 msgid "Enters full screen"
 msgstr ""
 
@@ -3586,7 +3593,7 @@ msgstr ""
 msgid "Excludes users you follow"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:422
 msgid "Exit fullscreen"
 msgstr ""
 
@@ -4025,6 +4032,10 @@ msgstr ""
 msgid "Finalizing"
 msgstr ""
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:144
+msgid "Finally!"
+msgstr ""
+
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:154
 msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
 msgstr ""
@@ -4394,7 +4405,7 @@ msgid "Get started"
 msgstr ""
 
 #: src/components/MediaPreview.tsx:136
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:60
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:64
 msgid "GIF"
 msgstr ""
 
@@ -5016,6 +5027,10 @@ msgstr ""
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
+msgstr ""
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:48
+msgid "Introducing drafts"
 msgstr ""
 
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
@@ -5855,7 +5870,7 @@ msgstr ""
 msgid "Music"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:167
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -6029,6 +6044,7 @@ msgstr ""
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:74
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:73
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:84
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:64
 msgid "New Feature"
 msgstr ""
@@ -6160,7 +6176,7 @@ msgstr ""
 msgid "No DNS Panel"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:135
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:136
 msgid "No drafts yet"
 msgstr ""
 
@@ -6346,6 +6362,10 @@ msgstr ""
 #: src/Navigation.tsx:170
 #: src/view/screens/Profile.tsx:132
 msgid "Not Found"
+msgstr ""
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:129
+msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:558
@@ -6821,13 +6841,13 @@ msgstr ""
 msgid "Password updated!"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:385
 msgid "Pause"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:336
 msgid "Pause video"
 msgstr ""
 
@@ -6932,9 +6952,9 @@ msgstr ""
 msgid "Pinned to your feeds"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Play"
 msgstr ""
 
@@ -6943,7 +6963,7 @@ msgid "Play {0}"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:337
 msgid "Play video"
 msgstr ""
 
@@ -6951,11 +6971,11 @@ msgstr ""
 msgid "Play Video"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:27
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Plays or pauses the GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
 msgid "Plays or pauses the video"
 msgstr ""
 
@@ -8798,7 +8818,7 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:134
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:81
 msgid "Show alt text"
 msgstr ""
 
@@ -9029,6 +9049,10 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:91
 msgid "Snoozes the reminder"
+msgstr ""
+
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:148
+msgid "So many thoughts, you should post one"
 msgstr ""
 
 #: src/components/WelcomeModal.tsx:150
@@ -10035,7 +10059,7 @@ msgstr ""
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
 msgid "Toggles the sound"
 msgstr ""
 
@@ -10276,7 +10300,7 @@ msgstr ""
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10313,7 +10337,7 @@ msgstr ""
 msgid "Unmute thread"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:334
 msgid "Unmute video"
 msgstr ""
 
@@ -10694,7 +10718,7 @@ msgid "Version {0}"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Video"
 msgstr ""
 
@@ -10727,7 +10751,7 @@ msgstr ""
 msgid "Video is playing"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:219
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:232
 msgid "Video not found."
 msgstr ""
 
@@ -11740,7 +11764,7 @@ msgstr ""
 msgid "Your birth date"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:223
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr ""
 

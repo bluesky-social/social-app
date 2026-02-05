@@ -584,6 +584,11 @@ msgstr "共有ボタンの隣に投稿をブックマークに保存できるよ
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr "プロフィールページのスクリーンショットには、フォローボタンの横にベルのアイコンが付いており、新しいアクティビティ通知機能を示します。"
 
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:97
+msgid "A screenshot of a the post composer with a new button next to the post button that says \"Drafts\", with a rainbow firework effect. Below, the text in the composer reads \"Hey, did you hear the news? Bluesky has drafts now???\"."
+msgstr ""
+
 #: src/Navigation.tsx:535
 #: src/screens/Settings/AboutSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:260
@@ -1021,7 +1026,7 @@ msgstr "既にアカウントを持ってますか？"
 msgid "Already signed in as @{0}"
 msgstr "@{0}としてすでにサインイン済み"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:142
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1037,7 +1042,7 @@ msgstr "ALT"
 msgid "Alt text"
 msgstr "ALTテキスト"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:148
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:95
 msgid "Alt Text"
 msgstr "ALTテキスト"
 
@@ -1063,7 +1068,7 @@ msgstr "メールが{0}に送信されました。以下に入力できる確認
 msgid "An error has occurred"
 msgstr "エラーが発生しました"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:438
 msgid "An error occurred"
 msgstr "エラーが発生しました"
 
@@ -1092,7 +1097,7 @@ msgstr "提案を非表示中にエラーが発生しました。{0}"
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "ビデオの読み込み時にエラーが発生しました。時間をおいてもう一度お試しください。"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:226
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:239
 msgid "An error occurred while loading the video. Please try again."
 msgstr "ビデオの読み込み時にエラーが発生しました。もう一度お試しください。"
 
@@ -1185,7 +1190,7 @@ msgstr "動物の福祉"
 msgid "Animals"
 msgstr "動物"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:105
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:95
 msgid "Animated GIF"
 msgstr "アニメーションGIF"
 
@@ -2098,6 +2103,7 @@ msgstr "パカラッ 🐴 パカラッ 🐴"
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:163
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:138
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:184
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:190
@@ -2113,7 +2119,7 @@ msgstr "パカラッ 🐴 パカラッ 🐴"
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:155
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:102
 #: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2987,7 +2993,7 @@ msgstr "この投稿の引用投稿を無効にする"
 msgid "Disable replies entirely"
 msgstr "返信を完全に無効にする"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Disable subtitles"
 msgstr "サブタイトル（字幕）を無効にする"
 
@@ -3179,6 +3185,7 @@ msgstr "CARファイルをダウンロード"
 msgid "Doxxing"
 msgstr "ドクシング（個人情報晒し）"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:118
 #: src/view/com/composer/drafts/DraftsButton.tsx:65
 #: src/view/com/composer/drafts/DraftsButton.tsx:74
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:111
@@ -3434,7 +3441,7 @@ msgstr "プッシュ通知を有効にする"
 msgid "Enable quote posts of this post"
 msgstr "この投稿の引用投稿を有効にする"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enable subtitles"
 msgstr "サブタイトル（字幕）を有効にする"
 
@@ -3485,7 +3492,7 @@ msgstr "ワードまたはタグを入力"
 msgid "Enter code"
 msgstr "コードを入力"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:423
 msgid "Enter fullscreen"
 msgstr "全画面表示にする"
 
@@ -3522,7 +3529,7 @@ msgstr "パスワードを入力"
 msgid "Enter your username and password"
 msgstr "ユーザー名とパスワードを入力してください"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:146
 msgid "Enters full screen"
 msgstr "フルスクリーンで表示"
 
@@ -3591,7 +3598,7 @@ msgstr "フォローしているユーザーは除外"
 msgid "Excludes users you follow"
 msgstr "フォローしているユーザーは除外"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:422
 msgid "Exit fullscreen"
 msgstr "全画面表示を終了"
 
@@ -4030,6 +4037,10 @@ msgstr "通知を受け取るユーザーをフィルターする"
 msgid "Finalizing"
 msgstr "最後に"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:144
+msgid "Finally!"
+msgstr ""
+
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:154
 msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
 msgstr "ついに！気になる投稿を追いかけましょう。いつでも見返せるように保存。"
@@ -4399,7 +4410,7 @@ msgid "Get started"
 msgstr "開始"
 
 #: src/components/MediaPreview.tsx:136
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:60
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:64
 msgid "GIF"
 msgstr "GIF"
 
@@ -5022,6 +5033,10 @@ msgstr "反応関連の設定"
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
 msgstr "アクティビティの通知の紹介"
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:48
+msgid "Introducing drafts"
+msgstr ""
 
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
@@ -5860,7 +5875,7 @@ msgstr "映画"
 msgid "Music"
 msgstr "音楽"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:167
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -6034,6 +6049,7 @@ msgstr "新しいメールアドレス"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:74
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:73
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:84
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:64
 msgid "New Feature"
 msgstr "新機能"
@@ -6352,6 +6368,10 @@ msgstr "フォローしている人は誰にもフォローしていません"
 #: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr "見つかりません"
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:129
+msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
+msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:558
 msgid "Note about sharing"
@@ -6826,13 +6846,13 @@ msgstr "パスワードが更新されました"
 msgid "Password updated!"
 msgstr "パスワードが更新されました！"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:385
 msgid "Pause"
 msgstr "一時停止"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:336
 msgid "Pause video"
 msgstr "ビデオを一時停止"
 
@@ -6937,9 +6957,9 @@ msgstr "ピン留めされたフィード"
 msgid "Pinned to your feeds"
 msgstr "フィードにピン留めしました"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Play"
 msgstr "再生"
 
@@ -6948,7 +6968,7 @@ msgid "Play {0}"
 msgstr "{0}を再生"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:337
 msgid "Play video"
 msgstr "ビデオを再生"
 
@@ -6956,11 +6976,11 @@ msgstr "ビデオを再生"
 msgid "Play Video"
 msgstr "ビデオを再生"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:27
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Plays or pauses the GIF"
 msgstr "GIFの再生や一時停止"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
 msgid "Plays or pauses the video"
 msgstr "ビデオの再生や一時停止"
 
@@ -8803,7 +8823,7 @@ msgstr "Shared Preferencesのテスター"
 msgid "Show"
 msgstr "表示"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:134
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:81
 msgid "Show alt text"
 msgstr "ALTテキストを表示"
 
@@ -10040,7 +10060,7 @@ msgstr "今日"
 msgid "Toggle to enable or disable adult content"
 msgstr "成人向けコンテンツの有効もしくは無効の切り替え"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
 msgid "Toggles the sound"
 msgstr "音の切り替え"
 
@@ -10281,7 +10301,7 @@ msgstr "いいねを外す"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "いいねを外す（{0, plural, other {#件のいいね}}）"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10318,7 +10338,7 @@ msgstr "リストのミュートを解除"
 msgid "Unmute thread"
 msgstr "スレッドのミュートを解除"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:334
 msgid "Unmute video"
 msgstr "ビデオのミュートを解除"
 
@@ -10699,7 +10719,7 @@ msgid "Version {0}"
 msgstr "バージョン {0}"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Video"
 msgstr "ビデオ"
 
@@ -10732,7 +10752,7 @@ msgstr "ビデオは一時停止中です"
 msgid "Video is playing"
 msgstr "ビデオを再生中です"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:219
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:232
 msgid "Video not found."
 msgstr "ビデオが見つかりません。"
 
@@ -11745,7 +11765,7 @@ msgstr "あなたの異議申し立てが送信されました。異議申し立
 msgid "Your birth date"
 msgstr "生年月日"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:223
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "使用中のブラウザが、このビデオ形式に対応していません。他のブラウザをお試しください。"
 

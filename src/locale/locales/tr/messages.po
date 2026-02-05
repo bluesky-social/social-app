@@ -584,6 +584,11 @@ msgstr "Paylaş düğmesinin yanında gönderiyi yer imlerine kaydedebilmenizi s
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr "Takip et butonunun yanında bir zil simgesi bulunan bir profil sayfasının ekran görüntüsü; bu, yeni etkinlik bildirimleri özelliğini göstermektedir."
 
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:97
+msgid "A screenshot of a the post composer with a new button next to the post button that says \"Drafts\", with a rainbow firework effect. Below, the text in the composer reads \"Hey, did you hear the news? Bluesky has drafts now???\"."
+msgstr ""
+
 #: src/Navigation.tsx:535
 #: src/screens/Settings/AboutSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:260
@@ -1021,7 +1026,7 @@ msgstr "Zaten bir hesabınız mı var?"
 msgid "Already signed in as @{0}"
 msgstr "Zaten @{0} olarak oturum açıldı"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:142
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1037,7 +1042,7 @@ msgstr "ALT"
 msgid "Alt text"
 msgstr "Alternatif metin"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:148
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:95
 msgid "Alt Text"
 msgstr "Alternatif Metin"
 
@@ -1063,7 +1068,7 @@ msgstr "{0} adresine bir e-posta gönderildi. Aşağıda girebileceğiniz bir on
 msgid "An error has occurred"
 msgstr "Bir hata oluştu"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:438
 msgid "An error occurred"
 msgstr "Bir hata oluştu"
 
@@ -1092,7 +1097,7 @@ msgstr "Öneriyi gizlerken bir hata oluştu. {0}"
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "Video yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin."
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:226
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:239
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Video yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
 
@@ -1185,7 +1190,7 @@ msgstr "Hayvan istismarı"
 msgid "Animals"
 msgstr "Hayvanlar"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:105
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:95
 msgid "Animated GIF"
 msgstr "Animasyonlu GIF"
 
@@ -2098,6 +2103,7 @@ msgstr "Klip 🐴 klop 🐴"
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:163
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:138
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:184
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:190
@@ -2113,7 +2119,7 @@ msgstr "Klip 🐴 klop 🐴"
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:155
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:102
 #: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
@@ -2987,7 +2993,7 @@ msgstr "Bu gönderinin alıntılarını devre dışı bırak"
 msgid "Disable replies entirely"
 msgstr "Yanıtları tümden devre dışı bırak"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Disable subtitles"
 msgstr "Altyazıları devre dışı bırak"
 
@@ -3179,6 +3185,7 @@ msgstr "CAR dosyasını indir"
 msgid "Doxxing"
 msgstr "Özel bilgi ifşası"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:118
 #: src/view/com/composer/drafts/DraftsButton.tsx:65
 #: src/view/com/composer/drafts/DraftsButton.tsx:74
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:111
@@ -3434,7 +3441,7 @@ msgstr "Anında bildirimleri etkinleştir"
 msgid "Enable quote posts of this post"
 msgstr "Bu gönderinin alıntılarını etkinleştir"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enable subtitles"
 msgstr "Altyazıları etkinleştir"
 
@@ -3485,7 +3492,7 @@ msgstr "Bir sözcük veya etiket girin"
 msgid "Enter code"
 msgstr "Kodu girin"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:423
 msgid "Enter fullscreen"
 msgstr "Tam ekran yap"
 
@@ -3522,7 +3529,7 @@ msgstr "Şifrenizi girin"
 msgid "Enter your username and password"
 msgstr "Kullanıcı adınızı ve şifrenizi girin"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:146
 msgid "Enters full screen"
 msgstr "Tam ekrana geçer"
 
@@ -3591,7 +3598,7 @@ msgstr "Takip ettiğim kullanıcıları hariç tut"
 msgid "Excludes users you follow"
 msgstr "Takip ettiğiniz kullanıcıları hariç tutar"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:422
 msgid "Exit fullscreen"
 msgstr "Tam ekrandan çık"
 
@@ -4030,6 +4037,10 @@ msgstr "Kimden bildirim alacağınızı filtreleyin"
 msgid "Finalizing"
 msgstr "Tamamlanıyor"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:144
+msgid "Finally!"
+msgstr ""
+
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:154
 msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
 msgstr "Sonunda! Sizin için önemli olan gönderileri kaçırmayın. Onları istediğiniz zaman tekrar ziyaret edebilmek için kaydedin."
@@ -4399,7 +4410,7 @@ msgid "Get started"
 msgstr "Başla"
 
 #: src/components/MediaPreview.tsx:136
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:60
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:64
 msgid "GIF"
 msgstr "GIF"
 
@@ -5022,6 +5033,10 @@ msgstr "Etkileşim ayarları"
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
 msgstr "Etkinlik bildirimleriyle tanış"
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:48
+msgid "Introducing drafts"
+msgstr ""
 
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
@@ -5860,7 +5875,7 @@ msgstr "Filmler"
 msgid "Music"
 msgstr "Müzik"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:167
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -6034,6 +6049,7 @@ msgstr "Yeni e-posta adresi"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:74
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:73
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:84
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:64
 msgid "New Feature"
 msgstr "Yeni Özellik"
@@ -6352,6 +6368,10 @@ msgstr "Takip ettiğiniz hiçkimse tarafından takip edilmiyor"
 #: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr "Bulunamadı"
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:129
+msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
+msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:558
 msgid "Note about sharing"
@@ -6826,13 +6846,13 @@ msgstr "Şifre güncellendi"
 msgid "Password updated!"
 msgstr "Şifre güncellendi!"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:385
 msgid "Pause"
 msgstr "Duraklat"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:336
 msgid "Pause video"
 msgstr "Videoyu duraklat"
 
@@ -6937,9 +6957,9 @@ msgstr "Sabitleme Akışları"
 msgid "Pinned to your feeds"
 msgstr "Akışlarınıza sabitlendi"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Play"
 msgstr "Oynat"
 
@@ -6948,7 +6968,7 @@ msgid "Play {0}"
 msgstr "{0} oynat"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:337
 msgid "Play video"
 msgstr "Videoyu oynat"
 
@@ -6956,11 +6976,11 @@ msgstr "Videoyu oynat"
 msgid "Play Video"
 msgstr "Videoyu Oynat"
 
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:27
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Plays or pauses the GIF"
 msgstr "GIF'i oynatır ya da duraklatır"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
 msgid "Plays or pauses the video"
 msgstr "Videoyu oynatır ya da duraklatır"
 
@@ -8803,7 +8823,7 @@ msgstr "Paylaşılan Tercihler Test Edicisi"
 msgid "Show"
 msgstr "Göster"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:134
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:81
 msgid "Show alt text"
 msgstr "Alt metni göster"
 
@@ -10040,7 +10060,7 @@ msgstr "Bugün"
 msgid "Toggle to enable or disable adult content"
 msgstr "Yetişkin içeriği etkinleştirmek veya devre dışı bırakmak için açın/kapayın"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
 msgid "Toggles the sound"
 msgstr "Sesi açar/kapar"
 
@@ -10281,7 +10301,7 @@ msgstr "Beğenmeyi geri al"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Beğeniyi kaldır ({0, plural, other {# beğeni}})"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10318,7 +10338,7 @@ msgstr "Listeyi sessizden çıkar"
 msgid "Unmute thread"
 msgstr "Konunun sessizliğini kaldır"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:334
 msgid "Unmute video"
 msgstr "Videonun sesini aç"
 
@@ -10699,7 +10719,7 @@ msgid "Version {0}"
 msgstr "Sürüm {0}"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Video"
 msgstr "Video"
 
@@ -10732,7 +10752,7 @@ msgstr "Video duraklatıldı"
 msgid "Video is playing"
 msgstr "Video oynatılıyor"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:219
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:232
 msgid "Video not found."
 msgstr "Video bulunamadı."
 
@@ -11745,7 +11765,7 @@ msgstr "İtirazınız gönderildi. İtirazınız kabul edilirse size bir e-posta
 msgid "Your birth date"
 msgstr "Doğum tarihiniz"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:223
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "Tarayıcınız video formatını desteklemiyor. Lütfen farklı bir tarayıcı deneyin."
 
