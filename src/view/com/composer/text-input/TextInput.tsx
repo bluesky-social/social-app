@@ -226,7 +226,7 @@ export function TextInput({
         placeholder={placeholder}
         placeholderTextColor={t.atoms.text_contrast_medium.color}
         keyboardAppearance={theme.colorScheme}
-        autoFocus={true}
+        autoFocus={props.autoFocus !== undefined ? props.autoFocus : true}
         allowFontScaling
         multiline
         scrollEnabled={false}
