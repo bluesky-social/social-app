@@ -43,6 +43,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => preferences?.moderationPrefs?.mutedWords ?? [],
     [preferences?.moderationPrefs?.mutedWords],
   )
+
   const {data, refetch} = useQuery(
     {
       // keep this, prefectching handles initial load
@@ -57,7 +58,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   useOnAppStateChange(state => {
-    if (state === 'active') refetch()
+    if (state === 'active') void refetch()
   })
 
   const ctx = useMemo(() => {
