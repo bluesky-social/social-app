@@ -17,14 +17,14 @@ export function useSaveImageToMediaLibrary() {
       granularPermissions: ['photo'],
     })
   return useCallback(
-    async (uri: string) => {
+    async ({uri, baseSaveName}: {uri: string; baseSaveName?: string}) => {
       if (!IS_NATIVE) {
         throw new Error('useSaveImageToMediaLibrary is native only')
       }
 
       async function save() {
         try {
-          await saveImageToMediaLibrary({uri})
+          await saveImageToMediaLibrary({uri, baseSaveName})
 
           Toast.show(_(msg`Image saved`))
         } catch (e: any) {

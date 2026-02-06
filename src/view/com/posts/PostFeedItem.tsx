@@ -426,6 +426,12 @@ let PostContent = ({
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
+  const postCreatedAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
+    ? post.record.createdAt
+    : undefined
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,
   })
@@ -488,6 +494,9 @@ let PostContent = ({
             moderation={moderation}
             onOpen={onOpenEmbed}
             viewContext={PostEmbedViewContext.Feed}
+            postUri={post.uri}
+            postAuthorHandle={postAuthor.handle}
+            postCreatedAt={postCreatedAt}
           />
         </View>
       ) : null}

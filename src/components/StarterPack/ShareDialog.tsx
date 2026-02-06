@@ -65,7 +65,7 @@ function ShareDialogInner({
   const saveImageToAlbum = useSaveImageToMediaLibrary()
 
   const onSave = async () => {
-    await saveImageToAlbum(imageUrl)
+    await saveImageToAlbum({uri: imageUrl})
   }
 
   return (
