@@ -7,6 +7,8 @@ import {
   runOnUI,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
+import {AtUri} from '@atproto/api'
+import { format, parseISO } from "date-fns";
 
 import {useLightboxControls} from '#/state/lightbox'
 import {type Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
@@ -15,23 +17,40 @@ import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {type EmbedType} from '#/types/bsky/post'
-import {type CommonProps} from './types'
+import {type CommonProps, type PostContextProps} from './types'
 
 export function ImageEmbed({
   embed,
   ...rest
-}: CommonProps & {
+}: CommonProps &
+  PostContextProps & {
   embed: EmbedType<'images'>
 }) {
   const {openLightbox} = useLightboxControls()
   const {images} = embed.view
 
+  const postRkey = rest?.postUri ? new AtUri(rest.postUri).rkey : undefined
+  const handle = rest.postAuthorHandle
+  // Filename-safe ISO 8601-compliant timestamp
+  const timestamp = rest?.postCreatedAt
+    ? format(parseISO(rest.postCreatedAt), "yyyy-MM-dd'T'HHmmss")
+    : undefined
+  // We need at least a handle and rkey to have
+  // a meaningful filename for a saved image
+  const canName = !!(handle && postRkey)
+
   if (images.length > 0) {
-    const items = images.map(img => ({
+    const items = images.map((img, idx) => ({
       uri: img.fullsize,
       thumbUri: img.thumb,
       alt: img.alt,
       dimensions: img.aspectRatio ?? null,
+      baseSaveName: canName
+        ? (() => {
+            const base = `${handle}_${postRkey}_img${idx + 1}`
+            return timestamp ? `${base}_${timestamp}` : base
+          })()
+        : undefined,
     }))
     const _openLightbox = (
       index: number,
