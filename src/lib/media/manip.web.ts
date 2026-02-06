@@ -42,16 +42,25 @@ export async function shareImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
+<<<<<<< HEAD
 /**
  * Saves an image to the user's device. Uses the CDN's `download` preset
  * which uses the JPEG version with the Content-Disposition header set to
  * `attachment; filename=<filename>`. On native this saves to the media library;
  * on web it triggers a browser download.
  */
-export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+export async function saveImageToMediaLibrary({
+  uri,
+  baseSaveName,
+}: {
+  uri: string
+  baseSaveName?: string
+}) {
   const downloadUri = convertCdnPreset(uri, 'download')
   const segments = downloadUri.split('/')
-  const filename = `bluesky-${segments.at(-1)}.jpg`
+  const filename = baseSaveName
+    ? `${baseSaveName}.jpg`
+    : `bluesky-${segments.at(-1)}.jpg`
   downloadUrl(downloadUri, filename)
 }
 
