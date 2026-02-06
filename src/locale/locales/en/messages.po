@@ -780,7 +780,7 @@ msgstr ""
 msgid "Add emoji reaction"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:223
+#: src/view/com/feeds/ComposerPrompt.tsx:274
 msgid "Add image"
 msgstr ""
 
@@ -2246,7 +2246,7 @@ msgstr ""
 msgid "Complete the challenge"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:146
+#: src/view/com/feeds/ComposerPrompt.tsx:197
 #: src/view/shell/desktop/LeftNav.tsx:573
 msgid "Compose new post"
 msgstr ""
@@ -3185,6 +3185,10 @@ msgstr ""
 #: src/view/com/composer/drafts/DraftsButton.tsx:74
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:112
 msgid "Drafts"
+msgstr ""
+
+#: src/view/com/feeds/ComposerPrompt.tsx:186
+msgid "Drop image to start a post"
 msgstr ""
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:375
@@ -6546,7 +6550,7 @@ msgstr ""
 msgid "Open avatar creator"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:201
+#: src/view/com/feeds/ComposerPrompt.tsx:252
 msgid "Open camera"
 msgstr ""
 
@@ -6663,7 +6667,7 @@ msgstr ""
 msgid "Opens composer"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:202
+#: src/view/com/feeds/ComposerPrompt.tsx:253
 msgid "Opens device camera"
 msgstr ""
 
@@ -6694,7 +6698,7 @@ msgstr ""
 msgid "Opens helpdesk in browser"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:224
+#: src/view/com/feeds/ComposerPrompt.tsx:275
 msgid "Opens image picker"
 msgstr ""
 
@@ -6714,7 +6718,7 @@ msgstr ""
 msgid "Opens post language settings"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:147
+#: src/view/com/feeds/ComposerPrompt.tsx:198
 msgid "Opens the post composer"
 msgstr ""
 
@@ -11144,7 +11148,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:103
 #: src/view/com/composer/Composer.tsx:1242
-#: src/view/com/feeds/ComposerPrompt.tsx:192
+#: src/view/com/feeds/ComposerPrompt.tsx:243
 msgid "What's up?"
 msgstr ""
 

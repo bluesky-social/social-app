@@ -1,8 +1,10 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
+import Animated, {FadeIn} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useImageDropZone} from '#/lib/hooks/useImageDropZone'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
   useCameraPermission,
@@ -11,6 +13,7 @@ import {
 } from '#/lib/hooks/usePermissions'
 import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
+import {useComposerState} from '#/state/shell/composer'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
@@ -34,6 +37,21 @@ export function ComposerPrompt() {
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
+  const composerState = useComposerState()
+
+  const handleImageDrop = (
+    imageUris: {uri: string; width: number; height: number}[],
+  ) => {
+    openComposer({
+      imageUris: imageUris.slice(0, MAX_IMAGES),
+      logContext: 'Fab',
+    })
+  }
+
+  const {isDraggingOver} = useImageDropZone({
+    enabled: !composerState && !!profile,
+    onDrop: handleImageDrop,
+  })
 
   const onPress = useCallback(() => {
     ax.metric('composerPrompt:press', {})
@@ -136,6 +154,39 @@ export function ComposerPrompt() {
 
   if (!profile) {
     return null
+  }
+
+  if (isDraggingOver) {
+    return (
+      <Animated.View
+        entering={FadeIn.duration(150)}
+        style={[
+          a.mx_sm,
+          a.my_xs,
+          a.rounded_md,
+          a.align_center,
+          a.justify_center,
+          a.flex_row,
+          a.gap_md,
+          {
+            paddingVertical: 36,
+            borderWidth: 2,
+            borderStyle: 'dashed',
+            borderColor: t.palette.primary_500,
+          },
+          web({pointerEvents: 'none'}),
+        ]}>
+        <ImageIcon size="lg" style={{color: t.palette.primary_500}} />
+        <Text
+          style={[
+            a.text_lg,
+            a.font_semi_bold,
+            {color: t.palette.primary_500},
+          ]}>
+          <Trans>Drop image to start a post</Trans>
+        </Text>
+      </Animated.View>
+    )
   }
 
   return (

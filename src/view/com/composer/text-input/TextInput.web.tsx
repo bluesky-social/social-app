@@ -477,8 +477,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   dropText: {
-    paddingVertical: 44,
-    paddingHorizontal: 36,
+    paddingVertical: 80,
+    paddingHorizontal: 80,
     borderStyle: 'dashed',
     borderRadius: 8,
     borderWidth: 2,
