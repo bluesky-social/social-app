@@ -3657,7 +3657,7 @@ msgstr ""
 
 #: src/Navigation.tsx:789
 #: src/screens/Search/Shell.tsx:327
-#: src/view/shell/desktop/LeftNav.tsx:687
+#: src/view/shell/desktop/LeftNav.tsx:688
 #: src/view/shell/Drawer.tsx:416
 msgid "Explore"
 msgstr ""
@@ -3981,7 +3981,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:193
 #: src/view/screens/Feeds.tsx:511
 #: src/view/screens/Profile.tsx:239
-#: src/view/shell/desktop/LeftNav.tsx:725
+#: src/view/shell/desktop/LeftNav.tsx:726
 #: src/view/shell/Drawer.tsx:532
 msgid "Feeds"
 msgstr ""
@@ -4794,7 +4794,7 @@ msgstr ""
 #: src/Navigation.tsx:784
 #: src/Navigation.tsx:804
 #: src/view/shell/bottom-bar/BottomBar.tsx:176
-#: src/view/shell/desktop/LeftNav.tsx:669
+#: src/view/shell/desktop/LeftNav.tsx:670
 #: src/view/shell/Drawer.tsx:442
 msgid "Home"
 msgstr ""
@@ -5510,7 +5510,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:67
 #: src/view/screens/Profile.tsx:233
 #: src/view/screens/Profile.tsx:241
-#: src/view/shell/desktop/LeftNav.tsx:743
+#: src/view/shell/desktop/LeftNav.tsx:744
 #: src/view/shell/Drawer.tsx:547
 msgid "Lists"
 msgstr ""
@@ -6421,7 +6421,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:203
 #: src/view/screens/Notifications.tsx:129
 #: src/view/shell/bottom-bar/BottomBar.tsx:250
-#: src/view/shell/desktop/LeftNav.tsx:706
+#: src/view/shell/desktop/LeftNav.tsx:707
 #: src/view/shell/Drawer.tsx:495
 msgid "Notifications"
 msgstr ""
@@ -7363,7 +7363,7 @@ msgid "profile"
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:293
-#: src/view/shell/desktop/LeftNav.tsx:784
+#: src/view/shell/desktop/LeftNav.tsx:785
 #: src/view/shell/Drawer.tsx:79
 #: src/view/shell/Drawer.tsx:598
 msgid "Profile"
@@ -8202,7 +8202,7 @@ msgstr ""
 msgid "Save to my feeds"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:762
+#: src/view/shell/desktop/LeftNav.tsx:763
 #: src/view/shell/Drawer.tsx:573
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -8665,7 +8665,7 @@ msgstr ""
 
 #: src/Navigation.tsx:216
 #: src/screens/Settings/Settings.tsx:103
-#: src/view/shell/desktop/LeftNav.tsx:802
+#: src/view/shell/desktop/LeftNav.tsx:803
 #: src/view/shell/Drawer.tsx:611
 msgid "Settings"
 msgstr ""
