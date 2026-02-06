@@ -182,7 +182,9 @@ let PostMenuItems = ({
 
   const href = useMemo(() => {
     const urip = new AtUri(postUri)
-    return makeProfileLink(postAuthor, 'post', urip.rkey)
+    const link = makeProfileLink(postAuthor, 'post', urip.rkey)
+    const isCommunity = urip.collection === 'community.blacksky.feed.post'
+    return isCommunity ? `${link}?collection=${urip.collection}` : link
   }, [postUri, postAuthor])
 
   const onDeletePost = () => {
@@ -199,7 +201,10 @@ let PostMenuItems = ({
             (params.name === currentAccount.handle ||
               params.name === currentAccount.did)
           ) {
-            const currentHref = makeProfileLink(postAuthor, 'post', params.rkey)
+            const currentLink = makeProfileLink(postAuthor, 'post', params.rkey)
+            const currentHref = params.collection
+              ? `${currentLink}?collection=${params.collection}`
+              : currentLink
             if (currentHref === href && navigation.canGoBack()) {
               navigation.goBack()
             }

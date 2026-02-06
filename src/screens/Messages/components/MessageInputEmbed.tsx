@@ -204,7 +204,11 @@ function MessageInputPostEmbed({
     }
     case 'success': {
       const itemUrip = new AtUri(post.uri)
-      const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey)
+      const isCommunityPost =
+        itemUrip.collection === 'community.blacksky.feed.post'
+      const itemHref = isCommunityPost
+        ? `${makeProfileLink(post.author, 'post', itemUrip.rkey)}?collection=${itemUrip.collection}`
+        : makeProfileLink(post.author, 'post', itemUrip.rkey)
 
       if (!post || !moderation || !rt || !record) {
         return null

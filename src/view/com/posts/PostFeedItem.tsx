@@ -174,7 +174,12 @@ let FeedItemInner = ({
 
   const [href] = useMemo(() => {
     const urip = new AtUri(post.uri)
-    return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey]
+    const link = makeProfileLink(post.author, 'post', urip.rkey)
+    const isCommunity = urip.collection === 'community.blacksky.feed.post'
+    return [
+      isCommunity ? `${link}?collection=${urip.collection}` : link,
+      urip.rkey,
+    ]
   }, [post.uri, post.author])
   const {sendInteraction, feedSourceInfo, feedDescriptor} =
     useFeedFeedbackContext()

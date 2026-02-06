@@ -7,6 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {communityXrpc} from '#/lib/api/community'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
@@ -16,6 +17,12 @@ import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
+import {
+  fetchQueryWithFallback,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from './useQueryWithFallback'
 
 const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
@@ -348,12 +355,34 @@ function usePostUnrepostMutation(
   })
 }
 
+const COMMUNITY_POST_COLLECTION = 'community.blacksky.feed.post'
+
 export function usePostDeleteMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await agent.deletePost(uri)
+      const parsedUri = new AtUri(uri)
+      if (parsedUri.collection === COMMUNITY_POST_COLLECTION) {
+        // Delete from community DB via appview
+        const res = await communityXrpc(
+          agent,
+          'community.blacksky.feed.deletePost',
+          {body: {uri}},
+        )
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.message || `deletePost failed: ${res.status}`)
+        }
+        // Also delete the stub record from PDS
+        await agent.com.atproto.repo.deleteRecord({
+          repo: parsedUri.hostname,
+          collection: COMMUNITY_POST_COLLECTION,
+          rkey: parsedUri.rkey,
+        })
+      } else {
+        await agent.deletePost(uri)
+      }
     },
     onSuccess(_, variables) {
       updatePostShadow(queryClient, variables.uri, {isDeleted: true})

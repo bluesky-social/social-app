@@ -42,6 +42,7 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ProfileStatusError} from '#/screens/Profile/components/ProfileStatusError'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
+import {CommunityFeedSection} from '#/screens/Profile/Sections/CommunityFeed'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {atoms as a, useTheme} from '#/alf'
@@ -217,6 +218,7 @@ function ProfileScreenLoaded({
   const [scrollViewTag, setScrollViewTag] = useState<number | null>(null)
 
   const postsSectionRef = useRef<SectionRef>(null)
+  const communitySectionRef = useRef<SectionRef>(null)
   const repliesSectionRef = useRef<SectionRef>(null)
   const mediaSectionRef = useRef<SectionRef>(null)
   const videosSectionRef = useRef<SectionRef>(null)
@@ -241,6 +243,7 @@ function ProfileScreenLoaded({
   const hasLabeler = !!profile.associated?.labeler
   const showFiltersTab = hasLabeler
   const showPostsTab = true
+  const showCommunityTab = hasSession
   const showRepliesTab = hasSession
   const showMediaTab = !hasLabeler
   const showVideosTab = !hasLabeler
@@ -257,6 +260,7 @@ function ProfileScreenLoaded({
     showFiltersTab ? _(msg`Labels`) : undefined,
     showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
     showPostsTab ? _(msg`Posts`) : undefined,
+    showCommunityTab ? _(msg`Community`) : undefined,
     showRepliesTab ? _(msg`Replies`) : undefined,
     showMediaTab ? _(msg`Media`) : undefined,
     showVideosTab ? _(msg`Videos`) : undefined,
@@ -269,6 +273,7 @@ function ProfileScreenLoaded({
   let nextIndex = 0
   let filtersIndex: number | null = null
   let postsIndex: number | null = null
+  let communityIndex: number | null = null
   let repliesIndex: number | null = null
   let mediaIndex: number | null = null
   let videosIndex: number | null = null
@@ -281,6 +286,9 @@ function ProfileScreenLoaded({
   }
   if (showPostsTab) {
     postsIndex = nextIndex++
+  }
+  if (showCommunityTab) {
+    communityIndex = nextIndex++
   }
   if (showRepliesTab) {
     repliesIndex = nextIndex++
@@ -310,6 +318,8 @@ function ProfileScreenLoaded({
         labelsSectionRef.current?.scrollToTop()
       } else if (index === postsIndex) {
         postsSectionRef.current?.scrollToTop()
+      } else if (index === communityIndex) {
+        communitySectionRef.current?.scrollToTop()
       } else if (index === repliesIndex) {
         repliesSectionRef.current?.scrollToTop()
       } else if (index === mediaIndex) {
@@ -329,6 +339,7 @@ function ProfileScreenLoaded({
     [
       filtersIndex,
       postsIndex,
+      communityIndex,
       repliesIndex,
       mediaIndex,
       videosIndex,
@@ -465,6 +476,18 @@ function ProfileScreenLoaded({
                       }
                     : undefined
                 }
+              />
+            )
+          : null}
+        {showCommunityTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <CommunityFeedSection
+                ref={communitySectionRef}
+                actor={profile.did}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}

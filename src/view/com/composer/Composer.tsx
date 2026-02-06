@@ -125,6 +125,7 @@ import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as EmojiPicker from '#/components/EmojiPicker'
+import * as Toggle from '#/components/forms/Toggle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -1142,8 +1143,19 @@ export const ComposePost = ({
             <Toast.Action
               label={l`View post`}
               onPress={() => {
-                const {host: name, rkey} = new AtUri(postUri)
-                navigation.navigate('PostThread', {name, rkey})
+                const urip = new AtUri(postUri)
+                const params: {
+                  name: string
+                  rkey: string
+                  collection?: string
+                } = {
+                  name: urip.host,
+                  rkey: urip.rkey,
+                }
+                if (urip.collection !== 'app.bsky.feed.post') {
+                  params.collection = urip.collection
+                }
+                navigation.navigate('PostThread', params)
               }}>
               <Trans context="Action to view the post the user just created">
                 View
@@ -1949,6 +1961,7 @@ function ComposerPills({
   bottomBarAnimatedStyle: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
+  const {_} = useLingui()
   const media = post.embed.media
   const hasMedia =
     media?.type === 'images' ||
@@ -1958,6 +1971,7 @@ function ComposerPills({
   const hasLink = !!post.embed.link
 
   // Don't render anything if no pills are going to be displayed
+  // Always show for non-replies (Blacksky Only toggle is available)
   if (isReply && !hasMedia && !hasLink) {
     return null
   }
@@ -1986,6 +2000,21 @@ function ComposerPills({
             }}
             style={bottomBarAnimatedStyle}
           />
+        )}
+        {isReply ? null : (
+          <Toggle.Item
+            name="blacksky_only"
+            label={_(msg`Blacksky Only`)}
+            value={thread.blackskyOnly}
+            onChange={() => {
+              dispatch({type: 'toggle_blacksky_only'})
+            }}
+            style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <Toggle.LabelText>
+              <Trans>Blacksky Only</Trans>
+            </Toggle.LabelText>
+            <Toggle.Switch />
+          </Toggle.Item>
         )}
         {hasMedia || hasLink ? (
           <LabelsBtn

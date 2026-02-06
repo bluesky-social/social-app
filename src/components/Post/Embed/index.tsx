@@ -327,7 +327,11 @@ export function QuoteEmbed({
   const t = useTheme()
   const queryClient = useQueryClient()
   const itemUrip = new AtUri(quote.uri)
-  const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
+  const isCommunityQuote =
+    itemUrip.collection === 'community.blacksky.feed.post'
+  const itemHref = isCommunityQuote
+    ? `${makeProfileLink(quote.author, 'post', itemUrip.rkey)}?collection=${itemUrip.collection}`
+    : makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
 
   const richText = useMemo(() => {

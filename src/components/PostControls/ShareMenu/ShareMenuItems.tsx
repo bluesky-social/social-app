@@ -47,7 +47,9 @@ let ShareMenuItems = ({
 
   const href = useMemo(() => {
     const urip = new AtUri(postUri)
-    return makeProfileLink(postAuthor, 'post', urip.rkey)
+    const link = makeProfileLink(postAuthor, 'post', urip.rkey)
+    const isCommunity = urip.collection === 'community.blacksky.feed.post'
+    return isCommunity ? `${link}?collection=${urip.collection}` : link
   }, [postUri, postAuthor])
 
   const hideInPWI = useMemo(() => {

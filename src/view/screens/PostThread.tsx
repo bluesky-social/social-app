@@ -8,8 +8,8 @@ import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export function PostThreadScreen({route}: Props) {
-  const {name, rkey} = route.params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+  const {name, rkey, collection} = route.params
+  const uri = makeRecordUri(name, collection || 'app.bsky.feed.post', rkey)
 
   return (
     <Layout.Screen testID="postThreadScreen">
