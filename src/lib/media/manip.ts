@@ -101,14 +101,24 @@ const ALBUM_NAME = 'Bluesky'
  * `attachment; filename=<filename>`. On native this saves to the media library;
  * on web it triggers a browser download.
  */
-export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+export async function saveImageToMediaLibrary({
+  uri,
+  baseSaveName: baseFilename,
+}: {
+  uri: string
+  baseSaveName?: string
+}) {
   const downloadUri = convertCdnPreset(uri, 'download')
   const downloadedPath = await downloadImage(
     downloadUri,
     String(uuid.v4()),
     20e3,
   )
-  const imagePath = await moveToPermanentPath(downloadedPath, '.jpg')
+  const imagePath = await moveToPermanentPath(
+    downloadedPath,
+    '.jpg',
+    baseFilename,
+  )
 
   // save
   try {
@@ -267,13 +277,17 @@ async function doResize(
   )
 }
 
-async function moveToPermanentPath(path: string, ext: string): Promise<string> {
+async function moveToPermanentPath(
+  path: string,
+  ext: string,
+  baseFilename?: string,
+): Promise<string> {
   /*
   Since this package stores images in a temp directory, we need to move the file to a permanent location.
   Relevant: IOS bug when trying to open a second time:
   https://github.com/ivpusic/react-native-image-crop-picker/issues/1199
   */
-  const filename = uuid.v4()
+  const filename = baseFilename || uuid.v4()
 
   // cacheDirectory will not ever be null on native, but it could be on web. This function only ever gets called on
   // native so we assert as a string.

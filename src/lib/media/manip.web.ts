@@ -42,7 +42,6 @@ export async function shareImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
-<<<<<<< HEAD
 /**
  * Saves an image to the user's device. Uses the CDN's `download` preset
  * which uses the JPEG version with the Content-Disposition header set to
