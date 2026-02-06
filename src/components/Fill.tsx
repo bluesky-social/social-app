@@ -1,7 +1,7 @@
-import React from 'react'
 import {View} from 'react-native'
+import type React from 'react'
 
-import {atoms as a, ViewStyleProp} from '#/alf'
+import {atoms as a, type ViewStyleProp} from '#/alf'
 
 export function Fill({
   children,

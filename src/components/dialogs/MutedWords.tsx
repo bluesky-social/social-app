@@ -1,11 +1,10 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
+import {type AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {
   usePreferencesQuery,
   useRemoveMutedWordMutation,
@@ -16,7 +15,7 @@ import {
   native,
   useBreakpoints,
   useTheme,
-  ViewStyleProp,
+  type ViewStyleProp,
   web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -32,6 +31,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 
@@ -108,7 +108,12 @@ function MutedWordsInner() {
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
       <View>
         <Text
-          style={[a.text_md, a.font_bold, a.pb_sm, t.atoms.text_contrast_high]}>
+          style={[
+            a.text_md,
+            a.font_semi_bold,
+            a.pb_sm,
+            t.atoms.text_contrast_high,
+          ]}>
           <Trans>Add muted words and tags</Trans>
         </Text>
         <Text style={[a.pb_lg, a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -147,7 +152,7 @@ function MutedWordsInner() {
               style={[
                 a.pb_xs,
                 a.text_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Duration:</Trans>
@@ -247,7 +252,7 @@ function MutedWordsInner() {
               style={[
                 a.pb_xs,
                 a.text_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Mute in:</Trans>
@@ -293,7 +298,7 @@ function MutedWordsInner() {
               style={[
                 a.pb_xs,
                 a.text_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Options:</Trans>
@@ -362,7 +367,7 @@ function MutedWordsInner() {
           <Text
             style={[
               a.text_md,
-              a.font_bold,
+              a.font_semi_bold,
               a.pb_md,
               t.atoms.text_contrast_high,
             ]}>
@@ -401,7 +406,7 @@ function MutedWordsInner() {
           )}
         </View>
 
-        {isNative && <View style={{height: 20}} />}
+        {IS_NATIVE && <View style={{height: 20}} />}
       </View>
 
       <Dialog.Close />
@@ -455,7 +460,7 @@ function MutedWordRow({
               style={[
                 a.flex_1,
                 a.leading_snug,
-                a.font_bold,
+                a.font_semi_bold,
                 web({
                   overflowWrap: 'break-word',
                   wordBreak: 'break-word',
@@ -466,7 +471,8 @@ function MutedWordRow({
                   {word.value}{' '}
                   <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
                     in{' '}
-                    <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                    <Text
+                      style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
                       text & tags
                     </Text>
                   </Text>
@@ -476,7 +482,8 @@ function MutedWordRow({
                   {word.value}{' '}
                   <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
                     in{' '}
-                    <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                    <Text
+                      style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
                       tags
                     </Text>
                   </Text>

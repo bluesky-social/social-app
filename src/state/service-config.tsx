@@ -2,6 +2,9 @@ import {createContext, useContext, useMemo} from 'react'
 
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useServiceConfigQuery} from '#/state/queries/service-config'
+import {useSession} from '#/state/session'
+import {useAnalytics} from '#/analytics'
+import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
 type TrendingContext = {
@@ -18,7 +21,7 @@ const TrendingContext = createContext<TrendingContext>({
 })
 TrendingContext.displayName = 'TrendingContext'
 
-const LiveNowContext = createContext<LiveNowContext | null>(null)
+const LiveNowContext = createContext<LiveNowContext>([])
 LiveNowContext.displayName = 'LiveNowContext'
 
 const CheckEmailConfirmedContext = createContext<boolean | null>(null)
@@ -49,10 +52,6 @@ export function Provider({children}: {children: React.ReactNode}) {
       return {enabled: Boolean(cachedEnabled)}
     }
 
-    /*
-     * Doing an extra check here to reduce hits to statsig. If it's disabled on
-     * the server, we can exit early.
-     */
     const enabled = Boolean(config?.topicsEnabled)
 
     // update cache
@@ -82,19 +81,53 @@ export function useTrendingConfig() {
   return useContext(TrendingContext)
 }
 
-export function useLiveNowConfig() {
+const DEFAULT_LIVE_ALLOWED_DOMAINS = [
+  'twitch.tv',
+  'www.twitch.tv',
+  'stream.place',
+  'bluecast.app',
+  'www.bluecast.app',
+]
+export type LiveNowConfig = {
+  currentAccountAllowedHosts: Set<string>
+  defaultAllowedHosts: Set<string>
+  allowedHostsExceptionsByDid: Map<string, Set<string>>
+}
+export function useLiveNowConfig(): LiveNowConfig {
   const ctx = useContext(LiveNowContext)
-  if (!ctx) {
-    throw new Error(
-      'useLiveNowConfig must be used within a ServiceConfigManager',
-    )
-  }
-  return ctx
+  const canGoLive = useCanGoLive()
+  const {currentAccount} = useSession()
+  return useMemo(() => {
+    const defaultAllowedHosts = new Set(DEFAULT_LIVE_ALLOWED_DOMAINS)
+    const allowedHostsExceptionsByDid = new Map<string, Set<string>>()
+    for (const live of ctx) {
+      allowedHostsExceptionsByDid.set(
+        live.did,
+        new Set(DEFAULT_LIVE_ALLOWED_DOMAINS.concat(live.domains)),
+      )
+    }
+    if (!currentAccount?.did || !canGoLive)
+      return {
+        currentAccountAllowedHosts: new Set(),
+        defaultAllowedHosts,
+        allowedHostsExceptionsByDid,
+      }
+    const vip = ctx.find(live => live.did === currentAccount.did)
+    return {
+      currentAccountAllowedHosts: new Set(
+        DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
+      ),
+      defaultAllowedHosts,
+      allowedHostsExceptionsByDid,
+    }
+  }, [ctx, currentAccount, canGoLive])
 }
 
-export function useCanGoLive(did?: string) {
-  const config = useLiveNowConfig()
-  return !!config.find(cfg => cfg.did === did)
+export function useCanGoLive() {
+  const ax = useAnalytics()
+  const {hasSession} = useSession()
+  if (!hasSession) return false
+  return IS_DEV ? true : !ax.features.enabled(ax.features.LiveNowBetaDisable)
 }
 
 export function useCheckEmailConfirmed() {

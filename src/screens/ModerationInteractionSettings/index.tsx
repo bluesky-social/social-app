@@ -2,14 +2,14 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import deepEqual from 'lodash.isequal'
+import deepEqual from 'fast-deep-equal'
 
 import {logger} from '#/logger'
 import {usePostInteractionSettingsMutation} from '#/state/queries/post-interaction-settings'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {
   threadgateAllowUISettingToAllowRecordValue,

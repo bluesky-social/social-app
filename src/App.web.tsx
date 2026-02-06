@@ -3,30 +3,21 @@ import '#/view/icons'
 import './style.css'
 
 import React, {useEffect, useState} from 'react'
-import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as Sentry from '@sentry/react-native'
 
 import {QueryProvider} from '#/lib/react-query'
-import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
-import {Provider as AgeAssuranceProvider} from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
-import {
-  beginResolveGeolocation,
-  ensureGeolocationResolved,
-  Provider as GeolocationProvider,
-} from '#/state/geolocation'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
-import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
 import {Provider as ModalStateProvider} from '#/state/modals'
@@ -46,6 +37,7 @@ import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
+import {Provider as OnboardingProvider} from '#/state/shell/onboarding'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
@@ -55,7 +47,6 @@ import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
-import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
@@ -63,13 +54,31 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
+import {
+  prefetchAgeAssuranceConfig,
+  Provider as AgeAssuranceV2Provider,
+} from '#/ageAssurance'
+import {
+  AnalyticsContext,
+  AnalyticsFeaturesContext,
+  features,
+  setupDeviceId,
+} from '#/analytics'
+import {
+  prefetchLiveEvents,
+  Provider as LiveEventsProvider,
+} from '#/features/liveEvents/context'
+import * as Geo from '#/geolocation'
+import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 /**
  * Begin geolocation ASAP
  */
-beginResolveGeolocation()
+Geo.resolve()
+prefetchAgeAssuranceConfig()
+prefetchLiveEvents()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -85,6 +94,8 @@ function InnerApp() {
       try {
         if (account) {
           await resumeSession(account)
+        } else {
+          await features.init
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
@@ -106,22 +117,22 @@ function InnerApp() {
   }, [_])
 
   // wait for session to resume
-  if (!isReady || !hasCheckedReferrer) return null
+  if (!isReady || !hasCheckedReferrer) return <Splash isReady />
 
   return (
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
-          <RootSiblingParent>
-            <VideoVolumeProvider>
-              <ActiveVideoProvider>
-                <React.Fragment
-                  // Resets the entire tree below when it changes:
-                  key={currentAccount?.did}>
+          <VideoVolumeProvider>
+            <ActiveVideoProvider>
+              <React.Fragment
+                // Resets the entire tree below when it changes:
+                key={currentAccount?.did}>
+                <AnalyticsFeaturesContext>
                   <QueryProvider currentDid={currentAccount?.did}>
                     <PolicyUpdateOverlayProvider>
-                      <StatsigProvider>
-                        <AgeAssuranceProvider>
+                      <LiveEventsProvider>
+                        <AgeAssuranceV2Provider>
                           <ComposerProvider>
                             <MessagesProvider>
                               {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
@@ -141,7 +152,6 @@ function InnerApp() {
                                                         <HideBottomBarBorderProvider>
                                                           <IntentDialogProvider>
                                                             <Shell />
-                                                            <NuxDialogs />
                                                             <ToastOutlet />
                                                           </IntentDialogProvider>
                                                         </HideBottomBarBorderProvider>
@@ -160,14 +170,14 @@ function InnerApp() {
                               </LabelDefsProvider>
                             </MessagesProvider>
                           </ComposerProvider>
-                        </AgeAssuranceProvider>
-                      </StatsigProvider>
+                        </AgeAssuranceV2Provider>
+                      </LiveEventsProvider>
                     </PolicyUpdateOverlayProvider>
                   </QueryProvider>
-                </React.Fragment>
-              </ActiveVideoProvider>
-            </VideoVolumeProvider>
-          </RootSiblingParent>
+                </AnalyticsFeaturesContext>
+              </React.Fragment>
+            </ActiveVideoProvider>
+          </VideoVolumeProvider>
         </ContextMenuProvider>
       </ThemeProvider>
     </Alf>
@@ -178,13 +188,13 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
+    Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(() =>
       setReady(true),
     )
   }, [])
 
   if (!isReady) {
-    return null
+    return <Splash isReady />
   }
 
   /*
@@ -192,31 +202,33 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <GeolocationProvider>
+    <Geo.Provider>
       <A11yProvider>
-        <SessionProvider>
-          <PrefsStateProvider>
-            <I18nProvider>
-              <ShellStateProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <StarterPackProvider>
-                            <InnerApp />
-                          </StarterPackProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </InvitesStateProvider>
-              </ShellStateProvider>
-            </I18nProvider>
-          </PrefsStateProvider>
-        </SessionProvider>
+        <OnboardingProvider>
+          <AnalyticsContext>
+            <SessionProvider>
+              <PrefsStateProvider>
+                <I18nProvider>
+                  <ShellStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <StarterPackProvider>
+                              <InnerApp />
+                            </StarterPackProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </ShellStateProvider>
+                </I18nProvider>
+              </PrefsStateProvider>
+            </SessionProvider>
+          </AnalyticsContext>
+        </OnboardingProvider>
       </A11yProvider>
-    </GeolocationProvider>
+    </Geo.Provider>
   )
 }
 

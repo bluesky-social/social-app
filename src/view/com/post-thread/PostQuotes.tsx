@@ -1,14 +1,15 @@
 import {useCallback, useState} from 'react'
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   moderatePost,
-  ModerationDecision,
+  type ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -44,6 +45,7 @@ export function PostQuotes({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
+  const trackPostView = usePostViewTracking('PostQuotes')
 
   const {
     data: resolvedUri,
@@ -123,6 +125,7 @@ export function PostQuotes({uri}: {uri: string}) {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
+      onItemSeen={item => trackPostView(item.post)}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}

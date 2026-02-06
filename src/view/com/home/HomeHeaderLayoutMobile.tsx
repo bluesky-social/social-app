@@ -1,3 +1,4 @@
+import {type JSX} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
@@ -76,6 +77,7 @@ export function HomeHeaderLayoutMobile({
               style={[
                 a.justify_center,
                 {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
+                a.bg_transparent,
               ]}>
               <ButtonIcon icon={FeedsIcon} size="lg" />
             </Link>

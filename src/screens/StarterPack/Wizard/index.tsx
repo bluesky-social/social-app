@@ -22,7 +22,6 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
@@ -31,7 +30,6 @@ import {
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAllListMembersQuery} from '#/state/queries/list-members'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -59,6 +57,8 @@ import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {Provider} from './State'
 
@@ -167,6 +167,7 @@ function WizardInner({
   onSuccess?: () => void
 }) {
   const navigation = useNavigation<NavigationProp>()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [state, dispatch] = useWizardState()
@@ -222,7 +223,7 @@ function WizardInner({
 
   const onSuccessCreate = (data: {uri: string; cid: string}) => {
     const rkey = new AtUri(data.uri).rkey
-    logEvent('starterPack:create', {
+    ax.metric('starterPack:create', {
       setName: state.name != null,
       setDescription: state.description != null,
       profilesCount: state.profiles.length,
@@ -236,7 +237,7 @@ function WizardInner({
       onSuccess?.()
     } else {
       navigation.replace('StarterPack', {
-        name: profile!.handle,
+        name: profile.handle,
         rkey,
         new: true,
       })
@@ -435,7 +436,7 @@ function Footer({
         {
           paddingBottom: a.pb_lg.paddingBottom + bottomInset,
         },
-        isNative && [
+        IS_NATIVE && [
           a.border_l,
           a.border_r,
           t.atoms.shadow_md,
@@ -447,7 +448,7 @@ function Footer({
       ]}>
       {items.length > minimumItems && (
         <View style={[a.absolute, {right: 14, top: 31}]}>
-          <Text style={[a.font_bold]}>
+          <Text style={[a.font_semi_bold]}>
             {items.length}/
             {state.currentStep === 'Profiles' ? STARTER_PACK_MAX_SIZE : 3}
           </Text>
@@ -490,7 +491,7 @@ function Footer({
                 ) : (
                   <Trans>
                     It's just{' '}
-                    <Text style={[a.font_bold, textStyles]} emoji>
+                    <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[0])}{' '}
                     </Text>
                     right now! Add more people to your starter pack by searching
@@ -500,21 +501,21 @@ function Footer({
               ) : items.length === 2 ? (
                 currentAccount?.did === items[0].did ? (
                   <Trans>
-                    <Text style={[a.font_bold, textStyles]}>You</Text> and
+                    <Text style={[a.font_semi_bold, textStyles]}>You</Text> and
                     <Text> </Text>
-                    <Text style={[a.font_bold, textStyles]} emoji>
+                    <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[1] /* [0] is self, skip it */)}{' '}
                     </Text>
                     are included in your starter pack
                   </Trans>
                 ) : (
                   <Trans>
-                    <Text style={[a.font_bold, textStyles]}>
+                    <Text style={[a.font_semi_bold, textStyles]}>
                       {getName(items[0])}
                     </Text>{' '}
                     and
                     <Text> </Text>
-                    <Text style={[a.font_bold, textStyles]} emoji>
+                    <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[1] /* [0] is self, skip it */)}{' '}
                     </Text>
                     are included in your starter pack
@@ -522,10 +523,10 @@ function Footer({
                 )
               ) : items.length > 2 ? (
                 <Trans context="profiles">
-                  <Text style={[a.font_bold, textStyles]} emoji>
+                  <Text style={[a.font_semi_bold, textStyles]} emoji>
                     {getName(items[1] /* [0] is self, skip it */)},{' '}
                   </Text>
-                  <Text style={[a.font_bold, textStyles]} emoji>
+                  <Text style={[a.font_semi_bold, textStyles]} emoji>
                     {getName(items[2])},{' '}
                   </Text>
                   and{' '}
@@ -542,7 +543,7 @@ function Footer({
         ) : state.currentStep === 'Feeds' ? (
           items.length === 0 ? (
             <View style={[a.gap_sm]}>
-              <Text style={[a.font_bold, a.text_center, textStyles]}>
+              <Text style={[a.font_semi_bold, a.text_center, textStyles]}>
                 <Trans>Add some feeds to your starter pack!</Trans>
               </Text>
               <Text style={[a.text_center, textStyles]}>
@@ -556,29 +557,29 @@ function Footer({
               {
                 items.length === 1 ? (
                   <Trans>
-                    <Text style={[a.font_bold, textStyles]} emoji>
+                    <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[0])}
                     </Text>{' '}
                     is included in your starter pack
                   </Trans>
                 ) : items.length === 2 ? (
                   <Trans>
-                    <Text style={[a.font_bold, textStyles]} emoji>
+                    <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[0])}
                     </Text>{' '}
                     and
                     <Text> </Text>
-                    <Text style={[a.font_bold, textStyles]} emoji>
+                    <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[1])}{' '}
                     </Text>
                     are included in your starter pack
                   </Trans>
                 ) : items.length > 2 ? (
                   <Trans context="feeds">
-                    <Text style={[a.font_bold, textStyles]} emoji>
+                    <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[0])},{' '}
                     </Text>
-                    <Text style={[a.font_bold, textStyles]} emoji>
+                    <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[1])},{' '}
                     </Text>
                     and{' '}
@@ -601,10 +602,15 @@ function Footer({
           a.w_full,
           a.align_center,
           a.gap_2xl,
-          isNative ? a.mt_sm : a.mt_md,
+          IS_NATIVE ? a.mt_sm : a.mt_md,
         ]}>
         {state.currentStep === 'Profiles' && items.length < 8 && (
-          <Text style={[a.font_bold, textStyles, t.atoms.text_contrast_medium]}>
+          <Text
+            style={[
+              a.font_semi_bold,
+              textStyles,
+              t.atoms.text_contrast_medium,
+            ]}>
             <Trans>Add {8 - items.length} more to continue</Trans>
           </Text>
         )}

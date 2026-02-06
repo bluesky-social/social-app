@@ -1,10 +1,24 @@
-import {I18n} from '@lingui/core'
+import {type I18n} from '@lingui/core'
+import {msg} from '@lingui/macro'
 
-export function niceDate(i18n: I18n, date: number | string | Date) {
+export function niceDate(
+  i18n: I18n,
+  date: number | string | Date,
+  dateStyle: 'short' | 'medium' | 'long' | 'full' | 'dot separated' = 'long',
+) {
   const d = new Date(date)
 
+  if (dateStyle === 'dot separated') {
+    return i18n._(
+      msg({
+        context: 'date and time formatted like this: [time] · [date]',
+        message: `${i18n.date(d, {timeStyle: 'short'})} · ${i18n.date(d, {dateStyle: 'medium'})}`,
+      }),
+    )
+  }
+
   return i18n.date(d, {
-    dateStyle: 'long',
+    dateStyle,
     timeStyle: 'short',
   })
 }

@@ -61,7 +61,7 @@ export function useComposerKeyboardShortcut() {
       )
         return
       if (event.key === 'n' || event.key === 'N') {
-        openComposer({})
+        openComposer({logContext: 'Other'})
       }
     }
     document.addEventListener('keydown', handler)

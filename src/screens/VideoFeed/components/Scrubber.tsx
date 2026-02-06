@@ -6,6 +6,7 @@ import {
   type NativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
+  clamp,
   interpolate,
   runOnJS,
   runOnUI,
@@ -179,7 +180,7 @@ export function Scrubber({
           timeStyle,
         ]}
         pointerEvents="none">
-        <Text style={[a.text_center, a.font_bold]}>
+        <Text style={[a.text_center, a.font_semi_bold]}>
           <Text style={[a.text_5xl, {fontVariant: ['tabular-nums']}]}>
             {formatTime(currentSeekTime)}
           </Text>
@@ -257,9 +258,4 @@ function PlayerListener({
   })
 
   return null
-}
-
-function clamp(num: number, min: number, max: number) {
-  'worklet'
-  return Math.min(Math.max(num, min), max)
 }

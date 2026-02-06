@@ -10,13 +10,13 @@ import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {ExternalGif} from './ExternalGif'
 import {ExternalPlayer} from './ExternalPlayer'
 import {GifEmbed} from './Gif'
@@ -53,7 +53,7 @@ export const ExternalEmbed = ({
   }, [playHaptic, onOpen])
 
   const onShareExternal = useCallback(() => {
-    if (link.uri && isNative) {
+    if (link.uri && IS_NATIVE) {
       playHaptic('Heavy')
       shareUrl(link.uri)
     }
@@ -97,11 +97,10 @@ export const ExternalEmbed = ({
           ]}>
           {imageUri && !embedPlayerParams ? (
             <Image
-              style={{
-                aspectRatio: 1.91,
-              }}
+              style={[a.aspect_card]}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
+              loading="lazy"
             />
           ) : undefined}
 
@@ -126,7 +125,7 @@ export const ExternalEmbed = ({
                 <Text
                   emoji
                   numberOfLines={3}
-                  style={[a.text_md, a.font_bold, a.leading_snug]}>
+                  style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
                   {link.title || link.uri}
                 </Text>
               )}

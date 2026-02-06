@@ -4,8 +4,8 @@ import {setStringAsync} from 'expo-clipboard'
 // TODO: replace global i18n instance with one returned from useLingui -sfn
 import {t} from '@lingui/macro'
 
-import {isAndroid, isIOS} from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
+import {IS_ANDROID, IS_IOS} from '#/env'
 
 /**
  * This function shares a URL using the native Share API if available, or copies it to the clipboard
@@ -14,9 +14,9 @@ import * as Toast from '#/view/com/util/Toast'
  * clipboard.
  */
 export async function shareUrl(url: string) {
-  if (isAndroid) {
+  if (IS_ANDROID) {
     await Share.share({message: url})
-  } else if (isIOS) {
+  } else if (IS_IOS) {
     await Share.share({url})
   } else {
     // React Native Share is not supported by web. Web Share API
@@ -34,7 +34,7 @@ export async function shareUrl(url: string) {
  * clipboard.
  */
 export async function shareText(text: string) {
-  if (isAndroid || isIOS) {
+  if (IS_ANDROID || IS_IOS) {
     await Share.share({message: text})
   } else {
     await setStringAsync(text)

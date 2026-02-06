@@ -34,6 +34,16 @@ export class Database {
 
   static postgres(opts: PgOptions): Database {
     const {schema, url, txLockNonce} = opts
+    log.info(
+      {
+        schema,
+        poolSize: opts.poolSize,
+        poolMaxUses: opts.poolMaxUses,
+        poolIdleTimeoutMs: opts.poolIdleTimeoutMs,
+      },
+      'Creating database connection',
+    )
+
     const pool =
       opts.pool ??
       new Pg.Pool({

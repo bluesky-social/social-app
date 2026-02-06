@@ -21,7 +21,7 @@ export function ActionsWrapper({
     <MessageContextMenu message={message}>
       {trigger =>
         // will always be true, since this file is platform split
-        trigger.isNative && (
+        trigger.IS_NATIVE && (
           <View style={[a.flex_1, a.relative]}>
             <View
               style={[

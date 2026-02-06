@@ -2,65 +2,62 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
-import {logger} from '#/state/ageAssurance/util'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
+import {AgeAssuranceConfigUnavailableError} from '#/components/ageAssurance/AgeAssuranceErrors'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
 
 export function AgeRestrictedScreen({
   children,
   screenTitle,
   infoText,
+  rightHeaderSlot,
 }: {
   children: React.ReactNode
   screenTitle?: string
   infoText?: string
+  rightHeaderSlot?: React.ReactNode
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const copy = useAgeAssuranceCopy()
-  const {isReady, isAgeRestricted} = useAgeAssurance()
+  const aa = useAgeAssurance()
 
-  if (!isReady) {
-    return (
-      <Layout.Screen>
-        <Layout.Header.Outer>
-          <Layout.Header.Content>
-            <Layout.Header.TitleText> </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
-        <Layout.Content />
-      </Layout.Screen>
-    )
-  }
-  if (!isAgeRestricted) return children
+  if (aa.state.access === aa.Access.Full) return children
 
   return (
     <Layout.Screen>
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
-        <Layout.Header.Content>
+        <Layout.Header.Content align="left">
           <Layout.Header.TitleText>
             {screenTitle ?? <Trans>Unavailable</Trans>}
           </Layout.Header.TitleText>
         </Layout.Header.Content>
-        <Layout.Header.Slot />
+        {rightHeaderSlot ?? <Layout.Header.Slot />}
       </Layout.Header.Outer>
       <Layout.Content>
         <View style={[a.p_lg]}>
+          {aa.state.error === 'config' && (
+            <View style={[a.pb_lg]}>
+              <AgeAssuranceConfigUnavailableError />
+            </View>
+          )}
+
           <View style={[a.align_start, a.pb_lg]}>
             <AgeAssuranceBadge />
           </View>
 
           <View style={[a.gap_sm, a.pb_lg]}>
-            <Text style={[a.text_xl, a.leading_snug, a.font_heavy]}>
+            <Text style={[a.text_xl, a.leading_snug, a.font_bold]}>
               <Trans>
                 You must complete age assurance in order to access this screen.
               </Trans>
@@ -78,7 +75,7 @@ export function AgeRestrictedScreen({
               variant="solid"
               color="primary"
               onPress={() => {
-                logger.metric('ageAssurance:navigateToSettings', {})
+                ax.metric('ageAssurance:navigateToSettings', {})
               }}>
               <ButtonText>
                 <Trans>Go to account settings</Trans>

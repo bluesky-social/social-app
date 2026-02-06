@@ -25,9 +25,7 @@ import {
   type NativeStackNavigatorProps,
 } from '@react-navigation/native-stack'
 
-import {PWI_ENABLED} from '#/lib/build-flags'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isNative, isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {
@@ -35,12 +33,11 @@ import {
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {LoggedOut} from '#/view/com/auth/LoggedOut'
-import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
-import {Takendown} from '#/screens/Takendown'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {PolicyUpdateOverlay} from '#/components/PolicyUpdateOverlay'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -52,11 +49,13 @@ type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
 function NativeStackNavigator({
   id,
   initialRouteName,
+  UNSTABLE_routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
   screenOptions,
   screenLayout,
+  UNSTABLE_router,
   ...rest
 }: NativeStackNavigatorProps) {
   // --- this is copy and pasted from the original native stack navigator ---
@@ -70,11 +69,13 @@ function NativeStackNavigator({
     >(StackRouter, {
       id,
       initialRouteName,
+      UNSTABLE_routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
       screenOptions,
       screenLayout,
+      UNSTABLE_router,
     })
 
   React.useEffect(
@@ -113,20 +114,14 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || isNative)) {
+  if (!hasSession && (activeRouteRequiresAuth || IS_NATIVE)) {
     return <LoggedOut />
   }
   if (hasSession && currentAccount?.signupQueued) {
     return <SignupQueued />
   }
-  if (hasSession && currentAccount?.status === 'takendown') {
-    return <Takendown />
-  }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
-  }
-  if (currentAccount?.status === 'deactivated') {
-    return <Deactivated />
   }
   if (onboardingState.isActive) {
     return <Onboarding />
@@ -162,7 +157,7 @@ function NativeStackNavigator({
           describe={describe}
         />
       </View>
-      {isWeb && (
+      {IS_WEB && (
         <>
           {showBottomBar ? <BottomBarWeb /> : <DesktopLeftNav />}
           {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
@@ -177,7 +172,7 @@ function NativeStackNavigator({
 
 export function createNativeStackNavigatorWithAuth<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
+  const NavigatorID extends string | undefined = string | undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList
     NavigatorID: NavigatorID

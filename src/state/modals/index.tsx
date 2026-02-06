@@ -1,14 +1,6 @@
 import React from 'react'
-import {type AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-
-export interface CreateOrEditListModal {
-  name: 'create-or-edit-list'
-  purpose?: string
-  list?: AppBskyGraphDefs.ListView
-  onSave?: (uri: string) => void
-}
 
 export interface UserAddRemoveListsModal {
   name: 'user-add-remove-lists'
@@ -21,14 +13,6 @@ export interface UserAddRemoveListsModal {
 
 export interface DeleteAccountModal {
   name: 'delete-account'
-}
-
-export interface WaitlistModal {
-  name: 'waitlist'
-}
-
-export interface InviteCodesModal {
-  name: 'invite-codes'
 }
 
 export interface ContentLanguagesSettingsModal {
@@ -46,12 +30,7 @@ export type Modal =
   | ContentLanguagesSettingsModal
 
   // Lists
-  | CreateOrEditListModal
   | UserAddRemoveListsModal
-
-  // Bluesky access
-  | WaitlistModal
-  | InviteCodesModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean

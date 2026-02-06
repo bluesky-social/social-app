@@ -8,7 +8,6 @@ import {
   type ViewabilityConfig,
   type ViewToken,
 } from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
 import {
   Gesture,
   GestureDetector,
@@ -22,8 +21,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
-import {useEvent} from 'expo'
-import {useEventListener} from 'expo'
+import {useEvent, useEventListener} from 'expo'
 import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
@@ -57,7 +55,7 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isAndroid} from '#/platform/detection'
+import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {
   POST_TOMBSTONE,
@@ -67,13 +65,12 @@ import {
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   FeedFeedbackProvider,
+  useFeedFeedback,
   useFeedFeedbackContext,
 } from '#/state/feed-feedback'
-import {useFeedFeedback} from '#/state/feed-feedback'
 import {useFeedInfo} from '#/state/queries/feed'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
-  type AuthorFilter,
   type FeedPostSliceItem,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
@@ -93,6 +90,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/i
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
 import {Leaf_Stroke2_Corner0_Rounded as LeafIcon} from '#/components/icons/Leaf'
+import {KeepAwake} from '#/components/KeepAwake'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
@@ -100,6 +98,8 @@ import * as Hider from '#/components/moderation/Hider'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 
@@ -150,7 +150,7 @@ export function VideoFeed({}: NativeStackScreenProps<
   return (
     <ThemeProvider theme="dark">
       <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
-        <SystemBars style={{statusBar: 'light', navigationBar: 'light'}} />
+        <KeepAwake />
         <View
           style={[
             a.absolute,
@@ -191,18 +191,16 @@ function Feed() {
   const feedDesc = useMemo(() => {
     switch (params.type) {
       case 'feedgen':
-        return `feedgen|${params.uri as string}` as const
+        return `feedgen|${params.uri}` as const
       case 'author':
-        return `author|${params.did as string}|${
-          params.filter as AuthorFilter
-        }` as const
+        return `author|${params.did}|${params.filter}` as const
       default:
         throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
     }
   }, [params])
   const feedUri = params.type === 'feedgen' ? params.uri : undefined
   const {data: feedInfo} = useFeedInfo(feedUri)
-  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo ?? undefined, hasSession)
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
     usePostFeedQuery(
       feedDesc,
@@ -489,9 +487,11 @@ let VideoItem = ({
   feedContext: string | undefined
   reqId: string | undefined
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
-  const {sendInteraction} = useFeedFeedbackContext()
+  const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
+  const hasTrackedView = useRef(false)
 
   useEffect(() => {
     if (active) {
@@ -501,8 +501,27 @@ let VideoItem = ({
         feedContext,
         reqId,
       })
+
+      // Track post:view event
+      if (!hasTrackedView.current) {
+        hasTrackedView.current = true
+        ax.metric('post:view', {
+          uri: post.uri,
+          authorDid: post.author.did,
+          logContext: 'ImmersiveVideo',
+          feedDescriptor,
+        })
+      }
     }
-  }, [active, post.uri, feedContext, reqId, sendInteraction])
+  }, [
+    active,
+    post.uri,
+    post.author.did,
+    feedContext,
+    reqId,
+    sendInteraction,
+    feedDescriptor,
+  ])
 
   // TODO: high-performance android phones should also
   // be capable of rendering 3 video players, but currently
@@ -524,7 +543,7 @@ let VideoItem = ({
           <Text
             style={[
               a.text_2xl,
-              a.font_heavy,
+              a.font_bold,
               a.text_center,
               a.leading_tight,
               a.mx_xl,
@@ -565,10 +584,10 @@ function VideoItemInner({
   embed: AppBskyEmbedVideo.View
 }) {
   const {bottom} = useSafeAreaInsets()
-  const [isReady, setIsReady] = useState(!isAndroid)
+  const [isReady, setIsReady] = useState(!IS_ANDROID)
 
   useEventListener(player, 'timeUpdate', evt => {
-    if (isAndroid && !isReady && evt.currentTime >= 0.05) {
+    if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
       setIsReady(true)
     }
   })
@@ -670,7 +689,7 @@ function ModerationOverlay({
                 <Text
                   style={[
                     a.text_sm,
-                    a.font_bold,
+                    a.font_semi_bold,
                     a.text_center,
                     {opacity: pressed ? 0.5 : 1},
                   ]}>
@@ -758,6 +777,7 @@ function Overlay({
         embed: post.embed,
         langs: record?.langs,
       },
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record])
 
@@ -807,7 +827,7 @@ function Overlay({
                   />
                   <View style={[a.flex_1]}>
                     <Text
-                      style={[a.text_md, a.font_heavy]}
+                      style={[a.text_md, a.font_bold]}
                       emoji
                       numberOfLines={1}>
                       {sanitizeDisplayName(
@@ -869,6 +889,7 @@ function Overlay({
                     richText={richText}
                     post={post}
                     record={record}
+                    feedContext={feedContext}
                     logContext="FeedItem"
                     onPressReply={() =>
                       navigation.navigate('PostThread', {
@@ -894,7 +915,7 @@ function Overlay({
           </LinearGradient>
         </View>
         {/*
-        {isAndroid && status === 'loading' && (
+        {IS_ANDROID && status === 'loading' && (
           <View
             style={[
               a.absolute,
@@ -952,7 +973,7 @@ function ExpandableRichTextView({
       ]}>
       <RichText
         value={value}
-        style={[a.text_sm, a.flex_1, a.leading_normal]}
+        style={[a.text_sm, a.flex_1, a.leading_relaxed]}
         authorHandle={authorHandle}
         enableTags
         numberOfLines={
@@ -1041,16 +1062,29 @@ function PlayPauseTapArea({
   const {isPlaying} = useEvent(player, 'playingChange', {
     isPlaying: player.playing,
   })
+  const isMounted = useRef(false)
 
-  const togglePlayPause = () => {
-    if (!player) return
-    doubleTapRef.current = null
-    if (player.playing) {
-      player.pause()
-    } else {
-      player.play()
+  useEffect(() => {
+    isMounted.current = true
+    return () => {
+      isMounted.current = false
     }
-  }
+  }, [])
+
+  const togglePlayPause = useNonReactiveCallback(() => {
+    // gets called after a timeout, so guard against being called after unmount -sfn
+    if (!player || !isMounted.current) return
+    doubleTapRef.current = null
+    try {
+      if (player.playing) {
+        player.pause()
+      } else {
+        player.play()
+      }
+    } catch (err) {
+      logger.error('Could not toggle play/pause', {safeMessage: err})
+    }
+  })
 
   const onPress = () => {
     if (doubleTapRef.current) {
@@ -1076,7 +1110,7 @@ function PlayPauseTapArea({
         isPlaying ? _(msg`Video is playing`) : _(msg`Video is paused`)
       }
       label={_(
-        `Video from ${sanitizeHandle(
+        msg`Video from ${sanitizeHandle(
           post.author.handle,
           '@',
         )}. Tap to play or pause the video`,
@@ -1114,7 +1148,7 @@ function EndMessage() {
         <LeafIcon width={64} fill="black" />
       </View>
       <View style={[a.w_full, a.gap_md]}>
-        <Text style={[a.text_3xl, a.text_center, a.font_heavy]}>
+        <Text style={[a.text_3xl, a.text_center, a.font_bold]}>
           <Trans>That's everything!</Trans>
         </Text>
         <Text

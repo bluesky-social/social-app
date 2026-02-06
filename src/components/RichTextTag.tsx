@@ -1,18 +1,17 @@
 import React from 'react'
-import {StyleProp, Text as RNText, TextStyle} from 'react-native'
+import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
-import {isNative, isWeb} from '#/platform/detection'
 import {
   usePreferencesQuery,
   useRemoveMutedWordsMutation,
   useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import {
@@ -22,6 +21,7 @@ import {
 } from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function RichTextTag({
   tag,
@@ -48,10 +48,11 @@ export function RichTextTag({
     reset: resetRemove,
   } = useRemoveMutedWordsMutation()
   const navigation = useNavigation<NavigationProp>()
-  const label = _(msg`Hashtag ${tag}`)
-  const hint = isNative
-    ? _(msg`Long press to open tag menu for #${tag}`)
-    : _(msg`Click to open tag menu for ${tag}`)
+  const isCashtag = tag.startsWith('$')
+  const label = isCashtag ? _(msg`Cashtag ${tag}`) : _(msg`Hashtag ${tag}`)
+  const hint = IS_NATIVE
+    ? _(msg`Long press to open tag menu for ${isCashtag ? tag : `#${tag}`}`)
+    : _(msg`Click to open tag menu for ${isCashtag ? tag : `#${tag}`}`)
 
   const isMuted = Boolean(
     (preferences?.moderationPrefs.mutedWords?.find(
@@ -85,9 +86,9 @@ export function RichTextTag({
             }}
             {...menuProps}
             onPress={e => {
-              if (isWeb) {
+              if (IS_WEB) {
                 return createStaticClickIfUnmodified(() => {
-                  if (!isNative) {
+                  if (!IS_NATIVE) {
                     menuProps.onPress()
                   }
                 }).onPress(e)
@@ -96,8 +97,9 @@ export function RichTextTag({
             onLongPress={createStaticClick(menuProps.onPress).onPress}
             accessibilityHint={hint}
             label={label}
-            style={textStyle}>
-            {isNative ? (
+            style={textStyle}
+            emoji>
+            {IS_NATIVE ? (
               display
             ) : (
               <RNText ref={menuProps.ref}>{display}</RNText>
@@ -108,20 +110,24 @@ export function RichTextTag({
       <Menu.Outer>
         <Menu.Group>
           <Menu.Item
-            label={_(msg`See ${tag} posts`)}
+            label={_(msg`See ${isCashtag ? tag : `#${tag}`} posts`)}
             onPress={() => {
               navigation.push('Hashtag', {
                 tag: encodeURIComponent(tag),
               })
             }}>
             <Menu.ItemText>
-              <Trans>See #{tag} posts</Trans>
+              {isCashtag ? (
+                <Trans>See {tag} posts</Trans>
+              ) : (
+                <Trans>See #{tag} posts</Trans>
+              )}
             </Menu.ItemText>
             <Menu.ItemIcon icon={Search} />
           </Menu.Item>
           {authorHandle && !isInvalidHandle(authorHandle) && (
             <Menu.Item
-              label={_(msg`See ${tag} posts by user`)}
+              label={_(msg`See ${isCashtag ? tag : `#${tag}`} posts by user`)}
               onPress={() => {
                 navigation.push('Hashtag', {
                   tag: encodeURIComponent(tag),
@@ -129,7 +135,11 @@ export function RichTextTag({
                 })
               }}>
               <Menu.ItemText>
-                <Trans>See #{tag} posts by user</Trans>
+                {isCashtag ? (
+                  <Trans>See {tag} posts by user</Trans>
+                ) : (
+                  <Trans>See #{tag} posts by user</Trans>
+                )}
               </Menu.ItemText>
               <Menu.ItemIcon icon={Person} />
             </Menu.Item>

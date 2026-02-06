@@ -10,13 +10,12 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {type MetricEvents} from '#/logger/metrics'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {RQKEY_ROOT_PAGINATED as useActorSearchPaginatedQueryKeyRoot} from '#/state/queries/actor-search'
+import {RQKEY_ROOT as useActorSearchQueryKeyRoot} from '#/state/queries/actor-search'
 import {
   type FeedPreviewItem,
   useFeedPreviews,
@@ -40,10 +39,6 @@ import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
 import {List} from '#/view/com/util/List'
 import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
 import {
   StarterPackCard,
   StarterPackCardSkeleton,
@@ -71,6 +66,8 @@ import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {type Metrics, useAnalytics} from '#/analytics'
+import {ExploreScreenLiveEventFeedsBanner} from '#/features/liveEvents/components/ExploreScreenLiveEventFeedsBanner'
 import * as ModuleHeader from './components/ModuleHeader'
 import {
   SuggestedAccountsTabBar,
@@ -126,7 +123,7 @@ type ExploreScreenItems =
       bottomBorder?: boolean
       searchButton?: {
         label: string
-        metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
+        metricsTag: Metrics['explore:module:searchButtonPress']['module']
         tab: 'user' | 'profile' | 'feed'
       }
     }
@@ -137,7 +134,7 @@ type ExploreScreenItems =
       icon: React.ComponentType<SVGIconProps>
       searchButton?: {
         label: string
-        metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
+        metricsTag: Metrics['explore:module:searchButtonPress']['module']
         tab: 'user' | 'profile' | 'feed'
       }
       hideDefaultTab?: boolean
@@ -204,6 +201,10 @@ type ExploreScreenItems =
       type: 'interests-card'
       key: 'interests-card'
     }
+  | {
+      type: 'liveEventFeedsBanner'
+      key: string
+    }
 
 export function Explore({
   focusSearchInput,
@@ -211,6 +212,7 @@ export function Explore({
   focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void
   headerHeight: number
 }) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
@@ -271,9 +273,10 @@ export function Explore({
     try {
       await fetchNextFeedsPage()
     } catch (err) {
-      logger.error('Failed to load more suggested follows', {message: err})
+      ax.logger.error('Failed to load more suggested follows', {message: err})
     }
   }, [
+    ax,
     isFetchingNextFeedsPage,
     hasNextFeedsPage,
     feedsError,
@@ -311,7 +314,7 @@ export function Explore({
         queryKey: [getSuggestedUsersQueryKeyRoot],
       }),
       qc.resetQueries({
-        queryKey: [useActorSearchPaginatedQueryKeyRoot],
+        queryKey: [useActorSearchQueryKeyRoot],
       }),
       qc.resetQueries({
         queryKey: createGetSuggestedFeedsQueryKey(),
@@ -331,9 +334,10 @@ export function Explore({
     try {
       await fetchNextPageFeedPreviews()
     } catch (err) {
-      logger.error('Failed to load more feed previews', {message: err})
+      ax.logger.error('Failed to load more feed previews', {message: err})
     }
   }, [
+    ax,
     isPendingFeedPreviews,
     isFetchingNextPageFeedPreviews,
     hasNextPageFeedPreviews,
@@ -490,11 +494,7 @@ export function Explore({
               if (hasPressedLoadMoreFeeds && index < 6) {
                 continue
               }
-              logger.metric(
-                'feed:suggestion:seen',
-                {feedUrl: item.feed.uri},
-                {statsig: false},
-              )
+              ax.metric('feed:suggestion:seen', {feedUrl: item.feed.uri})
             }
           }
           if (!hasPressedLoadMoreFeeds) {
@@ -607,6 +607,7 @@ export function Explore({
     return i
   }, [
     _,
+    ax,
     useFullExperience,
     suggestedFeeds,
     preferences,
@@ -686,6 +687,8 @@ export function Explore({
 
     i.push(topBorder)
     i.push(...interestsNuxModule)
+
+    i.push({type: 'liveEventFeedsBanner', key: 'liveEventFeedsBanner'})
 
     if (useFullExperience) {
       i.push(trendingTopicsModule)
@@ -808,7 +811,7 @@ export function Explore({
                   if (!useFullExperience) {
                     return
                   }
-                  logger.metric('feed:suggestion:press', {
+                  ax.metric('feed:suggestion:press', {
                     feedUrl: item.feed.uri,
                   })
                 }}
@@ -884,7 +887,7 @@ export function Explore({
                 ]}>
                 <CircleInfo size="md" fill={t.palette.negative_400} />
                 <View style={[a.flex_1, a.gap_sm]}>
-                  <Text style={[a.font_bold, a.leading_snug]}>
+                  <Text style={[a.font_semi_bold, a.leading_snug]}>
                     {item.message}
                   </Text>
                   <Text
@@ -916,13 +919,12 @@ export function Explore({
         }
         case 'preview:header': {
           return (
-            <ModuleHeader.Container
-              style={[a.pt_xs, t.atoms.border_contrast_low, a.border_b]}>
+            <ModuleHeader.Container style={[a.pt_xs]} bottomBorder>
               {/* Very non-scientific way to avoid small gap on scroll */}
               <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
               <ModuleHeader.FeedLink feed={item.feed}>
                 <ModuleHeader.FeedAvatar feed={item.feed} />
-                <View style={[a.flex_1, a.gap_xs]}>
+                <View style={[a.flex_1, a.gap_2xs]}>
                   <ModuleHeader.TitleText style={[a.text_lg]}>
                     {item.feed.displayName}
                   </ModuleHeader.TitleText>
@@ -992,9 +994,13 @@ export function Explore({
         case 'interests-card': {
           return <ExploreInterestsCard />
         }
+        case 'liveEventFeedsBanner': {
+          return <ExploreScreenLiveEventFeedsBanner />
+        }
       }
     },
     [
+      ax,
       t.atoms.border_contrast_low,
       t.atoms.bg_contrast_25,
       t.atoms.text_contrast_medium,
@@ -1024,26 +1030,44 @@ export function Explore({
 
   // track headers and report module viewability
   const alreadyReportedRef = useRef<Map<string, string>>(new Map())
-  const onItemSeen = useCallback((item: ExploreScreenItems) => {
-    let module: MetricEvents['explore:module:seen']['module']
-    if (item.type === 'trendingTopics' || item.type === 'trendingVideos') {
-      module = item.type
-    } else if (item.type === 'profile') {
-      module = 'suggestedAccounts'
-    } else if (item.type === 'feed') {
-      module = 'suggestedFeeds'
-    } else if (item.type === 'starterPack') {
-      module = 'suggestedStarterPacks'
-    } else if (item.type === 'preview:sliceItem') {
-      module = `feed:feedgen|${item.feed.uri}`
-    } else {
-      return
-    }
-    if (!alreadyReportedRef.current.has(module)) {
-      alreadyReportedRef.current.set(module, module)
-      logger.metric('explore:module:seen', {module}, {statsig: false})
-    }
-  }, [])
+  const seenProfilesRef = useRef<Set<string>>(new Set())
+  const onItemSeen = useCallback(
+    (item: ExploreScreenItems) => {
+      let module: Metrics['explore:module:seen']['module']
+      if (item.type === 'trendingTopics' || item.type === 'trendingVideos') {
+        module = item.type
+      } else if (item.type === 'profile') {
+        module = 'suggestedAccounts'
+        // Track individual profile seen events
+        if (!seenProfilesRef.current.has(item.profile.did)) {
+          seenProfilesRef.current.add(item.profile.did)
+          const position = suggestedFollowsModule.findIndex(
+            i => i.type === 'profile' && i.profile.did === item.profile.did,
+          )
+          ax.metric('suggestedUser:seen', {
+            logContext: 'Explore',
+            recId: item.recId,
+            position: position !== -1 ? position - 1 : 0, // -1 to account for header
+            suggestedDid: item.profile.did,
+            category: null,
+          })
+        }
+      } else if (item.type === 'feed') {
+        module = 'suggestedFeeds'
+      } else if (item.type === 'starterPack') {
+        module = 'suggestedStarterPacks'
+      } else if (item.type === 'preview:sliceItem') {
+        module = `feed:feedgen|${item.feed.uri}`
+      } else {
+        return
+      }
+      if (!alreadyReportedRef.current.has(module)) {
+        alreadyReportedRef.current.set(module, module)
+        ax.metric('explore:module:seen', {module})
+      }
+    },
+    [ax, suggestedFollowsModule],
+  )
 
   return (
     <List
@@ -1072,12 +1096,26 @@ export function Explore({
       windowSize={platform({android: 11})}
       /**
        * Default: 10
+       *
+       * NOTE: This was 1 on Android. Unfortunately this leads to the list totally freaking out
+       * when the sticky headers changed. I made a minimal reproduction and yeah, it's this prop.
+       * Totally fine when the sticky headers are static, but when they're dynamic, it's a mess.
+       *
+       * Repro: https://github.com/mozzius/stickyindices-repro
+       *
+       * I then found doubling this prop on iOS also reduced it freaking out there as well.
+       *
+       * Trades off seeing more blank space due to it having to render more items before it can show anything.
+       * -sfn
        */
-      maxToRenderPerBatch={platform({android: 1})}
+      maxToRenderPerBatch={platform({android: 10, ios: 20})}
       /**
        * Default: 50
+       *
+       * NOTE: This was 25 on Android. However, due to maxToRenderPerBatch being set to 10,
+       * the lower batching period is no longer necessary (?)
        */
-      updateCellsBatchingPeriod={platform({android: 25})}
+      updateCellsBatchingPeriod={50}
       refreshing={isPTR}
       onRefresh={onPTR}
     />

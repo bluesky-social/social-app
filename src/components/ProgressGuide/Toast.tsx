@@ -11,10 +11,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
-import {AnimatedCheck, AnimatedCheckRef} from '../anim/AnimatedCheck'
+import {IS_WEB} from '#/env'
+import {AnimatedCheck, type AnimatedCheckRef} from '../anim/AnimatedCheck'
 import {Text} from '../Typography'
 
 export interface ProgressGuideToastRef {
@@ -39,7 +39,7 @@ export const ProgressGuideToast = React.forwardRef<
   const translateY = useSharedValue(0)
   const opacity = useSharedValue(0)
   const animatedCheckRef = React.useRef<AnimatedCheckRef | null>(null)
-  const timeoutRef = React.useRef<NodeJS.Timeout | undefined>()
+  const timeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined)
   const winDim = useWindowDimensions()
 
   /**
@@ -108,11 +108,11 @@ export const ProgressGuideToast = React.forwardRef<
   const containerStyle = React.useMemo(() => {
     let left = 10
     let right = 10
-    if (isWeb && winDim.width > 400) {
+    if (IS_WEB && winDim.width > 400) {
       left = right = (winDim.width - 380) / 2
     }
     return {
-      position: isWeb ? 'fixed' : 'absolute',
+      position: IS_WEB ? 'fixed' : 'absolute',
       top: 0,
       left,
       right,
@@ -160,7 +160,7 @@ export const ProgressGuideToast = React.forwardRef<
               ref={animatedCheckRef}
             />
             <View>
-              <Text style={[a.text_md, a.font_bold]}>{title}</Text>
+              <Text style={[a.text_md, a.font_semi_bold]}>{title}</Text>
               {subtitle && (
                 <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
                   {subtitle}

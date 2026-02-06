@@ -1,11 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import {BSKY_LABELER_DID, ComAtprotoModerationDefs} from '@atproto/api'
+import {ToolsOzoneReportDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
-import {logger} from '#/state/ageAssurance/util'
+import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, web} from '#/alf'
@@ -14,6 +14,8 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {logger} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
 
 export function AgeAssuranceAppealDialog({
   control,
@@ -36,6 +38,7 @@ export function AgeAssuranceAppealDialog({
 
 function Inner({control}: {control: Dialog.DialogControlProps}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
   const agent = useAgent()
@@ -45,11 +48,11 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
-      logger.metric('ageAssurance:appealDialogSubmit', {})
+      ax.metric('ageAssurance:appealDialogSubmit', {})
 
       await agent.createModerationReport(
         {
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             did: currentAccount?.did,
@@ -58,9 +61,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
         },
         {
           encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
-          },
+          headers: BLUESKY_MOD_SERVICE_HEADERS,
         },
       )
     },
@@ -90,7 +91,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
         <AgeAssuranceBadge />
       </View>
 
-      <Text style={[a.text_2xl, a.font_heavy, a.pt_md, a.leading_tight]}>
+      <Text style={[a.text_2xl, a.font_bold, a.pt_md, a.leading_tight]}>
         <Trans>Contact us</Trans>
       </Text>
 

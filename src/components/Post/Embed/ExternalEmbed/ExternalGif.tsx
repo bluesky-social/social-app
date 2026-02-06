@@ -10,13 +10,13 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 
 export function ExternalGif({
   link,
@@ -66,12 +66,12 @@ export function ExternalGif({
       // Control animation on native
       setIsAnimating(prev => {
         if (prev) {
-          if (isNative) {
+          if (IS_NATIVE) {
             imageRef.current?.stopAnimating()
           }
           return false
         } else {
-          if (isNative) {
+          if (IS_NATIVE) {
             imageRef.current?.startAnimating()
           }
           return true
@@ -112,7 +112,7 @@ export function ExternalGif({
         <Image
           source={{
             uri:
-              !isPrefetched || (isWeb && !isAnimating)
+              !isPrefetched || (IS_WEB && !isAnimating)
                 ? link.thumb
                 : params.playerUri,
           }} // Web uses the thumb to control playback
@@ -123,7 +123,7 @@ export function ExternalGif({
           accessibilityIgnoresInvertColors
           accessibilityLabel={link.title}
           accessibilityHint={link.title}
-          cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
+          cachePolicy={IS_IOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
         />
 
         {(!isPrefetched || !isAnimating) && (

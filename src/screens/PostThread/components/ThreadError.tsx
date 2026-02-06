@@ -7,7 +7,7 @@ import {useCleanError} from '#/lib/hooks/useCleanError'
 import {OUTER_SPACE} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 
@@ -58,7 +58,12 @@ export function ThreadError({
           ]}>
           <View style={[a.gap_xs]}>
             <Text
-              style={[a.text_center, a.text_lg, a.font_bold, a.leading_snug]}>
+              style={[
+                a.text_center,
+                a.text_lg,
+                a.font_semi_bold,
+                a.leading_snug,
+              ]}>
               {title}
             </Text>
             <Text

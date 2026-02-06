@@ -1,13 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {i18n} from '@lingui/core'
 
 import {decideShouldRoll} from '#/lib/custom-animations/util'
 import {s} from '#/lib/styles'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
+import {useFormatPostStatCount} from '#/components/PostControls/util'
 
 const animationConfig = {
   duration: 400,
@@ -55,8 +54,9 @@ export function CountWheel({
 
   const [prevCount, setPrevCount] = React.useState(likeCount)
   const prevIsLiked = React.useRef(isLiked)
-  const formattedCount = formatCount(i18n, likeCount)
-  const formattedPrevCount = formatCount(i18n, prevCount)
+  const formatPostStatCount = useFormatPostStatCount()
+  const formattedCount = formatPostStatCount(likeCount)
+  const formattedPrevCount = formatPostStatCount(prevCount)
 
   React.useEffect(() => {
     if (isLiked === prevIsLiked.current) {
@@ -93,7 +93,7 @@ export function CountWheel({
             big ? a.text_md : a.text_sm,
             a.user_select_none,
             isLiked
-              ? [a.font_bold, s.likeColor]
+              ? [a.font_semi_bold, s.likeColor]
               : {color: t.palette.contrast_500},
           ]}>
           {formattedCount}
@@ -110,7 +110,7 @@ export function CountWheel({
               big ? a.text_md : a.text_sm,
               a.user_select_none,
               isLiked
-                ? [a.font_bold, s.likeColor]
+                ? [a.font_semi_bold, s.likeColor]
                 : {color: t.palette.contrast_500},
             ]}>
             {formattedPrevCount}

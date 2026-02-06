@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
-import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -20,6 +19,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -34,7 +34,7 @@ export function VerificationsDialog({
   verificationState: FullVerificationState
 }) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Inner
         control={control}
@@ -55,6 +55,7 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
 
@@ -79,7 +80,7 @@ function Inner({
         gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
       <View style={[a.gap_sm, a.pb_lg]}>
-        <Text style={[a.text_2xl, a.font_bold, a.pr_4xl, a.leading_tight]}>
+        <Text style={[a.text_2xl, a.font_semi_bold, a.pr_4xl, a.leading_tight]}>
           {label}
         </Text>
         <Text style={[a.text_md, a.leading_snug]}>
@@ -158,13 +159,9 @@ function Inner({
           color="secondary"
           style={[a.justify_center]}
           onPress={() => {
-            logger.metric(
-              'verification:learn-more',
-              {
-                location: 'verificationsDialog',
-              },
-              {statsig: true},
-            )
+            ax.metric('verification:learn-more', {
+              location: 'verificationsDialog',
+            })
           }}>
           <ButtonText>
             <Trans context="english-only-resource">Learn more</Trans>
@@ -206,7 +203,7 @@ function VerifierCard({
               <ProfileCard.AvatarPlaceholder />
               <View style={[a.flex_1]}>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  style={[a.text_md, a.font_semi_bold, a.leading_snug]}
                   numberOfLines={1}>
                   <Trans>Unknown verifier</Trans>
                 </Text>

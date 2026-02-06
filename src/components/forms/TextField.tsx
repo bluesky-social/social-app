@@ -15,7 +15,6 @@ import {
   android,
   applyFonts,
   atoms as a,
-  ios,
   platform,
   type TextStyleProp,
   tokens,
@@ -28,7 +27,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 const Context = createContext<{
-  inputRef: React.RefObject<TextInput> | null
+  inputRef: React.RefObject<TextInput | null> | null
   isInvalid: boolean
   hovered: boolean
   onHoverIn: () => void
@@ -142,17 +141,28 @@ export function useSharedInputStyles() {
   }, [t])
 }
 
-export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
+export type InputProps = Omit<
+  TextInputProps,
+  'value' | 'onChangeText' | 'placeholder'
+> & {
   label: string
   /**
    * @deprecated Controlled inputs are *strongly* discouraged. Use `defaultValue` instead where possible.
    *
    * See https://github.com/facebook/react-native-website/pull/4247
+   *
+   * Note: This guidance no longer applies once we migrate to the New Architecture!
    */
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
-  inputRef?: React.RefObject<TextInput> | React.ForwardedRef<TextInput>
+  inputRef?: React.RefObject<TextInput | null> | React.ForwardedRef<TextInput>
+  /**
+   * Note: this currently falls back to the label if not specified. However,
+   * most new designs have no placeholder. We should eventually remove this fallback
+   * behaviour, but for now just pass `null` if you want no placeholder -sfn
+   */
+  placeholder?: string | null | undefined
 }
 
 export function createInput(Component: typeof TextInput) {
@@ -202,17 +212,23 @@ export function createInput(Component: typeof TextInput) {
       a.px_xs,
       {
         // paddingVertical doesn't work w/multiline - esb
-        lineHeight: a.text_md.fontSize * 1.1875,
+        lineHeight: a.text_md.fontSize * 1.2,
         textAlignVertical: rest.multiline ? 'top' : undefined,
         minHeight: rest.multiline ? 80 : undefined,
         minWidth: 0,
+        paddingTop: 13,
+        paddingBottom: 13,
       },
-      ios({paddingTop: 12, paddingBottom: 13}),
-      // Needs to be sm on Paper, md on Fabric for some godforsaken reason -sfn
-      android(a.py_sm),
-      // fix for autofill styles covering border
+      android({
+        paddingTop: 8,
+        paddingBottom: 9,
+      }),
+      /*
+       * Margins are needed here to avoid autofill background overlapping the
+       * top and bottom borders - esb
+       */
       web({
-        paddingTop: 10,
+        paddingTop: 11,
         paddingBottom: 11,
         marginTop: 2,
         marginBottom: 2,
@@ -250,7 +266,7 @@ export function createInput(Component: typeof TextInput) {
             ctx.onBlur()
             onBlur?.(e)
           }}
-          placeholder={placeholder || label}
+          placeholder={placeholder === null ? undefined : placeholder || label}
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           style={flattened}
@@ -261,8 +277,8 @@ export function createInput(Component: typeof TextInput) {
             a.z_10,
             a.absolute,
             a.inset_0,
-            a.rounded_sm,
-            t.atoms.bg_contrast_25,
+            {borderRadius: 10},
+            t.atoms.bg_contrast_50,
             {borderColor: 'transparent', borderWidth: 2},
             ctx.hovered ? chromeHover : {},
             ctx.focused ? chromeFocus : {},
@@ -287,7 +303,7 @@ export function LabelText({
   return (
     <Text
       nativeID={nativeID}
-      style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium, a.mb_sm]}>
+      style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium, a.mb_sm]}>
       {children}
     </Text>
   )

@@ -1,5 +1,7 @@
-import {useCallback, useMemo} from 'react'
-import Graphemer from 'graphemer'
+import {type RichText} from '@atproto/api'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
+
+import {shortenLinks} from './rich-text-manip'
 
 export function enforceLen(
   str: string,
@@ -26,50 +28,18 @@ export function enforceLen(
   return str
 }
 
-export function useEnforceMaxGraphemeCount() {
-  const splitter = useMemo(() => new Graphemer(), [])
-
-  return useCallback(
-    (text: string, maxCount: number) => {
-      if (splitter.countGraphemes(text) > maxCount) {
-        return splitter.splitGraphemes(text).slice(0, maxCount).join('')
-      } else {
-        return text
-      }
-    },
-    [splitter],
-  )
-}
-
-export function useWarnMaxGraphemeCount({
+export function isOverMaxGraphemeCount({
   text,
   maxCount,
 }: {
-  text: string
+  text: string | RichText
   maxCount: number
 }) {
-  const splitter = useMemo(() => new Graphemer(), [])
-
-  return useMemo(() => {
-    return splitter.countGraphemes(text) > maxCount
-  }, [splitter, maxCount, text])
-}
-
-// https://stackoverflow.com/a/52171480
-export function toHashCode(str: string, seed = 0): number {
-  let h1 = 0xdeadbeef ^ seed,
-    h2 = 0x41c6ce57 ^ seed
-  for (let i = 0, ch; i < str.length; i++) {
-    ch = str.charCodeAt(i)
-    h1 = Math.imul(h1 ^ ch, 2654435761)
-    h2 = Math.imul(h2 ^ ch, 1597334677)
+  if (typeof text === 'string') {
+    return countGraphemes(text) > maxCount
+  } else {
+    return shortenLinks(text).graphemeLength > maxCount
   }
-  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507)
-  h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909)
-  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507)
-  h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909)
-
-  return 4294967296 * (2097151 & h2) + (h1 >>> 0)
 }
 
 export function countLines(str: string | undefined): number {

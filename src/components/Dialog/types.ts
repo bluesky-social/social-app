@@ -5,7 +5,6 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
-import type React from 'react'
 
 import {type ViewStyleProp} from '#/alf'
 import {type BottomSheetViewProps} from '../../../modules/bottom-sheet'
@@ -34,13 +33,13 @@ export type DialogControlRefProps = {
  */
 export type DialogControlProps = DialogControlRefProps & {
   id: string
-  ref: React.RefObject<DialogControlRefProps>
+  ref: React.RefObject<DialogControlRefProps | null>
   isOpen?: boolean
 }
 
 export type DialogContextProps = {
   close: DialogControlProps['close']
-  isNativeDialog: boolean
+  IS_NATIVEDialog: boolean
   nativeSnapPoint: BottomSheetSnapPoint
   disableDrag: boolean
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>

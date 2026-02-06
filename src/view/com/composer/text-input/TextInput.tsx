@@ -1,7 +1,6 @@
-import React, {
-  type ComponentProps,
-  forwardRef,
+import {
   useCallback,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -9,14 +8,15 @@ import React, {
 import {
   type NativeSyntheticEvent,
   Text as RNText,
-  type TextInput as RNTextInput,
   type TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
   type PastedFile,
-  type PasteInputRef, // @ts-expect-error no types when installing from github
+  type PasteInputRef,
+  // @ts-expect-error no types when installing from github
+  // eslint-disable-next-line import-x/no-unresolved
 } from '@mattermost/react-native-paste-input'
 
 import {POST_IMG_MAX} from '#/lib/constants'
@@ -25,65 +25,46 @@ import {isUriImage} from '#/lib/media/util'
 import {cleanError} from '#/lib/strings/errors'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
 import {useTheme} from '#/lib/ThemeContext'
-import {isAndroid, isNative} from '#/platform/detection'
 import {
   type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
+import {IS_ANDROID, IS_NATIVE} from '#/env'
 import {Autocomplete} from './mobile/Autocomplete'
-
-export interface TextInputRef {
-  focus: () => void
-  blur: () => void
-  getCursorPosition: () => DOMRect | undefined
-}
-
-interface TextInputProps extends ComponentProps<typeof RNTextInput> {
-  richtext: RichText
-  placeholder: string
-  webForceMinHeight: boolean
-  hasRightPadding: boolean
-  isActive: boolean
-  setRichText: (v: RichText) => void
-  onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => void
-  onNewLink: (uri: string) => void
-  onError: (err: string) => void
-}
+import {type TextInputProps} from './TextInput.types'
 
 interface Selection {
   start: number
   end: number
 }
 
-export const TextInput = forwardRef(function TextInputImpl(
-  {
-    richtext,
-    placeholder,
-    hasRightPadding,
-    setRichText,
-    onPhotoPasted,
-    onNewLink,
-    onError,
-    ...props
-  }: TextInputProps,
+export function TextInput({
   ref,
-) {
+  richtext,
+  placeholder,
+  hasRightPadding,
+  setRichText,
+  onPhotoPasted,
+  onNewLink,
+  onError,
+  ...props
+}: TextInputProps) {
   const {theme: t, fonts} = useAlf()
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
-  const prevLength = React.useRef(richtext.length)
+  const prevLength = useRef(richtext.length)
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
     blur: () => {
       textInput.current?.blur()
     },
     getCursorPosition: () => undefined, // Not implemented on native
+    maybeClosePopup: () => false, // Not needed on native
   }))
 
   const pastSuggestedUris = useRef(new Set<string>())
@@ -185,7 +166,7 @@ export const TextInput = forwardRef(function TextInputImpl(
     [onChangeText, richtext, setAutocompletePrefix],
   )
 
-  const inputTextStyle = React.useMemo(() => {
+  const inputTextStyle = useMemo(() => {
     const style = normalizeTextStyles(
       [a.text_lg, a.leading_snug, t.atoms.text],
       {
@@ -198,14 +179,14 @@ export const TextInput = forwardRef(function TextInputImpl(
     /**
      * PasteInput doesn't like `lineHeight`, results in jumpiness
      */
-    if (isNative) {
+    if (IS_NATIVE) {
       style.lineHeight = undefined
     }
 
     /*
      * Android impl of `PasteInput` doesn't support the array syntax for `fontVariant`
      */
-    if (isAndroid) {
+    if (IS_ANDROID) {
       // @ts-ignore
       style.fontVariant = style.fontVariant
         ? style.fontVariant.join(' ')
@@ -277,4 +258,4 @@ export const TextInput = forwardRef(function TextInputImpl(
       />
     </View>
   )
-})
+}

@@ -23,6 +23,11 @@ module.exports = async function (env, argv) {
   config = withAlias(config, {
     'react-native$': 'react-native-web',
     'react-native-webview': 'react-native-web-webview',
+    // Force ESM version
+    'unicode-segmenter/grapheme': require
+      .resolve('unicode-segmenter/grapheme')
+      .replace(/\.cjs$/, '.js'),
+    'react-native-gesture-handler': false, // RNGH should not be used on web, so let's cause a build error if it sneaks in
   })
   config.module.rules = [
     ...(config.module.rules || []),

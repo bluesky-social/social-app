@@ -7,7 +7,6 @@ import {
   Pressable,
   type PressableProps,
   type StyleProp,
-  StyleSheet,
   type TargetedEvent,
   type TextProps,
   type TextStyle,
@@ -40,7 +39,7 @@ export type ButtonColor =
   | 'primary_subtle'
   | 'negative_subtle'
 export type ButtonSize = 'tiny' | 'small' | 'large'
-export type ButtonShape = 'round' | 'square' | 'default'
+export type ButtonShape = 'round' | 'square' | 'rectangular' | 'default'
 export type VariantProps = {
   /**
    * The style variation of the button
@@ -57,6 +56,11 @@ export type VariantProps = {
   size?: ButtonSize
   /**
    * The shape of the button
+   *
+   * - `default`: Pill shaped. Most buttons should use this shape.
+   * - `round`: Circular. For icon-only buttons.
+   * - `square`: Square. For icon-only buttons.
+   * - `rectangular`: Rectangular. Matches previous style, use when adjacent to form fields.
    */
   shape?: ButtonShape
 }
@@ -71,8 +75,8 @@ export type ButtonState = {
 export type ButtonContext = VariantProps & ButtonState
 
 type NonTextElements =
-  | React.ReactElement
-  | Iterable<React.ReactElement | null | undefined | boolean>
+  | React.ReactElement<any>
+  | Iterable<React.ReactElement<any> | null | undefined | boolean>
 
 export type ButtonProps = Pick<
   PressableProps,
@@ -101,7 +105,8 @@ export type ButtonProps = Pick<
     PressableComponent?: React.ComponentType<PressableProps>
   }
 
-export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
+export type ButtonTextProps = TextProps &
+  VariantProps & {disabled?: boolean; emoji?: boolean}
 
 const Context = React.createContext<VariantProps & ButtonState>({
   hovered: false,
@@ -240,7 +245,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (color === 'secondary') {
           if (!disabled) {
-            baseStyles.push(t.atoms.bg_contrast_25)
+            baseStyles.push(t.atoms.bg_contrast_50)
             hoverStyles.push(t.atoms.bg_contrast_100)
           } else {
             baseStyles.push(t.atoms.bg_contrast_50)
@@ -274,51 +279,27 @@ export const Button = React.forwardRef<View, ButtonProps>(
         } else if (color === 'primary_subtle') {
           if (!disabled) {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_50,
-                dim: t.palette.primary_100,
-                dark: t.palette.primary_100,
-              }),
+              backgroundColor: t.palette.primary_50,
             })
             hoverStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_100,
-                dim: t.palette.primary_200,
-                dark: t.palette.primary_200,
-              }),
+              backgroundColor: t.palette.primary_100,
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_25,
-                dim: t.palette.primary_50,
-                dark: t.palette.primary_50,
-              }),
+              backgroundColor: t.palette.primary_50,
             })
           }
         } else if (color === 'negative_subtle') {
           if (!disabled) {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_50,
-                dim: t.palette.negative_100,
-                dark: t.palette.negative_100,
-              }),
+              backgroundColor: t.palette.negative_50,
             })
             hoverStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_100,
-                dim: t.palette.negative_200,
-                dark: t.palette.negative_200,
-              }),
+              backgroundColor: t.palette.negative_100,
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_25,
-                dim: t.palette.negative_50,
-                dark: t.palette.negative_50,
-              }),
+              backgroundColor: t.palette.negative_50,
             })
           }
         }
@@ -372,7 +353,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             if (!disabled) {
               baseStyles.push(t.atoms.bg)
               hoverStyles.push({
-                backgroundColor: t.palette.contrast_25,
+                backgroundColor: t.palette.contrast_50,
               })
             }
           }
@@ -396,7 +377,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             if (!disabled) {
               baseStyles.push(t.atoms.bg)
               hoverStyles.push({
-                backgroundColor: t.palette.contrast_25,
+                backgroundColor: t.palette.contrast_50,
               })
             }
           }
@@ -459,6 +440,26 @@ export const Button = React.forwardRef<View, ButtonProps>(
       }
 
       if (shape === 'default') {
+        if (size === 'large') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+            gap: 6,
+          })
+        } else if (size === 'small') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 8,
+            paddingHorizontal: 14,
+            gap: 5,
+          })
+        } else if (size === 'tiny') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            gap: 3,
+          })
+        }
+      } else if (shape === 'rectangular') {
         if (size === 'large') {
           baseStyles.push({
             paddingVertical: 12,
@@ -531,12 +532,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
         variant,
         color,
         size,
+        shape,
         disabled: disabled || false,
       }),
-      [state, variant, color, size, disabled],
+      [state, variant, color, size, shape, disabled],
     )
-
-    const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
       <PressableComponent
@@ -557,9 +557,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.align_center,
           a.justify_center,
           a.curve_continuous,
-          flattenedBaseStyles,
+          baseStyles,
+          style,
           ...(state.hovered || state.pressed
-            ? [hoverStyles, flatten(hoverStyleProp)]
+            ? [hoverStyles, hoverStyleProp]
             : []),
         ]}
         onPressIn={onPressIn}
@@ -626,37 +627,21 @@ export function useSharedButtonTextStyles() {
       } else if (color === 'primary_subtle') {
         if (!disabled) {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.primary_600,
-              dim: t.palette.primary_800,
-              dark: t.palette.primary_800,
-            }),
+            color: t.palette.primary_600,
           })
         } else {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.primary_200,
-              dim: t.palette.primary_200,
-              dark: t.palette.primary_200,
-            }),
+            color: t.palette.primary_200,
           })
         }
       } else if (color === 'negative_subtle') {
         if (!disabled) {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.negative_600,
-              dim: t.palette.negative_800,
-              dark: t.palette.negative_800,
-            }),
+            color: t.palette.negative_600,
           })
         } else {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.negative_200,
-              dim: t.palette.negative_200,
-              dark: t.palette.negative_200,
-            }),
+            color: t.palette.negative_200,
           })
         }
       }
@@ -763,10 +748,10 @@ export function useSharedButtonTextStyles() {
     } else if (size === 'small') {
       baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_xs, a.leading_snug, a.font_semi_bold)
     }
 
-    return StyleSheet.flatten(baseStyles)
+    return flatten(baseStyles)
   }, [t, variant, color, size, disabled])
 }
 
@@ -791,59 +776,79 @@ export function ButtonIcon({
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size: buttonSize} = useButtonContext()
+  const {size: buttonSize, shape: buttonShape} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
-  const {iconSize, iconContainerSize} = React.useMemo(() => {
-    /**
-     * Pre-set icon sizes for different button sizes
-     */
-    const iconSizeShorthand =
-      size ??
-      (({
-        large: 'md',
-        small: 'sm',
-        tiny: 'xs',
-      }[buttonSize || 'small'] || 'sm') as Exclude<
-        SVGIconProps['size'],
-        undefined
-      >)
+  const {iconSize, iconContainerSize, iconNegativeMargin} =
+    React.useMemo(() => {
+      /**
+       * Pre-set icon sizes for different button sizes
+       */
+      const iconSizeShorthand =
+        size ??
+        (({
+          large: 'md',
+          small: 'sm',
+          tiny: 'xs',
+        }[buttonSize || 'small'] || 'sm') as Exclude<
+          SVGIconProps['size'],
+          undefined
+        >)
 
-    /*
-     * Copied here from icons/common.tsx so we can tweak if we need to, but
-     * also so that we can calculate transforms.
-     */
-    const iconSize = {
-      xs: 12,
-      sm: 16,
-      md: 18,
-      lg: 24,
-      xl: 28,
-      '2xl': 32,
-    }[iconSizeShorthand]
+      /*
+       * Copied here from icons/common.tsx so we can tweak if we need to, but
+       * also so that we can calculate transforms.
+       */
+      const iconSize = {
+        xs: 12,
+        sm: 16,
+        md: 18,
+        lg: 24,
+        xl: 28,
+        '2xs': 8,
+        '2xl': 32,
+        '3xl': 40,
+      }[iconSizeShorthand]
 
-    /*
-     * Goal here is to match rendered text size so that different size icons
-     * don't increase button size
-     */
-    const iconContainerSize = {
-      large: 20,
-      small: 17,
-      tiny: 15,
-    }[buttonSize || 'small']
+      /*
+       * Goal here is to match rendered text size so that different size icons
+       * don't increase button size
+       */
+      const iconContainerSize = {
+        large: 20,
+        small: 17,
+        tiny: 15,
+      }[buttonSize || 'small']
 
-    return {
-      iconSize,
-      iconContainerSize,
-    }
-  }, [buttonSize, size])
+      /*
+       * The icon needs to be closer to the edge of the button than the text. Therefore
+       * we make the gap slightly too large, and then pull in the sides using negative margins.
+       */
+      let iconNegativeMargin = 0
+
+      if (buttonShape === 'default') {
+        iconNegativeMargin = {
+          large: -2,
+          small: -2,
+          tiny: -1,
+        }[buttonSize || 'small']
+      }
+
+      return {
+        iconSize,
+        iconContainerSize,
+        iconNegativeMargin,
+      }
+    }, [buttonSize, buttonShape, size])
 
   return (
     <View
       style={[
         a.z_20,
         {
-          width: iconContainerSize,
+          width: size === '2xs' ? 10 : iconContainerSize,
           height: iconContainerSize,
+          marginLeft: iconNegativeMargin,
+          marginRight: iconNegativeMargin,
         },
       ]}>
       <View
@@ -875,5 +880,49 @@ export function ButtonIcon({
         />
       </View>
     </View>
+  )
+}
+
+export type StackedButtonProps = Omit<
+  ButtonProps,
+  keyof VariantProps | 'children'
+> &
+  Pick<VariantProps, 'color'> & {
+    children: React.ReactNode
+    icon: React.ComponentType<SVGIconProps>
+  }
+
+export function StackedButton({children, ...props}: StackedButtonProps) {
+  return (
+    <Button
+      {...props}
+      size="tiny"
+      style={[
+        a.flex_col,
+        {
+          height: 72,
+          paddingHorizontal: 16,
+          borderRadius: 20,
+          gap: 4,
+        },
+        props.style,
+      ]}>
+      <StackedButtonInnerText icon={props.icon}>
+        {children}
+      </StackedButtonInnerText>
+    </Button>
+  )
+}
+
+function StackedButtonInnerText({
+  children,
+  icon: Icon,
+}: Pick<StackedButtonProps, 'icon' | 'children'>) {
+  const textStyles = useSharedButtonTextStyles()
+  return (
+    <>
+      <Icon width={24} fill={textStyles.color} />
+      <ButtonText>{children}</ButtonText>
+    </>
   )
 }

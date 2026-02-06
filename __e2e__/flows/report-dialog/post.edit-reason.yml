@@ -3,7 +3,7 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../../setupServer.js
     env:
-        SERVER_PATH: ?users&follows&posts&feeds
+      SERVER_PATH: ?users&follows&posts&feeds
 - runFlow:
     file: ../../setupApp.yml
 - tapOn:
@@ -15,20 +15,28 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "postDropdownReportBtn"
 - tapOn:
-    id: "report:option:com.atproto.moderation.defs#reasonOther"
+    id: "report:category:Misleading"
+- tapOn:
+    id: "report:option:Other misleading content"
 - assertVisible:
-    id: "report:labeler:mod-authority.test"
+    text: Your report will be sent to Dev-env Moderation.*
 # reason "other" defaults with details open
 - assertVisible:
     id: "report:details"
 - tapOn:
-    id: "report:clearOption"
+    id: "report:clearReportOption"
 - assertNotVisible:
     id: "report:details"
 - tapOn:
-    id: "report:option:com.atproto.moderation.defs#reasonSpam"
+    id: "report:clearCategory"
+- assertNotVisible:
+    id: "report:option:Other misleading content"
+- tapOn:
+    id: "report:category:Misleading"
+- tapOn:
+    id: "report:option:Spam"
 - assertVisible:
-    id: "report:labeler:mod-authority.test"
+    text: Your report will be sent to Dev-env Moderation.*
 - tapOn:
     id: "report:submit"
 - assertNotVisible:

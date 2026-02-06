@@ -29,14 +29,14 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
   }, [requestSwitchToAccount, closeAllActiveElements])
 
   return (
-    <View style={[{maxWidth: 200}]}>
+    <View style={[{maxWidth: 245}]}>
       <Link to="/" label="Bluesky - Home">
         <Logo width={32} />
       </Link>
 
       <View style={[a.pt_lg]}>
         <Text
-          style={[a.text_3xl, a.font_heavy, {lineHeight: a.text_3xl.fontSize}]}>
+          style={[a.text_3xl, a.font_bold, {lineHeight: a.text_3xl.fontSize}]}>
           <Trans>Join the conversation</Trans>
         </Text>
       </View>

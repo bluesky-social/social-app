@@ -1,5 +1,5 @@
 import {type Insets, Platform} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
 
 import {type ProxyHeaderValue} from '#/state/session/agent'
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID} from '#/env'
@@ -17,6 +17,7 @@ export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
+export const CARD_ASPECT_RATIO = 1200 / 630
 
 // HACK
 // Yes, this is exactly what it looks like. It's a hard-coded constant
@@ -124,7 +125,6 @@ export const createHitslop = (size: number): Insets => ({
 export const HITSLOP_10 = createHitslop(10)
 export const HITSLOP_20 = createHitslop(20)
 export const HITSLOP_30 = createHitslop(30)
-export const POST_CTRL_HITSLOP = {top: 5, bottom: 10, left: 10, right: 10}
 export const LANG_DROPDOWN_HITSLOP = {top: 10, bottom: 10, left: 4, right: 4}
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
@@ -203,7 +203,14 @@ export const EMOJI_REACTION_LIMIT = 5
 export const urls = {
   website: {
     blog: {
+      findFriendsAnnouncement:
+        'https://bsky.social/about/blog/12-16-2025-find-friends',
       initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
+      searchTipsAndTricks: 'https://bsky.social/about/blog/05-31-2024-search',
+    },
+    support: {
+      findFriendsPrivacyPolicy:
+        'https://bsky.social/about/support/find-friends-privacy-policy',
     },
   },
 }
@@ -213,15 +220,29 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
+export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always the same
 
-export const BLUESKY_PROXY_HEADER: ProxyHeaderValue = `${BLUESKY_PROXY_DID}#bsky_appview`
-
-export const BLUESKY_SERVICE_HEADERS = {
-  'atproto-proxy': BLUESKY_PROXY_HEADER,
+// temp hack for e2e - esb
+export const BLUESKY_PROXY_HEADER = {
+  value: `${BLUESKY_PROXY_DID}#bsky_appview`,
+  get() {
+    return this.value as ProxyHeaderValue
+  },
+  set(value: string) {
+    this.value = value
+  },
 }
 
 export const DM_SERVICE_HEADERS = {
   'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
+}
+
+export const BLUESKY_MOD_SERVICE_HEADERS = {
+  'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
+}
+
+export const BLUESKY_NOTIF_SERVICE_HEADERS = {
+  'atproto-proxy': `${BLUESKY_PROXY_DID}#bsky_notif`,
 }
 
 export const webLinks = {

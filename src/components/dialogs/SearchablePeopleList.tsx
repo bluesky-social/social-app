@@ -13,7 +13,6 @@ import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
@@ -25,10 +24,11 @@ import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged} from '#/components/dms/util'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 export type ProfileItem = {
@@ -254,7 +254,7 @@ export function SearchablePeopleList({
   )
 
   useLayoutEffect(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       setImmediate(() => {
         inputRef?.current?.focus()
       })
@@ -284,18 +284,18 @@ export function SearchablePeopleList({
             style={[
               a.z_10,
               a.text_lg,
-              a.font_heavy,
+              a.font_bold,
               a.leading_tight,
               t.atoms.text_contrast_high,
             ]}>
             {title}
           </Text>
-          {isWeb ? (
+          {IS_WEB ? (
             <Button
               label={_(msg`Close`)}
               size="small"
               shape="round"
-              variant={isWeb ? 'ghost' : 'solid'}
+              variant={IS_WEB ? 'ghost' : 'solid'}
               color="secondary"
               style={[
                 a.absolute,
@@ -484,7 +484,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput>
+  inputRef: React.RefObject<TextInput | null>
 }) {
   const t = useTheme()
   const {_} = useLingui()

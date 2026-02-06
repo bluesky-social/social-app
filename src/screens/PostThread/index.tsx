@@ -1,13 +1,18 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {Trans} from '@lingui/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
-import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
+import {
+  PostThreadContextProvider,
+  type ThreadItem,
+  usePostThread,
+} from '#/state/queries/usePostThread'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -38,12 +43,13 @@ import {
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
-import {LoggedOutCTA} from '#/components/LoggedOutCTA'
+import {useAnalytics} from '#/analytics'
 
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
 
 export function PostThread({uri}: {uri: string}) {
+  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
@@ -59,7 +65,6 @@ export function PostThread({uri}: {uri: string}) {
    */
   const thread = usePostThread({anchor: uri})
   const {anchor, hasParents} = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     let hasParents = false
     for (const item of thread.data.items) {
       if (item.type === 'threadPost' && item.depth === 0) {
@@ -69,6 +74,28 @@ export function PostThread({uri}: {uri: string}) {
     }
     return {hasParents}
   }, [thread.data.items])
+
+  // Track post:view event when anchor post is viewed
+  const seenPostUriRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (
+      anchor?.type === 'threadPost' &&
+      anchor.value.post.uri !== seenPostUriRef.current
+    ) {
+      const post = anchor.value.post
+      seenPostUriRef.current = post.uri
+
+      ax.metric('post:view', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext: 'Post',
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+    }
+  }, [ax, anchor, feedFeedback.feedDescriptor])
+
+  // Track post:view events for parent posts and replies (non-anchor posts)
+  const trackThreadItemView = usePostViewTracking('PostThreadItem')
 
   const {openComposer} = useOpenComposer()
   const optimisticOnPostReply = useCallback(
@@ -98,6 +125,7 @@ export function PostThread({uri}: {uri: string}) {
         langs: post.record.langs,
       },
       onPostSuccess: optimisticOnPostReply,
+      logContext: 'PostReply',
     })
 
     if (anchorPostSource) {
@@ -148,7 +176,9 @@ export function PostThread({uri}: {uri: string}) {
    */
   const shouldHandleScroll = useRef(true)
   /**
-   * Called any time the content size of the list changes, _just_ before paint.
+   * Called any time the content size of the list changes. Could be a fresh
+   * render, items being added to the list, or any resize that changes the
+   * scrollable size of the content.
    *
    * We want this to fire every time we change params (which will reset
    * `deferParents` via `onLayout` on the anchor post, due to the key change),
@@ -193,24 +223,23 @@ export function PostThread({uri}: {uri: string}) {
        * will give us a _positive_ offset, which will scroll the anchor post
        * back _up_ to the top of the screen.
        */
-      list.scrollToOffset({
-        offset: anchorOffsetTop - headerHeight,
-      })
+      const offset = anchorOffsetTop - headerHeight
+      list.scrollToOffset({offset})
 
       /*
-       * After the second pass, `deferParents` will be `false`, and we need
-       * to ensure this doesn't run again until scroll handling is requested
-       * again via `shouldHandleScroll.current === true` and a params
-       * change via `prepareForParamsUpdate`.
+       * After we manage to do a positive adjustment, we need to ensure this
+       * doesn't run again until scroll handling is requested again via
+       * `shouldHandleScroll.current === true` and a params change via
+       * `prepareForParamsUpdate`.
        *
        * The `isRoot` here is needed because if we're looking at the anchor
        * post, this handler will not fire after `deferParents` is set to
        * `false`, since there are no parents to render above it. In this case,
-       * we want to make sure `shouldHandleScroll` is set to `false` so that
-       * subsequent size changes unrelated to a params change (like pagination)
-       * do not affect scroll.
+       * we want to make sure `shouldHandleScroll` is set to `false` right away
+       * so that subsequent size changes unrelated to a params change (like
+       * pagination) do not affect scroll.
        */
-      if (!deferParents || isRoot) shouldHandleScroll.current = false
+      if (offset > 0 || isRoot) shouldHandleScroll.current = false
     }
   })
 
@@ -409,8 +438,6 @@ export function PostThread({uri}: {uri: string}) {
                 onPostSuccess={optimisticOnPostReply}
                 postSource={anchorPostSource}
               />
-              {/* Show CTA for logged-out visitors */}
-              <LoggedOutCTA style={a.px_lg} gateName="cta_above_post_replies" />
             </View>
           )
         } else {
@@ -494,7 +521,7 @@ export function PostThread({uri}: {uri: string}) {
   const defaultListFooterHeight = hasParents ? windowHeight - 200 : undefined
 
   return (
-    <>
+    <PostThreadContextProvider context={thread.context}>
       <Layout.Header.Outer headerRef={headerRef}>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
@@ -531,6 +558,12 @@ export function PostThread({uri}: {uri: string}) {
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
           onStartReachedThreshold={1}
+          onItemSeen={item => {
+            // Track post:view for parent posts and replies (non-anchor posts)
+            if (item.type === 'threadPost' && item.depth !== 0) {
+              trackThreadItemView(item.value.post)
+            }
+          }}
           /**
            * NATIVE ONLY
            * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
@@ -577,7 +610,7 @@ export function PostThread({uri}: {uri: string}) {
       {!gtMobile && canReply && hasSession && (
         <MobileComposePrompt onPressReply={onReplyToAnchor} />
       )}
-    </>
+    </PostThreadContextProvider>
   )
 }
 

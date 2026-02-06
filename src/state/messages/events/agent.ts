@@ -4,7 +4,10 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {isNetworkError} from '#/lib/strings/errors'
+import {
+  isErrorMaybeAppPasswordPermissions,
+  isNetworkError,
+} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
 import {
   BACKGROUND_POLL_INTERVAL,
@@ -260,7 +263,7 @@ export class MessagesEventBus {
 
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
     } catch (e: any) {
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`init failed`, {
           safeMessage: e.message,
         })
@@ -375,7 +378,7 @@ export class MessagesEventBus {
         this.emitter.emit('event', {type: 'logs', logs: batch})
       }
     } catch (e: any) {
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`poll events failed`, {
           safeMessage: e.message,
         })

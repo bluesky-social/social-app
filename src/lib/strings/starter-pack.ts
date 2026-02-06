@@ -46,7 +46,7 @@ export function parseStarterPackUri(uri?: string): {
     } else {
       const url = new URL(uri)
       const parts = url.pathname.split('/')
-      const [_, path, name, rkey] = parts
+      const [__, path, name, rkey] = parts
 
       if (parts.length !== 4) return null
       if (path !== 'starter-pack' && path !== 'start') return null

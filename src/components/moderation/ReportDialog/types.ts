@@ -1,22 +1,29 @@
 import {
-  $Typed,
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  ChatBskyConvoDefs,
+  type $Typed,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  type ChatBskyConvoDefs,
 } from '@atproto/api'
 
-import * as Dialog from '#/components/Dialog'
+import type * as Dialog from '#/components/Dialog'
+
+export type ReportSubjectConvo = {
+  view: 'convo' | 'message'
+  convoId: string
+  message: ChatBskyConvoDefs.MessageView
+}
 
 export type ReportSubject =
   | $Typed<AppBskyActorDefs.ProfileViewBasic>
   | $Typed<AppBskyActorDefs.ProfileView>
   | $Typed<AppBskyActorDefs.ProfileViewDetailed>
+  | $Typed<AppBskyActorDefs.StatusView>
   | $Typed<AppBskyGraphDefs.ListView>
   | $Typed<AppBskyFeedDefs.GeneratorView>
   | $Typed<AppBskyGraphDefs.StarterPackView>
   | $Typed<AppBskyFeedDefs.PostView>
-  | {convoId: string; message: ChatBskyConvoDefs.MessageView}
+  | ReportSubjectConvo
 
 export type ParsedReportSubject =
   | {
@@ -31,6 +38,12 @@ export type ParsedReportSubject =
         link: boolean
         quote: boolean
       }
+    }
+  | {
+      type: 'status'
+      uri: string
+      cid: string
+      nsid: string
     }
   | {
       type: 'list'
@@ -55,13 +68,15 @@ export type ParsedReportSubject =
       did: string
       nsid: string
     }
-  | {
-      type: 'chatMessage'
-      convoId: string
-      message: ChatBskyConvoDefs.MessageView
-    }
+  | ({
+      type: 'convoMessage'
+    } & ReportSubjectConvo)
 
 export type ReportDialogProps = {
   control: Dialog.DialogOuterProps['control']
   subject: ParsedReportSubject
+  /**
+   * Called if the report was successfully submitted.
+   */
+  onAfterSubmit?: () => void
 }

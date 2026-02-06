@@ -1,6 +1,4 @@
-import React from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {createContext, useContext, useMemo} from 'react'
 
 import {logger} from '#/logger'
 import {
@@ -8,15 +6,22 @@ import {
   type Emoji,
 } from '#/screens/Onboarding/StepProfile/types'
 
+type OnboardingScreen =
+  | 'profile'
+  | 'interests'
+  | 'suggested-accounts'
+  | 'suggested-starterpacks'
+  | 'find-contacts-intro'
+  | 'find-contacts'
+  | 'finished'
+
 export type OnboardingState = {
-  hasPrev: boolean
-  totalSteps: number
-  activeStep: 'profile' | 'interests' | 'suggested-accounts' | 'finished'
-  activeStepIndex: number
+  screens: Record<OnboardingScreen, boolean>
+  activeStep: OnboardingScreen
+  stepTransitionDirection: 'Forward' | 'Backward'
 
   interestsStepResults: {
     selectedInterests: string[]
-    apiResponse: ApiResponseMap
   }
   profileStepResults: {
     isCreatedAvatar: boolean
@@ -34,11 +39,6 @@ export type OnboardingState = {
       backgroundColor: AvatarColor
     }
   }
-
-  experiments?: {
-    onboarding_suggested_accounts?: boolean
-    onboarding_value_prop?: boolean
-  }
 }
 
 export type OnboardingAction =
@@ -49,12 +49,14 @@ export type OnboardingAction =
       type: 'prev'
     }
   | {
+      type: 'skip-contacts'
+    }
+  | {
       type: 'finish'
     }
   | {
       type: 'setInterestsStepResults'
       selectedInterests: string[]
-      apiResponse: ApiResponseMap
     }
   | {
       type: 'setProfileStepResults'
@@ -70,91 +72,45 @@ export type OnboardingAction =
         | undefined
     }
 
-export type ApiResponseMap = {
-  interests: string[]
-  suggestedAccountDids: {
-    [key: string]: string[]
+export function createInitialOnboardingState(
+  {
+    starterPacksStepEnabled,
+    findContactsStepEnabled,
+  }: {
+    starterPacksStepEnabled: boolean
+    findContactsStepEnabled: boolean
+  } = {starterPacksStepEnabled: true, findContactsStepEnabled: false},
+): OnboardingState {
+  const screens: OnboardingState['screens'] = {
+    profile: true,
+    interests: true,
+    'suggested-accounts': true,
+    'suggested-starterpacks': starterPacksStepEnabled,
+    'find-contacts-intro': findContactsStepEnabled,
+    'find-contacts': findContactsStepEnabled,
+    finished: true,
   }
-  suggestedFeedUris: {
-    [key: string]: string[]
-  }
-}
 
-// most popular selected interests
-export const popularInterests = [
-  'art',
-  'gaming',
-  'sports',
-  'comics',
-  'music',
-  'politics',
-  'photography',
-  'science',
-  'news',
-]
-
-export function useInterestsDisplayNames() {
-  const {_} = useLingui()
-
-  return React.useMemo<Record<string, string>>(() => {
-    return {
-      // Keep this alphabetized
-      animals: _(msg`Animals`),
-      art: _(msg`Art`),
-      books: _(msg`Books`),
-      comedy: _(msg`Comedy`),
-      comics: _(msg`Comics`),
-      culture: _(msg`Culture`),
-      dev: _(msg`Software Dev`),
-      education: _(msg`Education`),
-      food: _(msg`Food`),
-      gaming: _(msg`Video Games`),
-      journalism: _(msg`Journalism`),
-      movies: _(msg`Movies`),
-      music: _(msg`Music`),
-      nature: _(msg`Nature`),
-      news: _(msg`News`),
-      pets: _(msg`Pets`),
-      photography: _(msg`Photography`),
-      politics: _(msg`Politics`),
-      science: _(msg`Science`),
-      sports: _(msg`Sports`),
-      tech: _(msg`Tech`),
-      tv: _(msg`TV`),
-      writers: _(msg`Writers`),
-    }
-  }, [_])
-}
-
-export const initialState: OnboardingState = {
-  hasPrev: false,
-  totalSteps: 3,
-  activeStep: 'profile',
-  activeStepIndex: 1,
-
-  interestsStepResults: {
-    selectedInterests: [],
-    apiResponse: {
-      interests: [],
-      suggestedAccountDids: {},
-      suggestedFeedUris: {},
+  return {
+    screens,
+    activeStep: 'profile',
+    stepTransitionDirection: 'Forward',
+    interestsStepResults: {
+      selectedInterests: [],
     },
-  },
-  profileStepResults: {
-    isCreatedAvatar: false,
-    image: undefined,
-    imageUri: '',
-    imageMime: '',
-  },
+    profileStepResults: {
+      isCreatedAvatar: false,
+      image: undefined,
+      imageUri: '',
+      imageMime: '',
+    },
+  }
 }
 
-export const Context = React.createContext<{
+export const Context = createContext<{
   state: OnboardingState
   dispatch: React.Dispatch<OnboardingAction>
-}>({
-  state: {...initialState},
-  dispatch: () => {},
-})
+} | null>(null)
 Context.displayName = 'OnboardingContext'
 
 export function reducer(
@@ -163,62 +119,44 @@ export function reducer(
 ): OnboardingState {
   let next = {...s}
 
+  const stepOrder = getStepOrder(s)
+
   switch (a.type) {
     case 'next': {
-      if (s.experiments?.onboarding_suggested_accounts) {
-        if (s.activeStep === 'profile') {
-          next.activeStep = 'interests'
-          next.activeStepIndex = 2
-        } else if (s.activeStep === 'interests') {
-          next.activeStep = 'suggested-accounts'
-          next.activeStepIndex = 3
-        }
-        if (s.activeStep === 'suggested-accounts') {
-          next.activeStep = 'finished'
-          next.activeStepIndex = 4
-        }
-      } else {
-        if (s.activeStep === 'profile') {
-          next.activeStep = 'interests'
-          next.activeStepIndex = 2
-        } else if (s.activeStep === 'interests') {
-          next.activeStep = 'finished'
-          next.activeStepIndex = 3
-        }
+      const nextIndex = stepOrder.indexOf(next.activeStep) + 1
+      const nextStep = stepOrder[nextIndex]
+      if (nextStep) {
+        next.activeStep = nextStep
       }
+      next.stepTransitionDirection = 'Forward'
       break
     }
     case 'prev': {
-      if (s.experiments?.onboarding_suggested_accounts) {
-        if (s.activeStep === 'interests') {
-          next.activeStep = 'profile'
-          next.activeStepIndex = 1
-        } else if (s.activeStep === 'suggested-accounts') {
-          next.activeStep = 'interests'
-          next.activeStepIndex = 2
-        } else if (s.activeStep === 'finished') {
-          next.activeStep = 'suggested-accounts'
-          next.activeStepIndex = 3
-        }
-      } else {
-        if (s.activeStep === 'interests') {
-          next.activeStep = 'profile'
-          next.activeStepIndex = 1
-        } else if (s.activeStep === 'finished') {
-          next.activeStep = 'interests'
-          next.activeStepIndex = 2
-        }
+      const prevIndex = stepOrder.indexOf(next.activeStep) - 1
+      const prevStep = stepOrder[prevIndex]
+      if (prevStep) {
+        next.activeStep = prevStep
       }
+      next.stepTransitionDirection = 'Backward'
+      break
+    }
+    case 'skip-contacts': {
+      const nextIndex = stepOrder.indexOf('find-contacts') + 1
+      const nextStep = stepOrder[nextIndex] ?? 'finished'
+      next.activeStep = nextStep
+      next.stepTransitionDirection = 'Forward'
       break
     }
     case 'finish': {
-      next = initialState
+      next = createInitialOnboardingState({
+        starterPacksStepEnabled: s.screens['suggested-starterpacks'],
+        findContactsStepEnabled: s.screens['find-contacts'],
+      })
       break
     }
     case 'setInterestsStepResults': {
       next.interestsStepResults = {
         selectedInterests: a.selectedInterests,
-        apiResponse: a.apiResponse,
       }
       break
     }
@@ -242,7 +180,6 @@ export function reducer(
   logger.debug(`onboarding`, {
     hasPrev: state.hasPrev,
     activeStep: state.activeStep,
-    activeStepIndex: state.activeStepIndex,
     interestsStepResults: {
       selectedInterests: state.interestsStepResults.selectedInterests,
     },
@@ -254,4 +191,58 @@ export function reducer(
   }
 
   return state
+}
+
+function getStepOrder(s: OnboardingState): OnboardingScreen[] {
+  return [
+    s.screens.profile && ('profile' as const),
+    s.screens.interests && ('interests' as const),
+    s.screens['suggested-accounts'] && ('suggested-accounts' as const),
+    s.screens['suggested-starterpacks'] && ('suggested-starterpacks' as const),
+    s.screens['find-contacts-intro'] && ('find-contacts-intro' as const),
+    s.screens['find-contacts'] && ('find-contacts' as const),
+    s.screens.finished && ('finished' as const),
+  ].filter(x => !!x)
+}
+
+/**
+ * Note: not to be confused with `useOnboardingState`, which just determines if onboarding is active.
+ * This hook is for internal state of the onboarding flow (i.e. active step etc).
+ *
+ * This adds additional derived state to the onboarding context reducer.
+ */
+export function useOnboardingInternalState() {
+  const ctx = useContext(Context)
+
+  if (!ctx) {
+    throw new Error(
+      'useOnboardingInternalState must be used within OnboardingContext',
+    )
+  }
+
+  const {state, dispatch} = ctx
+
+  return {
+    state: useMemo(() => {
+      const stepOrder = getStepOrder(state).filter(
+        x => x !== 'find-contacts' && x !== 'finished',
+      ) as string[]
+      const canGoBack = state.activeStep !== stepOrder[0]
+      return {
+        ...state,
+        canGoBack,
+        /**
+         * Note: for *display* purposes only, do not lean on this
+         * for navigation purposes! we merge certain steps!
+         */
+        activeStepIndex: stepOrder.indexOf(
+          state.activeStep === 'find-contacts'
+            ? 'find-contacts-intro'
+            : state.activeStep,
+        ),
+        totalSteps: stepOrder.length,
+      }
+    }, [state]),
+    dispatch,
+  }
 }

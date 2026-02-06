@@ -4,50 +4,15 @@ import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {webLinks} from '#/lib/constants'
-import {useGate} from '#/lib/statsig/statsig'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-function CommunityGuidelinesNotice({}: {}) {
-  const {_} = useLingui()
-  const gate = useGate()
-
-  if (gate('disable_onboarding_policy_update_notice')) return null
-
-  return (
-    <View style={[a.pt_xs]}>
-      <Admonition type="tip">
-        <Trans>
-          You also agree to{' '}
-          <InlineLinkText
-            label={_(msg`Bluesky's Community Guidelines`)}
-            to={webLinks.communityDeprecated}>
-            Bluesky’s Community Guidelines
-          </InlineLinkText>
-          . An{' '}
-          <InlineLinkText
-            label={_(msg`Bluesky's Updated Community Guidelines`)}
-            to={webLinks.community}>
-            updated version of our Community Guidelines
-          </InlineLinkText>{' '}
-          will take effect on October 15th.
-        </Trans>
-      </Admonition>
-    </View>
-  )
-}
-
 export const Policies = ({
   serviceDescription,
-  needsGuardian,
-  under13,
 }: {
   serviceDescription: ComAtprotoServerDescribeServer.OutputSchema
-  needsGuardian: boolean
-  under13: boolean
 }) => {
   const t = useTheme()
   const {_} = useLingui()
@@ -67,12 +32,11 @@ export const Policies = ({
             This service has not provided terms of service or a privacy policy.
           </Trans>
         </Admonition>
-        <CommunityGuidelinesNotice />
       </View>
     )
   }
 
-  let els: ReactElement
+  let els: ReactElement<any>
   if (tos && pp) {
     els = (
       <Trans>
@@ -123,32 +87,9 @@ export const Policies = ({
     return null
   }
 
-  return (
-    <View style={[a.gap_sm]}>
-      {els ? (
-        <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
-          {els}
-        </Text>
-      ) : null}
-
-      {under13 ? (
-        <Admonition type="error">
-          <Trans>
-            You must be 13 years of age or older to create an account.
-          </Trans>
-        </Admonition>
-      ) : needsGuardian ? (
-        <Admonition type="warning">
-          <Trans>
-            If you are not yet an adult according to the laws of your country,
-            your parent or legal guardian must read these Terms on your behalf.
-          </Trans>
-        </Admonition>
-      ) : undefined}
-
-      <CommunityGuidelinesNotice />
-    </View>
-  )
+  return els ? (
+    <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>{els}</Text>
+  ) : null
 }
 
 function validWebLink(url?: string): string | undefined {

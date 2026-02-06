@@ -11,7 +11,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
-import {isWeb} from '#/platform/detection'
 import {
   invalidateActorStarterPacksWithMembershipQuery,
   useActorStarterPacksWithMembershipsQuery,
@@ -31,6 +30,8 @@ import {StarterPack} from '#/components/icons/StarterPack'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 type StarterPackWithMembership =
@@ -47,7 +48,6 @@ export function StarterPackDialog({
   targetDid,
   enabled,
 }: StarterPackDialogProps) {
-  const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const requireEmailVerification = useRequireEmailVerification()
 
@@ -78,7 +78,6 @@ export function StarterPackDialog({
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <StarterPackList
-        control={control}
         onStartWizard={wrappedNavToWizard}
         targetDid={targetDid}
         enabled={enabled}
@@ -92,7 +91,7 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
   const t = useTheme()
 
   return (
-    <View style={[a.gap_2xl, {paddingTop: isWeb ? 100 : 64}]}>
+    <View style={[a.gap_2xl, {paddingTop: IS_WEB ? 100 : 64}]}>
       <View style={[a.gap_xs, a.align_center]}>
         <StarterPack
           width={48}
@@ -122,21 +121,19 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
 }
 
 function StarterPackList({
-  control,
   onStartWizard,
   targetDid,
   enabled,
 }: {
-  control: Dialog.DialogControlProps
   onStartWizard: () => void
   targetDid: string
   enabled?: boolean
 }) {
+  const control = Dialog.useDialogContext()
   const {_} = useLingui()
 
   const {
     data,
-    refetch,
     isError,
     isLoading,
     hasNextPage,
@@ -147,15 +144,7 @@ function StarterPackList({
   const membershipItems =
     data?.pages.flatMap(page => page.starterPacksWithMembership) || []
 
-  const _onRefresh = useCallback(async () => {
-    try {
-      await refetch()
-    } catch (err) {
-      // Error handling is optional since this is just a refresh
-    }
-  }, [refetch])
-
-  const _onEndReached = useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -180,10 +169,10 @@ function StarterPackList({
       <View
         style={[
           {justifyContent: 'space-between', flexDirection: 'row'},
-          isWeb ? a.mb_2xl : a.my_lg,
+          IS_WEB ? a.mb_2xl : a.my_lg,
           a.align_center,
         ]}>
-        <Text style={[a.text_lg, a.font_bold]}>
+        <Text style={[a.text_lg, a.font_semi_bold]}>
           <Trans>Add to starter packs</Trans>
         </Text>
         <Button
@@ -200,7 +189,7 @@ function StarterPackList({
         <>
           <View
             style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
-            <Text style={[a.text_md, a.font_bold]}>
+            <Text style={[a.text_md, a.font_semi_bold]}>
               <Trans>New starter pack</Trans>
             </Text>
             <Button
@@ -239,13 +228,11 @@ function StarterPackList({
           ? () => 'starter_pack_dialog_loader'
           : (item: StarterPackWithMembership) => item.starterPack.uri
       }
-      refreshing={false}
-      onRefresh={_onRefresh}
-      onEndReached={_onEndReached}
+      onEndReached={onEndReached}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
-      style={isWeb ? [a.px_md, {minHeight: 500}] : [a.px_2xl, a.pt_lg]}
+      style={IS_WEB ? [a.px_md, {minHeight: 500}] : [a.px_2xl, a.pt_lg]}
     />
   )
 }
@@ -257,8 +244,9 @@ function StarterPackItem({
   starterPackWithMembership: StarterPackWithMembership
   targetDid: string
 }) {
-  const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const {_} = useLingui()
   const queryClient = useQueryClient()
 
   const starterPack = starterPackWithMembership.starterPack
@@ -308,6 +296,7 @@ function StarterPackItem({
     if (!starterPack.list?.uri || isPendingRefresh) return
 
     const listUri = starterPack.list.uri
+    const starterPackUri = starterPack.uri
 
     setIsPendingRefresh(true)
 
@@ -316,6 +305,7 @@ function StarterPackItem({
         listUri: listUri,
         actorDid: targetDid,
       })
+      ax.metric('starterPack:addUser', {starterPack: starterPackUri})
     } else {
       if (!starterPackWithMembership.listItem?.uri) {
         console.error('Cannot remove: missing membership URI')
@@ -327,6 +317,7 @@ function StarterPackItem({
         actorDid: targetDid,
         membershipUri: starterPackWithMembership.listItem.uri,
       })
+      ax.metric('starterPack:removeUser', {starterPack: starterPackUri})
     }
   }
 
@@ -344,7 +335,7 @@ function StarterPackItem({
   return (
     <View style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
       <View>
-        <Text emoji style={[a.text_md, a.font_bold]} numberOfLines={1}>
+        <Text emoji style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
           {record.name}
         </Text>
 
@@ -382,7 +373,7 @@ function StarterPackItem({
 
       <Button
         label={isInPack ? _(msg`Remove`) : _(msg`Add`)}
-        color={isInPack ? 'secondary' : 'primary'}
+        color={isInPack ? 'secondary' : 'primary_subtle'}
         size="tiny"
         disabled={isPendingRefresh}
         onPress={handleToggleMembership}>

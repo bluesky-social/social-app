@@ -4,12 +4,12 @@ import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {SearchLinkCard} from '#/view/shell/desktop/Search'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
 import {atoms as a, native} from '#/alf'
 import * as Layout from '#/components/Layout'
+import {IS_NATIVE} from '#/env'
 
 let AutocompleteResults = ({
   isAutocompleteFetching,
@@ -45,7 +45,7 @@ let AutocompleteResults = ({
             label={_(msg`Search for "${searchText}"`)}
             onPress={native(onSubmit)}
             to={
-              isNative
+              IS_NATIVE
                 ? undefined
                 : `/search?q=${encodeURIComponent(searchText)}`
             }

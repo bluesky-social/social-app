@@ -1,4 +1,4 @@
-import {createDownloadResumable, deleteAsync} from 'expo-file-system'
+import {createDownloadResumable, deleteAsync} from 'expo-file-system/legacy'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 
 import {

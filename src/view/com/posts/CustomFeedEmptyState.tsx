@@ -1,27 +1,51 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useSession} from '#/state/session'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
 export function CustomFeedEmptyState() {
+  const ax = useAnalytics()
+  const feedFeedback = useFeedFeedbackContext()
+  const {currentAccount} = useSession()
+  const hasLoggedDiscoverEmptyErrorRef = React.useRef(false)
+
+  useEffect(() => {
+    // Log the empty feed error event
+    if (feedFeedback.feedSourceInfo && currentAccount?.did) {
+      const uri = feedFeedback.feedSourceInfo.uri
+      if (
+        uri === DISCOVER_FEED_URI &&
+        !hasLoggedDiscoverEmptyErrorRef.current
+      ) {
+        hasLoggedDiscoverEmptyErrorRef.current = true
+        ax.metric('feed:discover:emptyError', {
+          userDid: currentAccount.did,
+        })
+      }
+    }
+  }, [feedFeedback.feedSourceInfo, currentAccount?.did])
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()
 
   const onPressFindAccounts = React.useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       navigation.navigate('Search', {})
     } else {
       navigation.navigate('SearchTab')

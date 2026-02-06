@@ -28,7 +28,7 @@ export function KeyboardControllerProvider({
   children: React.ReactNode
 }) {
   return (
-    <KeyboardProvider enabled={false}>
+    <KeyboardProvider enabled={false} preload={false}>
       <KeyboardControllerProviderInner>
         {children}
       </KeyboardControllerProviderInner>

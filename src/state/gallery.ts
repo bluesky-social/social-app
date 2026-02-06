@@ -1,9 +1,10 @@
 import {
   cacheDirectory,
+  copyAsync,
   deleteAsync,
   makeDirectoryAsync,
   moveAsync,
-} from 'expo-file-system'
+} from 'expo-file-system/legacy'
 import {
   type Action,
   type ActionCrop,
@@ -17,7 +18,8 @@ import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
-import {isNative} from '#/platform/detection'
+import {isCancelledError} from '#/lib/strings/errors'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export type ImageTransformation = {
   crop?: ActionCrop['crop']
@@ -37,6 +39,8 @@ export type ImageSource = ImageMeta & {
 type ComposerImageBase = {
   alt: string
   source: ImageSource
+  /** Original localRef path from draft, if editing an existing draft. Used to reuse the same storage key. */
+  localRefPath?: string
 }
 type ComposerImageWithoutTransformation = ComposerImageBase & {
   transformed?: undefined
@@ -54,7 +58,7 @@ export type ComposerImage =
 let _imageCacheDirectory: string
 
 function getImageCacheDirectory(): string | null {
-  if (isNative) {
+  if (IS_NATIVE) {
     return (_imageCacheDirectory ??= joinPath(cacheDirectory!, 'bsky-composer'))
   }
 
@@ -68,7 +72,8 @@ export async function createComposerImage(
     alt: '',
     source: {
       id: nanoid(),
-      path: await moveIfNecessary(raw.path),
+      // Copy to cache to ensure file survives OS temporary file cleanup
+      path: await copyToCache(raw.path),
       width: raw.width,
       height: raw.height,
       mime: raw.mime,
@@ -119,7 +124,7 @@ export async function pasteImage(
 }
 
 export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
-  if (!isNative) {
+  if (!IS_NATIVE) {
     return img
   }
 
@@ -143,7 +148,7 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
       },
     }
   } catch (e) {
-    if (e instanceof Error && e.message.includes('User cancelled')) {
+    if (!isCancelledError(e)) {
       return img
     }
 
@@ -243,7 +248,7 @@ export async function compressImage(img: ComposerImage): Promise<PickerImage> {
 }
 
 async function moveIfNecessary(from: string) {
-  const cacheDir = isNative && getImageCacheDirectory()
+  const cacheDir = IS_NATIVE && getImageCacheDirectory()
 
   if (cacheDir && from.startsWith(cacheDir)) {
     const to = joinPath(cacheDir, nanoid(36))
@@ -257,9 +262,74 @@ async function moveIfNecessary(from: string) {
   return from
 }
 
+/**
+ * Copy a file from a potentially temporary location to our cache directory.
+ * This ensures picker files are available for draft saving even if the original
+ * temporary files are cleaned up by the OS.
+ *
+ * On web, converts blob URLs to data URIs immediately to prevent revocation issues.
+ */
+async function copyToCache(from: string): Promise<string> {
+  // Data URIs don't need any conversion
+  if (from.startsWith('data:')) {
+    return from
+  }
+
+  if (IS_WEB) {
+    // Web: convert blob URLs to data URIs before they can be revoked
+    if (from.startsWith('blob:')) {
+      try {
+        const response = await fetch(from)
+        const blob = await response.blob()
+        return await blobToDataUri(blob)
+      } catch (e) {
+        // Blob URL was likely revoked, return as-is for downstream error handling
+        return from
+      }
+    }
+    // Other URLs on web don't need conversion
+    return from
+  }
+
+  // Native: copy to cache directory to survive OS temp file cleanup
+  const cacheDir = getImageCacheDirectory()
+  if (!cacheDir || from.startsWith(cacheDir)) {
+    return from
+  }
+
+  const to = joinPath(cacheDir, nanoid(36))
+  await makeDirectoryAsync(cacheDir, {intermediates: true})
+
+  let normalizedFrom = from
+  if (!from.startsWith('file://') && from.startsWith('/')) {
+    normalizedFrom = `file://${from}`
+  }
+
+  await copyAsync({from: normalizedFrom, to})
+  return to
+}
+
+/**
+ * Convert a Blob to a data URI
+ */
+function blobToDataUri(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result)
+      } else {
+        reject(new Error('Failed to convert blob to data URI'))
+      }
+    }
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(blob)
+  })
+}
+
 /** Purge files that were created to accomodate image manipulation */
 export async function purgeTemporaryImageFiles() {
-  const cacheDir = isNative && getImageCacheDirectory()
+  const cacheDir = IS_NATIVE && getImageCacheDirectory()
 
   if (cacheDir) {
     await deleteAsync(cacheDir, {idempotent: true})

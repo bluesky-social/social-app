@@ -9,7 +9,6 @@ import {
   type EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
-import {isAndroid} from '#/platform/detection'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {type Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
@@ -23,6 +22,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID} from '#/env'
 import {AltTextReminder} from './photos/Gallery'
 
 export function GifAltTextDialog({
@@ -95,7 +95,7 @@ export function GifAltTextDialogLoaded({
           <Plus size="sm" fill={t.palette.white} />
         )}
         <Text
-          style={[a.font_bold, {color: t.palette.white}]}
+          style={[a.font_semi_bold, {color: t.palette.white}]}
           accessible={false}>
           <Trans>ALT</Trans>
         </Text>
@@ -206,7 +206,8 @@ function AltTextInner({
         </View>
         {/* below the text input to force tab order */}
         <View>
-          <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
+          <Text
+            style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
             <Trans>Add alt text</Trans>
           </Text>
           <View style={[a.align_center]}>
@@ -223,7 +224,7 @@ function AltTextInner({
       </View>
       <Dialog.Close />
       {/* Maybe fix this later -h */}
-      {isAndroid ? <View style={{height: 300}} /> : null}
+      {IS_ANDROID ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }

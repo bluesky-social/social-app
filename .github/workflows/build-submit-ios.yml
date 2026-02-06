@@ -15,7 +15,10 @@ jobs:
   build:
     if: github.repository == 'bluesky-social/social-app'
     name: Build and Submit iOS
-    runs-on: macos-15
+    runs-on: macos-26-xlarge
+    concurrency:
+      group: ios-build
+      cancel-in-progress: false
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -30,7 +33,7 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: yarn
@@ -39,7 +42,7 @@ jobs:
         uses: dcarbone/install-jq-action@v2
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@main
         with:
           expo-version: latest
           eas-version: latest
@@ -49,19 +52,19 @@ jobs:
         run: yarn global add eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.4'
+          xcode-version: "26.0"
 
       - name: ☕️ Setup Cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
         with:
-          version: 1.14.3
+          version: 1.16.2
 
       - name: 💾 Cache Pods
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -91,17 +94,38 @@ jobs:
           echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
 
       - name: 🏗️ EAS Build
+        env:
+          PROFILE: ${{ inputs.profile || 'testflight' }}
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           yarn use-build-number-with-bump
           eas build -p ios
-          --profile ${{ inputs.profile || 'testflight' }}
-          --local --output build.ipa --non-interactive
+          --profile $PROFILE
+          --local --output build.tar.gz --non-interactive
+
+      - name: 📂 Extract build artifact
+        run: |
+          if [ -f "build.tar.gz" ]; then
+            echo "Extracting build.tar.gz..."
+            mkdir ios-build
+            tar -xzf build.tar.gz -C ios-build
+            echo "Extraction completed successfully"
+          else
+            echo "Archive file not found!"
+            exit 1
+          fi
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path build.ipa
+        run: eas submit -p ios --non-interactive --path ios-build/ios/build/Bluesky.ipa
+
+      - name: 🪲 Upload dSYM to Sentry
+        run: >
+          SENTRY_ORG=blueskyweb
+          SENTRY_PROJECT=app
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          yarn sentry-cli debug-files upload ios-build/ios/build/Bluesky.app.dSYM.zip --include-sources
 
       - name: 📚 Get version from package.json
         id: get-build-info
@@ -128,5 +152,7 @@ jobs:
           key: most-recent-testflight-commit
 
       - name: ✏️ Write commit hash to cache
+        env:
+          GITHUB_SHA: ${{ github.sha }}
         if: ${{ inputs.profile == 'testflight' }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
