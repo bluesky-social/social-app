@@ -95,12 +95,14 @@ export function DraftItem({
                 paddingTop: 20 + a.pt_md.paddingTop,
               },
             ]}>
-            <RichText
-              style={[a.text_md, a.leading_snug, a.pointer_events_none]}
-              value={post.text}
-              enableTags
-              disableMentionFacetValidation
-            />
+            {!!post.text.trim().length && (
+              <RichText
+                style={[a.text_md, a.leading_snug, a.pointer_events_none]}
+                value={post.text}
+                enableTags
+                disableMentionFacetValidation
+              />
+            )}
 
             {!mediaExistsOnOtherDevice && <DraftMediaPreview post={post} />}
 

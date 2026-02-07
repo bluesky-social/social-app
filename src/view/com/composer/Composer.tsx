@@ -1115,7 +1115,7 @@ export const ComposePost = ({
             onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
             {thread.posts.map((post, index) => (
-              <React.Fragment key={post.id}>
+              <React.Fragment key={post.id + (composerState.draftId ?? '')}>
                 <ComposerPost
                   post={post}
                   dispatch={composerDispatch}
@@ -1320,7 +1320,7 @@ let ComposerPost = React.memo(function ComposerPost({
           style={[a.pt_xs]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
-          autoFocus
+          autoFocus={isLastPost}
           webForceMinHeight={forceMinHeight}
           // To avoid overlap with the close button:
           hasRightPadding={isPartOfThread}
