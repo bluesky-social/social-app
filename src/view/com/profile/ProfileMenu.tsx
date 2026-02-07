@@ -13,6 +13,10 @@ import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
+import {
+  useHiddenRepostsFrom,
+  useHiddenRepostsFromApi,
+} from '#/state/preferences'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {
   RQKEY as profileQueryKey,
@@ -45,6 +49,7 @@ import {
   PersonX_Stroke2_Corner0_Rounded as PersonX,
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {EditLiveDialog} from '#/components/live/EditLiveDialog'
@@ -94,6 +99,10 @@ let ProfileMenu = ({
     statusNudge.status === 'ready' &&
     !statusNudge.nux?.completed
   const {mutate: saveNux} = useSaveNux()
+
+  const hiddenRepostsFrom = useHiddenRepostsFrom()
+  const {hideRepostsFrom, unhideRepostsFrom} = useHiddenRepostsFromApi()
+  const isHidingReposts = hiddenRepostsFrom?.includes(profile.did) ?? false
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -212,6 +221,28 @@ let ProfileMenu = ({
       }
     }
   }, [_, ax, queueUnfollow])
+
+  const onPressToggleHideReposts = () => {
+    if (isHidingReposts) {
+      unhideRepostsFrom({did: profile.did})
+      Toast.show(_(msg({message: 'Reposts unhidden', context: 'toast'})))
+    } else {
+      const success = hideRepostsFrom({did: profile.did})
+      if (success) {
+        Toast.show(_(msg({message: 'Reposts hidden', context: 'toast'})))
+      } else {
+        Toast.show(
+          _(
+            msg({
+              message: `Limit reached for hidden reposts. Unhide some accounts, or turn off all reposts in settings.`,
+              context: 'toast',
+            }),
+          ),
+          'xmark',
+        )
+      }
+    }
+  }
 
   const onPressReportAccount = React.useCallback(() => {
     reportDialogControl.open()
@@ -426,6 +457,25 @@ let ProfileMenu = ({
                   ))}
                 {!isSelf && (
                   <>
+                    {!isBlocked && (
+                      <Menu.Item
+                        testID="profileHeaderDropdownHideRepostsBtn"
+                        label={
+                          isHidingReposts
+                            ? _(msg`Show reposts`)
+                            : _(msg`Hide reposts`)
+                        }
+                        onPress={onPressToggleHideReposts}>
+                        <Menu.ItemText>
+                          {isHidingReposts ? (
+                            <Trans>Show reposts</Trans>
+                          ) : (
+                            <Trans>Hide reposts</Trans>
+                          )}
+                        </Menu.ItemText>
+                        <Menu.ItemIcon icon={RepostIcon} />
+                      </Menu.Item>
+                    )}
                     {!profile.viewer?.blocking &&
                       !profile.viewer?.mutedByList && (
                         <Menu.Item

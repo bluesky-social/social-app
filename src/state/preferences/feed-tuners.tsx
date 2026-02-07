@@ -4,12 +4,14 @@ import {FeedTuner} from '#/lib/api/feed-manip'
 import {type FeedDescriptor} from '../queries/post-feed'
 import {usePreferencesQuery} from '../queries/preferences'
 import {useSession} from '../session'
+import {useHiddenRepostsFrom} from './hidden-reposts-from'
 import {useLanguagePrefs} from './languages'
 
 export function useFeedTuners(feedDesc: FeedDescriptor) {
   const langPrefs = useLanguagePrefs()
   const {data: preferences} = usePreferencesQuery()
   const {currentAccount} = useSession()
+  const hiddenRepostsFrom = useHiddenRepostsFrom()
 
   return useMemo(() => {
     if (feedDesc.startsWith('author')) {
@@ -27,6 +29,11 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
     if (feedDesc === 'following' || feedDesc.startsWith('list')) {
       const feedTuners = [FeedTuner.removeOrphans]
 
+      if (hiddenRepostsFrom?.length) {
+        feedTuners.push(
+          FeedTuner.removeRepostsFrom(new Set(hiddenRepostsFrom)),
+        )
+      }
       if (preferences?.feedViewPrefs.hideReposts) {
         feedTuners.push(FeedTuner.removeReposts)
       }
@@ -48,5 +55,5 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       return feedTuners
     }
     return []
-  }, [feedDesc, currentAccount, preferences, langPrefs])
+  }, [feedDesc, currentAccount, preferences, langPrefs, hiddenRepostsFrom])
 }
