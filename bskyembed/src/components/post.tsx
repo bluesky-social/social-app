@@ -81,6 +81,7 @@ export function Post({thread}: Props) {
               href={`/profile/${post.author.did}`}
               className="block text-[15px] text-textLight dark:text-textDimmed hover:underline line-clamp-1">
               @{post.author.handle}
+              {post.author.pronouns ? ' · ' + post.author.pronouns : ''}
             </Link>
           </div>
         </div>

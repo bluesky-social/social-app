@@ -117,6 +117,13 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
               />
             </View>
           )}
+
+          {replyTo.author.pronouns ? (
+            <Text
+              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+              {' ' + replyTo.author.pronouns}
+            </Text>
+          ) : null}
         </View>
         <View style={[a.flex_row, a.gap_md]}>
           <View style={[a.flex_1, a.flex_grow]}>

@@ -378,6 +378,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   ]}
                   numberOfLines={1}>
                   {sanitizeHandle(post.author.handle, '@')}
+                  {post.author.pronouns ? ' · ' + post.author.pronouns : ''}
                 </Text>
               </ProfileHoverCard>
             </View>

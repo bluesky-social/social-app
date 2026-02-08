@@ -105,6 +105,7 @@ export function Embed({
                 )}
                 <p className="block line-clamp-1 text-sm text-textLight dark:text-textDimmed shrink-[10] ml-1">
                   @{record.author.handle}
+                  {record.author.pronouns ? ' · ' + record.author.pronouns : ''}
                 </p>
               </div>
             </div>
