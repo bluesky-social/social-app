@@ -30,6 +30,18 @@ export function cleanError(str: any): string {
   if (str.includes('Bad token scope') || str.includes('Bad token method')) {
     return t`This feature is not available while using an App Password. Please sign in with your main password.`
   }
+  if (str.includes('Account has been suspended')) {
+    return t`Account has been suspended`
+  }
+  if (str.includes('Account is deactivated')) {
+    return t`Account is deactivated`
+  }
+  if (str.includes('Profile not found')) {
+    return t`Profile not found`
+  }
+  if (str.includes('Unable to resolve handle')) {
+    return t`Unable to resolve handle`
+  }
   if (str.startsWith('Error: ')) {
     return str.slice('Error: '.length)
   }
