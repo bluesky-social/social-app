@@ -7,7 +7,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   type SessionAccount,
   useAgent,
@@ -24,6 +23,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 const COL_WIDTH = 400
 
@@ -55,7 +55,7 @@ export function Deactivated() {
   }, [setShowLoggedOut])
 
   const onPressLogout = React.useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       // We're switching accounts, which remounts the entire app.
       // On mobile, this gets us Home, but on the web we also need reset the URL.
       // We can't change the URL via a navigate() call because the navigator
@@ -101,8 +101,8 @@ export function Deactivated() {
         contentContainerStyle={[
           a.px_2xl,
           {
-            paddingTop: isWeb ? 64 : insets.top + 16,
-            paddingBottom: isWeb ? 64 : insets.bottom,
+            paddingTop: IS_WEB ? 64 : insets.top + 16,
+            paddingBottom: IS_WEB ? 64 : insets.bottom,
           },
         ]}>
         <View

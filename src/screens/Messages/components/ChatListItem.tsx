@@ -13,14 +13,12 @@ import {useQueryClient} from '@tanstack/react-query'
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
 import {decrementBadgeCount} from '#/lib/notifications/notifications'
-import {logEvent} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {
   postUriToRelativePath,
   toBskyAppUrl,
   toShortUrl,
 } from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -46,6 +44,8 @@ import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 export const ChatListItemPortal = createPortalGroup()
@@ -96,6 +96,7 @@ function ChatListItemReady({
   showMenu?: boolean
   children?: React.ReactNode
 }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -138,11 +139,10 @@ function ChatListItemReady({
 
   const {lastMessage, lastMessageSentAt, latestReportableMessage} =
     useMemo(() => {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       let lastMessage = _(msg`No messages yet`)
-      // eslint-disable-next-line @typescript-eslint/no-shadow
+
       let lastMessageSentAt: string | null = null
-      // eslint-disable-next-line @typescript-eslint/no-shadow
+
       let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
 
       if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
@@ -291,10 +291,10 @@ function ChatListItemReady({
         menuControl.open()
         return false
       } else {
-        logEvent('chat:open', {logContext: 'ChatsList'})
+        ax.metric('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [isDeletedAccount, menuControl, queryClient, profile, convo],
+    [ax, isDeletedAccount, menuControl, queryClient, profile, convo],
   )
 
   const onLongPress = useCallback(() => {
@@ -367,7 +367,7 @@ function ChatListItemReady({
                   )
             }
             accessibilityActions={
-              isNative
+              IS_NATIVE
                 ? [
                     {
                       name: 'magicTap',
@@ -381,7 +381,7 @@ function ChatListItemReady({
                 : undefined
             }
             onPress={onPress}
-            onLongPress={isNative ? onLongPress : undefined}
+            onLongPress={IS_NATIVE ? onLongPress : undefined}
             onAccessibilityAction={onLongPress}>
             {({hovered, pressed, focused}) => (
               <View
@@ -520,7 +520,7 @@ function ChatListItemReady({
               control={menuControl}
               currentScreen="list"
               showMarkAsRead={convo.unreadCount > 0}
-              hideTrigger={isNative}
+              hideTrigger={IS_NATIVE}
               blockInfo={blockInfo}
               style={[
                 a.absolute,

@@ -2,8 +2,8 @@ import {useCallback} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
 import * as Toast from '#/components/Toast'
+import {IS_NATIVE} from '#/env'
 import {saveImageToMediaLibrary} from './manip'
 
 /**
@@ -16,7 +16,7 @@ export function useSaveImageToMediaLibrary() {
   const {_} = useLingui()
   return useCallback(
     async (uri: string) => {
-      if (!isNative) {
+      if (!IS_NATIVE) {
         throw new Error('useSaveImageToMediaLibrary is native only')
       }
 

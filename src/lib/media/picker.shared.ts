@@ -5,9 +5,9 @@ import {
 } from 'expo-image-picker'
 import {t} from '@lingui/macro'
 
-import {isIOS, isWeb} from '#/platform/detection'
 import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/view/com/util/Toast'
+import {IS_IOS, IS_WEB} from '#/env'
 import {VIDEO_MAX_DURATION_MS} from '../constants'
 import {getDataUriSize} from './util'
 
@@ -53,8 +53,8 @@ export async function openUnifiedPicker({
     quality: 1,
     allowsMultipleSelection: true,
     legacy: true,
-    base64: isWeb,
-    selectionLimit: isIOS ? selectionCountRemaining : undefined,
+    base64: IS_WEB,
+    selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
     preferredAssetRepresentationMode:
       UIImagePickerPreferredAssetRepresentationMode.Automatic,
     videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,

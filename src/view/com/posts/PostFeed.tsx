@@ -27,14 +27,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isStatusStillActive, validateStatus} from '#/lib/actor-status'
+import {isStatusStillActive, isStatusValidForViewers} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -70,6 +68,9 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
@@ -155,6 +156,10 @@ type FeedRow =
       type: 'composerPrompt'
       key: string
     }
+  | {
+      type: 'liveEventFeedsAndTrendingBanner'
+      key: string
+    }
 
 export function getItemsForFeedback(feedRow: FeedRow): {
   item: FeedPostSliceItem
@@ -227,10 +232,10 @@ let PostFeed = ({
   initialNumToRender?: number
   isVideoFeed?: boolean
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
-  const gate = useGate()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -238,7 +243,7 @@ let PostFeed = ({
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
-  const areVideoFeedsEnabled = isNative
+  const areVideoFeedsEnabled = IS_NATIVE
 
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
@@ -360,7 +365,7 @@ let PostFeed = ({
   const showProgressIntersitial =
     (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
 
-  const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
+  const {trendingVideoDisabled} = useTrendingSettings()
 
   const ageAssuranceBannerState = useAgeAssuranceBannerState()
   const selectedFeed = useSelectedFeed()
@@ -432,7 +437,6 @@ let PostFeed = ({
           for (const page of data.pages) {
             for (const slice of page.slices) {
               const item = slice.items.find(
-                // eslint-disable-next-line @typescript-eslint/no-shadow
                 item => item.uri === slice.feedPostUri,
               )
               if (
@@ -510,19 +514,15 @@ let PostFeed = ({
                         })
                       }
                     }
-                    if (!rightNavVisible && !trendingDisabled) {
-                      arr.push({
-                        type: 'interstitialTrending',
-                        key:
-                          'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
-                      })
-                    }
+                    arr.push({
+                      type: 'liveEventFeedsAndTrendingBanner',
+                      key: 'liveEventFeedsAndTrendingBanner-' + sliceIndex,
+                    })
                     // Show composer prompt for Discover and Following feeds
                     if (
                       hasSession &&
                       (feedUriOrActorDid === DISCOVER_FEED_URI ||
-                        feed === 'following') &&
-                      gate('show_composer_prompt')
+                        feed === 'following')
                     ) {
                       arr.push({
                         type: 'composerPrompt',
@@ -545,7 +545,7 @@ let PostFeed = ({
                 } else if (feedKind === 'following') {
                   if (sliceIndex === 0) {
                     // Show composer prompt for Following feed
-                    if (hasSession && gate('show_composer_prompt')) {
+                    if (hasSession) {
                       arr.push({
                         type: 'composerPrompt',
                         key: 'composerPrompt-' + sliceIndex,
@@ -672,16 +672,13 @@ let PostFeed = ({
     feedTab,
     hasSession,
     showProgressIntersitial,
-    trendingDisabled,
     trendingVideoDisabled,
-    rightNavVisible,
     gtMobile,
     isVideoFeed,
     areVideoFeedsEnabled,
     hasPressedShowLessUris,
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
-    gate,
     blockedOrMutedAuthors,
   ])
 
@@ -689,7 +686,7 @@ let PostFeed = ({
   // =
 
   const onRefresh = useCallback(async () => {
-    logEvent('feed:refresh', {
+    ax.metric('feed:refresh', {
       feedType: feedType,
       feedUrl: feed,
       reason: 'pull-to-refresh',
@@ -702,12 +699,12 @@ let PostFeed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, setIsPTRing, onHasNew, feed, feedType])
+  }, [ax, refetch, setIsPTRing, onHasNew, feed, feedType])
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
-    logEvent('feed:endReached', {
+    ax.metric('feed:endReached', {
       feedType: feedType,
       feedUrl: feed,
       itemCount: feedItems.length,
@@ -718,6 +715,7 @@ let PostFeed = ({
       logger.error('Failed to load more posts', {message: err})
     }
   }, [
+    ax,
     isFetching,
     hasNextPage,
     isError,
@@ -773,6 +771,8 @@ let PostFeed = ({
         return <AgeAssuranceDismissibleFeedBanner />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
+        return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
       } else if (row.type === 'composerPrompt') {
         return <ComposerPrompt />
       } else if (row.type === 'interstitialTrendingVideos') {
@@ -872,7 +872,7 @@ let PostFeed = ({
      * reach the end, so that content isn't cut off by the bottom of the
      * screen.
      */
-    const offset = Math.max(headerOffset, 32) * (isWeb ? 1 : 2)
+    const offset = Math.max(headerOffset, 32) * (IS_WEB ? 1 : 2)
 
     return isFetchingNextPage ? (
       <View style={[styles.feedFooter]}>
@@ -935,36 +935,28 @@ let PostFeed = ({
 
           const position = getPostPosition('sliceItem', item.key)
 
-          logger.metric(
-            'post:view',
-            {
-              uri: post.uri,
-              authorDid: post.author.did,
-              logContext: 'FeedItem',
-              feedDescriptor: feedFeedback.feedDescriptor || feed,
-              position,
-            },
-            {statsig: false},
-          )
+          ax.metric('post:view', {
+            uri: post.uri,
+            authorDid: post.author.did,
+            logContext: 'FeedItem',
+            feedDescriptor: feedFeedback.feedDescriptor || feed,
+            position,
+          })
         }
 
         // Live status tracking (existing code)
         const actor = post.author
         if (
           actor.status &&
-          validateStatus(actor.did, actor.status, liveNowConfig) &&
+          isStatusValidForViewers(actor.status, liveNowConfig) &&
           isStatusStillActive(actor.status.expiresAt)
         ) {
           if (!seenActorWithStatusRef.current.has(actor.did)) {
             seenActorWithStatusRef.current.add(actor.did)
-            logger.metric(
-              'live:view:post',
-              {
-                subject: actor.did,
-                feed,
-              },
-              {statsig: false},
-            )
+            ax.metric('live:view:post', {
+              subject: actor.did,
+              feed,
+            })
           }
         }
       } else if (item.type === 'videoGridRow') {
@@ -978,17 +970,13 @@ let PostFeed = ({
 
             const position = getPostPosition('videoGridRow', item.key)
 
-            logger.metric(
-              'post:view',
-              {
-                uri: post.uri,
-                authorDid: post.author.did,
-                logContext: 'FeedItem',
-                feedDescriptor: feedFeedback.feedDescriptor || feed,
-                position,
-              },
-              {statsig: false},
-            )
+            ax.metric('post:view', {
+              uri: post.uri,
+              authorDid: post.author.did,
+              logContext: 'FeedItem',
+              feedDescriptor: feedFeedback.feedDescriptor || feed,
+              position,
+            })
           }
         }
       }
@@ -1023,7 +1011,7 @@ let PostFeed = ({
         }
         initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={9}
-        maxToRenderPerBatch={isIOS ? 5 : 1}
+        maxToRenderPerBatch={IS_IOS ? 5 : 1}
         updateCellsBatchingPeriod={40}
         onItemSeen={onItemSeen}
       />

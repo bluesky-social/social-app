@@ -21,8 +21,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
-import {useEvent} from 'expo'
-import {useEventListener} from 'expo'
+import {useEvent, useEventListener} from 'expo'
 import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
@@ -57,7 +56,6 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {
   POST_TOMBSTONE,
@@ -67,13 +65,12 @@ import {
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   FeedFeedbackProvider,
+  useFeedFeedback,
   useFeedFeedbackContext,
 } from '#/state/feed-feedback'
-import {useFeedFeedback} from '#/state/feed-feedback'
 import {useFeedInfo} from '#/state/queries/feed'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
-  type AuthorFilter,
   type FeedPostSliceItem,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
@@ -101,6 +98,8 @@ import * as Hider from '#/components/moderation/Hider'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 
@@ -192,11 +191,9 @@ function Feed() {
   const feedDesc = useMemo(() => {
     switch (params.type) {
       case 'feedgen':
-        return `feedgen|${params.uri as string}` as const
+        return `feedgen|${params.uri}` as const
       case 'author':
-        return `author|${params.did as string}|${
-          params.filter as AuthorFilter
-        }` as const
+        return `author|${params.did}|${params.filter}` as const
       default:
         throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
     }
@@ -490,6 +487,7 @@ let VideoItem = ({
   feedContext: string | undefined
   reqId: string | undefined
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
   const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
@@ -507,16 +505,12 @@ let VideoItem = ({
       // Track post:view event
       if (!hasTrackedView.current) {
         hasTrackedView.current = true
-        logger.metric(
-          'post:view',
-          {
-            uri: post.uri,
-            authorDid: post.author.did,
-            logContext: 'ImmersiveVideo',
-            feedDescriptor,
-          },
-          {statsig: false},
-        )
+        ax.metric('post:view', {
+          uri: post.uri,
+          authorDid: post.author.did,
+          logContext: 'ImmersiveVideo',
+          feedDescriptor,
+        })
       }
     }
   }, [
@@ -590,10 +584,10 @@ function VideoItemInner({
   embed: AppBskyEmbedVideo.View
 }) {
   const {bottom} = useSafeAreaInsets()
-  const [isReady, setIsReady] = useState(!isAndroid)
+  const [isReady, setIsReady] = useState(!IS_ANDROID)
 
   useEventListener(player, 'timeUpdate', evt => {
-    if (isAndroid && !isReady && evt.currentTime >= 0.05) {
+    if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
       setIsReady(true)
     }
   })
@@ -783,6 +777,7 @@ function Overlay({
         embed: post.embed,
         langs: record?.langs,
       },
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record])
 
@@ -920,7 +915,7 @@ function Overlay({
           </LinearGradient>
         </View>
         {/*
-        {isAndroid && status === 'loading' && (
+        {IS_ANDROID && status === 'loading' && (
           <View
             style={[
               a.absolute,
@@ -1115,7 +1110,7 @@ function PlayPauseTapArea({
         isPlaying ? _(msg`Video is playing`) : _(msg`Video is paused`)
       }
       label={_(
-        `Video from ${sanitizeHandle(
+        msg`Video from ${sanitizeHandle(
           post.author.handle,
           '@',
         )}. Tap to play or pause the video`,

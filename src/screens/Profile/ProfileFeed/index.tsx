@@ -13,11 +13,12 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
-import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {type NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
-import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {
@@ -47,6 +48,7 @@ import {
 } from '#/screens/Profile/components/ProfileFeedHeader'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
+import {IS_NATIVE} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export function ProfileFeedScreen(props: Props) {
@@ -175,7 +177,7 @@ export function ProfileFeedScreenInner({
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: 0, // -headerHeight,
     })
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
@@ -204,7 +206,7 @@ export function ProfileFeedScreenInner({
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
-    return isNative && _isVideoFeed
+    return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
 
   return (
@@ -236,7 +238,7 @@ export function ProfileFeedScreenInner({
       {hasSession && (
         <FAB
           testID="composeFAB"
-          onPress={() => openComposer({})}
+          onPress={() => openComposer({logContext: 'Fab'})}
           icon={
             <ComposeIcon2
               strokeWidth={1.5}

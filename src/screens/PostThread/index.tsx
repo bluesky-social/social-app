@@ -6,7 +6,6 @@ import {Trans} from '@lingui/macro'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
-import {logger} from '#/logger'
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {
@@ -44,11 +43,13 @@ import {
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {useAnalytics} from '#/analytics'
 
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
 
 export function PostThread({uri}: {uri: string}) {
+  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
@@ -64,7 +65,6 @@ export function PostThread({uri}: {uri: string}) {
    */
   const thread = usePostThread({anchor: uri})
   const {anchor, hasParents} = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     let hasParents = false
     for (const item of thread.data.items) {
       if (item.type === 'threadPost' && item.depth === 0) {
@@ -85,18 +85,14 @@ export function PostThread({uri}: {uri: string}) {
       const post = anchor.value.post
       seenPostUriRef.current = post.uri
 
-      logger.metric(
-        'post:view',
-        {
-          uri: post.uri,
-          authorDid: post.author.did,
-          logContext: 'Post',
-          feedDescriptor: feedFeedback.feedDescriptor,
-        },
-        {statsig: false},
-      )
+      ax.metric('post:view', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext: 'Post',
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
     }
-  }, [anchor, feedFeedback.feedDescriptor])
+  }, [ax, anchor, feedFeedback.feedDescriptor])
 
   // Track post:view events for parent posts and replies (non-anchor posts)
   const trackThreadItemView = usePostViewTracking('PostThreadItem')
@@ -129,6 +125,7 @@ export function PostThread({uri}: {uri: string}) {
         langs: post.record.langs,
       },
       onPostSuccess: optimisticOnPostReply,
+      logContext: 'PostReply',
     })
 
     if (anchorPostSource) {

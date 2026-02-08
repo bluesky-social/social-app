@@ -9,8 +9,11 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
-import {logger} from '#/logger'
-import {STALE} from '#/state/queries'
+import {
+  PERSISTED_QUERY_GCTIME,
+  PERSISTED_QUERY_ROOT,
+  STALE,
+} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
@@ -24,23 +27,24 @@ import {useAgent} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
 import {useAgeAssurance} from '#/ageAssurance'
 import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
+import {useAnalytics} from '#/analytics'
 
 export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/types'
 
-const preferencesQueryKeyRoot = 'getPreferences'
-export const preferencesQueryKey = [preferencesQueryKeyRoot]
+export const preferencesQueryKey = [PERSISTED_QUERY_ROOT, 'getPreferences']
 
 export function usePreferencesQuery() {
   const agent = useAgent()
   const aa = useAgeAssurance()
 
-  return useQuery({
+  const query = useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
     structuralSharing: replaceEqualDeep,
     refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
+    gcTime: PERSISTED_QUERY_GCTIME,
     queryFn: async () => {
       if (!agent.did) {
         return DEFAULT_LOGGED_OUT_PREFERENCES
@@ -92,6 +96,15 @@ export function usePreferencesQuery() {
       [aa],
     ),
   })
+
+  if (query.data?.birthDate) {
+    /**
+     * The persisted query cache stores dates as strings, but our code expects a `Date`.
+     */
+    query.data.birthDate = new Date(query.data.birthDate)
+  }
+
+  return query
 }
 
 export function useClearPreferencesMutation() {
@@ -110,6 +123,7 @@ export function useClearPreferencesMutation() {
 }
 
 export function usePreferencesSetContentLabelMutation() {
+  const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
 
@@ -120,11 +134,7 @@ export function usePreferencesSetContentLabelMutation() {
   >({
     mutationFn: async ({label, visibility, labelerDid}) => {
       await agent.setContentLabelPref(label, visibility, labelerDid)
-      logger.metric(
-        'moderation:changeLabelPreference',
-        {preference: visibility},
-        {statsig: true},
-      )
+      ax.metric('moderation:changeLabelPreference', {preference: visibility})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -417,6 +427,7 @@ export function useSetActiveProgressGuideMutation() {
 }
 
 export function useSetVerificationPrefsMutation() {
+  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -424,9 +435,9 @@ export function useSetVerificationPrefsMutation() {
     mutationFn: async prefs => {
       await agent.setVerificationPrefs(prefs)
       if (prefs.hideBadges) {
-        logger.metric('verification:settings:hideBadges', {}, {statsig: true})
+        ax.metric('verification:settings:hideBadges', {})
       } else {
-        logger.metric('verification:settings:unHideBadges', {}, {statsig: true})
+        ax.metric('verification:settings:unHideBadges', {})
       }
       // triggers a refetch
       await queryClient.invalidateQueries({

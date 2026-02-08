@@ -12,7 +12,6 @@ import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {isAndroid} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, platform, useTheme, web} from '#/alf'
@@ -21,6 +20,7 @@ import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {IS_ANDROID} from '#/env'
 import {TimeElapsed} from './TimeElapsed'
 import {PreviewableUserAvatar} from './UserAvatar'
 
@@ -152,14 +152,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 a.pl_xs,
                 a.text_md,
                 a.leading_tight,
-                isAndroid && a.flex_grow,
+                IS_ANDROID && a.flex_grow,
                 a.text_right,
                 t.atoms.text_contrast_medium,
                 web({
                   whiteSpace: 'nowrap',
                 }),
               ]}>
-              {!isAndroid && (
+              {!IS_ANDROID && (
                 <Text
                   style={[
                     a.text_md,

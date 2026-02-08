@@ -5,6 +5,8 @@ import {CARD_ASPECT_RATIO} from '#/lib/constants'
 import {native, platform, web} from '#/alf/util/platform'
 import * as Layout from '#/components/Layout'
 
+const EXP_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)'
+
 export const atoms = {
   ...baseAtoms,
 
@@ -103,7 +105,7 @@ export const atoms = {
   }),
   // special composite animation for dialogs
   zoom_fade_in: web({
-    animation: 'zoomIn ease-out 0.1s, fadeIn ease-out 0.1s',
+    animation: `zoomIn ${EXP_CURVE} 0.3s, fadeIn ${EXP_CURVE} 0.3s`,
   }),
 
   /**

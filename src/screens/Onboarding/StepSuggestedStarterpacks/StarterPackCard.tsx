@@ -19,6 +19,7 @@ import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Che
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import * as bsky from '#/types/bsky'
 
 const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
@@ -30,6 +31,7 @@ export function StarterPackCard({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
   const agent = useAgent()
@@ -89,7 +91,7 @@ export function StarterPackCard({
       }
     })
     Toast.show(_(msg`All accounts have been followed!`), {type: 'success'})
-    logger.metric('starterPack:followAll', {
+    ax.metric('starterPack:followAll', {
       logContext: 'Onboarding',
       starterPack: view.uri,
       count: dids.length,

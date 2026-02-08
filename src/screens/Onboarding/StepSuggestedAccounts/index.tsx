@@ -9,8 +9,6 @@ import * as bcp47Match from 'bcp-47-match'
 import {wait} from '#/lib/async/wait'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -31,11 +29,14 @@ import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../util'
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
@@ -92,10 +93,21 @@ export function StepSuggestedAccounts() {
 
   const {mutate: followAll, isPending: isFollowingAll} = useMutation({
     onMutate: () => {
-      logger.metric('onboarding:suggestedAccounts:followAllPressed', {
+      ax.metric('onboarding:suggestedAccounts:followAllPressed', {
         tab: selectedInterest ?? 'all',
         numAccounts: followableDids.length,
       })
+      for (let i = 0; i < followableDids.length; i++) {
+        const did = followableDids[i]
+        ax.metric('suggestedUser:follow', {
+          logContext: 'Onboarding',
+          location: 'FollowAll',
+          recId: suggestedUsers?.recId,
+          position: i,
+          suggestedDid: did,
+          category: selectedInterest,
+        })
+      }
     },
     mutationFn: async () => {
       for (const did of followableDids) {
@@ -132,20 +144,16 @@ export function StepSuggestedAccounts() {
     (did: string, position: number) => {
       if (!seenProfilesRef.current.has(did)) {
         seenProfilesRef.current.add(did)
-        logger.metric(
-          'suggestedUser:seen',
-          {
-            logContext: 'Onboarding',
-            recId: undefined,
-            position,
-            suggestedDid: did,
-            category: selectedInterest,
-          },
-          {statsig: true},
-        )
+        ax.metric('suggestedUser:seen', {
+          logContext: 'Onboarding',
+          recId: suggestedUsers?.recId,
+          position,
+          suggestedDid: did,
+          category: selectedInterest,
+        })
       }
     },
-    [selectedInterest],
+    [ax, selectedInterest, suggestedUsers?.recId],
   )
 
   return (
@@ -161,7 +169,7 @@ export function StepSuggestedAccounts() {
         style={[
           a.overflow_hidden,
           a.mt_sm,
-          isWeb
+          IS_WEB
             ? [a.max_w_full, web({minHeight: '100vh'})]
             : {marginHorizontal: tokens.space.xl * -1},
           a.flex_1,
@@ -213,7 +221,7 @@ export function StepSuggestedAccounts() {
               a.mt_md,
               a.border_y,
               t.atoms.border_contrast_low,
-              isWeb && [a.border_x, a.rounded_sm, a.overflow_hidden],
+              IS_WEB && [a.border_x, a.rounded_sm, a.overflow_hidden],
             ]}>
             {suggestedUsers?.actors.map((user, index) => (
               <SuggestedProfileCard
@@ -223,6 +231,7 @@ export function StepSuggestedAccounts() {
                 position={index}
                 category={selectedInterest}
                 onSeen={onProfileSeen}
+                recId={suggestedUsers.recId}
               />
             ))}
           </View>
@@ -237,7 +246,7 @@ export function StepSuggestedAccounts() {
               color="secondary"
               size="large"
               label={_(msg`Retry`)}
-              onPress={() => refetch()}>
+              onPress={() => void refetch()}>
               <ButtonText>
                 <Trans>Retry</Trans>
               </ButtonText>
@@ -297,6 +306,7 @@ function TabBar({
   defaultTabLabel?: string
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
@@ -309,11 +319,7 @@ function TabBar({
         selectedInterest || (hideDefaultTab ? interests[0] : 'all')
       }
       onSelectTab={tab => {
-        logger.metric(
-          'onboarding:suggestedAccounts:tabPressed',
-          {tab: tab},
-          {statsig: true},
-        )
+        ax.metric('onboarding:suggestedAccounts:tabPressed', {tab: tab})
         onSelectInterest(tab === 'all' ? null : tab)
       }}
       interestsDisplayNames={
@@ -324,7 +330,7 @@ function TabBar({
               ...interestsDisplayNames,
             }
       }
-      gutterWidth={isWeb ? 0 : tokens.space.xl}
+      gutterWidth={IS_WEB ? 0 : tokens.space.xl}
     />
   )
 }
@@ -335,14 +341,17 @@ function SuggestedProfileCard({
   position,
   category,
   onSeen,
+  recId,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   position: number
   category: string | null
   onSeen: (did: string, position: number) => void
+  recId?: number | string
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const cardRef = useRef<View>(null)
   const hasTrackedRef = useRef(false)
 
@@ -350,7 +359,7 @@ function SuggestedProfileCard({
     const node = cardRef.current
     if (!node || hasTrackedRef.current) return
 
-    if (isWeb && typeof IntersectionObserver !== 'undefined') {
+    if (IS_WEB && typeof IntersectionObserver !== 'undefined') {
       const observer = new IntersectionObserver(
         entries => {
           if (entries[0]?.isIntersecting && !hasTrackedRef.current) {
@@ -403,18 +412,14 @@ function SuggestedProfileCard({
             withIcon={false}
             logContext="OnboardingSuggestedAccounts"
             onFollow={() => {
-              logger.metric(
-                'suggestedUser:follow',
-                {
-                  logContext: 'Onboarding',
-                  location: 'Card',
-                  recId: undefined,
-                  position,
-                  suggestedDid: profile.did,
-                  category,
-                },
-                {statsig: true},
-              )
+              ax.metric('suggestedUser:follow', {
+                logContext: 'Onboarding',
+                location: 'Card',
+                recId,
+                position,
+                suggestedDid: profile.did,
+                category,
+              })
             }}
           />
         </ProfileCard.Header>

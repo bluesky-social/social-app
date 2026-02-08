@@ -7,19 +7,21 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
-import {GCP_PROJECT_ID} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {GCP_PROJECT_ID, IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
 
 const CAPTCHA_PATH =
-  isWeb || GCP_PROJECT_ID === 0 ? '/gate/signup' : '/gate/signup/attempt-attest'
+  IS_WEB || GCP_PROJECT_ID === 0
+    ? '/gate/signup'
+    : '/gate/signup/attempt-attest'
 
 export function StepCaptcha() {
-  if (isWeb) {
+  if (IS_WEB) {
     return <StepCaptchaInner />
   } else {
     return <StepCaptchaNative />
@@ -35,7 +37,7 @@ export function StepCaptchaNative() {
     ;(async () => {
       logger.debug('trying to generate attestation token...')
       try {
-        if (isIOS) {
+        if (IS_IOS) {
           logger.debug('starting to generate devicecheck token...')
           const token = await ReactNativeDeviceAttest.getDeviceCheckToken()
           setToken(token)
@@ -69,6 +71,7 @@ function StepCaptchaInner({
   payload?: string
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
 
@@ -85,10 +88,10 @@ function StepCaptchaInner({
     newUrl.searchParams.set('state', stateParam)
     newUrl.searchParams.set('colorScheme', theme.name)
 
-    if (isNative && token) {
+    if (IS_NATIVE && token) {
       newUrl.searchParams.set('platform', Platform.OS)
       newUrl.searchParams.set('token', token)
-      if (isAndroid && payload) {
+      if (IS_ANDROID && payload) {
         newUrl.searchParams.set('payload', payload)
       }
     }
@@ -107,13 +110,13 @@ function StepCaptchaInner({
   const onSuccess = React.useCallback(
     (code: string) => {
       setCompleted(true)
-      logger.metric('signup:captchaSuccess', {}, {statsig: true})
+      ax.metric('signup:captchaSuccess', {})
       dispatch({
         type: 'submit',
         task: {verificationCode: code, mutableProcessed: false},
       })
     },
-    [dispatch],
+    [ax, dispatch],
   )
 
   const onError = React.useCallback(
@@ -122,13 +125,13 @@ function StepCaptchaInner({
         type: 'setError',
         value: _(msg`Error receiving captcha response.`),
       })
-      logger.metric('signup:captchaFailure', {}, {statsig: true})
+      ax.metric('signup:captchaFailure', {})
       logger.error('Signup Flow Error', {
         registrationHandle: state.handle,
         error,
       })
     },
-    [_, dispatch, state.handle],
+    [_, ax, dispatch, state.handle],
   )
 
   const onBackPress = React.useCallback(() => {

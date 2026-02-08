@@ -1,12 +1,12 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
 
-import {isIOS} from '#/platform/detection'
 import {atoms as a} from '#/alf'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {usePolicyUpdateContext} from '#/components/PolicyUpdateOverlay/context'
 import {Portal} from '#/components/PolicyUpdateOverlay/Portal'
 import {Content} from '#/components/PolicyUpdateOverlay/updates/202508'
+import {IS_IOS} from '#/env'
 
 export {Provider} from '#/components/PolicyUpdateOverlay/context'
 export {usePolicyUpdateContext} from '#/components/PolicyUpdateOverlay/context'
@@ -39,7 +39,7 @@ export function PolicyUpdateOverlay() {
             // setting a zIndex when using FullWindowOverlay on iOS
             // means the taps pass straight through to the underlying content (???)
             // so don't set it on iOS. FullWindowOverlay already does the job.
-            !isIOS && {zIndex: 9999},
+            !IS_IOS && {zIndex: 9999},
           ]}>
           <Content state={state} />
         </View>

@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useRef} from 'react'
 import {Keyboard} from 'react-native'
+import {File} from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -11,13 +12,14 @@ import {
 } from '#/lib/hooks/usePermissions'
 import {openUnifiedPicker} from '#/lib/media/picker'
 import {extractDataUriMime} from '#/lib/media/util'
-import {isNative, isWeb} from '#/platform/detection'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as toast from '#/components/Toast'
+import {IS_NATIVE, IS_WEB} from '#/env'
+import {isAnimatedGif} from './videos/isAnimatedGif'
 
 export type SelectMediaButtonProps = {
   disabled?: boolean
@@ -91,7 +93,7 @@ const SUPPORTED_IMAGE_MIME_TYPES = (
     'image/svg+xml',
     'image/webp',
     'image/avif',
-    isNative && 'image/heic',
+    IS_NATIVE && 'image/heic',
   ] as const
 ).filter(Boolean)
 type SupportedImageMimeType = Exclude<
@@ -128,7 +130,7 @@ const extensionToMimeType: Record<
  * `mimeType`. If `mimeType` is not available, we try to infer it through
  * various means.
  */
-function classifyImagePickerAsset(asset: ImagePickerAsset):
+async function classifyImagePickerAsset(asset: ImagePickerAsset): Promise<
   | {
       success: true
       type: AssetType
@@ -138,7 +140,8 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
       success: false
       type: undefined
       mimeType: undefined
-    } {
+    }
+> {
   /*
    * Try to use the `mimeType` reported by `expo-image-picker` first.
    */
@@ -178,7 +181,22 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
    */
   let type: AssetType | undefined
   if (mimeType === 'image/gif') {
-    type = 'gif'
+    let bytes: ArrayBuffer | undefined
+    if (IS_WEB) {
+      bytes = await asset.file?.arrayBuffer()
+    } else {
+      const file = new File(asset.uri)
+      if (file.exists) {
+        bytes = await file.arrayBuffer()
+      }
+    }
+    if (bytes) {
+      const {isAnimated} = isAnimatedGif(bytes)
+      type = isAnimated ? 'gif' : 'image'
+    } else {
+      // If we can't read the file, assume it's animated
+      type = 'gif'
+    }
   } else if (mimeType?.startsWith('video/')) {
     type = 'video'
   } else if (mimeType?.startsWith('image/')) {
@@ -236,7 +254,7 @@ async function processImagePickerAssets(
   let supportedAssets: ValidatedImagePickerAsset[] = []
 
   for (const asset of assets) {
-    const {success, type, mimeType} = classifyImagePickerAsset(asset)
+    const {success, type, mimeType} = await classifyImagePickerAsset(asset)
 
     if (!success) {
       errors.add(SelectedAssetError.Unsupported)
@@ -261,7 +279,7 @@ async function processImagePickerAssets(
        * We don't care too much about mimeType at this point on native,
        * since the `processVideo` step later on will convert to `.mp4`.
        */
-      if (isWeb && !isSupportedVideoMimeType(mimeType)) {
+      if (IS_WEB && !isSupportedVideoMimeType(mimeType)) {
         errors.add(SelectedAssetError.Unsupported)
         continue
       }
@@ -271,7 +289,7 @@ async function processImagePickerAssets(
        * to filter out large files on web. On native, we compress these anyway,
        * so we only check on web.
        */
-      if (isWeb && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -290,7 +308,7 @@ async function processImagePickerAssets(
        * to filter out large files on web. On native, we compress GIFs as
        * videos anyway, so we only check on web.
        */
-      if (isWeb && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -308,7 +326,7 @@ async function processImagePickerAssets(
        * base64 data-uri, so we construct it here for web only.
        */
       uri:
-        isWeb && asset.base64
+        IS_WEB && asset.base64
           ? `data:${mimeType};base64,${asset.base64}`
           : asset.uri,
     })
@@ -327,7 +345,7 @@ async function processImagePickerAssets(
       }
 
       if (supportedAssets[0].duration) {
-        if (isWeb) {
+        if (IS_WEB) {
           /*
            * Web reports duration as seconds
            */
@@ -432,7 +450,7 @@ export function SelectMediaButton({
   )
 
   const onPressSelectMedia = useCallback(async () => {
-    if (isNative) {
+    if (IS_NATIVE) {
       const [photoAccess, videoAccess] = await Promise.all([
         requestPhotoAccessIfNeeded(),
         requestVideoAccessIfNeeded(),
@@ -446,7 +464,7 @@ export function SelectMediaButton({
       }
     }
 
-    if (isNative && Keyboard.isVisible()) {
+    if (IS_NATIVE && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
 
@@ -469,7 +487,7 @@ export function SelectMediaButton({
   useEffect(() => {
     if (autoOpen && !hasAutoOpened.current && !disabled) {
       hasAutoOpened.current = true
-      onPressSelectMedia()
+      void onPressSelectMedia()
     }
   }, [autoOpen, disabled, onPressSelectMedia])
 

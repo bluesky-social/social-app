@@ -17,18 +17,32 @@ export const geolocation: Geolocation | undefined = enabled
     }
   : undefined
 
-export const deviceGeolocation: Geolocation | undefined = enabled
-  ? {
-      countryCode: 'AA',
-      regionCode: undefined,
-    }
-  : undefined
+const deviceGeolocationEnabled = false || IS_E2E
+export const deviceGeolocation: Geolocation | undefined =
+  enabled && deviceGeolocationEnabled
+    ? {
+        countryCode: 'AA',
+        regionCode: undefined,
+      }
+    : undefined
 
 export const config: AppBskyAgeassuranceDefs.Config = {
   regions: [
     {
       countryCode: 'AA',
       regionCode: undefined,
+      minAccessAge: 13,
+      rules: [
+        {
+          $type: ids.Default,
+          access: 'full',
+        },
+      ],
+    },
+    {
+      countryCode: 'BB',
+      regionCode: undefined,
+      minAccessAge: 16,
       rules: [
         {
           $type: ids.Default,

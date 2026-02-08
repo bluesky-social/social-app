@@ -3,10 +3,10 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isFirefox, isTouchDevice} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {IS_WEB_FIREFOX, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {formatTime} from './utils'
 
 export function Scrubber({
@@ -100,7 +100,7 @@ export function Scrubber({
     // a pointerUp event is fired outside the element that captured the
     // pointer. Firefox clicks on the element the mouse is over, so we have
     // to make everything unclickable while seeking -sfn
-    if (isFirefox && scrubberActive) {
+    if (IS_WEB_FIREFOX && scrubberActive) {
       document.body.classList.add('force-no-clicks')
 
       return () => {
@@ -151,7 +151,7 @@ export function Scrubber({
     <View
       testID="scrubber"
       style={[
-        {height: isTouchDevice ? 32 : 18, width: '100%'},
+        {height: IS_WEB_TOUCH_DEVICE ? 32 : 18, width: '100%'},
         a.flex_shrink_0,
         a.px_xs,
       ]}

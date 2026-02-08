@@ -9,10 +9,8 @@ import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
-import {logEvent} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -31,12 +29,14 @@ import {
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
-import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ProgressGuideTask} from './Task'
 
@@ -60,10 +60,17 @@ type Item =
       key: string
     }
 
-export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
+export function FollowDialog({
+  guide,
+  showArrow,
+}: {
+  guide: Follow10ProgressGuide
+  showArrow?: boolean
+}) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const control = Dialog.useDialogControl()
-  const {gtMobile} = useBreakpoints()
+  const {gtPhone} = useBreakpoints()
   const {height: minHeight} = useWindowDimensions()
 
   return (
@@ -72,15 +79,14 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
         label={_(msg`Find people to follow`)}
         onPress={() => {
           control.open()
-          logEvent('progressGuide:followDialog:open', {})
+          ax.metric('progressGuide:followDialog:open', {})
         }}
-        size={gtMobile ? 'small' : 'large'}
-        color="primary"
-        variant="solid">
-        <ButtonIcon icon={PersonGroupIcon} />
+        size={gtPhone ? 'small' : 'large'}
+        color="primary">
         <ButtonText>
           <Trans>Find people to follow</Trans>
         </ButtonText>
+        {showArrow && <ButtonIcon icon={ArrowRightIcon} />}
       </Button>
       <Dialog.Outer control={control} nativeOptions={{minHeight}}>
         <Dialog.Handle />
@@ -113,6 +119,7 @@ let lastSearchText = ''
 
 function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
   const personalizedInterests = preferences?.interests?.tags
@@ -201,6 +208,15 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
       }
     }
 
+    if (
+      hasSearchText &&
+      !isFetchingSearchResults &&
+      !_items.length &&
+      !isSearchResultsError
+    ) {
+      _items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
+    }
+
     return _items
   }, [
     _,
@@ -213,16 +229,8 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
     currentAccount?.did,
     hasSearchText,
     resultsKey,
+    isSearchResultsError,
   ])
-
-  if (
-    searchText &&
-    !isFetchingSearchResults &&
-    !items.length &&
-    !isSearchResultsError
-  ) {
-    items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
-  }
 
   const renderItems = useCallback(
     ({item, index}: {item: Item; index: number}) => {
@@ -256,7 +264,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const selectedInterestRef = useRef(selectedInterest)
   selectedInterestRef.current = selectedInterest
 
-  const onViewableItemsChanged = useRef(
+  const onViewableItemsChanged = useNonReactiveCallback(
     ({viewableItems}: {viewableItems: ViewToken[]}) => {
       for (const viewableItem of viewableItems) {
         const item = viewableItem.item as Item
@@ -266,25 +274,24 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
             const position = itemsRef.current.findIndex(
               i => i.type === 'profile' && i.profile.did === item.profile.did,
             )
-            logger.metric(
-              'suggestedUser:seen',
-              {
-                logContext: 'ProgressGuide',
-                recId: undefined,
-                position: position !== -1 ? position : 0,
-                suggestedDid: item.profile.did,
-                category: selectedInterestRef.current,
-              },
-              {statsig: true},
-            )
+            ax.metric('suggestedUser:seen', {
+              logContext: 'ProgressGuide',
+              recId: hasSearchText ? undefined : suggestions?.recId,
+              position: position !== -1 ? position : 0,
+              suggestedDid: item.profile.did,
+              category: selectedInterestRef.current,
+            })
           }
         }
       }
     },
-  ).current
-  const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 50,
-  }).current
+  )
+  const viewabilityConfig = useMemo(
+    () => ({
+      itemVisiblePercentThreshold: 50,
+    }),
+    [],
+  )
 
   const onSelectTab = useCallback(
     (interest: string) => {
@@ -426,7 +433,7 @@ function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
         <Trans>Find people to follow</Trans>
       </Text>
       {guide && (
-        <View style={isWeb && {paddingRight: 36}}>
+        <View style={IS_WEB && {paddingRight: 36}}>
           <ProgressGuideTask
             current={guide.numFollows + 1}
             total={10 + 1}
@@ -435,12 +442,12 @@ function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
           />
         </View>
       )}
-      {isWeb ? (
+      {IS_WEB ? (
         <Button
           label={_(msg`Close`)}
           size="small"
           shape="round"
-          variant={isWeb ? 'ghost' : 'solid'}
+          variant={IS_WEB ? 'ghost' : 'solid'}
           color="secondary"
           style={[
             a.absolute,
@@ -574,7 +581,7 @@ function FollowProfileCardInner({
           <ProfileCard.Outer>
             <ProfileCard.Header>
               <ProfileCard.Avatar
-                disabledPreview={!isWeb}
+                disabledPreview={!IS_WEB}
                 profile={profile}
                 moderationOpts={moderationOpts}
               />

@@ -1,12 +1,12 @@
 import {type AppBskyActorDefs} from '@atproto/api'
 
-import {type useGate} from '#/lib/statsig/statsig'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {type SessionAccount} from '#/state/session'
+import {type AnalyticsContextType} from '#/analytics'
 import {type Geolocation} from '#/geolocation'
 
 export type EnabledCheckProps = {
-  gate: ReturnType<typeof useGate>
+  features: AnalyticsContextType['features']
   currentAccount: SessionAccount
   currentProfile: AppBskyActorDefs.ProfileViewDetailed
   preferences: UsePreferencesQueryResponse

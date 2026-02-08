@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 
 import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
-import {isNative, isWeb} from '#/platform/detection'
 import {
   toPostLanguages,
   useLanguagePrefs,
@@ -21,6 +20,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import * as Toggle from '#/components/forms/Toggle'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function PostLanguageSelectDialog({
   control,
@@ -168,7 +168,7 @@ export function DialogInner({
 
   const listHeader = (
     <View
-      style={[a.pb_xs, t.atoms.bg, isNative && a.pt_2xl]}
+      style={[a.pb_xs, t.atoms.bg, IS_NATIVE && a.pt_2xl]}
       onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}>
       <View style={[a.flex_row, a.w_full, a.justify_between]}>
         <View>
@@ -195,7 +195,7 @@ export function DialogInner({
           </Text>
         </View>
 
-        {isWeb && (
+        {IS_WEB && (
           <Button
             variant="ghost"
             size="small"
@@ -252,7 +252,7 @@ export function DialogInner({
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
         contentContainerStyle={[a.gap_0]}
-        style={[isNative && a.px_lg, web({paddingBottom: 120})]}
+        style={[IS_NATIVE && a.px_lg, web({paddingBottom: 120})]}
         scrollIndicatorInsets={{top: headerHeight}}
         renderItem={({item, index}) => {
           if (item.type === 'header') {

@@ -52,6 +52,7 @@ export function TextInput({
   onPressPublish,
   onNewLink,
   onFocus,
+  autoFocus,
 }: TextInputProps) {
   const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
@@ -241,23 +242,13 @@ export function TextInput({
           }
         },
       },
-      content: generateJSON(richtext.text.toString(), extensions, {
+      content: generateJSON(richTextToHTML(richtext), extensions, {
         preserveWhitespace: 'full',
       }),
-      autofocus: 'end',
+      autofocus: autoFocus ? 'end' : null,
       editable: true,
       injectCSS: true,
       shouldRerenderOnTransaction: false,
-      onCreate({editor: editorProp}) {
-        // HACK
-        // the 'enter' animation sometimes causes autofocus to fail
-        // (see Composer.web.tsx in shell)
-        // so we wait 200ms (the anim is 150ms) and then focus manually
-        // -prf
-        setTimeout(() => {
-          editorProp.chain().focus('end').run()
-        }, 200)
-      },
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
         const newText = editorJsonToText(json)
@@ -380,6 +371,36 @@ export function TextInput({
       )}
     </>
   )
+}
+
+/**
+ * Helper function to initialise the editor with RichText, which expects HTML
+ *
+ * All the extensions are able to initialise themselves from plain text, *except*
+ * for the Mention extension - we need to manually convert it into a `<span>` element
+ *
+ * It also escapes HTML characters
+ */
+function richTextToHTML(richtext: RichText): string {
+  let html = ''
+
+  for (const segment of richtext.segments()) {
+    if (segment.mention) {
+      html += `<span data-type="mention" data-id="${escapeHTML(segment.mention.did)}"></span>`
+    } else {
+      html += escapeHTML(segment.text)
+    }
+  }
+
+  return html
+}
+
+function escapeHTML(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
 }
 
 function editorJsonToText(

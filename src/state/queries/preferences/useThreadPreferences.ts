@@ -2,13 +2,13 @@ import {useCallback, useMemo, useRef, useState} from 'react'
 import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
-import {OnceKey, useCallOnce} from '#/lib/hooks/useCallOnce'
-import {logger} from '#/logger'
+import {useCallOnce} from '#/lib/once'
 import {
   usePreferencesQuery,
   useSetThreadViewPreferencesMutation,
 } from '#/state/queries/preferences'
 import {type ThreadViewPreferences} from '#/state/queries/preferences/types'
+import {useAnalytics} from '#/analytics'
 import {type Literal} from '#/types/utils'
 
 export type ThreadSortOption = Literal<
@@ -28,9 +28,10 @@ export type ThreadPreferences = {
 export function useThreadPreferences({
   save,
 }: {save?: boolean} = {}): ThreadPreferences {
+  const ax = useAnalytics()
   const {data: preferences} = usePreferencesQuery()
   const serverPrefs = preferences?.threadViewPrefs
-  const once = useCallOnce(OnceKey.PreferencesThread)
+  const once = useCallOnce()
 
   /*
    * Create local state representations of server state
@@ -61,7 +62,7 @@ export function useThreadPreferences({
     )
 
     once(() => {
-      logger.metric('thread:preferences:load', {
+      ax.metric('thread:preferences:load', {
         sort: serverPrefs.sort,
         view: serverPrefs.lab_treeViewEnabled ? 'tree' : 'linear',
       })
@@ -76,12 +77,12 @@ export function useThreadPreferences({
       try {
         setIsSaving(true)
         await mutateAsync(prefs)
-        logger.metric('thread:preferences:update', {
+        ax.metric('thread:preferences:update', {
           sort: prefs.sort,
           view: prefs.lab_treeViewEnabled ? 'tree' : 'linear',
         })
       } catch (e) {
-        logger.error('useThreadPreferences failed to save', {
+        ax.logger.error('useThreadPreferences failed to save', {
           safeMessage: e,
         })
       } finally {

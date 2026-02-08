@@ -1,15 +1,9 @@
-import React from 'react'
+import {createContext, useCallback, useContext, useId, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {
-  atoms as a,
-  useBreakpoints,
-  useTheme,
-  type ViewStyleProp,
-  web,
-} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp, web} from '#/alf'
 import {Button, type ButtonColor, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
@@ -20,7 +14,7 @@ export {
   useDialogControl as usePromptControl,
 } from '#/components/Dialog'
 
-const Context = React.createContext<{
+const Context = createContext<{
   titleId: string
   descriptionId: string
 }>({
@@ -37,12 +31,15 @@ export function Outer({
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
+  /**
+   * Native-specific options for the prompt. Extends `BottomSheetViewProps`
+   */
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
 }>) {
-  const titleId = React.useId()
-  const descriptionId = React.useId()
+  const titleId = useId()
+  const descriptionId = useId()
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({titleId, descriptionId}),
     [titleId, descriptionId],
   )
@@ -58,7 +55,7 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={web({maxWidth: 400})}>
+          style={web([{maxWidth: 320, borderRadius: 36}])}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -70,7 +67,7 @@ export function TitleText({
   children,
   style,
 }: React.PropsWithChildren<ViewStyleProp>) {
-  const {titleId} = React.useContext(Context)
+  const {titleId} = useContext(Context)
   return (
     <Text
       nativeID={titleId}
@@ -78,7 +75,7 @@ export function TitleText({
         a.flex_1,
         a.text_2xl,
         a.font_semi_bold,
-        a.pb_sm,
+        a.pb_xs,
         a.leading_snug,
         style,
       ]}>
@@ -92,7 +89,7 @@ export function DescriptionText({
   selectable,
 }: React.PropsWithChildren<{selectable?: boolean}>) {
   const t = useTheme()
-  const {descriptionId} = React.useContext(Context)
+  const {descriptionId} = useContext(Context)
   return (
     <Text
       nativeID={descriptionId}
@@ -103,22 +100,12 @@ export function DescriptionText({
   )
 }
 
-export function Actions({children}: React.PropsWithChildren<{}>) {
-  const {gtMobile} = useBreakpoints()
+export function Actions({children}: {children: React.ReactNode}) {
+  return <View style={[a.w_full, a.gap_sm, a.justify_end]}>{children}</View>
+}
 
-  return (
-    <View
-      style={[
-        a.w_full,
-        a.gap_md,
-        a.justify_end,
-        gtMobile
-          ? [a.flex_row, a.flex_row_reverse, a.justify_start]
-          : [a.flex_col],
-      ]}>
-      {children}
-    </View>
-  )
+export function Content({children}: {children: React.ReactNode}) {
+  return <View style={[a.pb_sm]}>{children}</View>
 }
 
 export function Cancel({
@@ -130,9 +117,8 @@ export function Cancel({
   cta?: string
 }) {
   const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     close()
   }, [close])
 
@@ -140,7 +126,7 @@ export function Cancel({
     <Button
       variant="solid"
       color="secondary"
-      size={gtMobile ? 'small' : 'large'}
+      size={'large'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
       <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
@@ -170,9 +156,8 @@ export function Action({
   testID?: string
 }) {
   const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
-  const handleOnPress = React.useCallback(
+  const handleOnPress = useCallback(
     (e: GestureResponderEvent) => {
       close(() => onPress?.(e))
     },
@@ -181,9 +166,8 @@ export function Action({
 
   return (
     <Button
-      variant="solid"
       color={color}
-      size={gtMobile ? 'small' : 'large'}
+      size={'large'}
       label={cta || _(msg`Confirm`)}
       onPress={handleOnPress}
       testID={testID}>
@@ -220,8 +204,10 @@ export function Basic({
 }>) {
   return (
     <Outer control={control} testID="confirmModal">
-      <TitleText>{title}</TitleText>
-      {description && <DescriptionText>{description}</DescriptionText>}
+      <Content>
+        <TitleText>{title}</TitleText>
+        {description && <DescriptionText>{description}</DescriptionText>}
+      </Content>
       <Actions>
         <Action
           cta={confirmButtonCta}

@@ -4,12 +4,14 @@ import {
   type AppBskyActorGetProfile,
   type AppBskyActorGetProfiles,
   type AppBskyActorProfile,
+  type AppBskyGraphGetFollows,
   AtUri,
   type BskyAgent,
   type ComAtprotoRepoUploadBlob,
   type Un$Typed,
 } from '@atproto/api'
 import {
+  type InfiniteData,
   keepPreviousData,
   type QueryClient,
   useMutation,
@@ -20,12 +22,12 @@ import {
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import {RQKEY as PROFILE_FOLLOWS_RQKEY} from '#/state/queries/profile-follows'
 import {
   unstableCacheProfileView,
   useUnstableProfileViewCache,
@@ -33,6 +35,8 @@ import {
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
+import {useAnalytics} from '#/analytics'
+import {type Metrics, toClout} from '#/analytics/metrics'
 import type * as bsky from '#/types/bsky'
 import {
   ProgressGuideAction,
@@ -240,13 +244,13 @@ export function useProfileUpdateMutation() {
 
 export function useProfileFollowMutationQueue(
   profile: Shadow<bsky.profile.AnyProfileView>,
-  logContext: LogEvents['profile:follow']['logContext'] &
-    LogEvents['profile:follow']['logContext'],
+  logContext: Metrics['profile:follow']['logContext'],
   position?: number,
   contextProfileDid?: string,
 ) {
   const agent = useAgent()
   const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
   const followMutation = useProfileFollowMutation(
@@ -282,6 +286,47 @@ export function useProfileFollowMutationQueue(
       updateProfileShadow(queryClient, did, {
         followingUri: finalFollowingUri,
       })
+
+      // Optimistically update profile follows cache for avatar displays
+      if (currentAccount?.did) {
+        type FollowsQueryData =
+          InfiniteData<AppBskyGraphGetFollows.OutputSchema>
+        queryClient.setQueryData<FollowsQueryData>(
+          PROFILE_FOLLOWS_RQKEY(currentAccount.did),
+          old => {
+            if (!old?.pages?.[0]) return old
+            if (finalFollowingUri) {
+              // Add the followed profile to the beginning
+              const alreadyExists = old.pages[0].follows.some(
+                f => f.did === profile.did,
+              )
+              if (alreadyExists) return old
+              return {
+                ...old,
+                pages: [
+                  {
+                    ...old.pages[0],
+                    follows: [
+                      profile as AppBskyActorDefs.ProfileView,
+                      ...old.pages[0].follows,
+                    ],
+                  },
+                  ...old.pages.slice(1),
+                ],
+              }
+            } else {
+              // Remove the unfollowed profile
+              return {
+                ...old,
+                pages: old.pages.map(page => ({
+                  ...page,
+                  follows: page.follows.filter(f => f.did !== profile.did),
+                })),
+              }
+            }
+          },
+        )
+      }
 
       if (finalFollowingUri) {
         agent.app.bsky.graph
@@ -319,11 +364,12 @@ export function useProfileFollowMutationQueue(
 }
 
 function useProfileFollowMutation(
-  logContext: LogEvents['profile:follow']['logContext'],
+  logContext: Metrics['profile:follow']['logContext'],
   profile: Shadow<bsky.profile.AnyProfileView>,
   position?: number,
   contextProfileDid?: string,
 ) {
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -336,7 +382,7 @@ function useProfileFollowMutation(
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
       captureAction(ProgressGuideAction.Follow)
-      logEvent('profile:follow', {
+      ax.metric('profile:follow', {
         logContext,
         didBecomeMutual: profile.viewer
           ? Boolean(profile.viewer.followedBy)
@@ -356,12 +402,13 @@ function useProfileFollowMutation(
 }
 
 function useProfileUnfollowMutation(
-  logContext: LogEvents['profile:unfollow']['logContext'],
+  logContext: Metrics['profile:unfollow']['logContext'],
 ) {
+  const ax = useAnalytics()
   const agent = useAgent()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
-      logEvent('profile:unfollow', {logContext})
+      ax.metric('profile:unfollow', {logContext})
       return await agent.deleteFollow(followUri)
     },
   })

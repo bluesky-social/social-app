@@ -12,9 +12,9 @@ import {useLingui} from '@lingui/react'
 import {ScaleAndFadeIn} from '#/lib/custom-animations/ScaleAndFade'
 import {ShrinkAndPop} from '#/lib/custom-animations/ShrinkAndPop'
 import {useHaptics} from '#/lib/haptics'
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -41,12 +41,12 @@ export function ChatEmptyPill() {
   }, [_])
 
   const onPressIn = React.useCallback(() => {
-    if (isWeb) return
+    if (IS_WEB) return
     scale.set(() => withTiming(1.075, {duration: 100}))
   }, [scale])
 
   const onPressOut = React.useCallback(() => {
-    if (isWeb) return
+    if (IS_WEB) return
     scale.set(() => withTiming(1, {duration: 100}))
   }, [scale])
 

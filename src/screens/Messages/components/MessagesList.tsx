@@ -24,8 +24,6 @@ import {
   isBskyPostUrl,
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {isWeb} from '#/platform/detection'
 import {
   type ActiveConvoStates,
   isConvoActive,
@@ -52,6 +50,8 @@ import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
+import {IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 
@@ -159,7 +159,7 @@ export function MessagesList({
     (_: number, height: number) => {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
-      if (isWeb && isAtTop.get() && hasScrolled) {
+      if (IS_WEB && isAtTop.get() && hasScrolled) {
         flatListRef.current?.scrollToOffset({
           offset: height - prevContentHeight.current,
           animated: false,
@@ -390,7 +390,7 @@ export function MessagesList({
     (e: LayoutChangeEvent) => {
       layoutHeight.set(e.nativeEvent.layout.height)
 
-      if (isWeb || !keyboardIsOpening.get()) {
+      if (IS_WEB || !keyboardIsOpening.get()) {
         flatListRef.current?.scrollToEnd({
           animated: !layoutScrollWithoutAnimation.get(),
         })
@@ -429,8 +429,8 @@ export function MessagesList({
           disableVirtualization={true}
           style={animatedListStyle}
           // The extra two items account for the header and the footer components
-          initialNumToRender={isNative ? 32 : 62}
-          maxToRenderPerBatch={isWeb ? 32 : 62}
+          initialNumToRender={IS_NATIVE ? 32 : 62}
+          maxToRenderPerBatch={IS_WEB ? 32 : 62}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
@@ -468,7 +468,7 @@ export function MessagesList({
         )}
       </Animated.View>
 
-      {isWeb && (
+      {IS_WEB && (
         <EmojiPicker
           pinToTop
           state={emojiPickerState}

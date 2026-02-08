@@ -65,7 +65,7 @@ export type TriggerProps = {
 
 export type TriggerChildProps =
   | {
-      isNative: true
+      IS_NATIVE: true
       control: DialogControlProps
       state: {
         /**
@@ -92,7 +92,7 @@ export type TriggerChildProps =
       }
     }
   | {
-      isNative: false
+      IS_NATIVE: false
       state: {
         hovered: boolean
         focused: boolean

@@ -11,47 +11,60 @@ import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isFirefox} from '#/lib/browser'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
+import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
   VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
+import {IS_WEB_FIREFOX} from '#/env'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
+
+const noop = () => {}
 
 export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
-  const {active, setActive, sendPosition, currentActiveView} =
-    useActiveVideoWeb()
+  const {
+    active: activeFromContext,
+    setActive,
+    sendPosition,
+    currentActiveView,
+  } = useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
   const lastKnownTime = useRef<number | undefined>(undefined)
 
+  const isGif = embed.presentation === 'gif'
+  // GIFs don't participate in the "one video at a time" system
+  const active = isGif || activeFromContext
+
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen && !isFirefox) return
+    if (isFullscreen && !IS_WEB_FIREFOX) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
         if (!entry) return
         setOnScreen(entry.isIntersecting)
-        sendPosition(
-          entry.boundingClientRect.y + entry.boundingClientRect.height / 2,
-        )
+        // GIFs don't send position - they don't compete to be the active video
+        if (!isGif) {
+          sendPosition(
+            entry.boundingClientRect.y + entry.boundingClientRect.height / 2,
+          )
+        }
       },
       {threshold: 0.5},
     )
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [sendPosition, isFullscreen])
+  }, [sendPosition, isFullscreen, isGif])
 
   const [key, setKey] = useState(0)
   const renderError = useCallback(
@@ -107,7 +120,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   return (
     <View style={[a.pt_xs]}>
       <ViewportObserver
-        sendPosition={sendPosition}
+        sendPosition={isGif ? noop : sendPosition}
         isAnyViewActive={currentActiveView !== null}>
         <ConstrainedImage
           fullBleed
@@ -150,7 +163,7 @@ function ViewportObserver({
   // observing a div of 100vh height
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen && !isFirefox) return
+    if (isFullscreen && !IS_WEB_FIREFOX) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]

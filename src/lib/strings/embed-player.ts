@@ -1,11 +1,10 @@
 import {Dimensions} from 'react-native'
 
-import {isSafari} from '#/lib/browser'
-import {isWeb} from '#/platform/detection'
+import {IS_WEB, IS_WEB_SAFARI} from '#/env'
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
-const IFRAME_HOST = isWeb
+const IFRAME_HOST = IS_WEB
   ? // @ts-ignore only for web
     window.location.host === 'localhost:8100'
     ? 'http://localhost:8100'
@@ -132,7 +131,7 @@ export function parseEmbedPlayerFromUrl(
     urlp.hostname === 'www.twitch.tv' ||
     urlp.hostname === 'm.twitch.tv'
   ) {
-    const parent = isWeb
+    const parent = IS_WEB
       ? // @ts-ignore only for web
         window.location.hostname
       : 'localhost'
@@ -559,8 +558,18 @@ export function parseTenorGif(urlp: URL):
     width: Number(w),
   }
 
-  if (isWeb) {
-    if (isSafari) {
+  // Validate dimensions are valid positive numbers
+  if (
+    isNaN(dimensions.height) ||
+    isNaN(dimensions.width) ||
+    dimensions.height <= 0 ||
+    dimensions.width <= 0
+  ) {
+    return {success: false}
+  }
+
+  if (IS_WEB) {
+    if (IS_WEB_SAFARI) {
       id = id.replace('AAAAC', 'AAAP1')
       filename = filename.replace('.gif', '.mp4')
     } else {

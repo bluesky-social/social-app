@@ -6,14 +6,15 @@ import {useLingui} from '@lingui/react'
 import type React from 'react'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
-import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useRequireAuth} from '#/state/session'
 import {useTheme} from '#/alf'
 import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
 export const BookmarkButton = memo(function BookmarkButton({
@@ -28,10 +29,12 @@ export const BookmarkButton = memo(function BookmarkButton({
   hitSlop?: Insets
 }): React.ReactNode {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
   const requireAuth = useRequireAuth()
+  const {feedDescriptor} = useFeedFeedbackContext()
 
   const {viewer} = post
   const isBookmarked = !!viewer?.bookmarked
@@ -50,7 +53,12 @@ export const BookmarkButton = memo(function BookmarkButton({
         post,
       })
 
-      logger.metric('post:bookmark', {logContext})
+      ax.metric('post:bookmark', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext,
+        feedDescriptor,
+      })
 
       toast.show(
         <toast.Outer>
@@ -85,7 +93,12 @@ export const BookmarkButton = memo(function BookmarkButton({
         uri: post.uri,
       })
 
-      logger.metric('post:unbookmark', {logContext})
+      ax.metric('post:unbookmark', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext,
+        feedDescriptor,
+      })
 
       toast.show(
         <toast.Outer>

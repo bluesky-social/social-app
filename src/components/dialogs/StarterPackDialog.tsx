@@ -11,8 +11,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   invalidateActorStarterPacksWithMembershipQuery,
   useActorStarterPacksWithMembershipsQuery,
@@ -32,6 +30,8 @@ import {StarterPack} from '#/components/icons/StarterPack'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 type StarterPackWithMembership =
@@ -91,7 +91,7 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
   const t = useTheme()
 
   return (
-    <View style={[a.gap_2xl, {paddingTop: isWeb ? 100 : 64}]}>
+    <View style={[a.gap_2xl, {paddingTop: IS_WEB ? 100 : 64}]}>
       <View style={[a.gap_xs, a.align_center]}>
         <StarterPack
           width={48}
@@ -169,7 +169,7 @@ function StarterPackList({
       <View
         style={[
           {justifyContent: 'space-between', flexDirection: 'row'},
-          isWeb ? a.mb_2xl : a.my_lg,
+          IS_WEB ? a.mb_2xl : a.my_lg,
           a.align_center,
         ]}>
         <Text style={[a.text_lg, a.font_semi_bold]}>
@@ -232,7 +232,7 @@ function StarterPackList({
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
-      style={isWeb ? [a.px_md, {minHeight: 500}] : [a.px_2xl, a.pt_lg]}
+      style={IS_WEB ? [a.px_md, {minHeight: 500}] : [a.px_2xl, a.pt_lg]}
     />
   )
 }
@@ -244,8 +244,9 @@ function StarterPackItem({
   starterPackWithMembership: StarterPackWithMembership
   targetDid: string
 }) {
-  const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const {_} = useLingui()
   const queryClient = useQueryClient()
 
   const starterPack = starterPackWithMembership.starterPack
@@ -304,7 +305,7 @@ function StarterPackItem({
         listUri: listUri,
         actorDid: targetDid,
       })
-      logger.metric('starterPack:addUser', {starterPack: starterPackUri})
+      ax.metric('starterPack:addUser', {starterPack: starterPackUri})
     } else {
       if (!starterPackWithMembership.listItem?.uri) {
         console.error('Cannot remove: missing membership URI')
@@ -316,7 +317,7 @@ function StarterPackItem({
         actorDid: targetDid,
         membershipUri: starterPackWithMembership.listItem.uri,
       })
-      logger.metric('starterPack:removeUser', {starterPack: starterPackUri})
+      ax.metric('starterPack:removeUser', {starterPack: starterPackUri})
     }
   }
 

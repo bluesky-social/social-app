@@ -22,7 +22,6 @@ import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp} from '#/lib/routes/types'
-import {isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {
@@ -41,6 +40,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
 import {AutocompleteResults} from './components/AutocompleteResults'
@@ -141,7 +141,7 @@ export function SearchScreenShell({
   const [headerHeight, setHeaderHeight] = useState(0)
   const headerRef = useRef(null)
   useLayoutEffect(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       if (!headerRef.current) return
       const measurement = (headerRef.current as Element).getBoundingClientRect()
       setHeaderHeight(measurement.height)
@@ -150,7 +150,7 @@ export function SearchScreenShell({
 
   useFocusEffect(
     useNonReactiveCallback(() => {
-      if (isWeb) {
+      if (IS_WEB) {
         setSearchText(queryParam)
       }
     }),
@@ -173,7 +173,7 @@ export function SearchScreenShell({
       setShowAutocomplete(false)
       updateSearchHistory(item)
 
-      if (isWeb) {
+      if (IS_WEB) {
         // @ts-expect-error route is not typesafe
         navigation.push(route.name, {...route.params, q: item})
       } else {
@@ -188,7 +188,7 @@ export function SearchScreenShell({
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocomplete(false)
-    if (isWeb) {
+    if (IS_WEB) {
       // Empty params resets the URL to be /search rather than /search?q=
       // Also clear the tab parameter
       const {
@@ -211,7 +211,7 @@ export function SearchScreenShell({
   }, [navigateToItem, searchText])
 
   const onAutocompleteResultPress = useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       setShowAutocomplete(false)
     } else {
       textInput.current?.blur()
@@ -238,7 +238,7 @@ export function SearchScreenShell({
   )
 
   const onSoftReset = useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       // Empty params resets the URL to be /search rather than /search?q=
       // Also clear the tab parameter when soft resetting
       const {
@@ -265,7 +265,7 @@ export function SearchScreenShell({
   )
 
   const onSearchInputFocus = useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       // Prevent a jump on iPad by ensuring that
       // the initial focused render has no result list.
       requestAnimationFrame(() => {
@@ -282,7 +282,7 @@ export function SearchScreenShell({
 
       // If a tab is specified, set the tab parameter
       if (tab) {
-        if (isWeb) {
+        if (IS_WEB) {
           navigation.setParams({...route.params, tab})
         } else {
           navigation.setParams({tab})
@@ -299,7 +299,7 @@ export function SearchScreenShell({
       <View
         ref={headerRef}
         onLayout={evt => {
-          if (isWeb) setHeaderHeight(evt.nativeEvent.layout.height)
+          if (IS_WEB) setHeaderHeight(evt.nativeEvent.layout.height)
         }}
         style={[
           a.relative,
@@ -581,7 +581,7 @@ function useQueryManager({
 }
 
 function scrollToTopWeb() {
-  if (isWeb) {
+  if (IS_WEB) {
     window.scrollTo(0, 0)
   }
 }

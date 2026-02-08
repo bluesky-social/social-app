@@ -12,16 +12,16 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
-import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLiveNowConfig} from '#/state/service-config'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {useDialogContext} from '#/components/Dialog'
+import {getLiveServiceNames} from '#/components/live/utils'
+import {useAnalytics} from '#/analytics'
 
 export function useLiveLinkMetaQuery(url: string | null) {
   const liveNowConfig = useLiveNowConfig()
-  const {currentAccount} = useSession()
   const {_} = useLingui()
 
   const agent = useAgent()
@@ -30,13 +30,16 @@ export function useLiveLinkMetaQuery(url: string | null) {
     queryKey: ['link-meta', url],
     queryFn: async () => {
       if (!url) return undefined
-      const config = liveNowConfig.find(cfg => cfg.did === currentAccount?.did)
-
-      if (!config) throw new Error(_(msg`You are not allowed to go live`))
-
       const urlp = new URL(url)
-      if (!config.domains.includes(urlp.hostname)) {
-        throw new Error(_(msg`${urlp.hostname} is not a valid URL`))
+      if (!liveNowConfig.currentAccountAllowedHosts.has(urlp.hostname)) {
+        const {formatted} = getLiveServiceNames(
+          liveNowConfig.currentAccountAllowedHosts,
+        )
+        throw new Error(
+          _(
+            msg`This service is not supported while the Live feature is in beta. Allowed services: ${formatted}.`,
+          ),
+        )
       }
 
       return await getLinkMeta(agent, url)
@@ -49,6 +52,7 @@ export function useUpsertLiveStatusMutation(
   linkMeta: LinkMeta | null | undefined,
   createdAt?: string,
 ) {
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -76,7 +80,7 @@ export function useUpsertLiveStatusMutation(
               thumb = blob.data.blob
             }
           } catch (e: any) {
-            logger.error(`Failed to upload thumbnail for live status`, {
+            ax.logger.error(`Failed to upload thumbnail for live status`, {
               url: linkMeta.url,
               image: linkMeta.image,
               safeMessage: e,
@@ -132,7 +136,7 @@ export function useUpsertLiveStatusMutation(
       }
     },
     onError: (e: any) => {
-      logger.error(`Failed to upsert live status`, {
+      ax.logger.error(`Failed to upsert live status`, {
         url: linkMeta?.url,
         image: linkMeta?.image,
         safeMessage: e,
@@ -140,17 +144,9 @@ export function useUpsertLiveStatusMutation(
     },
     onSuccess: ({record, image}) => {
       if (createdAt) {
-        logger.metric(
-          'live:edit',
-          {duration: record.durationMinutes},
-          {statsig: true},
-        )
+        ax.metric('live:edit', {duration: record.durationMinutes})
       } else {
-        logger.metric(
-          'live:create',
-          {duration: record.durationMinutes},
-          {statsig: true},
-        )
+        ax.metric('live:create', {duration: record.durationMinutes})
       }
 
       Toast.show(_(msg`You are now live!`))
@@ -186,6 +182,7 @@ export function useUpsertLiveStatusMutation(
 }
 
 export function useRemoveLiveStatusMutation() {
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -202,12 +199,12 @@ export function useRemoveLiveStatusMutation() {
       })
     },
     onError: (e: any) => {
-      logger.error(`Failed to remove live status`, {
+      ax.logger.error(`Failed to remove live status`, {
         safeMessage: e,
       })
     },
     onSuccess: () => {
-      logger.metric('live:remove', {}, {statsig: true})
+      ax.metric('live:remove', {})
       Toast.show(_(msg`You are no longer live`))
       control.close(() => {
         if (!currentAccount) return

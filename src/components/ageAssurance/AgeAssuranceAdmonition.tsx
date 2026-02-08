@@ -3,13 +3,14 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, select, useTheme, type ViewStyleProp} from '#/alf'
+import {AgeAssuranceConfigUnavailableError} from '#/components/ageAssurance/AgeAssuranceErrors'
 import {useDialogControl} from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import type * as Dialog from '#/components/Dialog'
 import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
-import {logger} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
 
 export function AgeAssuranceAdmonition({
   children,
@@ -19,6 +20,9 @@ export function AgeAssuranceAdmonition({
   const aa = useAgeAssurance()
 
   if (aa.state.access === aa.Access.Full) return null
+  if (aa.state.error === 'config') {
+    return <AgeAssuranceConfigUnavailableError style={style} />
+  }
 
   return (
     <Inner style={style} control={control}>
@@ -36,6 +40,7 @@ function Inner({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
 
   return (
     <>
@@ -88,7 +93,7 @@ function Inner({
                   to={'/settings/account'}
                   style={[a.text_sm, a.leading_snug, a.font_semi_bold]}
                   onPress={() => {
-                    logger.metric('ageAssurance:navigateToSettings', {})
+                    ax.metric('ageAssurance:navigateToSettings', {})
                   }}>
                   account settings.
                 </InlineLinkText>

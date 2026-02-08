@@ -11,12 +11,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isAndroidWeb} from '#/lib/browser'
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {logEvent} from '#/lib/statsig/statsig'
 import {createStarterPackGooglePlayUri} from '#/lib/strings/starter-pack'
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {
@@ -38,6 +35,8 @@ import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -120,6 +119,7 @@ function LandingScreenLoaded({
 }) {
   const {creator, listItemsSample, feeds} = starterPack
   const {_, i18n} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
@@ -142,12 +142,12 @@ function LandingScreenLoaded({
       postAppClipMessage({
         action: 'present',
       })
-    } else if (isAndroidWeb) {
+    } else if (IS_WEB_MOBILE_ANDROID) {
       androidDialogControl.open()
     } else {
       onContinue()
     }
-    logEvent('starterPack:ctaPress', {
+    ax.metric('starterPack:ctaPress', {
       starterPack: starterPack.uri,
     })
   }
@@ -326,15 +326,17 @@ function LandingScreenLoaded({
         setIsVisible={setAppClipOverlayVisible}
       />
       <Prompt.Outer control={androidDialogControl}>
-        <Prompt.TitleText>
-          <Trans>Download Bluesky</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText>
-          <Trans>
-            The experience is better in the app. Download Bluesky now and we'll
-            pick back up where you left off.
-          </Trans>
-        </Prompt.DescriptionText>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Download Bluesky</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>
+              The experience is better in the app. Download Bluesky now and
+              we'll pick back up where you left off.
+            </Trans>
+          </Prompt.DescriptionText>
+        </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action
             cta="Download on Google Play"
@@ -359,7 +361,7 @@ function LandingScreenLoaded({
           />
         </Prompt.Actions>
       </Prompt.Outer>
-      {isWeb && (
+      {IS_WEB && (
         <meta
           name="apple-itunes-app"
           content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card"

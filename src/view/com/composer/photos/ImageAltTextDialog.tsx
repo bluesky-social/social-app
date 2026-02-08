@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {enforceLen} from '#/lib/strings/helpers'
-import {isAndroid, isWeb} from '#/platform/detection'
 import {type ComposerImage} from '#/state/gallery'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
@@ -16,6 +15,7 @@ import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID, IS_WEB} from '#/env'
 
 type Props = {
   control: Dialog.DialogOuterProps['control']
@@ -66,7 +66,7 @@ const ImageAltTextInner = ({
   const windim = useWindowDimensions()
 
   const imageStyle = React.useMemo<ImageStyle>(() => {
-    const maxWidth = isWeb ? 450 : windim.width
+    const maxWidth = IS_WEB ? 450 : windim.width
     const source = image.transformed ?? image.source
 
     if (source.height > source.width) {
@@ -165,7 +165,7 @@ const ImageAltTextInner = ({
         </AltTextCounterWrapper>
       </View>
       {/* Maybe fix this later -h */}
-      {isAndroid ? <View style={{height: 300}} /> : null}
+      {IS_ANDROID ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }

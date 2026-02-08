@@ -21,9 +21,9 @@ import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
 // @ts-ignore
-import splashImagePointer from '../assets/splash.png'
+import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore
-import darkSplashImagePointer from '../assets/splash-dark.png'
+import darkSplashImagePointer from '../assets/splash/splash-dark.png'
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
@@ -146,7 +146,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
             withTiming(
               1,
               {duration: 400, easing: Easing.out(Easing.cubic)},
-              async () => {
+              () => {
+                'worklet'
                 // set these values to check animation at specific point
                 outroLogo.set(() =>
                   withTiming(

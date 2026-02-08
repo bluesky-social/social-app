@@ -31,7 +31,7 @@ export const SplashScreen = ({
 }) => {
   const {_} = useLingui()
   const t = useTheme()
-  const {isTabletOrMobile: isMobileWeb} = useWebMediaQueries()
+  const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
   const [showClipOverlay, setShowClipOverlay] = React.useState(false)
 
   React.useEffect(() => {
@@ -78,7 +78,7 @@ export const SplashScreen = ({
             a.justify_center,
             // @ts-expect-error web only
             {paddingBottom: '20vh'},
-            isMobileWeb && a.pb_5xl,
+            IS_WEB_MOBILE && a.pb_5xl,
             t.atoms.border_contrast_medium,
             a.align_center,
             a.gap_5xl,

@@ -15,8 +15,6 @@ import {useLingui} from '@lingui/react'
 import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
-import {isWeb} from '#/platform/detection'
-import {isIOS} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
 import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -27,7 +25,8 @@ import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icon
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {refetchAgeAssuranceServerState} from '#/ageAssurance'
-import {logger} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_WEB} from '#/env'
 
 export type RedirectOverlayState = {
   result: 'success' | 'unknown'
@@ -92,7 +91,7 @@ export function Provider({children}: {children?: React.ReactNode}) {
       actorDid: params.get('actorDid') ?? undefined,
     })
 
-    if (isWeb) {
+    if (IS_WEB) {
       // Clear the URL parameters so they don't re-trigger
       history.pushState(null, '', '/')
     }
@@ -145,7 +144,7 @@ export function RedirectOverlay() {
           // setting a zIndex when using FullWindowOverlay on iOS
           // means the taps pass straight through to the underlying content (???)
           // so don't set it on iOS. FullWindowOverlay already does the job.
-          !isIOS && {zIndex: 9999},
+          !IS_IOS && {zIndex: 9999},
           t.atoms.bg,
           gtMobile ? a.p_2xl : a.p_xl,
           a.align_center,
@@ -174,6 +173,7 @@ export function RedirectOverlay() {
 
 function Inner() {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const agent = useAgent()
   const polling = useRef(false)
@@ -187,7 +187,7 @@ function Inner() {
 
     polling.current = true
 
-    logger.metric('ageAssurance:redirectDialogOpen', {})
+    ax.metric('ageAssurance:redirectDialogOpen', {})
 
     wait(
       3e3,
@@ -218,18 +218,18 @@ function Inner() {
 
         setSuccess(true)
 
-        logger.metric('ageAssurance:redirectDialogSuccess', {})
+        ax.metric('ageAssurance:redirectDialogSuccess', {})
       })
       .catch(() => {
         if (unmounted.current) return
         setError(true)
-        logger.metric('ageAssurance:redirectDialogFail', {})
+        ax.metric('ageAssurance:redirectDialogFail', {})
       })
 
     return () => {
       unmounted.current = true
     }
-  }, [agent])
+  }, [ax, agent])
 
   if (success) {
     return (

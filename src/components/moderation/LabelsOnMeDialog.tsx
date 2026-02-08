@@ -12,7 +12,6 @@ import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -20,6 +19,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID} from '#/env'
 import {Admonition} from '../Admonition'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
@@ -344,7 +344,7 @@ function AppealForm({
           {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
-      {isAndroid && <View style={{height: 300}} />}
+      {IS_ANDROID && <View style={{height: 300}} />}
     </>
   )
 }

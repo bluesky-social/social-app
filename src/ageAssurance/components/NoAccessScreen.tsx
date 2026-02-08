@@ -9,9 +9,6 @@ import {
   useCreateSupportLink,
 } from '#/lib/hooks/useCreateSupportLink'
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {isNative} from '#/platform/detection'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useSessionApi} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -38,6 +35,8 @@ import {
   isLegacyBirthdateBug,
   useAgeAssuranceRegionConfig,
 } from '#/ageAssurance/util'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {useDeviceGeolocationApi} from '#/geolocation'
 
 const textStyles = [a.text_md, a.leading_snug]
@@ -45,6 +44,7 @@ const textStyles = [a.text_md, a.leading_snug]
 export function NoAccessScreen() {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {gtPhone} = useBreakpoints()
   const insets = useSafeAreaInsets()
   const birthdateControl = useDialogControl()
@@ -63,8 +63,8 @@ export function NoAccessScreen() {
 
   useEffect(() => {
     // just counting overall hits here
-    logger.metric(`blockedGeoOverlay:shown`, {})
-    logger.metric(`ageAssurance:noAccessScreen:shown`, {
+    ax.metric(`blockedGeoOverlay:shown`, {})
+    ax.metric(`ageAssurance:noAccessScreen:shown`, {
       accountCreatedAt: data?.accountCreatedAt || 'unknown',
       isAARegion,
       hasDeclaredAge,
@@ -74,7 +74,7 @@ export function NoAccessScreen() {
   }, [])
 
   const onPressLogout = useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       // We're switching accounts, which remounts the entire app.
       // On mobile, this gets us Home, but on the web we also need reset the URL.
       // We can't change the URL via a navigate() call because the navigator
@@ -103,10 +103,7 @@ export function NoAccessScreen() {
             label={_(msg`Click here to update your birthdate`)}
             style={[textStyles]}
             {...createStaticClick(() => {
-              logger.metric(
-                'ageAssurance:noAccessScreen:openBirthdateDialog',
-                {},
-              )
+              ax.metric('ageAssurance:noAccessScreen:openBirthdateDialog', {})
               birthdateControl.open()
             })}>
             clicking here
@@ -139,7 +136,7 @@ export function NoAccessScreen() {
           contentContainerStyle={[
             a.px_2xl,
             {
-              paddingTop: isWeb
+              paddingTop: IS_WEB
                 ? a.p_5xl.padding
                 : insets.top + a.p_2xl.padding,
               paddingBottom: 100,
@@ -177,10 +174,19 @@ export function NoAccessScreen() {
                         </Trans>
                       </Text>
 
+                      {!aa.flags.isOverRegionMinAccessAge && (
+                        <Text style={[textStyles]}>
+                          <Trans>
+                            Unfortunately, your declared age indicates that you
+                            are not old enough to access Bluesky in your region.
+                          </Trans>
+                        </Text>
+                      )}
+
                       {!isBlocked && birthdateUpdateText}
                     </View>
 
-                    <AccessSection />
+                    {aa.flags.isOverRegionMinAccessAge && <AccessSection />}
                   </>
                 ) : (
                   <View style={[a.gap_lg]}>
@@ -263,6 +269,7 @@ export function NoAccessScreen() {
 function AccessSection() {
   const t = useTheme()
   const {_, i18n} = useLingui()
+  const ax = useAnalytics()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
   const locationControl = Dialog.useDialogControl()
@@ -296,7 +303,7 @@ function AccessSection() {
                 label={_(msg`Contact our moderation team`)}
                 {...createStaticClick(() => {
                   appealControl.open()
-                  logger.metric('ageAssurance:appealDialogOpen', {})
+                  ax.metric('ageAssurance:appealDialogOpen', {})
                 })}>
                 contact our moderation team
               </SimpleInlineLinkText>{' '}
@@ -312,7 +319,7 @@ function AccessSection() {
                 color={hasInitiated ? 'secondary' : 'primary'}
                 onPress={() => {
                   control.open()
-                  logger.metric('ageAssurance:initDialogOpen', {
+                  ax.metric('ageAssurance:initDialogOpen', {
                     hasInitiatedPreviously: hasInitiated,
                   })
                 }}>
@@ -350,7 +357,7 @@ function AccessSection() {
         )}
 
         <View style={[a.gap_xs]}>
-          {isNative && (
+          {IS_NATIVE && (
             <>
               <Admonition>
                 <Trans>

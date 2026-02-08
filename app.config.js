@@ -1,5 +1,10 @@
+// @ts-check
 const pkg = require('./package.json')
 
+/**
+ * @param {import('@expo/config-types').ExpoConfig} _config
+ * @returns {{ expo: import('@expo/config-types').ExpoConfig }}
+ */
 module.exports = function (_config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
@@ -15,7 +20,7 @@ module.exports = function (_config) {
 
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
-  const IS_DEV = !IS_TESTFLIGHT || !IS_PRODUCTION
+  const IS_DEV = !IS_TESTFLIGHT && !IS_PRODUCTION
 
   const ASSOCIATED_DOMAINS = [
     'applinks:bsky.app',
@@ -114,6 +119,7 @@ module.exports = function (_config) {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
           'com.apple.security.application-groups': 'group.app.bsky',
+          // 'com.apple.developer.device-information.user-assigned-device-name': true,
         },
         privacyManifests: {
           NSPrivacyCollectedDataTypes: [
@@ -192,10 +198,14 @@ module.exports = function (_config) {
                 scheme: 'https',
                 host: 'bsky.app',
               },
-              IS_DEV && {
-                scheme: 'http',
-                host: 'localhost:19006',
-              },
+              ...(IS_DEV
+                ? [
+                    {
+                      scheme: 'http',
+                      host: 'localhost:19006',
+                    },
+                  ]
+                : []),
             ],
             category: ['BROWSABLE', 'DEFAULT'],
           },
@@ -227,20 +237,25 @@ module.exports = function (_config) {
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
         ],
-        USE_SENTRY && [
-          '@sentry/react-native/expo',
-          {
-            organization: 'blueskyweb',
-            project: 'app',
-            url: 'https://sentry.io',
-          },
-        ],
+        ...(USE_SENTRY
+          ? [
+              /** @type {[string, any]} */ ([
+                '@sentry/react-native/expo',
+                {
+                  organization: 'blueskyweb',
+                  project: 'app',
+                  url: 'https://sentry.io',
+                },
+              ]),
+            ]
+          : []),
         [
           'expo-build-properties',
           {
             ios: {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
+              ccacheEnabled: IS_DEV,
             },
             android: {
               compileSdkVersion: 35,
@@ -297,25 +312,25 @@ module.exports = function (_config) {
           'expo-splash-screen',
           {
             ios: {
-              enableFullScreenImage_legacy: true,
-              backgroundColor: '#ffffff',
-              image: './assets/splash.png',
+              enableFullScreenImage_legacy: true, // iOS only
+              backgroundColor: '#006AFF', // primary_500
+              image: './assets/splash/splash.png',
               resizeMode: 'cover',
               dark: {
-                enableFullScreenImage_legacy: true,
-                backgroundColor: '#001429',
-                image: './assets/splash-dark.png',
+                enableFullScreenImage_legacy: true, // iOS only
+                backgroundColor: '#002861', // primary_900
+                image: './assets/splash/splash-dark.png',
                 resizeMode: 'cover',
               },
             },
             android: {
-              backgroundColor: '#0c7cff',
-              image: './assets/splash-android-icon.png',
-              imageWidth: 150,
+              backgroundColor: '#006AFF', // primary_500
+              image: './assets/splash/android-splash-logo-white.png',
+              imageWidth: 102, // even division of 306px
               dark: {
-                backgroundColor: '#0c2a49',
-                image: './assets/splash-android-icon-dark.png',
-                imageWidth: 150,
+                backgroundColor: '#002861', // primary_900
+                image: './assets/splash/android-splash-logo-white.png',
+                imageWidth: 102,
               },
             },
           },
@@ -396,7 +411,7 @@ module.exports = function (_config) {
               'I agree to allow Bluesky to use my contacts for friend discovery until I opt out.',
           },
         ],
-      ].filter(Boolean),
+      ],
       extra: {
         eas: {
           build: {

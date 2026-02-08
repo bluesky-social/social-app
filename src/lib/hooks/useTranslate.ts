@@ -2,7 +2,7 @@ import {useCallback} from 'react'
 import * as IntentLauncher from 'expo-intent-launcher'
 
 import {getTranslatorLink} from '#/locale/helpers'
-import {isAndroid} from '#/platform/detection'
+import {IS_ANDROID} from '#/env'
 import {useOpenLink} from './useOpenLink'
 
 export function useTranslate() {
@@ -11,7 +11,7 @@ export function useTranslate() {
   return useCallback(
     async (text: string, language: string) => {
       const translateUrl = getTranslatorLink(text, language)
-      if (isAndroid) {
+      if (IS_ANDROID) {
         try {
           // use getApplicationIconAsync to determine if the translate app is installed
           if (

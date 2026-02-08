@@ -9,7 +9,6 @@ import {
   type EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
-import {isAndroid} from '#/platform/detection'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {type Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
@@ -23,6 +22,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID} from '#/env'
 import {AltTextReminder} from './photos/Gallery'
 
 export function GifAltTextDialog({
@@ -224,7 +224,7 @@ function AltTextInner({
       </View>
       <Dialog.Close />
       {/* Maybe fix this later -h */}
-      {isAndroid ? <View style={{height: 300}} /> : null}
+      {IS_ANDROID ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }

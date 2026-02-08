@@ -1,6 +1,6 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {
-  Image,
+  Image as RNImage,
   Pressable,
   type StyleProp,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
+import {Image as ExpoImage} from 'expo-image'
 import {type ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -15,7 +16,6 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useActorStatus} from '#/lib/actor-status'
-import {isTouchDevice} from '#/lib/browser'
 import {useHaptics} from '#/lib/haptics'
 import {
   useCameraPermission,
@@ -29,7 +29,6 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isCancelledError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {
   type ComposerImage,
   compressImage,
@@ -37,7 +36,6 @@ import {
 } from '#/state/gallery'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {EditImageDialog} from '#/view/com/composer/photos/EditImageDialog'
-import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -54,6 +52,8 @@ import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {useAnalytics} from '#/analytics'
+import {IS_ANDROID, IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
@@ -88,7 +88,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   onBeforePress?: () => void
 }
 
-const BLUR_AMOUNT = isWeb ? 5 : 100
+const BLUR_AMOUNT = IS_WEB ? 5 : 100
 
 let DefaultAvatar = ({
   type,
@@ -286,10 +286,10 @@ let UserAvatar = ({
   }, [size, style])
 
   return avatar &&
-    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
+    !((moderation?.blur && IS_ANDROID) /* android crashes with blur */) ? (
     <View style={containerStyle}>
       {usePlainRNImage ? (
-        <Image
+        <RNImage
           accessibilityIgnoresInvertColors
           testID="userAvatarImage"
           style={aviStyle}
@@ -301,7 +301,7 @@ let UserAvatar = ({
           onLoad={onLoad}
         />
       ) : (
-        <HighPriorityImage
+        <ExpoImage
           testID="userAvatarImage"
           style={aviStyle}
           contentFit="cover"
@@ -394,7 +394,7 @@ let EditableUserAvatar = ({
     }
 
     try {
-      if (isNative) {
+      if (IS_NATIVE) {
         onSelectNewAvatar(
           await compressIfNeeded(
             await openCropper({
@@ -441,7 +441,7 @@ let EditableUserAvatar = ({
           {({props}) => (
             <Pressable {...props} testID="changeAvatarBtn">
               {avatar ? (
-                <HighPriorityImage
+                <ExpoImage
                   testID="userAvatarImage"
                   style={aviStyle}
                   source={{uri: avatar}}
@@ -464,7 +464,7 @@ let EditableUserAvatar = ({
         </Menu.Trigger>
         <Menu.Outer showCancel>
           <Menu.Group>
-            {isNative && (
+            {IS_NATIVE && (
               <Menu.Item
                 testID="changeAvatarCameraBtn"
                 label={_(msg`Upload from Camera`)}
@@ -481,7 +481,7 @@ let EditableUserAvatar = ({
               label={_(msg`Upload from Library`)}
               onPress={onOpenLibrary}>
               <Menu.ItemText>
-                {isNative ? (
+                {IS_NATIVE ? (
                   <Trans>Upload from Library</Trans>
                 ) : (
                   <Trans>Upload from Files</Trans>
@@ -531,6 +531,7 @@ let PreviewableUserAvatar = ({
   live,
   ...props
 }: PreviewableUserAvatarProps): React.ReactNode => {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const status = useActorStatus(profile)
@@ -544,11 +545,7 @@ let PreviewableUserAvatar = ({
 
   const onOpenLiveStatus = useCallback(() => {
     playHaptic('Light')
-    logger.metric(
-      'live:card:open',
-      {subject: profile.did, from: 'post'},
-      {statsig: true},
-    )
+    ax.metric('live:card:open', {subject: profile.did, from: 'post'})
     liveControl.open()
   }, [liveControl, playHaptic, profile.did])
 
@@ -571,7 +568,7 @@ let PreviewableUserAvatar = ({
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       {disableNavigation ? (
         avatarEl
-      ) : status.isActive && (isNative || isTouchDevice) ? (
+      ) : status.isActive && (IS_NATIVE || IS_WEB_TOUCH_DEVICE) ? (
         <>
           <Button
             label={_(

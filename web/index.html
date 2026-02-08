@@ -19,6 +19,7 @@
     <title>%WEB_TITLE%</title>
 
     <link rel="preload" as="font" type="font/woff2" href="/static/media/InterVariable.c504db5c06caaf7cdfba.woff2" crossorigin>
+    <link rel="stylesheet" href="/static/style.css">
 
     <style>
       /**
@@ -42,14 +43,6 @@
         font-style: italic;
         font-display: swap;
       }
-      html {
-        background-color: white;
-      }
-      @media (prefers-color-scheme: dark) {
-        html {
-          background-color: black;
-        }
-      }
       html,
       body {
         margin: 0px;
@@ -64,6 +57,19 @@
         -ms-overflow-style: scrollbar;
         font-synthesis-weight: none;
       }
+      :root {
+        --text: black;
+        --background: white;
+        --backgroundLight: #e2e7ee;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --text: white;
+          --background: black;
+          --backgroundLight: #232e3e;
+        }
+      }
       html,
       body,
       #root {
@@ -71,6 +77,32 @@
         flex: 1 0 auto;
         min-height: 100%;
         width: 100%;
+      }
+      html.theme--light,
+      html.theme--light body,
+      html.theme--light #root {
+        background-color: white;
+        --text: black;
+        --background: white;
+        --backgroundLight: #DCE2EA;
+      }
+      html.theme--dark,
+      html.theme--dark body,
+      html.theme--dark #root {
+        color-scheme: dark;
+        background-color: black;
+        --text: white;
+        --background: black;
+        --backgroundLight: #232E3E;
+      }
+      html.theme--dim,
+      html.theme--dim body,
+      html.theme--dim #root {
+        color-scheme: dark;
+        background-color: #151D28;
+        --text: white;
+        --background: #151D28;
+        --backgroundLight: #2C3A4E;
       }
       #splash {
         display: flex;
@@ -98,6 +130,12 @@
         overflow-y: scroll;
       }
     </style>
+    <script>
+      const theme = localStorage.getItem('ALF_THEME')
+      if (theme) {
+        document.documentElement.classList.add(`theme--${theme}`)
+      }
+    </script>
   </head>
 
   <body>

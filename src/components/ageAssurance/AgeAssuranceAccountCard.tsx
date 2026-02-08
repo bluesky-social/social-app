@@ -3,11 +3,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {isNative} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
+import {AgeAssuranceConfigUnavailableError} from '#/components/ageAssurance/AgeAssuranceErrors'
 import {
   AgeAssuranceInitDialog,
   useDialogControl,
@@ -20,19 +20,29 @@ import {Divider} from '#/components/Divider'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {logger, useAgeAssurance} from '#/ageAssurance'
+import {useAgeAssurance} from '#/ageAssurance'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import {useDeviceGeolocationApi} from '#/geolocation'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
   const aa = useAgeAssurance()
   if (aa.state.access === aa.Access.Full) return null
+  if (aa.state.error === 'config') {
+    return (
+      <View style={style}>
+        <AgeAssuranceConfigUnavailableError />
+      </View>
+    )
+  }
   return <Inner style={style} />
 }
 
 function Inner({style}: ViewStyleProp & {}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
+  const ax = useAnalytics()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
   const locationControl = Dialog.useDialogControl()
@@ -78,7 +88,7 @@ function Inner({style}: ViewStyleProp & {}) {
           <View style={[a.pb_md, a.gap_xs]}>
             <Text style={[a.text_sm, a.leading_snug]}>{copy.notice}</Text>
 
-            {isNative && (
+            {IS_NATIVE && (
               <>
                 <Text style={[a.text_sm, a.leading_snug]}>
                   <Trans>
@@ -130,7 +140,7 @@ function Inner({style}: ViewStyleProp & {}) {
                   label={_(msg`Contact our moderation team`)}
                   {...createStaticClick(() => {
                     appealControl.open()
-                    logger.metric('ageAssurance:appealDialogOpen', {})
+                    ax.metric('ageAssurance:appealDialogOpen', {})
                   })}>
                   contact our moderation team
                 </InlineLinkText>{' '}
@@ -159,7 +169,7 @@ function Inner({style}: ViewStyleProp & {}) {
                   color={hasInitiated ? 'secondary' : 'primary'}
                   onPress={() => {
                     control.open()
-                    logger.metric('ageAssurance:initDialogOpen', {
+                    ax.metric('ageAssurance:initDialogOpen', {
                       hasInitiatedPreviously: hasInitiated,
                     })
                   }}>

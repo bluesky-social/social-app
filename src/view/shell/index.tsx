@@ -11,7 +11,6 @@ import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
-import {isAndroid, isIOS} from '#/platform/detection'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
 import {
@@ -34,6 +33,7 @@ import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {SigninDialog} from '#/components/dialogs/Signin'
+import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {
   Outlet as PolicyUpdateOverlayPortalOutlet,
   usePolicyUpdateContext,
@@ -42,6 +42,8 @@ import {Outlet as PortalOutlet} from '#/components/Portal'
 import {useAgeAssurance} from '#/ageAssurance'
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
+import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
@@ -59,7 +61,7 @@ function ShellInner() {
   useNotificationsHandler()
 
   useEffect(() => {
-    if (isAndroid) {
+    if (IS_ANDROID) {
       const listener = BackHandler.addEventListener('hardwareBackPress', () => {
         return closeAnyActiveElement()
       })
@@ -79,7 +81,7 @@ function ShellInner() {
   const navigation = useNavigation()
   const dedupe = useDedupe(1000)
   useEffect(() => {
-    if (!isAndroid) return
+    if (!IS_ANDROID) return
     const onFocusOrBlur = () => {
       setTimeout(() => {
         dedupe(updateActiveViewAsync)
@@ -117,6 +119,7 @@ function ShellInner() {
       <LinkWarningDialog />
       <Lightbox />
       <NuxDialogs />
+      <GlobalReportDialog />
 
       {/* Until policy update has been completed by the user, don't render anything that is portaled */}
       {policyUpdateState.completed && (
@@ -188,11 +191,13 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
       swipeEdgeWidth={winDim.width}
       swipeMinVelocity={100}
       swipeMinDistance={10}
-      drawerType={isIOS ? 'slide' : 'front'}
+      drawerType={IS_IOS ? 'slide' : 'front'}
       overlayStyle={{
         backgroundColor: select(t.name, {
           light: 'rgba(0, 57, 117, 0.1)',
-          dark: isAndroid ? 'rgba(16, 133, 254, 0.1)' : 'rgba(1, 82, 168, 0.1)',
+          dark: IS_ANDROID
+            ? 'rgba(16, 133, 254, 0.1)'
+            : 'rgba(1, 82, 168, 0.1)',
           dim: 'rgba(10, 13, 16, 0.8)',
         }),
       }}>
@@ -218,7 +223,7 @@ export function Shell() {
       <SystemBars
         style={{
           statusBar:
-            t.name !== 'light' || (isIOS && fullyExpandedCount > 0)
+            t.name !== 'light' || (IS_IOS && fullyExpandedCount > 0)
               ? 'light'
               : 'dark',
           navigationBar: t.name !== 'light' ? 'light' : 'dark',
@@ -241,6 +246,8 @@ export function Shell() {
           <RedirectOverlay />
         </>
       )}
+
+      <PassiveAnalytics />
     </View>
   )
 }

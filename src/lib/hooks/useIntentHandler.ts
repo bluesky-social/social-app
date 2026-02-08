@@ -5,11 +5,11 @@ import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
-import {logger} from '#/logger'
-import {isIOS, isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
@@ -22,6 +22,7 @@ let previousIntentUrl = ''
 
 export function useIntentHandler() {
   const incomingUrl = Linking.useLinkingURL()
+  const ax = useAnalytics()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
   const {currentAccount} = useSession()
@@ -29,14 +30,14 @@ export function useIntentHandler() {
 
   React.useEffect(() => {
     const handleIncomingURL = async (url: string) => {
-      if (isIOS) {
+      if (IS_IOS) {
         // Close in-app browser if it's open (iOS only)
         await WebBrowser.dismissBrowser().catch(() => {})
       }
 
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        logger.metric('deepLink:referrerReceived', {
+        ax.metric('deepLink:referrerReceived', {
           to: url,
           referrer: referrerInfo?.referrer,
           hostname: referrerInfo?.hostname,
@@ -95,6 +96,7 @@ export function useIntentHandler() {
     }
   }, [
     incomingUrl,
+    ax,
     composeIntent,
     verifyEmailIntent,
     currentAccount,
@@ -126,6 +128,7 @@ export function useComposeIntent() {
         openComposer({
           text: text ?? undefined,
           videoUri: {uri, width: Number(width), height: Number(height)},
+          logContext: 'Deeplink',
         })
         return
       }
@@ -150,7 +153,8 @@ export function useComposeIntent() {
       setTimeout(() => {
         openComposer({
           text: text ?? undefined,
-          imageUris: isNative ? imageUris : undefined,
+          imageUris: IS_NATIVE ? imageUris : undefined,
+          logContext: 'Deeplink',
         })
       }, 500)
     },

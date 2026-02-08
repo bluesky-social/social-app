@@ -50,7 +50,7 @@ export const BUNDLE_IDENTIFIER: string =
 
 /**
  * This will always be in the format of YYMMDDHH, so that it always increases
- * for each build. This should only be used for StatSig reporting and shouldn't
+ * for each build. This should only be used for analytics reporting and shouldn't
  * be used to identify a specific bundle.
  */
 export const BUNDLE_DATE: number =
@@ -85,6 +85,24 @@ export const CHAT_PROXY_DID: Did =
   process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
 
 /**
+ * Metrics API host
+ */
+export const METRICS_API_HOST: string =
+  process.env.EXPO_PUBLIC_METRICS_API_HOST || 'https://events.bsky.app'
+
+/**
+ * Growthbook API host
+ */
+export const GROWTHBOOK_API_HOST: string =
+  process.env.EXPO_PUBLIC_GROWTHBOOK_API_HOST || `${METRICS_API_HOST}/gb`
+
+/**
+ * Growthbook client key
+ */
+export const GROWTHBOOK_CLIENT_KEY: string =
+  process.env.EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY || 'sdk-7gkUkGy9wguUjyFe'
+
+/**
  * Sentry DSN for telemetry
  */
 export const SENTRY_DSN: string | undefined = process.env.EXPO_PUBLIC_SENTRY_DSN
@@ -108,8 +126,18 @@ export const GCP_PROJECT_ID: number =
  * URLs for the app config web worker. Can be a
  * locally running server, see `env.example` for more.
  */
-export const BAPP_CONFIG_DEV_URL = process.env.BAPP_CONFIG_DEV_URL
-export const BAPP_CONFIG_PROD_URL = `https://ip.bsky.app`
-export const BAPP_CONFIG_URL = IS_DEV
-  ? (BAPP_CONFIG_DEV_URL ?? BAPP_CONFIG_PROD_URL)
-  : BAPP_CONFIG_PROD_URL
+export const GEOLOCATION_DEV_URL = process.env.GEOLOCATION_DEV_URL
+export const GEOLOCATION_PROD_URL = `https://ip.bsky.app`
+export const GEOLOCATION_URL = IS_DEV
+  ? (GEOLOCATION_DEV_URL ?? GEOLOCATION_PROD_URL)
+  : GEOLOCATION_PROD_URL
+
+/**
+ * URLs for the live-event config web worker. Can be a
+ * locally running server, see `env.example` for more.
+ */
+export const LIVE_EVENTS_DEV_URL = process.env.LIVE_EVENTS_DEV_URL
+export const LIVE_EVENTS_PROD_URL = `https://live-events.workers.bsky.app`
+export const LIVE_EVENTS_URL = IS_DEV
+  ? (LIVE_EVENTS_DEV_URL ?? LIVE_EVENTS_PROD_URL)
+  : LIVE_EVENTS_PROD_URL

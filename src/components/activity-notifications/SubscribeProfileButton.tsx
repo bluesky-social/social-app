@@ -68,10 +68,12 @@ export function SubscribeProfileButton({
 
   const Icon = isSubscribed ? BellRingingIcon : BellPlusIcon
 
+  const tooltipVisible = showTooltip && !disableHint
+
   return (
     <>
       <Tooltip.Outer
-        visible={showTooltip && !disableHint}
+        visible={tooltipVisible}
         onVisibleChange={onDismissTooltip}
         position="bottom">
         <Tooltip.Target>
@@ -79,7 +81,7 @@ export function SubscribeProfileButton({
             accessibilityRole="button"
             testID="dmBtn"
             size="small"
-            color="secondary"
+            color={tooltipVisible ? 'primary_subtle' : 'secondary'}
             shape="round"
             label={_(msg`Get notified when ${name} posts`)}
             onPress={wrappedOnPress}>

@@ -18,7 +18,6 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
-import {logger} from '#/logger'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -60,6 +59,7 @@ import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
+import {useAnalytics} from '#/analytics'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -177,6 +177,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   postSource?: PostSource
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
@@ -260,6 +261,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
         langs: record.langs,
       },
       onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
     })
 
     if (postSource) {
@@ -281,6 +283,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   ])
 
   const onOpenAuthor = () => {
+    ax.metric('post:clickthroughAuthor', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'PostThreadItem',
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
@@ -292,6 +300,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   }
 
   const onOpenEmbed = () => {
+    ax.metric('post:clickthroughEmbed', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'PostThreadItem',
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
@@ -368,11 +382,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               </ProfileHoverCard>
             </View>
           </Link>
-          {showFollowButton && (
-            <View collapsable={false}>
-              <ThreadItemAnchorFollowButton did={post.author.did} />
-            </View>
-          )}
+          <View collapsable={false} style={[a.self_center]}>
+            <ThreadItemAnchorFollowButton
+              did={post.author.did}
+              enabled={showFollowButton}
+            />
+          </View>
         </View>
         <View style={[a.pb_sm]}>
           <LabelsOnMyPost post={post} style={[a.pb_sm]} />
@@ -528,6 +543,7 @@ function ExpandedPostDetails({
   isThreadAuthor: boolean
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_, i18n} = useLingui()
   const translate = useTranslate()
   const isRootPost = !('reply' in post.record)
@@ -553,7 +569,7 @@ function ExpandedPostDetails({
           AppBskyFeedPost.isRecord,
         )
       ) {
-        logger.metric('translate', {
+        ax.metric('translate', {
           sourceLanguages: post.record.langs ?? [],
           targetLanguage: langPrefs.primaryLanguage,
           textLength: post.record.text.length,
@@ -562,7 +578,7 @@ function ExpandedPostDetails({
 
       return false
     },
-    [translate, langPrefs, post],
+    [ax, translate, langPrefs, post],
   )
 
   return (
@@ -662,33 +678,29 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
       </Button>
 
       <Prompt.Outer control={control}>
-        <Prompt.TitleText>
-          <Trans>Archived post</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText>
-          <Trans>
-            This post claims to have been created on{' '}
-            <RNText style={[a.font_semi_bold]}>
-              {niceDate(i18n, createdAt)}
-            </RNText>
-            , but was first seen by Bluesky on{' '}
-            <RNText style={[a.font_semi_bold]}>
-              {niceDate(i18n, indexedAt)}
-            </RNText>
-            .
-          </Trans>
-        </Prompt.DescriptionText>
-        <Text
-          style={[
-            a.text_md,
-            a.leading_snug,
-            t.atoms.text_contrast_high,
-            a.pb_xl,
-          ]}>
-          <Trans>
-            Bluesky cannot confirm the authenticity of the claimed date.
-          </Trans>
-        </Text>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Archived post</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>
+              This post claims to have been created on{' '}
+              <RNText style={[a.font_semi_bold]}>
+                {niceDate(i18n, createdAt)}
+              </RNText>
+              , but was first seen by Bluesky on{' '}
+              <RNText style={[a.font_semi_bold]}>
+                {niceDate(i18n, indexedAt)}
+              </RNText>
+              .
+            </Trans>
+          </Prompt.DescriptionText>
+          <Prompt.DescriptionText>
+            <Trans>
+              Bluesky cannot confirm the authenticity of the claimed date.
+            </Trans>
+          </Prompt.DescriptionText>
+        </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
         </Prompt.Actions>

@@ -13,7 +13,7 @@ import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {colors, s} from '#/lib/styles'
-import {isAndroid} from '#/platform/detection'
+import {IS_ANDROID} from '#/env'
 import {Text} from './text/Text'
 import {FlatList_INTERNAL} from './Views'
 
@@ -120,7 +120,7 @@ export const ViewSelector = React.forwardRef<
       renderItem={renderItemInternal}
       ListFooterComponent={ListFooterComponent}
       // NOTE sticky header disabled on android due to major performance issues -prf
-      stickyHeaderIndices={isAndroid ? undefined : STICKY_HEADER_INDICES}
+      stickyHeaderIndices={IS_ANDROID ? undefined : STICKY_HEADER_INDICES}
       onScroll={onScroll}
       onEndReached={onEndReached}
       refreshControl={

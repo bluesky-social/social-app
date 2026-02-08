@@ -9,7 +9,6 @@ import {
   type OtherSelfLabel,
   type SelfLabel,
 } from '#/lib/moderation'
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -18,6 +17,7 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/Chevron'
 import {Shield_Stroke2_Corner0_Rounded} from '#/components/icons/Shield'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 export function LabelsBtn({
   labels,
@@ -33,7 +33,9 @@ export function LabelsBtn({
 
   const updateAdultLabels = (newLabels: AdultSelfLabel[]) => {
     const newLabel = newLabels[newLabels.length - 1]
-    const filtered = labels.filter(l => !ADULT_CONTENT_LABELS.includes(l))
+    const filtered = labels.filter(
+      l => !ADULT_CONTENT_LABELS.includes(l as AdultSelfLabel),
+    )
     onChange([
       ...new Set([...filtered, newLabel].filter(Boolean) as SelfLabel[]),
     ])
@@ -41,7 +43,9 @@ export function LabelsBtn({
 
   const updateOtherLabels = (newLabels: OtherSelfLabel[]) => {
     const newLabel = newLabels[newLabels.length - 1]
-    const filtered = labels.filter(l => !OTHER_SELF_LABELS.includes(l))
+    const filtered = labels.filter(
+      l => !OTHER_SELF_LABELS.includes(l as OtherSelfLabel),
+    )
     onChange([
       ...new Set([...filtered, newLabel].filter(Boolean) as SelfLabel[]),
     ])
@@ -218,7 +222,7 @@ function DialogInner({
           label={_(msg`Done`)}
           onPress={() => control.close()}
           color="primary"
-          size={isWeb ? 'small' : 'large'}
+          size={IS_WEB ? 'small' : 'large'}
           variant="solid"
           testID="confirmBtn">
           <ButtonText>

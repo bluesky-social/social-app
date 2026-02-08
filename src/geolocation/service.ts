@@ -128,7 +128,7 @@ export function useGeolocationServiceResponse() {
 
   useEffect(() => {
     return onGeolocationServiceResponseUpdate(config => {
-      setConfig(config!)
+      setConfig(config)
     })
   }, [])
 

@@ -9,10 +9,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {mergeRefs} from '#/lib/merge-refs'
-import {isAndroid, isIOS} from '#/platform/detection'
 import {atoms as a, ios, platform, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID, IS_IOS} from '#/env'
 
 export function OTPInput({
   label,
@@ -95,7 +95,7 @@ export function OTPInput({
       <TextInput
         // SMS autofill is borked on iOS if you open the keyboard immediately -sfn
         onLayout={ios(() => setTimeout(() => innerRef.current?.focus(), 100))}
-        autoFocus={isAndroid}
+        autoFocus={IS_ANDROID}
         accessible
         accessibilityLabel={label}
         accessibilityHint=""
@@ -135,7 +135,7 @@ export function OTPInput({
             android: {opacity: 0},
           }),
         ]}
-        caretHidden={isIOS}
+        caretHidden={IS_IOS}
         clearTextOnFocus
       />
     </Pressable>

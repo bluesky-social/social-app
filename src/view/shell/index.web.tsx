@@ -24,6 +24,7 @@ import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {useWelcomeModal} from '#/components/hooks/useWelcomeModal'
+import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {
   Outlet as PolicyUpdateOverlayPortalOutlet,
   usePolicyUpdateContext,
@@ -33,6 +34,7 @@ import {WelcomeModal} from '#/components/WelcomeModal'
 import {useAgeAssurance} from '#/ageAssurance'
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
+import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer.web'
 import {DrawerContent} from './Drawer'
@@ -73,6 +75,7 @@ function ShellInner() {
       <LinkWarningDialog />
       <Lightbox />
       <NuxDialogs />
+      <GlobalReportDialog />
 
       {welcomeModalControl.isOpen && (
         <WelcomeModal control={welcomeModalControl} />
@@ -179,6 +182,8 @@ export function Shell() {
           <RedirectOverlay />
         </>
       )}
+
+      <PassiveAnalytics />
     </View>
   )
 }

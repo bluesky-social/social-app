@@ -7,8 +7,6 @@ import {useLingui} from '@lingui/react'
 import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {shareUrl} from '#/lib/sharing'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
-import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
@@ -18,6 +16,8 @@ import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/ico
 import {QrCode_Stroke2_Corner0_Rounded as QrCodeIcon} from '#/components/icons/QrCode'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 interface Props {
   starterPack: AppBskyGraphDefs.StarterPackView
@@ -46,6 +46,7 @@ function ShareDialogInner({
   control,
 }: Props) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
@@ -54,7 +55,7 @@ function ShareDialogInner({
   const onShareLink = async () => {
     if (!link) return
     shareUrl(link)
-    logger.metric('starterPack:share', {
+    ax.metric('starterPack:share', {
       starterPack: starterPack.uri,
       shareType: 'link',
     })
@@ -110,13 +111,17 @@ function ShareDialogInner({
                 ],
               ]}>
               <Button
-                label={isWeb ? _(msg`Copy link`) : _(msg`Share link`)}
+                label={IS_WEB ? _(msg`Copy link`) : _(msg`Share link`)}
                 color="primary_subtle"
                 size="large"
                 onPress={onShareLink}>
                 <ButtonIcon icon={ChainLinkIcon} />
                 <ButtonText>
-                  {isWeb ? <Trans>Copy Link</Trans> : <Trans>Share link</Trans>}
+                  {IS_WEB ? (
+                    <Trans>Copy Link</Trans>
+                  ) : (
+                    <Trans>Share link</Trans>
+                  )}
                 </ButtonText>
               </Button>
               <Button
@@ -133,7 +138,7 @@ function ShareDialogInner({
                   <Trans>Share QR code</Trans>
                 </ButtonText>
               </Button>
-              {isNative && (
+              {IS_NATIVE && (
                 <Button
                   label={_(msg`Save image`)}
                   color="secondary"

@@ -18,13 +18,13 @@ import Animated, {
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {isIOS} from '#/platform/detection'
 import {
   Pager,
   type PagerRef,
   type RenderTabBarFnProps,
 } from '#/view/com/pager/Pager'
 import {useTheme} from '#/alf'
+import {IS_IOS} from '#/env'
 import {type ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
@@ -273,11 +273,11 @@ let PagerTabBar = ({
   const headerRef = useRef(null)
   return (
     <Animated.View
-      pointerEvents={isIOS ? 'auto' : 'box-none'}
+      pointerEvents={IS_IOS ? 'auto' : 'box-none'}
       style={[styles.tabBarMobile, headerTransform, t.atoms.bg]}>
       <View
         ref={headerRef}
-        pointerEvents={isIOS ? 'auto' : 'box-none'}
+        pointerEvents={IS_IOS ? 'auto' : 'box-none'}
         collapsable={false}>
         {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
         {

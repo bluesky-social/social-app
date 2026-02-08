@@ -6,9 +6,8 @@ import {useLingui} from '@lingui/react'
 
 import {wait} from '#/lib/async/wait'
 import {getLabelingServiceTitle} from '#/lib/moderation'
+import {useCallOnce} from '#/lib/once'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {Logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -16,6 +15,7 @@ import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotate'
 import {
@@ -28,9 +28,12 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import {useSubmitReportMutation} from './action'
 import {
   BSKY_LABELER_ONLY_REPORT_REASONS,
+  BSKY_LABELER_ONLY_SUBJECT_TYPES,
   NEW_TO_OLD_REASONS_MAP,
   SUPPORT_PAGE,
 } from './const'
@@ -44,22 +47,31 @@ import {
   useReportOptions,
 } from './utils/useReportOptions'
 
+export {type ReportSubject} from './types'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
-const logger = Logger.create(Logger.Context.ReportDialog)
+export function useGlobalReportDialogControl() {
+  return useGlobalDialogsControlContext().reportDialogControl
+}
+
+export function GlobalReportDialog() {
+  const {value, control} = useGlobalReportDialogControl()
+  return <ReportDialog control={control} subject={value?.subject} />
+}
 
 export function ReportDialog(
   props: Omit<ReportDialogProps, 'subject'> & {
-    subject: ReportSubject
+    subject?: ReportSubject
   },
 ) {
+  const ax = useAnalytics()
   const subject = React.useMemo(
-    () => parseReportSubject(props.subject),
+    () => (props.subject ? parseReportSubject(props.subject) : undefined),
     [props.subject],
   )
   const onClose = React.useCallback(() => {
-    logger.metric('reportDialog:close', {}, {statsig: false})
-  }, [])
+    ax.metric('reportDialog:close', {})
+  }, [ax])
   return (
     <Dialog.Outer control={props.control} onClose={onClose}>
       <Dialog.Handle />
@@ -91,6 +103,8 @@ function Invalid() {
 }
 
 function Inner(props: ReportDialogProps) {
+  const ax = useAnalytics()
+  const logger = ax.logger.useChild(ax.logger.Context.ReportDialog)
   const t = useTheme()
   const {_} = useLingui()
   const ref = React.useRef<ScrollView>(null)
@@ -116,8 +130,10 @@ function Inner(props: ReportDialogProps) {
   const isBskyOnlyReason = state?.selectedOption?.reason
     ? BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)
     : false
-  // some subjects (chats) only go to Bluesky
-  const isBskyOnlySubject = props.subject.type === 'convoMessage'
+  // some subjects ONLY go to Bluesky
+  const isBskyOnlySubject = BSKY_LABELER_ONLY_SUBJECT_TYPES.has(
+    props.subject.type,
+  )
 
   /**
    * Labelers that support this `subject` and its NSID collection
@@ -194,15 +210,11 @@ function Inner(props: ReportDialogProps) {
         }),
       )
       setSuccess(true)
-      logger.metric(
-        'reportDialog:success',
-        {
-          reason: state.selectedOption?.reason!,
-          labeler: state.selectedLabeler?.creator.handle!,
-          details: !!state.details,
-        },
-        {statsig: false},
-      )
+      ax.metric('reportDialog:success', {
+        reason: state.selectedOption?.reason ?? '',
+        labeler: state.selectedLabeler?.creator.handle ?? '',
+        details: !!state.details,
+      })
       // give time for user feedback
       setTimeout(() => {
         props.control.close(() => {
@@ -210,7 +222,7 @@ function Inner(props: ReportDialogProps) {
         })
       }, 1e3)
     } catch (e: any) {
-      logger.metric('reportDialog:failure', {}, {statsig: false})
+      ax.metric('reportDialog:failure', {})
       logger.error(e, {
         source: 'ReportDialog',
       })
@@ -223,15 +235,11 @@ function Inner(props: ReportDialogProps) {
     }
   }, [_, submitReport, state, dispatch, props, setPending, setSuccess])
 
-  React.useEffect(() => {
-    logger.metric(
-      'reportDialog:open',
-      {
-        subjectType: props.subject.type,
-      },
-      {statsig: false},
-    )
-  }, [props.subject])
+  useCallOnce(() => {
+    ax.metric('reportDialog:open', {
+      subjectType: props.subject.type,
+    })
+  })()
 
   return (
     <Dialog.ScrollableInner
@@ -239,7 +247,7 @@ function Inner(props: ReportDialogProps) {
       label={_(msg`Report dialog`)}
       ref={ref}
       style={[a.w_full, {maxWidth: 500}]}>
-      <View style={[a.gap_2xl, isNative && a.pt_md]}>
+      <View style={[a.gap_2xl, IS_NATIVE && a.pt_md]}>
         <StepOuter>
           <StepTitle
             index={1}
@@ -824,12 +832,7 @@ function LabelerCard({
               {title}
             </Text>
             <Text
-              style={[
-                a.text_sm,
-                ,
-                a.leading_snug,
-                t.atoms.text_contrast_medium,
-              ]}>
+              style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>By {sanitizeHandle(labeler.creator.handle, '@')}</Trans>
             </Text>
           </View>
