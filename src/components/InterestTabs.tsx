@@ -9,7 +9,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {isWeb} from '#/platform/detection'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
@@ -19,6 +18,7 @@ import {
   ArrowRight_Stroke2_Corner0_Rounded as ArrowRight,
 } from '#/components/icons/Arrow'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 /**
  * Tab component that automatically scrolls the selected tab into view - used for interests
@@ -83,7 +83,12 @@ export function InterestTabs({
   function handleTabLayout(index: number, x: number, width: number) {
     if (!tabOffsets.length) {
       pendingTabOffsets.current[index] = {x, width}
-      if (pendingTabOffsets.current.length === interests.length) {
+      // not only do we check if the length is equal to the number of interests,
+      // but we also need to ensure that the array isn't sparse. `.filter()`
+      // removes any empty slots from the array
+      if (
+        pendingTabOffsets.current.filter(o => !!o).length === interests.length
+      ) {
         setTabOffsets(pendingTabOffsets.current)
       }
     }
@@ -205,7 +210,7 @@ export function InterestTabs({
         showsHorizontalScrollIndicator={false}
         decelerationRate="fast"
         snapToOffsets={
-          tabOffsets.length === interests.length
+          tabOffsets.filter(o => !!o).length === interests.length
             ? tabOffsets.map(o => o.x - tokens.space.xl)
             : undefined
         }
@@ -231,7 +236,7 @@ export function InterestTabs({
           )
         })}
       </DraggableScrollView>
-      {isWeb && canScrollLeft && (
+      {IS_WEB && canScrollLeft && (
         <View
           style={[
             a.absolute,
@@ -258,14 +263,14 @@ export function InterestTabs({
               t.atoms.border_contrast_low,
               t.atoms.bg,
               a.h_full,
-              {aspectRatio: 1},
+              a.aspect_square,
               a.rounded_full,
             ]}>
             <ButtonIcon icon={ArrowLeft} />
           </Button>
         </View>
       )}
-      {isWeb && canScrollRight && (
+      {IS_WEB && canScrollRight && (
         <View
           style={[
             a.absolute,
@@ -292,7 +297,7 @@ export function InterestTabs({
               t.atoms.border_contrast_low,
               t.atoms.bg,
               a.h_full,
-              {aspectRatio: 1},
+              a.aspect_square,
               a.rounded_full,
             ]}>
             <ButtonIcon icon={ArrowRight} />

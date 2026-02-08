@@ -1,3 +1,4 @@
+import {XRPCError} from '@atproto/xrpc'
 import {t} from '@lingui/macro'
 
 export function cleanError(str: any): string {
@@ -17,6 +18,15 @@ export function cleanError(str: any): string {
   ) {
     return t`The server appears to be experiencing issues. Please try again in a few moments.`
   }
+  /**
+   * @see https://github.com/bluesky-social/atproto/blob/255cfcebb54332a7129af768a93004e22c6858e3/packages/pds/src/actor-store/preference/transactor.ts#L24
+   */
+  if (
+    str.includes('Do not have authorization to set preferences') &&
+    str.includes('app.bsky.actor.defs#personalDetailsPref')
+  ) {
+    return t`You cannot update your birthdate while using an app password. Please sign in with your main password to update your birthdate.`
+  }
   if (str.includes('Bad token scope') || str.includes('Bad token method')) {
     return t`This feature is not available while using an App Password. Please sign in with your main password.`
   }
@@ -31,6 +41,7 @@ const NETWORK_ERRORS = [
   'Network request failed',
   'Failed to fetch',
   'Load failed',
+  'Upstream service unreachable',
 ]
 
 export function isNetworkError(e: unknown) {
@@ -41,4 +52,24 @@ export function isNetworkError(e: unknown) {
     }
   }
   return false
+}
+
+export function isErrorMaybeAppPasswordPermissions(e: unknown) {
+  if (e instanceof XRPCError && e.error === 'TokenInvalid') {
+    return true
+  }
+  const str = String(e)
+  return str.includes('Bad token scope') || str.includes('Bad token method')
+}
+
+/**
+ * Intended to capture "User cancelled" or "Crop cancelled" errors
+ * that we often get from expo modules such @bsky.app/expo-image-crop-tool
+ *
+ * The exact name has changed in the past so let's just see if the string
+ * contains "cancel"
+ */
+export function isCancelledError(e: unknown) {
+  const str = String(e).toLowerCase()
+  return str.includes('cancel')
 }

@@ -19,8 +19,11 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
+import {
+  EmptyState,
+  type EmptyStateButtonProps,
+} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
@@ -32,6 +35,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
+import {IS_IOS} from '#/env'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -47,6 +51,9 @@ interface ProfileFeedgensProps {
   testID?: string
   setScrollViewTag: (tag: number | null) => void
   isMe: boolean
+  emptyStateMessage?: string
+  emptyStateButton?: EmptyStateButtonProps
+  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
 }
 
 function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
@@ -63,6 +70,9 @@ export function ProfileStarterPacks({
   testID,
   setScrollViewTag,
   isMe,
+  emptyStateMessage,
+  emptyStateButton,
+  emptyStateIcon,
 }: ProfileFeedgensProps) {
   const t = useTheme()
   const bottomBarOffset = useBottomBarOffset(100)
@@ -79,6 +89,28 @@ export function ProfileStarterPacks({
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
+  const {_} = useLingui()
+
+  const EmptyComponent = useCallback(() => {
+    if (emptyStateMessage || emptyStateButton || emptyStateIcon) {
+      return (
+        <View style={[a.px_lg, a.align_center, a.justify_center]}>
+          <EmptyState
+            icon={emptyStateIcon}
+            iconSize="3xl"
+            message={
+              emptyStateMessage ??
+              _(
+                msg`Starter packs let you share your favorite feeds and people with your friends.`,
+              )
+            }
+            button={emptyStateButton}
+          />
+        </View>
+      )
+    }
+    return <Empty />
+  }, [_, emptyStateMessage, emptyStateButton, emptyStateIcon])
 
   useImperativeHandle(ref, () => ({
     scrollToTop: () => {},
@@ -104,7 +136,7 @@ export function ProfileStarterPacks({
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   useEffect(() => {
-    if (isIOS && enabled && scrollElRef.current) {
+    if (IS_IOS && enabled && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
@@ -146,7 +178,7 @@ export function ProfileStarterPacks({
         onEndReached={onEndReached}
         onRefresh={onRefresh}
         ListEmptyComponent={
-          data ? (isMe ? Empty : undefined) : FeedLoadingPlaceholder
+          data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
         }
         ListFooterComponent={
           !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
@@ -299,15 +331,17 @@ function Empty() {
       </View>
 
       <Prompt.Outer control={confirmDialogControl}>
-        <Prompt.TitleText>
-          <Trans>Generate a starter pack</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText>
-          <Trans>
-            Bluesky will choose a set of recommended accounts from people in
-            your network.
-          </Trans>
-        </Prompt.DescriptionText>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Generate a starter pack</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>
+              Bluesky will choose a set of recommended accounts from people in
+              your network.
+            </Trans>
+          </Prompt.DescriptionText>
+        </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action
             color="primary"

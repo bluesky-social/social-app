@@ -7,17 +7,13 @@ import {
 } from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {LinearGradient} from 'expo-linear-gradient'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
-import {gradients} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
-import {ios} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
+import {IS_WEB} from '#/env'
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
@@ -27,13 +23,14 @@ export interface FABProps extends ComponentProps<typeof Pressable> {
 
 export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
-  const {isMobile, isTablet} = useWebMediaQueries()
+  const {gtMobile} = useBreakpoints()
+  const t = useTheme()
   const playHaptic = useHaptics()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
 
-  const size = isTablet ? styles.sizeLarge : styles.sizeRegular
+  const size = gtMobile ? styles.sizeLarge : styles.sizeRegular
 
-  const tabletSpacing = isTablet
+  const tabletSpacing = gtMobile
     ? {right: 50, bottom: 50}
     : {right: 24, bottom: clamp(insets.bottom, 15, 60) + 15}
 
@@ -43,7 +40,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
         styles.outer,
         size,
         tabletSpacing,
-        isMobile && fabMinimalShellTransform,
+        !gtMobile && fabMinimalShellTransform,
       ]}>
       <PressableScale
         testID={testID}
@@ -57,15 +54,16 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
           playHaptic('Heavy')
         })}
         targetScale={0.9}
-        style={[a.rounded_full, style]}
+        style={[
+          a.rounded_full,
+          size,
+          {backgroundColor: t.palette.primary_500},
+          a.align_center,
+          a.justify_center,
+          style,
+        ]}
         {...props}>
-        <LinearGradient
-          colors={[gradients.blueLight.start, gradients.blueLight.end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[styles.inner, size]}>
-          {icon}
-        </LinearGradient>
+        {icon}
       </PressableScale>
     </Animated.View>
   )
@@ -73,8 +71,8 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
 
 const styles = StyleSheet.create({
   sizeRegular: {
-    width: 60,
-    height: 60,
+    width: 56,
+    height: 56,
     borderRadius: 30,
   },
   sizeLarge: {
@@ -84,12 +82,8 @@ const styles = StyleSheet.create({
   },
   outer: {
     // @ts-ignore web-only
-    position: isWeb ? 'fixed' : 'absolute',
+    position: IS_WEB ? 'fixed' : 'absolute',
     zIndex: 1,
     cursor: 'pointer',
-  },
-  inner: {
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 })

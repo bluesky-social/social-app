@@ -3,14 +3,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {isNative} from '#/platform/detection'
-import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
-import {logger} from '#/state/ageAssurance/util'
-import {useDeviceGeolocationApi} from '#/state/geolocation'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
+import {AgeAssuranceConfigUnavailableError} from '#/components/ageAssurance/AgeAssuranceErrors'
 import {
   AgeAssuranceInitDialog,
   useDialogControl,
@@ -23,30 +20,41 @@ import {Divider} from '#/components/Divider'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
+import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
+import {useDeviceGeolocationApi} from '#/geolocation'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
-  const {isReady, isAgeRestricted, isDeclaredUnderage} = useAgeAssurance()
-
-  if (!isReady) return null
-  if (isDeclaredUnderage) return null
-  if (!isAgeRestricted) return null
-
+  const aa = useAgeAssurance()
+  if (aa.state.access === aa.Access.Full) return null
+  if (aa.state.error === 'config') {
+    return (
+      <View style={style}>
+        <AgeAssuranceConfigUnavailableError />
+      </View>
+    )
+  }
   return <Inner style={style} />
 }
 
 function Inner({style}: ViewStyleProp & {}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
+  const ax = useAnalytics()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
   const locationControl = Dialog.useDialogControl()
   const getTimeAgo = useGetTimeAgo()
   const {gtPhone} = useBreakpoints()
   const {setDeviceGeolocation} = useDeviceGeolocationApi()
+  const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
 
   const copy = useAgeAssuranceCopy()
-  const {status, lastInitiatedAt} = useAgeAssurance()
-  const isBlocked = status === 'blocked'
+  const aa = useAgeAssurance()
+  const {status, lastInitiatedAt} = aa.state
+  const isBlocked = status === aa.Status.Blocked
   const hasInitiated = !!lastInitiatedAt
   const timeAgo = lastInitiatedAt
     ? getTimeAgo(lastInitiatedAt, new Date())
@@ -80,7 +88,7 @@ function Inner({style}: ViewStyleProp & {}) {
           <View style={[a.pb_md, a.gap_xs]}>
             <Text style={[a.text_sm, a.leading_snug]}>{copy.notice}</Text>
 
-            {isNative && (
+            {IS_NATIVE && (
               <>
                 <Text style={[a.text_sm, a.leading_snug]}>
                   <Trans>
@@ -98,7 +106,10 @@ function Inner({style}: ViewStyleProp & {}) {
                 <DeviceLocationRequestDialog
                   control={locationControl}
                   onLocationAcquired={props => {
-                    if (props.geolocationStatus.isAgeRestrictedGeo) {
+                    const access = computeAgeAssuranceRegionAccess(
+                      props.geolocation,
+                    )
+                    if (access !== aa.Access.Full) {
                       props.disableDialogAction()
                       props.setDialogError(
                         _(
@@ -108,10 +119,7 @@ function Inner({style}: ViewStyleProp & {}) {
                     } else {
                       props.closeDialog(() => {
                         // set this after close!
-                        setDeviceGeolocation({
-                          countryCode: props.geolocationStatus.countryCode,
-                          regionCode: props.geolocationStatus.regionCode,
-                        })
+                        setDeviceGeolocation(props.geolocation)
                         Toast.show(_(msg`Thanks! You're all set.`), {
                           type: 'success',
                         })
@@ -132,7 +140,7 @@ function Inner({style}: ViewStyleProp & {}) {
                   label={_(msg`Contact our moderation team`)}
                   {...createStaticClick(() => {
                     appealControl.open()
-                    logger.metric('ageAssurance:appealDialogOpen', {})
+                    ax.metric('ageAssurance:appealDialogOpen', {})
                   })}>
                   contact our moderation team
                 </InlineLinkText>{' '}
@@ -161,7 +169,7 @@ function Inner({style}: ViewStyleProp & {}) {
                   color={hasInitiated ? 'secondary' : 'primary'}
                   onPress={() => {
                     control.open()
-                    logger.metric('ageAssurance:initDialogOpen', {
+                    ax.metric('ageAssurance:initDialogOpen', {
                       hasInitiatedPreviously: hasInitiated,
                     })
                   }}>

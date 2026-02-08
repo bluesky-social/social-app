@@ -3,7 +3,6 @@ import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {isNative} from '#/platform/detection'
 import {
   useHapticsDisabled,
   useRequireAltTextEnabled,
@@ -20,6 +19,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
 import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
 import * as Layout from '#/components/Layout'
+import {IS_NATIVE} from '#/env'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -76,7 +76,7 @@ export function AccessibilitySettingsScreen({}: Props) {
               <Toggle.Platform />
             </Toggle.Item>
           </SettingsList.Group>
-          {isNative && (
+          {IS_NATIVE && (
             <>
               <SettingsList.Divider />
               <SettingsList.Group contentContainerStyle={[a.gap_sm]}>

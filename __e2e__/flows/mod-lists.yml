@@ -19,21 +19,17 @@ appId: xyz.blueskyweb.app
     id: "moderationlistsBtn"
 - tapOn: "New list"
 - tapOn:
-    id: "editNameInput"
+    id: "editListNameInput"
 - inputText: "Muted Users"
 - tapOn:
-    id: "editDescriptionInput"
+    id: "editListDescriptionInput"
 - inputText: "Shhh"
-- tapOn: "Save"
 - tapOn: "Save"
 
 # view modlist
 - assertVisible: "Muted Users"
 - assertVisible: "Shhh"
 
-# DOES NOT WORK - THE BUTTON IS NOT ACCESSIBLE
-# IGNORING FOR NOW, FIX THE COMPONENTS IN THE NEXT RELEASE
-# BECAUSE THIS IS A LEGIT A11Y PROBLEM -sfn
 - tapOn: "Subscribe to this list"
 - tapOn: "Mute accounts"
 - tapOn: "Mute list"

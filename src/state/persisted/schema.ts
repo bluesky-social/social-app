@@ -71,7 +71,7 @@ const schema = z.object({
     contentLanguages: z.array(z.string()),
     /**
      * The language(s) the user is currently posting in, configured within the
-     * composer. Multiple languages are psearate by commas.
+     * composer. Multiple languages are separated by commas.
      *
      * BCP-47 2-letter language code without region.
      */
@@ -116,6 +116,7 @@ const schema = z.object({
   }),
   hiddenPosts: z.array(z.string()).optional(), // should move to server
   useInAppBrowser: z.boolean().optional(),
+  /** @deprecated */
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
   disableHaptics: z.boolean().optional(),

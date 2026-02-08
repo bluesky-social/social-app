@@ -1,10 +1,9 @@
 import {View} from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {TimesLarge_Stroke2_Corner0_Rounded} from './icons/Times'
 
 export function SearchError({
   title,
@@ -14,7 +13,7 @@ export function SearchError({
   children?: React.ReactNode
 }) {
   const {gtMobile} = useBreakpoints()
-  const pal = usePalette('default')
+  const t = useTheme()
 
   return (
     <Layout.Content>
@@ -27,7 +26,7 @@ export function SearchError({
             paddingVertical: 150,
           },
         ]}>
-        <TimesLarge_Stroke2_Corner0_Rounded width={32} fill={pal.colors.icon} />
+        <XIcon width={32} style={[t.atoms.text_contrast_low]} />
         <View
           style={[
             a.align_center,

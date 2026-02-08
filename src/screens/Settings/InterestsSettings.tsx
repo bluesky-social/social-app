@@ -6,6 +6,11 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 import debounce from 'lodash.debounce'
 
+import {
+  type Interest,
+  interests as allInterests,
+  useInterestsDisplayNames,
+} from '#/lib/interests'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {
   preferencesQueryKey,
@@ -17,7 +22,6 @@ import {createGetSuggestedUsersQueryKey} from '#/state/queries/trending/useGetSu
 import {createSuggestedStarterPacksQueryKey} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Divider} from '#/components/Divider'
@@ -160,7 +164,7 @@ function Inner({
         onChange={onChangeInterests}
         label={_(msg`Select your interests from the options below`)}>
         <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-          {INTERESTS.map(interest => {
+          {allInterests.map(interest => {
             const name = interestsDisplayNames[interest]
             if (!name) return null
             return (
@@ -178,7 +182,7 @@ function Inner({
   )
 }
 
-export function InterestButton({interest}: {interest: string}) {
+export function InterestButton({interest}: {interest: Interest}) {
   const t = useTheme()
   const interestsDisplayNames = useInterestsDisplayNames()
   const ctx = Toggle.useItemContext()
@@ -230,29 +234,3 @@ export function InterestButton({interest}: {interest: string}) {
     </View>
   )
 }
-
-const INTERESTS = [
-  'animals',
-  'art',
-  'books',
-  'comedy',
-  'comics',
-  'culture',
-  'dev',
-  'education',
-  'food',
-  'gaming',
-  'journalism',
-  'movies',
-  'music',
-  'nature',
-  'news',
-  'pets',
-  'photography',
-  'politics',
-  'science',
-  'sports',
-  'tech',
-  'tv',
-  'writers',
-]

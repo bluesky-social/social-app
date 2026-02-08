@@ -11,7 +11,12 @@ import {
 import {themes} from '#/alf/themes'
 import {type Device} from '#/storage'
 
-export {type TextStyleProp, type Theme, type ViewStyleProp} from '@bsky.app/alf'
+export {
+  type TextStyleProp,
+  type Theme,
+  utils,
+  type ViewStyleProp,
+} from '@bsky.app/alf'
 export {atoms} from '#/alf/atoms'
 export * from '#/alf/breakpoints'
 export * from '#/alf/fonts'

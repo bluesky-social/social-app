@@ -8,7 +8,7 @@ export function useAgeAssuranceCopy() {
   return useMemo(() => {
     return {
       notice: _(
-        msg`The laws in your location require you to verify you're an adult before accessing certain features on Bluesky, like adult content and direct messaging.`,
+        msg`Due to laws in your region, certain features on Bluesky are currently restricted until you're able to verify you're an adult.`,
       ),
       banner: _(
         msg`The laws in your location require you to verify you're an adult to access certain features. Tap to learn more.`,

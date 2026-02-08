@@ -11,7 +11,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import {isIOS} from '#/platform/detection'
+import {IS_IOS} from '#/env'
 import {
   type BottomSheetState,
   type BottomSheetViewProps,
@@ -30,7 +30,7 @@ const NativeView: React.ComponentType<
 
 const NativeModule = requireNativeModule('BottomSheet')
 
-const isIOS15 =
+const IS_IOS15 =
   Platform.OS === 'ios' &&
   // semvar - can be 3 segments, so can't use Number(Platform.Version)
   Number(Platform.Version.split('.').at(0)) < 16
@@ -91,7 +91,7 @@ export class BottomSheetNativeComponent extends React.Component<
     }
 
     let extraStyles
-    if (isIOS15 && this.state.viewHeight) {
+    if (IS_IOS15 && this.state.viewHeight) {
       const {viewHeight} = this.state
       const cornerRadius = this.props.cornerRadius ?? 0
       if (viewHeight < screenHeight / 2) {
@@ -112,9 +112,21 @@ export class BottomSheetNativeComponent extends React.Component<
           onStateChange={this.onStateChange}
           extraStyles={extraStyles}
           onLayout={e => {
-            const {height} = e.nativeEvent.layout
-            this.setState({viewHeight: height})
-            this.updateLayout()
+            if (IS_IOS15) {
+              const {height} = e.nativeEvent.layout
+              this.setState({viewHeight: height})
+            }
+            if (Platform.OS === 'android') {
+              // TEMP HACKFIX: I had to timebox this, but this is Bad.
+              // On Android, if you run updateLayout() immediately,
+              // it will take ages to actually run on the native side.
+              // However, adding literally any delay will fix this, including
+              // a console.log() - just sending the log to the CLI is enough.
+              // TODO: Get to the bottom of this and fix it properly! -sfn
+              setTimeout(() => this.updateLayout())
+            } else {
+              this.updateLayout()
+            }
           }}
         />
       </Portal>
@@ -141,7 +153,7 @@ function BottomSheetNativeComponentInner({
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
 
-  const sheetHeight = isIOS ? screenHeight - insets.top : screenHeight
+  const sheetHeight = IS_IOS ? screenHeight - insets.top : screenHeight
 
   return (
     <NativeView

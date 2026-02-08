@@ -37,7 +37,7 @@ export function Container({
   return (
     <div
       ref={ref}
-      className="w-full bg-white text-black hover:bg-neutral-50 dark:bg-dimmedBg dark:hover:bg-dimmedBgLighten relative transition-colors max-w-[600px] min-w-[300px] flex border dark:border-slate-600 dark:text-slate-200 rounded-xl"
+      className="w-full bg-brand text-black dark:bg-brand relative transition-colors max-w-[600px] min-w-[300px] flex items-center  dark:text-slate-200 rounded-[20px] cursor-pointer hover:bg-opacity-90"
       onClick={() => {
         if (ref.current && href) {
           // forwardRef requires preact/compat - let's keep it simple
@@ -49,7 +49,9 @@ export function Container({
         }
       }}>
       {href && <Link href={href} />}
-      <div className="flex-1 px-4 pt-3 pb-2.5 max-w-full">{children}</div>
+      <div className="flex-1 px-[6px] pt-[6px] pb-2.5 max-w-full">
+        {children}
+      </div>
     </div>
   )
 }

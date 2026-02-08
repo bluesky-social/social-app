@@ -15,6 +15,7 @@ import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useVideoMuteState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {GifPresentationControls} from '../GifPresentationControls'
 import {TimeIndicator} from './TimeIndicator'
 
 export function VideoEmbedInnerNative({
@@ -50,12 +51,14 @@ export function VideoEmbedInnerNative({
     throw new Error(error)
   }
 
+  const isGif = embed.presentation === 'gif'
+
   return (
     <View style={[a.flex_1, a.relative]}>
       <BlueskyVideoView
         url={embed.playlist}
         autoplay={!autoplayDisabled && !isWithinMessage}
-        beginMuted={autoplayDisabled ? false : muted}
+        beginMuted={isGif || autoplayDisabled ? false : muted}
         style={[a.rounded_sm]}
         onActiveChange={e => {
           setIsActive(e.nativeEvent.isActive)
@@ -82,25 +85,36 @@ export function VideoEmbedInnerNative({
         }
         accessibilityHint=""
       />
-      <VideoControls
-        enterFullscreen={() => {
-          videoRef.current?.enterFullscreen(true)
-        }}
-        toggleMuted={() => {
-          videoRef.current?.toggleMuted()
-        }}
-        togglePlayback={() => {
-          videoRef.current?.togglePlayback()
-        }}
-        isPlaying={isPlaying}
-        timeRemaining={timeRemaining}
-      />
+      {isGif ? (
+        <GifPresentationControls
+          onPress={() => {
+            videoRef.current?.togglePlayback()
+          }}
+          isPlaying={isPlaying}
+          isLoading={false}
+          altText={embed.alt}
+        />
+      ) : (
+        <VideoPresentationControls
+          enterFullscreen={() => {
+            videoRef.current?.enterFullscreen(true)
+          }}
+          toggleMuted={() => {
+            videoRef.current?.toggleMuted()
+          }}
+          togglePlayback={() => {
+            videoRef.current?.togglePlayback()
+          }}
+          isPlaying={isPlaying}
+          timeRemaining={timeRemaining}
+        />
+      )}
       <MediaInsetBorder />
     </View>
   )
 }
 
-function VideoControls({
+function VideoPresentationControls({
   enterFullscreen,
   toggleMuted,
   togglePlayback,

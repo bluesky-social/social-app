@@ -1,6 +1,5 @@
 import {useState} from 'react'
-import {Alert, LayoutAnimation, Pressable, View} from 'react-native'
-import {Linking} from 'react-native'
+import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -18,7 +17,6 @@ import {
 } from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isIOS, isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
@@ -37,6 +35,7 @@ import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceDismissibleNotice} from '#/components/ageAssurance/AgeAssuranceDismissibleNotice'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {Button, ButtonText} from '#/components/Button'
+import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
@@ -45,6 +44,7 @@ import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components
 import {ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon} from '#/components/icons/Chevron'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
 import {CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
+import {Contacts_Stroke2_Corner2_Rounded as ContactsIcon} from '#/components/icons/Contacts'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
@@ -68,12 +68,14 @@ import {
   shouldShowVerificationCheckButton,
   VerificationCheckButton,
 } from '#/components/verification/VerificationCheckButton'
-import {IS_INTERNAL} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const reducedMotion = useReducedMotion()
   const {logoutEveryAccount} = useSessionApi()
@@ -89,6 +91,8 @@ export function SettingsScreen({}: Props) {
   const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
   const [showAccounts, setShowAccounts] = useState(false)
   const [showDevOptions, setShowDevOptions] = useState(false)
+  const findContactsEnabled =
+    useIsFindContactsFeatureEnabledBasedOnGeolocation()
 
   return (
     <Layout.Screen>
@@ -207,6 +211,18 @@ export function SettingsScreen({}: Props) {
               <Trans>Content and media</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
+          {IS_NATIVE &&
+            findContactsEnabled &&
+            !ax.features.enabled(ax.features.ImportContactsSettingsDisable) && (
+              <SettingsList.LinkItem
+                to="/settings/find-contacts"
+                label={_(msg`Find friends from contacts`)}>
+                <SettingsList.ItemIcon icon={ContactsIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Find friends from contacts</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.LinkItem>
+            )}
           <SettingsList.LinkItem
             to="/settings/appearance"
             label={_(msg`Appearance`)}>
@@ -492,7 +508,7 @@ function DevOptions() {
           <Trans>Clear all storage data (restart after this)</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
-      {isIOS ? (
+      {IS_IOS ? (
         <SettingsList.PressableItem
           onPress={onPressApplyOta}
           label={_(msg`Apply Pull Request`)}>
@@ -501,7 +517,7 @@ function DevOptions() {
           </SettingsList.ItemText>
         </SettingsList.PressableItem>
       ) : null}
-      {isNative && isCurrentlyRunningPullRequestDeployment ? (
+      {IS_NATIVE && isCurrentlyRunningPullRequestDeployment ? (
         <SettingsList.PressableItem
           onPress={revertToEmbedded}
           label={_(msg`Unapply Pull Request`)}>
@@ -616,7 +632,9 @@ function AccountRow({
         ) : (
           <View style={[{width: 28}]} />
         )}
-        <SettingsList.ItemText>
+        <SettingsList.ItemText
+          numberOfLines={1}
+          style={[a.pr_2xl, a.leading_snug]}>
           {sanitizeHandle(account.handle, '@')}
         </SettingsList.ItemText>
         {pendingDid === account.did && <SettingsList.ItemIcon icon={Loader} />}

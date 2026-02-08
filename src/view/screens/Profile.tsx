@@ -7,17 +7,19 @@ import {
   type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
+  type NavigationProp,
 } from '#/lib/routes/types'
 import {combinedDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
@@ -42,6 +44,11 @@ import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {atoms as a} from '#/alf'
+import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
+import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
+import {Image_Stroke1_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
+import {Message_Stroke1_Corner0_Rounded_Filled as MessageIcon} from '#/components/icons/Message'
+import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons/VideoClip'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
@@ -169,6 +176,8 @@ function ProfileScreenLoaded({
   const {hasSession, currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useOpenComposer()
+  const navigation = useNavigation<NavigationProp>()
+  const requireEmailVerification = useRequireEmailVerification()
   const {
     data: labelerInfo,
     error: labelerError,
@@ -323,7 +332,7 @@ function ProfileScreenLoaded({
       isInvalidHandle(profile.handle)
         ? undefined
         : profile.handle
-    openComposer({mention})
+    openComposer({mention, logContext: 'ProfileFeed'})
   }
 
   const onPageSelected = (i: number) => {
@@ -333,6 +342,17 @@ function ProfileScreenLoaded({
   const onCurrentPageSelected = (index: number) => {
     scrollSectionToTop(index)
   }
+
+  const navToWizard = useCallback(() => {
+    navigation.navigate('StarterPackWizard', {})
+  }, [navigation])
+  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
+    instructions: [
+      <Trans key="nav">
+        Before creating a starter pack, you must first verify your email.
+      </Trans>,
+    ],
+  })
 
   // rendering
   // =
@@ -408,6 +428,19 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No posts yet`)}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Write a post`),
+                        text: _(msg`Write a post`),
+                        onPress: () =>
+                          openComposer({logContext: 'ProfileFeed'}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
               />
             )
           : null}
@@ -421,6 +454,8 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No replies yet`)}
+                emptyStateIcon={MessageIcon}
               />
             )
           : null}
@@ -434,6 +469,20 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No media yet`)}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Post a photo`),
+                        text: _(msg`Post a photo`),
+                        onPress: () =>
+                          openComposer({logContext: 'ProfileFeed'}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
+                emptyStateIcon={ImageIcon}
               />
             )
           : null}
@@ -447,6 +496,20 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No video posts yet`)}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Post a video`),
+                        text: _(msg`Post a video`),
+                        onPress: () =>
+                          openComposer({logContext: 'ProfileFeed'}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
+                emptyStateIcon={VideoIcon}
               />
             )
           : null}
@@ -460,6 +523,8 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No likes yet`)}
+                emptyStateIcon={HeartIcon}
               />
             )
           : null}
@@ -485,6 +550,25 @@ function ProfileScreenLoaded({
                 headerOffset={headerHeight}
                 enabled={isFocused}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={
+                  isMe
+                    ? _(
+                        msg`Starter Packs let you share your favorite feeds and people with your friends.`,
+                      )
+                    : _(msg`No Starter Packs yet`)
+                }
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Create a Starter Pack`),
+                        text: _(msg`Create a Starter Pack`),
+                        onPress: wrappedNavToWizard,
+                        color: 'primary',
+                        size: 'small',
+                      }
+                    : undefined
+                }
+                emptyStateIcon={CircleAndSquareIcon}
               />
             )
           : null}

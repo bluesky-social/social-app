@@ -7,43 +7,49 @@ import {
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {
+  type NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Post} from '#/view/com/post/Post'
+import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {EmptyState} from '#/screens/Bookmarks/components/EmptyState'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {BookmarkFilled} from '#/components/icons/Bookmark'
+import {BookmarkDeleteLarge, BookmarkFilled} from '#/components/icons/Bookmark'
 import {CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon} from '#/components/icons/CircleQuestion'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import * as Skele from '#/components/Skeleton'
 import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
 
 export function BookmarksScreen({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
+  const ax = useAnalytics()
 
   useFocusEffect(
     useCallback(() => {
       setMinimalShellMode(false)
-      logger.metric('bookmarks:view', {})
-    }, [setMinimalShellMode]),
+      ax.metric('bookmarks:view', {})
+    }, [setMinimalShellMode, ax]),
   )
 
   return (
@@ -90,6 +96,7 @@ function BookmarksInner() {
   const initialNumToRender = useInitialNumToRender()
   const cleanError = useCleanError()
   const [isPTRing, setIsPTRing] = useState(false)
+  const trackPostView = usePostViewTracking('Bookmarks')
   const {
     data,
     isLoading,
@@ -138,7 +145,7 @@ function BookmarksInner() {
               key: bookmark.item.uri,
               bookmark: {
                 ...bookmark,
-                item: bookmark.item as $Typed<AppBskyFeedDefs.NotFoundPost>,
+                item: bookmark.item,
               },
             })
           }
@@ -148,7 +155,7 @@ function BookmarksInner() {
               key: bookmark.item.uri,
               bookmark: {
                 ...bookmark,
-                item: bookmark.item as $Typed<AppBskyFeedDefs.PostView>,
+                item: bookmark.item,
               },
             })
           }
@@ -172,6 +179,11 @@ function BookmarksInner() {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
+      onItemSeen={item => {
+        if (item.type === 'bookmark') {
+          trackPostView(item.bookmark.item)
+        }
+      }}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
@@ -182,7 +194,7 @@ function BookmarksInner() {
       }
       initialNumToRender={initialNumToRender}
       windowSize={9}
-      maxToRenderPerBatch={isIOS ? 5 : 1}
+      maxToRenderPerBatch={IS_IOS ? 5 : 1}
       updateCellsBatchingPeriod={40}
       sideBorders={false}
     />
@@ -259,24 +271,57 @@ function BookmarkNotFound({
   )
 }
 
+function BookmarkItem({
+  item,
+  hideTopBorder,
+}: {
+  item: Extract<ListItem, {type: 'bookmark'}>
+  hideTopBorder: boolean
+}) {
+  const ax = useAnalytics()
+  return (
+    <Post
+      post={item.bookmark.item}
+      hideTopBorder={hideTopBorder}
+      onBeforePress={() => {
+        ax.metric('bookmarks:post-clicked', {})
+      }}
+    />
+  )
+}
+
+function BookmarksEmpty() {
+  const t = useTheme()
+  const {_} = useLingui()
+  const navigation = useNavigation<NavigationProp<CommonNavigatorParams>>()
+
+  return (
+    <EmptyState
+      icon={BookmarkDeleteLarge}
+      message={_(msg`Nothing saved yet`)}
+      textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
+      button={{
+        label: _(msg`Button to go back to the home timeline`),
+        text: _(msg`Go home`),
+        onPress: () => navigation.navigate('Home' as never),
+        size: 'small',
+        color: 'secondary',
+      }}
+      style={[a.pt_3xl]}
+    />
+  )
+}
+
 function renderItem({item, index}: {item: ListItem; index: number}) {
   switch (item.type) {
     case 'loading': {
       return <PostFeedLoadingPlaceholder />
     }
     case 'empty': {
-      return <EmptyState />
+      return <BookmarksEmpty />
     }
     case 'bookmark': {
-      return (
-        <Post
-          post={item.bookmark.item}
-          hideTopBorder={index === 0}
-          onBeforePress={() => {
-            logger.metric('bookmarks:post-clicked', {})
-          }}
-        />
-      )
+      return <BookmarkItem item={item} hideTopBorder={index === 0} />
     }
     case 'bookmarkNotFound': {
       return (

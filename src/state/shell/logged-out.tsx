@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useActiveStarterPack} from '#/state/shell/starter-pack'
+import {IS_WEB} from '#/env'
 
 type State = {
   showLoggedOut: boolean
@@ -26,7 +26,7 @@ type Controls = {
     /**
      * The did of the account to populate the login form with.
      */
-    requestedAccount?: string | 'none' | 'new' | 'starterpack'
+    requestedAccount?: (string & {}) | 'none' | 'new' | 'starterpack'
   }) => void
   /**
    * Clears the requested account so that next time the logged out view is
@@ -55,7 +55,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<State>({
     showLoggedOut: shouldShowStarterPack,
     requestedAccountSwitchTo: shouldShowStarterPack
-      ? isWeb
+      ? IS_WEB
         ? 'starterpack'
         : 'new'
       : undefined,

@@ -4,11 +4,11 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isSafari, isTouchDevice} from '#/lib/browser'
 import {atoms as a} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {useVideoVolumeState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {ControlButton} from './ControlButton'
 
 export function VolumeControl({
@@ -57,7 +57,7 @@ export function VolumeControl({
       onPointerEnter={onHover}
       onPointerLeave={onEndHover}
       style={[a.relative]}>
-      {hovered && !isTouchDevice && (
+      {hovered && !IS_WEB_TOUCH_DEVICE && (
         <Animated.View
           entering={FadeIn.duration(100)}
           exiting={FadeOut.duration(100)}
@@ -80,7 +80,9 @@ export function VolumeControl({
               aria-label={_(msg`Volume`)}
               style={
                 // Ridiculous safari hack for old version of safari. Fixed in sonoma beta -h
-                isSafari ? {height: 92, minHeight: '100%'} : {height: '100%'}
+                IS_WEB_SAFARI
+                  ? {height: 92, minHeight: '100%'}
+                  : {height: '100%'}
               }
               onChange={onVolumeChange}
               // @ts-expect-error for old versions of firefox, and then re-using it for targeting the CSS -sfn

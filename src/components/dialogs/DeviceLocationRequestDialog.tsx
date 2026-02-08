@@ -6,13 +6,6 @@ import {useLingui} from '@lingui/react'
 import {wait} from '#/lib/async/wait'
 import {isNetworkError, useCleanError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {
-  computeGeolocationStatus,
-  type GeolocationStatus,
-  useGeolocationConfig,
-} from '#/state/geolocation'
-import {useRequestDeviceLocation} from '#/state/geolocation/useRequestDeviceLocation'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -20,10 +13,12 @@ import * as Dialog from '#/components/Dialog'
 import {PinLocation_Stroke2_Corner0_Rounded as LocationIcon} from '#/components/icons/PinLocation'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
+import {type Geolocation, useRequestDeviceGeolocation} from '#/geolocation'
 
 export type Props = {
   onLocationAcquired?: (props: {
-    geolocationStatus: GeolocationStatus
+    geolocation: Geolocation
     setDialogError: (error: string) => void
     disableDialogAction: () => void
     closeDialog: (callback?: () => void) => void
@@ -57,8 +52,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const {close} = Dialog.useDialogContext()
-  const requestDeviceLocation = useRequestDeviceLocation()
-  const {config} = useGeolocationConfig()
+  const requestDeviceLocation = useRequestDeviceGeolocation()
   const cleanError = useCleanError()
 
   const [isRequesting, setIsRequesting] = useState(false)
@@ -76,9 +70,8 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
         const location = req.location
 
         if (location && location.countryCode) {
-          const geolocationStatus = computeGeolocationStatus(location, config)
           onLocationAcquired?.({
-            geolocationStatus,
+            geolocation: location,
             setDialogError: setError,
             disableDialogAction: () => setDialogDisabled(true),
             closeDialog: close,
@@ -145,7 +138,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
             disabled={isRequesting}
             label={_(msg`Allow location access`)}
             onPress={onPressConfirm}
-            size={isWeb ? 'small' : 'large'}
+            size={IS_WEB ? 'small' : 'large'}
             color="primary">
             <ButtonIcon icon={isRequesting ? Loader : LocationIcon} />
             <ButtonText>
@@ -154,11 +147,11 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
           </Button>
         )}
 
-        {!isWeb && (
+        {!IS_WEB && (
           <Button
             label={_(msg`Cancel`)}
             onPress={() => close()}
-            size={isWeb ? 'small' : 'large'}
+            size={IS_WEB ? 'small' : 'large'}
             color="secondary">
             <ButtonText>
               <Trans>Cancel</Trans>

@@ -11,7 +11,6 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {useActorStatus} from '#/lib/actor-status'
-import {isTouchDevice} from '#/lib/browser'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -43,6 +42,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -70,7 +70,7 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
     }
   }
 
-  if (props.disable || isTouchDevice) {
+  if (props.disable || IS_WEB_TOUCH_DEVICE) {
     return props.children
   } else {
     return (
@@ -389,6 +389,7 @@ let Card = ({
       {data && moderationOpts ? (
         status.isActive ? (
           <LiveStatus
+            status={status}
             profile={data}
             embed={status.embed}
             padding="lg"
@@ -515,7 +516,12 @@ function Inner({
           <View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
             <Text
               numberOfLines={1}
-              style={[a.text_lg, a.font_semi_bold, a.self_start]}>
+              style={[
+                a.text_lg,
+                a.leading_snug,
+                a.font_semi_bold,
+                a.self_start,
+              ]}>
               {sanitizeDisplayName(
                 profile.displayName || sanitizeHandle(profile.handle),
                 moderation.ui('displayName'),

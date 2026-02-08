@@ -51,6 +51,45 @@
     <meta property="og:description" content="This profile requires authentication to view.">
     <meta property="twitter:description" content="This profile requires authentication to view.">
   {% endif %}
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "dateCreated": "{{ profileView.CreatedAt }}",
+    "mainEntity": {
+      "@type": "Person",
+      {%- if profileView.DisplayName %}
+      "name": "{{ profileView.DisplayName }}",
+      "alternateName": "@{{ profileView.Handle }}",
+      {% else %}
+      "name": "@{{ profileView.Handle }}",
+      {% endif -%}
+      "identifier": "{{ profileView.Did }}",
+      "description": "{{ profileView.Description }}",
+      "image": "{{ profileView.Avatar }}",
+      "interactionStatistic": [
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/FollowAction",
+          "userInteractionCount": {{ profileView.FollowersCount }}
+        }
+      ],
+      "agentInteractionStatistic": [
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/FollowAction",
+          "userInteractionCount": {{ profileView.FollowsCount }}
+        },
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/WriteAction",
+          "userInteractionCount": {{ profileView.PostsCount }}
+        }
+      ]
+    }
+  }
+  </script>
 {% endif -%}
 {%- endblock %}
 

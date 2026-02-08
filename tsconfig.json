@@ -10,7 +10,14 @@
       "crypto": ["./src/platform/crypto.ts"],
       "multiformats/cid": ["node_modules/multiformats/types/src/cid.d.ts"],
       "multiformats/hashes/hasher": ["node_modules/multiformats/types/src/hashes/hasher.d.ts"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "ts-plugin-sort-import-suggestions",
+        "moveUpPatterns": ["#/", "@lingui/macro"],
+        "moveDownPatterns": ["react-native-reanimated/lib"],
+      }
+    ]
   },
   "exclude": ["bskyweb", "bskyembed", "web-build"]
 }

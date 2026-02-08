@@ -3,15 +3,15 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
+import {useAnalytics} from '#/analytics'
 import {FormContainer} from './FormContainer'
 
 export const ChooseAccountForm = ({
@@ -23,6 +23,7 @@ export const ChooseAccountForm = ({
 }) => {
   const [pendingDid, setPendingDid] = React.useState<string | null>(null)
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -45,8 +46,8 @@ export const ChooseAccountForm = ({
       }
       try {
         setPendingDid(account.did)
-        await resumeSession(account)
-        logEvent('account:loggedIn', {
+        await resumeSession(account, true)
+        ax.metric('account:loggedIn', {
           logContext: 'ChooseAccountForm',
           withPassword: false,
         })
@@ -74,7 +75,8 @@ export const ChooseAccountForm = ({
   return (
     <FormContainer
       testID="chooseAccountForm"
-      titleText={<Trans>Select account</Trans>}>
+      titleText={<Trans>Select account</Trans>}
+      style={web([a.py_2xl])}>
       <View>
         <TextField.LabelText>
           <Trans>Sign in as...</Trans>

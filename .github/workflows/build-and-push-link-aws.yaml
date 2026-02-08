@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'bskylink/**'
-      - 'Dockerfile.bskylink'
-      - '.github/workflows/build-and-push-link-aws.yaml'
+      - "bskylink/**"
+      - "Dockerfile.bskylink"
+      - ".github/workflows/build-and-push-link-aws.yaml"
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v1

@@ -7,7 +7,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, tokens} from '#/alf'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import {Text} from '#/components/Typography'
-import {ChatListItem} from './ChatListItem'
+import {ChatListItem, ChatListItemPortal} from './ChatListItem'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
 export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
@@ -42,37 +42,40 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             <Trans comment="Accept a chat request">Accept Request</Trans>
           </Text>
         </View>
+        {/* then, this gets absolutely positioned on top of the spacer */}
+        <ChatListItemPortal.Portal>
+          <View
+            style={[
+              a.absolute,
+              a.pr_md,
+              a.w_full,
+              a.flex_row,
+              a.align_center,
+              a.gap_sm,
+              {
+                bottom: tokens.space.md,
+                paddingLeft: tokens.space.lg + 52 + tokens.space.md,
+              },
+            ]}>
+            {!isDeletedAccount ? (
+              <>
+                <AcceptChatButton convo={convo} currentScreen="list" />
+                <RejectMenu
+                  convo={convo}
+                  profile={otherUser}
+                  showDeleteConvo
+                  currentScreen="list"
+                />
+              </>
+            ) : (
+              <>
+                <DeleteChatButton convo={convo} currentScreen="list" />
+                <View style={a.flex_1} />
+              </>
+            )}
+          </View>
+        </ChatListItemPortal.Portal>
       </ChatListItem>
-      <View
-        style={[
-          a.absolute,
-          a.pr_md,
-          a.w_full,
-          a.flex_row,
-          a.align_center,
-          a.gap_sm,
-          {
-            bottom: tokens.space.md,
-            paddingLeft: tokens.space.lg + 52 + tokens.space.md,
-          },
-        ]}>
-        {!isDeletedAccount ? (
-          <>
-            <AcceptChatButton convo={convo} currentScreen="list" />
-            <RejectMenu
-              convo={convo}
-              profile={otherUser}
-              showDeleteConvo
-              currentScreen="list"
-            />
-          </>
-        ) : (
-          <>
-            <DeleteChatButton convo={convo} currentScreen="list" />
-            <View style={a.flex_1} />
-          </>
-        )}
-      </View>
     </View>
   )
 }

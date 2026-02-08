@@ -46,7 +46,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
             label={_(msg`Block or report`)}
             convo={convoState.convo}
             profile={otherUser}
-            color="negative"
+            color="negative_subtle"
             size="small"
             currentScreen="conversation"
           />
@@ -70,8 +70,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
         <AcceptChatButton
           onAcceptConvo={onAcceptChat}
           convo={convoState.convo}
-          color="primary"
-          variant="outline"
+          color="primary_subtle"
           size="small"
           currentScreen="conversation"
         />

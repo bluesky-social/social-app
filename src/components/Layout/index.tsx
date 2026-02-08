@@ -11,7 +11,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {isWeb} from '#/platform/detection'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   atoms as a,
@@ -23,6 +22,7 @@ import {
 import {useDialogContext} from '#/components/Dialog'
 import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
+import {IS_WEB} from '#/env'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
@@ -43,7 +43,7 @@ export const Screen = memo(function Screen({
   const {top} = useSafeAreaInsets()
   return (
     <>
-      {isWeb && <WebCenterBorders />}
+      {IS_WEB && <WebCenterBorders />}
       <View
         style={[a.util_screen_outer, {paddingTop: noInsetTop ? 0 : top}, style]}
         {...props}
@@ -98,7 +98,7 @@ export const Content = memo(
           contentContainerStyle,
         ]}
         {...props}>
-        {isWeb ? (
+        {IS_WEB ? (
           <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
             {/* @ts-expect-error web only -esb */}
             {children}
@@ -145,7 +145,7 @@ export const KeyboardAwareContent = memo(function LayoutKeyboardAwareContent({
       ]}
       keyboardShouldPersistTaps="handled"
       {...props}>
-      {isWeb ? <Center>{children}</Center> : children}
+      {IS_WEB ? <Center>{children}</Center> : children}
     </KeyboardAwareScrollView>
   )
 })

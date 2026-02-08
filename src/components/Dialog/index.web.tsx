@@ -3,8 +3,8 @@ import {
   FlatList,
   type FlatListProps,
   type GestureResponderEvent,
+  Pressable,
   type StyleProp,
-  TouchableWithoutFeedback,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -98,7 +98,7 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
-      isNativeDialog: false,
+      IS_NATIVEDialog: false,
       nativeSnapPoint: 0,
       disableDrag: false,
       setDisableDrag: () => {},
@@ -113,7 +113,7 @@ export function Outer({
         <Portal>
           <Context.Provider value={context}>
             <RemoveScrollBar />
-            <TouchableWithoutFeedback
+            <Pressable
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
               onPress={handleBackgroundPress}>
@@ -146,7 +146,7 @@ export function Outer({
                   {children}
                 </View>
               </View>
-            </TouchableWithoutFeedback>
+            </Pressable>
           </Context.Provider>
         </Portal>
       )}
@@ -180,6 +180,7 @@ export function Inner({
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
+        // note: flatten is required for some reason -sfn
         style={flatten([
           a.relative,
           a.rounded_md,
@@ -244,7 +245,7 @@ export const InnerFlatList = React.forwardRef<
       contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
-        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
+        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, style]}
         {...props}
       />
       {footer}
@@ -303,7 +304,7 @@ export function Handle() {
   return null
 }
 
-function Backdrop() {
+export function Backdrop() {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
   return (

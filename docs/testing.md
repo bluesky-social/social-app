@@ -12,7 +12,7 @@ values.
 ### Running Maestro tests
 
 - In one tab, run `yarn e2e:mock-server`
-- In a second tab, run `yarn e2e:metro`
+- In a second tab, run `yarn e2e:build`
 - In a third tab, run `yarn e2e:run`
 
 ## Using Flashlight for Performance Testing

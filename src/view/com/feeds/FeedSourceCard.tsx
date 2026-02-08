@@ -182,11 +182,15 @@ export function FeedSourceCardLoaded({
     return (
       <Link
         testID={`feed-${feed.displayName}`}
-        label={_(
+        label={
           feed.type === 'feed'
-            ? msg`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, liked by ${feed.likeCount || 0}`
-            : msg`${feed.displayName}, a list by ${sanitizeHandle(feed.creatorHandle, '@')}`,
-        )}
+            ? _(
+                msg`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, liked by ${feed.likeCount || 0}`,
+              )
+            : _(
+                msg`${feed.displayName}, a list by ${sanitizeHandle(feed.creatorHandle, '@')}`,
+              )
+        }
         to={{
           screen: feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList',
           params: {name: feed.creatorDid, rkey: new AtUri(feed.uri).rkey},

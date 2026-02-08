@@ -62,7 +62,10 @@ export async function getLinkMeta(
     likelyType,
     url,
   }
-  if (likelyType !== LikelyType.HTML) {
+  const htmlExemptedHostnames: string[] = ['storage.courtlistener.com']
+  const isExemptedFromHtmlCheck = htmlExemptedHostnames.includes(urlp.hostname)
+  // Skip early return only for hosts exempted from the HTML check
+  if (likelyType !== LikelyType.HTML && !isExemptedFromHtmlCheck) {
     return meta
   }
 

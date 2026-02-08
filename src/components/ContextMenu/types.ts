@@ -85,7 +85,7 @@ export type TriggerProps = {
 }
 export type TriggerChildProps =
   | {
-      isNative: true
+      IS_NATIVE: true
       control: {
         isOpen: boolean
         open: (mode: 'full' | 'auxiliary-only') => void
@@ -115,7 +115,7 @@ export type TriggerChildProps =
       }
     }
   | {
-      isNative: false
+      IS_NATIVE: false
       control: Dialog.DialogOuterProps['control']
       state: {
         hovered: false

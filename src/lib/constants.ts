@@ -17,6 +17,7 @@ export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
+export const CARD_ASPECT_RATIO = 1200 / 630
 
 // HACK
 // Yes, this is exactly what it looks like. It's a hard-coded constant
@@ -202,7 +203,14 @@ export const EMOJI_REACTION_LIMIT = 5
 export const urls = {
   website: {
     blog: {
+      findFriendsAnnouncement:
+        'https://bsky.social/about/blog/12-16-2025-find-friends',
       initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
+      searchTipsAndTricks: 'https://bsky.social/about/blog/05-31-2024-search',
+    },
+    support: {
+      findFriendsPrivacyPolicy:
+        'https://bsky.social/about/support/find-friends-privacy-policy',
     },
   },
 }
@@ -212,6 +220,7 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
+export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always the same
 
 // temp hack for e2e - esb
 export const BLUESKY_PROXY_HEADER = {
@@ -230,6 +239,10 @@ export const DM_SERVICE_HEADERS = {
 
 export const BLUESKY_MOD_SERVICE_HEADERS = {
   'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
+}
+
+export const BLUESKY_NOTIF_SERVICE_HEADERS = {
+  'atproto-proxy': `${BLUESKY_PROXY_DID}#bsky_notif`,
 }
 
 export const webLinks = {

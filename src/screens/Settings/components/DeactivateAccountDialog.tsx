@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useAgent, useSessionApi} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogOuterProps} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -32,7 +32,6 @@ function DeactivateAccountDialogInner({
   control: DialogOuterProps['control']
 }) {
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const agent = useAgent()
   const {logoutCurrentAccount} = useSessionApi()
@@ -100,9 +99,8 @@ function DeactivateAccountDialogInner({
       </View>
       <Prompt.Actions>
         <Button
-          variant="solid"
           color="negative"
-          size={gtMobile ? 'small' : 'large'}
+          size="large"
           label={_(msg`Yes, deactivate`)}
           onPress={handleDeactivate}>
           <ButtonText>{_(msg`Yes, deactivate`)}</ButtonText>

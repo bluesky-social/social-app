@@ -1,18 +1,18 @@
 appId: xyz.blueskyweb.app
 ---
 - launchApp:
-   appId: "xyz.blueskyweb.app"
-   clearState: true
+    appId: "xyz.blueskyweb.app"
+    clearState: true
 - waitForAnimationToEnd
 - tapOn: "http://localhost:8081"
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Continue"
 - swipe:
-   from: "Bluesky"
-   direction: DOWN
+    from: "Bluesky"
+    direction: DOWN
+    duration: 100
 - tapOn:
-   id: e2eProxyHeaderInput
+    id: e2eProxyHeaderInput
 - inputText: ${output.result}
 - pressKey: Enter
-- hideKeyboard

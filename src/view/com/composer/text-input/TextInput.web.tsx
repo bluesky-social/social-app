@@ -20,7 +20,7 @@ import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {Fragment, Node, Slice} from '@tiptap/pm/model'
 import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
-import Graphemer from 'graphemer'
+import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
@@ -52,6 +52,7 @@ export function TextInput({
   onPressPublish,
   onNewLink,
   onFocus,
+  autoFocus,
 }: TextInputProps) {
   const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
@@ -211,39 +212,43 @@ export function TextInput({
             const isNotSelection = view.state.selection.empty
             if (isNotSelection) {
               const cursorPosition = view.state.selection.$anchor.pos
-              const textBefore = view.state.doc.textBetween(0, cursorPosition)
-              const graphemes = new Graphemer().splitGraphemes(textBefore)
+              const textBefore = view.state.doc.textBetween(
+                0,
+                cursorPosition,
+                // important - use \n as a block separator, otherwise
+                // all the lines get mushed together -sfn
+                '\n',
+              )
+              const graphemes = [...splitGraphemes(textBefore)]
 
               if (graphemes.length > 0) {
                 const lastGrapheme = graphemes[graphemes.length - 1]
-                const deleteFrom = cursorPosition - lastGrapheme.length
-                editor?.commands.deleteRange({
-                  from: deleteFrom,
-                  to: cursorPosition,
-                })
-                return true
+                // deleteRange doesn't work on newlines, because tiptap
+                // treats them as separate 'blocks' and we're using \n
+                // as a stand-in. bail out if the last grapheme is a newline
+                // to let the default behavior handle it -sfn
+                if (lastGrapheme !== '\n') {
+                  // otherwise, delete the last grapheme using deleteRange,
+                  // so that emojis are deleted as a whole
+                  const deleteFrom = cursorPosition - lastGrapheme.length
+                  editor?.commands.deleteRange({
+                    from: deleteFrom,
+                    to: cursorPosition,
+                  })
+                  return true
+                }
               }
             }
           }
         },
       },
-      content: generateJSON(richtext.text.toString(), extensions, {
+      content: generateJSON(richTextToHTML(richtext), extensions, {
         preserveWhitespace: 'full',
       }),
-      autofocus: 'end',
+      autofocus: autoFocus ? 'end' : null,
       editable: true,
       injectCSS: true,
       shouldRerenderOnTransaction: false,
-      onCreate({editor: editorProp}) {
-        // HACK
-        // the 'enter' animation sometimes causes autofocus to fail
-        // (see Composer.web.tsx in shell)
-        // so we wait 200ms (the anim is 150ms) and then focus manually
-        // -prf
-        setTimeout(() => {
-          editorProp.chain().focus('end').run()
-        }, 200)
-      },
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
         const newText = editorJsonToText(json)
@@ -366,6 +371,36 @@ export function TextInput({
       )}
     </>
   )
+}
+
+/**
+ * Helper function to initialise the editor with RichText, which expects HTML
+ *
+ * All the extensions are able to initialise themselves from plain text, *except*
+ * for the Mention extension - we need to manually convert it into a `<span>` element
+ *
+ * It also escapes HTML characters
+ */
+function richTextToHTML(richtext: RichText): string {
+  let html = ''
+
+  for (const segment of richtext.segments()) {
+    if (segment.mention) {
+      html += `<span data-type="mention" data-id="${escapeHTML(segment.mention.did)}"></span>`
+    } else {
+      html += escapeHTML(segment.text)
+    }
+  }
+
+  return html
+}
+
+function escapeHTML(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
 }
 
 function editorJsonToText(

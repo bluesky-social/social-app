@@ -56,6 +56,46 @@
   <meta property="article:published_time" content="{{ postView.IndexedAt }}">
   <link rel="alternate" type="application/json+oembed" href="https://embed.bsky.app/oembed?format=json&url={{ postView.Uri | urlencode }}" />
   <link rel="alternate" href="{{ postView.Uri }}" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "DiscussionForumPosting",
+      "author": {
+        "@type": "Person",
+        {%- if postView.Author.DisplayName %}
+        "name": "{{ postView.Author.DisplayName }}",
+        "alternateName": "@{{ postView.Author.Handle }}",
+        {% else %}
+        "name": "@{{ postView.Author.Handle }}",
+        {% endif -%}
+        "url": "https://bsky.app/profile/{{ postView.Author.Handle }}"
+      },
+      {%- if postText %}
+      "text": "{{ postText }}",
+      {% endif %}
+      {%- if imageThumbUrls %}
+      "image": "{{ imageThumbUrls[0] }}",
+      {% endif %}
+      "datePublished": "{{ postView.IndexedAt }}",
+      "interactionStatistic": [
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/LikeAction",
+          "userInteractionCount": {{ postView.LikeCount }}
+        },
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/CommentAction",
+          "userInteractionCount": {{ postView.ReplyCount }}
+        },
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/ShareAction",
+          "userInteractionCount": {{ postView.RepostCount + postView.QuoteCount }}
+        }
+      ]
+    }
+  </script>
 {%- elif requiresAuth and profileHandle -%}
   <meta property="og:type" content="article">
   <meta property="profile:username" content="{{ profileHandle }}">
@@ -68,9 +108,9 @@
   {% else %}
   <meta property="og:title" content="@{{ profileHandle }}">
   {% endif -%}
-  <meta name="description" content="This post requires authentication to view.">
-  <meta property="og:description" content="This post requires authentication to view.">
-  <meta property="twitter:description" content="This post requires authentication to view.">
+  <meta name="description" content="This author has chosen to make their posts visible only to people who are signed in.">
+  <meta property="og:description" content="This author has chosen to make their posts visible only to people who are signed in.">
+  <meta property="twitter:description" content="This author has chosen to make their posts visible only to people who are signed in.">
   <meta name="twitter:card" content="summary">
 {% endif -%}
 {%- endblock %}
@@ -89,7 +129,7 @@
 <div id="bsky_post_summary">
   <h3>Post</h3>
   <p id="bsky_handle">{{ profileHandle }}</p>
-  <p id="bsky_post_text">This post requires authentication to view.</p>
+      <p id="bsky_post_text">This author has chosen to make their posts visible only to people who are signed in.</p>
 </div>
 {% endif -%}
 {%- endblock %}

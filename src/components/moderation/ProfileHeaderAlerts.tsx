@@ -6,6 +6,7 @@ import * as Pills from '#/components/Pills'
 
 export function ProfileHeaderAlerts({
   moderation,
+  style,
 }: {
   moderation: ModerationDecision
   style?: StyleProp<ViewStyle>
@@ -16,7 +17,7 @@ export function ProfileHeaderAlerts({
   }
 
   return (
-    <Pills.Row size="lg">
+    <Pills.Row size="lg" style={style}>
       {modui.alerts.filter(unique).map(cause => (
         <Pills.Label
           size="lg"

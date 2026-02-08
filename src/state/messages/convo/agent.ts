@@ -11,9 +11,11 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {isNetworkError} from '#/lib/strings/errors'
+import {
+  isErrorMaybeAppPasswordPermissions,
+  isNetworkError,
+} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
@@ -34,6 +36,7 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
+import {IS_NATIVE} from '#/env'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -92,7 +95,7 @@ export class Convo {
     this.convoId = params.convoId
     this.agent = params.agent
     this.events = params.events
-    this.senderUserDid = params.agent.session?.did!
+    this.senderUserDid = params.agent.assertDid
 
     if (params.placeholderData) {
       this.setupPlaceholderData(params.placeholderData)
@@ -485,7 +488,7 @@ export class Convo {
         this.dispatch({event: ConvoDispatchEvent.Ready})
       }
     } catch (e: any) {
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error('setup failed', {
           safeMessage: e.message,
         })
@@ -594,7 +597,7 @@ export class Convo {
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
     } catch (e: any) {
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`failed to refresh convo`, {
           safeMessage: e.message,
         })
@@ -636,7 +639,7 @@ export class Convo {
           {
             cursor: nextCursor,
             convoId: this.convoId,
-            limit: isNative ? 30 : 60,
+            limit: IS_NATIVE ? 30 : 60,
           },
           {headers: DM_SERVICE_HEADERS},
         )
@@ -662,7 +665,7 @@ export class Convo {
         }
       }
     } catch (e: any) {
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error('failed to fetch message history', {
           safeMessage: e.message,
         })
@@ -938,7 +941,7 @@ export class Convo {
     } else {
       this.pendingMessageFailure = 'unrecoverable'
 
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`handleSendMessageFailure received unknown error`, {
           safeMessage: e.message,
         })
@@ -1014,7 +1017,7 @@ export class Convo {
         )
       })
     } catch (e: any) {
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`failed to delete message`, {
           safeMessage: e.message,
         })

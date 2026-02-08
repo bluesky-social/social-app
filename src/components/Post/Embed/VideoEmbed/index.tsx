@@ -6,21 +6,20 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform} from '#/alf'
 import {Button} from '#/components/Button'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
+import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {GifPresentationControls} from './GifPresentationControls'
 import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 interface Props {
   embed: AppBskyEmbedVideo.View
-  crop?: 'none' | 'square' | 'constrained'
 }
 
-export function VideoEmbed({embed, crop}: Props) {
-  const t = useTheme()
+export function VideoEmbed({embed}: Props) {
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -40,13 +39,10 @@ export function VideoEmbed({embed, crop}: Props) {
   }
 
   let constrained: number | undefined
-  let max: number | undefined
   if (aspectRatio !== undefined) {
     const ratio = 1 / 2 // max of 1:2 ratio in feeds
     constrained = Math.max(aspectRatio, ratio)
-    max = Math.max(aspectRatio, 0.25) // max of 1:4 in thread
   }
-  const cropDisabled = crop === 'none'
 
   const contents = (
     <ErrorBoundary renderError={renderError} key={key}>
@@ -56,28 +52,13 @@ export function VideoEmbed({embed, crop}: Props) {
 
   return (
     <View style={[a.pt_xs]}>
-      {cropDisabled ? (
-        <View
-          style={[
-            a.w_full,
-            a.overflow_hidden,
-            {aspectRatio: max ?? 1},
-            a.rounded_md,
-            a.overflow_hidden,
-            t.atoms.bg_contrast_25,
-          ]}>
-          {contents}
-        </View>
-      ) : (
-        <ConstrainedImage
-          fullBleed={crop === 'square'}
-          aspectRatio={constrained || 1}
-          // slightly smaller max height than images
-          // images use 16 / 9, for reference
-          minMobileAspectRatio={14 / 9}>
-          {contents}
-        </ConstrainedImage>
-      )}
+      <ConstrainedImage
+        aspectRatio={constrained || 1}
+        // slightly smaller max height than images
+        // images use 16 / 9, for reference
+        minMobileAspectRatio={14 / 9}>
+        {contents}
+      </ConstrainedImage>
     </View>
   )
 }
@@ -121,33 +102,40 @@ function InnerWrapper({embed}: Props) {
           {
             backgroundColor: 'transparent', // If you don't add `backgroundColor` to the styles here,
             // the play button won't show up on the first render on android 🥴😮‍💨
-            display: showOverlay ? 'flex' : 'none',
           },
+          platform({
+            android: {display: showOverlay ? 'flex' : 'none'},
+            ios: {zIndex: showOverlay ? 1 : -1},
+          }),
         ]}
         cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
       >
-        {showOverlay && (
-          <Button
-            style={[a.flex_1, a.align_center, a.justify_center]}
-            onPress={() => {
-              ref.current?.togglePlayback()
-            }}
-            label={_(msg`Play video`)}>
-            {showSpinner ? (
-              <View
-                style={[
-                  a.rounded_full,
-                  a.p_xs,
-                  a.align_center,
-                  a.justify_center,
-                ]}>
-                <ActivityIndicator size="large" color="white" />
-              </View>
-            ) : (
-              <PlayButtonIcon />
-            )}
-          </Button>
-        )}
+        {showOverlay &&
+          (embed.presentation === 'gif' ? (
+            <GifPresentationControls
+              isPlaying={false}
+              isLoading={showSpinner}
+              onPress={() => {
+                ref.current?.togglePlayback()
+              }}
+              altText={embed.alt}
+            />
+          ) : (
+            <Button
+              style={[a.flex_1, a.align_center, a.justify_center]}
+              onPress={() => {
+                ref.current?.togglePlayback()
+              }}
+              label={_(msg`Play video`)}>
+              {showSpinner ? (
+                <View style={[a.align_center, a.justify_center]}>
+                  <ActivityIndicator size="large" color="white" />
+                </View>
+              ) : (
+                <PlayButtonIcon />
+              )}
+            </Button>
+          ))}
       </ImageBackground>
     </>
   )

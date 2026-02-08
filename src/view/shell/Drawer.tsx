@@ -13,7 +13,6 @@ import {getTabState, TabState} from '#/lib/routes/helpers'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -40,8 +39,10 @@ import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
-import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {
+  MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
+  MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
+} from '#/components/icons/MagnifyingGlass'
 import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
@@ -55,6 +56,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {IS_WEB} from '#/env'
 
 const iconWidth = 26
 
@@ -165,7 +167,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     (tab: 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile') => {
       const state = navigation.getState()
       setDrawerOpen(false)
-      if (isWeb) {
+      if (IS_WEB) {
         // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
         if (tab === 'MyProfile') {
           navigation.navigate('Profile', {name: currentAccount!.handle})
@@ -495,10 +497,10 @@ let NotificationsMenuItem = ({
         numUnreadNotifications === ''
           ? ''
           : _(
-              msg`${plural(numUnreadNotifications ?? 0, {
+              plural(numUnreadNotifications ?? 0, {
                 one: '# unread item',
                 other: '# unread items',
-              })}` || '',
+              }),
             )
       }
       count={numUnreadNotifications}

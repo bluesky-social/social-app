@@ -1,29 +1,36 @@
 import React from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {List} from '#/view/com/util/List'
-import {atoms as a, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import * as Layout from '#/components/Layout'
+import {InlineLinkText} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {SearchError} from '#/components/SearchError'
+import {Text} from '#/components/Typography'
 
 const renderItem = ({item}: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
   return <Post post={item} />
@@ -39,13 +46,22 @@ export default function HashtagScreen({
   const {tag, author} = route.params
   const {_} = useLingui()
 
-  const fullTag = React.useMemo(() => {
-    return `#${decodeURIComponent(tag)}`
+  const decodedTag = React.useMemo(() => {
+    return decodeURIComponent(tag)
   }, [tag])
 
+  const isCashtag = decodedTag.startsWith('$')
+
+  const fullTag = React.useMemo(() => {
+    // Cashtags already include the $ prefix, hashtags need # added
+    return isCashtag ? decodedTag : `#${decodedTag}`
+  }, [decodedTag, isCashtag])
+
   const headerTitle = React.useMemo(() => {
-    return enforceLen(fullTag.toLowerCase(), 24, true, 'middle')
-  }, [fullTag])
+    // Keep cashtags uppercase, lowercase hashtags
+    const displayTag = isCashtag ? fullTag.toUpperCase() : fullTag.toLowerCase()
+    return enforceLen(displayTag, 24, true, 'middle')
+  }, [fullTag, isCashtag])
 
   const sanitizedAuthor = React.useMemo(() => {
     if (!author) return
@@ -161,11 +177,18 @@ function HashtagScreenTab({
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = React.useState(false)
+  const t = useTheme()
+  const {hasSession} = useSession()
+  const trackPostView = usePostViewTracking('Hashtag')
+
+  const isCashtag = fullTag.startsWith('$')
 
   const queryParam = React.useMemo(() => {
-    if (!author) return fullTag
-    return `${fullTag} from:${author}`
-  }, [fullTag, author])
+    // Cashtags need # prefix for search: "#$BTC" or "#$BTC from:author"
+    const searchTag = isCashtag ? `#${fullTag}` : fullTag
+    if (!author) return searchTag
+    return `${searchTag} from:${author}`
+  }, [fullTag, author, isCashtag])
 
   const {
     data,
@@ -194,6 +217,49 @@ function HashtagScreenTab({
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+
+  const showSignIn = () => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'none'})
+  }
+
+  const showCreateAccount = () => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'new'})
+  }
+
+  if (!hasSession) {
+    return (
+      <SearchError
+        title={_(msg`Search is currently unavailable when logged out`)}>
+        <Text style={[a.text_md, a.text_center, a.leading_snug]}>
+          <Trans>
+            <InlineLinkText
+              label={_(msg`Sign in`)}
+              to={'#'}
+              onPress={showSignIn}>
+              Sign in
+            </InlineLinkText>
+            <Text style={t.atoms.text_contrast_medium}> or </Text>
+            <InlineLinkText
+              label={_(msg`Create an account`)}
+              to={'#'}
+              onPress={showCreateAccount}>
+              create an account
+            </InlineLinkText>
+            <Text> </Text>
+            <Text style={t.atoms.text_contrast_medium}>
+              to search for news, sports, politics, and everything else
+              happening on Bluesky.
+            </Text>
+          </Trans>
+        </Text>
+      </SearchError>
+    )
+  }
+
   return (
     <>
       {posts.length < 1 ? (
@@ -202,7 +268,7 @@ function HashtagScreenTab({
           isError={isError}
           onRetry={refetch}
           emptyType="results"
-          emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
+          emptyMessage={_(msg`We couldn't find any results for that tag.`)}
         />
       ) : (
         <List
@@ -213,6 +279,7 @@ function HashtagScreenTab({
           onRefresh={onRefresh}
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
+          onItemSeen={trackPostView}
           // @ts-ignore web only -prf
           desktopFixedHeight
           ListFooterComponent={

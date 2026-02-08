@@ -17,6 +17,7 @@ export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
   const urip = new AtUri(uri || '')
   const res = useResolveDidQuery(urip.host)
   if (res.data) {
+    // @ts-expect-error TODO new-sdk-migration
     urip.host = res.data
     return {
       ...res,

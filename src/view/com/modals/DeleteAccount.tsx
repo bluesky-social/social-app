@@ -16,19 +16,19 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
 import {colors, gradients, s} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
-import {isAndroid, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {atoms as a, useTheme as useNewTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text as NewText} from '#/components/Typography'
+import {IS_ANDROID, IS_WEB} from '#/env'
 import {resetToTab} from '../../../Navigation'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {ScrollView, TextInput} from './util'
 
-export const snapPoints = isAndroid ? ['90%'] : ['55%']
+export const snapPoints = IS_ANDROID ? ['90%'] : ['55%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
@@ -173,7 +173,7 @@ export function Component({}: {}) {
               </>
             )}
 
-            <View style={[!isWeb && a.px_xl]}>
+            <View style={[!IS_WEB && a.px_xl]}>
               <View
                 style={[
                   a.w_full,

@@ -134,7 +134,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                 <Admonition.Outer type="tip">
                   <Admonition.Row>
                     <Admonition.Icon />
-                    <View style={[a.flex_1, a.gap_sm]}>
+                    <Admonition.Content>
                       <Admonition.Text>
                         <Trans>
                           Enable notifications for an account by visiting their
@@ -166,7 +166,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                           .
                         </Trans>
                       </Admonition.Text>
-                    </View>
+                    </Admonition.Content>
                   </Admonition.Row>
                 </Admonition.Outer>
               ) : (

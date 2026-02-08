@@ -163,6 +163,7 @@ export async function resolveLink(
       const res = await agent.resolveHandle({
         handle: urip.host,
       })
+      // @ts-expect-error TODO new-sdk-migration
       urip.host = res.data.did
     }
     const res = await agent.getPosts({

@@ -27,13 +27,13 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isStatusStillActive, validateStatus} from '#/lib/actor-status'
+import {isStatusStillActive, isStatusValidForViewers} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logEvent} from '#/lib/statsig/statsig'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
@@ -68,6 +68,10 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
+import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -148,6 +152,14 @@ type FeedRow =
       type: 'ageAssuranceBanner'
       key: string
     }
+  | {
+      type: 'composerPrompt'
+      key: string
+    }
+  | {
+      type: 'liveEventFeedsAndTrendingBanner'
+      key: string
+    }
 
 export function getItemsForFeedback(feedRow: FeedRow): {
   item: FeedPostSliceItem
@@ -220,6 +232,7 @@ let PostFeed = ({
   initialNumToRender?: number
   isVideoFeed?: boolean
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
@@ -230,7 +243,7 @@ let PostFeed = ({
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
-  const areVideoFeedsEnabled = isNative
+  const areVideoFeedsEnabled = IS_NATIVE
 
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
@@ -290,7 +303,9 @@ let PostFeed = ({
         }
       }
     } catch (e) {
-      logger.error('Poll latest failed', {feed, message: String(e)})
+      if (!isNetworkError(e)) {
+        logger.error('Poll latest failed', {feed, message: String(e)})
+      }
     }
   })
 
@@ -350,7 +365,7 @@ let PostFeed = ({
   const showProgressIntersitial =
     (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
 
-  const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
+  const {trendingVideoDisabled} = useTrendingSettings()
 
   const ageAssuranceBannerState = useAgeAssuranceBannerState()
   const selectedFeed = useSelectedFeed()
@@ -359,6 +374,11 @@ let PostFeed = ({
    * want this to update when user swipes.
    */
   const [isCurrentFeedAtStartupSelected] = useState(selectedFeed === feed)
+
+  const blockedOrMutedAuthors = usePostAuthorShadowFilter(
+    // author feeds have their own handling
+    feed.startsWith('author|') ? undefined : data?.pages,
+  )
 
   const feedItems: FeedRow[] = useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
@@ -417,10 +437,13 @@ let PostFeed = ({
           for (const page of data.pages) {
             for (const slice of page.slices) {
               const item = slice.items.find(
-                // eslint-disable-next-line @typescript-eslint/no-shadow
                 item => item.uri === slice.feedPostUri,
               )
-              if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
+              if (
+                item &&
+                AppBskyEmbedVideo.isView(item.post.embed) &&
+                !blockedOrMutedAuthors.includes(item.post.author.did)
+              ) {
                 videos.push({
                   item,
                   feedContext: slice.feedContext,
@@ -491,11 +514,19 @@ let PostFeed = ({
                         })
                       }
                     }
-                    if (!rightNavVisible && !trendingDisabled) {
+                    arr.push({
+                      type: 'liveEventFeedsAndTrendingBanner',
+                      key: 'liveEventFeedsAndTrendingBanner-' + sliceIndex,
+                    })
+                    // Show composer prompt for Discover and Following feeds
+                    if (
+                      hasSession &&
+                      (feedUriOrActorDid === DISCOVER_FEED_URI ||
+                        feed === 'following')
+                    ) {
                       arr.push({
-                        type: 'interstitialTrending',
-                        key:
-                          'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
+                        type: 'composerPrompt',
+                        key: 'composerPrompt-' + sliceIndex,
                       })
                     }
                   } else if (sliceIndex === 15) {
@@ -510,6 +541,16 @@ let PostFeed = ({
                       type: 'interstitialFollows',
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                     })
+                  }
+                } else if (feedKind === 'following') {
+                  if (sliceIndex === 0) {
+                    // Show composer prompt for Following feed
+                    if (hasSession) {
+                      arr.push({
+                        type: 'composerPrompt',
+                        key: 'composerPrompt-' + sliceIndex,
+                      })
+                    }
                   }
                 } else if (feedKind === 'profile') {
                   if (sliceIndex === 5) {
@@ -538,6 +579,12 @@ let PostFeed = ({
                   key:
                     'sliceFallbackMarker-' + sliceIndex + '-' + lastFetchedAt,
                 })
+              } else if (
+                slice.items.some(item =>
+                  blockedOrMutedAuthors.includes(item.post.author.did),
+                )
+              ) {
+                // skip
               } else if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
                 const last = slice.items.length - 1
@@ -619,27 +666,27 @@ let PostFeed = ({
     isEmpty,
     lastFetchedAt,
     data,
+    feed,
     feedType,
     feedUriOrActorDid,
     feedTab,
     hasSession,
     showProgressIntersitial,
-    trendingDisabled,
     trendingVideoDisabled,
-    rightNavVisible,
     gtMobile,
     isVideoFeed,
     areVideoFeedsEnabled,
     hasPressedShowLessUris,
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
+    blockedOrMutedAuthors,
   ])
 
   // events
   // =
 
   const onRefresh = useCallback(async () => {
-    logEvent('feed:refresh', {
+    ax.metric('feed:refresh', {
       feedType: feedType,
       feedUrl: feed,
       reason: 'pull-to-refresh',
@@ -652,12 +699,12 @@ let PostFeed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, setIsPTRing, onHasNew, feed, feedType])
+  }, [ax, refetch, setIsPTRing, onHasNew, feed, feedType])
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
-    logEvent('feed:endReached', {
+    ax.metric('feed:endReached', {
       feedType: feedType,
       feedUrl: feed,
       itemCount: feedItems.length,
@@ -668,6 +715,7 @@ let PostFeed = ({
       logger.error('Failed to load more posts', {message: err})
     }
   }, [
+    ax,
     isFetching,
     hasNextPage,
     isError,
@@ -723,6 +771,10 @@ let PostFeed = ({
         return <AgeAssuranceDismissibleFeedBanner />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
+        return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
+      } else if (row.type === 'composerPrompt') {
+        return <ComposerPrompt />
       } else if (row.type === 'interstitialTrendingVideos') {
         return <TrendingVideosInterstitial />
       } else if (row.type === 'fallbackMarker') {
@@ -820,7 +872,7 @@ let PostFeed = ({
      * reach the end, so that content isn't cut off by the bottom of the
      * screen.
      */
-    const offset = Math.max(headerOffset, 32) * (isWeb ? 1 : 2)
+    const offset = Math.max(headerOffset, 32) * (IS_WEB ? 1 : 2)
 
     return isFetchingNextPage ? (
       <View style={[styles.feedFooter]}>
@@ -837,32 +889,99 @@ let PostFeed = ({
   const liveNowConfig = useLiveNowConfig()
 
   const seenActorWithStatusRef = useRef<Set<string>>(new Set())
+  const seenPostUrisRef = useRef<Set<string>>(new Set())
+
+  // Helper to calculate position in feed (count only root posts, not interstitials or thread replies)
+  const getPostPosition = useNonReactiveCallback(
+    (type: FeedRow['type'], key: string) => {
+      // Calculate position: find the row index in feedItems, then calculate position
+      const rowIndex = feedItems.findIndex(
+        row => row.type === 'sliceItem' && row.key === key,
+      )
+
+      if (rowIndex >= 0) {
+        let position = 0
+        for (let i = 0; i < rowIndex && i < feedItems.length; i++) {
+          const row = feedItems[i]
+          if (row.type === 'sliceItem') {
+            // Only count root posts (indexInSlice === 0), not thread replies
+            if (row.indexInSlice === 0) {
+              position++
+            }
+          } else if (row.type === 'videoGridRow') {
+            // Count each video in the grid row
+            position += row.items.length
+          }
+        }
+        return position
+      }
+    },
+  )
+
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
-      if (item.type === 'sliceItem') {
-        const actor = item.slice.items[item.indexInSlice].post.author
 
+      // Track post:view events
+      if (item.type === 'sliceItem') {
+        const slice = item.slice
+        const indexInSlice = item.indexInSlice
+        const postItem = slice.items[indexInSlice]
+        const post = postItem.post
+
+        // Only track the root post of each slice (index 0) to avoid double-counting thread items
+        if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
+          seenPostUrisRef.current.add(post.uri)
+
+          const position = getPostPosition('sliceItem', item.key)
+
+          ax.metric('post:view', {
+            uri: post.uri,
+            authorDid: post.author.did,
+            logContext: 'FeedItem',
+            feedDescriptor: feedFeedback.feedDescriptor || feed,
+            position,
+          })
+        }
+
+        // Live status tracking (existing code)
+        const actor = post.author
         if (
           actor.status &&
-          validateStatus(actor.did, actor.status, liveNowConfig) &&
+          isStatusValidForViewers(actor.status, liveNowConfig) &&
           isStatusStillActive(actor.status.expiresAt)
         ) {
           if (!seenActorWithStatusRef.current.has(actor.did)) {
             seenActorWithStatusRef.current.add(actor.did)
-            logger.metric(
-              'live:view:post',
-              {
-                subject: actor.did,
-                feed,
-              },
-              {statsig: false},
-            )
+            ax.metric('live:view:post', {
+              subject: actor.did,
+              feed,
+            })
+          }
+        }
+      } else if (item.type === 'videoGridRow') {
+        // Track each video in the grid row
+        for (let i = 0; i < item.items.length; i++) {
+          const postItem = item.items[i]
+          const post = postItem.post
+
+          if (!seenPostUrisRef.current.has(post.uri)) {
+            seenPostUrisRef.current.add(post.uri)
+
+            const position = getPostPosition('videoGridRow', item.key)
+
+            ax.metric('post:view', {
+              uri: post.uri,
+              authorDid: post.author.did,
+              logContext: 'FeedItem',
+              feedDescriptor: feedFeedback.feedDescriptor || feed,
+              position,
+            })
           }
         }
       }
     },
-    [feedFeedback, feed, liveNowConfig],
+    [feedFeedback, feed, liveNowConfig, getPostPosition],
   )
 
   return (
@@ -892,7 +1011,7 @@ let PostFeed = ({
         }
         initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={9}
-        maxToRenderPerBatch={isIOS ? 5 : 1}
+        maxToRenderPerBatch={IS_IOS ? 5 : 1}
         updateCellsBatchingPeriod={40}
         onItemSeen={onItemSeen}
       />
