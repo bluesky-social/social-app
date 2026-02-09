@@ -100,10 +100,13 @@ function GermSelfButton({did}: {did: string}) {
           ...res.value,
           messageMe: {
             ...res.value.messageMe,
-            showButtonTo: 'none',
+            // TODO: update types
+            // showButtonTo: 'none',
           },
         },
       )
+
+      // TODO: await appview and revalidate profile
     },
     onSuccess: () => {
       Toast.show(_(msg`Germ DM link removed`))
