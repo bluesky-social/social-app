@@ -372,7 +372,10 @@ function Header({
 
     let followUris: Map<string, string>
     try {
-      followUris = await bulkWriteFollows(agent, dids)
+      followUris = await bulkWriteFollows(agent, dids, {
+        uri: starterPack.uri,
+        cid: starterPack.cid,
+      })
     } catch (e) {
       setIsProcessing(false)
       Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
