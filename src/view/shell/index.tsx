@@ -49,7 +49,6 @@ import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
 function ShellInner() {
-  const winDim = useWindowDimensions()
   const insets = useSafeAreaInsets()
   const {state: policyUpdateState} = usePolicyUpdateContext()
 
@@ -106,8 +105,7 @@ function ShellInner() {
           <TabsNavigator layout={drawerLayout} />
         </ErrorBoundary>
       </View>
-
-      <Composer winHeight={winDim.height} />
+      <Composer />
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
