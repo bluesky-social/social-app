@@ -22,12 +22,12 @@ export function LinkWarningDialog() {
       webOptions={{alignCenter: true}}
       onClose={linkWarningDialogControl.clear}>
       <Dialog.Handle />
-      <InAppBrowserConsentInner link={linkWarningDialogControl.value} />
+      <LinkWarningDialogInner link={linkWarningDialogControl.value} />
     </Dialog.Outer>
   )
 }
 
-function InAppBrowserConsentInner({
+function LinkWarningDialogInner({
   link,
 }: {
   link?: {href: string; displayText: string; share?: boolean}
