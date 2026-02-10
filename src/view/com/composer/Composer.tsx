@@ -1158,6 +1158,7 @@ export const ComposePost = ({
             isEmpty={isComposerEmpty}
             isDirty={composerState.isDirty}
             isEditingDraft={!!composerState.draftId}
+            canSaveDraft={allPostsWithinLimit}
             textLength={thread.posts[0].richtext.text.length}>
             {missingAltError && <AltTextReminder error={missingAltError} />}
             <ErrorBanner
@@ -1497,6 +1498,7 @@ function ComposerTopBar({
   isEmpty,
   isDirty,
   isEditingDraft,
+  canSaveDraft,
   textLength,
   topBarAnimatedStyle,
   children,
@@ -1510,11 +1512,12 @@ function ComposerTopBar({
   onCancel: () => void
   onPublish: () => void
   onSelectDraft: (draft: DraftSummary) => void
-  onSaveDraft: () => Promise<void>
+  onSaveDraft: () => Promise<boolean>
   onDiscard: () => void
   isEmpty: boolean
   isDirty: boolean
   isEditingDraft: boolean
+  canSaveDraft: boolean
   textLength: number
   topBarAnimatedStyle: StyleProp<ViewStyle>
   children?: React.ReactNode
@@ -1562,6 +1565,7 @@ function ComposerTopBar({
                 isEmpty={isEmpty}
                 isDirty={isDirty}
                 isEditingDraft={isEditingDraft}
+                canSaveDraft={canSaveDraft}
                 textLength={textLength}
               />
             )}
