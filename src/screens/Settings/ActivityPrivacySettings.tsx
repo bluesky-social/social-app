@@ -126,12 +126,12 @@ export function Inner({
           </Toggle.LabelText>
         </Toggle.Item>
         <Toggle.Item
-          label={_(msg`No one`)}
+          label={_(msg({context: 'enable for', message: `No one`}))}
           name="none"
           style={[a.flex_row, a.py_xs, a.gap_sm]}>
           <Toggle.Radio />
           <Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md]}>
-            <Trans>No one</Trans>
+            <Trans context="enable for">No one</Trans>
           </Toggle.LabelText>
         </Toggle.Item>
       </View>

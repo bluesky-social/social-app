@@ -128,7 +128,7 @@ msgid "{0, plural, other {{1} posts}}"
 msgstr ""
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
-#: src/screens/StarterPack/StarterPackScreen.tsx:496
+#: src/screens/StarterPack/StarterPackScreen.tsx:499
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr ""
 
@@ -939,8 +939,8 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:93
-#: src/screens/StarterPack/StarterPackScreen.tsx:390
+#: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:96
+#: src/screens/StarterPack/StarterPackScreen.tsx:393
 msgid "All accounts have been followed!"
 msgstr ""
 
@@ -1105,9 +1105,9 @@ msgid "An error occurred while saving the QR code!"
 msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:53
-#: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:78
+#: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:81
 #: src/screens/StarterPack/StarterPackScreen.tsx:356
-#: src/screens/StarterPack/StarterPackScreen.tsx:378
+#: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
@@ -1327,7 +1327,7 @@ msgstr ""
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:664
+#: src/screens/StarterPack/StarterPackScreen.tsx:667
 msgid "Are you sure you want to delete this starter pack?"
 msgstr ""
 
@@ -2238,7 +2238,7 @@ msgstr ""
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:325
+#: src/screens/Onboarding/StepFinished/index.tsx:328
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
@@ -2503,7 +2503,7 @@ msgid "Copy host"
 msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:114
-#: src/screens/StarterPack/StarterPackScreen.tsx:624
+#: src/screens/StarterPack/StarterPackScreen.tsx:627
 msgid "Copy link"
 msgstr ""
 
@@ -2528,7 +2528,7 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:617
+#: src/screens/StarterPack/StarterPackScreen.tsx:620
 msgid "Copy link to starter pack"
 msgstr ""
 
@@ -2808,9 +2808,9 @@ msgstr ""
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:274
 #: src/screens/Settings/AppPasswords.tsx:212
-#: src/screens/StarterPack/StarterPackScreen.tsx:606
-#: src/screens/StarterPack/StarterPackScreen.tsx:695
-#: src/screens/StarterPack/StarterPackScreen.tsx:767
+#: src/screens/StarterPack/StarterPackScreen.tsx:609
+#: src/screens/StarterPack/StarterPackScreen.tsx:698
+#: src/screens/StarterPack/StarterPackScreen.tsx:770
 msgid "Delete"
 msgstr ""
 
@@ -2882,12 +2882,12 @@ msgstr ""
 msgid "Delete post"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:600
-#: src/screens/StarterPack/StarterPackScreen.tsx:758
+#: src/screens/StarterPack/StarterPackScreen.tsx:603
+#: src/screens/StarterPack/StarterPackScreen.tsx:761
 msgid "Delete starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:661
+#: src/screens/StarterPack/StarterPackScreen.tsx:664
 msgid "Delete starter pack?"
 msgstr ""
 
@@ -2995,8 +2995,8 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
 #: src/lib/moderation/useLabelBehaviorDescription.ts:45
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
-#: src/screens/Messages/Settings.tsx:144
-#: src/screens/Messages/Settings.tsx:147
+#: src/screens/Messages/Settings.tsx:146
+#: src/screens/Messages/Settings.tsx:149
 #: src/screens/Moderation/index.tsx:384
 msgid "Disabled"
 msgstr ""
@@ -3237,7 +3237,7 @@ msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:145
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:252
-#: src/screens/StarterPack/StarterPackScreen.tsx:595
+#: src/screens/StarterPack/StarterPackScreen.tsx:598
 #: src/screens/StarterPack/Wizard/index.tsx:340
 #: src/screens/StarterPack/Wizard/index.tsx:345
 msgid "Edit"
@@ -3318,7 +3318,7 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:587
+#: src/screens/StarterPack/StarterPackScreen.tsx:590
 msgid "Edit starter pack"
 msgstr ""
 
@@ -3454,8 +3454,8 @@ msgstr ""
 msgid "Enable trending videos in your Discover feed"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:135
-#: src/screens/Messages/Settings.tsx:138
+#: src/screens/Messages/Settings.tsx:137
+#: src/screens/Messages/Settings.tsx:140
 #: src/screens/Moderation/index.tsx:382
 msgid "Enabled"
 msgstr ""
@@ -3745,7 +3745,7 @@ msgstr ""
 msgid "Failed to delete post, please try again"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:729
+#: src/screens/StarterPack/StarterPackScreen.tsx:732
 msgid "Failed to delete starter pack"
 msgstr ""
 
@@ -4028,7 +4028,7 @@ msgstr ""
 msgid "Filter who you receive notifications from"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:331
+#: src/screens/Onboarding/StepFinished/index.tsx:334
 msgid "Finalizing"
 msgstr ""
 
@@ -4162,12 +4162,12 @@ msgstr ""
 #: src/components/contacts/screens/ViewMatches.tsx:275
 #: src/components/contacts/screens/ViewMatches.tsx:290
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:274
-#: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:158
-#: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
+#: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:161
+#: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:168
 #: src/screens/Settings/FindContactsSettings.tsx:443
 #: src/screens/Settings/FindContactsSettings.tsx:453
-#: src/screens/StarterPack/StarterPackScreen.tsx:442
-#: src/screens/StarterPack/StarterPackScreen.tsx:450
+#: src/screens/StarterPack/StarterPackScreen.tsx:445
+#: src/screens/StarterPack/StarterPackScreen.tsx:453
 msgid "Follow all"
 msgstr ""
 
@@ -4445,7 +4445,7 @@ msgstr ""
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/screens/Profile/ProfileFeed/index.tsx:100
-#: src/screens/StarterPack/StarterPackScreen.tsx:780
+#: src/screens/StarterPack/StarterPackScreen.tsx:783
 #: src/view/screens/NotFound.tsx:56
 msgid "Go Back"
 msgstr ""
@@ -5137,8 +5137,8 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:210
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:468
-#: src/screens/StarterPack/StarterPackScreen.tsx:479
+#: src/screens/StarterPack/StarterPackScreen.tsx:471
+#: src/screens/StarterPack/StarterPackScreen.tsx:482
 msgid "Join Bluesky"
 msgstr ""
 
@@ -5332,7 +5332,7 @@ msgstr ""
 msgid "Let's get your password reset!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:333
+#: src/screens/Onboarding/StepFinished/index.tsx:336
 msgid "Let's go!"
 msgstr ""
 
@@ -6135,8 +6135,8 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:353
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
-#: src/screens/Onboarding/StepFinished/index.tsx:326
-#: src/screens/Onboarding/StepFinished/index.tsx:335
+#: src/screens/Onboarding/StepFinished/index.tsx:329
+#: src/screens/Onboarding/StepFinished/index.tsx:338
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -6236,11 +6236,16 @@ msgstr ""
 msgid "No notifications yet!"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:106
-#: src/screens/Messages/Settings.tsx:109
+#: src/screens/Messages/Settings.tsx:107
+#: src/screens/Messages/Settings.tsx:111
+msgctxt "allow messages from"
+msgid "No one"
+msgstr ""
+
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:159
+msgctxt "enable for"
 msgid "No one"
 msgstr ""
 
@@ -6395,11 +6400,11 @@ msgstr ""
 msgid "Notification settings"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:128
+#: src/screens/Messages/Settings.tsx:130
 msgid "Notification sounds"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:125
+#: src/screens/Messages/Settings.tsx:127
 msgid "Notification Sounds"
 msgstr ""
 
@@ -6614,7 +6619,7 @@ msgstr ""
 msgid "Open share menu"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:573
+#: src/screens/StarterPack/StarterPackScreen.tsx:576
 msgid "Open starter pack menu"
 msgstr ""
 
@@ -7894,8 +7899,8 @@ msgstr ""
 msgid "Report post"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:637
 #: src/screens/StarterPack/StarterPackScreen.tsx:640
+#: src/screens/StarterPack/StarterPackScreen.tsx:643
 msgid "Report starter pack"
 msgstr ""
 
@@ -7957,7 +7962,7 @@ msgstr ""
 #: src/components/PostControls/RepostButton.tsx:145
 #: src/components/PostControls/RepostButton.web.tsx:44
 #: src/components/PostControls/RepostButton.web.tsx:104
-#: src/screens/StarterPack/StarterPackScreen.tsx:568
+#: src/screens/StarterPack/StarterPackScreen.tsx:571
 msgid "Repost or quote post"
 msgstr ""
 
@@ -8111,7 +8116,7 @@ msgstr ""
 
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:219
-#: src/screens/StarterPack/StarterPackScreen.tsx:774
+#: src/screens/StarterPack/StarterPackScreen.tsx:777
 msgid "Return to previous page"
 msgstr ""
 
@@ -8735,7 +8740,7 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:194
 #: src/screens/Hashtag.tsx:142
-#: src/screens/StarterPack/StarterPackScreen.tsx:437
+#: src/screens/StarterPack/StarterPackScreen.tsx:440
 #: src/screens/Topic.tsx:103
 msgid "Share"
 msgstr ""
@@ -8787,7 +8792,7 @@ msgstr ""
 msgid "Share this feed"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:430
+#: src/screens/StarterPack/StarterPackScreen.tsx:433
 msgid "Share this starter pack"
 msgstr ""
 
@@ -8799,8 +8804,8 @@ msgstr ""
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:121
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:159
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:165
-#: src/screens/StarterPack/StarterPackScreen.tsx:618
-#: src/screens/StarterPack/StarterPackScreen.tsx:626
+#: src/screens/StarterPack/StarterPackScreen.tsx:621
+#: src/screens/StarterPack/StarterPackScreen.tsx:629
 #: src/view/com/profile/ProfileMenu.tsx:270
 #: src/view/com/profile/ProfileMenu.tsx:283
 msgid "Share via..."
@@ -9026,8 +9031,8 @@ msgstr ""
 #: src/components/contacts/screens/VerifyNumber.tsx:204
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:85
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:89
-#: src/screens/Onboarding/StepFinished/index.tsx:291
-#: src/screens/Onboarding/StepFinished/index.tsx:313
+#: src/screens/Onboarding/StepFinished/index.tsx:294
+#: src/screens/Onboarding/StepFinished/index.tsx:316
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:261
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:104
 #: src/screens/StarterPack/Wizard/index.tsx:219
@@ -9039,8 +9044,8 @@ msgstr ""
 msgid "Skip contact sharing and continue to the app"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:284
-#: src/screens/Onboarding/StepFinished/index.tsx:310
+#: src/screens/Onboarding/StepFinished/index.tsx:287
+#: src/screens/Onboarding/StepFinished/index.tsx:313
 msgid "Skip introduction and start using your account"
 msgstr ""
 
@@ -9206,7 +9211,7 @@ msgstr ""
 msgid "Starter pack by you"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:738
+#: src/screens/StarterPack/StarterPackScreen.tsx:741
 msgid "Starter pack is invalid"
 msgstr ""
 
@@ -9603,7 +9608,7 @@ msgstr ""
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:748
+#: src/screens/StarterPack/StarterPackScreen.tsx:751
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
@@ -10180,7 +10185,7 @@ msgstr ""
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:680
+#: src/screens/StarterPack/StarterPackScreen.tsx:683
 msgid "Unable to delete"
 msgstr ""
 
@@ -11275,7 +11280,7 @@ msgstr ""
 msgid "Yes, deactivate"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:692
+#: src/screens/StarterPack/StarterPackScreen.tsx:695
 msgid "Yes, delete this starter pack"
 msgstr ""
 
@@ -11374,7 +11379,7 @@ msgstr ""
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:116
+#: src/screens/Messages/Settings.tsx:118
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr ""
 

@@ -156,7 +156,7 @@ function NotificationDeclaration({
     case 'mutuals':
       return <Trans>Only followers who I follow</Trans>
     case 'none':
-      return <Trans>No one</Trans>
+      return <Trans context="enable for">No one</Trans>
     case 'followers':
     default:
       return <Trans>Anyone who follows me</Trans>
