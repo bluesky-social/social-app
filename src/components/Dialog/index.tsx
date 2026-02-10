@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import {
   KeyboardAwareScrollView,
+  type KeyboardAwareScrollViewRef,
   useKeyboardHandler,
   useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller'
@@ -23,7 +24,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
@@ -209,10 +209,9 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
 
-    useEnableKeyboardController(IS_IOS)
-
     const [keyboardHeight, setKeyboardHeight] = React.useState(0)
 
+    // note: iOS-only. keyboard-controller doesn't seem to work inside the sheets on Android
     useKeyboardHandler(
       {
         onEnd: e => {
@@ -231,7 +230,6 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       }
       paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
     } else {
-      paddingBottom += keyboardHeight
       if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
         paddingBottom += insets.top
       }
@@ -259,7 +257,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
           {paddingBottom},
           contentContainerStyle,
         ]}
-        ref={ref}
+        ref={ref as React.Ref<KeyboardAwareScrollViewRef>}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
@@ -288,8 +286,6 @@ export const InnerFlatList = React.forwardRef<
 >(function InnerFlatList({footer, style, ...props}, ref) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
-
-  useEnableKeyboardController(IS_IOS)
 
   const onScroll = (e: ScrollEvent) => {
     'worklet'
