@@ -28,6 +28,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
@@ -51,6 +54,7 @@ jobs:
       - name: Merge PR commit
         env:
           HEAD_REF: ${{ github.head_ref }}
+          YARN_ENABLE_HARDENED_MODE: "0"
         run: |
           # Have to set a git config for the merge to work
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -79,6 +83,8 @@ jobs:
 
       - name: 🔦 Generate stats file from base commit
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        env:
+          YARN_ENABLE_HARDENED_MODE: "0"
         run: |
           yarn install
           yarn intl:build
@@ -106,6 +112,8 @@ jobs:
   fingerprint-native:
     runs-on: ubuntu-22.04
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
+    env:
+      YARN_ENABLE_HARDENED_MODE: "0"
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
@@ -115,6 +123,9 @@ jobs:
       - name: ⬇️ Fetch commits from base branch
         run: git fetch origin main:main --depth 100
         if: github.event_name == 'pull_request'
+
+      - name: 📦 Enable Corepack
+        run: corepack enable
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6

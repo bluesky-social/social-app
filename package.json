@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "yarn@1.22.22",
+  "packageManager": "yarn@4.12.0",
   "expo": {
     "autolinking": {
       "android": {
@@ -185,7 +185,6 @@
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
     "patch-package": "^8.0.1",
-    "postinstall-postinstall": "^2.1.0",
     "psl": "^1.9.0",
     "radix-ui": "^1.4.3",
     "react": "19.1.0",
@@ -242,7 +241,6 @@
     "@react-native/eslint-config": "^0.81.5",
     "@react-native/typescript-config": "^0.81.5",
     "@sentry/webpack-plugin": "^3.2.2",
-    "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.2.0",
     "@types/jest": "29.5.14",
     "@types/lodash.chunk": "^4.2.7",
@@ -289,13 +287,12 @@
   "resolutions": {
     "@react-native/babel-preset": "0.81.5",
     "@react-native/normalize-colors": "0.81.5",
-    "**/@expo/image-utils": "0.8.7",
-    "**/@react-native-async-storage/async-storage": "2.2.0",
-    "**/expo-constants": "18.0.8",
-    "**/expo-device": "7.1.4",
-    "**/multiformats": "9.9.0",
+    "@expo/image-utils": "0.8.8",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "multiformats": "9.9.0",
     "unicode-segmenter": "0.14.5",
-    "@types/estree": "1.0.6"
+    "@types/estree": "1.0.6",
+    "zod": "3.25.76"
   },
   "jest": {
     "preset": "jest-expo/ios",
@@ -358,12 +355,18 @@
   },
   "lockfile-lint": {
     "path": "yarn.lock",
+    "type": "yarn",
     "allowedHosts": [
       "npm",
-      "yarn"
+      "yarn",
+      "github.com"
     ],
     "allowedSchemes": [
-      "https:"
+      "https:",
+      "npm:",
+      "workspace:",
+      "link:",
+      "patch:"
     ],
     "allowedPackageNameAliases": [
       "@babel/traverse--for-generate-function-map:@babel/traverse",
@@ -376,7 +379,7 @@
       "https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4",
       "https://codeload.github.com/mattermost/react-native-paste-input/tar.gz/f260447edc645a817ab1ba7b46d8341d84dba8e9"
     ],
-    "emptyHostname": false,
+    "emptyHostname": true,
     "validatePackageNames": true,
     "validateIntegrity": true
   }

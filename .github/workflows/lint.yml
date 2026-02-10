@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+      - name: 📦 Enable Corepack
+        run: corepack enable
       - name: Install node
         uses: actions/setup-node@v6
         with:
@@ -24,7 +26,7 @@ jobs:
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
-          command: yarn --frozen-lockfile
+          command: YARN_ENABLE_HARDENED_MODE=0 yarn install --immutable
           attempt_limit: 3
           attempt_delay: 2000
       - name: Lint check
@@ -43,6 +45,8 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+      - name: 📦 Enable Corepack
+        run: corepack enable
       - name: Install node
         uses: actions/setup-node@v6
         with:
@@ -51,7 +55,7 @@ jobs:
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
-          command: yarn --frozen-lockfile
+          command: YARN_ENABLE_HARDENED_MODE=0 yarn install --immutable
           attempt_limit: 3
           attempt_delay: 2000
       - name: Check & compile i18n

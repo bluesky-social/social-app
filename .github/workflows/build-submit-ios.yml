@@ -32,6 +32,9 @@ jobs:
         with:
           fetch-depth: 5
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
@@ -49,10 +52,10 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
+        run: npx eas-cli-local-build-plugin@latest
 
       - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:

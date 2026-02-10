@@ -56,6 +56,9 @@ jobs:
         if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main --depth 100
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
@@ -97,7 +100,7 @@ jobs:
 
       - name: ⛏️ Setup Expo
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: yarn global add eas-cli-local-build-plugin
+        run: npx eas-cli-local-build-plugin@latest
 
       - name: 🪛 Setup jq
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
@@ -176,6 +179,9 @@ jobs:
         with:
           fetch-depth: 5
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
@@ -190,10 +196,10 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
+        run: npx eas-cli-local-build-plugin@latest
 
       - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -282,6 +288,9 @@ jobs:
         with:
           fetch-depth: 5
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
@@ -296,7 +305,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
+        run: npx eas-cli-local-build-plugin@latest
 
       - uses: actions/setup-java@v4
         with:
@@ -304,7 +313,7 @@ jobs:
           java-version: "17"
 
       - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: 🔤 Compile translations
         run: yarn intl:build

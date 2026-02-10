@@ -32,6 +32,9 @@ jobs:
         with:
           fetch-depth: 5
 
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
@@ -49,7 +52,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
+        run: npx eas-cli-local-build-plugin@latest
 
       - uses: actions/setup-java@v4
         with:
@@ -57,7 +60,7 @@ jobs:
           java-version: "17"
 
       - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: 🔤 Compile translations
         run: yarn intl:build 2>&1 | tee i18n.log
