@@ -574,7 +574,7 @@ export const ComposePost = ({
     if (tooLong) {
       setError(
         _(
-          msg`Your post text exceeds ${MAX_GRAPHEME_LENGTH} characters. Shorten the text before saving as a draft.`,
+          msg`Post is too long to save as a draft. The maximum number of characters is ${MAX_GRAPHEME_LENGTH}.`,
         ),
       )
       return false
@@ -724,11 +724,6 @@ export const ComposePost = ({
     // - No draft is loaded (new composition)
     // - Draft is loaded but has been modified
     if (hasContent && (!composerState.draftId || composerState.isDirty)) {
-      // If text exceeds the limit, skip the save prompt and show the error
-      // directly since we know the draft can't be saved.
-      if (!checkDraftTextLength()) {
-        return
-      }
       closeAllDialogs()
       Keyboard.dismiss()
       discardPromptControl.open()
@@ -742,7 +737,6 @@ export const ComposePost = ({
     closeAllDialogs,
     discardPromptControl,
     onClose,
-    checkDraftTextLength,
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
@@ -1228,35 +1222,48 @@ export const ComposePost = ({
           <Prompt.Outer control={discardPromptControl}>
             <Prompt.Content>
               <Prompt.TitleText>
-                {composerState.draftId ? (
-                  <Trans>Save changes?</Trans>
+                {allPostsWithinLimit ? (
+                  composerState.draftId ? (
+                    <Trans>Save changes?</Trans>
+                  ) : (
+                    <Trans>Save draft?</Trans>
+                  )
                 ) : (
-                  <Trans>Save draft?</Trans>
+                  <Trans>Discard draft?</Trans>
                 )}
               </Prompt.TitleText>
               <Prompt.DescriptionText>
-                {composerState.draftId ? (
-                  <Trans>
-                    You have unsaved changes to this draft, would you like to
-                    save them?
-                  </Trans>
+                {allPostsWithinLimit ? (
+                  composerState.draftId ? (
+                    <Trans>
+                      You have unsaved changes to this draft, would you like to
+                      save them?
+                    </Trans>
+                  ) : (
+                    <Trans>
+                      Would you like to save this as a draft to edit later?
+                    </Trans>
+                  )
                 ) : (
                   <Trans>
-                    Would you like to save this as a draft to edit later?
+                    Your post exceeds the character limit and can't be saved as
+                    a draft.
                   </Trans>
                 )}
               </Prompt.DescriptionText>
             </Prompt.Content>
             <Prompt.Actions>
-              <Prompt.Action
-                cta={
-                  composerState.draftId
-                    ? _(msg`Save changes`)
-                    : _(msg`Save draft`)
-                }
-                onPress={handleSaveDraft}
-                color="primary"
-              />
+              {allPostsWithinLimit && (
+                <Prompt.Action
+                  cta={
+                    composerState.draftId
+                      ? _(msg`Save changes`)
+                      : _(msg`Save draft`)
+                  }
+                  onPress={handleSaveDraft}
+                  color="primary"
+                />
+              )}
               <Prompt.Action
                 cta={_(msg`Discard`)}
                 onPress={handleDiscard}
