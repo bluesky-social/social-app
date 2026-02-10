@@ -35,7 +35,11 @@ export function GermButton({
   const t = useTheme()
   const {currentAccount} = useSession()
 
-  if (germ.showButtonTo === 'none') {
+  // exclude `none` and all unknown values
+  if (
+    germ.showButtonTo !== 'everyone' ||
+    germ.showButtonTo !== 'usersIFollow'
+  ) {
     return null
   }
 
