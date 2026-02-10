@@ -1,12 +1,18 @@
 import {Platform, View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  type AppBskyActorGetProfile,
+  type AtpAgent,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {until} from '#/lib/async/until'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {RQKEY} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -79,37 +85,26 @@ function GermSelfButton({did}: {did: string}) {
   const selfExplanationDialogControl = Dialog.useDialogControl()
   const agent = useAgent()
   const t = useTheme()
+  const queryClient = useQueryClient()
 
   const {mutate, isPending} = useMutation({
     onMutate: async () => {
-      const res = await agent.com.germnetwork.declaration.get({
+      await agent.com.germnetwork.declaration.delete({
         repo: did,
         rkey: 'self',
       })
 
-      if (!res?.value) {
-        throw new Error('Failed to get self declaration')
-      }
-
-      await agent.com.germnetwork.declaration.put(
-        {
-          repo: did,
-          rkey: 'self',
-        },
-        {
-          ...res.value,
-          messageMe: {
-            ...res.value.messageMe,
-            // TODO: update types
-            // showButtonTo: 'none',
-          },
-        },
-      )
-
-      // TODO: await appview and revalidate profile
+      await whenAppViewReady(agent, did, res => !res.data.associated?.germ)
     },
     onSuccess: () => {
-      Toast.show(_(msg`Germ DM link removed`))
+      selfExplanationDialogControl.close(() => {
+        Toast.show(
+          _(
+            msg`Germ DM link disconnected. You can reconnect it at any time through the Germ app.`,
+          ),
+        )
+        void queryClient.refetchQueries({queryKey: RQKEY(did)})
+      })
     },
     onError: error => {
       Toast.show(
@@ -169,14 +164,14 @@ function GermSelfButton({did}: {did: string}) {
               </ButtonText>
             </Button>
             <Button
-              label={_(msg`Remove Germ DM link`)}
+              label={_(msg`Disconnect Germ DM`)}
               size="large"
               color="primary"
               onPress={() => mutate()}
               disabled={isPending}>
               {isPending && <ButtonIcon icon={Loader} />}
               <ButtonText>
-                <Trans>Remove Germ DM link</Trans>
+                <Trans>Disconnect Germ DM</Trans>
               </ButtonText>
             </Button>
           </View>
@@ -221,4 +216,17 @@ function platform() {
     default:
       return 'web'
   }
+}
+
+async function whenAppViewReady(
+  agent: AtpAgent,
+  actor: string,
+  fn: (res: AppBskyActorGetProfile.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () => agent.app.bsky.actor.getProfile({actor}),
+  )
 }
