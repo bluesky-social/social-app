@@ -58,9 +58,14 @@ export function GermButton({
       to={url}
       label={_(msg`Open Germ DM`)}
       shouldProxy={false}
-      style={[t.atoms.bg_contrast_50, a.rounded_full, a.gap_xs, {padding: 6}]}>
+      style={[
+        t.atoms.bg_contrast_50,
+        a.rounded_full,
+        a.self_start,
+        {padding: 6},
+      ]}>
       <GermLogo size="small" />
-      <Text style={[a.text_sm, a.font_medium]}>
+      <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
         <Trans>Germ DM</Trans>
       </Text>
       <ArrowTopRightIcon style={[t.atoms.text]} size="sm" />
@@ -75,6 +80,7 @@ function GermLogo({size}: {size: 'small' | 'large'}) {
       accessibilityIgnoresInvertColors={false}
       contentFit="cover"
       style={[
+        a.rounded_full,
         size === 'large' ? {width: 32, height: 32} : {width: 16, height: 16},
       ]}
     />
@@ -158,11 +164,11 @@ function GermSelfButton({did}: {did: string}) {
         style={[
           t.atoms.bg_contrast_50,
           a.rounded_full,
-          a.gap_xs,
-          {padding: 6},
+          a.self_start,
+          {padding: 6, paddingRight: 10},
         ]}>
         <GermLogo size="small" />
-        <Text style={[a.text_sm, a.font_medium]}>
+        <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
           <Trans>Germ DM</Trans>
         </Text>
       </Button>
@@ -183,8 +189,8 @@ function GermSelfButton({did}: {did: string}) {
 
           <Text style={[a.text_md, a.leading_snug, a.mt_sm]}>
             <Trans>
-              This button lets others send you a message on the Germ DM app. You
-              can manage its visibility from the Germ DM app.
+              This button lets others send you a message in the Germ DM app. You
+              can manage its visibility here or in Germ DM.
             </Trans>
           </Text>
           <View style={[a.mt_2xl, a.gap_md]}>
