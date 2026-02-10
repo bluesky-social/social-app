@@ -280,7 +280,7 @@ export const ComposePost = ({
   // Clear error when composer content changes, but only if all posts are
   // back within the character limit.
   const allPostsWithinLimit = thread.posts.every(
-    post => post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH,
+    post => post.richtext.graphemeLength <= MAX_GRAPHEME_LENGTH,
   )
   useEffect(() => {
     if (error && allPostsWithinLimit) {
@@ -569,7 +569,7 @@ export const ComposePost = ({
 
   const checkDraftTextLength = React.useCallback((): boolean => {
     const tooLong = composerState.thread.posts.some(
-      post => post.shortenedGraphemeLength > MAX_GRAPHEME_LENGTH,
+      post => post.richtext.graphemeLength > MAX_GRAPHEME_LENGTH,
     )
     if (tooLong) {
       setError(
