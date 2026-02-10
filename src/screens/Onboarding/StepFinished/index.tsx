@@ -96,10 +96,13 @@ export function StepFinished() {
       const {selectedInterests} = interestsStepResults
 
       await Promise.all([
-        bulkWriteFollows(agent, [
-          BSKY_APP_ACCOUNT_DID,
-          ...(listItems?.map(i => i.subject.did) ?? []),
-        ]),
+        bulkWriteFollows(
+          agent,
+          [BSKY_APP_ACCOUNT_DID, ...(listItems?.map(i => i.subject.did) ?? [])],
+          starterPack
+            ? {uri: starterPack.uri, cid: starterPack.cid}
+            : undefined,
+        ),
         (async () => {
           // Interests need to get saved first, then we can write the feeds to prefs
           await agent.setInterestsPref({tags: selectedInterests})
