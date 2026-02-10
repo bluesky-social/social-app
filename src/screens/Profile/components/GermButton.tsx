@@ -57,6 +57,7 @@ export function GermButton({
     <Link
       to={url}
       label={_(msg`Open Germ DM`)}
+      shouldProxy={false}
       style={[t.atoms.bg_contrast_50, a.rounded_full, a.gap_xs, {padding: 6}]}>
       <GermLogo size="small" />
       <Text style={[a.text_sm, a.font_medium]}>
