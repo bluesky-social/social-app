@@ -136,7 +136,8 @@ function SubtitleDialogInner({
             ]}>
             <Plural
               value={MAX_ALT_TEXT}
-              other="Alt text must be less than # characters." />
+              other="Alt text must be less than # characters."
+            />
           </Text>
         )}
 
