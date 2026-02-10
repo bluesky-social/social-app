@@ -314,11 +314,13 @@ export function StepInfo({
                         {!isOverAppMinAccessAge ? (
                           <Plural
                             value={MIN_ACCESS_AGE}
-                            other="You must be # years of age or older to create an account." />
+                            other="You must be # years of age or older to create an account."
+                          />
                         ) : (
                           <Plural
                             value={aaRegionConfig.minAccessAge}
-                            other="You must be # years of age or older to create an account in your region." />
+                            other="You must be # years of age or older to create an account in your region."
+                          />
                         )}
                       </Admonition.Text>
                       {IS_NATIVE &&
