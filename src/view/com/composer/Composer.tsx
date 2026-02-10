@@ -63,6 +63,7 @@ import {useAppState} from '#/lib/appState'
 import {retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
 import {
+  MAX_DRAFT_GRAPHEME_LENGTH,
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
@@ -280,7 +281,7 @@ export const ComposePost = ({
   // Clear error when composer content changes, but only if all posts are
   // back within the character limit.
   const allPostsWithinLimit = thread.posts.every(
-    post => post.richtext.graphemeLength <= MAX_GRAPHEME_LENGTH,
+    post => post.richtext.graphemeLength <= MAX_DRAFT_GRAPHEME_LENGTH,
   )
   useEffect(() => {
     if (error && allPostsWithinLimit) {
@@ -569,12 +570,12 @@ export const ComposePost = ({
 
   const checkDraftTextLength = React.useCallback((): boolean => {
     const tooLong = composerState.thread.posts.some(
-      post => post.richtext.graphemeLength > MAX_GRAPHEME_LENGTH,
+      post => post.richtext.graphemeLength > MAX_DRAFT_GRAPHEME_LENGTH,
     )
     if (tooLong) {
       setError(
         _(
-          msg`Post is too long to save as a draft. The maximum number of characters is ${MAX_GRAPHEME_LENGTH}.`,
+          msg`Post is too long to save as a draft. The maximum number of characters is ${MAX_DRAFT_GRAPHEME_LENGTH}.`,
         ),
       )
       return false
