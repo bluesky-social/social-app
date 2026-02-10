@@ -45,6 +45,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
+  AppBskyDraftCreateDraft,
   AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
   AtUri,
@@ -275,6 +276,19 @@ export const ComposePost = ({
   )
 
   const thread = composerState.thread
+
+  // Clear error when composer content changes, but only if all posts are
+  // back within the character limit.
+  const allPostsWithinLimit = thread.posts.every(
+    post => post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH,
+  )
+  useEffect(() => {
+    if (error && allPostsWithinLimit) {
+      setError('')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [thread, allPostsWithinLimit])
+
   const activePost = thread.posts[composerState.activePostIndex]
   const nextPost: PostDraft | undefined =
     thread.posts[composerState.activePostIndex + 1]
@@ -543,7 +557,36 @@ export const ComposePost = ({
     revokeAllMediaUrls()
   }, [closeComposer, queryClient])
 
+  const getDraftSaveError = React.useCallback(
+    (e: unknown): string => {
+      if (e instanceof AppBskyDraftCreateDraft.DraftLimitReachedError) {
+        return _(msg`You've reached the maximum number of drafts`)
+      }
+      return _(msg`Failed to save draft`)
+    },
+    [_],
+  )
+
+  const checkDraftTextLength = React.useCallback((): boolean => {
+    const tooLong = composerState.thread.posts.some(
+      post => post.shortenedGraphemeLength > MAX_GRAPHEME_LENGTH,
+    )
+    if (tooLong) {
+      setError(
+        _(
+          msg`Your post text exceeds ${MAX_GRAPHEME_LENGTH} characters. Shorten the text before saving as a draft.`,
+        ),
+      )
+      return false
+    }
+    return true
+  }, [composerState.thread.posts, _])
+
   const handleSaveDraft = React.useCallback(async () => {
+    setError('')
+    if (!checkDraftTextLength()) {
+      return
+    }
     const isNewDraft = !composerState.draftId
     try {
       const result = await saveDraft({
@@ -569,18 +612,43 @@ export const ComposePost = ({
       onClose()
     } catch (e) {
       logger.error('Failed to save draft', {error: e})
-      setError(_(msg`Failed to save draft`))
+      setError(getDraftSaveError(e))
     }
-  }, [saveDraft, composerState, composerDispatch, onClose, _, ax])
+  }, [
+    saveDraft,
+    composerState,
+    composerDispatch,
+    onClose,
+    ax,
+    checkDraftTextLength,
+    getDraftSaveError,
+  ])
 
   // Save without closing - for use by DraftsButton
-  const saveCurrentDraft = React.useCallback(async () => {
-    const result = await saveDraft({
-      composerState,
-      existingDraftId: composerState.draftId,
-    })
-    composerDispatch({type: 'mark_saved', draftId: result.draftId})
-  }, [saveDraft, composerState, composerDispatch])
+  const saveCurrentDraft = React.useCallback(async (): Promise<boolean> => {
+    setError('')
+    if (!checkDraftTextLength()) {
+      return false
+    }
+    try {
+      const result = await saveDraft({
+        composerState,
+        existingDraftId: composerState.draftId,
+      })
+      composerDispatch({type: 'mark_saved', draftId: result.draftId})
+      return true
+    } catch (e) {
+      logger.error('Failed to save draft', {error: e})
+      setError(getDraftSaveError(e))
+      return false
+    }
+  }, [
+    saveDraft,
+    composerState,
+    composerDispatch,
+    checkDraftTextLength,
+    getDraftSaveError,
+  ])
 
   // Handle discard action - fires metric and closes composer
   const handleDiscard = React.useCallback(() => {
@@ -656,6 +724,11 @@ export const ComposePost = ({
     // - No draft is loaded (new composition)
     // - Draft is loaded but has been modified
     if (hasContent && (!composerState.draftId || composerState.isDirty)) {
+      // If text exceeds the limit, skip the save prompt and show the error
+      // directly since we know the draft can't be saved.
+      if (!checkDraftTextLength()) {
+        return
+      }
       closeAllDialogs()
       Keyboard.dismiss()
       discardPromptControl.open()
@@ -669,6 +742,7 @@ export const ComposePost = ({
     closeAllDialogs,
     discardPromptControl,
     onClose,
+    checkDraftTextLength,
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
