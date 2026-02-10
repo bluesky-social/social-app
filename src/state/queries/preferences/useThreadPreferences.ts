@@ -1,5 +1,6 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
+import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
 import {useCallOnce} from '#/lib/once'
@@ -94,6 +95,14 @@ export function useThreadPreferences({
       {leading: true, trailing: true},
     )
   }, [mutateAsync, ax])
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        void savePrefs.flush()
+      }
+    }, [savePrefs]),
+  )
 
   if (save && userUpdatedPrefs.current) {
     savePrefs({
