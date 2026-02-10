@@ -73,23 +73,27 @@ export function useThreadPreferences({
   const [isSaving, setIsSaving] = useState(false)
   const {mutateAsync} = useSetThreadViewPreferencesMutation()
   const savePrefs = useMemo(() => {
-    return debounce(async (prefs: ThreadViewPreferences) => {
-      try {
-        setIsSaving(true)
-        await mutateAsync(prefs)
-        ax.metric('thread:preferences:update', {
-          sort: prefs.sort,
-          view: prefs.lab_treeViewEnabled ? 'tree' : 'linear',
-        })
-      } catch (e) {
-        ax.logger.error('useThreadPreferences failed to save', {
-          safeMessage: e,
-        })
-      } finally {
-        setIsSaving(false)
-      }
-    }, 4e3)
-  }, [mutateAsync])
+    return debounce(
+      async (prefs: ThreadViewPreferences) => {
+        try {
+          setIsSaving(true)
+          await mutateAsync(prefs)
+          ax.metric('thread:preferences:update', {
+            sort: prefs.sort,
+            view: prefs.lab_treeViewEnabled ? 'tree' : 'linear',
+          })
+        } catch (e) {
+          ax.logger.error('useThreadPreferences failed to save', {
+            safeMessage: e,
+          })
+        } finally {
+          setIsSaving(false)
+        }
+      },
+      2e3,
+      {leading: true, trailing: true},
+    )
+  }, [mutateAsync, ax])
 
   if (save && userUpdatedPrefs.current) {
     savePrefs({
