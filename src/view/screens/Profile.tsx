@@ -79,14 +79,14 @@ function ProfileScreenInner({route}: Props) {
     data: resolvedDid,
     error: resolveError,
     refetch: refetchDid,
-    isLoading: isLoadingDid,
+    status: didStatus,
   } = useResolveDidQuery(name)
   const {
     data: profile,
     error: profileError,
     refetch: refetchProfile,
-    isLoading: isLoadingProfile,
     isPlaceholderData: isPlaceholderProfile,
+    status: profileStatus,
   } = useProfileQuery({
     did: resolvedDid,
   })
@@ -117,7 +117,7 @@ function ProfileScreenInner({route}: Props) {
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile) {
+  if (didStatus === 'pending' || profileStatus === 'pending') {
     return (
       <Layout.Content>
         <ProfileHeaderLoading />
