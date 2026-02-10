@@ -88,23 +88,56 @@ function GermSelfButton({did}: {did: string}) {
   const t = useTheme()
   const queryClient = useQueryClient()
 
-  const {mutate, isPending} = useMutation({
+  const {mutate: deleteDeclaration, isPending} = useMutation({
     onMutate: async () => {
+      const previousRecord = await agent.com.germnetwork.declaration
+        .get({
+          repo: did,
+          rkey: 'self',
+        })
+        .then(res => res.value)
+        .catch(() => null)
+
       await agent.com.germnetwork.declaration.delete({
         repo: did,
         rkey: 'self',
       })
 
       await whenAppViewReady(agent, did, res => !res.data.associated?.germ)
+
+      return previousRecord
     },
-    onSuccess: () => {
-      selfExplanationDialogControl.close(() => {
-        Toast.show(
-          _(
-            msg`Germ DM link disconnected. You can reconnect it at any time through the Germ app.`,
-          ),
+    onSuccess: (_data, _variables, previousRecord) => {
+      async function undo() {
+        if (!previousRecord) return
+        await agent.com.germnetwork.declaration.put(
+          {
+            repo: did,
+            rkey: 'self',
+          },
+          previousRecord,
         )
+        await whenAppViewReady(agent, did, res => !!res.data.associated?.germ)
+        await queryClient.refetchQueries({queryKey: RQKEY(did)})
+
+        Toast.show(_(msg`Germ DM reconnected`))
+      }
+
+      selfExplanationDialogControl.close(() => {
         void queryClient.refetchQueries({queryKey: RQKEY(did)})
+        Toast.show(
+          <Toast.Outer>
+            <Toast.Icon />
+            <Toast.Text>
+              <Trans>Germ DM disconnected</Trans>
+            </Toast.Text>
+            {previousRecord && (
+              <Toast.Action label={_(msg`Undo`)} onPress={() => void undo()}>
+                <Trans>Undo</Trans>
+              </Toast.Action>
+            )}
+          </Toast.Outer>,
+        )
       })
     },
     onError: error => {
@@ -154,21 +187,21 @@ function GermSelfButton({did}: {did: string}) {
               can manage its visibility from the Germ DM app.
             </Trans>
           </Text>
-          <View style={[a.mt_2xl]}>
+          <View style={[a.mt_2xl, a.gap_md]}>
             <Button
-              label={_(msg``)}
+              label={_(msg`Got it`)}
               size="large"
               color="primary"
               onPress={() => selfExplanationDialogControl.close()}>
               <ButtonText>
-                <Trans>Got it!</Trans>
+                <Trans>Got it</Trans>
               </ButtonText>
             </Button>
             <Button
               label={_(msg`Disconnect Germ DM`)}
               size="large"
-              color="primary"
-              onPress={() => mutate()}
+              color="secondary"
+              onPress={() => deleteDeclaration()}
               disabled={isPending}>
               {isPending && <ButtonIcon icon={Loader} />}
               <ButtonText>
