@@ -67,7 +67,9 @@ export function VideoEmbedInnerNative({
           setIsLoading(e.nativeEvent.isLoading)
         }}
         onMutedChange={e => {
-          setMuted(e.nativeEvent.isMuted)
+          if (!isGif) {
+            setMuted(e.nativeEvent.isMuted)
+          }
         }}
         onStatusChange={e => {
           setStatus(e.nativeEvent.status)
