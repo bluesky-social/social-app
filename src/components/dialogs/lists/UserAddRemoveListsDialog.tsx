@@ -265,7 +265,7 @@ function ListItem({
       })
     } else {
       if (!listItem?.uri) {
-        console.error('Cannot remove: missing membership URI')
+        logger.error('Cannot remove: missing membership URI')
         return
       }
       removeMembership({
