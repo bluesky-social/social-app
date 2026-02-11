@@ -333,7 +333,39 @@ jobs:
           yarn use-build-number-with-bump
           eas build -p android
           --profile testflight-android
-          --local --output build.apk --non-interactive
+          --local --output build.aab --non-interactive
+
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
+      - name: 🚀 Submit to Google Play
+        run: eas submit -p android --profile testflight-android --non-interactive --path build.aab
+
+      - name: 🔧 Setup bundletool
+        uses: amyu/setup-bundletool@v1
+        with:
+          bundletool-version: "1.17.2"
+
+      - name: 🔑 Decode keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
+
+      - name: 📦 Build signed universal APK
+        run: |
+          bundletool build-apks \
+            --bundle=build.aab \
+            --output=universal.apks \
+            --mode=universal \
+            --ks=keystore.jks \
+            --ks-pass=pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+            --ks-key-alias=${{ secrets.ANDROID_KEY_ALIAS }} \
+            --key-pass=pass:${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: 📋 Rename to .zip for extraction
+        run: mv universal.apks universal.zip
+
+      - name: 📦 Extract universal APK
+        run: unzip -p universal.zip universal.apk > build.apk
 
       - name: ⏰ Get a timestamp
         id: timestamp
