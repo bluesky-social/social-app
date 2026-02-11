@@ -144,19 +144,32 @@ function GermSelfButton({did}: {did: string}) {
 
       async function undo() {
         if (!previousRecord) return
-        await agent.com.germnetwork.declaration.put(
-          {
-            repo: did,
-            rkey: 'self',
-          },
-          previousRecord,
-        )
-        await whenAppViewReady(agent, did, res => !!res.data.associated?.germ)
-        await queryClient.refetchQueries({queryKey: RQKEY(did)})
+        try {
+          await agent.com.germnetwork.declaration.put(
+            {
+              repo: did,
+              rkey: 'self',
+            },
+            previousRecord,
+          )
+          await whenAppViewReady(agent, did, res => !!res.data.associated?.germ)
+          await queryClient.refetchQueries({queryKey: RQKEY(did)})
 
-        Toast.show(_(msg`Germ DM reconnected`))
-
-        ax.metric('profile:associated:germ:self-reconnect', {})
+          Toast.show(_(msg`Germ DM reconnected`))
+          ax.metric('profile:associated:germ:self-reconnect', {})
+        } catch (e: any) {
+          Toast.show(
+            _(msg`Failed to reconnect Germ DM. Error: ${e?.message}`),
+            {
+              type: 'error',
+            },
+          )
+          if (!isNetworkError(e)) {
+            ax.logger.error('Failed to reconnect Germ DM link', {
+              safeMessage: e,
+            })
+          }
+        }
       }
 
       selfExplanationDialogControl.close(() => {
@@ -178,13 +191,15 @@ function GermSelfButton({did}: {did: string}) {
     },
     onError: error => {
       Toast.show(
-        _(msg`Failed to remove Germ DM link. Error: ${error?.message}`),
+        _(msg`Failed to disconnect Germ DM. Error: ${error?.message}`),
         {
           type: 'error',
         },
       )
       if (!isNetworkError(error)) {
-        ax.logger.error('Failed to remove Germ DM link', {safeMessage: error})
+        ax.logger.error('Failed to disconnect Germ DM link', {
+          safeMessage: error,
+        })
       }
     },
   })
