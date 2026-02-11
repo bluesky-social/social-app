@@ -34,6 +34,7 @@ export type MergeableMetadata = {
 }
 
 export type Metadata = {
+  source: 'app'
   base: BaseMetadata
   geolocation: GeolocationMetadata
 } & MergeableMetadata
