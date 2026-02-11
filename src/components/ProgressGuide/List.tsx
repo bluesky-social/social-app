@@ -87,8 +87,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
                     a.justify_between,
                     a.gap_sm,
                   ]
-                : a.flex_col,
-              !inlineLayout && a.gap_md,
+                : [a.flex_col, a.gap_md],
             ]}>
             <StackedAvatars follows={follows?.pages?.[0]?.follows} />
             <FollowDialog guide={guide} showArrow={inlineLayout} />
