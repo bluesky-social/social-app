@@ -175,6 +175,7 @@ function BottomSheetNativeComponentInner({
           Platform.OS === 'android' && {
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
+            overflow: 'hidden',
           },
           extraStyles,
         ]}>
