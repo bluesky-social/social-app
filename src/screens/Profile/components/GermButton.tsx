@@ -37,8 +37,7 @@ export function GermButton({
 
   // exclude `none` and all unknown values
   if (
-    germ.showButtonTo !== 'everyone' ||
-    germ.showButtonTo !== 'usersIFollow'
+    !(germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow')
   ) {
     return null
   }
