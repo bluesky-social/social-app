@@ -93,9 +93,50 @@ jobs:
           --profile $PROFILE
           --local --output build.aab --non-interactive
 
-      - name: ✍️ Rename Testflight bundle
-        if: ${{ inputs.profile != 'production' }}
-        run: mv build.aab build.apk
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
+      - name: 🚀 Submit to Google Play
+        env:
+          PROFILE: ${{ inputs.profile || 'testflight-android' }}
+        run: eas submit -p android --profile $PROFILE --non-interactive --path build.aab
+
+      - name: 🔔 Notify Slack of Play Store Submission
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Android ${{ inputs.profile || 'testflight-android' }} build submitted to Google Play!\n```Version Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: 🔧 Setup bundletool
+        uses: amyu/setup-bundletool@v1
+        with:
+          bundletool-version: "1.17.2"
+
+      - name: 🔑 Decode keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
+
+      - name: 📦 Build signed universal APK
+        run: |
+          bundletool build-apks \
+            --bundle=build.aab \
+            --output=universal.apks \
+            --mode=universal \
+            --ks=keystore.jks \
+            --ks-pass=pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+            --ks-key-alias=${{ secrets.ANDROID_KEY_ALIAS }} \
+            --key-pass=pass:${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: 📋 Rename to .zip for extraction
+        run: mv universal.apks universal.zip
+
+      - name: 📦 Extract universal APK
+        run: unzip -p universal.zip universal.apk > build.apk
 
       - name: ⏰ Get a timestamp
         id: timestamp
@@ -103,19 +144,8 @@ jobs:
         with:
           format: "MM-DD-HH-mm-ss"
 
-      - name: 🚀 Upload Production Artifact
-        id: upload-artifact-production
-        if: ${{ inputs.profile == 'production' }}
-        uses: actions/upload-artifact@v4
-        with:
-          retention-days: 30
-          compression-level: 6
-          name: build-${{ steps.timestamp.outputs.time }}.aab
-          path: build.aab
-
-      - name: 🚀 Upload Testflight Artifact
-        id: upload-artifact-testflight
-        if: ${{ inputs.profile != 'production' }}
+      - name: 🚀 Upload APK Artifact
+        id: upload-artifact
         uses: actions/upload-artifact@v4
         with:
           retention-days: 30
@@ -123,67 +153,12 @@ jobs:
           name: build-${{ steps.timestamp.outputs.time }}.apk
           path: build.apk
 
-      - name: 📚 Get version from package.json
-        id: get-build-info
-        run: bash scripts/setGitHubOutput.sh
-
-      - name: 🔔 Notify Slack of Production Build
-        if: ${{ inputs.profile == 'production' }}
+      - name: 🔔 Notify Slack of APK Artifact
         uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
             {
-              "text": "Android production build for Google Play Store submission is ready!\n```Artifact: ${{ steps.upload-artifact-production.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-      - name: 🔔 Notify Slack of Testflight Build
-        if: ${{ inputs.profile != 'production' }}
-        uses: slackapi/slack-github-action@v1.25.0
-        with:
-          payload: |
-            {
-              "text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact-testflight.outputs.artifact-url }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-      - name: 🧹 Clear Metro cache
-        if: ${{ inputs.profile == 'production' }}
-        # https://github.com/expo/eas-cli/issues/2959#issuecomment-2749791326
-        run: rm -rf ${TMPDIR:-/tmp}/metro-cache
-
-      - name: 🏗️ Build Production APK
-        if: ${{ inputs.profile == 'production' }}
-        run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
-          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn use-build-number-with-bump
-          eas build -p android
-          --profile production-apk
-          --local --output build.apk --non-interactive
-
-      - name: 🚀 Upload Production APK Artifact
-        id: upload-artifact-production-apk
-        if: ${{ inputs.profile == 'production' }}
-        uses: actions/upload-artifact@v4
-        with:
-          retention-days: 30
-          compression-level: 6
-          name: build-${{ steps.timestamp.outputs.time }}.apk
-          path: build.apk
-
-      - name: 🔔 Notify Slack of Production APK Build
-        if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@v1.25.0
-        with:
-          payload: |
-            {
-              "text": "Android production build for GitHub/Obtanium is ready!\n```Artifact: ${{ steps.upload-artifact-production-apk.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
+              "text": "Android ${{ inputs.profile || 'testflight-android' }} APK is ready for testing!\n```Artifact: ${{ steps.upload-artifact.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
