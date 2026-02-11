@@ -99,7 +99,7 @@ function GermSelfButton({did}: {did: string}) {
   const queryClient = useQueryClient()
 
   const {mutate: deleteDeclaration, isPending} = useMutation({
-    onMutate: async () => {
+    mutationFn: async () => {
       const previousRecord = await agent.com.germnetwork.declaration
         .get({
           repo: did,
@@ -117,7 +117,7 @@ function GermSelfButton({did}: {did: string}) {
 
       return previousRecord
     },
-    onSuccess: (_data, _variables, previousRecord) => {
+    onSuccess: previousRecord => {
       async function undo() {
         if (!previousRecord) return
         await agent.com.germnetwork.declaration.put(
