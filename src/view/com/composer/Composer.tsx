@@ -1231,7 +1231,7 @@ export const ComposePost = ({
                     <Trans>Save draft?</Trans>
                   )
                 ) : (
-                  <Trans>Discard draft?</Trans>
+                  <Trans>Discard post?</Trans>
                 )}
               </Prompt.TitleText>
               <Prompt.DescriptionText>
@@ -1247,10 +1247,7 @@ export const ComposePost = ({
                     </Trans>
                   )
                 ) : (
-                  <Trans>
-                    Your post exceeds the character limit and can't be saved as
-                    a draft.
-                  </Trans>
+                  <Trans>You can only save drafts up to 1000 characters.</Trans>
                 )}
               </Prompt.DescriptionText>
             </Prompt.Content>
@@ -1271,7 +1268,7 @@ export const ComposePost = ({
                 onPress={handleDiscard}
                 color="negative_subtle"
               />
-              <Prompt.Cancel />
+              <Prompt.Cancel cta={_(msg`Keep editing`)} />
             </Prompt.Actions>
           </Prompt.Outer>
         )}
