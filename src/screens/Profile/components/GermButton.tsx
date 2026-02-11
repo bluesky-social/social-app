@@ -240,8 +240,10 @@ function GermSelfButton({did}: {did: string}) {
 
           <Text style={[a.text_md, a.leading_snug, a.mt_sm]}>
             <Trans>
-              This button lets others send you a message in the Germ DM app. You
-              can manage its visibility here or in Germ DM.
+              This button lets others open the Germ DM app to send you a
+              message. You can manage its visibility from the Germ DM app, or
+              you can disconnect your Bluesky account from Germ DM altogether by
+              clicking the button below.
             </Trans>
           </Text>
           <View style={[a.mt_2xl, a.gap_md]}>
