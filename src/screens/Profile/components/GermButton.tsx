@@ -60,6 +60,7 @@ export function GermButton({
     <Link
       to={url}
       label={_(msg`Open Germ DM`)}
+      overridePresentation={false}
       shouldProxy={false}
       style={[
         t.atoms.bg_contrast_50,
