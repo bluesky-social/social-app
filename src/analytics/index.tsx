@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useMemo} from 'react'
+import {createContext, useContext, useMemo} from 'react'
 import {Platform} from 'react-native'
 
 import {Logger} from '#/logger'
@@ -181,20 +181,25 @@ export function AnalyticsFeaturesContext({
   const parentContext = useContext(Context)
 
   /**
-   * Side-effect: we need to synchronously set this during the
-   * same render cycle. It does not trigger a re-render, it just
-   * sets properties on the singleton GrowthBook instance.
+   * Side-effects: we need to synchronously set these during the same render
+   * cycle. These calls do not trigger re-renders, they just set properties on
+   * the singleton GrowthBook instance.
    */
   setAttributes(parentContext.metadata)
-
-  useEffect(() => {
-    feats.setTrackingCallback((experiment, result) => {
-      parentContext.metric('experiment:viewed', {
-        experimentId: experiment.key,
-        variationId: result.key,
-      })
+  feats.setTrackingCallback((experiment, result) => {
+    parentContext.metric('experiment:viewed', {
+      experimentId: experiment.key,
+      variationId: result.key,
     })
-  }, [parentContext.metric])
+  })
+  feats.setFeatureUsageCallback((feature, result) => {
+    parentContext.metric('feature:viewed', {
+      featureId: feature,
+      featureResultValue: result.value,
+      experimentId: result.experiment?.key,
+      variationId: result.experimentResult?.key,
+    })
+  })
 
   const childContext = useMemo<AnalyticsContextType>(() => {
     return {
