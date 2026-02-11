@@ -23,6 +23,7 @@ export function useGetSuggestedFeedsQuery({enabled}: {enabled?: boolean}) {
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetSuggestedFeedsQueryKey(),
     queryFn: async () => {
+      throw new Error('Explore debug error')
       const contentLangs = getContentLanguages().join(',')
       const {data} = await agent.app.bsky.unspecced.getSuggestedFeeds(
         {

@@ -38,6 +38,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
+      throw new Error('Explore debug error')
       const contentLangs = getContentLanguages().join(',')
       const userInterests = aggregateUserInterests(preferences)
 

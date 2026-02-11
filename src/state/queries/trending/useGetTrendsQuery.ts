@@ -27,6 +27,7 @@ export function useGetTrendsQuery() {
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetTrendsQueryKey(),
     queryFn: async () => {
+      throw new Error('Explore debug error')
       const contentLangs = getContentLanguages().join(',')
       const {data} = await agent.app.bsky.unspecced.getTrends(
         {

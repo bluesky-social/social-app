@@ -141,6 +141,7 @@ export function useFeedPreviews(
     enabled,
     queryKey: RQKEY(uris),
     queryFn: async ({pageParam}) => {
+      throw new Error('Explore debug error')
       const feed = feeds[pageParam]
       const api = new CustomFeedAPI({
         agent,

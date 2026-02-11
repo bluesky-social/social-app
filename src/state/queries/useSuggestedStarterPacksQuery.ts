@@ -30,6 +30,7 @@ export function useSuggestedStarterPacksQuery({
     staleTime: STALE.MINUTES.THREE,
     queryKey: createSuggestedStarterPacksQueryKey(overrideInterests),
     queryFn: async () => {
+      throw new Error('Explore debug error')
       const {data} = await agent.app.bsky.unspecced.getSuggestedStarterPacks(
         undefined,
         {
