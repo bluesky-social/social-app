@@ -4,6 +4,7 @@
  * the app is ready to go.
  */
 
+import {useEffect} from 'react'
 import {View} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 
@@ -13,6 +14,18 @@ const size = 100
 const ratio = 57 / 64
 
 export function Splash() {
+  useEffect(() => {
+    // double rAF ensures that the React version gets painted
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const splash = document.getElementById('splash')
+        if (splash) {
+          splash.remove()
+        }
+      })
+    })
+  }, [])
+
   return (
     <View style={[a.fixed, a.inset_0, a.align_center, a.justify_center]}>
       <Svg
