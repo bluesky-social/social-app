@@ -11,7 +11,6 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
 import {isNetworkError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
 import {RQKEY} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -23,6 +22,7 @@ import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function GermButton({
@@ -32,8 +32,9 @@ export function GermButton({
   germ: AppBskyActorDefs.ProfileAssociatedGerm
   profile: bsky.profile.AnyProfileView
 }) {
-  const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const linkWarningControl = Dialog.useDialogControl()
 
@@ -63,6 +64,7 @@ export function GermButton({
       <Link
         to={url}
         onPress={evt => {
+          ax.metric('profile:associated:germ:click-to-chat', {})
           if (isCustomGermDomain(url)) {
             evt.preventDefault()
             linkWarningControl.open()
@@ -111,10 +113,11 @@ function GermLogo({size}: {size: 'small' | 'large'}) {
 }
 
 function GermSelfButton({did}: {did: string}) {
+  const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const selfExplanationDialogControl = Dialog.useDialogControl()
   const agent = useAgent()
-  const t = useTheme()
   const queryClient = useQueryClient()
 
   const {mutate: deleteDeclaration, isPending} = useMutation({
@@ -137,6 +140,8 @@ function GermSelfButton({did}: {did: string}) {
       return previousRecord
     },
     onSuccess: previousRecord => {
+      ax.metric('profile:associated:germ:self-disconnect', {})
+
       async function undo() {
         if (!previousRecord) return
         await agent.com.germnetwork.declaration.put(
@@ -150,6 +155,8 @@ function GermSelfButton({did}: {did: string}) {
         await queryClient.refetchQueries({queryKey: RQKEY(did)})
 
         Toast.show(_(msg`Germ DM reconnected`))
+
+        ax.metric('profile:associated:germ:self-reconnect', {})
       }
 
       selfExplanationDialogControl.close(() => {
@@ -172,9 +179,12 @@ function GermSelfButton({did}: {did: string}) {
     onError: error => {
       Toast.show(
         _(msg`Failed to remove Germ DM link. Error: ${error?.message}`),
+        {
+          type: 'error',
+        },
       )
       if (!isNetworkError(error)) {
-        logger.error('Failed to remove Germ DM link', {safeMessage: error})
+        ax.logger.error('Failed to remove Germ DM link', {safeMessage: error})
       }
     },
   })
@@ -183,7 +193,10 @@ function GermSelfButton({did}: {did: string}) {
     <>
       <Button
         label={_(msg`Learn more about your Germ DM link`)}
-        onPress={selfExplanationDialogControl.open}
+        onPress={() => {
+          ax.metric('profile:associated:germ:click-self-info', {})
+          selfExplanationDialogControl.open()
+        }}
         style={[
           t.atoms.bg_contrast_50,
           a.rounded_full,
