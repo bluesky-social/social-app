@@ -173,14 +173,14 @@ function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
                   a.justify_center,
                   a.rounded_full,
                   t.atoms.bg_contrast_300,
+                  a.border,
+                  t.atoms.border_contrast_low,
                   {
                     width: avatarSize,
                     height: avatarSize,
                     marginLeft:
                       followedAvatars.length === 0 && i === 0 ? 0 : -overlap,
                     zIndex: TOTAL_AVATARS - followedAvatars.length - i,
-                    borderWidth: 1,
-                    borderColor: t.atoms.border_contrast_low.borderColor,
                   },
                 ]}>
                 <PersonIcon
