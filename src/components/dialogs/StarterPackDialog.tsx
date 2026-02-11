@@ -271,7 +271,7 @@ function StarterPackItem({
       },
       onError: err => {
         if (!isNetworkError(err)) {
-          logger.error('Failed to remove from starter pack', {safeMessage: err})
+          logger.error('Failed to add to starter pack', {safeMessage: err})
         }
         Toast.show(_(msg`Failed to add to starter pack`), {type: 'error'})
       },
