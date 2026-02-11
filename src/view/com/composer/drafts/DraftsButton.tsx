@@ -113,8 +113,8 @@ export function DraftsButton({
             )
           ) : (
             <Trans>
-              Your post exceeds the character limit and can't be saved as a
-              draft.
+              You can only save drafts up to 1000 characters. Would you like to
+              discard this post before viewing your drafts?
             </Trans>
           )}
         </Prompt.DescriptionText>
@@ -131,7 +131,7 @@ export function DraftsButton({
             onPress={handleDiscardAndOpen}
             color="negative_subtle"
           />
-          <Prompt.Cancel />
+          <Prompt.Cancel cta={_(msg`Keep editing`)} />
         </Prompt.Actions>
       </Prompt.Outer>
     </>
