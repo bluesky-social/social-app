@@ -3,6 +3,7 @@ import {type LocationGeocodedAddress} from 'expo-location'
 import {IS_ANDROID} from '#/env'
 import {logger} from '#/geolocation/logger'
 import {type Geolocation} from '#/geolocation/types'
+import {device} from '#/storage'
 
 /**
  * Maps full US region names to their short codes.
@@ -124,4 +125,22 @@ export function mergeGeolocations(
     merged: geolocation,
   })
   return geolocation
+}
+
+/**
+ * Get's the merged geolocation as a string in the format of
+ * "countryCode-regionCode", or just "countryCode" if regionCode is not
+ * available.
+ */
+export function getGeolocationString() {
+  const geo = device.get(['mergedGeolocation'])
+  if (!geo) return
+  const {countryCode, regionCode} = geo
+  if (countryCode) {
+    if (regionCode) {
+      return `${countryCode}-${regionCode}`
+    } else {
+      return countryCode
+    }
+  }
 }
