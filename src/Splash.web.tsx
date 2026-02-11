@@ -15,7 +15,7 @@ const ratio = 57 / 64
 
 export function Splash() {
   useEffect(() => {
-    // double rAF ensures that the React version gets painted
+    // double rAF ensures that the React version gets painted first
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const splash = document.getElementById('splash')
