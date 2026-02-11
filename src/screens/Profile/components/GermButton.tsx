@@ -72,7 +72,7 @@ export function GermButton({
       <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
         <Trans>Germ DM</Trans>
       </Text>
-      <ArrowTopRightIcon style={[t.atoms.text]} size="sm" />
+      <ArrowTopRightIcon style={[t.atoms.text, a.mx_2xs]} width={14} />
     </Link>
   )
 }
