@@ -158,6 +158,7 @@ function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
                 type="user"
                 size={avatarSize - 2}
                 avatar={follow.avatar}
+                noBorder
               />
             </View>
           ))}
