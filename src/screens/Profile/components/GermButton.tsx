@@ -17,6 +17,7 @@ import {useAgent, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {CustomLinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
@@ -34,6 +35,7 @@ export function GermButton({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
+  const linkWarningControl = Dialog.useDialogControl()
 
   // exclude `none` and all unknown values
   if (
@@ -57,23 +59,40 @@ export function GermButton({
   }
 
   return (
-    <Link
-      to={url}
-      label={_(msg`Open Germ DM`)}
-      overridePresentation={false}
-      shouldProxy={false}
-      style={[
-        t.atoms.bg_contrast_50,
-        a.rounded_full,
-        a.self_start,
-        {padding: 6},
-      ]}>
-      <GermLogo size="small" />
-      <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
-        <Trans>Germ DM</Trans>
-      </Text>
-      <ArrowTopRightIcon style={[t.atoms.text, a.mx_2xs]} width={14} />
-    </Link>
+    <>
+      <Link
+        to={url}
+        onPress={evt => {
+          if (isCustomGermDomain(url)) {
+            evt.preventDefault()
+            linkWarningControl.open()
+            return false
+          }
+        }}
+        label={_(msg`Open Germ DM`)}
+        overridePresentation={false}
+        shouldProxy={false}
+        style={[
+          t.atoms.bg_contrast_50,
+          a.rounded_full,
+          a.self_start,
+          {padding: 6},
+        ]}>
+        <GermLogo size="small" />
+        <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
+          <Trans>Germ DM</Trans>
+        </Text>
+        <ArrowTopRightIcon style={[t.atoms.text, a.mx_2xs]} width={14} />
+      </Link>
+      <CustomLinkWarningDialog
+        control={linkWarningControl}
+        link={{
+          href: url,
+          displayText: '',
+          share: false,
+        }}
+      />
+    </>
   )
 }
 
@@ -248,6 +267,15 @@ function constructGermUrl(
     return urlp.toString()
   } catch {
     return null
+  }
+}
+
+function isCustomGermDomain(url: string) {
+  try {
+    const urlp = new URL(url)
+    return urlp.hostname !== 'landing.ger.mx'
+  } catch {
+    return false
   }
 }
 
