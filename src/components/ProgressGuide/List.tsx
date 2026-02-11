@@ -147,11 +147,11 @@ function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
               key={follow.did}
               style={[
                 a.rounded_full,
+                a.border,
+                t.atoms.border_contrast_low,
                 {
                   marginLeft: i === 0 ? 0 : -overlap,
                   zIndex: TOTAL_AVATARS - i,
-                  borderWidth: 1,
-                  borderColor: t.atoms.bg_contrast_25.backgroundColor,
                 },
               ]}>
               <UserAvatar
