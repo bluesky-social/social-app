@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="EdgeToEdgeBottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <!-- Enable edge-to-edge -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="enableEdgeToEdge">true</item>
+
+        <!-- Configure bottom sheet to respect system window insets -->
+        <item name="bottomSheetStyle">@style/EdgeToEdgeBottomSheet</item>
+    </style>
+
+    <style name="EdgeToEdgeBottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="paddingBottomSystemWindowInsets">false</item>
+        <item name="paddingLeftSystemWindowInsets">true</item>
+        <item name="paddingRightSystemWindowInsets">true</item>
+        <item name="paddingTopSystemWindowInsets">false</item>
+    </style>
+</resources>

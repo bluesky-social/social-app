@@ -242,7 +242,7 @@ jobs:
           --local --output build.ipa --non-interactive
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path build.ipa
+        run: eas submit -p ios --non-interactive --path build.ipa --what-to-test "TestFlight build"
 
       - name: ⬇️ Restore Cache
         id: get-base-commit

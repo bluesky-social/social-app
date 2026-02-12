@@ -118,7 +118,12 @@ jobs:
           fi
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path ios-build/ios/build/Bluesky.ipa
+        env:
+          PROFILE: ${{ inputs.profile || 'testflight' }}
+        run: >
+          eas submit -p ios --non-interactive
+          --path ios-build/ios/build/Bluesky.ipa
+          --what-to-test "$([[ "$PROFILE" == "production" ]] && echo "Production build" || echo "TestFlight build")"
 
       - name: 🪲 Upload dSYM to Sentry
         run: >

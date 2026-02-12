@@ -5,6 +5,7 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {enforceLen} from '#/lib/strings/helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
@@ -28,6 +29,7 @@ export const ImageAltTextDialog = ({
   image,
   onChange,
 }: Props): React.ReactNode => {
+  const {height: minHeight} = useWindowDimensions()
   const [altText, setAltText] = React.useState(image.alt)
 
   return (
@@ -38,7 +40,8 @@ export const ImageAltTextDialog = ({
           ...image,
           alt: enforceLen(altText, MAX_ALT_TEXT, true),
         })
-      }}>
+      }}
+      nativeOptions={{minHeight}}>
       <Dialog.Handle />
       <ImageAltTextInner
         control={control}
@@ -64,6 +67,8 @@ const ImageAltTextInner = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const windim = useWindowDimensions()
+
+  const [isKeyboardVisible] = useIsKeyboardVisible()
 
   const imageStyle = React.useMemo<ImageStyle>(() => {
     const maxWidth = IS_WEB ? 450 : windim.width
@@ -165,7 +170,7 @@ const ImageAltTextInner = ({
         </AltTextCounterWrapper>
       </View>
       {/* Maybe fix this later -h */}
-      {IS_ANDROID ? <View style={{height: 300}} /> : null}
+      {IS_ANDROID && isKeyboardVisible ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }

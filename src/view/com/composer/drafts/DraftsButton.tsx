@@ -17,14 +17,16 @@ export function DraftsButton({
   isEmpty,
   isDirty,
   isEditingDraft,
+  canSaveDraft,
   textLength,
 }: {
   onSelectDraft: (draft: DraftSummary) => void
-  onSaveDraft: () => Promise<void>
+  onSaveDraft: () => Promise<{success: boolean}>
   onDiscard: () => void
   isEmpty: boolean
   isDirty: boolean
   isEditingDraft: boolean
+  canSaveDraft: boolean
   textLength: number
 }) {
   const {_} = useLingui()
@@ -44,8 +46,10 @@ export function DraftsButton({
   }
 
   const handleSaveAndOpen = async () => {
-    await onSaveDraft()
-    draftsDialogControl.open()
+    const {success} = await onSaveDraft()
+    if (success) {
+      draftsDialogControl.open()
+    }
   }
 
   const handleDiscardAndOpen = () => {
@@ -83,37 +87,51 @@ export function DraftsButton({
       <Prompt.Outer control={savePromptControl}>
         <Prompt.Content>
           <Prompt.TitleText>
-            {isEditingDraft ? (
-              <Trans>Save changes?</Trans>
+            {canSaveDraft ? (
+              isEditingDraft ? (
+                <Trans>Save changes?</Trans>
+              ) : (
+                <Trans>Save draft?</Trans>
+              )
             ) : (
-              <Trans>Save draft?</Trans>
+              <Trans>Discard draft?</Trans>
             )}
           </Prompt.TitleText>
         </Prompt.Content>
         <Prompt.DescriptionText>
-          {isEditingDraft ? (
-            <Trans>
-              You have unsaved changes. Would you like to save them before
-              viewing your drafts?
-            </Trans>
+          {canSaveDraft ? (
+            isEditingDraft ? (
+              <Trans>
+                You have unsaved changes. Would you like to save them before
+                viewing your drafts?
+              </Trans>
+            ) : (
+              <Trans>
+                Would you like to save this as a draft before viewing your
+                drafts?
+              </Trans>
+            )
           ) : (
             <Trans>
-              Would you like to save this as a draft before viewing your drafts?
+              You can only save drafts up to 1000 characters. Would you like to
+              discard this post before viewing your drafts?
             </Trans>
           )}
         </Prompt.DescriptionText>
         <Prompt.Actions>
-          <Prompt.Action
-            cta={isEditingDraft ? _(msg`Save changes`) : _(msg`Save draft`)}
-            onPress={handleSaveAndOpen}
-            color="primary"
-          />
+          {canSaveDraft && (
+            <Prompt.Action
+              cta={isEditingDraft ? _(msg`Save changes`) : _(msg`Save draft`)}
+              onPress={handleSaveAndOpen}
+              color="primary"
+            />
+          )}
           <Prompt.Action
             cta={_(msg`Discard`)}
             onPress={handleDiscardAndOpen}
             color="negative_subtle"
           />
-          <Prompt.Cancel />
+          <Prompt.Cancel cta={_(msg`Keep editing`)} />
         </Prompt.Actions>
       </Prompt.Outer>
     </>

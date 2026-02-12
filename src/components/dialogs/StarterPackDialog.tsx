@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyGraphGetStarterPacksWithMembership,
@@ -7,20 +7,18 @@ import {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
-import {
-  invalidateActorStarterPacksWithMembershipQuery,
-  useActorStarterPacksWithMembershipsQuery,
-} from '#/state/queries/actor-starter-packs'
+import {isNetworkError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {useActorStarterPacksWithMembershipsQuery} from '#/state/queries/actor-starter-packs'
 import {
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {useProfileQuery} from '#/state/queries/profile'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -29,6 +27,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/
 import {StarterPack} from '#/components/icons/StarterPack'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
@@ -131,6 +130,7 @@ function StarterPackList({
 }) {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
+  const {data: subject} = useProfileQuery({did: targetDid})
 
   const {
     data,
@@ -155,9 +155,13 @@ function StarterPackList({
 
   const renderItem = useCallback(
     ({item}: {item: StarterPackWithMembership}) => (
-      <StarterPackItem starterPackWithMembership={item} targetDid={targetDid} />
+      <StarterPackItem
+        starterPackWithMembership={item}
+        targetDid={targetDid}
+        subject={subject}
+      />
     ),
-    [targetDid],
+    [targetDid, subject],
   )
 
   const onClose = useCallback(() => {
@@ -168,9 +172,11 @@ function StarterPackList({
     <>
       <View
         style={[
-          {justifyContent: 'space-between', flexDirection: 'row'},
-          IS_WEB ? a.mb_2xl : a.my_lg,
+          a.justify_between,
           a.align_center,
+          a.flex_row,
+          a.pb_lg,
+          native(a.pt_lg),
         ]}>
         <Text style={[a.text_lg, a.font_semi_bold]}>
           <Trans>Add to starter packs</Trans>
@@ -181,7 +187,8 @@ function StarterPackList({
           variant="ghost"
           color="secondary"
           size="small"
-          shape="round">
+          shape="round"
+          style={{margin: -8}}>
           <ButtonIcon icon={XIcon} />
         </Button>
       </View>
@@ -232,7 +239,10 @@ function StarterPackList({
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
-      style={IS_WEB ? [a.px_md, {minHeight: 500}] : [a.px_2xl, a.pt_lg]}
+      style={platform({
+        web: [a.px_2xl, {minHeight: 500}],
+        native: [a.px_2xl, a.pt_lg],
+      })}
     />
   )
 }
@@ -240,65 +250,53 @@ function StarterPackList({
 function StarterPackItem({
   starterPackWithMembership,
   targetDid,
+  subject,
 }: {
   starterPackWithMembership: StarterPackWithMembership
   targetDid: string
+  subject?: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
-  const queryClient = useQueryClient()
 
   const starterPack = starterPackWithMembership.starterPack
   const isInPack = !!starterPackWithMembership.listItem
 
-  const [isPendingRefresh, setIsPendingRefresh] = useState(false)
+  const {mutate: addMembership, isPending: isPendingAdd} =
+    useListMembershipAddMutation({
+      subject,
+      onSuccess: () => {
+        Toast.show(_(msg`Added to starter pack`))
+      },
+      onError: err => {
+        if (!isNetworkError(err)) {
+          logger.error('Failed to add to starter pack', {safeMessage: err})
+        }
+        Toast.show(_(msg`Failed to add to starter pack`), {type: 'error'})
+      },
+    })
 
-  const {mutate: addMembership} = useListMembershipAddMutation({
-    onSuccess: () => {
-      Toast.show(_(msg`Added to starter pack`))
-      // Use a timeout to wait for the appview to update, matching the pattern
-      // in list-memberships.ts
-      setTimeout(() => {
-        invalidateActorStarterPacksWithMembershipQuery({
-          queryClient,
-          did: targetDid,
-        })
-        setIsPendingRefresh(false)
-      }, 1e3)
-    },
-    onError: () => {
-      Toast.show(_(msg`Failed to add to starter pack`), 'xmark')
-      setIsPendingRefresh(false)
-    },
-  })
+  const {mutate: removeMembership, isPending: isPendingRemove} =
+    useListMembershipRemoveMutation({
+      onSuccess: () => {
+        Toast.show(_(msg`Removed from starter pack`))
+      },
+      onError: err => {
+        if (!isNetworkError(err)) {
+          logger.error('Failed to remove from starter pack', {safeMessage: err})
+        }
+        Toast.show(_(msg`Failed to remove from starter pack`), {type: 'error'})
+      },
+    })
 
-  const {mutate: removeMembership} = useListMembershipRemoveMutation({
-    onSuccess: () => {
-      Toast.show(_(msg`Removed from starter pack`))
-      // Use a timeout to wait for the appview to update, matching the pattern
-      // in list-memberships.ts
-      setTimeout(() => {
-        invalidateActorStarterPacksWithMembershipQuery({
-          queryClient,
-          did: targetDid,
-        })
-        setIsPendingRefresh(false)
-      }, 1e3)
-    },
-    onError: () => {
-      Toast.show(_(msg`Failed to remove from starter pack`), 'xmark')
-      setIsPendingRefresh(false)
-    },
-  })
+  const isPending = isPendingAdd || isPendingRemove
 
   const handleToggleMembership = () => {
-    if (!starterPack.list?.uri || isPendingRefresh) return
+    if (!starterPack.list?.uri || isPending) return
 
     const listUri = starterPack.list.uri
     const starterPackUri = starterPack.uri
-
-    setIsPendingRefresh(true)
 
     if (!isInPack) {
       addMembership({
@@ -309,7 +307,6 @@ function StarterPackItem({
     } else {
       if (!starterPackWithMembership.listItem?.uri) {
         console.error('Cannot remove: missing membership URI')
-        setIsPendingRefresh(false)
         return
       }
       removeMembership({
@@ -344,7 +341,7 @@ function StarterPackItem({
             starterPack.listItemsSample.length > 0 && (
               <>
                 <AvatarStack
-                  size={32}
+                  size={24}
                   profiles={starterPack.listItemsSample
                     ?.slice(0, 4)
                     .map(p => p.subject)}
@@ -375,8 +372,9 @@ function StarterPackItem({
         label={isInPack ? _(msg`Remove`) : _(msg`Add`)}
         color={isInPack ? 'secondary' : 'primary_subtle'}
         size="tiny"
-        disabled={isPendingRefresh}
+        disabled={isPending}
         onPress={handleToggleMembership}>
+        {isPending && <ButtonIcon icon={Loader} />}
         <ButtonText>
           {isInPack ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
         </ButtonText>
