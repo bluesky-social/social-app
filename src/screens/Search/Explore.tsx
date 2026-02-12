@@ -78,10 +78,14 @@ function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
   const t = useTheme()
   const {_} = useLingui()
 
+  const handleOnPress = () => {
+    void item.onLoadMore()
+  }
+
   return (
     <Button
       label={_(msg`Load more`)}
-      onPress={item.onLoadMore}
+      onPress={handleOnPress}
       style={[a.relative, a.w_full]}>
       {({hovered, pressed}) => (
         <>
@@ -171,7 +175,7 @@ type ExploreScreenItems =
       key: string
       message: string
       isLoadingMore: boolean
-      onLoadMore: () => void
+      onLoadMore: () => void | Promise<void>
     }
   | {
       type: 'profilePlaceholder'
@@ -714,6 +718,9 @@ export function Explore({
 
   const renderItem = useCallback(
     ({item, index}: {item: ExploreScreenItems; index: number}) => {
+      const handleOnPressRetry = () => {
+        void fetchNextPageFeedPreviews()
+      }
       switch (item.type) {
         case 'topBorder':
           return (
@@ -987,7 +994,7 @@ export function Explore({
               label={_(
                 msg`There was an issue fetching posts. Tap here to try again.`,
               )}
-              onPress={fetchNextPageFeedPreviews}
+              onPress={handleOnPressRetry}
             />
           )
         }
@@ -1069,6 +1076,14 @@ export function Explore({
     [ax, suggestedFollowsModule],
   )
 
+  const handleOnEndReached = () => {
+    void onLoadMoreFeedPreviews()
+  }
+
+  const handleOnRefresh = () => {
+    void onPTR()
+  }
+
   return (
     <List
       data={items}
@@ -1081,7 +1096,7 @@ export function Explore({
       stickyHeaderIndices={native(stickyHeaderIndices)}
       viewabilityConfig={viewabilityConfig}
       onItemSeen={onItemSeen}
-      onEndReached={onLoadMoreFeedPreviews}
+      onEndReached={handleOnEndReached}
       /**
        * Default: 2
        */
@@ -1117,7 +1132,7 @@ export function Explore({
        */
       updateCellsBatchingPeriod={50}
       refreshing={isPTR}
-      onRefresh={onPTR}
+      onRefresh={handleOnRefresh}
     />
   )
 }
