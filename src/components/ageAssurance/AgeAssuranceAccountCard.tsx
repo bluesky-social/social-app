@@ -56,6 +56,7 @@ function Inner({style}: ViewStyleProp & {}) {
   const {status, lastInitiatedAt} = aa.state
   const isBlocked = status === aa.Status.Blocked
   const hasInitiated = !!lastInitiatedAt
+  const hasCompletedFlow = status === aa.Status.Assured
   const timeAgo = lastInitiatedAt
     ? getTimeAgo(lastInitiatedAt, new Date())
     : null
@@ -85,8 +86,22 @@ function Inner({style}: ViewStyleProp & {}) {
             </View>
           </View>
 
-          <View style={[a.pb_md, a.gap_xs]}>
+          <View style={[a.pb_md, a.gap_sm]}>
             <Text style={[a.text_sm, a.leading_snug]}>{copy.notice}</Text>
+            {hasCompletedFlow && (
+              <Text style={[a.text_sm, a.leading_snug]}>
+                <Trans>
+                  If you have questions or concerns,{' '}
+                  <InlineLinkText
+                    label={_(msg`Contact our support team`)}
+                    {...createStaticClick(() => {
+                      appealControl.open()
+                    })}>
+                    our support team can help.
+                  </InlineLinkText>
+                </Trans>
+              </Text>
+            )}
 
             {IS_NATIVE && (
               <>
