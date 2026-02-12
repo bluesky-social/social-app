@@ -92,6 +92,12 @@ function DeleteAccountDialogInner({
     try {
       setEmailState(EmailState.PENDING)
       await agent.com.atproto.server.requestAccountDelete()
+      setError('')
+      setEmailState(
+        emailSentCount === 0 ? EmailState.DEFAULT : EmailState.RESENT,
+      )
+      setEmailSentCount(prevCount => prevCount + 1)
+      setStep(Step.VERIFY_CODE)
     } catch (e: any) {
       const {clean, raw} = cleanError(e)
       const error = clean || raw || e
@@ -100,13 +106,6 @@ function DeleteAccountDialogInner({
         message: 'Failed to send account deletion verification email',
       })
       setEmailState(EmailState.DEFAULT)
-    } finally {
-      setError('')
-      setEmailState(
-        emailSentCount === 0 ? EmailState.DEFAULT : EmailState.RESENT,
-      )
-      setEmailSentCount(prevCount => prevCount + 1)
-      setStep(Step.VERIFY_CODE)
     }
   }, [agent, cleanError, emailSentCount, emailState, setEmailState])
 
