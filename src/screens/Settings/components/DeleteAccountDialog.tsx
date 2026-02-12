@@ -266,17 +266,18 @@ function DeleteAccountDialogInner({
             ]}>
             {emailSentCount > 1 ? (
               <Trans>
-                Email resent!{' '}
+                Email sent!{' '}
                 <InlineLinkText
                   label={_(msg`Resend`)}
                   {...createStaticClick(() => {
                     void handleSendEmail()
                   })}>
-                  Click here to send again.
+                  Click here to resend.
                 </InlineLinkText>
               </Trans>
             ) : (
               <Trans>
+                Don’t see a code?{' '}
                 <InlineLinkText
                   label={_(msg`Resend`)}
                   {...createStaticClick(() => {
