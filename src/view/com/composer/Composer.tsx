@@ -477,12 +477,6 @@ export const ComposePost = ({
 
   const handleSelectDraft = React.useCallback(
     async (draftSummary: DraftSummary) => {
-      // Dismiss keyboard immediately to prevent flicker. Without this,
-      // the text input regains focus (showing the keyboard) after the
-      // drafts sheet closes, then loses it again when the post component
-      // remounts with the draft content, causing a show-hide-show cycle.
-      Keyboard.dismiss()
-
       logger.debug('loading draft for editing', {
         draftId: draftSummary.id,
       })
