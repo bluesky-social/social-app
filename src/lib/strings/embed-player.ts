@@ -68,7 +68,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   flickr: 'Flickr',
   kakaoTv: 'Kakao TV',
   naverTv: 'Naver TV',
-  chzzk: 'Chzzk',
+  chzzk: 'CHZZK',
   soop: 'SOOP',
 }
 
