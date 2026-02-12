@@ -89,7 +89,7 @@ function DeleteAccountDialogInner({
     }
     try {
       setEmailState(EmailState.PENDING)
-      await agent.com.atproto.server.requestAccountDelete()
+      // await agent.com.atproto.server.requestAccountDelete()
       setError('')
       setEmailSentCount(prevCount => prevCount + 1)
       setStep(Step.VERIFY_CODE)
@@ -342,10 +342,18 @@ function DeleteAccountDialogInner({
             </Prompt.TitleText>
             <Prompt.DescriptionText>
               <Trans>
+                This will irreversably delete your Bluesky account{' '}
                 <Span style={[a.font_semi_bold, t.atoms.text]}>
                   {currentHandle}
                 </Span>{' '}
-                will be permanently deleted.
+                and all associated data. Note that this will affect any other{' '}
+                <InlineLinkText
+                  label={_(msg`Learn more about the AT Protocol.`)}
+                  style={[a.text_md]}
+                  to="https://bsky.social/about/faq">
+                  AT Protocol
+                </InlineLinkText>{' '}
+                services you use with this account.
               </Trans>
             </Prompt.DescriptionText>
           </Prompt.Content>
