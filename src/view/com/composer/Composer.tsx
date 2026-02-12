@@ -569,7 +569,7 @@ export const ComposePost = ({
     if (tooLong) {
       setError(
         _(
-          msg`Post is too long to save as a draft. The maximum number of characters is ${MAX_DRAFT_GRAPHEME_LENGTH}.`,
+          msg`One or more posts are too long to save as a draft. ${plural(MAX_DRAFT_GRAPHEME_LENGTH, {one: 'The maximum number of characters is # character.', other: 'The maximum number of characters is # characters.'})}`,
         ),
       )
       return false
