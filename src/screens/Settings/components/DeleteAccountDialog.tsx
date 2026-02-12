@@ -349,11 +349,13 @@ function DeleteAccountDialogInner({
             </Prompt.DescriptionText>
           </Prompt.Content>
           <View style={[a.gap_lg, a.mb_lg]}>
-            <Prompt.Action
+            <Button
               color="negative"
-              cta={_(msg`Yes, Delete My Account`)}
-              onPress={handleConfirmDeletion}
-            />
+              size="large"
+              label={_(msg`Yes, Delete My Account`)}
+              onPress={handleConfirmDeletion}>
+              <ButtonText>{_(msg`Yes, Delete My Account`)}</ButtonText>
+            </Button>
             <Prompt.Cancel />
           </View>
         </>
