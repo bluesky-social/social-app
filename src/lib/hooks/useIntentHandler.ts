@@ -128,6 +128,7 @@ export function useComposeIntent() {
         openComposer({
           text: text ?? undefined,
           videoUri: {uri, width: Number(width), height: Number(height)},
+          logContext: 'Deeplink',
         })
         return
       }
@@ -153,6 +154,7 @@ export function useComposeIntent() {
         openComposer({
           text: text ?? undefined,
           imageUris: IS_NATIVE ? imageUris : undefined,
+          logContext: 'Deeplink',
         })
       }, 500)
     },

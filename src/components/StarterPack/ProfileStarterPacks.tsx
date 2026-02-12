@@ -101,7 +101,7 @@ export function ProfileStarterPacks({
             message={
               emptyStateMessage ??
               _(
-                'Starter packs let you share your favorite feeds and people with your friends.',
+                msg`Starter packs let you share your favorite feeds and people with your friends.`,
               )
             }
             button={emptyStateButton}

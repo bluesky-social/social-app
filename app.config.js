@@ -119,6 +119,7 @@ module.exports = function (_config) {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
           'com.apple.security.application-groups': 'group.app.bsky',
+          // 'com.apple.developer.device-information.user-assigned-device-name': true,
         },
         privacyManifests: {
           NSPrivacyCollectedDataTypes: [
@@ -310,24 +311,26 @@ module.exports = function (_config) {
         [
           'expo-splash-screen',
           {
-            enableFullScreenImage_legacy: true, // iOS only
-            backgroundColor: '#EEF5FF', // based on illustration
-            image: './assets/splash/splash-mobile.png',
-            resizeMode: 'cover',
-            dark: {
+            ios: {
               enableFullScreenImage_legacy: true, // iOS only
-              backgroundColor: '#446DA9', // based on illustration
-              image: './assets/splash/splash-mobile-dark.png',
+              backgroundColor: '#006AFF', // primary_500
+              image: './assets/splash/splash.png',
               resizeMode: 'cover',
+              dark: {
+                enableFullScreenImage_legacy: true, // iOS only
+                backgroundColor: '#002861', // primary_900
+                image: './assets/splash/splash-dark.png',
+                resizeMode: 'cover',
+              },
             },
             android: {
-              backgroundColor: '#A8CCFF', // primary_200
+              backgroundColor: '#006AFF', // primary_500
               image: './assets/splash/android-splash-logo-white.png',
-              imageWidth: 105,
+              imageWidth: 102, // even division of 306px
               dark: {
-                backgroundColor: '#00398A', // primary_800
+                backgroundColor: '#002861', // primary_900
                 image: './assets/splash/android-splash-logo-white.png',
-                imageWidth: 105,
+                imageWidth: 102,
               },
             },
           },

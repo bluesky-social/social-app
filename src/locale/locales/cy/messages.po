@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-22 23:01\n"
+"PO-Revision-Date: 2026-02-04 18:40\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -83,9 +83,9 @@ msgstr "{0, plural, one {# ailbostiad} other {# ailbostiad}}"
 msgid "{0, plural, one {# second} other {# seconds}}"
 msgstr "{0, plural, one {# eiliad} other {# eiliad}}"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:222
-#: src/view/shell/bottom-bar/BottomBar.tsx:254
-#: src/view/shell/Drawer.tsx:498
+#: src/view/shell/bottom-bar/BottomBar.tsx:223
+#: src/view/shell/bottom-bar/BottomBar.tsx:255
+#: src/view/shell/Drawer.tsx:500
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr "{0, plural, one {# eitem heb ei ddarllen} other {# eitem heb ei ddarllen}}"
 
@@ -93,6 +93,10 @@ msgstr "{0, plural, one {# eitem heb ei ddarllen} other {# eitem heb ei ddarllen
 #: src/lib/hooks/useTimeAgo.ts:182
 msgid "{0, plural, one {#mo} other {#mo}}"
 msgstr "{0, plural, one {#mis} other {#mis}}"
+
+#: src/view/com/composer/drafts/DraftItem.tsx:140
+msgid "{0, plural, one {1 more post} other {# more posts}}"
+msgstr "{0, plural, zero {}one {1 postiad ychwanegol} two {# bostiad ychwanegol} few {# postiad ychwanegol} many {# postiad ychwanegol} other {# postiad ychwanegol}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/screens/Profile/Header/Metrics.tsx:22
@@ -104,7 +108,7 @@ msgstr "{0, plural, one {dilynwr} other {dilynwr}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {yn dilyn} other {yn dilyn}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:491
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:492
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {hoffi} other {hoffi}}"
 
@@ -112,15 +116,15 @@ msgstr "{0, plural, one {hoffi} other {hoffi}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {postiad} other {postiad}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:475
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:476
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {dyfyniad} other {dyfyniad}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:457
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:458
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {ail bostiad} other {ail bostiad}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:502
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:503
 msgid "{0, plural, one {save} other {saves}}"
 msgstr "{0, plural, zero {}one {cadw} two {cadw} few {cadw} many {cadw} other {cadw}}"
 
@@ -142,7 +146,7 @@ msgctxt "date and time formatted like this: [time] · [date]"
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
-#: src/components/moderation/ContentHider.tsx:89
+#: src/components/moderation/ContentHider.tsx:99
 msgid "{0} (Account)"
 msgstr "{0} (Cyfrif)"
 
@@ -166,7 +170,7 @@ msgstr "Mae {0} yn fyw"
 
 #: src/screens/Signup/StepHandle/index.tsx:185
 msgid "{0} is not available"
-msgstr "Nid yw {0} ar gael"
+msgstr "Dyw {0} ddim ar gael"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "{0} joined this week"
@@ -189,11 +193,11 @@ msgstr "Ymatebodd {0} i {1}"
 msgid "{0} reacted {1} to {2}"
 msgstr "Ymatebodd {0} {1} i {2}"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:187
+#: src/view/com/feeds/FeedSourceCard.tsx:188
 msgid "{0}, a feed by {1}, liked by {2}"
 msgstr "{0}, ffrwd gan {1}, hoffwyd gan {2}"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:188
+#: src/view/com/feeds/FeedSourceCard.tsx:191
 msgid "{0}, a list by {1}"
 msgstr "{0}, rhestr gan {1}"
 
@@ -432,7 +436,7 @@ msgstr "{joinedAllTimeCount, plural, other {Mae # eraill}} wedi ymuno!"
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, zero {}one {# munud} two {# funud} few {# munud} many {# munud} other {# munud}}"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:277
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:299
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr "{notificationCount, plural, one {# eitem heb ei darllen} other {# eitem heb eu darllen}}"
 
@@ -486,11 +490,11 @@ msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "Mae <0>{0}, </0><1>{1}, </1>a {2, plural, one {# arall} other {# arall}} wedi'u cynnwys yn eich pecyn cychwyn"
 
-#: src/view/shell/Drawer.tsx:117
+#: src/view/shell/Drawer.tsx:119
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr "<0>{0}</0> {1, plural, one {dilynwr} other {dilynwyr}}"
 
-#: src/view/shell/Drawer.tsx:128
+#: src/view/shell/Drawer.tsx:130
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {yn dilyn} other {yn dilyn}}Crybwyll"
 
@@ -580,6 +584,11 @@ msgstr "Llun sgrin o bostiad gyda botwm newydd nesaf at y botwm rhannu sy'n cani
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr "Llun sgrin o dudalen proffil gydag eicon cloch wrth ymyl y botwm dilyn, yn dangos y nodwedd hysbysiadau gweithgaredd newydd."
 
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:97
+msgid "A screenshot of a the post composer with a new button next to the post button that says \"Drafts\", with a rainbow firework effect. Below, the text in the composer reads \"Hey, did you hear the news? Bluesky has drafts now???\"."
+msgstr ""
+
 #: src/Navigation.tsx:535
 #: src/screens/Settings/AboutSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:260
@@ -637,7 +646,7 @@ msgstr "Cyfrif wedi'i rwystro"
 #: src/view/com/profile/ProfileMenu.tsx:195
 msgctxt "toast"
 msgid "Account followed"
-msgstr "Cyfrif yn ei ddilyn"
+msgstr "Cyfrif yn cael ei ddilyn"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
 #: src/view/com/profile/ProfileMenu.tsx:158
@@ -714,8 +723,8 @@ msgstr "Ychwanegu {0} arall i barhau"
 msgid "Add {displayName} to starter pack"
 msgstr "Ychwanegu {displayName} at y pecyn cychwyn"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:102
-#: src/view/com/composer/labels/LabelsBtn.tsx:107
+#: src/view/com/composer/labels/LabelsBtn.tsx:106
+#: src/view/com/composer/labels/LabelsBtn.tsx:111
 msgid "Add a content warning"
 msgstr "Ychwanegu rhybudd cynnwys"
 
@@ -754,11 +763,11 @@ msgstr "Ychwanegu testun amgen (dewisol)"
 msgid "Add another account"
 msgstr "Ychwanegu cyfrif arall"
 
-#: src/view/com/composer/Composer.tsx:858
+#: src/view/com/composer/Composer.tsx:1241
 msgid "Add another post"
 msgstr "Ychwanegu postiad arall"
 
-#: src/view/com/composer/Composer.tsx:1498
+#: src/view/com/composer/Composer.tsx:1900
 msgid "Add another post to thread"
 msgstr "Ychwanegu postiad arall i edefyn"
 
@@ -776,12 +785,12 @@ msgstr "Ychwanegu Cyfrinair Apiau"
 msgid "Add emoji reaction"
 msgstr "Ychwanegu adwaith emoji"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:222
+#: src/view/com/feeds/ComposerPrompt.tsx:223
 msgid "Add image"
 msgstr "Ychwanegwch lun"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:481
+#: src/view/com/composer/SelectMediaButton.tsx:499
 msgid "Add media to post"
 msgstr "Ychwanegu cyfrwng i bostiad"
 
@@ -871,7 +880,7 @@ msgstr "Manylion ychwanegol (terfyn o 1000 nod)"
 msgid "Additional details (limit 300 characters)"
 msgstr "Manylion ychwanegol (terfyn o 300 nod)"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:154
+#: src/view/com/composer/labels/LabelsBtn.tsx:158
 msgid "Adult"
 msgstr "Oedolyn"
 
@@ -879,10 +888,10 @@ msgstr "Oedolyn"
 msgid "Adult content"
 msgstr "Cynnwys oedolion"
 
-#: src/components/moderation/ContentHider.tsx:120
+#: src/components/moderation/ContentHider.tsx:130
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:149
-#: src/view/com/composer/labels/LabelsBtn.tsx:122
+#: src/view/com/composer/labels/LabelsBtn.tsx:126
 msgid "Adult Content"
 msgstr "Cynnwys Oedolion"
 
@@ -894,8 +903,8 @@ msgstr "Dim ond trwy'r We yn <0>bsky.app</0> y mae modd galluogi cynnwys oedolio
 msgid "Adult content is disabled."
 msgstr "Mae cynnwys oedolion wedi'i analluogi."
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:133
-#: src/view/com/composer/labels/LabelsBtn.tsx:191
+#: src/view/com/composer/labels/LabelsBtn.tsx:137
+#: src/view/com/composer/labels/LabelsBtn.tsx:195
 msgid "Adult Content labels"
 msgstr "Labeli Cynnwys Oedolion"
 
@@ -930,8 +939,8 @@ msgid "alice@example.com"
 msgstr "alice@example.com"
 
 #. the default tab in the interests tab bar
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:171
-#: src/view/screens/Notifications.tsx:88
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
+#: src/view/screens/Notifications.tsx:87
 msgid "All"
 msgstr "Y Cyfan"
 
@@ -1017,7 +1026,7 @@ msgstr "Oes gennych chi gyfrif yn barod?"
 msgid "Already signed in as @{0}"
 msgstr "Eisoes wedi mewngofnodi fel @{0}"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1033,7 +1042,7 @@ msgstr "AMGEN"
 msgid "Alt text"
 msgstr "Testun amgen"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:202
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:95
 msgid "Alt Text"
 msgstr "Testun Amgen"
 
@@ -1059,7 +1068,7 @@ msgstr "Mae e-bost wedi'i anfon at {0}. Mae'n cynnwys cod cadarnhau y gallwch ei
 msgid "An error has occurred"
 msgstr "Digwyddodd gwall"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:421
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:438
 msgid "An error occurred"
 msgstr "Digwyddodd gwall"
 
@@ -1067,7 +1076,7 @@ msgstr "Digwyddodd gwall"
 msgid "An error occurred while compressing the video."
 msgstr "Digwyddodd gwall wrth gywasgu'r fideo."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:193
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:204
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:68
 msgid "An error occurred while fetching suggested accounts."
 msgstr "Digwyddodd gwall wrth estyn y cyfrifon hyn."
@@ -1076,7 +1085,7 @@ msgstr "Digwyddodd gwall wrth estyn y cyfrifon hyn."
 msgid "An error occurred while fetching the feed."
 msgstr "Digwyddodd gwall wrth nôl y ffrwd."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:371
+#: src/components/StarterPack/ProfileStarterPacks.tsx:373
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "Digwyddodd gwall wrth gynhyrchu'ch pecyn cychwyn. Eisiau ceisio eto?"
 
@@ -1088,7 +1097,7 @@ msgstr "Digwyddodd gwall wrth guddio awgrym. {0}"
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "Digwyddodd gwall wrth lwytho'r fideo. Ceisiwch eto yn nes ymlaen."
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:226
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:239
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Digwyddodd gwall wrth lwytho'r fideo. Ceisiwch eto."
 
@@ -1181,7 +1190,7 @@ msgstr "Lles anifeiliaid"
 msgid "Animals"
 msgstr "Anifeiliaid"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:160
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:95
 msgid "Animated GIF"
 msgstr "GIF wedi'i hanimeiddio"
 
@@ -1306,12 +1315,12 @@ msgstr "Gosod y ffrydiau rhagosodedig sy'n cael eu hargymell"
 msgid "Apply Pull Request"
 msgstr "Gosod Cais Tynnu"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:673
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:674
 msgid "Archived from {0}"
 msgstr "Wedi'i archifo o {0}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:642
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:681
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:643
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:683
 msgid "Archived post"
 msgstr "Post wedi'i archifo"
 
@@ -1332,11 +1341,11 @@ msgstr "Ydych chi'n siŵr eich bod am ddileu'r pecyn cychwyn hwn?"
 msgid "Are you sure you want to discard your changes?"
 msgstr "Ydych chi'n siŵr eich bod am ddileu eich newidiadau?"
 
-#: src/components/dms/LeaveConvoPrompt.tsx:46
+#: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation?"
 msgstr "Ydych chi'n siŵr eich bod eisiau gadael y sgwrs hon?"
 
-#: src/components/dms/LeaveConvoPrompt.tsx:45
+#: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "Ydych chi'n siŵr eich bod am adael y sgwrs hon? Bydd eich negeseuon yn cael eu dileu i chi, ond nid ar gyfer y cyfranogwr arall."
 
@@ -1344,11 +1353,7 @@ msgstr "Ydych chi'n siŵr eich bod am adael y sgwrs hon? Bydd eich negeseuon yn 
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Ydych chi'n siŵr eich bod am dynnu hwn o'ch ffrydiau?"
 
-#: src/view/com/composer/Composer.tsx:807
-msgid "Are you sure you'd like to discard this draft?"
-msgstr "A ydych yn siŵr yr hoffech gael gwared ar y drafft hwn?"
-
-#: src/view/com/composer/Composer.tsx:997
+#: src/view/com/composer/Composer.tsx:1380
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Ydych chi'n siŵr yr hoffech chi gael gwared ar y postiad hwn?"
 
@@ -1364,7 +1369,7 @@ msgstr "Ydych chi'n ysgrifennu yn <0>{suggestedLanguageName}</0>?"
 msgid "Art"
 msgstr "Celf"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:166
+#: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Artistic or non-erotic nudity."
 msgstr "Noethni artistig neu anerotig."
 
@@ -1382,8 +1387,8 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:118
-#: src/screens/Settings/ContentAndMediaSettings.tsx:124
+#: src/screens/Settings/ContentAndMediaSettings.tsx:117
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
 msgid "Autoplay videos and GIFs"
 msgstr "Awtochwarae fideos a GIFs"
 
@@ -1404,11 +1409,13 @@ msgstr "Ar gael"
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Messages/components/ChatDisabled.tsx:145
 #: src/screens/Messages/components/ChatDisabled.tsx:146
-#: src/screens/Profile/Header/Shell.tsx:178
+#: src/screens/Profile/Header/Shell.tsx:179
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:272
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:281
 #: src/screens/Signup/BackNextButtons.tsx:41
 #: src/screens/StarterPack/Wizard/index.tsx:324
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:79
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:85
 msgid "Back"
 msgstr "Nôl"
 
@@ -1559,7 +1566,7 @@ msgstr "Does dim modd i gyfrifon sydd wedi'u rhwystro ymateb yn eich trywyddau, 
 
 #: src/screens/Profile/Sections/Labels.tsx:202
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "Nid yw rhwystro'n atal y labelwr hwn rhag gosod labeli ar eich cyfrif."
+msgstr "Dyw rhwystro ddim yn atal y labelwr hwn rhag gosod labeli ar eich cyfrif."
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:115
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -1578,7 +1585,7 @@ msgstr "Blog"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:703
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:699
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Dyw Bluesky ddim yn gallu cadarnhau dilysrwydd y dyddiad honedig."
 
@@ -1623,13 +1630,13 @@ msgstr "Telerau Gwasanaeth Cymdeithasol Bluesky"
 msgid "Bluesky stores your contacts as encoded data. Removing your contacts will immediately delete this data."
 msgstr "Mae Bluesky yn cadw'ch cysylltiadau fel data wedi'i amgodio. Bydd tynnu'ch cysylltiadau yn dileu'r data hwn yn syth."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:338
+#: src/components/StarterPack/ProfileStarterPacks.tsx:339
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bydd Bluesky yn dewis set o gyfrifon wedi'u hargymhell gan bobl yn eich rhwydwaith."
 
 #: src/screens/Settings/components/PwiOptOut.tsx:99
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Ni fydd Bluesky yn dangos eich proffil na'ch postiadau i ddefnyddwyr sydd wedi allgofnodi. Mae'n bosibl na fydd apiau eraill yn parchu'r gofyniad hwn. Nid yw hyn yn gwneud eich cyfrif yn breifat."
+msgstr "Fydd Bluesky ddim yn dangos eich proffil na'ch postiadau i ddefnyddwyr sydd wedi allgofnodi. Mae'n bosibl na fydd apiau eraill yn parchu'r gofyniad hwn. Dyw hyn ddim yn gwneud eich cyfrif yn breifat."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:133
 msgid "Bluesky will proactively verify notable and authentic accounts."
@@ -1664,20 +1671,20 @@ msgstr "Torri rheolau gwefan"
 msgid "Browse custom feeds"
 msgstr "Pori'r ffrydiau cyfaddas"
 
-#: src/components/FeedInterstitials.tsx:771
+#: src/components/FeedInterstitials.tsx:748
 msgid "Browse more accounts"
 msgstr "Porwch ragor o gyfrifon"
 
-#: src/components/FeedInterstitials.tsx:901
+#: src/components/FeedInterstitials.tsx:878
 msgid "Browse more feeds on the Explore page"
 msgstr "Porwch ragor o ffrydiau ar y dudalen Archwilio"
 
-#: src/components/FeedInterstitials.tsx:882
-#: src/components/FeedInterstitials.tsx:885
+#: src/components/FeedInterstitials.tsx:859
+#: src/components/FeedInterstitials.tsx:862
 msgid "Browse more suggestions"
 msgstr "Pori ragor o awgrymiadau"
 
-#: src/components/FeedInterstitials.tsx:910
+#: src/components/FeedInterstitials.tsx:887
 msgid "Browse more suggestions on the Explore page"
 msgstr "Porwch ragor o awgrymiadau ar y dudalen Archwilio"
 
@@ -1770,8 +1777,8 @@ msgstr "Camera"
 #: src/components/live/GoLiveDialog.tsx:252
 #: src/components/Menu/index.tsx:352
 #: src/components/PostControls/RepostButton.tsx:209
-#: src/components/Prompt.tsx:144
-#: src/components/Prompt.tsx:146
+#: src/components/Prompt.tsx:130
+#: src/components/Prompt.tsx:132
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:151
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:156
 #: src/lib/media/picker.tsx:38
@@ -1788,8 +1795,8 @@ msgstr "Camera"
 #: src/screens/Settings/Settings.tsx:305
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1052
-#: src/view/com/composer/Composer.tsx:1063
+#: src/view/com/composer/Composer.tsx:1449
+#: src/view/com/composer/Composer.tsx:1461
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:52
 #: src/view/shell/desktop/LeftNav.tsx:213
@@ -1822,7 +1829,7 @@ msgstr "Diddymu'r chwilio"
 #: src/components/PostControls/index.tsx:108
 #: src/components/PostControls/index.tsx:139
 #: src/components/PostControls/index.tsx:167
-#: src/state/shell/composer/index.tsx:95
+#: src/state/shell/composer/index.tsx:104
 msgid "Cannot interact with a blocked user"
 msgstr "Methu rhyngweithio â defnyddiwr sydd wedi'i rwystro"
 
@@ -1901,9 +1908,9 @@ msgstr "Newidiadau wedi'u cadw"
 
 #: src/lib/hooks/useNotificationHandler.ts:102
 #: src/Navigation.tsx:560
-#: src/view/shell/bottom-bar/BottomBar.tsx:218
+#: src/view/shell/bottom-bar/BottomBar.tsx:219
 #: src/view/shell/desktop/LeftNav.tsx:608
-#: src/view/shell/Drawer.tsx:466
+#: src/view/shell/Drawer.tsx:468
 msgid "Chat"
 msgstr "Sgyrsiau"
 
@@ -1989,7 +1996,7 @@ msgstr "Dewiswch ddull dilysu parth"
 msgid "Choose Feeds"
 msgstr "Dewiswch Ffrydiau"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:346
+#: src/components/StarterPack/ProfileStarterPacks.tsx:348
 msgid "Choose for me"
 msgstr "Dewiswch i mi"
 
@@ -2096,6 +2103,7 @@ msgstr "Clip 🐴 clop 🐴"
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:163
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:138
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:184
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:190
@@ -2111,8 +2119,8 @@ msgstr "Clip 🐴 clop 🐴"
 #: src/components/live/EditLiveDialog.tsx:221
 #: src/components/NewskieDialog.tsx:167
 #: src/components/NewskieDialog.tsx:173
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:208
-#: src/components/ProgressGuide/FollowDialog.tsx:442
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:102
+#: src/components/ProgressGuide/FollowDialog.tsx:447
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:145
@@ -2168,9 +2176,10 @@ msgstr "Cau'r ddeialog GIFau"
 msgid "Close image"
 msgstr "Cau'r ddelwedd"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:110
+#: src/view/com/lightbox/Lightbox.web.tsx:66
+#: src/view/com/lightbox/Lightbox.web.tsx:219
 msgid "Close image viewer"
-msgstr "Cau'r golwg delwedd"
+msgstr "Cau'r darllenydd delweddau"
 
 #: src/components/ContextMenu/Backdrop.ios.tsx:53
 #: src/components/ContextMenu/Backdrop.ios.tsx:79
@@ -2190,7 +2199,7 @@ msgstr "Cau'r modal croeso"
 msgid "Closes password update alert"
 msgstr "Yn cau'r rhybudd diweddaru cyfrinair"
 
-#: src/view/com/composer/Composer.tsx:1060
+#: src/view/com/composer/Composer.tsx:1458
 msgid "Closes post composer and discards post draft"
 msgstr "Yn cau cyfansoddwr postiad ac yn dileu postiad drafft"
 
@@ -2242,12 +2251,12 @@ msgstr "Cwblhewch y cyflwyniad a dechreuwch ddefnyddio'ch cyfrif"
 msgid "Complete the challenge"
 msgstr "Cwblhewch yr her"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:145
+#: src/view/com/feeds/ComposerPrompt.tsx:146
 #: src/view/shell/desktop/LeftNav.tsx:573
 msgid "Compose new post"
 msgstr "Cyfansoddi postiad newydd"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:1344
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "Cyfansoddwch bostiadau hyd at {0, plural, zero {} one {# nod} two {# nod} few {# characters} many {# nod}other {# nod}}"
 
@@ -2255,7 +2264,11 @@ msgstr "Cyfansoddwch bostiadau hyd at {0, plural, zero {} one {# nod} two {# nod
 msgid "Compose reply"
 msgstr "Ysgrifennu ateb"
 
-#: src/view/com/composer/Composer.tsx:1893
+#: src/view/com/composer/Composer.tsx:2298
+msgid "Compressing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2300
 msgid "Compressing video..."
 msgstr "Yn cywasgu fideo..."
 
@@ -2263,7 +2276,6 @@ msgstr "Yn cywasgu fideo..."
 msgid "Configure content filtering setting for category: {name}"
 msgstr "Ffurfweddw gosodiad hidlo cynnwys ar gyfer categori: {name}"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:36
 msgid "Configure live event banner"
 msgstr "Ffurfweddu baner digwyddiad byw"
@@ -2272,8 +2284,8 @@ msgstr "Ffurfweddu baner digwyddiad byw"
 msgid "Configured in <0>moderation settings</0>."
 msgstr "Wedi'i ffurfweddu yn y <0>gosodiadau cymedroli</0>."
 
-#: src/components/Prompt.tsx:187
-#: src/components/Prompt.tsx:190
+#: src/components/Prompt.tsx:171
+#: src/components/Prompt.tsx:174
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:188
 msgid "Confirm"
@@ -2329,7 +2341,7 @@ msgstr "Cysylltu â'n chefnogaeth"
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:64
 #: src/screens/Settings/FindContactsSettings.tsx:156
 msgid "Contact sync is not available on this device, as the app is unable to access your contacts."
-msgstr "Nid yw cydweddu cysylltiadau ar gael ar y ddyfais hon, gan nad yw'r ap yn gallu cael mynediad i'ch cysylltiadau."
+msgstr "Dyw cydweddu cysylltiadau ddim ar gael ar y ddyfais hon, gan nad yw'r ap yn gallu cael mynediad i'ch cysylltiadau."
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:95
 msgid "Contact us"
@@ -2343,7 +2355,7 @@ msgstr "Cysylltiadau wedi'u Mewnforio"
 msgid "Contacts removed"
 msgstr "Tynnwyd y cysylltiadau"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:53
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Content & Media"
 msgstr "Cynnwys a Chyfryngau"
 
@@ -2389,7 +2401,7 @@ msgstr "Cynnwys sy'n hyrwyddo neu'n dangos hunan niweidio"
 msgid "Content Warning"
 msgstr "Rhybudd Cynnwys"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:60
+#: src/view/com/composer/labels/LabelsBtn.tsx:64
 msgid "Content warnings"
 msgstr "Rhybuddion cynnwys"
 
@@ -2401,7 +2413,7 @@ msgstr "Cefndir ddewislen cyd-destun, cliciwch i gau'r ddewislen."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:92
 #: src/screens/Onboarding/StepProfile/index.tsx:287
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:273
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:285
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:116
 msgid "Continue"
 msgstr "Parhau"
@@ -2420,7 +2432,7 @@ msgstr "Parhau â'r trywydd..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:89
 #: src/screens/Onboarding/StepProfile/index.tsx:284
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:270
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:282
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:113
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2582,7 +2594,7 @@ msgstr "Methu dilyn pob cyfatebiaeth. {0}"
 msgid "Could not leave chat"
 msgstr "Methu gadael y sgwrs"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:84
+#: src/screens/Profile/ProfileFeed/index.tsx:86
 msgid "Could not load feed"
 msgstr "Methu llwytho ffrwd"
 
@@ -2643,8 +2655,8 @@ msgstr "Creu cod QR ar gyfer pecyn cychwyn"
 msgid "Create a starter pack"
 msgstr "Creu pecyn cychwyn"
 
-#: src/view/screens/Profile.tsx:560
-#: src/view/screens/Profile.tsx:561
+#: src/view/screens/Profile.tsx:563
+#: src/view/screens/Profile.tsx:564
 msgid "Create a Starter Pack"
 msgstr "Crëwch Becyn Cychwyn"
 
@@ -2654,12 +2666,12 @@ msgstr "Creu pecyn cychwyn i mi"
 
 #: src/components/WelcomeModal.tsx:157
 #: src/components/WelcomeModal.tsx:165
-#: src/view/com/auth/SplashScreen.tsx:72
+#: src/view/com/auth/SplashScreen.tsx:106
 #: src/view/com/auth/SplashScreen.web.tsx:121
-#: src/view/shell/bottom-bar/BottomBar.tsx:342
-#: src/view/shell/bottom-bar/BottomBar.tsx:347
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:201
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:206
+#: src/view/shell/bottom-bar/BottomBar.tsx:322
+#: src/view/shell/bottom-bar/BottomBar.tsx:327
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:220
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:225
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Create account"
@@ -2693,7 +2705,7 @@ msgstr "Creu un arall"
 msgid "Create moderation list"
 msgstr "Creu rhestr cymedroli"
 
-#: src/view/com/auth/SplashScreen.tsx:64
+#: src/view/com/auth/SplashScreen.tsx:99
 #: src/view/com/auth/SplashScreen.web.tsx:113
 msgid "Create new account"
 msgstr "Creu cyfrif newydd"
@@ -2772,7 +2784,7 @@ msgstr "Dyddiad geni"
 
 #: src/screens/Settings/AccountSettings.tsx:161
 #: src/screens/Settings/AccountSettings.tsx:166
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:72
 msgid "Deactivate account"
 msgstr "Cau cyfrif"
 
@@ -2871,7 +2883,7 @@ msgstr "Dileu fy ngyfrif"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:746
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:748
-#: src/view/com/composer/Composer.tsx:971
+#: src/view/com/composer/Composer.tsx:1354
 msgid "Delete post"
 msgstr "Dileu postiad"
 
@@ -2981,7 +2993,7 @@ msgstr "Analluogi postiadau dyfynu'r postiad hwn"
 msgid "Disable replies entirely"
 msgstr "Analluogi atebion yn llwyr"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:387
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Disable subtitles"
 msgstr "Analluogi isdeitlau"
 
@@ -2996,8 +3008,11 @@ msgstr "Analluogwyd"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:92
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
-#: src/view/com/composer/Composer.tsx:809
-#: src/view/com/composer/Composer.tsx:1004
+#: src/view/com/composer/Composer.tsx:1149
+#: src/view/com/composer/Composer.tsx:1187
+#: src/view/com/composer/Composer.tsx:1387
+#: src/view/com/composer/drafts/DraftItem.tsx:239
+#: src/view/com/composer/drafts/DraftsButton.tsx:112
 msgid "Discard"
 msgstr "Dileu"
 
@@ -3006,11 +3021,12 @@ msgstr "Dileu"
 msgid "Discard changes?"
 msgstr "Dileu'r newidiadau?"
 
-#: src/view/com/composer/Composer.tsx:806
+#: src/view/com/composer/Composer.tsx:1147
+#: src/view/com/composer/drafts/DraftItem.tsx:236
 msgid "Discard draft?"
 msgstr "Dileu'r drafft?"
 
-#: src/view/com/composer/Composer.tsx:996
+#: src/view/com/composer/Composer.tsx:1379
 msgid "Discard post?"
 msgstr "Dileu'r postiad?"
 
@@ -3037,7 +3053,7 @@ msgstr "Cau"
 msgid "Dismiss banner"
 msgstr "Cau'r faner"
 
-#: src/view/com/composer/Composer.tsx:1817
+#: src/view/com/composer/Composer.tsx:2219
 msgid "Dismiss error"
 msgstr "Cau'r gwall"
 
@@ -3049,11 +3065,16 @@ msgstr "Cau'r canllaw cychwyn arni"
 msgid "Dismiss interests"
 msgstr "Diystyru diddordebau"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:81
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:63
+msgid "Dismiss live event banner"
+msgstr "Cau baner digwyddiad byw"
+
 #: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr "Cau'r adran hon"
 
-#: src/components/FeedInterstitials.tsx:581
+#: src/components/FeedInterstitials.tsx:560
 msgid "Dismiss this suggestion"
 msgstr "Cau'r awgrym hwn"
 
@@ -3121,8 +3142,8 @@ msgstr "Peidiwch â phoeni! Mae'r holl negeseuon a gosodiadau wedi'u cadw a bydd
 #: src/screens/Onboarding/StepProfile/index.tsx:340
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:214
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:221
-#: src/view/com/composer/labels/LabelsBtn.tsx:218
-#: src/view/com/composer/labels/LabelsBtn.tsx:225
+#: src/view/com/composer/labels/LabelsBtn.tsx:222
+#: src/view/com/composer/labels/LabelsBtn.tsx:229
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:303
 #: src/view/com/composer/videos/SubtitleDialog.tsx:188
 #: src/view/com/composer/videos/SubtitleDialog.tsx:199
@@ -3147,11 +3168,11 @@ msgstr "Tapio dwywaith neu bwyso'n hir i ychwanegu ymateb"
 msgid "Double tap to close the dialog"
 msgstr "Tapiwch ddwywaith i gau'r ddeialog"
 
-#: src/screens/VideoFeed/index.tsx:1117
+#: src/screens/VideoFeed/index.tsx:1118
 msgid "Double tap to like"
 msgstr "Tapio dwywaith i'w hoffi"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:330
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:331
 msgid "Download Bluesky"
 msgstr "Llwythwch Bluesky i Lawr"
 
@@ -3163,6 +3184,13 @@ msgstr "Llwythwch ffeil CAR i lawr"
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:115
 msgid "Doxxing"
 msgstr "Docsio"
+
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:118
+#: src/view/com/composer/drafts/DraftsButton.tsx:65
+#: src/view/com/composer/drafts/DraftsButton.tsx:74
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:111
+msgid "Drafts"
+msgstr "Drafftiau"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:375
 msgid "Drop to add images"
@@ -3285,13 +3313,13 @@ msgstr "Golygu gosodiadau rhyngweithio postiad"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:268
 #: src/screens/Profile/Header/EditProfileDialog.tsx:274
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:293
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:321
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:324
 msgid "Edit profile"
 msgstr "Golygu proffil"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:296
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:323
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:326
 msgid "Edit Profile"
 msgstr "Golygu Proffil"
 
@@ -3413,7 +3441,7 @@ msgstr "Galluogi gwthio hysbysiadau"
 msgid "Enable quote posts of this post"
 msgstr "Galluogi postiadau dyfynu'r postiad hwn"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enable subtitles"
 msgstr "Galluogi isdeitlau"
 
@@ -3421,13 +3449,13 @@ msgstr "Galluogi isdeitlau"
 msgid "Enable this source only"
 msgstr "Galluogi dim ond y ffynhonnell hon"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:134
-#: src/screens/Settings/ContentAndMediaSettings.tsx:148
+#: src/screens/Settings/ContentAndMediaSettings.tsx:133
+#: src/screens/Settings/ContentAndMediaSettings.tsx:147
 msgid "Enable trending topics"
 msgstr "Galluogi pynciau tueddol"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:156
-#: src/screens/Settings/ContentAndMediaSettings.tsx:170
+#: src/screens/Settings/ContentAndMediaSettings.tsx:154
+#: src/screens/Settings/ContentAndMediaSettings.tsx:168
 msgid "Enable trending videos in your Discover feed"
 msgstr "Galluogi fideos tueddol yn eich ffrwd Darganfod"
 
@@ -3464,7 +3492,7 @@ msgstr "Rhowch air neu dag"
 msgid "Enter code"
 msgstr "Rhowch y cod"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:406
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:423
 msgid "Enter fullscreen"
 msgstr "Mynd i'r sgrin lawn"
 
@@ -3501,7 +3529,7 @@ msgstr "Rhowch eich cyfrinair"
 msgid "Enter your username and password"
 msgstr "Rhowch eich enw defnyddiwr a chyfrinair"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:132
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:146
 msgid "Enters full screen"
 msgstr "Yn mynd i'r sgrin lawn"
 
@@ -3509,7 +3537,7 @@ msgstr "Yn mynd i'r sgrin lawn"
 msgid "Entertainment"
 msgstr "Adloniant"
 
-#: src/view/com/composer/Composer.tsx:1902
+#: src/view/com/composer/Composer.tsx:2318
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Gwall"
@@ -3570,7 +3598,7 @@ msgstr "Eithrio defnyddwyr rydych yn eu dilyn"
 msgid "Excludes users you follow"
 msgstr "Yn eithrio defnyddwyr rydych yn eu dilyn"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:422
 msgid "Exit fullscreen"
 msgstr "Gadael y sgrin lawn"
 
@@ -3578,11 +3606,7 @@ msgstr "Gadael y sgrin lawn"
 msgid "Exits account deletion process"
 msgstr "Yn gadael y broses dileu cyfrif"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:111
-msgid "Exits image view"
-msgstr "Yn gadael golwg delwedd"
-
-#: src/view/com/lightbox/Lightbox.web.tsx:185
+#: src/view/com/lightbox/Lightbox.web.tsx:192
 msgid "Expand alt text"
 msgstr "Ehangu testun amgen"
 
@@ -3598,11 +3622,11 @@ msgstr "Ehangu neu leihau'r postiad llawn rydych yn ateb iddo"
 msgid "Expand post text"
 msgstr "Estyn testun postiad"
 
-#: src/screens/VideoFeed/index.tsx:989
+#: src/screens/VideoFeed/index.tsx:990
 msgid "Expands or collapses post text"
 msgstr "Yn ehangu neu'n lleihau testun postiad"
 
-#: src/lib/api/index.ts:418
+#: src/lib/api/index.ts:420
 msgid "Expected uri to resolve to a record"
 msgstr "Yr uri disgwyliedig i ddatrys i gofnod"
 
@@ -3639,7 +3663,7 @@ msgstr "Delweddau di-noethol amlwg."
 #: src/Navigation.tsx:789
 #: src/screens/Search/Shell.tsx:327
 #: src/view/shell/desktop/LeftNav.tsx:687
-#: src/view/shell/Drawer.tsx:414
+#: src/view/shell/Drawer.tsx:416
 msgid "Explore"
 msgstr "Darganfod"
 
@@ -3657,8 +3681,8 @@ msgstr "Allforio fy nata"
 msgid "Export My Data"
 msgstr "Allforio Fy Nata"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:86
-#: src/screens/Settings/ContentAndMediaSettings.tsx:89
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:88
 msgid "External media"
 msgstr "Cyfryngau allanol"
 
@@ -3670,7 +3694,7 @@ msgstr "Cyfryngau Allanol"
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/screens/Settings/ExternalMediaPreferences.tsx:43
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "Gall cyfryngau allanol ganiatáu i wefannau gasglu gwybodaeth amdanoch chi a'ch dyfais. Nid oes unrhyw wybodaeth yn cael ei anfon na gofyn amdano nes i chi bwyso'r botwm \"chwarae\"."
+msgstr "Gall cyfryngau allanol ganiatáu i wefannau gasglu gwybodaeth amdanoch chi a'ch dyfais. Does dim gwybodaeth yn cael ei anfon na gofyn amdano nes i chi bwyso'r botwm \"chwarae\"."
 
 #: src/Navigation.tsx:378
 #: src/screens/Settings/ExternalMediaPreferences.tsx:34
@@ -3730,7 +3754,7 @@ msgstr "Wedi methu dileu postiad, ceisiwch eto"
 msgid "Failed to delete starter pack"
 msgstr "Wedi methu dileu'r pecyn cychwyn"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:122
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:133
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "Wedi methu dilyn pob un o'r cyfrifon hyn, rhowch gynnig arall arni"
 
@@ -3829,6 +3853,10 @@ msgstr "Wedi methu dileu'r dilysiad"
 msgid "Failed to resolve location. Please try again."
 msgstr "Wedi methu canfod y lleoliad. Ceisiwch eto."
 
+#: src/view/com/composer/Composer.tsx:572
+msgid "Failed to save draft"
+msgstr "Wedi methu cadw drafft"
+
 #: src/lib/media/save-image.ios.ts:27
 #: src/lib/media/save-image.ts:31
 msgid "Failed to save image: {0}"
@@ -3915,6 +3943,7 @@ msgid "Feed"
 msgstr "Ffrwd"
 
 #: src/components/FeedCard.tsx:171
+#: src/state/queries/feed.ts:121
 #: src/view/com/feeds/FeedSourceCard.tsx:150
 msgid "Feed by {0}"
 msgstr "Ffrwd gan {0}"
@@ -3941,7 +3970,7 @@ msgstr "Dyw'r ffrwd ddim ar gael"
 
 #: src/view/shell/desktop/RightNav.tsx:107
 #: src/view/shell/desktop/RightNav.tsx:108
-#: src/view/shell/Drawer.tsx:368
+#: src/view/shell/Drawer.tsx:370
 msgid "Feedback"
 msgstr "Adborth"
 
@@ -3958,7 +3987,7 @@ msgstr "Adborth wedi'i anfon at weithredwr ffrwd"
 #: src/view/screens/Feeds.tsx:511
 #: src/view/screens/Profile.tsx:239
 #: src/view/shell/desktop/LeftNav.tsx:725
-#: src/view/shell/Drawer.tsx:530
+#: src/view/shell/Drawer.tsx:532
 msgid "Feeds"
 msgstr "Ffrydiau"
 
@@ -4008,6 +4037,10 @@ msgstr "Hidlo gan bwy rydych yn derbyn hysbysiadau"
 msgid "Finalizing"
 msgstr "Yn cwblhau"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:144
+msgid "Finally!"
+msgstr ""
+
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:154
 msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
 msgstr "O'r diwedd! Cadwch drefn ar bostiadau sy'n bwysig i chi. Cadwch nhw i'w hail ddarllen unrhyw bryd."
@@ -4020,7 +4053,7 @@ msgstr "Cyllid"
 #: src/view/com/posts/FollowingEmptyState.tsx:53
 #: src/view/com/posts/FollowingEndOfFeed.tsx:54
 msgid "Find accounts to follow"
-msgstr "Dewch o hyd i gyfrifon i'w dilyn"
+msgstr "Chwilio am gyfrifon i'w dilyn"
 
 #: src/Navigation.tsx:426
 #: src/Navigation.tsx:627
@@ -4042,9 +4075,9 @@ msgid "Find my friends"
 msgstr "Chwilio am fy ffrindiau"
 
 #. Starter packs suggested to the user for them to follow
-#: src/components/ProgressGuide/FollowDialog.tsx:78
-#: src/components/ProgressGuide/FollowDialog.tsx:86
-#: src/components/ProgressGuide/FollowDialog.tsx:428
+#: src/components/ProgressGuide/FollowDialog.tsx:79
+#: src/components/ProgressGuide/FollowDialog.tsx:87
+#: src/components/ProgressGuide/FollowDialog.tsx:433
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:42
 msgid "Find people to follow"
 msgstr "Chwilio am bobl i'w dilyn"
@@ -4098,19 +4131,19 @@ msgstr "Mewnbwn cod ffocysu"
 #: src/components/ProfileHoverCard/index.web.tsx:497
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:152
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:378
-#: src/screens/VideoFeed/index.tsx:873
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:381
+#: src/screens/VideoFeed/index.tsx:874
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
 #: src/view/com/notifications/NotificationFeedItem.tsx:848
 msgid "Follow"
 msgstr "Dilyn"
 
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:139
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:366
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:369
 msgid "Follow {0}"
 msgstr "Dilynwch {0}"
 
-#: src/screens/VideoFeed/index.tsx:850
+#: src/screens/VideoFeed/index.tsx:851
 msgid "Follow {handle}"
 msgstr "Dilynwch {handle}"
 
@@ -4120,7 +4153,7 @@ msgstr "Dilynwch 10 cyfrif"
 
 #: src/components/ProgressGuide/List.tsx:60
 msgid "Follow 10 people to get started"
-msgstr "Dilyn 10 person i gychwyn arni"
+msgstr "Dilynwch 10 person i gychwyn arni"
 
 #: src/components/ProgressGuide/List.tsx:102
 msgid "Follow 7 accounts"
@@ -4133,7 +4166,7 @@ msgstr "Dilynwch y cyfrif"
 
 #: src/components/contacts/screens/ViewMatches.tsx:275
 #: src/components/contacts/screens/ViewMatches.tsx:290
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:262
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:274
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:158
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
 #: src/screens/Settings/FindContactsSettings.tsx:443
@@ -4143,20 +4176,20 @@ msgstr "Dilynwch y cyfrif"
 msgid "Follow all"
 msgstr "Dilynwch y cyfan"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:259
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:271
 msgid "Follow all accounts"
 msgstr "Dilynwch bob cyfrif"
 
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:553
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:150
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:376
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:379
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
 #: src/view/com/notifications/NotificationFeedItem.tsx:848
 msgid "Follow back"
 msgstr "Dilynwch Nôl"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:117
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:128
 msgid "Followed all accounts!"
 msgstr "Yn dilyn pob cyfrif!"
 
@@ -4170,7 +4203,7 @@ msgstr "Yn cael ei ddilyn gan <0>{0}</0>"
 
 #: src/components/KnownFollowers.tsx:224
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "Yn cael eu dilyn gan <0>{0}</0> a {1, plural, one {# arall} other {# arall}}"
+msgstr "Yn cael ei ddilyn gan <0>{0}</0> a {1, plural, one {# arall} other {# arall}}"
 
 #: src/components/KnownFollowers.tsx:211
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -4195,18 +4228,18 @@ msgstr "Dilynwyr rydych chi'n eu hadnabod"
 #: src/components/ProfileHoverCard/index.web.tsx:496
 #: src/components/ProfileHoverCard/index.web.tsx:507
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:374
-#: src/screens/VideoFeed/index.tsx:871
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:377
+#: src/screens/VideoFeed/index.tsx:872
 #: src/view/com/notifications/NotificationFeedItem.tsx:819
 #: src/view/com/notifications/NotificationFeedItem.tsx:836
 msgid "Following"
-msgstr "Yn Dilyn"
+msgstr "Yn dilyn"
 
 #: src/screens/SavedFeeds.tsx:410
 #: src/view/screens/Feeds.tsx:603
 msgctxt "feed-name"
 msgid "Following"
-msgstr "Yn Dilyn"
+msgstr "Yn dilyn"
 
 #: src/components/ProfileCard.tsx:509
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:244
@@ -4214,14 +4247,14 @@ msgstr "Yn Dilyn"
 msgid "Following {0}"
 msgstr "Yn dilyn {0}"
 
-#: src/screens/VideoFeed/index.tsx:849
+#: src/screens/VideoFeed/index.tsx:850
 msgid "Following {handle}"
 msgstr "Yn dilyn {handle}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:78
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Following feed preferences"
-msgstr "Dewisiadau ffrydio Yn Dilyn"
+msgstr "Dewisiadau ffrydio Yn dilyn"
 
 #: src/Navigation.tsx:365
 #: src/screens/Settings/FollowingFeedPreferences.tsx:56
@@ -4264,7 +4297,7 @@ msgstr "Am resymau diogelwch, fyddwch chi ddim yn gallu gweld hwn eto. Os byddwc
 msgid "For the best experience, we recommend using the theme font."
 msgstr "I gael y profiad gorau, rydym yn argymell defnyddio ffont y thema."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:317
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:329
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:88
 msgid "For You"
 msgstr "I Chi"
@@ -4307,11 +4340,11 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "Oddi wrth <0/>"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:335
+#: src/components/StarterPack/ProfileStarterPacks.tsx:336
 msgid "Generate a starter pack"
 msgstr "Creu pecyn cychwyn"
 
-#: src/view/shell/Drawer.tsx:372
+#: src/view/shell/Drawer.tsx:374
 msgid "Get help"
 msgstr "Cael cymorth"
 
@@ -4376,9 +4409,14 @@ msgstr "Cael gwybod pan fydd rhywun yn postio"
 msgid "Get started"
 msgstr "Cychwyn arni"
 
-#: src/components/MediaPreview.tsx:114
+#: src/components/MediaPreview.tsx:136
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:64
 msgid "GIF"
 msgstr "GIF"
+
+#: src/view/com/composer/Composer.tsx:2323
+msgid "GIF uploaded"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:242
 msgid "Give your profile a face"
@@ -4394,12 +4432,12 @@ msgstr "Gogoneddu trais"
 #: src/components/moderation/ScreenHider.tsx:160
 #: src/components/moderation/ScreenHider.tsx:169
 #: src/screens/Messages/Inbox.tsx:251
-#: src/screens/Profile/ProfileFeed/index.tsx:93
+#: src/screens/Profile/ProfileFeed/index.tsx:95
 #: src/screens/ProfileList/components/ErrorScreen.tsx:34
 #: src/screens/ProfileList/components/ErrorScreen.tsx:40
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1178
-#: src/screens/VideoFeed/index.tsx:1182
+#: src/screens/VideoFeed/index.tsx:1179
+#: src/screens/VideoFeed/index.tsx:1183
 #: src/view/com/auth/LoggedOut.tsx:73
 #: src/view/com/profile/ProfileFollowers.tsx:178
 #: src/view/com/profile/ProfileFollowers.tsx:179
@@ -4411,7 +4449,7 @@ msgstr "Mynd nôl"
 #: src/screens/List/ListHiddenScreen.tsx:224
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/Profile/ProfileFeed/index.tsx:98
+#: src/screens/Profile/ProfileFeed/index.tsx:100
 #: src/screens/StarterPack/StarterPackScreen.tsx:780
 #: src/view/screens/NotFound.tsx:56
 msgid "Go Back"
@@ -4498,8 +4536,8 @@ msgstr "Mae mynd yn fyw wedi ei analluogi ar eich cyfrif ar hyn o bryd"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
-#: src/view/com/composer/labels/LabelsBtn.tsx:196
-#: src/view/com/composer/labels/LabelsBtn.tsx:199
+#: src/view/com/composer/labels/LabelsBtn.tsx:200
+#: src/view/com/composer/labels/LabelsBtn.tsx:203
 msgid "Graphic Media"
 msgstr "Cyfryngau Graffig"
 
@@ -4592,7 +4630,7 @@ msgstr "Wedi ei gadw gan Bluesky am 7 diwrnod i osgoi camddefnydd, yna ei ddileu
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/RightNav.tsx:128
 #: src/view/shell/desktop/RightNav.tsx:131
-#: src/view/shell/Drawer.tsx:381
+#: src/view/shell/Drawer.tsx:383
 msgid "Help"
 msgstr "Cymorth"
 
@@ -4632,9 +4670,9 @@ msgstr "Rhestr gudd"
 
 #: src/components/interstitials/Trending.tsx:133
 #: src/components/interstitials/TrendingVideos.tsx:138
-#: src/components/moderation/ContentHider.tsx:208
+#: src/components/moderation/ContentHider.tsx:219
 #: src/components/moderation/LabelPreference.tsx:140
-#: src/components/moderation/PostHider.tsx:137
+#: src/components/moderation/PostHider.tsx:139
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:776
 #: src/lib/moderation/useLabelBehaviorDescription.ts:18
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
@@ -4717,8 +4755,8 @@ msgstr "Cuddio rhestr defnyddwyr"
 msgid "Hide verification badges"
 msgstr "Cuddio bathodynnau dilysu"
 
-#: src/components/moderation/ContentHider.tsx:159
-#: src/components/moderation/PostHider.tsx:91
+#: src/components/moderation/ContentHider.tsx:170
+#: src/components/moderation/PostHider.tsx:93
 msgid "Hides the content"
 msgstr "Yn cuddio'r cynnwys"
 
@@ -4760,9 +4798,9 @@ msgstr "Daliwch ati! Rydyn ni'n rhoi mynediad i fideo yn raddol, ac rydych chi'n
 
 #: src/Navigation.tsx:784
 #: src/Navigation.tsx:804
-#: src/view/shell/bottom-bar/BottomBar.tsx:175
+#: src/view/shell/bottom-bar/BottomBar.tsx:176
 #: src/view/shell/desktop/LeftNav.tsx:669
-#: src/view/shell/Drawer.tsx:440
+#: src/view/shell/Drawer.tsx:442
 msgid "Home"
 msgstr "Cartref"
 
@@ -4819,7 +4857,7 @@ msgstr "Rwy'n deall"
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "Rwy ar Bluesky fel {0} - dewch i chwilio amdana i! https://bsky.app/download"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:187
+#: src/view/com/lightbox/Lightbox.web.tsx:194
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Os yw'r testun amgen yn hir, bydd y testun amgen yn toglo'r cyflwr estynedig"
 
@@ -4872,7 +4910,7 @@ msgstr "Os ydych chi eisiau cyfyngu ar bwy sy'n gallu derbyn hysbysiadau am weit
 msgid "If you're a developer, you can host your own server."
 msgstr "Os ydych chi'n ddatblygwr, gallwch chi gynnal eich gweinydd eich hun."
 
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:91
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr "Os ydych chi'n ceisio newid eich enw dangos neu'ch e-bost, gwnewch hynny cyn i chi ei ei gau."
 
@@ -4996,6 +5034,10 @@ msgstr "Gosodiadau rhyngweithio"
 msgid "Introducing activity notifications"
 msgstr "Yn cyflwyno hysbysiadau gweithgaredd"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:48
+msgid "Introducing drafts"
+msgstr ""
+
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:55
 msgid "Introducing finding friends via contacts"
 msgstr "Chwilio am ffrindiau drwy eich cysylltiadau"
@@ -5089,7 +5131,7 @@ msgstr "Dim ond <0>{0}</0>ar hyn o bryd! Ychwanegwch fwy o bobl at eich pecyn cy
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Dim ond chi ar hyn o bryd! Ychwanegwch fwy o bobl at eich pecyn cychwyn trwy chwilio uchod."
 
-#: src/view/com/composer/Composer.tsx:1836
+#: src/view/com/composer/Composer.tsx:2238
 msgid "Job ID: {0}"
 msgstr "ID gwaith: {0}"
 
@@ -5122,20 +5164,20 @@ msgstr "Cadw fi'n gyfredol"
 msgid "KWS website"
 msgstr "Gwefan KWS"
 
-#: src/components/moderation/ContentHider.tsx:239
+#: src/components/moderation/ContentHider.tsx:250
 msgid "Labeled by {0}."
 msgstr "Wedi'i labelu gan {0}."
 
-#: src/components/moderation/ContentHider.tsx:237
+#: src/components/moderation/ContentHider.tsx:248
 msgid "Labeled by the author."
 msgstr "Wedi'i labelu gan yr awdur."
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:69
+#: src/view/com/composer/labels/LabelsBtn.tsx:73
 #: src/view/screens/Profile.tsx:232
 msgid "Labels"
 msgstr "Labeli"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:67
+#: src/view/com/composer/labels/LabelsBtn.tsx:71
 msgid "Labels added"
 msgstr "Labeli wedi'u hychwanegu"
 
@@ -5218,8 +5260,8 @@ msgstr "Dysgu rhagor am fewnforio cysylltiadau"
 msgid "Learn more about self hosting your PDS."
 msgstr "Dysgu rhagor am hunan westeio eich PDS."
 
-#: src/components/moderation/ContentHider.tsx:157
-#: src/components/moderation/ContentHider.tsx:223
+#: src/components/moderation/ContentHider.tsx:168
+#: src/components/moderation/ContentHider.tsx:234
 msgid "Learn more about the moderation applied to this content"
 msgstr "Dysgu rhagor am y cymedroli wedi'i osod i'r cynnwys hwn"
 
@@ -5231,7 +5273,7 @@ msgstr "Dysgwch ragor am y newidiadau yma a sut i rannu eich barn gyda ni drwy <
 msgid "Learn more about these changes and how to share your thoughts with us by reading our blog post."
 msgstr "Dysgwch ragor am y newidiadau yma a sut i rannu eich barn gyda ni drwy ddarllen ein cofnod blog."
 
-#: src/components/moderation/PostHider.tsx:113
+#: src/components/moderation/PostHider.tsx:115
 #: src/components/moderation/ScreenHider.tsx:133
 msgid "Learn more about this warning"
 msgstr "Dysgwch ragor am y rhybudd hwn"
@@ -5252,11 +5294,11 @@ msgid "Learn more in your <0>account settings.</0>"
 msgstr "Mae rhagor o wybodaeth yn eich <0>gosodiadau cyfrif</0>"
 
 #: src/components/dialogs/ServerInput.tsx:225
-#: src/components/moderation/ContentHider.tsx:247
+#: src/components/moderation/ContentHider.tsx:258
 msgid "Learn more."
 msgstr "Dysgu rhagor."
 
-#: src/components/dms/LeaveConvoPrompt.tsx:48
+#: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave"
 msgstr "Gadael"
 
@@ -5286,7 +5328,7 @@ msgstr "Gadael Bluesky"
 msgid "left to go."
 msgstr "chwith i fynd."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:351
+#: src/components/StarterPack/ProfileStarterPacks.tsx:353
 msgid "Let me choose"
 msgstr "Gadewch i mi ddewis"
 
@@ -5315,7 +5357,7 @@ msgid "Like"
 msgstr "Hoffi"
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
-#: src/components/PostControls/index.tsx:287
+#: src/components/PostControls/index.tsx:288
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "Hoffi ({0, plural, one {# hoffi} other {# hoffi}})"
 
@@ -5380,7 +5422,7 @@ msgstr "Hoffi eich ail bostiadau"
 msgid "Likes of your reposts notifications"
 msgstr "Hoffi eich hysbysiadau ail bostio"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:484
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:485
 msgid "Likes on this post"
 msgstr "Hoffi ar y postiad hwn"
 
@@ -5474,7 +5516,7 @@ msgstr "Rhestr heb ei thewi"
 #: src/view/screens/Profile.tsx:233
 #: src/view/screens/Profile.tsx:241
 #: src/view/shell/desktop/LeftNav.tsx:743
-#: src/view/shell/Drawer.tsx:545
+#: src/view/shell/Drawer.tsx:547
 msgid "Lists"
 msgstr "Rhestrau"
 
@@ -5496,9 +5538,19 @@ msgstr "BYW"
 msgid "Live event happening now: {0}"
 msgstr "Digwyddiadau byw'n digwydd nawr: {0}"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:32
+msgid "Live event hidden"
+msgstr "Digwyddiad byw cudd"
+
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:105
 msgid "Live event options"
 msgstr "Dewisiadau digwyddiadau byw"
+
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:52
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:34
+msgid "Live event unhidden"
+msgstr "Amlygu digwyddiad cudd"
 
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:109
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
@@ -5524,11 +5576,11 @@ msgstr "Llwytho rhagor"
 msgid "Load more suggested feeds"
 msgstr "Llwytho rhagor o ffrydiau wedi'u hawgrymu"
 
-#: src/view/screens/Notifications.tsx:278
+#: src/view/screens/Notifications.tsx:277
 msgid "Load new notifications"
 msgstr "Llwytho hysbysiadau newydd"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:231
+#: src/screens/Profile/ProfileFeed/index.tsx:233
 #: src/screens/Profile/Sections/Feed.tsx:116
 #: src/screens/ProfileList/FeedSection.tsx:112
 #: src/view/com/feeds/FeedPage.tsx:170
@@ -5564,7 +5616,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "Logo gan @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:137
-#: src/view/shell/Drawer.tsx:709
+#: src/view/shell/Drawer.tsx:711
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "Logo gan <0>@sawaratsuki.bsky.social</0>"
 
@@ -5600,8 +5652,8 @@ msgstr "Gwnewch un i mi"
 msgid "Make sure this is where you intend to go!"
 msgstr "Gwnewch yn siŵr mai dyma lle rydych chi'n bwriadu mynd!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:62
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
 msgid "Manage saved feeds"
 msgstr "Rheoli ffrydiau wedi'u cadw"
 
@@ -5638,7 +5690,16 @@ msgstr "Efallai yn nes ymlaen"
 msgid "Media"
 msgstr "Cyfryngau"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:205
+#. Example: "Media stored on John's iPhone"
+#: src/view/com/composer/drafts/DraftItem.tsx:116
+msgid "Media stored on {0}"
+msgstr "Cyfryngau wedi'u cadw ar {0}"
+
+#: src/view/com/composer/drafts/DraftItem.tsx:114
+msgid "Media stored on another device"
+msgstr "Cyfryngau wedi'u cadw ar ddyfais arall"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:209
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "Cyfryngau a all fod yn annymunol neu'n amhriodol i rai cynulleidfaoedd."
 
@@ -5653,7 +5714,7 @@ msgstr "defnyddwyr wedi'u crybwyll"
 #: src/lib/hooks/useNotificationHandler.ts:150
 #: src/screens/Settings/NotificationSettings/index.tsx:159
 #: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:41
-#: src/view/screens/Notifications.tsx:101
+#: src/view/screens/Notifications.tsx:100
 msgid "Mentions"
 msgstr "Crybwylliadau"
 
@@ -5715,6 +5776,10 @@ msgstr "Hysbysiadau amrywiol"
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:35
 msgid "Misleading"
 msgstr "Camarweiniol"
+
+#: src/view/com/composer/drafts/DraftItem.tsx:128
+msgid "Missing media"
+msgstr "Cyfryngau coll"
 
 #: src/Navigation.tsx:180
 #: src/screens/Moderation/index.tsx:99
@@ -5788,6 +5853,7 @@ msgid "More languages..."
 msgstr "Rhagor o ieithoedd..."
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:143
+#: src/view/com/composer/drafts/DraftItem.tsx:187
 #: src/view/com/profile/ProfileMenu.tsx:242
 #: src/view/com/profile/ProfileMenu.tsx:249
 msgid "More options"
@@ -5809,7 +5875,7 @@ msgstr "Ffilmiau"
 msgid "Music"
 msgstr "Cerddoriaeth"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:153
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:167
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
 msgctxt "video"
 msgid "Mute"
@@ -5939,7 +6005,7 @@ msgstr "Ewch i'r pecyn cychwyn"
 msgid "Navigates to the next screen"
 msgstr "Yn llywio i'r sgrin nesaf"
 
-#: src/view/shell/Drawer.tsx:78
+#: src/view/shell/Drawer.tsx:80
 msgid "Navigates to your profile"
 msgstr "Yn llywio i'ch proffil"
 
@@ -5983,6 +6049,7 @@ msgstr "Cyfeiriad e-bost newydd"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:74
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:73
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:84
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:64
 msgid "New Feature"
 msgstr "Nodwedd Newydd"
@@ -6018,12 +6085,12 @@ msgstr "Negeseuon newydd"
 msgid "New password"
 msgstr "Cyfrinair newydd"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:248
+#: src/screens/Profile/ProfileFeed/index.tsx:250
 #: src/screens/ProfileList/index.tsx:246
 #: src/screens/ProfileList/index.tsx:284
 #: src/view/screens/Feeds.tsx:552
-#: src/view/screens/Notifications.tsx:167
-#: src/view/screens/Profile.tsx:591
+#: src/view/screens/Notifications.tsx:166
+#: src/view/screens/Profile.tsx:594
 msgid "New post"
 msgstr "Postiad newydd"
 
@@ -6085,7 +6152,7 @@ msgstr "Newyddion"
 msgid "Next"
 msgstr "Nesaf"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:170
+#: src/view/com/lightbox/Lightbox.web.tsx:179
 msgid "Next image"
 msgstr "Delwedd nesaf"
 
@@ -6114,6 +6181,10 @@ msgstr "Dim ffrydiau cyfaddas eto"
 msgid "No DNS Panel"
 msgstr "Dim Panel DNS"
 
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:135
+msgid "No drafts yet"
+msgstr "Dim drafftiau eto"
+
 #: src/components/live/EditLiveDialog.tsx:139
 msgid "No expiry set"
 msgstr "Dim dyddiad dod i ben wedi'i osod"
@@ -6136,7 +6207,7 @@ msgstr "Dim delwedd"
 
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
-#: src/view/screens/Profile.tsx:523
+#: src/view/screens/Profile.tsx:526
 msgid "No likes yet"
 msgstr "Dim hoffi eto"
 
@@ -6148,9 +6219,9 @@ msgstr "Dim rhestrau"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:269
 #: src/view/com/notifications/NotificationFeedItem.tsx:792
 msgid "No longer following {0}"
-msgstr "Ddim yn dilyn {0} bellach"
+msgstr "Dim yn dilyn {0} bellach"
 
-#: src/view/screens/Profile.tsx:471
+#: src/view/screens/Profile.tsx:472
 msgid "No media yet"
 msgstr "Dim cyfryngau eto"
 
@@ -6195,7 +6266,7 @@ msgstr "Dim postiadau eto"
 msgid "No quotes yet"
 msgstr "Dim dyfyniadau eto"
 
-#: src/view/screens/Profile.tsx:456
+#: src/view/screens/Profile.tsx:457
 msgid "No replies yet"
 msgstr "Dim atebion eto"
 
@@ -6209,7 +6280,7 @@ msgid "No result"
 msgstr "Dim canlyniad"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:223
-#: src/components/ProgressGuide/FollowDialog.tsx:230
+#: src/components/ProgressGuide/FollowDialog.tsx:217
 msgid "No results"
 msgstr "Dim canlyniadau"
 
@@ -6238,7 +6309,7 @@ msgstr "Dim canlyniadau."
 msgid "No search results found for \"{search}\"."
 msgstr "Heb ganfod canlyniadau chwilio \"{search}\"."
 
-#: src/view/screens/Profile.tsx:555
+#: src/view/screens/Profile.tsx:558
 msgid "No Starter Packs yet"
 msgstr "Dim Pecynnau Cychwyn eto"
 
@@ -6247,7 +6318,7 @@ msgstr "Dim Pecynnau Cychwyn eto"
 msgid "No thanks"
 msgstr "Dim diolch"
 
-#: src/view/screens/Profile.tsx:497
+#: src/view/screens/Profile.tsx:499
 msgid "No video posts yet"
 msgstr "Dim postiadau fideo eto"
 
@@ -6298,6 +6369,10 @@ msgstr "Dim yn cael ei ddilyn gan neb rydych chi'n eu dilyn"
 msgid "Not Found"
 msgstr "Heb ei Ganfod"
 
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:129
+msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
+msgstr ""
+
 #: src/view/com/profile/ProfileMenu.tsx:558
 msgid "Note about sharing"
 msgstr "Nodyn am rannu"
@@ -6321,7 +6396,7 @@ msgstr "Dim wedi'i gadw eto"
 
 #: src/Navigation.tsx:433
 #: src/Navigation.tsx:580
-#: src/view/screens/Notifications.tsx:136
+#: src/view/screens/Notifications.tsx:135
 msgid "Notification settings"
 msgstr "Gosodiadau hysbysu"
 
@@ -6349,10 +6424,10 @@ msgstr "Seiniau Hysbysu"
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
 #: src/screens/Settings/Settings.tsx:200
 #: src/screens/Settings/Settings.tsx:203
-#: src/view/screens/Notifications.tsx:130
-#: src/view/shell/bottom-bar/BottomBar.tsx:249
+#: src/view/screens/Notifications.tsx:129
+#: src/view/shell/bottom-bar/BottomBar.tsx:250
 #: src/view/shell/desktop/LeftNav.tsx:706
-#: src/view/shell/Drawer.tsx:493
+#: src/view/shell/Drawer.tsx:495
 msgid "Notifications"
 msgstr "Hysbysiadau"
 
@@ -6368,8 +6443,8 @@ msgstr "nawr"
 msgid "Now"
 msgstr "Nawr"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:145
-#: src/view/com/composer/labels/LabelsBtn.tsx:148
+#: src/view/com/composer/labels/LabelsBtn.tsx:149
+#: src/view/com/composer/labels/LabelsBtn.tsx:152
 msgid "Nudity"
 msgstr "Noethni"
 
@@ -6390,7 +6465,7 @@ msgstr "O na!"
 
 #. Confirm button text.
 #: src/components/contacts/screens/GetContacts.tsx:316
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:223
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:225
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:45
 #: src/screens/Settings/AppIconSettings/index.tsx:231
@@ -6398,7 +6473,7 @@ msgid "OK"
 msgstr "Iawn"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:708
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:705
 msgid "Okay"
 msgstr "Iawn"
 
@@ -6417,23 +6492,23 @@ msgstr "ar <0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "Ailosod cyflwyno"
 
-#: src/view/com/composer/Composer.tsx:399
+#: src/view/com/composer/Composer.tsx:707
 msgid "One or more GIFs is missing alt text."
 msgstr "Does dim testun amgen ar un neu fwy o GIFau."
 
-#: src/view/com/composer/Composer.tsx:396
+#: src/view/com/composer/Composer.tsx:704
 msgid "One or more images is missing alt text."
 msgstr "Does dim testun amgen ar un neu fwy o fideos."
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:411
 msgid "One or more of your selected files are not supported."
 msgstr "Dyw un neu fwy o'r ffeiliau hyn ddim yn cael eu cynnal."
 
-#: src/view/com/composer/SelectMediaButton.tsx:416
+#: src/view/com/composer/SelectMediaButton.tsx:434
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "Mae un neu fwy o'r ffeiliau hyn yn rhy fawr. Uchafswm maint yw 100 MB."
 
-#: src/view/com/composer/Composer.tsx:406
+#: src/view/com/composer/Composer.tsx:714
 msgid "One or more videos is missing alt text."
 msgstr "Does dim testun amgen ar un neu fwy o fideos."
 
@@ -6464,8 +6539,8 @@ msgid "Oops, something went wrong!"
 msgstr "Wps, aeth rhywbeth o'i le!"
 
 #: src/components/Lists.tsx:183
-#: src/components/StarterPack/ProfileStarterPacks.tsx:360
-#: src/components/StarterPack/ProfileStarterPacks.tsx:369
+#: src/components/StarterPack/ProfileStarterPacks.tsx:362
+#: src/components/StarterPack/ProfileStarterPacks.tsx:371
 #: src/screens/Settings/AppPasswords.tsx:58
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:106
 #: src/view/screens/Profile.tsx:132
@@ -6476,7 +6551,7 @@ msgstr "Wps!"
 msgid "Open avatar creator"
 msgstr "Agor y crëwr avatar"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:200
+#: src/view/com/feeds/ComposerPrompt.tsx:201
 msgid "Open camera"
 msgstr "Agor camera"
 
@@ -6485,12 +6560,16 @@ msgstr "Agor camera"
 msgid "Open conversation options"
 msgstr "Agor dewisiadau sgyrsiau"
 
+#: src/view/com/composer/drafts/DraftItem.tsx:69
+msgid "Open draft"
+msgstr "Agor drafft"
+
 #: src/components/Layout/Header/index.tsx:160
 msgid "Open drawer menu"
 msgstr "Agor dewislen drôr"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1483
+#: src/view/com/composer/Composer.tsx:1885
 msgid "Open emoji picker"
 msgstr "Agor y dewisydd emojis"
 
@@ -6557,7 +6636,7 @@ msgstr "Agor cofnod system"
 msgid "Opens {0} feed"
 msgstr "Yn agor {0} ffrwd"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:62
+#: src/view/com/composer/labels/LabelsBtn.tsx:66
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Yn agor deialog i ychwanegu rhybudd cynnwys at eich postiad"
 
@@ -6589,25 +6668,25 @@ msgstr "Yn agor deialog newid enw dangos"
 msgid "Opens composer"
 msgstr "Yn agor y cyfansoddwr"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:201
+#: src/view/com/feeds/ComposerPrompt.tsx:202
 msgid "Opens device camera"
 msgstr "Yn agor camera dyfais"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:487
+#: src/view/com/composer/SelectMediaButton.tsx:505
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Yn agor oriel dyfais i ddewis hyd at {MAX_IMAGES, plural, other {# delwedd}}, neu un fideo neu GIF."
 
-#: src/view/com/composer/Composer.tsx:1484
+#: src/view/com/composer/Composer.tsx:1886
 msgid "Opens emoji picker"
 msgstr "Yn agor y dewisydd emojis"
 
-#: src/view/com/auth/SplashScreen.tsx:66
+#: src/view/com/auth/SplashScreen.tsx:101
 #: src/view/com/auth/SplashScreen.web.tsx:115
 msgid "Opens flow to create a new Bluesky account"
 msgstr "Yn agor llif i greu cyfrif Bluesky newydd"
 
-#: src/view/com/auth/SplashScreen.tsx:83
+#: src/view/com/auth/SplashScreen.tsx:119
 #: src/view/com/auth/SplashScreen.web.tsx:129
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr "Yn agor llif i fewngofnodi i'ch cyfrif Bluesky presennol"
@@ -6620,7 +6699,7 @@ msgstr "Yn agor deialog dewis GIF"
 msgid "Opens helpdesk in browser"
 msgstr "Yn agor desg gymorth yn y porwr"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:223
+#: src/view/com/feeds/ComposerPrompt.tsx:224
 msgid "Opens image picker"
 msgstr "Yn agor dewisydd lluniau"
 
@@ -6640,9 +6719,13 @@ msgstr "Yn agor ffurflen ailosod cyfrinair"
 msgid "Opens post language settings"
 msgstr "Yn agor gosodiadau ieithoedd postiadau"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:146
+#: src/view/com/feeds/ComposerPrompt.tsx:147
 msgid "Opens the post composer"
 msgstr "Yn agor maes ysgrifennu postiad"
+
+#: src/view/com/composer/drafts/DraftItem.tsx:70
+msgid "Opens this draft in the composer"
+msgstr "Yn agor y drafft hwn yn y cyfansoddwr"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:1027
 #: src/view/com/util/UserAvatar.tsx:597
@@ -6679,7 +6762,7 @@ msgstr "Statws OTA: Dim ar gael"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:242
-#: src/view/com/composer/labels/LabelsBtn.tsx:180
+#: src/view/com/composer/labels/LabelsBtn.tsx:184
 msgid "Other"
 msgstr "Arall"
 
@@ -6763,13 +6846,13 @@ msgstr "Cyfrinair wedi'i ddiweddaru"
 msgid "Password updated!"
 msgstr "Cyfrinair wedi'i ddiweddaru!"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:368
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:385
 msgid "Pause"
 msgstr "Oedi"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:319
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:336
 msgid "Pause video"
 msgstr "Oedi fideo"
 
@@ -6829,7 +6912,7 @@ msgstr "Gwiriwyd y rhif ffôn"
 msgid "Photography"
 msgstr "Ffotograffiaeth"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:164
+#: src/view/com/composer/labels/LabelsBtn.tsx:168
 msgid "Pictures meant for adults."
 msgstr "Lluniau ar gyfer oedolion."
 
@@ -6874,9 +6957,9 @@ msgstr "Ffrydiau wedi'u Pinio"
 msgid "Pinned to your feeds"
 msgstr "Wedi'i binio i'ch ffrydiau"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:44
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:369
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Play"
 msgstr "Chwarae"
 
@@ -6885,7 +6968,7 @@ msgid "Play {0}"
 msgstr "Chwarae {0}"
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:115
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:320
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:337
 msgid "Play video"
 msgstr "Chwarae fideo"
 
@@ -6893,11 +6976,11 @@ msgstr "Chwarae fideo"
 msgid "Play Video"
 msgstr "Chwarae Fideo"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:43
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Plays or pauses the GIF"
 msgstr "Yn chwarae neu'n oedi'r GIF"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:138
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
 msgid "Plays or pauses the video"
 msgstr "Yn chwarae neu'n oedi'r fideo"
 
@@ -6909,7 +6992,7 @@ msgstr "Yn chwarae'r GIF"
 msgid "Plays the video"
 msgstr "Yn chwarae'r fideo"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:110
+#: src/view/com/composer/labels/LabelsBtn.tsx:114
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr "Ychwanegwch unrhyw labeli rhybudd cynnwys sy'n berthnasol i'r cyfryngau rydych chi'n eu postio."
 
@@ -7066,31 +7149,31 @@ msgstr "Ysgrifennwch eich neges isod:"
 msgid "Politics"
 msgstr "Gwleidyddiaeth"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:151
+#: src/view/com/composer/labels/LabelsBtn.tsx:155
 msgid "Porn"
 msgstr "Pornograffi"
 
-#: src/screens/PostThread/index.tsx:528
+#: src/screens/PostThread/index.tsx:529
 msgctxt "description"
 msgid "Post"
 msgstr "Postio"
 
-#: src/view/com/composer/Composer.tsx:1123
+#: src/view/com/composer/Composer.tsx:1532
 msgctxt "action"
 msgid "Post"
 msgstr "Postio"
 
-#: src/view/screens/Profile.tsx:475
 #: src/view/screens/Profile.tsx:476
+#: src/view/screens/Profile.tsx:477
 msgid "Post a photo"
 msgstr "Postiwch lun"
 
-#: src/view/screens/Profile.tsx:501
-#: src/view/screens/Profile.tsx:502
+#: src/view/screens/Profile.tsx:503
+#: src/view/screens/Profile.tsx:504
 msgid "Post a video"
 msgstr "Postiwch fideo"
 
-#: src/view/com/composer/Composer.tsx:1121
+#: src/view/com/composer/Composer.tsx:1530
 msgctxt "action"
 msgid "Post All"
 msgstr "Postio'r Cyfan"
@@ -7217,7 +7300,7 @@ msgstr "Pwyswch i weld dilynwyr y cyfrif hwn rydych chi'n ei ddilyn hefyd"
 msgid "Preview"
 msgstr "Rhagolwg"
 
-#: src/view/com/lightbox/Lightbox.web.tsx:151
+#: src/view/com/lightbox/Lightbox.web.tsx:158
 msgid "Previous image"
 msgstr "Delwedd flaenorol"
 
@@ -7257,8 +7340,8 @@ msgstr "Gosodiadau Preifatrwydd a Diogelwch"
 #: src/screens/Settings/AboutSettings.tsx:90
 #: src/screens/Settings/AboutSettings.tsx:93
 #: src/view/screens/PrivacyPolicy.tsx:34
-#: src/view/shell/Drawer.tsx:704
-#: src/view/shell/Drawer.tsx:705
+#: src/view/shell/Drawer.tsx:706
+#: src/view/shell/Drawer.tsx:707
 msgid "Privacy Policy"
 msgstr "Polisi Preifatwydd"
 
@@ -7266,7 +7349,11 @@ msgstr "Polisi Preifatwydd"
 msgid "Privacy violation of a minor"
 msgstr "Torri ar breifatrwydd plentyn dan oed"
 
-#: src/view/com/composer/Composer.tsx:1899
+#: src/view/com/composer/Composer.tsx:2312
+msgid "Processing GIF..."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:2314
 msgid "Processing video..."
 msgstr "Yn prosesu fideo..."
 
@@ -7280,10 +7367,10 @@ msgstr "Wrthi’n prosesu..."
 msgid "profile"
 msgstr "proffil"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:313
+#: src/view/shell/bottom-bar/BottomBar.tsx:293
 #: src/view/shell/desktop/LeftNav.tsx:784
-#: src/view/shell/Drawer.tsx:77
-#: src/view/shell/Drawer.tsx:596
+#: src/view/shell/Drawer.tsx:79
+#: src/view/shell/Drawer.tsx:598
 msgid "Profile"
 msgstr "Proffil"
 
@@ -7305,22 +7392,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Rhestrau cyhoeddus, y mae modd eu rhannu o ddefnyddwyr i'w tewi neu eu rhwystro'n lluosog."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1103
+#: src/view/com/composer/Composer.tsx:1515
 msgid "Publish post"
 msgstr "Cyhoeddi postiad"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1096
+#: src/view/com/composer/Composer.tsx:1508
 msgid "Publish posts"
 msgstr "Cyhoeddi postiadau"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1081
+#: src/view/com/composer/Composer.tsx:1493
 msgid "Publish replies"
 msgstr "Cyhoeddi atebion"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1088
+#: src/view/com/composer/Composer.tsx:1500
 msgid "Publish reply"
 msgstr "Cyhoeddi ateb"
 
@@ -7360,6 +7447,7 @@ msgstr "Hysbysiadau dyfynnu"
 #: src/components/PostControls/RepostButton.tsx:198
 #: src/components/PostControls/RepostButton.web.tsx:85
 #: src/components/PostControls/RepostButton.web.tsx:92
+#: src/view/com/composer/drafts/DraftItem.tsx:134
 msgid "Quote post"
 msgstr "Dyfyniad postiad"
 
@@ -7385,7 +7473,7 @@ msgstr "Analluogwyd postiadau dyfyniad"
 msgid "Quotes"
 msgstr "Dyfyniadau"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:468
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:469
 msgid "Quotes of this post"
 msgstr "Dyfyniadau'r postiad hwn"
 
@@ -7424,11 +7512,11 @@ msgstr "darllenwch am sut i ddefnyddio'r hidlyddion chwilio"
 msgid "Read blog post"
 msgstr "Darllen postiad blog"
 
-#: src/screens/VideoFeed/index.tsx:990
+#: src/screens/VideoFeed/index.tsx:991
 msgid "Read less"
 msgstr "Darllen llai"
 
-#: src/screens/VideoFeed/index.tsx:990
+#: src/screens/VideoFeed/index.tsx:991
 msgid "Read more"
 msgstr "Darllen mwy"
 
@@ -7720,13 +7808,13 @@ msgstr "Analluogwyd atebion"
 msgid "Replies to this post are disabled."
 msgstr "Mae atebion i'r postiad hwn wedi'u hanalluogi."
 
-#: src/view/com/composer/Composer.tsx:1119
+#: src/view/com/composer/Composer.tsx:1528
 msgctxt "action"
 msgid "Reply"
 msgstr "Ateb"
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
-#: src/components/PostControls/index.tsx:241
+#: src/components/PostControls/index.tsx:242
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr "Ateb ({0, plural, one {# ateb} other {# ateb}})"
 
@@ -7892,7 +7980,7 @@ msgstr "Wedi'i ail-bostio gennych chi"
 msgid "Reposts"
 msgstr "Ail bostiadau"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:450
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:451
 msgid "Reposts of this post"
 msgstr "Ail-bostiadau'r postiad hwn"
 
@@ -7996,14 +8084,14 @@ msgstr "Yn ceisio'r weithred olaf eto, oedd yn wallus"
 #: src/components/moderation/ReportDialog/index.tsx:281
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:58
-#: src/components/StarterPack/ProfileStarterPacks.tsx:374
+#: src/components/StarterPack/ProfileStarterPacks.tsx:376
 #: src/screens/Login/LoginForm.tsx:326
 #: src/screens/Login/LoginForm.tsx:333
 #: src/screens/Messages/ChatList.tsx:292
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:219
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:236
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:239
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:248
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:251
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:91
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:94
 #: src/screens/PostThread/components/ThreadError.tsx:80
@@ -8030,10 +8118,10 @@ msgstr "Nôl i'r dudalen flaenorol"
 msgid "Returns to home page"
 msgstr "Yn mynd nôl i'r dudalen gartref"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:94
+#: src/screens/Profile/ProfileFeed/index.tsx:96
 #: src/screens/ProfileList/components/ErrorScreen.tsx:35
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:575
-#: src/screens/VideoFeed/index.tsx:1179
+#: src/screens/VideoFeed/index.tsx:1180
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr "Yn mynd nôl i'r dudalen flaenorol"
@@ -8063,7 +8151,7 @@ msgstr "Yn mynd nôl i'r cam blaenorol"
 msgid "Save"
 msgstr "Cadw"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:614
+#: src/view/com/lightbox/ImageViewing/index.tsx:612
 msgctxt "action"
 msgid "Save"
 msgstr "Cadw"
@@ -8076,8 +8164,25 @@ msgstr "Cadw dyddiad geni"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:200
 #: src/screens/SavedFeeds.tsx:116
 #: src/screens/SavedFeeds.tsx:120
+#: src/view/com/composer/Composer.tsx:1180
+#: src/view/com/composer/drafts/DraftsButton.tsx:107
 msgid "Save changes"
 msgstr "Cadw'r newidiadau"
+
+#: src/view/com/composer/Composer.tsx:1158
+#: src/view/com/composer/drafts/DraftsButton.tsx:87
+msgid "Save changes?"
+msgstr "Cadw newidiadau?"
+
+#: src/view/com/composer/Composer.tsx:1181
+#: src/view/com/composer/drafts/DraftsButton.tsx:107
+msgid "Save draft"
+msgstr "Cadw drafft"
+
+#: src/view/com/composer/Composer.tsx:1160
+#: src/view/com/composer/drafts/DraftsButton.tsx:89
+msgid "Save draft?"
+msgstr "Cadw drafft?"
 
 #: src/components/StarterPack/ShareDialog.tsx:143
 #: src/components/StarterPack/ShareDialog.tsx:149
@@ -8103,7 +8208,7 @@ msgid "Save to my feeds"
 msgstr "Cadw i fy ffrydiau"
 
 #: src/view/shell/desktop/LeftNav.tsx:762
-#: src/view/shell/Drawer.tsx:571
+#: src/view/shell/Drawer.tsx:573
 msgctxt "link to bookmarks screen"
 msgid "Saved"
 msgstr "Wedi cadw"
@@ -8155,7 +8260,7 @@ msgstr "Sgrolio i'r brig"
 #: src/components/forms/SearchInput.tsx:36
 #: src/screens/Search/Shell.tsx:327
 #: src/screens/Search/Shell.tsx:514
-#: src/view/shell/bottom-bar/BottomBar.tsx:195
+#: src/view/shell/bottom-bar/BottomBar.tsx:196
 msgid "Search"
 msgstr "Chwilio"
 
@@ -8164,7 +8269,7 @@ msgstr "Chwilio"
 msgid "Search @{0}'s posts"
 msgstr "Chwilio postiadau @{0}"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:659
+#: src/components/ProgressGuide/FollowDialog.tsx:664
 msgid "Search by name or interest"
 msgstr "Chwiliwch yn ôl enw neu ddiddordeb"
 
@@ -8177,12 +8282,12 @@ msgid "Search feeds"
 msgstr "Chwilo'r ffrydiau"
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.
-#: src/components/ProgressGuide/FollowDialog.tsx:488
+#: src/components/ProgressGuide/FollowDialog.tsx:493
 msgid "Search for \"{interestsDisplayName}\""
 msgstr "Chwiliwch am \"{interestsDisplayName}\""
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
-#: src/components/ProgressGuide/FollowDialog.tsx:481
+#: src/components/ProgressGuide/FollowDialog.tsx:486
 msgid "Search for \"{interestsDisplayName}\" (active)"
 msgstr "Chwiliwch am \"{interestsDisplayName}\" (gweithredol)"
 
@@ -8234,7 +8339,7 @@ msgid "Search posts"
 msgstr "Chwiliwch am bostiadau"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:534
-#: src/components/ProgressGuide/FollowDialog.tsx:678
+#: src/components/ProgressGuide/FollowDialog.tsx:683
 msgid "Search profiles"
 msgstr "Chwilio proffiliau"
 
@@ -8247,7 +8352,7 @@ msgid "Search..."
 msgstr "Chwilio..."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:535
-#: src/components/ProgressGuide/FollowDialog.tsx:679
+#: src/components/ProgressGuide/FollowDialog.tsx:684
 msgid "Searches for profiles"
 msgstr "Chwilio am broffiliau"
 
@@ -8283,12 +8388,12 @@ msgstr "Gweld #{tag} postiad yn ôl defnyddiwr"
 msgid "See jobs at Bluesky"
 msgstr "Gweld swyddi yn Bluesky"
 
-#: src/components/FeedInterstitials.tsx:724
-#: src/components/FeedInterstitials.tsx:785
+#: src/components/FeedInterstitials.tsx:699
+#: src/components/FeedInterstitials.tsx:762
 msgid "See more"
 msgstr "Gweld rhagor"
 
-#: src/components/FeedInterstitials.tsx:706
+#: src/components/FeedInterstitials.tsx:681
 msgid "See more suggested profiles"
 msgstr "Gweld rhagor o broffiliau diddorol"
 
@@ -8456,7 +8561,7 @@ msgstr "Dewiswch eich dewis iaith cyfieithu'ch ffrydiau."
 msgid "Select your preferred notification channels"
 msgstr "Dewiswch eich hoff sianeli hysbysu"
 
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:414
 msgid "Selecting multiple media types is not supported."
 msgstr "Dyw dewis mathau lluosog o gyfryngau ddim yn cael ei gynnal."
 
@@ -8485,7 +8590,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "Anfon E-bost"
 
-#: src/view/shell/Drawer.tsx:361
+#: src/view/shell/Drawer.tsx:363
 msgid "Send feedback"
 msgstr "Anfonwch adborth"
 
@@ -8566,7 +8671,7 @@ msgstr "Yn gosod e-bost ar gyfer ailosod cyfrinair"
 #: src/Navigation.tsx:216
 #: src/screens/Settings/Settings.tsx:103
 #: src/view/shell/desktop/LeftNav.tsx:802
-#: src/view/shell/Drawer.tsx:609
+#: src/view/shell/Drawer.tsx:611
 msgid "Settings"
 msgstr "Gosodiadau"
 
@@ -8619,7 +8724,7 @@ msgctxt "toast"
 msgid "Settings saved"
 msgstr "Gosodiadau wedi'u cadw"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:168
+#: src/view/com/composer/labels/LabelsBtn.tsx:172
 msgid "Sexual activity or erotic nudity."
 msgstr "Gweithgaredd rhywiol neu noethni erotig."
 
@@ -8634,7 +8739,7 @@ msgstr "Rhywiol Awgrymiadol"
 msgid "Share"
 msgstr "Rhannu"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:623
+#: src/view/com/lightbox/ImageViewing/index.tsx:621
 msgctxt "action"
 msgid "Share"
 msgstr "Rhannu"
@@ -8712,13 +8817,13 @@ msgstr "Rhannwch eich hoff ffrwd!"
 msgid "Shared Preferences Tester"
 msgstr "Profwr Dewisiadau Rhannu"
 
-#: src/components/moderation/ContentHider.tsx:208
+#: src/components/moderation/ContentHider.tsx:219
 #: src/components/moderation/LabelPreference.tsx:142
-#: src/components/moderation/PostHider.tsx:137
+#: src/components/moderation/PostHider.tsx:139
 msgid "Show"
 msgstr "Dangos"
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:189
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:81
 msgid "Show alt text"
 msgstr "Dangos testun amgen"
 
@@ -8820,7 +8925,7 @@ msgstr "Dangos rhybudd a hidlo o ffrydiau"
 msgid "Show when you’re live"
 msgstr "Dangos pan fyddwch yn fyw"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:644
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:645
 msgid "Shows information about when this post was created"
 msgstr "Yn dangos manylion pryd cafodd y postiad hwn ei chreu"
 
@@ -8828,8 +8933,8 @@ msgstr "Yn dangos manylion pryd cafodd y postiad hwn ei chreu"
 msgid "Shows other accounts you can switch to"
 msgstr "Yn dangos cyfrifon eraill y gallwch newid iddyn nhw"
 
-#: src/components/moderation/ContentHider.tsx:160
-#: src/components/moderation/PostHider.tsx:91
+#: src/components/moderation/ContentHider.tsx:171
+#: src/components/moderation/PostHider.tsx:93
 msgid "Shows the content"
 msgstr "Yn dangos y cynnwys"
 
@@ -8842,14 +8947,14 @@ msgstr "Yn dangos y cynnwys"
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/LoginForm.tsx:181
 #: src/screens/Search/SearchResults.tsx:296
-#: src/view/com/auth/SplashScreen.tsx:81
-#: src/view/com/auth/SplashScreen.tsx:89
+#: src/view/com/auth/SplashScreen.tsx:117
+#: src/view/com/auth/SplashScreen.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:127
 #: src/view/com/auth/SplashScreen.web.tsx:135
-#: src/view/shell/bottom-bar/BottomBar.tsx:352
-#: src/view/shell/bottom-bar/BottomBar.tsx:357
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:211
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:216
+#: src/view/shell/bottom-bar/BottomBar.tsx:332
+#: src/view/shell/bottom-bar/BottomBar.tsx:337
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:230
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:235
 #: src/view/shell/NavSignupCard.tsx:57
 #: src/view/shell/NavSignupCard.tsx:62
 msgid "Sign in"
@@ -8916,17 +9021,13 @@ msgstr "Mae Angen Mewngofnodi"
 msgid "Signed in as @{0}"
 msgstr "Wedi mewngofnodi fel @{0}"
 
-#: src/components/FeedInterstitials.tsx:701
-msgid "Similar accounts"
-msgstr "Cyfrifon tebyg"
-
 #: src/components/contacts/screens/PhoneInput.tsx:162
 #: src/components/contacts/screens/VerifyNumber.tsx:204
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:85
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:89
 #: src/screens/Onboarding/StepFinished/index.tsx:291
 #: src/screens/Onboarding/StepFinished/index.tsx:313
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:249
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:261
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:104
 #: src/screens/StarterPack/Wizard/index.tsx:219
 msgid "Skip"
@@ -8942,7 +9043,7 @@ msgstr "Hepgor rhannu cysylltiadau ac ymlaen i'r ap"
 msgid "Skip introduction and start using your account"
 msgstr "Hepgor y cyflwyniad a chychwyn defnyddio'ch cyfrif"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:258
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:101
 msgid "Skip to next step"
 msgstr "Mynd i'r cam nesaf"
@@ -8967,7 +9068,7 @@ msgstr "Datblygwr Meddalwedd"
 msgid "Some of your verifications are invalid."
 msgstr "Mae rhai o'ch dilysiadau'n annilys."
 
-#: src/components/FeedInterstitials.tsx:864
+#: src/components/FeedInterstitials.tsx:841
 msgid "Some other feeds you might like"
 msgstr "Rhai ffrydiau eraill efallai y byddwch yn eu hoffi"
 
@@ -8994,7 +9095,7 @@ msgstr "Aeth rhywbeth o'i le"
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:138
 #: src/components/moderation/ReportDialog/index.tsx:273
 #: src/screens/Deactivated.tsx:85
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:58
 #: src/view/screens/Storybook/Admonitions.tsx:55
 msgid "Something went wrong, please try again"
 msgstr "Aeth rhywbeth o'i le, ceisiwch eto"
@@ -9020,7 +9121,7 @@ msgstr "Aeth rhywbeth o'i le. Ceisiwch eto."
 msgid "Something wrong? Let us know."
 msgstr "Rhywbeth o'i le? Rhowch wybod i ni."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:212
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "Ymddiheuriadau, does dim modd i ni lwytho awgrymiadau cyfrifon ar hyn o bryd."
 
@@ -9113,7 +9214,11 @@ msgstr "Pecynnau Cychwyn"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Mae pecynnau cychwyn yn caniatáu i chi rannu gyda'ch ffrindiau eich hoff ffrydiau a phobl."
 
-#: src/view/screens/Profile.tsx:553
+#: src/components/StarterPack/ProfileStarterPacks.tsx:104
+msgid "Starter packs let you share your favorite feeds and people with your friends."
+msgstr "Mae pecynnau cychwyn yn gadael i chi rannu eich hoff ffrydiau a phobl gyda'ch ffrindiau."
+
+#: src/view/screens/Profile.tsx:556
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr "Mae Pecynnau Cychwyn yn gadael i chi rannu'ch hoff ffrydiau a phobl gyda'ch ffrindiau."
 
@@ -9181,11 +9286,11 @@ msgstr "Tanysgrifiwch i @{0} i ddefnyddio'r labeli hyn:"
 msgid "Subscribe to account activity"
 msgstr "Tanysgrifio i weithgaredd cyfrif"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:344
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "Subscribe to Labeler"
 msgstr "Tanysgrifiwch i Labelwr"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:310
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:312
 msgid "Subscribe to this labeler"
 msgstr "Tanysgrifiwch i'r labelwr hwn"
 
@@ -9212,13 +9317,13 @@ msgid "Suggested Accounts"
 msgstr "Cyfrifon wedi'u Hawgrymu"
 
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:699
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:152
+#: src/components/FeedInterstitials.tsx:677
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:163
 msgid "Suggested for you"
 msgstr "Awgrymiadau i chi"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:139
-#: src/view/com/composer/labels/LabelsBtn.tsx:142
+#: src/view/com/composer/labels/LabelsBtn.tsx:143
+#: src/view/com/composer/labels/LabelsBtn.tsx:146
 msgid "Suggestive"
 msgstr "Awgrymiadol"
 
@@ -9354,8 +9459,8 @@ msgstr "Telerau"
 #: src/screens/Settings/AboutSettings.tsx:82
 #: src/screens/Settings/AboutSettings.tsx:85
 #: src/view/screens/TermsOfService.tsx:34
-#: src/view/shell/Drawer.tsx:697
 #: src/view/shell/Drawer.tsx:699
+#: src/view/shell/Drawer.tsx:701
 msgid "Terms of Service"
 msgstr "Telerau Gwasanaeth"
 
@@ -9403,12 +9508,12 @@ msgstr "Mae'r enw defnyddiwr hwnnw eisoes wedi'i gymryd"
 msgid "That's all, folks!"
 msgstr "Dyna i gyd, bobl!"
 
-#: src/screens/VideoFeed/index.tsx:1151
+#: src/screens/VideoFeed/index.tsx:1152
 msgid "That's everything!"
 msgstr "Dyna bopeth!"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:391
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:394
 #: src/view/com/profile/ProfileMenu.tsx:539
 msgid "The account will be able to interact with you after unblocking."
 msgstr "Bydd y cyfrif yn gallu rhyngweithio â chi ar ôl ei ddadrwystro."
@@ -9447,7 +9552,7 @@ msgstr "Ffrwd Darganfod"
 msgid "The Discover feed now knows what you like"
 msgstr "Mae ffrwd Darganfod nawr yn gwybod beth rydych chi'n ei hoffi"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:333
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:334
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
 msgstr "Mae'r profiad yn well yn yr ap. Llwythwch Bluesky i lawr nawr a byddwn yn dod nôl lle roeddech chi."
 
@@ -9527,7 +9632,7 @@ msgstr "Thema"
 msgid "There is a limit to how often you can change your birthdate. You may need to wait a day or two before updating it again."
 msgstr "Mae yna derfyn ar ba mor aml fedrwch chi newid eich dyddiad geni. Bosib y bydd rhaid i chi aros am ddiwrnod neu ddau yn ei ddiweddaru eto."
 
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:85
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "Does dim terfyn amser ar gyfer agor cyfrif, dewch yn ôl unrhyw bryd."
 
@@ -9684,7 +9789,7 @@ msgstr "Mae'r cod yn annilys. Anfonwch eto i gael cod newydd."
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:144
 msgid "This confirmation code is not valid. Please try again."
-msgstr "Nid yw'r cod cadarnhau yma'n ddilys. Ceisiwch eto."
+msgstr "Dyw'r cod cadarnhau yma ddim yn ddilys. Ceisiwch eto."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -9710,6 +9815,10 @@ msgstr "Dyw'r cynnwys hwn ddim yn weladwy heb gyfrif Bluesky."
 #: src/screens/Messages/components/ChatListItem.tsx:366
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "Mae'r sgwrs hon gyda chyfrif sydd wedi'i ddileu neu wedi'i chau. Pwyswch am ddewisiadau"
+
+#: src/view/com/composer/drafts/DraftItem.tsx:237
+msgid "This draft will be permanently deleted."
+msgstr "Bydd y drafft hwn yn cael ei ddileu'n barhaol."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:156
 msgid "This email is already associated with your account."
@@ -9740,7 +9849,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr "Mae'r ffrwd hon yn wag! Efallai y bydd angen i chi ddilyn mwy o ddefnyddwyr neu newid eich gosodiadau iaith."
 
 #: src/components/StarterPack/Main/PostsList.tsx:41
-#: src/screens/Profile/ProfileFeed/index.tsx:197
+#: src/screens/Profile/ProfileFeed/index.tsx:199
 #: src/screens/ProfileList/FeedSection.tsx:77
 msgid "This feed is empty."
 msgstr "Mae'r ffrwd hon yn wag."
@@ -9798,7 +9907,7 @@ msgstr "Mae'r rhestr hon yn wag."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Dyw'r gwasanaeth cymedroli hwn ddim ar gael. Gweler isod am ragor o fanylion. Os bydd y mater hwn yn parhau, cysylltwch â ni."
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:684
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:686
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Mae'r postiad hwn yn honni iddo gael ei greu ar <0>{0}</0>, ond fe'i gwelwyd gyntaf gan Bluesky ar <1>{1}</1>."
 
@@ -9816,9 +9925,9 @@ msgstr "Cafodd y postiad hwn ei ddileu gan yr awdur"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:773
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "Bydd y postiad hwn yn cael ei guddio rhag ffrydiau ac edafedd. Nid oes modd dadwneud hyn."
+msgstr "Bydd y postiad hwn yn cael ei guddio rhag ffrydiau ac edafedd. Does dim modd dadwneud hyn."
 
-#: src/view/com/composer/Composer.tsx:515
+#: src/view/com/composer/Composer.tsx:823
 msgid "This post's author has disabled quote posts."
 msgstr "Mae awdur y postiad hwn wedi analluogi postiadau dyfyniadau."
 
@@ -9834,7 +9943,7 @@ msgstr "Bydd yr ateb hwn yn cael ei drefnu mewn adran gudd ar waelod eich edefyn
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Dyw'r gwasanaeth hwn heb ddarparu telerau gwasanaeth na pholisi preifatrwydd."
 
-#: src/components/live/queries.ts:38
+#: src/components/live/queries.ts:40
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Dyw'r gwasanaeth yma ddim yn cael ei gefnogi tra bod y nodwedd Byw yn y cyflwr beta. Gwasanaethu sy'n cael eu caniatáu: {formatted}."
 
@@ -9861,7 +9970,7 @@ msgstr "Mae'r defnyddiwr hwn wedi eich rhwystro"
 #: src/components/moderation/ModerationDetailsDialog.tsx:81
 #: src/lib/moderation/useModerationCauseDescription.ts:76
 msgid "This user has blocked you. You cannot view their content."
-msgstr "Mae'r defnyddiwr hwn wedi eich rhwystro. Nid oes modd i chi weld eu cynnwys."
+msgstr "Mae'r defnyddiwr hwn wedi eich rhwystro. Does dim modd i chi weld eu cynnwys."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
@@ -9900,8 +10009,8 @@ msgstr "Bydd hyn yn tynnu'ch postiad o'r postiad dyfynnu hwn ar gyfer pob defnyd
 msgid "Thread options"
 msgstr "Opsiynau edafedd"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:70
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:72
 msgid "Thread preferences"
 msgstr "Dewisiadau edafedd"
 
@@ -9951,7 +10060,7 @@ msgstr "Heddiw"
 msgid "Toggle to enable or disable adult content"
 msgstr "Toglo i alluogi neu analluogi cynnwys oedolion"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
 msgid "Toggles the sound"
 msgstr "Toglo'r sain"
 
@@ -9988,8 +10097,8 @@ msgstr "Pwnc"
 #: src/components/dms/MessageContextMenu.tsx:138
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:505
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:507
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:606
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:609
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:607
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:610
 msgid "Translate"
 msgstr "Cyfieithu"
 
@@ -10091,15 +10200,15 @@ msgstr "Manylion ffrwd anhysbys"
 #: src/components/dms/MessagesListBlockedFooter.tsx:112
 #: src/components/dms/MessagesListBlockedFooter.tsx:119
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:334
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:394
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:337
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:397
 #: src/screens/ProfileList/components/Header.tsx:165
 #: src/screens/ProfileList/components/Header.tsx:172
 #: src/view/com/profile/ProfileMenu.tsx:551
 msgid "Unblock"
 msgstr "Dadflocio"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:338
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:341
 msgctxt "action"
 msgid "Unblock"
 msgstr "Dadflocio"
@@ -10112,7 +10221,7 @@ msgid "Unblock account"
 msgstr "Dadrwystro cyfrif"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:389
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:392
 #: src/view/com/profile/ProfileMenu.tsx:533
 msgid "Unblock Account?"
 msgstr "Dadrwystro Cyfrif?"
@@ -10127,8 +10236,12 @@ msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr "Dadwneud"
 
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:57
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:63
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:72
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:78
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:39
+#: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:45
 msgid "Undo"
 msgstr "Dadwneud"
 
@@ -10142,7 +10255,7 @@ msgstr "Dadwneud ail-bostio"
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr "Dad-wneud ail-bostio ({0, plural, one {# ail-bostio} other {# ail-bostio}})"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:365
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:368
 msgid "Unfollow {0}"
 msgstr "Dad-ddilyn {0}"
 
@@ -10151,7 +10264,7 @@ msgstr "Dad-ddilyn {0}"
 msgid "Unfollow account"
 msgstr "Dad-ddilyn y cyfrif"
 
-#: src/screens/VideoFeed/index.tsx:854
+#: src/screens/VideoFeed/index.tsx:855
 msgid "Unfollows the user"
 msgstr "Dad-ddilyn defnyddiwr"
 
@@ -10184,11 +10297,11 @@ msgid "Unlike"
 msgstr "Dad-hoffi"
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
-#: src/components/PostControls/index.tsx:277
+#: src/components/PostControls/index.tsx:278
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Dadhoffi ({0, plural, one {# hoffi} other {# hoffi}})"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Unmute"
@@ -10225,7 +10338,7 @@ msgstr "Dad-dewi rhestr"
 msgid "Unmute thread"
 msgstr "Dad-dewi'r edefyn"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:317
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:334
 msgid "Unmute video"
 msgstr "Dad-dewi fideo"
 
@@ -10276,7 +10389,7 @@ msgstr "Rhestr dadbinio"
 msgid "Unsnooze email reminder"
 msgstr "Dad-gysgu atgoffwr e-bost"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:342
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:344
 msgid "Unsubscribe"
 msgstr "Dad-danysgrifio"
 
@@ -10285,7 +10398,7 @@ msgstr "Dad-danysgrifio"
 msgid "Unsubscribe from list"
 msgstr "Dad-danysgrifio o'r rhestr"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:311
 msgid "Unsubscribe from this labeler"
 msgstr "Dad-danysgrifio o'r labelwr hwn"
 
@@ -10293,7 +10406,7 @@ msgstr "Dad-danysgrifio o'r labelwr hwn"
 msgid "Unsubscribed from list"
 msgstr "Wedi dad-danysgrifio o'r rhestr"
 
-#: src/view/com/composer/Composer.tsx:899
+#: src/view/com/composer/Composer.tsx:1282
 msgid "Unsupported video type: {mimeType}"
 msgstr "Math o fideo sydd ddim yn cael ei gynnal: {mimeType}"
 
@@ -10363,16 +10476,20 @@ msgstr "Llwytho i fyny o'r Ffeiliau"
 msgid "Upload from Library"
 msgstr "Llwytho i fyny o'r Llyfrgell"
 
+#: src/view/com/composer/Composer.tsx:2305
+msgid "Uploading GIF..."
+msgstr ""
+
 #: src/lib/api/index.ts:302
 msgid "Uploading images..."
 msgstr "Wrthi'n lwytho lluniau i fyny..."
 
-#: src/lib/api/index.ts:368
-#: src/lib/api/index.ts:392
+#: src/lib/api/index.ts:370
+#: src/lib/api/index.ts:394
 msgid "Uploading link thumbnail..."
 msgstr "Wrthi'n lwytho dolen llun bach i fyny..."
 
-#: src/view/com/composer/Composer.tsx:1896
+#: src/view/com/composer/Composer.tsx:2307
 msgid "Uploading video..."
 msgstr "Wrthi'n llwytho fideo i fyny..."
 
@@ -10389,8 +10506,8 @@ msgstr "Defnyddiwch y darparwr rhagosodedig"
 msgid "Use in-app browser"
 msgstr "Defnyddio'r porwr o fewn yr ap"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:104
-#: src/screens/Settings/ContentAndMediaSettings.tsx:110
+#: src/screens/Settings/ContentAndMediaSettings.tsx:103
+#: src/screens/Settings/ContentAndMediaSettings.tsx:109
 msgid "Use in-app browser to open links"
 msgstr "Defnyddio'r porwr o fewn yr ap i agor dolenni"
 
@@ -10443,6 +10560,10 @@ msgstr "Defnyddiwr yn eich Rhwystro Chi"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:214
 msgid "User list by {0}"
+msgstr "Rhestr defnyddwyr gan {0}"
+
+#: src/state/queries/feed.ts:162
+msgid "User List by {0}"
 msgstr "Rhestr defnyddwyr gan {0}"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:212
@@ -10597,8 +10718,8 @@ msgstr "Yn gwirio..."
 msgid "Version {0}"
 msgstr "Fersiwn {0}"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:131
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Video"
 msgstr "Fideo"
 
@@ -10614,20 +10735,24 @@ msgstr "Ffrwd Fideo"
 msgid "Video from {0}: {text}"
 msgstr "Fideo gan {0}: {text}"
 
+#: src/screens/VideoFeed/index.tsx:1113
+msgid "Video from {0}. Tap to play or pause the video"
+msgstr "Fideo gan {0}. Tapio i chwarae neu oedi'r fideo"
+
 #: src/lib/interests.ts:62
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:231
 msgid "Video Games"
 msgstr "Gemau Fideo"
 
-#: src/screens/VideoFeed/index.tsx:1109
+#: src/screens/VideoFeed/index.tsx:1110
 msgid "Video is paused"
 msgstr "Fideo wedi'i atal"
 
-#: src/screens/VideoFeed/index.tsx:1109
+#: src/screens/VideoFeed/index.tsx:1110
 msgid "Video is playing"
 msgstr "Fideo yn chwarae"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:219
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:232
 msgid "Video not found."
 msgstr "Fideo heb ei ganfod."
 
@@ -10635,11 +10760,11 @@ msgstr "Fideo heb ei ganfod."
 msgid "Video settings"
 msgstr "Gosodiadau fideo"
 
-#: src/view/com/composer/Composer.tsx:1906
+#: src/view/com/composer/Composer.tsx:2325
 msgid "Video uploaded"
 msgstr "Fideo wedi'i lwytho i fyny"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
 msgstr "Fideo: {0}"
 
@@ -10647,23 +10772,23 @@ msgstr "Fideo: {0}"
 msgid "Videos"
 msgstr "Fideos"
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:428
 msgid "Videos must be less than 3 minutes long."
 msgstr "Rhaid i fideos fod yn llai na 3 munud o hyd."
 
-#: src/view/com/composer/Composer.tsx:587
+#: src/view/com/composer/Composer.tsx:915
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "Edrych"
 
-#: src/screens/Profile/Header/Shell.tsx:261
+#: src/screens/Profile/Header/Shell.tsx:262
 msgid "View {0}'s avatar"
 msgstr "Gweld afatar {0}"
 
 #: src/components/ProfileCard.tsx:142
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:458
 #: src/screens/Search/components/SearchProfileCard.tsx:36
-#: src/screens/VideoFeed/index.tsx:813
+#: src/screens/VideoFeed/index.tsx:814
 #: src/view/com/notifications/NotificationFeedItem.tsx:609
 msgid "View {0}'s profile"
 msgstr "Gweld proffil {0}"
@@ -10708,7 +10833,7 @@ msgstr "Gweld mwy"
 msgid "View more trending videos"
 msgstr "Edrychwch ar ragor o fideos sy'n trendio"
 
-#: src/view/com/composer/Composer.tsx:582
+#: src/view/com/composer/Composer.tsx:910
 msgid "View post"
 msgstr "Edrych ar y postiad"
 
@@ -10788,7 +10913,7 @@ msgstr "Cynnwys treisiol neu fygythiol"
 msgid "Visit site"
 msgstr "Mynd i'r wefan"
 
-#: src/view/screens/Notifications.tsx:303
+#: src/view/screens/Notifications.tsx:302
 msgid "Visit your notification settings"
 msgstr "Ewch i'ch gosodiadau hysbysu"
 
@@ -10938,7 +11063,7 @@ msgid "We're having issues initializing the age assurance process for your accou
 msgstr "Rydym yn cael anawsterau cychwyn y broses sicrhau oed ar gyfer eich cyfrif. Cysylltwch â'n <0>cefnogaeth</0> am gymorth."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:107
-#: src/components/ProgressGuide/FollowDialog.tsx:190
+#: src/components/ProgressGuide/FollowDialog.tsx:191
 msgid "We're having network issues, try again"
 msgstr "Rydym yn cael problemau rhwydwaith, ceisiwch eto"
 
@@ -10968,7 +11093,7 @@ msgstr "Mae'n ddrwg gennym, ond nid oeddem yn gallu llwytho eich geiriau wedi'u 
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Mae'n ddrwg gennym, ond nid oedd modd cwblhau eich chwilio. Ceisiwch eto ymhen ychydig funudau."
 
-#: src/view/com/composer/Composer.tsx:512
+#: src/view/com/composer/Composer.tsx:820
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Mae'n ddrwg gennym! Mae'r postiad rydych chi'n ymateb iddo wedi'i dileu."
 
@@ -10977,7 +11102,7 @@ msgstr "Mae'n ddrwg gennym! Mae'r postiad rydych chi'n ymateb iddo wedi'i dileu.
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Mae'n ddrwg gennym! Gallwn ni ddim dod o hyd i'r dudalen yr oeddech yn chwilio amdani."
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:217
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:218
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr "Mae'n ddrwg gennym! Dim ond i ugain o labelwyr y gallwch chi danysgrifio, ac rydych chi wedi cyrraedd eich terfyn o ugain."
 
@@ -11018,10 +11143,9 @@ msgstr "Beth yw eich diddordebau?"
 msgid "What do you want to call your starter pack?"
 msgstr "Beth ydych chi am ei alw'ch pecyn cychwyn?"
 
-#: src/view/com/auth/SplashScreen.tsx:51
 #: src/view/com/auth/SplashScreen.web.tsx:103
-#: src/view/com/composer/Composer.tsx:859
-#: src/view/com/feeds/ComposerPrompt.tsx:191
+#: src/view/com/composer/Composer.tsx:1242
+#: src/view/com/feeds/ComposerPrompt.tsx:192
 msgid "What's up?"
 msgstr "Beth sy'n digwydd?"
 
@@ -11097,6 +11221,14 @@ msgstr "Pam dylai'r defnyddiwr hwn gael ei adolygu?"
 msgid "Would you like to block this user and/or delete this conversation?"
 msgstr "Hoffech chi rwystro'r defnyddiwr hwn a/neu ddileu'r sgwrs hon?"
 
+#: src/view/com/composer/drafts/DraftsButton.tsx:100
+msgid "Would you like to save this as a draft before viewing your drafts?"
+msgstr "Hoffech chi gadw hwn fel drafft cyn edrych ar eich drafftiau?"
+
+#: src/view/com/composer/Composer.tsx:1170
+msgid "Would you like to save this as a draft to edit later?"
+msgstr "Hoffech chi gadw hwn fel drafft i'w olygu'n nes ymlaen?"
+
 #: src/screens/Messages/components/MessageInput.tsx:154
 #: src/screens/Messages/components/MessageInput.web.tsx:214
 msgid "Write a message"
@@ -11107,12 +11239,12 @@ msgstr "Ysgrifennwch neges"
 msgid "Write a post"
 msgstr "Ysgrifennu postiad"
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:1342
 msgid "Write post"
 msgstr "Ysgrifennwch bostiad"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:90
-#: src/view/com/composer/Composer.tsx:857
+#: src/view/com/composer/Composer.tsx:1240
 msgid "Write your reply"
 msgstr "Ysgrifennwch eich ateb"
 
@@ -11133,8 +11265,8 @@ msgstr "www.mylivestream.tv"
 msgid "Yes"
 msgstr "Iawn"
 
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:104
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
 msgid "Yes, deactivate"
 msgstr "Iawn, cau"
 
@@ -11188,7 +11320,7 @@ msgstr "Rydych mewn llinell."
 msgid "You are Live"
 msgstr "Rydych chi'n Fyw"
 
-#: src/components/live/queries.ts:206
+#: src/components/live/queries.ts:208
 msgid "You are no longer live"
 msgstr "Dydych chi ddim yn fyw mwyach"
 
@@ -11200,7 +11332,7 @@ msgstr "Does dim caniatâd i chi lwytho fideos i fyny."
 msgid "You are not following anyone yet"
 msgstr "Dydych chi ddim yn dilyn neb eto"
 
-#: src/components/live/queries.ts:150
+#: src/components/live/queries.ts:152
 msgid "You are now live!"
 msgstr "Rydych chi nawr yn fyw!"
 
@@ -11255,11 +11387,11 @@ msgstr "Gallwch nawr ddewis i gael gwybod pan fydd pobl benodol yn postio. Os oe
 msgid "You can now sign in with your new password."
 msgstr "Gallwch nawr fewngofnodi gyda'ch cyfrinair newydd."
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:431
 msgid "You can only select one GIF at a time."
 msgstr "Dim ond un GIF ar y tro mai modd ei ddewis."
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:425
 msgid "You can only select one video at a time."
 msgstr "Dim ond un fideo ar y tro mai modd ei ddewis."
 
@@ -11268,7 +11400,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Gallwch ailagor eich cyfrif i barhau i fewngofnodi. Bydd defnyddwyr eraill yn gallu gweld eich proffil a'ch postiadau."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:399
+#: src/view/com/composer/SelectMediaButton.tsx:417
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "Gallwch ddewis hyd at {MAX_IMAGES, plural, other {# delwedd}} i gyd."
 
@@ -11317,7 +11449,7 @@ msgstr "Rydych wedi rhwystro'r defnyddiwr hwn"
 msgid "You have blocked this user. You cannot view their content."
 msgstr "Rydych wedi rhwystro'r defnyddiwr hwn. Allwch chi ddim gweld eu cynnwys."
 
-#: src/view/screens/Notifications.tsx:298
+#: src/view/screens/Notifications.tsx:297
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr "Rydych wedi analluogi hysbysiadau ateb, dyfynnu, a chrybwyll, felly ni fydd y tab hwn yn diweddaru. I newid hyn, ewch i'ch <0>gosodiadau hysbysu</0>."
 
@@ -11350,7 +11482,7 @@ msgstr "Does gennych chi ddim sgyrsiau eto. Dechreuwch un!"
 
 #: src/view/com/lists/MyLists.tsx:81
 msgid "You have no lists."
-msgstr "Nid oes gennych unrhyw restrau."
+msgstr "Does gennych ddim rhestrau."
 
 #: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
@@ -11375,6 +11507,14 @@ msgstr "Diolch, rydych chi wedi dilysu'ch cyfeiriad e-bost yn llwyddiannus. Gall
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Rydych wedi cyrraedd y terfyn ar gyfer llwytho fideo i fyny dros dro. Ceisiwch eto yn nes ymlaen."
+
+#: src/view/com/composer/Composer.tsx:1165
+msgid "You have unsaved changes to this draft, would you like to save them?"
+msgstr "Mae gennych chi newidiadau heb eu cadw o'r drafft hwn, hoffech chi eu cadw?"
+
+#: src/view/com/composer/drafts/DraftsButton.tsx:95
+msgid "You have unsaved changes. Would you like to save them before viewing your drafts?"
+msgstr "Mae gennych chi newidiadau heb eu cadw. Hoffech chi eu cadw cyn edrych ar eich drafftiau?"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:291
 msgid "You haven't created a starter pack yet!"
@@ -11437,7 +11577,7 @@ msgstr "Rhaid i chi fod yn {MIN_ACCESS_AGE} oed neu'n hŷn i greu cyfrif."
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr "Rhaid eich bod yn o leiaf 13 oed i ddefnyddio Bluesky. Darllenwch ein <0>Amodau Gwasanaeth</0> am ragor o wybodaeth."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:362
+#: src/components/StarterPack/ProfileStarterPacks.tsx:364
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "Rhaid i chi fod yn dilyn o leiaf saith o bobl eraill i gynhyrchu pecyn cychwyn."
 
@@ -11449,7 +11589,7 @@ msgstr "Mae'n rhaid i chi gwblhau'r drefn sicrwydd oed er mwyn cael mynediad at 
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "Rhaid i chi ganiatáu mynediad i'ch llyfrgell ffotograffau i gadw cod QR"
 
-#: src/view/com/composer/SelectMediaButton.tsx:442
+#: src/view/com/composer/SelectMediaButton.tsx:460
 msgid "You need to allow access to your media library."
 msgstr "Rhaid i chi ganiatáu mynediad i'ch llyfrgell cyfryngau."
 
@@ -11544,7 +11684,7 @@ msgid "You're in line"
 msgstr "Chi fydd nesaf"
 
 #: src/screens/Deactivated.tsx:80
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:53
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr "Rydych wedi mewngofnodi gyda Chyfrinair Ap. Mewngofnodwch gyda'ch prif gyfrinair i barhau i gau'ch eich cyfrif."
 
@@ -11589,7 +11729,7 @@ msgstr "Rydych wedi cyrraedd terfyn dyddiol llwytho fideos i fyny (gormod o feit
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Rydych wedi cyrraedd terfyn dyddiol llwytho fideos i fyny (gormod o fideos)"
 
-#: src/screens/VideoFeed/index.tsx:1160
+#: src/screens/VideoFeed/index.tsx:1161
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Rydych wedi rhedeg allan o fideos i'w gwylio. Efallai ei fod yn amser da i gael newid bach?"
 
@@ -11611,7 +11751,7 @@ msgstr "Nid yw eich cyfrif yn ddigon hen eto i lwytho fideos i fyny. Ceisiwch et
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:68
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "Mae modd llwytho eich storfa cyfrif i lawr, sy'n cynnwys yr holl gofnodion data cyhoeddus, fel ffeil \"CAR\". Nid yw'r ffeil hon yn cynnwys mewnblaniadau cyfryngau, megis delweddau, na'ch data preifat, y mae'n rhaid eu nôl nhw ar wahân."
+msgstr "Mae modd llwytho eich storfa cyfrif i lawr, sy'n cynnwys yr holl gofnodion data cyhoeddus, fel ffeil \"CAR\". Dyw'r ffeil hon ddim yn cynnwys mewnblaniadau cyfryngau, megis delweddau, na'ch data preifat, y mae'n rhaid eu nôl nhw ar wahân."
 
 #: src/screens/Takendown.tsx:212
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
@@ -11625,7 +11765,7 @@ msgstr "Mae eich apêl wedi'i chyflwyno. Os bydd eich apêl yn llwyddo, byddwch 
 msgid "Your birth date"
 msgstr "Eich dyddiad geni"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:223
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "Nid yw eich porwr yn cefnogi'r fformat fideo. Rhowch gynnig ar borwr gwahanol."
 
@@ -11692,8 +11832,8 @@ msgstr "Eich enw dangos llawn fydd <0>@{0}</0>"
 
 #: src/Navigation.tsx:527
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
-#: src/screens/Settings/ContentAndMediaSettings.tsx:94
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:96
 #: src/screens/Settings/InterestsSettings.tsx:46
 msgid "Your interests"
 msgstr "Eich diddordebau"
@@ -11731,11 +11871,11 @@ msgstr "Mae eich cyfrinair wedi'i newid yn llwyddiannus! Defnyddiwch eich cyfrin
 msgid "Your password must be at least 8 characters long."
 msgstr "Rhaid i'ch cyfrinair fod o leiaf 8 nod."
 
-#: src/view/com/composer/Composer.tsx:578
+#: src/view/com/composer/Composer.tsx:906
 msgid "Your post was sent"
 msgstr "Mae eich postiad wedi'i anfon"
 
-#: src/view/com/composer/Composer.tsx:575
+#: src/view/com/composer/Composer.tsx:903
 msgid "Your posts were sent"
 msgstr "Mae eich postiadau wedi'u hanfon"
 
@@ -11752,11 +11892,11 @@ msgstr "Eich llun proffil"
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
 msgstr "Eich llun proffil wedi ei amgylchynu gan gylchoedd consentrig o luniau proffil defnyddwyr eraill"
 
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:74
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Ni fydd eich proffil, postiadau, ffrydiau a rhestrau bellach yn weladwy i ddefnyddwyr Bluesky eraill. Gallwch ail agor eich cyfrif unrhyw bryd trwy fewngofnodi."
 
-#: src/view/com/composer/Composer.tsx:577
+#: src/view/com/composer/Composer.tsx:905
 msgid "Your reply was sent"
 msgstr "Mae eich ateb wedi'i anfon"
 

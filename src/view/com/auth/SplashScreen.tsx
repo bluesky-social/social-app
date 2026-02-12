@@ -11,9 +11,9 @@ import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 // @ts-ignore
-import splashImagePointer from '../../../../assets/splash/splash-mobile.png'
+import splashImagePointer from '../../../../assets/splash/illustration-mobile.png'
 // @ts-ignore
-import darkSplashImagePointer from '../../../../assets/splash/splash-mobile-dark.png'
+import darkSplashImagePointer from '../../../../assets/splash/illustration-mobile-dark.png'
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
@@ -78,7 +78,7 @@ export const SplashScreen = ({
 
         <View
           testID="signinOrCreateAccount"
-          style={[a.px_xl, a.gap_md, a.pb_sm]}>
+          style={[a.px_5xl, a.gap_md, a.pb_sm]}>
           <View
             style={[
               t.atoms.shadow_md,

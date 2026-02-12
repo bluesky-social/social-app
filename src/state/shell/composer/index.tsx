@@ -33,6 +33,14 @@ export type OnPostSuccessData =
     }
   | undefined
 
+export type ComposerLogContext =
+  | 'Fab'
+  | 'PostReply'
+  | 'QuotePost'
+  | 'ProfileFeed'
+  | 'Deeplink'
+  | 'Other'
+
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
@@ -44,6 +52,7 @@ export interface ComposerOpts {
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
   videoUri?: {uri: string; width: number; height: number}
   openGallery?: boolean
+  logContext?: ComposerLogContext
 }
 
 type StateContext = ComposerOpts | undefined

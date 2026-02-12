@@ -237,6 +237,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
         langs: post.record.langs,
       },
       onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record, onPostSuccess, moderation])
 
@@ -302,7 +303,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
-                <>
+                <View style={[a.mb_2xs]}>
                   <RichText
                     enableTags
                     value={richText}
@@ -317,7 +318,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                       onPress={onPressShowMore}
                     />
                   )}
-                </>
+                </View>
               ) : undefined}
               {post.embed && (
                 <View style={[a.pb_xs]}>

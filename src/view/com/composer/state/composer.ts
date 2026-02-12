@@ -670,6 +670,9 @@ export function createComposerState({
         }
       }
     }
+  } else if (initMention) {
+    // highlight the mention
+    initRichText.detectFacetsWithoutResolution()
   }
 
   return {

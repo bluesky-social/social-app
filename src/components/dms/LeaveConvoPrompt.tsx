@@ -40,11 +40,13 @@ export function LeaveConvoPrompt({
     <Prompt.Basic
       control={control}
       title={_(msg`Leave conversation`)}
-      description={_(
+      description={
         hasMessages
-          ? msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`
-          : msg`Are you sure you want to leave this conversation?`,
-      )}
+          ? _(
+              msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`,
+            )
+          : _(msg`Are you sure you want to leave this conversation?`)
+      }
       confirmButtonCta={_(msg`Leave`)}
       confirmButtonColor="negative"
       onConfirm={() => leaveConvo()}

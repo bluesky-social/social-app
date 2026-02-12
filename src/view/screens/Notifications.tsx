@@ -30,8 +30,7 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {atoms as a, useTheme} from '#/alf'
-import {web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
@@ -161,7 +160,7 @@ export function NotificationsScreen({}: Props) {
       </Pager>
       <FAB
         testID="composeFAB"
-        onPress={() => openComposer({})}
+        onPress={() => openComposer({logContext: 'Fab'})}
         icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
         accessibilityRole="button"
         accessibilityLabel={_(msg`New post`)}

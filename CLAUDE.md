@@ -29,8 +29,9 @@ yarn lint               # Run ESLint
 yarn typecheck          # Run TypeScript type checking
 
 # Internationalization
-yarn intl:extract       # Extract translation strings (you don't typically need to run this manually, we have CI for it)
-yarn intl:compile       # Compile translations for runtime
+# DO NOT run these commands - extraction and compilation are handled by CI
+yarn intl:extract       # Extract translation strings (nightly CI job)
+yarn intl:compile       # Compile translations for runtime (nightly CI job)
 
 # Build
 yarn build-web          # Build web version
@@ -299,8 +300,9 @@ function MyComponent() {
 
 **Commands:**
 ```bash
+# DO NOT run these commands - extraction and compilation are handled by a nightly CI job
 yarn intl:extract    # Extract new strings to locale files
-yarn intl:compile    # Compile for runtime (required after changes)
+yarn intl:compile    # Compile translations for runtime
 ```
 
 ## State Management

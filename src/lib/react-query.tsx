@@ -1,26 +1,25 @@
 import {useEffect, useRef, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query'
 import {
+  type PersistQueryClientOptions,
   PersistQueryClientProvider,
   type PersistQueryClientProviderProps,
 } from '@tanstack/react-query-persist-client'
-import type React from 'react'
 
+import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
+import {PERSISTED_QUERY_ROOT} from '#/state/queries'
+import * as env from '#/env'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
 declare global {
   interface Window {
+    // eslint-disable-next-line  @typescript-eslint/consistent-type-imports
     __TANSTACK_QUERY_CLIENT__: import('@tanstack/query-core').QueryClient
   }
 }
-
-// any query keys in this array will be persisted to AsyncStorage
-export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
-const STORED_CACHE_QUERY_KEY_ROOTS = [labelersDetailedInfoQueryKeyRoot]
 
 async function checkIsOnline(): Promise<boolean> {
   try {
@@ -138,7 +137,8 @@ const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehyd
   {
     shouldDehydrateMutation: (_: any) => false,
     shouldDehydrateQuery: query => {
-      return STORED_CACHE_QUERY_KEY_ROOTS.includes(String(query.queryKey[0]))
+      const root = String(query.queryKey[0])
+      return root === PERSISTED_QUERY_ROOT
     },
   }
 
@@ -177,14 +177,16 @@ function QueryProviderInner({
   // Do not move the query client creation outside of this component.
   const [queryClient, _setQueryClient] = useState(() => createQueryClient())
   const [persistOptions, _setPersistOptions] = useState(() => {
+    const storage = createPersistedQueryStorage(currentDid ?? 'logged-out')
     const asyncPersister = createAsyncStoragePersister({
-      storage: AsyncStorage,
+      storage,
       key: 'queryClient-' + (currentDid ?? 'logged-out'),
     })
     return {
       persister: asyncPersister,
       dehydrateOptions,
-    }
+      buster: env.APP_VERSION,
+    } satisfies Omit<PersistQueryClientOptions, 'queryClient'>
   })
   useEffect(() => {
     if (IS_WEB) {

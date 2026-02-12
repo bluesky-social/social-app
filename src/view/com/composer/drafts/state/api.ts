@@ -1,21 +1,28 @@
 /**
  * Type converters for Draft API - convert between ComposerState and server Draft types.
  */
-import {type AppBskyDraftDefs, RichText} from '@atproto/api'
+import {type AppBskyDraftDefs, AtUri, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
+import {resolveLink} from '#/lib/api/resolve'
+import {getDeviceName} from '#/lib/deviceName'
 import {getImageDim} from '#/lib/media/manip'
 import {mimeToExt} from '#/lib/media/video/util'
 import {type ComposerImage} from '#/state/gallery'
 import {type Gif} from '#/state/queries/tenor'
+import {threadgateAllowUISettingToAllowRecordValue} from '#/state/queries/threadgate/util'
+import {createPublicAgent} from '#/state/session/agent'
 import {
   type ComposerState,
   type EmbedDraft,
   type PostDraft,
 } from '#/view/com/composer/state/composer'
 import {type VideoState} from '#/view/com/composer/state/video'
+import {type AnalyticsContextType} from '#/analytics'
+import {getDeviceId} from '#/analytics/identifiers'
 import {logger} from './logger'
 import {type DraftPostDisplay, type DraftSummary} from './schema'
+import * as storage from './storage'
 
 const TENOR_HOSTNAME = 'media.tenor.com'
 
@@ -61,33 +68,14 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
     }),
   )
 
-  // Convert threadgate settings to server format
-  const threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow'] = []
-  for (const setting of state.thread.threadgate) {
-    if (setting.type === 'mention') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#mentionRule' as const,
-      })
-    } else if (setting.type === 'following') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#followingRule' as const,
-      })
-    } else if (setting.type === 'followers') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#followerRule' as const,
-      })
-    } else if (setting.type === 'list') {
-      threadgateAllow.push({
-        $type: 'app.bsky.feed.threadgate#listRule' as const,
-        list: setting.list,
-      })
-    }
-  }
-
   const draft: AppBskyDraftDefs.Draft = {
     $type: 'app.bsky.draft.defs#draft',
+    deviceId: getDeviceId(),
+    deviceName: getDeviceName().slice(0, 100), // max length of 100 in lex
     posts,
-    threadgateAllow: threadgateAllow.length > 0 ? threadgateAllow : undefined,
+    threadgateAllow: threadgateAllowUISettingToAllowRecordValue(
+      state.thread.threadgate,
+    ),
     postgateEmbeddingRules:
       state.thread.postgate.embeddingRules &&
       state.thread.postgate.embeddingRules.length > 0
@@ -140,15 +128,21 @@ async function postDraftToServerPost(
 
   // Add quote record embed
   if (post.embed.quote) {
-    draftPost.embedRecords = [
-      {
-        $type: 'app.bsky.draft.defs#draftEmbedRecord',
-        record: {
-          uri: post.embed.quote.uri,
-          cid: '', // We don't have the CID at draft time
+    const resolved = await resolveLink(
+      createPublicAgent(),
+      post.embed.quote.uri,
+    )
+    if (resolved && resolved.type === 'record') {
+      draftPost.embedRecords = [
+        {
+          $type: 'app.bsky.draft.defs#draftEmbedRecord',
+          record: {
+            uri: resolved.record.uri,
+            cid: resolved.record.cid,
+          },
         },
-      },
-    ]
+      ]
+    }
   }
 
   // Add external link embed (only if no media, otherwise it's ignored)
@@ -277,16 +271,24 @@ function serializeGif(gifMedia: {
  * Convert server DraftView to DraftSummary for list display.
  * Also checks which media files exist locally.
  */
-export function draftViewToSummary(
-  view: AppBskyDraftDefs.DraftView,
-  localMediaExists: (path: string) => boolean,
-): DraftSummary {
-  const firstPost = view.draft.posts[0]
-  const previewText = firstPost?.text?.slice(0, 100) || ''
-
-  let mediaCount = 0
-  let hasMedia = false
-  let hasMissingMedia = false
+export function draftViewToSummary({
+  view,
+  analytics,
+}: {
+  view: AppBskyDraftDefs.DraftView
+  analytics: AnalyticsContextType
+}): DraftSummary {
+  const meta = {
+    isOriginatingDevice: view.draft.deviceId === getDeviceId(),
+    postCount: view.draft.posts.length,
+    // minus anchor post
+    replyCount: view.draft.posts.length - 1,
+    hasMedia: false,
+    hasMissingMedia: false,
+    mediaCount: 0,
+    hasQuotes: false,
+    quoteCount: 0,
+  }
 
   const posts: DraftPostDisplay[] = view.draft.posts.map((post, index) => {
     const images: DraftPostDisplay['images'] = []
@@ -296,11 +298,11 @@ export function draftViewToSummary(
     // Process images
     if (post.embedImages) {
       for (const img of post.embedImages) {
-        mediaCount++
-        hasMedia = true
-        const exists = localMediaExists(img.localRef.path)
+        meta.mediaCount++
+        meta.hasMedia = true
+        const exists = storage.mediaExists(img.localRef.path)
         if (!exists) {
-          hasMissingMedia = true
+          meta.hasMissingMedia = true
         }
         images.push({
           localPath: img.localRef.path,
@@ -313,11 +315,11 @@ export function draftViewToSummary(
     // Process videos
     if (post.embedVideos) {
       for (const vid of post.embedVideos) {
-        mediaCount++
-        hasMedia = true
-        const exists = localMediaExists(vid.localRef.path)
+        meta.mediaCount++
+        meta.hasMedia = true
+        const exists = storage.mediaExists(vid.localRef.path)
         if (!exists) {
-          hasMissingMedia = true
+          meta.hasMissingMedia = true
         }
         videos.push({
           localPath: vid.localRef.path,
@@ -332,11 +334,16 @@ export function draftViewToSummary(
       for (const ext of post.embedExternals) {
         const gifData = parseGifFromUrl(ext.uri)
         if (gifData) {
-          mediaCount++
-          hasMedia = true
+          meta.mediaCount++
+          meta.hasMedia = true
           gif = gifData
         }
       }
+    }
+
+    if (post.embedRecords && post.embedRecords.length > 0) {
+      meta.quoteCount += post.embedRecords.length
+      meta.hasQuotes = true
     }
 
     return {
@@ -348,16 +355,17 @@ export function draftViewToSummary(
     }
   })
 
+  if (meta.isOriginatingDevice && meta.hasMissingMedia) {
+    analytics.logger.warn(`Draft is missing media on originating device`, {})
+  }
+
   return {
     id: view.id,
-    draft: view.draft,
-    previewText,
-    hasMedia,
-    hasMissingMedia,
-    mediaCount,
-    postCount: view.draft.posts.length,
+    createdAt: view.createdAt,
     updatedAt: view.updatedAt,
+    draft: view.draft,
     posts,
+    meta,
   }
 }
 
@@ -535,7 +543,9 @@ export async function draftToComposerPosts(
       // Restore quote embed
       if (post.embedRecords && post.embedRecords.length > 0) {
         const record = post.embedRecords[0]
-        embed.quote = {type: 'link', uri: record.record.uri}
+        const urip = new AtUri(record.record.uri)
+        const url = `https://bsky.app/profile/${urip.host}/post/${urip.rkey}`
+        embed.quote = {type: 'link', uri: url}
       }
 
       // Restore link embed (only if not a GIF)
