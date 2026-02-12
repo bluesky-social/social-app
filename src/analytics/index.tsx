@@ -94,7 +94,6 @@ const Context = createContext<AnalyticsBaseContextType>({
     })
   },
   metadata: {
-    source: 'app',
     base: {
       deviceId: getDeviceId() ?? 'unknown',
       sessionId: getInitialSessionId(),
