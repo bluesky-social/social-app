@@ -1,10 +1,10 @@
 import {useCallback, useRef, useState} from 'react'
-import {Text as RNText, type TextInput, View} from 'react-native'
+import {type TextInput, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {cleanError} from '#/lib/strings/errors'
+import {useCleanError} from '#/lib/hooks/useCleanError'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
@@ -12,9 +12,11 @@ import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogOuterProps} from '#/components/Dialog'
-import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {
+  isValidCode,
+  TokenField,
+} from '#/components/dialogs/EmailDialog/components/TokenField'
 import * as TextField from '#/components/forms/TextField'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
@@ -23,10 +25,8 @@ import * as Prompt from '#/components/Prompt'
 import * as toast from '#/components/Toast'
 import {Span, Text} from '#/components/Typography'
 import {resetToTab} from '#/Navigation'
-import {Divider} from './SettingsList'
 
 const WHITESPACE_RE = /\s/gu
-const CONFIRM_CODE_LENGTH = 11
 const PASSWORD_MIN_LENGTH = 8
 
 enum Step {
@@ -38,10 +38,7 @@ enum Step {
 enum EmailState {
   DEFAULT,
   PENDING,
-}
-
-function isConfirmCodeValid(confirmCode: string) {
-  return confirmCode.length === CONFIRM_CODE_LENGTH
+  RESENT,
 }
 
 function isPasswordValid(password: string) {
@@ -76,11 +73,13 @@ function DeleteAccountDialogInner({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
+  const cleanError = useCleanError()
   const agent = useAgent()
   const {currentAccount} = useSession()
   const {removeAccount} = useSessionApi()
 
   const [emailState, setEmailState] = useState(EmailState.DEFAULT)
+  const [emailSentCount, setEmailSentCount] = useState(0)
   const [step, setStep] = useState(Step.SEND_CODE)
   const [confirmCode, setConfirmCode] = useState('')
   const [password, setPassword] = useState('')
@@ -91,19 +90,27 @@ function DeleteAccountDialogInner({
       return
     }
     try {
-      setError('')
       setEmailState(EmailState.PENDING)
       await agent.com.atproto.server.requestAccountDelete()
-      setEmailState(EmailState.DEFAULT)
-      setStep(Step.VERIFY_CODE)
     } catch (e: any) {
-      setError(cleanError(e))
-      logger.error(e, {
+      const {clean, raw} = cleanError(e)
+      const error = clean || raw || e
+      setError(error)
+      logger.error(raw || e, {
         message: 'Failed to send account deletion verification email',
       })
       setEmailState(EmailState.DEFAULT)
+    } finally {
+      setError('')
+      setEmailState(
+        emailSentCount === 0 ? EmailState.DEFAULT : EmailState.RESENT,
+      )
+      console.log('emailSentCount 1', emailSentCount)
+      setEmailSentCount(prevCount => prevCount + 1)
+      console.log('emailSentCount 2', emailSentCount)
+      setStep(Step.VERIFY_CODE)
     }
-  }, [agent, emailState, setEmailState])
+  }, [agent, cleanError, emailSentCount, emailState, setEmailState])
 
   const confirmDeletion = useCallback(async () => {
     try {
@@ -133,8 +140,10 @@ function DeleteAccountDialogInner({
         removeAccount(currentAccount)
       })
     } catch (e: any) {
-      setError(cleanError(e))
-      logger.error(e, {
+      const {clean, raw} = cleanError(e)
+      const error = clean || raw || e
+      setError(error)
+      logger.error(raw || e, {
         message: 'Failed to delete account',
       })
       setConfirmCode('')
@@ -145,6 +154,7 @@ function DeleteAccountDialogInner({
     _,
     agent.api.chat.bsky.actor,
     agent.com.atproto.server,
+    cleanError,
     confirmCode,
     control,
     currentAccount,
@@ -175,23 +185,27 @@ function DeleteAccountDialogInner({
   const currentHandle = sanitizeHandle(currentAccount?.handle ?? '', '@')
   const currentEmail = currentAccount?.email ?? '(no email)'
 
+  console.log('emailSentCount', emailSentCount)
+
   switch (step) {
     case Step.SEND_CODE:
       return (
         <>
-          <Prompt.TitleText>
-            {_(msg`Delete account “${currentHandle}”`)}
-          </Prompt.TitleText>
-          <Prompt.DescriptionText>
-            <Trans>
-              For security reasons, we’ll need to send a confirmation code to
-              your email address{' '}
-              <Span style={[a.font_semi_bold, t.atoms.text]}>
-                {currentEmail}
-              </Span>
-              .
-            </Trans>
-          </Prompt.DescriptionText>
+          <Prompt.Content>
+            <Prompt.TitleText>
+              {_(msg`Delete account “${currentHandle}”`)}
+            </Prompt.TitleText>
+            <Prompt.DescriptionText>
+              <Trans>
+                For security reasons, we’ll need to send a confirmation code to
+                your email address{' '}
+                <Span style={[a.font_semi_bold, t.atoms.text]}>
+                  {currentEmail}
+                </Span>
+                .
+              </Trans>
+            </Prompt.DescriptionText>
+          </Prompt.Content>
           <View style={[a.gap_lg, a.mb_lg]}>
             <Button
               color="primary"
@@ -206,27 +220,18 @@ function DeleteAccountDialogInner({
             <Prompt.Cancel />
           </View>
           {error && (
-            <View
-              style={[
-                a.flex_row,
-                a.gap_sm,
-                a.p_md,
-                a.rounded_sm,
-                t.atoms.bg_contrast_25,
-                a.mb_lg,
-              ]}>
-              <CircleInfo size="md" fill={t.palette.negative_400} />
+            <Admonition style={[a.mb_lg]} type="error">
               <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
-            </View>
+            </Admonition>
           )}
           <Admonition type="tip">
             <Trans>
               You can also{' '}
-              <RNText
+              <Span
                 style={[{color: t.palette.primary_500}, web(a.underline)]}
                 onPress={handleDeactivate}>
                 temporarily deactivate
-              </RNText>{' '}
+              </Span>{' '}
               your account instead. Your profile, posts, feeds, and lists will
               no longer be visible to other Bluesky users. You can reactivate
               your account at any time by logging in.
@@ -237,18 +242,20 @@ function DeleteAccountDialogInner({
     case Step.VERIFY_CODE:
       return (
         <>
-          <Prompt.TitleText>
-            {_(msg`Delete account “${currentHandle}”`)}
-          </Prompt.TitleText>
-          <Prompt.DescriptionText>
-            <Trans>
-              Check{' '}
-              <Span style={[a.font_semi_bold, t.atoms.text]}>
-                {currentEmail}
-              </Span>{' '}
-              for an email with the confirmation code to enter below:
-            </Trans>
-          </Prompt.DescriptionText>
+          <Prompt.Content>
+            <Prompt.TitleText>
+              {_(msg`Delete account “${currentHandle}”`)}
+            </Prompt.TitleText>
+            <Prompt.DescriptionText>
+              <Trans>
+                Check{' '}
+                <Span style={[a.font_semi_bold, t.atoms.text]}>
+                  {currentEmail}
+                </Span>{' '}
+                for an email with the confirmation code to enter below:
+              </Trans>
+            </Prompt.DescriptionText>
+          </Prompt.Content>
           <View style={[a.mb_xs]}>
             <TextField.LabelText>
               <Trans>Confirmation Code</Trans>
@@ -266,15 +273,28 @@ function DeleteAccountDialogInner({
               a.mb_lg,
               t.atoms.text_contrast_medium,
             ]}>
-            <Trans>
-              <InlineLinkText
-                label={_(msg`Resend`)}
-                {...createStaticClick(() => {
-                  void handleSendEmail()
-                })}>
-                Click here to resend.
-              </InlineLinkText>
-            </Trans>{' '}
+            {emailSentCount > 1 ? (
+              <Trans>
+                Email resent!{' '}
+                <InlineLinkText
+                  label={_(msg`Resend`)}
+                  {...createStaticClick(() => {
+                    void handleSendEmail()
+                  })}>
+                  Click here to send again.
+                </InlineLinkText>
+              </Trans>
+            ) : (
+              <Trans>
+                <InlineLinkText
+                  label={_(msg`Resend`)}
+                  {...createStaticClick(() => {
+                    void handleSendEmail()
+                  })}>
+                  Click here to resend.
+                </InlineLinkText>
+              </Trans>
+            )}{' '}
             <Span style={{top: 1}}>
               {emailState === EmailState.PENDING ? <Loader size="xs" /> : null}
             </Span>
@@ -293,22 +313,20 @@ function DeleteAccountDialogInner({
                 autoCorrect={false}
                 returnKeyType="done"
                 secureTextEntry={true}
-                autoComplete="off"
+                // @ts-expect-error https://github.com/necolas/react-native-web/issues/1464#issuecomment-546377874
+                autoComplete="token-password-confirmation"
                 clearButtonMode="while-editing"
                 passwordRules={`minlength: ${PASSWORD_MIN_LENGTH}};`}
                 value={password}
                 onChangeText={setPassword}
                 onSubmitEditing={handleDeleteAccount}
-                accessibilityHint={_(msg`Input your password`)}
               />
             </TextField.Root>
           </View>
           <View style={[a.gap_lg, a.mb_lg]}>
             <Button
               color="negative"
-              disabled={
-                !isConfirmCodeValid(confirmCode) || !isPasswordValid(password)
-              }
+              disabled={!isValidCode(confirmCode) || !isPasswordValid(password)}
               size={gtMobile ? 'small' : 'large'}
               label={_(msg`Delete My Account`)}
               onPress={handleDeleteAccount}>
@@ -317,44 +335,34 @@ function DeleteAccountDialogInner({
             <Prompt.Cancel />
           </View>
           {error && (
-            <View
-              style={[
-                a.flex_row,
-                a.gap_sm,
-                a.p_md,
-                a.rounded_sm,
-                t.atoms.bg_contrast_25,
-                a.mb_lg,
-              ]}>
-              <CircleInfo size="md" fill={t.palette.negative_400} />
+            <Admonition style={[a.mb_lg]} type="error">
               <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
-            </View>
+            </Admonition>
           )}
-          <Divider />
         </>
       )
     case Step.CONFIRM_DELETION:
       return (
         <>
-          <Prompt.TitleText>
-            {_(msg`Are you really, really sure?`)}
-          </Prompt.TitleText>
-          <Prompt.DescriptionText>
-            <Trans>
-              <Span style={[a.font_semi_bold, t.atoms.text]}>
-                {currentHandle}
-              </Span>{' '}
-              will be permanently deleted.
-            </Trans>
-          </Prompt.DescriptionText>
+          <Prompt.Content>
+            <Prompt.TitleText>
+              {_(msg`Are you really, really sure?`)}
+            </Prompt.TitleText>
+            <Prompt.DescriptionText>
+              <Trans>
+                <Span style={[a.font_semi_bold, t.atoms.text]}>
+                  {currentHandle}
+                </Span>{' '}
+                will be permanently deleted.
+              </Trans>
+            </Prompt.DescriptionText>
+          </Prompt.Content>
           <View style={[a.gap_lg, a.mb_lg]}>
-            <Button
+            <Prompt.Action
               color="negative"
-              size={gtMobile ? 'small' : 'large'}
-              label={_(msg`Delete My Account`)}
-              onPress={handleConfirmDeletion}>
-              <ButtonText>{_(msg`Yes, Delete My Account`)}</ButtonText>
-            </Button>
+              cta={_(msg`Yes, Delete My Account`)}
+              onPress={handleConfirmDeletion}
+            />
             <Prompt.Cancel />
           </View>
         </>
