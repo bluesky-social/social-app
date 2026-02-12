@@ -117,7 +117,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
   private fun handleImageIntents(
     uris: List<Uri>,
-    text: String?
+    text: String?,
   ) {
     var allParams = ""
 
@@ -145,7 +145,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
   private fun handleVideoIntents(
     uris: List<Uri>,
-    text: String?
+    text: String?,
   ) {
     val uri = uris[0]
     // If there is no extension for the file, substringAfterLast returns the original string - not

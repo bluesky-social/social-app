@@ -52,6 +52,8 @@ class DialogRootViewGroup(
     if (ReactFeatureFlags.dispatchPointerEvents) {
       jSPointerDispatcher = JSPointerDispatcher(this)
     }
+
+    fitsSystemWindows = false
   }
 
   override fun onSizeChanged(

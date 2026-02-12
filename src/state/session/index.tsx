@@ -430,7 +430,7 @@ export function useRequireAuth() {
   const {signinDialogControl} = useGlobalDialogsControlContext()
 
   return useCallback(
-    (fn: () => void) => {
+    (fn: () => unknown) => {
       if (hasSession) {
         fn()
       } else {
