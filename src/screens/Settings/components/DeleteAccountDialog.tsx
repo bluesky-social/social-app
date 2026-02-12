@@ -1,5 +1,5 @@
 import {useCallback, useRef, useState} from 'react'
-import {type TextInput, View} from 'react-native'
+import {Text as RNText, type TextInput, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,7 +8,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogOuterProps} from '#/components/Dialog'
@@ -50,20 +50,27 @@ function isPasswordValid(password: string) {
 
 export function DeleteAccountDialog({
   control,
+  deactivateDialogControl,
 }: {
   control: DialogOuterProps['control']
+  deactivateDialogControl: DialogOuterProps['control']
 }) {
   return (
     <Prompt.Outer control={control}>
-      <DeleteAccountDialogInner control={control} />
+      <DeleteAccountDialogInner
+        control={control}
+        deactivateDialogControl={deactivateDialogControl}
+      />
     </Prompt.Outer>
   )
 }
 
 function DeleteAccountDialogInner({
   control,
+  deactivateDialogControl,
 }: {
   control: DialogOuterProps['control']
+  deactivateDialogControl: DialogOuterProps['control']
 }) {
   const passwordRef = useRef<TextInput | null>(null)
   const t = useTheme()
@@ -145,6 +152,10 @@ function DeleteAccountDialogInner({
     removeAccount,
   ])
 
+  const handleDeactivate = useCallback(() => {
+    control.close(() => deactivateDialogControl.open())
+  }, [control, deactivateDialogControl])
+
   const handleSendEmail = useCallback(() => {
     void sendEmail()
   }, [sendEmail])
@@ -210,10 +221,15 @@ function DeleteAccountDialogInner({
           )}
           <Admonition type="tip">
             <Trans>
-              You can also temporarily deactivate your account instead. Your
-              profile, posts, feeds, and lists will no longer be visible to
-              other Bluesky users. You can reactivate your account at any time
-              by logging in.
+              You can also{' '}
+              <RNText
+                style={[{color: t.palette.primary_500}, web(a.underline)]}
+                onPress={handleDeactivate}>
+                temporarily deactivate
+              </RNText>{' '}
+              your account instead. Your profile, posts, feeds, and lists will
+              no longer be visible to other Bluesky users. You can reactivate
+              your account at any time by logging in.
             </Trans>
           </Admonition>
         </>
