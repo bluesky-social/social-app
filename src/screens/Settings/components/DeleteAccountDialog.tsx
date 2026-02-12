@@ -8,7 +8,7 @@ import {useCleanError} from '#/lib/hooks/useCleanError'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogOuterProps} from '#/components/Dialog'
@@ -70,7 +70,6 @@ function DeleteAccountDialogInner({
 }) {
   const passwordRef = useRef<TextInput | null>(null)
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const cleanError = useCleanError()
   const agent = useAgent()
@@ -201,8 +200,8 @@ function DeleteAccountDialogInner({
           <View style={[a.gap_lg, a.mb_lg]}>
             <Button
               color="primary"
-              size={gtMobile ? 'small' : 'large'}
               label={_(msg`Send Email`)}
+              size="large"
               onPress={handleSendEmail}>
               <ButtonText>{_(msg`Send Email`)}</ButtonText>
               <ButtonIcon
@@ -319,7 +318,7 @@ function DeleteAccountDialogInner({
             <Button
               color="negative"
               disabled={!isValidCode(confirmCode) || !isPasswordValid(password)}
-              size={gtMobile ? 'small' : 'large'}
+              size="large"
               label={_(msg`Delete My Account`)}
               onPress={handleDeleteAccount}>
               <ButtonText>{_(msg`Delete My Account`)}</ButtonText>
