@@ -38,7 +38,6 @@ enum Step {
 enum EmailState {
   DEFAULT,
   PENDING,
-  RESENT,
 }
 
 function isPasswordValid(password: string) {
@@ -93,9 +92,6 @@ function DeleteAccountDialogInner({
       setEmailState(EmailState.PENDING)
       await agent.com.atproto.server.requestAccountDelete()
       setError('')
-      setEmailState(
-        emailSentCount === 0 ? EmailState.DEFAULT : EmailState.RESENT,
-      )
       setEmailSentCount(prevCount => prevCount + 1)
       setStep(Step.VERIFY_CODE)
     } catch (e: any) {
@@ -105,9 +101,10 @@ function DeleteAccountDialogInner({
       logger.error(raw || e, {
         message: 'Failed to send account deletion verification email',
       })
+    } finally {
       setEmailState(EmailState.DEFAULT)
     }
-  }, [agent, cleanError, emailSentCount, emailState, setEmailState])
+  }, [agent, cleanError, emailState, setEmailState])
 
   const confirmDeletion = useCallback(async () => {
     try {
