@@ -89,7 +89,7 @@ function DeleteAccountDialogInner({
     }
     try {
       setEmailState(EmailState.PENDING)
-      // await agent.com.atproto.server.requestAccountDelete()
+      await agent.com.atproto.server.requestAccountDelete()
       setError('')
       setEmailSentCount(prevCount => prevCount + 1)
       setStep(Step.VERIFY_CODE)
@@ -197,7 +197,7 @@ function DeleteAccountDialogInner({
               </Trans>
             </Prompt.DescriptionText>
           </Prompt.Content>
-          <View style={[a.gap_lg, a.mb_lg]}>
+          <Prompt.Actions>
             <Button
               color="primary"
               label={_(msg`Send Email`)}
@@ -209,13 +209,13 @@ function DeleteAccountDialogInner({
               />
             </Button>
             <Prompt.Cancel />
-          </View>
+          </Prompt.Actions>
           {error && (
-            <Admonition style={[a.mb_lg]} type="error">
+            <Admonition style={[a.mt_lg, a.mb_lg]} type="error">
               <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
             </Admonition>
           )}
-          <Admonition type="tip">
+          <Admonition style={[a.mt_lg]} type="tip">
             <Trans>
               You can also{' '}
               <Span
@@ -315,7 +315,7 @@ function DeleteAccountDialogInner({
               />
             </TextField.Root>
           </View>
-          <View style={[a.gap_lg, a.mb_lg]}>
+          <Prompt.Actions>
             <Button
               color="negative"
               disabled={!isValidCode(confirmCode) || !isPasswordValid(password)}
@@ -325,9 +325,9 @@ function DeleteAccountDialogInner({
               <ButtonText>{_(msg`Delete My Account`)}</ButtonText>
             </Button>
             <Prompt.Cancel />
-          </View>
+          </Prompt.Actions>
           {error && (
-            <Admonition style={[a.mb_lg]} type="error">
+            <Admonition style={[a.mt_lg, a.mb_lg]} type="error">
               <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
             </Admonition>
           )}
@@ -357,7 +357,7 @@ function DeleteAccountDialogInner({
               </Trans>
             </Prompt.DescriptionText>
           </Prompt.Content>
-          <View style={[a.gap_lg, a.mb_lg]}>
+          <Prompt.Actions>
             <Button
               color="negative"
               size="large"
@@ -366,7 +366,7 @@ function DeleteAccountDialogInner({
               <ButtonText>{_(msg`Yes, Delete My Account`)}</ButtonText>
             </Button>
             <Prompt.Cancel />
-          </View>
+          </Prompt.Actions>
         </>
       )
   }
