@@ -200,10 +200,10 @@ function DeleteAccountDialogInner({
           <Prompt.Actions>
             <Button
               color="primary"
-              label={_(msg`Send Email`)}
+              label={_(msg`Send email`)}
               size="large"
               onPress={handleSendEmail}>
-              <ButtonText>{_(msg`Send Email`)}</ButtonText>
+              <ButtonText>{_(msg`Send email`)}</ButtonText>
               <ButtonIcon
                 icon={emailState === EmailState.PENDING ? Loader : Envelope}
               />
@@ -249,7 +249,7 @@ function DeleteAccountDialogInner({
           </Prompt.Content>
           <View style={[a.mb_xs]}>
             <TextField.LabelText>
-              <Trans>Confirmation Code</Trans>
+              <Trans>Confirmation code</Trans>
             </TextField.LabelText>
             <TokenField
               value={confirmCode}
@@ -361,9 +361,9 @@ function DeleteAccountDialogInner({
             <Button
               color="negative"
               size="large"
-              label={_(msg`Yes, Delete My Account`)}
+              label={_(msg`Yes, delete my account`)}
               onPress={handleConfirmDeletion}>
-              <ButtonText>{_(msg`Yes, Delete My Account`)}</ButtonText>
+              <ButtonText>{_(msg`Yes, delete my account`)}</ButtonText>
             </Button>
             <Prompt.Cancel />
           </Prompt.Actions>
