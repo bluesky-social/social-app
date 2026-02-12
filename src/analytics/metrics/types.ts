@@ -472,6 +472,7 @@ export type Events = {
     position: number
     suggestedDid: string
     category: string | null
+    source?: 'SuggestedUsers' | 'SuggestedOnboardingUsers'
   }
   'suggestedUser:press': {
     logContext:
@@ -496,6 +497,7 @@ export type Events = {
     position: number
     suggestedDid: string
     category: string | null
+    source?: 'SuggestedUsers' | 'SuggestedOnboardingUsers'
   }
   'suggestedUser:seeMore': {
     logContext:
