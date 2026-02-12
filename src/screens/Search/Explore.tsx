@@ -467,9 +467,9 @@ export function Explore({
         if (suggestedFeedsError) {
           i.push({
             type: 'error',
-            key: 'feedsError',
+            key: 'suggestedFeedsError',
             message: _(msg`Failed to load suggested feeds`),
-            error: cleanError(feedsError),
+            error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
@@ -516,8 +516,15 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: _(msg`Failed to load feeds`),
             error: cleanError(feedsError),
+          })
+        } else if (suggestedFeedsError) {
+          i.push({
+            type: 'error',
+            key: 'suggestedFeedsError',
+            message: _(msg`Failed to load suggested feeds`),
+            error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
@@ -554,8 +561,15 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: _(msg`Failed to load feeds`),
             error: cleanError(feedsError),
+          })
+        } else if (suggestedFeedsError) {
+          i.push({
+            type: 'error',
+            key: 'suggestedFeedsError',
+            message: _(msg`Failed to load suggested feeds`),
+            error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
@@ -593,8 +607,15 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: _(msg`Failed to load feeds`),
             error: cleanError(feedsError),
+          })
+        } else if (suggestedFeedsError) {
+          i.push({
+            type: 'error',
+            key: 'feedsError',
+            message: _(msg`Failed to load suggested feeds`),
+            error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
