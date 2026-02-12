@@ -5,8 +5,12 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStructure
+import android.view.Window
 import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.allViews
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
@@ -15,6 +19,7 @@ import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.internal.EdgeToEdgeUtils
 import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
@@ -29,14 +34,19 @@ class BottomSheetView(
 
   private lateinit var dialogRootViewGroup: DialogRootViewGroup
   private var eventDispatcher: EventDispatcher? = null
+  private var isKeyboardVisible: Boolean = false
 
-  private val rawScreenHeight =
+  private val screenHeight =
     context.resources.displayMetrics.heightPixels
       .toFloat()
-  private val safeScreenHeight = (rawScreenHeight - getNavigationBarHeight()).toFloat()
 
   private fun getNavigationBarHeight(): Int {
     val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+    return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
+  }
+
+  private fun getStatusBarHeight(): Int {
+    val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
     return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
   }
 
@@ -44,7 +54,6 @@ class BottomSheetView(
   private val onSnapPointChange by EventDispatcher()
   private val onStateChange by EventDispatcher()
 
-  // Props
   var disableDrag = false
     set(value) {
       field = value
@@ -56,48 +65,31 @@ class BottomSheetView(
       field = value
       this.dialog?.setCancelable(!value)
     }
+
   var preventExpansion = false
 
   var minHeight = 0f
     set(value) {
-      field =
-        if (value < 0) {
-          0f
-        } else {
-          dpToPx(value)
-        }
+      field = if (value < 0) 0f else dpToPx(value)
     }
 
-  var maxHeight = this.safeScreenHeight
+  var maxHeight = this.screenHeight
     set(value) {
       val px = dpToPx(value)
-      field =
-        if (px > this.safeScreenHeight) {
-          this.safeScreenHeight
-        } else {
-          px
-        }
+      field = if (px > this.screenHeight) this.screenHeight else px
     }
 
   private var isOpen: Boolean = false
     set(value) {
       field = value
-      onStateChange(
-        mapOf(
-          "state" to if (value) "open" else "closed",
-        ),
-      )
+      onStateChange(mapOf("state" to if (value) "open" else "closed"))
     }
 
   private var isOpening: Boolean = false
     set(value) {
       field = value
       if (value) {
-        onStateChange(
-          mapOf(
-            "state" to "opening",
-          ),
-        )
+        onStateChange(mapOf("state" to "opening"))
       }
     }
 
@@ -105,33 +97,21 @@ class BottomSheetView(
     set(value) {
       field = value
       if (value) {
-        onStateChange(
-          mapOf(
-            "state" to "closing",
-          ),
-        )
+        onStateChange(mapOf("state" to "closing"))
       }
     }
 
   private var selectedSnapPoint = 0
     set(value) {
       if (field == value) return
-
       field = value
-      onSnapPointChange(
-        mapOf(
-          "snapPoint" to value,
-        ),
-      )
+      onSnapPointChange(mapOf("snapPoint" to value))
     }
-
-  // Lifecycle
 
   init {
     (appContext.reactContext as? ReactContext)?.let {
       it.addLifecycleEventListener(this)
       this.eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(it, this.id)
-
       this.dialogRootViewGroup = DialogRootViewGroup(context)
       this.dialogRootViewGroup.eventDispatcher = this.eventDispatcher
     }
@@ -161,25 +141,53 @@ class BottomSheetView(
   private fun getHalfExpandedRatio(contentHeight: Float): Float =
     when {
       // Full height sheets
-      contentHeight >= safeScreenHeight -> 0.99f
-      // Medium height sheets (>50% but <100%)
-      contentHeight >= safeScreenHeight / 2 ->
-        this.clampRatio(this.getTargetHeight() / safeScreenHeight)
-      // Small height sheets (<50%)
-      else ->
-        this.clampRatio(this.getTargetHeight() / rawScreenHeight)
+      contentHeight >= screenHeight -> 0.99f
+      else -> this.clampRatio(this.getTargetHeight() / screenHeight)
     }
 
   private fun present() {
     if (this.isOpen || this.isOpening || this.isClosing) return
 
     val contentHeight = this.getContentHeight()
-    val dialog = BottomSheetDialog(context)
+
+    var activityWindow: Window? = null
+    var currentContext = context
+    while (currentContext != null) {
+      if (currentContext is android.app.Activity) {
+        activityWindow = currentContext.window
+        break
+      }
+      currentContext = (currentContext as? android.content.ContextWrapper)?.baseContext
+    }
+
+    val originalStatusBarAppearance =
+      activityWindow?.let { window ->
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars
+      }
+    val originalNavBarAppearance =
+      activityWindow?.let { window ->
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars
+      }
+
+    val dialog = BottomSheetDialog(context, R.style.EdgeToEdgeBottomSheetDialogTheme)
     dialog.setContentView(dialogRootViewGroup)
     dialog.setCancelable(!preventDismiss)
+    dialog.setDismissWithAnimation(true)
     dialog.setOnDismissListener {
       this.isClosing = true
       this.destroy()
+    }
+
+    dialog.setOnShowListener {
+      dialog.window?.let { window ->
+        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
+        if (originalNavBarAppearance != null) {
+          insetsController.isAppearanceLightNavigationBars = originalNavBarAppearance
+        }
+        if (originalStatusBarAppearance != null) {
+          EdgeToEdgeUtils.setLightStatusBar(window, originalStatusBarAppearance)
+        }
+      }
     }
 
     val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
@@ -194,7 +202,17 @@ class BottomSheetView(
       behavior.isDraggable = true
       behavior.isHideable = true
 
-      if (contentHeight >= this.safeScreenHeight || this.minHeight >= this.safeScreenHeight) {
+      if (preventExpansion) {
+        behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
+      } else {
+        behavior.maxHeight = (screenHeight - getStatusBarHeight()).toInt()
+      }
+
+      val targetHeight = this.getTargetHeight()
+      val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
+      val shouldBeExpanded = targetHeight >= availableHeight
+
+      if (shouldBeExpanded) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.selectedSnapPoint = 2
       } else {
@@ -209,18 +227,10 @@ class BottomSheetView(
             newState: Int,
           ) {
             when (newState) {
-              BottomSheetBehavior.STATE_EXPANDED -> {
-                selectedSnapPoint = 2
-              }
-              BottomSheetBehavior.STATE_COLLAPSED -> {
-                selectedSnapPoint = 1
-              }
-              BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                selectedSnapPoint = 1
-              }
-              BottomSheetBehavior.STATE_HIDDEN -> {
-                selectedSnapPoint = 0
-              }
+              BottomSheetBehavior.STATE_EXPANDED -> selectedSnapPoint = 2
+              BottomSheetBehavior.STATE_COLLAPSED -> selectedSnapPoint = 1
+              BottomSheetBehavior.STATE_HALF_EXPANDED -> selectedSnapPoint = 1
+              BottomSheetBehavior.STATE_HIDDEN -> selectedSnapPoint = 0
             }
           }
 
@@ -231,9 +241,26 @@ class BottomSheetView(
         },
       )
     }
+
     this.isOpening = true
     dialog.show()
     this.dialog = dialog
+
+    ViewCompat.setOnApplyWindowInsetsListener(dialogRootViewGroup) { view, insets ->
+      val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+      val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+      val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
+
+      val wasKeyboardVisible = isKeyboardVisible
+      isKeyboardVisible = imeVisible
+
+      if (imeVisible && behavior?.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+      } else if (!imeVisible && wasKeyboardVisible) {
+        updateLayout()
+      }
+      insets
+    }
   }
 
   fun updateLayout() {
@@ -246,12 +273,24 @@ class BottomSheetView(
       val currentState = behavior.state
 
       val oldRatio = behavior.halfExpandedRatio
-      var newRatio = getHalfExpandedRatio(contentHeight)
+      val newRatio = getHalfExpandedRatio(contentHeight)
       behavior.halfExpandedRatio = newRatio
 
-      if (contentHeight > this.safeScreenHeight && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+      if (preventExpansion) {
+        behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
+      }
+
+      val targetHeight = this.getTargetHeight()
+      val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
+      val shouldBeExpanded = targetHeight >= availableHeight
+
+      if (isKeyboardVisible) {
+        if (behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+          behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+      } else if (shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_EXPANDED && !preventExpansion) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-      } else if (contentHeight < this.safeScreenHeight && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
+      } else if (!shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
       } else if (currentState == BottomSheetBehavior.STATE_HALF_EXPANDED && oldRatio != newRatio) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -279,25 +318,19 @@ class BottomSheetView(
 
   private fun getTargetHeight(): Float {
     val contentHeight = this.getContentHeight()
-    val height =
-      if (contentHeight > maxHeight) {
-        maxHeight
-      } else if (contentHeight < minHeight) {
-        minHeight
-      } else {
-        contentHeight
-      }
-    return height
+    return when {
+      contentHeight > maxHeight -> maxHeight
+      contentHeight < minHeight -> minHeight
+      else -> contentHeight
+    }
   }
 
-  private fun clampRatio(ratio: Float): Float {
-    if (ratio < 0.01) {
-      return 0.01f
-    } else if (ratio > 0.99) {
-      return 0.99f
+  private fun clampRatio(ratio: Float): Float =
+    when {
+      ratio < 0.01 -> 0.01f
+      ratio > 0.99 -> 0.99f
+      else -> ratio
     }
-    return ratio
-  }
 
   private fun setDraggable(draggable: Boolean) {
     val dialog = this.dialog ?: return
@@ -322,9 +355,7 @@ class BottomSheetView(
   // View overrides to pass to DialogRootViewGroup instead
 
   override fun dispatchProvideStructure(structure: ViewStructure?) {
-    if (structure == null) {
-      return
-    }
+    if (structure == null) return
     dialogRootViewGroup.dispatchProvideStructure(structure)
   }
 
@@ -363,7 +394,6 @@ class BottomSheetView(
   // https://stackoverflow.com/questions/11862391/getheight-px-or-dpi
   fun dpToPx(dp: Float): Float {
     val displayMetrics = context.resources.displayMetrics
-    val px = dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)
-    return px
+    return dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)
   }
 }

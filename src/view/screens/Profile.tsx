@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {
@@ -79,45 +79,45 @@ function ProfileScreenInner({route}: Props) {
     data: resolvedDid,
     error: resolveError,
     refetch: refetchDid,
-    isLoading: isLoadingDid,
+    isPending: isDidPending,
   } = useResolveDidQuery(name)
   const {
     data: profile,
     error: profileError,
     refetch: refetchProfile,
-    isLoading: isLoadingProfile,
     isPlaceholderData: isPlaceholderProfile,
+    isPending: isProfilePending,
   } = useProfileQuery({
     did: resolvedDid,
   })
 
-  const onPressTryAgain = React.useCallback(() => {
+  const onPressTryAgain = useCallback(() => {
     if (resolveError) {
-      refetchDid()
+      void refetchDid()
     } else {
-      refetchProfile()
+      void refetchProfile()
     }
   }, [resolveError, refetchDid, refetchProfile])
 
   // Apply hard-coded redirects as need
-  React.useEffect(() => {
+  useEffect(() => {
     if (resolveError) {
       if (name === 'lulaoficial.bsky.social') {
         console.log('Applying redirect to lula.com.br')
-        navigate('Profile', {name: 'lula.com.br'})
+        void navigate('Profile', {name: 'lula.com.br'})
       }
     }
   }, [name, resolveError])
 
   // When we open the profile, we want to reset the posts query if we are blocked.
-  React.useEffect(() => {
+  useEffect(() => {
     if (resolvedDid && profile?.viewer?.blockedBy) {
       resetProfilePostsQueries(queryClient, resolvedDid)
     }
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile) {
+  if (isDidPending || isProfilePending) {
     return (
       <Layout.Content>
         <ProfileHeaderLoading />
@@ -186,20 +186,20 @@ function ProfileScreenLoaded({
     did: profile.did,
     enabled: !!profile.associated?.labeler,
   })
-  const [currentPage, setCurrentPage] = React.useState(0)
+  const [currentPage, setCurrentPage] = useState(0)
   const {_} = useLingui()
 
-  const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
+  const [scrollViewTag, setScrollViewTag] = useState<number | null>(null)
 
-  const postsSectionRef = React.useRef<SectionRef>(null)
-  const repliesSectionRef = React.useRef<SectionRef>(null)
-  const mediaSectionRef = React.useRef<SectionRef>(null)
-  const videosSectionRef = React.useRef<SectionRef>(null)
-  const likesSectionRef = React.useRef<SectionRef>(null)
-  const feedsSectionRef = React.useRef<SectionRef>(null)
-  const listsSectionRef = React.useRef<SectionRef>(null)
-  const starterPacksSectionRef = React.useRef<SectionRef>(null)
-  const labelsSectionRef = React.useRef<SectionRef>(null)
+  const postsSectionRef = useRef<SectionRef>(null)
+  const repliesSectionRef = useRef<SectionRef>(null)
+  const mediaSectionRef = useRef<SectionRef>(null)
+  const videosSectionRef = useRef<SectionRef>(null)
+  const likesSectionRef = useRef<SectionRef>(null)
+  const feedsSectionRef = useRef<SectionRef>(null)
+  const listsSectionRef = useRef<SectionRef>(null)
+  const starterPacksSectionRef = useRef<SectionRef>(null)
+  const labelsSectionRef = useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -315,7 +315,7 @@ function ProfileScreenLoaded({
   )
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
       return listenSoftReset(() => {
         scrollSectionToTop(currentPage)
@@ -601,16 +601,16 @@ function ProfileScreenLoaded({
 
 function useRichText(text: string): [RichTextAPI, boolean] {
   const agent = useAgent()
-  const [prevText, setPrevText] = React.useState(text)
-  const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
-  const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
+  const [prevText, setPrevText] = useState(text)
+  const [rawRT, setRawRT] = useState(() => new RichTextAPI({text}))
+  const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null)
   if (text !== prevText) {
     setPrevText(text)
     setRawRT(new RichTextAPI({text}))
     setResolvedRT(null)
     // This will queue an immediate re-render
   }
-  React.useEffect(() => {
+  useEffect(() => {
     let ignore = false
     async function resolveRTFacets() {
       // new each time
@@ -620,7 +620,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
         setResolvedRT(resolvedRT)
       }
     }
-    resolveRTFacets()
+    void resolveRTFacets()
     return () => {
       ignore = true
     }
