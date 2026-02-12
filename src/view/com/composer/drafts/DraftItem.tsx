@@ -37,7 +37,7 @@ export function DraftItem({
   const post = draft.posts[0]
 
   const mediaExistsOnOtherDevice =
-    !draft.meta.isOriginatingDevice && draft.meta.hasMissingMedia
+    !draft.meta.isOriginatingDevice && draft.meta.hasMedia
   const mediaIsMissing =
     draft.meta.isOriginatingDevice && draft.meta.hasMissingMedia
   const hasMetadata =
