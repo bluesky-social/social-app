@@ -105,9 +105,7 @@ function DeleteAccountDialogInner({
       setEmailState(
         emailSentCount === 0 ? EmailState.DEFAULT : EmailState.RESENT,
       )
-      console.log('emailSentCount 1', emailSentCount)
       setEmailSentCount(prevCount => prevCount + 1)
-      console.log('emailSentCount 2', emailSentCount)
       setStep(Step.VERIFY_CODE)
     }
   }, [agent, cleanError, emailSentCount, emailState, setEmailState])
@@ -184,8 +182,6 @@ function DeleteAccountDialogInner({
 
   const currentHandle = sanitizeHandle(currentAccount?.handle ?? '', '@')
   const currentEmail = currentAccount?.email ?? '(no email)'
-
-  console.log('emailSentCount', emailSentCount)
 
   switch (step) {
     case Step.SEND_CODE:
