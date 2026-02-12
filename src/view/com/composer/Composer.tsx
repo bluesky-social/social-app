@@ -283,12 +283,6 @@ export const ComposePost = ({
   const allPostsWithinLimit = thread.posts.every(
     post => post.richtext.graphemeLength <= MAX_DRAFT_GRAPHEME_LENGTH,
   )
-  useEffect(() => {
-    if (error && allPostsWithinLimit) {
-      setError('')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [thread, allPostsWithinLimit])
 
   const activePost = thread.posts[composerState.activePostIndex]
   const nextPost: PostDraft | undefined =
@@ -568,7 +562,7 @@ export const ComposePost = ({
     [_],
   )
 
-  const checkDraftTextLength = React.useCallback((): boolean => {
+  const validateDraftTextOrError = React.useCallback((): boolean => {
     const tooLong = composerState.thread.posts.some(
       post => post.richtext.graphemeLength > MAX_DRAFT_GRAPHEME_LENGTH,
     )
@@ -585,7 +579,7 @@ export const ComposePost = ({
 
   const handleSaveDraft = React.useCallback(async () => {
     setError('')
-    if (!checkDraftTextLength()) {
+    if (!validateDraftTextOrError()) {
       return
     }
     const isNewDraft = !composerState.draftId
@@ -621,15 +615,17 @@ export const ComposePost = ({
     composerDispatch,
     onClose,
     ax,
-    checkDraftTextLength,
+    validateDraftTextOrError,
     getDraftSaveError,
   ])
 
   // Save without closing - for use by DraftsButton
-  const saveCurrentDraft = React.useCallback(async (): Promise<boolean> => {
+  const saveCurrentDraft = React.useCallback(async (): Promise<{
+    success: boolean
+  }> => {
     setError('')
-    if (!checkDraftTextLength()) {
-      return false
+    if (!validateDraftTextOrError()) {
+      return {success: false}
     }
     try {
       const result = await saveDraft({
@@ -637,17 +633,16 @@ export const ComposePost = ({
         existingDraftId: composerState.draftId,
       })
       composerDispatch({type: 'mark_saved', draftId: result.draftId})
-      return true
+      return {success: true}
     } catch (e) {
-      logger.error('Failed to save draft', {error: e})
       setError(getDraftSaveError(e))
-      return false
+      return {success: false}
     }
   }, [
     saveDraft,
     composerState,
     composerDispatch,
-    checkDraftTextLength,
+    validateDraftTextOrError,
     getDraftSaveError,
   ])
 
@@ -1510,7 +1505,7 @@ function ComposerTopBar({
   onCancel: () => void
   onPublish: () => void
   onSelectDraft: (draft: DraftSummary) => void
-  onSaveDraft: () => Promise<boolean>
+  onSaveDraft: () => Promise<{success: boolean}>
   onDiscard: () => void
   isEmpty: boolean
   isDirty: boolean

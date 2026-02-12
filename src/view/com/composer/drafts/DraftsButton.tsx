@@ -21,7 +21,7 @@ export function DraftsButton({
   textLength,
 }: {
   onSelectDraft: (draft: DraftSummary) => void
-  onSaveDraft: () => Promise<boolean>
+  onSaveDraft: () => Promise<{success: boolean}>
   onDiscard: () => void
   isEmpty: boolean
   isDirty: boolean
@@ -46,8 +46,8 @@ export function DraftsButton({
   }
 
   const handleSaveAndOpen = async () => {
-    const saved = await onSaveDraft()
-    if (saved) {
+    const {success} = await onSaveDraft()
+    if (success) {
       draftsDialogControl.open()
     }
   }
