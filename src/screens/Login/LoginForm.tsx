@@ -312,17 +312,15 @@ export const LoginForm = ({
       <FormError error={error} />
       <View style={[a.pt_md, web([a.justify_between, a.flex_row])]}>
         {IS_WEB && (
-          <>
-            <Button
-              label={_(msg`Back`)}
-              color="secondary"
-              size="large"
-              onPress={onPressBack}>
-              <ButtonText>
-                <Trans>Back</Trans>
-              </ButtonText>
-            </Button>
-          </>
+          <Button
+            label={_(msg`Back`)}
+            color="secondary"
+            size="large"
+            onPress={onPressBack}>
+            <ButtonText>
+              <Trans>Back</Trans>
+            </ButtonText>
+          </Button>
         )}
         {!serviceDescription && error ? (
           <Button
