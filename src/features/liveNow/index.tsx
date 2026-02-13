@@ -14,6 +14,8 @@ import {useTickEveryMinute} from '#/state/shell'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
+export * from '#/features/liveNow/utils'
+
 export const DEFAULT_ALLOWED_DOMAINS = [
   'twitch.tv',
   'stream.place',

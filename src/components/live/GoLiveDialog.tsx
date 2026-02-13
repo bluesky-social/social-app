@@ -12,16 +12,16 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import {
-  displayDuration,
-  getLiveServiceNames,
-  useDebouncedValue,
-} from '#/components/live/utils'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
-import {useLiveNowConfig} from '#/features/liveNow'
+import {
+  displayDuration,
+  getLiveServiceNames,
+  useDebouncedValue,
+  useLiveNowConfig,
+} from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 import {LinkPreview} from './LinkPreview'
 import {useLiveLinkMetaQuery, useUpsertLiveStatusMutation} from './queries'
