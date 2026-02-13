@@ -4,7 +4,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {isWeb} from '#/platform/detection'
 import {Logomark} from '#/view/icons/Logomark'
 import {atoms as a, platform, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
@@ -14,6 +13,7 @@ import {
   Header,
   HEADER_SLOT_SIZE,
 } from '#/components/Layout'
+import {IS_WEB} from '#/env'
 import {AuthLayoutNavigationContext} from '../context'
 
 /**
@@ -48,7 +48,7 @@ export function Outer({children}: {children: React.ReactNode}) {
 export function Content({children}: {children?: React.ReactNode}) {
   return (
     <View style={[a.flex_1, a.justify_center, {minHeight: HEADER_SLOT_SIZE}]}>
-      {isWeb ? children : <Logo />}
+      {IS_WEB ? children : <Logo />}
     </View>
   )
 }

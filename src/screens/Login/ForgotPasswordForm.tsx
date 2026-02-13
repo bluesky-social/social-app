@@ -5,10 +5,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 
-import {isNetworkError} from '#/lib/strings/errors'
-import {cleanError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {Agent} from '#/state/session/agent'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -18,6 +16,7 @@ import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -121,11 +120,10 @@ export const ForgotPasswordForm = ({
       <FormError error={error} />
 
       <View style={[web([a.flex_row, a.align_center]), a.pt_md]}>
-        {isWeb && (
+        {IS_WEB && (
           <>
             <Button
               label={_(msg`Back`)}
-              variant="solid"
               color="secondary"
               size="large"
               onPress={onPressBack}>

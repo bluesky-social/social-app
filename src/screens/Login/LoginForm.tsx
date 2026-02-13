@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {Keyboard, type TextInput, View} from 'react-native'
 import {
   ComAtprotoServerCreateSession,
@@ -24,7 +24,7 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -72,7 +72,7 @@ export const LoginForm = ({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
-  const onPressSelectService = React.useCallback(() => {
+  const onPressSelectService = useCallback(() => {
     Keyboard.dismiss()
   }, [])
 
