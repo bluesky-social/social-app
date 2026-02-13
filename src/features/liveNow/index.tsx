@@ -26,7 +26,7 @@ import {useTickEveryMinute} from '#/state/shell'
 import * as Toast from '#/view/com/util/Toast'
 import {useDialogContext} from '#/components/Dialog'
 import {useAnalytics} from '#/analytics'
-import {getLiveServiceNames} from '#/features/liveNow/utils'
+import {getLiveNowHost, getLiveServiceNames} from '#/features/liveNow/utils'
 import type * as bsky from '#/types/bsky'
 
 export * from '#/features/liveNow/utils'
@@ -35,10 +35,6 @@ export const DEFAULT_ALLOWED_DOMAINS = [
   'twitch.tv',
   'stream.place',
   'bluecast.app',
-
-  // TODO remove need for subdomains
-  'www.twitch.tv',
-  'www.bluecast.app',
 ]
 
 export type LiveNowConfig = {
@@ -153,10 +149,10 @@ export function isStatusValidForViewers(
   try {
     const {host: liveDid} = new AtUri(status.uri)
     if (AppBskyEmbedExternal.isView(status.embed)) {
-      const url = new URL(status.embed.external.uri)
+      const host = getLiveNowHost(status.embed.external.uri)
       const exception = config.allowedHostsExceptionsByDid.get(liveDid)
-      const isValidException = exception ? exception.has(url.hostname) : false
-      const isValidForAnyone = config.defaultAllowedHosts.has(url.hostname)
+      const isValidException = exception ? exception.has(host) : false
+      const isValidForAnyone = config.defaultAllowedHosts.has(host)
       return isValidException || isValidForAnyone
     } else {
       return false
@@ -176,8 +172,8 @@ export function useLiveLinkMetaQuery(url: string | null) {
     queryKey: ['link-meta', url],
     queryFn: async () => {
       if (!url) return undefined
-      const urlp = new URL(url)
-      if (!liveNowConfig.currentAccountAllowedHosts.has(urlp.hostname)) {
+      const host = getLiveNowHost(url)
+      if (!liveNowConfig.currentAccountAllowedHosts.has(host)) {
         const {formatted} = getLiveServiceNames(
           liveNowConfig.currentAccountAllowedHosts,
         )
