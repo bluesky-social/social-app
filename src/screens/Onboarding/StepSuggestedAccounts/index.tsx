@@ -45,6 +45,11 @@ export function StepSuggestedAccounts() {
 
   const {state, dispatch} = useOnboardingInternalState()
 
+  const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
+  // keeping track of who was followed via the follow all button
+  // so we can enable/disable the button without having to dig through the shadow cache
+  const [followedUsers, setFollowedUsers] = useState<string[]>([])
+
   /*
    * Special language handling copied wholesale from the Explore screen
    */
@@ -54,10 +59,9 @@ export function StepSuggestedAccounts() {
     return bcp47Match.basicFilter('en', contentLanguages).length > 0
   }, [contentLanguages])
   const interestsDisplayNames = useInterestsDisplayNames()
-  const selectedInterests = state.interestsStepResults.selectedInterests
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
-    .sort(boostInterests(selectedInterests))
+    .sort(boostInterests(state.interestsStepResults.selectedInterests))
 
   const {
     data: suggestedUsers,
@@ -66,15 +70,10 @@ export function StepSuggestedAccounts() {
     isRefetching,
     refetch,
   } = useSuggestedOnboardingUsers({
-    category: useFullExperience ? null : interests[0],
+    category: selectedInterest || (useFullExperience ? null : interests[0]),
     search: !useFullExperience,
-    overrideInterests: selectedInterests,
+    overrideInterests: state.interestsStepResults.selectedInterests,
   })
-
-  const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
-  // keeping track of who was followed via the follow all button
-  // so we can enable/disable the button without having to dig through the shadow cache
-  const [followedUsers, setFollowedUsers] = useState<string[]>([])
 
   const isError = !!error
   const isEmpty =
