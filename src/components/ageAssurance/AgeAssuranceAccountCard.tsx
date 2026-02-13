@@ -91,7 +91,9 @@ function Inner({style}: ViewStyleProp & {}) {
             {hasCompletedFlow && (
               <Text style={[a.text_sm, a.leading_snug]}>
                 <Trans>
-                  If you have questions or concerns,{' '}
+                  If you are 18+ and want to try again, click the button below
+                  and use a different verification method if one is available in
+                  your region. If you have questions or concerns,{' '}
                   <InlineLinkText
                     label={_(msg`Contact our support team`)}
                     {...createStaticClick(() => {
