@@ -1,5 +1,6 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
+import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
@@ -24,14 +25,14 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotate'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
-import {boostInterests} from '#/components/InterestTabs'
+import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
+import * as ProfileCard from '#/components/ProfileCard'
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../util'
-import SuggestedProfileCard from './SuggestedProfileCard'
-import TabBar from './TabBar'
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
@@ -288,6 +289,143 @@ export function StepSuggestedAccounts() {
           </View>
         )}
       </OnboardingControls.Portal>
+    </View>
+  )
+}
+
+function TabBar({
+  selectedInterest,
+  onSelectInterest,
+  selectedInterests,
+  hideDefaultTab,
+  defaultTabLabel,
+}: {
+  selectedInterest: string | null
+  onSelectInterest: (interest: string | null) => void
+  selectedInterests: string[]
+  hideDefaultTab?: boolean
+  defaultTabLabel?: string
+}) {
+  const {_} = useLingui()
+  const ax = useAnalytics()
+  const interestsDisplayNames = useInterestsDisplayNames()
+  const interests = Object.keys(interestsDisplayNames)
+    .sort(boostInterests(popularInterests))
+    .sort(boostInterests(selectedInterests))
+
+  return (
+    <InterestTabs
+      interests={hideDefaultTab ? interests : ['all', ...interests]}
+      selectedInterest={
+        selectedInterest || (hideDefaultTab ? interests[0] : 'all')
+      }
+      onSelectTab={tab => {
+        ax.metric('onboarding:suggestedAccounts:tabPressed', {tab: tab})
+        onSelectInterest(tab === 'all' ? null : tab)
+      }}
+      interestsDisplayNames={
+        hideDefaultTab
+          ? interestsDisplayNames
+          : {
+              all: defaultTabLabel || _(msg`For You`),
+              ...interestsDisplayNames,
+            }
+      }
+      gutterWidth={IS_WEB ? 0 : tokens.space.xl}
+    />
+  )
+}
+
+function SuggestedProfileCard({
+  profile,
+  moderationOpts,
+  position,
+  category,
+  onSeen,
+  recId,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+  position: number
+  category: string | null
+  onSeen: (did: string, position: number) => void
+  recId?: number | string
+}) {
+  const t = useTheme()
+  const ax = useAnalytics()
+  const cardRef = useRef<View>(null)
+  const hasTrackedRef = useRef(false)
+
+  useEffect(() => {
+    const node = cardRef.current
+    if (!node || hasTrackedRef.current) return
+
+    if (IS_WEB && typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver(
+        entries => {
+          if (entries[0]?.isIntersecting && !hasTrackedRef.current) {
+            hasTrackedRef.current = true
+            onSeen(profile.did, position)
+            observer.disconnect()
+          }
+        },
+        {threshold: 0.5},
+      )
+      // @ts-ignore - web only
+      observer.observe(node)
+      return () => observer.disconnect()
+    } else {
+      // Native: use a short delay to account for initial layout
+      const timeout = setTimeout(() => {
+        if (!hasTrackedRef.current) {
+          hasTrackedRef.current = true
+          onSeen(profile.did, position)
+        }
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+  }, [onSeen, profile.did, position])
+
+  return (
+    <View
+      ref={cardRef}
+      style={[
+        a.w_full,
+        a.py_lg,
+        a.px_xl,
+        position !== 0 && a.border_t,
+        t.atoms.border_contrast_low,
+      ]}>
+      <ProfileCard.Outer>
+        <ProfileCard.Header>
+          <ProfileCard.Avatar
+            profile={profile}
+            moderationOpts={moderationOpts}
+            disabledPreview
+          />
+          <ProfileCard.NameAndHandle
+            profile={profile}
+            moderationOpts={moderationOpts}
+          />
+          <ProfileCard.FollowButton
+            profile={profile}
+            moderationOpts={moderationOpts}
+            withIcon={false}
+            logContext="OnboardingSuggestedAccounts"
+            onFollow={() => {
+              ax.metric('suggestedUser:follow', {
+                logContext: 'Onboarding',
+                location: 'Card',
+                recId,
+                position,
+                suggestedDid: profile.did,
+                category,
+              })
+            }}
+          />
+        </ProfileCard.Header>
+        <ProfileCard.Description profile={profile} numberOfLines={3} />
+      </ProfileCard.Outer>
     </View>
   )
 }
