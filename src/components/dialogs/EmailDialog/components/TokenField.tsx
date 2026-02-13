@@ -32,8 +32,7 @@ export function TokenField({
       <TextField.Root>
         <TextField.Icon icon={Shield} />
         <TextField.Input
-          // @ts-expect-error https://github.com/necolas/react-native-web/issues/1464#issuecomment-546377874
-          autoComplete="token"
+          autoComplete="off"
           autoCorrect={false}
           isInvalid={isInvalid}
           label={_(msg`Confirmation code`)}

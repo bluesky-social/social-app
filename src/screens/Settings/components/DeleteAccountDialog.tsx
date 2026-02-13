@@ -304,8 +304,7 @@ function DeleteAccountDialogInner({
                 autoCorrect={false}
                 returnKeyType="done"
                 secureTextEntry={true}
-                // @ts-expect-error https://github.com/necolas/react-native-web/issues/1464#issuecomment-546377874
-                autoComplete="token-password-confirmation"
+                autoComplete="off"
                 clearButtonMode="while-editing"
                 passwordRules={`minlength: ${PASSWORD_MIN_LENGTH}};`}
                 value={password}
