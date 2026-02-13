@@ -33,7 +33,6 @@ import {
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
 import {InlineLinkText, Link} from '#/components/Link'
-import {LiveStatus} from '#/components/live/LiveStatusDialog'
 import {Loader} from '#/components/Loader'
 import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
@@ -43,6 +42,7 @@ import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
+import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
