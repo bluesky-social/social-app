@@ -107,7 +107,6 @@ export function StepSuggestedAccounts() {
           position: i,
           suggestedDid: did,
           category: selectedInterest,
-          source: 'SuggestedOnboardingUsers',
         })
       }
     },

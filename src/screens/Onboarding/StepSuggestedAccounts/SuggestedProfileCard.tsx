@@ -92,7 +92,6 @@ export default function SuggestedProfileCard({
                 position,
                 suggestedDid: profile.did,
                 category,
-                source: 'SuggestedOnboardingUsers',
               })
             }}
           />
