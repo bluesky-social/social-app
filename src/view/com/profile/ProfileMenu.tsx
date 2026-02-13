@@ -45,9 +45,6 @@ import {
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {EditLiveDialog} from '#/components/live/EditLiveDialog'
-import {GoLiveDialog} from '#/components/live/GoLiveDialog'
-import {GoLiveDisabledDialog} from '#/components/live/GoLiveDisabledDialog'
 import * as Menu from '#/components/Menu'
 import {
   ReportDialog,
@@ -60,6 +57,9 @@ import {VerificationRemovePrompt} from '#/components/verification/VerificationRe
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {useActorStatus, useLiveNowConfig} from '#/features/liveNow'
+import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
+import {GoLiveDialog} from '#/features/liveNow/components/GoLiveDialog'
+import {GoLiveDisabledDialog} from '#/features/liveNow/components/GoLiveDisabledDialog'
 import {Dot} from '#/features/nuxs/components/Dot'
 import {Gradient} from '#/features/nuxs/components/Gradient'
 import {useDevMode} from '#/storage/hooks/dev-mode'
