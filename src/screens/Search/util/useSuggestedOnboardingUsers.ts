@@ -16,7 +16,7 @@ export function useSuggestedOnboardingUsers({
   category?: string | null
   /**
    * If true, we'll search for users using the translated value of `category`,
-   * based on the user's "app language setting
+   * based on the user's app language setting
    */
   search?: boolean
   /**
