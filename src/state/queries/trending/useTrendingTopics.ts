@@ -29,9 +29,10 @@ export const trendingTopicsQueryKey = ['trending-topics']
 export function useTrendingTopics() {
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
-  const mutedWords = React.useMemo(() => {
-    return preferences?.moderationPrefs?.mutedWords || []
-  }, [preferences?.moderationPrefs])
+  const mutedWords = React.useMemo(
+    () => preferences?.moderationPrefs?.mutedWords ?? [],
+    [preferences?.moderationPrefs?.mutedWords],
+  )
 
   return useQuery<Response>({
     refetchOnWindowFocus: true,
