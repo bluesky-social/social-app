@@ -7,7 +7,6 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
-import {type Source} from './types'
 
 export default function SuggestedProfileCard({
   profile,
@@ -16,7 +15,6 @@ export default function SuggestedProfileCard({
   category,
   onSeen,
   recId,
-  source,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
@@ -24,7 +22,6 @@ export default function SuggestedProfileCard({
   category: string | null
   onSeen: (did: string, position: number) => void
   recId?: number | string
-  source: Source
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -95,7 +92,7 @@ export default function SuggestedProfileCard({
                 position,
                 suggestedDid: profile.did,
                 category,
-                source,
+                source: 'SuggestedOnboardingUsers',
               })
             }}
           />
