@@ -40,7 +40,7 @@ export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
 
-      const interests = props.overrideInterests.join(',')
+      const overrideInterests = props.overrideInterests.join(',')
 
       const {data} = await agent.app.bsky.unspecced.getSuggestedOnboardingUsers(
         {
@@ -49,7 +49,7 @@ export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
         },
         {
           headers: {
-            ...createBskyTopicsHeader(interests),
+            ...createBskyTopicsHeader(overrideInterests),
             'Accept-Language': contentLangs,
           },
         },
@@ -57,7 +57,7 @@ export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
       // FALLBACK: if no results for 'all', try again with no interests specified
       if (!props.category && data.actors.length === 0) {
         logger.error(
-          `Did not get any suggested onboarding users, falling back - interests: ${interests}`,
+          `Did not get any suggested onboarding users, falling back - interests: ${overrideInterests}`,
         )
         const {data: fallbackData} =
           await agent.app.bsky.unspecced.getSuggestedOnboardingUsers(
