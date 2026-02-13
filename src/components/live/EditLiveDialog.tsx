@@ -20,13 +20,14 @@ import * as TextField from '#/components/forms/TextField'
 import {Clock_Stroke2_Corner0_Rounded as ClockIcon} from '#/components/icons/Clock'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {displayDuration, useDebouncedValue} from '#/features/liveNow'
-import {LinkPreview} from './LinkPreview'
 import {
+  displayDuration,
+  useDebouncedValue,
   useLiveLinkMetaQuery,
   useRemoveLiveStatusMutation,
   useUpsertLiveStatusMutation,
-} from './queries'
+} from '#/features/liveNow'
+import {LinkPreview} from './LinkPreview'
 
 export function EditLiveDialog({
   control,

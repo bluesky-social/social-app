@@ -20,11 +20,12 @@ import {
   displayDuration,
   getLiveServiceNames,
   useDebouncedValue,
+  useLiveLinkMetaQuery,
   useLiveNowConfig,
+  useUpsertLiveStatusMutation,
 } from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 import {LinkPreview} from './LinkPreview'
-import {useLiveLinkMetaQuery, useUpsertLiveStatusMutation} from './queries'
 
 export function GoLiveDialog({
   control,
