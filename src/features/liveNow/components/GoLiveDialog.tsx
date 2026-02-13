@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -19,7 +20,6 @@ import {Text} from '#/components/Typography'
 import {
   displayDuration,
   getLiveServiceNames,
-  useDebouncedValue,
   useLiveLinkMetaQuery,
   useLiveNowConfig,
   useUpsertLiveStatusMutation,

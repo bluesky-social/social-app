@@ -9,6 +9,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {differenceInMinutes} from 'date-fns'
 
+import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useTickEveryMinute} from '#/state/shell'
@@ -22,7 +23,6 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {
   displayDuration,
-  useDebouncedValue,
   useLiveLinkMetaQuery,
   useRemoveLiveStatusMutation,
   useUpsertLiveStatusMutation,
