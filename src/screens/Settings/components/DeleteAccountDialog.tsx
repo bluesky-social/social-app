@@ -145,8 +145,7 @@ function DeleteAccountDialogInner({
     }
   }, [
     _,
-    agent.api.chat.bsky.actor,
-    agent.com.atproto.server,
+    agent,
     cleanError,
     confirmCode,
     control,
