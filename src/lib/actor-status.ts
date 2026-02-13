@@ -8,8 +8,8 @@ import {
 import {isAfter, parseISO} from 'date-fns'
 
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
-import {type LiveNowConfig, useLiveNowConfig} from '#/state/service-config'
 import {useTickEveryMinute} from '#/state/shell'
+import {type LiveNowConfig, useLiveNowConfig} from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 
 export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
