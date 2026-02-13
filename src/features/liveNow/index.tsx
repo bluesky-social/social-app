@@ -52,15 +52,6 @@ export function useLiveNowConfig(): LiveNowConfig {
   return useMemo(() => {
     const disabled = ax.features.enabled(ax.features.LiveNowBetaDisable)
 
-    if (!currentAccount?.did || disabled) {
-      return {
-        canGoLive: false,
-        currentAccountAllowedHosts: new Set(),
-        defaultAllowedHosts: new Set(),
-        allowedHostsExceptionsByDid: new Map(),
-      }
-    }
-
     const defaultAllowedHosts = new Set(
       DEFAULT_ALLOWED_DOMAINS.concat(liveNow.allow),
     )
@@ -70,6 +61,15 @@ export function useLiveNowConfig(): LiveNowConfig {
         ex.did,
         new Set(DEFAULT_ALLOWED_DOMAINS.concat(ex.allow)),
       )
+    }
+
+    if (!currentAccount?.did || disabled) {
+      return {
+        canGoLive: false,
+        currentAccountAllowedHosts: new Set(),
+        defaultAllowedHosts,
+        allowedHostsExceptionsByDid,
+      }
     }
 
     return {
