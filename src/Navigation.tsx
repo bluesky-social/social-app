@@ -1,5 +1,5 @@
 import {type JSX, useCallback, useRef} from 'react'
-import {Linking} from 'react-native'
+import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
@@ -874,11 +874,6 @@ const LINKING = {
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
-/**
- * Used to ensure we don't handle the same notification twice
- */
-let lastHandledNotificationDateDedupe: number | undefined
-
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const ax = useAnalytics()
   const notyLogger = ax.logger.useChild(ax.logger.Context.Notifications)
@@ -889,6 +884,8 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const previousScreen = useRef<string | undefined>(undefined)
   const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const linkingUrl = Linking.useLinkingURL()
+  const notificationResponse = Notifications.getLastNotificationResponse()
 
   /**
    * Handle navigation to a conversation, or prepares for account switch.
@@ -923,29 +920,28 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     },
   )
 
-  async function handlePushNotificationEntry() {
+  function handlePushNotificationEntry() {
     if (!IS_NATIVE) return
 
-    // deep links take precedence - on android,
-    // getLastNotificationResponseAsync returns a "notification"
-    // that is actually a deep link. avoid handling it twice -sfn
-    if (await Linking.getInitialURL()) {
-      return
-    }
+    // intent urls are handled by `useIntentHandler`
+    if (linkingUrl) return
 
-    /**
-     * The notification that caused the app to open, if applicable
-     */
-    const response = await Notifications.getLastNotificationResponseAsync()
+    if (notificationResponse) {
+      notyLogger.debug(`handlePushNotificationEntry: response`, {
+        response: notificationResponse,
+      })
 
-    if (response) {
-      notyLogger.debug(`handlePushNotificationEntry: response`, {response})
+      // Clear the last notification response to ensure it's not used again
+      try {
+        Notifications.clearLastNotificationResponse()
+      } catch (error) {
+        notyLogger.error(
+          `handlePushNotificationEntry: error clearing notification response`,
+          {error},
+        )
+      }
 
-      if (response.notification.date === lastHandledNotificationDateDedupe)
-        return
-      lastHandledNotificationDateDedupe = response.notification.date
-
-      const payload = getNotificationPayload(response.notification)
+      const payload = getNotificationPayload(notificationResponse.notification)
 
       if (payload) {
         ax.metric('notifications:openApp', {
