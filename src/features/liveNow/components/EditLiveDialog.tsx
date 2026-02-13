@@ -27,7 +27,7 @@ import {
   useRemoveLiveStatusMutation,
   useUpsertLiveStatusMutation,
 } from '#/features/liveNow'
-import {LinkPreview} from './LinkPreview'
+import {LinkPreview} from '#/features/liveNow/components/LinkPreview'
 
 export function EditLiveDialog({
   control,

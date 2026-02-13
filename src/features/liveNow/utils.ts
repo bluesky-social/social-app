@@ -36,7 +36,6 @@ const serviceUrlToNameMap: Record<string, string> = {
 }
 
 export function getLiveServiceNames(domains: Set<string>) {
-  console.log(domains)
   const names = Array.from(
     new Set(
       Array.from(domains.values())
