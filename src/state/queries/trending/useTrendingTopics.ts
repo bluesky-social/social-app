@@ -15,6 +15,15 @@ type Response = {
 
 export const DEFAULT_LIMIT = 14
 
+function dedup(topics: TrendingTopic[]): TrendingTopic[] {
+  const seen = new Set<string>()
+  return topics.filter(t => {
+    if (seen.has(t.link)) return false
+    seen.add(t.link)
+    return true
+  })
+}
+
 export const trendingTopicsQueryKey = ['trending-topics']
 
 export function useTrendingTopics() {
@@ -40,18 +49,22 @@ export function useTrendingTopics() {
     select: React.useCallback(
       (data: Response) => {
         return {
-          topics: data.topics.filter(t => {
-            return !hasMutedWord({
-              mutedWords,
-              text: t.topic + ' ' + t.displayName + ' ' + t.description,
-            })
-          }),
-          suggested: data.suggested.filter(t => {
-            return !hasMutedWord({
-              mutedWords,
-              text: t.topic + ' ' + t.displayName + ' ' + t.description,
-            })
-          }),
+          topics: dedup(
+            data.topics.filter(t => {
+              return !hasMutedWord({
+                mutedWords,
+                text: t.topic + ' ' + t.displayName + ' ' + t.description,
+              })
+            }),
+          ),
+          suggested: dedup(
+            data.suggested.filter(t => {
+              return !hasMutedWord({
+                mutedWords,
+                text: t.topic + ' ' + t.displayName + ' ' + t.description,
+              })
+            }),
+          ),
         }
       },
       [mutedWords],
