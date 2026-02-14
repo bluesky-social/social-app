@@ -265,6 +265,13 @@ export function QuoteEmbed({
       : undefined
   }, [quote.record])
 
+  const postCreatedAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    quote.record,
+    AppBskyFeedPost.isRecord,
+  )
+    ? quote.record.createdAt
+    : undefined
+
   const onBeforePress = useCallback(() => {
     unstableCacheProfileView(queryClient, quote.author)
     onOpen?.()
@@ -339,6 +346,9 @@ export function QuoteEmbed({
                   allowNestedQuotes={
                     parentIsWithinQuote ? false : parentAllowNestedQuotes
                   }
+                  postUri={quote.uri}
+                  postAuthorHandle={quote.author.handle}
+                  postCreatedAt={postCreatedAt}
                 />
               )}
             </Link>
