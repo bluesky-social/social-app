@@ -1725,7 +1725,7 @@ function ComposerEmbeds({
         <View
           style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], IS_WEB && [a.pb_md]]}>
           <View style={[a.relative]}>
-            <View style={{pointerEvents: 'none'}}>
+            <View style={a.pointer_events_none}>
               <LazyQuoteEmbed uri={embed.quote.uri} />
             </View>
             {canRemoveQuote && (

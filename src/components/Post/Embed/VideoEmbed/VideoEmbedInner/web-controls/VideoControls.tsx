@@ -430,8 +430,13 @@ export function Controls({
       </View>
       {(showSpinner || error) && (
         <View
-          pointerEvents="none"
-          style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+          style={[
+            a.pointer_events_none,
+            a.absolute,
+            a.inset_0,
+            a.justify_center,
+            a.align_center,
+          ]}>
           {showSpinner && <Loader fill={t.palette.white} size="lg" />}
           {error && (
             <Text style={{color: t.palette.white}}>

@@ -29,7 +29,6 @@ export function TimeIndicator({
 
   return (
     <View
-      pointerEvents="none"
       accessibilityLabel={_(
         msg`Time remaining: ${plural(Number(time) || 0, {
           one: '# second',
@@ -38,6 +37,7 @@ export function TimeIndicator({
       )}
       accessibilityHint=""
       style={[
+        a.pointer_events_none,
         {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           borderRadius: 6,

@@ -659,20 +659,20 @@ export function ProfileGrid({
     <View
       ref={containerRef}
       style={[
+        IS_IOS ? a.pointer_events_auto : a.pointer_events_box_none,
         !isProfileHeaderContext && a.border_t,
         t.atoms.border_contrast_low,
         t.atoms.bg_contrast_25,
-      ]}
-      pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+      ]}>
       <View
         style={[
+          IS_IOS ? a.pointer_events_auto : a.pointer_events_box_none,
           a.px_lg,
           a.pt_md,
           a.flex_row,
           a.align_center,
           a.justify_between,
-        ]}
-        pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+        ]}>
         <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
           <Trans>Suggested for you</Trans>
         </Text>
