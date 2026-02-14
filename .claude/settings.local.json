@@ -1,7 +1,7 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(npx tsc:*)"
-    ]
-  }
+    "permissions": {
+        "allow": [
+            "Bash(npx tsc:*)"
+        ]
+    }
 }
