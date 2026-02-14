@@ -1,21 +1,22 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, Keyboard, View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 
-import {isNetworkError} from '#/lib/strings/errors'
-import {cleanError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {Agent} from '#/state/session/agent'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {atoms as a, useTheme, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -118,43 +119,50 @@ export const ForgotPasswordForm = ({
 
       <FormError error={error} />
 
-      <View style={[a.flex_row, a.align_center, a.pt_md]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>
-            <Trans>Back</Trans>
-          </ButtonText>
-        </Button>
-        <View style={a.flex_1} />
-        {!serviceDescription || isProcessing ? (
-          <ActivityIndicator />
+      <View style={[web([a.flex_row, a.align_center]), a.pt_md]}>
+        {IS_WEB && (
+          <>
+            <Button
+              label={_(msg`Back`)}
+              color="secondary"
+              size="large"
+              onPress={onPressBack}>
+              <ButtonText>
+                <Trans>Back</Trans>
+              </ButtonText>
+            </Button>
+            <View style={a.flex_1} />
+          </>
+        )}
+        {!serviceDescription ? (
+          <Button
+            label={_(msg`Connecting to service...`)}
+            size="large"
+            color="secondary"
+            disabled>
+            <ButtonIcon icon={Loader} />
+            <ButtonText>Connecting...</ButtonText>
+          </Button>
         ) : (
           <Button
             label={_(msg`Next`)}
-            variant="solid"
-            color={'primary'}
+            accessibilityHint={_(msg`Navigates to the next screen`)}
+            color="primary"
             size="large"
-            onPress={onPressNext}>
+            onPress={onPressNext}
+            disabled={isProcessing}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
+            {isProcessing && <ButtonIcon icon={Loader} />}
           </Button>
         )}
-        {!serviceDescription || isProcessing ? (
-          <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
-            <Trans>Processing...</Trans>
-          </Text>
-        ) : undefined}
       </View>
       <View
         style={[
           t.atoms.border_contrast_medium,
           a.border_t,
-          a.pt_2xl,
+          a.pt_xl,
           a.mt_md,
           a.flex_row,
           a.justify_center,
