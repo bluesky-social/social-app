@@ -18,6 +18,8 @@ import {atoms as a, native} from '#/alf'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {useAnalytics} from '#/analytics'
 import {ChooseAccountForm} from './ChooseAccountForm'
+import * as AuthLayout from './components/AuthLayout'
+import {AuthLayoutNavigationContext} from './components/AuthLayout/context'
 
 enum Forms {
   Login,
@@ -131,11 +133,14 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   let content = null
   let title = ''
   let description = ''
+  let goBack = null
 
   switch (currentForm) {
     case Forms.Login:
       title = _(msg`Sign in`)
       description = _(msg`Enter your username and password`)
+      goBack = () =>
+        accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
       content = (
         <LoginForm
           error={error}
@@ -146,9 +151,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           onAttemptFailed={onAttemptFailed}
           onAttemptSuccess={onAttemptSuccess}
           setServiceUrl={setServiceUrl}
-          onPressBack={() =>
-            accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
-          }
+          onPressBack={goBack}
           onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={refetchService}
         />
@@ -157,16 +160,18 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     case Forms.ChooseAccount:
       title = _(msg`Sign in`)
       description = _(msg`Select from an existing account`)
+      goBack = handlePressBack
       content = (
         <ChooseAccountForm
           onSelectAccount={onSelectAccount}
-          onPressBack={handlePressBack}
+          onPressBack={goBack}
         />
       )
       break
     case Forms.ForgotPassword:
       title = _(msg`Forgot Password`)
       description = _(msg`Let's get your password reset!`)
+      goBack = () => gotoForm(Forms.Login)
       content = (
         <ForgotPasswordForm
           error={error}
@@ -174,7 +179,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           serviceDescription={serviceDescription}
           setError={setError}
           setServiceUrl={setServiceUrl}
-          onPressBack={() => gotoForm(Forms.Login)}
+          onPressBack={goBack}
           onEmailSent={() => gotoForm(Forms.SetNewPassword)}
         />
       )
@@ -182,12 +187,13 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     case Forms.SetNewPassword:
       title = _(msg`Forgot Password`)
       description = _(msg`Let's get your password reset!`)
+      goBack = () => gotoForm(Forms.ForgotPassword)
       content = (
         <SetNewPasswordForm
           error={error}
           serviceUrl={serviceUrl}
           setError={setError}
-          onPressBack={() => gotoForm(Forms.ForgotPassword)}
+          onPressBack={goBack}
           onPasswordSet={() => gotoForm(Forms.PasswordUpdated)}
         />
       )
@@ -201,23 +207,35 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       break
   }
 
+  const navigation = goBack ? {goBack} : null
+
   return (
-    <Animated.View style={a.flex_1} entering={native(FadeIn.duration(90))}>
-      <KeyboardAvoidingView testID="signIn" behavior="padding" style={a.flex_1}>
-        <LoggedOutLayout
-          leadin=""
-          title={title}
-          description={description}
-          scrollable>
-          <LayoutAnimationConfig skipEntering>
-            <ScreenTransition
-              key={currentForm}
-              direction={screenTransitionDirection}>
-              {content}
-            </ScreenTransition>
-          </LayoutAnimationConfig>
-        </LoggedOutLayout>
-      </KeyboardAvoidingView>
-    </Animated.View>
+    <AuthLayoutNavigationContext value={navigation}>
+      <Animated.View style={a.flex_1} entering={native(FadeIn.duration(90))}>
+        <KeyboardAvoidingView
+          testID="signIn"
+          behavior="padding"
+          style={a.flex_1}>
+          <AuthLayout.Header.Outer>
+            <AuthLayout.Header.BackButton />
+            <AuthLayout.Header.Content />
+            <AuthLayout.Header.Slot />
+          </AuthLayout.Header.Outer>
+          <LoggedOutLayout
+            leadin=""
+            title={title}
+            description={description}
+            scrollable>
+            <LayoutAnimationConfig skipEntering>
+              <ScreenTransition
+                key={currentForm}
+                direction={screenTransitionDirection}>
+                {content}
+              </ScreenTransition>
+            </LayoutAnimationConfig>
+          </LoggedOutLayout>
+        </KeyboardAvoidingView>
+      </Animated.View>
+    </AuthLayoutNavigationContext>
   )
 }

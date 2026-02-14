@@ -43,10 +43,10 @@ export function SwitchAccountDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner label={_(msg`Switch Account`)}>
+      <Dialog.ScrollableInner label={_(msg`Switch account`)}>
         <View style={[a.gap_lg]}>
           <Text style={[a.text_2xl, a.font_semi_bold]}>
-            <Trans>Switch Account</Trans>
+            <Trans>Switch account</Trans>
           </Text>
 
           <AccountList
