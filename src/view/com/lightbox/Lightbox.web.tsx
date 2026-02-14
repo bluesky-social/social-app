@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
@@ -124,6 +124,32 @@ function LightboxGallery({
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [onKeyDown])
+
+  // Push a history entry so the browser back button closes the lightbox
+  // instead of navigating away from the page.
+  const closedByPopStateRef = useRef(false)
+  useEffect(() => {
+    history.pushState({lightbox: true}, '')
+
+    const handlePopState = () => {
+      closedByPopStateRef.current = true
+      onClose()
+    }
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+      // Only pop our entry if it's still the current one. If navigation
+      // already pushed a new entry on top, leave the orphaned entry —
+      // it shares the same URL so traversing through it is harmless.
+      if (
+        !closedByPopStateRef.current &&
+        (history.state as {lightbox?: boolean})?.lightbox
+      ) {
+        history.back()
+      }
+    }
+  }, [onClose])
 
   const delayedFadeInAnim = !reduceMotionEnabled && [
     a.fade_in,
