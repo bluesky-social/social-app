@@ -10,6 +10,35 @@
   color-scheme: light dark;
 }
 
+/* Video player spinner */
+@keyframes video-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.video-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: video-spin 0.8s linear infinite;
+}
+
+/* Firefox scrubber workaround */
+.force-no-clicks * {
+  pointer-events: none !important;
+}
+
+/* Volume slider vertical orientation */
+input[type='range'][orient='vertical'] {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  appearance: slider-vertical;
+  -webkit-appearance: slider-vertical;
+}
+
 select {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' height='14px' width='14px' fill='none' viewBox='0 0 24 24'><path fill='black' fill-rule='evenodd' d='M3.293 8.293a1 1 0 0 1 1.414 0L12 15.586l7.293-7.293a1 1 0 1 1 1.414 1.414l-8 8a1 1 0 0 1-1.414 0l-8-8a1 1 0 0 1 0-1.414Z' clip-rule='evenodd'/></svg>");
   background-repeat: no-repeat;

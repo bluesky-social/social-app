@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@atproto/api": "^0.15.25",
+    "hls.js": "^1.6.2",
     "preact": "^10.4.8"
   },
   "devDependencies": {

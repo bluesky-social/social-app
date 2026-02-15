@@ -11,7 +11,8 @@ import {
   AppBskyLabelerDefs,
 } from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
-import {useMemo} from 'preact/hooks'
+import {lazy, Suspense} from 'preact/compat'
+import {useMemo, useState} from 'preact/hooks'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import playIcon from '../../assets/play_filled_corner2_rounded.svg'
@@ -22,6 +23,8 @@ import {getRkey} from '../util/rkey'
 import {getVerificationState} from '../util/verification-state'
 import {Link} from './link'
 import {VerificationCheck} from './verification-check'
+
+const LazyVideoPlayer = lazy(() => import('./video-player'))
 
 export function Embed({
   content,
@@ -389,26 +392,66 @@ function GenericWithImageEmbed({
   )
 }
 
-// just the thumbnail and a play button
 function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
-  let aspectRatio = 1
+  const [activated, setActivated] = useState(content.presentation === 'gif')
 
+  let aspectRatio = 1
   if (content.aspectRatio) {
     const {width, height} = content.aspectRatio
     aspectRatio = clamp(width / height, 1 / 1, 3 / 1)
   }
 
+  if (activated) {
+    return (
+      <Suspense
+        fallback={
+          <VideoEmbedFallback
+            content={content}
+            aspectRatio={aspectRatio}
+            loading
+          />
+        }>
+        <LazyVideoPlayer content={content} />
+      </Suspense>
+    )
+  }
+
+  return (
+    <VideoEmbedFallback
+      content={content}
+      aspectRatio={aspectRatio}
+      onPress={() => setActivated(true)}
+    />
+  )
+}
+
+function VideoEmbedFallback({
+  content,
+  aspectRatio,
+  onPress,
+  loading,
+}: {
+  content: AppBskyEmbedVideo.View
+  aspectRatio: number
+  onPress?: () => void
+  loading?: boolean
+}) {
   return (
     <div
-      className="w-full overflow-hidden rounded-xl aspect-square relative"
-      style={{aspectRatio: `${aspectRatio} / 1`}}>
+      className="w-full overflow-hidden rounded-xl relative cursor-pointer"
+      style={{aspectRatio: `${aspectRatio} / 1`}}
+      onClick={onPress}>
       <img
         src={content.thumbnail}
         alt={content.alt}
         className="object-cover size-full"
       />
       <div className="size-24 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/50 flex items-center justify-center">
-        <img src={playIcon} className="object-cover size-3/5" />
+        {loading ? (
+          <div className="video-spinner" />
+        ) : (
+          <img src={playIcon} className="object-cover size-3/5" />
+        )}
       </div>
     </div>
   )
