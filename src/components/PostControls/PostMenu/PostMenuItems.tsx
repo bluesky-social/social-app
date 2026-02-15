@@ -258,7 +258,7 @@ let PostMenuItems = ({
   }
 
   const onPressTranslate = () => {
-    translate(record.text, langPrefs.primaryLanguage)
+    translate(record.text, langPrefs.primaryLanguage, {postUri: post.uri})
 
     if (
       bsky.dangerousIsType<AppBskyFeedPost.Record>(

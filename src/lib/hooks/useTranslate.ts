@@ -1,54 +1,109 @@
 import {useCallback} from 'react'
-import * as IntentLauncher from 'expo-intent-launcher'
+import {Alert} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {getTranslatorLink} from '#/locale/helpers'
-import {IS_ANDROID} from '#/env'
+import {logger} from '#/logger'
+import {setTranslationState} from '#/state/translation'
+import {useAnalytics} from '#/analytics'
 import {useOpenLink} from './useOpenLink'
 
+/**
+ * Attempts on-device translation via expo-translate-text.
+ * Uses a lazy require to avoid crashing if the native module
+ * isn't linked into the current build.
+ */
+async function attemptTranslation(
+  text: string,
+  language: string,
+  postUri: string,
+): Promise<void> {
+  const {onTranslateTask} =
+    require('expo-translate-text') as typeof import('expo-translate-text')
+  const result = await onTranslateTask({
+    input: text,
+    targetLangCode: language,
+  })
+
+  setTranslationState(postUri, {
+    status: 'success',
+    translatedText:
+      typeof result.translatedTexts === 'string' ? result.translatedTexts : '',
+    sourceLanguage: result.sourceLanguage ?? '',
+  })
+}
+
+/**
+ * Native translation hook. Attempts on-device translation using
+ * Apple Translation (iOS 18+) or Google ML Kit (Android).
+ * Falls back to Google Translate URL if the language pack is
+ * unavailable or the user declines to download it.
+ *
+ * Web uses useTranslate.web.ts which always opens Google Translate.
+ */
 export function useTranslate() {
   const openLink = useOpenLink()
+  const {_} = useLingui()
+  const ax = useAnalytics()
 
   return useCallback(
-    async (text: string, language: string) => {
-      const translateUrl = getTranslatorLink(text, language)
-      if (IS_ANDROID) {
-        try {
-          // use getApplicationIconAsync to determine if the translate app is installed
-          if (
-            !(await IntentLauncher.getApplicationIconAsync(
-              'com.google.android.apps.translate',
-            ))
-          ) {
-            throw new Error('Translate app not installed')
-          }
-
-          // TODO: this should only be called one at a time, use something like
-          // RQ's `scope` - otherwise can trigger the browser to open unexpectedly when the call throws -sfn
-          await IntentLauncher.startActivityAsync(
-            'android.intent.action.PROCESS_TEXT',
-            {
-              type: 'text/plain',
-              extra: {
-                'android.intent.extra.PROCESS_TEXT': text,
-                'android.intent.extra.PROCESS_TEXT_READONLY': true,
-              },
-              // note: to skip the intermediate app select, we need to specify a
-              // `className`. however, this isn't safe to hardcode, we'd need to query the
-              // package manager for the correct activity. this requires native code, so
-              // skip for now -sfn
-              // packageName: 'com.google.android.apps.translate',
-              // className: 'com.google.android.apps.translate.TranslateActivity',
-            },
-          )
-        } catch (err) {
-          if (__DEV__) console.error(err)
-          // most likely means they don't have the translate app
-          await openLink(translateUrl)
-        }
-      } else {
+    async (text: string, language: string, opts?: {postUri?: string}) => {
+      // No postUri means non-post context (e.g. DMs) — open Google Translate
+      if (!opts?.postUri) {
+        const translateUrl = getTranslatorLink(text, language)
         await openLink(translateUrl)
+        return
+      }
+
+      const postUri = opts.postUri
+      setTranslationState(postUri, {status: 'loading'})
+
+      try {
+        await attemptTranslation(text, language, postUri)
+        ax.metric('translate:result', {method: 'on-device'})
+      } catch (err) {
+        logger.error('Failed to translate post', {safeMessage: err})
+        setTranslationState(postUri, {status: 'idle'})
+
+        // On-device translation failed (language pack missing or user
+        // dismissed the download prompt). Show options to retry or
+        // fall back to Google Translate.
+        ax.metric('translate:result', {method: 'fallback-alert'})
+        Alert.alert(
+          _(msg`Translation unavailable`),
+          _(msg`The required language pack is not installed on your device.`),
+          [
+            {
+              text: _(msg`Download language pack`),
+              onPress: async () => {
+                setTranslationState(postUri, {status: 'loading'})
+                try {
+                  await attemptTranslation(text, language, postUri)
+                  ax.metric('translate:result', {method: 'on-device'})
+                } catch (retryErr) {
+                  logger.error('Failed to translate post', {
+                    safeMessage: retryErr,
+                  })
+                  setTranslationState(postUri, {status: 'idle'})
+                }
+              },
+            },
+            {
+              text: _(msg`Use Google Translate`),
+              onPress: () => {
+                ax.metric('translate:result', {method: 'google-translate'})
+                openLink(getTranslatorLink(text, language))
+              },
+            },
+            {
+              text: _(msg`Cancel`),
+              style: 'cancel',
+            },
+          ],
+        )
       }
     },
-    [openLink],
+    [_, ax, openLink],
   )
 }

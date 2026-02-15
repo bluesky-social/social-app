@@ -43,6 +43,7 @@ import {Embed} from '#/components/Post/Embed'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/TranslatedPost'
 import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {RichText} from '#/components/RichText'
@@ -481,6 +482,7 @@ let PostContent = ({
           )}
         </View>
       ) : undefined}
+      <TranslatedPost postUri={post.uri} />
       {postEmbed ? (
         <View style={[a.pb_xs]}>
           <Embed

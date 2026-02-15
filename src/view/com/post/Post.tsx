@@ -33,6 +33,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/TranslatedPost'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
@@ -217,6 +218,7 @@ function PostInner({
                 )}
               </View>
             ) : undefined}
+            <TranslatedPost postUri={post.uri} />
             {post.embed ? (
               <Embed
                 embed={post.embed}

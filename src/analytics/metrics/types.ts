@@ -667,6 +667,9 @@ export type Events = {
     targetLanguage: string
     textLength: number
   }
+  'translate:result': {
+    method: 'on-device' | 'google-translate' | 'fallback-alert'
+  }
 
   'verification:create': {}
   'verification:revoke': {}
