@@ -766,7 +766,7 @@ msgstr ""
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1978
+#: src/view/com/composer/Composer.tsx:1976
 msgid "Add another post to thread"
 msgstr ""
 
@@ -2263,11 +2263,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2376
+#: src/view/com/composer/Composer.tsx:2374
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2378
+#: src/view/com/composer/Composer.tsx:2376
 msgid "Compressing video..."
 msgstr ""
 
@@ -3060,7 +3060,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2297
+#: src/view/com/composer/Composer.tsx:2295
 msgid "Dismiss error"
 msgstr ""
 
@@ -3544,7 +3544,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2396
+#: src/view/com/composer/Composer.tsx:2394
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr ""
@@ -4447,7 +4447,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2401
+#: src/view/com/composer/Composer.tsx:2399
 msgid "GIF uploaded"
 msgstr ""
 
@@ -5170,7 +5170,7 @@ msgstr ""
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2316
+#: src/view/com/composer/Composer.tsx:2314
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -6631,7 +6631,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1963
+#: src/view/com/composer/Composer.tsx:1961
 msgid "Open emoji picker"
 msgstr ""
 
@@ -6743,7 +6743,7 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1964
+#: src/view/com/composer/Composer.tsx:1962
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -7421,11 +7421,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2390
+#: src/view/com/composer/Composer.tsx:2388
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2392
+#: src/view/com/composer/Composer.tsx:2390
 msgid "Processing video..."
 msgstr ""
 
@@ -10557,7 +10557,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2383
+#: src/view/com/composer/Composer.tsx:2381
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -10570,7 +10570,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2385
+#: src/view/com/composer/Composer.tsx:2383
 msgid "Uploading video..."
 msgstr ""
 
@@ -10841,7 +10841,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2403
+#: src/view/com/composer/Composer.tsx:2401
 msgid "Video uploaded"
 msgstr ""
 
