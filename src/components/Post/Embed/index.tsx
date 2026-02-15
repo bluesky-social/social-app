@@ -225,11 +225,13 @@ export function QuoteEmbed({
   embed,
   onOpen,
   style,
+  linkDisabled,
   isWithinQuote: parentIsWithinQuote,
   allowNestedQuotes: parentAllowNestedQuotes,
 }: Omit<CommonProps, 'viewContext'> & {
   embed: EmbedType<'post'>
   viewContext?: QuoteEmbedViewContext
+  linkDisabled?: boolean
 }) {
   const moderationOpts = useModerationOpts()
   const quote = useMemo<$Typed<AppBskyFeedDefs.PostView>>(
@@ -280,11 +282,48 @@ export function QuoteEmbed({
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
+
+  const contents = (
+    <>
+      <View pointerEvents="none">
+        <PostMeta
+          author={quote.author}
+          moderation={moderation}
+          showAvatar
+          postHref={itemHref}
+          timestamp={quote.indexedAt}
+        />
+      </View>
+      {moderation ? (
+        <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} />
+      ) : null}
+      {richText ? (
+        <RichText
+          value={richText}
+          style={a.text_md}
+          numberOfLines={20}
+          disableLinks
+        />
+      ) : null}
+      {quote.embed && (
+        <Embed
+          embed={quote.embed}
+          moderation={moderation}
+          isWithinQuote={parentIsWithinQuote ?? true}
+          // already within quote? override nested
+          allowNestedQuotes={
+            parentIsWithinQuote ? false : parentAllowNestedQuotes
+          }
+        />
+      )}
+    </>
+  )
+
   return (
     <View
       style={[a.mt_sm]}
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}>
+      onPointerEnter={linkDisabled ? undefined : onPointerEnter}
+      onPointerLeave={linkDisabled ? undefined : onPointerLeave}>
       <ContentHider
         modui={moderation?.ui('contentList')}
         style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
@@ -292,56 +331,29 @@ export function QuoteEmbed({
         childContainerStyle={[a.pt_sm]}>
         {({active}) => (
           <>
-            {!active && (
+            {!active && !linkDisabled && (
               <SubtleHover
                 native
                 hover={hover || pressed}
                 style={[a.rounded_md]}
               />
             )}
-            <Link
-              style={[!active && a.p_md]}
-              hoverStyle={t.atoms.border_contrast_high}
-              href={itemHref}
-              title={itemTitle}
-              onBeforePress={onBeforePress}
-              onPressIn={onPressIn}
-              onPressOut={onPressOut}>
-              <View pointerEvents="none">
-                <PostMeta
-                  author={quote.author}
-                  moderation={moderation}
-                  showAvatar
-                  postHref={itemHref}
-                  timestamp={quote.indexedAt}
-                />
+            {linkDisabled ? (
+              <View style={[!active && a.p_md]} pointerEvents="none">
+                {contents}
               </View>
-              {moderation ? (
-                <PostAlerts
-                  modui={moderation.ui('contentView')}
-                  style={[a.py_xs]}
-                />
-              ) : null}
-              {richText ? (
-                <RichText
-                  value={richText}
-                  style={a.text_md}
-                  numberOfLines={20}
-                  disableLinks
-                />
-              ) : null}
-              {quote.embed && (
-                <Embed
-                  embed={quote.embed}
-                  moderation={moderation}
-                  isWithinQuote={parentIsWithinQuote ?? true}
-                  // already within quote? override nested
-                  allowNestedQuotes={
-                    parentIsWithinQuote ? false : parentAllowNestedQuotes
-                  }
-                />
-              )}
-            </Link>
+            ) : (
+              <Link
+                style={[!active && a.p_md]}
+                hoverStyle={t.atoms.border_contrast_high}
+                href={itemHref}
+                title={itemTitle}
+                onBeforePress={onBeforePress}
+                onPressIn={onPressIn}
+                onPressOut={onPressOut}>
+                {contents}
+              </Link>
+            )}
           </>
         )}
       </ContentHider>
