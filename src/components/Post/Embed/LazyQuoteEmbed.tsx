@@ -6,7 +6,13 @@ import {useResolveLinkQuery} from '#/state/queries/resolve-link'
 import {atoms as a, useTheme} from '#/alf'
 import {QuoteEmbed} from '#/components/Post/Embed'
 
-export function LazyQuoteEmbed({uri}: {uri: string}) {
+export function LazyQuoteEmbed({
+  uri,
+  linkDisabled,
+}: {
+  uri: string
+  linkDisabled?: boolean
+}) {
   const t = useTheme()
   const {data} = useResolveLinkQuery(uri)
 
@@ -21,6 +27,7 @@ export function LazyQuoteEmbed({uri}: {uri: string}) {
         type: 'post',
         view,
       }}
+      linkDisabled={linkDisabled}
     />
   ) : (
     <View
