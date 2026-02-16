@@ -17,15 +17,15 @@ import {android, atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {Globe_Stroke2_Corner0_Rounded} from '#/components/icons/Globe'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon} from '#/components/icons/SquareArrowTopRight'
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {useGlobalReportDialogControl} from '#/components/moderation/ReportDialog'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
 import type * as bsky from '#/types/bsky'
-import {Globe_Stroke2_Corner0_Rounded} from '../icons/Globe'
-import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon} from '../icons/SquareArrowTopRight'
-import {LiveIndicator} from './LiveIndicator'
 
 export function LiveStatusDialog({
   control,

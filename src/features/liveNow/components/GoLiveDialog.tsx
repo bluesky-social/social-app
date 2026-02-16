@@ -3,28 +3,29 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useLiveNowConfig} from '#/state/service-config'
 import {useTickEveryMinute} from '#/state/shell'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import {
-  displayDuration,
-  getLiveServiceNames,
-  useDebouncedValue,
-} from '#/components/live/utils'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
+import {
+  displayDuration,
+  getLiveServiceNames,
+  useLiveLinkMetaQuery,
+  useLiveNowConfig,
+  useUpsertLiveStatusMutation,
+} from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 import {LinkPreview} from './LinkPreview'
-import {useLiveLinkMetaQuery, useUpsertLiveStatusMutation} from './queries'
 
 export function GoLiveDialog({
   control,
