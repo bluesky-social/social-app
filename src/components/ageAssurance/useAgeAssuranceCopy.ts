@@ -14,7 +14,7 @@ export function useAgeAssuranceCopy() {
     return {
       notice: hasCompletedFlow
         ? _(
-            msg`You have successfully completed the Age Assurance process, but based on the results, we cannot be sure that you are 18 years of age or older. Due to laws in your region, certain features on Bluesky must remain restricted until you're able to verify you're an adult.`,
+            msg`You have completed the Age Assurance process, but based on the results, we cannot be sure that you are 18 years of age or older. Due to laws in your region, certain features on Bluesky must remain restricted until you're able to verify you're an adult.`,
           )
         : _(
             msg`Due to laws in your region, certain features on Bluesky are currently restricted until you're able to verify you're an adult.`,
