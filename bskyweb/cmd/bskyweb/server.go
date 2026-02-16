@@ -574,7 +574,10 @@ func (srv *Server) WebPost(c echo.Context) error {
 
 	if postView.Embed != nil && !isEmbedHidden {
 		hasImages := postView.Embed.EmbedImages_View != nil
-		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
+		hasVideo := postView.Embed.EmbedVideo_View != nil
+		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil
+		hasMediaImages := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
+		hasMediaVideo := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View != nil
 
 		if hasImages {
 			var thumbUrls []string
@@ -582,12 +585,20 @@ func (srv *Server) WebPost(c echo.Context) error {
 				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
 			}
 			data["imgThumbUrls"] = thumbUrls
-		} else if hasMedia {
+		} else if hasVideo {
+			if postView.Embed.EmbedVideo_View.Thumbnail != nil {
+				data["imgThumbUrls"] = []string{*postView.Embed.EmbedVideo_View.Thumbnail}
+			}
+		} else if hasMediaImages {
 			var thumbUrls []string
 			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
 				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
 			}
 			data["imgThumbUrls"] = thumbUrls
+		} else if hasMediaVideo {
+			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail != nil {
+				data["imgThumbUrls"] = []string{*postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail}
+			}
 		}
 	}
 

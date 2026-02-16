@@ -4800,7 +4800,7 @@ msgid "Hides the content"
 msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:74
-msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
+msgid "Hmm, it looks like you're signed in with an <0>App Password</0>. To set your birthdate, you'll need to sign in with your main account password, or ask whomever controls this account to do so."
 msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:124
@@ -5649,12 +5649,6 @@ msgstr ""
 
 #: src/Navigation.tsx:324
 msgid "Log"
-msgstr ""
-
-#: src/screens/Login/LoginForm.tsx:178
-#: src/screens/Login/LoginForm.tsx:349
-#: src/screens/Login/LoginForm.tsx:355
-msgid "Log in"
 msgstr ""
 
 #: src/components/AccountList.tsx:191
@@ -9020,6 +9014,9 @@ msgstr ""
 #: src/screens/Hashtag.tsx:240
 #: src/screens/Login/index.tsx:140
 #: src/screens/Login/index.tsx:161
+#: src/screens/Login/LoginForm.tsx:178
+#: src/screens/Login/LoginForm.tsx:349
+#: src/screens/Login/LoginForm.tsx:355
 #: src/screens/Search/SearchResults.tsx:296
 #: src/view/com/auth/SplashScreen.tsx:117
 #: src/view/com/auth/SplashScreen.tsx:123
