@@ -6,8 +6,8 @@ import {
 } from 'react-native-safe-area-context'
 
 import {clamp} from '#/lib/numbers'
-import {isWeb} from '#/platform/detection'
 import {atoms as a, platform, useBreakpoints} from '#/alf'
+import {IS_WEB} from '#/env'
 
 type LayoutContextValue = {
   headerHeight: SharedValue<number>
@@ -42,7 +42,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const value = useMemo(
     () => ({
       headerHeight,
-      footerHeight: isWeb && gtMobile ? 0 : footerHeight,
+      footerHeight: IS_WEB && gtMobile ? 0 : footerHeight,
       setFooterHeight: (height: number) => setFooterHeight(round4dp(height)),
     }),
     [headerHeight, footerHeight, setFooterHeight, gtMobile],
