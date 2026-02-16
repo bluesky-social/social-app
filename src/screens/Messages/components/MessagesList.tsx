@@ -50,8 +50,7 @@ import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
-import {IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 
@@ -254,7 +253,8 @@ export function MessagesList({
   )
 
   // -- Keyboard animation handling
-  const {footerHeight} = useShellLayout()
+  const {footerHeight: nativeFooterHeight} = useShellLayout()
+  const footerHeight = IS_WEB ? 0 : nativeFooterHeight
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
@@ -279,14 +279,14 @@ export function MessagesList({
       onMove: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > footerHeight.get()) {
+        if (e.height > footerHeight) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
       onEnd: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > footerHeight.get()) {
+        if (e.height > footerHeight) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
         keyboardIsOpening.set(false)
@@ -296,13 +296,11 @@ export function MessagesList({
   )
 
   const animatedListStyle = useAnimatedStyle(() => ({
-    marginBottom: Math.max(keyboardHeight.get(), footerHeight.get()),
+    marginBottom: Math.max(keyboardHeight.get(), footerHeight),
   }))
 
   const animatedStickyViewStyle = useAnimatedStyle(() => ({
-    transform: [
-      {translateY: -Math.max(keyboardHeight.get(), footerHeight.get())},
-    ],
+    transform: [{translateY: -Math.max(keyboardHeight.get(), footerHeight)}],
   }))
 
   // -- Message sending
@@ -446,6 +444,9 @@ export function MessagesList({
           ListHeaderComponent={
             <MaybeLoader isLoading={convoState.isFetchingHistory} />
           }
+          contentInset={{bottom: 0}}
+          contentContainerStyle={{paddingBottom: 0}}
+          scrollIndicatorInsets={{bottom: 0}}
         />
       </ScrollProvider>
       <Animated.View style={animatedStickyViewStyle}>

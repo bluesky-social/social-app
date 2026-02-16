@@ -51,7 +51,7 @@ export function BottomBarWeb() {
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {footerHeight} = useShellLayout()
+  const {setFooterHeight} = useShellLayout()
   const hideBorder = useHideBottomBarBorder()
   const accountSwitchControl = useDialogControl()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
@@ -90,7 +90,7 @@ export function BottomBarWeb() {
             : t.atoms.border_contrast_low,
           footerMinimalShellTransform,
         ]}
-        onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>
+        onLayout={event => setFooterHeight(event.nativeEvent.layout.height)}>
         {hasSession ? (
           <>
             <NavItem routeName="Home" href="/">
