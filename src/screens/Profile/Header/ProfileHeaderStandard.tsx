@@ -157,6 +157,7 @@ let ProfileHeaderStandard = ({
                     testID="profileHeaderDescription"
                     style={[a.text_md]}
                     numberOfLines={15}
+                    selectable
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}
