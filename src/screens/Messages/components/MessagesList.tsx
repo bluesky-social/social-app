@@ -50,8 +50,7 @@ import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
-import {IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 
@@ -255,7 +254,7 @@ export function MessagesList({
 
   // -- Keyboard animation handling
   const {footerHeight: nativeFooterHeight} = useShellLayout()
-  const footerHeight = isWeb ? 0 : nativeFooterHeight
+  const footerHeight = IS_WEB ? 0 : nativeFooterHeight
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
