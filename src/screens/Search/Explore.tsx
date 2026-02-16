@@ -362,7 +362,7 @@ export function Explore({
     i.push({
       type: 'tabbedHeader',
       key: 'suggested-accounts-header',
-      title: _(msg`Suggested Accounts`),
+      title: _(msg`Suggested accounts`),
       icon: Person,
       searchButton: {
         label: _(msg`Search for more accounts`),
@@ -439,7 +439,7 @@ export function Explore({
     i.push({
       type: 'header',
       key: 'suggested-feeds-header',
-      title: _(msg`Discover New Feeds`),
+      title: _(msg`Discover new feeds`),
       icon: ListSparkle,
       searchButton: {
         label: _(msg`Search for more feeds`),
