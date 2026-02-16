@@ -29,6 +29,7 @@ export async function openCamera(customOpts: ImagePickerOptions) {
     size: asset.fileSize ?? 0,
     width: asset.width,
     height: asset.height,
+    asset,
   }
 }
 

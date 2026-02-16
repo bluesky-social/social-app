@@ -3,7 +3,7 @@ import {
   getInfoAsync,
   readDirectoryAsync,
 } from 'expo-file-system/legacy'
-import {type ImagePickerResult} from 'expo-image-picker'
+import {type ImagePickerAsset, type ImagePickerResult} from 'expo-image-picker'
 import ExpoImageCropTool, {
   type OpenCropperOptions,
 } from '@bsky.app/expo-image-crop-tool'
@@ -57,8 +57,20 @@ export async function openUnifiedPicker(): Promise<ImagePickerResult> {
   }
 }
 
-export async function openCamera(): Promise<PickerImage> {
-  return await getFile()
+export async function openCamera(): Promise<
+  PickerImage & {asset: ImagePickerAsset}
+> {
+  const file = await getFile()
+  return {
+    ...file,
+    asset: {
+      uri: file.path,
+      width: file.width,
+      height: file.height,
+      mimeType: file.mime,
+      type: 'image',
+    },
+  }
 }
 
 export async function openCropper(opts: OpenCropperOptions) {

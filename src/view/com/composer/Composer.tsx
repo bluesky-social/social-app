@@ -1951,7 +1951,8 @@ function ComposerFooter({
               />
               <OpenCameraBtn
                 disabled={media?.type === 'images' ? isMaxImages : !!media}
-                onAdd={onImageAdd}
+                onAddImage={onImageAdd}
+                onAddVideo={asset => onSelectVideo(post.id, asset)}
               />
               <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
               {!isMobile ? (

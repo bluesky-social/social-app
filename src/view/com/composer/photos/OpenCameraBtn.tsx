@@ -1,9 +1,10 @@
 import {useCallback} from 'react'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import * as MediaLibrary from 'expo-media-library'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {POST_IMG_MAX} from '#/lib/constants'
+import {POST_IMG_MAX, VIDEO_MAX_DURATION_MS} from '#/lib/constants'
 import {useCameraPermission} from '#/lib/hooks/usePermissions'
 import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
@@ -15,14 +16,15 @@ import {IS_NATIVE, IS_WEB_MOBILE} from '#/env'
 
 type Props = {
   disabled?: boolean
-  onAdd: (next: ComposerImage[]) => void
+  onAddImage: (next: ComposerImage[]) => void
+  onAddVideo: (asset: ImagePickerAsset) => void
 }
 
-export function OpenCameraBtn({disabled, onAdd}: Props) {
+export function OpenCameraBtn({disabled, onAddImage, onAddVideo}: Props) {
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const [mediaPermissionRes, requestMediaPermission] =
-    MediaLibrary.usePermissions({granularPermissions: ['photo']})
+    MediaLibrary.usePermissions({granularPermissions: ['photo', 'video']})
   const t = useTheme()
 
   const onPressTakePicture = useCallback(async () => {
@@ -34,25 +36,31 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
         await requestMediaPermission()
       }
 
-      const img = await openCamera({
+      const result = await openCamera({
+        mediaTypes: ['images', 'videos'],
         aspect: [POST_IMG_MAX.width, POST_IMG_MAX.height],
+        videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
       })
 
       // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to
       // the image even without these permissions
       if (mediaPermissionRes) {
-        await MediaLibrary.createAssetAsync(img.path)
+        await MediaLibrary.createAssetAsync(result.path)
       }
 
-      const res = await createComposerImage(img)
-
-      onAdd([res])
+      if (result.mime.startsWith('image')) {
+        const img = await createComposerImage(result)
+        onAddImage([img])
+      } else if (result.mime.startsWith('video')) {
+        onAddVideo(result.asset)
+      }
     } catch (err: any) {
       // ignore
       logger.warn('Error using camera', {error: err})
     }
   }, [
-    onAdd,
+    onAddImage,
+    onAddVideo,
     requestCameraAccessIfNeeded,
     mediaPermissionRes,
     requestMediaPermission,
