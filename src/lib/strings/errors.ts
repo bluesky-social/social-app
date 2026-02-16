@@ -54,6 +54,7 @@ const NETWORK_ERRORS = [
   'Failed to fetch',
   'Load failed',
   'Upstream service unreachable',
+  'NetworkError when attempting to fetch resource',
 ]
 
 export function isNetworkError(e: unknown) {
