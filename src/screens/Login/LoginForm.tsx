@@ -175,7 +175,7 @@ export const LoginForm = ({
   }
 
   return (
-    <FormContainer testID="loginForm" titleText={<Trans>Log in</Trans>}>
+    <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>
@@ -346,13 +346,13 @@ export const LoginForm = ({
         ) : (
           <Button
             testID="loginNextButton"
-            label={_(msg`Log in`)}
+            label={_(msg`Sign in`)}
             accessibilityHint={_(msg`Navigates to the next screen`)}
             color="primary"
             size="large"
             onPress={onPressNext}>
             <ButtonText>
-              <Trans>Log in</Trans>
+              <Trans>Sign in</Trans>
             </ButtonText>
             {isProcessing && <ButtonIcon icon={Loader} />}
           </Button>
