@@ -3,7 +3,8 @@ import {Pressable, useWindowDimensions, View} from 'react-native'
 import Picker from '@emoji-mart/react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {DismissableLayer, FocusScope} from 'radix-ui/internal'
+import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
+import {FocusScope} from '@radix-ui/react-focus-scope'
 
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a, flatten} from '#/alf'
@@ -120,7 +121,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
 
   return (
     <Portal>
-      <FocusScope.FocusScope
+      <FocusScope
         loop
         trapped
         onUnmountAutoFocus={e => {
@@ -153,7 +154,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
             },
           ])}>
           <View style={[{position: 'absolute'}, position]}>
-            <DismissableLayer.DismissableLayer
+            <DismissableLayer
               onFocusOutside={evt => evt.preventDefault()}
               onDismiss={close}>
               <Picker
@@ -163,7 +164,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
                 onEmojiSelect={onInsert}
                 autoFocus={true}
               />
-            </DismissableLayer.DismissableLayer>
+            </DismissableLayer>
           </View>
         </View>
 
@@ -174,7 +175,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
           onPress={close}
           style={[a.fixed, a.inset_0]}
         />
-      </FocusScope.FocusScope>
+      </FocusScope>
     </Portal>
   )
 }
