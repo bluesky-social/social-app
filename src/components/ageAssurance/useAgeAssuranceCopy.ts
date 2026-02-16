@@ -28,5 +28,3 @@ export function useAgeAssuranceCopy() {
     }
   }, [_, hasCompletedFlow])
 }
-
-// Your age estimation was successful, but based on the results, we cannot be sure that you are 18 or older.
