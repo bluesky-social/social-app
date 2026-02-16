@@ -27,7 +27,7 @@ export const DEFAULT_APP_CONFIG_RESPONSE: AppConfigResponse = {
   },
 }
 
-let fetchAppConfigPromise: Promise<Response>
+let fetchAppConfigPromise: Promise<AppConfigResponse>
 
 async function fetchAppConfig(): Promise<AppConfigResponse | null> {
   try {
@@ -37,15 +37,13 @@ async function fetchAppConfig(): Promise<AppConfigResponse | null> {
         async () => {
           const r = await fetch(`${APP_CONFIG_URL}/config`)
           if (!r.ok) throw new Error(await r.text())
-          return r
+          const data = await r.json()
+          return data
         },
         1e3,
       )
     }
-    const res = await fetchAppConfigPromise
-    if (!res.ok) return null
-    const data = await res.json()
-    return data
+    return await fetchAppConfigPromise
   } catch {
     return null
   }

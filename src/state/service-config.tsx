@@ -8,18 +8,10 @@ type TrendingContext = {
   enabled: boolean
 }
 
-type LiveNowContext = {
-  did: string
-  domains: string[]
-}[]
-
 const TrendingContext = createContext<TrendingContext>({
   enabled: false,
 })
 TrendingContext.displayName = 'TrendingContext'
-
-const LiveNowContext = createContext<LiveNowContext>([])
-LiveNowContext.displayName = 'LiveNowContext'
 
 const CheckEmailConfirmedContext = createContext<boolean | null>(null)
 
@@ -57,19 +49,15 @@ export function Provider({children}: {children: React.ReactNode}) {
     return {enabled}
   }, [isInitialLoad, config, langPrefs.contentLanguages])
 
-  const liveNow = useMemo<LiveNowContext>(() => config?.liveNow ?? [], [config])
-
   // probably true, so default to true when loading
   // if the call fails, the query will set it to false for us
   const checkEmailConfirmed = config?.checkEmailConfirmed ?? true
 
   return (
     <TrendingContext.Provider value={trending}>
-      <LiveNowContext.Provider value={liveNow}>
-        <CheckEmailConfirmedContext.Provider value={checkEmailConfirmed}>
-          {children}
-        </CheckEmailConfirmedContext.Provider>
-      </LiveNowContext.Provider>
+      <CheckEmailConfirmedContext.Provider value={checkEmailConfirmed}>
+        {children}
+      </CheckEmailConfirmedContext.Provider>
     </TrendingContext.Provider>
   )
 }
