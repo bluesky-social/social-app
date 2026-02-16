@@ -1,6 +1,6 @@
 import React, {useRef} from 'react'
 import {type TextInput, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
@@ -312,15 +312,15 @@ export function StepInfo({
                     <Admonition.Content>
                       <Admonition.Text>
                         {!isOverAppMinAccessAge ? (
-                          <Trans>
-                            You must be {MIN_ACCESS_AGE} years of age or older
-                            to create an account.
-                          </Trans>
+                          <Plural
+                            value={MIN_ACCESS_AGE}
+                            other="You must be # years of age or older to create an account."
+                          />
                         ) : (
-                          <Trans>
-                            You must be {aaRegionConfig.minAccessAge} years of
-                            age or older to create an account in your region.
-                          </Trans>
+                          <Plural
+                            value={aaRegionConfig.minAccessAge}
+                            other="You must be # years of age or older to create an account in your region."
+                          />
                         )}
                       </Admonition.Text>
                       {IS_NATIVE &&
