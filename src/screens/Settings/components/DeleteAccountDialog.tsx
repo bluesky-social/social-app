@@ -10,7 +10,6 @@ import {logger} from '#/logger'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogOuterProps} from '#/components/Dialog'
 import {
   isValidCode,
@@ -197,16 +196,12 @@ function DeleteAccountDialogInner({
             </Prompt.DescriptionText>
           </Prompt.Content>
           <Prompt.Actions>
-            <Button
-              color="primary"
-              label={_(msg`Send email`)}
-              size="large"
-              onPress={handleSendEmail}>
-              <ButtonText>{_(msg`Send email`)}</ButtonText>
-              <ButtonIcon
-                icon={emailState === EmailState.PENDING ? Loader : Envelope}
-              />
-            </Button>
+            <Prompt.Action
+              icon={emailState === EmailState.PENDING ? Loader : Envelope}
+              cta={_(msg`Send email`)}
+              shouldCloseOnPress={false}
+              onPress={handleSendEmail}
+            />
             <Prompt.Cancel />
           </Prompt.Actions>
           {error && (
@@ -314,14 +309,13 @@ function DeleteAccountDialogInner({
             </TextField.Root>
           </View>
           <Prompt.Actions>
-            <Button
+            <Prompt.Action
               color="negative"
               disabled={!isValidCode(confirmCode) || !isPasswordValid(password)}
-              size="large"
-              label={_(msg`Delete My Account`)}
-              onPress={handleDeleteAccount}>
-              <ButtonText>{_(msg`Delete My Account`)}</ButtonText>
-            </Button>
+              cta={_(msg`Delete my account`)}
+              shouldCloseOnPress={false}
+              onPress={handleDeleteAccount}
+            />
             <Prompt.Cancel />
           </Prompt.Actions>
           {error && (
@@ -356,13 +350,12 @@ function DeleteAccountDialogInner({
             </Prompt.DescriptionText>
           </Prompt.Content>
           <Prompt.Actions>
-            <Button
+            <Prompt.Action
               color="negative"
-              size="large"
-              label={_(msg`Yes, delete my account`)}
-              onPress={handleConfirmDeletion}>
-              <ButtonText>{_(msg`Yes, delete my account`)}</ButtonText>
-            </Button>
+              cta={_(msg`Yes, delete my account`)}
+              shouldCloseOnPress={false}
+              onPress={handleConfirmDeletion}
+            />
             <Prompt.Cancel />
           </Prompt.Actions>
         </>
