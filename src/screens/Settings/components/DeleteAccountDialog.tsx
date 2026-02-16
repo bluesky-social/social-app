@@ -325,7 +325,7 @@ function DeleteAccountDialogInner({
             <Prompt.Cancel />
           </Prompt.Actions>
           {error && (
-            <Admonition style={[a.mt_lg, a.mb_lg]} type="error">
+            <Admonition style={[a.mt_lg]} type="error">
               <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
             </Admonition>
           )}
