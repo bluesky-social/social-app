@@ -13,16 +13,23 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {
+  type ScrollHandler,
+  useAnimatedProps,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {ScrollProvider, useScrollHandlers} from '#/lib/ScrollContext'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
 import {useSession} from '#/state/session'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -48,6 +55,7 @@ interface ProfileListsProps {
   did: string
   scrollElRef: ListRef
   headerOffset: number
+  collapsedHeaderHeight?: number
   enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
@@ -59,6 +67,7 @@ export function ProfileLists({
   did,
   scrollElRef,
   headerOffset,
+  collapsedHeaderHeight = 0,
   enabled,
   style,
   testID,
@@ -67,6 +76,39 @@ export function ProfileLists({
   const {_} = useLingui()
   const t = useTheme()
   const [isPTRing, setIsPTRing] = useState(false)
+
+  const {
+    onBeginDrag: onBeginDragFromContext,
+    onEndDrag: onEndDragFromContext,
+    onScroll: onScrollFromContext,
+    onMomentumEnd: onMomentumEndFromContext,
+  } = useScrollHandlers()
+
+  const scrollY = useSharedValue(0)
+  const onScrollWorklet = useCallback<ScrollHandler<any>>(
+    (e, ctx) => {
+      'worklet'
+      onScrollFromContext?.(e, ctx)
+      scrollY.set(e.contentOffset.y)
+    },
+    [onScrollFromContext, scrollY],
+  )
+
+  const {footerHeight} = useShellLayout()
+
+  const animatedProps = useAnimatedProps(() => {
+    if (IS_IOS) {
+      return {
+        scrollIndicatorInsets: {
+          top: Math.max(headerOffset - scrollY.get(), collapsedHeaderHeight),
+          right: 1,
+          left: 0,
+          bottom: footerHeight.get(),
+        },
+      }
+    }
+    return {}
+  })
   const {height} = useWindowDimensions()
   const opts = useMemo(() => ({enabled}), [enabled])
   const {
@@ -245,22 +287,30 @@ export function ProfileLists({
 
   return (
     <View testID={testID} style={style}>
-      <List
-        testID={testID ? `${testID}-flatlist` : undefined}
-        ref={scrollElRef}
-        data={items}
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-        ListFooterComponent={ProfileListsFooter}
-        refreshing={isPTRing}
-        onRefresh={onRefresh}
-        headerOffset={headerOffset}
-        progressViewOffset={ios(0)}
-        removeClippedSubviews={true}
-        desktopFixedHeight
-        onEndReached={onEndReached}
-        contentContainerStyle={{minHeight: height + headerOffset}}
-      />
+      <ScrollProvider
+        onScroll={onScrollWorklet}
+        onBeginDrag={onBeginDragFromContext}
+        onEndDrag={onEndDragFromContext}
+        onMomentumBegin={onMomentumEndFromContext}
+        onMomentumEnd={onMomentumEndFromContext}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={items}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          ListFooterComponent={ProfileListsFooter}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          headerOffset={headerOffset}
+          progressViewOffset={ios(0)}
+          removeClippedSubviews={true}
+          desktopFixedHeight
+          onEndReached={onEndReached}
+          contentContainerStyle={{minHeight: height + headerOffset}}
+          animatedProps={animatedProps}
+        />
+      </ScrollProvider>
     </View>
   )
 }

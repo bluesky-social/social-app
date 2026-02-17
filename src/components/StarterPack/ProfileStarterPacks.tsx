@@ -7,6 +7,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {
+  type ScrollHandler,
+  useAnimatedProps,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,9 +22,11 @@ import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
+import {ScrollProvider, useScrollHandlers} from '#/lib/ScrollContext'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   EmptyState,
   type EmptyStateButtonProps,
@@ -46,6 +53,7 @@ interface ProfileFeedgensProps {
   scrollElRef: ListRef
   did: string
   headerOffset: number
+  collapsedHeaderHeight?: number
   enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
@@ -65,6 +73,7 @@ export function ProfileStarterPacks({
   scrollElRef,
   did,
   headerOffset,
+  collapsedHeaderHeight = 0,
   enabled,
   style,
   testID,
@@ -78,6 +87,39 @@ export function ProfileStarterPacks({
   const bottomBarOffset = useBottomBarOffset(100)
   const {height} = useWindowDimensions()
   const [isPTRing, setIsPTRing] = useState(false)
+
+  const {
+    onBeginDrag: onBeginDragFromContext,
+    onEndDrag: onEndDragFromContext,
+    onScroll: onScrollFromContext,
+    onMomentumEnd: onMomentumEndFromContext,
+  } = useScrollHandlers()
+
+  const scrollY = useSharedValue(0)
+  const onScrollWorklet = useCallback<ScrollHandler<any>>(
+    (e, ctx) => {
+      'worklet'
+      onScrollFromContext?.(e, ctx)
+      scrollY.set(e.contentOffset.y)
+    },
+    [onScrollFromContext, scrollY],
+  )
+
+  const {footerHeight} = useShellLayout()
+
+  const animatedProps = useAnimatedProps(() => {
+    if (IS_IOS) {
+      return {
+        scrollIndicatorInsets: {
+          top: Math.max(headerOffset - scrollY.get(), collapsedHeaderHeight),
+          right: 1,
+          left: 0,
+          bottom: footerHeight.get(),
+        },
+      }
+    }
+    return {}
+  })
   const {
     data,
     refetch,
@@ -160,30 +202,38 @@ export function ProfileStarterPacks({
 
   return (
     <View testID={testID} style={style}>
-      <List
-        testID={testID ? `${testID}-flatlist` : undefined}
-        ref={scrollElRef}
-        data={items}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        refreshing={isPTRing}
-        headerOffset={headerOffset}
-        progressViewOffset={ios(0)}
-        contentContainerStyle={{
-          minHeight: height + headerOffset,
-          paddingBottom: bottomBarOffset,
-        }}
-        removeClippedSubviews={true}
-        desktopFixedHeight
-        onEndReached={onEndReached}
-        onRefresh={onRefresh}
-        ListEmptyComponent={
-          data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
-        }
-        ListFooterComponent={
-          !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
-        }
-      />
+      <ScrollProvider
+        onScroll={onScrollWorklet}
+        onBeginDrag={onBeginDragFromContext}
+        onEndDrag={onEndDragFromContext}
+        onMomentumBegin={onMomentumEndFromContext}
+        onMomentumEnd={onMomentumEndFromContext}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={items}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          refreshing={isPTRing}
+          headerOffset={headerOffset}
+          progressViewOffset={ios(0)}
+          contentContainerStyle={{
+            minHeight: height + headerOffset,
+            paddingBottom: bottomBarOffset,
+          }}
+          removeClippedSubviews={true}
+          desktopFixedHeight
+          onEndReached={onEndReached}
+          onRefresh={onRefresh}
+          ListEmptyComponent={
+            data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
+          }
+          ListFooterComponent={
+            !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
+          }
+          animatedProps={animatedProps}
+        />
+      </ScrollProvider>
     </View>
   )
 }

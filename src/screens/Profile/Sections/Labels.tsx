@@ -1,6 +1,11 @@
 import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
 import {findNodeHandle, type ListRenderItemInfo, View} from 'react-native'
 import {
+  type ScrollHandler,
+  useAnimatedProps,
+  useSharedValue,
+} from 'react-native-reanimated'
+import {
   type AppBskyLabelerDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinitions,
@@ -10,6 +15,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
+import {ScrollProvider, useScrollHandlers} from '#/lib/ScrollContext'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {List, type ListRef} from '#/view/com/util/List'
 import {atoms as a, ios, tokens, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
@@ -30,6 +37,7 @@ interface LabelsSectionProps {
   moderationOpts: ModerationOpts
   scrollElRef: ListRef
   headerHeight: number
+  collapsedHeaderHeight: number
   isFocused: boolean
   setScrollViewTag: (tag: number | null) => void
 }
@@ -42,10 +50,44 @@ export function ProfileLabelsSection({
   moderationOpts,
   scrollElRef,
   headerHeight,
+  collapsedHeaderHeight,
   isFocused,
   setScrollViewTag,
 }: LabelsSectionProps) {
   const t = useTheme()
+
+  const {
+    onBeginDrag: onBeginDragFromContext,
+    onEndDrag: onEndDragFromContext,
+    onScroll: onScrollFromContext,
+    onMomentumEnd: onMomentumEndFromContext,
+  } = useScrollHandlers()
+
+  const scrollY = useSharedValue(0)
+  const onScrollWorklet = useCallback<ScrollHandler<any>>(
+    (e, ctx) => {
+      'worklet'
+      onScrollFromContext?.(e, ctx)
+      scrollY.set(e.contentOffset.y)
+    },
+    [onScrollFromContext, scrollY],
+  )
+
+  const {footerHeight} = useShellLayout()
+
+  const animatedProps = useAnimatedProps(() => {
+    if (IS_IOS) {
+      return {
+        scrollIndicatorInsets: {
+          top: Math.max(headerHeight - scrollY.get(), collapsedHeaderHeight),
+          right: 1,
+          left: 0,
+          bottom: footerHeight.get(),
+        },
+      }
+    }
+    return {}
+  })
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -118,30 +160,38 @@ export function ProfileLabelsSection({
 
   return (
     <View>
-      <List
-        ref={scrollElRef}
-        data={labelValues}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        contentContainerStyle={a.px_xl}
-        headerOffset={headerHeight}
-        progressViewOffset={ios(0)}
-        ListHeaderComponent={
-          <LabelerListHeader
-            isLabelerLoading={isLabelerLoading}
-            labelerInfo={labelerInfo}
-            labelerError={labelerError}
-            hasValues={labelValues.length !== 0}
-            isSubscribed={isSubscribed}
-          />
-        }
-        ListFooterComponent={
-          <ListFooter
-            height={headerHeight + 180}
-            style={a.border_transparent}
-          />
-        }
-      />
+      <ScrollProvider
+        onScroll={onScrollWorklet}
+        onBeginDrag={onBeginDragFromContext}
+        onEndDrag={onEndDragFromContext}
+        onMomentumBegin={onMomentumEndFromContext}
+        onMomentumEnd={onMomentumEndFromContext}>
+        <List
+          ref={scrollElRef}
+          data={labelValues}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          contentContainerStyle={a.px_xl}
+          headerOffset={headerHeight}
+          progressViewOffset={ios(0)}
+          ListHeaderComponent={
+            <LabelerListHeader
+              isLabelerLoading={isLabelerLoading}
+              labelerInfo={labelerInfo}
+              labelerError={labelerError}
+              hasValues={labelValues.length !== 0}
+              isSubscribed={isSubscribed}
+            />
+          }
+          ListFooterComponent={
+            <ListFooter
+              height={headerHeight + 180}
+              style={a.border_transparent}
+            />
+          }
+          animatedProps={animatedProps}
+        />
+      </ScrollProvider>
     </View>
   )
 }
