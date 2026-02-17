@@ -393,7 +393,7 @@ function ProfileScreenLoaded({
         renderHeader={renderHeader}
         allowHeaderOverScroll>
         {showFiltersTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection
                 ref={labelsSectionRef}
                 labelerInfo={labelerInfo}
@@ -402,18 +402,20 @@ function ProfileScreenLoaded({
                 moderationOpts={moderationOpts}
                 scrollElRef={scrollElRef as ListRef}
                 headerHeight={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 isFocused={isFocused}
                 setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
         {showListsTab && !!profile.associated?.labeler
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileLists
                 ref={listsSectionRef}
                 did={profile.did}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 enabled={isFocused}
                 setScrollViewTag={setScrollViewTag}
               />
@@ -535,25 +537,27 @@ function ProfileScreenLoaded({
             )
           : null}
         {showFeedsTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileFeedgens
                 ref={feedsSectionRef}
                 did={profile.did}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 enabled={isFocused}
                 setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
         {showStarterPacksTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileStarterPacks
                 ref={starterPacksSectionRef}
                 did={profile.did}
                 isMe={isMe}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 enabled={isFocused}
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={
@@ -579,12 +583,13 @@ function ProfileScreenLoaded({
             )
           : null}
         {showListsTab && !profile.associated?.labeler
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileLists
                 ref={listsSectionRef}
                 did={profile.did}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 enabled={isFocused}
                 setScrollViewTag={setScrollViewTag}
               />
