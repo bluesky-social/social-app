@@ -9,7 +9,8 @@ import {
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
 import {useSetExternalEmbedPref} from '#/state/preferences'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
@@ -24,9 +25,7 @@ export function EmbedConsentDialog({
   onAccept: () => void
 }) {
   const {_} = useLingui()
-  const t = useTheme()
   const setExternalEmbedPref = useSetExternalEmbedPref()
-  const {gtMobile} = useBreakpoints()
 
   const onShowAllPress = useCallback(() => {
     for (const key of embedPlayerSources) {
@@ -52,50 +51,46 @@ export function EmbedConsentDialog({
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`External Media`)}
-        style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
+        style={web({maxWidth: 400})}>
         <View style={a.gap_sm}>
-          <Text style={[a.text_2xl, a.font_semi_bold]}>
+          <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>External Media</Trans>
           </Text>
 
           <View style={[a.mt_sm, a.mb_2xl, a.gap_lg]}>
-            <Text>
+            <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
                 This content is hosted by {externalEmbedLabels[source]}. Do you
                 want to enable external media?
               </Trans>
             </Text>
 
-            <Text style={t.atoms.text_contrast_medium}>
+            <Admonition type="info">
               <Trans>
                 External media may allow websites to collect information about
                 you and your device. No information is sent or requested until
                 you press the "play" button.
               </Trans>
-            </Text>
+            </Admonition>
           </View>
         </View>
         <View style={a.gap_md}>
           <Button
-            style={gtMobile && a.flex_1}
             label={_(msg`Enable external media`)}
             onPress={onShowAllPress}
             onAccessibilityEscape={control.close}
             color="primary"
-            size="large"
-            variant="solid">
+            size="large">
             <ButtonText>
               <Trans>Enable external media</Trans>
             </ButtonText>
           </Button>
           <Button
-            style={gtMobile && a.flex_1}
             label={_(msg`Enable this source only`)}
             onPress={onShowPress}
             onAccessibilityEscape={control.close}
             color="secondary"
-            size="large"
-            variant="solid">
+            size="large">
             <ButtonText>
               <Trans>Enable {externalEmbedLabels[source]} only</Trans>
             </ButtonText>

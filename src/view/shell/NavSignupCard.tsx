@@ -29,7 +29,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
   }, [requestSwitchToAccount, closeAllActiveElements])
 
   return (
-    <View style={[{maxWidth: 200}]}>
+    <View style={[{maxWidth: 245}]}>
       <Link to="/" label="Bluesky - Home">
         <Logo width={32} />
       </Link>

@@ -13,6 +13,7 @@ import {
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createVideoAgent} from '#/lib/media/video/util'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 
 type CaptionsTrack = {lang: string; file: File}
@@ -403,7 +404,6 @@ function getUploadErrorMessage(e: unknown, _: I18n['_']): string | null {
   if (e instanceof AbortError) {
     return null
   }
-  logger.error('Error uploading video', {safeMessage: e})
   if (e instanceof ServerError || e instanceof UploadLimitError) {
     // https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
     switch (e.message) {
@@ -433,9 +433,20 @@ function getUploadErrorMessage(e: unknown, _: I18n['_']): string | null {
         return _(
           msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
         )
-      default:
-        return e.message
+      case 'Confirm your email address to upload videos':
+        return _(msg`Please confirm your email address to upload videos.`)
     }
   }
-  return _(msg`An error occurred while uploading the video.`)
+
+  if (isNetworkError(e)) {
+    return _(
+      msg`An error occurred while uploading the video. Please check your internet connection and try again.`,
+    )
+  } else {
+    // only log errors if they are unknown (and not network errors)
+    logger.error('Error uploading video', {safeMessage: e})
+  }
+
+  const message = e instanceof Error ? e.message : ''
+  return _(msg`An error occurred while uploading the video. ${message}`)
 }

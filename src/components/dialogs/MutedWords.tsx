@@ -8,6 +8,7 @@ import {logger} from '#/logger'
 import {
   usePreferencesQuery,
   useRemoveMutedWordMutation,
+  useUpdateMutedWordMutation,
   useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
 import {
@@ -29,6 +30,7 @@ import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/P
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
+import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
@@ -421,6 +423,7 @@ function MutedWordRow({
   const t = useTheme()
   const {_} = useLingui()
   const {isPending, mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
+  const {mutateAsync: updateMutedWord} = useUpdateMutedWordMutation()
   const control = Prompt.usePromptControl()
   const expiryDate = word.expiresAt ? new Date(word.expiresAt) : undefined
   const isExpired = expiryDate && expiryDate < new Date()
@@ -430,6 +433,15 @@ function MutedWordRow({
     control.close()
     removeMutedWord(word)
   }, [removeMutedWord, word, control])
+
+  const renew = (days?: number) => {
+    updateMutedWord({
+      ...word,
+      expiresAt: days
+        ? new Date(Date.now() + days * ONE_DAY).toISOString()
+        : undefined,
+    })
+  }
 
   return (
     <>
@@ -493,35 +505,104 @@ function MutedWordRow({
           </View>
 
           {(expiryDate || word.actorTarget === 'exclude-following') && (
-            <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-              <Text
-                style={[
-                  a.flex_1,
-                  a.text_xs,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                {expiryDate && (
+            <View style={[a.flex_1, a.flex_row, a.align_center, a.flex_wrap]}>
+              {expiryDate &&
+                (isExpired ? (
                   <>
-                    {isExpired ? (
+                    <Text
+                      style={[
+                        a.text_xs,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}>
                       <Trans>Expired</Trans>
-                    ) : (
-                      <Trans>
-                        Expires{' '}
-                        {formatDistance(expiryDate, new Date(), {
-                          addSuffix: true,
-                        })}
-                      </Trans>
-                    )}
+                    </Text>
+                    <Text
+                      style={[
+                        a.text_xs,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {' · '}
+                    </Text>
+                    <Menu.Root>
+                      <Menu.Trigger label={_(msg`Renew mute word`)}>
+                        {({props}) => (
+                          <Text
+                            {...props}
+                            style={[
+                              a.text_xs,
+                              a.leading_snug,
+                              a.font_semi_bold,
+                              {color: t.palette.primary_500},
+                            ]}>
+                            <Trans>Renew</Trans>
+                          </Text>
+                        )}
+                      </Menu.Trigger>
+                      <Menu.Outer>
+                        <Menu.LabelText>
+                          <Trans>Renew duration</Trans>
+                        </Menu.LabelText>
+                        <Menu.Group>
+                          <Menu.Item
+                            label={_(msg`24 hours`)}
+                            onPress={() => renew(1)}>
+                            <Menu.ItemText>
+                              <Trans>24 hours</Trans>
+                            </Menu.ItemText>
+                          </Menu.Item>
+                          <Menu.Item
+                            label={_(msg`7 days`)}
+                            onPress={() => renew(7)}>
+                            <Menu.ItemText>
+                              <Trans>7 days</Trans>
+                            </Menu.ItemText>
+                          </Menu.Item>
+                          <Menu.Item
+                            label={_(msg`30 days`)}
+                            onPress={() => renew(30)}>
+                            <Menu.ItemText>
+                              <Trans>30 days</Trans>
+                            </Menu.ItemText>
+                          </Menu.Item>
+                          <Menu.Item
+                            label={_(msg`Forever`)}
+                            onPress={() => renew()}>
+                            <Menu.ItemText>
+                              <Trans>Forever</Trans>
+                            </Menu.ItemText>
+                          </Menu.Item>
+                        </Menu.Group>
+                      </Menu.Outer>
+                    </Menu.Root>
                   </>
-                )}
-                {word.actorTarget === 'exclude-following' && (
-                  <>
-                    {' • '}
-                    <Trans>Excludes users you follow</Trans>
-                  </>
-                )}
-              </Text>
+                ) : (
+                  <Text
+                    style={[
+                      a.text_xs,
+                      a.leading_snug,
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    <Trans>
+                      Expires{' '}
+                      {formatDistance(expiryDate, new Date(), {
+                        addSuffix: true,
+                      })}
+                    </Trans>
+                  </Text>
+                ))}
+              {word.actorTarget === 'exclude-following' && (
+                <Text
+                  style={[
+                    a.text_xs,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  {expiryDate ? ' · ' : ''}
+                  <Trans>Excludes users you follow</Trans>
+                </Text>
+              )}
             </View>
           )}
         </View>

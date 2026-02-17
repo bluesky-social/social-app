@@ -5,7 +5,6 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -74,6 +73,7 @@ import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {useActorStatus} from '#/features/liveNow'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 import {router} from '../../../routes'
 
@@ -628,6 +628,7 @@ export function DesktopLeftNav() {
       style={[
         a.px_xl,
         styles.leftNav,
+        !hasSession && !leftNavMinimal && styles.leftNavWide,
         leftNavMinimal && styles.leftNavMinimal,
         {
           transform: [
@@ -820,6 +821,9 @@ const styles = StyleSheet.create({
     // @ts-expect-error web only
     maxHeight: '100vh',
     overflowY: 'auto',
+  },
+  leftNavWide: {
+    width: 245,
   },
   leftNavMinimal: {
     paddingTop: 0,

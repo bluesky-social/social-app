@@ -875,4 +875,9 @@ export type Events = {
   'liveEvents:unhideAllFeedBanners': {
     context: LiveEventFeedMetricContext
   }
+
+  'profile:associated:germ:click-to-chat': {}
+  'profile:associated:germ:click-self-info': {}
+  'profile:associated:germ:self-disconnect': {}
+  'profile:associated:germ:self-reconnect': {}
 }

@@ -10,7 +10,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {useHaptics} from '#/lib/haptics'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -39,6 +38,8 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {IS_IOS} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
+import {GermButton} from '../components/GermButton'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
@@ -156,12 +157,17 @@ let ProfileHeaderStandard = ({
                     testID="profileHeaderDescription"
                     style={[a.text_md]}
                     numberOfLines={15}
+                    selectable
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}
                   />
                 </View>
               ) : undefined}
+
+              {profile.associated?.germ && (
+                <GermButton germ={profile.associated.germ} profile={profile} />
+              )}
 
               {!isMe &&
                 !isBlockedUser &&

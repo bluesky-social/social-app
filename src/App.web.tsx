@@ -2,7 +2,7 @@ import '#/logger/sentry/setup' // must be near top
 import '#/view/icons'
 import './style.css'
 
-import React, {useEffect, useState} from 'react'
+import {Fragment, useEffect, useState} from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -13,6 +13,10 @@ import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
+import {
+  prefetchAppConfig,
+  Provider as AppConfigProvider,
+} from '#/state/appConfig'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
@@ -79,9 +83,10 @@ import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottom
 Geo.resolve()
 prefetchAgeAssuranceConfig()
 prefetchLiveEvents()
+prefetchAppConfig()
 
 function InnerApp() {
-  const [isReady, setIsReady] = React.useState(false)
+  const [isReady, setIsReady] = useState(false)
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
@@ -116,68 +121,67 @@ function InnerApp() {
     })
   }, [_])
 
-  // wait for session to resume
-  if (!isReady || !hasCheckedReferrer) return <Splash isReady />
-
   return (
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
-          <VideoVolumeProvider>
-            <ActiveVideoProvider>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
-                <AnalyticsFeaturesContext>
-                  <QueryProvider currentDid={currentAccount?.did}>
-                    <PolicyUpdateOverlayProvider>
-                      <LiveEventsProvider>
-                        <AgeAssuranceV2Provider>
-                          <ComposerProvider>
-                            <MessagesProvider>
-                              {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                              <LabelDefsProvider>
-                                <ModerationOptsProvider>
-                                  <LoggedOutViewProvider>
-                                    <SelectedFeedProvider>
-                                      <HiddenRepliesProvider>
-                                        <HomeBadgeProvider>
-                                          <UnreadNotifsProvider>
-                                            <BackgroundNotificationPreferencesProvider>
-                                              <MutedThreadsProvider>
-                                                <SafeAreaProvider>
-                                                  <ProgressGuideProvider>
-                                                    <ServiceConfigProvider>
-                                                      <EmailVerificationProvider>
-                                                        <HideBottomBarBorderProvider>
-                                                          <IntentDialogProvider>
-                                                            <Shell />
-                                                            <ToastOutlet />
-                                                          </IntentDialogProvider>
-                                                        </HideBottomBarBorderProvider>
-                                                      </EmailVerificationProvider>
-                                                    </ServiceConfigProvider>
-                                                  </ProgressGuideProvider>
-                                                </SafeAreaProvider>
-                                              </MutedThreadsProvider>
-                                            </BackgroundNotificationPreferencesProvider>
-                                          </UnreadNotifsProvider>
-                                        </HomeBadgeProvider>
-                                      </HiddenRepliesProvider>
-                                    </SelectedFeedProvider>
-                                  </LoggedOutViewProvider>
-                                </ModerationOptsProvider>
-                              </LabelDefsProvider>
-                            </MessagesProvider>
-                          </ComposerProvider>
-                        </AgeAssuranceV2Provider>
-                      </LiveEventsProvider>
-                    </PolicyUpdateOverlayProvider>
-                  </QueryProvider>
-                </AnalyticsFeaturesContext>
-              </React.Fragment>
-            </ActiveVideoProvider>
-          </VideoVolumeProvider>
+          <Splash isReady={isReady && hasCheckedReferrer}>
+            <VideoVolumeProvider>
+              <ActiveVideoProvider>
+                <Fragment
+                  // Resets the entire tree below when it changes:
+                  key={currentAccount?.did}>
+                  <AnalyticsFeaturesContext>
+                    <QueryProvider currentDid={currentAccount?.did}>
+                      <PolicyUpdateOverlayProvider>
+                        <LiveEventsProvider>
+                          <AgeAssuranceV2Provider>
+                            <ComposerProvider>
+                              <MessagesProvider>
+                                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                                <LabelDefsProvider>
+                                  <ModerationOptsProvider>
+                                    <LoggedOutViewProvider>
+                                      <SelectedFeedProvider>
+                                        <HiddenRepliesProvider>
+                                          <HomeBadgeProvider>
+                                            <UnreadNotifsProvider>
+                                              <BackgroundNotificationPreferencesProvider>
+                                                <MutedThreadsProvider>
+                                                  <SafeAreaProvider>
+                                                    <ProgressGuideProvider>
+                                                      <ServiceConfigProvider>
+                                                        <EmailVerificationProvider>
+                                                          <HideBottomBarBorderProvider>
+                                                            <IntentDialogProvider>
+                                                              <Shell />
+                                                              <ToastOutlet />
+                                                            </IntentDialogProvider>
+                                                          </HideBottomBarBorderProvider>
+                                                        </EmailVerificationProvider>
+                                                      </ServiceConfigProvider>
+                                                    </ProgressGuideProvider>
+                                                  </SafeAreaProvider>
+                                                </MutedThreadsProvider>
+                                              </BackgroundNotificationPreferencesProvider>
+                                            </UnreadNotifsProvider>
+                                          </HomeBadgeProvider>
+                                        </HiddenRepliesProvider>
+                                      </SelectedFeedProvider>
+                                    </LoggedOutViewProvider>
+                                  </ModerationOptsProvider>
+                                </LabelDefsProvider>
+                              </MessagesProvider>
+                            </ComposerProvider>
+                          </AgeAssuranceV2Provider>
+                        </LiveEventsProvider>
+                      </PolicyUpdateOverlayProvider>
+                    </QueryProvider>
+                  </AnalyticsFeaturesContext>
+                </Fragment>
+              </ActiveVideoProvider>
+            </VideoVolumeProvider>
+          </Splash>
         </ContextMenuProvider>
       </ThemeProvider>
     </Alf>
@@ -187,14 +191,14 @@ function InnerApp() {
 function App() {
   const [isReady, setReady] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(() =>
       setReady(true),
     )
   }, [])
 
   if (!isReady) {
-    return <Splash isReady />
+    return null
   }
 
   /*
@@ -203,31 +207,33 @@ function App() {
    */
   return (
     <Geo.Provider>
-      <A11yProvider>
-        <OnboardingProvider>
-          <AnalyticsContext>
-            <SessionProvider>
-              <PrefsStateProvider>
-                <I18nProvider>
-                  <ShellStateProvider>
-                    <ModalStateProvider>
-                      <DialogStateProvider>
-                        <LightboxStateProvider>
-                          <PortalProvider>
-                            <StarterPackProvider>
-                              <InnerApp />
-                            </StarterPackProvider>
-                          </PortalProvider>
-                        </LightboxStateProvider>
-                      </DialogStateProvider>
-                    </ModalStateProvider>
-                  </ShellStateProvider>
-                </I18nProvider>
-              </PrefsStateProvider>
-            </SessionProvider>
-          </AnalyticsContext>
-        </OnboardingProvider>
-      </A11yProvider>
+      <AppConfigProvider>
+        <A11yProvider>
+          <OnboardingProvider>
+            <AnalyticsContext>
+              <SessionProvider>
+                <PrefsStateProvider>
+                  <I18nProvider>
+                    <ShellStateProvider>
+                      <ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <StarterPackProvider>
+                                <InnerApp />
+                              </StarterPackProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
+                      </ModalStateProvider>
+                    </ShellStateProvider>
+                  </I18nProvider>
+                </PrefsStateProvider>
+              </SessionProvider>
+            </AnalyticsContext>
+          </OnboardingProvider>
+        </A11yProvider>
+      </AppConfigProvider>
     </Geo.Provider>
   )
 }
