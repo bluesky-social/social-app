@@ -10,7 +10,6 @@ import {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useTranslate} from '#/lib/hooks/useTranslate'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -60,6 +59,7 @@ import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
+import {useActorStatus} from '#/features/liveNow'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -452,14 +452,16 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <Text
                     testID="repostCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.repostCount)}
-                    </Text>{' '}
-                    <Plural
-                      value={post.repostCount}
-                      one="repost"
-                      other="reposts"
-                    />
+                    <Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.repostCount)}
+                      </Text>{' '}
+                      <Plural
+                        value={post.repostCount}
+                        one="repost"
+                        other="reposts"
+                      />
+                    </Trans>
                   </Text>
                 </Link>
               ) : null}
@@ -470,14 +472,16 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <Text
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.quoteCount)}
-                    </Text>{' '}
-                    <Plural
-                      value={post.quoteCount}
-                      one="quote"
-                      other="quotes"
-                    />
+                    <Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.quoteCount)}
+                      </Text>{' '}
+                      <Plural
+                        value={post.quoteCount}
+                        one="quote"
+                        other="quotes"
+                      />
+                    </Trans>
                   </Text>
                 </Link>
               ) : null}
@@ -486,10 +490,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <Text
                     testID="likeCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.likeCount)}
-                    </Text>{' '}
-                    <Plural value={post.likeCount} one="like" other="likes" />
+                    <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.likeCount)}
+                      </Text>{' '}
+                      <Plural value={post.likeCount} one="like" other="likes" />
+                    </Trans>
                   </Text>
                 </Link>
               ) : null}
@@ -497,10 +503,16 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 <Text
                   testID="bookmarkCount-expanded"
                   style={[a.text_md, t.atoms.text_contrast_medium]}>
-                  <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                    {formatPostStatCount(post.bookmarkCount)}
-                  </Text>{' '}
-                  <Plural value={post.bookmarkCount} one="save" other="saves" />
+                  <Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
+                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                      {formatPostStatCount(post.bookmarkCount)}
+                    </Text>{' '}
+                    <Plural
+                      value={post.bookmarkCount}
+                      one="save"
+                      other="saves"
+                    />
+                  </Trans>
                 </Text>
               ) : null}
             </View>

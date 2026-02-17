@@ -24,6 +24,7 @@ yarn android            # Run on Android
 yarn ios                # Run on iOS
 
 # Testing & Quality
+# IMPORTANT: Always use these yarn scripts, never call the underlying tools directly
 yarn test               # Run Jest tests
 yarn lint               # Run ESLint
 yarn typecheck          # Run TypeScript type checking

@@ -72,9 +72,9 @@ export function BirthDateSettingsDialog({
             ) : isUsingAppPassword ? (
               <Admonition type="info">
                 <Trans>
-                  Hmm, it looks like you're logged in with an{' '}
+                  Hmm, it looks like you're signed in with an{' '}
                   <Span style={[a.italic]}>App Password</Span>. To set your
-                  birthdate, you'll need to log in with your main account
+                  birthdate, you'll need to sign in with your main account
                   password, or ask whomever controls this account to do so.
                 </Trans>
               </Admonition>

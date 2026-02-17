@@ -13,6 +13,10 @@ import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
+import {
+  prefetchAppConfig,
+  Provider as AppConfigProvider,
+} from '#/state/appConfig'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
@@ -79,6 +83,7 @@ import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottom
 Geo.resolve()
 prefetchAgeAssuranceConfig()
 prefetchLiveEvents()
+prefetchAppConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = useState(false)
@@ -202,31 +207,33 @@ function App() {
    */
   return (
     <Geo.Provider>
-      <A11yProvider>
-        <OnboardingProvider>
-          <AnalyticsContext>
-            <SessionProvider>
-              <PrefsStateProvider>
-                <I18nProvider>
-                  <ShellStateProvider>
-                    <ModalStateProvider>
-                      <DialogStateProvider>
-                        <LightboxStateProvider>
-                          <PortalProvider>
-                            <StarterPackProvider>
-                              <InnerApp />
-                            </StarterPackProvider>
-                          </PortalProvider>
-                        </LightboxStateProvider>
-                      </DialogStateProvider>
-                    </ModalStateProvider>
-                  </ShellStateProvider>
-                </I18nProvider>
-              </PrefsStateProvider>
-            </SessionProvider>
-          </AnalyticsContext>
-        </OnboardingProvider>
-      </A11yProvider>
+      <AppConfigProvider>
+        <A11yProvider>
+          <OnboardingProvider>
+            <AnalyticsContext>
+              <SessionProvider>
+                <PrefsStateProvider>
+                  <I18nProvider>
+                    <ShellStateProvider>
+                      <ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <StarterPackProvider>
+                                <InnerApp />
+                              </StarterPackProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
+                      </ModalStateProvider>
+                    </ShellStateProvider>
+                  </I18nProvider>
+                </PrefsStateProvider>
+              </SessionProvider>
+            </AnalyticsContext>
+          </OnboardingProvider>
+        </A11yProvider>
+      </AppConfigProvider>
     </Geo.Provider>
   )
 }
