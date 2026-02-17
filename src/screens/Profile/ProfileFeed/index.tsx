@@ -12,6 +12,7 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {cleanError} from '#/lib/strings/errors'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
@@ -69,7 +70,7 @@ export function ProfileFeedScreen(props: Props) {
         <ErrorScreen
           showHeader
           title={_(msg`Could not load feed`)}
-          message={error.toString()}
+          message={cleanError(error)}
           onPressTryAgain={() => void refetch()}
         />
       </Layout.Screen>
