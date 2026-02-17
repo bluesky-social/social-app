@@ -419,11 +419,12 @@ function ProfileScreenLoaded({
             )
           : null}
         {showPostsTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
                 ref={postsSectionRef}
                 feed={`author|${profile.did}|posts_and_author_threads`}
                 headerHeight={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
@@ -445,11 +446,12 @@ function ProfileScreenLoaded({
             )
           : null}
         {showRepliesTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
                 ref={repliesSectionRef}
                 feed={`author|${profile.did}|posts_with_replies`}
                 headerHeight={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
@@ -460,11 +462,12 @@ function ProfileScreenLoaded({
             )
           : null}
         {showMediaTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
                 ref={mediaSectionRef}
                 feed={`author|${profile.did}|posts_with_media`}
                 headerHeight={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
@@ -487,11 +490,12 @@ function ProfileScreenLoaded({
             )
           : null}
         {showVideosTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
                 ref={videosSectionRef}
                 feed={`author|${profile.did}|posts_with_video`}
                 headerHeight={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
@@ -514,11 +518,12 @@ function ProfileScreenLoaded({
             )
           : null}
         {showLikesTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, collapsedHeaderHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
                 ref={likesSectionRef}
                 feed={`likes|${profile.did}`}
                 headerHeight={headerHeight}
+                collapsedHeaderHeight={collapsedHeaderHeight}
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
