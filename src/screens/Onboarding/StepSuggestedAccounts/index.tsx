@@ -7,8 +7,10 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
 import {wait} from '#/lib/async/wait'
+import {useCleanError} from '#/lib/hooks/useCleanError'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
+import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -43,6 +45,7 @@ export function StepSuggestedAccounts() {
   const agent = useAgent()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
+  const cleanError = useCleanError()
 
   const {state, dispatch} = useOnboardingInternalState()
 
@@ -75,6 +78,7 @@ export function StepSuggestedAccounts() {
     overrideInterests: state.interestsStepResults.selectedInterests,
   })
 
+  const {raw: rawError} = cleanError(error)
   const isError = !!error
   const isEmpty =
     !isLoading && suggestedUsers && suggestedUsers.actors.length === 0
@@ -155,6 +159,14 @@ export function StepSuggestedAccounts() {
     },
     [ax, selectedInterest, suggestedUsers?.recId],
   )
+
+  useEffect(() => {
+    if (rawError) {
+      logger.error(rawError, {
+        message: 'Failed to fetch suggested accounts during onboarding',
+      })
+    }
+  }, [rawError])
 
   return (
     <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
