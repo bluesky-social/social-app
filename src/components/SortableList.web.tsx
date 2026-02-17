@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {View} from 'react-native'
 
 import {useTheme} from '#/alf'
-import {GripVertical_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/GripVertical'
+import {DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/DotGrid'
 
 /**
  * Web implementation of SortableList using pointer events.

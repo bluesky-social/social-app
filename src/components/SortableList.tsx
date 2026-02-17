@@ -10,7 +10,7 @@ import Animated, {
 
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme, web} from '#/alf'
-import {GripVertical_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/GripVertical'
+import {DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/DotGrid'
 
 /**
  * Drag-to-reorder list. Items are absolutely positioned in a fixed-height
