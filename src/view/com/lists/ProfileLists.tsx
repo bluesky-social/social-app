@@ -285,32 +285,40 @@ export function ProfileLists({
     isEmpty,
   ])
 
+  const list = (
+    <List
+      testID={testID ? `${testID}-flatlist` : undefined}
+      ref={scrollElRef}
+      data={items}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      ListFooterComponent={ProfileListsFooter}
+      refreshing={isPTRing}
+      onRefresh={onRefresh}
+      headerOffset={headerOffset}
+      progressViewOffset={ios(0)}
+      removeClippedSubviews={true}
+      desktopFixedHeight
+      onEndReached={onEndReached}
+      contentContainerStyle={{minHeight: height + headerOffset}}
+      animatedProps={IS_IOS ? animatedProps : undefined}
+    />
+  )
+
   return (
     <View testID={testID} style={style}>
-      <ScrollProvider
-        onScroll={onScrollWorklet}
-        onBeginDrag={onBeginDragFromContext}
-        onEndDrag={onEndDragFromContext}
-        onMomentumBegin={onMomentumEndFromContext}
-        onMomentumEnd={onMomentumEndFromContext}>
-        <List
-          testID={testID ? `${testID}-flatlist` : undefined}
-          ref={scrollElRef}
-          data={items}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          ListFooterComponent={ProfileListsFooter}
-          refreshing={isPTRing}
-          onRefresh={onRefresh}
-          headerOffset={headerOffset}
-          progressViewOffset={ios(0)}
-          removeClippedSubviews={true}
-          desktopFixedHeight
-          onEndReached={onEndReached}
-          contentContainerStyle={{minHeight: height + headerOffset}}
-          animatedProps={animatedProps}
-        />
-      </ScrollProvider>
+      {IS_IOS ? (
+        <ScrollProvider
+          onScroll={onScrollWorklet}
+          onBeginDrag={onBeginDragFromContext}
+          onEndDrag={onEndDragFromContext}
+          onMomentumBegin={onMomentumEndFromContext}
+          onMomentumEnd={onMomentumEndFromContext}>
+          {list}
+        </ScrollProvider>
+      ) : (
+        list
+      )}
     </View>
   )
 }
