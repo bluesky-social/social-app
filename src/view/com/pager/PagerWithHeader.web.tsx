@@ -15,6 +15,7 @@ import {TabBar} from './TabBar'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
+  collapsedHeaderHeight: number
   isFocused: boolean
   scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
 }
@@ -177,6 +178,7 @@ function PagerItem({
   }
   return renderTab({
     headerHeight: 0,
+    collapsedHeaderHeight: 0,
     isFocused,
     scrollElRef: scrollElRef as React.MutableRefObject<
       ListMethods | ScrollView | null
