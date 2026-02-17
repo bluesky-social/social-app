@@ -132,7 +132,12 @@ export function StepSuggestedAccounts() {
       toast.show(_(msg`Followed all accounts!`), {type: 'success'})
       setFollowedUsers(followed => [...followed, ...newlyFollowed])
     },
-    onError: () => {
+    onError: e => {
+      const {clean, raw} = cleanError(e)
+      const err = clean || raw || e
+      logger.error(err || e, {
+        message: 'Failed to follow all suggested accounts during onboarding',
+      })
       toast.show(
         _(msg`Failed to follow all suggested accounts, please try again`),
         {type: 'error'},
