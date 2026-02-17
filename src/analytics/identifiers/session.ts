@@ -18,6 +18,16 @@ export function getInitialSessionId() {
   return sessionId
 }
 
+/**
+ * Gets the current session ID. Freshness depends on `useSessionId` being
+ * mounted, which handles refreshing this value between foreground/background
+ * transitions. Since that's mounted in `analytics/index.tsx`, this value can
+ * generally be trusted to be up to date.
+ */
+export function getSessionId() {
+  return device.get(['nativeSessionId'])
+}
+
 export function useSessionId() {
   const [id, setId] = useState(() => sessionId)
 
