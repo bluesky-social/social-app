@@ -1031,45 +1031,53 @@ let PostFeed = ({
     return {}
   })
 
+  const list = (
+    <List
+      testID={testID ? `${testID}-flatlist` : undefined}
+      ref={scrollElRef}
+      data={feedItems}
+      keyExtractor={(item: FeedRow) => item.key}
+      renderItem={renderItem}
+      ListFooterComponent={FeedFooter}
+      ListHeaderComponent={ListHeaderComponent}
+      refreshing={isPTRing}
+      onRefresh={onRefresh}
+      headerOffset={headerOffset}
+      progressViewOffset={progressViewOffset}
+      contentContainerStyle={{
+        minHeight: Dimensions.get('window').height * 1.5,
+      }}
+      onScrolledDownChange={handleScrolledDownChange}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={2} // number of posts left to trigger load more
+      removeClippedSubviews={true}
+      extraData={extraData}
+      desktopFixedHeight={
+        desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+      }
+      initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
+      windowSize={9}
+      maxToRenderPerBatch={IS_IOS ? 5 : 1}
+      updateCellsBatchingPeriod={40}
+      onItemSeen={onItemSeen}
+      animatedProps={IS_IOS ? animatedProps : undefined}
+    />
+  )
+
   return (
     <View testID={testID} style={style}>
-      <ScrollProvider
-        onScroll={onScrollWorklet}
-        onBeginDrag={onBeginDragFromContext}
-        onEndDrag={onEndDragFromContext}
-        onMomentumBegin={onMomentumEndFromContext}
-        onMomentumEnd={onMomentumEndFromContext}>
-        <List
-          testID={testID ? `${testID}-flatlist` : undefined}
-          ref={scrollElRef}
-          data={feedItems}
-          keyExtractor={(item: FeedRow) => item.key}
-          renderItem={renderItem}
-          ListFooterComponent={FeedFooter}
-          ListHeaderComponent={ListHeaderComponent}
-          refreshing={isPTRing}
-          onRefresh={onRefresh}
-          headerOffset={headerOffset}
-          progressViewOffset={progressViewOffset}
-          contentContainerStyle={{
-            minHeight: Dimensions.get('window').height * 1.5,
-          }}
-          onScrolledDownChange={handleScrolledDownChange}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={2} // number of posts left to trigger load more
-          removeClippedSubviews={true}
-          extraData={extraData}
-          desktopFixedHeight={
-            desktopFixedHeightOffset ? desktopFixedHeightOffset : true
-          }
-          initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
-          windowSize={9}
-          maxToRenderPerBatch={IS_IOS ? 5 : 1}
-          updateCellsBatchingPeriod={40}
-          onItemSeen={onItemSeen}
-          animatedProps={animatedProps}
-        />
-      </ScrollProvider>
+      {IS_IOS ? (
+        <ScrollProvider
+          onScroll={onScrollWorklet}
+          onBeginDrag={onBeginDragFromContext}
+          onEndDrag={onEndDragFromContext}
+          onMomentumBegin={onMomentumEndFromContext}
+          onMomentumEnd={onMomentumEndFromContext}>
+          {list}
+        </ScrollProvider>
+      ) : (
+        list
+      )}
     </View>
   )
 }

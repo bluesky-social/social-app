@@ -200,40 +200,48 @@ export function ProfileStarterPacks({
     [isTabletOrDesktop, t.atoms.border_contrast_low],
   )
 
+  const list = (
+    <List
+      testID={testID ? `${testID}-flatlist` : undefined}
+      ref={scrollElRef}
+      data={items}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      refreshing={isPTRing}
+      headerOffset={headerOffset}
+      progressViewOffset={ios(0)}
+      contentContainerStyle={{
+        minHeight: height + headerOffset,
+        paddingBottom: bottomBarOffset,
+      }}
+      removeClippedSubviews={true}
+      desktopFixedHeight
+      onEndReached={onEndReached}
+      onRefresh={onRefresh}
+      ListEmptyComponent={
+        data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
+      }
+      ListFooterComponent={
+        !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
+      }
+      animatedProps={IS_IOS ? animatedProps : undefined}
+    />
+  )
+
   return (
     <View testID={testID} style={style}>
-      <ScrollProvider
-        onScroll={onScrollWorklet}
-        onBeginDrag={onBeginDragFromContext}
-        onEndDrag={onEndDragFromContext}
-        onMomentumBegin={onMomentumEndFromContext}
-        onMomentumEnd={onMomentumEndFromContext}>
-        <List
-          testID={testID ? `${testID}-flatlist` : undefined}
-          ref={scrollElRef}
-          data={items}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          refreshing={isPTRing}
-          headerOffset={headerOffset}
-          progressViewOffset={ios(0)}
-          contentContainerStyle={{
-            minHeight: height + headerOffset,
-            paddingBottom: bottomBarOffset,
-          }}
-          removeClippedSubviews={true}
-          desktopFixedHeight
-          onEndReached={onEndReached}
-          onRefresh={onRefresh}
-          ListEmptyComponent={
-            data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
-          }
-          ListFooterComponent={
-            !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
-          }
-          animatedProps={animatedProps}
-        />
-      </ScrollProvider>
+      {IS_IOS ? (
+        <ScrollProvider
+          onScroll={onScrollWorklet}
+          onBeginDrag={onBeginDragFromContext}
+          onEndDrag={onEndDragFromContext}
+          onMomentumBegin={onMomentumEndFromContext}
+          onMomentumEnd={onMomentumEndFromContext}>
+          {list}
+        </ScrollProvider>
+      ) : (
+        list
+      )}
     </View>
   )
 }

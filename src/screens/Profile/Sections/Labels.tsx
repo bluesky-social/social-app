@@ -158,40 +158,45 @@ export function ProfileLabelsSection({
     [labelerInfo, isSubscribed, numItems, t],
   )
 
+  const list = (
+    <List
+      ref={scrollElRef}
+      data={labelValues}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      contentContainerStyle={a.px_xl}
+      headerOffset={headerHeight}
+      progressViewOffset={ios(0)}
+      ListHeaderComponent={
+        <LabelerListHeader
+          isLabelerLoading={isLabelerLoading}
+          labelerInfo={labelerInfo}
+          labelerError={labelerError}
+          hasValues={labelValues.length !== 0}
+          isSubscribed={isSubscribed}
+        />
+      }
+      ListFooterComponent={
+        <ListFooter height={headerHeight + 180} style={a.border_transparent} />
+      }
+      animatedProps={IS_IOS ? animatedProps : undefined}
+    />
+  )
+
   return (
     <View>
-      <ScrollProvider
-        onScroll={onScrollWorklet}
-        onBeginDrag={onBeginDragFromContext}
-        onEndDrag={onEndDragFromContext}
-        onMomentumBegin={onMomentumEndFromContext}
-        onMomentumEnd={onMomentumEndFromContext}>
-        <List
-          ref={scrollElRef}
-          data={labelValues}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          contentContainerStyle={a.px_xl}
-          headerOffset={headerHeight}
-          progressViewOffset={ios(0)}
-          ListHeaderComponent={
-            <LabelerListHeader
-              isLabelerLoading={isLabelerLoading}
-              labelerInfo={labelerInfo}
-              labelerError={labelerError}
-              hasValues={labelValues.length !== 0}
-              isSubscribed={isSubscribed}
-            />
-          }
-          ListFooterComponent={
-            <ListFooter
-              height={headerHeight + 180}
-              style={a.border_transparent}
-            />
-          }
-          animatedProps={animatedProps}
-        />
-      </ScrollProvider>
+      {IS_IOS ? (
+        <ScrollProvider
+          onScroll={onScrollWorklet}
+          onBeginDrag={onBeginDragFromContext}
+          onEndDrag={onEndDragFromContext}
+          onMomentumBegin={onMomentumEndFromContext}
+          onMomentumEnd={onMomentumEndFromContext}>
+          {list}
+        </ScrollProvider>
+      ) : (
+        list
+      )}
     </View>
   )
 }
