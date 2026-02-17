@@ -7,7 +7,6 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
 import {wait} from '#/lib/async/wait'
-import {useCleanError} from '#/lib/hooks/useCleanError'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
@@ -45,7 +44,6 @@ export function StepSuggestedAccounts() {
   const agent = useAgent()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
-  const cleanError = useCleanError()
 
   const {state, dispatch} = useOnboardingInternalState()
 
@@ -78,7 +76,6 @@ export function StepSuggestedAccounts() {
     overrideInterests: state.interestsStepResults.selectedInterests,
   })
 
-  const {raw: rawError} = cleanError(error)
   const isError = !!error
   const isEmpty =
     !isLoading && suggestedUsers && suggestedUsers.actors.length === 0
@@ -133,10 +130,12 @@ export function StepSuggestedAccounts() {
       setFollowedUsers(followed => [...followed, ...newlyFollowed])
     },
     onError: e => {
-      const {raw} = cleanError(e)
-      logger.error(raw || e, {
-        message: 'Failed to follow all suggested accounts during onboarding',
-      })
+      logger.error(
+        'Failed to follow all suggested accounts during onboarding',
+        {
+          safeMessage: e,
+        },
+      )
       toast.show(
         _(msg`Failed to follow all suggested accounts, please try again`),
         {type: 'error'},
@@ -165,12 +164,12 @@ export function StepSuggestedAccounts() {
   )
 
   useEffect(() => {
-    if (rawError) {
-      logger.error(rawError, {
-        message: 'Failed to fetch suggested accounts during onboarding',
+    if (error) {
+      logger.error('Failed to fetch suggested accounts during onboarding', {
+        safeMessage: error,
       })
     }
-  }, [rawError])
+  }, [error])
 
   return (
     <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
