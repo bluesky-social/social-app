@@ -12,7 +12,11 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
-import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
+import {
+  precacheResolveLinkQuery,
+  RQKEY_GIF_ROOT,
+  RQKEY_LINK_ROOT,
+} from '#/state/queries/resolve-link'
 import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
 
@@ -120,6 +124,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     if (wasOpen) {
       setState(undefined)
       purgeTemporaryImageFiles()
+      // Purging deletes cached thumbnails on disk, so remove the query
+      // caches that may hold references to those now-deleted file paths.
+      // Without this, restoring a draft would serve stale ResolvedLink
+      // data pointing at missing files, causing "Failed to load blob".
+      queryClient.removeQueries({queryKey: [RQKEY_LINK_ROOT]})
+      queryClient.removeQueries({queryKey: [RQKEY_GIF_ROOT]})
     }
 
     return wasOpen
