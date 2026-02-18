@@ -9,6 +9,7 @@ import * as bcp47Match from 'bcp-47-match'
 import {wait} from '#/lib/async/wait'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
+import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -19,7 +20,7 @@ import {
   OnboardingTitleText,
 } from '#/screens/Onboarding/Layout'
 import {useOnboardingInternalState} from '#/screens/Onboarding/state'
-import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
+import {useSuggestedOnboardingUsers} from '#/screens/Search/util/useSuggestedOnboardingUsers'
 import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -63,13 +64,14 @@ export function StepSuggestedAccounts() {
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
     .sort(boostInterests(state.interestsStepResults.selectedInterests))
+
   const {
     data: suggestedUsers,
     isLoading,
     error,
     isRefetching,
     refetch,
-  } = useSuggestedUsers({
+  } = useSuggestedOnboardingUsers({
     category: selectedInterest || (useFullExperience ? null : interests[0]),
     search: !useFullExperience,
     overrideInterests: state.interestsStepResults.selectedInterests,
@@ -128,7 +130,13 @@ export function StepSuggestedAccounts() {
       toast.show(_(msg`Followed all accounts!`), {type: 'success'})
       setFollowedUsers(followed => [...followed, ...newlyFollowed])
     },
-    onError: () => {
+    onError: e => {
+      logger.error(
+        'Failed to follow all suggested accounts during onboarding',
+        {
+          safeMessage: e,
+        },
+      )
       toast.show(
         _(msg`Failed to follow all suggested accounts, please try again`),
         {type: 'error'},
@@ -155,6 +163,14 @@ export function StepSuggestedAccounts() {
     },
     [ax, selectedInterest, suggestedUsers?.recId],
   )
+
+  useEffect(() => {
+    if (error) {
+      logger.error('Failed to fetch suggested accounts during onboarding', {
+        safeMessage: error,
+      })
+    }
+  }, [error])
 
   return (
     <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">

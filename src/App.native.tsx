@@ -3,6 +3,7 @@ import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
+import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -14,7 +15,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as Sentry from '@sentry/react-native'
 
-import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
 import {s} from '#/lib/styles'
@@ -22,6 +22,10 @@ import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
+import {
+  prefetchAppConfig,
+  Provider as AppConfigProvider,
+} from '#/state/appConfig'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
@@ -103,6 +107,7 @@ if (IS_ANDROID) {
 Geo.resolve()
 prefetchAgeAssuranceConfig()
 prefetchLiveEvents()
+prefetchAppConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -228,38 +233,40 @@ function App() {
    */
   return (
     <Geo.Provider>
-      <A11yProvider>
-        <KeyboardControllerProvider>
-          <OnboardingProvider>
-            <AnalyticsContext>
-              <SessionProvider>
-                <PrefsStateProvider>
-                  <I18nProvider>
-                    <ShellStateProvider>
-                      <ModalStateProvider>
-                        <DialogStateProvider>
-                          <LightboxStateProvider>
-                            <PortalProvider>
-                              <BottomSheetProvider>
-                                <StarterPackProvider>
-                                  <SafeAreaProvider
-                                    initialMetrics={initialWindowMetrics}>
-                                    <InnerApp />
-                                  </SafeAreaProvider>
-                                </StarterPackProvider>
-                              </BottomSheetProvider>
-                            </PortalProvider>
-                          </LightboxStateProvider>
-                        </DialogStateProvider>
-                      </ModalStateProvider>
-                    </ShellStateProvider>
-                  </I18nProvider>
-                </PrefsStateProvider>
-              </SessionProvider>
-            </AnalyticsContext>
-          </OnboardingProvider>
-        </KeyboardControllerProvider>
-      </A11yProvider>
+      <AppConfigProvider>
+        <A11yProvider>
+          <KeyboardControllerProvider>
+            <OnboardingProvider>
+              <AnalyticsContext>
+                <SessionProvider>
+                  <PrefsStateProvider>
+                    <I18nProvider>
+                      <ShellStateProvider>
+                        <ModalStateProvider>
+                          <DialogStateProvider>
+                            <LightboxStateProvider>
+                              <PortalProvider>
+                                <BottomSheetProvider>
+                                  <StarterPackProvider>
+                                    <SafeAreaProvider
+                                      initialMetrics={initialWindowMetrics}>
+                                      <InnerApp />
+                                    </SafeAreaProvider>
+                                  </StarterPackProvider>
+                                </BottomSheetProvider>
+                              </PortalProvider>
+                            </LightboxStateProvider>
+                          </DialogStateProvider>
+                        </ModalStateProvider>
+                      </ShellStateProvider>
+                    </I18nProvider>
+                  </PrefsStateProvider>
+                </SessionProvider>
+              </AnalyticsContext>
+            </OnboardingProvider>
+          </KeyboardControllerProvider>
+        </A11yProvider>
+      </AppConfigProvider>
     </Geo.Provider>
   )
 }

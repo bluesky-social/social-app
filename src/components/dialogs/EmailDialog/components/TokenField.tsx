@@ -32,8 +32,11 @@ export function TokenField({
       <TextField.Root>
         <TextField.Icon icon={Shield} />
         <TextField.Input
+          autoComplete="off"
+          autoCorrect={false}
           isInvalid={isInvalid}
           label={_(msg`Confirmation code`)}
+          maxLength={11}
           placeholder="XXXXX-XXXXX"
           value={value}
           onChangeText={handleOnChangeText}

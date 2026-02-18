@@ -98,6 +98,7 @@ export function DraftItem({
             {!!post.text.trim().length && (
               <RichText
                 style={[a.text_md, a.leading_snug, a.pointer_events_none]}
+                numberOfLines={8}
                 value={post.text}
                 enableTags
                 disableMentionFacetValidation

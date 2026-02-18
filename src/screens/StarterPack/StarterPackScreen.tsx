@@ -501,7 +501,7 @@ function Header({
                     value={starterPack.joinedAllTimeCount || 0}
                     other="# people have"
                   />{' '}
-                  used this starter pack!
+                  joined Bluesky via this starter pack!
                 </Trans>
               </Text>
             </View>

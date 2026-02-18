@@ -1,12 +1,4 @@
-import {
-  type JSX,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -27,7 +19,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isStatusStillActive, isStatusValidForViewers} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -48,7 +39,6 @@ import {
   RQKEY,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
-import {useLiveNowConfig} from '#/state/service-config'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {useSelectedFeed} from '#/state/shell/selected-feed'
@@ -71,6 +61,11 @@ import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interst
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
+import {
+  isStatusStillActive,
+  isStatusValidForViewers,
+  useLiveNowConfig,
+} from '#/features/liveNow'
 import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
@@ -220,13 +215,13 @@ let PostFeed = ({
   scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
   onScrolledDownChange?: (isScrolledDown: boolean) => void
-  renderEmptyState: () => JSX.Element
-  renderEndOfFeed?: () => JSX.Element
+  renderEmptyState: () => React.ReactElement
+  renderEndOfFeed?: () => React.ReactElement
   testID?: string
   headerOffset?: number
   progressViewOffset?: number
   desktopFixedHeightOffset?: number
-  ListHeaderComponent?: () => JSX.Element
+  ListHeaderComponent?: () => React.ReactElement
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   initialNumToRender?: number
@@ -309,20 +304,26 @@ let PostFeed = ({
     }
   })
 
+  const isScrolledDownRef = useRef(false)
+  const handleScrolledDownChange = (isScrolledDown: boolean) => {
+    isScrolledDownRef.current = isScrolledDown
+    onScrolledDownChange?.(isScrolledDown)
+  }
+
   const myDid = currentAccount?.did || ''
   const onPostCreated = useCallback(() => {
     // NOTE
-    // only invalidate if there's 1 page
-    // more than 1 page can trigger some UI freakouts on iOS and android
-    // -prf
+    // only invalidate if at the top of the feed
+    // changing content when scrolled can trigger some UI freakouts on iOS and android
+    // -sfn
     if (
-      data?.pages.length === 1 &&
+      !isScrolledDownRef.current &&
       (feed === 'following' ||
         feed === `author|${myDid}|posts_and_author_threads`)
     ) {
-      queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+      void queryClient.invalidateQueries({queryKey: RQKEY(feed)})
     }
-  }, [queryClient, feed, data, myDid])
+  }, [queryClient, feed, myDid])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
@@ -981,7 +982,7 @@ let PostFeed = ({
         }
       }
     },
-    [feedFeedback, feed, liveNowConfig, getPostPosition],
+    [feedFeedback, feed, liveNowConfig, getPostPosition, ax],
   )
 
   return (
@@ -1001,7 +1002,7 @@ let PostFeed = ({
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
-        onScrolledDownChange={onScrolledDownChange}
+        onScrolledDownChange={handleScrolledDownChange}
         onEndReached={onEndReached}
         onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}

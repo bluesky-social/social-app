@@ -18,7 +18,6 @@ export type QueryProps = {
   category?: string | null
   limit?: number
   enabled?: boolean
-  overrideInterests?: string[]
 }
 
 export const getSuggestedUsersQueryKeyRoot = 'unspecced-suggested-users'
@@ -26,7 +25,6 @@ export const createGetSuggestedUsersQueryKey = (props: QueryProps) => [
   getSuggestedUsersQueryKeyRoot,
   props.category,
   props.limit,
-  props.overrideInterests?.join(','),
 ]
 
 export function useGetSuggestedUsersQuery(props: QueryProps) {
@@ -41,11 +39,6 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
       const contentLangs = getContentLanguages().join(',')
       const userInterests = aggregateUserInterests(preferences)
 
-      const interests =
-        props.overrideInterests && props.overrideInterests.length > 0
-          ? props.overrideInterests.join(',')
-          : userInterests
-
       const {data} = await agent.app.bsky.unspecced.getSuggestedUsers(
         {
           category: props.category ?? undefined,
@@ -53,7 +46,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
         },
         {
           headers: {
-            ...createBskyTopicsHeader(interests),
+            ...createBskyTopicsHeader(userInterests),
             'Accept-Language': contentLangs,
           },
         },
@@ -61,7 +54,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
       // FALLBACK: if no results for 'all', try again with no interests specified
       if (!props.category && data.actors.length === 0) {
         logger.error(
-          `Did not get any suggested users, falling back - interests: ${interests}`,
+          `Did not get any suggested users, falling back - interests: ${userInterests}`,
         )
         const {data: fallbackData} =
           await agent.app.bsky.unspecced.getSuggestedUsers(

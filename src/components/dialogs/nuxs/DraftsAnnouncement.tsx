@@ -95,7 +95,7 @@ export function DraftsAnnouncement() {
             ]}
             alt={_(
               msg({
-                message: `A screenshot of a the post composer with a new button next to the post button that says "Drafts", with a rainbow firework effect. Below, the text in the composer reads "Hey, did you hear the news? Bluesky has drafts now???".`,
+                message: `A screenshot of the post composer with a new button next to the post button that says "Drafts", with a rainbow firework effect. Below, the text in the composer reads "Hey, did you hear the news? Bluesky has drafts now!!!".`,
                 comment:
                   'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
               }),
