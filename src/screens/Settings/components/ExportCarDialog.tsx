@@ -121,6 +121,14 @@ export function ExportCarDialog({
             {loading === 'repo' && <ButtonIcon icon={Loader} />}
           </Button>
 
+          <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
+            <Trans>
+              You can also download your chat data as a "JSONL" file. This file
+              only includes chat messages that you have sent and does not
+              include chat messages that you have received.
+            </Trans>
+          </Text>
+
           <Button
             color="secondary"
             size="large"
