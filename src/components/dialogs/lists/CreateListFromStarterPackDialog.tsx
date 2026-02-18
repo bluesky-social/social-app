@@ -27,6 +27,7 @@ import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {CreateOrEditListDialog} from './CreateOrEditListDialog'
 
 export function CreateListFromStarterPackDialog({
@@ -39,6 +40,7 @@ export function CreateListFromStarterPackDialog({
   const {_} = useLingui()
   const t = useTheme()
   const agent = useAgent()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const queryClient = useQueryClient()
@@ -92,7 +94,7 @@ export function CreateListFromStarterPackDialog({
             const chunks = chunk(listitemWrites, 50)
             for (const c of chunks) {
               await agent.com.atproto.repo.applyWrites({
-                repo: currentAccount!.did,
+                repo: currentAccount.did,
                 writes: c,
               })
             }
@@ -115,7 +117,7 @@ export function CreateListFromStarterPackDialog({
 
       queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
 
-      logger.metric('starterPack:convertToList', {
+      ax.metric('starterPack:convertToList', {
         starterPack: starterPack.uri,
         memberCount: listItems.length,
       })
