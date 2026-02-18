@@ -61,6 +61,7 @@ export function ProfileHeaderHandle({
               // forceLTR handled by CSS above on web
               IS_NATIVE,
             )}
+        {profile.pronouns ? ' · ' + profile.pronouns : ''}
       </Text>
     </View>
   )

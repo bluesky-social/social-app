@@ -281,6 +281,9 @@ function InlineNameAndHandle({
         ]}
         numberOfLines={1}>
         {NON_BREAKING_SPACE + handle}
+        {'pronouns' in profile && profile.pronouns
+          ? ' · ' + profile.pronouns
+          : ''}
       </Text>
     </View>
   )

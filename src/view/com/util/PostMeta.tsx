@@ -135,6 +135,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 {flexShrink: 10},
               ]}>
               {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+              {author.pronouns ? ' · ' + author.pronouns : ''}
             </WebOnlyInlineLinkText>
           </View>
         </ProfileHoverCard>

@@ -111,6 +111,7 @@ export function VideoPostCard({
           ]}
           numberOfLines={1}>
           {sanitizeHandle(post.author.handle, '@')}
+          {post.author.pronouns ? ' · ' + post.author.pronouns : ''}
         </Text>
       </View>
     </View>
@@ -321,6 +322,7 @@ export function VideoPostCardTextPlaceholder({
               ]}
               numberOfLines={1}>
               {sanitizeHandle(author.handle, '@')}
+              {author.pronouns ? ' · ' + author.pronouns : ''}
             </Text>
           </View>
         ) : (
