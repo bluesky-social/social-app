@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
@@ -23,14 +24,14 @@ export function ExportCarDialog({
   const {_} = useLingui()
   const t = useTheme()
   const agent = useAgent()
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<'repo' | 'chat' | false>(false)
 
   const download = useCallback(async () => {
     if (!agent.session) {
       return // shouldnt ever happen
     }
     try {
-      setLoading(true)
+      setLoading('repo')
       const did = agent.session.did
       const downloadRes = await agent.com.atproto.sync.getRepo({did})
       const saveRes = await saveBytesToDisk(
@@ -44,6 +45,40 @@ export function ExportCarDialog({
       }
     } catch (e) {
       logger.error('Error occurred while downloading CAR file', {message: e})
+      Toast.show(_(msg`Error occurred while saving file`), {type: 'error'})
+    } finally {
+      setLoading(false)
+      control.close()
+    }
+  }, [_, control, agent])
+
+  const downloadChatData = useCallback(async () => {
+    if (!agent.session) {
+      return
+    }
+    try {
+      setLoading('chat')
+      // Using raw fetch because the XRPC client incorrectly tries to JSON-parse
+      // application/jsonl responses (substring match on application/json).
+      const res = await agent.sessionManager.fetchHandler(
+        '/xrpc/chat.bsky.actor.exportAccountData',
+        {headers: DM_SERVICE_HEADERS},
+      )
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`)
+      }
+      const data = new Uint8Array(await res.arrayBuffer())
+      const saveRes = await saveBytesToDisk(
+        'chat.jsonl',
+        data,
+        res.headers.get('content-type') || 'application/jsonl',
+      )
+
+      if (saveRes) {
+        Toast.show(_(msg`File saved successfully!`))
+      }
+    } catch (e) {
+      logger.error('Error occurred while downloading chat data', {message: e})
       Toast.show(_(msg`Error occurred while saving file`), {type: 'error'})
     } finally {
       setLoading(false)
@@ -77,13 +112,34 @@ export function ExportCarDialog({
             color="primary"
             size="large"
             label={_(msg`Download CAR file`)}
-            disabled={loading}
+            disabled={!!loading}
             onPress={download}>
             <ButtonIcon icon={DownloadIcon} />
             <ButtonText>
               <Trans>Download CAR file</Trans>
             </ButtonText>
-            {loading && <ButtonIcon icon={Loader} />}
+            {loading === 'repo' && <ButtonIcon icon={Loader} />}
+          </Button>
+
+          <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
+            <Trans>
+              You can also download your chat data as a "JSONL" file. This file
+              only includes chat messages that you have sent and does not
+              include chat messages that you have received.
+            </Trans>
+          </Text>
+
+          <Button
+            color="secondary"
+            size="large"
+            label={_(msg`Download chat data`)}
+            disabled={!!loading}
+            onPress={downloadChatData}>
+            <ButtonIcon icon={DownloadIcon} />
+            <ButtonText>
+              <Trans>Download chat data</Trans>
+            </ButtonText>
+            {loading === 'chat' && <ButtonIcon icon={Loader} />}
           </Button>
 
           <Text
