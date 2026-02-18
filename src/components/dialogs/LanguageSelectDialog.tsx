@@ -6,11 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
-import {
-  toPostLanguages,
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-} from '#/state/preferences/languages'
+import {useLanguagePrefs} from '#/state/preferences/languages'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -22,18 +18,27 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
-export function PostLanguageSelectDialog({
+export function LanguageSelectDialog({
+  titleText,
+  subtitleText,
   control,
   /**
    * Optionally can be passed to show different values than what is saved in
    * langPrefs.
    */
   currentLanguages,
-  onSelectLanguage,
+  onSelectLanguages,
+  maxLanguages,
 }: {
   control: Dialog.DialogControlProps
+  titleText?: React.ReactNode
+  subtitleText?: React.ReactNode
+  /**
+   * Defaults to the primary language
+   */
   currentLanguages?: string[]
-  onSelectLanguage?: (language: string) => void
+  onSelectLanguages: (languages: string[]) => void
+  maxLanguages?: number
 }) {
   const {height} = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -50,8 +55,11 @@ export function PostLanguageSelectDialog({
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
         <DialogInner
+          titleText={titleText}
+          subtitleText={subtitleText}
           currentLanguages={currentLanguages}
-          onSelectLanguage={onSelectLanguage}
+          onSelectLanguages={onSelectLanguages}
+          maxLanguages={maxLanguages}
         />
       </ErrorBoundary>
     </Dialog.Outer>
@@ -59,11 +67,17 @@ export function PostLanguageSelectDialog({
 }
 
 export function DialogInner({
+  titleText,
+  subtitleText,
   currentLanguages,
-  onSelectLanguage,
+  onSelectLanguages,
+  maxLanguages,
 }: {
+  titleText?: React.ReactNode
+  subtitleText?: React.ReactNode
   currentLanguages?: string[]
-  onSelectLanguage?: (language: string) => void
+  onSelectLanguages?: (languages: string[]) => void
+  maxLanguages?: number
 }) {
   const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
@@ -81,26 +95,17 @@ export function DialogInner({
   }, [])
 
   const langPrefs = useLanguagePrefs()
-  const postLanguagesPref =
-    currentLanguages ?? toPostLanguages(langPrefs.postLanguage)
-
   const [checkedLanguagesCode2, setCheckedLanguagesCode2] = useState<string[]>(
-    postLanguagesPref || [langPrefs.primaryLanguage],
+    currentLanguages || [langPrefs.primaryLanguage],
   )
   const [search, setSearch] = useState('')
 
-  const setLangPrefs = useLanguagePrefsApi()
   const t = useTheme()
   const {_} = useLingui()
 
   const handleClose = () => {
     control.close(() => {
-      let langsString = checkedLanguagesCode2.join(',')
-      if (!langsString) {
-        langsString = langPrefs.primaryLanguage
-      }
-      setLangPrefs.setPostLanguage(langsString)
-      onSelectLanguage?.(langsString)
+      onSelectLanguages?.(checkedLanguagesCode2)
     })
   }
 
@@ -181,18 +186,20 @@ export function DialogInner({
               a.text_xl,
               a.mb_sm,
             ]}>
-            <Trans>Choose Post Languages</Trans>
+            {titleText ?? <Trans>Choose languages</Trans>}
           </Text>
-          <Text
-            nativeID="dialog-description"
-            style={[
-              t.atoms.text_contrast_medium,
-              a.text_left,
-              a.text_md,
-              a.mb_lg,
-            ]}>
-            <Trans>Select up to 3 languages used in this post</Trans>
-          </Text>
+          {subtitleText && (
+            <Text
+              nativeID="dialog-description"
+              style={[
+                t.atoms.text_contrast_medium,
+                a.text_left,
+                a.text_md,
+                a.mb_lg,
+              ]}>
+              {subtitleText}
+            </Text>
+          )}
         </View>
 
         {IS_WEB && (
@@ -244,7 +251,7 @@ export function DialogInner({
       values={checkedLanguagesCode2}
       onChange={setCheckedLanguagesCode2}
       type="checkbox"
-      maxSelections={3}
+      maxSelections={maxLanguages}
       label={_(msg`Select languages`)}
       style={web([a.contents])}>
       <Dialog.InnerFlatList

@@ -16,8 +16,10 @@ import {
   type BottomSheetState,
   type BottomSheetViewProps,
 } from './BottomSheet.types'
-import {BottomSheetPortalProvider} from './BottomSheetPortal'
-import {Context as PortalContext} from './BottomSheetPortal'
+import {
+  BottomSheetPortalProvider,
+  Context as PortalContext,
+} from './BottomSheetPortal'
 
 const screenHeight = Dimensions.get('screen').height
 
