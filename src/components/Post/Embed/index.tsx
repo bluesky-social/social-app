@@ -285,15 +285,14 @@ export function QuoteEmbed({
 
   const contents = (
     <>
-      <View pointerEvents="none">
-        <PostMeta
-          author={quote.author}
-          moderation={moderation}
-          showAvatar
-          postHref={itemHref}
-          timestamp={quote.indexedAt}
-        />
-      </View>
+      <PostMeta
+        author={quote.author}
+        moderation={moderation}
+        showAvatar
+        postHref={itemHref}
+        timestamp={quote.indexedAt}
+        linkDisabled
+      />
       {moderation ? (
         <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} />
       ) : null}

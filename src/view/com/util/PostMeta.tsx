@@ -12,7 +12,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {precacheProfile} from '#/state/queries/profile'
+import {unstableCacheProfileView} from '#/state/queries/profile'
 import {atoms as a, platform, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -29,6 +29,7 @@ interface PostMetaOpts {
   moderation: ModerationDecision | undefined
   postHref: string
   timestamp: string
+  linkDisabled?: boolean
   showAvatar?: boolean
   avatarSize?: number
   onOpenAuthor?: () => void
@@ -46,16 +47,18 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const queryClient = useQueryClient()
   const onOpenAuthor = opts.onOpenAuthor
   const onBeforePressAuthor = useCallback(() => {
-    precacheProfile(queryClient, author)
+    unstableCacheProfileView(queryClient, author)
     onOpenAuthor?.()
   }, [queryClient, author, onOpenAuthor])
   const onBeforePressPost = useCallback(() => {
-    precacheProfile(queryClient, author)
+    unstableCacheProfileView(queryClient, author)
   }, [queryClient, author])
 
   const timestampLabel = niceDate(i18n, opts.timestamp)
   const verification = useSimpleVerificationState({profile: author})
   const {isActive: live} = useActorStatus(author)
+
+  const MaybeLinkText = opts.linkDisabled ? Text : WebOnlyInlineLinkText
 
   return (
     <View
@@ -77,19 +80,20 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             type={author.associated?.labeler ? 'labeler' : 'user'}
             live={live}
             hideLiveBadge
+            disableNavigation={opts.linkDisabled}
           />
         </View>
       )}
       <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
         <ProfileHoverCard did={author.did}>
           <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
-            <WebOnlyInlineLinkText
+            <MaybeLinkText
               emoji
               numberOfLines={1}
               to={profileLink}
               label={_(msg`View profile`)}
               disableMismatchWarning
-              onPress={onBeforePressAuthor}
+              onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
               style={[
                 a.text_md,
                 a.font_semi_bold,
@@ -104,7 +108,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                   opts.moderation?.ui('displayName'),
                 ),
               )}
-            </WebOnlyInlineLinkText>
+            </MaybeLinkText>
             {verification.showBadge && (
               <View
                 style={[
@@ -120,14 +124,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 />
               </View>
             )}
-            <WebOnlyInlineLinkText
+            <MaybeLinkText
               emoji
               numberOfLines={1}
               to={profileLink}
               label={_(msg`View profile`)}
               disableMismatchWarning
               disableUnderline
-              onPress={onBeforePressAuthor}
+              onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
               style={[
                 a.text_md,
                 t.atoms.text_contrast_medium,
@@ -135,19 +139,19 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 {flexShrink: 10},
               ]}>
               {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
-            </WebOnlyInlineLinkText>
+            </MaybeLinkText>
           </View>
         </ProfileHoverCard>
 
         <TimeElapsed timestamp={opts.timestamp}>
           {({timeElapsed}) => (
-            <WebOnlyInlineLinkText
+            <MaybeLinkText
               to={opts.postHref}
               label={timestampLabel}
               title={timestampLabel}
               disableMismatchWarning
               disableUnderline
-              onPress={onBeforePressPost}
+              onPress={opts.linkDisabled ? undefined : onBeforePressPost}
               style={[
                 a.pl_xs,
                 a.text_md,
@@ -171,7 +175,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 </Text>
               )}
               {timeElapsed}
-            </WebOnlyInlineLinkText>
+            </MaybeLinkText>
           )}
         </TimeElapsed>
       </View>
