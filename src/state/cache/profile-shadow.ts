@@ -25,6 +25,7 @@ import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '#
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '#/state/queries/profile-followers'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '#/state/queries/profile-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '#/state/queries/suggested-follows'
+import {findAllProfilesInQueryData as findAllProfilesInSuggestedOnboardingUsersQueryData} from '#/state/queries/trending/useGetSuggestedOnboardingUsersQuery'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersQueryData} from '#/state/queries/trending/useGetSuggestedUsersQuery'
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
 import type * as bsky from '#/types/bsky'
@@ -247,6 +248,7 @@ function* findProfilesInCache(
   yield* findAllProfilesInProfileQueryData(queryClient, did)
   yield* findAllProfilesInProfileFollowersQueryData(queryClient, did)
   yield* findAllProfilesInProfileFollowsQueryData(queryClient, did)
+  yield* findAllProfilesInSuggestedOnboardingUsersQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedUsersQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
   yield* findAllProfilesInActorSearchQueryData(queryClient, did)

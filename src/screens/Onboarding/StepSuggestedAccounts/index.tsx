@@ -20,7 +20,7 @@ import {
   OnboardingTitleText,
 } from '#/screens/Onboarding/Layout'
 import {useOnboardingInternalState} from '#/screens/Onboarding/state'
-import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
+import {useSuggestedOnboardingUsers} from '#/screens/Search/util/useSuggestedOnboardingUsers'
 import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -64,13 +64,14 @@ export function StepSuggestedAccounts() {
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
     .sort(boostInterests(state.interestsStepResults.selectedInterests))
+
   const {
     data: suggestedUsers,
     isLoading,
     error,
     isRefetching,
     refetch,
-  } = useSuggestedUsers({
+  } = useSuggestedOnboardingUsers({
     category: selectedInterest || (useFullExperience ? null : interests[0]),
     search: !useFullExperience,
     overrideInterests: state.interestsStepResults.selectedInterests,
