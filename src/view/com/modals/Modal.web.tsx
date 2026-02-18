@@ -24,7 +24,7 @@ export function ModalsContainer() {
   )
 }
 
-function Modal({modal}: {modal: ModalIface}) {
+function Modal({modal: _modal}: {modal: ModalIface}) {
   const {isModalActive} = useModals()
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
