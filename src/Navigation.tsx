@@ -885,7 +885,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
   const linkingUrl = Linking.useLinkingURL()
-  const notificationResponse = Notifications.useLastNotificationResponse()
 
   /**
    * Handle navigation to a conversation, or prepares for account switch.
@@ -925,6 +924,8 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     // intent urls are handled by `useIntentHandler`
     if (linkingUrl) return
+
+    const notificationResponse = Notifications.getLastNotificationResponse()
 
     if (notificationResponse) {
       notyLogger.debug(`handlePushNotificationEntry: response`, {
