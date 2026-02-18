@@ -9,7 +9,6 @@ import {
   getAppLanguageAsContentLanguage,
   getContentLanguages,
 } from '#/state/preferences/languages'
-import {getAnalyticsHeaders} from '#/analytics/utils'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
@@ -63,15 +62,12 @@ export class CustomFeedAPI implements FeedAPI {
             limit,
           },
           {
-            headers: isBlueskyOwned
-              ? {
-                  ...createBskyTopicsHeader(this.userInterests),
-                  ...getAnalyticsHeaders(),
-                  'Accept-Language': contentLangs,
-                }
-              : {
-                  'Accept-Language': contentLangs,
-                },
+            headers: {
+              ...(isBlueskyOwned
+                ? createBskyTopicsHeader(this.userInterests)
+                : {}),
+              'Accept-Language': contentLangs,
+            },
           },
         )
       : await loggedOutFetch({...this.params, cursor, limit})
