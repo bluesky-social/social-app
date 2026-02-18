@@ -12,7 +12,6 @@ import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
-import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
@@ -67,7 +66,6 @@ function ShellInner() {
         <FlatNavigator layout={drawerLayout} />
       </ErrorBoundary>
       <Composer winHeight={0} />
-      <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />

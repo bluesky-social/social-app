@@ -20,7 +20,6 @@ import {
 } from '#/state/shell'
 import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
-import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
@@ -110,7 +109,6 @@ function ShellInner() {
       </View>
 
       <Composer winHeight={winDim.height} />
-      <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
