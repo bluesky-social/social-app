@@ -82,6 +82,22 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
   })
 }
 
+export function useRemoveLabelersMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    async mutationFn({dids}: {dids: string[]}) {
+      await Promise.all(dids.map(did => agent.removeLabeler(did)))
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
 export function useLabelerSubscriptionMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
