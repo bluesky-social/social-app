@@ -4592,17 +4592,24 @@
   dependencies:
     nanoid "^3.3.1"
 
-"@growthbook/growthbook-react@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@growthbook/growthbook-react/-/growthbook-react-1.6.2.tgz#847135be0c46b167f980dbe6015e5f4ed010475c"
-  integrity sha512-96Bo2Jwd4NBn/kBLN4ceF299PhTw8fQltRykD32hu2xMW8/LXhB8swxbPshGK+Xfa2gjgt24kpZ5oSvaVLLT7w==
+"@growthbook/growthbook-react@^1.6.5":
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/@growthbook/growthbook-react/-/growthbook-react-1.6.5.tgz#e849cff64a54e56d5c566512bdc839148ae613ed"
+  integrity sha512-afi/RUbwazVNKv2acn6wDQz4BJNRAEpwIuHfggQup2/aE5PLAxy3+95gjjRMgCcPR0Pf3sFmhYGvOmxLD0ZRbQ==
   dependencies:
-    "@growthbook/growthbook" "^1.6.2"
+    "@growthbook/growthbook" "^1.6.5"
 
 "@growthbook/growthbook@^1.6.2":
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/@growthbook/growthbook/-/growthbook-1.6.2.tgz#6a25122deac8a09955f6bddeb134af62b209809b"
   integrity sha512-x3sK6Lff4BVusIzcdBeHZqA3B4kLs3kM/pJ7vvLTJwb6N/+Yn99EF1yc0XU6cfDVqFq6uFkvIFhMwDWUaKD73g==
+  dependencies:
+    dom-mutator "^0.6.0"
+
+"@growthbook/growthbook@^1.6.5":
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/@growthbook/growthbook/-/growthbook-1.6.5.tgz#c9e2119187ee3288525a77a7c64353276f5ba91b"
+  integrity sha512-mUaMsgeUTpRIUOTn33EUXHRK6j7pxBjwqH4WpQyq+pukjd1AIzWlEa6w7i6bInJUcweGgP2beXZmaP6b6UPn7A==
   dependencies:
     dom-mutator "^0.6.0"
 
