@@ -12,7 +12,6 @@ import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useTranslate} from '#/lib/hooks/useTranslate'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -44,11 +43,13 @@ import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {InlineLinkText, Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -60,6 +61,7 @@ import {VerificationCheckButton} from '#/components/verification/VerificationChe
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
+import {useTranslateOnDevice} from '#/translation/useTranslateOnDevice'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -411,6 +413,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 shouldProxyLinks={true}
               />
             ) : undefined}
+            <TranslatedPost postUri={post.uri} hideLoading />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed
@@ -556,7 +559,9 @@ function ExpandedPostDetails({
   const t = useTheme()
   const ax = useAnalytics()
   const {_, i18n} = useLingui()
-  const translate = useTranslate()
+  const {clearTranslation, translate, translationState} = useTranslateOnDevice(
+    post.uri,
+  )
   const isRootPost = !('reply' in post.record)
   const langPrefs = useLanguagePrefs()
 
@@ -572,7 +577,7 @@ function ExpandedPostDetails({
   const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
-      translate(post.record.text || '', langPrefs.primaryLanguage)
+      void translate(post.record.text || '', langPrefs.primaryLanguage)
 
       if (
         bsky.dangerousIsType<AppBskyFeedPost.Record>(
@@ -592,6 +597,15 @@ function ExpandedPostDetails({
     [ax, translate, langPrefs, post],
   )
 
+  const onHideTranslation = useCallback(
+    (e: GestureResponderEvent) => {
+      e.preventDefault()
+      clearTranslation()
+      return false
+    },
+    [clearTranslation],
+  )
+
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
@@ -608,18 +622,32 @@ function ExpandedPostDetails({
               &middot;
             </Text>
 
-            <InlineLinkText
-              // overridden to open an intent on android, but keep
-              // as anchor tag for accessibility
-              to={getTranslatorLink(
-                post.record.text,
-                langPrefs.primaryLanguage,
-              )}
-              label={_(msg`Translate`)}
-              style={[a.text_sm]}
-              onPress={onTranslatePress}>
-              <Trans>Translate</Trans>
-            </InlineLinkText>
+            {translationState.status === 'loading' ? (
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                  <Loader size="xs" /> <Trans>Translating…</Trans>
+                </Text>
+              </View>
+            ) : translationState.status === 'success' ? (
+              <InlineLinkText
+                to="#"
+                label={_(msg`Hide translation`)}
+                style={[a.text_sm]}
+                onPress={onHideTranslation}>
+                <Trans>Hide translation</Trans>
+              </InlineLinkText>
+            ) : (
+              <InlineLinkText
+                to={getTranslatorLink(
+                  post.record.text,
+                  langPrefs.primaryLanguage,
+                )}
+                label={_(msg`Translate`)}
+                style={[a.text_sm]}
+                onPress={onTranslatePress}>
+                <Trans>Translate</Trans>
+              </InlineLinkText>
+            )}
           </>
         )}
       </View>

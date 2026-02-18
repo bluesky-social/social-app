@@ -11970,6 +11970,11 @@ expo-system-ui@~6.0.9:
     "@react-native/normalize-colors" "0.81.5"
     debug "^4.3.2"
 
+expo-translate-text@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/expo-translate-text/-/expo-translate-text-0.1.0.tgz#16904f1baac126d5a452b4196495d238dcbbb6af"
+  integrity sha512-zrRJ0Do6Gie12yZYzgD4McQNIvb54pfPsBRegkUSuADec9DrXdxJXvw/OieZ+L4oMQu0Fx/NJDnHGQoaa0CVgA==
+
 expo-updates-interface@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-2.0.0.tgz#7721cb64c37bcb46b23827b2717ef451a9378749"
