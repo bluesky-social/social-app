@@ -2,7 +2,6 @@ import {useCallback} from 'react'
 
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {useLightboxControls} from './lightbox'
-import {useModalControls} from './modals'
 import {useComposerControls} from './shell/composer'
 import {useSetDrawerOpen} from './shell/drawer-open'
 
@@ -12,15 +11,11 @@ import {useSetDrawerOpen} from './shell/drawer-open'
  */
 export function useCloseAnyActiveElement() {
   const {closeLightbox} = useLightboxControls()
-  const {closeModal} = useModalControls()
   const {closeComposer} = useComposerControls()
   const {closeAllDialogs} = useDialogStateControlContext()
   const setDrawerOpen = useSetDrawerOpen()
   return useCallback(() => {
     if (closeLightbox()) {
-      return true
-    }
-    if (closeModal()) {
       return true
     }
     if (closeAllDialogs()) {
@@ -31,7 +26,7 @@ export function useCloseAnyActiveElement() {
     }
     setDrawerOpen(false)
     return false
-  }, [closeLightbox, closeModal, closeComposer, setDrawerOpen, closeAllDialogs])
+  }, [closeLightbox, closeComposer, setDrawerOpen, closeAllDialogs])
 }
 
 /**
@@ -39,21 +34,13 @@ export function useCloseAnyActiveElement() {
  */
 export function useCloseAllActiveElements() {
   const {closeLightbox} = useLightboxControls()
-  const {closeAllModals} = useModalControls()
   const {closeComposer} = useComposerControls()
   const {closeAllDialogs: closeAlfDialogs} = useDialogStateControlContext()
   const setDrawerOpen = useSetDrawerOpen()
   return useCallback(() => {
     closeLightbox()
-    closeAllModals()
     closeComposer()
     closeAlfDialogs()
     setDrawerOpen(false)
-  }, [
-    closeLightbox,
-    closeAllModals,
-    closeComposer,
-    closeAlfDialogs,
-    setDrawerOpen,
-  ])
+  }, [closeLightbox, closeComposer, closeAlfDialogs, setDrawerOpen])
 }

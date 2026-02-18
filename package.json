@@ -79,7 +79,6 @@
     "@bsky.app/alf": "^0.1.6",
     "@bsky.app/expo-image-crop-tool": "^0.5.0",
     "@bsky.app/react-native-mmkv": "2.12.5",
-    "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
     "@expo/webpack-config": "^19.0.1",
@@ -371,7 +370,6 @@
       "wrap-ansi-cjs:wrap-ansi"
     ],
     "allowedUrls": [
-      "https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908",
       "https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4",
       "https://codeload.github.com/mattermost/react-native-paste-input/tar.gz/f260447edc645a817ab1ba7b46d8341d84dba8e9"
     ],
