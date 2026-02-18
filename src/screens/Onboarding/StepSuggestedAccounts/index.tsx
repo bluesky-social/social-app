@@ -9,6 +9,7 @@ import * as bcp47Match from 'bcp-47-match'
 import {wait} from '#/lib/async/wait'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
+import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -128,7 +129,13 @@ export function StepSuggestedAccounts() {
       toast.show(_(msg`Followed all accounts!`), {type: 'success'})
       setFollowedUsers(followed => [...followed, ...newlyFollowed])
     },
-    onError: () => {
+    onError: e => {
+      logger.error(
+        'Failed to follow all suggested accounts during onboarding',
+        {
+          safeMessage: e,
+        },
+      )
       toast.show(
         _(msg`Failed to follow all suggested accounts, please try again`),
         {type: 'error'},
@@ -155,6 +162,14 @@ export function StepSuggestedAccounts() {
     },
     [ax, selectedInterest, suggestedUsers?.recId],
   )
+
+  useEffect(() => {
+    if (error) {
+      logger.error('Failed to fetch suggested accounts during onboarding', {
+        safeMessage: error,
+      })
+    }
+  }, [error])
 
   return (
     <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
