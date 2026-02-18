@@ -11,11 +11,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {
-  type ScrollHandler,
-  useAnimatedProps,
-  useSharedValue,
-} from 'react-native-reanimated'
-import {
   type AppBskyActorDefs,
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
@@ -27,7 +22,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {ScrollProvider, useScrollHandlers} from '#/lib/ScrollContext'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
@@ -48,10 +43,10 @@ import {
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {useSelectedFeed} from '#/state/shell/selected-feed'
-import {useShellLayout} from '#/state/shell/shell-layout'
 import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {useProfileScrollbarAdjustment} from '#/screens/Profile/useProfileScrollbarAdjustment'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
 import {
@@ -211,7 +206,7 @@ let PostFeed = ({
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
   isVideoFeed = false,
-  adjustScrollIndicators,
+  adjustScrollIndicators = false,
   collapsedHeaderHeight = 0,
 }: {
   feed: FeedDescriptor
@@ -996,88 +991,46 @@ let PostFeed = ({
     [feedFeedback, feed, liveNowConfig, getPostPosition, ax],
   )
 
-  const {
-    onBeginDrag: onBeginDragFromContext,
-    onEndDrag: onEndDragFromContext,
-    onScroll: onScrollFromContext,
-    onMomentumEnd: onMomentumEndFromContext,
-  } = useScrollHandlers()
-
-  const scrollY = useSharedValue(0)
-  const onScrollWorklet = useCallback<ScrollHandler<any>>(
-    (e, ctx) => {
-      'worklet'
-      onScrollFromContext?.(e, ctx)
-      scrollY.set(e.contentOffset.y)
-    },
-    [onScrollFromContext, scrollY],
-  )
-
-  const {footerHeight} = useShellLayout()
-
-  const animatedProps = useAnimatedProps(() => {
-    if (IS_IOS) {
-      return {
-        scrollIndicatorInsets: {
-          top: adjustScrollIndicators
-            ? Math.max(headerOffset - scrollY.get(), collapsedHeaderHeight)
-            : headerOffset,
-          right: 1,
-          left: 0,
-          bottom: footerHeight.get(),
-        },
-      }
-    }
-    return {}
+  const {scrollHandlers, animatedProps} = useProfileScrollbarAdjustment({
+    enabled: adjustScrollIndicators,
+    headerOffset,
+    collapsedHeaderHeight,
   })
-
-  const list = (
-    <List
-      testID={testID ? `${testID}-flatlist` : undefined}
-      ref={scrollElRef}
-      data={feedItems}
-      keyExtractor={(item: FeedRow) => item.key}
-      renderItem={renderItem}
-      ListFooterComponent={FeedFooter}
-      ListHeaderComponent={ListHeaderComponent}
-      refreshing={isPTRing}
-      onRefresh={onRefresh}
-      headerOffset={headerOffset}
-      progressViewOffset={progressViewOffset}
-      contentContainerStyle={{
-        minHeight: Dimensions.get('window').height * 1.5,
-      }}
-      onScrolledDownChange={handleScrolledDownChange}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={2} // number of posts left to trigger load more
-      removeClippedSubviews={true}
-      extraData={extraData}
-      desktopFixedHeight={
-        desktopFixedHeightOffset ? desktopFixedHeightOffset : true
-      }
-      initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
-      windowSize={9}
-      maxToRenderPerBatch={IS_IOS ? 5 : 1}
-      updateCellsBatchingPeriod={40}
-      onItemSeen={onItemSeen}
-      animatedProps={IS_IOS ? animatedProps : undefined}
-    />
-  )
 
   return (
     <View testID={testID} style={style}>
-      {IS_IOS ? (
-        <ScrollProvider
-          onScroll={onScrollWorklet}
-          onBeginDrag={onBeginDragFromContext}
-          onEndDrag={onEndDragFromContext}
-          onMomentumBegin={onMomentumEndFromContext}
-          onMomentumEnd={onMomentumEndFromContext}>
-          {list}
-        </ScrollProvider>
-      ) : (
-        list
-      )}
+      <ScrollProvider {...scrollHandlers}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={feedItems}
+          keyExtractor={(item: FeedRow) => item.key}
+          renderItem={renderItem}
+          ListFooterComponent={FeedFooter}
+          ListHeaderComponent={ListHeaderComponent}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          headerOffset={headerOffset}
+          progressViewOffset={progressViewOffset}
+          contentContainerStyle={{
+            minHeight: Dimensions.get('window').height * 1.5,
+          }}
+          onScrolledDownChange={handleScrolledDownChange}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={2} // number of posts left to trigger load more
+          removeClippedSubviews={true}
+          extraData={extraData}
+          desktopFixedHeight={
+            desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+          }
+          initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
+          windowSize={9}
+          maxToRenderPerBatch={IS_IOS ? 5 : 1}
+          updateCellsBatchingPeriod={40}
+          onItemSeen={onItemSeen}
+          animatedProps={animatedProps}
+        />
+      </ScrollProvider>
     </View>
   )
 }

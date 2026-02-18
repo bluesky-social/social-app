@@ -7,11 +7,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  type ScrollHandler,
-  useAnimatedProps,
-  useSharedValue,
-} from 'react-native-reanimated'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,20 +15,19 @@ import {useNavigation} from '@react-navigation/native'
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
-import {ScrollProvider, useScrollHandlers} from '#/lib/ScrollContext'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
-import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   EmptyState,
   type EmptyStateButtonProps,
 } from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, ios, useTheme} from '#/alf'
+import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {useProfileScrollbarAdjustment} from '#/screens/Profile/useProfileScrollbarAdjustment'
+import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -87,39 +81,8 @@ export function ProfileStarterPacks({
   const bottomBarOffset = useBottomBarOffset(100)
   const {height} = useWindowDimensions()
   const [isPTRing, setIsPTRing] = useState(false)
+  const {gtMobile} = useBreakpoints()
 
-  const {
-    onBeginDrag: onBeginDragFromContext,
-    onEndDrag: onEndDragFromContext,
-    onScroll: onScrollFromContext,
-    onMomentumEnd: onMomentumEndFromContext,
-  } = useScrollHandlers()
-
-  const scrollY = useSharedValue(0)
-  const onScrollWorklet = useCallback<ScrollHandler<any>>(
-    (e, ctx) => {
-      'worklet'
-      onScrollFromContext?.(e, ctx)
-      scrollY.set(e.contentOffset.y)
-    },
-    [onScrollFromContext, scrollY],
-  )
-
-  const {footerHeight} = useShellLayout()
-
-  const animatedProps = useAnimatedProps(() => {
-    if (IS_IOS) {
-      return {
-        scrollIndicatorInsets: {
-          top: Math.max(headerOffset - scrollY.get(), collapsedHeaderHeight),
-          right: 1,
-          left: 0,
-          bottom: footerHeight.get(),
-        },
-      }
-    }
-    return {}
-  })
   const {
     data,
     refetch,
@@ -128,7 +91,6 @@ export function ProfileStarterPacks({
     isFetchingNextPage,
     fetchNextPage,
   } = useActorStarterPacksQuery({did, enabled})
-  const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
   const {_} = useLingui()
@@ -190,58 +152,54 @@ export function ProfileStarterPacks({
         <View
           style={[
             a.p_lg,
-            (isTabletOrDesktop || index !== 0) && a.border_t,
+            (gtMobile || index !== 0) && a.border_t,
             t.atoms.border_contrast_low,
           ]}>
           <StarterPackCard starterPack={item} />
         </View>
       )
     },
-    [isTabletOrDesktop, t.atoms.border_contrast_low],
+    [gtMobile, t.atoms.border_contrast_low],
   )
 
-  const list = (
-    <List
-      testID={testID ? `${testID}-flatlist` : undefined}
-      ref={scrollElRef}
-      data={items}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      refreshing={isPTRing}
-      headerOffset={headerOffset}
-      progressViewOffset={ios(0)}
-      contentContainerStyle={{
-        minHeight: height + headerOffset,
-        paddingBottom: bottomBarOffset,
-      }}
-      removeClippedSubviews={true}
-      desktopFixedHeight
-      onEndReached={onEndReached}
-      onRefresh={onRefresh}
-      ListEmptyComponent={
-        data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
-      }
-      ListFooterComponent={
-        !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
-      }
-      animatedProps={IS_IOS ? animatedProps : undefined}
-    />
-  )
+  const {scrollHandlers, animatedProps} = useProfileScrollbarAdjustment({
+    headerOffset,
+    collapsedHeaderHeight,
+  })
 
   return (
     <View testID={testID} style={style}>
-      {IS_IOS ? (
-        <ScrollProvider
-          onScroll={onScrollWorklet}
-          onBeginDrag={onBeginDragFromContext}
-          onEndDrag={onEndDragFromContext}
-          onMomentumBegin={onMomentumEndFromContext}
-          onMomentumEnd={onMomentumEndFromContext}>
-          {list}
-        </ScrollProvider>
-      ) : (
-        list
-      )}
+      <ScrollProvider {...scrollHandlers}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={items}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          refreshing={isPTRing}
+          headerOffset={headerOffset}
+          progressViewOffset={ios(0)}
+          contentContainerStyle={{
+            minHeight: height + headerOffset,
+            paddingBottom: bottomBarOffset,
+          }}
+          removeClippedSubviews={true}
+          desktopFixedHeight
+          onEndReached={onEndReached}
+          onRefresh={onRefresh}
+          ListEmptyComponent={
+            data
+              ? isMe
+                ? EmptyComponent
+                : undefined
+              : FeedFeedLoadingPlaceholder
+          }
+          ListFooterComponent={
+            !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
+          }
+          animatedProps={animatedProps}
+        />
+      </ScrollProvider>
     </View>
   )
 }

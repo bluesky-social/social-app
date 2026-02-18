@@ -13,28 +13,23 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  type ScrollHandler,
-  useAnimatedProps,
-  useSharedValue,
-} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {ScrollProvider, useScrollHandlers} from '#/lib/ScrollContext'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
 import {useSession} from '#/state/session'
-import {useShellLayout} from '#/state/shell/shell-layout'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {useProfileScrollbarAdjustment} from '#/screens/Profile/useProfileScrollbarAdjustment'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
@@ -77,38 +72,6 @@ export function ProfileLists({
   const t = useTheme()
   const [isPTRing, setIsPTRing] = useState(false)
 
-  const {
-    onBeginDrag: onBeginDragFromContext,
-    onEndDrag: onEndDragFromContext,
-    onScroll: onScrollFromContext,
-    onMomentumEnd: onMomentumEndFromContext,
-  } = useScrollHandlers()
-
-  const scrollY = useSharedValue(0)
-  const onScrollWorklet = useCallback<ScrollHandler<any>>(
-    (e, ctx) => {
-      'worklet'
-      onScrollFromContext?.(e, ctx)
-      scrollY.set(e.contentOffset.y)
-    },
-    [onScrollFromContext, scrollY],
-  )
-
-  const {footerHeight} = useShellLayout()
-
-  const animatedProps = useAnimatedProps(() => {
-    if (IS_IOS) {
-      return {
-        scrollIndicatorInsets: {
-          top: Math.max(headerOffset - scrollY.get(), collapsedHeaderHeight),
-          right: 1,
-          left: 0,
-          bottom: footerHeight.get(),
-        },
-      }
-    }
-    return {}
-  })
   const {height} = useWindowDimensions()
   const opts = useMemo(() => ({enabled}), [enabled])
   const {
@@ -229,7 +192,7 @@ export function ProfileLists({
           />
         )
       } else if (item === LOADING) {
-        return <FeedLoadingPlaceholder />
+        return <FeedFeedLoadingPlaceholder />
       }
       if (preferences) {
         return (
@@ -285,40 +248,32 @@ export function ProfileLists({
     isEmpty,
   ])
 
-  const list = (
-    <List
-      testID={testID ? `${testID}-flatlist` : undefined}
-      ref={scrollElRef}
-      data={items}
-      keyExtractor={keyExtractor}
-      renderItem={renderItem}
-      ListFooterComponent={ProfileListsFooter}
-      refreshing={isPTRing}
-      onRefresh={onRefresh}
-      headerOffset={headerOffset}
-      progressViewOffset={ios(0)}
-      removeClippedSubviews={true}
-      desktopFixedHeight
-      onEndReached={onEndReached}
-      contentContainerStyle={{minHeight: height + headerOffset}}
-      animatedProps={IS_IOS ? animatedProps : undefined}
-    />
-  )
+  const {scrollHandlers, animatedProps} = useProfileScrollbarAdjustment({
+    headerOffset,
+    collapsedHeaderHeight,
+  })
 
   return (
     <View testID={testID} style={style}>
-      {IS_IOS ? (
-        <ScrollProvider
-          onScroll={onScrollWorklet}
-          onBeginDrag={onBeginDragFromContext}
-          onEndDrag={onEndDragFromContext}
-          onMomentumBegin={onMomentumEndFromContext}
-          onMomentumEnd={onMomentumEndFromContext}>
-          {list}
-        </ScrollProvider>
-      ) : (
-        list
-      )}
+      <ScrollProvider {...scrollHandlers}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={items}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          ListFooterComponent={ProfileListsFooter}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          headerOffset={headerOffset}
+          progressViewOffset={ios(0)}
+          removeClippedSubviews={true}
+          desktopFixedHeight
+          onEndReached={onEndReached}
+          contentContainerStyle={{minHeight: height + headerOffset}}
+          animatedProps={animatedProps}
+        />
+      </ScrollProvider>
     </View>
   )
 }
