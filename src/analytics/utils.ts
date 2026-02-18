@@ -7,6 +7,7 @@ import {
   type MergeableMetadata,
   type SessionMetadata,
 } from '#/analytics/metadata'
+import {getIPGeolocationString} from '#/geolocation/util'
 
 /**
  * Thin `useMemo` wrapper that marks the metadata as memoized and provides a
@@ -47,5 +48,6 @@ export function getAnalyticsHeaders() {
   return {
     'X-Bsky-Device-Id': getDeviceId(),
     'X-Bsky-Session-Id': getSessionId(),
+    'X-Bsky-IP-Geolocation': getIPGeolocationString(),
   }
 }

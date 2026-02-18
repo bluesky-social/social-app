@@ -128,12 +128,17 @@ export function mergeGeolocations(
 }
 
 /**
- * Get's the merged geolocation as a string in the format of
+ * Get's the IP-based geolocation as a string in the format of
  * "countryCode-regionCode", or just "countryCode" if regionCode is not
  * available.
+ *
+ * IMPORTANT: this method should only return IP-based data, not the user's GPS
+ * based data. IP-based data we can already infer from requests, but for
+ * consistency between frontend and backend, we sometimes want to share the
+ * value we have on the frontend with the backend.
  */
-export function getGeolocationString() {
-  const geo = device.get(['mergedGeolocation'])
+export function getIPGeolocationString() {
+  const geo = device.get(['geolocationServiceResponse'])
   if (!geo) return
   const {countryCode, regionCode} = geo
   if (countryCode) {
