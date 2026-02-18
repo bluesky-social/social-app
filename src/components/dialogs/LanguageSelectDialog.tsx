@@ -186,7 +186,7 @@ export function DialogInner({
               a.text_xl,
               a.mb_sm,
             ]}>
-            {titleText ?? <Trans>Choose Languages</Trans>}
+            {titleText ?? <Trans>Choose languages</Trans>}
           </Text>
           {subtitleText && (
             <Text

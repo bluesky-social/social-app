@@ -86,7 +86,7 @@ export function LanguageSettingsScreen({}: Props) {
         <SettingsList.Container>
           <SettingsList.Group iconInset={false}>
             <SettingsList.ItemText>
-              <Trans>App Language</Trans>
+              <Trans>App language</Trans>
             </SettingsList.ItemText>
             <View style={[a.gap_md, a.w_full]}>
               <Text style={[a.leading_snug]}>
@@ -120,7 +120,7 @@ export function LanguageSettingsScreen({}: Props) {
           <SettingsList.Divider />
           <SettingsList.Group iconInset={false}>
             <SettingsList.ItemText>
-              <Trans>Primary Language</Trans>
+              <Trans>Primary language</Trans>
             </SettingsList.ItemText>
             <View style={[a.gap_md, a.w_full]}>
               <Text style={[a.leading_snug]}>
@@ -154,7 +154,7 @@ export function LanguageSettingsScreen({}: Props) {
           <SettingsList.Divider />
           <SettingsList.Group iconInset={false}>
             <SettingsList.ItemText>
-              <Trans>Content Languages</Trans>
+              <Trans>Content languages</Trans>
             </SettingsList.ItemText>
             <View style={[a.gap_md]}>
               <Text style={[a.leading_snug]}>
@@ -172,7 +172,7 @@ export function LanguageSettingsScreen({}: Props) {
 
               <View style={[a.w_full, web({maxWidth: 400})]}>
                 <Toggle.Group
-                  label={_(msg`Select Content Languages`)}
+                  label={_(msg`Select content languages`)}
                   values={langPrefs.contentLanguages}
                   onChange={setLangPrefs.setContentLanguages}>
                   <Toggle.PanelGroup>
@@ -210,7 +210,7 @@ export function LanguageSettingsScreen({}: Props) {
 
               <LanguageSelectDialog
                 control={contentLanguagePrefsControl}
-                titleText={<Trans>Select Content Languages</Trans>}
+                titleText={<Trans>Select content languages</Trans>}
                 subtitleText={
                   <Trans>
                     If none are selected, all languages will be shown in your

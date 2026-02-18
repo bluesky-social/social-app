@@ -53,7 +53,7 @@ export function PostLanguageSelect({
       <>
         <LanguageBtn onPress={languageDialogControl.open} />
         <LanguageSelectDialog
-          titleText={<Trans>Choose Post Languages</Trans>}
+          titleText={<Trans>Choose post languages</Trans>}
           subtitleText={
             <Trans>Select up to 3 languages used in this post</Trans>
           }
@@ -110,7 +110,7 @@ export function PostLanguageSelect({
       </Menu.Root>
 
       <LanguageSelectDialog
-        titleText={<Trans>Choose Post Languages</Trans>}
+        titleText={<Trans>Choose post languages</Trans>}
         subtitleText={<Trans>Select up to 3 languages used in this post</Trans>}
         control={languageDialogControl}
         currentLanguages={currentLanguages}
