@@ -885,7 +885,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
   const linkingUrl = Linking.useLinkingURL()
-  const notificationResponse = Notifications.getLastNotificationResponse()
+  const notificationResponse = Notifications.useLastNotificationResponse()
 
   /**
    * Handle navigation to a conversation, or prepares for account switch.
