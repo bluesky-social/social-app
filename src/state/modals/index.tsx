@@ -11,7 +11,7 @@ export interface ContentLanguagesSettingsModal {
  */
 export type Modal =
   // Curation
-  | ContentLanguagesSettingsModal
+  ContentLanguagesSettingsModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean
