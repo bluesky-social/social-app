@@ -1847,7 +1847,7 @@ msgstr ""
 #: src/components/PostControls/index.tsx:108
 #: src/components/PostControls/index.tsx:139
 #: src/components/PostControls/index.tsx:167
-#: src/state/shell/composer/index.tsx:104
+#: src/state/shell/composer/index.tsx:108
 msgid "Cannot interact with a blocked user"
 msgstr ""
 
