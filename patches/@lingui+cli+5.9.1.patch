@@ -1,0 +1,20 @@
+diff --git a/node_modules/@lingui/cli/dist/api/catalog.js b/node_modules/@lingui/cli/dist/api/catalog.js
+index 191b281..4af924e 100644
+--- a/node_modules/@lingui/cli/dist/api/catalog.js
++++ b/node_modules/@lingui/cli/dist/api/catalog.js
+@@ -234,10 +234,12 @@ async function writeCompiled(path, locale, compiledCatalog, namespace) {
+     await (0, utils_1.writeFile)(filename, compiledCatalog);
+     return filename;
+ }
++
++// hardcoded en-US locale to have consistent sorting
++// @see https://github.com/lingui/js-lingui/pull/1808
++const collator = new Intl.Collator("en-US");
++
+ const orderByMessage = (a, b) => {
+-    // hardcoded en-US locale to have consistent sorting
+-    // @see https://github.com/lingui/js-lingui/pull/1808
+-    const collator = new Intl.Collator("en-US");
+     const aMsg = a.entry.message || "";
+     const bMsg = b.entry.message || "";
+     const aCtxt = a.entry.context || "";
