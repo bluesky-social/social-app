@@ -3,7 +3,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {codeToLanguageName} from '#/locale/helpers'
-import {APP_LANGUAGES} from '#/locale/languages'
+import {APP_LANGUAGES, type AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -137,7 +137,9 @@ function TranslationLanguageSelect({
             <Select.ItemText>{label}</Select.ItemText>
           </Select.Item>
         )}
-        items={APP_LANGUAGES.map(l => ({
+        items={APP_LANGUAGES.filter(
+          l => l.code2 !== (langPrefs.primaryLanguage as AppLanguage),
+        ).map(l => ({
           label: l.name,
           value: l.code2,
         }))}
