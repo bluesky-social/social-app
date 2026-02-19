@@ -59,7 +59,7 @@
     "intl:extract": "lingui extract --clean --locale en",
     "intl:extract:all": "lingui extract --clean",
     "intl:compile": "lingui compile",
-    "intl:compile-if-needed": "is-ci || [ -f src/locale/locales/en/messages.js ] || yarn intl:compile",
+    "intl:compile-if-needed": "is-ci || [ -f src/locale/locales/en/messages.ts ] || yarn intl:compile",
     "intl:pull": "crowdin download translations --verbose -b main",
     "intl:push": "crowdin push translations --verbose -b main",
     "intl:push-sources": "crowdin push sources --verbose -b main",
