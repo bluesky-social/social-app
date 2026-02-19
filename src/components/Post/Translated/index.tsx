@@ -153,7 +153,7 @@ function TranslationLanguageSelect({
           ? IOS_ON_DEVICE_LANGUAGES
           : ANDROID_ON_DEVICE_LANGUAGES
         )
-          .filter(l => !langPrefs.primaryLanguage.startsWith(l.code2)) // Only two-letter language codes are supported
+          .filter(l => !langPrefs.primaryLanguage.startsWith(l.code2)) // Don't show the current language as it would be redundant
           .sort(
             (a, b) => a.name.localeCompare(b.name, langPrefs.primaryLanguage), // Localized sort
           )
