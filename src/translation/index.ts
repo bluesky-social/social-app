@@ -23,7 +23,7 @@ const IDLE: TranslationState = {status: 'idle'}
 
 const emitter = new Emitter()
 
-// Note: Since we’re storing this in memory without clearing it, e.g., LRU,
+// Note: Since we’re storing this in memory without clearing it, e.g., via LRU,
 // this could get large over time if we don't clear the translation when the
 // component is unmounted. Something to keep an eye out for.
 const translations = new Map<string, TranslationState>()
@@ -70,7 +70,7 @@ export function useTranslationState(key: string) {
 async function attemptTranslation(
   input: string,
   targetLangCodeOriginal: string,
-  sourceLangCodeOriginal?: string,
+  sourceLangCodeOriginal?: string, // Auto-detects if not provided
 ): Promise<{
   translatedText: string
   targetLanguage: TranslationTaskResult['targetLanguage']
@@ -110,6 +110,7 @@ async function attemptTranslation(
 /**
  * Native translation hook. Attempts on-device translation using Apple
  * Translation (iOS 18+) or Google ML Kit (Android).
+ *
  * Falls back to Google Translate URL if the language pack is unavailable.
  *
  * Web uses index.web.ts which always opens Google Translate.
