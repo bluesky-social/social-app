@@ -824,6 +824,10 @@ msgstr ""
 msgid "Add more details (optional)"
 msgstr ""
 
+#: src/screens/Settings/LanguageSettings.tsx:198
+msgid "Add more languages..."
+msgstr ""
+
 #: src/components/dialogs/MutedWords.tsx:328
 msgid "Add mute word with chosen settings"
 msgstr ""
@@ -964,7 +968,7 @@ msgid "alice@example.com"
 msgstr ""
 
 #. the default tab in the interests tab bar
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:198
 #: src/view/screens/Notifications.tsx:87
 msgid "All"
 msgstr ""
@@ -978,11 +982,15 @@ msgstr ""
 msgid "All friends followed!"
 msgstr ""
 
+#: src/components/dialogs/LanguageSelectDialog.tsx:245
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:64
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:99
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:101
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:238
 msgid "All languages"
+msgstr ""
+
+#: src/screens/Settings/LanguageSettings.tsx:169
+msgid "All languages will be shown in your feeds."
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:707
@@ -1085,7 +1093,7 @@ msgid "An email has been sent to {0}. It includes a confirmation code which you 
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:253
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:320
+#: src/components/dialogs/LanguageSelectDialog.tsx:327
 msgid "An error has occurred"
 msgstr ""
 
@@ -1097,7 +1105,7 @@ msgstr ""
 msgid "An error occurred while compressing the video."
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:204
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:220
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:68
 msgid "An error occurred while fetching suggested accounts."
 msgstr ""
@@ -1248,12 +1256,9 @@ msgstr ""
 msgid "App Icon"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:103
+#: src/screens/Settings/LanguageSettings.tsx:89
+#: src/screens/Settings/LanguageSettings.tsx:105
 msgid "App language"
-msgstr ""
-
-#: src/screens/Settings/LanguageSettings.tsx:87
-msgid "App Language"
 msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:122
@@ -1753,7 +1758,7 @@ msgstr ""
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:836
 #: src/screens/Search/components/StarterPackCard.tsx:106
-#: src/screens/Search/Explore.tsx:932
+#: src/screens/Search/Explore.tsx:960
 msgid "By {0}"
 msgstr ""
 
@@ -2018,12 +2023,17 @@ msgstr ""
 msgid "Choose for me"
 msgstr ""
 
+#: src/components/dialogs/LanguageSelectDialog.tsx:189
+msgid "Choose languages"
+msgstr ""
+
 #: src/screens/StarterPack/Wizard/index.tsx:211
 msgid "Choose People"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:184
-msgid "Choose Post Languages"
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:56
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:113
+msgid "Choose post languages"
 msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
@@ -2117,6 +2127,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:232
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:238
 #: src/components/dialogs/GifSelect.tsx:269
+#: src/components/dialogs/LanguageSelectDialog.tsx:342
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:158
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:163
@@ -2147,7 +2158,6 @@ msgstr ""
 #: src/features/liveNow/components/EditLiveDialog.tsx:222
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:287
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:292
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
 #: src/view/com/feeds/MissingFeed.tsx:210
 #: src/view/com/feeds/MissingFeed.tsx:217
 msgid "Close"
@@ -2169,11 +2179,11 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:222
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:228
 #: src/components/dialogs/GifSelect.tsx:263
+#: src/components/dialogs/LanguageSelectDialog.tsx:211
+#: src/components/dialogs/LanguageSelectDialog.tsx:305
+#: src/components/dialogs/LanguageSelectDialog.tsx:337
 #: src/components/verification/VerificationsDialog.tsx:137
 #: src/components/verification/VerifierDialog.tsx:138
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:204
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:298
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:330
 msgid "Close dialog"
 msgstr ""
 
@@ -2309,10 +2319,6 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:34
-msgid "Confirm content language settings"
-msgstr ""
-
 #: src/ageAssurance/components/NoAccessScreen.tsx:366
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:115
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:40
@@ -2398,9 +2404,8 @@ msgstr ""
 msgid "Content from across the network we think you might like."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:155
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
-msgid "Content Languages"
+#: src/screens/Settings/LanguageSettings.tsx:157
+msgid "Content languages"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:84
@@ -2431,7 +2436,7 @@ msgstr ""
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:92
 #: src/screens/Onboarding/StepProfile/index.tsx:287
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:285
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:301
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:116
 msgid "Continue"
 msgstr ""
@@ -2450,7 +2455,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:89
 #: src/screens/Onboarding/StepProfile/index.tsx:284
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:282
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:298
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:113
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2612,7 +2617,7 @@ msgstr ""
 msgid "Could not leave chat"
 msgstr ""
 
-#: src/screens/Profile/ProfileFeed/index.tsx:86
+#: src/screens/Profile/ProfileFeed/index.tsx:72
 msgid "Could not load feed"
 msgstr ""
 
@@ -2788,10 +2793,6 @@ msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr ""
 
-#: src/view/screens/Debug.tsx:69
-msgid "Dark mode"
-msgstr ""
-
 #: src/screens/Settings/AppearanceSettings.tsx:106
 msgid "Dark theme"
 msgstr ""
@@ -2810,7 +2811,7 @@ msgstr ""
 msgid "Debug Moderation"
 msgstr ""
 
-#: src/view/screens/Debug.tsx:89
+#: src/view/screens/Debug.tsx:77
 msgid "Debug panel"
 msgstr ""
 
@@ -3066,7 +3067,10 @@ msgstr ""
 msgid "Discover new custom feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:438
+#: src/screens/Search/Explore.tsx:442
+msgid "Discover new feeds"
+msgstr ""
+
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr ""
@@ -3162,6 +3166,7 @@ msgstr ""
 #: src/components/contacts/screens/ViewMatches.tsx:411
 #: src/components/dialogs/BirthDateSettings.tsx:196
 #: src/components/dialogs/BirthDateSettings.tsx:203
+#: src/components/dialogs/LanguageSelectDialog.tsx:310
 #: src/components/dialogs/ServerInput.tsx:240
 #: src/components/dialogs/ServerInput.tsx:242
 #: src/components/dms/AfterReportDialog.tsx:142
@@ -3174,7 +3179,6 @@ msgstr ""
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:221
 #: src/view/com/composer/labels/LabelsBtn.tsx:222
 #: src/view/com/composer/labels/LabelsBtn.tsx:229
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:303
 #: src/view/com/composer/videos/SubtitleDialog.tsx:191
 #: src/view/com/composer/videos/SubtitleDialog.tsx:202
 msgid "Done"
@@ -3184,10 +3188,6 @@ msgstr ""
 #: src/view/com/modals/UserAddRemoveLists.tsx:116
 msgctxt "action"
 msgid "Done"
-msgstr ""
-
-#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
-msgid "Done{extraText}"
 msgstr ""
 
 #: src/components/dms/MessageItem.tsx:161
@@ -3206,9 +3206,14 @@ msgstr ""
 msgid "Download Bluesky"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:79
-#: src/screens/Settings/components/ExportCarDialog.tsx:84
+#: src/screens/Settings/components/ExportCarDialog.tsx:114
+#: src/screens/Settings/components/ExportCarDialog.tsx:119
 msgid "Download CAR file"
+msgstr ""
+
+#: src/screens/Settings/components/ExportCarDialog.tsx:135
+#: src/screens/Settings/components/ExportCarDialog.tsx:140
+msgid "Download chat data"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:115
@@ -3593,7 +3598,8 @@ msgstr ""
 msgid "Error message"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:47
+#: src/screens/Settings/components/ExportCarDialog.tsx:48
+#: src/screens/Settings/components/ExportCarDialog.tsx:82
 msgid "Error occurred while saving file"
 msgstr ""
 
@@ -3708,7 +3714,7 @@ msgstr ""
 msgid "Export my data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:63
+#: src/screens/Settings/components/ExportCarDialog.tsx:98
 msgid "Export My Data"
 msgstr ""
 
@@ -3789,7 +3795,7 @@ msgstr ""
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:133
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:141
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr ""
 
@@ -3810,10 +3816,16 @@ msgstr ""
 msgid "Failed to load conversations"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:474
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:519
+#: src/screens/Search/Explore.tsx:564
+#: src/screens/Search/Explore.tsx:610
+msgid "Failed to load feeds"
+msgstr ""
+
+#: src/screens/Search/Explore.tsx:478
+#: src/screens/Search/Explore.tsx:533
+#: src/screens/Search/Explore.tsx:578
+#: src/screens/Search/Explore.tsx:624
 msgid "Failed to load feeds preferences"
 msgstr ""
 
@@ -3843,14 +3855,14 @@ msgstr ""
 msgid "Failed to load preference."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:467
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:526
+#: src/screens/Search/Explore.tsx:571
+#: src/screens/Search/Explore.tsx:617
 msgid "Failed to load suggested feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:377
+#: src/screens/Search/Explore.tsx:381
 msgid "Failed to load suggested follows"
 msgstr ""
 
@@ -4048,7 +4060,8 @@ msgstr ""
 msgid "Fetch update"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:43
+#: src/screens/Settings/components/ExportCarDialog.tsx:44
+#: src/screens/Settings/components/ExportCarDialog.tsx:78
 msgid "File saved successfully!"
 msgstr ""
 
@@ -4205,7 +4218,7 @@ msgstr ""
 
 #: src/components/contacts/screens/ViewMatches.tsx:275
 #: src/components/contacts/screens/ViewMatches.tsx:290
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:274
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:290
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:161
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:168
 #: src/screens/Settings/FindContactsSettings.tsx:443
@@ -4215,7 +4228,7 @@ msgstr ""
 msgid "Follow all"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:271
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:287
 msgid "Follow all accounts"
 msgstr ""
 
@@ -4228,7 +4241,7 @@ msgstr ""
 msgid "Follow back"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:128
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:130
 msgid "Followed all accounts!"
 msgstr ""
 
@@ -4336,7 +4349,7 @@ msgstr ""
 msgid "For the best experience, we recommend using the theme font."
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:329
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:345
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:88
 msgid "For You"
 msgstr ""
@@ -4492,7 +4505,6 @@ msgstr ""
 #: src/components/moderation/ScreenHider.tsx:169
 #: src/screens/Login/components/AuthLayout/Header/index.tsx:75
 #: src/screens/Messages/Inbox.tsx:251
-#: src/screens/Profile/ProfileFeed/index.tsx:95
 #: src/screens/ProfileList/components/ErrorScreen.tsx:34
 #: src/screens/ProfileList/components/ErrorScreen.tsx:40
 #: src/screens/VideoFeed/components/Header.tsx:163
@@ -4509,7 +4521,6 @@ msgstr ""
 #: src/screens/List/ListHiddenScreen.tsx:224
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/Profile/ProfileFeed/index.tsx:100
 #: src/screens/StarterPack/StarterPackScreen.tsx:783
 #: src/view/screens/NotFound.tsx:56
 msgid "Go Back"
@@ -4926,6 +4937,10 @@ msgstr ""
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr ""
 
+#: src/screens/Settings/LanguageSettings.tsx:215
+msgid "If none are selected, all languages will be shown in your feeds."
+msgstr ""
+
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:93
 msgid "If you are 18 years of age or older and want to try again, click the button below and use a different verification method if one is available in your region. If you have questions or concerns, <0>our support team can help.</0>"
 msgstr ""
@@ -5271,7 +5286,7 @@ msgstr ""
 msgid "Language Settings"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:78
+#: src/screens/Settings/LanguageSettings.tsx:80
 #: src/screens/Settings/Settings.tsx:244
 #: src/screens/Settings/Settings.tsx:247
 msgid "Languages"
@@ -5395,10 +5410,6 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:283
 #: src/components/dms/LeaveConvoPrompt.tsx:42
 msgid "Leave conversation"
-msgstr ""
-
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:84
-msgid "Leave them all unselected to see any language."
 msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:82
@@ -5649,12 +5660,12 @@ msgstr ""
 msgid "Live link"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:83
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:508
+#: src/screens/Search/Explore.tsx:599
 msgid "Load more suggested feeds"
 msgstr ""
 
@@ -5662,7 +5673,7 @@ msgstr ""
 msgid "Load new notifications"
 msgstr ""
 
-#: src/screens/Profile/ProfileFeed/index.tsx:233
+#: src/screens/Profile/ProfileFeed/index.tsx:203
 #: src/screens/Profile/Sections/Feed.tsx:116
 #: src/screens/ProfileList/FeedSection.tsx:112
 #: src/view/com/feeds/FeedPage.tsx:170
@@ -5929,8 +5940,8 @@ msgstr ""
 msgid "More feeds"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:87
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:90
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:102
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:105
 msgid "More languages..."
 msgstr ""
 
@@ -6168,7 +6179,7 @@ msgstr ""
 msgid "New password"
 msgstr ""
 
-#: src/screens/Profile/ProfileFeed/index.tsx:250
+#: src/screens/Profile/ProfileFeed/index.tsx:220
 #: src/screens/ProfileList/index.tsx:250
 #: src/screens/ProfileList/index.tsx:299
 #: src/view/screens/Feeds.tsx:552
@@ -6370,7 +6381,7 @@ msgstr ""
 msgid "No results"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:789
+#: src/screens/Search/Explore.tsx:817
 msgid "No results for \"{0}\"."
 msgstr ""
 
@@ -6387,7 +6398,7 @@ msgstr ""
 msgid "No results found for \"<0>{query}</0>\"."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:793
+#: src/screens/Search/Explore.tsx:821
 msgid "No results."
 msgstr ""
 
@@ -6544,7 +6555,7 @@ msgid "Off"
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:256
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:323
+#: src/components/dialogs/LanguageSelectDialog.tsx:330
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
 msgstr ""
@@ -6809,7 +6820,7 @@ msgstr ""
 msgid "Opens password reset form"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:129
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:147
 msgid "Opens post language settings"
 msgstr ""
 
@@ -7324,7 +7335,7 @@ msgid "Post Interaction Settings"
 msgstr ""
 
 #. Accessibility label for button that opens dialog to choose post language settings
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:124
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:142
 msgid "Post language selection"
 msgstr ""
 
@@ -7403,12 +7414,9 @@ msgstr ""
 msgid "Previous image"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:137
+#: src/screens/Settings/LanguageSettings.tsx:123
+#: src/screens/Settings/LanguageSettings.tsx:139
 msgid "Primary language"
-msgstr ""
-
-#: src/screens/Settings/LanguageSettings.tsx:121
-msgid "Primary Language"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:116
@@ -7669,7 +7677,7 @@ msgstr ""
 msgid "Recent Searches"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:232
+#: src/components/dialogs/LanguageSelectDialog.tsx:239
 msgid "Recently used"
 msgstr ""
 
@@ -8206,8 +8214,8 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:292
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:219
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:248
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:251
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:264
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:267
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:91
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:94
 #: src/screens/PostThread/components/ThreadError.tsx:80
@@ -8234,7 +8242,6 @@ msgstr ""
 msgid "Returns to home page"
 msgstr ""
 
-#: src/screens/Profile/ProfileFeed/index.tsx:96
 #: src/screens/ProfileList/components/ErrorScreen.tsx:35
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:575
 #: src/screens/VideoFeed/index.tsx:1180
@@ -8419,11 +8426,11 @@ msgstr ""
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:364
+#: src/screens/Search/Explore.tsx:368
 msgid "Search for more accounts"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:441
+#: src/screens/Search/Explore.tsx:445
 msgid "Search for more feeds"
 msgstr ""
 
@@ -8440,8 +8447,8 @@ msgstr ""
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:215
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:216
+#: src/components/dialogs/LanguageSelectDialog.tsx:222
+#: src/components/dialogs/LanguageSelectDialog.tsx:223
 msgid "Search languages"
 msgstr ""
 
@@ -8536,7 +8543,7 @@ msgstr ""
 msgid "Select {0}"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:72
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:87
 msgid "Select {langName}"
 msgstr ""
 
@@ -8568,11 +8575,12 @@ msgstr ""
 msgid "Select an option"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:98
+#: src/screens/Settings/LanguageSettings.tsx:100
 msgid "Select app language"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:166
+#: src/screens/Settings/LanguageSettings.tsx:175
+#: src/screens/Settings/LanguageSettings.tsx:213
 msgid "Select content languages"
 msgstr ""
 
@@ -8614,8 +8622,7 @@ msgstr ""
 msgid "Select language..."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:180
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:248
+#: src/components/dialogs/LanguageSelectDialog.tsx:255
 msgid "Select languages"
 msgstr ""
 
@@ -8623,11 +8630,11 @@ msgstr ""
 msgid "Select moderation service"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:57
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:72
 msgid "Select post language"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:132
+#: src/screens/Settings/LanguageSettings.tsx:134
 msgid "Select primary language"
 msgstr ""
 
@@ -8644,7 +8651,8 @@ msgstr ""
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:194
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:58
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:114
 msgid "Select up to 3 languages used in this post"
 msgstr ""
 
@@ -8652,11 +8660,11 @@ msgstr ""
 msgid "Select what content this mute word should apply to."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:91
+#: src/screens/Settings/LanguageSettings.tsx:93
 msgid "Select which language to use for the app's user interface."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:159
+#: src/screens/Settings/LanguageSettings.tsx:161
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
@@ -8669,7 +8677,7 @@ msgstr ""
 msgid "Select your interests from the options below"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:125
+#: src/screens/Settings/LanguageSettings.tsx:127
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
@@ -9136,7 +9144,7 @@ msgstr ""
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:89
 #: src/screens/Onboarding/StepFinished/index.tsx:294
 #: src/screens/Onboarding/StepFinished/index.tsx:316
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:261
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:104
 #: src/screens/StarterPack/Wizard/index.tsx:216
 msgid "Skip"
@@ -9152,7 +9160,7 @@ msgstr ""
 msgid "Skip introduction and start using your account"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:258
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:274
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:101
 msgid "Skip to next step"
 msgstr ""
@@ -9234,7 +9242,7 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:212
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:228
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
@@ -9318,7 +9326,7 @@ msgstr ""
 msgid "Starter pack is invalid"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:629
+#: src/screens/Search/Explore.tsx:654
 #: src/view/screens/Profile.tsx:240
 msgid "Starter Packs"
 msgstr ""
@@ -9425,13 +9433,13 @@ msgstr ""
 msgid "Successfully verified"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:361
-msgid "Suggested Accounts"
+#: src/screens/Search/Explore.tsx:365
+msgid "Suggested accounts"
 msgstr ""
 
 #. Accounts suggested to the user for them to follow
 #: src/components/FeedInterstitials.tsx:677
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:163
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:179
 msgid "Suggested for you"
 msgstr ""
 
@@ -9770,7 +9778,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:988
+#: src/screens/Search/Explore.tsx:1016
 #: src/view/com/posts/PostFeed.tsx:758
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
@@ -9834,7 +9842,7 @@ msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:258
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:325
+#: src/components/dialogs/LanguageSelectDialog.tsx:332
 #: src/view/com/util/ErrorBoundary.tsx:59
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
@@ -9942,7 +9950,7 @@ msgstr ""
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:96
+#: src/screens/Settings/components/ExportCarDialog.tsx:152
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr ""
 
@@ -9963,7 +9971,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr ""
 
 #: src/components/StarterPack/Main/PostsList.tsx:41
-#: src/screens/Profile/ProfileFeed/index.tsx:199
+#: src/screens/Profile/ProfileFeed/index.tsx:169
 #: src/screens/ProfileList/FeedSection.tsx:77
 msgid "This feed is empty."
 msgstr ""
@@ -9980,7 +9988,7 @@ msgstr ""
 msgid "This information is private and not shared with other users."
 msgstr ""
 
-#: src/view/screens/Debug.tsx:343
+#: src/view/screens/Debug.tsx:329
 msgid "This is an empty state"
 msgstr ""
 
@@ -10921,7 +10929,7 @@ msgstr ""
 msgid "View blocked user's profile"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:100
+#: src/screens/Settings/components/ExportCarDialog.tsx:156
 msgid "View blogpost for more details"
 msgstr ""
 
@@ -10961,8 +10969,8 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:487
 #: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/view/com/posts/PostFeedErrorMessage.tsx:182
-#: src/view/com/util/PostMeta.tsx:90
-#: src/view/com/util/PostMeta.tsx:127
+#: src/view/com/util/PostMeta.tsx:94
+#: src/view/com/util/PostMeta.tsx:131
 msgid "View profile"
 msgstr ""
 
@@ -11277,10 +11285,6 @@ msgstr ""
 msgid "When you tap on a check, you’ll see which organizations have granted verification."
 msgstr ""
 
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:79
-msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr ""
-
 #: src/components/WhoCanReply.tsx:225
 msgid "Who can interact with this post?"
 msgstr ""
@@ -11487,6 +11491,10 @@ msgstr ""
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
 msgid "You can also discover new Custom Feeds to follow."
+msgstr ""
+
+#: src/screens/Settings/components/ExportCarDialog.tsx:125
+msgid "You can also download your chat data as a \"JSONL\" file. This file only includes chat messages that you have sent and does not include chat messages that you have received."
 msgstr ""
 
 #: src/components/contacts/screens/GetContacts.tsx:249
@@ -11876,7 +11884,7 @@ msgstr ""
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:68
+#: src/screens/Settings/components/ExportCarDialog.tsx:103
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
