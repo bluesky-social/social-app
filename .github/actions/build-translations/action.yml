@@ -15,9 +15,9 @@ runs:
     - name: 🔑 Generate cache key
       id: cache-key
       shell: bash
+      env:
+        PO_HASH: ${{ hashFiles('src/locale/locales/**/messages.po') }}
       run: |
-        # Hash all .po files to detect any translation changes
-        PO_HASH=$(find src/locale/locales -name "messages.po" -type f -exec cat {} \; | shasum -a 256 | cut -d' ' -f1)
         # Get @lingui/cli version to bust cache on compiler upgrades
         LINGUI_VERSION=$(grep '"version"' node_modules/@lingui/cli/package.json | head -1 | sed 's/.*"version": "\(.*\)".*/\1/')
         CACHE_KEY="translations-${PO_HASH}-lingui-${LINGUI_VERSION}"
