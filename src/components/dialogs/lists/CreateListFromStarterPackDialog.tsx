@@ -219,7 +219,7 @@ export function CreateListFromStarterPackDialog({
         nativeOptions={{preventDismiss: true}}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
-          label={_(msg`Adding members to list`)}
+          label={_(msg`Adding members to list...`)}
           style={web({maxWidth: 400})}>
           <View style={[a.align_center, a.gap_lg, a.py_5xl]}>
             <Loader size="xl" />
