@@ -133,7 +133,9 @@ let PostMenuItems = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const {translate} = useTranslateOnDevice(post.uri)
+  const {clearTranslation, translate, translationState} = useTranslateOnDevice(
+    post.uri,
+  )
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()
@@ -219,7 +221,7 @@ let PostMenuItems = ({
   const onToggleThreadMute = () => {
     try {
       if (isThreadMuted) {
-        unmuteThread()
+        void unmuteThread()
         ax.metric('post:unmute', {
           uri: postUri,
           authorDid: postAuthor.did,
@@ -228,7 +230,7 @@ let PostMenuItems = ({
         })
         Toast.show(_(msg`You will now receive notifications for this thread`))
       } else {
-        muteThread()
+        void muteThread()
         ax.metric('post:mute', {
           uri: postUri,
           authorDid: postAuthor.did,
@@ -239,7 +241,8 @@ let PostMenuItems = ({
           _(msg`You will no longer receive notifications for this thread`),
         )
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         logger.error('Failed to toggle thread mute', {message: e})
         Toast.show(
@@ -253,12 +256,12 @@ let PostMenuItems = ({
   const onCopyPostText = () => {
     const str = richTextToString(richText, true)
 
-    Clipboard.setStringAsync(str)
+    void Clipboard.setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }
 
   const onPressTranslate = () => {
-    translate(record.text, langPrefs.primaryLanguage)
+    void translate(record.text, langPrefs.primaryLanguage)
 
     if (
       bsky.dangerousIsType<AppBskyFeedPost.Record>(
@@ -272,6 +275,11 @@ let PostMenuItems = ({
         textLength: post.record.text.length,
       })
     }
+  }
+
+  const onPressHideTranslation = () => {
+    clearTranslation()
+    return false
   }
 
   const onHidePost = () => {
@@ -343,7 +351,8 @@ let PostMenuItems = ({
           ? _(msg`Quote post was successfully detached`)
           : _(msg`Quote post was re-attached`),
       )
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       Toast.show(
         _(msg({message: 'Updating quote attachment failed', context: 'toast'})),
       )
@@ -380,7 +389,8 @@ let PostMenuItems = ({
           ? _(msg`Reply was successfully hidden`)
           : _(msg({message: 'Reply visibility updated', context: 'toast'})),
       )
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e instanceof MaxHiddenRepliesError) {
         Toast.show(
           _(
@@ -409,7 +419,7 @@ let PostMenuItems = ({
 
   const onPressPin = () => {
     ax.metric(isPinned ? 'post:unpin' : 'post:pin', {})
-    pinPostMutate({
+    void pinPostMutate({
       postUri,
       postCid,
       action: isPinned ? 'unpin' : 'pin',
@@ -420,7 +430,8 @@ let PostMenuItems = ({
     try {
       await queueBlock()
       Toast.show(_(msg({message: 'Account blocked', context: 'toast'})))
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         logger.error('Failed to block account', {message: e})
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
@@ -433,7 +444,8 @@ let PostMenuItems = ({
       try {
         await queueUnmute()
         Toast.show(_(msg({message: 'Account unmuted', context: 'toast'})))
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as Error
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unmute account', {message: e})
           Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
@@ -443,7 +455,8 @@ let PostMenuItems = ({
       try {
         await queueMute()
         Toast.show(_(msg({message: 'Account muted', context: 'toast'})))
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as Error
         if (e?.name !== 'AbortError') {
           logger.error('Failed to mute account', {message: e})
           Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
@@ -456,7 +469,7 @@ let PostMenuItems = ({
     const url = `https://docs.google.com/forms/d/e/1FAIpQLSd0QPqhNFksDQf1YyOos7r1ofCLvmrKAH1lU042TaS3GAZaWQ/viewform?entry.1756031717=${toShareUrl(
       href,
     )}`
-    openLink(url)
+    void openLink(url)
   }
 
   const onSignIn = () => requireSignIn(() => {})
@@ -499,13 +512,31 @@ let PostMenuItems = ({
         <Menu.Group>
           {!hideInPWI || hasSession ? (
             <>
-              <Menu.Item
-                testID="postDropdownTranslateBtn"
-                label={_(msg`Translate`)}
-                onPress={onPressTranslate}>
-                <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={Translate} position="right" />
-              </Menu.Item>
+              {translationState.status === 'loading' ? (
+                <Menu.Item
+                  testID="postDropdownTranslateBtn"
+                  label={_(msg`Translating…`)}
+                  onPress={onPressHideTranslation}>
+                  <Menu.ItemText>{_(msg`Translating…`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Translate} position="right" />
+                </Menu.Item>
+              ) : translationState.status === 'success' ? (
+                <Menu.Item
+                  testID="postDropdownTranslateBtn"
+                  label={_(msg`Hide translation`)}
+                  onPress={onPressHideTranslation}>
+                  <Menu.ItemText>{_(msg`Hide translation`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Translate} position="right" />
+                </Menu.Item>
+              ) : (
+                <Menu.Item
+                  testID="postDropdownTranslateBtn"
+                  label={_(msg`Translate`)}
+                  onPress={onPressTranslate}>
+                  <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Translate} position="right" />
+                </Menu.Item>
+              )}
 
               <Menu.Item
                 testID="postDropdownCopyTextBtn"
@@ -687,7 +718,7 @@ let PostMenuItems = ({
                         ? _(msg`Unmute account`)
                         : _(msg`Mute account`)
                     }
-                    onPress={onMuteAuthor}>
+                    onPress={() => void onMuteAuthor()}>
                     <Menu.ItemText>
                       {postAuthor.viewer?.muted
                         ? _(msg`Unmute account`)
@@ -796,7 +827,7 @@ let PostMenuItems = ({
         description={_(
           msg`This will remove your post from this quote post for all users, and replace it with a placeholder.`,
         )}
-        onConfirm={onToggleQuotePostAttachment}
+        onConfirm={() => void onToggleQuotePostAttachment()}
         confirmButtonCta={_(msg`Yes, detach`)}
       />
 
@@ -806,7 +837,7 @@ let PostMenuItems = ({
         description={_(
           msg`This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others.`,
         )}
-        onConfirm={onToggleReplyVisibility}
+        onConfirm={() => void onToggleReplyVisibility()}
         confirmButtonCta={_(msg`Yes, hide`)}
       />
 
@@ -816,7 +847,7 @@ let PostMenuItems = ({
         description={_(
           msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
         )}
-        onConfirm={onBlockAuthor}
+        onConfirm={() => void onBlockAuthor()}
         confirmButtonCta={_(msg`Block`)}
         confirmButtonColor="negative"
       />
