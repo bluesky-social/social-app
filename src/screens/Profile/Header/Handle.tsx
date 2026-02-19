@@ -1,7 +1,8 @@
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {type Shadow} from '#/state/cache/types'

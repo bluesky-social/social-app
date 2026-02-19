@@ -1,5 +1,6 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {type ViewStyleProp} from '#/alf'
 import * as Admonition from '#/components/Admonition'

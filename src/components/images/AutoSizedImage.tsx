@@ -7,7 +7,7 @@ import Animated, {
 import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {type Dimensions} from '#/lib/media/types'

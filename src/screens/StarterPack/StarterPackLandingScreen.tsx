@@ -8,8 +8,9 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'

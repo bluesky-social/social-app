@@ -1,5 +1,5 @@
 import {type TextInputProps, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import * as TextField from '#/components/forms/TextField'

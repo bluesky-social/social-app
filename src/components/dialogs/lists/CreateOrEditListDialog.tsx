@@ -1,8 +1,9 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'

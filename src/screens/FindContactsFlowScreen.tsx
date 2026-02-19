@@ -1,6 +1,6 @@
 import {useCallback, useLayoutEffect, useState} from 'react'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {usePreventRemove} from '@react-navigation/native'
 

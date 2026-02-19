@@ -1,15 +1,19 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyGraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {RQKEY_ROOT as listQueryRoot} from '#/state/queries/list'
-import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
+import {
+  RQKEY_ROOT as listQueryRoot,
+  useListBlockMutation,
+  useListMuteMutation,
+} from '#/state/queries/list'
 import {
   type UsePreferencesQueryResponse,
   useRemoveFeedMutation,

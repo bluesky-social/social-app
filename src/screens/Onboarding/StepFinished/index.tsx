@@ -8,8 +8,9 @@ import {
   type Un$Typed,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'

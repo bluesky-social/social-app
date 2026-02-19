@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {ToolsOzoneReportDefs as OzoneReportDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 export type ReportCategory =
@@ -247,7 +247,7 @@ export function useReportOptions() {
     }
 
     return {
-      categories: Object.values(categories) as ReportCategoryConfig[],
+      categories: Object.values(categories),
       getCategory(reasonName: ReportCategory) {
         return categories[reasonName]
       },

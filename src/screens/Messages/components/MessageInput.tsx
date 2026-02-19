@@ -12,7 +12,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 

@@ -7,8 +7,9 @@ import {
   moderateUserList,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 

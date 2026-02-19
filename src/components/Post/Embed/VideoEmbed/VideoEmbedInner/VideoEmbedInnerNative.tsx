@@ -2,7 +2,7 @@ import {useImperativeHandle, useRef, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {BlueskyVideoView} from '@haileyok/bluesky-video'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'

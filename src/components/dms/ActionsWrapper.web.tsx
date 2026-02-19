@@ -1,7 +1,7 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useConvoActive} from '#/state/messages/convo'

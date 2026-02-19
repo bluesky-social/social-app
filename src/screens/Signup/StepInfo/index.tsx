@@ -1,7 +1,8 @@
 import React, {useRef} from 'react'
 import {type TextInput, View} from 'react-native'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 

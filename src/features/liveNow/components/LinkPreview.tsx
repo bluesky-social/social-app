@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {type LinkMeta} from '#/lib/link-meta/link-meta'
 import {toNiceDomain} from '#/lib/strings/url-helpers'

@@ -8,7 +8,7 @@ import {
   moderatePost,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'

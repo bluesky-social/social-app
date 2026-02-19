@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import * as VideoThumbnails from 'expo-video-thumbnails'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import * as device from '#/lib/deviceName'
