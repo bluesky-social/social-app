@@ -1,9 +1,12 @@
-import {View} from 'react-native'
+import {Platform, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {codeToLanguageName} from '#/locale/helpers'
-import {APP_LANGUAGES, type AppLanguage} from '#/locale/languages'
+import {
+  ANDROID_ON_DEVICE_LANGUAGES,
+  IOS_ON_DEVICE_LANGUAGES,
+} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -146,12 +149,18 @@ function TranslationLanguageSelect({
             <Select.ItemText>{label}</Select.ItemText>
           </Select.Item>
         )}
-        items={APP_LANGUAGES.filter(
-          l => l.code2 !== (langPrefs.primaryLanguage as AppLanguage),
-        ).map(l => ({
-          label: l.name,
-          value: l.code2,
-        }))}
+        items={(Platform.OS === 'ios'
+          ? IOS_ON_DEVICE_LANGUAGES
+          : ANDROID_ON_DEVICE_LANGUAGES
+        )
+          .filter(l => l.code2 !== langPrefs.primaryLanguage.split('-')[0])
+          .sort((a, b) => {
+            return a.name.localeCompare(b.name)
+          })
+          .map(l => ({
+            label: l.name,
+            value: l.code2,
+          }))}
       />
     </Select.Root>
   )

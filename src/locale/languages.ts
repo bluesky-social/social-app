@@ -4,6 +4,16 @@ export interface Language {
   name: string
 }
 
+export interface AndroidOnDeviceLanguage {
+  code2: string
+  name: string
+}
+
+export interface IosOnDeviceLanguage {
+  code2: string
+  name: string
+}
+
 export enum AppLanguage {
   en = 'en',
   an = 'an',
@@ -98,6 +108,103 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.zh_CN, name: '简体中文 – Simplified Chinese'},
   {code2: AppLanguage.zh_TW, name: '繁體中文 – Traditional Chinese'},
   {code2: AppLanguage.zh_HK, name: '粵文 – Cantonese'},
+]
+
+// https://developers.google.com/android/reference/com/google/mlkit/nl/translate/TranslateLanguage
+export const ANDROID_ON_DEVICE_LANGUAGES: AndroidOnDeviceLanguage[] = [
+  {code2: 'af', name: 'Afrikaans'},
+  {code2: 'ar', name: 'عربي'},
+  {code2: 'be', name: 'беларускі'},
+  {code2: 'bg', name: 'български'},
+  {code2: 'bn', name: 'বাংলা'},
+  {code2: 'ca', name: 'català'},
+  {code2: 'cs', name: 'čeština'},
+  {code2: 'cy', name: 'Cymraeg'},
+  {code2: 'da', name: 'dansk'},
+  {code2: 'de', name: 'Deutsch'},
+  {code2: 'el', name: 'ελληνικά'},
+  {code2: 'en', name: 'English'},
+  {code2: 'eo', name: 'Esperanto'},
+  {code2: 'es', name: 'Español'},
+  {code2: 'et', name: 'eesti keel'},
+  {code2: 'fa', name: 'فارسی'},
+  {code2: 'fi', name: 'suomalainen'},
+  {code2: 'fr', name: 'Français'},
+  {code2: 'ga', name: 'Gaeilge'},
+  {code2: 'gl', name: 'galego'},
+  {code2: 'gu', name: 'ગુજરાતી'},
+  {code2: 'he', name: 'עִברִית'},
+  {code2: 'hi', name: 'हिंदी'},
+  {code2: 'hr', name: 'hrvatski'},
+  {code2: 'ht', name: 'Kreyòl ayisyen'},
+  {code2: 'hu', name: 'magyar'},
+  {code2: 'id', name: 'Indonesia'},
+  {code2: 'is', name: 'íslenskur'},
+  {code2: 'it', name: 'Italiano'},
+  {code2: 'ja', name: '日本語'},
+  {code2: 'ka', name: 'ქართული'},
+  {code2: 'kn', name: 'ಕನ್ನಡ'},
+  {code2: 'ko', name: '한국어'},
+  {code2: 'lt', name: 'lietuvių'},
+  {code2: 'lv', name: 'latviski'},
+  {code2: 'mk', name: 'македонски'},
+  {code2: 'mr', name: 'मराठी'},
+  {code2: 'ms', name: 'Melayu'},
+  {code2: 'mt', name: 'Malti'},
+  {code2: 'nl', name: 'Nederlands'},
+  {code2: 'no', name: 'Bokmål'},
+  {code2: 'pl', name: 'Polski'},
+  {code2: 'pt', name: 'Português'},
+  {code2: 'ro', name: 'română'},
+  {code2: 'ru', name: 'Русский'},
+  {code2: 'sk', name: 'slovenský'},
+  {code2: 'sl', name: 'slovenski'},
+  {code2: 'sq', name: 'shqiptare'},
+  {code2: 'sv', name: 'Kiswidi'},
+  {code2: 'sw', name: 'kiswahili'},
+  {code2: 'ta', name: 'தமிழ்'},
+  {code2: 'te', name: 'తెలుగు'},
+  {code2: 'th', name: 'แบบไทย'},
+  {code2: 'tl', name: 'ᜏᜒᜃᜅ᜔ ᜆᜄᜎᜓᜄ᜔'},
+  {code2: 'tr', name: 'Türkçe'},
+  {code2: 'uk', name: 'українська'},
+  {code2: 'ur', name: 'اردو'},
+  {code2: 'vi', name: 'Tiếng Việt'},
+  {code2: 'zh', name: '简体中文'},
+]
+
+// https://developer.apple.com/documentation/foundation/nslocale/isolanguagecodes
+export const IOS_ON_DEVICE_LANGUAGES: IosOnDeviceLanguage[] = [
+  {code2: 'ar', name: 'عربي'},
+  {code2: 'ca', name: 'català'},
+  {code2: 'cs', name: 'čeština'},
+  {code2: 'da', name: 'dansk'},
+  {code2: 'de', name: 'Deutsch'},
+  {code2: 'el', name: 'ελληνικά'},
+  {code2: 'en', name: 'English'},
+  {code2: 'es', name: 'Español'},
+  {code2: 'fi', name: 'suomalainen'},
+  {code2: 'fr', name: 'Français'},
+  {code2: 'he', name: 'עִברִית'},
+  {code2: 'hi', name: 'हिंदी'},
+  {code2: 'it', name: 'Italiano'},
+  {code2: 'ja', name: '日本語'},
+  {code2: 'ko', name: '한국어'},
+  {code2: 'ms', name: 'Melayu'},
+  {code2: 'nl', name: 'Nederlands'},
+  {code2: 'no', name: 'Bokmål'},
+  {code2: 'pl', name: 'Polski'},
+  {code2: 'pt', name: 'Português'},
+  {code2: 'ro', name: 'română'},
+  {code2: 'ru', name: 'Русский'},
+  {code2: 'sk', name: 'slovenský'},
+  {code2: 'sv', name: 'Kiswidi'},
+  {code2: 'th', name: 'แบบไทย'},
+  {code2: 'tr', name: 'Türkçe'},
+  {code2: 'uk', name: 'українська'},
+  {code2: 'vi', name: 'Tiếng Việt'},
+  {code2: 'zh-CN', name: '简体中文'},
+  {code2: 'zh-TW', name: '繁體中文'},
 ]
 
 export const LANGUAGES: Language[] = [
