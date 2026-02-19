@@ -90,10 +90,6 @@ textarea:focus,
 input:focus {
   outline: 0;
 }
-.tippy-content .items {
-  width: fit-content;
-}
-
 /* Tooltips */
 [data-tooltip] {
   position: relative;

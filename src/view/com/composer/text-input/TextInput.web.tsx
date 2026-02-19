@@ -12,11 +12,10 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import {Document} from '@tiptap/extension-document'
 import Hardbreak from '@tiptap/extension-hard-break'
-import History from '@tiptap/extension-history'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
-import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
+import {Placeholder, UndoRedo} from '@tiptap/extensions'
 import {generateJSON} from '@tiptap/html'
 import {Fragment, Node, Slice} from '@tiptap/pm/model'
 import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
@@ -77,7 +76,7 @@ export function TextInput({
         placeholder,
       }),
       TiptapText,
-      History,
+      UndoRedo,
       Hardbreak,
     ],
     [autocomplete, placeholder],

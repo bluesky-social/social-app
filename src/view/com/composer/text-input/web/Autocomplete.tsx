@@ -1,6 +1,13 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
+import {
+  autoUpdate,
+  computePosition,
+  flip,
+  offset,
+  shift,
+} from '@floating-ui/dom'
 import {Trans} from '@lingui/macro'
 import {ReactRenderer} from '@tiptap/react'
 import {
@@ -8,7 +15,6 @@ import {
   type SuggestionOptions,
   type SuggestionProps,
 } from '@tiptap/suggestion'
-import tippy, {type Instance as TippyInstance} from 'tippy.js'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
@@ -39,11 +45,40 @@ export function createSuggestion({
 
     render: () => {
       let component: ReactRenderer<MentionListRef> | undefined
-      let popup: TippyInstance[] | undefined
+      let floatingEl: HTMLDivElement | undefined
+      let cleanupAutoUpdate: (() => void) | undefined
+      let latestClientRect: (() => DOMRect | null) | null = null
 
       const hide = () => {
-        popup?.[0]?.destroy()
+        cleanupAutoUpdate?.()
+        cleanupAutoUpdate = undefined
+        if (floatingEl) {
+          floatingEl.remove()
+          floatingEl = undefined
+        }
         component?.destroy()
+      }
+
+      const updatePosition = () => {
+        if (!floatingEl || !latestClientRect) return
+        const rect = latestClientRect()
+        if (!rect) return
+
+        const virtualEl = {
+          getBoundingClientRect: () => rect,
+        }
+
+        computePosition(virtualEl, floatingEl, {
+          placement: 'bottom-start',
+          middleware: [offset(8), flip(), shift({padding: 8})],
+        }).then(({x, y}) => {
+          if (floatingEl) {
+            Object.assign(floatingEl.style, {
+              left: `${x}px`,
+              top: `${y}px`,
+            })
+          }
+        })
       }
 
       return {
@@ -53,33 +88,36 @@ export function createSuggestion({
             editor: props.editor,
           })
 
-          if (!props.clientRect) {
-            return
+          floatingEl = document.createElement('div')
+          floatingEl.style.position = 'absolute'
+          floatingEl.style.zIndex = '1000'
+          floatingEl.style.width = 'fit-content'
+          if (component.element) {
+            floatingEl.appendChild(component.element)
           }
+          document.body.appendChild(floatingEl)
 
-          // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
-          popup = tippy('body', {
-            getReferenceClientRect: props.clientRect,
-            appendTo: () => document.body,
-            content: component.element,
-            showOnCreate: true,
-            interactive: true,
-            trigger: 'manual',
-            placement: 'bottom-start',
-          })
+          latestClientRect = props.clientRect ?? null
+
+          if (latestClientRect && floatingEl) {
+            const rect = latestClientRect()
+            if (rect) {
+              const virtualEl = {
+                getBoundingClientRect: () => rect,
+              }
+              cleanupAutoUpdate = autoUpdate(
+                virtualEl,
+                floatingEl,
+                updatePosition,
+              )
+            }
+          }
         },
 
         onUpdate(props) {
           component?.updateProps(props)
-
-          if (!props.clientRect) {
-            return
-          }
-
-          popup?.[0]?.setProps({
-            // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
-            getReferenceClientRect: props.clientRect,
-          })
+          latestClientRect = props.clientRect ?? null
+          updatePosition()
         },
 
         onKeyDown(props) {
@@ -104,7 +142,10 @@ const MentionList = forwardRef<
     autocompleteRef: React.Ref<AutocompleteRef>
     hide: () => void
   }
->(function MentionListImpl({items, command, hide, autocompleteRef}, ref) {
+>(function MentionListImpl(
+  {items, command, query, hide, autocompleteRef},
+  ref,
+) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const t = useTheme()
   const moderationOpts = useModerationOpts()
@@ -189,7 +230,7 @@ const MentionList = forwardRef<
           })
         ) : (
           <Text style={[a.text_sm, a.px_md, a.py_md]}>
-            <Trans>No result</Trans>
+            {query ? <Trans>No result</Trans> : <Trans>Keep typing...</Trans>}
           </Text>
         )}
       </View>
