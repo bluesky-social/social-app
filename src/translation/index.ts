@@ -32,7 +32,7 @@ const translations = new Map<string, TranslationState>()
  * Syncs translations to an in-memory map to ensure the hook only re-renders
  * when the value changes for a given key.
  */
-export function useTranslationState(key: string) {
+function useTranslationState(key: string) {
   const getSnapshot = () => {
     return translations.get(key) ?? IDLE
   }
