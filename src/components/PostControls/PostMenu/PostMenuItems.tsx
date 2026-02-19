@@ -94,7 +94,7 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
-import {useTranslateOnDevice} from '#/translation/useTranslateOnDevice'
+import {useTranslateOnDevice} from '#/translation'
 import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({

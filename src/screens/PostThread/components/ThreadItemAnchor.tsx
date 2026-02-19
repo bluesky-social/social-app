@@ -61,7 +61,7 @@ import {VerificationCheckButton} from '#/components/verification/VerificationChe
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
-import {useTranslateOnDevice} from '#/translation/useTranslateOnDevice'
+import {useTranslateOnDevice} from '#/translation'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({

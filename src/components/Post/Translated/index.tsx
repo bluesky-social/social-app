@@ -9,7 +9,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
-import {useTranslateOnDevice} from '#/translation/useTranslateOnDevice'
+import {useTranslateOnDevice} from '#/translation'
 
 export function TranslatedPost({
   postText,
