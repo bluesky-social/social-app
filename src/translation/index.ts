@@ -65,10 +65,6 @@ export function useTranslationState(key: string) {
  * Attempts on-device translation via expo-translate-text.
  * Uses a lazy import to avoid crashing if the native module isn't linked into
  * the current build.
- *
- * Note that Android only supports two-character language codes and will fail on
- * other input.
- * https://developers.google.com/android/reference/com/google/mlkit/nl/translate/TranslateLanguage
  */
 async function attemptTranslation(
   input: string,
@@ -79,6 +75,9 @@ async function attemptTranslation(
   targetLanguage: TranslationTaskResult['targetLanguage']
   sourceLanguage: TranslationTaskResult['sourceLanguage']
 }> {
+  // Note that Android only supports two-character language codes and will fail
+  // on other input.
+  // https://developers.google.com/android/reference/com/google/mlkit/nl/translate/TranslateLanguage
   const targetLangCode =
     Platform.OS === 'android'
       ? targetLangCodeOriginal.split('-')[0]
