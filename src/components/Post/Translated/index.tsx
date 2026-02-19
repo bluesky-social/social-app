@@ -9,6 +9,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {useTranslateOnDevice} from '#/translation'
 
 export function TranslatedPost({
@@ -108,12 +109,17 @@ function TranslationLanguageSelect({
   postUri: string
   sourceLanguage: string
 }) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {translate} = useTranslateOnDevice(postUri)
 
-  const handleChangeTranslationLanguage = (sourceLangCode: string) => {
-    void translate(postText, langPrefs.primaryLanguage, sourceLangCode)
+  const handleChangeTranslationLanguage = (selectedLanguage: string) => {
+    ax.metric('translate:override', {
+      sourceLanguage,
+      selectedLanguage,
+    })
+    void translate(postText, langPrefs.primaryLanguage, selectedLanguage)
   }
 
   return (

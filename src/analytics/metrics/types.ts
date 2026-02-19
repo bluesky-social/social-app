@@ -682,6 +682,10 @@ export type Events = {
   'translate:result': {
     method: 'on-device' | 'google-translate' | 'fallback-alert'
   }
+  'translate:override': {
+    sourceLanguage: string
+    selectedLanguage: string
+  }
 
   'verification:create': {}
   'verification:revoke': {}
