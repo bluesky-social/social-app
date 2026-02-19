@@ -153,10 +153,10 @@ function TranslationLanguageSelect({
           ? IOS_ON_DEVICE_LANGUAGES
           : ANDROID_ON_DEVICE_LANGUAGES
         )
-          .filter(l => l.code2 !== langPrefs.primaryLanguage.split('-')[0])
-          .sort((a, b) => {
-            return a.name.localeCompare(b.name)
-          })
+          .filter(l => l.code2 !== langPrefs.primaryLanguage.split('-')[0]) // Only two-letter language codes are supported
+          .sort(
+            (a, b) => a.name.localeCompare(b.name, langPrefs.primaryLanguage), // Localized sort
+          )
           .map(l => ({
             label: l.name,
             value: l.code2,
