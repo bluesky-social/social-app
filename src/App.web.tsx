@@ -68,7 +68,6 @@ import {
   features,
   setupDeviceId,
 } from '#/analytics'
-import {useSetAnalyticsHeaders} from '#/analytics/useSetAnalyticsHeaders'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
@@ -93,8 +92,6 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
-
-  useSetAnalyticsHeaders()
 
   // init
   useEffect(() => {
