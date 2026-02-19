@@ -104,7 +104,7 @@ import { useLingui } from "@lingui/react/macro";
 
 const { t } = useLingui();
 return <Text accessibilityLabel={t`Label is here`}>{text}</Text>
-````
+```
 
 If you want to do this outside of a React component, you can use the global `t` macro instead (note: this won't react to changes if the locale is switched dynamically within the app):
 ```jsx
