@@ -1,4 +1,5 @@
 import {useCallback, useSyncExternalStore} from 'react'
+import {Platform} from 'react-native'
 import {type TranslationTaskResult} from 'expo-translate-text/build/ExpoTranslateText.types'
 import Emitter from 'eventemitter3'
 
@@ -64,16 +65,29 @@ export function useTranslationState(key: string) {
  * Attempts on-device translation via expo-translate-text.
  * Uses a lazy import to avoid crashing if the native module isn't linked into
  * the current build.
+ *
+ * Note that Android only supports two-character language codes and will fail on
+ * other input.
+ * https://developers.google.com/android/reference/com/google/mlkit/nl/translate/TranslateLanguage
  */
 async function attemptTranslation(
   input: string,
-  targetLangCode: string,
-  sourceLangCode?: string,
+  targetLangCodeOriginal: string,
+  sourceLangCodeOriginal?: string,
 ): Promise<{
   translatedText: string
   targetLanguage: TranslationTaskResult['targetLanguage']
   sourceLanguage: TranslationTaskResult['sourceLanguage']
 }> {
+  const targetLangCode =
+    Platform.OS === 'android'
+      ? targetLangCodeOriginal.split('-')[0]
+      : targetLangCodeOriginal
+  const sourceLangCode =
+    Platform.OS === 'android'
+      ? sourceLangCodeOriginal?.split('-')[0]
+      : sourceLangCodeOriginal
+
   const {onTranslateTask} =
     // Needed in order to type check the dynamically imported module.
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
