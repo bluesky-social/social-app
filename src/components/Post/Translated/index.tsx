@@ -80,16 +80,19 @@ function TranslationResult({
             <Trans>Translated from {langName}</Trans>
           ) : (
             <Trans>Translated</Trans>
-          )}{' '}
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            &middot;
-          </Text>{' '}
+          )}
           {sourceLanguage != null && (
-            <TranslationLanguageSelect
-              postUri={postUri}
-              sourceLanguage={sourceLanguage}
-              postText={postText}
-            />
+            <>
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                {' '}
+                &middot;
+              </Text>{' '}
+              <TranslationLanguageSelect
+                postUri={postUri}
+                sourceLanguage={sourceLanguage}
+                postText={postText}
+              />
+            </>
           )}
         </Text>
         <Text emoji selectable style={[a.text_md]}>
