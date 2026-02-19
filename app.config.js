@@ -336,7 +336,7 @@ module.exports = function (_config) {
           },
         ],
         [
-          '@mozzius/expo-dynamic-app-icon',
+          '@bsky.app/expo-dynamic-app-icon',
           {
             /**
              * Default set
