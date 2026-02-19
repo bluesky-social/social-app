@@ -110,7 +110,9 @@ google-services.json
 
 # i18n
 src/locale/locales/_build/
-src/locale/locales/**/*.js
+src/locale/locales/**/messages.js
+src/locale/locales/**/messages.mjs
+src/locale/locales/**/messages.ts
 
 # local builds
 *.apk
