@@ -127,7 +127,10 @@ export function useStarterPackLink({
 
   return {
     to: `/starter-pack/${handleOrDid}/${rkey}`,
-    label: AppBskyGraphStarterpack.isRecord(view.record)
+    label: bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      view.record,
+      AppBskyGraphStarterpack.isRecord,
+    )
       ? _(msg`Navigate to ${view.record.name}`)
       : _(msg`Navigate to starter pack`),
     precache,
@@ -151,7 +154,12 @@ export function Link({
     return {rkey, handleOrDid: creator.handle || creator.did}
   }, [starterPack])
 
-  if (!AppBskyGraphStarterpack.isRecord(record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 

@@ -20,8 +20,10 @@ export function StepDetails() {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({
     did: currentAccount?.did,
-    staleTime: 300,
+    staleTime: Infinity,
   })
+
+  const name = currentProfile?.displayName || currentProfile?.handle
 
   return (
     <ScreenTransition direction={state.transitionDirection} enabledWeb>
@@ -43,11 +45,9 @@ export function StepDetails() {
           </TextField.LabelText>
           <TextField.Root>
             <TextField.Input
-              label={_(
-                msg`${
-                  currentProfile?.displayName || currentProfile?.handle
-                }'s starter pack`,
-              )}
+              label={
+                name ? _(msg`${name}'s starter pack`) : _(msg`My starter pack`)
+              }
               value={state.name}
               onChangeText={text => dispatch({type: 'SetName', name: text})}
             />
@@ -71,11 +71,11 @@ export function StepDetails() {
           </TextField.LabelText>
           <TextField.Root>
             <TextField.Input
-              label={_(
-                msg`${
-                  currentProfile?.displayName || currentProfile?.handle
-                }'s favorite feeds and people - join me!`,
-              )}
+              label={
+                name
+                  ? _(msg`${name}'s favorite feeds and people - join me!`)
+                  : _(msg`My favorite feeds and people - join me!`)
+              }
               value={state.description}
               onChangeText={text =>
                 dispatch({type: 'SetDescription', description: text})

@@ -65,7 +65,7 @@ export default function HashtagScreen({
   }, [fullTag, isCashtag])
 
   const sanitizedAuthor = React.useMemo(() => {
-    if (!author) return
+    if (!author) return ''
     return sanitizeHandle(author)
   }, [author])
 
