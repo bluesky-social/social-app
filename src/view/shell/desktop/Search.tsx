@@ -16,7 +16,7 @@ import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
 import {atoms as a, useTheme} from '#/alf'
 import {SearchInput} from '#/components/forms/SearchInput'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 import {Link, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
