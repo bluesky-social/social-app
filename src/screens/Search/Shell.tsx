@@ -208,8 +208,8 @@ export function SearchScreenShell({
   }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
 
   const onSubmit = useCallback(() => {
-    navigateToItem(deferredSearchText)
-  }, [navigateToItem, deferredSearchText])
+    navigateToItem(searchText)
+  }, [navigateToItem, searchText])
 
   const onAutocompleteResultPress = useCallback(() => {
     if (IS_WEB) {
