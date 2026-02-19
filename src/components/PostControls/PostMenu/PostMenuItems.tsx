@@ -94,7 +94,7 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
-import {useTranslate} from '#/translation/useTranslate'
+import {useTranslateOnDevice} from '#/translation/useTranslateOnDevice'
 import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
@@ -133,7 +133,7 @@ let PostMenuItems = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const translate = useTranslate()
+  const {translate} = useTranslateOnDevice(post.uri)
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()
