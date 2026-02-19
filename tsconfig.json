@@ -17,7 +17,8 @@
         "moveUpPatterns": ["#/", "@lingui/macro"],
         "moveDownPatterns": ["react-native-reanimated/lib"],
       }
-    ]
+    ],
+    "customConditions": ["react-native-strict-api"]
   },
   "exclude": ["bskyweb", "bskyembed", "web-build"]
 }
