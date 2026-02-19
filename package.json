@@ -98,7 +98,6 @@
     "@haileyok/bluesky-video": "0.3.2",
     "@ipld/dag-cbor": "^9.2.0",
     "@lingui/core": "^5.9.1",
-    "@lingui/macro": "^5.9.1",
     "@lingui/react": "^5.9.1",
     "@mattermost/react-native-paste-input": "mattermost/react-native-paste-input",
     "@miblanchard/react-native-slider": "^2.6.0",
