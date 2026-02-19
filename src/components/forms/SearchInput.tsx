@@ -66,13 +66,7 @@ export function SearchInput({
           autoComplete="off"
           autoCapitalize="none"
           onKeyPress={onKeyPress}
-          style={[
-            showClear
-              ? {
-                  paddingRight: 24,
-                }
-              : {},
-          ]}
+          style={[!!showClear && a.pr_2xl]}
           {...rest}
         />
       </TextField.Root>
