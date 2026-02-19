@@ -73,7 +73,7 @@ import { Text } from "react-native";
 ```jsx
 // After
 import { Text } from "react-native";
-import { Trans } from "@lingui/macro";
+import { Trans } from "@lingui/react/macro";
 
 <Text><Trans>Hello World</Trans></Text>
 ```
@@ -90,18 +90,33 @@ const text = "Hello World";
 ```
 In this case, you can use the `useLingui()` hook:
 ```jsx
-import { msg } from "@lingui/macro";
+import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 
 const { _ } = useLingui();
 return <Text accessibilityLabel={_(msg`Label is here`)}>{text}</Text>
 ```
 
-If you want to do this outside of a React component, you can use the `t` macro instead (note: this won't react to changes if the locale is switched dynamically within the app):
-```jsx
-import { t } from "@lingui/macro";
+NEW: the latest Lingui version introduced a new macro version of the `useLingui` hook which lets you do this:
 
+```jsx
+import { useLingui } from "@lingui/react/macro";
+
+const { t } = useLingui();
+return <Text accessibilityLabel={t`Label is here`}>{text}</Text>
+````
+
+If you want to do this outside of a React component, you can use the global `t` macro instead (note: this won't react to changes if the locale is switched dynamically within the app):
+```jsx
+import { t } from "@lingui/core/macro";
+
+// not ideal - t only gets called once at module evaluation time
 const text = t`Hello World`;
+
+// however, this is suitable for strings that are ephemeral:
+function sayHello() {
+  Toast.show(t`Hello World`); // Each time the toast shows, the current locale at that moment is used
+}
 ```
 
 We can then run `yarn intl:extract` to update the catalog in `src/locale/locales/{locale}/messages.po`. This will add the new string to the catalog.
@@ -121,7 +136,7 @@ So the workflow is as follows:
 These pitfalls are memoization pitfalls that will cause the components to not re-render when the locale is changed -- causing stale translations to be shown.
 
 ```jsx
-import { msg } from "@lingui/macro";
+import { msg } from "@lingui/core/macro";
 import { i18n } from "@lingui/core";
 
 const welcomeMessage = msg`Welcome!`;
