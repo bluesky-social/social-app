@@ -24,7 +24,8 @@ const IDLE: TranslationState = {status: 'idle'}
 const emitter = new Emitter()
 
 // Note: Since we’re storing this in memory without clearing it, e.g., LRU,
-// this could get large over time. Something to keep an eye out for.
+// this could get large over time if we don't clear the translation when the
+// component is unmounted. Something to keep an eye out for.
 const translations = new Map<string, TranslationState>()
 
 /**

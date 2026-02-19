@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from 'react'
+import {memo, useCallback, useEffect, useMemo} from 'react'
 import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -609,6 +609,13 @@ function ExpandedPostDetails({
     },
     [clearTranslation],
   )
+
+  useEffect(() => {
+    return () => {
+      // Clear the translation when leaving the post
+      clearTranslation()
+    }
+  }, [clearTranslation])
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
