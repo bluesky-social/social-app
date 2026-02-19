@@ -128,7 +128,7 @@ export function mergeGeolocations(
 }
 
 /**
- * Get's the IP-based geolocation as a string in the format of
+ * Gets the IP-based geolocation as a string in the format of
  * "countryCode-regionCode", or just "countryCode" if regionCode is not
  * available.
  *
