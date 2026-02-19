@@ -170,7 +170,7 @@ export const ANDROID_ON_DEVICE_LANGUAGES: AndroidOnDeviceLanguage[] = [
   {code2: 'uk', name: 'українська'},
   {code2: 'ur', name: 'اردو'},
   {code2: 'vi', name: 'Tiếng Việt'},
-  {code2: 'zh', name: '简体中文'},
+  {code2: 'zh', name: '中文'},
 ]
 
 // https://developer.apple.com/documentation/foundation/nslocale/isolanguagecodes
