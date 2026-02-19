@@ -96,6 +96,8 @@ async function attemptTranslation(
     targetLangCode,
     sourceLangCode,
   })
+
+  // Since `input` is always a string, the result should always be a string.
   return {
     translatedText:
       typeof result.translatedTexts === 'string' ? result.translatedTexts : '',
