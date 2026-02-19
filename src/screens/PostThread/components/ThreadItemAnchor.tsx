@@ -404,16 +404,23 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               additionalCauses={additionalPostAlerts}
             />
             {richText?.text ? (
-              <RichText
-                enableTags
-                selectable
-                value={richText}
-                style={[a.flex_1, a.text_lg]}
-                authorHandle={post.author.handle}
-                shouldProxyLinks={true}
-              />
+              <>
+                <RichText
+                  enableTags
+                  selectable
+                  value={richText}
+                  style={[a.flex_1, a.text_lg]}
+                  authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
+                />
+
+                <TranslatedPost
+                  postText={record.text}
+                  postUri={post.uri}
+                  hideLoading
+                />
+              </>
             ) : undefined}
-            <TranslatedPost postUri={post.uri} hideLoading />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed
