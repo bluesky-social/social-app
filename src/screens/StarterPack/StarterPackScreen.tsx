@@ -50,10 +50,12 @@ import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {CreateListFromStarterPackDialog} from '#/components/dialogs/lists/CreateListFromStarterPackDialog'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
@@ -528,6 +530,7 @@ function OverflowMenu({
   const {currentAccount} = useSession()
   const reportDialogControl = useReportDialogControl()
   const deleteDialogControl = useDialogControl()
+  const convertToListDialogControl = useDialogControl()
   const navigation = useNavigation<NavigationProp>()
 
   const {
@@ -609,6 +612,17 @@ function OverflowMenu({
                   <Trans>Delete</Trans>
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={Trash} position="right" />
+              </Menu.Item>
+              <Menu.Item
+                label={_(msg`Create a list from this starter pack`)}
+                testID="convertToListBtn"
+                onPress={() => {
+                  convertToListDialogControl.open()
+                }}>
+                <Menu.ItemText>
+                  <Trans>Create list from members</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={ListSparkle} position="right" />
               </Menu.Item>
             </>
           ) : (
@@ -702,6 +716,11 @@ function OverflowMenu({
           <Prompt.Cancel />
         </Prompt.Actions>
       </Prompt.Outer>
+
+      <CreateListFromStarterPackDialog
+        control={convertToListDialogControl}
+        starterPack={starterPack}
+      />
     </>
   )
 }

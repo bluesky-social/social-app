@@ -571,6 +571,10 @@ export type Events = {
     profilesCount: number
     feedsCount: number
   }
+  'starterPack:convertToList': {
+    starterPack: string
+    memberCount: number
+  }
   'starterPack:ctaPress': {
     starterPack: string
   }
