@@ -887,6 +887,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
   const linkingUrl = Linking.useLinkingURL()
+  const [initialNotificationResponse, setInitialNotificationResponse] =
+    useState(() => {
+      if (!IS_NATIVE) return null
+      return Notifications.getLastNotificationResponse()
+    })
 
   const [initialState] = useState(() => {
     if (!IS_NATIVE) return
@@ -904,7 +909,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       // - no intent
       // - not handling a notification
       if (linkingUrl) return
-      if (notificationResponse) return
+      if (initialNotificationResponse) return
       if (previousNavState.did !== currentAccount?.did) {
         return
       }
@@ -960,15 +965,14 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     // intent urls are handled by `useIntentHandler`
     if (linkingUrl) return
 
-    const notificationResponse = Notifications.getLastNotificationResponse()
-
-    if (notificationResponse) {
+    if (initialNotificationResponse) {
       notyLogger.debug(`handlePushNotificationEntry: response`, {
-        response: notificationResponse,
+        response: initialNotificationResponse,
       })
 
       // Clear the last notification response to ensure it's not used again
       try {
+        setInitialNotificationResponse(null)
         Notifications.clearLastNotificationResponse()
       } catch (error) {
         notyLogger.error(
@@ -977,7 +981,9 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         )
       }
 
-      const payload = getNotificationPayload(notificationResponse.notification)
+      const payload = getNotificationPayload(
+        initialNotificationResponse.notification,
+      )
 
       if (payload) {
         ax.metric('notifications:openApp', {
