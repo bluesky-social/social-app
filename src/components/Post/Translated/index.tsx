@@ -120,12 +120,12 @@ function TranslationLanguageSelect({
   const langPrefs = useLanguagePrefs()
   const {translate} = useTranslateOnDevice(postUri)
 
-  const handleChangeTranslationLanguage = (selectedLanguage: string) => {
+  const handleChangeTranslationLanguage = (targetLanguage: string) => {
     ax.metric('translate:override', {
       sourceLanguage,
-      selectedLanguage,
+      targetLanguage,
     })
-    void translate(postText, langPrefs.primaryLanguage, selectedLanguage)
+    void translate(postText, langPrefs.primaryLanguage, targetLanguage)
   }
 
   return (
