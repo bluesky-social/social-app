@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {View} from 'react-native'
+import {Platform, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -133,6 +133,7 @@ function TranslationLanguageSelect({
 
   const handleChangeTranslationLanguage = (sourceLangCode: string) => {
     ax.metric('translate:override', {
+      os: Platform.OS,
       sourceLanguage: sourceLangCode,
       targetLanguage: langPrefs.primaryLanguage,
     })
