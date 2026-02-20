@@ -2,7 +2,7 @@ import {Platform, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {codeToLanguageName} from '#/locale/helpers'
+import {codeToLanguageName, languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
@@ -155,11 +155,8 @@ function TranslationLanguageSelect({
               !langPrefs.primaryLanguage.startsWith(lang.code2) && // Don't show the current language as it would be redundant
               index === self.findIndex(t => t.code2 === lang.code2), // Remove dupes (which will happen due to multiple code3 values mapping to the same code2)
           )
-          .sort(
-            (a, b) => a.name.localeCompare(b.name, langPrefs.primaryLanguage), // Localized sort
-          )
           .map(l => ({
-            label: l.name,
+            label: languageName(l, langPrefs.appLanguage), // TODO: Use pre-generated localized language name here and elsewhere
             value: l.code2,
           }))}
       />
