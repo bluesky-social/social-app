@@ -19,8 +19,10 @@ export function usePostQuery(uri: string | undefined) {
   const agent = useAgent()
   return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
-    async queryFn() {
-      const urip = new AtUri(uri!)
+    queryFn: async () => {
+      if (!uri) throw new Error('[unreachable] No URI provided')
+
+      const urip = new AtUri(uri)
 
       if (!urip.host.startsWith('did:')) {
         const res = await agent.resolveHandle({
@@ -158,7 +160,7 @@ export function usePostLikeMutationQueue(
     return queueToggle(false)
   }, [queryClient, postUri, queueToggle])
 
-  return [queueLike, queueUnlike]
+  return [queueLike, queueUnlike] as const
 }
 
 function usePostLikeMutation(
@@ -286,7 +288,7 @@ export function usePostRepostMutationQueue(
     return queueToggle(false)
   }, [queryClient, postUri, queueToggle])
 
-  return [queueRepost, queueUnrepost]
+  return [queueRepost, queueUnrepost] as const
 }
 
 function usePostRepostMutation(
