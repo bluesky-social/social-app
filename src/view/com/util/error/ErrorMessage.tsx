@@ -17,6 +17,11 @@ import {useTheme} from '#/lib/ThemeContext'
 import * as Layout from '#/components/Layout'
 import {Text} from '../text/Text'
 
+/**
+ * @deprecated - use Admonition with type="error" instead (does not cover all cases)
+ *
+ * TODO: Create a new ALF'd <ErrorBanner /> component -sfn
+ */
 export function ErrorMessage({
   message,
   numberOfLines,

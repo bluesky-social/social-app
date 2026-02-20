@@ -1,15 +1,11 @@
 import {View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotate'
+import {Warning_Stroke2_Corner0_Rounded_Large as WarningIcon} from '#/components/icons/Warning'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 
@@ -29,7 +25,6 @@ export function ErrorScreen({
   showHeader?: boolean
 }) {
   const t = useTheme()
-  const pal = usePalette('default')
   const {_} = useLingui()
 
   return (
@@ -45,27 +40,22 @@ export function ErrorScreen({
           <Layout.Header.Slot />
         </Layout.Header.Outer>
       )}
-      <View style={[a.px_xl, a.py_2xl]}>
-        <View style={[a.mb_md, a.align_center]}>
-          <View
-            style={[
-              a.rounded_full,
-              {width: 50, height: 50},
-              a.align_center,
-              a.justify_center,
-              {backgroundColor: t.palette.contrast_950},
-            ]}>
-            <FontAwesomeIcon
-              icon="exclamation"
-              style={pal.textInverted as FontAwesomeIconStyle}
-              size={24}
-            />
-          </View>
+      <View style={[a.px_xl, a.py_5xl]}>
+        <View style={[a.mb_sm, a.align_center]}>
+          <WarningIcon size="4xl" style={{color: t.palette.yellow}} />
         </View>
-        <Text style={[a.text_center, a.font_bold, a.text_2xl, a.mb_md]}>
+        <Text style={[a.text_center, a.font_semi_bold, a.text_xl, a.mb_xs]}>
           {title}
         </Text>
-        <Text style={[a.text_center, a.text_md, a.mb_xl]}>{message}</Text>
+        <Text
+          style={[
+            a.text_center,
+            a.text_md,
+            t.atoms.text_contrast_high,
+            a.mb_lg,
+          ]}>
+          {message}
+        </Text>
         {details && (
           <View
             style={[
@@ -73,10 +63,10 @@ export function ErrorScreen({
               a.border,
               t.atoms.border_contrast_medium,
               t.atoms.bg_contrast_25,
-              a.mb_xl,
+              a.mb_lg,
               a.py_sm,
               a.px_lg,
-              a.rounded_xs,
+              a.rounded_sm,
               a.overflow_hidden,
             ]}>
             <Text
@@ -91,7 +81,6 @@ export function ErrorScreen({
             <Button
               testID="errorScreenTryAgainButton"
               onPress={onPressTryAgain}
-              variant="solid"
               color="secondary_inverted"
               size="small"
               label={_(msg`Retry`)}
