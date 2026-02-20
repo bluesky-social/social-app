@@ -1,5 +1,7 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
+import type Animated from 'react-native-reanimated'
+import {useAnimatedRef, useScrollViewOffset} from 'react-native-reanimated'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {msg} from '@lingui/core/macro'
@@ -28,6 +30,7 @@ import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {SortableList} from '#/components/DraggableList'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
 import {Pin_Filled_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
@@ -35,7 +38,6 @@ import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Tra
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {SortableList} from '#/components/SortableList'
 import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
@@ -59,6 +61,8 @@ function SavedFeedsInner({
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
+  const scrollRef = useAnimatedRef<Animated.ScrollView>()
+  const scrollOffset = useScrollViewOffset(scrollRef)
 
   /*
    * Use optimistic data if exists and no error, otherwise fallback to remote
@@ -119,7 +123,7 @@ function SavedFeedsInner({
         </Button>
       </Layout.Header.Outer>
 
-      <Layout.Content scrollEnabled={!isDragging}>
+      <Layout.Content ref={scrollRef} scrollEnabled={!isDragging}>
         {noSavedFeedsOfAnyType && (
           <View style={[t.atoms.border_contrast_low, a.border_b]}>
             <NoSavedFeedsOfAnyType
@@ -151,6 +155,8 @@ function SavedFeedsInner({
               data={pinnedFeeds}
               keyExtractor={f => f.id}
               itemHeight={68}
+              scrollRef={scrollRef}
+              scrollOffset={scrollOffset}
               onDragStart={() => setIsDragging(true)}
               onDragEnd={() => setIsDragging(false)}
               onReorder={reordered => {

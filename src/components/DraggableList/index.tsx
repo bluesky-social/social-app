@@ -1,9 +1,14 @@
 import React, {useLayoutEffect, useRef} from 'react'
-import {View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
+  type AnimatedRef,
+  measure,
   runOnJS,
+  scrollTo,
+  type SharedValue,
+  useAnimatedRef,
   useAnimatedStyle,
+  useFrameCallback,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
@@ -32,7 +37,14 @@ interface SortableListProps<T> {
   onDragEnd?: () => void
   /** Fixed row height used for position math. */
   itemHeight: number
+  /** Ref to the parent Animated.ScrollView for auto-scroll. */
+  scrollRef?: AnimatedRef<Animated.ScrollView>
+  /** Scroll offset shared value from useScrollViewOffset. */
+  scrollOffset?: SharedValue<number>
 }
+
+const AUTO_SCROLL_THRESHOLD = 50
+const AUTO_SCROLL_SPEED = 4
 
 /**
  * Bundled into a single shared value so all fields update atomically
@@ -55,6 +67,8 @@ export function SortableList<T>({
   onDragStart,
   onDragEnd,
   itemHeight,
+  scrollRef,
+  scrollOffset,
 }: SortableListProps<T>) {
   const state = useSharedValue<DragState>({
     slots: Object.fromEntries(data.map((item, i) => [keyExtractor(item), i])),
@@ -62,6 +76,20 @@ export function SortableList<T>({
     dragStartSlot: -1,
   })
   const dragY = useSharedValue(0)
+
+  // Auto-scroll shared values
+  const scrollCompensation = useSharedValue(0)
+  const isGestureActive = useSharedValue(false)
+  // We track scroll position ourselves because scrollOffset.get() lags
+  // by one frame after scrollTo(), causing a feedback loop where the
+  // frame callback keeps thinking the item is at the edge.
+  const trackedScrollY = useSharedValue(0)
+
+  // For measuring list position within scroll content
+  const listRef = useAnimatedRef<Animated.View>()
+  const listContentOffset = useSharedValue(0)
+  const viewportHeight = useSharedValue(0)
+  const measureDone = useSharedValue(false)
 
   // Sync slots when data changes externally (e.g. pin/unpin).
   // Skip after our own reorder — the worklet already set correct slots
@@ -88,6 +116,68 @@ export function SortableList<T>({
     onDragEnd?.()
   }
 
+  // Auto-scroll: runs every frame while a gesture is active.
+  useFrameCallback(() => {
+    if (!isGestureActive.get()) return
+    if (!scrollRef || !scrollOffset) return
+
+    const s = state.get()
+    if (s.activeKey === '') return
+
+    // Measure list and scroll view on first frame of drag.
+    // Use scrollOffset here (only once) since no lag has occurred yet.
+    if (!measureDone.get()) {
+      const scrollM = measure(
+        scrollRef as unknown as AnimatedRef<Animated.View>,
+      )
+      const listM = measure(listRef)
+      if (!scrollM || !listM) return
+      trackedScrollY.set(scrollOffset.get())
+      listContentOffset.set(listM.pageY - scrollM.pageY + trackedScrollY.get())
+      viewportHeight.set(scrollM.height)
+      measureDone.set(true)
+    }
+
+    const startSlot = s.dragStartSlot
+    const currentDragY = dragY.get()
+
+    // Use trackedScrollY (not scrollOffset) to avoid the one-frame lag
+    // after scrollTo() that causes a feedback loop.
+    const scrollY = trackedScrollY.get()
+
+    // Item position relative to scroll viewport top.
+    const itemContentY =
+      listContentOffset.get() + startSlot * itemHeight + currentDragY
+    const itemViewportY = itemContentY - scrollY
+    const itemBottomViewportY = itemViewportY + itemHeight
+
+    let scrollDelta = 0
+    if (itemViewportY < AUTO_SCROLL_THRESHOLD) {
+      scrollDelta = -AUTO_SCROLL_SPEED
+    } else if (
+      itemBottomViewportY >
+      viewportHeight.get() - AUTO_SCROLL_THRESHOLD
+    ) {
+      scrollDelta = AUTO_SCROLL_SPEED
+    }
+
+    if (scrollDelta === 0) return
+
+    // Don't scroll if the item is already at a list boundary.
+    const effectiveSlotPos =
+      (startSlot * itemHeight + currentDragY) / itemHeight
+    if (scrollDelta < 0 && effectiveSlotPos <= 0) return
+    if (scrollDelta > 0 && effectiveSlotPos >= data.length - 1) return
+
+    // Don't scroll past the top.
+    if (scrollDelta < 0 && scrollY <= 0) return
+
+    const newScrollY = Math.max(0, scrollY + scrollDelta)
+    scrollTo(scrollRef, 0, newScrollY, false)
+    trackedScrollY.set(newScrollY)
+    scrollCompensation.set(scrollCompensation.get() + (newScrollY - scrollY))
+  })
+
   // Render in stable key order so React never reorders native views.
   // On Android, native ViewGroup child reordering causes a visual flash.
   const sortedData = [...data].sort((a, b) => {
@@ -97,7 +187,7 @@ export function SortableList<T>({
   })
 
   return (
-    <View style={{height: data.length * itemHeight}}>
+    <Animated.View ref={listRef} style={{height: data.length * itemHeight}}>
       {sortedData.map(item => {
         const key = keyExtractor(item)
         return (
@@ -109,6 +199,9 @@ export function SortableList<T>({
             itemHeight={itemHeight}
             state={state}
             dragY={dragY}
+            scrollCompensation={scrollCompensation}
+            isGestureActive={isGestureActive}
+            measureDone={measureDone}
             renderItem={renderItem}
             onCommitReorder={handleReorder}
             onDragStart={onDragStart}
@@ -116,7 +209,7 @@ export function SortableList<T>({
           />
         )
       })}
-    </View>
+    </Animated.View>
   )
 }
 
@@ -127,6 +220,9 @@ function SortableItem<T>({
   itemHeight,
   state,
   dragY,
+  scrollCompensation,
+  isGestureActive,
+  measureDone,
   renderItem,
   onCommitReorder,
   onDragStart,
@@ -138,6 +234,9 @@ function SortableItem<T>({
   itemHeight: number
   state: Animated.SharedValue<DragState>
   dragY: Animated.SharedValue<number>
+  scrollCompensation: SharedValue<number>
+  isGestureActive: SharedValue<boolean>
+  measureDone: SharedValue<boolean>
   renderItem: (item: T, dragHandle: React.ReactNode) => React.ReactNode
   onCommitReorder: (sortedKeys: string[]) => void
   onDragStart?: () => void
@@ -153,6 +252,9 @@ function SortableItem<T>({
       const mySlot = s.slots[itemKey]
       state.set({...s, activeKey: itemKey, dragStartSlot: mySlot})
       dragY.set(0)
+      scrollCompensation.set(0)
+      isGestureActive.set(true)
+      measureDone.set(false)
       if (onDragStart) {
         runOnJS(onDragStart)()
       }
@@ -160,14 +262,17 @@ function SortableItem<T>({
     })
     .onChange(e => {
       'worklet'
-      // Clamp so the item can't leave list bounds.
       const startSlot = state.get().dragStartSlot
       const minY = -startSlot * itemHeight
       const maxY = (itemCount - 1 - startSlot) * itemHeight
-      dragY.set(Math.max(minY, Math.min(e.translationY, maxY)))
+      // Include scroll compensation so the item tracks with auto-scroll.
+      const effectiveY = e.translationY + scrollCompensation.get()
+      dragY.set(Math.max(minY, Math.min(effectiveY, maxY)))
     })
     .onEnd(() => {
       'worklet'
+      // Stop auto-scroll BEFORE the snap animation.
+      isGestureActive.set(false)
       const startSlot = state.get().dragStartSlot
       const rawNewSlot = Math.round(
         (startSlot * itemHeight + dragY.get()) / itemHeight,
@@ -218,6 +323,7 @@ function SortableItem<T>({
     // Reset if the gesture is cancelled without onEnd firing.
     .onFinalize(() => {
       'worklet'
+      isGestureActive.set(false)
       if (state.get().activeKey === itemKey && dragY.get() === 0) {
         const s = state.get()
         state.set({...s, activeKey: '', dragStartSlot: -1})
