@@ -3,10 +3,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {codeToLanguageName} from '#/locale/helpers'
-import {
-  ANDROID_ON_DEVICE_LANGUAGES,
-  IOS_ON_DEVICE_LANGUAGES,
-} from '#/locale/languages'
+import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -120,12 +117,12 @@ function TranslationLanguageSelect({
   const langPrefs = useLanguagePrefs()
   const {translate} = useTranslateOnDevice(postUri)
 
-  const handleChangeTranslationLanguage = (targetLanguage: string) => {
+  const handleChangeTranslationLanguage = (sourceLangCode: string) => {
     ax.metric('translate:override', {
-      sourceLanguage,
-      targetLanguage,
+      sourceLanguage: sourceLangCode,
+      targetLanguage: langPrefs.primaryLanguage,
     })
-    void translate(postText, langPrefs.primaryLanguage, targetLanguage)
+    void translate(postText, langPrefs.primaryLanguage, sourceLangCode)
   }
 
   return (
@@ -150,10 +147,14 @@ function TranslationLanguageSelect({
           </Select.Item>
         )}
         items={(Platform.OS === 'ios'
-          ? IOS_ON_DEVICE_LANGUAGES
-          : ANDROID_ON_DEVICE_LANGUAGES
+          ? LANGUAGES.filter(lang => lang.ios)
+          : LANGUAGES.filter(lang => lang.android)
         )
-          .filter(l => !langPrefs.primaryLanguage.startsWith(l.code2)) // Don't show the current language as it would be redundant
+          .filter(
+            (lang, index, self) =>
+              !langPrefs.primaryLanguage.startsWith(lang.code2) && // Don't show the current language as it would be redundant
+              index === self.findIndex(t => t.code2 === lang.code2), // Remove dupes (which will happen due to multiple code3 values mapping to the same code2)
+          )
           .sort(
             (a, b) => a.name.localeCompare(b.name, langPrefs.primaryLanguage), // Localized sort
           )
