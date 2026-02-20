@@ -43,7 +43,7 @@ import {InlineLinkText, Link} from '#/components/Link'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
-import * as toast from '#/components/Toast'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_IOS} from '#/env'
@@ -186,7 +186,7 @@ export function ModerationScreenInner({
   const handleCleanup = async () => {
     try {
       await removeLabelers({dids: unavailableDids})
-      toast.show(_(msg`Removed unavailable services`), {
+      Toast.show(_(msg`Removed unavailable services`), {
         type: 'success',
       })
     } catch (e: any) {
