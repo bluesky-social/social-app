@@ -589,6 +589,11 @@ func (srv *Server) WebPost(c echo.Context) error {
 			if postView.Embed.EmbedVideo_View.Thumbnail != nil {
 				data["imgThumbUrls"] = []string{*postView.Embed.EmbedVideo_View.Thumbnail}
 			}
+			data["videoPlaylistUrl"] = postView.Embed.EmbedVideo_View.Playlist
+			if postView.Embed.EmbedVideo_View.AspectRatio != nil {
+				data["videoWidth"] = postView.Embed.EmbedVideo_View.AspectRatio.Width
+				data["videoHeight"] = postView.Embed.EmbedVideo_View.AspectRatio.Height
+			}
 		} else if hasMediaImages {
 			var thumbUrls []string
 			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
@@ -598,6 +603,11 @@ func (srv *Server) WebPost(c echo.Context) error {
 		} else if hasMediaVideo {
 			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail != nil {
 				data["imgThumbUrls"] = []string{*postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail}
+			}
+			data["videoPlaylistUrl"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Playlist
+			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio != nil {
+				data["videoWidth"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio.Width
+				data["videoHeight"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio.Height
 			}
 		}
 	}

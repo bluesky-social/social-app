@@ -33,7 +33,18 @@
   <meta property="og:image" content="{{ imgThumbUrl }}">
   <meta property="twitter:image" content="{{ imgThumbUrl }}">
   {% endfor %}
+  {%- if videoPlaylistUrl %}
+  <meta property="og:video" content="{{ videoPlaylistUrl }}">
+  <meta property="og:video:secure_url" content="{{ videoPlaylistUrl }}">
+  <meta property="og:video:type" content="application/vnd.apple.mpegurl">
+  {%- if videoWidth %}
+  <meta property="og:video:width" content="{{ videoWidth }}">
+  <meta property="og:video:height" content="{{ videoHeight }}">
+  {% endif -%}
+  <meta name="twitter:card" content="player">
+  {% else %}
   <meta name="twitter:card" content="summary_large_image">
+  {% endif -%}
   {% else %}
   <meta property="og:image" content="{{ postView.Author.Avatar }}">
   <meta property="twitter:image" content="{{ postView.Author.Avatar }}">
