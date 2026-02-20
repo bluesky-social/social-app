@@ -144,7 +144,10 @@ export function LanguageSettingsScreen({}: Props) {
                       <Select.ItemText>{label}</Select.ItemText>
                     </Select.Item>
                   )}
-                  items={DEDUPED_LANGUAGES.map(l => ({
+                  items={DEDUPED_LANGUAGES.sort(
+                    (a, b) =>
+                      a.name.localeCompare(b.name, langPrefs.primaryLanguage), // Localized sort
+                  ).map(l => ({
                     label: languageName(l, langPrefs.appLanguage),
                     value: l.code2,
                   }))}
