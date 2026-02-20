@@ -4113,7 +4113,7 @@ export const LANGUAGES: Language[] = [
     name: '中文',
     en: 'Chinese',
     android: true,
-    ios: false,
+    ios: true,
   },
   {
     code3: 'znd',
