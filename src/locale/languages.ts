@@ -203,8 +203,8 @@ export const IOS_ON_DEVICE_LANGUAGES: IosOnDeviceLanguage[] = [
   {code2: 'tr', name: 'Türkçe'},
   {code2: 'uk', name: 'українська'},
   {code2: 'vi', name: 'Tiếng Việt'},
-  {code2: 'zh-CN', name: '中文（中国）'},
-  {code2: 'zh-TW', name: '中文（台灣）'},
+  {code2: 'zh-CN', name: '简体中文'},
+  {code2: 'zh-TW', name: '繁體中文'},
 ]
 
 export const LANGUAGES: Language[] = [
