@@ -146,7 +146,7 @@ export function Action({
   cta,
   disabled = false,
   icon,
-  shouldCloseOnPress,
+  shouldCloseOnPress = true,
   testID,
 }: {
   /**
