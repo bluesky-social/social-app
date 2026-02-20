@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {type AppBskyUnspeccedDefs, hasMutedWord} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
@@ -29,7 +29,7 @@ export const trendingTopicsQueryKey = ['trending-topics']
 export function useTrendingTopics() {
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
-  const mutedWords = React.useMemo(
+  const mutedWords = useMemo(
     () => preferences?.moderationPrefs?.mutedWords ?? [],
     [preferences?.moderationPrefs?.mutedWords],
   )
@@ -39,7 +39,7 @@ export function useTrendingTopics() {
     staleTime: STALE.MINUTES.THREE,
     queryKey: trendingTopicsQueryKey,
     async queryFn() {
-      const {data} = await agent.api.app.bsky.unspecced.getTrendingTopics({
+      const {data} = await agent.app.bsky.unspecced.getTrendingTopics({
         limit: DEFAULT_LIMIT,
       })
       return {
@@ -47,14 +47,14 @@ export function useTrendingTopics() {
         suggested: data.suggested ?? [],
       }
     },
-    select: React.useCallback(
+    select: useCallback(
       (data: Response) => {
         return {
           topics: dedup(
             data.topics.filter(t => {
               return !hasMutedWord({
                 mutedWords,
-                text: t.topic + ' ' + t.displayName + ' ' + t.description,
+                text: `${t.topic} ${t.displayName ?? ''} ${t.description ?? ''}`,
               })
             }),
           ),
@@ -62,7 +62,7 @@ export function useTrendingTopics() {
             data.suggested.filter(t => {
               return !hasMutedWord({
                 mutedWords,
-                text: t.topic + ' ' + t.displayName + ' ' + t.description,
+                text: `${t.topic} ${t.displayName ?? ''} ${t.description ?? ''}`,
               })
             }),
           ),
