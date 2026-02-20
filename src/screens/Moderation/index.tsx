@@ -481,13 +481,10 @@ export function ModerationScreenInner({
               label={_(msg`Remove unavailable moderation services`)}
               onPress={handleCleanup}
               disabled={isRemovingLabelers}>
-              {isRemovingLabelers ? (
-                <Loader size="xs" />
-              ) : (
-                <ButtonText>
-                  <Trans>Remove</Trans>
-                </ButtonText>
-              )}
+              <ButtonText>
+                <Trans>Remove</Trans>
+              </ButtonText>
+              {isRemovingLabelers && <ButtonIcon icon={Loader} />}
             </Admonition.Button>
           </Admonition.Row>
         </Admonition.Outer>
