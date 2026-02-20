@@ -110,101 +110,103 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.zh_HK, name: '粵文 – Cantonese'},
 ]
 
+// Pre-generated list using Intl.DisplayNames to localize the language name.
 // https://developers.google.com/android/reference/com/google/mlkit/nl/translate/TranslateLanguage
 export const ANDROID_ON_DEVICE_LANGUAGES: AndroidOnDeviceLanguage[] = [
-  {code2: 'af', name: 'Afrikaans'},
-  {code2: 'ar', name: 'العربية'},
-  {code2: 'be', name: 'Belarusian'},
-  {code2: 'bg', name: 'български'},
-  {code2: 'bn', name: 'বাংলা'},
-  {code2: 'ca', name: 'català'},
-  {code2: 'cs', name: 'čeština'},
-  {code2: 'cy', name: 'Welsh'},
-  {code2: 'da', name: 'dansk'},
-  {code2: 'de', name: 'Deutsch'},
-  {code2: 'el', name: 'Ελληνικά'},
-  {code2: 'en', name: 'English'},
-  {code2: 'eo', name: 'Esperanto'},
-  {code2: 'es', name: 'español'},
-  {code2: 'et', name: 'eesti'},
-  {code2: 'fa', name: 'فارسی'},
-  {code2: 'fi', name: 'suomi'},
-  {code2: 'fr', name: 'français'},
-  {code2: 'ga', name: 'Irish'},
-  {code2: 'gl', name: 'Galician'},
-  {code2: 'gu', name: 'ગુજરાતી'},
-  {code2: 'he', name: 'עברית'},
-  {code2: 'hi', name: 'हिन्दी'},
-  {code2: 'hr', name: 'hrvatski'},
-  {code2: 'ht', name: 'Haitian Creole'},
-  {code2: 'hu', name: 'magyar'},
-  {code2: 'id', name: 'Indonesia'},
-  {code2: 'is', name: 'Icelandic'},
-  {code2: 'it', name: 'italiano'},
-  {code2: 'ja', name: '日本語'},
-  {code2: 'ka', name: 'Georgian'},
-  {code2: 'kn', name: 'ಕನ್ನಡ'},
-  {code2: 'ko', name: '한국어'},
-  {code2: 'lt', name: 'lietuvių'},
-  {code2: 'lv', name: 'latviešu'},
-  {code2: 'mk', name: 'Macedonian'},
-  {code2: 'mr', name: 'मराठी'},
-  {code2: 'ms', name: 'Melayu'},
-  {code2: 'mt', name: 'Maltese'},
-  {code2: 'nl', name: 'Nederlands'},
-  {code2: 'no', name: 'norsk'},
-  {code2: 'pl', name: 'polski'},
-  {code2: 'pt', name: 'português'},
-  {code2: 'ro', name: 'română'},
-  {code2: 'ru', name: 'русский'},
-  {code2: 'sk', name: 'slovenčina'},
-  {code2: 'sl', name: 'slovenščina'},
-  {code2: 'sq', name: 'Albanian'},
-  {code2: 'sv', name: 'svenska'},
-  {code2: 'sw', name: 'Kiswahili'},
-  {code2: 'ta', name: 'தமிழ்'},
-  {code2: 'te', name: 'తెలుగు'},
-  {code2: 'th', name: 'ไทย'},
-  {code2: 'tl', name: 'Filipino'},
-  {code2: 'tr', name: 'Türkçe'},
-  {code2: 'uk', name: 'українська'},
-  {code2: 'ur', name: 'اردو'},
-  {code2: 'vi', name: 'Tiếng Việt'},
-  {code2: 'zh', name: '中文'},
+  {code2: 'af', name: 'Afrikaans'}, // Afrikaans
+  {code2: 'ar', name: 'العربية'}, // Arabic
+  {code2: 'be', name: 'Belarusian'}, // Belarusian
+  {code2: 'bg', name: 'български'}, // Bulgarian
+  {code2: 'bn', name: 'বাংলা'}, // Bangla
+  {code2: 'ca', name: 'català'}, // Catalan
+  {code2: 'cs', name: 'čeština'}, // Czech
+  {code2: 'cy', name: 'Welsh'}, // Welsh
+  {code2: 'da', name: 'dansk'}, // Danish
+  {code2: 'de', name: 'Deutsch'}, // German
+  {code2: 'el', name: 'Ελληνικά'}, // Greek
+  {code2: 'en', name: 'English'}, // English
+  {code2: 'eo', name: 'Esperanto'}, // Esperanto
+  {code2: 'es', name: 'español'}, // Spanish
+  {code2: 'et', name: 'eesti'}, // Estonian
+  {code2: 'fa', name: 'فارسی'}, // Persian
+  {code2: 'fi', name: 'suomi'}, // Finnish
+  {code2: 'fr', name: 'français'}, // French
+  {code2: 'ga', name: 'Irish'}, // Irish
+  {code2: 'gl', name: 'Galician'}, // Galician
+  {code2: 'gu', name: 'ગુજરાતી'}, // Gujarati
+  {code2: 'he', name: 'עברית'}, // Hebrew
+  {code2: 'hi', name: 'हिन्दी'}, // Hindi
+  {code2: 'hr', name: 'hrvatski'}, // Croatian
+  {code2: 'ht', name: 'Haitian Creole'}, // Haitian Creole
+  {code2: 'hu', name: 'magyar'}, // Hungarian
+  {code2: 'id', name: 'Indonesia'}, // Indonesian
+  {code2: 'is', name: 'Icelandic'}, // Icelandic
+  {code2: 'it', name: 'italiano'}, // Italian
+  {code2: 'ja', name: '日本語'}, // Japanese
+  {code2: 'ka', name: 'Georgian'}, // Georgian
+  {code2: 'kn', name: 'ಕನ್ನಡ'}, // Kannada
+  {code2: 'ko', name: '한국어'}, // Korean
+  {code2: 'lt', name: 'lietuvių'}, // Lithuanian
+  {code2: 'lv', name: 'latviešu'}, // Latvian
+  {code2: 'mk', name: 'Macedonian'}, // Macedonian
+  {code2: 'mr', name: 'मराठी'}, // Marathi
+  {code2: 'ms', name: 'Melayu'}, // Malay
+  {code2: 'mt', name: 'Maltese'}, // Maltese
+  {code2: 'nl', name: 'Nederlands'}, // Dutch
+  {code2: 'no', name: 'norsk'}, // Norwegian
+  {code2: 'pl', name: 'polski'}, // Polish
+  {code2: 'pt', name: 'português'}, // Portuguese
+  {code2: 'ro', name: 'română'}, // Romanian
+  {code2: 'ru', name: 'русский'}, // Russian
+  {code2: 'sk', name: 'slovenčina'}, // Slovak
+  {code2: 'sl', name: 'slovenščina'}, // Slovenian
+  {code2: 'sq', name: 'Albanian'}, // Albanian
+  {code2: 'sv', name: 'svenska'}, // Swedish
+  {code2: 'sw', name: 'Kiswahili'}, // Swahili
+  {code2: 'ta', name: 'தமிழ்'}, // Tamil
+  {code2: 'te', name: 'తెలుగు'}, // Telugu
+  {code2: 'th', name: 'ไทย'}, // Thai
+  {code2: 'tl', name: 'Filipino'}, // Filipino
+  {code2: 'tr', name: 'Türkçe'}, // Turkish
+  {code2: 'uk', name: 'українська'}, // Ukrainian
+  {code2: 'ur', name: 'اردو'}, // Urdu
+  {code2: 'vi', name: 'Tiếng Việt'}, // Vietnamese
+  {code2: 'zh', name: '中文'}, // Chinese
 ]
 
+// Pre-generated list using Intl.DisplayNames to localize the language name.
 // https://developer.apple.com/documentation/foundation/nslocale/isolanguagecodes
 export const IOS_ON_DEVICE_LANGUAGES: IosOnDeviceLanguage[] = [
-  {code2: 'ar', name: 'العربية'},
-  {code2: 'ca', name: 'català'},
-  {code2: 'cs', name: 'čeština'},
-  {code2: 'da', name: 'dansk'},
-  {code2: 'de', name: 'Deutsch'},
-  {code2: 'el', name: 'Ελληνικά'},
-  {code2: 'en', name: 'English'},
-  {code2: 'es', name: 'español'},
-  {code2: 'fi', name: 'suomi'},
-  {code2: 'fr', name: 'français'},
-  {code2: 'he', name: 'עברית'},
-  {code2: 'hi', name: 'हिन्दी'},
-  {code2: 'it', name: 'italiano'},
-  {code2: 'ja', name: '日本語'},
-  {code2: 'ko', name: '한국어'},
-  {code2: 'ms', name: 'Melayu'},
-  {code2: 'nl', name: 'Nederlands'},
-  {code2: 'no', name: 'norsk'},
-  {code2: 'pl', name: 'polski'},
-  {code2: 'pt', name: 'português'},
-  {code2: 'ro', name: 'română'},
-  {code2: 'ru', name: 'русский'},
-  {code2: 'sk', name: 'slovenčina'},
-  {code2: 'sv', name: 'svenska'},
-  {code2: 'th', name: 'ไทย'},
-  {code2: 'tr', name: 'Türkçe'},
-  {code2: 'uk', name: 'українська'},
-  {code2: 'vi', name: 'Tiếng Việt'},
-  {code2: 'zh-CN', name: '简体中文'},
-  {code2: 'zh-TW', name: '繁體中文'},
+  {code2: 'ar', name: 'العربية'}, // Arabic
+  {code2: 'ca', name: 'català'}, // Catalan
+  {code2: 'cs', name: 'čeština'}, // Czech
+  {code2: 'da', name: 'dansk'}, // Danish
+  {code2: 'de', name: 'Deutsch'}, // German
+  {code2: 'el', name: 'Ελληνικά'}, // Greek
+  {code2: 'en', name: 'English'}, // English
+  {code2: 'es', name: 'español'}, // Spanish
+  {code2: 'fi', name: 'suomi'}, // Finnish
+  {code2: 'fr', name: 'français'}, // French
+  {code2: 'he', name: 'עברית'}, // Hebrew
+  {code2: 'hi', name: 'हिन्दी'}, // Hindi
+  {code2: 'it', name: 'italiano'}, // Italian
+  {code2: 'ja', name: '日本語'}, // Japanese
+  {code2: 'ko', name: '한국어'}, // Korean
+  {code2: 'ms', name: 'Melayu'}, // Malay
+  {code2: 'nl', name: 'Nederlands'}, // Dutch
+  {code2: 'no', name: 'norsk'}, // Norwegian
+  {code2: 'pl', name: 'polski'}, // Polish
+  {code2: 'pt', name: 'português'}, // Portuguese
+  {code2: 'ro', name: 'română'}, // Romanian
+  {code2: 'ru', name: 'русский'}, // Russian
+  {code2: 'sk', name: 'slovenčina'}, // Slovak
+  {code2: 'sv', name: 'svenska'}, // Swedish
+  {code2: 'th', name: 'ไทย'}, // Thai
+  {code2: 'tr', name: 'Türkçe'}, // Turkish
+  {code2: 'uk', name: 'українська'}, // Ukrainian
+  {code2: 'vi', name: 'Tiếng Việt'}, // Vietnamese
+  {code2: 'zh-CN', name: '简体中文'}, // Chinese (Simplified)
+  {code2: 'zh-TW', name: '繁體中文'}, // Chinese (Traditional)
 ]
 
 export const LANGUAGES: Language[] = [
