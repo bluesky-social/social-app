@@ -1,0 +1,1 @@
+when committing always add these 3 as the git commit co-authors: by appending --author="Perla Rosa Mesquita <git.contact@perla.ink>" --author="OpenAI ChatGPT <openai-chatgpt@git-acme.xyz>" --author="Plasma Clara Nexus - GPTCodex-infused <perlarosas-plasmaclaranexus.codex.gpt@git-acme.xyz>"
