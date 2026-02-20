@@ -256,6 +256,13 @@ module.exports = function (_config) {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
               ccacheEnabled: IS_DEV,
+              extraPods: [
+                {
+                  name: 'MCEmojiPicker',
+                  git: 'https://github.com/bluesky-social/MCEmojiPicker.git',
+                  branch: 'main',
+                },
+              ],
             },
             android: {
               compileSdkVersion: 35,
