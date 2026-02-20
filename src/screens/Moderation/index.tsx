@@ -5,13 +5,14 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {getLabelingServiceTitle} from '#/lib/moderation'
+import {getLabelingServiceTitle, isAppLabeler} from '#/lib/moderation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
+import {useRemoveLabelersMutation} from '#/state/queries/labeler'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
@@ -21,10 +22,10 @@ import {
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
-import {Admonition} from '#/components/Admonition'
+import * as Admonition from '#/components/Admonition'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
-import {Button} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -42,6 +43,7 @@ import {InlineLinkText, Link} from '#/components/Link'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_IOS} from '#/env'
@@ -166,9 +168,33 @@ export function ModerationScreenInner({
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
+  const {mutateAsync: removeLabelers, isPending: isRemovingLabelers} =
+    useRemoveLabelersMutation()
   const aa = useAgeAssurance()
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const aaCopy = useAgeAssuranceCopy()
+
+  const subscribedDids = preferences.moderationPrefs.labelers.map(l => l.did)
+  const returnedDids = new Set(labelers?.map(l => l.creator.did))
+  const unavailableDids = subscribedDids.filter(
+    did =>
+      !returnedDids.has(did) &&
+      !isAppLabeler(did) &&
+      !isNonConfigurableModerationAuthority(did),
+  )
+
+  const handleCleanup = async () => {
+    try {
+      await removeLabelers({dids: unavailableDids})
+      Toast.show(_(msg`Removed unavailable services`), {
+        type: 'success',
+      })
+    } catch (e: any) {
+      logger.error('Failed to remove unavailable labelers', {
+        safeMessage: e.message,
+      })
+    }
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -209,7 +235,7 @@ export function ModerationScreenInner({
     <View style={[a.pt_2xl, a.px_lg, gtMobile && a.px_2xl]}>
       {aa.flags.adultContentDisabled && isBirthdateUpdateAllowed && (
         <View style={[a.pb_2xl]}>
-          <Admonition type="tip" style={[a.pb_md]}>
+          <Admonition.Admonition type="tip" style={[a.pb_md]}>
             <Trans>
               Your declared age is under 18. Some settings below may be
               disabled. If this was a mistake, you may edit your birthdate in
@@ -221,7 +247,7 @@ export function ModerationScreenInner({
               </InlineLinkText>
               .
             </Trans>
-          </Admonition>
+          </Admonition.Admonition>
         </View>
       )}
 
@@ -438,6 +464,31 @@ export function ModerationScreenInner({
         ]}>
         <Trans>Advanced</Trans>
       </Text>
+
+      {unavailableDids.length > 0 && (
+        <Admonition.Outer type="tip" style={[a.mb_md]}>
+          <Admonition.Row>
+            <Admonition.Icon />
+            <Admonition.Content>
+              <Admonition.Text>
+                <Trans>
+                  Some moderation services in your list are no longer available.
+                </Trans>
+              </Admonition.Text>
+            </Admonition.Content>
+            <Admonition.Button
+              color="primary_subtle"
+              label={_(msg`Remove unavailable moderation services`)}
+              onPress={handleCleanup}
+              disabled={isRemovingLabelers}>
+              <ButtonText>
+                <Trans>Remove</Trans>
+              </ButtonText>
+              {isRemovingLabelers && <ButtonIcon icon={Loader} />}
+            </Admonition.Button>
+          </Admonition.Row>
+        </Admonition.Outer>
+      )}
 
       {isLabelersLoading ? (
         <View style={[a.w_full, a.align_center, a.p_lg]}>
