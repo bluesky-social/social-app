@@ -9,9 +9,9 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FindContactsFlow} from '#/components/contacts/FindContactsFlow'
 import {useFindContactsFlowState} from '#/components/contacts/state'
+import {ErrorScreen} from '#/components/ErrorScreen'
 import * as Layout from '#/components/Layout'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {IS_NATIVE} from '#/env'

@@ -18,12 +18,12 @@ import {
   useAppPasswordsQuery,
 } from '#/state/queries/app-passwords'
 import {EmptyState} from '#/view/com/util/EmptyState'
-import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {ErrorScreen} from '#/components/ErrorScreen'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'

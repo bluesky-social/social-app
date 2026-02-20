@@ -6,8 +6,8 @@ import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {ErrorScreen} from '#/components/ErrorScreen'
 import {IS_WEB} from '#/env'
-import {ErrorScreen} from './error/ErrorScreen'
 
 interface Props {
   children?: ReactNode

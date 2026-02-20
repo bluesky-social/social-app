@@ -18,12 +18,12 @@ import {
   useFeaturedGifsQuery,
   useGifSearchQuery,
 } from '#/state/queries/tenor'
-import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {type ListMethods} from '#/view/com/util/List'
 import {atoms as a, ios, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {ErrorScreen} from '#/components/ErrorScreen'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
