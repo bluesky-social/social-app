@@ -1,11 +1,13 @@
 import {Component, type ErrorInfo, type ReactNode} from 'react'
-import {type StyleProp, type ViewStyle} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {reloadAppAsync} from 'expo'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {IS_WEB} from '#/env'
 import {ErrorScreen} from './error/ErrorScreen'
-import {CenteredView} from './Views'
 
 interface Props {
   children?: ReactNode
@@ -39,9 +41,9 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <CenteredView style={[{height: '100%', flex: 1}, this.props.style]}>
-          <TranslatedErrorScreen details={this.state.error.toString()} />
-        </CenteredView>
+        <View style={[{height: '100%', flex: 1}, this.props.style]}>
+          <TranslatedErrorScreen details={cleanError(this.state.error)} />
+        </View>
       )
     }
 
@@ -59,6 +61,13 @@ function TranslatedErrorScreen({details}: {details?: string}) {
         msg`There was an unexpected issue in the application. Please let us know if this happened to you!`,
       )}
       details={details}
+      onPressTryAgain={() => {
+        if (IS_WEB) {
+          window.location.reload()
+        } else {
+          void reloadAppAsync()
+        }
+      }}
     />
   )
 }
