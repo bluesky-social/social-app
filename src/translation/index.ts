@@ -135,7 +135,12 @@ export function useTranslateOnDevice(key: string) {
           targetLangCode,
           sourceLangCode,
         )
-        ax.metric('translate:result', {method: 'on-device'})
+        ax.metric('translate:result', {
+          method: 'on-device',
+          os: Platform.OS,
+          sourceLanguage: result.sourceLanguage,
+          targetLanguage: result.targetLanguage,
+        })
         setTranslation({
           status: 'success',
           translatedText: result.translatedText,
@@ -146,7 +151,12 @@ export function useTranslateOnDevice(key: string) {
         logger.error('Failed to translate post on device', {safeMessage: e})
         // On-device translation failed (language pack missing or user dismissed
         // the download prompt). Fall back to Google Translate.
-        ax.metric('translate:result', {method: 'fallback-alert'})
+        ax.metric('translate:result', {
+          method: 'fallback-alert',
+          os: Platform.OS,
+          sourceLanguage: sourceLangCode ?? null,
+          targetLanguage: targetLangCode,
+        })
         setTranslation({status: 'idle'})
         const translateUrl = getTranslatorLink(
           text,

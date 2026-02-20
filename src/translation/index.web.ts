@@ -1,4 +1,5 @@
 import {useCallback} from 'react'
+import {Platform} from 'react-native'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getTranslatorLink} from '#/locale/helpers'
@@ -28,7 +29,12 @@ export function useTranslateOnDevice(_key: string) {
         targetLangCode,
         sourceLangCode,
       )
-      ax.metric('translate:result', {method: 'google-translate'})
+      ax.metric('translate:result', {
+        method: 'google-translate',
+        os: Platform.OS,
+        sourceLanguage: sourceLangCode ?? null,
+        targetLanguage: targetLangCode,
+      })
       await openLink(translateUrl)
     },
     [ax, openLink, primaryLanguage],

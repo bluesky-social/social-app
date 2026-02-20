@@ -2,6 +2,8 @@
  * Do not import runtime code into this file
  */
 
+import {type Platform} from 'react-native'
+
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -681,6 +683,9 @@ export type Events = {
   }
   'translate:result': {
     method: 'on-device' | 'google-translate' | 'fallback-alert'
+    os: Platform['OS']
+    sourceLanguage: string | null
+    targetLanguage: string
   }
   'translate:override': {
     sourceLanguage: string
