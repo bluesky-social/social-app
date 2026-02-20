@@ -17,6 +17,7 @@ import {
   type NavigationProp,
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
+import {useA11y} from '#/state/a11y'
 import {
   useOverwriteSavedFeedsMutation,
   usePreferencesQuery,
@@ -31,6 +32,10 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {SortableList} from '#/components/DraggableList'
+import {
+  ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon,
+  ArrowTop_Stroke2_Corner0_Rounded as ArrowUpIcon,
+} from '#/components/icons/Arrow'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
 import {Pin_Filled_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
@@ -43,8 +48,12 @@ import {Text} from '#/components/Typography'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 export function SavedFeeds({}: Props) {
   const {data: preferences} = usePreferencesQuery()
+  const {screenReaderEnabled} = useA11y()
   if (!preferences) {
     return <View />
+  }
+  if (screenReaderEnabled) {
+    return <SavedFeedsA11y preferences={preferences} />
   }
   return <SavedFeedsInner preferences={preferences} />
 }
@@ -240,16 +249,200 @@ function SavedFeedsInner({
   )
 }
 
+function SavedFeedsA11y({
+  preferences,
+}: {
+  preferences: UsePreferencesQueryResponse
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
+    useOverwriteSavedFeedsMutation()
+  const navigation = useNavigation<NavigationProp>()
+
+  const [currentFeeds, setCurrentFeeds] = useState(
+    () => preferences.savedFeeds || [],
+  )
+  const hasUnsavedChanges = currentFeeds !== preferences.savedFeeds
+  const pinnedFeeds = currentFeeds.filter(f => f.pinned)
+  const unpinnedFeeds = currentFeeds.filter(f => !f.pinned)
+  const noSavedFeedsOfAnyType = pinnedFeeds.length + unpinnedFeeds.length === 0
+  const noFollowingFeed =
+    currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeedsOfAnyType
+
+  useFocusEffect(
+    useCallback(() => {
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
+  )
+
+  const onSaveChanges = async () => {
+    try {
+      await overwriteSavedFeeds(currentFeeds)
+      Toast.show(_(msg({message: 'Feeds updated!', context: 'toast'})))
+      if (navigation.canGoBack()) {
+        navigation.goBack()
+      } else {
+        navigation.navigate('Feeds')
+      }
+    } catch (e) {
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
+      logger.error('Failed to toggle pinned feed', {message: e})
+    }
+  }
+
+  const onMoveUp = (index: number) => {
+    const pinned = [...pinnedFeeds]
+    ;[pinned[index - 1], pinned[index]] = [pinned[index], pinned[index - 1]]
+    setCurrentFeeds([...pinned, ...unpinnedFeeds])
+  }
+
+  const onMoveDown = (index: number) => {
+    const pinned = [...pinnedFeeds]
+    ;[pinned[index], pinned[index + 1]] = [pinned[index + 1], pinned[index]]
+    setCurrentFeeds([...pinned, ...unpinnedFeeds])
+  }
+
+  return (
+    <Layout.Screen>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content align="left">
+          <Layout.Header.TitleText>
+            <Trans>Feeds</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Button
+          testID="saveChangesBtn"
+          size="small"
+          color={hasUnsavedChanges ? 'primary' : 'secondary'}
+          onPress={onSaveChanges}
+          label={_(msg`Save changes`)}
+          disabled={isOverwritePending || !hasUnsavedChanges}>
+          <ButtonIcon icon={isOverwritePending ? Loader : SaveIcon} />
+          <ButtonText>
+            {gtMobile ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}
+          </ButtonText>
+        </Button>
+      </Layout.Header.Outer>
+
+      <Layout.Content>
+        {noSavedFeedsOfAnyType && (
+          <View style={[t.atoms.border_contrast_low, a.border_b]}>
+            <NoSavedFeedsOfAnyType
+              onAddRecommendedFeeds={() =>
+                setCurrentFeeds(
+                  RECOMMENDED_SAVED_FEEDS.map(f => ({
+                    ...f,
+                    id: TID.nextStr(),
+                  })),
+                )
+              }
+            />
+          </View>
+        )}
+
+        <SectionHeaderText>
+          <Trans>Pinned Feeds</Trans>
+        </SectionHeaderText>
+
+        {!pinnedFeeds.length ? (
+          <View style={[a.flex_1, a.p_lg]}>
+            <Admonition type="info">
+              <Trans>You don't have any pinned feeds.</Trans>
+            </Admonition>
+          </View>
+        ) : (
+          pinnedFeeds.map((feed, i) => (
+            <PinnedFeedItem
+              key={feed.id}
+              feed={feed}
+              currentFeeds={currentFeeds}
+              setCurrentFeeds={setCurrentFeeds}
+              index={i}
+              total={pinnedFeeds.length}
+              onMoveUp={() => onMoveUp(i)}
+              onMoveDown={() => onMoveDown(i)}
+            />
+          ))
+        )}
+
+        {noFollowingFeed && (
+          <View style={[t.atoms.border_contrast_low, a.border_b]}>
+            <NoFollowingFeed
+              onAddFeed={() =>
+                setCurrentFeeds(feeds => [
+                  ...feeds,
+                  {...TIMELINE_SAVED_FEED, id: TID.next().toString()},
+                ])
+              }
+            />
+          </View>
+        )}
+
+        <SectionHeaderText>
+          <Trans>Saved Feeds</Trans>
+        </SectionHeaderText>
+
+        {!unpinnedFeeds.length ? (
+          <View style={[a.flex_1, a.p_lg]}>
+            <Admonition type="info">
+              <Trans>You don't have any saved feeds.</Trans>
+            </Admonition>
+          </View>
+        ) : (
+          unpinnedFeeds.map(f => (
+            <UnpinnedFeedItem
+              key={f.id}
+              feed={f}
+              currentFeeds={currentFeeds}
+              setCurrentFeeds={setCurrentFeeds}
+            />
+          ))
+        )}
+
+        <View style={[a.px_lg, a.py_xl]}>
+          <Text
+            style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
+            <Trans>
+              Feeds are custom algorithms that users build with a little coding
+              expertise.{' '}
+              <InlineLinkText
+                to="https://github.com/bluesky-social/feed-generator"
+                label={_(msg`See this guide`)}
+                disableMismatchWarning
+                style={[a.leading_snug]}>
+                See this guide
+              </InlineLinkText>{' '}
+              for more information.
+            </Trans>
+          </Text>
+        </View>
+      </Layout.Content>
+    </Layout.Screen>
+  )
+}
+
 function PinnedFeedItem({
   feed,
   currentFeeds,
   setCurrentFeeds,
   dragHandle,
+  index,
+  total,
+  onMoveUp,
+  onMoveDown,
 }: {
   feed: AppBskyActorDefs.SavedFeed
   currentFeeds: AppBskyActorDefs.SavedFeed[]
   setCurrentFeeds: React.Dispatch<AppBskyActorDefs.SavedFeed[]>
-  dragHandle: React.ReactNode
+  dragHandle?: React.ReactNode
+  index?: number
+  total?: number
+  onMoveUp?: () => void
+  onMoveDown?: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -288,7 +481,32 @@ function PinnedFeedItem({
           shape="square">
           <ButtonIcon icon={PinIcon} />
         </Button>
-        {dragHandle}
+        {onMoveUp !== undefined ? (
+          <>
+            <Button
+              testID={`feed-${feed.type}-moveUp`}
+              label={_(msg`Move feed up`)}
+              onPress={onMoveUp}
+              disabled={index === 0}
+              size="small"
+              color="secondary"
+              shape="square">
+              <ButtonIcon icon={ArrowUpIcon} />
+            </Button>
+            <Button
+              testID={`feed-${feed.type}-moveDown`}
+              label={_(msg`Move feed down`)}
+              onPress={onMoveDown}
+              disabled={index === total! - 1}
+              size="small"
+              color="secondary"
+              shape="square">
+              <ButtonIcon icon={ArrowDownIcon} />
+            </Button>
+          </>
+        ) : (
+          dragHandle
+        )}
       </View>
     </View>
   )
