@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import {Platform, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -117,6 +118,24 @@ function TranslationLanguageSelect({
   const langPrefs = useLanguagePrefs()
   const {translate} = useTranslateOnDevice(postUri)
 
+  const items = useMemo(
+    () =>
+      (Platform.OS === 'ios'
+        ? LANGUAGES.filter(lang => lang.ios)
+        : LANGUAGES.filter(lang => lang.android)
+      )
+        .filter(
+          (lang, index, self) =>
+            !langPrefs.primaryLanguage.startsWith(lang.code2) && // Don't show the current language as it would be redundant
+            index === self.findIndex(t => t.code2 === lang.code2), // Remove dupes (which will happen due to multiple code3 values mapping to the same code2)
+        )
+        .map(l => ({
+          label: languageName(l, langPrefs.appLanguage), // TODO: Use pre-generated localized language name here and elsewhere
+          value: l.code2,
+        })),
+    [langPrefs],
+  )
+
   const handleChangeTranslationLanguage = (sourceLangCode: string) => {
     ax.metric('translate:override', {
       sourceLanguage: sourceLangCode,
@@ -146,19 +165,7 @@ function TranslationLanguageSelect({
             <Select.ItemText>{label}</Select.ItemText>
           </Select.Item>
         )}
-        items={(Platform.OS === 'ios'
-          ? LANGUAGES.filter(lang => lang.ios)
-          : LANGUAGES.filter(lang => lang.android)
-        )
-          .filter(
-            (lang, index, self) =>
-              !langPrefs.primaryLanguage.startsWith(lang.code2) && // Don't show the current language as it would be redundant
-              index === self.findIndex(t => t.code2 === lang.code2), // Remove dupes (which will happen due to multiple code3 values mapping to the same code2)
-          )
-          .map(l => ({
-            label: languageName(l, langPrefs.appLanguage), // TODO: Use pre-generated localized language name here and elsewhere
-            value: l.code2,
-          }))}
+        items={items}
       />
     </Select.Root>
   )
