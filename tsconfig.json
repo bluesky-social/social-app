@@ -3,6 +3,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "esnext",
+    "lib": ["dom", "esnext"],
     "types": ["node", "jest"],
     "baseUrl": ".",
     "paths": {
