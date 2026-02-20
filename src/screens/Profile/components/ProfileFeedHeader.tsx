@@ -259,7 +259,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                             size="xs"
                             fill={
                               likeUri
-                                ? t.palette.like
+                                ? t.palette.pink
                                 : t.atoms.text_contrast_low.color
                             }
                           />
@@ -503,14 +503,13 @@ function DialogInner({
               disabled={isLikePending || isUnlikePending}
               label={_(msg`Like this feed`)}
               size="small"
-              variant="solid"
               color="secondary"
               onPress={onToggleLiked}
               style={[a.flex_1]}>
               {isLiked ? (
-                <HeartFilled size="sm" fill={t.palette.like} />
+                <HeartFilled size="sm" fill={t.palette.pink} />
               ) : (
-                <ButtonIcon icon={Heart} position="left" />
+                <ButtonIcon icon={Heart} />
               )}
 
               <ButtonText>
@@ -521,7 +520,6 @@ function DialogInner({
               disabled={isFeedStateChangePending}
               label={isPinned ? _(msg`Unpin feed`) : _(msg`Pin feed`)}
               size="small"
-              variant="solid"
               color={isPinned ? 'secondary' : 'primary'}
               onPress={onTogglePinned}
               style={[a.flex_1]}>

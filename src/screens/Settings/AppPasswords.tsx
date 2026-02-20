@@ -21,7 +21,7 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
-import {Admonition, colors} from '#/components/Admonition'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
@@ -195,7 +195,7 @@ function AppPasswordCard({
       </View>
       {appPassword.privileged && (
         <View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
-          <WarningIcon style={[{color: colors.warning}]} />
+          <WarningIcon style={[{color: t.palette.yellow}]} />
           <Text style={t.atoms.text_contrast_high}>
             <Trans>Allows access to direct messages</Trans>
           </Text>
