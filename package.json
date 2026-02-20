@@ -282,7 +282,7 @@
     "svgo": "^3.3.2",
     "ts-node": "^10.9.1",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.0",
     "webpack-bundle-analyzer": "^4.10.1"
   },
