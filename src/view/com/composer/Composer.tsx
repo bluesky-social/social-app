@@ -948,7 +948,10 @@ export const ComposePost = ({
       })
 
       let err = cleanError(e.message)
-      if (err.includes('not locate record')) {
+      if (
+        e instanceof apilib.ReplyDeletedError ||
+        err.includes('not locate record')
+      ) {
         err = l`We're sorry! The post you are replying to has been deleted.`
       } else if (e instanceof EmbeddingDisabledError) {
         err = l`This post's author has disabled quote posts.`
