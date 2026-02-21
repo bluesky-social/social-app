@@ -160,8 +160,10 @@ export function CreateListFromStarterPackDialog({
             </Text>
 
             <Admonition type="tip">
-              Changes to the starter pack will not be reflected in the list
-              after creation. The list will be an independent copy.
+              <Trans>
+                Changes to the starter pack will not be reflected in the list
+                after creation. The list will be an independent copy.
+              </Trans>
             </Admonition>
 
             <View
