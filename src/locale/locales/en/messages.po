@@ -901,8 +901,8 @@ msgstr ""
 msgid "Added to starter pack"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:222
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:227
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:224
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:229
 msgid "Adding members to list..."
 msgstr ""
 
@@ -1810,8 +1810,8 @@ msgstr ""
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:131
 #: src/components/dialogs/InAppBrowserConsent.tsx:98
 #: src/components/dialogs/InAppBrowserConsent.tsx:104
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:189
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:197
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:191
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:199
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:291
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:299
 #: src/components/Menu/index.tsx:352
@@ -1934,6 +1934,10 @@ msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:174
 msgid "Changes saved"
+msgstr ""
+
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:163
+msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:102
@@ -2735,8 +2739,8 @@ msgstr ""
 msgid "Create another"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:177
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:185
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:179
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:187
 msgid "Create list"
 msgstr ""
 
