@@ -11,7 +11,6 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/types'
-import {useModalControls} from '#/state/modals'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {
   RQKEY as profileQueryKey,
@@ -25,6 +24,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {UserAddRemoveListsDialog} from '#/components/dialogs/lists/UserAddRemoveListsDialog'
 import {StarterPackDialog} from '#/components/dialogs/StarterPackDialog'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
@@ -73,7 +73,6 @@ let ProfileMenu = ({
   const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
-  const {openModal} = useModalControls()
   const reportDialogControl = useReportDialogControl()
   const queryClient = useQueryClient()
   const navigation = useNavigation<NavigationProp>()
@@ -106,6 +105,7 @@ let ProfileMenu = ({
   const goLiveDialogControl = useDialogControl()
   const goLiveDisabledDialogControl = useDialogControl()
   const addToStarterPacksDialogControl = useDialogControl()
+  const addToListsDialogControl = useDialogControl()
 
   const showLoggedOutWarning = React.useMemo(() => {
     return (
@@ -130,15 +130,8 @@ let ProfileMenu = ({
   }, [profile])
 
   const onPressAddRemoveLists = React.useCallback(() => {
-    openModal({
-      name: 'user-add-remove-lists',
-      subject: profile.did,
-      handle: profile.handle,
-      displayName: profile.displayName || profile.handle,
-      onAdd: invalidateProfileQuery,
-      onRemove: invalidateProfileQuery,
-    })
-  }, [profile, openModal, invalidateProfileQuery])
+    addToListsDialogControl.open()
+  }, [addToListsDialogControl])
 
   const onPressMuteAccount = React.useCallback(async () => {
     if (profile.viewer?.muted) {
@@ -517,6 +510,15 @@ let ProfileMenu = ({
       <StarterPackDialog
         control={addToStarterPacksDialogControl}
         targetDid={profile.did}
+      />
+
+      <UserAddRemoveListsDialog
+        control={addToListsDialogControl}
+        subjectDid={profile.did}
+        displayName={profile.displayName || profile.handle}
+        handle={profile.handle}
+        onAdd={invalidateProfileQuery}
+        onRemove={invalidateProfileQuery}
       />
 
       <ReportDialog
