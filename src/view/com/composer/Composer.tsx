@@ -605,11 +605,15 @@ export const ComposePost = ({
       })
 
       onClose()
+      setTimeout(() => {
+        Toast.show(_(msg`Draft saved`), {type: 'success'})
+      }, 500)
     } catch (e) {
       logger.error('Failed to save draft', {error: e})
       setError(getDraftSaveError(e))
     }
   }, [
+    _,
     saveDraft,
     composerState,
     composerDispatch,
@@ -633,12 +637,14 @@ export const ComposePost = ({
         existingDraftId: composerState.draftId,
       })
       composerDispatch({type: 'mark_saved', draftId: result.draftId})
+      Toast.show(_(msg`Draft saved`), {type: 'success'})
       return {success: true}
     } catch (e) {
       setError(getDraftSaveError(e))
       return {success: false}
     }
   }, [
+    _,
     saveDraft,
     composerState,
     composerDispatch,
