@@ -212,7 +212,6 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
-    const [contentSize, setContentSize] = React.useState(0)
 
     const [keyboardHeight, setKeyboardHeight] = React.useState(0)
 
@@ -254,34 +253,8 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       }
     }
 
-    // iOS26 floaty sheets have this annoying extra safe area when sheets are 150px or more
-    // TODO: Remove this behaviour on the native side!! I could not figure it out -sfn
-    //
-    // fix by using a negative margin on the scrollview when the sheet is in this zone (it's fine for large sheets)
-    const IOS_MIN_HEIGHT_FOR_SAFEAREA = 151
-    const IOS_MAX_HEIGHT_FOR_SAFEAREA = 400
-    const iosAutoSafeAreaHeightAdjust = 34
-    const shouldAttemptUndoSafeArea =
-      IS_LIQUID_GLASS &&
-      contentSize > IOS_MIN_HEIGHT_FOR_SAFEAREA &&
-      contentSize < IOS_MAX_HEIGHT_FOR_SAFEAREA
-    const adjustedSize =
-      contentSize -
-      (shouldAttemptUndoSafeArea ? iosAutoSafeAreaHeightAdjust : 0)
-    // reducing the padding obviously then makes it dip back under 150px, so we need to adjust
-    // again to ensure a minimum height of 150
-    const ensureMinHeight = Math.min(
-      0,
-      adjustedSize - IOS_MIN_HEIGHT_FOR_SAFEAREA,
-    )
-    const marginBottom = shouldAttemptUndoSafeArea
-      ? iosAutoSafeAreaHeightAdjust * -1 - ensureMinHeight
-      : 0
-
     return (
       <KeyboardAwareScrollView
-        style={[{marginBottom}]}
-        onContentSizeChange={(_width, height) => setContentSize(height)}
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
