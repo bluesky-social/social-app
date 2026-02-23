@@ -83,8 +83,9 @@
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
     "@expo/webpack-config": "^19.0.1",
-    "@floating-ui/dom": "^1.6.3",
-    "@floating-ui/react-dom": "^2.0.8",
+    "@floating-ui/dom": "^1.7.5",
+    "@floating-ui/react": "^0.27.18",
+    "@floating-ui/react-dom": "^2.1.7",
     "@formatjs/intl-displaynames": "^6.8.13",
     "@formatjs/intl-locale": "^4.2.13",
     "@formatjs/intl-numberformat": "^8.15.6",
@@ -295,7 +296,9 @@
     "**/expo-device": "7.1.4",
     "**/multiformats": "9.9.0",
     "unicode-segmenter": "0.14.5",
-    "@types/estree": "1.0.6"
+    "@types/estree": "1.0.6",
+    "@floating-ui/dom": "1.7.5",
+    "@floating-ui/react-dom": "2.1.7"
   },
   "jest": {
     "preset": "jest-expo/ios",

@@ -5,11 +5,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {SearchLinkCard} from '#/view/shell/desktop/Search'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
-import {atoms as a, native} from '#/alf'
+import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
-import {IS_NATIVE} from '#/env'
+import {SearchLinkCard} from './SearchLinkCard'
 
 let AutocompleteResults = ({
   isAutocompleteFetching,
@@ -43,12 +42,8 @@ let AutocompleteResults = ({
           keyboardDismissMode="on-drag">
           <SearchLinkCard
             label={_(msg`Search for "${searchText}"`)}
-            onPress={native(onSubmit)}
-            to={
-              IS_NATIVE
-                ? undefined
-                : `/search?q=${encodeURIComponent(searchText)}`
-            }
+            onPress={onSubmit}
+            to={{screen: 'Search', params: {q: searchText}}}
             style={a.border_b}
           />
           {autocompleteData?.map(item => (

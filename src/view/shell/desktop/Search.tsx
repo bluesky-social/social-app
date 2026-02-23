@@ -1,167 +1,278 @@
-import React from 'react'
+import {useDeferredValue, useRef, useState} from 'react'
+import {type Role, type TextInput, View} from 'react-native'
 import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {msg} from '@lingui/macro'
+  useDismiss,
+  useFloating,
+  useId,
+  useInteractions,
+  useListNavigation,
+  useRole,
+} from '@floating-ui/react'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {Link} from '#/view/com/util/Link'
-import {Text} from '#/view/com/util/text/Text'
-import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
-import {atoms as a} from '#/alf'
+import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
+import {atoms as a, flatten, useTheme} from '#/alf'
 import {SearchInput} from '#/components/forms/SearchInput'
-
-let SearchLinkCard = ({
-  label,
-  to,
-  onPress,
-  style,
-}: {
-  label: string
-  to?: string
-  onPress?: () => void
-  style?: ViewStyle
-}): React.ReactNode => {
-  const pal = usePalette('default')
-
-  const inner = (
-    <View
-      style={[pal.border, {paddingVertical: 16, paddingHorizontal: 12}, style]}>
-      <Text type="md" style={[pal.text]}>
-        {label}
-      </Text>
-    </View>
-  )
-
-  if (onPress) {
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        accessibilityLabel={label}
-        accessibilityHint="">
-        {inner}
-      </TouchableOpacity>
-    )
-  }
-
-  return (
-    <Link href={to} asAnchor anchorNoUnderline>
-      <View
-        style={[
-          pal.border,
-          {paddingVertical: 16, paddingHorizontal: 12},
-          style,
-        ]}>
-        <Text type="md" style={[pal.text]}>
-          {label}
-        </Text>
-      </View>
-    </Link>
-  )
-}
-SearchLinkCard = React.memo(SearchLinkCard)
-export {SearchLinkCard}
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
+import {Loader} from '#/components/Loader'
+import * as ProfileCard from '#/components/ProfileCard'
+import {Text} from '#/components/Typography'
 
 export function DesktopSearch() {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const [isActive, setIsActive] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>('')
+  const qc = useQueryClient()
+
+  const searchInputRef = useRef<TextInput>(null)
+  const [open, setOpen] = useState(false)
+  const [query, setQuery] = useState('')
+  const deferredQuery = useDeferredValue(query)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const listRef = useRef<Array<HTMLElement | null>>([])
+
   const {data: autocompleteData, isFetching} = useActorAutocompleteQuery(
-    query,
+    deferredQuery,
     true,
   )
 
   const moderationOpts = useModerationOpts()
+  const profiles = autocompleteData ?? []
+  const hasSearchLink = deferredQuery.length > 0
 
-  const onChangeText = React.useCallback((text: string) => {
+  // Floating UI setup — used for interaction hooks (ARIA combobox pattern),
+  // not for positioning (we keep the existing CSS absolute layout).
+  const {refs, context} = useFloating({
+    open,
+    onOpenChange(nextOpen, _event, reason) {
+      setOpen(nextOpen)
+      if (!nextOpen && reason === 'escape-key') {
+        setQuery('')
+        searchInputRef.current?.blur()
+      }
+    },
+  })
+
+  const role = useRole(context, {role: 'listbox'})
+  const dismiss = useDismiss(context)
+  const listNav = useListNavigation(context, {
+    listRef,
+    activeIndex,
+    onNavigate: setActiveIndex,
+    virtual: true,
+    loop: true,
+  })
+
+  const {getReferenceProps, getFloatingProps, getItemProps} = useInteractions([
+    role,
+    dismiss,
+    listNav,
+  ])
+
+  const listboxId = useId()
+
+  const navigateToSearch = () => {
+    if (!deferredQuery.length) return
+    navigation.dispatch(StackActions.push('Search', {q: deferredQuery}))
+    setQuery('')
+    setOpen(false)
+    searchInputRef.current?.blur()
+  }
+
+  const navigateToProfile = (profileIndex: number) => {
+    const profile = profiles[profileIndex]
+    if (!profile) return
+    unstableCacheProfileView(qc, profile)
+    navigation.dispatch(StackActions.push('Profile', {name: profile.did}))
+    setQuery('')
+    setOpen(false)
+    searchInputRef.current?.blur()
+  }
+
+  const selectItem = (index: number) => {
+    if (hasSearchLink && index === 0) {
+      navigateToSearch()
+    } else {
+      navigateToProfile(hasSearchLink ? index - 1 : index)
+    }
+  }
+
+  const onChangeText = (text: string) => {
     setQuery(text)
-    setIsActive(text.length > 0)
-  }, [])
+    if (!open) setOpen(true)
+    setActiveIndex(text.length > 0 ? 0 : null)
+  }
 
-  const onPressCancelSearch = React.useCallback(() => {
+  const onPressCancelSearch = () => {
     setQuery('')
-    setIsActive(false)
-  }, [setQuery])
+    setOpen(false)
+  }
 
-  const onSubmit = React.useCallback(() => {
-    setIsActive(false)
-    if (!query.length) return
-    navigation.dispatch(StackActions.push('Search', {q: query}))
-  }, [query, navigation])
+  // getReferenceProps produces the merged keyboard + ARIA props.
+  // We must use onKeyDownCapture because RNW's TextInput internally calls
+  // stopPropagation() on all keydown events, preventing normal bubbling.
+  // Capture phase (parent→child) fires before the target's handler.
+  const referenceProps = getReferenceProps({
+    onKeyDown(e: React.KeyboardEvent) {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        if (activeIndex != null) {
+          selectItem(activeIndex)
+        } else {
+          navigateToSearch()
+        }
+      }
+    },
+  })
+  const {onKeyDown: refOnKeyDown, ...refAriaProps} = referenceProps
 
-  const onSearchProfileCardPress = React.useCallback(() => {
-    setQuery('')
-    setIsActive(false)
-  }, [])
+  // Extract role/id from floating props for the listbox View
+  const floatingProps = getFloatingProps()
 
   return (
-    <View style={[styles.container, pal.view]}>
-      <SearchInput
-        value={query}
-        onChangeText={onChangeText}
-        onClearText={onPressCancelSearch}
-        onSubmitEditing={onSubmit}
-      />
-      {query !== '' && isActive && moderationOpts && (
-        <View
-          style={[
-            pal.view,
-            pal.borderDark,
-            styles.resultsContainer,
-            a.overflow_hidden,
-          ]}>
-          {isFetching && !autocompleteData?.length ? (
-            <View style={{padding: 8}}>
-              <ActivityIndicator />
-            </View>
-          ) : (
-            <>
-              <SearchLinkCard
-                label={_(msg`Search for "${query}"`)}
-                to={`/search?q=${encodeURIComponent(query)}`}
-                style={
-                  (autocompleteData?.length ?? 0) > 0
-                    ? {borderBottomWidth: 1}
-                    : undefined
-                }
-              />
-              {autocompleteData?.map(item => (
-                <SearchProfileCard
-                  key={item.did}
-                  profile={item}
-                  moderationOpts={moderationOpts}
-                  onPress={onSearchProfileCardPress}
-                />
-              ))}
-            </>
-          )}
+    <View style={[a.w_full, a.z_10]}>
+      {/* Wrapper div receives floating-ui reference + ARIA props.
+          onKeyDownCapture is needed because RNW's TextInput stops keydown
+          propagation — capture phase fires before that happens. */}
+      <div
+        ref={refs.setReference}
+        onKeyDownCapture={
+          refOnKeyDown as React.KeyboardEventHandler<HTMLDivElement>
+        }
+        {...(refAriaProps as React.HTMLAttributes<HTMLDivElement>)}
+        style={{width: '100%'}}>
+        <SearchInput
+          ref={searchInputRef}
+          value={query}
+          onChangeText={onChangeText}
+          onClearText={onPressCancelSearch}
+          onFocus={() => setOpen(true)}
+          onBlur={(e: any) => {
+            const relatedTarget = (e as React.FocusEvent)
+              .relatedTarget as Node | null
+            if (
+              relatedTarget &&
+              refs.floating.current?.contains(relatedTarget)
+            ) {
+              return
+            }
+            setOpen(false)
+          }}
+        />
+      </div>
+      {open && moderationOpts && (
+        <View style={[a.w_full]}>
+          <View
+            ref={refs.setFloating}
+            role={floatingProps.role as Role}
+            id={floatingProps.id as string}
+            style={[
+              t.atoms.bg,
+              t.atoms.border_contrast_low,
+              a.w_full,
+              a.border,
+              a.mt_sm,
+              a.rounded_sm,
+              a.overflow_hidden,
+              a.absolute,
+              a.shadow_lg,
+              a.zoom_fade_in,
+            ]}>
+            {deferredQuery.length === 0 ? (
+              <View style={[a.py_xl, a.gap_sm, a.align_center]}>
+                <SearchIcon size="2xl" style={[t.atoms.text_contrast_low]} />
+                <Text
+                  style={[a.text_sm, t.atoms.text_contrast_low, a.text_center]}>
+                  <Trans>Start typing to search</Trans>
+                </Text>
+              </View>
+            ) : (
+              <>
+                {/* Search link option */}
+                <div
+                  ref={node => {
+                    listRef.current[0] = node
+                  }}
+                  id={`${listboxId}-option-0`}
+                  role="option"
+                  aria-selected={activeIndex === 0}
+                  style={flatten([
+                    a.w_full,
+                    a.py_lg,
+                    a.px_md,
+                    a.pointer,
+                    (profiles.length > 0 || isFetching) && a.border_b,
+                    t.atoms.border_contrast_low,
+                    activeIndex === 0 && t.atoms.bg_contrast_25,
+                  ])}
+                  {...getItemProps({
+                    onClick() {
+                      navigateToSearch()
+                    },
+                  })}>
+                  <Text style={[a.text_sm, a.leading_snug]}>
+                    {_(msg`Search for "${deferredQuery}"`)}
+                  </Text>
+                </div>
+
+                {/* Loading state */}
+                {isFetching && !profiles.length ? (
+                  <View style={[a.p_xl, a.align_center]}>
+                    <Loader size="md" />
+                  </View>
+                ) : (
+                  profiles.map((profile, i) => {
+                    const itemIndex = 1 + i
+                    return (
+                      <div
+                        key={profile.did}
+                        ref={node => {
+                          listRef.current[itemIndex] = node
+                        }}
+                        id={`${listboxId}-option-${itemIndex}`}
+                        role="option"
+                        aria-selected={activeIndex === itemIndex}
+                        aria-label={_(msg`View ${profile.handle}'s profile`)}
+                        style={flatten([
+                          a.flex,
+                          a.flex_col,
+                          {paddingLeft: 6, paddingRight: 6},
+                          a.px_sm,
+                          a.pointer,
+                          activeIndex === itemIndex && t.atoms.bg_contrast_25,
+                        ])}
+                        {...getItemProps({
+                          onClick() {
+                            navigateToProfile(i)
+                          },
+                        })}>
+                        <ProfileCard.Outer>
+                          <ProfileCard.Header>
+                            <ProfileCard.Avatar
+                              profile={profile}
+                              moderationOpts={moderationOpts}
+                            />
+                            <ProfileCard.NameAndHandle
+                              profile={profile}
+                              moderationOpts={moderationOpts}
+                            />
+                          </ProfileCard.Header>
+                        </ProfileCard.Outer>
+                      </div>
+                    )
+                  })
+                )}
+              </>
+            )}
+          </View>
         </View>
       )}
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    width: '100%',
-  },
-  resultsContainer: {
-    marginTop: 10,
-    flexDirection: 'column',
-    width: '100%',
-    borderWidth: 1,
-    borderRadius: 6,
-  },
-})
