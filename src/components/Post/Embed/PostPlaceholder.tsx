@@ -1,33 +1,29 @@
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {InfoCircleIcon} from '#/lib/icons'
-import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {Text} from '#/components/Typography'
 
 export function PostPlaceholder({children}: {children: React.ReactNode}) {
   const t = useTheme()
-  const pal = usePalette('default')
+
   return (
     <View
-      style={[styles.errorContainer, a.border, t.atoms.border_contrast_low]}>
-      <InfoCircleIcon size={18} style={pal.text} />
-      <Text type="lg" style={pal.text}>
+      style={[
+        a.flex_row,
+        a.gap_xs,
+        a.rounded_md,
+        a.py_md,
+        a.px_md,
+        a.mt_sm,
+        a.align_center,
+        a.border,
+        t.atoms.border_contrast_low,
+      ]}>
+      <CircleInfoIcon size="md" style={t.atoms.text_contrast_medium} />
+      <Text style={[a.text_md, t.atoms.text_contrast_medium, a.italic]}>
         {children}
       </Text>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    borderRadius: 8,
-    marginTop: 8,
-    paddingVertical: 14,
-    paddingHorizontal: 14,
-    borderWidth: StyleSheet.hairlineWidth,
-  },
-})
