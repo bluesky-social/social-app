@@ -195,8 +195,8 @@ export function Inner({children, style, header}: DialogInnerProps) {
           a.pt_2xl,
           a.px_xl,
           IS_LIQUID_GLASS
-            ? {paddingBottom: insets.bottom + insets.top}
-            : a.pb_2xl,
+            ? a.pb_2xl
+            : {paddingBottom: insets.bottom + insets.top},
           style,
         ]}>
         {children}
