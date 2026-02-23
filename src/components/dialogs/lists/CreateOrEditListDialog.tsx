@@ -83,7 +83,6 @@ export function CreateOrEditListDialog({
       nativeOptions={{
         preventDismiss: dirty,
         minHeight: height,
-        cornerRadius: 20,
       }}
       testID="createOrEditListDialog">
       <DialogInner

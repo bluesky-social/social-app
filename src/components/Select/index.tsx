@@ -150,7 +150,7 @@ export function Content<T>({
   }, [items, context.value, valueExtractor, setValue])
 
   return (
-    <Dialog.Outer control={control} nativeOptions={{cornerRadius: 20}}>
+    <Dialog.Outer control={control}>
       <ContentInner
         control={control}
         items={items}

@@ -56,9 +56,7 @@ export function ChangeHandleDialog({
   const {height} = useWindowDimensions()
 
   return (
-    <Dialog.Outer
-      control={control}
-      nativeOptions={{minHeight: height, cornerRadius: 20}}>
+    <Dialog.Outer control={control} nativeOptions={{minHeight: height}}>
       <ChangeHandleDialogInner />
     </Dialog.Outer>
   )
