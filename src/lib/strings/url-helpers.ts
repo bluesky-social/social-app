@@ -1,5 +1,4 @@
 import {AtUri} from '@atproto/api'
-import psl from 'psl'
 import TLDs from 'tlds'
 
 import {BSKY_SERVICE} from '#/lib/constants'
@@ -308,17 +307,6 @@ export function isPossiblyAUrl(str: string): boolean {
   }
   const [firstWord] = str.split(/[\s\/]/)
   return isValidDomain(firstWord)
-}
-
-export function splitApexDomain(hostname: string): [string, string] {
-  const hostnamep = psl.parse(hostname)
-  if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
-    return ['', hostname]
-  }
-  return [
-    hostnamep.subdomain ? `${hostnamep.subdomain}.` : '',
-    hostnamep.domain,
-  ]
 }
 
 export function createBskyAppAbsoluteUrl(path: string): string {
