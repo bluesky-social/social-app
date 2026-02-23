@@ -688,6 +688,7 @@ export type Events = {
     targetLanguage: string
   }
   'translate:override': {
+    os: Platform['OS']
     sourceLanguage: string
     targetLanguage: string
   }
