@@ -4,7 +4,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {codeToLanguageName, languageName} from '#/locale/helpers'
-import {LANGUAGES} from '#/locale/languages'
+import {
+  ANDROID_ON_DEVICE_LANGUAGES,
+  IOS_ON_DEVICE_LANGUAGES,
+} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -120,14 +123,19 @@ function TranslationLanguageSelect({
 
   const items = useMemo(
     () =>
-      LANGUAGES.filter(
-        (lang, index, self) =>
-          !langPrefs.primaryLanguage.startsWith(lang.code2) && // Don't show the current language as it would be redundant
-          index === self.findIndex(t => t.code2 === lang.code2), // Remove dupes (which will happen due to multiple code3 values mapping to the same code2)
-      ).map(l => ({
-        label: languageName(l, langPrefs.appLanguage), // TODO: Use pre-generated localized language name here and elsewhere
-        value: l.code2,
-      })),
+      (Platform.OS === 'android'
+        ? ANDROID_ON_DEVICE_LANGUAGES
+        : IOS_ON_DEVICE_LANGUAGES
+      )
+        .filter(
+          (lang, index, self) =>
+            !langPrefs.primaryLanguage.startsWith(lang.code2) && // Don't show the current language as it would be redundant
+            index === self.findIndex(t => t.code2 === lang.code2), // Remove dupes (which will happen due to multiple code3 values mapping to the same code2)
+        )
+        .map(l => ({
+          label: languageName(l, langPrefs.appLanguage), // TODO: Use pre-generated localized language name here and elsewhere
+          value: l.code2,
+        })),
     [langPrefs],
   )
 

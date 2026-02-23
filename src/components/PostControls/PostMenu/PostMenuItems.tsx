@@ -27,7 +27,6 @@ import {
 } from '#/lib/routes/types'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
-import {getPostLanguage, isPostInLanguage} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -262,7 +261,7 @@ let PostMenuItems = ({
   }
 
   const onPressTranslate = () => {
-    void translate(record.text, langPrefs.primaryLanguage, sourceLanguage)
+    void translate(record.text, langPrefs.primaryLanguage)
 
     if (
       bsky.dangerousIsType<AppBskyFeedPost.Record>(
@@ -282,17 +281,6 @@ let PostMenuItems = ({
     clearTranslation()
     return false
   }
-
-  const needsTranslation = useMemo(
-    () =>
-      Boolean(
-        langPrefs.primaryLanguage &&
-          !isPostInLanguage(post, [langPrefs.primaryLanguage]),
-      ),
-    [post, langPrefs.primaryLanguage],
-  )
-
-  const sourceLanguage = getPostLanguage(post)
 
   const onHidePost = () => {
     hidePost({uri: postUri})
@@ -524,34 +512,30 @@ let PostMenuItems = ({
         <Menu.Group>
           {!hideInPWI || hasSession ? (
             <>
-              {needsTranslation && (
-                <>
-                  {translationState.status === 'loading' ? (
-                    <Menu.Item
-                      testID="postDropdownTranslateBtn"
-                      label={_(msg`Translating…`)}
-                      onPress={onPressHideTranslation}>
-                      <Menu.ItemText>{_(msg`Translating…`)}</Menu.ItemText>
-                      <Menu.ItemIcon icon={Translate} position="right" />
-                    </Menu.Item>
-                  ) : translationState.status === 'success' ? (
-                    <Menu.Item
-                      testID="postDropdownTranslateBtn"
-                      label={_(msg`Hide translation`)}
-                      onPress={onPressHideTranslation}>
-                      <Menu.ItemText>{_(msg`Hide translation`)}</Menu.ItemText>
-                      <Menu.ItemIcon icon={Translate} position="right" />
-                    </Menu.Item>
-                  ) : (
-                    <Menu.Item
-                      testID="postDropdownTranslateBtn"
-                      label={_(msg`Translate`)}
-                      onPress={onPressTranslate}>
-                      <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
-                      <Menu.ItemIcon icon={Translate} position="right" />
-                    </Menu.Item>
-                  )}
-                </>
+              {translationState.status === 'loading' ? (
+                <Menu.Item
+                  testID="postDropdownTranslateBtn"
+                  label={_(msg`Translating…`)}
+                  onPress={onPressHideTranslation}>
+                  <Menu.ItemText>{_(msg`Translating…`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Translate} position="right" />
+                </Menu.Item>
+              ) : translationState.status === 'success' ? (
+                <Menu.Item
+                  testID="postDropdownTranslateBtn"
+                  label={_(msg`Hide translation`)}
+                  onPress={onPressHideTranslation}>
+                  <Menu.ItemText>{_(msg`Hide translation`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Translate} position="right" />
+                </Menu.Item>
+              ) : (
+                <Menu.Item
+                  testID="postDropdownTranslateBtn"
+                  label={_(msg`Translate`)}
+                  onPress={onPressTranslate}>
+                  <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Translate} position="right" />
+                </Menu.Item>
               )}
 
               <Menu.Item

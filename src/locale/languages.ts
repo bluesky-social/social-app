@@ -4149,6 +4149,11 @@ export const LANGUAGES: Language[] = [
   },
 ]
 
+export const IOS_ON_DEVICE_LANGUAGES = LANGUAGES.filter(lang => lang.ios)
+export const ANDROID_ON_DEVICE_LANGUAGES = LANGUAGES.filter(
+  lang => lang.android,
+)
+
 export const LANGUAGES_MAP_CODE2 = Object.fromEntries(
   LANGUAGES.map(lang => [lang.code2, lang]),
 )
