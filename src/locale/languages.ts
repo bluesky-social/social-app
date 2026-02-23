@@ -681,7 +681,7 @@ export const LANGUAGES: Language[] = [
     name: 'català',
     en: 'Catalan',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'cau',
@@ -713,7 +713,7 @@ export const LANGUAGES: Language[] = [
     name: 'čeština',
     en: 'Czech',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'cha',
@@ -945,7 +945,7 @@ export const LANGUAGES: Language[] = [
     name: 'čeština',
     en: 'Czech',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'dak',
@@ -961,7 +961,7 @@ export const LANGUAGES: Language[] = [
     name: 'dansk',
     en: 'Danish',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'dar',
@@ -1121,7 +1121,7 @@ export const LANGUAGES: Language[] = [
     name: 'Ελληνικά',
     en: 'Greek',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'elx',
@@ -1241,7 +1241,7 @@ export const LANGUAGES: Language[] = [
     name: 'suomi',
     en: 'Finnish',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'fiu',
@@ -1489,7 +1489,7 @@ export const LANGUAGES: Language[] = [
     name: 'Ελληνικά',
     en: 'Greek',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'grn',
@@ -1561,7 +1561,7 @@ export const LANGUAGES: Language[] = [
     name: 'עברית',
     en: 'Hebrew',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'her',
@@ -2393,7 +2393,7 @@ export const LANGUAGES: Language[] = [
     name: 'Melayu',
     en: 'Malay',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'mdf',
@@ -2545,7 +2545,7 @@ export const LANGUAGES: Language[] = [
     name: 'Melayu',
     en: 'Malay',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'mul',
@@ -2769,7 +2769,7 @@ export const LANGUAGES: Language[] = [
     name: 'norsk',
     en: 'Norwegian',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'nqo',
@@ -3113,7 +3113,7 @@ export const LANGUAGES: Language[] = [
     name: 'română',
     en: 'Romanian',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'ron',
@@ -3121,7 +3121,7 @@ export const LANGUAGES: Language[] = [
     name: 'română',
     en: 'Romanian',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'run',
@@ -3321,7 +3321,7 @@ export const LANGUAGES: Language[] = [
     name: 'slovenčina',
     en: 'Slovak',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'slk',
@@ -3329,7 +3329,7 @@ export const LANGUAGES: Language[] = [
     name: 'slovenčina',
     en: 'Slovak',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'slv',
@@ -3561,7 +3561,7 @@ export const LANGUAGES: Language[] = [
     name: 'svenska',
     en: 'Swedish',
     android: true,
-    ios: true,
+    ios: false,
   },
   {
     code3: 'syc',

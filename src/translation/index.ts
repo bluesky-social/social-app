@@ -83,7 +83,7 @@ async function attemptTranslation(
     Platform.OS === 'android'
       ? targetLangCodeOriginal.split('-')[0]
       : targetLangCodeOriginal
-  const sourceLangCode =
+  let sourceLangCode =
     Platform.OS === 'android'
       ? sourceLangCodeOriginal?.split('-')[0]
       : sourceLangCodeOriginal
