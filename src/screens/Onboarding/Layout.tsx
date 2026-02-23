@@ -1,8 +1,9 @@
 import {useEffect, useRef, useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useOnboardingDispatch} from '#/state/shell'
 import {useOnboardingInternalState} from '#/screens/Onboarding/state'
@@ -20,8 +21,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons
 import {HEADER_SLOT_SIZE} from '#/components/Layout'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
-import {IS_ANDROID, IS_WEB} from '#/env'
-import {IS_INTERNAL} from '#/env'
+import {IS_ANDROID, IS_INTERNAL, IS_WEB} from '#/env'
 
 const ONBOARDING_COL_WIDTH = 420
 

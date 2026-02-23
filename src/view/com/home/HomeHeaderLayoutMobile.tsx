@@ -1,7 +1,7 @@
 import {type JSX} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'

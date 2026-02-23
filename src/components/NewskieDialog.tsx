@@ -1,8 +1,9 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {differenceInSeconds} from 'date-fns'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -29,7 +30,7 @@ export function NewskieDialog({
   const {_} = useLingui()
   const control = useDialogControl()
 
-  const createdAt = profile.createdAt as string | undefined
+  const createdAt = profile.createdAt
 
   const [now] = useState(() => Date.now())
   const daysOld = useMemo(() => {

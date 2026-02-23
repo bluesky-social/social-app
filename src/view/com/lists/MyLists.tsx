@@ -8,7 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'

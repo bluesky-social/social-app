@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
@@ -94,7 +94,6 @@ export function ExternalGif({
         source={params.source}
         onAccept={load}
       />
-
       <Pressable
         style={[
           {height: 300},

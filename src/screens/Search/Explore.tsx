@@ -5,8 +5,9 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
@@ -350,11 +351,19 @@ export function Explore({
   ])
 
   const topBorder = useMemo(
-    () => ({type: 'topBorder', key: 'top-border'}) as const,
+    () =>
+      ({
+        type: 'topBorder',
+        key: 'top-border',
+      }) as const,
     [],
   )
   const trendingTopicsModule = useMemo(
-    () => ({type: 'trendingTopics', key: 'trending-topics'}) as const,
+    () =>
+      ({
+        type: 'trendingTopics',
+        key: 'trending-topics',
+      }) as const,
     [],
   )
   const suggestedFollowsModule = useMemo(() => {

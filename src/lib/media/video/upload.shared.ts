@@ -1,6 +1,6 @@
 import {type BskyAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 
 import {VIDEO_SERVICE_DID} from '#/lib/constants'
 import {UploadLimitError} from '#/lib/media/video/errors'

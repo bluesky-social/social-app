@@ -1,7 +1,7 @@
 import {memo} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

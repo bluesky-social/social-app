@@ -2,7 +2,7 @@ import {type JSX, useCallback, useRef} from 'react'
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {
   type BottomTabBarProps,
   createBottomTabNavigator,

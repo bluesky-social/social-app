@@ -52,8 +52,9 @@ import {
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 

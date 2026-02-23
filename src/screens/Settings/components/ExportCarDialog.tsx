@@ -1,7 +1,8 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {saveBytesToDisk} from '#/lib/media/manip'

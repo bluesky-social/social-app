@@ -1,8 +1,9 @@
 import {type JSX, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'

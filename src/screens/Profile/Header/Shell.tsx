@@ -10,7 +10,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 

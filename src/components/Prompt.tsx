@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext, useId, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme, type ViewStyleProp, web} from '#/alf'

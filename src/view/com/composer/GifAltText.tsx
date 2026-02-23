@@ -1,7 +1,8 @@
 import {useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'

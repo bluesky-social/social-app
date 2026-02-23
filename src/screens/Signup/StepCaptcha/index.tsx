@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {ActivityIndicator, Platform, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 

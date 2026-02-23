@@ -1,7 +1,8 @@
 import {useState} from 'react'
 import {Alert, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -128,7 +129,7 @@ function getAppIconName(icon: string | false): DynamicAppIcon.IconName {
   if (!icon || icon === 'DEFAULT') {
     return 'default_light'
   } else {
-    return icon as DynamicAppIcon.IconName
+    return icon
   }
 }
 
@@ -150,7 +151,7 @@ function Group({
       values={[value]}
       maxSelections={1}
       onChange={vals => {
-        if (vals[0]) onChange(vals[0] as DynamicAppIcon.IconName)
+        if (vals[0]) onChange(vals[0])
       }}>
       <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
         {children}

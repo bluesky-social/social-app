@@ -1,7 +1,7 @@
 import {Fragment, useMemo} from 'react'
 import {Text as RNText} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {

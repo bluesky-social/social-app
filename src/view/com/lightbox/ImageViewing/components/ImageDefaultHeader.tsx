@@ -8,7 +8,7 @@
 import {StyleSheet, TouchableOpacity, type ViewStyle} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {createHitslop} from '#/lib/constants'

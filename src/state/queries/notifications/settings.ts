@@ -1,5 +1,5 @@
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 import {
   type QueryClient,
   useMutation,

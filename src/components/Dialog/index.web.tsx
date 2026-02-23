@@ -8,7 +8,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'

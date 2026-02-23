@@ -1,6 +1,6 @@
 import {useContext} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'

@@ -6,7 +6,7 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 

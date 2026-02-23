@@ -1,6 +1,7 @@
 import {useMemo} from 'react'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
 import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
