@@ -16,7 +16,11 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
+import {
+  getPostLanguage,
+  getTranslatorLink,
+  isPostInLanguage,
+} from '#/locale/helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -578,10 +582,16 @@ function ExpandedPostDetails({
     [post, langPrefs.primaryLanguage],
   )
 
+  const sourceLanguage = getPostLanguage(post)
+
   const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
-      void translate(post.record.text || '', langPrefs.primaryLanguage)
+      void translate(
+        post.record.text || '',
+        langPrefs.primaryLanguage,
+        sourceLanguage,
+      )
 
       if (
         bsky.dangerousIsType<AppBskyFeedPost.Record>(
@@ -598,7 +608,7 @@ function ExpandedPostDetails({
 
       return false
     },
-    [ax, translate, langPrefs, post],
+    [ax, sourceLanguage, translate, langPrefs, post],
   )
 
   const onHideTranslation = useCallback(

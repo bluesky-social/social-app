@@ -103,7 +103,7 @@ async function attemptTranslation(
     translatedText:
       typeof result.translatedTexts === 'string' ? result.translatedTexts : '',
     targetLanguage: result.targetLanguage,
-    sourceLanguage: result.sourceLanguage,
+    sourceLanguage: result.sourceLanguage ?? sourceLangCode ?? null, // iOS doesn't return the source language
   }
 }
 
