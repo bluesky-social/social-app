@@ -271,7 +271,8 @@ import * as TextField from '#/components/forms/TextField'
 All user-facing strings must be wrapped for translation using Lingui.
 
 ```tsx
-import {msg, Trans, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import {useLingui} from '@lingui/react'
 
 function MyComponent() {
