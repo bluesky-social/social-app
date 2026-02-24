@@ -18,6 +18,19 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Text} from '#/components/Typography'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
+type FlatListItem = {
+  item:
+    | {
+        type: 'header'
+        label: string
+      }
+    | {
+        type: 'item'
+        lang: Language
+      }
+  index: number
+}
+
 export function LanguageSelectDialog({
   titleText,
   subtitleText,
@@ -263,7 +276,7 @@ export function DialogInner({
         contentContainerStyle={[a.gap_0]}
         style={[IS_NATIVE && a.px_lg, web({paddingBottom: 120})]}
         scrollIndicatorInsets={{top: headerHeight}}
-        renderItem={({item, index}) => {
+        renderItem={({item, index}: FlatListItem) => {
           if (item.type === 'header') {
             return (
               <Text
