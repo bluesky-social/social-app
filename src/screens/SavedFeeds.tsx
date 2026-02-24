@@ -520,7 +520,9 @@ function UnpinnedFeedItem({
 }: {
   feed: AppBskyActorDefs.SavedFeed
   currentFeeds: AppBskyActorDefs.SavedFeed[]
-  setCurrentFeeds: React.Dispatch<AppBskyActorDefs.SavedFeed[]>
+  setCurrentFeeds: React.Dispatch<
+    React.SetStateAction<AppBskyActorDefs.SavedFeed[]>
+  >
 }) {
   const {_} = useLingui()
   const t = useTheme()
