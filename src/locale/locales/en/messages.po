@@ -273,11 +273,11 @@ msgstr ""
 msgid "{displayName}'s Starter Pack"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:217
+#: src/screens/SignupQueued.tsx:219
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:223
+#: src/screens/SignupQueued.tsx:225
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr ""
 
@@ -843,9 +843,9 @@ msgstr ""
 msgid "Add account"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:77
-#: src/view/com/composer/GifAltText.tsx:145
-#: src/view/com/composer/GifAltText.tsx:212
+#: src/view/com/composer/GifAltText.tsx:78
+#: src/view/com/composer/GifAltText.tsx:147
+#: src/view/com/composer/GifAltText.tsx:214
 #: src/view/com/composer/photos/Gallery.tsx:171
 #: src/view/com/composer/photos/Gallery.tsx:218
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:94
@@ -1063,7 +1063,7 @@ msgstr ""
 msgid "All friends followed!"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:246
+#: src/components/dialogs/LanguageSelectDialog.tsx:248
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:65
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:100
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:102
@@ -1143,13 +1143,13 @@ msgid "Already signed in as @{0}"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
-#: src/view/com/composer/GifAltText.tsx:101
+#: src/view/com/composer/GifAltText.tsx:102
 #: src/view/com/composer/photos/Gallery.tsx:189
 msgid "ALT"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:55
-#: src/view/com/composer/GifAltText.tsx:155
+#: src/view/com/composer/GifAltText.tsx:157
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:123
 #: src/view/com/composer/videos/SubtitleDialog.tsx:41
 #: src/view/com/composer/videos/SubtitleDialog.tsx:59
@@ -1167,7 +1167,7 @@ msgid "Alt text describes images for blind and low-vision users, and helps give 
 msgstr ""
 
 #. placeholder {0}: i18n.number(MAX_ALT_TEXT)
-#: src/view/com/composer/GifAltText.tsx:180
+#: src/view/com/composer/GifAltText.tsx:182
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:144
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
@@ -1178,7 +1178,7 @@ msgid "An email has been sent to {0}. It includes a confirmation code which you 
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:254
-#: src/components/dialogs/LanguageSelectDialog.tsx:328
+#: src/components/dialogs/LanguageSelectDialog.tsx:330
 msgid "An error has occurred"
 msgstr ""
 
@@ -1904,7 +1904,7 @@ msgstr ""
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:200
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:300
-#: src/components/Menu/index.tsx:353
+#: src/components/Menu/index.tsx:355
 #: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:136
 #: src/components/Prompt.tsx:138
@@ -2126,7 +2126,7 @@ msgstr ""
 msgid "Choose for me"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:190
+#: src/components/dialogs/LanguageSelectDialog.tsx:192
 msgid "Choose languages"
 msgstr ""
 
@@ -2231,7 +2231,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:233
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:239
 #: src/components/dialogs/GifSelect.tsx:270
-#: src/components/dialogs/LanguageSelectDialog.tsx:343
+#: src/components/dialogs/LanguageSelectDialog.tsx:345
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:159
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:168
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:164
@@ -2283,9 +2283,9 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:223
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:229
 #: src/components/dialogs/GifSelect.tsx:264
-#: src/components/dialogs/LanguageSelectDialog.tsx:212
-#: src/components/dialogs/LanguageSelectDialog.tsx:306
-#: src/components/dialogs/LanguageSelectDialog.tsx:338
+#: src/components/dialogs/LanguageSelectDialog.tsx:214
+#: src/components/dialogs/LanguageSelectDialog.tsx:308
+#: src/components/dialogs/LanguageSelectDialog.tsx:340
 #: src/components/verification/VerificationsDialog.tsx:138
 #: src/components/verification/VerifierDialog.tsx:139
 msgid "Close dialog"
@@ -2319,7 +2319,7 @@ msgstr ""
 msgid "Close menu"
 msgstr ""
 
-#: src/components/Menu/index.tsx:347
+#: src/components/Menu/index.tsx:349
 msgid "Close this dialog"
 msgstr ""
 
@@ -2397,11 +2397,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2375
+#: src/view/com/composer/Composer.tsx:2373
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2377
+#: src/view/com/composer/Composer.tsx:2375
 msgid "Compressing video..."
 msgstr ""
 
@@ -3079,7 +3079,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:151
+#: src/view/com/composer/GifAltText.tsx:153
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:119
 msgid "Descriptive alt text"
 msgstr ""
@@ -3204,7 +3204,7 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:375
+#: src/components/Dialog/index.tsx:379
 msgid "Dismiss"
 msgstr ""
 
@@ -3212,7 +3212,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2296
+#: src/view/com/composer/Composer.tsx:2294
 msgid "Dismiss error"
 msgstr ""
 
@@ -3295,7 +3295,7 @@ msgstr ""
 #: src/components/contacts/screens/ViewMatches.tsx:412
 #: src/components/dialogs/BirthDateSettings.tsx:197
 #: src/components/dialogs/BirthDateSettings.tsx:204
-#: src/components/dialogs/LanguageSelectDialog.tsx:311
+#: src/components/dialogs/LanguageSelectDialog.tsx:313
 #: src/components/dialogs/ServerInput.tsx:241
 #: src/components/dialogs/ServerInput.tsx:243
 #: src/components/dms/AfterReportDialog.tsx:143
@@ -3323,7 +3323,7 @@ msgstr ""
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:376
+#: src/components/Dialog/index.tsx:380
 msgid "Double tap to close the dialog"
 msgstr ""
 
@@ -3708,7 +3708,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2395
+#: src/view/com/composer/Composer.tsx:2393
 #: src/view/com/util/error/ErrorScreen.tsx:43
 msgid "Error"
 msgstr ""
@@ -4642,7 +4642,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2400
+#: src/view/com/composer/Composer.tsx:2398
 msgid "GIF uploaded"
 msgstr ""
 
@@ -5379,7 +5379,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2315
+#: src/view/com/composer/Composer.tsx:2313
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -5582,7 +5582,7 @@ msgstr ""
 msgid "Leaving Bluesky"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:156
+#: src/screens/SignupQueued.tsx:158
 msgid "left to go."
 msgstr ""
 
@@ -6753,7 +6753,7 @@ msgid "Off"
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:257
-#: src/components/dialogs/LanguageSelectDialog.tsx:331
+#: src/components/dialogs/LanguageSelectDialog.tsx:333
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
 msgstr ""
@@ -7665,11 +7665,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2389
+#: src/view/com/composer/Composer.tsx:2387
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2391
+#: src/view/com/composer/Composer.tsx:2389
 msgid "Processing video..."
 msgstr ""
 
@@ -7887,7 +7887,7 @@ msgstr ""
 msgid "Recent Searches"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:240
+#: src/components/dialogs/LanguageSelectDialog.tsx:242
 msgid "Recently used"
 msgstr ""
 
@@ -8487,8 +8487,8 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:251
 #: src/screens/SavedFeeds.tsx:120
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:271
-#: src/view/com/composer/GifAltText.tsx:194
-#: src/view/com/composer/GifAltText.tsx:203
+#: src/view/com/composer/GifAltText.tsx:196
+#: src/view/com/composer/GifAltText.tsx:205
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:63
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:76
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:158
@@ -8671,8 +8671,8 @@ msgstr ""
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:223
-#: src/components/dialogs/LanguageSelectDialog.tsx:224
+#: src/components/dialogs/LanguageSelectDialog.tsx:225
+#: src/components/dialogs/LanguageSelectDialog.tsx:226
 msgid "Search languages"
 msgstr ""
 
@@ -8850,7 +8850,7 @@ msgstr ""
 msgid "Select language..."
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:256
+#: src/components/dialogs/LanguageSelectDialog.tsx:258
 msgid "Select languages"
 msgstr ""
 
@@ -10088,12 +10088,12 @@ msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:259
-#: src/components/dialogs/LanguageSelectDialog.tsx:333
+#: src/components/dialogs/LanguageSelectDialog.tsx:335
 #: src/view/com/util/ErrorBoundary.tsx:59
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:131
+#: src/screens/SignupQueued.tsx:133
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr ""
 
@@ -10868,7 +10868,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2382
+#: src/view/com/composer/Composer.tsx:2380
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -10881,7 +10881,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2384
+#: src/view/com/composer/Composer.tsx:2382
 msgid "Uploading video..."
 msgstr ""
 
@@ -11160,7 +11160,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2402
+#: src/view/com/composer/Composer.tsx:2400
 msgid "Video uploaded"
 msgstr ""
 
@@ -11378,7 +11378,7 @@ msgstr ""
 msgid "We don't store your friends' phone numbers or send any messages"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:161
+#: src/screens/SignupQueued.tsx:163
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr ""
 
@@ -11437,7 +11437,7 @@ msgstr ""
 msgid "We were unable to receive the verification due to a connection issue. It may arrive later. If it does, your account will update automatically."
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:165
+#: src/screens/SignupQueued.tsx:167
 msgid "We will let you know when your account is ready."
 msgstr ""
 
@@ -11725,7 +11725,7 @@ msgstr ""
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:158
+#: src/screens/SignupQueued.tsx:160
 msgid "You are in line."
 msgstr ""
 
@@ -12101,7 +12101,7 @@ msgstr ""
 msgid "You'll stay updated with these feeds"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:128
+#: src/screens/SignupQueued.tsx:130
 msgid "You're in line"
 msgstr ""
 
