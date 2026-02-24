@@ -3731,6 +3731,11 @@
   resolved "https://registry.yarnpkg.com/@bsky.app/expo-image-crop-tool/-/expo-image-crop-tool-0.5.0.tgz#4308fbde5c15e6be9122601797bc3d9549c95e31"
   integrity sha512-gmhQr2HWTRFyPO00fn5OmtiEVtikXusHMrN5Zoq26pu1VZX3zVE+aoc668etTqrvsQcm2Qu8fo96k5F3Wu+6wg==
 
+"@bsky.app/expo-translate-text@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@bsky.app/expo-translate-text/-/expo-translate-text-0.2.1.tgz#228265e1c7412be98b7b7eb0c82d57a11b16ddb6"
+  integrity sha512-OoPTMhXnXWatrSXHq0f3+NuoeUyN1jSR9J1NcHQoW6xyMZay7w/A3KrjRLJYAGyO8uyXEbaFb4qMIDMUt0GJaA==
+
 "@bsky.app/react-native-mmkv@2.12.5":
   version "2.12.5"
   resolved "https://registry.yarnpkg.com/@bsky.app/react-native-mmkv/-/react-native-mmkv-2.12.5.tgz#eb17d31a6158c74393f617a1763ac223ff3f83a6"
@@ -11969,11 +11974,6 @@ expo-system-ui@~6.0.9:
   dependencies:
     "@react-native/normalize-colors" "0.81.5"
     debug "^4.3.2"
-
-expo-translate-text@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/expo-translate-text/-/expo-translate-text-0.1.0.tgz#16904f1baac126d5a452b4196495d238dcbbb6af"
-  integrity sha512-zrRJ0Do6Gie12yZYzgD4McQNIvb54pfPsBRegkUSuADec9DrXdxJXvw/OieZ+L4oMQu0Fx/NJDnHGQoaa0CVgA==
 
 expo-updates-interface@~2.0.0:
   version "2.0.0"

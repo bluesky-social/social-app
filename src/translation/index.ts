@@ -1,7 +1,7 @@
 import {useCallback, useSyncExternalStore} from 'react'
 import {Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
-import {type TranslationTaskResult} from 'expo-translate-text/build/ExpoTranslateText.types'
+import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
 import Emitter from 'eventemitter3'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
@@ -64,7 +64,7 @@ function useTranslationState(key: string) {
 }
 
 /**
- * Attempts on-device translation via expo-translate-text.
+ * Attempts on-device translation via @bsky.app/expo-translate-text.
  * Uses a lazy import to avoid crashing if the native module isn't linked into
  * the current build.
  */
@@ -106,7 +106,7 @@ async function attemptTranslation(
   const {onTranslateTask} =
     // Needed in order to type check the dynamically imported module.
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    (await require('expo-translate-text')) as typeof import('expo-translate-text')
+    (await require('@bsky.app/expo-translate-text')) as typeof import('@bsky.app/expo-translate-text')
   const result = await onTranslateTask({
     input,
     targetLangCode,
