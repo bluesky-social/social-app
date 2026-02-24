@@ -1527,7 +1527,7 @@ function ComposerTopBar({
           a.flex_row,
           a.align_center,
           a.gap_xs,
-          IS_LIQUID_GLASS ? [a.px_lg, a.pb_md] : [a.p_sm],
+          IS_LIQUID_GLASS ? [a.px_lg, a.pt_lg, a.pb_md] : [a.p_sm],
         ]}>
         <Button
           label={_(msg`Cancel`)}
