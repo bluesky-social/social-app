@@ -1522,7 +1522,13 @@ function ComposerTopBar({
     <Animated.View
       style={topBarAnimatedStyle}
       layout={native(LinearTransition)}>
-      <View style={[a.flex_row, a.align_center, a.gap_xs, a.p_lg, a.pb_md]}>
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.gap_xs,
+          IS_LIQUID_GLASS ? [a.px_lg, a.pb_md] : [a.p_sm],
+        ]}>
         <Button
           label={_(msg`Cancel`)}
           variant="ghost"
