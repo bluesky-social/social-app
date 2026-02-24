@@ -1,18 +1,15 @@
 import {View} from 'react-native'
-import Animated, {runOnJS, useAnimatedReaction} from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useIsFocused, useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
-import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -31,41 +28,9 @@ export function HomeHeaderLayoutMobile({
   const {_} = useLingui()
   const {headerHeight} = useShellLayout()
   const insets = useSafeAreaInsets()
-  const {headerMode} = useMinimalShellMode()
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
-  const navigation = useNavigation()
-  const isFocused = useIsFocused()
-
-  const updateNativeHeader = useNonReactiveCallback((visible: boolean) => {
-    if (!isFocused) return
-
-    if (visible) {
-      navigation.setOptions({
-        headerShown: false,
-
-        headerTransparent: true,
-        headerEdgeEffects: {top: 'soft'},
-      })
-    } else {
-      navigation.setOptions({
-        headerShown: true,
-        headerTitle: 'Bluesky team',
-
-        headerTransparent: true,
-        headerEdgeEffects: {top: 'soft'},
-      })
-    }
-  })
-
-  useAnimatedReaction(
-    () => headerMode.get() < 0.5,
-    (curr, prev) => {
-      if (prev === curr) return
-      runOnJS(updateNativeHeader)(curr)
-    },
-  )
 
   return (
     <Animated.View
