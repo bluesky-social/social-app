@@ -5,6 +5,12 @@ import {BUNDLE_IDENTIFIER, IS_TESTFLIGHT, RELEASE_VERSION} from '#/env/common'
 
 export * from '#/env/common'
 
+// for some reason Platform.OS === 'ios' AND Platform.Version is undefined in our CI unit tests -sfn
+const iOSMajorVersion =
+  Platform.OS === 'ios' && typeof Platform.Version === 'string'
+    ? parseInt(Platform.Version.split('.')[0], 10)
+    : 0
+
 /**
  * The semver version of the app, specified in our `package.json`.file. On
  * iOs/Android, the native build version is appended to the semver version, so
@@ -41,3 +47,5 @@ export const IS_WEB_FIREFOX: boolean = false
  * Misc
  */
 export const IS_HIGH_DPI: boolean = true
+// ideally we'd use isLiquidGlassAvailable() from expo-glass-effect but checking iOS version is good enough for now
+export const IS_LIQUID_GLASS: boolean = iOSMajorVersion >= 26

@@ -47,3 +47,4 @@ export const IS_WEB_FIREFOX: boolean = /firefox|fxios/i.test(
 export const IS_HIGH_DPI: boolean = window.matchMedia(
   '(min-resolution: 2dppx)',
 ).matches
+export const IS_LIQUID_GLASS: boolean = false
