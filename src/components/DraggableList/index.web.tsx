@@ -88,7 +88,10 @@ export function SortableList<T>({
 
   return (
     <View
-      style={{height: data.length * itemHeight, position: 'relative'}}
+      style={[
+        {height: data.length * itemHeight, position: 'relative'},
+        t.atoms.bg_contrast_25,
+      ]}
       // @ts-expect-error web-only pointer events
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}>
@@ -151,16 +154,18 @@ export function SortableList<T>({
                 top: index * itemHeight,
                 left: 0,
                 right: 0,
-                height: isActive ? itemHeight - 1 : itemHeight,
-                overflow: 'hidden',
-                transform: [
-                  {translateY: isActive ? translationY : offset},
-                  {scale: isActive ? 1.03 : 1},
-                ],
+                height: itemHeight,
+                transform: [{translateY: isActive ? translationY : offset}],
+                scale: isActive ? 1.03 : 1,
                 zIndex: isActive ? 999 : 0,
-                // Only animate non-dragged items shifting into place.
-                transition:
-                  dragState && !isActive ? 'transform 200ms ease' : 'none',
+                boxShadow: isActive ? '0 2px 12px rgba(0,0,0,0.06)' : 'none',
+                // Animate scale/shadow on pickup, and transform for
+                // non-dragged items shifting into place.
+                transition: isActive
+                  ? 'box-shadow 200ms ease, scale 200ms ease'
+                  : dragState
+                    ? 'transform 200ms ease'
+                    : 'none',
               } as any,
             ]}>
             {renderItem(item, dragHandle)}

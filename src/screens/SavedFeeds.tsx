@@ -461,8 +461,7 @@ function PinnedFeedItem({
   }
 
   return (
-    <View
-      style={[a.flex_row, a.border_b, t.atoms.border_contrast_low, t.atoms.bg]}>
+    <View style={[a.flex_row, t.atoms.bg]}>
       {feed.type === 'timeline' ? (
         <FollowingFeedCard />
       ) : (

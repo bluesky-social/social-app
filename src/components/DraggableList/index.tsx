@@ -10,6 +10,7 @@ import Animated, {
   useAnimatedStyle,
   useFrameCallback,
   useSharedValue,
+  withSpring,
   withTiming,
 } from 'react-native-reanimated'
 
@@ -71,6 +72,7 @@ export function SortableList<T>({
   scrollRef,
   scrollOffset,
 }: SortableListProps<T>) {
+  const t = useTheme()
   const state = useSharedValue<DragState>({
     slots: Object.fromEntries(data.map((item, i) => [keyExtractor(item), i])),
     activeKey: '',
@@ -188,7 +190,9 @@ export function SortableList<T>({
   })
 
   return (
-    <Animated.View ref={listRef} style={{height: data.length * itemHeight}}>
+    <Animated.View
+      ref={listRef}
+      style={[{height: data.length * itemHeight}, t.atoms.bg_contrast_25]}>
       {sortedData.map(item => {
         const key = keyExtractor(item)
         return (
@@ -361,16 +365,38 @@ function SortableItem<T>({
     }
     const baseY = mySlot * itemHeight
 
-    // Active item: follow the finger with a slight scale-up.
+    // Active item: follow the finger with a slight scale-up and shadow.
     if (s.activeKey === itemKey) {
       return {
         transform: [
           {translateY: s.dragStartSlot * itemHeight + dragY.get()},
-          {scale: 1.03},
+          {scale: withSpring(1.03)},
         ],
         zIndex: 999,
-        height: itemHeight - 1, // clip bottom border
+        ...(IS_IOS
+          ? {
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 1},
+              shadowOpacity: withSpring(0.08),
+              shadowRadius: withSpring(4),
+            }
+          : {
+              elevation: withSpring(3),
+            }),
       }
+    }
+
+    // Reset for non-active states. Without this, shadow props
+    // set during dragging linger on the native view.
+    const inactive = {
+      ...(IS_IOS
+        ? {
+            shadowOpacity: withSpring(0),
+            shadowRadius: withSpring(0),
+          }
+        : {
+            elevation: withSpring(0),
+          }),
     }
 
     // Another item is being dragged — shift to make room.
@@ -399,9 +425,10 @@ function SortableItem<T>({
       return {
         transform: [
           {translateY: withTiming(baseY + offset, {duration: 200})},
-          {scale: 1},
+          {scale: withSpring(1)},
         ],
         zIndex: 0,
+        ...inactive,
       }
     }
 
@@ -413,12 +440,14 @@ function SortableItem<T>({
       return {
         transform: [{translateY: baseY}, {scale: 1}],
         zIndex: 0,
+        ...inactive,
       }
     }
 
     return {
       transform: [{translateY: withTiming(baseY, {duration: 200})}, {scale: 1}],
       zIndex: 0,
+      ...inactive,
     }
   })
 
@@ -451,7 +480,6 @@ function SortableItem<T>({
           left: 0,
           right: 0,
           height: itemHeight,
-          overflow: 'hidden',
         },
         animatedStyle,
       ]}>
