@@ -2,7 +2,7 @@ import {memo, useCallback} from 'react'
 import {LayoutAnimation} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useTranslate} from '#/lib/hooks/useTranslate'

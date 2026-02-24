@@ -10,8 +10,9 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'

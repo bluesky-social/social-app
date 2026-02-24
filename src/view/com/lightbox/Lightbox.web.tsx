@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'

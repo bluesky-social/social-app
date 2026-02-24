@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {Keyboard, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'

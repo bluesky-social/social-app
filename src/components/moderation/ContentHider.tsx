@@ -6,8 +6,9 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {
   ADULT_CONTENT_LABELS,

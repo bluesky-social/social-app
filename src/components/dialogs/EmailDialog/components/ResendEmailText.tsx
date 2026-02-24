@@ -1,6 +1,7 @@
 import {useState} from 'react'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {atoms as a, type TextStyleProp, useTheme} from '#/alf'

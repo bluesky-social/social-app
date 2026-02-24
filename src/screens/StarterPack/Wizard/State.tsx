@@ -4,7 +4,7 @@ import {
   type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
 } from '@atproto/api'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import * as Toast from '#/view/com/util/Toast'

@@ -1,8 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigationState} from '@react-navigation/native'
 
 import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'

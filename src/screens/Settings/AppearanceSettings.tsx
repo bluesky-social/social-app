@@ -5,8 +5,9 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,
@@ -23,8 +24,7 @@ import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/T
 import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
-import {IS_INTERNAL} from '#/env'
+import {IS_INTERNAL, IS_NATIVE} from '#/env'
 import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>

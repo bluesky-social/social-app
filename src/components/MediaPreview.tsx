@@ -1,7 +1,7 @@
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {isTenorGifUri} from '#/lib/strings/embed-player'
 import {atoms as a, useTheme} from '#/alf'

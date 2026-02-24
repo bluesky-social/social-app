@@ -1,8 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {makeCustomFeedLink, makeProfileLink} from '#/lib/routes/links'

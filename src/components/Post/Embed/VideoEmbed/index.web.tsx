@@ -8,7 +8,7 @@ import {
 } from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'

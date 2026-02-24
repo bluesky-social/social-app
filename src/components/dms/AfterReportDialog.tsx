@@ -1,8 +1,9 @@
 import {memo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 import type React from 'react'
 

@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'

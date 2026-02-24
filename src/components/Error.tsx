@@ -1,6 +1,7 @@
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import {CenteredView} from '#/view/com/util/Views'

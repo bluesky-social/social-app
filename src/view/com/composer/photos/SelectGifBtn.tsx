@@ -1,6 +1,6 @@
 import {useCallback, useRef} from 'react'
 import {Keyboard} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {type Gif} from '#/state/queries/tenor'

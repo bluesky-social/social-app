@@ -40,7 +40,7 @@ import {
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
 import {Image, type ImageErrorEventData} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
 import flattenReactChildren from 'react-keyed-flatten-children'

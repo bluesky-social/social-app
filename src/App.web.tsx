@@ -4,7 +4,7 @@ import './style.css'
 
 import {Fragment, useEffect, useState} from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import * as Sentry from '@sentry/react-native'
 

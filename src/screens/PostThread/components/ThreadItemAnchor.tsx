@@ -7,8 +7,9 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useTranslate} from '#/lib/hooks/useTranslate'
@@ -318,7 +319,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   return (
     <>
       <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
-
       <View
         testID={`postThreadItem-by-${post.author.handle}`}
         style={[

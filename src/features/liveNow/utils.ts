@@ -1,5 +1,5 @@
 import {type I18n} from '@lingui/core'
-import {plural} from '@lingui/macro'
+import {plural} from '@lingui/core/macro'
 import psl from 'psl'
 
 export function displayDuration(i18n: I18n, durationInMinutes: number) {

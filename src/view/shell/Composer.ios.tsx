@@ -6,6 +6,7 @@ import {useComposerState} from '#/state/shell/composer'
 import {ComposePost, useComposerCancelRef} from '#/view/com/composer/Composer'
 import {atoms as a, useTheme} from '#/alf'
 import {SheetCompatProvider as TooltipSheetCompatProvider} from '#/components/Tooltip'
+import {IS_LIQUID_GLASS} from '#/env'
 
 export function Composer({}: {winHeight: number}) {
   const {setFullyExpandedCount} = useDialogStateControlContext()
@@ -32,8 +33,10 @@ export function Composer({}: {winHeight: number}) {
       visible={open}
       presentationStyle="pageSheet"
       animationType="slide"
-      onRequestClose={() => ref.current?.onPressCancel()}>
-      <View style={[t.atoms.bg, a.flex_1]}>
+      onRequestClose={() => ref.current?.onPressCancel()}
+      backdropColor="transparent"
+      style={[!IS_LIQUID_GLASS && a.rounded_sheet]}>
+      <View style={[a.flex_1, a.curve_continuous, t.atoms.bg]}>
         <TooltipSheetCompatProvider>
           <ComposePost
             cancelRef={ref}
@@ -45,7 +48,6 @@ export function Composer({}: {winHeight: number}) {
             text={state?.text}
             imageUris={state?.imageUris}
             videoUri={state?.videoUri}
-            openGallery={state?.openGallery}
           />
         </TooltipSheetCompatProvider>
       </View>

@@ -3,7 +3,7 @@ import {
   launchImageLibraryAsync,
   UIImagePickerPreferredAssetRepresentationMode,
 } from 'expo-image-picker'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 
 import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/view/com/util/Toast'
