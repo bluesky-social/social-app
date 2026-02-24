@@ -82,7 +82,6 @@ export function HomeHeaderLayoutMobile({
         headerMinimalShellTransform,
       ]}
       onLayout={e => {
-        console.log({height: e.nativeEvent.layout.height})
         headerHeight.set(e.nativeEvent.layout.height)
       }}>
       <Layout.Header.Outer noBottomBorder>
