@@ -17,6 +17,7 @@ import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {IS_LIQUID_GLASS} from '#/env'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -39,11 +40,11 @@ export function HomeHeaderLayoutMobile({
         a.z_10,
         t.atoms.bg,
         {
-          paddingTop: insets.top,
           top: 0,
           left: 0,
           right: 0,
         },
+        IS_LIQUID_GLASS && {paddingTop: insets.top},
         headerMinimalShellTransform,
       ]}
       onLayout={e => {
