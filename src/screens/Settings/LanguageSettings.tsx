@@ -8,7 +8,7 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {atoms as a, web} from '#/alf'
@@ -146,9 +146,9 @@ export function LanguageSettingsScreen({}: Props) {
                   )}
                   items={DEDUPED_LANGUAGES.sort(
                     (a, b) =>
-                      a.name.localeCompare(b.name, langPrefs.primaryLanguage), // Localized sort
+                      a.name.localeCompare(b.name, langPrefs.appLanguage), // Localized sort
                   ).map(l => ({
-                    label: languageName(l, langPrefs.appLanguage),
+                    label: l.name, // Pre-generated name using Intl.DisplayNames
                     value: l.code2,
                   }))}
                 />
@@ -180,32 +180,35 @@ export function LanguageSettingsScreen({}: Props) {
                   values={langPrefs.contentLanguages}
                   onChange={setLangPrefs.setContentLanguages}>
                   <Toggle.PanelGroup>
-                    {possibleLanguages.map((language, index) => {
-                      const name = languageName(language, langPrefs.appLanguage)
-                      return (
-                        <Toggle.Item
-                          key={language.code2}
-                          name={language.code2}
-                          label={name}>
-                          {({selected}) => (
-                            <Toggle.Panel
-                              active={selected}
-                              adjacent={index === 0 ? 'trailing' : 'both'}>
-                              <Toggle.Checkbox />
-                              <Toggle.PanelText>{name}</Toggle.PanelText>
-                            </Toggle.Panel>
-                          )}
-                        </Toggle.Item>
+                    {possibleLanguages
+                      .sort(
+                        (a, b) =>
+                          a.name.localeCompare(b.name, langPrefs.appLanguage), // Localized sort
                       )
-                    })}
+                      .map((language, index) => {
+                        const name = language.name // Pre-generated name using Intl.DisplayNames
+                        return (
+                          <Toggle.Item
+                            key={language.code2}
+                            name={language.code2}
+                            label={name}>
+                            {({selected}) => (
+                              <Toggle.Panel
+                                active={selected}
+                                adjacent={index === 0 ? 'trailing' : 'both'}>
+                                <Toggle.Checkbox />
+                                <Toggle.PanelText>{name}</Toggle.PanelText>
+                              </Toggle.Panel>
+                            )}
+                          </Toggle.Item>
+                        )
+                      })}
                     <Button
-                      label={_(msg`Add more languages...`)}
+                      label={_(msg`Add more languages…`)}
                       onPress={contentLanguagePrefsControl.open}>
                       <Toggle.Panel adjacent="leading">
                         <Toggle.PanelIcon icon={PlusIcon} />
-                        <Toggle.PanelText>
-                          Add more languages...
-                        </Toggle.PanelText>
+                        <Toggle.PanelText>Add more languages…</Toggle.PanelText>
                       </Toggle.Panel>
                     </Button>
                   </Toggle.PanelGroup>

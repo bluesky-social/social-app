@@ -23,7 +23,7 @@ export function SearchLanguageDropdown({
   onChange(value: string): void
 }) {
   const {_} = useLingui()
-  const {appLanguage, contentLanguages} = useLanguagePrefs()
+  const {appLanguage, contentLanguages, primaryLanguage} = useLanguagePrefs()
 
   const languages = useMemo(() => {
     return LANGUAGES.filter(
@@ -47,19 +47,19 @@ export function SearchLanguageDropdown({
           al =>
             // skip `ast`, because it uses a 3-letter code which conflicts with `as`
             // it begins with `a` anyway so still is top of the list
-            al.code2 !== 'ast' && al.code2.startsWith(a.value),
+            (al.code2 as string) !== 'ast' && al.code2.startsWith(a.value),
         )
         const bIsCommon = !!APP_LANGUAGES.find(
           al =>
             // ditto
-            al.code2 !== 'ast' && al.code2.startsWith(b.value),
+            (al.code2 as string) !== 'ast' && al.code2.startsWith(b.value),
         )
         if (aIsCommon && !bIsCommon) return -1
         if (bIsCommon && !aIsCommon) return 1
         // fall back to alphabetical
-        return a.label.localeCompare(b.label)
+        return a.label.localeCompare(b.label, primaryLanguage)
       })
-  }, [appLanguage, contentLanguages])
+  }, [appLanguage, contentLanguages, primaryLanguage])
 
   const currentLanguageLabel =
     languages.find(lang => lang.value === value)?.label ?? _(msg`All languages`)

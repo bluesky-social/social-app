@@ -125,10 +125,18 @@ function TranslationLanguageSelect({
         (lang, index, self) =>
           !langPrefs.primaryLanguage.startsWith(lang.code2) && // Don't show the current language as it would be redundant
           index === self.findIndex(t => t.code2 === lang.code2), // Remove dupes (which will happen due to multiple code3 values mapping to the same code2)
-      ).map(l => ({
-        label: languageName(l, langPrefs.appLanguage), // TODO: Use pre-generated localized language name here and elsewhere
-        value: l.code2,
-      })),
+      )
+        .sort(
+          (a, b) =>
+            languageName(a, langPrefs.appLanguage).localeCompare(
+              languageName(b, langPrefs.appLanguage),
+              langPrefs.appLanguage,
+            ), // Localized sort
+        )
+        .map(l => ({
+          label: languageName(l, langPrefs.appLanguage), // The viewer may not be familiar with the source language, so localize the name
+          value: l.code2,
+        })),
     [langPrefs],
   )
 
@@ -155,7 +163,7 @@ function TranslationLanguageSelect({
         }}
       </Select.Trigger>
       <Select.Content
-        label={_(msg`Select language`)}
+        label={_(msg`Select the source language`)}
         renderItem={({label, value}) => (
           <Select.Item value={value} label={label}>
             <Select.ItemIndicator />

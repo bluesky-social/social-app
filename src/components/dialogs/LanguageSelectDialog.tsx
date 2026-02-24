@@ -5,7 +5,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
@@ -287,7 +286,7 @@ export function DialogInner({
             <Toggle.Item
               key={lang.code2}
               name={lang.code2}
-              label={languageName(lang, langPrefs.appLanguage)}
+              label={lang.name}
               style={[
                 t.atoms.border_contrast_low,
                 a.border_b,
@@ -296,7 +295,7 @@ export function DialogInner({
                 a.py_md,
               ]}>
               <Toggle.LabelText style={[a.flex_1]}>
-                {languageName(lang, langPrefs.appLanguage)}
+                {lang.name}
               </Toggle.LabelText>
               <Toggle.Checkbox />
             </Toggle.Item>
