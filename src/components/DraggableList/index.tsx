@@ -16,6 +16,7 @@ import Animated, {
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme, web} from '#/alf'
 import {DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/DotGrid'
+import {IS_IOS} from '#/env'
 
 /**
  * Drag-to-reorder list. Items are absolutely positioned in a fixed-height
@@ -245,6 +246,8 @@ function SortableItem<T>({
   const t = useTheme()
   const playHaptic = useHaptics()
 
+  const lastHapticSlot = useSharedValue(-1)
+
   const gesture = Gesture.Pan()
     .onStart(() => {
       'worklet'
@@ -255,6 +258,7 @@ function SortableItem<T>({
       scrollCompensation.set(0)
       isGestureActive.set(true)
       measureDone.set(false)
+      lastHapticSlot.set(mySlot)
       if (onDragStart) {
         runOnJS(onDragStart)()
       }
@@ -267,7 +271,17 @@ function SortableItem<T>({
       const maxY = (itemCount - 1 - startSlot) * itemHeight
       // Include scroll compensation so the item tracks with auto-scroll.
       const effectiveY = e.translationY + scrollCompensation.get()
-      dragY.set(Math.max(minY, Math.min(effectiveY, maxY)))
+      const clampedY = Math.max(minY, Math.min(effectiveY, maxY))
+      dragY.set(clampedY)
+
+      const currentSlot = Math.round(
+        (startSlot * itemHeight + clampedY) / itemHeight,
+      )
+      const clampedSlot = Math.max(0, Math.min(currentSlot, itemCount - 1))
+      if (IS_IOS && clampedSlot !== lastHapticSlot.get()) {
+        lastHapticSlot.set(clampedSlot)
+        runOnJS(playHaptic)('Light')
+      }
     })
     .onEnd(() => {
       'worklet'
