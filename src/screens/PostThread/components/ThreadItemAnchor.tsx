@@ -647,7 +647,6 @@ function ExpandedPostDetails({
             {translationState.status === 'loading' ? (
               <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                 <Loader size="xs" />
-                <Text> </Text>
                 <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
                   <Trans>Translating…</Trans>
                 </Text>
