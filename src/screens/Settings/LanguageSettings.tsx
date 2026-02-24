@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useDeferredValue, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -60,17 +60,21 @@ export function LanguageSettingsScreen({}: Props) {
     langPrefs.contentLanguages,
   )
 
+  const deferredContentLanguages = useDeferredValue(
+    langPrefs.contentLanguages,
+  )
+
   const possibleLanguages = useMemo(() => {
     return [
       ...new Set([
         ...recentLanguages,
-        ...langPrefs.contentLanguages,
+        ...deferredContentLanguages,
         ...langPrefs.primaryLanguage,
       ]),
     ]
       .map(lang => LANGUAGES.find(l => l.code2 === lang))
       .filter(x => !!x)
-  }, [recentLanguages, langPrefs.contentLanguages, langPrefs.primaryLanguage])
+  }, [recentLanguages, deferredContentLanguages, langPrefs.primaryLanguage])
 
   return (
     <Layout.Screen testID="PreferencesLanguagesScreen">
@@ -165,7 +169,7 @@ export function LanguageSettingsScreen({}: Props) {
                 </Trans>
               </Text>
 
-              {langPrefs.contentLanguages.length === 0 && (
+              {deferredContentLanguages.length === 0 && (
                 <Admonition type="info">
                   <Trans>All languages will be shown in your feeds.</Trans>
                 </Admonition>
