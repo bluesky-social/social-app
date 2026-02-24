@@ -180,7 +180,7 @@ function SubtitleDialogInner({
             {subtitleMissingLanguage && (
               <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
                 <Trans>
-                  Ensure you have selected a language for each subtitle file.
+                  Ensure you have selected a language for each captions file.
                 </Trans>
               </Text>
             )}
@@ -283,7 +283,7 @@ function SubtitleFileRow({
       </View>
 
       <Button
-        label={_(msg`Remove subtitle file`)}
+        label={_(msg`Remove captions file`)}
         size="tiny"
         shape="round"
         variant="outline"
