@@ -1,13 +1,18 @@
 import {interpolate, useAnimatedStyle} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {IS_LIQUID_GLASS} from '#/env'
 
 // Keep these separated so that we only pay for useAnimatedStyle that gets used.
 
 export function useMinimalShellHeaderTransform() {
   const {headerMode} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
+  const {top: topInset} = useSafeAreaInsets()
+
+  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
 
   const headerTransform = useAnimatedStyle(() => {
     const headerModeValue = headerMode.get()
@@ -19,7 +24,7 @@ export function useMinimalShellHeaderTransform() {
           translateY: interpolate(
             headerModeValue,
             [0, 1],
-            [0, -headerHeight.get()],
+            [0, headerPinnedHeight - headerHeight.get()],
           ),
         },
       ],
