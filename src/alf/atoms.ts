@@ -10,10 +10,6 @@ const EXP_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)'
 export const atoms = {
   ...baseAtoms,
 
-  rounded_sheet: {
-    borderRadius: 40,
-  },
-
   h_full_vh: web({
     height: '100vh',
   }),
