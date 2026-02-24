@@ -153,7 +153,7 @@ function TranslationLanguageSelect({
     <Select.Root
       value={sourceLanguage}
       onValueChange={handleChangeTranslationLanguage}>
-      <Select.Trigger hitSlop={10} label={_(msg`Change translation language`)}>
+      <Select.Trigger hitSlop={10} label={_(msg`Change source language`)}>
         {({props}) => {
           return (
             <Text {...props} style={[a.text_xs]}>
