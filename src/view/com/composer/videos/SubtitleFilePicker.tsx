@@ -58,14 +58,14 @@ export function SubtitleFilePicker({
       <View style={a.flex_row}>
         <Button
           onPress={handleClick}
-          label={_(msg`Select subtitle file (.vtt)`)}
+          label={_(msg`Select captions file (.vtt)`)}
           size="large"
           color="primary"
           variant="solid"
           disabled={disabled}>
           <ButtonIcon icon={CCIcon} />
           <ButtonText>
-            <Trans>Select subtitle file (.vtt)</Trans>
+            <Trans>Select captions file (.vtt)</Trans>
           </ButtonText>
         </Button>
       </View>
