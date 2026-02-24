@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useRef} from 'react'
+import {useLayoutEffect, useRef} from 'react'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   type AnimatedRef,

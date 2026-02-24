@@ -437,7 +437,9 @@ function PinnedFeedItem({
 }: {
   feed: AppBskyActorDefs.SavedFeed
   currentFeeds: AppBskyActorDefs.SavedFeed[]
-  setCurrentFeeds: React.Dispatch<AppBskyActorDefs.SavedFeed[]>
+  setCurrentFeeds: React.Dispatch<
+    React.SetStateAction<AppBskyActorDefs.SavedFeed[]>
+  >
   dragHandle?: React.ReactNode
   index?: number
   total?: number
