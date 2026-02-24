@@ -1,5 +1,6 @@
 import {useCallback, useSyncExternalStore} from 'react'
 import {Platform} from 'react-native'
+import {getLocales} from 'expo-localization'
 import {type TranslationTaskResult} from 'expo-translate-text/build/ExpoTranslateText.types'
 import Emitter from 'eventemitter3'
 
@@ -79,14 +80,28 @@ async function attemptTranslation(
   // Note that Android only supports two-character language codes and will fail
   // on other input.
   // https://developers.google.com/android/reference/com/google/mlkit/nl/translate/TranslateLanguage
-  const targetLangCode =
+  let targetLangCode =
     Platform.OS === 'android'
       ? targetLangCodeOriginal.split('-')[0]
       : targetLangCodeOriginal
-  let sourceLangCode =
+  const sourceLangCode =
     Platform.OS === 'android'
       ? sourceLangCodeOriginal?.split('-')[0]
       : sourceLangCodeOriginal
+
+  // Special cases for regional languages
+  if (Platform.OS !== 'android') {
+    const deviceLocales = getLocales()
+    const primaryLanguageTag = deviceLocales[0]?.languageTag
+    switch (targetLangCodeOriginal) {
+      case 'en': // en-US, en-GB
+      case 'es': // es-419, es-ES
+      case 'pt': // pt-BR, pt-PT
+      case 'zh': // zh-Hans-CN, zh-Hant-HK, zh-Hant-TW
+        targetLangCode = primaryLanguageTag
+        break
+    }
+  }
 
   const {onTranslateTask} =
     // Needed in order to type check the dynamically imported module.
