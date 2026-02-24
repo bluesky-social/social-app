@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -11,12 +11,14 @@ export function ProfileCardWithFollowBtn({
   logContext = 'ProfileCard',
   position,
   contextProfileDid,
+  onPress,
 }: {
   profile: AppBskyActorDefs.ProfileView
   noBorder?: boolean
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
   position?: number
   contextProfileDid?: string
+  onPress: (e: GestureResponderEvent) => void
 }) {
   const t = useTheme()
   const moderationOpts = useModerationOpts()
@@ -36,6 +38,7 @@ export function ProfileCardWithFollowBtn({
         logContext={logContext}
         position={position}
         contextProfileDid={contextProfileDid}
+        onPress={onPress}
       />
     </View>
   )

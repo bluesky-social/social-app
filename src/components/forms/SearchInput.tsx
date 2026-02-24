@@ -1,7 +1,6 @@
-import React from 'react'
+import {forwardRef} from 'react'
 import {type TextInput, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {atoms as a, useTheme} from '#/alf'
@@ -19,10 +18,10 @@ type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
   onClearText?: () => void
 }
 
-export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
+export const SearchInput = forwardRef<TextInput, SearchInputProps>(
   function SearchInput({value, label, onClearText, ...rest}, ref) {
     const t = useTheme()
-    const {_} = useLingui()
+    const {t: _} = useLingui()
     const showClear = value && value.length > 0
 
     return (
@@ -31,9 +30,9 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
           <TextField.Icon icon={MagnifyingGlassIcon} />
           <TextField.Input
             inputRef={ref}
-            label={label || _(msg`Search`)}
+            label={label || _`Search`}
             value={value}
-            placeholder={_(msg`Search`)}
+            placeholder={_`Search`}
             returnKeyType="search"
             keyboardAppearance={t.scheme}
             selectTextOnFocus={IS_NATIVE}
@@ -67,7 +66,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
             <Button
               testID="searchTextInputClearBtn"
               onPress={onClearText}
-              label={_(msg`Clear search query`)}
+              label={_`Clear search query`}
               hitSlop={HITSLOP_10}
               size="tiny"
               shape="round"

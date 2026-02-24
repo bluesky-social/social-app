@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, useCallback, useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -6,8 +6,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -68,15 +67,15 @@ let SearchLinkCard = ({
     </Link>
   )
 }
-SearchLinkCard = React.memo(SearchLinkCard)
+SearchLinkCard = memo(SearchLinkCard)
 export {SearchLinkCard}
 
 export function DesktopSearch() {
-  const {_} = useLingui()
+  const {t: _} = useLingui()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
-  const [isActive, setIsActive] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>('')
+  const [isActive, setIsActive] = useState<boolean>(false)
+  const [query, setQuery] = useState<string>('')
   const {data: autocompleteData, isFetching} = useActorAutocompleteQuery(
     query,
     true,
@@ -84,23 +83,23 @@ export function DesktopSearch() {
 
   const moderationOpts = useModerationOpts()
 
-  const onChangeText = React.useCallback((text: string) => {
+  const onChangeText = useCallback((text: string) => {
     setQuery(text)
     setIsActive(text.length > 0)
   }, [])
 
-  const onPressCancelSearch = React.useCallback(() => {
+  const onPressCancelSearch = useCallback(() => {
     setQuery('')
     setIsActive(false)
   }, [setQuery])
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     setIsActive(false)
     if (!query.length) return
     navigation.dispatch(StackActions.push('Search', {q: query}))
   }, [query, navigation])
 
-  const onSearchProfileCardPress = React.useCallback(() => {
+  const onSearchProfileCardPress = useCallback(() => {
     setQuery('')
     setIsActive(false)
   }, [])
@@ -128,7 +127,7 @@ export function DesktopSearch() {
           ) : (
             <>
               <SearchLinkCard
-                label={_(msg`Search for "${query}"`)}
+                label={_`Search for "${query}"`}
                 to={`/search?q=${encodeURIComponent(query)}`}
                 style={
                   (autocompleteData?.length ?? 0) > 0
@@ -136,11 +135,12 @@ export function DesktopSearch() {
                     : undefined
                 }
               />
-              {autocompleteData?.map(item => (
+              {autocompleteData?.map((item, index) => (
                 <SearchProfileCard
                   key={item.did}
                   profile={item}
                   moderationOpts={moderationOpts}
+                  position={index}
                   onPress={onSearchProfileCardPress}
                 />
               ))}

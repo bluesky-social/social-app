@@ -96,7 +96,7 @@ export function SearchScreenShell({
   })
 
   const updateSearchHistory = useCallback(
-    async (item: string) => {
+    (item: string) => {
       if (!item) return
       const newSearchHistory = [
         item,
@@ -108,7 +108,7 @@ export function SearchScreenShell({
   )
 
   const updateProfileHistory = useCallback(
-    async (item: bsky.profile.AnyProfileView) => {
+    (item: bsky.profile.AnyProfileView) => {
       const newAccountHistory = [
         item.did,
         ...accountHistory.filter(p => p !== item.did),
@@ -119,13 +119,13 @@ export function SearchScreenShell({
   )
 
   const deleteSearchHistoryItem = useCallback(
-    async (item: string) => {
+    (item: string) => {
       setTermHistory(termHistory.filter(search => search !== item))
     },
     [termHistory, setTermHistory],
   )
   const deleteProfileHistoryItem = useCallback(
-    async (item: bsky.profile.AnyProfileView) => {
+    (item: bsky.profile.AnyProfileView) => {
       setAccountHistory(accountHistory.filter(p => p !== item.did))
     },
     [accountHistory, setAccountHistory],
@@ -162,7 +162,7 @@ export function SearchScreenShell({
     textInput.current?.focus()
   }, [])
 
-  const onChangeText = useCallback(async (text: string) => {
+  const onChangeText = useCallback((text: string) => {
     scrollToTopWeb()
     setSearchText(text)
   }, [])
@@ -475,7 +475,7 @@ let SearchScreenInner = ({
   useLayoutEffect(() => {
     const newTabIndex = getInitialTabIndex()
     if (newTabIndex !== activeTab) {
-      setActiveTab(newTabIndex)
+      void setActiveTab(newTabIndex)
     }
   }, [tabParam, activeTab, getInitialTabIndex])
 
