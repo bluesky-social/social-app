@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useMemo} from 'react'
+import {memo, useCallback, useMemo} from 'react'
 import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -10,6 +10,7 @@ import {
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -620,12 +621,12 @@ function ExpandedPostDetails({
     [clearTranslation],
   )
 
-  useEffect(() => {
+  useFocusEffect(() => {
     return () => {
       // Clear the translation when leaving the post
       clearTranslation()
     }
-  }, [clearTranslation])
+  })
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
