@@ -8,6 +8,7 @@ import {
   EncodingType,
   getInfoAsync,
   makeDirectoryAsync,
+  moveAsync,
   StorageAccessFramework,
   writeAsStringAsync,
 } from 'expo-file-system/legacy'
@@ -37,7 +38,7 @@ export async function compressIfNeeded(
   })
   const finalImageMovedPath = await moveToPermanentPath(
     resizedImage.path,
-    '.jpg',
+    '.webp',
   )
   const finalImg = {
     ...resizedImage,
@@ -56,25 +57,19 @@ export interface DownloadAndResizeOpts {
 }
 
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
-  let appendExt = 'jpeg'
   try {
-    const urip = new URL(opts.uri)
-    const ext = urip.pathname.split('.').pop()
-    if (ext === 'png') {
-      appendExt = 'png'
-    }
+    new URL(opts.uri)
   } catch (e: any) {
     console.error('Invalid URI', opts.uri, e)
     return
   }
 
-  const path = createPath(appendExt)
+  const path = await downloadImage(opts.uri, String(uuid.v4()), opts.timeout)
 
   try {
-    await downloadImage(opts.uri, path, opts.timeout)
     return await doResize(path, opts)
   } finally {
-    safeDeleteAsync(path)
+    void safeDeleteAsync(path)
   }
 }
 
@@ -84,27 +79,17 @@ export async function shareImageModal({uri}: {uri: string}) {
     return
   }
 
-  // we're currently relying on the fact our CDN only serves jpegs
-  // -prf
-  const imageUri = await downloadImage(uri, createPath('jpg'), 15e3)
-  const imagePath = await moveToPermanentPath(imageUri, '.jpg')
-  safeDeleteAsync(imageUri)
+  const imagePath = await downloadImage(uri, String(uuid.v4()), 15e3)
   await Sharing.shareAsync(imagePath, {
-    mimeType: 'image/jpeg',
-    UTI: 'image/jpeg',
+    mimeType: mimeFromExt(imagePath),
+    UTI: mimeFromExt(imagePath),
   })
 }
 
 const ALBUM_NAME = 'Bluesky'
 
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
-  // download the file to cache
-  // NOTE
-  // assuming JPEG
-  // we're currently relying on the fact our CDN only serves jpegs
-  // -prf
-  const imageUri = await downloadImage(uri, createPath('jpg'), 15e3)
-  const imagePath = await moveToPermanentPath(imageUri, '.jpg')
+  const imagePath = await downloadImage(uri, String(uuid.v4()), 15e3)
 
   // save
   try {
@@ -219,7 +204,7 @@ async function doResize(
       localUri,
       [{resize: newDimensions}],
       {
-        format: SaveFormat.JPEG,
+        format: SaveFormat.WEBP,
         compress: qualityPercentage / 100,
       },
     )
@@ -237,7 +222,7 @@ async function doResize(
       minQualityPercentage = qualityPercentage
       newDataUri = {
         path: normalizePath(resizeRes.uri),
-        mime: 'image/jpeg',
+        mime: 'image/webp',
         size: fileInfo.size,
         width: resizeRes.width,
         height: resizeRes.height,
@@ -402,18 +387,15 @@ export function getResizedDimensions(originalDims: {
   }
 }
 
-function createPath(ext: string) {
-  // cacheDirectory will never be null on native, so the null check here is not necessary except for typescript.
-  // we use a web-only function for downloadAndResize on web
-  return `${cacheDirectory ?? ''}/${uuid.v4()}.${ext}`
-}
-
-async function downloadImage(uri: string, path: string, timeout: number) {
-  const dlResumable = createDownloadResumable(uri, path, {cache: true})
+async function downloadImage(uri: string, destName: string, timeout: number) {
+  // Download to a temp path first, then rename with the correct extension
+  // based on the response's mimeType.
+  const tempPath = `${cacheDirectory ?? ''}/${destName}.bin`
+  const dlResumable = createDownloadResumable(uri, tempPath, {cache: true})
   let timedOut = false
   const to1 = setTimeout(() => {
     timedOut = true
-    dlResumable.cancelAsync()
+    void dlResumable.cancelAsync()
   }, timeout)
 
   const dlRes = await dlResumable.downloadAsync()
@@ -427,5 +409,33 @@ async function downloadImage(uri: string, path: string, timeout: number) {
     }
   }
 
-  return normalizePath(dlRes.uri)
+  const ext = extFromMime(dlRes.mimeType)
+  const finalPath = `${cacheDirectory ?? ''}/${destName}.${ext}`
+  await moveAsync({from: dlRes.uri, to: finalPath})
+
+  return normalizePath(finalPath)
+}
+
+const MIME_TO_EXT: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/webp': 'webp',
+  'image/png': 'png',
+  'image/gif': 'gif',
+}
+
+function extFromMime(mimeType?: string | null): string {
+  return (mimeType && MIME_TO_EXT[mimeType]) || 'jpg'
+}
+
+const EXT_TO_MIME: Record<string, string> = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  webp: 'image/webp',
+  png: 'image/png',
+  gif: 'image/gif',
+}
+
+function mimeFromExt(path: string): string {
+  const ext = path.split('.').pop()
+  return (ext && EXT_TO_MIME[ext]) || 'image/jpeg'
 }

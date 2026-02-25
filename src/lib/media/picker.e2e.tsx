@@ -64,7 +64,8 @@ export async function openCamera(): Promise<PickerImage> {
 export async function openCropper(opts: OpenCropperOptions) {
   const item = await ExpoImageCropTool.openCropperAsync({
     ...opts,
-    format: 'jpeg',
+    // @ts-expect-error update @bsky.app/expo-image-crop-tool to pick up webp support
+    format: 'webp',
   })
 
   return {

@@ -43,6 +43,7 @@ jest.mock('expo-image-manipulator', () => ({
   }),
   SaveFormat: {
     JPEG: 'jpeg',
+    WEBP: 'webp',
   },
 }))
 

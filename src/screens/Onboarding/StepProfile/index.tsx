@@ -114,15 +114,16 @@ export function StepProfile() {
             !asset.mimeType?.startsWith('image/') ||
             (!asset.mimeType?.endsWith('jpeg') &&
               !asset.mimeType?.endsWith('jpg') &&
-              !asset.mimeType?.endsWith('png'))
+              !asset.mimeType?.endsWith('png') &&
+              !asset.mimeType?.endsWith('webp'))
           ) {
-            setError(_(msg`Only .jpg and .png files are supported`))
+            setError(_(msg`Only .jpg, .png, and .webp files are supported`))
             return false
           }
           return true
         })
         .map(image => ({
-          mime: 'image/jpeg',
+          mime: image.mimeType || 'image/jpeg',
           height: image.height,
           width: image.width,
           path: image.uri,

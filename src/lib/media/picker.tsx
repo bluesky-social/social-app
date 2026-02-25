@@ -37,7 +37,8 @@ export async function openCropper(opts: OpenCropperOptions) {
     doneButtonText: t`Done`,
     cancelButtonText: t`Cancel`,
     ...opts,
-    format: 'jpeg',
+    // @ts-expect-error update @bsky.app/expo-image-crop-tool to pick up webp support
+    format: 'webp',
   })
 
   return {

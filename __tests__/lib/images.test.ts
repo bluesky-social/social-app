@@ -12,7 +12,7 @@ const mockResizedImage = {
   size: 100,
   width: 100,
   height: 100,
-  mime: 'image/jpeg',
+  mime: 'image/webp',
 }
 
 describe('downloadAndResize', () => {
@@ -63,7 +63,7 @@ describe('downloadAndResize', () => {
     expect(manipulateAsync).toHaveBeenCalledWith(
       expect.any(String),
       [{resize: {height: opts.height, width: opts.width}}],
-      {format: SaveFormat.JPEG, compress: 1.0},
+      {format: SaveFormat.WEBP, compress: 1.0},
     )
     expect(deleteAsync).toHaveBeenCalledWith(expect.any(String), {
       idempotent: true,

@@ -52,7 +52,7 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
             ref={viewshotRef}
             options={{
               fileName: 'placeholderAvatar',
-              format: 'jpg',
+              format: 'webp',
               quality: 0.8,
               height: 150 * SIZE_MULTIPLIER,
               width: 150 * SIZE_MULTIPLIER,
