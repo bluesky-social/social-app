@@ -1,18 +1,20 @@
 import React from 'react'
 
+import {device, useStorage} from '#/storage'
+
 const Context = React.createContext<{
   // native
   muted: boolean
-  setMuted: React.Dispatch<React.SetStateAction<boolean>>
+  setMuted: (v: boolean) => void
   // web
   volume: number
-  setVolume: React.Dispatch<React.SetStateAction<number>>
+  setVolume: (v: number) => void
 } | null>(null)
 Context.displayName = 'VideoVolumeContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [muted, setMuted] = React.useState(true)
-  const [volume, setVolume] = React.useState(1)
+  const [volume = 1, setVolume] = useStorage(device, ['videoVolume'])
 
   const value = React.useMemo(
     () => ({
