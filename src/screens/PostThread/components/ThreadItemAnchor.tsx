@@ -629,52 +629,50 @@ function ExpandedPostDetails({
   })
 
   return (
-    <View style={[a.gap_md, a.pt_md, a.align_start]}>
-      <BackdatedPostIndicator post={post} />
-      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt, 'dot separated')}
-        </Text>
-        {isRootPost && (
-          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
-        )}
-        {needsTranslation && (
-          <>
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              &middot;
-            </Text>
-
-            {translationState.status === 'loading' ? (
-              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                <Loader size="xs" />
-                <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                  <Trans>Translating…</Trans>
-                </Text>
-              </View>
-            ) : translationState.status === 'success' ? (
-              <InlineLinkText
-                to="#"
-                label={_(msg`Hide translation`)}
-                style={[a.text_sm]}
-                onPress={onHideTranslation}>
-                <Trans>Hide translation</Trans>
-              </InlineLinkText>
-            ) : (
-              <InlineLinkText
-                to={getTranslatorLink(
-                  post.record.text,
-                  langPrefs.primaryLanguage,
-                )}
-                label={_(msg`Translate`)}
-                style={[a.text_sm]}
-                onPress={onTranslatePress}>
-                <Trans>Translate</Trans>
-              </InlineLinkText>
-            )}
-          </>
-        )}
+    <>
+      {needsTranslation && (
+        <View style={[a.gap_md, a.pt_md, a.align_start]}>
+          {translationState.status === 'loading' ? (
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Loader size="xs" />
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                <Trans>Translating…</Trans>
+              </Text>
+            </View>
+          ) : translationState.status === 'success' ? (
+            <InlineLinkText
+              to="#"
+              label={_(msg`Hide translation`)}
+              style={[a.text_sm]}
+              onPress={onHideTranslation}>
+              <Trans>Hide translation</Trans>
+            </InlineLinkText>
+          ) : (
+            <InlineLinkText
+              to={getTranslatorLink(
+                post.record.text,
+                langPrefs.primaryLanguage,
+              )}
+              label={_(msg`Translate`)}
+              style={[a.text_sm]}
+              onPress={onTranslatePress}>
+              <Trans>Translate</Trans>
+            </InlineLinkText>
+          )}
+        </View>
+      )}
+      <View style={[a.gap_md, a.pt_md, a.align_start]}>
+        <BackdatedPostIndicator post={post} />
+        <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            {niceDate(i18n, post.indexedAt, 'dot separated')}
+          </Text>
+          {isRootPost && (
+            <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+          )}
+        </View>
       </View>
-    </View>
+    </>
   )
 }
 
