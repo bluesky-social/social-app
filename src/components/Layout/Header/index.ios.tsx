@@ -1,6 +1,5 @@
 import {useLayoutEffect, useMemo, useState} from 'react'
-import {useWindowDimensions} from 'react-native'
-import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated'
+import {useWindowDimensions, View} from 'react-native'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -33,13 +32,9 @@ function TransparentOuter({children, headerRef}: OuterProps) {
   // bit of a hack - react-native-screens initially renders the header too wide
   // so let's delay showing it until the padding has been applied -sfn
   const isInitialRender = headerWidth === 0 || headerWidth === screenWidth
-  const animatedOpacity = useAnimatedStyle(() => ({
-    opacity: withTiming(isInitialRender ? 0 : 1, {duration: 100}),
-  }))
-
   const headerElement = useMemo(() => {
     return (
-      <Animated.View
+      <View
         ref={headerRef}
         onLayout={evt => setHeaderWidth(evt.nativeEvent.layout.width)}
         style={[
@@ -48,12 +43,12 @@ function TransparentOuter({children, headerRef}: OuterProps) {
           a.align_center,
           a.gap_sm,
           a.px_xs,
-          animatedOpacity,
+          isInitialRender && {opacity: 0},
         ]}>
         {children}
-      </Animated.View>
+      </View>
     )
-  }, [children, headerRef, animatedOpacity])
+  }, [children, headerRef, isInitialRender])
 
   // this is how expo-router handles it
   // https://github.com/expo/expo/blob/main/packages/expo-router/src/views/Screen.tsx#L34
