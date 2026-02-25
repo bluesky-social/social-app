@@ -18,7 +18,7 @@ export function ProfileCardWithFollowBtn({
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
   position?: number
   contextProfileDid?: string
-  onPress: (e: GestureResponderEvent) => void
+  onPress?: (e: GestureResponderEvent) => void
 }) {
   const t = useTheme()
   const moderationOpts = useModerationOpts()

@@ -135,12 +135,11 @@ export function DesktopSearch() {
                     : undefined
                 }
               />
-              {autocompleteData?.map((item, index) => (
+              {autocompleteData?.map(item => (
                 <SearchProfileCard
                   key={item.did}
                   profile={item}
                   moderationOpts={moderationOpts}
-                  position={index}
                   onPress={onSearchProfileCardPress}
                 />
               ))}

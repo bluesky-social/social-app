@@ -63,7 +63,7 @@ export function Default({
   testID?: string
   position?: number
   contextProfileDid?: string
-  onPress: (e: GestureResponderEvent) => void
+  onPress?: (e: GestureResponderEvent) => void
 }) {
   return (
     <Link testID={testID} profile={profile} onPress={onPress}>

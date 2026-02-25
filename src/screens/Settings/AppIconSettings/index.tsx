@@ -129,7 +129,7 @@ function getAppIconName(icon: string | false): DynamicAppIcon.IconName {
   if (!icon || icon === 'DEFAULT') {
     return 'default_light'
   } else {
-    return icon
+    return icon as DynamicAppIcon.IconName
   }
 }
 
@@ -151,7 +151,7 @@ function Group({
       values={[value]}
       maxSelections={1}
       onChange={vals => {
-        if (vals[0]) onChange(vals[0])
+        if (vals[0]) onChange(vals[0] as DynamicAppIcon.IconName)
       }}>
       <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
         {children}
