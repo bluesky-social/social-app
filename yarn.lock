@@ -3427,7 +3427,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.15.4", "@babel/runtime@^7.18.6", "@babel/runtime@^7.20.0", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.15.4", "@babel/runtime@^7.18.6", "@babel/runtime@^7.20.0", "@babel/runtime@^7.8.4":
   version "7.22.10"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.10.tgz#ae3e9631fd947cb7e3610d3e9d8fef5f76696682"
   integrity sha512-21t/fkKLMZI4pqP2wlmsQAWnYW1PDyKyyUV4vCi+B25ydmdaYTKXPwCj0BzSUnZf4seIiYvSA3jcZ3gdsMFkLQ==
@@ -8479,11 +8479,6 @@
     js-yaml "^3.10.0"
     tslib "^2.4.0"
 
-"@zxing/text-encoding@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@zxing/text-encoding/-/text-encoding-0.9.0.tgz#fb50ffabc6c7c66a0c96b4c03e3d9be74864b70b"
-  integrity sha512-U/4aVJ2mxI0aDNI8Uq0wEhMgY+u4CNtEb0om3+y3+niDAsoTCOB33UF0sxpzqzdqXLqmvc+vZyAt4O8pPdfkwA==
-
 abab@^2.0.5, abab@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.6.tgz#41b80f2c871d19686216b82309231cfd3cb3d291"
@@ -11975,13 +11970,6 @@ expo-system-ui@~6.0.9:
     "@react-native/normalize-colors" "0.81.5"
     debug "^4.3.2"
 
-expo-task-manager@~14.0.9:
-  version "14.0.9"
-  resolved "https://registry.yarnpkg.com/expo-task-manager/-/expo-task-manager-14.0.9.tgz#7e410711cf3fd0c465a191916d699c6560c93192"
-  integrity sha512-GKWtXrkedr4XChHfTm5IyTcSfMtCPxzx89y4CMVqKfyfROATibrE/8UI5j7UC/pUOfFoYlQvulQEvECMreYuUA==
-  dependencies:
-    unimodules-app-loader "~6.0.8"
-
 expo-updates-interface@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-2.0.0.tgz#7721cb64c37bcb46b23827b2717ef451a9378749"
@@ -12095,11 +12083,6 @@ express@^4.17.2, express@^4.17.3, express@^4.18.2:
     type-is "~1.6.18"
     utils-merge "1.0.1"
     vary "~1.1.2"
-
-fast-base64-decode@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/fast-base64-decode/-/fast-base64-decode-1.0.0.tgz#b434a0dd7d92b12b43f26819300d2dafb83ee418"
-  integrity sha512-qwaScUgUGBYeDNRnbc/KyllVU88Jk1pRHPStuF/lO7B0/RTRLj7U0lkdTAutlBblY08rwZDff6tNU9cjv6j//Q==
 
 fast-deep-equal@^3, fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
@@ -12965,13 +12948,6 @@ hermes-parser@^0.25.1:
   integrity sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==
   dependencies:
     hermes-estree "0.25.1"
-
-history@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/history/-/history-5.3.0.tgz#1548abaa245ba47992f063a0783db91ef201c73b"
-  integrity sha512-ZqaKwjjrAYUYfLG+htGaIIZ4nioX2L70ZUMIFysS3xvBsSG4x/n1V6TXV3N8ZYNuFGlDirFg32T7B6WOUPDYcQ==
-  dependencies:
-    "@babel/runtime" "^7.7.6"
 
 hls.js@^1.6.2:
   version "1.6.2"
@@ -17368,13 +17344,6 @@ react-native-gesture-handler@~2.28.0:
     hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
 
-react-native-get-random-values@~1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/react-native-get-random-values/-/react-native-get-random-values-1.11.0.tgz#1ca70d1271f4b08af92958803b89dccbda78728d"
-  integrity sha512-4BTbDbRmS7iPdhYLRcz3PGFIpFJBwNZg9g42iwa2P6FOv9vZj/xJc678RZXnLNZzd0qd7Q3CCF6Yd+CU2eoXKQ==
-  dependencies:
-    fast-base64-decode "^1.0.0"
-
 react-native-is-edge-to-edge@1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.7.tgz#28947688f9fafd584e73a4f935ea9603bd9b1939"
@@ -17455,13 +17424,6 @@ react-native-uitextview@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.4.0.tgz#d1b583cc173cec00f4fdd03744cca76c54a12fbb"
   integrity sha512-itm/frzkn/ma3+lwmKn2CkBOXPNo4bL8iVwQwjlzix5gVO59T2+axdfoj/Wi+Ra6F76KzNKxSah+7Y8dYmCHbQ==
-
-react-native-url-polyfill@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-url-polyfill/-/react-native-url-polyfill-1.3.0.tgz#c1763de0f2a8c22cc3e959b654c8790622b6ef6a"
-  integrity sha512-w9JfSkvpqqlix9UjDvJjm1EjSt652zVQ6iwCIj1cVVkwXf4jQhQgTNXY6EVTwuAmUjg6BC6k9RHCBynoLFo3IQ==
-  dependencies:
-    whatwg-url-without-unicode "8.0.0-3"
 
 react-native-uuid@^2.0.3:
   version "2.0.3"
@@ -19782,11 +19744,6 @@ unicode-segmenter@0.14.5, unicode-segmenter@^0.14.0, unicode-segmenter@^0.14.5:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/unicode-segmenter/-/unicode-segmenter-0.14.5.tgz#c658f6dd30de172cdcd94542adc205ba43fb63c6"
   integrity sha512-jHGmj2LUuqDcX3hqY12Ql+uhUTn8huuxNZGq7GvtF6bSybzH3aFgedYu/KTzQStEgt1Ra2F3HxadNXsNjb3m3g==
-
-unimodules-app-loader@~6.0.8:
-  version "6.0.8"
-  resolved "https://registry.yarnpkg.com/unimodules-app-loader/-/unimodules-app-loader-6.0.8.tgz#81c868b726e24b7e37d708fe0117e1869c721cdb"
-  integrity sha512-fqS8QwT/MC/HAmw1NKCHdzsPA6WaLm0dNmoC5Pz6lL+cDGYeYCNdHMO9fy08aL2ZD7cVkNM0pSR/AoNRe+rslA==
 
 unique-string@~2.0.0:
   version "2.0.0"
