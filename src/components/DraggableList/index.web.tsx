@@ -2,7 +2,6 @@ import {useState} from 'react'
 import {View} from 'react-native'
 
 import {useTheme} from '#/alf'
-import {useAutoScroll} from '#/components/DraggableList/useAutoScroll'
 import {DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/DotGrid'
 
 /**
@@ -31,7 +30,6 @@ export function SortableList<T>({
   itemHeight,
 }: SortableListProps<T>) {
   const t = useTheme()
-  const autoScroll = useAutoScroll()
   const [dragState, setDragState] = useState<{
     activeIndex: number
     currentY: number
@@ -54,12 +52,10 @@ export function SortableList<T>({
     if (!dragState) return
     e.preventDefault()
     setDragState(prev => (prev ? {...prev, currentY: e.clientY} : null))
-    autoScroll.move(e.clientY)
   }
 
   const handlePointerUp = () => {
     if (!dragState) return
-    autoScroll.stop()
     const newPos = getNewPosition(dragState)
     if (newPos !== dragState.activeIndex) {
       const next = [...data]
@@ -76,12 +72,6 @@ export function SortableList<T>({
     ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
     setDragState({activeIndex: index, currentY: e.clientY, startY: e.clientY})
     onDragStart?.()
-    autoScroll.start(e.target as HTMLElement, delta => {
-      setDragState(prev =>
-        prev ? {...prev, startY: prev.startY - delta} : null,
-      )
-    })
-    autoScroll.move(e.clientY)
   }
 
   const newPos = dragState ? getNewPosition(dragState) : -1
