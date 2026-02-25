@@ -74,7 +74,7 @@ export function Deactivated() {
       await agent.com.atproto.server.activateAccount()
       await queryClient.resetQueries()
       const account = agentToSessionAccountOrThrow(agent)
-      await resumeSession(account)
+      await resumeSession({...account, active: true, status: undefined})
     } catch (e: any) {
       switch (e.message) {
         case 'Bad token scope':
