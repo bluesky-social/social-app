@@ -1,7 +1,5 @@
 /* global jest */
 import 'react-native-gesture-handler/jestSetup'
-// IMPORTANT: this is what's used in the native runtime
-import 'react-native-url-polyfill/auto'
 
 import {configure} from '@testing-library/react-native'
 
