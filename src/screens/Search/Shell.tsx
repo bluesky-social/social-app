@@ -441,6 +441,7 @@ export function SearchScreenShell({
           flex: 1,
         }}>
         <SearchScreenInner
+          key={params.lang}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           query={query}
