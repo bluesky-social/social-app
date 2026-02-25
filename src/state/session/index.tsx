@@ -284,6 +284,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       type: 'partial-refresh-session',
       accountDid: agent.session!.did,
       patch: {
+        email: data.email,
         emailConfirmed: data.emailConfirmed,
         emailAuthFactor: data.emailAuthFactor,
       },

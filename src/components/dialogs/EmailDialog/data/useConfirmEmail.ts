@@ -1,6 +1,6 @@
 import {useMutation} from '@tanstack/react-query'
 
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, useSession, useSessionApi} from '#/state/session'
 
 export function useConfirmEmail({
   onSuccess,
@@ -8,6 +8,7 @@ export function useConfirmEmail({
 }: {onSuccess?: () => void; onError?: () => void} = {}) {
   const agent = useAgent()
   const {currentAccount} = useSession()
+  const {partialRefreshSession} = useSessionApi()
 
   return useMutation({
     mutationFn: async ({token}: {token: string}) => {
@@ -19,8 +20,7 @@ export function useConfirmEmail({
         email: currentAccount.email.trim(),
         token: token.trim(),
       })
-      // will update session state at root of app
-      await agent.resumeSession(agent.session!)
+      await partialRefreshSession()
     },
     onSuccess,
     onError,
