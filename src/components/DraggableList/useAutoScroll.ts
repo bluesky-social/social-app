@@ -1,4 +1,4 @@
-import {useRef} from 'react'
+import {useEffect, useRef} from 'react'
 
 const AUTO_SCROLL_THRESHOLD = 50
 const AUTO_SCROLL_SPEED = 8
@@ -72,6 +72,12 @@ export function useAutoScroll() {
     scrollableRef.current = null
     onDeltaRef.current = null
   }
+
+  useEffect(() => {
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+    }
+  }, [])
 
   return {start, move, stop}
 }

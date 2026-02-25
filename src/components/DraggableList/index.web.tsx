@@ -94,7 +94,8 @@ export function SortableList<T>({
       ]}
       // @ts-expect-error web-only pointer events
       onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}>
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}>
       {data.map((item, index) => {
         const isActive = dragState?.activeIndex === index
 
