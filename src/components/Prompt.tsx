@@ -61,7 +61,7 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={web([{maxWidth: 320, borderRadius: 36}])}>
+          style={web([{maxWidth: 360, borderRadius: 36}])}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
