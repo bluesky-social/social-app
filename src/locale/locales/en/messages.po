@@ -868,7 +868,7 @@ msgstr ""
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1977
+#: src/view/com/composer/Composer.tsx:1983
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1926,8 +1926,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:306
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1527
-#: src/view/com/composer/Composer.tsx:1539
+#: src/view/com/composer/Composer.tsx:1533
+#: src/view/com/composer/Composer.tsx:1545
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:214
@@ -2331,7 +2331,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1536
+#: src/view/com/composer/Composer.tsx:1542
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2397,11 +2397,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2373
+#: src/view/com/composer/Composer.tsx:2379
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2375
+#: src/view/com/composer/Composer.tsx:2381
 msgid "Compressing video..."
 msgstr ""
 
@@ -3121,6 +3121,10 @@ msgstr ""
 msgid "Disable 2FA"
 msgstr ""
 
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
+msgid "Disable captions"
+msgstr "Disable captions"
+
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:158
 msgid "Disable email 2FA"
 msgstr ""
@@ -3140,10 +3144,6 @@ msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:463
 msgid "Disable replies entirely"
-msgstr ""
-
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
-msgid "Disable subtitles"
 msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
@@ -3212,7 +3212,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2294
+#: src/view/com/composer/Composer.tsx:2300
 msgid "Dismiss error"
 msgstr ""
 
@@ -3584,6 +3584,10 @@ msgstr ""
 msgid "Enable adult content"
 msgstr ""
 
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:406
+msgid "Enable captions"
+msgstr "Enable captions"
+
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:93
 msgid "Enable email 2FA"
 msgstr ""
@@ -3611,10 +3615,6 @@ msgstr ""
 msgid "Enable quote posts of this post"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:406
-msgid "Enable subtitles"
-msgstr ""
-
 #: src/components/dialogs/EmbedConsent.tsx:90
 msgid "Enable this source only"
 msgstr ""
@@ -3640,8 +3640,8 @@ msgid "End of feed"
 msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:182
-msgid "Ensure you have selected a language for each subtitle file."
-msgstr ""
+msgid "Ensure you have selected a language for each caption file."
+msgstr "Ensure you have selected a language for each caption file."
 
 #: src/components/contacts/screens/VerifyNumber.tsx:231
 msgid "Enter 6-digit code that was sent to your phone number"
@@ -3708,7 +3708,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2393
+#: src/view/com/composer/Composer.tsx:2399
 #: src/view/com/util/error/ErrorScreen.tsx:43
 msgid "Error"
 msgstr ""
@@ -4642,7 +4642,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2398
+#: src/view/com/composer/Composer.tsx:2404
 msgid "GIF uploaded"
 msgstr ""
 
@@ -5379,7 +5379,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2313
+#: src/view/com/composer/Composer.tsx:2319
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -6869,7 +6869,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1962
+#: src/view/com/composer/Composer.tsx:1968
 msgid "Open emoji picker"
 msgstr ""
 
@@ -6982,7 +6982,7 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1963
+#: src/view/com/composer/Composer.tsx:1969
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -7471,7 +7471,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1611
+#: src/view/com/composer/Composer.tsx:1617
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -7491,7 +7491,7 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1609
+#: src/view/com/composer/Composer.tsx:1615
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -7665,11 +7665,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2387
+#: src/view/com/composer/Composer.tsx:2393
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2389
+#: src/view/com/composer/Composer.tsx:2395
 msgid "Processing video..."
 msgstr ""
 
@@ -7711,22 +7711,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1594
+#: src/view/com/composer/Composer.tsx:1600
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1593
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1572
+#: src/view/com/composer/Composer.tsx:1578
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1579
+#: src/view/com/composer/Composer.tsx:1585
 msgid "Publish reply"
 msgstr ""
 
@@ -7960,6 +7960,10 @@ msgstr ""
 msgid "Remove Banner"
 msgstr ""
 
+#: src/view/com/composer/videos/SubtitleDialog.tsx:286
+msgid "Remove caption file"
+msgstr "Remove caption file"
+
 #: src/screens/Messages/components/MessageInputEmbed.tsx:212
 msgid "Remove embed"
 msgstr ""
@@ -8020,10 +8024,6 @@ msgstr ""
 #: src/components/PostControls/RepostButton.tsx:153
 #: src/components/PostControls/RepostButton.tsx:163
 msgid "Remove repost"
-msgstr ""
-
-#: src/view/com/composer/videos/SubtitleDialog.tsx:286
-msgid "Remove subtitle file"
 msgstr ""
 
 #: src/components/contacts/screens/ViewMatches.tsx:500
@@ -8149,7 +8149,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1607
+#: src/view/com/composer/Composer.tsx:1613
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -8806,6 +8806,11 @@ msgstr ""
 msgid "Select app language"
 msgstr ""
 
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:61
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:68
+msgid "Select caption file (.vtt)"
+msgstr "Select caption file (.vtt)"
+
 #: src/screens/Settings/LanguageSettings.tsx:176
 #: src/screens/Settings/LanguageSettings.tsx:214
 msgid "Select content languages"
@@ -8864,11 +8869,6 @@ msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:135
 msgid "Select primary language"
-msgstr ""
-
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:61
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:68
-msgid "Select subtitle file (.vtt)"
 msgstr ""
 
 #: src/components/InternationalPhoneCodeSelect.tsx:68
@@ -10868,7 +10868,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2380
+#: src/view/com/composer/Composer.tsx:2386
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -10881,7 +10881,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2382
+#: src/view/com/composer/Composer.tsx:2388
 msgid "Uploading video..."
 msgstr ""
 
@@ -11160,7 +11160,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2400
+#: src/view/com/composer/Composer.tsx:2406
 msgid "Video uploaded"
 msgstr ""
 
