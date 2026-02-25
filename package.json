@@ -220,7 +220,7 @@
     "react-native-screens": "^4.19.0",
     "react-native-svg": "15.12.1",
     "react-native-uitextview": "^1.4.0",
-    "react-native-url-polyfill": "^1.3.0",
+    "react-native-url-polyfill": "^3.0.0",
     "react-native-uuid": "^2.0.3",
     "react-native-view-shot": "^4.0.3",
     "react-native-web": "^0.21.0",

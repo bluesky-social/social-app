@@ -17456,10 +17456,10 @@ react-native-uitextview@^1.4.0:
   resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.4.0.tgz#d1b583cc173cec00f4fdd03744cca76c54a12fbb"
   integrity sha512-itm/frzkn/ma3+lwmKn2CkBOXPNo4bL8iVwQwjlzix5gVO59T2+axdfoj/Wi+Ra6F76KzNKxSah+7Y8dYmCHbQ==
 
-react-native-url-polyfill@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-url-polyfill/-/react-native-url-polyfill-1.3.0.tgz#c1763de0f2a8c22cc3e959b654c8790622b6ef6a"
-  integrity sha512-w9JfSkvpqqlix9UjDvJjm1EjSt652zVQ6iwCIj1cVVkwXf4jQhQgTNXY6EVTwuAmUjg6BC6k9RHCBynoLFo3IQ==
+react-native-url-polyfill@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-url-polyfill/-/react-native-url-polyfill-3.0.0.tgz#16b809c35d45f7d4cf968967bc35ab73b7542826"
+  integrity sha512-aA5CiuUCUb/lbrliVCJ6lZ17/RpNJzvTO/C7gC/YmDQhTUoRD5q5HlJfwLWcxz4VgAhHwXKzhxH+wUN24tAdqg==
   dependencies:
     whatwg-url-without-unicode "8.0.0-3"
 
