@@ -12,9 +12,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -49,6 +47,23 @@ import {SearchLanguageDropdown} from './components/SearchLanguageDropdown'
 import {Explore} from './Explore'
 import {SearchResults} from './SearchResults'
 
+type TabParam = 'user' | 'profile' | 'feed' | 'latest'
+
+// Map tab parameter to tab index
+function getTabIndex(tabParam?: TabParam) {
+  switch (tabParam) {
+    case 'feed':
+      return 3 // Feeds tab
+    case 'user':
+    case 'profile':
+      return 2 // People tab
+    case 'latest':
+      return 1 // Latest tab
+    default:
+      return 0 // Top tab
+  }
+}
+
 export function SearchScreenShell({
   queryParam,
   testID,
@@ -69,10 +84,14 @@ export function SearchScreenShell({
   const navigation = useNavigation<NavigationProp>()
   const route = useRoute()
   const textInput = useRef<TextInput>(null)
-  const {_} = useLingui()
+  const {t: _} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
+
+  // Get tab parameter from route params
+  const tabParam = (route.params as {q?: string; tab?: TabParam})?.tab
+  const [activeTab, setActiveTab] = useState(() => getTabIndex(tabParam))
 
   // Query terms
   const [searchText, setSearchText] = useState<string>(queryParam)
@@ -96,7 +115,7 @@ export function SearchScreenShell({
   })
 
   const updateSearchHistory = useCallback(
-    async (item: string) => {
+    (item: string) => {
       if (!item) return
       const newSearchHistory = [
         item,
@@ -108,7 +127,7 @@ export function SearchScreenShell({
   )
 
   const updateProfileHistory = useCallback(
-    async (item: bsky.profile.AnyProfileView) => {
+    (item: bsky.profile.AnyProfileView) => {
       const newAccountHistory = [
         item.did,
         ...accountHistory.filter(p => p !== item.did),
@@ -119,13 +138,13 @@ export function SearchScreenShell({
   )
 
   const deleteSearchHistoryItem = useCallback(
-    async (item: string) => {
+    (item: string) => {
       setTermHistory(termHistory.filter(search => search !== item))
     },
     [termHistory, setTermHistory],
   )
   const deleteProfileHistoryItem = useCallback(
-    async (item: bsky.profile.AnyProfileView) => {
+    (item: bsky.profile.AnyProfileView) => {
       setAccountHistory(accountHistory.filter(p => p !== item.did))
     },
     [accountHistory, setAccountHistory],
@@ -162,7 +181,7 @@ export function SearchScreenShell({
     textInput.current?.focus()
   }, [])
 
-  const onChangeText = useCallback(async (text: string) => {
+  const onChangeText = useCallback((text: string) => {
     scrollToTopWeb()
     setSearchText(text)
   }, [])
@@ -277,7 +296,7 @@ export function SearchScreenShell({
   }, [setShowAutocomplete])
 
   const focusSearchInput = useCallback(
-    (tab?: 'user' | 'profile' | 'feed') => {
+    (tab?: TabParam) => {
       textInput.current?.focus()
 
       // If a tab is specified, set the tab parameter
@@ -350,15 +369,14 @@ export function SearchScreenShell({
                     onClearText={onPressClearQuery}
                     onSubmitEditing={onSubmit}
                     placeholder={
-                      inputPlaceholder ??
-                      _(msg`Search for posts, users, or feeds`)
+                      inputPlaceholder ?? _`Search for posts, users, or feeds`
                     }
                     hitSlop={{...HITSLOP_20, top: 0}}
                   />
                 </View>
                 {showAutocomplete && (
                   <Button
-                    label={_(msg`Cancel search`)}
+                    label={_`Cancel search`}
                     size="large"
                     variant="ghost"
                     color="secondary"
@@ -423,6 +441,8 @@ export function SearchScreenShell({
           flex: 1,
         }}>
         <SearchScreenInner
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
           query={query}
           queryWithParams={queryWithParams}
           headerHeight={headerHeight}
@@ -434,11 +454,15 @@ export function SearchScreenShell({
 }
 
 let SearchScreenInner = ({
+  activeTab,
+  setActiveTab,
   query,
   queryWithParams,
   headerHeight,
   focusSearchInput,
 }: {
+  activeTab: number
+  setActiveTab: React.Dispatch<React.SetStateAction<number>>
   query: string
   queryWithParams: string
   headerHeight: number
@@ -448,43 +472,13 @@ let SearchScreenInner = ({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
-  const route = useRoute()
-
-  // Get tab parameter from route params
-  const tabParam = (
-    route.params as {q?: string; tab?: 'user' | 'profile' | 'feed'}
-  )?.tab
-
-  // Map tab parameter to tab index
-  const getInitialTabIndex = useCallback(() => {
-    if (!tabParam) return 0
-    switch (tabParam) {
-      case 'user':
-      case 'profile':
-        return 2 // People tab
-      case 'feed':
-        return 3 // Feeds tab
-      default:
-        return 0
-    }
-  }, [tabParam])
-
-  const [activeTab, setActiveTab] = useState(getInitialTabIndex())
-
-  // Update activeTab when tabParam changes
-  useLayoutEffect(() => {
-    const newTabIndex = getInitialTabIndex()
-    if (newTabIndex !== activeTab) {
-      setActiveTab(newTabIndex)
-    }
-  }, [tabParam, activeTab, getInitialTabIndex])
 
   const onPageSelected = useCallback(
     (index: number) => {
       setMinimalShellMode(false)
       setActiveTab(index)
     },
-    [setMinimalShellMode],
+    [setActiveTab, setMinimalShellMode],
   )
 
   return queryWithParams ? (
