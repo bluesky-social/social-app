@@ -43,14 +43,14 @@ let SearchResults = ({
   headerHeight: number
   initialPage?: number
 }): React.ReactNode => {
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
 
   const sections = useMemo(() => {
     if (!queryWithParams) return []
     const noParams = queryWithParams === query
     return [
       {
-        title: _`Top`,
+        title: l`Top`,
         component: (
           <SearchScreenPostResults
             query={queryWithParams}
@@ -60,7 +60,7 @@ let SearchResults = ({
         ),
       },
       {
-        title: _`Latest`,
+        title: l`Latest`,
         component: (
           <SearchScreenPostResults
             query={queryWithParams}
@@ -70,13 +70,13 @@ let SearchResults = ({
         ),
       },
       noParams && {
-        title: _`People`,
+        title: l`People`,
         component: (
           <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
       },
       noParams && {
-        title: _`Feeds`,
+        title: l`Feeds`,
         component: (
           <SearchScreenFeedsResults query={query} active={activeTab === 3} />
         ),
@@ -85,7 +85,7 @@ let SearchResults = ({
       title: string
       component: React.ReactNode
     }[]
-  }, [_, query, queryWithParams, activeTab])
+  }, [l, query, queryWithParams, activeTab])
 
   return (
     <Pager
@@ -166,7 +166,7 @@ function NoResultsText({
   query: string
 }) {
   const t = useTheme()
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <>
@@ -182,9 +182,7 @@ function NoResultsText({
         <Trans context="english-only-resource">
           Try a different search term, or{' '}
           <InlineLinkText
-            // New syntax with @lingui/react/macro v5
-            // eslint-disable-next-line bsky-internal/lingui-msg-rule
-            label={_({
+            label={l({
               message: 'read about how to use search filters',
               context: 'english-only-resource',
             })}
@@ -220,7 +218,7 @@ let SearchScreenPostResults = ({
   active: boolean
 }): React.ReactNode => {
   const ax = useAnalytics()
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
   const trackPostView = usePostViewTracking('SearchResults')
@@ -306,15 +304,15 @@ let SearchScreenPostResults = ({
 
   if (!hasSession) {
     return (
-      <SearchError title={_`Search is currently unavailable when logged out`}>
+      <SearchError title={l`Search is currently unavailable when logged out`}>
         <Text style={[a.text_md, a.text_center, a.leading_snug]}>
           <Trans>
-            <InlineLinkText label={_`Sign in`} to="#" onPress={showSignIn}>
+            <InlineLinkText label={l`Sign in`} to="#" onPress={showSignIn}>
               Sign in
             </InlineLinkText>
             <Text style={t.atoms.text_contrast_medium}> or </Text>
             <InlineLinkText
-              label={_`Create an account`}
+              label={l`Create an account`}
               to={'#'}
               onPress={showCreateAccount}>
               create an account
@@ -332,7 +330,7 @@ let SearchScreenPostResults = ({
 
   return error ? (
     <EmptyState
-      messageText={_`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
+      messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
       error={cleanError(error)}
     />
   ) : (
@@ -419,7 +417,7 @@ let SearchScreenUserResults = ({
   active: boolean
 }): React.ReactNode => {
   const ax = useAnalytics()
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
   const {hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
 
@@ -466,7 +464,7 @@ let SearchScreenUserResults = ({
   if (error) {
     return (
       <EmptyState
-        messageText={_`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
+        messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
         error={error.toString()}
       />
     )

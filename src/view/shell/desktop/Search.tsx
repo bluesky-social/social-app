@@ -71,7 +71,7 @@ SearchLinkCard = memo(SearchLinkCard)
 export {SearchLinkCard}
 
 export function DesktopSearch() {
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const [isActive, setIsActive] = useState<boolean>(false)
@@ -127,7 +127,7 @@ export function DesktopSearch() {
           ) : (
             <>
               <SearchLinkCard
-                label={_`Search for "${query}"`}
+                label={l`Search for "${query}"`}
                 to={`/search?q=${encodeURIComponent(query)}`}
                 style={
                   (autocompleteData?.length ?? 0) > 0

@@ -21,7 +21,7 @@ type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
 export const SearchInput = forwardRef<TextInput, SearchInputProps>(
   function SearchInput({value, label, onClearText, ...rest}, ref) {
     const t = useTheme()
-    const {t: _} = useLingui()
+    const {t: l} = useLingui()
     const showClear = value && value.length > 0
 
     return (
@@ -30,9 +30,9 @@ export const SearchInput = forwardRef<TextInput, SearchInputProps>(
           <TextField.Icon icon={MagnifyingGlassIcon} />
           <TextField.Input
             inputRef={ref}
-            label={label || _`Search`}
+            label={label || l`Search`}
             value={value}
-            placeholder={_`Search`}
+            placeholder={l`Search`}
             returnKeyType="search"
             keyboardAppearance={t.scheme}
             selectTextOnFocus={IS_NATIVE}
@@ -66,7 +66,7 @@ export const SearchInput = forwardRef<TextInput, SearchInputProps>(
             <Button
               testID="searchTextInputClearBtn"
               onPress={onClearText}
-              label={_`Clear search query`}
+              label={l`Clear search query`}
               hitSlop={HITSLOP_10}
               size="tiny"
               shape="round"

@@ -36,7 +36,7 @@ export function SearchHistory({
   onRemoveProfileClick: (profile: bsky.profile.AnyProfileView) => void
 }) {
   const ax = useAnalytics()
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
 
   return (
@@ -103,7 +103,7 @@ export function SearchHistory({
                   <Text style={[a.text_md]}>{historyItem}</Text>
                 </Pressable>
                 <Button
-                  label={_`Remove ${historyItem}`}
+                  label={l`Remove ${historyItem}`}
                   onPress={() => onRemoveItemClick(historyItem)}
                   size="small"
                   variant="ghost"
@@ -131,7 +131,7 @@ function RecentProfileItem({
   onPress: () => void
   onRemove: () => void
 }) {
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
   const width = 80
 
   const moderation = moderateProfile(profile, moderationOpts)
@@ -176,7 +176,7 @@ function RecentProfileItem({
         </View>
       </Link>
       <Button
-        label={_`Remove profile`}
+        label={l`Remove profile`}
         hitSlop={createHitslop(6)}
         size="tiny"
         variant="outline"

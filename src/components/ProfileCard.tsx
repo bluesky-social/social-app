@@ -136,11 +136,11 @@ export function Link({
 }: {
   profile: bsky.profile.AnyProfileView
 } & Omit<LinkProps, 'to' | 'label'>) {
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <InternalLink
-      label={_`View ${
+      label={l`View ${
         profile.displayName || sanitizeHandle(profile.handle)
       }’s profile`}
       to={{
@@ -488,7 +488,7 @@ export function FollowButtonInner({
   contextProfileDid,
   ...rest
 }: FollowButtonProps) {
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
   const profile = useProfileShadow(profileUnshadowed)
   const moderation = moderateProfile(profile, moderationOpts)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -505,7 +505,7 @@ export function FollowButtonInner({
     try {
       await queueFollow()
       Toast.show(
-        _`Following ${sanitizeDisplayName(
+        l`Following ${sanitizeDisplayName(
           profile.displayName || profile.handle,
           moderation.ui('displayName'),
         )}`,
@@ -515,7 +515,7 @@ export function FollowButtonInner({
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(_`An issue occurred, please try again.`, 'xmark')
+        Toast.show(l`An issue occurred, please try again.`, 'xmark')
       }
     }
   }
@@ -526,7 +526,7 @@ export function FollowButtonInner({
     try {
       await queueUnfollow()
       Toast.show(
-        _`No longer following ${sanitizeDisplayName(
+        l`No longer following ${sanitizeDisplayName(
           profile.displayName || profile.handle,
           moderation.ui('displayName'),
         )}`,
@@ -535,27 +535,21 @@ export function FollowButtonInner({
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(_`An issue occurred, please try again.`, 'xmark')
+        Toast.show(l`An issue occurred, please try again.`, 'xmark')
       }
     }
   }
 
-  // New syntax with @lingui/react/macro v5
-  // eslint-disable-next-line bsky-internal/lingui-msg-rule
-  const unfollowLabel = _({
+  const unfollowLabel = l({
     message: 'Following',
     comment: 'User is following this account, click to unfollow',
   })
   const followLabel = profile.viewer?.followedBy
-    ? // New syntax with @lingui/react/macro v5
-      // eslint-disable-next-line bsky-internal/lingui-msg-rule
-      _({
+    ? l({
         message: 'Follow back',
         comment: 'User is not following this account, click to follow back',
       })
-    : // New syntax with @lingui/react/macro v5
-      // eslint-disable-next-line bsky-internal/lingui-msg-rule
-      _({
+    : l({
         message: 'Follow',
         comment: 'User is not following this account, click to follow',
       })

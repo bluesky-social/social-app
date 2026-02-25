@@ -277,7 +277,7 @@ function SaveButtonInner({
   pin?: boolean
   text?: boolean
 } & Partial<ButtonProps>) {
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {isPending: isAddSavedFeedPending, mutateAsync: saveFeeds} =
     useAddSavedFeedsMutation()
@@ -310,15 +310,13 @@ function SaveButtonInner({
             },
           ])
         }
-        // New syntax with @lingui/react/macro v5
-        // eslint-disable-next-line bsky-internal/lingui-msg-rule
-        Toast.show(_({message: 'Feeds updated!', context: 'toast'}))
+        Toast.show(l({message: 'Feeds updated!', context: 'toast'}))
       } catch (err: any) {
         logger.error(err, {message: `FeedCard: failed to update feeds`, pin})
-        Toast.show(_`Failed to update feeds`, 'xmark')
+        Toast.show(l`Failed to update feeds`, 'xmark')
       }
     },
-    [_, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
+    [l, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
   )
 
   const onPromptRemoveFeed = useCallback(
@@ -335,7 +333,7 @@ function SaveButtonInner({
     <>
       <Button
         disabled={isPending}
-        label={_`Add this feed to your feeds`}
+        label={l`Add this feed to your feeds`}
         size="small"
         variant="solid"
         color={savedFeedConfig ? 'secondary' : 'primary'}
@@ -370,12 +368,12 @@ function SaveButtonInner({
 
       <Prompt.Basic
         control={removePromptControl}
-        title={_`Remove from your feeds?`}
-        description={_`Are you sure you want to remove this from your feeds?`}
+        title={l`Remove from your feeds?`}
+        description={l`Are you sure you want to remove this from your feeds?`}
         onConfirm={(e: GestureResponderEvent) => {
           void toggleSave(e)
         }}
-        confirmButtonCta={_`Remove`}
+        confirmButtonCta={l`Remove`}
         confirmButtonColor="negative"
       />
     </>
