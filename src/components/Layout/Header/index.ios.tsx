@@ -42,7 +42,10 @@ function TransparentOuter({children, headerRef}: OuterProps) {
           a.flex_row,
           a.align_center,
           a.gap_sm,
-          a.px_xs,
+          // built-in padding, but slightly more on right than left,
+          // so compensate for that. this is because we're using
+          // headerRightItems
+          a.pl_xs,
           isInitialRender && {opacity: 0},
         ]}>
         {children}
