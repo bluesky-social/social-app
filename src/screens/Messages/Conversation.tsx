@@ -42,7 +42,7 @@ import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
-import {IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -86,7 +86,10 @@ export function MessagesConversationScreenInner({route}: Props) {
   )
 
   return (
-    <Layout.Screen testID="convoScreen" style={web([{minHeight: 0}, a.flex_1])}>
+    <Layout.Screen
+      testID="convoScreen"
+      style={web([{minHeight: 0}, a.flex_1])}
+      noInsetTop={IS_LIQUID_GLASS}>
       <ConvoProvider key={convoId} convoId={convoId}>
         <Inner />
       </ConvoProvider>
