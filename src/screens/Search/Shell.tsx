@@ -84,7 +84,7 @@ export function SearchScreenShell({
   const navigation = useNavigation<NavigationProp>()
   const route = useRoute()
   const textInput = useRef<TextInput>(null)
-  const {t: _} = useLingui()
+  const {t: l} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
@@ -369,14 +369,14 @@ export function SearchScreenShell({
                     onClearText={onPressClearQuery}
                     onSubmitEditing={onSubmit}
                     placeholder={
-                      inputPlaceholder ?? _`Search for posts, users, or feeds`
+                      inputPlaceholder ?? l`Search for posts, users, or feeds`
                     }
                     hitSlop={{...HITSLOP_20, top: 0}}
                   />
                 </View>
                 {showAutocomplete && (
                   <Button
-                    label={_`Cancel search`}
+                    label={l`Cancel search`}
                     size="large"
                     variant="ghost"
                     color="secondary"
