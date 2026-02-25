@@ -40,6 +40,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
@@ -64,6 +65,7 @@ export function SearchScreenShell({
   inputPlaceholder?: string
   isExplore?: boolean
 }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
@@ -206,9 +208,15 @@ export function SearchScreenShell({
     }
   }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
 
-  const onSubmit = useCallback(() => {
-    navigateToItem(searchText)
-  }, [navigateToItem, searchText])
+  const onSubmit = useCallback(
+    (source: 'typed' | 'autocomplete') => () => {
+      ax.metric('search:query', {
+        source,
+      })
+      navigateToItem(searchText)
+    },
+    [ax, navigateToItem, searchText],
+  )
 
   const onAutocompleteResultPress = useCallback(() => {
     if (IS_WEB) {
@@ -348,7 +356,7 @@ export function SearchScreenShell({
                     onFocus={onSearchInputFocus}
                     onChangeText={onChangeText}
                     onClearText={onPressClearQuery}
-                    onSubmitEditing={onSubmit}
+                    onSubmitEditing={onSubmit('typed')}
                     placeholder={
                       inputPlaceholder ??
                       _(msg`Search for posts, users, or feeds`)
@@ -402,7 +410,7 @@ export function SearchScreenShell({
             isAutocompleteFetching={isAutocompleteFetching}
             autocompleteData={autocompleteData}
             searchText={searchText}
-            onSubmit={onSubmit}
+            onSubmit={onSubmit('autocomplete')}
             onResultPress={onAutocompleteResultPress}
             onProfileClick={handleProfileClick}
           />
