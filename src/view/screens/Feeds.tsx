@@ -228,7 +228,7 @@ export function FeedsScreen(_props: Props) {
            * In practice, `savedFeeds` is always defined, but we check for TS
            * and for safety.
            *
-           * In both cases, we show 4 as the the loading state.
+           * In both cases, we show 4 as the loading state.
            */
           const min = 8
           const count = savedFeeds
