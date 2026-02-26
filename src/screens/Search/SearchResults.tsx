@@ -44,9 +44,6 @@ let SearchResults = ({
 }): React.ReactNode => {
   const {t: l} = useLingui()
 
-  // There may be fewer tabs after changing the search options.
-  const selectedPage = Math.min(initialPage, 0)
-
   const sections = useMemo(() => {
     if (!queryWithParams) return []
     const noParams = queryWithParams === query
@@ -88,6 +85,9 @@ let SearchResults = ({
       component: React.ReactNode
     }[]
   }, [l, query, queryWithParams, activeTab])
+
+  // There may be fewer tabs after changing the search options.
+  const selectedPage = initialPage > sections.length - 1 ? 0 : initialPage
 
   return (
     <Pager
