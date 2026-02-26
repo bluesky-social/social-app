@@ -7,9 +7,7 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -185,7 +183,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
@@ -423,6 +421,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               postUri={post.uri}
               hideLoading
             />
+            <TranslateLink post={item.value.post} />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed
@@ -459,7 +458,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 t.atoms.border_contrast_low,
               ]}>
               {post.repostCount != null && post.repostCount !== 0 ? (
-                <Link to={repostsHref} label={_(msg`Reposts of this post`)}>
+                <Link to={repostsHref} label={l`Reposts of this post`}>
                   <Text
                     testID="repostCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -479,7 +478,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               {post.quoteCount != null &&
               post.quoteCount !== 0 &&
               !post.viewer?.embeddingDisabled ? (
-                <Link to={quotesHref} label={_(msg`Quotes of this post`)}>
+                <Link to={quotesHref} label={l`Quotes of this post`}>
                   <Text
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -497,7 +496,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 </Link>
               ) : null}
               {post.likeCount != null && post.likeCount !== 0 ? (
-                <Link to={likesHref} label={_(msg`Likes on this post`)}>
+                <Link to={likesHref} label={l`Likes on this post`}>
                   <Text
                     testID="likeCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -558,20 +557,17 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   )
 })
 
-function ExpandedPostDetails({
+function TranslateLink({
   post,
-  isThreadAuthor,
 }: {
   post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
-  isThreadAuthor: boolean
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_, i18n} = useLingui()
+  const {t: l} = useLingui()
   const {clearTranslation, translate, translationState} = useTranslateOnDevice(
     post.uri,
   )
-  const isRootPost = !('reply' in post.record)
   const langPrefs = useLanguagePrefs()
 
   const needsTranslation = useMemo(
@@ -629,56 +625,66 @@ function ExpandedPostDetails({
   })
 
   return (
-    <>
-      {needsTranslation && (
-        <View style={[a.gap_md, a.pt_md, a.align_start]}>
-          {translationState.status === 'loading' ? (
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <Loader size="xs" />
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                <Trans>Translating…</Trans>
-              </Text>
-            </View>
-          ) : translationState.status === 'success' ? (
-            <InlineLinkText
-              to="#"
-              label={_(msg`Hide translation`)}
-              style={[a.text_sm]}
-              onPress={onHideTranslation}>
-              <Trans>Hide translation</Trans>
-            </InlineLinkText>
-          ) : (
-            <InlineLinkText
-              to={getTranslatorLink(
-                post.record.text,
-                langPrefs.primaryLanguage,
-              )}
-              label={_(msg`Translate`)}
-              style={[a.text_sm]}
-              onPress={onTranslatePress}>
-              <Trans>Translate</Trans>
-            </InlineLinkText>
-          )}
-        </View>
-      )}
+    needsTranslation && (
       <View style={[a.gap_md, a.pt_md, a.align_start]}>
-        <BackdatedPostIndicator post={post} />
-        <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            {niceDate(i18n, post.indexedAt, 'dot separated')}
-          </Text>
-          {isRootPost && (
-            <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
-          )}
-        </View>
+        {translationState.status === 'loading' ? (
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <Loader size="xs" />
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Translating…</Trans>
+            </Text>
+          </View>
+        ) : translationState.status === 'success' ? (
+          <InlineLinkText
+            to="#"
+            label={l`Hide translation`}
+            style={[a.text_sm]}
+            onPress={onHideTranslation}>
+            <Trans>Hide translation</Trans>
+          </InlineLinkText>
+        ) : (
+          <InlineLinkText
+            to={getTranslatorLink(post.record.text, langPrefs.primaryLanguage)}
+            label={l`Translate`}
+            style={[a.text_sm]}
+            onPress={onTranslatePress}>
+            <Trans>Translate</Trans>
+          </InlineLinkText>
+        )}
       </View>
-    </>
+    )
+  )
+}
+
+function ExpandedPostDetails({
+  post,
+  isThreadAuthor,
+}: {
+  post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
+  isThreadAuthor: boolean
+}) {
+  const t = useTheme()
+  const {i18n} = useLingui()
+  const isRootPost = !('reply' in post.record)
+
+  return (
+    <View style={[a.gap_md, a.pt_md, a.align_start]}>
+      <BackdatedPostIndicator post={post} />
+      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          {niceDate(i18n, post.indexedAt, 'dot separated')}
+        </Text>
+        {isRootPost && (
+          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+        )}
+      </View>
+    </View>
   )
 }
 
 function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
@@ -698,10 +704,8 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   return (
     <>
       <Button
-        label={_(msg`Archived post`)}
-        accessibilityHint={_(
-          msg`Shows information about when this post was created`,
-        )}
+        label={l`Archived post`}
+        accessibilityHint={l`Shows information about when this post was created`}
         onPress={e => {
           e.preventDefault()
           e.stopPropagation()
@@ -760,7 +764,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
           </Prompt.DescriptionText>
         </Prompt.Content>
         <Prompt.Actions>
-          <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
+          <Prompt.Action cta={l`Okay`} onPress={() => {}} />
         </Prompt.Actions>
       </Prompt.Outer>
     </>
