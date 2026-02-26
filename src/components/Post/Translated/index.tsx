@@ -97,7 +97,7 @@ function TranslationResult({
             </>
           )}
         </Text>
-        <Text emoji selectable style={[a.text_md]}>
+        <Text emoji selectable style={[a.text_md, a.leading_snug]}>
           {translatedText}
         </Text>
       </View>
