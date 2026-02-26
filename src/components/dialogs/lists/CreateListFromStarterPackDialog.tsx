@@ -8,8 +8,9 @@ import {
   type ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
@@ -160,8 +161,10 @@ export function CreateListFromStarterPackDialog({
             </Text>
 
             <Admonition type="tip">
-              Changes to the starter pack will not be reflected in the list
-              after creation. The list will be an independent copy.
+              <Trans>
+                Changes to the starter pack will not be reflected in the list
+                after creation. The list will be an independent copy.
+              </Trans>
             </Admonition>
 
             <View

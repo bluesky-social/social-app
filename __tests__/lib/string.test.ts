@@ -1,4 +1,5 @@
 import {RichText} from '@atproto/api'
+import {i18n} from '@lingui/core'
 
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {
@@ -6,6 +7,7 @@ import {
   createStarterPackLinkFromAndroidReferrer,
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
+import {messages} from '#/locale/locales/en/messages'
 import {tenorUrlToBskyGifUrl} from '#/state/queries/tenor'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
@@ -202,6 +204,9 @@ describe('enforceLen', () => {
 })
 
 describe('cleanError', () => {
+  // cleanError uses lingui
+  i18n.loadAndActivate({locale: 'en', messages})
+
   const inputs = [
     'TypeError: Network request failed',
     'Error: Aborted',
@@ -327,6 +332,7 @@ describe('shortenLinks', () => {
       expect(outputRT.text).toEqual(outputs[i][0])
       expect(outputRT.facets?.length).toEqual(outputs[i][1].length)
       for (let j = 0; j < outputs[i][1].length; j++) {
+        // @ts-expect-error whatever
         expect(outputRT.facets![j].features[0].uri).toEqual(outputs[i][1][j])
       }
     }

@@ -5,8 +5,9 @@ import {
   AppBskyActorStatus,
   type AppBskyEmbedExternal,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {differenceInMinutes} from 'date-fns'
 
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'

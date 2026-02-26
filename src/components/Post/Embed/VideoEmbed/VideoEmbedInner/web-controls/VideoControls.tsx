@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import type Hls from 'hls.js'
 
 import {clamp} from '#/lib/numbers'
@@ -401,8 +402,8 @@ export function Controls({
           {hasSubtitleTrack && (
             <ControlButton
               active={subtitlesEnabled}
-              activeLabel={_(msg`Disable subtitles`)}
-              inactiveLabel={_(msg`Enable subtitles`)}
+              activeLabel={_(msg`Disable captions`)}
+              inactiveLabel={_(msg`Enable captions`)}
               activeIcon={CCActiveIcon}
               inactiveIcon={CCInactiveIcon}
               onPress={onPressSubtitles}

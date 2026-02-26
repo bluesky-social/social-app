@@ -27,6 +27,19 @@ class SheetViewController: UIViewController {
       return
     }
 
+    // On iOS 26, the floaty sheet presentation adds the device bottom safe area
+    // on top of the custom detent value, creating visible padding inside the pill.
+    // Subtract it so the pill height matches our actual content.
+    var bottomSafeAreaAdjustment: CGFloat = 0
+    if #available(iOS 26.0, *) {
+      if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+         let window = windowScene.windows.first {
+        bottomSafeAreaAdjustment = window.safeAreaInsets.bottom
+      }
+    }
+
+    let adjustedHeight = contentHeight - bottomSafeAreaAdjustment
+
     if #available(iOS 16.0, *) {
       if contentHeight > screenHeight - 100 {
         sheet.detents = [
@@ -36,7 +49,7 @@ class SheetViewController: UIViewController {
       } else {
         sheet.detents = [
           .custom { _ in
-            return contentHeight
+            return adjustedHeight
           }
         ]
         if !preventExpansion {

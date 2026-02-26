@@ -1,5 +1,5 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'

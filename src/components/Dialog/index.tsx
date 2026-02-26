@@ -21,7 +21,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -38,7 +38,7 @@ import {
   type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
-import {IS_ANDROID, IS_IOS} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   type BottomSheetSnapPointChangeEvent,
@@ -166,7 +166,8 @@ export function Outer({
   return (
     <BottomSheet
       ref={ref}
-      cornerRadius={20}
+      // device-bezel radius when undefined
+      cornerRadius={IS_LIQUID_GLASS ? undefined : 20}
       backgroundColor={t.atoms.bg.backgroundColor}
       {...nativeOptions}
       onSnapPointChange={onSnapPointChange}
@@ -181,6 +182,9 @@ export function Outer({
   )
 }
 
+/**
+ * @deprecated use `Dialog.ScrollableInner` instead
+ */
 export function Inner({children, style, header}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
@@ -190,9 +194,9 @@ export function Inner({children, style, header}: DialogInnerProps) {
         style={[
           a.pt_2xl,
           a.px_xl,
-          {
-            paddingBottom: insets.bottom + insets.top,
-          },
+          IS_LIQUID_GLASS
+            ? a.pb_2xl
+            : {paddingBottom: insets.bottom + insets.top},
           style,
         ]}>
         {children}
@@ -253,7 +257,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       <KeyboardAwareScrollView
         contentContainerStyle={[
           a.pt_2xl,
-          a.px_xl,
+          IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
           {paddingBottom},
           contentContainerStyle,
         ]}
@@ -342,7 +346,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
         a.pt_md,
         {
           paddingBottom: platform({
-            ios: tokens.space.md + bottom,
+            ios: tokens.space.md + bottom + (IS_LIQUID_GLASS ? top : 0),
             android: tokens.space.md + bottom + top,
           }),
         },

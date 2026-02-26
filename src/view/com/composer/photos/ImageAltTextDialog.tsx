@@ -1,8 +1,9 @@
 import React from 'react'
 import {type ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'

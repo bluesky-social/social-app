@@ -8,7 +8,7 @@ import {
   ComAtprotoRepoPutRecord,
 } from '@atproto/api'
 import {retry} from '@atproto/common-web'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {isAfter, parseISO} from 'date-fns'

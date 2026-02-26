@@ -1,8 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -13,6 +14,7 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
+import {agentToSessionAccountOrThrow} from '#/state/session/agent'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -35,7 +37,7 @@ export function Deactivated() {
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
-  const {logoutCurrentAccount} = useSessionApi()
+  const {logoutCurrentAccount, resumeSession} = useSessionApi()
   const agent = useAgent()
   const [pending, setPending] = React.useState(false)
   const [error, setError] = React.useState<string | undefined>()
@@ -71,7 +73,8 @@ export function Deactivated() {
       setPending(true)
       await agent.com.atproto.server.activateAccount()
       await queryClient.resetQueries()
-      await agent.resumeSession(agent.session!)
+      const account = agentToSessionAccountOrThrow(agent)
+      await resumeSession({...account, active: true, status: undefined})
     } catch (e: any) {
       switch (e.message) {
         case 'Bad token scope':
@@ -92,7 +95,7 @@ export function Deactivated() {
     } finally {
       setPending(false)
     }
-  }, [_, agent, setPending, setError, queryClient])
+  }, [_, agent, queryClient, resumeSession])
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>

@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
 import {UserInfoText} from '#/view/com/util/UserInfoText'

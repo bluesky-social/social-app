@@ -1,8 +1,9 @@
 import {useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
 import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 

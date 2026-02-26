@@ -1,8 +1,9 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
@@ -16,7 +17,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import * as Toggle from '#/components/forms/Toggle'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 export function LanguageSelectDialog({
   titleText,
@@ -51,7 +52,9 @@ export function LanguageSelectDialog({
   return (
     <Dialog.Outer
       control={control}
-      nativeOptions={{minHeight: height - insets.top}}>
+      nativeOptions={{
+        minHeight: IS_LIQUID_GLASS ? height : height - insets.top,
+      }}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
         <DialogInner

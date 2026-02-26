@@ -16,7 +16,7 @@ import {
   type ModerationOpts,
   RichText,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
@@ -24,8 +24,10 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {moderationOptsOverrideContext} from '#/state/preferences/moderation-opts'
+import {
+  moderationOptsOverrideContext,
+  useModerationOpts,
+} from '#/state/preferences/moderation-opts'
 import {type FeedNotification} from '#/state/queries/notifications/types'
 import {
   groupNotifications,
