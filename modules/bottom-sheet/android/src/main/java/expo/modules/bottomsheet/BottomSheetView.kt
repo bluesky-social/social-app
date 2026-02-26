@@ -254,8 +254,16 @@ class BottomSheetView(
       val wasKeyboardVisible = isKeyboardVisible
       isKeyboardVisible = imeVisible
 
-      if (imeVisible && behavior?.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+      if (imeVisible && behavior != null && bottomSheet != null && behavior.state != BottomSheetBehavior.STATE_EXPANDED && behavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+        if (preventExpansion) {
+          behavior.maxHeight = (screenHeight - getStatusBarHeight()).toInt()
+          bottomSheet.requestLayout()
+          bottomSheet.post {
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+          }
+        } else {
+          behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
       } else if (!imeVisible && wasKeyboardVisible) {
         updateLayout()
       }
