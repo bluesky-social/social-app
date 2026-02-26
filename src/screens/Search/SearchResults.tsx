@@ -1,6 +1,7 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
+import {type ProfileView} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -95,7 +96,8 @@ let SearchResults = ({
           <TabBar items={sections.map(section => section.title)} {...props} />
         </Layout.Center>
       )}
-      initialPage={initialPage}>
+      // There may be fewer tabs after changing the search language filter.
+      initialPage={Math.min(initialPage, 0)}>
       {sections.map((section, i) => (
         <View key={i}>{section.component}</View>
       ))}
@@ -167,9 +169,9 @@ function NoResultsText({query}: {query: string}) {
     <>
       <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
         <Trans>
-          No results found for "
+          No results found for “
           <Text style={[a.text_lg, t.atoms.text, a.font_medium]}>{query}</Text>
-          ".
+          ”.
         </Trans>
       </Text>
       {'\n\n'}
@@ -242,7 +244,7 @@ let SearchScreenPostResults = ({
   }, [setIsPTR, refetch])
   const onEndReached = useCallback(() => {
     if (isFetching || !hasNextPage || error) return
-    fetchNextPage()
+    void fetchNextPage()
   }, [isFetching, error, hasNextPage, fetchNextPage])
 
   const posts = useMemo(() => {
@@ -331,18 +333,20 @@ let SearchScreenPostResults = ({
           {posts.length ? (
             <List
               data={items}
-              renderItem={({item}) => {
+              renderItem={({item}: {item: SearchResultSlice}) => {
                 if (item.type === 'post') {
                   return <Post post={item.post} />
                 } else {
                   return null
                 }
               }}
-              keyExtractor={item => item.key}
+              keyExtractor={(item: SearchResultSlice) => item.key}
               refreshing={isPTR}
-              onRefresh={onPullToRefresh}
+              onRefresh={() => {
+                void onPullToRefresh()
+              }}
               onEndReached={onEndReached}
-              onItemSeen={item => {
+              onItemSeen={(item: SearchResultSlice) => {
                 if (item.type === 'post') {
                   trackPostView(item.post)
                 }
@@ -400,7 +404,7 @@ let SearchScreenUserResults = ({
   const onEndReached = useCallback(() => {
     if (!hasSession) return
     if (isFetching || !hasNextPage || error) return
-    fetchNextPage()
+    void fetchNextPage()
   }, [isFetching, error, hasNextPage, fetchNextPage, hasSession])
 
   const profiles = useMemo(() => {
@@ -411,7 +415,7 @@ let SearchScreenUserResults = ({
     return (
       <EmptyState
         messageText={_(
-          msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
+          msg`We’re sorry, but your search could not be completed. Please try again in a few minutes.`,
         )}
         error={error.toString()}
       />
@@ -423,10 +427,14 @@ let SearchScreenUserResults = ({
       {profiles.length ? (
         <List
           data={profiles}
-          renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} />}
-          keyExtractor={item => item.did}
+          renderItem={({item}: {item: ProfileView}) => (
+            <ProfileCardWithFollowBtn profile={item} />
+          )}
+          keyExtractor={(item: ProfileView) => item.did}
           refreshing={isPTR}
-          onRefresh={onPullToRefresh}
+          onRefresh={() => {
+            void onPullToRefresh()
+          }}
           onEndReached={onEndReached}
           desktopFixedHeight
           ListFooterComponent={
@@ -465,7 +473,7 @@ let SearchScreenFeedsResults = ({
       {results.length ? (
         <List
           data={results}
-          renderItem={({item}) => (
+          renderItem={({item}: {item: AppBskyFeedDefs.GeneratorView}) => (
             <View
               style={[
                 a.border_t,
@@ -476,7 +484,7 @@ let SearchScreenFeedsResults = ({
               <FeedCard.Default view={item} />
             </View>
           )}
-          keyExtractor={item => item.uri}
+          keyExtractor={(item: AppBskyFeedDefs.GeneratorView) => item.uri}
           desktopFixedHeight
           ListFooterComponent={<ListFooter />}
         />
