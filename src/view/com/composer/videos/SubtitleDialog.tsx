@@ -60,7 +60,7 @@ export function SubtitleDialogBtn(props: Props) {
           )}
         </ButtonText>
       </Button>
-      <Dialog.Outer control={control}>
+      <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
