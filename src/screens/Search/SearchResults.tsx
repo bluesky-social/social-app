@@ -1,7 +1,6 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {type ProfileView} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
@@ -26,6 +25,7 @@ import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
+import type * as bsky from '#/types/bsky'
 
 let SearchResults = ({
   query,
@@ -417,10 +417,10 @@ let SearchScreenUserResults = ({
       {profiles.length ? (
         <List
           data={profiles}
-          renderItem={({item}: {item: ProfileView}) => (
+          renderItem={({item}: {item: bsky.profile.AnyProfileView}) => (
             <ProfileCardWithFollowBtn profile={item} />
           )}
-          keyExtractor={(item: ProfileView) => item.did}
+          keyExtractor={(item: bsky.profile.AnyProfileView) => item.did}
           refreshing={isPTR}
           onRefresh={() => {
             void onPullToRefresh()
