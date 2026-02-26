@@ -3,18 +3,13 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   Pressable,
-  type ScrollView,
+  ScrollView,
   type StyleProp,
   TextInput,
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  KeyboardAwareScrollView,
-  type KeyboardAwareScrollViewRef,
-  useKeyboardHandler,
-  useReanimatedKeyboardAnimation,
-} from 'react-native-keyboard-controller'
+import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
   type ScrollEvent,
@@ -154,7 +149,7 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
-      IS_NATIVEDialog: true,
+      isNativeDialog: true,
       nativeSnapPoint: snapPoint,
       disableDrag,
       setDisableDrag,
@@ -212,33 +207,17 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
-
-    const [keyboardHeight, setKeyboardHeight] = React.useState(0)
-
-    // note: iOS-only. keyboard-controller doesn't seem to work inside the sheets on Android
-    useKeyboardHandler(
-      {
-        onEnd: e => {
-          'worklet'
-          runOnJS(setKeyboardHeight)(e.height)
-        },
-      },
-      [],
-    )
+    const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
 
     let paddingBottom = 0
     if (IS_IOS) {
-      paddingBottom += keyboardHeight / 4
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.bottom + tokens.space.md
-      }
-      paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
+      paddingBottom = tokens.space._2xl
     } else {
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
+      paddingBottom =
+        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
+      if (isAtMaxSnapPoint) {
         paddingBottom += insets.top
       }
-      paddingBottom +=
-        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
     }
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -254,18 +233,18 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     }
 
     return (
-      <KeyboardAwareScrollView
+      <ScrollView
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
           {paddingBottom},
           contentContainerStyle,
         ]}
-        ref={ref as React.Ref<KeyboardAwareScrollViewRef>}
+        ref={ref}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
+        automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        bottomOffset={30}
         scrollEventThrottle={50}
         onScroll={IS_ANDROID ? onScroll : undefined}
         keyboardShouldPersistTaps="handled"
@@ -275,7 +254,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         stickyHeaderIndices={ios(header ? [0] : undefined)}>
         {header}
         {children}
-      </KeyboardAwareScrollView>
+      </ScrollView>
     )
   },
 )

@@ -98,7 +98,7 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
-      IS_NATIVEDialog: false,
+      isNativeDialog: false,
       nativeSnapPoint: 0,
       disableDrag: false,
       setDisableDrag: () => {},
