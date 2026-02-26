@@ -4,8 +4,10 @@ import {Drawer} from 'react-native-drawer-layout'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {ScreenCornerRadius} from 'react-native-screen-corner-radius'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
+import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
@@ -136,6 +138,7 @@ function ShellInner() {
 
 function DrawerLayout({children}: {children: React.ReactNode}) {
   const t = useTheme()
+  const playHaptic = useHaptics()
   const isDrawerOpen = useIsDrawerOpen()
   const setIsDrawerOpen = useSetDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
@@ -191,8 +194,11 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
       swipeEdgeWidth={winDim.width}
       swipeMinVelocity={100}
       swipeMinDistance={10}
-      drawerType={IS_IOS ? 'slide' : 'front'}
+      drawerType="back"
+      onGestureEnd={() => playHaptic('light')}
       overlayStyle={{
+        overflow: 'hidden',
+        borderRadius: ScreenCornerRadius,
         backgroundColor: select(t.name, {
           light: 'rgba(0, 57, 117, 0.1)',
           dark: IS_ANDROID

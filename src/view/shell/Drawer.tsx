@@ -265,7 +265,11 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   return (
     <View
       testID="drawer"
-      style={[a.flex_1, a.border_r, t.atoms.bg, t.atoms.border_contrast_low]}>
+      style={[
+        a.flex_1,
+        t.atoms.bg,
+        web([a.border_r, t.atoms.border_contrast_low]),
+      ]}>
       <ScrollView
         style={[a.flex_1]}
         contentContainerStyle={[
