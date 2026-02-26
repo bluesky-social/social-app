@@ -647,6 +647,32 @@ export type Events = {
     tab: string
   }
 
+  'search:query': {
+    source: 'typed' | 'history' | 'autocomplete'
+  }
+
+  'search:results:loaded': {
+    tab: 'top' | 'latest' | 'people' | 'feeds'
+    initialCount: number
+  }
+
+  'search:result:press': {
+    tab?: 'top' | 'latest' | 'people' | 'feeds'
+    resultType: 'post' | 'profile' | 'feed'
+    position: number
+    uri: string
+  }
+
+  'search:recent:press': {
+    profileDid: string
+    position: number
+  }
+
+  'search:autocomplete:press': {
+    profileDid: string
+    position: number
+  }
+
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
 

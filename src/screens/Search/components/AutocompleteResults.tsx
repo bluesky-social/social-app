@@ -9,6 +9,7 @@ import {SearchLinkCard} from '#/view/shell/desktop/Search'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
 import {atoms as a, native} from '#/alf'
 import * as Layout from '#/components/Layout'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 let AutocompleteResults = ({
@@ -26,6 +27,7 @@ let AutocompleteResults = ({
   onResultPress: () => void
   onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   return (
@@ -51,12 +53,16 @@ let AutocompleteResults = ({
             }
             style={a.border_b}
           />
-          {autocompleteData?.map(item => (
+          {autocompleteData?.map((item, index) => (
             <SearchProfileCard
               key={item.did}
               profile={item}
               moderationOpts={moderationOpts}
               onPress={() => {
+                ax.metric('search:autocomplete:press', {
+                  profileDid: item.did,
+                  position: index,
+                })
                 onProfileClick(item)
                 onResultPress()
               }}

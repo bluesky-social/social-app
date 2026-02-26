@@ -40,6 +40,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
@@ -64,6 +65,7 @@ export function SearchScreenShell({
   inputPlaceholder?: string
   isExplore?: boolean
 }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
@@ -96,7 +98,7 @@ export function SearchScreenShell({
   })
 
   const updateSearchHistory = useCallback(
-    async (item: string) => {
+    (item: string) => {
       if (!item) return
       const newSearchHistory = [
         item,
@@ -108,7 +110,7 @@ export function SearchScreenShell({
   )
 
   const updateProfileHistory = useCallback(
-    async (item: bsky.profile.AnyProfileView) => {
+    (item: bsky.profile.AnyProfileView) => {
       const newAccountHistory = [
         item.did,
         ...accountHistory.filter(p => p !== item.did),
@@ -119,13 +121,13 @@ export function SearchScreenShell({
   )
 
   const deleteSearchHistoryItem = useCallback(
-    async (item: string) => {
+    (item: string) => {
       setTermHistory(termHistory.filter(search => search !== item))
     },
     [termHistory, setTermHistory],
   )
   const deleteProfileHistoryItem = useCallback(
-    async (item: bsky.profile.AnyProfileView) => {
+    (item: bsky.profile.AnyProfileView) => {
       setAccountHistory(accountHistory.filter(p => p !== item.did))
     },
     [accountHistory, setAccountHistory],
@@ -162,7 +164,7 @@ export function SearchScreenShell({
     textInput.current?.focus()
   }, [])
 
-  const onChangeText = useCallback(async (text: string) => {
+  const onChangeText = useCallback((text: string) => {
     scrollToTopWeb()
     setSearchText(text)
   }, [])
@@ -206,9 +208,15 @@ export function SearchScreenShell({
     }
   }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
 
-  const onSubmit = useCallback(() => {
-    navigateToItem(searchText)
-  }, [navigateToItem, searchText])
+  const onSubmit = useCallback(
+    (source: 'typed' | 'autocomplete') => () => {
+      ax.metric('search:query', {
+        source,
+      })
+      navigateToItem(searchText)
+    },
+    [ax, navigateToItem, searchText],
+  )
 
   const onAutocompleteResultPress = useCallback(() => {
     if (IS_WEB) {
@@ -348,7 +356,7 @@ export function SearchScreenShell({
                     onFocus={onSearchInputFocus}
                     onChangeText={onChangeText}
                     onClearText={onPressClearQuery}
-                    onSubmitEditing={onSubmit}
+                    onSubmitEditing={onSubmit('typed')}
                     placeholder={
                       inputPlaceholder ??
                       _(msg`Search for posts, users, or feeds`)
@@ -402,7 +410,7 @@ export function SearchScreenShell({
             isAutocompleteFetching={isAutocompleteFetching}
             autocompleteData={autocompleteData}
             searchText={searchText}
-            onSubmit={onSubmit}
+            onSubmit={onSubmit('autocomplete')}
             onResultPress={onAutocompleteResultPress}
             onProfileClick={handleProfileClick}
           />
@@ -475,7 +483,7 @@ let SearchScreenInner = ({
   useLayoutEffect(() => {
     const newTabIndex = getInitialTabIndex()
     if (newTabIndex !== activeTab) {
-      setActiveTab(newTabIndex)
+      void setActiveTab(newTabIndex)
     }
   }, [tabParam, activeTab, getInitialTabIndex])
 
