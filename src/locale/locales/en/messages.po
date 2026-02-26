@@ -4175,7 +4175,8 @@ msgid "Feedback sent to feed operator"
 msgstr ""
 
 #: src/Navigation.tsx:585
-#: src/screens/SavedFeeds.tsx:108
+#: src/screens/SavedFeeds.tsx:118
+#: src/screens/SavedFeeds.tsx:314
 #: src/screens/Search/SearchResults.tsx:79
 #: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:512
@@ -4185,12 +4186,14 @@ msgstr ""
 msgid "Feeds"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:215
+#: src/screens/SavedFeeds.tsx:233
+#: src/screens/SavedFeeds.tsx:409
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0>See this guide</0> for more information."
 msgstr ""
 
 #: src/components/FeedCard.tsx:315
-#: src/screens/SavedFeeds.tsx:90
+#: src/screens/SavedFeeds.tsx:100
+#: src/screens/SavedFeeds.tsx:284
 msgctxt "toast"
 msgid "Feeds updated!"
 msgstr ""
@@ -4440,7 +4443,7 @@ msgstr ""
 msgid "Following"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:410
+#: src/screens/SavedFeeds.tsx:629
 #: src/view/screens/Feeds.tsx:604
 msgctxt "feed-name"
 msgid "Following"
@@ -6135,11 +6138,11 @@ msgstr ""
 msgid "More options"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:329
+#: src/screens/SavedFeeds.tsx:499
 msgid "Move feed down"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:320
+#: src/screens/SavedFeeds.tsx:489
 msgid "Move feed up"
 msgstr ""
 
@@ -6157,10 +6160,11 @@ msgctxt "video"
 msgid "Mute"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:151
-#: src/components/RichTextTag.tsx:164
-msgid "Mute {tag}"
-msgstr ""
+#. placeholder {0}: isCashtag ? tag : `#${tag}`
+#: src/components/RichTextTag.tsx:154
+#: src/components/RichTextTag.tsx:170
+msgid "Mute {0}"
+msgstr "Mute {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:688
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:694
@@ -7228,7 +7232,7 @@ msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:522
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:528
-#: src/screens/SavedFeeds.tsx:351
+#: src/screens/SavedFeeds.tsx:570
 msgid "Pin feed"
 msgstr ""
 
@@ -7260,7 +7264,8 @@ msgstr ""
 msgid "Pinned {0} to Home"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:142
+#: src/screens/SavedFeeds.tsx:152
+#: src/screens/SavedFeeds.tsx:348
 msgid "Pinned Feeds"
 msgstr ""
 
@@ -7982,7 +7987,7 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:328
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:176
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:179
-#: src/screens/SavedFeeds.tsx:340
+#: src/screens/SavedFeeds.tsx:560
 msgid "Remove from my feeds"
 msgstr ""
 
@@ -8485,7 +8490,8 @@ msgstr ""
 #: src/features/liveNow/components/EditLiveDialog.tsx:211
 #: src/screens/Profile/Header/EditProfileDialog.tsx:237
 #: src/screens/Profile/Header/EditProfileDialog.tsx:251
-#: src/screens/SavedFeeds.tsx:120
+#: src/screens/SavedFeeds.tsx:130
+#: src/screens/SavedFeeds.tsx:326
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:271
 #: src/view/com/composer/GifAltText.tsx:196
 #: src/view/com/composer/GifAltText.tsx:205
@@ -8507,8 +8513,10 @@ msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:192
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:201
-#: src/screens/SavedFeeds.tsx:116
-#: src/screens/SavedFeeds.tsx:120
+#: src/screens/SavedFeeds.tsx:126
+#: src/screens/SavedFeeds.tsx:130
+#: src/screens/SavedFeeds.tsx:322
+#: src/screens/SavedFeeds.tsx:326
 #: src/view/com/composer/Composer.tsx:1255
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
@@ -8558,7 +8566,8 @@ msgctxt "link to bookmarks screen"
 msgid "Saved"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:184
+#: src/screens/SavedFeeds.tsx:204
+#: src/screens/SavedFeeds.tsx:386
 msgid "Saved Feeds"
 msgstr ""
 
@@ -8751,7 +8760,8 @@ msgstr ""
 msgid "See suggested accounts"
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:220
+#: src/screens/SavedFeeds.tsx:238
+#: src/screens/SavedFeeds.tsx:414
 msgid "See this guide"
 msgstr ""
 
@@ -10010,7 +10020,8 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:180
 #: src/screens/ProfileList/components/Header.tsx:91
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:79
-#: src/screens/SavedFeeds.tsx:97
+#: src/screens/SavedFeeds.tsx:107
+#: src/screens/SavedFeeds.tsx:291
 msgid "There was an issue contacting the server"
 msgstr ""
 
@@ -10707,10 +10718,11 @@ msgctxt "video"
 msgid "Unmute"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:151
-#: src/components/RichTextTag.tsx:164
-msgid "Unmute {tag}"
-msgstr ""
+#. placeholder {0}: isCashtag ? tag : `#${tag}`
+#: src/components/RichTextTag.tsx:153
+#: src/components/RichTextTag.tsx:169
+msgid "Unmute {0}"
+msgstr "Unmute {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:687
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:693
@@ -10744,7 +10756,7 @@ msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:522
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:528
-#: src/screens/SavedFeeds.tsx:351
+#: src/screens/SavedFeeds.tsx:478
 msgid "Unpin feed"
 msgstr ""
 
@@ -11848,11 +11860,13 @@ msgstr ""
 msgid "You don't have any lists yet."
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:149
+#: src/screens/SavedFeeds.tsx:159
+#: src/screens/SavedFeeds.tsx:354
 msgid "You don't have any pinned feeds."
 msgstr ""
 
-#: src/screens/SavedFeeds.tsx:191
+#: src/screens/SavedFeeds.tsx:211
+#: src/screens/SavedFeeds.tsx:392
 msgid "You don't have any saved feeds."
 msgstr ""
 
