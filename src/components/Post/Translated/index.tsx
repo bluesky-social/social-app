@@ -12,19 +12,17 @@ import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {useTranslateOnDevice} from '#/translation'
+import {type TranslationState, useTranslateOnDevice} from '#/translation'
 
 export function TranslatedPost({
   postText,
-  postUri,
   hideLoading = false,
+  translationState,
 }: {
   postText: string
-  postUri: string
   hideLoading: boolean
+  translationState: TranslationState
 }) {
-  const {translationState} = useTranslateOnDevice(postUri)
-
   if (translationState.status === 'loading' && !hideLoading) {
     return <TranslationLoading />
   }
@@ -33,7 +31,6 @@ export function TranslatedPost({
     return (
       <TranslationResult
         postText={postText}
-        postUri={postUri}
         sourceLanguage={translationState.sourceLanguage}
         translatedText={translationState.translatedText}
       />
@@ -58,12 +55,10 @@ function TranslationLoading() {
 
 function TranslationResult({
   postText,
-  postUri,
   sourceLanguage,
   translatedText,
 }: {
   postText: string
-  postUri: string
   sourceLanguage: string | null
   translatedText: string
 }) {
@@ -90,7 +85,6 @@ function TranslationResult({
                 &middot;
               </Text>{' '}
               <TranslationLanguageSelect
-                postUri={postUri}
                 sourceLanguage={sourceLanguage}
                 postText={postText}
               />
@@ -107,17 +101,15 @@ function TranslationResult({
 
 function TranslationLanguageSelect({
   postText,
-  postUri,
   sourceLanguage,
 }: {
   postText: string
-  postUri: string
   sourceLanguage: string
 }) {
   const ax = useAnalytics()
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const {translate} = useTranslateOnDevice(postUri)
+  const {translate} = useTranslateOnDevice()
 
   const items = useMemo(
     () =>
