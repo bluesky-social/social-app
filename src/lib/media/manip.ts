@@ -79,17 +79,29 @@ export async function shareImageModal({uri}: {uri: string}) {
     return
   }
 
-  const imagePath = await downloadImage(uri, String(uuid.v4()), 15e3)
+  const downloadedPath = await downloadImage(uri, String(uuid.v4()), 15e3)
+  const {uri: jpegUri} = await manipulateAsync(downloadedPath, [], {
+    format: SaveFormat.JPEG,
+    compress: 1.0,
+  })
+  void safeDeleteAsync(downloadedPath)
+  const imagePath = await moveToPermanentPath(jpegUri, '.jpg')
   await Sharing.shareAsync(imagePath, {
-    mimeType: mimeFromExt(imagePath),
-    UTI: mimeFromExt(imagePath),
+    mimeType: 'image/jpeg',
+    UTI: 'image/jpeg',
   })
 }
 
 const ALBUM_NAME = 'Bluesky'
 
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
-  const imagePath = await downloadImage(uri, String(uuid.v4()), 15e3)
+  const downloadedPath = await downloadImage(uri, String(uuid.v4()), 15e3)
+  const {uri: jpegUri} = await manipulateAsync(downloadedPath, [], {
+    format: SaveFormat.JPEG,
+    compress: 1.0,
+  })
+  void safeDeleteAsync(downloadedPath)
+  const imagePath = await moveToPermanentPath(jpegUri, '.jpg')
 
   // save
   try {
@@ -425,17 +437,4 @@ const MIME_TO_EXT: Record<string, string> = {
 
 function extFromMime(mimeType?: string | null): string {
   return (mimeType && MIME_TO_EXT[mimeType]) || 'jpg'
-}
-
-const EXT_TO_MIME: Record<string, string> = {
-  jpg: 'image/jpeg',
-  jpeg: 'image/jpeg',
-  webp: 'image/webp',
-  png: 'image/png',
-  gif: 'image/gif',
-}
-
-function mimeFromExt(path: string): string {
-  const ext = path.split('.').pop()
-  return (ext && EXT_TO_MIME[ext]) || 'image/jpeg'
 }
