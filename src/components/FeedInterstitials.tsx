@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSimilarAccountsDisabled} from '#/state/preferences/similar-accounts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
@@ -416,6 +417,7 @@ export function ProfileGrid({
   const {gtMobile} = useBreakpoints()
   const followDialogControl = useDialogControl()
 
+  const disabledSimilarAccounts = useSimilarAccountsDisabled()
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
   const isFeedContext = viewContext === 'feed'
@@ -649,6 +651,10 @@ export function ProfileGrid({
           </Animated.View>
         ))
 
+  if (disabledSimilarAccounts == true) {
+    return null
+  }
+  
   // Use totalProfileCount (before dismissals) for minLength check on initial render.
   const profileCountForMinCheck = totalProfileCount ?? profiles.length
   if (error || (!isLoading && profileCountForMinCheck < minLength)) {
