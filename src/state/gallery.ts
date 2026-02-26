@@ -219,7 +219,7 @@ export async function compressImage(img: ComposerImage): Promise<PickerImage> {
       [{resize: {width: w, height: h}}],
       {
         compress: qualityPercentage / 100,
-        format: SaveFormat.WEBP,
+        format: SaveFormat.JPEG,
         base64: true,
       },
     )
@@ -232,7 +232,7 @@ export async function compressImage(img: ComposerImage): Promise<PickerImage> {
         path: await moveIfNecessary(res.uri),
         width: res.width,
         height: res.height,
-        mime: 'image/webp',
+        mime: 'image/jpeg',
         size,
       }
     } else {

@@ -38,7 +38,7 @@ export async function compressIfNeeded(
   })
   const finalImageMovedPath = await moveToPermanentPath(
     resizedImage.path,
-    '.webp',
+    '.jpg',
   )
   const finalImg = {
     ...resizedImage,
@@ -216,7 +216,7 @@ async function doResize(
       localUri,
       [{resize: newDimensions}],
       {
-        format: SaveFormat.WEBP,
+        format: SaveFormat.JPEG,
         compress: qualityPercentage / 100,
       },
     )
@@ -234,7 +234,7 @@ async function doResize(
       minQualityPercentage = qualityPercentage
       newDataUri = {
         path: normalizePath(resizeRes.uri),
-        mime: 'image/webp',
+        mime: 'image/jpeg',
         size: fileInfo.size,
         width: resizeRes.width,
         height: resizeRes.height,

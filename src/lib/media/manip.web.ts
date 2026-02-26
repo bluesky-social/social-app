@@ -103,7 +103,7 @@ async function doResize(
   }
   return {
     path: newDataUri,
-    mime: 'image/webp',
+    mime: 'image/jpeg',
     size: getDataUriSize(newDataUri),
     width: opts.width,
     height: opts.height,
@@ -146,7 +146,7 @@ function createResizedImage(
       canvas.height = h
 
       ctx.drawImage(img, 0, 0, w, h)
-      resolve(canvas.toDataURL('image/webp', quality))
+      resolve(canvas.toDataURL('image/jpeg', quality))
     })
     img.addEventListener('error', ev => {
       reject(ev.error)
