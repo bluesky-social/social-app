@@ -95,7 +95,7 @@ export function Deactivated() {
     } finally {
       setPending(false)
     }
-  }, [_, agent, setPending, setError, queryClient, resumeSession])
+  }, [_, agent, queryClient, resumeSession])
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>
