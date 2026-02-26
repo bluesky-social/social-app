@@ -107,7 +107,11 @@ export function renderChildrenWithEmoji(
   })
 }
 
-const SINGLE_EMOJI_RE = /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u
+const CONTAINS_EMOJI_RE = /[\p{Extended_Pictographic}]/u
+const ALL_EMOJI_OR_COMPONENT_RE = /^[\p{Emoji}\p{Emoji_Component}]+$/u
 export function isOnlyEmoji(text: string) {
-  return text.length <= 15 && SINGLE_EMOJI_RE.test(text)
+  if (text.length > 15) {
+    return false
+  }
+  return ALL_EMOJI_OR_COMPONENT_RE.test(text) && CONTAINS_EMOJI_RE.test(text)
 }
