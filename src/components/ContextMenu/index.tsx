@@ -81,9 +81,9 @@ export {
 const {Provider: PortalProvider, Outlet, Portal} = createPortalGroup()
 
 const SPRING_IN: WithSpringConfig = {
-  mass: IS_IOS ? 1.25 : 0.75,
-  damping: 50,
-  stiffness: 1100,
+  mass: 0.75,
+  damping: 300,
+  stiffness: 1200,
   restDisplacementThreshold: 0.01,
 }
 
