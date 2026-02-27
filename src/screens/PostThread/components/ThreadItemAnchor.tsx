@@ -416,7 +416,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 shouldProxyLinks={true}
               />
             ) : undefined}
-            <TranslatedPost postText={record.text} hideLoading />
+            <TranslatedPost
+              postText={record.text}
+              postUri={post.uri}
+              hideLoading
+            />
             <TranslateLink post={item.value.post} />
             {post.embed && (
               <View style={[a.py_xs]}>
@@ -561,9 +565,10 @@ function TranslateLink({
   const t = useTheme()
   const ax = useAnalytics()
   const {t: l} = useLingui()
+  const {clearTranslation, translate, translationState} = useTranslateOnDevice(
+    post.uri,
+  )
   const langPrefs = useLanguagePrefs()
-
-  const {translate, clearTranslation, translationState} = useTranslateOnDevice()
 
   const needsTranslation = useMemo(
     () =>

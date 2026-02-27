@@ -1,13 +1,8 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import {useCallback, useSyncExternalStore} from 'react'
 import {Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
+import Emitter from 'eventemitter3'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getTranslatorLink} from '#/locale/helpers'
@@ -26,6 +21,47 @@ export type TranslationState =
     }
 
 const IDLE: TranslationState = {status: 'idle'}
+
+const emitter = new Emitter()
+
+// Note: Since we’re storing this in memory without clearing it, e.g., via LRU,
+// this could get large over time if we don't clear the translation when the
+// component is unmounted. Something to keep an eye out for.
+const translations = new Map<string, TranslationState>()
+
+/**
+ * Syncs translations to an in-memory map to ensure the hook only re-renders
+ * when the value changes for a given key.
+ */
+function useTranslationState(key: string) {
+  const getSnapshot = () => {
+    return translations.get(key) ?? IDLE
+  }
+
+  const subscribe = (callback: () => void): (() => void) => {
+    emitter.addListener(key, callback)
+    return () => {
+      emitter.removeListener(key, callback)
+    }
+  }
+
+  const translationState = useSyncExternalStore(subscribe, getSnapshot)
+
+  const setTranslation = useCallback(
+    (newState: TranslationState) => {
+      translations.set(key, newState)
+      emitter.emit(key)
+    },
+    [key],
+  )
+
+  const clearTranslation = useCallback(() => {
+    translations.delete(key)
+    emitter.emit(key)
+  }, [key])
+
+  return {clearTranslation, setTranslation, translationState}
+}
 
 /**
  * Attempts on-device translation via @bsky.app/expo-translate-text.
@@ -62,7 +98,7 @@ async function attemptTranslation(
       case 'es': // es-419, es-ES
       case 'pt': // pt-BR, pt-PT
       case 'zh': // zh-Hans-CN, zh-Hant-HK, zh-Hant-TW
-        targetLangCode = primaryLanguageTag ?? targetLangCodeOriginal
+        targetLangCode = primaryLanguageTag
         break
     }
   }
@@ -86,21 +122,6 @@ async function attemptTranslation(
   }
 }
 
-const Context = createContext<{
-  translationState: TranslationState
-  translate: (
-    text: string,
-    targetLangCode: string,
-    sourceLangCode?: string,
-  ) => Promise<void>
-  clearTranslation: () => void
-}>({
-  translationState: IDLE,
-  translate: async () => {},
-  clearTranslation: () => {},
-})
-Context.displayName = 'TranslationContext'
-
 /**
  * Native translation hook. Attempts on-device translation using Apple
  * Translation (iOS 18+) or Google ML Kit (Android).
@@ -109,26 +130,12 @@ Context.displayName = 'TranslationContext'
  *
  * Web uses index.web.ts which always opens Google Translate.
  */
-export function useTranslateOnDevice() {
-  const context = useContext(Context)
-  if (!context) {
-    throw new Error(
-      'useTranslateOnDevice must be used within a TranslationProvider',
-    )
-  }
-  return context
-}
-
-export function Provider({children}: {children?: React.ReactNode}) {
-  const [translationState, setTranslationState] =
-    useState<TranslationState>(IDLE)
+export function useTranslateOnDevice(key: string) {
+  const {clearTranslation, setTranslation, translationState} =
+    useTranslationState(key)
   const openLink = useOpenLink()
   const ax = useAnalytics()
   const {primaryLanguage} = useLanguagePrefs()
-
-  const clearTranslation = useCallback(() => {
-    setTranslationState(IDLE)
-  }, [])
 
   const translate = useCallback(
     async (
@@ -136,7 +143,7 @@ export function Provider({children}: {children?: React.ReactNode}) {
       targetLangCode: string = primaryLanguage,
       sourceLangCode?: string,
     ) => {
-      setTranslationState({status: 'loading'})
+      setTranslation({status: 'loading'})
       try {
         const result = await attemptTranslation(
           text,
@@ -149,7 +156,7 @@ export function Provider({children}: {children?: React.ReactNode}) {
           sourceLanguage: result.sourceLanguage,
           targetLanguage: result.targetLanguage,
         })
-        setTranslationState({
+        setTranslation({
           status: 'success',
           translatedText: result.translatedText,
           sourceLanguage: result.sourceLanguage,
@@ -165,7 +172,7 @@ export function Provider({children}: {children?: React.ReactNode}) {
           sourceLanguage: sourceLangCode ?? null,
           targetLanguage: targetLangCode,
         })
-        setTranslationState({status: 'idle'})
+        setTranslation({status: 'idle'})
         const translateUrl = getTranslatorLink(
           text,
           targetLangCode,
@@ -174,13 +181,7 @@ export function Provider({children}: {children?: React.ReactNode}) {
         await openLink(translateUrl)
       }
     },
-    [ax, openLink, primaryLanguage, setTranslationState],
+    [ax, openLink, primaryLanguage, setTranslation],
   )
-
-  const ctx = useMemo(
-    () => ({clearTranslation, translate, translationState}),
-    [clearTranslation, translate, translationState],
-  )
-
-  return <Context.Provider value={ctx}>{children}</Context.Provider>
+  return {clearTranslation, translate, translationState}
 }
