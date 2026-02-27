@@ -422,9 +422,7 @@ let SearchScreenUserResults = ({
           )}
           keyExtractor={(item: bsky.profile.AnyProfileView) => item.did}
           refreshing={isPTR}
-          onRefresh={() => {
-            void onPullToRefresh()
-          }}
+          onRefresh={() => void onPullToRefresh()}
           onEndReached={onEndReached}
           desktopFixedHeight
           ListFooterComponent={
