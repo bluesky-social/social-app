@@ -55,7 +55,7 @@ export function MessagesListHeader({
   }, [moderation])
 
   return (
-    <Layout.Header.Outer transparent>
+    <Layout.Header.Outer>
       <View style={[a.flex_1, a.flex_row, a.gap_xs, a.align_start]}>
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
           <Layout.Header.BackButton />

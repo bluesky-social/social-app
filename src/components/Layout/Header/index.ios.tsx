@@ -1,10 +1,8 @@
-import {useLayoutEffect, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
-import {useIsFocused, useNavigation} from '@react-navigation/native'
+import {View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {type NavigationProp} from '#/lib/routes/types'
-import {atoms as a} from '#/alf'
-import {IS_LIQUID_GLASS} from '#/env'
+import {atoms as a, useGutters} from '#/alf'
+import {useTransparentHeaderProps} from '#/components/Layout/ScrollEdgeInteraction'
 import {Outer as DefaultOuter, type OuterProps} from './index.shared'
 
 export {
@@ -18,68 +16,46 @@ export {
 } from './index.shared'
 
 export function Outer(props: OuterProps) {
-  if (IS_LIQUID_GLASS && props.transparent) {
-    return <TransparentOuter {...props} />
+  const transparentHeaderProps = useTransparentHeaderProps()
+  if (transparentHeaderProps) {
+    return (
+      <TransparentOuter
+        transparentHeaderProps={transparentHeaderProps}
+        {...props}
+      />
+    )
   }
-
   return <DefaultOuter {...props} />
 }
 
-function TransparentOuter({children, headerRef}: OuterProps) {
-  const [headerWidth, setHeaderWidth] = useState(0)
-  const {width: screenWidth} = useWindowDimensions()
+function TransparentOuter({
+  children,
+  transparentHeaderProps,
+}: OuterProps & {
+  transparentHeaderProps: {ref: (node: View | null) => void; onLayout: any}
+}) {
+  const {top} = useSafeAreaInsets()
+  const gutters = useGutters([0, 'base'])
 
-  // bit of a hack - react-native-screens initially renders the header too wide
-  // so let's delay showing it until the padding has been applied -sfn
-  const isInitialRender = headerWidth === 0 || headerWidth === screenWidth
-  const headerElement = useMemo(() => {
-    return (
-      <View
-        ref={headerRef}
-        onLayout={evt => setHeaderWidth(evt.nativeEvent.layout.width)}
-        style={[
-          a.flex_1,
-          a.flex_row,
-          a.align_center,
-          a.gap_sm,
-          // built-in padding, but slightly more on right than left,
-          // so compensate for that. this is because we're using
-          // headerRightItems
-          a.pl_xs,
-          isInitialRender && {opacity: 0},
-        ]}>
-        {children}
-      </View>
-    )
-  }, [children, headerRef, isInitialRender])
-
-  // this is how expo-router handles it
-  // https://github.com/expo/expo/blob/main/packages/expo-router/src/views/Screen.tsx#L34
-  // note: I'm skipping handling preloading for now -sfn
-  const navigation = useNavigation<NavigationProp>()
-  const isFocused = useIsFocused()
-  useLayoutEffect(() => {
-    if (isFocused) {
-      navigation.setOptions({
-        headerShown: true,
-        // abuse the headerItems API so we get
-        // the sweet sweet progressive blur header.
-        // unclear why just `header: () => elem` doesn't work -sfn
-        unstable_headerRightItems: () => [
-          {
-            type: 'custom',
-            element: headerElement,
-            hidesSharedBackground: true,
-          },
-        ],
-        headerTransparent: true,
-        headerBackVisible: false,
-        scrollEdgeEffects: {
-          top: 'soft',
-        },
-      })
-    }
-  }, [isFocused, navigation, headerElement])
-
-  return null
+  return (
+    <View
+      collapsable={false}
+      ref={transparentHeaderProps.ref}
+      onLayout={transparentHeaderProps.onLayout}
+      style={[
+        a.absolute,
+        a.top_0,
+        a.left_0,
+        a.right_0,
+        a.z_10,
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        gutters,
+        {paddingTop: top, minHeight: 48 + top},
+        a.pb_xs,
+      ]}>
+      {children}
+    </View>
+  )
 }

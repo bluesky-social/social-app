@@ -6,14 +6,20 @@ import {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {mergeRefs} from '#/lib/merge-refs'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
+import {
+  useScrollEdgeScrollView,
+  useTransparentHeaderHeight,
+} from '#/components/Layout/ScrollEdgeInteraction'
 import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
@@ -54,6 +60,7 @@ let List = forwardRef<ListMethods, ListProps>(
       headerOffset,
       style,
       progressViewOffset,
+      contentInset,
       automaticallyAdjustsScrollIndicatorInsets = false,
       ...props
     },
@@ -63,6 +70,13 @@ let List = forwardRef<ListMethods, ListProps>(
     const t = useTheme()
     const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
+    const transparentHeaderRef = useScrollEdgeScrollView()
+    const insets = useSafeAreaInsets()
+    const transparentHeaderHeight = useTransparentHeaderHeight()
+    const isHeaderTransparent = transparentHeaderHeight != null
+    const headerHeight = isHeaderTransparent
+      ? transparentHeaderHeight - insets.top
+      : undefined
 
     const handleScrolledDownChange = useNonReactiveCallback(
       (didScrollDown: boolean) => {
@@ -163,10 +177,18 @@ let List = forwardRef<ListMethods, ListProps>(
           automaticallyAdjustsScrollIndicatorInsets
         }
         scrollIndicatorInsets={{
-          top: headerOffset,
+          top: headerHeight || headerOffset,
           right: 1,
           ...props.scrollIndicatorInsets,
         }}
+        contentInset={
+          headerHeight
+            ? {
+                ...contentInset,
+                top: headerHeight,
+              }
+            : contentInset
+        }
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
@@ -175,7 +197,9 @@ let List = forwardRef<ListMethods, ListProps>(
         scrollEventThrottle={1}
         style={style}
         // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
-        ref={ref}
+        ref={
+          transparentHeaderRef ? mergeRefs([ref, transparentHeaderRef]) : ref
+        }
       />
     )
   },

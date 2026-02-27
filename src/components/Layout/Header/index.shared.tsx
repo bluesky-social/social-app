@@ -35,22 +35,6 @@ export type OuterProps = {
   noBottomBorder?: boolean
   headerRef?: React.RefObject<View | null>
   sticky?: boolean
-  /**
-   * Use native transparent blurred header on iOS 26 (looks very nice)
-   *
-   * When using this, make sure to enable these props on the scrollview for the screen:
-   * ```tsx
-   * <Layout.Content
-   *   contentInsetAdjustmentBehavior="automatic"
-   *   automaticallyAdjustsScrollIndicatorInsets
-   *   // everything else
-   * />
-   * ```
-   * and also set `noInsetTop={IS_LIQUID_GLASS}` on `Layout.Screen`
-   *
-   * @platform ios
-   * */
-  transparent?: boolean
 }
 
 export function Outer({

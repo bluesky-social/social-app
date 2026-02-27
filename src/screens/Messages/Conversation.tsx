@@ -89,7 +89,7 @@ export function MessagesConversationScreenInner({route}: Props) {
     <Layout.Screen
       testID="convoScreen"
       style={web([{minHeight: 0}, a.flex_1])}
-      noInsetTop={IS_LIQUID_GLASS}>
+      transparentHeader={IS_LIQUID_GLASS}>
       <ConvoProvider key={convoId} convoId={convoId}>
         <Inner />
       </ConvoProvider>
