@@ -9,7 +9,7 @@ import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {SearchInput} from '#/components/forms/SearchInput'
@@ -18,18 +18,15 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Text} from '#/components/Typography'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
-type FlatListItem = {
-  item:
-    | {
-        type: 'header'
-        label: string
-      }
-    | {
-        type: 'item'
-        lang: Language
-      }
-  index: number
-}
+type FlatListItem =
+  | {
+      type: 'header'
+      label: string
+    }
+  | {
+      type: 'item'
+      lang: Language
+    }
 
 export function LanguageSelectDialog({
   titleText,
@@ -96,6 +93,7 @@ export function DialogInner({
 }) {
   const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
+  const [footerHeight, setFooterHeight] = useState(0)
 
   const allowedLanguages = useMemo(() => {
     const uniqueLanguagesMap = LANGUAGES.filter(lang => !!lang.code2).reduce(
@@ -261,6 +259,8 @@ export function DialogInner({
     ...displayedLanguages.all.map(lang => ({type: 'item', lang})),
   ]
 
+  const numItems = flatListData.length
+
   return (
     <Toggle.Group
       values={checkedLanguagesCode2}
@@ -273,10 +273,13 @@ export function DialogInner({
         data={flatListData}
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
-        contentContainerStyle={[a.gap_0]}
-        style={[IS_NATIVE && a.px_lg, web({paddingBottom: 120})]}
-        scrollIndicatorInsets={{top: headerHeight}}
-        renderItem={({item, index}: FlatListItem) => {
+        contentContainerStyle={[
+          a.gap_0,
+          IS_NATIVE && {paddingBottom: footerHeight + tokens.space.xl},
+        ]}
+        style={[IS_NATIVE && a.px_lg, IS_WEB && {paddingBottom: 120}]}
+        scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
+        renderItem={({item, index}: {item: FlatListItem; index: number}) => {
           if (item.type === 'header') {
             return (
               <Text
@@ -295,6 +298,8 @@ export function DialogInner({
           }
           const lang = item.lang
 
+          const isLastItem = index === numItems - 1
+
           return (
             <Toggle.Item
               key={lang.code2}
@@ -302,7 +307,7 @@ export function DialogInner({
               label={lang.name}
               style={[
                 t.atoms.border_contrast_low,
-                a.border_b,
+                !isLastItem && a.border_b,
                 a.rounded_0,
                 a.px_0,
                 a.py_md,
@@ -315,7 +320,8 @@ export function DialogInner({
           )
         }}
         footer={
-          <Dialog.FlatListFooter>
+          <Dialog.FlatListFooter
+            onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
             <Button
               label={_(msg`Close dialog`)}
               onPress={handleClose}

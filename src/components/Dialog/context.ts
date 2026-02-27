@@ -18,7 +18,7 @@ import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomShee
 
 export const Context = createContext<DialogContextProps>({
   close: () => {},
-  IS_NATIVEDialog: false,
+  isNativeDialog: false,
   nativeSnapPoint: BottomSheetSnapPoint.Hidden,
   disableDrag: false,
   setDisableDrag: () => {},
