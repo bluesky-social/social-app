@@ -278,7 +278,16 @@ let PagerTabBar = ({
       <View
         ref={headerRef}
         pointerEvents={IS_IOS ? 'auto' : 'box-none'}
-        collapsable={false}>
+        collapsable={false}
+        onLayout={(e: LayoutChangeEvent) => {
+          // Fallback measurement using onLayout directly on the header wrapper.
+          // This is more reliable than .measure() on Android after certain
+          // navigation transitions (e.g. returning from the logged-out view)
+          // where .measure() can fail to return a height.
+          if (isHeaderReady) {
+            onHeaderOnlyLayout(e.nativeEvent.layout.height)
+          }
+        }}>
         {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
         {
           // It wouldn't be enough to place `onLayout` on the parent node because
@@ -286,6 +295,7 @@ let PagerTabBar = ({
           // Instead, we'll render a brand node conditionally and get fresh layout.
           isHeaderReady && (
             <View
+              collapsable={false}
               // It wouldn't be enough to do this in a `ref` of an effect because,
               // even if `isHeaderReady` might have turned `true`, the associated
               // layout might not have been performed yet on the native side.
