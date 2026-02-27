@@ -70,32 +70,30 @@ function TranslationResult({
     : undefined
 
   return (
-    <>
-      <View style={[a.py_xs, a.gap_xs, a.mt_sm]}>
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          {langName ? (
-            <Trans>Translated from {langName}</Trans>
-          ) : (
-            <Trans>Translated</Trans>
-          )}
-          {sourceLanguage != null && (
-            <>
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                {' '}
-                &middot;
-              </Text>{' '}
-              <TranslationLanguageSelect
-                sourceLanguage={sourceLanguage}
-                postText={postText}
-              />
-            </>
-          )}
-        </Text>
-        <Text emoji selectable style={[a.text_md, a.leading_snug]}>
-          {translatedText}
-        </Text>
-      </View>
-    </>
+    <View style={[a.py_xs, a.gap_xs, a.mt_sm]}>
+      <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+        {langName ? (
+          <Trans>Translated from {langName}</Trans>
+        ) : (
+          <Trans>Translated</Trans>
+        )}
+        {sourceLanguage != null && (
+          <>
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              {' '}
+              &middot;
+            </Text>{' '}
+            <TranslationLanguageSelect
+              sourceLanguage={sourceLanguage}
+              postText={postText}
+            />
+          </>
+        )}
+      </Text>
+      <Text emoji selectable style={[a.text_md, a.leading_snug]}>
+        {translatedText}
+      </Text>
+    </View>
   )
 }
 

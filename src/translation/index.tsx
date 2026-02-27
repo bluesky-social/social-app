@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import {Platform} from 'react-native'
+import {LayoutAnimation, Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
 
@@ -70,7 +70,7 @@ async function attemptTranslation(
   const {onTranslateTask} =
     // Needed in order to type check the dynamically imported module.
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    (await require('@bsky.app/expo-translate-text')) as typeof import('@bsky.app/expo-translate-text')
+    require('@bsky.app/expo-translate-text') as typeof import('@bsky.app/expo-translate-text')
   const result = await onTranslateTask({
     input,
     targetLangCode,
@@ -127,6 +127,7 @@ export function Provider({children}: {children?: React.ReactNode}) {
   const {primaryLanguage} = useLanguagePrefs()
 
   const clearTranslation = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setTranslationState(IDLE)
   }, [])
 
@@ -149,6 +150,7 @@ export function Provider({children}: {children?: React.ReactNode}) {
           sourceLanguage: result.sourceLanguage,
           targetLanguage: result.targetLanguage,
         })
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         setTranslationState({
           status: 'success',
           translatedText: result.translatedText,
