@@ -4,11 +4,13 @@ import * as Clipboard from 'expo-clipboard'
 import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useTranslate} from '#/lib/hooks/useTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
+import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import * as ContextMenu from '#/components/ContextMenu'
@@ -36,6 +38,7 @@ export let MessageContextMenu = ({
   const {_} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
   const convo = useConvoActive()
   const deleteControl = usePromptControl()
   const reportControl = usePromptControl()
@@ -170,7 +173,6 @@ export let MessageContextMenu = ({
       </ContextMenu.Root>
 
       <ReportDialog
-        // currentScreen="conversation"
         control={reportControl}
         subject={{
           view: 'message',
@@ -178,6 +180,9 @@ export let MessageContextMenu = ({
           message,
         }}
         onAfterSubmit={() => {
+          if (sender) {
+            unstableCacheProfileView(queryClient, sender)
+          }
           blockOrDeleteControl.open()
         }}
       />
