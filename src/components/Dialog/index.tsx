@@ -1,20 +1,16 @@
 import React, {useImperativeHandle} from 'react'
 import {
+  type LayoutChangeEvent,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   Pressable,
-  type ScrollView,
+  ScrollView,
   type StyleProp,
   TextInput,
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  KeyboardAwareScrollView,
-  type KeyboardAwareScrollViewRef,
-  useKeyboardHandler,
-  useReanimatedKeyboardAnimation,
-} from 'react-native-keyboard-controller'
+import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
   type ScrollEvent,
@@ -29,7 +25,7 @@ import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import {atoms as a, ios, platform, tokens, useTheme} from '#/alf'
+import {android, atoms as a, ios, platform, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -154,7 +150,7 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
-      IS_NATIVEDialog: true,
+      isNativeDialog: true,
       nativeSnapPoint: snapPoint,
       disableDrag,
       setDisableDrag,
@@ -212,33 +208,17 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
-
-    const [keyboardHeight, setKeyboardHeight] = React.useState(0)
-
-    // note: iOS-only. keyboard-controller doesn't seem to work inside the sheets on Android
-    useKeyboardHandler(
-      {
-        onEnd: e => {
-          'worklet'
-          runOnJS(setKeyboardHeight)(e.height)
-        },
-      },
-      [],
-    )
+    const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
 
     let paddingBottom = 0
     if (IS_IOS) {
-      paddingBottom += keyboardHeight / 4
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.bottom + tokens.space.md
-      }
-      paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
+      paddingBottom = tokens.space._2xl
     } else {
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
+      paddingBottom =
+        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
+      if (isAtMaxSnapPoint) {
         paddingBottom += insets.top
       }
-      paddingBottom +=
-        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
     }
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -254,18 +234,21 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     }
 
     return (
-      <KeyboardAwareScrollView
+      <ScrollView
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
           {paddingBottom},
           contentContainerStyle,
         ]}
-        ref={ref as React.Ref<KeyboardAwareScrollViewRef>}
+        ref={ref}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
+        contentInsetAdjustmentBehavior={
+          isAtMaxSnapPoint ? 'automatic' : 'never'
+        }
+        automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
         {...props}
-        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        bottomOffset={30}
+        bounces={isAtMaxSnapPoint}
         scrollEventThrottle={50}
         onScroll={IS_ANDROID ? onScroll : undefined}
         keyboardShouldPersistTaps="handled"
@@ -275,7 +258,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         stickyHeaderIndices={ios(header ? [0] : undefined)}>
         {header}
         {children}
-      </KeyboardAwareScrollView>
+      </ScrollView>
     )
   },
 )
@@ -287,9 +270,14 @@ export const InnerFlatList = React.forwardRef<
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
     footer?: React.ReactNode
   }
->(function InnerFlatList({footer, style, ...props}, ref) {
+>(function InnerFlatList(
+  {headerOffset, footer, style, contentContainerStyle, ...props},
+  ref,
+) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+
+  const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
 
   const onScroll = (e: ScrollEvent) => {
     'worklet'
@@ -308,19 +296,36 @@ export const InnerFlatList = React.forwardRef<
     <ScrollProvider onScroll={onScroll}>
       <List
         keyboardShouldPersistTaps="handled"
-        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        ListFooterComponent={<View style={{height: insets.bottom + 100}} />}
+        contentInsetAdjustmentBehavior={
+          isAtMaxSnapPoint ? 'automatic' : 'never'
+        }
+        automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
+        scrollIndicatorInsets={{top: headerOffset}}
+        bounces={isAtMaxSnapPoint}
         ref={ref}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
         style={[a.h_full, style]}
+        contentContainerStyle={[
+          {paddingTop: headerOffset},
+          android({
+            paddingBottom: insets.top + insets.bottom + tokens.space.xl,
+          }),
+          contentContainerStyle,
+        ]}
       />
       {footer}
     </ScrollProvider>
   )
 })
 
-export function FlatListFooter({children}: {children: React.ReactNode}) {
+export function FlatListFooter({
+  children,
+  onLayout,
+}: {
+  children: React.ReactNode
+  onLayout?: (event: LayoutChangeEvent) => void
+}) {
   const t = useTheme()
   const {top, bottom} = useSafeAreaInsets()
   const {height} = useReanimatedKeyboardAnimation()
@@ -334,6 +339,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
 
   return (
     <Animated.View
+      onLayout={onLayout}
       style={[
         a.absolute,
         a.bottom_0,
