@@ -13,7 +13,7 @@ const clearTranslation = () => {} // no-op on web
 /**
  * Web always opens Google Translate.
  */
-export function useTranslateOnDevice(_key: string) {
+export function useTranslateOnDevice() {
   const openLink = useOpenLink()
   const ax = useAnalytics()
   const {primaryLanguage} = useLanguagePrefs()
