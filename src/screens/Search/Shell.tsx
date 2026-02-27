@@ -467,7 +467,7 @@ let SearchScreenInner = ({
   query: string
   queryWithParams: string
   headerHeight: number
-  focusSearchInput: (tab?: 'user' | 'profile' | 'feed') => void
+  focusSearchInput: (tab?: TabParam) => void
 }): React.ReactNode => {
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
