@@ -15,7 +15,7 @@ import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useAnalytics} from '#/analytics'
 
-type TranslationState =
+export type TranslationState =
   | {status: 'idle'}
   | {status: 'loading'}
   | {
