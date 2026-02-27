@@ -16,14 +16,12 @@ import {useTranslateOnDevice} from '#/translation'
 
 export function TranslatedPost({
   postText,
-  postUri,
   hideLoading = false,
 }: {
   postText: string
-  postUri: string
   hideLoading: boolean
 }) {
-  const {translationState} = useTranslateOnDevice(postUri)
+  const {translationState} = useTranslateOnDevice()
 
   if (translationState.status === 'loading' && !hideLoading) {
     return <TranslationLoading />
@@ -33,7 +31,6 @@ export function TranslatedPost({
     return (
       <TranslationResult
         postText={postText}
-        postUri={postUri}
         sourceLanguage={translationState.sourceLanguage}
         translatedText={translationState.translatedText}
       />
@@ -58,12 +55,10 @@ function TranslationLoading() {
 
 function TranslationResult({
   postText,
-  postUri,
   sourceLanguage,
   translatedText,
 }: {
   postText: string
-  postUri: string
   sourceLanguage: string | null
   translatedText: string
 }) {
@@ -90,7 +85,6 @@ function TranslationResult({
                 &middot;
               </Text>{' '}
               <TranslationLanguageSelect
-                postUri={postUri}
                 sourceLanguage={sourceLanguage}
                 postText={postText}
               />
@@ -107,17 +101,15 @@ function TranslationResult({
 
 function TranslationLanguageSelect({
   postText,
-  postUri,
   sourceLanguage,
 }: {
   postText: string
-  postUri: string
   sourceLanguage: string
 }) {
   const ax = useAnalytics()
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const {translate} = useTranslateOnDevice(postUri)
+  const {translate} = useTranslateOnDevice()
 
   const items = useMemo(
     () =>

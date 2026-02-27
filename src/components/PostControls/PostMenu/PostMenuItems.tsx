@@ -133,9 +133,7 @@ let PostMenuItems = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const {clearTranslation, translate, translationState} = useTranslateOnDevice(
-    post.uri,
-  )
+  const {clearTranslation, translate, translationState} = useTranslateOnDevice()
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()

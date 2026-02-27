@@ -85,6 +85,7 @@ import {
 } from '#/features/liveEvents/context'
 import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
+import {Provider as TranslationProvider} from '#/translation'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
@@ -179,9 +180,11 @@ function InnerApp() {
                                                           style={s.h100pct}>
                                                           <GlobalGestureEventsProvider>
                                                             <IntentDialogProvider>
-                                                              <TestCtrls />
-                                                              <Shell />
-                                                              <ToastOutlet />
+                                                              <TranslationProvider>
+                                                                <TestCtrls />
+                                                                <Shell />
+                                                                <ToastOutlet />
+                                                              </TranslationProvider>
                                                             </IntentDialogProvider>
                                                           </GlobalGestureEventsProvider>
                                                         </GestureHandlerRootView>
