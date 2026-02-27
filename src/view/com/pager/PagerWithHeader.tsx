@@ -284,6 +284,7 @@ let PagerTabBar = ({
           // This is more reliable than .measure() on Android after certain
           // navigation transitions (e.g. returning from the logged-out view)
           // where .measure() can fail to return a height.
+          // ref: https://github.com/bluesky-social/social-app/pull/9964 -sfp
           if (isHeaderReady) {
             onHeaderOnlyLayout(e.nativeEvent.layout.height)
           }
