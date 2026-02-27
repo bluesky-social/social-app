@@ -57,11 +57,11 @@ class ExpoScrollEdgeInteractionView: ExpoView {
     currentInteraction = interaction
   }
 
-  private func resolveEdge() -> NSDirectionalRectEdge {
+  private func resolveEdge() -> UIRectEdge {
     switch edge {
     case "bottom": return .bottom
-    case "left": return .leading
-    case "right": return .trailing
+    case "left": return .left
+    case "right": return .right
     default: return .top
     }
   }
