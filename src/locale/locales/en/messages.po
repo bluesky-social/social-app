@@ -839,7 +839,7 @@ msgid "Add a user to this list"
 msgstr ""
 
 #: src/components/dialogs/SwitchAccount.tsx:56
-#: src/screens/Deactivated.tsx:184
+#: src/screens/Deactivated.tsx:186
 msgid "Add account"
 msgstr ""
 
@@ -1913,7 +1913,7 @@ msgstr ""
 #: src/features/liveNow/components/GoLiveDialog.tsx:248
 #: src/features/liveNow/components/GoLiveDialog.tsx:254
 #: src/lib/media/picker.tsx:38
-#: src/screens/Deactivated.tsx:150
+#: src/screens/Deactivated.tsx:152
 #: src/screens/Profile/Header/EditProfileDialog.tsx:219
 #: src/screens/Profile/Header/EditProfileDialog.tsx:227
 #: src/screens/Search/Shell.tsx:370
@@ -1938,7 +1938,7 @@ msgstr ""
 msgid "Cancel quote post"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:144
+#: src/screens/Deactivated.tsx:146
 msgid "Cancel reactivation and sign out"
 msgstr ""
 
@@ -3833,7 +3833,7 @@ msgstr ""
 msgid "Explicit sexual images."
 msgstr ""
 
-#: src/Navigation.tsx:789
+#: src/Navigation.tsx:808
 #: src/screens/Search/Shell.tsx:327
 #: src/view/shell/desktop/LeftNav.tsx:689
 #: src/view/shell/Drawer.tsx:417
@@ -5032,8 +5032,8 @@ msgstr ""
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
-#: src/Navigation.tsx:784
-#: src/Navigation.tsx:804
+#: src/Navigation.tsx:803
+#: src/Navigation.tsx:823
 #: src/view/shell/bottom-bar/BottomBar.tsx:177
 #: src/view/shell/desktop/LeftNav.tsx:671
 #: src/view/shell/Drawer.tsx:443
@@ -6033,7 +6033,7 @@ msgstr ""
 msgid "Message options"
 msgstr ""
 
-#: src/Navigation.tsx:799
+#: src/Navigation.tsx:818
 msgid "Messages"
 msgstr ""
 
@@ -6708,7 +6708,7 @@ msgid "Notification Sounds"
 msgstr ""
 
 #: src/Navigation.tsx:575
-#: src/Navigation.tsx:794
+#: src/Navigation.tsx:813
 #: src/screens/Notifications/ActivityList.tsx:31
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
 #: src/screens/Settings/NotificationSettings/index.tsx:93
@@ -7046,11 +7046,11 @@ msgstr ""
 msgid "Options:"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:192
+#: src/screens/Deactivated.tsx:194
 msgid "Or, continue with another account."
 msgstr ""
 
-#: src/screens/Deactivated.tsx:179
+#: src/screens/Deactivated.tsx:181
 msgid "Or, sign in to one of your other accounts."
 msgstr ""
 
@@ -7818,7 +7818,7 @@ msgstr ""
 msgid "React with {emoji}"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:133
+#: src/screens/Deactivated.tsx:135
 msgid "Reactivate your account"
 msgstr ""
 
@@ -9325,8 +9325,8 @@ msgstr ""
 msgid "Sign in as..."
 msgstr ""
 
-#: src/screens/Deactivated.tsx:195
-#: src/screens/Deactivated.tsx:201
+#: src/screens/Deactivated.tsx:197
+#: src/screens/Deactivated.tsx:203
 msgid "Sign in or create an account"
 msgstr ""
 
@@ -9463,7 +9463,7 @@ msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:139
 #: src/components/moderation/ReportDialog/index.tsx:273
-#: src/screens/Deactivated.tsx:86
+#: src/screens/Deactivated.tsx:88
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 #: src/view/screens/Storybook/Admonitions.tsx:56
 msgid "Something went wrong, please try again"
@@ -10035,7 +10035,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:1025
-#: src/view/com/posts/PostFeed.tsx:758
+#: src/view/com/posts/PostFeed.tsx:764
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -11293,7 +11293,7 @@ msgid "View your default post interaction settings"
 msgstr ""
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:57
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:72
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:75
 msgid "View your feeds and explore more"
 msgstr ""
 
@@ -11552,7 +11552,7 @@ msgstr ""
 msgid "We've confirmed your age assurance status. You can now close this dialog."
 msgstr ""
 
-#: src/screens/Deactivated.tsx:117
+#: src/screens/Deactivated.tsx:119
 msgid "Welcome back!"
 msgstr ""
 
@@ -11708,7 +11708,7 @@ msgstr ""
 msgid "Yes, hide"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:139
+#: src/screens/Deactivated.tsx:141
 msgid "Yes, reactivate my account"
 msgstr ""
 
@@ -11828,7 +11828,7 @@ msgstr ""
 msgid "You can only select one video at a time."
 msgstr ""
 
-#: src/screens/Deactivated.tsx:125
+#: src/screens/Deactivated.tsx:127
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr ""
 
@@ -12026,7 +12026,7 @@ msgid "You need to verify your email address before you can enable email 2FA."
 msgstr ""
 
 #. placeholder {0}: currentAccount?.handle
-#: src/screens/Deactivated.tsx:120
+#: src/screens/Deactivated.tsx:122
 msgid "You previously deactivated @{0}."
 msgstr ""
 
@@ -12119,7 +12119,7 @@ msgstr ""
 msgid "You're in line"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:81
+#: src/screens/Deactivated.tsx:83
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr ""
