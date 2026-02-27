@@ -64,7 +64,7 @@ import {VerificationCheckButton} from '#/components/verification/VerificationChe
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
-import {type TranslationState, useTranslateOnDevice} from '#/translation'
+import {useTranslateOnDevice} from '#/translation'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -188,7 +188,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
   const formatPostStatCount = useFormatPostStatCount()
-  const {clearTranslation, translate, translationState} = useTranslateOnDevice()
 
   const post = postShadow
   const record = item.value.post.record
@@ -419,15 +418,10 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             ) : undefined}
             <TranslatedPost
               postText={record.text}
-              translationState={translationState}
+              postUri={post.uri}
               hideLoading
             />
-            <TranslateLink
-              post={item.value.post}
-              translate={translate}
-              translationState={translationState}
-              clearTranslation={clearTranslation}
-            />
+            <TranslateLink post={item.value.post} />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed
@@ -565,22 +559,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 
 function TranslateLink({
   post,
-  translate,
-  clearTranslation,
-  translationState,
 }: {
   post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
-  translate: (
-    text: string,
-    targetLangCode: string,
-    sourceLangCode?: string,
-  ) => Promise<void>
-  clearTranslation: () => void
-  translationState: TranslationState
 }) {
   const t = useTheme()
   const ax = useAnalytics()
   const {t: l} = useLingui()
+  const {clearTranslation, translate, translationState} = useTranslateOnDevice(
+    post.uri,
+  )
   const langPrefs = useLanguagePrefs()
 
   const needsTranslation = useMemo(
