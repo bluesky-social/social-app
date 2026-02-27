@@ -19,6 +19,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {useTranslate} from '#/lib/hooks/useTranslate'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -94,7 +95,6 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
-import {useTranslateOnDevice} from '#/translation'
 import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
@@ -133,7 +133,7 @@ let PostMenuItems = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const {clearTranslation, translate, translationState} = useTranslateOnDevice()
+  const translate = useTranslate()
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()
@@ -273,11 +273,6 @@ let PostMenuItems = ({
         textLength: post.record.text.length,
       })
     }
-  }
-
-  const onPressHideTranslation = () => {
-    clearTranslation()
-    return false
   }
 
   const onHidePost = () => {
@@ -510,31 +505,13 @@ let PostMenuItems = ({
         <Menu.Group>
           {!hideInPWI || hasSession ? (
             <>
-              {translationState.status === 'loading' ? (
-                <Menu.Item
-                  testID="postDropdownTranslateBtn"
-                  label={_(msg`Translating…`)}
-                  onPress={onPressHideTranslation}>
-                  <Menu.ItemText>{_(msg`Translating…`)}</Menu.ItemText>
-                  <Menu.ItemIcon icon={Translate} position="right" />
-                </Menu.Item>
-              ) : translationState.status === 'success' ? (
-                <Menu.Item
-                  testID="postDropdownTranslateBtn"
-                  label={_(msg`Hide translation`)}
-                  onPress={onPressHideTranslation}>
-                  <Menu.ItemText>{_(msg`Hide translation`)}</Menu.ItemText>
-                  <Menu.ItemIcon icon={Translate} position="right" />
-                </Menu.Item>
-              ) : (
-                <Menu.Item
-                  testID="postDropdownTranslateBtn"
-                  label={_(msg`Translate`)}
-                  onPress={onPressTranslate}>
-                  <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
-                  <Menu.ItemIcon icon={Translate} position="right" />
-                </Menu.Item>
-              )}
+              <Menu.Item
+                testID="postDropdownTranslateBtn"
+                label={_(msg`Translate`)}
+                onPress={onPressTranslate}>
+                <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={Translate} position="right" />
+              </Menu.Item>
 
               <Menu.Item
                 testID="postDropdownCopyTextBtn"

@@ -6,7 +6,8 @@ import {getTranslatorLink} from '#/locale/helpers'
 import {IS_ANDROID} from '#/env'
 
 /**
- * @deprecated use `useTranslateOnDevice`
+ * Will always link out to Google Translate. If inline translation is desired,
+ * use `useTranslateOnDevice`
  */
 export function useTranslate() {
   const openLink = useOpenLink()

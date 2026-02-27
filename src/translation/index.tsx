@@ -113,7 +113,7 @@ export function useTranslateOnDevice() {
   const context = useContext(Context)
   if (!context) {
     throw new Error(
-      'useTranslateOnDevice must be used within a TranslationProvider',
+      'useTranslateOnDevice must be used within a TranslateOnDeviceProvider',
     )
   }
   return context

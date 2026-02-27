@@ -8,7 +8,6 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -64,7 +63,10 @@ import {VerificationCheckButton} from '#/components/verification/VerificationChe
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
-import {useTranslateOnDevice} from '#/translation'
+import {
+  Provider as TranslateOnDeviceProvider,
+  useTranslateOnDevice,
+} from '#/translation'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -87,16 +89,18 @@ export function ThreadItemAnchor({
   }
 
   return (
-    <ThreadItemAnchorInner
-      // Safeguard from clobbering per-post state below:
-      key={postShadow.uri}
-      item={item}
-      isRoot={isRoot}
-      postShadow={postShadow}
-      onPostSuccess={onPostSuccess}
-      threadgateRecord={threadgateRecord}
-      postSource={postSource}
-    />
+    <TranslateOnDeviceProvider>
+      <ThreadItemAnchorInner
+        // Safeguard from clobbering per-post state below:
+        key={postShadow.uri}
+        item={item}
+        isRoot={isRoot}
+        postShadow={postShadow}
+        onPostSuccess={onPostSuccess}
+        threadgateRecord={threadgateRecord}
+        postSource={postSource}
+      />
+    </TranslateOnDeviceProvider>
   )
 }
 
@@ -611,13 +615,6 @@ function TranslateLink({
     },
     [clearTranslation],
   )
-
-  useFocusEffect(() => {
-    return () => {
-      // Clear the translation when leaving the post
-      clearTranslation()
-    }
-  })
 
   return (
     needsTranslation && (
