@@ -1,5 +1,5 @@
-import {memo, useCallback} from 'react'
-import {View} from 'react-native'
+import {memo, useCallback, useRef} from 'react'
+import {findNodeHandle, View} from 'react-native'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -41,6 +41,7 @@ let RepostButton = ({
   const requireAuth = useRequireAuth()
   const dialogControl = Dialog.useDialogControl()
   const formatPostStatCount = useFormatPostStatCount()
+  const btnRef = useRef<View>(null)
 
   const onPress = () => requireAuth(() => dialogControl.open())
 
@@ -56,6 +57,7 @@ let RepostButton = ({
   return (
     <>
       <PostControlButton
+        ref={btnRef}
         testID="repostBtn"
         active={isReposted}
         activeColor={t.palette.positive_500}
@@ -94,7 +96,10 @@ let RepostButton = ({
       </PostControlButton>
       <Dialog.Outer
         control={dialogControl}
-        nativeOptions={{preventExpansion: true}}>
+        nativeOptions={{
+          preventExpansion: true,
+          sourceViewTag: findNodeHandle(btnRef.current) ?? undefined,
+        }}>
         <Dialog.Handle />
         <RepostButtonDialogInner
           isReposted={isReposted}

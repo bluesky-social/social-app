@@ -262,7 +262,7 @@ let ProfileMenu = ({
           }}
         </Menu.Trigger>
 
-        <Menu.Outer style={{minWidth: 170}}>
+        <Menu.Outer style={{minWidth: 170}} disableTransition>
           <Menu.Group>
             <Menu.Item
               testID="profileHeaderDropdownShareBtn"
