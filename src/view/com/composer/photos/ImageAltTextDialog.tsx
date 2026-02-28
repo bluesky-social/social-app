@@ -23,12 +23,14 @@ type Props = {
   control: Dialog.DialogOuterProps['control']
   image: ComposerImage
   onChange: (next: ComposerImage) => void
+  sourceViewTag?: number
 }
 
 export const ImageAltTextDialog = ({
   control,
   image,
   onChange,
+  sourceViewTag,
 }: Props): React.ReactNode => {
   const {height: minHeight} = useWindowDimensions()
   const [altText, setAltText] = useState(image.alt)
@@ -42,7 +44,7 @@ export const ImageAltTextDialog = ({
           alt: enforceLen(altText, MAX_ALT_TEXT, true),
         })
       }}
-      nativeOptions={{minHeight}}>
+      nativeOptions={{minHeight, sourceViewTag}}>
       <Dialog.Handle />
       <ImageAltTextInner
         control={control}
