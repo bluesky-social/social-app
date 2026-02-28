@@ -1,0 +1,2 @@
+export var DEFAULT_POLL_INTERVAL = 60e3;
+export var BACKGROUND_POLL_INTERVAL = 60e3 * 5;

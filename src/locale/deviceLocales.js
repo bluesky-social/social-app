@@ -1,0 +1,60 @@
+import { getLocales as defaultGetLocales } from 'expo-localization';
+import { dedupArray } from '#/lib/functions';
+/**
+ * Normalized locales
+ *
+ * Handles legacy migration for Java devices.
+ *
+ * {@link https://github.com/bluesky-social/social-app/pull/4461}
+ * {@link https://xml.coverpages.org/iso639a.html}
+ *
+ * Convert Chinese language tags for Native.
+ *
+ * {@link https://datatracker.ietf.org/doc/html/rfc5646#appendix-A}
+ * {@link https://developer.apple.com/documentation/packagedescription/languagetag}
+ * {@link https://gist.github.com/amake/0ac7724681ac1c178c6f95a5b09f03ce#new-locales-vs-old-locales-chinese}
+ */
+export function getLocales() {
+    var _a;
+    var locales = (_a = defaultGetLocales === null || defaultGetLocales === void 0 ? void 0 : defaultGetLocales()) !== null && _a !== void 0 ? _a : [];
+    var output = [];
+    for (var _i = 0, locales_1 = locales; _i < locales_1.length; _i++) {
+        var locale = locales_1[_i];
+        if (typeof locale.languageCode === 'string') {
+            if (locale.languageCode === 'in') {
+                // indonesian
+                locale.languageCode = 'id';
+            }
+            if (locale.languageCode === 'iw') {
+                // hebrew
+                locale.languageCode = 'he';
+            }
+            if (locale.languageCode === 'ji') {
+                // yiddish
+                locale.languageCode = 'yi';
+            }
+        }
+        if (typeof locale.languageTag === 'string') {
+            if (locale.languageTag.startsWith('zh-Hans') ||
+                locale.languageTag === 'zh-CN') {
+                // Simplified Chinese to zh-Hans-CN
+                locale.languageTag = 'zh-Hans-CN';
+            }
+            if (locale.languageTag.startsWith('zh-Hant') ||
+                locale.languageTag === 'zh-TW') {
+                // Traditional Chinese to zh-Hant-TW
+                locale.languageTag = 'zh-Hant-TW';
+            }
+        }
+        // @ts-ignore checked above
+        output.push(locale);
+    }
+    return output;
+}
+export var deviceLocales = getLocales();
+/**
+ * BCP-47 language tag without region e.g. array of 2-char lang codes
+ *
+ * {@link https://docs.expo.dev/versions/latest/sdk/localization/#locale}
+ */
+export var deviceLanguageCodes = dedupArray(deviceLocales.map(function (l) { return l.languageCode; }));
