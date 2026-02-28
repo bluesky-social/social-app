@@ -14,6 +14,7 @@ import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 
 type TranslationState =
   | {status: 'idle'}
@@ -119,7 +120,7 @@ export function useTranslateOnDevice() {
   return context
 }
 
-export function Provider({children}: {children?: React.ReactNode}) {
+export function Provider({children}: React.PropsWithChildren<unknown>) {
   const [translationState, setTranslationState] =
     useState<TranslationState>(IDLE)
   const openLink = useOpenLink()
@@ -158,15 +159,25 @@ export function Provider({children}: {children?: React.ReactNode}) {
           targetLanguage: result.targetLanguage,
         })
       } catch (e) {
-        logger.error('Failed to translate post on device', {safeMessage: e})
-        // On-device translation failed (language pack missing or user dismissed
-        // the download prompt). Fall back to Google Translate.
-        ax.metric('translate:result', {
-          method: 'fallback-alert',
-          os: Platform.OS,
-          sourceLanguage: sourceLangCode ?? null,
-          targetLanguage: targetLangCode,
-        })
+        if (IS_WEB) {
+          // Web always opens Google Translate.
+          ax.metric('translate:result', {
+            method: 'google-translate',
+            os: Platform.OS,
+            sourceLanguage: sourceLangCode ?? null,
+            targetLanguage: targetLangCode,
+          })
+        } else {
+          logger.error('Failed to translate post on device', {safeMessage: e})
+          // On-device translation failed (language pack missing or user dismissed
+          // the download prompt). Fall back to Google Translate.
+          ax.metric('translate:result', {
+            method: 'fallback-alert',
+            os: Platform.OS,
+            sourceLanguage: sourceLangCode ?? null,
+            targetLanguage: targetLangCode,
+          })
+        }
         setTranslationState({status: 'idle'})
         const translateUrl = getTranslatorLink(
           text,
