@@ -1,5 +1,11 @@
-import {useEffect, useMemo, useState} from 'react'
-import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
+import {useEffect, useMemo, useRef, useState} from 'react'
+import {
+  findNodeHandle,
+  Keyboard,
+  type StyleProp,
+  type View,
+  type ViewStyle,
+} from 'react-native'
 import {type AnimatedStyle} from 'react-native-reanimated'
 import {type AppBskyFeedPostgate} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -46,6 +52,7 @@ export function ThreadgateBtn({
   const {_} = useLingui()
   const ax = useAnalytics()
   const control = Dialog.useDialogControl()
+  const btnRef = useRef<View>(null)
   const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
   const [showTooltip, setShowTooltip] = useState(false)
   const [tooltipWasShown] = useState(!threadgateNudged)
@@ -145,6 +152,7 @@ export function ThreadgateBtn({
         position="top">
         <Tooltip.Target>
           <Button
+            ref={btnRef}
             color={showTooltip ? 'primary_subtle' : 'secondary'}
             size="small"
             testID="openReplyGateButton"
@@ -167,6 +175,7 @@ export function ThreadgateBtn({
 
       <PostInteractionSettingsControlledDialog
         control={control}
+        sourceViewTag={findNodeHandle(btnRef.current) ?? undefined}
         onSave={() => {
           if (persist) {
             persistChanges({
