@@ -36,6 +36,10 @@ class BottomSheetView(
   private var eventDispatcher: EventDispatcher? = null
   private var isKeyboardVisible: Boolean = false
 
+  // Native content height observation (eliminates JS bridge round-trip)
+  private var contentLayoutListener: View.OnLayoutChangeListener? = null
+  private var observedContentView: View? = null
+
   private val screenHeight =
     context.resources.displayMetrics.heightPixels
       .toFloat()
@@ -129,6 +133,7 @@ class BottomSheetView(
   }
 
   private fun destroy() {
+    this.stopObservingContentHeight()
     this.isClosing = false
     this.isOpen = false
     this.dialog = null
@@ -245,6 +250,7 @@ class BottomSheetView(
     this.isOpening = true
     dialog.show()
     this.dialog = dialog
+    this.startObservingContentHeight()
 
     ViewCompat.setOnApplyWindowInsetsListener(dialogRootViewGroup) { view, insets ->
       val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
@@ -308,6 +314,35 @@ class BottomSheetView(
 
   fun dismiss() {
     this.dialog?.dismiss()
+  }
+
+  // Observe the content view's layout changes so that height updates are detected
+  // purely on the native side, without a JS bridge round-trip through onLayout.
+  private fun startObservingContentHeight() {
+    stopObservingContentHeight()
+
+    val innerViewGroup = this.innerView as? ViewGroup ?: return
+    val contentView = innerViewGroup.getChildAt(0) ?: return
+
+    val listener = View.OnLayoutChangeListener { _, _, top, _, bottom, _, _, oldTop, _, oldBottom ->
+      val newHeight = bottom - top
+      val oldHeight = oldBottom - oldTop
+      if (newHeight != oldHeight && newHeight > 0 && (isOpen || isOpening) && !isClosing) {
+        updateLayout()
+      }
+    }
+
+    contentView.addOnLayoutChangeListener(listener)
+    this.contentLayoutListener = listener
+    this.observedContentView = contentView
+  }
+
+  private fun stopObservingContentHeight() {
+    contentLayoutListener?.let { listener ->
+      observedContentView?.removeOnLayoutChangeListener(listener)
+    }
+    contentLayoutListener = null
+    observedContentView = null
   }
 
   // Util
