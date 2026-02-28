@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {
   findNodeHandle,
   Keyboard,
@@ -52,7 +52,13 @@ export function ThreadgateBtn({
   const {_} = useLingui()
   const ax = useAnalytics()
   const control = Dialog.useDialogControl()
-  const btnRef = useRef<View>(null)
+  const [sourceViewTag, setSourceViewTag] = useState<number>()
+  const btnRef = (node: View | null) => {
+    if (node) {
+      const tag = findNodeHandle(node)
+      if (tag != null) setSourceViewTag(tag)
+    }
+  }
   const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
   const [showTooltip, setShowTooltip] = useState(false)
   const [tooltipWasShown] = useState(!threadgateNudged)
@@ -175,7 +181,7 @@ export function ThreadgateBtn({
 
       <PostInteractionSettingsControlledDialog
         control={control}
-        sourceViewTag={findNodeHandle(btnRef.current) ?? undefined}
+        sourceViewTag={sourceViewTag}
         onSave={() => {
           if (persist) {
             persistChanges({

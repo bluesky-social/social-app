@@ -1,4 +1,12 @@
-import {cloneElement, Fragment, isValidElement, useMemo, useRef} from 'react'
+import {
+  cloneElement,
+  Fragment,
+  isValidElement,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   findNodeHandle,
   Pressable,
@@ -106,9 +114,14 @@ export function Outer({
 }>) {
   const context = useMenuContext()
   const {_} = useLingui()
-  const sourceViewTag = enableTransition
-    ? (findNodeHandle(context.triggerRef.current) ?? undefined)
-    : undefined
+  const [sourceViewTag, setSourceViewTag] = useState<number>()
+
+  useEffect(() => {
+    if (enableTransition && context.triggerRef.current) {
+      const tag = findNodeHandle(context.triggerRef.current)
+      if (tag != null) setSourceViewTag(tag)
+    }
+  }, [enableTransition, context.triggerRef])
 
   return (
     <Dialog.Outer

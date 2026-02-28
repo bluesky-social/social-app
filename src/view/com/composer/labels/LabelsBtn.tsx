@@ -1,4 +1,4 @@
-import {useRef} from 'react'
+import {useState} from 'react'
 import {findNodeHandle, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -30,7 +30,14 @@ export function LabelsBtn({
 }) {
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
-  const btnRef = useRef<View>(null)
+  const [sourceViewTag, setSourceViewTag] = useState<number>()
+
+  const btnRef = (node: View | null) => {
+    if (node) {
+      const tag = findNodeHandle(node)
+      if (tag != null) setSourceViewTag(tag)
+    }
+  }
 
   const hasLabel = labels.length > 0
 
@@ -80,7 +87,7 @@ export function LabelsBtn({
         control={control}
         nativeOptions={{
           preventExpansion: true,
-          sourceViewTag: findNodeHandle(btnRef.current) ?? undefined,
+          sourceViewTag,
         }}>
         <Dialog.Handle />
         <DialogInner
