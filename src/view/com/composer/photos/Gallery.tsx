@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
+  findNodeHandle,
   type ImageStyle,
-  Keyboard,
   type LayoutChangeEvent,
   StyleSheet,
   TouchableOpacity,
@@ -144,6 +144,14 @@ const GalleryItem = ({
 
   const altTextControl = Dialog.useDialogControl()
   const editControl = Dialog.useDialogControl()
+  const [altBtnViewTag, setAltBtnViewTag] = useState<number>()
+
+  const altBtnRef = (node: View | null) => {
+    if (node) {
+      const tag = findNodeHandle(node)
+      if (tag != null) setAltBtnViewTag(tag)
+    }
+  }
 
   const onImageEdit = () => {
     if (IS_NATIVE) {
@@ -156,12 +164,12 @@ const GalleryItem = ({
   }
 
   const onAltTextEdit = () => {
-    Keyboard.dismiss()
     altTextControl.open()
   }
 
   return (
     <View
+      ref={altBtnRef}
       style={imageStyle as ViewStyle}
       // Fixes ALT and icons appearing with half opacity when the post is inactive
       renderToHardwareTextureAndroid>
@@ -240,6 +248,7 @@ const GalleryItem = ({
         control={altTextControl}
         image={image}
         onChange={onChange}
+        sourceViewTag={altBtnViewTag}
       />
 
       <EditImageDialog
