@@ -15,6 +15,7 @@ import * as Dialog from '#/components/Dialog'
 import {LanguageSelectDialog} from '#/components/dialogs/LanguageSelectDialog'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
+import {Keyboard_Stroke2_Corner0_Rounded as KeyboardIcon} from '#/components/icons/Keyboard'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 
@@ -65,20 +66,32 @@ export function PostLanguageSelect({
           )}
         </Menu.Trigger>
         <Menu.Outer>
-          <Menu.Group>
-            {showAutoItem && (
+          {showAutoItem && (
+            <Menu.Group>
               <Menu.Item
-                label={_(msg`Automatic`)}
+                label={_(
+                  msg`Keyboard (${codeToLanguageName(
+                    keyboardLanguage,
+                    langPrefs.appLanguage,
+                  )})`,
+                )}
                 onPress={() => onSelectAutomatic?.()}>
+                <Menu.ItemIcon icon={KeyboardIcon} />
                 <Menu.ItemText>
-                  <Trans>Automatic</Trans>
-                  {' ('}
-                  {codeToLanguageName(keyboardLanguage, langPrefs.appLanguage)}
-                  {')'}
+                  <Trans>
+                    Keyboard (
+                    {codeToLanguageName(
+                      keyboardLanguage,
+                      langPrefs.appLanguage,
+                    )}
+                    )
+                  </Trans>
                 </Menu.ItemText>
                 <Menu.ItemRadio selected={!!isAutoMode} />
               </Menu.Item>
-            )}
+            </Menu.Group>
+          )}
+          <Menu.Group>
             {dedupedHistory.map(historyItem => {
               const langCodes = historyItem.split(',')
               const langName = langCodes
