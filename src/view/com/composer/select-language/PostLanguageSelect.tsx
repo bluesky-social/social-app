@@ -21,9 +21,17 @@ import {Text} from '#/components/Typography'
 export function PostLanguageSelect({
   currentLanguages: currentLanguagesProp,
   onSelectLanguage,
+  onSelectAutomatic,
+  keyboardLanguage,
+  isAutoMode,
+  autoLangEnabled,
 }: {
   currentLanguages?: string[]
   onSelectLanguage?: (language: string) => void
+  onSelectAutomatic?: () => void
+  keyboardLanguage?: string | null
+  isAutoMode?: boolean
+  autoLangEnabled?: boolean
 }) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
@@ -46,26 +54,7 @@ export function PostLanguageSelect({
     onSelectLanguage?.(langsString)
   }
 
-  if (
-    dedupedHistory.length === 1 &&
-    dedupedHistory[0] === langPrefs.postLanguage
-  ) {
-    return (
-      <>
-        <LanguageBtn onPress={languageDialogControl.open} />
-        <LanguageSelectDialog
-          titleText={<Trans>Choose post languages</Trans>}
-          subtitleText={
-            <Trans>Select up to 3 languages used in this post</Trans>
-          }
-          control={languageDialogControl}
-          currentLanguages={currentLanguages}
-          onSelectLanguages={onSelectLanguages}
-          maxLanguages={3}
-        />
-      </>
-    )
-  }
+  const showAutoItem = !!autoLangEnabled && !!keyboardLanguage
 
   return (
     <>
@@ -77,6 +66,19 @@ export function PostLanguageSelect({
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
+            {showAutoItem && (
+              <Menu.Item
+                label={_(msg`Automatic`)}
+                onPress={() => onSelectAutomatic?.()}>
+                <Menu.ItemText>
+                  <Trans>Automatic</Trans>
+                  {' ('}
+                  {codeToLanguageName(keyboardLanguage, langPrefs.appLanguage)}
+                  {')'}
+                </Menu.ItemText>
+                <Menu.ItemRadio selected={!!isAutoMode} />
+              </Menu.Item>
+            )}
             {dedupedHistory.map(historyItem => {
               const langCodes = historyItem.split(',')
               const langName = langCodes
@@ -92,7 +94,9 @@ export function PostLanguageSelect({
                   }}>
                   <Menu.ItemText>{langName}</Menu.ItemText>
                   <Menu.ItemRadio
-                    selected={currentLanguages.includes(historyItem)}
+                    selected={
+                      !isAutoMode && currentLanguages.includes(historyItem)
+                    }
                   />
                 </Menu.Item>
               )
