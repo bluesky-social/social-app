@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {
   findNodeHandle,
   type ImageStyle,
+  Keyboard,
   type LayoutChangeEvent,
   StyleSheet,
   TouchableOpacity,
@@ -164,6 +165,7 @@ const GalleryItem = ({
   }
 
   const onAltTextEdit = () => {
+    Keyboard.dismiss()
     altTextControl.open()
   }
 
