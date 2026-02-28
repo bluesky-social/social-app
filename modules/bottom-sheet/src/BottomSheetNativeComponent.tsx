@@ -126,9 +126,9 @@ export class BottomSheetNativeComponent extends React.Component<
               // a console.log() - just sending the log to the CLI is enough.
               // TODO: Get to the bottom of this and fix it properly! -sfn
               setTimeout(() => this.updateLayout())
-            } else {
-              this.updateLayout()
             }
+            // iOS: content height changes are observed natively via KVO on
+            // the content view's bounds, so no JS bridge round-trip needed.
           }}
         />
       </Portal>
