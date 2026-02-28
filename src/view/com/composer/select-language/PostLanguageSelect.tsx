@@ -75,7 +75,7 @@ export function PostLanguageSelect({
             <LanguageBtn currentLanguages={currentLanguages} {...props} />
           )}
         </Menu.Trigger>
-        <Menu.Outer enableTransition>
+        <Menu.Outer>
           <Menu.Group>
             {dedupedHistory.map(historyItem => {
               const langCodes = historyItem.split(',')

@@ -77,11 +77,9 @@ export type PostInteractionSettingsFormProps = {
  */
 export function PostInteractionSettingsControlledDialog({
   control,
-  sourceViewTag,
   ...rest
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
-  sourceViewTag?: number
 }) {
   const ax = useAnalytics()
   const onClose = useNonReactiveCallback(() => {
@@ -102,7 +100,6 @@ export function PostInteractionSettingsControlledDialog({
       nativeOptions={{
         preventExpansion: true,
         preventDismiss: rest.isDirty && rest.persist,
-        sourceViewTag,
       }}
       onClose={onClose}>
       <Dialog.Handle />

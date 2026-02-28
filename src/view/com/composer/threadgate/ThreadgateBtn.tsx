@@ -1,10 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
-import {
-  findNodeHandle,
-  type StyleProp,
-  type View,
-  type ViewStyle,
-} from 'react-native'
+import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
 import {type AnimatedStyle} from 'react-native-reanimated'
 import {type AppBskyFeedPostgate} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -31,6 +26,7 @@ import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Gr
 import * as Tooltip from '#/components/Tooltip'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import {useThreadgateNudged} from '#/storage/hooks/threadgate-nudged'
 
 export function ThreadgateBtn({
@@ -50,13 +46,6 @@ export function ThreadgateBtn({
   const {_} = useLingui()
   const ax = useAnalytics()
   const control = Dialog.useDialogControl()
-  const [sourceViewTag, setSourceViewTag] = useState<number>()
-  const btnRef = (node: View | null) => {
-    if (node) {
-      const tag = findNodeHandle(node)
-      if (tag != null) setSourceViewTag(tag)
-    }
-  }
   const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
   const [showTooltip, setShowTooltip] = useState(false)
   const [tooltipWasShown] = useState(!threadgateNudged)
@@ -83,6 +72,10 @@ export function ThreadgateBtn({
     ax.metric('composer:threadgate:open', {
       nudged: tooltipWasShown,
     })
+
+    if (IS_NATIVE && Keyboard.isVisible()) {
+      Keyboard.dismiss()
+    }
 
     setShowTooltip(false)
     setThreadgateNudged(true)
@@ -152,7 +145,6 @@ export function ThreadgateBtn({
         position="top">
         <Tooltip.Target>
           <Button
-            ref={btnRef}
             color={showTooltip ? 'primary_subtle' : 'secondary'}
             size="small"
             testID="openReplyGateButton"
@@ -175,7 +167,6 @@ export function ThreadgateBtn({
 
       <PostInteractionSettingsControlledDialog
         control={control}
-        sourceViewTag={sourceViewTag}
         onSave={() => {
           if (persist) {
             persistChanges({
