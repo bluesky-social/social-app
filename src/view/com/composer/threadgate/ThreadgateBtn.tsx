@@ -1,7 +1,6 @@
 import {useEffect, useMemo, useState} from 'react'
 import {
   findNodeHandle,
-  Keyboard,
   type StyleProp,
   type View,
   type ViewStyle,
@@ -32,7 +31,6 @@ import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Gr
 import * as Tooltip from '#/components/Tooltip'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE} from '#/env'
 import {useThreadgateNudged} from '#/storage/hooks/threadgate-nudged'
 
 export function ThreadgateBtn({
@@ -85,10 +83,6 @@ export function ThreadgateBtn({
     ax.metric('composer:threadgate:open', {
       nudged: tooltipWasShown,
     })
-
-    if (IS_NATIVE && Keyboard.isVisible()) {
-      Keyboard.dismiss()
-    }
 
     setShowTooltip(false)
     setThreadgateNudged(true)
