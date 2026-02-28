@@ -8,6 +8,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   private var innerView: UIView?
   private var touchHandler: RCTTouchHandler?
 
+  // Native content height observation (eliminates JS bridge round-trip)
+  private var contentHeightObservation: NSKeyValueObservation?
+
   // Events
   private let onAttemptDismiss = EventDispatcher()
   private let onSnapPointChange = EventDispatcher()
@@ -105,6 +108,8 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
 
   private func destroy() {
+    self.contentHeightObservation?.invalidate()
+    self.contentHeightObservation = nil
     self.isClosing = false
     self.isOpen = false
     self.sheetVc = nil
@@ -137,10 +142,32 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
     self.sheetVc = sheetVc
     self.isOpening = true
+    self.startObservingContentHeight()
 
     rvc.present(sheetVc, animated: true) { [weak self] in
       self?.isOpening = false
       self?.isOpen = true
+    }
+  }
+
+  // Observe the content view's bounds via KVO so that height changes are detected
+  // purely on the native side, without a JS bridge round-trip through onLayout.
+  private func startObservingContentHeight() {
+    self.contentHeightObservation?.invalidate()
+
+    guard let contentView = self.innerView?.subviews.first else { return }
+
+    self.contentHeightObservation = contentView.observe(
+      \.bounds,
+      options: [.old, .new]
+    ) { [weak self] _, change in
+      guard let self = self,
+            (self.isOpen || self.isOpening) && !self.isClosing,
+            let oldBounds = change.oldValue,
+            let newBounds = change.newValue,
+            oldBounds.height != newBounds.height,
+            newBounds.height > 0 else { return }
+      self.updateLayout()
     }
   }
 
