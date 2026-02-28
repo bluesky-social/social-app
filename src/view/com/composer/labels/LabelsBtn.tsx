@@ -1,4 +1,5 @@
-import {Keyboard, View} from 'react-native'
+import {useRef} from 'react'
+import {findNodeHandle, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -29,6 +30,7 @@ export function LabelsBtn({
 }) {
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
+  const btnRef = useRef<View>(null)
 
   const hasLabel = labels.length > 0
 
@@ -51,6 +53,7 @@ export function LabelsBtn({
   return (
     <>
       <Button
+        ref={btnRef}
         color="secondary"
         size="small"
         testID="labelsBtn"
@@ -73,7 +76,12 @@ export function LabelsBtn({
         <ButtonIcon icon={TinyChevronIcon} size="2xs" />
       </Button>
 
-      <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+      <Dialog.Outer
+        control={control}
+        nativeOptions={{
+          preventExpansion: true,
+          sourceViewTag: findNodeHandle(btnRef.current) ?? undefined,
+        }}>
         <Dialog.Handle />
         <DialogInner
           labels={labels}

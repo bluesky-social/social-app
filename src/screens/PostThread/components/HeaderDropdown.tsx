@@ -40,7 +40,7 @@ export function HeaderDropdown({
           </Button>
         )}
       </Menu.Trigger>
-      <Menu.Outer disableTransition>
+      <Menu.Outer>
         <Menu.LabelText>
           <Trans>Show replies as</Trans>
         </Menu.LabelText>
