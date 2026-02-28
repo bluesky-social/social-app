@@ -1,5 +1,5 @@
-import React from 'react'
-import {ColorValue, NativeSyntheticEvent} from 'react-native'
+import {type ColorValue, type NativeSyntheticEvent} from 'react-native'
+import type React from 'react'
 
 export type BottomSheetState = 'closed' | 'closing' | 'open' | 'opening'
 
@@ -25,6 +25,7 @@ export interface BottomSheetViewProps {
   backgroundColor?: ColorValue
   containerBackgroundColor?: ColorValue
   disableDrag?: boolean
+  sourceViewTag?: number
 
   minHeight?: number
   maxHeight?: number

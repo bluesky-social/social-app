@@ -1,5 +1,6 @@
-import {cloneElement, Fragment, isValidElement, useMemo} from 'react'
+import {cloneElement, Fragment, isValidElement, useMemo, useRef} from 'react'
 import {
+  findNodeHandle,
   Pressable,
   type StyleProp,
   type TextStyle,
@@ -46,9 +47,11 @@ export function Root({
   control?: Dialog.DialogControlProps
 }>) {
   const defaultControl = Dialog.useDialogControl()
+  const triggerRef = useRef<View>(null)
   const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
+      triggerRef,
     }),
     [control, defaultControl],
   )
@@ -79,7 +82,7 @@ export function Trigger({
       pressed,
     },
     props: {
-      ref: null,
+      ref: context.triggerRef,
       onPress: context.control.open,
       onFocus,
       onBlur,
@@ -101,11 +104,12 @@ export function Outer({
 }>) {
   const context = useMenuContext()
   const {_} = useLingui()
+  const sourceViewTag = findNodeHandle(context.triggerRef.current) ?? undefined
 
   return (
     <Dialog.Outer
       control={context.control}
-      nativeOptions={{preventExpansion: true}}>
+      nativeOptions={{preventExpansion: true, sourceViewTag}}>
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>

@@ -26,6 +26,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   var preventDismiss = false
   var preventExpansion = false
   var cornerRadius: CGFloat?
+  var sourceViewTag: Int?
   var minHeight = 0.0
   var maxHeight: CGFloat! {
     didSet {
@@ -134,6 +135,15 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       self.selectedDetentIdentifier = sheet.selectedDetentIdentifier
     }
     sheetVc.view.addSubview(innerView)
+
+    if #available(iOS 26.0, *),
+       let tag = self.sourceViewTag,
+       let bridge = self.appContext?.reactBridge,
+       let sourceView = bridge.uiManager.view(forReactTag: NSNumber(value: tag)) {
+      sheetVc.preferredTransition = .zoom { _ in
+        return sourceView
+      }
+    }
 
     self.sheetVc = sheetVc
     self.isOpening = true

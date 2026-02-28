@@ -3,6 +3,7 @@ import {
   type AccessibilityRole,
   type GestureResponderEvent,
   type PressableProps,
+  type View,
 } from 'react-native'
 import type React from 'react'
 
@@ -12,6 +13,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']
+  triggerRef: React.RefObject<View | null>
 }
 
 export type ItemContextType = {
@@ -61,7 +63,7 @@ export type TriggerChildProps =
        * object is empty.
        */
       props: {
-        ref: null
+        ref: React.RefObject<View | null>
         onPress: () => void
         onFocus: () => void
         onBlur: () => void

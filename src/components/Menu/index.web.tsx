@@ -1,4 +1,4 @@
-import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
+import {forwardRef, useCallback, useId, useMemo, useRef, useState} from 'react'
 import {
   Pressable,
   type StyleProp,
@@ -62,9 +62,11 @@ export function Root({
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
+  const triggerRef = useRef<View>(null)
   const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
+      triggerRef,
     }),
     [control, defaultControl],
   )
