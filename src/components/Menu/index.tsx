@@ -98,13 +98,17 @@ export function Trigger({
 export function Outer({
   children,
   showCancel,
+  disableTransition,
 }: React.PropsWithChildren<{
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
+  disableTransition?: boolean
 }>) {
   const context = useMenuContext()
   const {_} = useLingui()
-  const sourceViewTag = findNodeHandle(context.triggerRef.current) ?? undefined
+  const sourceViewTag = disableTransition
+    ? undefined
+    : (findNodeHandle(context.triggerRef.current) ?? undefined)
 
   return (
     <Dialog.Outer
