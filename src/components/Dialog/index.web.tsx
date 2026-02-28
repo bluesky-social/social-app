@@ -3,6 +3,7 @@ import {
   FlatList,
   type FlatListProps,
   type GestureResponderEvent,
+  type LayoutChangeEvent,
   Pressable,
   type StyleProp,
   View,
@@ -98,7 +99,7 @@ export function Outer({
   const context = React.useMemo(
     () => ({
       close,
-      IS_NATIVEDialog: false,
+      isNativeDialog: false,
       nativeSnapPoint: 0,
       disableDrag: false,
       setDisableDrag: () => {},
@@ -253,11 +254,18 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function FlatListFooter({children}: {children: React.ReactNode}) {
+export function FlatListFooter({
+  children,
+  onLayout,
+}: {
+  children: React.ReactNode
+  onLayout?: (event: LayoutChangeEvent) => void
+}) {
   const t = useTheme()
 
   return (
     <View
+      onLayout={onLayout}
       style={[
         a.absolute,
         a.bottom_0,

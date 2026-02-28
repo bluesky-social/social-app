@@ -1,5 +1,6 @@
 import {
   type AccessibilityProps,
+  type Insets,
   type StyleProp,
   type TextStyle,
   type ViewStyle,
@@ -60,6 +61,7 @@ export type RadixPassThroughTriggerProps = {
 
 export type TriggerProps = {
   children: React.ReactNode | ((props: TriggerChildProps) => React.ReactNode)
+  hitSlop?: number | Insets | null
   label: string
 }
 

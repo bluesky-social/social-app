@@ -85,6 +85,7 @@
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.7",
     "@bsky.app/expo-image-crop-tool": "^0.5.0",
+    "@bsky.app/expo-translate-text": "^0.2.4",
     "@bsky.app/react-native-mmkv": "2.12.5",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
