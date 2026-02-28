@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {findNodeHandle, Keyboard, View} from 'react-native'
+import {findNodeHandle, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -64,10 +64,7 @@ export function LabelsBtn({
         color="secondary"
         size="small"
         testID="labelsBtn"
-        onPress={() => {
-          Keyboard.dismiss()
-          control.open()
-        }}
+        onPress={() => control.open()}
         label={_(msg`Content warnings`)}
         accessibilityHint={_(
           msg`Opens a dialog to add a content warning to your post`,
