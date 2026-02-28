@@ -1,5 +1,4 @@
-import {useState} from 'react'
-import {findNodeHandle, View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -30,14 +29,6 @@ export function LabelsBtn({
 }) {
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
-  const [sourceViewTag, setSourceViewTag] = useState<number>()
-
-  const btnRef = (node: View | null) => {
-    if (node) {
-      const tag = findNodeHandle(node)
-      if (tag != null) setSourceViewTag(tag)
-    }
-  }
 
   const hasLabel = labels.length > 0
 
@@ -60,11 +51,13 @@ export function LabelsBtn({
   return (
     <>
       <Button
-        ref={btnRef}
         color="secondary"
         size="small"
         testID="labelsBtn"
-        onPress={() => control.open()}
+        onPress={() => {
+          Keyboard.dismiss()
+          control.open()
+        }}
         label={_(msg`Content warnings`)}
         accessibilityHint={_(
           msg`Opens a dialog to add a content warning to your post`,
@@ -80,12 +73,7 @@ export function LabelsBtn({
         <ButtonIcon icon={TinyChevronIcon} size="2xs" />
       </Button>
 
-      <Dialog.Outer
-        control={control}
-        nativeOptions={{
-          preventExpansion: true,
-          sourceViewTag,
-        }}>
+      <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <DialogInner
           labels={labels}
