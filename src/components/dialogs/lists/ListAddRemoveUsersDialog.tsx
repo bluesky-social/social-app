@@ -39,7 +39,10 @@ export function ListAddRemoveUsersDialog({
   ) => void | undefined
 }) {
   return (
-    <Dialog.Outer control={control} testID="listAddRemoveUsersDialog">
+    <Dialog.Outer
+      control={control}
+      testID="listAddRemoveUsersDialog"
+      nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <DialogInner list={list} onChange={onChange} />
     </Dialog.Outer>

@@ -8,8 +8,6 @@ import android.view.ViewStructure
 import android.view.Window
 import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
@@ -33,7 +31,6 @@ class BottomSheetView(
 
   private lateinit var dialogRootViewGroup: DialogRootViewGroup
   private var eventDispatcher: EventDispatcher? = null
-  private var isKeyboardVisible: Boolean = false
 
   // Native content height observation (eliminates JS bridge round-trip)
   private var contentLayoutListener: View.OnLayoutChangeListener? = null
@@ -70,6 +67,8 @@ class BottomSheetView(
       field = value
       this.dialog?.setCancelable(!value)
     }
+
+  var fullHeight = false
 
   var preventExpansion = false
 
@@ -202,28 +201,36 @@ class BottomSheetView(
 
       val behavior = BottomSheetBehavior.from(it)
       behavior.state = BottomSheetBehavior.STATE_HIDDEN
-      behavior.isFitToContents = true
-      behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
       behavior.skipCollapsed = true
       behavior.isDraggable = true
       behavior.isHideable = true
-
-      if (preventExpansion) {
-        behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
-      } else {
-        behavior.maxHeight = (screenHeight - getStatusBarHeight()).toInt()
-      }
-
-      val targetHeight = this.getTargetHeight()
-      val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
-      val shouldBeExpanded = targetHeight >= availableHeight
-
-      if (shouldBeExpanded) {
+      if (fullHeight) {
+        behavior.isFitToContents = false
+        behavior.expandedOffset = getStatusBarHeight()
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.selectedSnapPoint = 2
-      } else {
+      } else if (preventExpansion) {
+        behavior.isFitToContents = true
+        behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
+        behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         this.selectedSnapPoint = 1
+      } else {
+        behavior.isFitToContents = false
+        behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
+        behavior.expandedOffset = getStatusBarHeight()
+
+        val targetHeight = this.getTargetHeight()
+        val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
+        val shouldBeExpanded = targetHeight >= availableHeight
+
+        if (shouldBeExpanded) {
+          behavior.state = BottomSheetBehavior.STATE_EXPANDED
+          this.selectedSnapPoint = 2
+        } else {
+          behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+          this.selectedSnapPoint = 1
+        }
       }
 
       behavior.addBottomSheetCallback(
@@ -232,6 +239,10 @@ class BottomSheetView(
             bottomSheet: View,
             newState: Int,
           ) {
+            if (newState == BottomSheetBehavior.STATE_EXPANDED && preventExpansion) {
+              behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+              return
+            }
             when (newState) {
               BottomSheetBehavior.STATE_EXPANDED -> selectedSnapPoint = 2
               BottomSheetBehavior.STATE_COLLAPSED -> selectedSnapPoint = 1
@@ -258,34 +269,14 @@ class BottomSheetView(
     this.isOpening = true
     dialog.show()
     this.dialog = dialog
-    this.startObservingContentHeight()
-
-    ViewCompat.setOnApplyWindowInsetsListener(dialogRootViewGroup) { view, insets ->
-      val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
-      val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-      val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
-
-      val wasKeyboardVisible = isKeyboardVisible
-      isKeyboardVisible = imeVisible
-
-      if (imeVisible && behavior != null && bottomSheet != null && behavior.state != BottomSheetBehavior.STATE_EXPANDED && behavior.state != BottomSheetBehavior.STATE_HIDDEN) {
-        if (preventExpansion) {
-          behavior.maxHeight = (screenHeight - getStatusBarHeight()).toInt()
-          bottomSheet.requestLayout()
-          bottomSheet.post {
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-          }
-        } else {
-          behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-      } else if (!imeVisible && wasKeyboardVisible) {
-        updateLayout()
-      }
-      insets
+    if (!fullHeight) {
+      this.startObservingContentHeight()
     }
+
   }
 
   fun updateLayout() {
+    if (fullHeight) return
     val dialog = this.dialog ?: return
     val contentHeight = this.getContentHeight()
 
@@ -300,6 +291,7 @@ class BottomSheetView(
 
       if (preventExpansion) {
         behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
+        it.requestLayout()
       }
 
       val targetHeight = this.getTargetHeight()
@@ -315,11 +307,7 @@ class BottomSheetView(
         return
       }
 
-      if (isKeyboardVisible) {
-        if (behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-          behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-      } else if (shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_EXPANDED && !preventExpansion) {
+      if (shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_EXPANDED && !preventExpansion) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
       } else if (!shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -330,7 +318,7 @@ class BottomSheetView(
   }
 
   fun dismiss() {
-    this.dialog?.dismiss()
+    this.dialog?.cancel()
   }
 
   // Observe each direct child of innerView via OnLayoutChangeListener so that

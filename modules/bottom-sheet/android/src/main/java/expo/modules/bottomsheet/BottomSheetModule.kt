@@ -25,6 +25,10 @@ class BottomSheetModule : Module() {
           view.dismiss()
         }
 
+        Prop("fullHeight") { view: BottomSheetView, prop: Boolean ->
+          view.fullHeight = prop
+        }
+
         Prop("disableDrag") { view: BottomSheetView, prop: Boolean ->
           view.disableDrag = prop
         }

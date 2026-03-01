@@ -16,5 +16,6 @@
         <item name="paddingLeftSystemWindowInsets">true</item>
         <item name="paddingRightSystemWindowInsets">true</item>
         <item name="paddingTopSystemWindowInsets">false</item>
+        <item name="backgroundTint">@android:color/transparent</item>
     </style>
 </resources>

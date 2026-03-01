@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
-import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {enforceLen} from '#/lib/strings/helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
@@ -17,7 +16,7 @@ import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = {
   control: Dialog.DialogOuterProps['control']
@@ -30,7 +29,6 @@ export const ImageAltTextDialog = ({
   image,
   onChange,
 }: Props): React.ReactNode => {
-  const {height: minHeight} = useWindowDimensions()
   const [altText, setAltText] = useState(image.alt)
 
   return (
@@ -42,7 +40,7 @@ export const ImageAltTextDialog = ({
           alt: enforceLen(altText, MAX_ALT_TEXT, true),
         })
       }}
-      nativeOptions={{minHeight}}>
+      nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <ImageAltTextInner
         control={control}
@@ -68,8 +66,6 @@ const ImageAltTextInner = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const {width: screenWidth} = useWindowDimensions()
-
-  const [isKeyboardVisible] = useIsKeyboardVisible()
 
   const imageStyle = useMemo<ImageStyle>(() => {
     const maxWidth = IS_WEB
@@ -177,8 +173,6 @@ const ImageAltTextInner = ({
           </Button>
         </AltTextCounterWrapper>
       </View>
-      {/* Maybe fix this later -h */}
-      {IS_ANDROID && isKeyboardVisible ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }

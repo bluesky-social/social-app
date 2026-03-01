@@ -26,6 +26,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
 
   // React view props
+  var fullHeight = false
   var preventDismiss = false
   var preventExpansion = false
   var cornerRadius: CGFloat?
@@ -131,7 +132,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     }
 
     let sheetVc = SheetViewController()
-    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion)
+    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion, fullHeight: self.fullHeight)
     if let sheet = sheetVc.sheetPresentationController {
       sheet.delegate = self
       sheet.preferredCornerRadius = self.cornerRadius
@@ -141,7 +142,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
     self.sheetVc = sheetVc
     self.isOpening = true
-    self.startObservingContentHeight()
+    if !self.fullHeight {
+      self.startObservingContentHeight()
+    }
 
     rvc.present(sheetVc, animated: true) { [weak self] in
       self?.isOpening = false

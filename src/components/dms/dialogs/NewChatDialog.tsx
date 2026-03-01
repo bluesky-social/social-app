@@ -70,7 +70,10 @@ export function NewChat({
         accessibilityHint=""
       />
 
-      <Dialog.Outer control={control} testID="newChatDialog">
+      <Dialog.Outer
+        control={control}
+        testID="newChatDialog"
+        nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <SearchablePeopleList
           title={_(msg`Start a new chat`)}

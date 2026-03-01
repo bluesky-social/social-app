@@ -17,7 +17,10 @@ export function SendViaChatDialog({
   onSelectChat: (chatId: string) => void
 }) {
   return (
-    <Dialog.Outer control={control} testID="sendViaChatChatDialog">
+    <Dialog.Outer
+      control={control}
+      testID="sendViaChatChatDialog"
+      nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <SendViaChatDialogInner control={control} onSelectChat={onSelectChat} />
     </Dialog.Outer>

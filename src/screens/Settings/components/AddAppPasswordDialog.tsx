@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -34,9 +34,8 @@ export function AddAppPasswordDialog({
   control: Dialog.DialogControlProps
   passwords: string[]
 }) {
-  const {height} = useWindowDimensions()
   return (
-    <Dialog.Outer control={control} nativeOptions={{minHeight: height}}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <CreateDialogInner passwords={passwords} />
     </Dialog.Outer>
