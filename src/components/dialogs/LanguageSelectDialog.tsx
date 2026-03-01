@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -17,7 +16,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import * as Toggle from '#/components/forms/Toggle'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
-import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 type FlatListItem =
   | {
@@ -51,9 +50,6 @@ export function LanguageSelectDialog({
   onSelectLanguages: (languages: string[]) => void
   maxLanguages?: number
 }) {
-  const {height} = useWindowDimensions()
-  const insets = useSafeAreaInsets()
-
   const renderErrorBoundary = useCallback(
     (error: any) => <DialogError details={String(error)} />,
     [],
@@ -63,7 +59,7 @@ export function LanguageSelectDialog({
     <Dialog.Outer
       control={control}
       nativeOptions={{
-        minHeight: IS_LIQUID_GLASS ? height : height - insets.top,
+        fullHeight: true,
       }}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
