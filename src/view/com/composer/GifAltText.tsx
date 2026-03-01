@@ -23,7 +23,6 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID} from '#/env'
 import {AltTextReminder} from './photos/Gallery'
 
 export function GifAltTextDialog({
@@ -225,8 +224,6 @@ function AltTextInner({
         </View>
       </View>
       <Dialog.Close />
-      {/* Maybe fix this later -h */}
-      {IS_ANDROID ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }
