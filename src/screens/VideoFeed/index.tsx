@@ -338,13 +338,13 @@ function Feed() {
         const nextPlayer = [player1, player2, player3][(index + 1) % 3]
 
         if (prevVideo && prevVideo !== prevPlayerCurrentSource?.source) {
-          prevPlayer.replace(prevVideo)
+          prevPlayer.replaceAsync(prevVideo)
         }
         prevPlayer.pause()
 
         if (currVideo) {
           if (currVideo !== currPlayerCurrentSource?.source) {
-            currPlayer.replace(currVideo)
+            currPlayer.replaceAsync(currVideo)
           }
           if (
             currVideoModeration &&
@@ -358,7 +358,7 @@ function Feed() {
         }
 
         if (nextVideo && nextVideo !== nextPlayerCurrentSource?.source) {
-          nextPlayer.replace(nextVideo)
+          nextPlayer.replaceAsync(nextVideo)
         }
         nextPlayer.pause()
       }
