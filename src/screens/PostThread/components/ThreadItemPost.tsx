@@ -296,12 +296,16 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 postHref={postHref}
                 style={[a.pb_xs]}
               />
-              <LabelsOnMyPost post={post} style={[a.pb_xs]} />
-              <PostAlerts
-                modui={moderation.ui('contentList')}
-                style={[a.pb_2xs]}
-                additionalCauses={additionalPostAlerts}
-              />
+              {item.ui.isAnchor && (
+                <>
+                  <LabelsOnMyPost post={post} style={[a.pb_xs]} />
+                  <PostAlerts
+                    modui={moderation.ui('contentList')}
+                    style={[a.pb_2xs]}
+                    additionalCauses={additionalPostAlerts}
+                  />
+                </>
+              )}
               {richText?.text ? (
                 <View style={[a.mb_2xs]}>
                   <RichText
