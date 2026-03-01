@@ -115,8 +115,6 @@ export class BottomSheetNativeComponent extends React.Component<
                   this.setState({viewHeight: height})
                 }
               : undefined
-            // Content height changes are observed natively on both platforms:
-            // iOS uses KVO on content view bounds, Android uses OnLayoutChangeListener.
           }
         />
       </Portal>
