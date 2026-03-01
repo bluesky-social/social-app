@@ -127,8 +127,11 @@ function ContentHiderActive({
         }
 
         const def = cause.labelDef || getDefinition(labelDefs, cause.label)
-        if (def.identifier === 'porn' || def.identifier === 'sexual') {
+        if (def.identifier === 'porn') {
           return _(msg`Adult Content`)
+        }
+        if (def.identifier === 'sexual') {
+          return _(msg`Sexually Suggestive`)
         }
         return getLabelStrings(i18n.locale, globalLabelStrings, def).name
       })
