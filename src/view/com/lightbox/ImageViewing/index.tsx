@@ -95,6 +95,7 @@ export default function ImageViewRoot({
   'use no memo'
   const ref = useAnimatedRef<View>()
   const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
+  const [imageIndex, setImageIndex] = useState(activeLightbox?.index ?? 0)
   const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(
     'portrait',
   )
@@ -102,6 +103,7 @@ export default function ImageViewRoot({
 
   if (!activeLightbox && nextLightbox) {
     setActiveLightbox(nextLightbox)
+    setImageIndex(nextLightbox.index)
   }
 
   React.useEffect(() => {
@@ -177,6 +179,8 @@ export default function ImageViewRoot({
           <ImageView
             key={activeLightbox.id + '-' + orientation}
             lightbox={activeLightbox}
+            imageIndex={imageIndex}
+            setImageIndex={setImageIndex}
             orientation={orientation}
             onRequestClose={onRequestClose}
             onPressSave={onPressSave}
@@ -193,6 +197,8 @@ export default function ImageViewRoot({
 
 function ImageView({
   lightbox,
+  imageIndex,
+  setImageIndex,
   orientation,
   onRequestClose,
   onPressSave,
@@ -202,6 +208,8 @@ function ImageView({
   openProgress,
 }: {
   lightbox: Lightbox
+  imageIndex: number
+  setImageIndex: (index: number) => void
   orientation: 'portrait' | 'landscape'
   onRequestClose: () => void
   onPressSave: (uri: string) => void
@@ -210,11 +218,11 @@ function ImageView({
   safeAreaRef: AnimatedRef<View>
   openProgress: SharedValue<number>
 }) {
-  const {images, index: initialImageIndex} = lightbox
+  const [initialImageIndex] = useState(imageIndex)
+  const {images} = lightbox
   const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-  const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
   const [isAltExpanded, setAltExpanded] = React.useState(false)
   const dismissSwipeTranslateY = useSharedValue(0)
