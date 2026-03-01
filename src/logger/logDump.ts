@@ -1,4 +1,4 @@
-import type {LogContext, LogLevel, Metadata} from '#/logger/types'
+import {type LogContext, type LogLevel, type Metadata} from '#/logger/types'
 
 export type ConsoleTransportEntry = {
   id: string

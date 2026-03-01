@@ -1,12 +1,12 @@
-import React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
+import type React from 'react'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isWeb} from '#/platform/detection'
 import {atoms as a} from '#/alf'
+import {IS_WEB} from '#/env'
 import {Text} from '../text/Text'
 
 export const LoggedOutLayout = ({
@@ -42,11 +42,11 @@ export const LoggedOutLayout = ({
           contentContainerStyle={[
             {paddingBottom: isKeyboardVisible ? 300 : 0},
           ]}>
-          <View style={a.pt_md}>{children}</View>
+          <View style={a.pt_lg}>{children}</View>
         </ScrollView>
       )
     } else {
-      return <View style={a.pt_md}>{children}</View>
+      return <View style={a.pt_lg}>{children}</View>
     }
   }
   return (
@@ -79,7 +79,7 @@ export const LoggedOutLayout = ({
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag">
-            <View style={[styles.contentWrapper, isWeb && a.my_auto]}>
+            <View style={[styles.contentWrapper, IS_WEB && a.my_auto]}>
               {children}
             </View>
           </ScrollView>

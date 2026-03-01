@@ -1,8 +1,7 @@
-import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyFeedDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {type AppBskyFeedDefs} from '@atproto/api'
+import {Trans} from '@lingui/react/macro'
 
 import {isTenorGifUri} from '#/lib/strings/embed-player'
 import {atoms as a, useTheme} from '#/alf'
@@ -51,7 +50,11 @@ export function Embed({
   } else if (e.type === 'video') {
     return (
       <Outer style={style}>
-        <VideoItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
+        {e.view.presentation === 'gif' ? (
+          <GifItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
+        ) : (
+          <VideoItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
+        )}
       </Outer>
     )
   } else if (
@@ -82,22 +85,39 @@ export function ImageItem({
   alt,
   children,
 }: {
-  thumbnail: string
+  thumbnail?: string
   alt?: string
   children?: React.ReactNode
 }) {
   const t = useTheme()
+
+  if (!thumbnail) {
+    return (
+      <View
+        style={[
+          {backgroundColor: 'black'},
+          a.flex_1,
+          a.aspect_square,
+          {maxWidth: 100},
+          a.rounded_xs,
+        ]}
+        accessibilityLabel={alt}
+        accessibilityHint="">
+        {children}
+      </View>
+    )
+  }
+
   return (
-    <View style={[a.relative, a.flex_1, {aspectRatio: 1, maxWidth: 100}]}>
+    <View style={[a.relative, a.flex_1, a.aspect_square, {maxWidth: 100}]}>
       <Image
         key={thumbnail}
         source={{uri: thumbnail}}
+        alt={alt}
         style={[a.flex_1, a.rounded_xs, t.atoms.bg_contrast_25]}
         contentFit="cover"
         accessible={true}
         accessibilityIgnoresInvertColors
-        accessibilityHint={alt}
-        accessibilityLabel=""
       />
       <MediaInsetBorder style={[a.rounded_xs]} />
       {children}
@@ -105,7 +125,7 @@ export function ImageItem({
   )
 }
 
-export function GifItem({thumbnail, alt}: {thumbnail: string; alt?: string}) {
+export function GifItem({thumbnail, alt}: {thumbnail?: string; alt?: string}) {
   return (
     <ImageItem thumbnail={thumbnail} alt={alt}>
       <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
@@ -127,20 +147,6 @@ export function VideoItem({
   thumbnail?: string
   alt?: string
 }) {
-  if (!thumbnail) {
-    return (
-      <View
-        style={[
-          {backgroundColor: 'black'},
-          a.flex_1,
-          {aspectRatio: 1, maxWidth: 100},
-          a.justify_center,
-          a.align_center,
-        ]}>
-        <PlayButtonIcon size={24} />
-      </View>
-    )
-  }
   return (
     <ImageItem thumbnail={thumbnail} alt={alt}>
       <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
@@ -157,7 +163,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
-    right: 5,
+    left: 5,
     bottom: 5,
     zIndex: 2,
   },

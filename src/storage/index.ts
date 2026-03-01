@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
-import {MMKV} from 'react-native-mmkv'
+import {MMKV} from '@bsky.app/react-native-mmkv'
 
-import {Account, Device} from '#/storage/schema'
+import {type Account, type Device} from '#/storage/schema'
 
 export * from '#/storage/schema'
 
@@ -67,6 +67,13 @@ export class Storage<Scopes extends unknown[], Schema> {
   }
 
   /**
+   * For debugging purposes
+   */
+  removeAll() {
+    this.store.clearAll()
+  }
+
+  /**
    * Fires a callback when the storage associated with a given key changes
    *
    * @returns Listener - call `remove()` to stop listening
@@ -83,18 +90,10 @@ export class Storage<Scopes extends unknown[], Schema> {
   }
 }
 
-type StorageSchema<T extends Storage<any, any>> = T extends Storage<
-  any,
-  infer U
->
-  ? U
-  : never
-type StorageScopes<T extends Storage<any, any>> = T extends Storage<
-  infer S,
-  any
->
-  ? S
-  : never
+type StorageSchema<T extends Storage<any, any>> =
+  T extends Storage<any, infer U> ? U : never
+type StorageScopes<T extends Storage<any, any>> =
+  T extends Storage<infer S, any> ? S : never
 
 /**
  * Hook to use a storage instance. Acts like a useState hook, but persists the

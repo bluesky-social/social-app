@@ -1,17 +1,22 @@
+import {timeout} from '#/lib/async/timeout'
 import {isNetworkError} from '#/lib/strings/errors'
 
 export async function retry<P>(
   retries: number,
-  cond: (err: any) => boolean,
-  fn: () => Promise<P>,
+  shouldRetry: (err: any) => boolean,
+  action: () => Promise<P>,
+  delay?: number,
 ): Promise<P> {
   let lastErr
   while (retries > 0) {
     try {
-      return await fn()
+      return await action()
     } catch (e: any) {
       lastErr = e
-      if (cond(e)) {
+      if (shouldRetry(e)) {
+        if (delay) {
+          await timeout(delay)
+        }
         retries--
         continue
       }
@@ -24,6 +29,7 @@ export async function retry<P>(
 export async function networkRetry<P>(
   retries: number,
   fn: () => Promise<P>,
+  delay?: number,
 ): Promise<P> {
-  return retry(retries, isNetworkError, fn)
+  return retry(retries, isNetworkError, fn, delay)
 }

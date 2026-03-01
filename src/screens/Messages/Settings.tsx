@@ -1,11 +1,11 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {Trans} from '@lingui/react/macro'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {CommonNavigatorParams} from '#/lib/routes/types'
-import {isNative} from '#/platform/detection'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -16,12 +16,18 @@ import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 type AllowIncoming = 'all' | 'none' | 'following'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>
-export function MessagesSettingsScreen({}: Props) {
+
+export function MessagesSettingsScreen(props: Props) {
+  return <MessagesSettingsScreenInner {...props} />
+}
+
+export function MessagesSettingsScreenInner({}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({
@@ -66,7 +72,7 @@ export function MessagesSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <View style={[a.p_lg, a.gap_md]}>
-          <Text style={[a.text_lg, a.font_bold]}>
+          <Text style={[a.text_lg, a.font_semi_bold]}>
             <Trans>Allow new messages from</Trans>
           </Text>
           <Toggle.Group
@@ -98,10 +104,12 @@ export function MessagesSettingsScreen({}: Props) {
               </Toggle.Item>
               <Toggle.Item
                 name="none"
-                label={_(msg`No one`)}
+                label={_(
+                  msg({context: 'allow messages from', message: `No one`}),
+                )}
                 style={[a.justify_between, a.py_sm]}>
                 <Toggle.LabelText>
-                  <Trans>No one</Trans>
+                  <Trans context="allow messages from">No one</Trans>
                 </Toggle.LabelText>
                 <Toggle.Radio />
               </Toggle.Item>
@@ -113,10 +121,10 @@ export function MessagesSettingsScreen({}: Props) {
               you choose.
             </Trans>
           </Admonition>
-          {isNative && (
+          {IS_NATIVE && (
             <>
               <Divider style={a.my_md} />
-              <Text style={[a.text_lg, a.font_bold]}>
+              <Text style={[a.text_lg, a.font_semi_bold]}>
                 <Trans>Notification Sounds</Trans>
               </Text>
               <Toggle.Group

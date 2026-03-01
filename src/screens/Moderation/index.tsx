@@ -1,17 +1,19 @@
 import {Fragment, useCallback} from 'react'
 import {Linking, View} from 'react-native'
 import {LABELS} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {getLabelingServiceTitle} from '#/lib/moderation'
+import {getLabelingServiceTitle, isAppLabeler} from '#/lib/moderation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
+import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
+import {useRemoveLabelersMutation} from '#/state/queries/labeler'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
@@ -20,11 +22,11 @@ import {
 } from '#/state/queries/preferences'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
-import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import * as Admonition from '#/components/Admonition'
+import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -42,7 +44,10 @@ import {InlineLinkText, Link} from '#/components/Link'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
+import {IS_IOS} from '#/env'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
@@ -90,7 +95,15 @@ export function ModerationScreen(
 
   return (
     <Layout.Screen testID="moderationScreen">
-      <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Moderation</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         {isLoading ? (
           <ListMaybePlaceholder isLoading={true} sideBorders={false} />
@@ -131,7 +144,7 @@ function SubItem({
       ]}>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <Icon size="md" style={[t.atoms.text_contrast_medium]} />
-        <Text style={[a.text_sm, a.font_bold]}>{title}</Text>
+        <Text style={[a.text_sm, a.font_semi_bold]}>{title}</Text>
       </View>
       <ChevronRight
         size="sm"
@@ -151,12 +164,38 @@ export function ModerationScreenInner({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
-  const birthdateDialogControl = Dialog.useDialogControl()
   const {
     isLoading: isLabelersLoading,
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
+  const {mutateAsync: removeLabelers, isPending: isRemovingLabelers} =
+    useRemoveLabelersMutation()
+  const aa = useAgeAssurance()
+  const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
+  const aaCopy = useAgeAssuranceCopy()
+
+  const subscribedDids = preferences.moderationPrefs.labelers.map(l => l.did)
+  const returnedDids = new Set(labelers?.map(l => l.creator.did))
+  const unavailableDids = subscribedDids.filter(
+    did =>
+      !returnedDids.has(did) &&
+      !isAppLabeler(did) &&
+      !isNonConfigurableModerationAuthority(did),
+  )
+
+  const handleCleanup = async () => {
+    try {
+      await removeLabelers({dids: unavailableDids})
+      Toast.show(_(msg`Removed unavailable services`), {
+        type: 'success',
+      })
+    } catch (e: any) {
+      logger.error('Failed to remove unavailable labelers', {
+        safeMessage: e.message,
+      })
+    }
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -166,12 +205,17 @@ export function ModerationScreenInner({
 
   const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =
     usePreferencesSetAdultContentMutation()
-  const adultContentEnabled = !!(
+  let adultContentEnabled = !!(
     (optimisticAdultContent && optimisticAdultContent.enabled) ||
     (!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled)
   )
-  const ageNotSet = !preferences.userAge
-  const isUnderage = (preferences.userAge || 0) < 18
+  const adultContentUIDisabledOnIOS = IS_IOS && !adultContentEnabled
+  let adultContentUIDisabled = adultContentUIDisabledOnIOS
+
+  if (aa.flags.adultContentDisabled) {
+    adultContentEnabled = false
+    adultContentUIDisabled = true
+  }
 
   const onToggleAdultContentEnabled = useCallback(
     async (selected: boolean) => {
@@ -188,12 +232,33 @@ export function ModerationScreenInner({
     [setAdultContentPref],
   )
 
-  const disabledOnIOS = isIOS && !adultContentEnabled
-
   return (
     <View style={[a.pt_2xl, a.px_lg, gtMobile && a.px_2xl]}>
+      {aa.flags.adultContentDisabled && isBirthdateUpdateAllowed && (
+        <View style={[a.pb_2xl]}>
+          <Admonition.Admonition type="tip" style={[a.pb_md]}>
+            <Trans>
+              Your declared age is under 18. Some settings below may be
+              disabled. If this was a mistake, you may edit your birthdate in
+              your{' '}
+              <InlineLinkText
+                to="/settings/account"
+                label={_(msg`Go to account settings`)}>
+                account settings
+              </InlineLinkText>
+              .
+            </Trans>
+          </Admonition.Admonition>
+        </View>
+      )}
+
       <Text
-        style={[a.text_md, a.font_bold, a.pb_md, t.atoms.text_contrast_high]}>
+        style={[
+          a.text_md,
+          a.font_semi_bold,
+          a.pb_md,
+          t.atoms.text_contrast_high,
+        ]}>
         <Trans>Moderation tools</Trans>
       </Text>
 
@@ -300,35 +365,17 @@ export function ModerationScreenInner({
           a.pt_2xl,
           a.pb_md,
           a.text_md,
-          a.font_bold,
+          a.font_semi_bold,
           t.atoms.text_contrast_high,
         ]}>
         <Trans>Content filters</Trans>
       </Text>
 
-      <View style={[a.gap_md]}>
-        {ageNotSet && (
-          <>
-            <Button
-              label={_(msg`Confirm your birthdate`)}
-              size="small"
-              variant="solid"
-              color="secondary"
-              onPress={() => {
-                birthdateDialogControl.open()
-              }}
-              style={[a.justify_between, a.rounded_md, a.px_lg, a.py_lg]}>
-              <ButtonText>
-                <Trans>Confirm your age:</Trans>
-              </ButtonText>
-              <ButtonText>
-                <Trans>Set birthdate</Trans>
-              </ButtonText>
-            </Button>
+      <AgeAssuranceAdmonition style={[a.pb_md]}>
+        {aaCopy.notice}
+      </AgeAssuranceAdmonition>
 
-            <BirthDateSettingsDialog control={birthdateDialogControl} />
-          </>
-        )}
+      <View style={[a.gap_md]}>
         <View
           style={[
             a.w_full,
@@ -336,7 +383,7 @@ export function ModerationScreenInner({
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
           ]}>
-          {!ageNotSet && !isUnderage && (
+          {aa.state.access === aa.Access.Full && (
             <>
               <View
                 style={[
@@ -345,14 +392,14 @@ export function ModerationScreenInner({
                   a.flex_row,
                   a.align_center,
                   a.justify_between,
-                  disabledOnIOS && {opacity: 0.5},
+                  adultContentUIDisabled && {opacity: 0.5},
                 ]}>
-                <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+                <Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
                   <Trans>Enable adult content</Trans>
                 </Text>
                 <Toggle.Item
                   label={_(msg`Toggle to enable or disable adult content`)}
-                  disabled={disabledOnIOS}
+                  disabled={adultContentUIDisabled}
                   name="adultContent"
                   value={adultContentEnabled}
                   onChange={onToggleAdultContentEnabled}>
@@ -368,7 +415,7 @@ export function ModerationScreenInner({
                   </View>
                 </Toggle.Item>
               </View>
-              {disabledOnIOS && (
+              {adultContentUIDisabledOnIOS && (
                 <View style={[a.pb_lg, a.px_lg]}>
                   <Text>
                     <Trans>
@@ -388,35 +435,61 @@ export function ModerationScreenInner({
                   </Text>
                 </View>
               )}
-              <Divider />
+
+              {adultContentEnabled && (
+                <>
+                  <Divider />
+                  <GlobalLabelPreference labelDefinition={LABELS.porn} />
+                  <Divider />
+                  <GlobalLabelPreference labelDefinition={LABELS.sexual} />
+                  <Divider />
+                  <GlobalLabelPreference
+                    labelDefinition={LABELS['graphic-media']}
+                  />
+                  <Divider />
+                  <GlobalLabelPreference labelDefinition={LABELS.nudity} />
+                </>
+              )}
             </>
           )}
-          {!isUnderage && adultContentEnabled && (
-            <>
-              <GlobalLabelPreference labelDefinition={LABELS.porn} />
-              <Divider />
-              <GlobalLabelPreference labelDefinition={LABELS.sexual} />
-              <Divider />
-              <GlobalLabelPreference
-                labelDefinition={LABELS['graphic-media']}
-              />
-              <Divider />
-            </>
-          )}
-          <GlobalLabelPreference labelDefinition={LABELS.nudity} />
         </View>
       </View>
 
       <Text
         style={[
           a.text_md,
-          a.font_bold,
+          a.font_semi_bold,
           a.pt_2xl,
           a.pb_md,
           t.atoms.text_contrast_high,
         ]}>
         <Trans>Advanced</Trans>
       </Text>
+
+      {unavailableDids.length > 0 && (
+        <Admonition.Outer type="tip" style={[a.mb_md]}>
+          <Admonition.Row>
+            <Admonition.Icon />
+            <Admonition.Content>
+              <Admonition.Text>
+                <Trans>
+                  Some moderation services in your list are no longer available.
+                </Trans>
+              </Admonition.Text>
+            </Admonition.Content>
+            <Admonition.Button
+              color="primary_subtle"
+              label={_(msg`Remove unavailable moderation services`)}
+              onPress={handleCleanup}
+              disabled={isRemovingLabelers}>
+              <ButtonText>
+                <Trans>Remove</Trans>
+              </ButtonText>
+              {isRemovingLabelers && <ButtonIcon icon={Loader} />}
+            </Admonition.Button>
+          </Admonition.Row>
+        </Admonition.Outer>
+      )}
 
       {isLabelersLoading ? (
         <View style={[a.w_full, a.align_center, a.p_lg]}>

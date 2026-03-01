@@ -49,11 +49,13 @@ export function Composer({winHeight}: {winHeight: number}) {
       <ComposePost
         replyTo={state.replyTo}
         onPost={state.onPost}
+        onPostSuccess={state.onPostSuccess}
         quote={state.quote}
         mention={state.mention}
         text={state.text}
         imageUris={state.imageUris}
         videoUri={state.videoUri}
+        openGallery={state.openGallery}
       />
     </Animated.View>
   )

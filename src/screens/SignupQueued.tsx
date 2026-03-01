@@ -1,12 +1,12 @@
 import React from 'react'
 import {Modal, ScrollView, View} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {StatusBar} from 'expo-status-bar'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
 import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Logo} from '#/view/icons/Logo'
@@ -14,6 +14,7 @@ import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
+import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 const COL_WIDTH = 400
 
@@ -98,7 +99,7 @@ export function SignupQueued() {
     </Button>
   )
 
-  const webLayout = isWeb && gtMobile
+  const webLayout = IS_WEB && gtMobile
 
   return (
     <Modal
@@ -106,7 +107,9 @@ export function SignupQueued() {
       animationType={native('slide')}
       presentationStyle="formSheet"
       style={[web(a.util_screen_outer)]}>
-      {isIOS && <StatusBar style="light" />}
+      {IS_IOS && !IS_LIQUID_GLASS && (
+        <SystemBars style={{statusBar: 'light'}} />
+      )}
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}
         contentContainerStyle={{borderWidth: 0}}
@@ -123,7 +126,7 @@ export function SignupQueued() {
               <Logo width={120} />
             </View>
 
-            <Text style={[a.text_4xl, a.font_heavy, a.pb_sm]}>
+            <Text style={[a.text_4xl, a.font_bold, a.pb_sm]}>
               <Trans>You're in line</Trans>
             </Text>
             <P style={[t.atoms.text_contrast_medium]}>
@@ -146,7 +149,7 @@ export function SignupQueued() {
               ]}>
               {typeof placeInQueue === 'number' && (
                 <Text
-                  style={[a.text_5xl, a.text_center, a.font_heavy, a.mb_2xl]}>
+                  style={[a.text_5xl, a.text_center, a.font_bold, a.mb_2xl]}>
                   {placeInQueue}
                 </Text>
               )}

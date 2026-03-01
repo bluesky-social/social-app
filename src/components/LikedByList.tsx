@@ -1,6 +1,6 @@
 import React from 'react'
-import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {type AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'

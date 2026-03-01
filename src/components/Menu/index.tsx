@@ -1,10 +1,16 @@
-import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {cloneElement, Fragment, isValidElement, useMemo} from 'react'
+import {
+  Pressable,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {isAndroid, isIOS, isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -16,14 +22,15 @@ import {
   useMenuItemContext,
 } from '#/components/Menu/context'
 import {
-  ContextType,
-  GroupProps,
-  ItemIconProps,
-  ItemProps,
-  ItemTextProps,
-  TriggerProps,
+  type ContextType,
+  type GroupProps,
+  type ItemIconProps,
+  type ItemProps,
+  type ItemTextProps,
+  type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
 
 export {
   type DialogControlProps as MenuControlProps,
@@ -39,7 +46,7 @@ export function Root({
   control?: Dialog.DialogControlProps
 }>) {
   const defaultControl = Dialog.useDialogControl()
-  const context = React.useMemo<ContextType>(
+  const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
     }),
@@ -64,7 +71,7 @@ export function Trigger({
   } = useInteractionState()
 
   return children({
-    isNative: true,
+    IS_NATIVE: true,
     control: context.control,
     state: {
       hovered: false,
@@ -105,7 +112,7 @@ export function Outer({
         <Dialog.ScrollableInner label={_(msg`Menu`)}>
           <View style={[a.gap_lg]}>
             {children}
-            {isNative && showCancel && <Cancel />}
+            {IS_NATIVE && showCancel && <Cancel />}
           </View>
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -131,13 +138,13 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       onFocus={onFocus}
       onBlur={onBlur}
       onPress={async e => {
-        if (isAndroid) {
+        if (IS_ANDROID) {
           /**
            * Below fix for iOS doesn't work for Android, this does.
            */
           onPress?.(e)
           context.control.close()
-        } else if (isIOS) {
+        } else if (IS_IOS) {
           /**
            * Fixes a subtle bug on iOS
            * {@link https://github.com/bluesky-social/social-app/pull/5849/files#diff-de516ef5e7bd9840cd639213301df38cf03acfcad5bda85a1d63efd249ba79deL124-L127}
@@ -161,6 +168,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         a.gap_sm,
         a.px_md,
         a.rounded_md,
+        a.overflow_hidden,
         a.border,
         t.atoms.bg_contrast_25,
         t.atoms.border_contrast_low,
@@ -185,9 +193,8 @@ export function ItemText({children, style}: ItemTextProps) {
       style={[
         a.flex_1,
         a.text_md,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_high,
-        {paddingTop: 3},
         style,
         disabled && t.atoms.text_contrast_low,
       ]}>
@@ -196,16 +203,18 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp}: ItemIconProps) {
+export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
   const t = useTheme()
   const {disabled} = useMenuItemContext()
   return (
     <Comp
       size="lg"
       fill={
-        disabled
-          ? t.atoms.text_contrast_low.color
-          : t.atoms.text_contrast_medium.color
+        fill
+          ? fill({disabled})
+          : disabled
+            ? t.atoms.text_contrast_low.color
+            : t.atoms.text_contrast_medium.color
       }
     />
   )
@@ -244,16 +253,54 @@ export function ItemRadio({selected}: {selected: boolean}) {
   )
 }
 
-export function LabelText({children}: {children: React.ReactNode}) {
+/**
+ * NATIVE ONLY - for adding non-pressable items to the menu
+ *
+ * @platform ios, android
+ */
+export function ContainerItem({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.px_md,
+        a.rounded_lg,
+        a.curve_continuous,
+        a.border,
+        t.atoms.bg_contrast_25,
+        t.atoms.border_contrast_low,
+        {paddingVertical: 10},
+        style,
+      ]}>
+      {children}
+    </View>
+  )
+}
+
+export function LabelText({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<TextStyle>
+}) {
   const t = useTheme()
   return (
     <Text
       style={[
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_medium,
-        {
-          marginBottom: -8,
-        },
+        {marginBottom: -8},
+        style,
       ]}>
       {children}
     </Text>
@@ -265,26 +312,28 @@ export function Group({children, style}: GroupProps) {
   return (
     <View
       style={[
-        a.rounded_md,
+        a.rounded_lg,
+        a.curve_continuous,
         a.overflow_hidden,
         a.border,
         t.atoms.border_contrast_low,
         style,
       ]}>
       {flattenReactChildren(children).map((child, i) => {
-        return React.isValidElement(child) && child.type === Item ? (
-          <React.Fragment key={i}>
+        return isValidElement(child) &&
+          (child.type === Item || child.type === ContainerItem) ? (
+          <Fragment key={i}>
             {i > 0 ? (
               <View style={[a.border_b, t.atoms.border_contrast_low]} />
             ) : null}
-            {React.cloneElement(child, {
-              // @ts-ignore
+            {cloneElement(child, {
+              // @ts-expect-error cloneElement is not aware of the types
               style: {
                 borderRadius: 0,
                 borderWidth: 0,
               },
             })}
-          </React.Fragment>
+          </Fragment>
         ) : null
       })}
     </View>

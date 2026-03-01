@@ -7,16 +7,16 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {
   ScaleAndFadeIn,
   ScaleAndFadeOut,
 } from '#/lib/custom-animations/ScaleAndFade'
 import {useHaptics} from '#/lib/haptics'
-import {isAndroid, isIOS, isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -28,18 +28,18 @@ export function NewMessagesPill({
   const t = useTheme()
   const playHaptic = useHaptics()
   const {bottom: bottomInset} = useSafeAreaInsets()
-  const bottomBarHeight = isIOS ? 42 : isAndroid ? 60 : 0
-  const bottomOffset = isWeb ? 0 : bottomInset + bottomBarHeight
+  const bottomBarHeight = IS_IOS ? 42 : IS_ANDROID ? 60 : 0
+  const bottomOffset = IS_WEB ? 0 : bottomInset + bottomBarHeight
 
   const scale = useSharedValue(1)
 
   const onPressIn = React.useCallback(() => {
-    if (isWeb) return
+    if (IS_WEB) return
     scale.set(() => withTiming(1.075, {duration: 100}))
   }, [scale])
 
   const onPressOut = React.useCallback(() => {
-    if (isWeb) return
+    if (IS_WEB) return
     scale.set(() => withTiming(1, {duration: 100}))
   }, [scale])
 
@@ -88,7 +88,7 @@ export function NewMessagesPill({
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}>
-        <Text style={[a.font_bold]}>
+        <Text style={[a.font_semi_bold]}>
           <Trans>New messages</Trans>
         </Text>
       </AnimatedPressable>

@@ -1,8 +1,9 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
@@ -31,7 +32,7 @@ export const SplashScreen = ({
 }) => {
   const {_} = useLingui()
   const t = useTheme()
-  const {isTabletOrMobile: isMobileWeb} = useWebMediaQueries()
+  const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
   const [showClipOverlay, setShowClipOverlay] = React.useState(false)
 
   React.useEffect(() => {
@@ -78,7 +79,7 @@ export const SplashScreen = ({
             a.justify_center,
             // @ts-expect-error web only
             {paddingBottom: '20vh'},
-            isMobileWeb && a.pb_5xl,
+            IS_WEB_MOBILE && a.pb_5xl,
             t.atoms.border_contrast_medium,
             a.align_center,
             a.gap_5xl,
@@ -95,7 +96,11 @@ export const SplashScreen = ({
               )}
 
               <Text
-                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+                style={[
+                  a.text_md,
+                  a.font_semi_bold,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 <Trans>What's up?</Trans>
               </Text>
             </View>
@@ -154,9 +159,11 @@ function Footer() {
         a.absolute,
         a.inset_0,
         {top: 'auto'},
-        a.p_xl,
+        a.px_xl,
+        a.py_lg,
         a.border_t,
         a.flex_row,
+        a.align_center,
         a.flex_wrap,
         a.gap_xl,
         a.flex_1,

@@ -1,9 +1,9 @@
 import assert from 'node:assert'
 
 import bodyParser from 'body-parser'
-import {Express, Request} from 'express'
+import {type Express, type Request} from 'express'
 
-import {AppContext} from '../context.js'
+import {type AppContext} from '../context.js'
 import {LinkType} from '../db/schema.js'
 import {randomId} from '../util.js'
 import {handler} from './util.js'
@@ -83,18 +83,21 @@ const getUrl = (ctx: AppContext, req: Request, id: string) => {
         : `https://${req.headers.host}`
     return `${baseUrl}/${id}`
   }
-  const baseUrl = ctx.cfg.service.hostnames.includes(req.headers.host)
-    ? `https://${req.headers.host}`
+  const host = req.headers.host ?? ''
+  const baseUrl = ctx.cfg.service.hostnamesSet.has(host)
+    ? `https://${host}`
     : `https://${ctx.cfg.service.hostnames[0]}`
   return `${baseUrl}/${id}`
 }
 
 const normalizedPathFromParts = (parts: string[]): string => {
+  // When given ['path1', 'path2', 'te:fg'], output should be
+  // /path1/path2/te:fg
   return (
     '/' +
     parts
       .map(encodeURIComponent)
-      .map(part => part.replaceAll('%3A', ':')) // preserve colons
+      .map(part => part.replace(/%3A/g, ':')) // preserve colons
       .join('/')
   )
 }

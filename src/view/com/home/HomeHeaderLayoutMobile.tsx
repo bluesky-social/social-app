@@ -1,7 +1,7 @@
-import React from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -17,16 +17,18 @@ import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {IS_LIQUID_GLASS} from '#/env'
 
 export function HomeHeaderLayoutMobile({
   children,
 }: {
   children: React.ReactNode
-  tabBarAnchor: JSX.Element | null | undefined
+  tabBarAnchor: React.ReactElement | null | undefined
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const {headerHeight} = useShellLayout()
+  const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
@@ -42,6 +44,7 @@ export function HomeHeaderLayoutMobile({
           left: 0,
           right: 0,
         },
+        IS_LIQUID_GLASS && {paddingTop: insets.top},
         headerMinimalShellTransform,
       ]}
       onLayout={e => {
@@ -56,13 +59,8 @@ export function HomeHeaderLayoutMobile({
           <PressableScale
             targetScale={0.9}
             onPress={() => {
-              emitSoftReset()
-            }}
-            onPressIn={() => {
-              playHaptic('Heavy')
-            }}
-            onPressOut={() => {
               playHaptic('Light')
+              emitSoftReset()
             }}>
             <Logo width={30} />
           </PressableScale>
@@ -72,7 +70,7 @@ export function HomeHeaderLayoutMobile({
           {hasSession && (
             <Link
               testID="viewHeaderHomeFeedPrefsBtn"
-              to="/feeds"
+              to={{screen: 'Feeds'}}
               hitSlop={HITSLOP_10}
               label={_(msg`View your feeds and explore more`)}
               size="small"
@@ -81,9 +79,8 @@ export function HomeHeaderLayoutMobile({
               shape="square"
               style={[
                 a.justify_center,
-                {
-                  marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET,
-                },
+                {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
+                a.bg_transparent,
               ]}>
               <ButtonIcon icon={FeedsIcon} size="lg" />
             </Link>

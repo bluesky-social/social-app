@@ -1,16 +1,21 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {
+  type AppBskyActorDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {Link, LinkProps} from '#/components/Link'
+import {Link, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 const AVI_SIZE = 30
 const AVI_SIZE_SMALL = 20
@@ -137,9 +142,9 @@ function KnownFollowersInner({
         <>
           <View
             style={[
+              a.flex_row,
               {
                 height: SIZE,
-                width: SIZE + (slice.length - 1) * a.gap_md.gap,
               },
               pressed && {
                 opacity: 0.5,
@@ -149,15 +154,14 @@ function KnownFollowersInner({
               <View
                 key={prof.did}
                 style={[
-                  a.absolute,
                   a.rounded_full,
                   {
                     borderWidth: AVI_BORDER,
                     borderColor: t.atoms.bg.backgroundColor,
                     width: SIZE + AVI_BORDER * 2,
                     height: SIZE + AVI_BORDER * 2,
-                    left: i * a.gap_md.gap,
                     zIndex: AVI_BORDER - i,
+                    marginLeft: i > 0 ? -8 : 0,
                   },
                 ]}>
                 <UserAvatar
@@ -165,6 +169,7 @@ function KnownFollowersInner({
                   avatar={prof.avatar}
                   moderation={moderation.ui('avatar')}
                   type={prof.associated?.labeler ? 'labeler' : 'user'}
+                  noBorder
                 />
               </View>
             ))}
@@ -201,9 +206,8 @@ function KnownFollowersInner({
                     one="# other"
                     other="# others"
                   />
-                </Trans>
+                </Trans> // only 2
               ) : (
-                // only 2
                 <Trans>
                   Followed by{' '}
                   <Text emoji key={slice[0].profile.did} style={textStyle}>

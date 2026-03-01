@@ -1,10 +1,10 @@
 import React from 'react'
 import {
   BSKY_LABELER_DID,
-  ModerationCause,
-  ModerationCauseSource,
+  type ModerationCause,
+  type ModerationCauseSource,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -12,10 +12,10 @@ import {useLabelDefinitions} from '#/state/preferences'
 import {useSession} from '#/state/session'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
-import {AppModerationCause} from '#/components/Pills'
+import {type AppModerationCause} from '#/components/Pills'
 import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
 
@@ -28,6 +28,7 @@ export interface ModerationCauseDescription {
   sourceType?: ModerationCauseSource['type']
   sourceAvi?: string
   sourceDid?: string
+  isSubjectAccount?: boolean
 }
 
 export function useModerationCauseDescription(
@@ -153,8 +154,8 @@ export function useModerationCauseDescription(
           def.identifier === '!no-unauthenticated'
             ? EyeSlash
             : def.severity === 'alert'
-            ? Warning
-            : CircleInfo,
+              ? Warning
+              : CircleInfo,
         name: strings.name,
         description: strings.description,
         source,
@@ -162,6 +163,7 @@ export function useModerationCauseDescription(
         sourceType: cause.source.type,
         sourceAvi: labeler?.creator.avatar,
         sourceDid: cause.label.src,
+        isSubjectAccount: cause.label.uri.startsWith('did:'),
       }
     }
     // should never happen

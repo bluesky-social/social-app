@@ -1,11 +1,14 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
-import {logEvent} from '#/lib/statsig/statsig'
+import {STALE} from '#/state/queries'
+import {profilesQueryKey} from '#/state/queries/profile'
+import {useAgent, useSession} from '#/state/session'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
@@ -18,6 +21,7 @@ import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, native, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {useAnalytics} from '#/analytics'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
@@ -30,11 +34,12 @@ export {ScreenState as LoggedOutScreenState}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {requestedAccountSwitchTo} = useLoggedOutView()
-  const [screenState, setScreenState] = React.useState<ScreenState>(() => {
+  const [screenState, setScreenState] = useState<ScreenState>(() => {
     if (requestedAccountSwitchTo === 'new') {
       return ScreenState.S_CreateAccount
     } else if (requestedAccountSwitchTo === 'starterpack') {
@@ -47,11 +52,26 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   })
   const {clearRequestedAccount} = useLoggedOutViewControls()
 
-  React.useEffect(() => {
+  const queryClient = useQueryClient()
+  const {accounts} = useSession()
+  const agent = useAgent()
+  useEffect(() => {
+    const actors = accounts.map(acc => acc.did)
+    void queryClient.prefetchQuery({
+      queryKey: profilesQueryKey(actors),
+      staleTime: STALE.MINUTES.FIVE,
+      queryFn: async () => {
+        const res = await agent.getProfiles({actors})
+        return res.data
+      },
+    })
+  }, [accounts, agent, queryClient])
+
+  useEffect(() => {
     setMinimalShellMode(true)
   }, [setMinimalShellMode])
 
-  const onPressDismiss = React.useCallback(() => {
+  const onPressDismiss = useCallback(() => {
     if (onDismiss) {
       onDismiss()
     }
@@ -94,11 +114,11 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           <SplashScreen
             onPressSignin={() => {
               setScreenState(ScreenState.S_Login)
-              logEvent('splash:signInPressed', {})
+              ax.metric('splash:signInPressed', {})
             }}
             onPressCreateAccount={() => {
               setScreenState(ScreenState.S_CreateAccount)
-              logEvent('splash:createAccountPressed', {})
+              ax.metric('splash:createAccountPressed', {})
             }}
           />
         ) : undefined}

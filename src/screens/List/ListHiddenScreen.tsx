@@ -1,17 +1,21 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyGraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {RQKEY_ROOT as listQueryRoot} from '#/state/queries/list'
-import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
 import {
-  UsePreferencesQueryResponse,
+  RQKEY_ROOT as listQueryRoot,
+  useListBlockMutation,
+  useListMuteMutation,
+} from '#/state/queries/list'
+import {
+  type UsePreferencesQueryResponse,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
@@ -122,7 +126,7 @@ export function ListHiddenScreen({
           width={42}
         />
         <View style={[a.gap_sm, a.align_center]}>
-          <Text style={[a.font_bold, a.text_3xl]}>
+          <Text style={[a.font_semi_bold, a.text_3xl]}>
             {list.creator.viewer?.blocking || list.creator.viewer?.blockedBy ? (
               <Trans>Creator has been blocked</Trans>
             ) : (
@@ -150,7 +154,7 @@ export function ListHiddenScreen({
             ) : (
               <Trans>
                 This list – created by{' '}
-                <Text style={[a.font_bold]}>
+                <Text style={[a.font_semi_bold]}>
                   {sanitizeHandle(list.creator.handle, '@')}
                 </Text>{' '}
                 – contains possible violations of Bluesky's community guidelines

@@ -1,8 +1,8 @@
 import {useMemo} from 'react'
 
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {useInterestsDisplayNames} from '#/lib/interests'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
-import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 
 /**
  * Conditional hook, used in case a user is a non-english speaker, in which
@@ -15,7 +15,7 @@ export function useSuggestedUsers({
   category?: string | null
   /**
    * If true, we'll search for users using the translated value of `category`,
-   * based on the user's "app language setting
+   * based on the user's app language setting
    */
   search?: boolean
 }) {
@@ -24,7 +24,7 @@ export function useSuggestedUsers({
     enabled: !search,
     category,
   })
-  const searched = useActorSearchPaginated({
+  const searched = useActorSearch({
     enabled: !!search,
     // use user's app language translation for this value
     query: category ? interestsDisplayNames[category] : '',
@@ -38,11 +38,13 @@ export function useSuggestedUsers({
         data: searched?.data
           ? {
               actors: searched.data.pages.flatMap(p => p.actors) ?? [],
+              recId: undefined,
             }
           : undefined,
         isLoading: searched.isLoading,
         error: searched.error,
         isRefetching: searched.isRefetching,
+        refetch: searched.refetch,
       }
     } else {
       return {
@@ -50,6 +52,7 @@ export function useSuggestedUsers({
         isLoading: curated.isLoading,
         error: curated.error,
         isRefetching: curated.isRefetching,
+        refetch: curated.refetch,
       }
     }
   }, [curated, searched, search])

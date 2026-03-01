@@ -1,6 +1,5 @@
 import React from 'react'
-import {type AppBskyUnspeccedGetTrends} from '@atproto/api'
-import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
+import {type AppBskyUnspeccedGetTrends, hasMutedWord} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {

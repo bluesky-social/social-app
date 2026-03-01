@@ -1,19 +1,20 @@
-import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {useMemo} from 'react'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 
 import {cleanError} from '#/lib/strings/errors'
 import {
   useResolveGifQuery,
   useResolveLinkQuery,
 } from '#/state/queries/resolve-link'
-import {Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/state/queries/tenor'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
-import {ExternalLinkEmbed} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
+import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
+import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
+import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
-import {MaybeFeedCard, MaybeListCard} from '../util/post-embeds'
 
 export const ExternalEmbedGif = ({
   onRemove,
@@ -24,7 +25,7 @@ export const ExternalEmbedGif = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveGifQuery(gif)
-  const linkInfo = React.useMemo(
+  const linkInfo = useMemo(
     () =>
       data && {
         title: data.title ?? data.uri,
@@ -36,7 +37,13 @@ export const ExternalEmbedGif = ({
   )
 
   const loadingStyle: ViewStyle = {
-    aspectRatio: gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
+    aspectRatio: (() => {
+      const dims = gif.media_formats.gif?.dims
+      if (dims && dims[0] > 0 && dims[1] > 0) {
+        return dims[0] / dims[1]
+      }
+      return 16 / 9 // Default aspect ratio
+    })(),
     width: '100%',
   }
 
@@ -44,7 +51,7 @@ export const ExternalEmbedGif = ({
     <View style={[a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {linkInfo ? (
         <View style={{pointerEvents: 'auto'}}>
-          <ExternalLinkEmbed link={linkInfo} hideAlt />
+          <ExternalEmbed link={linkInfo} hideAlt />
         </View>
       ) : error ? (
         <Container style={[a.align_start, a.p_md, a.gap_xs]}>
@@ -76,11 +83,11 @@ export const ExternalEmbedLink = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveLinkQuery(uri)
-  const linkComponent = React.useMemo(() => {
+  const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
         return (
-          <ExternalLinkEmbed
+          <ExternalEmbed
             link={{
               title: data.title || uri,
               uri,
@@ -91,9 +98,29 @@ export const ExternalEmbedLink = ({
           />
         )
       } else if (data.kind === 'feed') {
-        return <MaybeFeedCard view={data.view} />
+        return (
+          <ModeratedFeedEmbed
+            embed={{
+              type: 'feed',
+              view: {
+                $type: 'app.bsky.feed.defs#generatorView',
+                ...data.view,
+              },
+            }}
+          />
+        )
       } else if (data.kind === 'list') {
-        return <MaybeListCard view={data.view} />
+        return (
+          <ModeratedListEmbed
+            embed={{
+              type: 'list',
+              view: {
+                $type: 'app.bsky.graph.defs#listView',
+                ...data.view,
+              },
+            }}
+          />
+        )
       } else if (data.kind === 'starter-pack') {
         return <StarterPackEmbed starterPack={data.view} />
       }

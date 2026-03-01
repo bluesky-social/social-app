@@ -8,6 +8,7 @@ import {
   aggregateUserInterests,
   createBskyTopicsHeader,
 } from '#/lib/api/feed/utils'
+import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -36,6 +37,8 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
+      const userInterests = aggregateUserInterests(preferences)
+
       const {data} = await agent.app.bsky.unspecced.getSuggestedUsers(
         {
           category: props.category ?? undefined,
@@ -43,11 +46,30 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
         },
         {
           headers: {
-            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+            ...createBskyTopicsHeader(userInterests),
             'Accept-Language': contentLangs,
           },
         },
       )
+      // FALLBACK: if no results for 'all', try again with no interests specified
+      if (!props.category && data.actors.length === 0) {
+        logger.error(
+          `Did not get any suggested users, falling back - interests: ${userInterests}`,
+        )
+        const {data: fallbackData} =
+          await agent.app.bsky.unspecced.getSuggestedUsers(
+            {
+              category: props.category ?? undefined,
+              limit: props.limit || 10,
+            },
+            {
+              headers: {
+                'Accept-Language': contentLangs,
+              },
+            },
+          )
+        return fallbackData
+      }
 
       return data
     },
@@ -62,7 +84,7 @@ export function* findAllProfilesInQueryData(
     queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsers.OutputSchema>({
       queryKey: [getSuggestedUsersQueryKeyRoot],
     })
-  for (const [_, response] of responses) {
+  for (const [_key, response] of responses) {
     if (!response) {
       continue
     }

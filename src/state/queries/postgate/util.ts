@@ -1,9 +1,9 @@
 import {
-  $Typed,
+  type $Typed,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
-  AppBskyFeedPostgate,
+  type AppBskyFeedDefs,
+  type AppBskyFeedPostgate,
   AtUri,
 } from '@atproto/api'
 
@@ -113,6 +113,7 @@ export function createEmbedViewRecordFromPost(
     likeCount: post.likeCount,
     quoteCount: post.quoteCount,
     indexedAt: post.indexedAt,
+    embeds: post.embed ? [post.embed] : [],
   }
 }
 

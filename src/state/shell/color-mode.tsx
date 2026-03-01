@@ -15,11 +15,17 @@ const stateContext = React.createContext<StateContext>({
   colorMode: 'system',
   darkTheme: 'dark',
 })
+stateContext.displayName = 'ColorModeStateContext'
 const setContext = React.createContext<SetContext>({} as SetContext)
+setContext.displayName = 'ColorModeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [colorMode, setColorMode] = React.useState(persisted.get('colorMode'))
-  const [darkTheme, setDarkTheme] = React.useState(persisted.get('darkTheme'))
+  const [colorMode, setColorMode] = React.useState(() =>
+    persisted.get('colorMode'),
+  )
+  const [darkTheme, setDarkTheme] = React.useState(() =>
+    persisted.get('darkTheme'),
+  )
 
   const stateContextValue = React.useMemo(
     () => ({

@@ -1,13 +1,14 @@
-import {ImagePickerAsset} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {
-  AppBskyFeedPostgate,
+  type AppBskyActorDefs,
+  type AppBskyDraftDefs,
+  type AppBskyFeedPostgate,
   AppBskyRichtextFacet,
-  BskyPreferences,
   RichText,
 } from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
-import {SelfLabel} from '#/lib/moderation'
+import {type SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {
@@ -15,17 +16,22 @@ import {
   postUriToRelativePath,
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
-import {ComposerImage, createInitialImages} from '#/state/gallery'
+import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
-import {Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/state/queries/tenor'
 import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {ComposerOpts} from '#/state/shell/composer'
+import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {type ComposerOpts} from '#/state/shell/composer'
 import {
-  LinkFacetMatch,
+  type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
-import {createVideoState, VideoAction, videoReducer, VideoState} from './video'
+import {
+  createVideoState,
+  type VideoAction,
+  videoReducer,
+  type VideoState,
+} from './video'
 
 type ImagesMedia = {
   type: 'images'
@@ -96,6 +102,14 @@ export type ComposerState = {
   thread: ThreadDraft
   activePostIndex: number
   mutableNeedsFocusActive: boolean
+  /** ID of the draft being edited, if any. Used to update existing draft on save. */
+  draftId?: string
+  /** Whether the composer has been modified since loading a draft. */
+  isDirty: boolean
+  /** Map of localId -> loaded media path/URL for the current draft. Used for re-saving without re-copying media. */
+  loadedMediaMap?: Map<string, string>
+  /** Set of original localRef paths from the draft being edited. Used to identify orphaned media on save. */
+  originalLocalRefs?: Set<string>
 }
 
 export type ComposerAction =
@@ -117,6 +131,28 @@ export type ComposerAction =
       type: 'focus_post'
       postId: string
     }
+  | {
+      type: 'restore_from_draft'
+      draftId: string
+      posts: PostDraft[]
+      threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow']
+      postgateEmbeddingRules: AppBskyDraftDefs.Draft['postgateEmbeddingRules']
+
+      /** Map of localRefPath -> loaded media path/URL */
+      loadedMedia: Map<string, string>
+      /** Set of original localRef paths from the draft. Used to identify orphaned media on save. */
+      originalLocalRefs: Set<string>
+    }
+  | {
+      type: 'clear'
+      initInteractionSettings:
+        | AppBskyActorDefs.PostInteractionSettingsPref
+        | undefined
+    }
+  | {
+      type: 'mark_saved'
+      draftId: string
+    }
 
 export const MAX_IMAGES = 4
 
@@ -128,6 +164,7 @@ export function composerReducer(
     case 'update_postgate': {
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           postgate: action.postgate,
@@ -137,6 +174,7 @@ export function composerReducer(
     case 'update_threadgate': {
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           threadgate: action.threadgate,
@@ -157,6 +195,7 @@ export function composerReducer(
       }
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -179,6 +218,7 @@ export function composerReducer(
       })
       return {
         ...state,
+        isDirty: true,
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -204,6 +244,7 @@ export function composerReducer(
       }
       return {
         ...state,
+        isDirty: true,
         activePostIndex: nextActivePostIndex,
         mutableNeedsFocusActive: true,
         thread: {
@@ -222,6 +263,54 @@ export function composerReducer(
       return {
         ...state,
         activePostIndex: nextActivePostIndex,
+      }
+    }
+    case 'restore_from_draft': {
+      const {
+        draftId,
+        posts,
+        threadgateAllow,
+        postgateEmbeddingRules,
+        loadedMedia,
+        originalLocalRefs,
+      } = action
+
+      return {
+        activePostIndex: 0,
+        mutableNeedsFocusActive: true,
+        draftId,
+        isDirty: false,
+        loadedMediaMap: loadedMedia,
+        originalLocalRefs,
+        thread: {
+          posts,
+          postgate: createPostgateRecord({
+            post: '',
+            embeddingRules: postgateEmbeddingRules,
+          }),
+          threadgate: threadgateRecordToAllowUISetting({
+            $type: 'app.bsky.feed.threadgate',
+            post: '',
+            createdAt: new Date().toString(),
+            allow: threadgateAllow,
+          }),
+        },
+      }
+    }
+    case 'clear': {
+      return createComposerState({
+        initText: undefined,
+        initMention: undefined,
+        initImageUris: [],
+        initQuoteUri: undefined,
+        initInteractionSettings: action.initInteractionSettings,
+      })
+    }
+    case 'mark_saved': {
+      return {
+        ...state,
+        isDirty: false,
+        draftId: action.draftId,
       }
     }
   }
@@ -489,7 +578,7 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    | BskyPreferences['postInteractionSettings']
+    | AppBskyActorDefs.PostInteractionSettingsPref
     | undefined
 }): ComposerState {
   let media: ImagesMedia | undefined
@@ -514,12 +603,12 @@ export function createComposerState({
     text: initText
       ? initText
       : initMention
-      ? insertMentionAt(
-          `@${initMention}`,
-          initMention.length + 1,
-          `${initMention}`,
-        )
-      : '',
+        ? insertMentionAt(
+            `@${initMention}`,
+            initMention.length + 1,
+            `${initMention}`,
+          )
+        : '',
   })
 
   let link: Link | undefined
@@ -581,11 +670,15 @@ export function createComposerState({
         }
       }
     }
+  } else if (initMention) {
+    // highlight the mention
+    initRichText.detectFacetsWithoutResolution()
   }
 
   return {
     activePostIndex: 0,
     mutableNeedsFocusActive: false,
+    isDirty: false,
     thread: {
       posts: [
         {

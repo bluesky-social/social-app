@@ -16,8 +16,8 @@ module.exports = function (api) {
       ],
     ],
     plugins: [
-      'macros',
-      ['babel-plugin-react-compiler', {target: '18'}],
+      '@lingui/babel-plugin-lingui-macro',
+      ['babel-plugin-react-compiler', {target: '19'}],
       [
         'module:react-native-dotenv',
         {
@@ -37,10 +37,6 @@ module.exports = function (api) {
           alias: {
             // This needs to be mirrored in tsconfig.json
             '#': './src',
-            lib: './src/lib',
-            platform: './src/platform',
-            state: './src/state',
-            view: './src/view',
             crypto: './src/platform/crypto.ts',
           },
         },

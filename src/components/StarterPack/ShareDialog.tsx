@@ -1,24 +1,24 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
-import {AppBskyGraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type AppBskyGraphDefs} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {saveImageToMediaLibrary} from '#/lib/media/manip'
+import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {shareUrl} from '#/lib/sharing'
-import {logEvent} from '#/lib/statsig/statsig'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
-import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {DialogControlProps} from '#/components/Dialog'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {type DialogControlProps} from '#/components/Dialog'
 import * as Dialog from '#/components/Dialog'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
+import {QrCode_Stroke2_Corner0_Rounded as QrCodeIcon} from '#/components/icons/QrCode'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 interface Props {
   starterPack: AppBskyGraphDefs.StarterPackView
@@ -30,7 +30,9 @@ interface Props {
 
 export function ShareDialog(props: Props) {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer
+      control={props.control}
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <ShareDialogInner {...props} />
     </Dialog.Outer>
@@ -45,54 +47,39 @@ function ShareDialogInner({
   control,
 }: Props) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {gtMobile} = useBreakpoints()
 
   const imageUrl = getStarterPackOgCard(starterPack)
 
   const onShareLink = async () => {
     if (!link) return
     shareUrl(link)
-    logEvent('starterPack:share', {
+    ax.metric('starterPack:share', {
       starterPack: starterPack.uri,
       shareType: 'link',
     })
     control.close()
   }
 
+  const saveImageToAlbum = useSaveImageToMediaLibrary()
+
   const onSave = async () => {
-    const res = await requestMediaLibraryPermissionsAsync()
-
-    if (!res) {
-      Toast.show(
-        _(msg`You must grant access to your photo library to save the image.`),
-        'xmark',
-      )
-      return
-    }
-
-    try {
-      await saveImageToMediaLibrary({uri: imageUrl})
-      Toast.show(_(msg`Image saved to your camera roll!`))
-      control.close()
-    } catch (e: unknown) {
-      Toast.show(_(msg`An error occurred while saving the QR code!`), 'xmark')
-      logger.error('Failed to save QR code', {error: e})
-      return
-    }
+    await saveImageToAlbum(imageUrl)
   }
 
   return (
     <>
       <Dialog.ScrollableInner label={_(msg`Share link dialog`)}>
         {!imageLoaded || !link ? (
-          <View style={[a.p_xl, a.align_center]}>
+          <View style={[a.align_center, a.justify_center, {minHeight: 350}]}>
             <Loader size="xl" />
           </View>
         ) : (
-          <View style={[!isTabletOrDesktop && a.gap_lg]}>
-            <View style={[a.gap_sm, isTabletOrDesktop && a.pb_lg]}>
-              <Text style={[a.font_bold, a.text_2xl]}>
+          <View style={[!gtMobile && a.gap_lg]}>
+            <View style={[a.gap_sm, gtMobile && a.pb_lg]}>
+              <Text style={[a.font_semi_bold, a.text_2xl]}>
                 <Trans>Invite people to this starter pack!</Trans>
               </Text>
               <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -106,10 +93,10 @@ function ShareDialogInner({
               source={{uri: imageUrl}}
               style={[
                 a.rounded_sm,
+                a.aspect_card,
                 {
-                  aspectRatio: 1200 / 630,
-                  transform: [{scale: isTabletOrDesktop ? 0.85 : 1}],
-                  marginTop: isTabletOrDesktop ? -20 : 0,
+                  transform: [{scale: gtMobile ? 0.85 : 1}],
+                  marginTop: gtMobile ? -20 : 0,
                 },
               ]}
               accessibilityIgnoresInvertColors={true}
@@ -117,42 +104,48 @@ function ShareDialogInner({
             <View
               style={[
                 a.gap_md,
-                isWeb && [a.gap_sm, a.flex_row_reverse, {marginLeft: 'auto'}],
+                gtMobile && [
+                  a.gap_sm,
+                  a.justify_center,
+                  a.flex_row,
+                  a.flex_wrap,
+                ],
               ]}>
               <Button
-                label={isWeb ? _(msg`Copy link`) : _(msg`Share link`)}
-                variant="solid"
-                color="secondary"
-                size="small"
-                style={[isWeb && a.self_center]}
+                label={IS_WEB ? _(msg`Copy link`) : _(msg`Share link`)}
+                color="primary_subtle"
+                size="large"
                 onPress={onShareLink}>
+                <ButtonIcon icon={ChainLinkIcon} />
                 <ButtonText>
-                  {isWeb ? <Trans>Copy Link</Trans> : <Trans>Share link</Trans>}
+                  {IS_WEB ? (
+                    <Trans>Copy Link</Trans>
+                  ) : (
+                    <Trans>Share link</Trans>
+                  )}
                 </ButtonText>
               </Button>
               <Button
                 label={_(msg`Share QR code`)}
-                variant="solid"
-                color="secondary"
-                size="small"
-                style={[isWeb && a.self_center]}
+                color="primary_subtle"
+                size="large"
                 onPress={() => {
                   control.close(() => {
                     qrDialogControl.open()
                   })
                 }}>
+                <ButtonIcon icon={QrCodeIcon} />
                 <ButtonText>
                   <Trans>Share QR code</Trans>
                 </ButtonText>
               </Button>
-              {isNative && (
+              {IS_NATIVE && (
                 <Button
                   label={_(msg`Save image`)}
-                  variant="ghost"
                   color="secondary"
-                  size="small"
-                  style={[isWeb && a.self_center]}
+                  size="large"
                   onPress={onSave}>
+                  <ButtonIcon icon={DownloadIcon} />
                   <ButtonText>
                     <Trans>Save image</Trans>
                   </ButtonText>
@@ -161,6 +154,7 @@ function ShareDialogInner({
             </View>
           </View>
         )}
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </>
   )

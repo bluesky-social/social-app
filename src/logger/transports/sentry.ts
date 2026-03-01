@@ -1,6 +1,6 @@
 import {isNetworkError} from '#/lib/strings/errors'
 import {Sentry} from '#/logger/sentry/lib'
-import {LogLevel, Transport} from '#/logger/types'
+import {LogLevel, type Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 
 export const sentryTransport: Transport = (
@@ -10,6 +10,9 @@ export const sentryTransport: Transport = (
   {type, tags, ...metadata},
   timestamp,
 ) => {
+  // Skip debug messages entirely for now - esb
+  if (level === LogLevel.Debug) return
+
   const meta = {
     __context__: context,
     ...prepareMetadata(metadata),

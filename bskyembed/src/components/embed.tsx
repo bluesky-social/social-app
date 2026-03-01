@@ -17,8 +17,11 @@ import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import playIcon from '../../assets/play_filled_corner2_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
 import {CONTENT_LABELS, labelsToInfo} from '../labels'
-import {getRkey} from '../utils'
+import * as bsky from '../types/bsky'
+import {getRkey} from '../util/rkey'
+import {getVerificationState} from '../util/verification-state'
 import {Link} from './link'
+import {VerificationCheck} from './verification-check'
 
 export function Embed({
   content,
@@ -75,23 +78,35 @@ export function Embed({
           CONTENT_LABELS.includes(label.val),
         )
 
+        const verification = getVerificationState({profile: record.author})
+
         return (
           <Link
             href={`/profile/${record.author.did}/post/${getRkey(record)}`}
-            className="transition-colors hover:bg-neutral-100 dark:hover:bg-slate-700 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
+            className="transition-colors hover:bg-blue-50 dark:hover:bg-slate-900 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
-              <div className="w-4 h-4 overflow-hidden rounded-full bg-neutral-300 dark:bg-slate-700 shrink-0">
+              <div className="w-4 h-4 rounded-full bg-neutral-300 dark:bg-slate-900 shrink-0">
                 <img
+                  className="rounded-full"
                   src={record.author.avatar}
                   style={isAuthorLabeled ? {filter: 'blur(1.5px)'} : undefined}
                 />
               </div>
-              <p className="line-clamp-1 text-sm">
-                <span className="font-bold">{record.author.displayName}</span>
-                <span className="text-textLight dark:text-textDimmed ml-1">
+              <div className="flex flex-1 items-center shrink min-w-0 min-h-0">
+                <p className="block text-sm shrink-0 font-bold max-w-[70%] line-clamp-1">
+                  {record.author.displayName?.trim() || record.author.handle}
+                </p>
+                {verification.isVerified && (
+                  <VerificationCheck
+                    className="ml-[3px] mt-px shrink-0 self-center"
+                    verifier={verification.role === 'verifier'}
+                    size={12}
+                  />
+                )}
+                <p className="block line-clamp-1 text-sm text-textLight dark:text-textDimmed shrink-[10] ml-1">
                   @{record.author.handle}
-                </span>
-              </p>
+                </p>
+              </div>
             </div>
             {text && <p className="text-sm">{text}</p>}
             {record.embeds?.map(embed => (
@@ -207,7 +222,7 @@ export function Embed({
 
 function Info({children}: {children: ComponentChildren}) {
   return (
-    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
+    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 hover:bg-blue-50 dark:border-slate-600 dark:hover:bg-slate-900">
       <img src={infoIcon} className="w-4 h-4 shrink-0 mt-0.5" />
       <p className="text-sm text-textLight dark:text-textDimmed">{children}</p>
     </div>
@@ -315,7 +330,7 @@ function ExternalEmbed({
       {content.external.thumb && (
         <img
           src={content.external.thumb}
-          className="aspect-[1.91/1] object-cover"
+          className="aspect-[1200/630] object-cover"
         />
       )}
       <div className="py-3 px-4">
@@ -404,7 +419,12 @@ function StarterPackEmbed({
 }: {
   content: AppBskyGraphDefs.StarterPackViewBasic
 }) {
-  if (!AppBskyGraphStarterpack.isRecord(content.record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      content.record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 
@@ -415,7 +435,7 @@ function StarterPackEmbed({
     <Link
       href={starterPackHref}
       className="w-full rounded-xl overflow-hidden border dark:border-slate-600 flex flex-col items-stretch">
-      <img src={imageUri} className="aspect-[1.91/1] object-cover" />
+      <img src={imageUri} className="aspect-[1200/630] object-cover" />
       <div className="py-3 px-4">
         <div className="flex space-x-2 items-center">
           <img src={starterPackIcon} className="w-10 h-10" />
@@ -443,7 +463,9 @@ function StarterPackEmbed({
 }
 
 // from #/lib/strings/starter-pack.ts
-function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
+function getStarterPackImage(
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+) {
   const rkey = getRkey({uri: starterPack.uri})
   return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }

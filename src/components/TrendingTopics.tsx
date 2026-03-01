@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {type AtUri} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -10,18 +10,22 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 // import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 // import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
 // import {UserAvatar} from '#/view/com/util/UserAvatar'
-import type {TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
-import {atoms as a, native, useTheme, ViewStyleProp} from '#/alf'
+import {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
+import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function TrendingTopic({
   topic: raw,
   size,
   style,
-}: {topic: TrendingTopic; size?: 'large' | 'small'} & ViewStyleProp) {
-  const t = useTheme()
+  hovered,
+}: {
+  topic: TrendingTopic
+  size?: 'large' | 'small'
+  hovered?: boolean
+} & ViewStyleProp) {
   const topic = useTopic(raw)
 
   const isSmall = size === 'small'
@@ -33,18 +37,14 @@ export function TrendingTopic({
       style={[
         a.flex_row,
         a.align_center,
-        a.rounded_full,
-        a.border,
-        t.atoms.border_contrast_medium,
-        t.atoms.bg,
         isSmall
           ? [
               {
-                paddingVertical: 5,
-                paddingHorizontal: 10,
+                paddingVertical: 2,
+                paddingHorizontal: 4,
               },
             ]
-          : [a.py_sm, a.px_md],
+          : [a.py_xs, a.px_sm],
         hasIcon && {gap: 6},
         style,
       ]}>
@@ -90,9 +90,10 @@ export function TrendingTopic({
 
       <Text
         style={[
-          a.font_bold,
+          a.font_semi_bold,
           a.leading_tight,
           isSmall ? [a.text_sm] : [a.text_md, {paddingBottom: 1}],
+          hovered && {textDecorationLine: 'underline'},
         ]}
         numberOfLines={1}>
         {topic.displayName}

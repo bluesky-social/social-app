@@ -1,12 +1,11 @@
 import {Text as RNText, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
-import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
-import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -15,6 +14,7 @@ import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -29,7 +29,8 @@ export function VerifierDialog({
   verificationState: FullVerificationState
 }) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+      <Dialog.Handle />
       <Inner
         control={control}
         profile={profile}
@@ -49,6 +50,7 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
@@ -65,8 +67,6 @@ function Inner({
       style={[
         gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
-      <Dialog.Handle />
-
       <View style={[a.gap_lg]}>
         <View
           style={[
@@ -91,17 +91,16 @@ function Inner({
         </View>
 
         <View style={[a.gap_sm]}>
-          <Text style={[a.text_2xl, a.font_bold, a.pr_4xl, a.leading_tight]}>
+          <Text
+            style={[a.text_2xl, a.font_semi_bold, a.pr_4xl, a.leading_tight]}>
             {label}
           </Text>
           <Text style={[a.text_md, a.leading_snug]}>
             <Trans>
-              Accounts with a scalloped blue check mark
+              Accounts with a scalloped blue check mark{' '}
               <RNText>
-                {NON_BREAKING_SPACE}
                 <VerifierCheck width={14} />
-                {NON_BREAKING_SPACE}
-              </RNText>
+              </RNText>{' '}
               can verify others. These trusted verifiers are selected by
               Bluesky.
             </Trans>
@@ -118,24 +117,27 @@ function Inner({
           <Link
             overridePresentation
             to={urls.website.blog.initialVerificationAnnouncement}
-            label={_(msg`Learn more about verification on Bluesky`)}
+            label={_(
+              msg({
+                message: `Learn more about verification on Bluesky`,
+                context: `english-only-resource`,
+              }),
+            )}
             size="small"
-            variant="solid"
             color="primary"
             style={[a.justify_center]}
             onPress={() => {
-              logger.metric('verification:learn-more', {
+              ax.metric('verification:learn-more', {
                 location: 'verifierDialog',
               })
             }}>
             <ButtonText>
-              <Trans>Learn more</Trans>
+              <Trans context="english-only-resource">Learn more</Trans>
             </ButtonText>
           </Link>
           <Button
             label={_(msg`Close dialog`)}
             size="small"
-            variant="solid"
             color="secondary"
             onPress={() => {
               control.close()
@@ -146,8 +148,6 @@ function Inner({
           </Button>
         </View>
       </View>
-
-      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }

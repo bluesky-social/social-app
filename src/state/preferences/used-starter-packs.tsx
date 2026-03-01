@@ -6,7 +6,9 @@ type StateContext = boolean | undefined
 type SetContext = (v: boolean) => void
 
 const stateContext = React.createContext<StateContext>(false)
+stateContext.displayName = 'UsedStarterPacksStateContext'
 const setContext = React.createContext<SetContext>((_: boolean) => {})
+setContext.displayName = 'UsedStarterPacksSetContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [state, setState] = React.useState<StateContext>(() =>

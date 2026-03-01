@@ -5,8 +5,9 @@ import {
   AppBskyGraphStarterpack,
   moderateProfile,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -89,7 +90,7 @@ export function StarterPackCard({
               <View style={[a.flex_1]}>
                 <Text
                   emoji
-                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  style={[a.text_md, a.font_semi_bold, a.leading_snug]}
                   numberOfLines={1}>
                   {record.name}
                 </Text>
@@ -242,7 +243,7 @@ export function AvatarStack({
                 <Text
                   style={[
                     gtPhone ? a.text_md : a.text_xs,
-                    a.font_bold,
+                    a.font_semi_bold,
                     a.leading_snug,
                     {color: 'white'},
                   ]}>

@@ -8,8 +8,12 @@ appId: xyz.blueskyweb.app
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
+
 - assertVisible:
-      id: "storybookBtn"
+    id: "storybookBtn"
 - tapOn:
     id: "storybookBtn"
 - tapOn:

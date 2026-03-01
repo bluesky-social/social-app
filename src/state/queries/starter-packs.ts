@@ -1,16 +1,15 @@
 import {
   AppBskyFeedDefs,
   AppBskyGraphDefs,
-  AppBskyGraphGetStarterPack,
+  type AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
-  AppBskyRichtextFacet,
+  type AppBskyRichtextFacet,
   AtUri,
-  BskyAgent,
+  type BskyAgent,
   RichText,
 } from '@atproto/api'
-import {StarterPackView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {
-  QueryClient,
+  type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -59,7 +58,7 @@ export function useStarterPackQuery({
 }) {
   const agent = useAgent()
 
-  return useQuery<StarterPackView>({
+  return useQuery<AppBskyGraphDefs.StarterPackView>({
     queryKey: RQKEY(uri ? {uri} : {did, rkey}),
     queryFn: async () => {
       if (!uri) {
@@ -353,7 +352,7 @@ async function whenAppViewReady(
   )
 }
 
-export async function precacheStarterPack(
+export function precacheStarterPack(
   queryClient: QueryClient,
   starterPack:
     | AppBskyGraphDefs.StarterPackViewBasic
@@ -370,6 +369,18 @@ export async function precacheStarterPack(
     AppBskyGraphDefs.isStarterPackViewBasic(starterPack) &&
     bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
   ) {
+    let feeds: AppBskyFeedDefs.GeneratorView[] | undefined
+    if (starterPack.record.feeds) {
+      feeds = []
+      for (const feed of starterPack.record.feeds) {
+        // note: types are wrong? claims to be `FeedItem`, but we actually
+        // get un$typed `GeneratorView` objects here -sfn
+        if (bsky.validate(feed, AppBskyFeedDefs.validateGeneratorView)) {
+          feeds.push(feed)
+        }
+      }
+    }
+
     const listView: AppBskyGraphDefs.ListViewBasic = {
       uri: starterPack.record.list,
       // This will be populated once the data from server is fetched
@@ -381,6 +392,7 @@ export async function precacheStarterPack(
       ...starterPack,
       $type: 'app.bsky.graph.defs#starterPackView',
       list: listView,
+      feeds,
     }
   }
 

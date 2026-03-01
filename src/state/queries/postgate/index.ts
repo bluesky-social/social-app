@@ -2,10 +2,10 @@ import React from 'react'
 import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPostgate,
   AtUri,
-  BskyAgent,
+  type BskyAgent,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
@@ -36,6 +36,7 @@ export async function getPostgateRecord({
     const res = await agent.resolveHandle({
       handle: urip.host,
     })
+    // @ts-expect-error TODO new-sdk-migration
     urip.host = res.data.did
   }
 
@@ -139,7 +140,7 @@ export function usePostgateQuery({postUri}: {postUri: string}) {
     staleTime: STALE.SECONDS.THIRTY,
     queryKey: createPostgateQueryKey(postUri),
     async queryFn() {
-      return (await getPostgateRecord({agent, postUri})) ?? null
+      return await getPostgateRecord({agent, postUri}).then(res => res ?? null)
     },
   })
 }
@@ -173,7 +174,7 @@ export function useToggleQuoteDetachmentMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const getPosts = useGetPosts()
-  const prevEmbed = React.useRef<AppBskyFeedDefs.PostView['embed']>()
+  const prevEmbed = React.useRef<AppBskyFeedDefs.PostView['embed']>(undefined)
 
   return useMutation({
     mutationFn: async ({

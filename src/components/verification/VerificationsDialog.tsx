@@ -1,11 +1,11 @@
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
-import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -20,6 +20,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -34,13 +35,13 @@ export function VerificationsDialog({
   verificationState: FullVerificationState
 }) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+      <Dialog.Handle />
       <Inner
         control={control}
         profile={profile}
         verificationState={verificationState}
       />
-      <Dialog.Close />
     </Dialog.Outer>
   )
 }
@@ -55,6 +56,7 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
 
@@ -64,13 +66,13 @@ function Inner({
       ? _(msg`You are verified`)
       : _(msg`Your verifications`)
     : state.profile.isVerified
-    ? _(msg`${userName} is verified`)
-    : _(
-        msg({
-          message: `${userName}'s verifications`,
-          comment: `Possessive, meaning "the verifications of {userName}"`,
-        }),
-      )
+      ? _(msg`${userName} is verified`)
+      : _(
+          msg({
+            message: `${userName}'s verifications`,
+            comment: `Possessive, meaning "the verifications of {userName}"`,
+          }),
+        )
 
   return (
     <Dialog.ScrollableInner
@@ -78,10 +80,8 @@ function Inner({
       style={[
         gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
-      <Dialog.Handle />
-
       <View style={[a.gap_sm, a.pb_lg]}>
-        <Text style={[a.text_2xl, a.font_bold, a.pr_4xl, a.leading_tight]}>
+        <Text style={[a.text_2xl, a.font_semi_bold, a.pr_4xl, a.leading_tight]}>
           {label}
         </Text>
         <Text style={[a.text_md, a.leading_snug]}>
@@ -92,8 +92,8 @@ function Inner({
             </Trans>
           ) : (
             <Trans>
-              This account has one or more verifications, but it is not
-              currently verified.
+              This account has one or more attempted verifications, but it is
+              not currently verified.
             </Trans>
           )}
         </Text>
@@ -149,18 +149,23 @@ function Inner({
         <Link
           overridePresentation
           to={urls.website.blog.initialVerificationAnnouncement}
-          label={_(msg`Learn more about verification on Bluesky`)}
+          label={_(
+            msg({
+              message: `Learn more about verification on Bluesky`,
+              context: `english-only-resource`,
+            }),
+          )}
           size="small"
           variant="solid"
           color="secondary"
           style={[a.justify_center]}
           onPress={() => {
-            logger.metric('verification:learn-more', {
+            ax.metric('verification:learn-more', {
               location: 'verificationsDialog',
             })
           }}>
           <ButtonText>
-            <Trans>Learn more</Trans>
+            <Trans context="english-only-resource">Learn more</Trans>
           </ButtonText>
         </Link>
       </View>
@@ -180,7 +185,7 @@ function VerifierCard({
   outerDialogControl: Dialog.DialogControlProps
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const {data: profile, error} = useProfileQuery({did: verification.issuer})
@@ -199,7 +204,7 @@ function VerifierCard({
               <ProfileCard.AvatarPlaceholder />
               <View style={[a.flex_1]}>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  style={[a.text_md, a.font_semi_bold, a.leading_snug]}
                   numberOfLines={1}>
                   <Trans>Unknown verifier</Trans>
                 </Text>
@@ -213,14 +218,32 @@ function VerifierCard({
             </>
           ) : profile && moderationOpts ? (
             <>
-              <ProfileCard.Avatar
+              <ProfileCard.Link
                 profile={profile}
-                moderationOpts={moderationOpts}
-              />
-              <ProfileCard.NameAndHandle
-                profile={profile}
-                moderationOpts={moderationOpts}
-              />
+                style={[a.flex_row, a.align_center, a.gap_sm, a.flex_1]}
+                onPress={() => {
+                  outerDialogControl.close()
+                }}>
+                <ProfileCard.Avatar
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  disabledPreview
+                />
+                <View style={[a.flex_1]}>
+                  <ProfileCard.Name
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                  <Text
+                    emoji
+                    style={[a.leading_snug, t.atoms.text_contrast_medium]}
+                    numberOfLines={1}>
+                    {i18n.date(new Date(verification.createdAt), {
+                      dateStyle: 'long',
+                    })}
+                  </Text>
+                </View>
+              </ProfileCard.Link>
               {canAdminister && (
                 <View>
                   <Button

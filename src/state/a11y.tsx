@@ -1,13 +1,14 @@
 import React from 'react'
 import {AccessibilityInfo} from 'react-native'
 
-import {isWeb} from '#/platform/detection'
+import {IS_WEB} from '#/env'
 import {PlatformInfo} from '../../modules/expo-bluesky-swiss-army'
 
 const Context = React.createContext({
   reduceMotionEnabled: false,
   screenReaderEnabled: false,
 })
+Context.displayName = 'A11yContext'
 
 export function useA11y() {
   return React.useContext(Context)
@@ -57,7 +58,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
        *
        * @see https://github.com/necolas/react-native-web/discussions/2072
        */
-      screenReaderEnabled: isWeb ? false : screenReaderEnabled,
+      screenReaderEnabled: IS_WEB ? false : screenReaderEnabled,
     }
   }, [reduceMotionEnabled, screenReaderEnabled])
 

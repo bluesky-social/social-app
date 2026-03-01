@@ -1,7 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -92,7 +93,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         t.atoms.border_contrast_low,
         a.border_t,
       ]}>
-      <Text style={[a.text_5xl, a.font_bold, t.atoms.text, a.text_center]}>
+      <Text style={[a.text_5xl, a.font_semi_bold, t.atoms.text, a.text_center]}>
         :(
       </Text>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text, a.text_center]}>

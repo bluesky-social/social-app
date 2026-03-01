@@ -1,8 +1,10 @@
-import React from 'react'
+import {type JSX} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -52,7 +54,7 @@ function HomeHeaderLayoutDesktopAndTablet({
             </View>
             <Link
               to="/feeds"
-              hitSlop={10}
+              hitSlop={HITSLOP_10}
               label={_(msg`View your feeds and explore more`)}
               size="small"
               variant="ghost"

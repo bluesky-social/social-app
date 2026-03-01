@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
@@ -45,8 +45,7 @@ function getLocalizedLanguage(
     const translatedName = allNames.of(langCode)
 
     if (translatedName) {
-      // force simple title case (as languages do not always start with an uppercase in Unicode data)
-      return translatedName[0].toLocaleUpperCase() + translatedName.slice(1)
+      return translatedName
     }
   } catch (e) {
     // ignore RangeError from Intl.DisplayNames APIs
@@ -58,7 +57,7 @@ function getLocalizedLanguage(
 
 export function languageName(language: Language, appLang: string): string {
   // if Intl.DisplayNames is unavailable on the target, display the English name
-  if (!(Intl as any).DisplayNames) {
+  if (!Intl.DisplayNames) {
     return language.name
   }
 
@@ -128,8 +127,12 @@ export function isPostInLanguage(
   return bcp47Match.basicFilter(lang, targetLangs).length > 0
 }
 
-export function getTranslatorLink(text: string, lang: string): string {
-  return `https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(
+export function getTranslatorLink(
+  text: string,
+  targetLangCode: string,
+  sourceLanguage?: string,
+): string {
+  return `https://translate.google.com/?sl=${sourceLanguage ?? 'auto'}&tl=${targetLangCode}&text=${encodeURIComponent(
     text,
   )}`
 }
@@ -181,6 +184,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.fi
       case 'fr':
         return AppLanguage.fr
+      case 'fy':
+        return AppLanguage.fy
       case 'ga':
         return AppLanguage.ga
       case 'gd':
@@ -211,6 +216,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.pl
       case 'pt-BR':
         return AppLanguage.pt_BR
+      case 'pt-PT':
+        return AppLanguage.pt_PT
       case 'ro':
         return AppLanguage.ro
       case 'ru':
@@ -275,4 +282,45 @@ export function findSupportedAppLanguage(languageTags: (string | undefined)[]) {
     }
   }
   return AppLanguage.en
+}
+
+/**
+ * Gets region name for a given country code and language.
+ *
+ * Falls back to English if unavailable/error, and if that fails, returns the country code.
+ *
+ * Intl.DisplayNames is widely available + has been polyfilled on native
+ */
+export function regionName(countryCode: string, appLang: string): string {
+  const translatedName = getLocalizedRegionName(countryCode, appLang)
+
+  if (translatedName) {
+    return translatedName
+  }
+
+  // Fallback: get English name. Needed for i.e. Esperanto
+  const englishName = getLocalizedRegionName(countryCode, 'en')
+  if (englishName) {
+    return englishName
+  }
+
+  // Final fallback: return country code
+  return countryCode
+}
+
+function getLocalizedRegionName(
+  countryCode: string,
+  appLang: string,
+): string | undefined {
+  try {
+    const allNames = new Intl.DisplayNames([appLang], {
+      type: 'region',
+      fallback: 'none',
+    })
+
+    return allNames.of(countryCode)
+  } catch (err) {
+    console.warn('Error getting localized region name:', err)
+    return undefined
+  }
 }

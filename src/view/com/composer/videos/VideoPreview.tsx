@@ -1,9 +1,10 @@
-import React from 'react'
+import {useRef} from 'react'
 import {View} from 'react-native'
-import {ImagePickerAsset} from 'expo-image-picker'
+import {Image} from 'expo-image'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {BlueskyVideoView} from '@haileyok/bluesky-video'
 
-import {CompressedVideo} from '#/lib/media/video/types'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
@@ -23,7 +24,7 @@ export function VideoPreview({
   clear: () => void
 }) {
   const t = useTheme()
-  const playerRef = React.useRef<BlueskyVideoView>(null)
+  const playerRef = useRef<BlueskyVideoView>(null)
   const autoplayDisabled = useAutoplayDisabled()
   let aspectRatio = asset.width / asset.height
 
@@ -48,13 +49,25 @@ export function VideoPreview({
         <VideoTranscodeBackdrop uri={asset.uri} />
       </View>
       {isActivePost && (
-        <BlueskyVideoView
-          url={video.uri}
-          autoplay={!autoplayDisabled}
-          beginMuted={true}
-          forceTakeover={true}
-          ref={playerRef}
-        />
+        <>
+          {video.mimeType === 'image/gif' ? (
+            <Image
+              style={[a.flex_1]}
+              autoplay={!autoplayDisabled}
+              source={{uri: video.uri}}
+              accessibilityIgnoresInvertColors
+              cachePolicy="none"
+            />
+          ) : (
+            <BlueskyVideoView
+              url={video.uri}
+              autoplay={!autoplayDisabled}
+              beginMuted={true}
+              forceTakeover={true}
+              ref={playerRef}
+            />
+          )}
+        </>
       )}
       <ExternalEmbedRemoveBtn onRemove={clear} />
       {autoplayDisabled && (

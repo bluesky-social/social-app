@@ -1,13 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyGraphDefs,
+  type AppBskyGraphDefs,
   AtUri,
   moderateUserList,
-  ModerationUI,
+  type ModerationUI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -22,10 +23,10 @@ import {
   Outer,
   SaveButton,
 } from '#/components/FeedCard'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 /*
  * This component is based on `FeedCard` and is tightly coupled with that
@@ -50,7 +51,9 @@ type Props = {
   showPinButton?: boolean
 }
 
-export function Default(props: Props) {
+export function Default(
+  props: Props & Omit<LinkProps, 'to' | 'label' | 'children'>,
+) {
   const {view, showPinButton} = props
   const moderationOpts = useModerationOpts()
   const moderation = moderationOpts
@@ -125,7 +128,7 @@ export function TitleAndByline({
         allowOverride={creator && currentAccount?.did === creator.did}>
         <Hider.Mask>
           <Text
-            style={[a.text_md, a.font_bold, a.leading_snug, a.italic]}
+            style={[a.text_md, a.font_semi_bold, a.leading_snug, a.italic]}
             numberOfLines={1}>
             <Trans>Hidden list</Trans>
           </Text>
@@ -133,7 +136,7 @@ export function TitleAndByline({
         <Hider.Content>
           <Text
             emoji
-            style={[a.text_md, a.font_bold, a.leading_snug]}
+            style={[a.text_md, a.font_semi_bold, a.leading_snug]}
             numberOfLines={1}>
             {title}
           </Text>

@@ -1,24 +1,23 @@
 import {createContext, useCallback, useContext} from 'react'
-import {GestureResponderEvent, Keyboard, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {type GestureResponderEvent, Keyboard, View} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {NavigationProp} from '#/lib/routes/types'
-import {isIOS} from '#/platform/detection'
+import {type NavigationProp} from '#/lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
 import {
   atoms as a,
   platform,
-  TextStyleProp,
+  type TextStyleProp,
   useBreakpoints,
   useGutters,
   useLayoutBreakpoints,
   useTheme,
   web,
 } from '#/alf'
-import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
+import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
@@ -29,6 +28,7 @@ import {
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
+import {IS_IOS} from '#/env'
 
 export function Outer({
   children,
@@ -38,7 +38,7 @@ export function Outer({
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
-  headerRef?: React.MutableRefObject<View | null>
+  headerRef?: React.RefObject<View | null>
   sticky?: boolean
 }) {
   const t = useTheme()
@@ -77,6 +77,7 @@ export function Outer({
 }
 
 const AlignmentContext = createContext<'platform' | 'left'>('platform')
+AlignmentContext.displayName = 'AlignmentContext'
 
 export function Content({
   children,
@@ -90,7 +91,7 @@ export function Content({
       style={[
         a.flex_1,
         a.justify_center,
-        isIOS && align === 'platform' && a.align_center,
+        IS_IOS && align === 'platform' && a.align_center,
         {minHeight: HEADER_SLOT_SIZE},
       ]}>
       <AlignmentContext.Provider value={align}>
@@ -128,7 +129,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         size="small"
         variant="ghost"
         color="secondary"
-        shape="square"
+        shape="round"
         onPress={onPressBack}
         hitSlop={HITSLOP_30}
         style={[
@@ -163,7 +164,10 @@ export function MenuButton() {
         shape="square"
         onPress={onPress}
         hitSlop={HITSLOP_30}
-        style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}]}>
+        style={[
+          {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
+          a.bg_transparent,
+        ]}>
         <ButtonIcon icon={Menu} size="lg" />
       </Button>
     </Slot>
@@ -180,9 +184,9 @@ export function TitleText({
     <Text
       style={[
         a.text_lg,
-        a.font_heavy,
+        a.font_semi_bold,
         a.leading_tight,
-        isIOS && align === 'platform' && a.text_center,
+        IS_IOS && align === 'platform' && a.text_center,
         gtMobile && a.text_xl,
         style,
       ]}
@@ -201,7 +205,7 @@ export function SubtitleText({children}: {children: React.ReactNode}) {
       style={[
         a.text_sm,
         a.leading_snug,
-        isIOS && align === 'platform' && a.text_center,
+        IS_IOS && align === 'platform' && a.text_center,
         t.atoms.text_contrast_medium,
       ]}
       numberOfLines={2}>

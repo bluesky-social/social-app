@@ -16,7 +16,7 @@ import {
   type ModerationOpts,
   RichText,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
@@ -24,15 +24,20 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {moderationOptsOverrideContext} from '#/state/preferences/moderation-opts'
+import {
+  moderationOptsOverrideContext,
+  useModerationOpts,
+} from '#/state/preferences/moderation-opts'
 import {type FeedNotification} from '#/state/queries/notifications/types'
 import {
   groupNotifications,
   shouldFilterNotif,
 } from '#/state/queries/notifications/util'
+import {threadPost} from '#/state/queries/usePostThread/views'
 import {useSession} from '#/state/session'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
+import {ThreadItemAnchor} from '#/screens/PostThread/components/ThreadItemAnchor'
+import {ThreadItemPost} from '#/screens/PostThread/components/ThreadItemPost'
 import {ProfileHeaderStandard} from '#/screens/Profile/Header/ProfileHeaderStandard'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -49,7 +54,6 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {H1, H3, P, Text} from '#/components/Typography'
 import {ScreenHider} from '../../components/moderation/ScreenHider'
 import {NotificationFeedItem} from '../com/notifications/NotificationFeedItem'
-import {PostThreadItem} from '../com/post-thread/PostThreadItem'
 import {PostFeedItem} from '../com/posts/PostFeedItem'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
@@ -112,14 +116,14 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               }),
             ]
           : scenario[0] === 'label' && target[0] === 'profile'
-          ? [
-              mock.label({
-                src: isSelfLabel ? did : undefined,
-                val: label[0],
-                uri: `at://${did}/app.bsky.actor.profile/self`,
-              }),
-            ]
-          : undefined,
+            ? [
+                mock.label({
+                  src: isSelfLabel ? did : undefined,
+                  val: label[0],
+                  uri: `at://${did}/app.bsky.actor.profile/self`,
+                }),
+              ]
+            : undefined,
       viewer: mock.actorViewerState({
         following: isFollowing
           ? `at://${currentAccount?.did || ''}/app.bsky.graph.follow/1234`
@@ -273,7 +277,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
       <moderationOptsOverrideContext.Provider value={modOpts}>
         <ScrollView>
           <CenteredView style={[t.atoms.bg, a.px_lg, a.py_lg]}>
-            <H1 style={[a.text_5xl, a.font_bold, a.pb_lg]}>
+            <H1 style={[a.text_5xl, a.font_semi_bold, a.pb_lg]}>
               Moderation states
             </H1>
 
@@ -394,7 +398,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                       <View style={[a.mt_md]}>
                         <Text
                           style={[
-                            a.font_bold,
+                            a.font_semi_bold,
                             a.text_xs,
                             t.atoms.text,
                             a.pb_sm,
@@ -436,7 +440,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                   <View>
                     <Text
                       style={[
-                        a.font_bold,
+                        a.font_semi_bold,
                         a.text_xs,
                         t.atoms.text,
                         a.pl_md,
@@ -519,13 +523,13 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                   <MockPostFeedItem post={post} moderation={postModeration} />
 
                   <Heading title="Post" subtitle="viewed directly" />
-                  <MockPostThreadItem post={post} moderation={postModeration} />
+                  <MockPostThreadItem post={post} moderationOpts={modOpts} />
 
                   <Heading title="Post" subtitle="reply in thread" />
                   <MockPostThreadItem
                     post={post}
-                    moderation={postModeration}
-                    reply
+                    moderationOpts={modOpts}
+                    isReply
                   />
                 </>
               )}
@@ -594,7 +598,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
 function Heading({title, subtitle}: {title: string; subtitle?: string}) {
   const t = useTheme()
   return (
-    <H3 style={[a.text_3xl, a.font_bold, a.pb_md]}>
+    <H3 style={[a.text_3xl, a.font_semi_bold, a.pb_md]}>
       {title}{' '}
       {!!subtitle && (
         <H3 style={[t.atoms.text_contrast_medium, a.text_lg]}>{subtitle}</H3>
@@ -625,7 +629,8 @@ function CustomLabelForm({
         a.mt_md,
       ]}>
       <View>
-        <Text style={[a.font_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
+        <Text
+          style={[a.font_semi_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
           Blurs
         </Text>
         <View
@@ -660,7 +665,8 @@ function CustomLabelForm({
         </View>
       </View>
       <View>
-        <Text style={[a.font_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
+        <Text
+          style={[a.font_semi_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
           Severity
         </Text>
         <View
@@ -787,7 +793,7 @@ function ModerationUIView({
           const ui = mod.ui(key as keyof ModerationBehavior)
           return (
             <View key={key} style={[a.flex_row, a.gap_md]}>
-              <Text style={[a.font_bold, {width: 100}]}>{key}</Text>
+              <Text style={[a.font_semi_bold, {width: 100}]}>{key}</Text>
               <Flag v={ui.filter} label="Filter" />
               <Flag v={ui.blur} label="Blur" />
               <Flag v={ui.alert} label="Alert" />
@@ -829,6 +835,7 @@ function MockPostFeedItem({
       showReplyTo={false}
       reason={undefined}
       feedContext={''}
+      reqId={undefined}
       rootPost={post}
     />
   )
@@ -836,28 +843,33 @@ function MockPostFeedItem({
 
 function MockPostThreadItem({
   post,
-  moderation,
-  reply,
+  moderationOpts,
+  isReply,
 }: {
   post: AppBskyFeedDefs.PostView
-  moderation: ModerationDecision
-  reply?: boolean
+  moderationOpts: ModerationOpts
+  isReply?: boolean
 }) {
-  return (
-    <PostThreadItem
-      // @ts-ignore
-      post={post}
-      record={post.record as AppBskyFeedPost.Record}
-      moderation={moderation}
-      depth={reply ? 1 : 0}
-      isHighlightedPost={!reply}
-      treeView={false}
-      prevPost={undefined}
-      nextPost={undefined}
-      hasPrecedingItem={false}
-      overrideBlur={false}
-      onPostReply={() => {}}
-    />
+  const thread = threadPost({
+    uri: post.uri,
+    depth: isReply ? 1 : 0,
+    value: {
+      $type: 'app.bsky.unspecced.defs#threadItemPost',
+      post,
+      moreParents: false,
+      moreReplies: 0,
+      opThread: false,
+      hiddenByThreadgate: false,
+      mutedByViewer: false,
+    },
+    moderationOpts,
+    threadgateHiddenReplies: new Set<string>(),
+  })
+
+  return isReply ? (
+    <ThreadItemPost item={thread} />
+  ) : (
+    <ThreadItemAnchor item={thread} />
   )
 }
 

@@ -1,18 +1,22 @@
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'
 import * as ProfileCard from '#/components/ProfileCard'
+import type * as bsky from '#/types/bsky'
 
 export function ProfileCardWithFollowBtn({
   profile,
   noBorder,
   logContext = 'ProfileCard',
+  position,
+  contextProfileDid,
 }: {
-  profile: AppBskyActorDefs.ProfileView
+  profile: bsky.profile.AnyProfileView
   noBorder?: boolean
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
+  position?: number
+  contextProfileDid?: string
 }) {
   const t = useTheme()
   const moderationOpts = useModerationOpts()
@@ -30,6 +34,8 @@ export function ProfileCardWithFollowBtn({
         profile={profile}
         moderationOpts={moderationOpts}
         logContext={logContext}
+        position={position}
+        contextProfileDid={contextProfileDid}
       />
     </View>
   )

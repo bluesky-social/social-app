@@ -1,24 +1,27 @@
 import React, {useCallback} from 'react'
-import {ListRenderItemInfo, View} from 'react-native'
+import {type ListRenderItemInfo, View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyGraphGetList,
+  type AppBskyActorDefs,
+  type AppBskyGraphGetList,
   AtUri,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
-import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  type UseInfiniteQueryResult,
+} from '@tanstack/react-query'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
-import {isNative, isWeb} from '#/platform/detection'
 import {useAllListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
-import {List, ListRef} from '#/view/com/util/List'
-import {SectionRef} from '#/screens/Profile/Sections/types'
+import {List, type ListRef} from '#/view/com/util/List'
+import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
   return `${item.did}-${index}`
@@ -72,7 +75,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     }
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
-        animated: isNative,
+        animated: IS_NATIVE,
         offset: -headerHeight,
       })
     }, [scrollElRef, headerHeight])
@@ -90,7 +93,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
           style={[
             a.p_lg,
             t.atoms.border_contrast_low,
-            (isWeb || index !== 0) && a.border_t,
+            (IS_WEB || index !== 0) && a.border_t,
           ]}>
           <ProfileCard
             profile={item}

@@ -1,11 +1,18 @@
 import {Router} from '#/lib/routes/router'
+import {type FlatNavigatorParams} from './lib/routes/types'
 
-export const router = new Router({
-  Home: '/',
+type AllNavigatableRoutes = Omit<
+  FlatNavigatorParams,
+  'NotFound' | 'SharedPreferencesTester'
+>
+
+export const router = new Router<AllNavigatableRoutes>({
+  Home: ['/', '/download'],
   Search: '/search',
   Feeds: '/feeds',
   Notifications: '/notifications',
-  NotificationSettings: '/notifications/settings',
+  NotificationsActivityList: '/notifications/activity',
+  LegacyNotificationSettings: '/notifications/settings',
   Settings: '/settings',
   Lists: '/lists',
   // moderation
@@ -42,13 +49,27 @@ export const router = new Router({
   AccessibilitySettings: '/settings/accessibility',
   AppearanceSettings: '/settings/appearance',
   SavedFeeds: '/settings/saved-feeds',
-  // new settings
   AccountSettings: '/settings/account',
   PrivacyAndSecuritySettings: '/settings/privacy-and-security',
+  ActivityPrivacySettings: '/settings/privacy-and-security/activity',
   ContentAndMediaSettings: '/settings/content-and-media',
-  SettingsInterests: '/settings/interests',
+  InterestsSettings: '/settings/interests',
   AboutSettings: '/settings/about',
   AppIconSettings: '/settings/app-icon',
+  NotificationSettings: '/settings/notifications',
+  ReplyNotificationSettings: '/settings/notifications/replies',
+  MentionNotificationSettings: '/settings/notifications/mentions',
+  QuoteNotificationSettings: '/settings/notifications/quotes',
+  LikeNotificationSettings: '/settings/notifications/likes',
+  RepostNotificationSettings: '/settings/notifications/reposts',
+  NewFollowerNotificationSettings: '/settings/notifications/new-followers',
+  LikesOnRepostsNotificationSettings:
+    '/settings/notifications/likes-on-reposts',
+  RepostsOnRepostsNotificationSettings:
+    '/settings/notifications/reposts-on-reposts',
+  ActivityNotificationSettings: '/settings/notifications/activity',
+  MiscellaneousNotificationSettings: '/settings/notifications/miscellaneous',
+  FindContactsSettings: '/settings/find-contacts',
   // support
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
@@ -70,4 +91,6 @@ export const router = new Router({
   StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
   VideoFeed: '/video-feed',
+  Bookmarks: '/saved',
+  FindContactsFlow: '/find-contacts',
 })

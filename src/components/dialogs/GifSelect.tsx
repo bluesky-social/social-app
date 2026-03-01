@@ -1,42 +1,44 @@
-import React, {
+import {
   useCallback,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import {TextInput, View} from 'react-native'
+import {type TextInput, View} from 'react-native'
 import {useWindowDimensions} from 'react-native'
 import {Image} from 'expo-image'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
-import {isWeb} from '#/platform/detection'
 import {
-  Gif,
+  type Gif,
+  tenorUrlToBskyGifUrl,
   useFeaturedGifsQuery,
   useGifSearchQuery,
 } from '#/state/queries/tenor'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {ListMethods} from '#/view/com/util/List'
+import {type ListMethods} from '#/view/com/util/List'
 import {atoms as a, ios, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 
 export function GifSelectDialog({
   controlRef,
   onClose,
   onSelectGif: onSelectGifProp,
 }: {
-  controlRef: React.RefObject<{open: () => void}>
+  controlRef: React.RefObject<{open: () => void} | null>
   onClose?: () => void
   onSelectGif: (gif: Gif) => void
 }) {
@@ -118,7 +120,7 @@ function GifList({
     [onSelectGif],
   )
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
@@ -145,21 +147,10 @@ function GifList({
           a.flex_row,
           a.align_center,
           !gtMobile && web(a.gap_md),
+          a.pb_sm,
+          t.atoms.bg,
         ]}>
-        {/* cover top corners */}
-        <View
-          style={[
-            a.absolute,
-            a.inset_0,
-            {
-              borderBottomLeftRadius: 8,
-              borderBottomRightRadius: 8,
-            },
-            t.atoms.bg,
-          ]}
-        />
-
-        {!gtMobile && isWeb && (
+        {!gtMobile && IS_WEB && (
           <Button
             size="small"
             variant="ghost"
@@ -171,7 +162,7 @@ function GifList({
           </Button>
         )}
 
-        <TextField.Root>
+        <TextField.Root style={[!gtMobile && IS_WEB && a.flex_1]}>
           <TextField.Icon icon={Search} />
           <TextField.Input
             label={_(msg`Search GIFs`)}
@@ -205,11 +196,9 @@ function GifList({
         renderItem={renderItem}
         numColumns={gtMobile ? 3 : 2}
         columnWrapperStyle={[a.gap_sm]}
-        contentContainerStyle={[
-          native([a.px_xl, {minHeight: height}]),
-          web(a.h_full_vh),
-        ]}
-        style={[web(a.h_full_vh)]}
+        contentContainerStyle={[native([a.px_xl, {minHeight: height}])]}
+        webInnerStyle={[web({minHeight: '80vh'})]}
+        webInnerContentContainerStyle={[web(a.pb_0)]}
         ListHeaderComponent={
           <>
             {listHeader}
@@ -292,14 +281,15 @@ export function GifPreview({
   gif: Gif
   onSelectGif: (gif: Gif) => void
 }) {
+  const ax = useAnalytics()
   const {gtTablet} = useBreakpoints()
   const {_} = useLingui()
   const t = useTheme()
 
   const onPress = useCallback(() => {
-    logEvent('composer:gif:select', {})
+    ax.metric('composer:gif:select', {})
     onSelectGif(gif)
-  }, [onSelectGif, gif])
+  }, [ax, onSelectGif, gif])
 
   return (
     <Button
@@ -312,11 +302,12 @@ export function GifPreview({
             a.flex_1,
             a.mb_sm,
             a.rounded_sm,
-            {aspectRatio: 1, opacity: pressed ? 0.8 : 1},
+            a.aspect_square,
+            {opacity: pressed ? 0.8 : 1},
             t.atoms.bg_contrast_25,
           ]}
           source={{
-            uri: gif.media_formats.tinygif.url,
+            uri: tenorUrlToBskyGifUrl(gif.media_formats.tinygif.url),
           }}
           contentFit="cover"
           accessibilityLabel={gif.title}

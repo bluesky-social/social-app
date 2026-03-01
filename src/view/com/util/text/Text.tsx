@@ -1,17 +1,17 @@
 import React from 'react'
-import {StyleSheet, TextProps} from 'react-native'
+import {StyleSheet, type TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
 import {lh, s} from '#/lib/styles'
-import {TypographyVariant, useTheme} from '#/lib/ThemeContext'
+import {type TypographyVariant, useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
 import {applyFonts, useAlf} from '#/alf'
 import {
   childHasEmoji,
   renderChildrenWithEmoji,
-  StringChild,
+  type StringChild,
 } from '#/alf/typography'
+import {IS_IOS, IS_WEB} from '#/env'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
   type?: TypographyVariant
@@ -32,7 +32,7 @@ export type CustomTextProps = Omit<TextProps, 'children'> & {
 
 export {Text_DEPRECATED as Text}
 /**
- * @deprecated use Text from Typography instead.
+ * @deprecated use Text from `#/components/Typography.tsx` instead
  */
 function Text_DEPRECATED({
   type = 'md',
@@ -51,6 +51,7 @@ function Text_DEPRECATED({
   if (__DEV__) {
     if (!emoji && childHasEmoji(children)) {
       logger.warn(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
       )
     }
@@ -80,10 +81,10 @@ function Text_DEPRECATED({
     }
 
     return {
-      uiTextView: selectable && isIOS,
+      uiTextView: selectable && IS_IOS,
       selectable,
       style: flattened,
-      dataSet: isWeb
+      dataSet: IS_WEB
         ? Object.assign({tooltip: title}, dataSet || {})
         : undefined,
       ...props,

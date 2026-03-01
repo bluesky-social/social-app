@@ -1,16 +1,15 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
-import {useTrendingConfig} from '#/state/trending-config'
+import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useGutters, useTheme, type ViewStyleProp, web} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {type Props as SVGIconProps} from '#/components/icons/common'
@@ -19,6 +18,7 @@ import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/ic
 import {Link} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 const TOPIC_COUNT = 5
 
@@ -29,6 +29,7 @@ export function ExploreTrendingTopics() {
 }
 
 function Inner() {
+  const ax = useAnalytics()
   const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
@@ -44,7 +45,7 @@ function Inner() {
           trend={trend}
           rank={index + 1}
           onPress={() => {
-            logger.metric('trendingTopic:click', {context: 'explore'})
+            ax.metric('trendingTopic:click', {context: 'explore'})
           }}
         />
       ))}
@@ -64,7 +65,7 @@ export function TrendRow({
   onPress?: () => void
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const gutters = useGutters([0, 'base'])
 
   const category = useCategoryDisplayName(trend?.category || 'other')
@@ -73,13 +74,6 @@ export function TrendRow({
       (1000 * 60 * 60),
   )
   const badgeType = trend.status === 'hot' ? 'hot' : age < 2 ? 'new' : age
-  const postCount = trend.postCount
-    ? _(
-        plural(trend.postCount, {
-          other: `${formatCount(i18n, trend.postCount)} posts`,
-        }),
-      )
-    : null
 
   const actors = useModerateTrendingActors(trend.actors)
 
@@ -93,14 +87,14 @@ export function TrendRow({
       PressableComponent={Pressable}>
       {({hovered, pressed}) => (
         <>
-          <SubtleHover hover={hovered || pressed} />
+          <SubtleHover hover={hovered || pressed} native />
           <View style={[gutters, a.w_full, a.py_lg, a.flex_row, a.gap_2xs]}>
             <View style={[a.flex_1, a.gap_xs]}>
               <View style={[a.flex_row]}>
                 <Text
                   style={[
                     a.text_md,
-                    a.font_bold,
+                    a.font_semi_bold,
                     a.leading_tight,
                     {width: 20},
                   ]}>
@@ -109,7 +103,7 @@ export function TrendRow({
                   </Trans>
                 </Text>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_tight]}
+                  style={[a.text_md, a.font_semi_bold, a.leading_tight]}
                   numberOfLines={1}>
                   {trend.displayName}
                 </Text>
@@ -131,8 +125,6 @@ export function TrendRow({
                     web(a.leading_snug),
                   ]}
                   numberOfLines={1}>
-                  {postCount}
-                  {postCount && category && <> &middot; </>}
                   {category}
                 </Text>
               </View>
@@ -159,10 +151,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
     a.align_center,
     a.gap_xs,
     a.rounded_full,
-    a.px_sm,
-    {
-      height: 28,
-    },
+    {height: 28, paddingHorizontal: 10},
   ]
 
   let Icon: React.ComponentType<SVGIconProps> | null = null
@@ -193,7 +182,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
     case 'new': {
       Icon = TrendingIcon
       text = _(msg`New`)
-      color = t.palette.positive_700
+      color = t.palette.positive_600
       backgroundColor = t.palette.positive_50
       break
     }
@@ -214,7 +203,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
   return (
     <View style={[pillStyles, {backgroundColor}]}>
       {Icon && <Icon size="sm" style={{color}} />}
-      <Text style={[a.text_sm, {color}]}>{text}</Text>
+      <Text style={[a.text_sm, a.font_medium, {color}]}>{text}</Text>
     </View>
   )
 }
@@ -265,12 +254,12 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
               style={[a.rounded_full]}
             />
           </View>
-          <LoadingPlaceholder width={90} height={18} />
+          <LoadingPlaceholder width={90} height={17} />
         </View>
         <View style={[a.flex_row, a.gap_sm, a.align_center, {paddingLeft: 20}]}>
-          <LoadingPlaceholder width={70} height={18} />
-          <LoadingPlaceholder width={40} height={18} />
-          <LoadingPlaceholder width={60} height={18} />
+          <LoadingPlaceholder width={70} height={16} />
+          <LoadingPlaceholder width={40} height={16} />
+          <LoadingPlaceholder width={60} height={16} />
         </View>
       </View>
       <View style={[a.flex_shrink_0]}>

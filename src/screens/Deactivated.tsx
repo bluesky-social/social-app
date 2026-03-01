@@ -1,21 +1,20 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   type SessionAccount,
   useAgent,
   useSession,
   useSessionApi,
 } from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {agentToSessionAccountOrThrow} from '#/state/session/agent'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -26,6 +25,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 const COL_WIDTH = 400
 
@@ -37,18 +37,11 @@ export function Deactivated() {
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const {logoutCurrentAccount} = useSessionApi()
+  const {logoutCurrentAccount, resumeSession} = useSessionApi()
   const agent = useAgent()
   const [pending, setPending] = React.useState(false)
   const [error, setError] = React.useState<string | undefined>()
   const queryClient = useQueryClient()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(true)
-    }, [setMinimalShellMode]),
-  )
 
   const onSelectAccount = React.useCallback(
     (account: SessionAccount) => {
@@ -64,7 +57,7 @@ export function Deactivated() {
   }, [setShowLoggedOut])
 
   const onPressLogout = React.useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       // We're switching accounts, which remounts the entire app.
       // On mobile, this gets us Home, but on the web we also need reset the URL.
       // We can't change the URL via a navigate() call because the navigator
@@ -80,7 +73,8 @@ export function Deactivated() {
       setPending(true)
       await agent.com.atproto.server.activateAccount()
       await queryClient.resetQueries()
-      await agent.resumeSession(agent.session!)
+      const account = agentToSessionAccountOrThrow(agent)
+      await resumeSession({...account, active: true, status: undefined})
     } catch (e: any) {
       switch (e.message) {
         case 'Bad token scope':
@@ -101,7 +95,7 @@ export function Deactivated() {
     } finally {
       setPending(false)
     }
-  }, [_, agent, setPending, setError, queryClient])
+  }, [_, agent, queryClient, resumeSession])
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>
@@ -110,8 +104,8 @@ export function Deactivated() {
         contentContainerStyle={[
           a.px_2xl,
           {
-            paddingTop: isWeb ? 64 : insets.top + 16,
-            paddingBottom: isWeb ? 64 : insets.bottom,
+            paddingTop: IS_WEB ? 64 : insets.top + 16,
+            paddingBottom: IS_WEB ? 64 : insets.bottom,
           },
         ]}>
         <View
@@ -121,7 +115,7 @@ export function Deactivated() {
           </View>
 
           <View style={[a.gap_xs, a.pb_3xl]}>
-            <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_xl, a.font_semi_bold, a.leading_snug]}>
               <Trans>Welcome back!</Trans>
             </Text>
             <Text style={[a.text_sm, a.leading_snug]}>

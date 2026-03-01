@@ -1,23 +1,26 @@
 import React, {useCallback, useEffect} from 'react'
-import {NativeScrollEvent} from 'react-native'
-import {interpolate, useSharedValue, withSpring} from 'react-native-reanimated'
+import {type NativeScrollEvent} from 'react-native'
+import {
+  clamp,
+  interpolate,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import EventEmitter from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {isNative, isWeb} from '#/platform/detection'
 import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
-
-function clamp(num: number, min: number, max: number) {
-  'worklet'
-  return Math.min(Math.max(num, min), max)
-}
 
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
   const {headerMode} = useMinimalShellMode()
+  const {top: topInset} = useSafeAreaInsets()
+  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
@@ -35,7 +38,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   )
 
   useEffect(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       return listenToForcedWindowScroll(() => {
         startDragOffset.set(null)
         startMode.set(null)
@@ -48,7 +51,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (e: NativeScrollEvent) => {
       'worklet'
       const offsetY = Math.max(0, e.contentOffset.y)
-      if (isNative) {
+      if (IS_NATIVE) {
         const startDragOffsetValue = startDragOffset.get()
         if (startDragOffsetValue === null) {
           return
@@ -75,7 +78,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (e: NativeScrollEvent) => {
       'worklet'
       const offsetY = Math.max(0, e.contentOffset.y)
-      if (isNative) {
+      if (IS_NATIVE) {
         startDragOffset.set(offsetY)
         startMode.set(headerMode.get())
       }
@@ -86,7 +89,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const onEndDrag = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
-      if (isNative) {
+      if (IS_NATIVE) {
         if (e.velocity && e.velocity.y !== 0) {
           // If we detect a velocity, wait for onMomentumEnd to snap.
           return
@@ -100,7 +103,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const onMomentumEnd = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
-      if (isNative) {
+      if (IS_NATIVE) {
         snapToClosestState(e)
       }
     },
@@ -111,7 +114,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (e: NativeScrollEvent) => {
       'worklet'
       const offsetY = Math.max(0, e.contentOffset.y)
-      if (isNative) {
+      if (IS_NATIVE) {
         const startDragOffsetValue = startDragOffset.get()
         const startModeValue = startMode.get()
         if (startDragOffsetValue === null || startModeValue === null) {
@@ -126,9 +129,10 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         // The "mode" value is always between 0 and 1.
         // Figure out how much to move it based on the current dragged distance.
         const dy = offsetY - startDragOffsetValue
+        const hideDistance = headerHeight.get() - headerPinnedHeight
         const dProgress = interpolate(
           dy,
-          [-headerHeight.get(), headerHeight.get()],
+          [-hideDistance, hideDistance],
           [-1, 1],
         )
         const newValue = clamp(startModeValue + dProgress, 0, 1)
@@ -156,6 +160,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     },
     [
       headerHeight,
+      headerPinnedHeight,
       headerMode,
       setMode,
       startDragOffset,
@@ -177,7 +182,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
 
 const emitter = new EventEmitter()
 
-if (isWeb) {
+if (IS_WEB) {
   const originalScroll = window.scroll
   window.scroll = function () {
     emitter.emit('forced-scroll')

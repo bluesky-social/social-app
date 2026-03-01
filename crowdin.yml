@@ -9,6 +9,7 @@
       "translation": "/src/locale/locales/%two_letters_code%/messages.po",
       "languages_mapping": {
           "two_letters_code": {
+            "pt": "pt-PT",
             "pt-BR": "pt-BR",
             "en-GB": "en-GB",
             "zh-CN": "zh-CN",

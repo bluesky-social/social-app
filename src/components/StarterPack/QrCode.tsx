@@ -1,34 +1,33 @@
-import React from 'react'
+import {lazy, useState} from 'react'
 import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
 import type ViewShot from 'react-native-view-shot'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {Trans} from '@lingui/react/macro'
 
-import {isWeb} from '#/platform/detection'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
-const LazyViewShot = React.lazy(
+const LazyViewShot = lazy(
   // @ts-expect-error dynamic import
   () => import('react-native-view-shot/src/index'),
 )
 
-interface Props {
+export function QrCode({
+  starterPack,
+  link,
+  ref,
+}: {
   starterPack: AppBskyGraphDefs.StarterPackView
   link: string
-}
-
-export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
-  {starterPack, link},
-  ref,
-) {
+  ref: React.Ref<ViewShot>
+}) {
   const {record} = starterPack
 
   if (
@@ -54,14 +53,19 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
         ]}>
         <View style={[a.gap_sm]}>
           <Text
-            style={[a.font_bold, a.text_3xl, a.text_center, {color: 'white'}]}>
+            style={[
+              a.font_semi_bold,
+              a.text_3xl,
+              a.text_center,
+              {color: 'white'},
+            ]}>
             {record.name}
           </Text>
         </View>
         <View style={[a.gap_xl, a.align_center]}>
           <Text
             style={[
-              a.font_bold,
+              a.font_semi_bold,
               a.text_center,
               {color: 'white', fontSize: 18},
             ]}>
@@ -76,7 +80,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
               a.flex,
               a.flex_row,
               a.align_center,
-              a.font_bold,
+              a.font_semi_bold,
               {color: 'white', fontSize: 18, gap: 6},
             ]}>
             <Trans>
@@ -93,43 +97,78 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
       </LinearGradientBackground>
     </LazyViewShot>
   )
-})
+}
 
 export function QrCodeInner({link}: {link: string}) {
   const t = useTheme()
+  const [logoArea, setLogoArea] = useState<{
+    x: number
+    y: number
+    width: number
+    height: number
+  } | null>(null)
+
+  const onLogoAreaChange = (area: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }) => {
+    setLogoArea(area)
+  }
 
   return (
-    <QRCode
-      data={link}
-      style={[
-        a.rounded_sm,
-        {height: 225, width: 225, backgroundColor: '#f3f3f3'},
-      ]}
-      pieceSize={isWeb ? 8 : 6}
-      padding={20}
-      // pieceLiquidRadius={2}
-      pieceBorderRadius={isWeb ? 4.5 : 3.5}
-      outerEyesOptions={{
-        topLeft: {
-          borderRadius: [12, 12, 0, 12],
-          color: t.palette.primary_500,
-        },
-        topRight: {
-          borderRadius: [12, 12, 12, 0],
-          color: t.palette.primary_500,
-        },
-        bottomLeft: {
-          borderRadius: [12, 0, 12, 12],
-          color: t.palette.primary_500,
-        },
-      }}
-      innerEyesOptions={{borderRadius: 3}}
-      logo={{
-        href: require('../../../assets/logo.png'),
-        scale: 0.95,
-        padding: 2,
-        hidePieces: true,
-      }}
-    />
+    <View style={{position: 'relative'}}>
+      {/* An SVG version of the logo is placed on top of normal `QRCode` `logo` prop, since the PNG fails to load before the export completes on web. */}
+      {IS_WEB && logoArea && (
+        <View
+          style={{
+            position: 'absolute',
+            left: logoArea.x,
+            top: logoArea.y + 1,
+            zIndex: 1,
+            padding: 4,
+          }}>
+          <Logo width={logoArea.width - 14} height={logoArea.height - 14} />
+        </View>
+      )}
+      <QRCode
+        data={link}
+        style={[
+          a.rounded_sm,
+          {height: 225, width: 225, backgroundColor: '#f3f3f3'},
+        ]}
+        pieceSize={IS_WEB ? 8 : 6}
+        padding={20}
+        pieceBorderRadius={IS_WEB ? 4.5 : 3.5}
+        outerEyesOptions={{
+          topLeft: {
+            borderRadius: [12, 12, 0, 12],
+            color: t.palette.primary_500,
+          },
+          topRight: {
+            borderRadius: [12, 12, 12, 0],
+            color: t.palette.primary_500,
+          },
+          bottomLeft: {
+            borderRadius: [12, 0, 12, 12],
+            color: t.palette.primary_500,
+          },
+        }}
+        innerEyesOptions={{borderRadius: 3}}
+        logo={{
+          href: require('../../../assets/logo.png'),
+          ...(IS_WEB && {
+            onChange: onLogoAreaChange,
+            padding: 28,
+          }),
+          ...(!IS_WEB && {
+            padding: 2,
+            scale: 0.95,
+          }),
+          hidePieces: true,
+        }}
+      />
+    </View>
   )
 }

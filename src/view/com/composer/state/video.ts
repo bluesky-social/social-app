@@ -1,8 +1,7 @@
-import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyVideoDefs, BlobRef, BskyAgent} from '@atproto/api'
-import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
-import {I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {type ImagePickerAsset} from 'expo-image-picker'
+import {type AppBskyVideoDefs, type BlobRef, type BskyAgent} from '@atproto/api'
+import {type I18n} from '@lingui/core'
+import {msg} from '@lingui/core/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {compressVideo} from '#/lib/media/video/compress'
@@ -11,9 +10,10 @@ import {
   UploadLimitError,
   VideoTooLargeError,
 } from '#/lib/media/video/errors'
-import {CompressedVideo} from '#/lib/media/video/types'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createVideoAgent} from '#/lib/media/video/util'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 
 type CaptionsTrack = {lang: string; file: File}
@@ -328,7 +328,7 @@ export async function processVideo(
     }
 
     const videoAgent = createVideoAgent()
-    let status: JobStatus | undefined
+    let status: AppBskyVideoDefs.JobStatus | undefined
     let blob: BlobRef | undefined
     try {
       const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
@@ -392,7 +392,9 @@ function getCompressErrorMessage(e: unknown, _: I18n['_']): string | null {
     return null
   }
   if (e instanceof VideoTooLargeError) {
-    return _(msg`The selected video is larger than 100 MB.`)
+    return _(
+      msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+    )
   }
   logger.error('Error compressing video', {safeMessage: e})
   return _(msg`An error occurred while compressing the video.`)
@@ -402,7 +404,6 @@ function getUploadErrorMessage(e: unknown, _: I18n['_']): string | null {
   if (e instanceof AbortError) {
     return null
   }
-  logger.error('Error uploading video', {safeMessage: e})
   if (e instanceof ServerError || e instanceof UploadLimitError) {
     // https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
     switch (e.message) {
@@ -428,9 +429,24 @@ function getUploadErrorMessage(e: unknown, _: I18n['_']): string | null {
         return _(
           msg`Your account is not yet old enough to upload videos. Please try again later.`,
         )
-      default:
-        return e.message
+      case 'file size (100000001 bytes) is larger than the maximum allowed size (100000000 bytes)':
+        return _(
+          msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+        )
+      case 'Confirm your email address to upload videos':
+        return _(msg`Please confirm your email address to upload videos.`)
     }
   }
-  return _(msg`An error occurred while uploading the video.`)
+
+  if (isNetworkError(e)) {
+    return _(
+      msg`An error occurred while uploading the video. Please check your internet connection and try again.`,
+    )
+  } else {
+    // only log errors if they are unknown (and not network errors)
+    logger.error('Error uploading video', {safeMessage: e})
+  }
+
+  const message = e instanceof Error ? e.message : ''
+  return _(msg`An error occurred while uploading the video. ${message}`)
 }

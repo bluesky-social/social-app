@@ -12,23 +12,23 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import Graphemer from 'graphemer'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {useEmail} from '#/lib/hooks/useEmail'
-import {isIOS, isWeb} from '#/platform/detection'
+import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {android, atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {IS_IOS, IS_WEB} from '#/env'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
@@ -75,7 +75,7 @@ export function MessageInput({
     if (!hasEmbed && message.trim() === '') {
       return
     }
-    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+    if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
@@ -84,10 +84,10 @@ export function MessageInput({
     playHaptic()
     setEmbed(undefined)
     setMessage('')
-    if (isIOS) {
+    if (IS_IOS) {
       setShouldEnforceClear(true)
     }
-    if (isWeb) {
+    if (IS_WEB) {
       // Pressing the send button causes the text input to lose focus, so we need to
       // re-focus it after sending
       setTimeout(() => {
@@ -160,7 +160,7 @@ export function MessageInput({
             // next change and double make sure the input is cleared. It should *always* send an onChange event after
             // clearing via setMessage('') that happens in onSubmit()
             // -sfn
-            if (isIOS && shouldEnforceClear) {
+            if (IS_IOS && shouldEnforceClear) {
               setShouldEnforceClear(false)
               setMessage('')
               return
@@ -174,7 +174,8 @@ export function MessageInput({
             a.text_md,
             a.px_sm,
             t.atoms.text,
-            {paddingBottom: isIOS ? 5 : 0},
+            android({paddingTop: 0}),
+            {paddingBottom: IS_IOS ? 5 : 0},
             animatedStyle,
           ]}
           keyboardAppearance={t.scheme}

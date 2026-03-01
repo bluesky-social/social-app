@@ -1,19 +1,22 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
-import {useEmail} from '#/lib/hooks/useEmail'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {NavigationProp} from '#/lib/routes/types'
-import {useModalControls} from '#/state/modals'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MyLists} from '#/view/com/lists/MyLists'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {CreateOrEditListDialog} from '#/components/dialogs/lists/CreateOrEditListDialog'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
 
@@ -22,36 +25,39 @@ export function ModerationModlistsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const navigation = useNavigation<NavigationProp>()
-  const {openModal} = useModalControls()
-  const {needsEmailVerification} = useEmail()
-  const control = useDialogControl()
+  const requireEmailVerification = useRequireEmailVerification()
+  const createListDialogControl = useDialogControl()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPressNewList = React.useCallback(() => {
-    if (needsEmailVerification) {
-      control.open()
-      return
-    }
+  const onPressNewList = useCallback(() => {
+    createListDialogControl.open()
+  }, [createListDialogControl])
 
-    openModal({
-      name: 'create-or-edit-list',
-      purpose: 'app.bsky.graph.defs#modlist',
-      onSave: (uri: string) => {
-        try {
-          const urip = new AtUri(uri)
-          navigation.navigate('ProfileList', {
-            name: urip.hostname,
-            rkey: urip.rkey,
-          })
-        } catch {}
-      },
-    })
-  }, [needsEmailVerification, control, openModal, navigation])
+  const wrappedOnPressNewList = requireEmailVerification(onPressNewList, {
+    instructions: [
+      <Trans key="modlist">
+        Before creating a list, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
+  const onCreateList = useCallback(
+    (uri: string) => {
+      try {
+        const urip = new AtUri(uri)
+        navigation.navigate('ProfileList', {
+          name: urip.hostname,
+          rkey: urip.rkey,
+        })
+      } catch {}
+    },
+    [navigation],
+  )
 
   return (
     <Layout.Screen testID="moderationModlistsScreen">
@@ -68,19 +74,20 @@ export function ModerationModlistsScreen({}: Props) {
           color="secondary"
           variant="solid"
           size="small"
-          onPress={onPressNewList}>
+          onPress={wrappedOnPressNewList}>
           <ButtonIcon icon={PlusIcon} />
           <ButtonText>
             <Trans context="action">New</Trans>
           </ButtonText>
         </Button>
       </Layout.Header.Outer>
+
       <MyLists filter="mod" style={a.flex_grow} />
-      <VerifyEmailDialog
-        reasonText={_(
-          msg`Before creating a list, you must first verify your email.`,
-        )}
-        control={control}
+
+      <CreateOrEditListDialog
+        purpose="app.bsky.graph.defs#modlist"
+        control={createListDialogControl}
+        onSave={onCreateList}
       />
     </Layout.Screen>
   )

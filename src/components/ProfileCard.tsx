@@ -1,23 +1,36 @@
-import React from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
+import {useMemo} from 'react'
+import {
+  type GestureResponderEvent,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {
   moderateProfile,
   type ModerationOpts,
   RichText as RichTextApi,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {getModerationCauseKey} from '#/lib/moderation'
-import {type LogEvents} from '#/lib/statsig/statsig'
+import {forceLTR} from '#/lib/strings/bidi'
+import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
+import {
+  atoms as a,
+  platform,
+  type TextStyleProp,
+  useTheme,
+  type ViewStyleProp,
+} from '#/alf'
 import {
   Button,
   ButtonIcon,
@@ -32,6 +45,8 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {type Metrics} from '#/analytics'
+import {useActorStatus} from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 
 export function Default({
@@ -39,11 +54,15 @@ export function Default({
   moderationOpts,
   logContext = 'ProfileCard',
   testID,
+  position,
+  contextProfileDid,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
   testID?: string
+  position?: number
+  contextProfileDid?: string
 }) {
   return (
     <Link testID={testID} profile={profile}>
@@ -51,6 +70,8 @@ export function Default({
         profile={profile}
         moderationOpts={moderationOpts}
         logContext={logContext}
+        position={position}
+        contextProfileDid={contextProfileDid}
       />
     </Link>
   )
@@ -60,10 +81,14 @@ export function Card({
   profile,
   moderationOpts,
   logContext = 'ProfileCard',
+  position,
+  contextProfileDid,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
+  position?: number
+  contextProfileDid?: string
 }) {
   return (
     <Outer>
@@ -74,6 +99,8 @@ export function Card({
           profile={profile}
           moderationOpts={moderationOpts}
           logContext={logContext}
+          position={position}
+          contextProfileDid={contextProfileDid}
         />
       </Header>
 
@@ -130,22 +157,42 @@ export function Link({
 export function Avatar({
   profile,
   moderationOpts,
+  onPress,
+  disabledPreview,
+  liveOverride,
+  size = 40,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  onPress?: () => void
+  disabledPreview?: boolean
+  liveOverride?: boolean
+  size?: number
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
 
-  return (
+  const {isActive: live} = useActorStatus(profile)
+
+  return disabledPreview ? (
+    <UserAvatar
+      size={size}
+      avatar={profile.avatar}
+      type={profile.associated?.labeler ? 'labeler' : 'user'}
+      moderation={moderation.ui('avatar')}
+      live={liveOverride ?? live}
+    />
+  ) : (
     <PreviewableUserAvatar
-      size={40}
+      size={size}
       profile={profile}
       moderation={moderation.ui('avatar')}
+      onBeforePress={onPress}
+      live={liveOverride ?? live}
     />
   )
 }
 
-export function AvatarPlaceholder() {
+export function AvatarPlaceholder({size = 40}: {size?: number}) {
   const t = useTheme()
   return (
     <View
@@ -153,8 +200,8 @@ export function AvatarPlaceholder() {
         a.rounded_full,
         t.atoms.bg_contrast_25,
         {
-          width: 40,
-          height: 40,
+          width: size,
+          height: size,
         },
       ]}
     />
@@ -164,14 +211,77 @@ export function AvatarPlaceholder() {
 export function NameAndHandle({
   profile,
   moderationOpts,
+  inline = false,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+  inline?: boolean
+}) {
+  if (inline) {
+    return (
+      <InlineNameAndHandle profile={profile} moderationOpts={moderationOpts} />
+    )
+  } else {
+    return (
+      <View style={[a.flex_1]}>
+        <Name profile={profile} moderationOpts={moderationOpts} />
+        <Handle profile={profile} />
+      </View>
+    )
+  }
+}
+
+function InlineNameAndHandle({
+  profile,
+  moderationOpts,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
+  const t = useTheme()
+  const verification = useSimpleVerificationState({profile})
+  const moderation = moderateProfile(profile, moderationOpts)
+  const name = sanitizeDisplayName(
+    profile.displayName || sanitizeHandle(profile.handle),
+    moderation.ui('displayName'),
+  )
+  const handle = sanitizeHandle(profile.handle, '@')
   return (
-    <View style={[a.flex_1]}>
-      <Name profile={profile} moderationOpts={moderationOpts} />
-      <Handle profile={profile} />
+    <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
+      <Text
+        emoji
+        style={[
+          a.font_semi_bold,
+          a.leading_tight,
+          a.flex_shrink_0,
+          {maxWidth: '70%'},
+        ]}
+        numberOfLines={1}>
+        {forceLTR(name)}
+      </Text>
+      {verification.showBadge && (
+        <View
+          style={[
+            a.pl_2xs,
+            a.self_center,
+            {marginTop: platform({default: 0, android: -1})},
+          ]}>
+          <VerificationCheck
+            width={platform({android: 13, default: 12})}
+            verifier={verification.role === 'verifier'}
+          />
+        </View>
+      )}
+      <Text
+        emoji
+        style={[
+          a.leading_tight,
+          t.atoms.text_contrast_medium,
+          {flexShrink: 10},
+        ]}
+        numberOfLines={1}>
+        {NON_BREAKING_SPACE + handle}
+      </Text>
     </View>
   )
 }
@@ -179,9 +289,13 @@ export function NameAndHandle({
 export function Name({
   profile,
   moderationOpts,
+  style,
+  textStyle,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  style?: StyleProp<ViewStyle>
+  textStyle?: StyleProp<TextStyle>
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
@@ -190,10 +304,17 @@ export function Name({
   )
   const verification = useSimpleVerificationState({profile})
   return (
-    <View style={[a.flex_row, a.align_center]}>
+    <View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
       <Text
         emoji
-        style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
+        style={[
+          a.text_md,
+          a.font_semi_bold,
+          a.leading_snug,
+          a.self_start,
+          a.flex_shrink,
+          textStyle,
+        ]}
         numberOfLines={1}>
         {name}
       </Text>
@@ -209,14 +330,20 @@ export function Name({
   )
 }
 
-export function Handle({profile}: {profile: bsky.profile.AnyProfileView}) {
+export function Handle({
+  profile,
+  textStyle,
+}: {
+  profile: bsky.profile.AnyProfileView
+  textStyle?: StyleProp<TextStyle>
+}) {
   const t = useTheme()
   const handle = sanitizeHandle(profile.handle, '@')
 
   return (
     <Text
       emoji
-      style={[a.leading_snug, t.atoms.text_contrast_medium]}
+      style={[a.leading_snug, t.atoms.text_contrast_medium, textStyle]}
       numberOfLines={1}>
       {handle}
     </Text>
@@ -253,15 +380,34 @@ export function NameAndHandlePlaceholder() {
   )
 }
 
+export function NamePlaceholder({style}: ViewStyleProp) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.rounded_xs,
+        t.atoms.bg_contrast_25,
+        {
+          width: '60%',
+          height: 14,
+        },
+        style,
+      ]}
+    />
+  )
+}
+
 export function Description({
   profile: profileUnshadowed,
   numberOfLines = 3,
+  style,
 }: {
   profile: bsky.profile.AnyProfileView
   numberOfLines?: number
-}) {
+} & TextStyleProp) {
   const profile = useProfileShadow(profileUnshadowed)
-  const rt = React.useMemo(() => {
+  const rt = useMemo(() => {
     if (!('description' in profile)) return
     const rt = new RichTextApi({text: profile.description || ''})
     rt.detectFacetsWithoutResolution()
@@ -279,7 +425,7 @@ export function Description({
     <View style={[a.pt_xs]}>
       <RichText
         value={rt}
-        style={[a.leading_snug]}
+        style={style}
         numberOfLines={numberOfLines}
         disableLinks
       />
@@ -315,11 +461,13 @@ export function DescriptionPlaceholder({
 export type FollowButtonProps = {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  logContext: LogEvents['profile:follow']['logContext'] &
-    LogEvents['profile:unfollow']['logContext']
+  logContext: Metrics['profile:follow']['logContext'] &
+    Metrics['profile:unfollow']['logContext']
   colorInverted?: boolean
   onFollow?: () => void
   withIcon?: boolean
+  position?: number
+  contextProfileDid?: string
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
@@ -336,6 +484,8 @@ export function FollowButtonInner({
   onFollow,
   colorInverted,
   withIcon = true,
+  position,
+  contextProfileDid,
   ...rest
 }: FollowButtonProps) {
   const {_} = useLingui()
@@ -344,6 +494,8 @@ export function FollowButtonInner({
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     logContext,
+    position,
+    contextProfileDid,
   )
   const isRound = Boolean(rest.shape && rest.shape === 'round')
 
@@ -396,12 +548,19 @@ export function FollowButtonInner({
       comment: 'User is following this account, click to unfollow',
     }),
   )
-  const followLabel = _(
-    msg({
-      message: 'Follow',
-      comment: 'User is not following this account, click to follow',
-    }),
-  )
+  const followLabel = profile.viewer?.followedBy
+    ? _(
+        msg({
+          message: 'Follow back',
+          comment: 'User is not following this account, click to follow back',
+        }),
+      )
+    : _(
+        msg({
+          message: 'Follow',
+          comment: 'User is not following this account, click to follow',
+        }),
+      )
 
   if (!profile.viewer) return null
   if (
@@ -441,6 +600,24 @@ export function FollowButtonInner({
         </Button>
       )}
     </View>
+  )
+}
+
+export function FollowButtonPlaceholder({style}: ViewStyleProp) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.rounded_sm,
+        t.atoms.bg_contrast_25,
+        a.w_full,
+        {
+          height: 33,
+        },
+        style,
+      ]}
+    />
   )
 }
 

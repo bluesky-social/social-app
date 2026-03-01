@@ -6,18 +6,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
-import * as ChangeEmailModal from './ChangeEmail'
-import * as ChangePasswordModal from './ChangePassword'
-import * as CreateOrEditListModal from './CreateOrEditList'
-import * as CropImageModal from './CropImage.web'
-import * as DeleteAccountModal from './DeleteAccount'
-import * as EditProfileModal from './EditProfile'
-import * as InviteCodesModal from './InviteCodes'
-import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
-import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
-import * as LinkWarningModal from './LinkWarning'
 import * as UserAddRemoveLists from './UserAddRemoveLists'
-import * as VerifyEmailModal from './VerifyEmail'
 
 export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
@@ -47,9 +36,6 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
-    if (modal.name === 'crop-image') {
-      return // dont close on mask presses during crop
-    }
     closeModal()
   }
   const onInnerPress = () => {
@@ -58,30 +44,8 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   let element
-  if (modal.name === 'edit-profile') {
-    element = <EditProfileModal.Component {...modal} />
-  } else if (modal.name === 'create-or-edit-list') {
-    element = <CreateOrEditListModal.Component {...modal} />
-  } else if (modal.name === 'user-add-remove-lists') {
+  if (modal.name === 'user-add-remove-lists') {
     element = <UserAddRemoveLists.Component {...modal} />
-  } else if (modal.name === 'crop-image') {
-    element = <CropImageModal.Component {...modal} />
-  } else if (modal.name === 'delete-account') {
-    element = <DeleteAccountModal.Component />
-  } else if (modal.name === 'invite-codes') {
-    element = <InviteCodesModal.Component />
-  } else if (modal.name === 'content-languages-settings') {
-    element = <ContentLanguagesSettingsModal.Component />
-  } else if (modal.name === 'post-languages-settings') {
-    element = <PostLanguagesSettingsModal.Component />
-  } else if (modal.name === 'verify-email') {
-    element = <VerifyEmailModal.Component {...modal} />
-  } else if (modal.name === 'change-email') {
-    element = <ChangeEmailModal.Component />
-  } else if (modal.name === 'change-password') {
-    element = <ChangePasswordModal.Component />
-  } else if (modal.name === 'link-warning') {
-    element = <LinkWarningModal.Component {...modal} />
   } else {
     return null
   }

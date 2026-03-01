@@ -1,12 +1,13 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
   moderateProfile,
   type ModerationDecision,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {
   type RouteProp,
   useFocusEffect,
@@ -15,14 +16,13 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useEmail} from '#/lib/hooks/useEmail'
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {isWeb} from '#/platform/detection'
 import {type Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
+import {useEmail} from '#/state/email-verification'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
@@ -31,32 +31,48 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {useDialogControl} from '#/components/Dialog'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
+import {
+  EmailDialogScreenID,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'MessagesConversation'
 >
-export function MessagesConversationScreen({route}: Props) {
+
+export function MessagesConversationScreen(props: Props) {
+  const {_} = useLingui()
+  const aaCopy = useAgeAssuranceCopy()
+  return (
+    <AgeRestrictedScreen
+      screenTitle={_(msg`Conversation`)}
+      infoText={aaCopy.chatsInfoText}>
+      <MessagesConversationScreenInner {...props} />
+    </AgeRestrictedScreen>
+  )
+}
+
+export function MessagesConversationScreenInner({route}: Props) {
   const {gtMobile} = useBreakpoints()
   const setMinimalShellMode = useSetMinimalShellMode()
 
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
-  useEnableKeyboardControllerScreen(true)
-
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
 
-      if (isWeb && !gtMobile) {
+      if (IS_WEB && !gtMobile) {
         setMinimalShellMode(true)
       } else {
         setMinimalShellMode(false)
@@ -183,19 +199,50 @@ function InnerReady({
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-  const {_} = useLingui()
   const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
   const {params} =
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
-  const verifyEmailControl = useDialogControl()
   const {needsEmailVerification} = useEmail()
+  const emailDialogControl = useEmailDialogControl()
 
-  React.useEffect(() => {
+  /**
+   * Must be non-reactive, otherwise the update to open the global dialog will
+   * cause a re-render loop.
+   */
+  const maybeBlockForEmailVerification = useNonReactiveCallback(() => {
     if (needsEmailVerification) {
-      verifyEmailControl.open()
+      /*
+       * HACKFIX
+       *
+       * Load bearing timeout, to bump this state update until the after the
+       * `navigator.addListener('state')` handler closes elements from
+       * `shell/index.*.tsx`  - sfn & esb
+       */
+      setTimeout(() =>
+        emailDialogControl.open({
+          id: EmailDialogScreenID.Verify,
+          instructions: [
+            <Trans key="pre-compose">
+              Before you can message another user, you must first verify your
+              email.
+            </Trans>,
+          ],
+          onCloseWithoutVerifying: () => {
+            if (navigation.canGoBack()) {
+              navigation.goBack()
+            } else {
+              navigation.navigate('Messages', {animation: 'pop'})
+            }
+          },
+        }),
+      )
     }
-  }, [needsEmailVerification, verifyEmailControl])
+  })
+
+  useEffect(() => {
+    maybeBlockForEmailVerification()
+  }, [maybeBlockForEmailVerification])
 
   return (
     <>
@@ -216,15 +263,6 @@ function InnerReady({
           }
         />
       )}
-      <VerifyEmailDialog
-        reasonText={_(
-          msg`Before you may message another user, you must first verify your email.`,
-        )}
-        control={verifyEmailControl}
-        onCloseWithoutVerifying={() => {
-          navigation.navigate('Home')
-        }}
-      />
     </>
   )
 }

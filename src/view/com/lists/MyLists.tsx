@@ -1,14 +1,14 @@
-import React from 'react'
+import React, {type JSX} from 'react'
 import {
   ActivityIndicator,
   FlatList as RNFlatList,
   RefreshControl,
-  StyleProp,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -16,9 +16,9 @@ import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
+import {type MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {atoms as a, useTheme} from '#/alf'
-import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
+import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {Text} from '#/components/Typography'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -69,7 +69,7 @@ export function MyLists({
   switch (filter) {
     case 'curate':
       emptyText = _(
-        msg`Public, sharable lists which can be used to drive feeds.`,
+        msg`Lists allow you to see content from your favorite people.`,
       )
       break
     case 'mod':
@@ -102,19 +102,18 @@ export function MyLists({
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_xl]}>
+          <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_3xl]}>
             <View
               style={[
                 a.align_center,
                 a.justify_center,
                 a.rounded_full,
-                t.atoms.bg_contrast_25,
                 {
-                  width: 32,
-                  height: 32,
+                  width: 64,
+                  height: 64,
                 },
               ]}>
-              <ListIcon size="md" fill={t.atoms.text_contrast_low.color} />
+              <ListIcon size="2xl" fill={t.atoms.text_contrast_medium.color} />
             </View>
             <Text
               style={[

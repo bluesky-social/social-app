@@ -1,14 +1,14 @@
-import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
+import type React from 'react'
 
-import {isIOS} from '#/platform/detection'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
+import {IS_IOS} from '#/env'
 
 export function GrowableAvatar({
   children,
@@ -20,7 +20,7 @@ export function GrowableAvatar({
   const pagerContext = usePagerHeaderContext()
 
   // pagerContext should only be present on iOS, but better safe than sorry
-  if (!pagerContext || !isIOS) {
+  if (!pagerContext || !IS_IOS) {
     return <View style={style}>{children}</View>
   }
 

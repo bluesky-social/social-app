@@ -1,0 +1,802 @@
+import {memo, useCallback, useMemo} from 'react'
+import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  type AppBskyFeedThreadgate,
+  AtUri,
+  RichText as RichTextAPI,
+} from '@atproto/api'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
+
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {niceDate} from '#/lib/strings/time'
+import {
+  getPostLanguage,
+  getTranslatorLink,
+  isPostInLanguage,
+} from '#/locale/helpers'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
+import {useLanguagePrefs} from '#/state/preferences'
+import {type ThreadItem} from '#/state/queries/usePostThread/types'
+import {useSession} from '#/state/session'
+import {type OnPostSuccessData} from '#/state/shell/composer'
+import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {type PostSource} from '#/state/unstable-post-source'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
+import {
+  LINEAR_AVI_WIDTH,
+  OUTER_SPACE,
+  REPLY_LINE_WIDTH,
+} from '#/screens/PostThread/const'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
+import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
+import {InlineLinkText, Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {type AppModerationCause} from '#/components/Pills'
+import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {TranslatedPost} from '#/components/Post/Translated'
+import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
+import {useFormatPostStatCount} from '#/components/PostControls/util'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import * as Prompt from '#/components/Prompt'
+import {RichText} from '#/components/RichText'
+import * as Skele from '#/components/Skeleton'
+import {Text} from '#/components/Typography'
+import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
+import {WhoCanReply} from '#/components/WhoCanReply'
+import {useAnalytics} from '#/analytics'
+import {useActorStatus} from '#/features/liveNow'
+import {
+  Provider as TranslateOnDeviceProvider,
+  useTranslateOnDevice,
+} from '#/translation'
+import * as bsky from '#/types/bsky'
+
+export function ThreadItemAnchor({
+  item,
+  onPostSuccess,
+  threadgateRecord,
+  postSource,
+}: {
+  item: Extract<ThreadItem, {type: 'threadPost'}>
+  onPostSuccess?: (data: OnPostSuccessData) => void
+  threadgateRecord?: AppBskyFeedThreadgate.Record
+  postSource?: PostSource
+}) {
+  const postShadow = usePostShadow(item.value.post)
+  const threadRootUri = item.value.post.record.reply?.root?.uri || item.uri
+  const isRoot = threadRootUri === item.uri
+
+  if (postShadow === POST_TOMBSTONE) {
+    return <ThreadItemAnchorDeleted isRoot={isRoot} />
+  }
+
+  return (
+    <TranslateOnDeviceProvider>
+      <ThreadItemAnchorInner
+        // Safeguard from clobbering per-post state below:
+        key={postShadow.uri}
+        item={item}
+        isRoot={isRoot}
+        postShadow={postShadow}
+        onPostSuccess={onPostSuccess}
+        threadgateRecord={threadgateRecord}
+        postSource={postSource}
+      />
+    </TranslateOnDeviceProvider>
+  )
+}
+
+function ThreadItemAnchorDeleted({isRoot}: {isRoot: boolean}) {
+  const t = useTheme()
+
+  return (
+    <>
+      <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
+
+      <View
+        style={[
+          {
+            paddingHorizontal: OUTER_SPACE,
+            paddingBottom: OUTER_SPACE,
+          },
+          isRoot && [a.pt_lg],
+        ]}>
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.py_md,
+            a.rounded_sm,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              {
+                width: LINEAR_AVI_WIDTH,
+              },
+            ]}>
+            <TrashIcon style={[t.atoms.text_contrast_medium]} />
+          </View>
+          <Text
+            style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+            <Trans>Post has been deleted</Trans>
+          </Text>
+        </View>
+      </View>
+    </>
+  )
+}
+
+function ThreadItemAnchorParentReplyLine({isRoot}: {isRoot: boolean}) {
+  const t = useTheme()
+
+  return !isRoot ? (
+    <View style={[a.pl_lg, a.flex_row, a.pb_xs, {height: a.pt_lg.paddingTop}]}>
+      <View style={{width: 42}}>
+        <View
+          style={[
+            {
+              width: REPLY_LINE_WIDTH,
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              flexGrow: 1,
+              backgroundColor: t.atoms.border_contrast_low.borderColor,
+            },
+          ]}
+        />
+      </View>
+    </View>
+  ) : null
+}
+
+const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
+  item,
+  isRoot,
+  postShadow,
+  onPostSuccess,
+  threadgateRecord,
+  postSource,
+}: {
+  item: Extract<ThreadItem, {type: 'threadPost'}>
+  isRoot: boolean
+  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  onPostSuccess?: (data: OnPostSuccessData) => void
+  threadgateRecord?: AppBskyFeedThreadgate.Record
+  postSource?: PostSource
+}) {
+  const t = useTheme()
+  const ax = useAnalytics()
+  const {t: l} = useLingui()
+  const {openComposer} = useOpenComposer()
+  const {currentAccount, hasSession} = useSession()
+  const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
+  const formatPostStatCount = useFormatPostStatCount()
+
+  const post = postShadow
+  const record = item.value.post.record
+  const moderation = item.moderation
+  const authorShadow = useProfileShadow(post.author)
+  const {isActive: live} = useActorStatus(post.author)
+  const richText = useMemo(
+    () =>
+      new RichTextAPI({
+        text: record.text,
+        facets: record.facets,
+      }),
+    [record],
+  )
+
+  const threadRootUri = record.reply?.root?.uri || post.uri
+  const authorHref = makeProfileLink(post.author)
+  const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
+
+  const likesHref = useMemo(() => {
+    const urip = new AtUri(post.uri)
+    return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
+  }, [post.uri, post.author])
+  const repostsHref = useMemo(() => {
+    const urip = new AtUri(post.uri)
+    return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
+  }, [post.uri, post.author])
+  const quotesHref = useMemo(() => {
+    const urip = new AtUri(post.uri)
+    return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
+  }, [post.uri, post.author])
+
+  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
+    threadgateRecord,
+  })
+  const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
+    const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
+    const isControlledByViewer =
+      new AtUri(threadRootUri).host === currentAccount?.did
+    return isControlledByViewer && isPostHiddenByThreadgate
+      ? [
+          {
+            type: 'reply-hidden',
+            source: {type: 'user', did: currentAccount?.did},
+            priority: 6,
+          },
+        ]
+      : []
+  }, [post, currentAccount?.did, threadgateHiddenReplies, threadRootUri])
+  const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
+    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
+  )
+  const showFollowButton =
+    currentAccount?.did !== post.author.did && !onlyFollowersCanReply
+
+  const viaRepost = useMemo(() => {
+    const reason = postSource?.post.reason
+
+    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+      return {
+        uri: reason.uri,
+        cid: reason.cid,
+      }
+    }
+  }, [postSource])
+
+  const onPressReply = useCallback(() => {
+    openComposer({
+      replyTo: {
+        uri: post.uri,
+        cid: post.cid,
+        text: record.text,
+        author: post.author,
+        embed: post.embed,
+        moderation,
+        langs: record.langs,
+      },
+      onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
+    })
+
+    if (postSource) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#interactionReply',
+        feedContext: postSource.post.feedContext,
+        reqId: postSource.post.reqId,
+      })
+    }
+  }, [
+    openComposer,
+    post,
+    record,
+    onPostSuccess,
+    moderation,
+    postSource,
+    feedFeedback,
+  ])
+
+  const onOpenAuthor = () => {
+    ax.metric('post:clickthroughAuthor', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'PostThreadItem',
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
+    if (postSource) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#clickthroughAuthor',
+        feedContext: postSource.post.feedContext,
+        reqId: postSource.post.reqId,
+      })
+    }
+  }
+
+  const onOpenEmbed = () => {
+    ax.metric('post:clickthroughEmbed', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'PostThreadItem',
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
+    if (postSource) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#clickthroughEmbed',
+        feedContext: postSource.post.feedContext,
+        reqId: postSource.post.reqId,
+      })
+    }
+  }
+
+  return (
+    <>
+      <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
+      <View
+        testID={`postThreadItem-by-${post.author.handle}`}
+        style={[
+          {
+            paddingHorizontal: OUTER_SPACE,
+          },
+          isRoot && [a.pt_lg],
+        ]}>
+        <View style={[a.flex_row, a.gap_md, a.pb_md]}>
+          <View collapsable={false}>
+            <PreviewableUserAvatar
+              size={42}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              live={live}
+              onBeforePress={onOpenAuthor}
+            />
+          </View>
+          <Link
+            to={authorHref}
+            style={[a.flex_1]}
+            label={sanitizeDisplayName(
+              post.author.displayName || sanitizeHandle(post.author.handle),
+              moderation.ui('displayName'),
+            )}
+            onPress={onOpenAuthor}>
+            <View style={[a.flex_1, a.align_start]}>
+              <ProfileHoverCard did={post.author.did} style={[a.w_full]}>
+                <View style={[a.flex_row, a.align_center]}>
+                  <Text
+                    emoji
+                    style={[
+                      a.flex_shrink,
+                      a.text_lg,
+                      a.font_semi_bold,
+                      a.leading_snug,
+                    ]}
+                    numberOfLines={1}>
+                    {sanitizeDisplayName(
+                      post.author.displayName ||
+                        sanitizeHandle(post.author.handle),
+                      moderation.ui('displayName'),
+                    )}
+                  </Text>
+
+                  <View style={[a.pl_xs]}>
+                    <VerificationCheckButton profile={authorShadow} size="md" />
+                  </View>
+                </View>
+                <Text
+                  style={[
+                    a.text_md,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  numberOfLines={1}>
+                  {sanitizeHandle(post.author.handle, '@')}
+                </Text>
+              </ProfileHoverCard>
+            </View>
+          </Link>
+          <View collapsable={false} style={[a.self_center]}>
+            <ThreadItemAnchorFollowButton
+              did={post.author.did}
+              enabled={showFollowButton}
+            />
+          </View>
+        </View>
+        <View style={[a.pb_sm]}>
+          <LabelsOnMyPost post={post} style={[a.pb_sm]} />
+          <ContentHider
+            modui={moderation.ui('contentView')}
+            ignoreMute
+            childContainerStyle={[a.pt_sm]}>
+            <PostAlerts
+              modui={moderation.ui('contentView')}
+              size="lg"
+              includeMute
+              style={[a.pb_sm]}
+              additionalCauses={additionalPostAlerts}
+            />
+            {richText?.text ? (
+              <RichText
+                enableTags
+                selectable
+                value={richText}
+                style={[a.flex_1, a.text_lg]}
+                authorHandle={post.author.handle}
+                shouldProxyLinks={true}
+              />
+            ) : undefined}
+            <TranslatedPost postText={record.text} hideLoading />
+            <TranslateLink post={item.value.post} />
+            {post.embed && (
+              <View style={[a.py_xs]}>
+                <Embed
+                  embed={post.embed}
+                  moderation={moderation}
+                  viewContext={PostEmbedViewContext.ThreadHighlighted}
+                  onOpen={onOpenEmbed}
+                />
+              </View>
+            )}
+          </ContentHider>
+          <ExpandedPostDetails
+            post={item.value.post}
+            isThreadAuthor={isThreadAuthor}
+          />
+          {post.repostCount !== 0 ||
+          post.likeCount !== 0 ||
+          post.quoteCount !== 0 ||
+          post.bookmarkCount !== 0 ? (
+            // Show this section unless we're *sure* it has no engagement.
+            <View
+              style={[
+                a.flex_row,
+                a.flex_wrap,
+                a.align_center,
+                {
+                  rowGap: a.gap_sm.gap,
+                  columnGap: a.gap_lg.gap,
+                },
+                a.border_t,
+                a.border_b,
+                a.mt_md,
+                a.py_md,
+                t.atoms.border_contrast_low,
+              ]}>
+              {post.repostCount != null && post.repostCount !== 0 ? (
+                <Link to={repostsHref} label={l`Reposts of this post`}>
+                  <Text
+                    testID="repostCount-expanded"
+                    style={[a.text_md, t.atoms.text_contrast_medium]}>
+                    <Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.repostCount)}
+                      </Text>{' '}
+                      <Plural
+                        value={post.repostCount}
+                        one="repost"
+                        other="reposts"
+                      />
+                    </Trans>
+                  </Text>
+                </Link>
+              ) : null}
+              {post.quoteCount != null &&
+              post.quoteCount !== 0 &&
+              !post.viewer?.embeddingDisabled ? (
+                <Link to={quotesHref} label={l`Quotes of this post`}>
+                  <Text
+                    testID="quoteCount-expanded"
+                    style={[a.text_md, t.atoms.text_contrast_medium]}>
+                    <Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.quoteCount)}
+                      </Text>{' '}
+                      <Plural
+                        value={post.quoteCount}
+                        one="quote"
+                        other="quotes"
+                      />
+                    </Trans>
+                  </Text>
+                </Link>
+              ) : null}
+              {post.likeCount != null && post.likeCount !== 0 ? (
+                <Link to={likesHref} label={l`Likes on this post`}>
+                  <Text
+                    testID="likeCount-expanded"
+                    style={[a.text_md, t.atoms.text_contrast_medium]}>
+                    <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.likeCount)}
+                      </Text>{' '}
+                      <Plural value={post.likeCount} one="like" other="likes" />
+                    </Trans>
+                  </Text>
+                </Link>
+              ) : null}
+              {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
+                <Text
+                  testID="bookmarkCount-expanded"
+                  style={[a.text_md, t.atoms.text_contrast_medium]}>
+                  <Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
+                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                      {formatPostStatCount(post.bookmarkCount)}
+                    </Text>{' '}
+                    <Plural
+                      value={post.bookmarkCount}
+                      one="save"
+                      other="saves"
+                    />
+                  </Trans>
+                </Text>
+              ) : null}
+            </View>
+          ) : null}
+          <View
+            style={[
+              a.pt_sm,
+              a.pb_2xs,
+              {
+                marginLeft: -5,
+              },
+            ]}>
+            <FeedFeedbackProvider value={feedFeedback}>
+              <PostControls
+                big
+                post={postShadow}
+                record={record}
+                richText={richText}
+                onPressReply={onPressReply}
+                logContext="PostThreadItem"
+                threadgateRecord={threadgateRecord}
+                feedContext={postSource?.post?.feedContext}
+                reqId={postSource?.post?.reqId}
+                viaRepost={viaRepost}
+              />
+            </FeedFeedbackProvider>
+          </View>
+          <DebugFieldDisplay subject={post} />
+        </View>
+      </View>
+    </>
+  )
+})
+
+function TranslateLink({
+  post,
+}: {
+  post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
+}) {
+  const t = useTheme()
+  const ax = useAnalytics()
+  const {t: l} = useLingui()
+  const langPrefs = useLanguagePrefs()
+
+  const {translate, clearTranslation, translationState} = useTranslateOnDevice()
+
+  const needsTranslation = useMemo(
+    () =>
+      Boolean(
+        langPrefs.primaryLanguage &&
+          !isPostInLanguage(post, [langPrefs.primaryLanguage]),
+      ),
+    [post, langPrefs.primaryLanguage],
+  )
+
+  const sourceLanguage = getPostLanguage(post)
+
+  const onTranslatePress = useCallback(
+    (e: GestureResponderEvent) => {
+      e.preventDefault()
+      void translate(
+        post.record.text || '',
+        langPrefs.primaryLanguage,
+        sourceLanguage,
+      )
+
+      if (
+        bsky.dangerousIsType<AppBskyFeedPost.Record>(
+          post.record,
+          AppBskyFeedPost.isRecord,
+        )
+      ) {
+        ax.metric('translate', {
+          sourceLanguages: post.record.langs ?? [],
+          targetLanguage: langPrefs.primaryLanguage,
+          textLength: post.record.text.length,
+        })
+      }
+
+      return false
+    },
+    [ax, sourceLanguage, translate, langPrefs, post],
+  )
+
+  const onHideTranslation = useCallback(
+    (e: GestureResponderEvent) => {
+      e.preventDefault()
+      clearTranslation()
+      return false
+    },
+    [clearTranslation],
+  )
+
+  return (
+    needsTranslation && (
+      <View style={[a.gap_md, a.pt_md, a.align_start]}>
+        {translationState.status === 'loading' ? (
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <Loader size="xs" />
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Translating…</Trans>
+            </Text>
+          </View>
+        ) : translationState.status === 'success' ? (
+          <InlineLinkText
+            to="#"
+            label={l`Hide translation`}
+            style={[a.text_sm]}
+            onPress={onHideTranslation}>
+            <Trans>Hide translation</Trans>
+          </InlineLinkText>
+        ) : (
+          <InlineLinkText
+            to={getTranslatorLink(post.record.text, langPrefs.primaryLanguage)}
+            label={l`Translate`}
+            style={[a.text_sm]}
+            onPress={onTranslatePress}>
+            <Trans>Translate</Trans>
+          </InlineLinkText>
+        )}
+      </View>
+    )
+  )
+}
+
+function ExpandedPostDetails({
+  post,
+  isThreadAuthor,
+}: {
+  post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
+  isThreadAuthor: boolean
+}) {
+  const t = useTheme()
+  const {i18n} = useLingui()
+  const isRootPost = !('reply' in post.record)
+
+  return (
+    <View style={[a.gap_md, a.pt_md, a.align_start]}>
+      <BackdatedPostIndicator post={post} />
+      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          {niceDate(i18n, post.indexedAt, 'dot separated')}
+        </Text>
+        {isRootPost && (
+          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+        )}
+      </View>
+    </View>
+  )
+}
+
+function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
+  const t = useTheme()
+  const {t: l, i18n} = useLingui()
+  const control = Prompt.usePromptControl()
+
+  const indexedAt = new Date(post.indexedAt)
+  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
+    ? new Date(post.record.createdAt)
+    : new Date(post.indexedAt)
+
+  // backdated if createdAt is 24 hours or more before indexedAt
+  const isBackdated =
+    indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
+
+  if (!isBackdated) return null
+
+  return (
+    <>
+      <Button
+        label={l`Archived post`}
+        accessibilityHint={l`Shows information about when this post was created`}
+        onPress={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          control.open()
+        }}>
+        {({hovered, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.rounded_full,
+              t.atoms.bg_contrast_25,
+              (hovered || pressed) && t.atoms.bg_contrast_50,
+              {
+                gap: 3,
+                paddingHorizontal: 6,
+                paddingVertical: 3,
+              },
+            ]}>
+            <CalendarClockIcon fill={t.palette.yellow} size="sm" aria-hidden />
+            <Text
+              style={[
+                a.text_xs,
+                a.font_semi_bold,
+                a.leading_tight,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Archived from {niceDate(i18n, createdAt, 'medium')}</Trans>
+            </Text>
+          </View>
+        )}
+      </Button>
+
+      <Prompt.Outer control={control}>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Archived post</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>
+              This post claims to have been created on{' '}
+              <RNText style={[a.font_semi_bold]}>
+                {niceDate(i18n, createdAt)}
+              </RNText>
+              , but was first seen by Bluesky on{' '}
+              <RNText style={[a.font_semi_bold]}>
+                {niceDate(i18n, indexedAt)}
+              </RNText>
+              .
+            </Trans>
+          </Prompt.DescriptionText>
+          <Prompt.DescriptionText>
+            <Trans>
+              Bluesky cannot confirm the authenticity of the claimed date.
+            </Trans>
+          </Prompt.DescriptionText>
+        </Prompt.Content>
+        <Prompt.Actions>
+          <Prompt.Action cta={l`Okay`} onPress={() => {}} />
+        </Prompt.Actions>
+      </Prompt.Outer>
+    </>
+  )
+}
+
+function getThreadAuthor(
+  post: AppBskyFeedDefs.PostView,
+  record: AppBskyFeedPost.Record,
+): string {
+  if (!record.reply) {
+    return post.author.did
+  }
+  try {
+    return new AtUri(record.reply.root.uri).host
+  } catch {
+    return ''
+  }
+}
+
+export function ThreadItemAnchorSkeleton() {
+  return (
+    <View style={[a.p_lg, a.gap_md]}>
+      <Skele.Row style={[a.align_center, a.gap_md]}>
+        <Skele.Circle size={42} />
+
+        <Skele.Col>
+          <Skele.Text style={[a.text_lg, {width: '20%'}]} />
+          <Skele.Text blend style={[a.text_md, {width: '40%'}]} />
+        </Skele.Col>
+      </Skele.Row>
+
+      <View>
+        <Skele.Text style={[a.text_xl, {width: '100%'}]} />
+        <Skele.Text style={[a.text_xl, {width: '60%'}]} />
+      </View>
+
+      <Skele.Text style={[a.text_sm, {width: '50%'}]} />
+
+      <PostControlsSkeleton big />
+    </View>
+  )
+}

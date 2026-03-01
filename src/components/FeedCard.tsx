@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -6,8 +6,9 @@ import {
   AtUri,
   RichText as RichTextApi,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -21,25 +22,27 @@ import {
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
 import {
   Button,
   ButtonIcon,
   type ButtonProps,
   ButtonText,
 } from '#/components/Button'
+import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {RichText, type RichTextProps} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useActiveLiveEventFeedUris} from '#/features/liveEvents/context'
 import type * as bsky from '#/types/bsky'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from './icons/Trash'
 
 type Props = {
   view: AppBskyFeedDefs.GeneratorView
+  onPress?: () => void
 }
 
 export function Default(props: Props) {
@@ -49,7 +52,11 @@ export function Default(props: Props) {
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
-          <TitleAndByline title={view.displayName} creator={view.creator} />
+          <TitleAndByline
+            title={view.displayName}
+            creator={view.creator}
+            uri={view.uri}
+          />
           <SaveButton view={view} pin />
         </Header>
         <Description description={view.description} />
@@ -118,17 +125,43 @@ export function AvatarPlaceholder({size = 40}: Omit<AvatarProps, 'src'>) {
 export function TitleAndByline({
   title,
   creator,
+  uri,
 }: {
   title: string
   creator?: bsky.profile.AnyProfileView
+  uri?: string
 }) {
   const t = useTheme()
+  const activeLiveEvents = useActiveLiveEventFeedUris()
+  const liveColor = useMemo(
+    () =>
+      select(t.name, {
+        dark: t.palette.negative_600,
+        dim: t.palette.negative_600,
+        light: t.palette.negative_500,
+      }),
+    [t],
+  )
 
   return (
     <View style={[a.flex_1]}>
+      {uri && activeLiveEvents.has(uri) && (
+        <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+          <LiveIcon size="xs" fill={liveColor} />
+          <Text
+            style={[
+              a.text_2xs,
+              a.font_medium,
+              a.leading_snug,
+              {color: liveColor},
+            ]}>
+            <Trans>Happening now</Trans>
+          </Text>
+        </View>
+      )}
       <Text
         emoji
-        style={[a.text_md, a.font_bold, a.leading_snug]}
+        style={[a.text_md, a.font_semi_bold, a.leading_snug]}
         numberOfLines={1}>
         {title}
       </Text>
@@ -186,7 +219,7 @@ export function Description({
     return rt
   }, [description])
   if (!rt) return null
-  return <RichText value={rt} style={[a.leading_snug]} disableLinks {...rest} />
+  return <RichText value={rt} disableLinks {...rest} />
 }
 
 export function DescriptionPlaceholder() {
@@ -214,7 +247,7 @@ export function DescriptionPlaceholder() {
 export function Likes({count}: {count: number}) {
   const t = useTheme()
   return (
-    <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+    <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.font_semi_bold]}>
       <Trans>
         Liked by <Plural value={count || 0} one="# user" other="# users" />
       </Trans>

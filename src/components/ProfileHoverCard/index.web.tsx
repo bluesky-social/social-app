@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -6,12 +6,13 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
-import {isTouchDevice} from '#/lib/browser'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -39,6 +40,9 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {IS_WEB_TOUCH_DEVICE} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
+import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -66,11 +70,13 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
     }
   }
 
-  if (props.disable || isTouchDevice) {
+  if (props.disable || IS_WEB_TOUCH_DEVICE) {
     return props.children
   } else {
     return (
-      <View onPointerMove={onPointerMove} style={[a.flex_shrink]}>
+      <View
+        onPointerMove={onPointerMove}
+        style={[a.flex_shrink, props.inline && a.inline, props.style]}>
         <ProfileHoverCardInner {...props} />
       </View>
     )
@@ -105,6 +111,8 @@ const HIDE_DELAY = 150
 const HIDE_DURATION = 200
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
+  const navigation = useNavigation<NavigationProp>()
+
   const {refs, floatingStyles} = useFloating({
     middleware: floatingMiddlewares,
   })
@@ -320,7 +328,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       onPointerLeave={onPointerLeaveTarget}
       // @ts-ignore web only prop
       onMouseUp={onPress}
-      style={{flexShrink: 1}}>
+      style={[a.flex_shrink, props.inline && a.inline]}>
       {props.children}
       {isVisible && (
         <Portal>
@@ -330,7 +338,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
             onPointerEnter={onPointerEnterCard}
             onPointerLeave={onPointerLeaveCard}>
             <div style={{willChange: 'transform', ...animationStyle}}>
-              <Card did={props.did} hide={onPress} />
+              <Card did={props.did} hide={onPress} navigation={navigation} />
             </div>
           </div>
         </Portal>
@@ -339,7 +347,15 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   )
 }
 
-let Card = ({did, hide}: {did: string; hide: () => void}): React.ReactNode => {
+let Card = ({
+  did,
+  hide,
+  navigation,
+}: {
+  did: string
+  hide: () => void
+  navigation: NavigationProp
+}): React.ReactNode => {
   const t = useTheme()
 
   const profile = useProfileQuery({did})
@@ -347,24 +363,49 @@ let Card = ({did, hide}: {did: string; hide: () => void}): React.ReactNode => {
 
   const data = profile.data
 
+  const status = useActorStatus(data)
+
+  const onPressOpenProfile = useCallback(() => {
+    if (!status.isActive || !data) return
+    hide()
+    navigation.push('Profile', {
+      name: data.handle,
+    })
+  }, [hide, navigation, status, data])
+
   return (
     <View
       style={[
-        a.p_lg,
+        !status.isActive && a.p_lg,
         a.border,
         a.rounded_md,
         a.overflow_hidden,
         t.atoms.bg,
         t.atoms.border_contrast_low,
         t.atoms.shadow_lg,
-        {
-          width: 300,
-        },
+        {width: status.isActive ? 350 : 300},
+        a.max_w_full,
       ]}>
       {data && moderationOpts ? (
-        <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />
+        status.isActive ? (
+          <LiveStatus
+            status={status}
+            profile={data}
+            embed={status.embed}
+            padding="lg"
+            onPressOpenProfile={onPressOpenProfile}
+          />
+        ) : (
+          <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />
+        )
       ) : (
-        <View style={[a.justify_center]}>
+        <View
+          style={[
+            a.justify_center,
+            a.align_center,
+            {minHeight: 200},
+            a.w_full,
+          ]}>
           <Loader size="xl" />
         </View>
       )}
@@ -475,7 +516,12 @@ function Inner({
           <View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
             <Text
               numberOfLines={1}
-              style={[a.text_lg, a.font_bold, a.self_start]}>
+              style={[
+                a.text_lg,
+                a.leading_snug,
+                a.font_semi_bold,
+                a.self_start,
+              ]}>
               {sanitizeDisplayName(
                 profile.displayName || sanitizeHandle(profile.handle),
                 moderation.ui('displayName'),
@@ -522,7 +568,7 @@ function Inner({
               label={`${followers} ${pluralizedFollowers}`}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
+              <Text style={[a.text_md, a.font_semi_bold]}>{followers} </Text>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {pluralizedFollowers}
               </Text>
@@ -532,7 +578,7 @@ function Inner({
               label={_(msg`${following} following`)}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Text style={[a.text_md, a.font_bold]}>{following} </Text>
+              <Text style={[a.text_md, a.font_semi_bold]}>{following} </Text>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {pluralizedFollowings}
               </Text>

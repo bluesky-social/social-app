@@ -1,12 +1,12 @@
 import React, {useMemo} from 'react'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {
   ProgressGuideToast,
-  ProgressGuideToastRef,
+  type ProgressGuideToastRef,
 } from '#/components/ProgressGuide/Toast'
+import {useAnalytics} from '#/analytics'
 import {
   usePreferencesQuery,
   useSetActiveProgressGuideMutation,
@@ -45,6 +45,7 @@ export type ProgressGuide =
   | undefined
 
 const ProgressGuideContext = React.createContext<ProgressGuide>(undefined)
+ProgressGuideContext.displayName = 'ProgressGuideContext'
 
 const ProgressGuideControlContext = React.createContext<{
   startProgressGuide(guide: ProgressGuideName): void
@@ -55,6 +56,7 @@ const ProgressGuideControlContext = React.createContext<{
   endProgressGuide: () => {},
   captureAction: (_action: ProgressGuideAction, _count = 1) => {},
 })
+ProgressGuideControlContext.displayName = 'ProgressGuideControlContext'
 
 export function useProgressGuide(guide: ProgressGuideName) {
   const ctx = React.useContext(ProgressGuideContext)
@@ -69,6 +71,7 @@ export function useProgressGuideControls() {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {mutateAsync, variables, isPending} =
@@ -138,7 +141,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       endProgressGuide() {
         setLocalGuideState(undefined)
         mutateAsync(undefined)
-        logEvent('progressGuide:hide', {})
+        ax.metric('progressGuide:hide', {})
       },
 
       captureAction(action: ProgressGuideAction, count = 1) {
@@ -200,7 +203,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         mutateAsync(guide?.isComplete ? undefined : guide)
       },
     }
-  }, [activeProgressGuide, mutateAsync, setLocalGuideState])
+  }, [ax, activeProgressGuide, mutateAsync, setLocalGuideState])
 
   return (
     <ProgressGuideContext.Provider value={localGuideState}>

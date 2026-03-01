@@ -3,7 +3,7 @@ import {type ChatBskyConvoDefs} from '@atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/hooks/useAppState'
+import {useAppState} from '#/lib/appState'
 import {Convo} from '#/state/messages/convo/agent'
 import {
   type ConvoParams,
@@ -26,6 +26,7 @@ import {useAgent} from '#/state/session'
 export * from '#/state/messages/convo/util'
 
 const ChatContext = React.createContext<ConvoState | null>(null)
+ChatContext.displayName = 'ChatContext'
 
 export function useConvo() {
   const ctx = useContext(ChatContext)

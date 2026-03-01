@@ -1,10 +1,12 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {ComAtprotoModerationDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {ToolsOzoneReportDefs} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
+import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -21,7 +23,12 @@ export function ChatDisabled() {
       <View
         style={[a.align_start, a.p_xl, a.rounded_md, t.atoms.bg_contrast_25]}>
         <Text
-          style={[a.text_md, a.font_bold, a.pb_sm, t.atoms.text_contrast_high]}>
+          style={[
+            a.text_md,
+            a.font_semi_bold,
+            a.pb_sm,
+            t.atoms.text_contrast_high,
+          ]}>
           <Trans>Your chats have been disabled</Trans>
         </Text>
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -73,14 +80,20 @@ function DialogInner() {
     mutationFn: async () => {
       if (!currentAccount)
         throw new Error('No current account, should be unreachable')
-      await agent.createModerationReport({
-        reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
-        subject: {
-          $type: 'com.atproto.admin.defs#repoRef',
-          did: currentAccount.did,
+      await agent.createModerationReport(
+        {
+          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
+          subject: {
+            $type: 'com.atproto.admin.defs#repoRef',
+            did: currentAccount.did,
+          },
+          reason: details,
         },
-        reason: details,
-      })
+        {
+          encoding: 'application/json',
+          headers: BLUESKY_MOD_SERVICE_HEADERS,
+        },
+      )
     },
     onError: err => {
       logger.error('Failed to submit chat appeal', {message: err})
@@ -97,7 +110,7 @@ function DialogInner() {
 
   return (
     <Dialog.ScrollableInner label={_(msg`Appeal this decision`)}>
-      <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
+      <Text style={[a.text_2xl, a.font_semi_bold, a.pb_xs, a.leading_tight]}>
         <Trans>Appeal this decision</Trans>
       </Text>
       <Text style={[a.text_md, a.leading_snug]}>

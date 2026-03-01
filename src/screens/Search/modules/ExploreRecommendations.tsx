@@ -1,14 +1,12 @@
 import {View} from 'react-native'
 import {type AppBskyUnspeccedDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
   useTrendingTopics,
 } from '#/state/queries/trending/useTrendingTopics'
-import {useTrendingConfig} from '#/state/trending-config'
+import {useTrendingConfig} from '#/state/service-config'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
 import {
@@ -17,6 +15,8 @@ import {
   TrendingTopicSkeleton,
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 
 // Note: This module is not currently used and may be removed in the future.
 
@@ -27,6 +27,7 @@ export function ExploreRecommendations() {
 
 function Inner() {
   const t = useTheme()
+  const ax = useAnalytics()
   const gutters = useGutters([0, 'compact'])
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noRecs = !isLoading && !error && !trending?.suggested?.length
@@ -37,7 +38,7 @@ function Inner() {
       <View
         style={[
           a.flex_row,
-          isWeb
+          IS_WEB
             ? [a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
             : [a.p_lg, a.pt_2xl, a.gap_md],
           a.border_b,
@@ -50,7 +51,7 @@ function Inner() {
               fill={t.palette.primary_500}
               style={{marginLeft: -2}}
             />
-            <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>
+            <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
               <Trans>Recommended</Trans>
             </Text>
           </View>
@@ -88,11 +89,7 @@ function Inner() {
                   key={topic.link}
                   topic={topic}
                   onPress={() => {
-                    logger.metric(
-                      'recommendedTopic:click',
-                      {context: 'explore'},
-                      {statsig: true},
-                    )
+                    ax.metric('recommendedTopic:click', {context: 'explore'})
                   }}>
                   {({hovered}) => (
                     <TrendingTopic

@@ -1,12 +1,18 @@
-import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import {msg} from '@lingui/macro'
+import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
+import {
+  Pressable,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import {DropdownMenu} from 'radix-ui'
 
 import {useA11y} from '#/state/a11y'
 import {atoms as a, flatten, useTheme, web} from '#/alf'
-import * as Dialog from '#/components/Dialog'
+import type * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
   Context,
@@ -15,13 +21,13 @@ import {
   useMenuItemContext,
 } from '#/components/Menu/context'
 import {
-  ContextType,
-  GroupProps,
-  ItemIconProps,
-  ItemProps,
-  ItemTextProps,
-  RadixPassThroughTriggerProps,
-  TriggerProps,
+  type ContextType,
+  type GroupProps,
+  type ItemIconProps,
+  type ItemProps,
+  type ItemTextProps,
+  type RadixPassThroughTriggerProps,
+  type TriggerProps,
 } from '#/components/Menu/types'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
@@ -29,10 +35,10 @@ import {Text} from '#/components/Typography'
 export {useMenuContext}
 
 export function useMenuControl(): Dialog.DialogControlProps {
-  const id = React.useId()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const id = useId()
+  const [isOpen, setIsOpen] = useState(false)
 
-  return React.useMemo(
+  return useMemo(
     () => ({
       id,
       ref: {current: null},
@@ -56,13 +62,13 @@ export function Root({
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
-  const context = React.useMemo<ContextType>(
+  const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
     }),
     [control, defaultControl],
   )
-  const onOpenChange = React.useCallback(
+  const onOpenChange = useCallback(
     (open: boolean) => {
       if (context.control.isOpen && !open) {
         context.control.close()
@@ -96,7 +102,7 @@ export function Root({
   )
 }
 
-const RadixTriggerPassThrough = React.forwardRef(
+const RadixTriggerPassThrough = forwardRef(
   (
     props: {
       children: (
@@ -132,7 +138,7 @@ export function Trigger({
       <RadixTriggerPassThrough>
         {props =>
           children({
-            isNative: false,
+            IS_NATIVE: false,
             control,
             state: {
               hovered,
@@ -256,6 +262,7 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
           a.gap_lg,
           a.py_sm,
           a.rounded_xs,
+          a.overflow_hidden,
           {minHeight: 32, paddingHorizontal: 10},
           web({outline: 0}),
           (hovered || focused) &&
@@ -286,7 +293,7 @@ export function ItemText({children, style}: ItemTextProps) {
     <Text
       style={[
         a.flex_1,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_high,
         style,
         disabled && t.atoms.text_contrast_low,
@@ -296,7 +303,7 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
+export function ItemIcon({icon: Comp, position = 'left', fill}: ItemIconProps) {
   const t = useTheme()
   const {disabled} = useMenuItemContext()
   return (
@@ -313,9 +320,11 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
       <Comp
         size="md"
         fill={
-          disabled
-            ? t.atoms.text_contrast_low.color
-            : t.atoms.text_contrast_medium.color
+          fill
+            ? fill({disabled})
+            : disabled
+              ? t.atoms.text_contrast_low.color
+              : t.atoms.text_contrast_medium.color
         }
       />
     </View>
@@ -355,18 +364,23 @@ export function ItemRadio({selected}: {selected: boolean}) {
   )
 }
 
-export function LabelText({children}: {children: React.ReactNode}) {
+export function LabelText({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<TextStyle>
+}) {
   const t = useTheme()
   return (
     <Text
       style={[
-        a.font_bold,
-        a.pt_md,
-        a.pb_sm,
+        a.font_semi_bold,
+        a.p_sm,
         t.atoms.text_contrast_low,
-        {
-          paddingHorizontal: 10,
-        },
+        a.leading_snug,
+        {paddingHorizontal: 10},
+        style,
       ]}>
       {children}
     </Text>
@@ -389,4 +403,8 @@ export function Divider() {
       ])}
     />
   )
+}
+
+export function ContainerItem() {
+  return null
 }

@@ -1,10 +1,9 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
-import {isNative} from '#/platform/detection'
 import {useAutoplayDisabled, useSetAutoplayDisabled} from '#/state/preferences'
 import {
   useInAppBrowser,
@@ -14,7 +13,7 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useTrendingConfig} from '#/state/trending-config'
+import {useTrendingConfig} from '#/state/service-config'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
@@ -26,6 +25,8 @@ import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -33,6 +34,7 @@ type Props = NativeStackScreenProps<
 >
 export function ContentAndMediaSettingsScreen({}: Props) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const autoplayDisabledPref = useAutoplayDisabled()
   const setAutoplayDisabledPref = useSetAutoplayDisabled()
   const inAppBrowserPref = useInAppBrowser()
@@ -96,7 +98,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.Divider />
-          {isNative && (
+          {IS_NATIVE && (
             <Toggle.Item
               name="use_in_app_browser"
               label={_(msg`Use in-app browser to open links`)}
@@ -124,7 +126,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               <Toggle.Platform />
             </SettingsList.Item>
           </Toggle.Item>
-          {trendingEnabled && (
+          {trendingEnabled ? (
             <>
               <SettingsList.Divider />
               <Toggle.Item
@@ -134,9 +136,9 @@ export function ContentAndMediaSettingsScreen({}: Props) {
                 onChange={value => {
                   const hide = Boolean(!value)
                   if (hide) {
-                    logEvent('trendingTopics:hide', {context: 'settings'})
+                    ax.metric('trendingTopics:hide', {context: 'settings'})
                   } else {
-                    logEvent('trendingTopics:show', {context: 'settings'})
+                    ax.metric('trendingTopics:show', {context: 'settings'})
                   }
                   setTrendingDisabled(hide)
                 }}>
@@ -150,14 +152,14 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               </Toggle.Item>
               <Toggle.Item
                 name="show_trending_videos"
-                label={_(msg`Enable trending videos in your Discover feed.`)}
+                label={_(msg`Enable trending videos in your Discover feed`)}
                 value={!trendingVideoDisabled}
                 onChange={value => {
                   const hide = Boolean(!value)
                   if (hide) {
-                    logEvent('trendingVideos:hide', {context: 'settings'})
+                    ax.metric('trendingVideos:hide', {context: 'settings'})
                   } else {
-                    logEvent('trendingVideos:show', {context: 'settings'})
+                    ax.metric('trendingVideos:show', {context: 'settings'})
                   }
                   setTrendingVideoDisabled(hide)
                 }}>
@@ -170,7 +172,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
                 </SettingsList.Item>
               </Toggle.Item>
             </>
-          )}
+          ) : null}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>

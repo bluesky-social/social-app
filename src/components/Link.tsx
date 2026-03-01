@@ -1,26 +1,31 @@
-import React from 'react'
-import {type GestureResponderEvent} from 'react-native'
+import React, {useMemo} from 'react'
+import {type GestureResponderEvent, Linking} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
-import {StackActions, useLinkProps} from '@react-navigation/native'
+import {
+  type LinkProps as RNLinkProps,
+  StackActions,
+} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {type AllNavigatorParams} from '#/lib/routes/types'
+import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
+  createProxiedUrl,
   isBskyDownloadUrl,
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {isNative, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {atoms as a, flatten, type TextStyleProp, useTheme, web} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text, type TextProps} from '#/components/Typography'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
+import {useGlobalDialogsControlContext} from './dialogs/Context'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -28,11 +33,10 @@ import {router} from '#/routes'
  */
 export {useButtonContext as useLinkContext} from '#/components/Button'
 
-type BaseLinkProps = Pick<
-  Parameters<typeof useLinkProps<AllNavigatorParams>>[0],
-  'to'
-> & {
+type BaseLinkProps = {
   testID?: string
+
+  to: RNLinkProps<AllNavigatorParams> | string
 
   /**
    * The React Navigation `StackAction` to perform when the link is pressed.
@@ -92,12 +96,25 @@ export function useLink({
   shouldProxy?: boolean
 }) {
   const navigation = useNavigationDeduped()
-  const {href} = useLinkProps<AllNavigatorParams>({
-    to:
-      typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
-  })
+  const href = useMemo(() => {
+    return typeof to === 'string'
+      ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
+      : to.screen
+        ? router.matchName(to.screen)?.build(to.params)
+        : to.href
+          ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
+          : undefined
+  }, [to])
+
+  if (!href) {
+    throw new Error(
+      'Could not resolve screen. Link `to` prop must be a string or an object with `screen` and `params` properties',
+    )
+  }
+
   const isExternal = isExternalUrl(href)
-  const {openModal, closeModal} = useModalControls()
+  const {closeModal} = useModalControls()
+  const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
 
   const onPress = React.useCallback(
@@ -113,15 +130,14 @@ export function useLink({
           linkRequiresWarning(href, displayText),
       )
 
-      if (isWeb) {
+      if (IS_WEB) {
         e.preventDefault()
       }
 
       if (requiresWarning) {
-        openModal({
-          name: 'link-warning',
-          text: displayText,
-          href: href,
+        linkWarningDialogControl.open({
+          displayText,
+          href,
         })
       } else {
         if (isExternal) {
@@ -140,15 +156,44 @@ export function useLink({
           } else {
             closeModal() // close any active modals
 
+            const [screen, params] = router.matchPath(href) as [
+              screen: keyof AllNavigatorParams,
+              params?: RouteParams,
+            ]
+
+            // does not apply to web's flat navigator
+            if (IS_NATIVE && screen !== 'NotFound') {
+              const state = navigation.getState()
+              // if screen is not in the current navigator, it means it's
+              // most likely a tab screen. note: state can be undefined
+              if (!state?.routeNames?.includes?.(screen)) {
+                const parent = navigation.getParent()
+                if (
+                  parent &&
+                  parent.getState().routeNames.includes(`${screen}Tab`)
+                ) {
+                  // yep, it's a tab screen. i.e. SearchTab
+                  // thus we need to navigate to the child screen
+                  // via the parent navigator
+                  // see https://reactnavigation.org/docs/upgrading-from-6.x/#changes-to-the-navigate-action
+                  // TODO: can we support the other kinds of actions? push/replace -sfn
+
+                  // @ts-expect-error include does not narrow the type unfortunately
+                  parent.navigate(`${screen}Tab`, {screen, params})
+                  return
+                } else {
+                  // will probably fail, but let's try anyway
+                }
+              }
+            }
+
             if (action === 'push') {
-              navigation.dispatch(StackActions.push(...router.matchPath(href)))
+              navigation.dispatch(StackActions.push(screen, params))
             } else if (action === 'replace') {
-              navigation.dispatch(
-                StackActions.replace(...router.matchPath(href)),
-              )
+              navigation.dispatch(StackActions.replace(screen, params))
             } else if (action === 'navigate') {
-              // @ts-ignore
-              navigation.navigate(...router.matchPath(href))
+              // @ts-expect-error not typed
+              navigation.navigate(screen, params, {pop: true})
             } else {
               throw Error('Unsupported navigator action.')
             }
@@ -162,13 +207,13 @@ export function useLink({
       displayText,
       isExternal,
       href,
-      openModal,
       openLink,
       closeModal,
       action,
       navigation,
       overridePresentation,
       shouldProxy,
+      linkWarningDialogControl,
     ],
   )
 
@@ -181,22 +226,27 @@ export function useLink({
     )
 
     if (requiresWarning) {
-      openModal({
-        name: 'link-warning',
-        text: displayText,
-        href: href,
+      linkWarningDialogControl.open({
+        displayText,
+        href,
         share: true,
       })
     } else {
       shareUrl(href)
     }
-  }, [disableMismatchWarning, displayText, href, isExternal, openModal])
+  }, [
+    disableMismatchWarning,
+    displayText,
+    href,
+    isExternal,
+    linkWarningDialogControl,
+  ])
 
   const onLongPress = React.useCallback(
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnLongPress?.(e)
       if (exitEarlyIfFalse === false) return
-      return isNative && shareOnLongPress ? handleLongPress() : undefined
+      return IS_NATIVE && shareOnLongPress ? handleLongPress() : undefined
     },
     [outerOnLongPress, handleLongPress, shareOnLongPress],
   )
@@ -246,7 +296,7 @@ export function Link({
   return (
     <Button
       {...rest}
-      style={[a.justify_start, flatten(rest.style)]}
+      style={[a.justify_start, rest.style]}
       role="link"
       accessibilityRole="link"
       href={href}
@@ -358,13 +408,100 @@ export function InlineLinkText({
   )
 }
 
+/**
+ * A barebones version of `InlineLinkText`, for use outside a
+ * `react-navigation` context.
+ */
+export function SimpleInlineLinkText({
+  children,
+  to,
+  style,
+  download,
+  selectable,
+  label,
+  disableUnderline,
+  shouldProxy,
+  onPress: outerOnPress,
+  ...rest
+}: Omit<
+  InlineLinkProps,
+  | 'to'
+  | 'action'
+  | 'disableMismatchWarning'
+  | 'overridePresentation'
+  | 'onLongPress'
+  | 'shareOnLongPress'
+> & {
+  to: string
+}) {
+  const t = useTheme()
+  const {
+    state: hovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
+  const flattenedStyle = flatten(style) || {}
+  const isExternal = isExternalUrl(to)
+
+  let href = to
+  if (shouldProxy) {
+    href = createProxiedUrl(href)
+  }
+
+  const onPress = (e: GestureResponderEvent) => {
+    const exitEarlyIfFalse = outerOnPress?.(e)
+    if (exitEarlyIfFalse === false) return
+    Linking.openURL(href)
+  }
+
+  return (
+    <Text
+      selectable={selectable}
+      accessibilityHint=""
+      accessibilityLabel={label}
+      {...rest}
+      style={[
+        {color: t.palette.primary_500},
+        hovered &&
+          !disableUnderline && {
+            ...web({
+              outline: 0,
+              textDecorationLine: 'underline',
+              textDecorationColor:
+                flattenedStyle.color ?? t.palette.primary_500,
+            }),
+          },
+        flattenedStyle,
+      ]}
+      role="link"
+      onPress={onPress}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
+      accessibilityRole="link"
+      href={href}
+      {...web({
+        hrefAttrs: {
+          target: download ? undefined : isExternal ? 'blank' : undefined,
+          rel: isExternal ? 'noopener noreferrer' : undefined,
+          download,
+        },
+        dataSet: {
+          // default to no underline, apply this ourselves
+          noUnderline: '1',
+        },
+      })}>
+      {children}
+    </Text>
+  )
+}
+
 export function WebOnlyInlineLinkText({
   children,
   to,
   onPress,
   ...props
 }: Omit<InlineLinkProps, 'onLongPress'>) {
-  return isWeb ? (
+  return IS_WEB ? (
     <InlineLinkText {...props} to={to} onPress={onPress}>
       {children}
     </InlineLinkText>
@@ -382,7 +519,7 @@ export function WebOnlyInlineLinkText({
 export function createStaticClick(
   onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>,
 ): {
-  to: BaseLinkProps['to']
+  to: string
   onPress: Exclude<BaseLinkProps['onPress'], undefined>
 } {
   return {
@@ -410,7 +547,7 @@ export function createStaticClickIfUnmodified(
 ): {onPress: Exclude<BaseLinkProps['onPress'], undefined>} {
   return {
     onPress(e: GestureResponderEvent) {
-      if (!isWeb || !isModifiedClickEvent(e)) {
+      if (!IS_WEB || !isModifiedClickEvent(e)) {
         e.preventDefault()
         onPressHandler(e)
         return false
@@ -424,7 +561,7 @@ export function createStaticClickIfUnmodified(
  * intends to deviate from default behavior.
  */
 export function isClickEventWithMetaKey(e: GestureResponderEvent) {
-  if (!isWeb) return false
+  if (!IS_WEB) return false
   const event = e as unknown as MouseEvent
   return event.metaKey || event.altKey || event.ctrlKey || event.shiftKey
 }
@@ -433,7 +570,7 @@ export function isClickEventWithMetaKey(e: GestureResponderEvent) {
  * Determines if the web click target is anything other than `_self`
  */
 export function isClickTargetExternal(e: GestureResponderEvent) {
-  if (!isWeb) return false
+  if (!IS_WEB) return false
   const event = e as unknown as MouseEvent
   const el = event.currentTarget as HTMLAnchorElement
   return el && el.target && el.target !== '_self'
@@ -445,7 +582,7 @@ export function isClickTargetExternal(e: GestureResponderEvent) {
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button}
  */
 export function isModifiedClickEvent(e: GestureResponderEvent): boolean {
-  if (!isWeb) return false
+  if (!IS_WEB) return false
   const event = e as unknown as MouseEvent
   const isPrimaryButton = event.button === 0
   return (
@@ -459,8 +596,8 @@ export function isModifiedClickEvent(e: GestureResponderEvent): boolean {
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button}
  */
 export function shouldClickOpenNewTab(e: GestureResponderEvent) {
-  if (!isWeb) return false
+  if (!IS_WEB) return false
   const event = e as unknown as MouseEvent
-  const isMiddleClick = isWeb && event.button === 1
+  const isMiddleClick = IS_WEB && event.button === 1
   return isClickEventWithMetaKey(e) || isClickTargetExternal(e) || isMiddleClick
 }

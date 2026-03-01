@@ -1,15 +1,19 @@
 import React from 'react'
+import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {isNative} from '#/platform/detection'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
+import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
-type IntentType = 'compose' | 'verify-email'
+type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
@@ -17,31 +21,30 @@ const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 let previousIntentUrl = ''
 
 export function useIntentHandler() {
-  const incomingUrl = Linking.useURL()
+  const incomingUrl = Linking.useLinkingURL()
+  const ax = useAnalytics()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
+  const {currentAccount} = useSession()
+  const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
   React.useEffect(() => {
-    const handleIncomingURL = (url: string) => {
+    const handleIncomingURL = async (url: string) => {
+      if (IS_IOS) {
+        // Close in-app browser if it's open (iOS only)
+        await WebBrowser.dismissBrowser().catch(() => {})
+      }
+
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        logEvent('deepLink:referrerReceived', {
+        ax.metric('deepLink:referrerReceived', {
           to: url,
           referrer: referrerInfo?.referrer,
           hostname: referrerInfo?.hostname,
         })
       }
-
-      // We want to be able to support bluesky:// deeplinks. It's unnatural for someone to use a deeplink with three
-      // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care
-      // of two cases when parsing the url. If we ensure there is a third slash, we can always ensure the first
-      // path parameter is in pathname rather than in hostname.
-      if (url.startsWith('bluesky://') && !url.startsWith('bluesky:///')) {
-        url = url.replace('bluesky://', 'bluesky:///')
-      }
-
-      const urlp = new URL(url)
-      const [_, intent, intentType] = urlp.pathname.split('/')
+      const urlp = parseLinkingUrl(url)
+      const [, intent, intentType] = urlp.pathname.split('/')
 
       // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
       // intent check. On web, we have to check the first part of the path since we have an actual hostname
@@ -65,6 +68,19 @@ export function useIntentHandler() {
           verifyEmailIntent(code)
           return
         }
+        case 'age-assurance': {
+          // Handled in `#/ageAssurance/components/RedirectOverlay.tsx`
+          return
+        }
+        case 'apply-ota': {
+          const channel = params.get('channel')
+          if (!channel) {
+            Alert.alert('Error', 'No channel provided to look for.')
+          } else {
+            tryApplyUpdate(channel)
+          }
+          return
+        }
         default: {
           return
         }
@@ -78,12 +94,19 @@ export function useIntentHandler() {
       handleIncomingURL(incomingUrl)
       previousIntentUrl = incomingUrl
     }
-  }, [incomingUrl, composeIntent, verifyEmailIntent])
+  }, [
+    incomingUrl,
+    ax,
+    composeIntent,
+    verifyEmailIntent,
+    currentAccount,
+    tryApplyUpdate,
+  ])
 }
 
 export function useComposeIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {hasSession} = useSession()
 
   return React.useCallback(
@@ -97,7 +120,6 @@ export function useComposeIntent() {
       videoUri: string | null
     }) => {
       if (!hasSession) return
-
       closeAllActiveElements()
 
       // Whenever a video URI is present, we don't support adding images right now.
@@ -106,6 +128,7 @@ export function useComposeIntent() {
         openComposer({
           text: text ?? undefined,
           videoUri: {uri, width: Number(width), height: Number(height)},
+          logContext: 'Deeplink',
         })
         return
       }
@@ -130,7 +153,8 @@ export function useComposeIntent() {
       setTimeout(() => {
         openComposer({
           text: text ?? undefined,
-          imageUris: isNative ? imageUris : undefined,
+          imageUris: IS_NATIVE ? imageUris : undefined,
+          logContext: 'Deeplink',
         })
       }, 500)
     },

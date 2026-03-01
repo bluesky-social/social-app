@@ -58,6 +58,7 @@ buck-out/
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+Gemfile.lock
 
 # Testing
 coverage/
@@ -109,7 +110,9 @@ google-services.json
 
 # i18n
 src/locale/locales/_build/
-src/locale/locales/**/*.js
+src/locale/locales/**/messages.js
+src/locale/locales/**/messages.mjs
+src/locale/locales/**/messages.ts
 
 # local builds
 *.apk
@@ -118,3 +121,9 @@ src/locale/locales/**/*.js
 
 # ogcard assets
 bskyogcard/src/assets/fonts/noto-*
+
+# bskyweb build output
+bskyweb/static/media/*.webp
+bskyweb/static/media/*.jpg
+bskyweb/static/media/*.png
+bskyweb/static/media/*.svg

@@ -1,32 +1,43 @@
 import {useCallback} from 'react'
-import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useEmail} from '#/state/email-verification'
 import {useAcceptConversation} from '#/state/queries/messages/accept-conversation'
 import {precacheConvoQuery} from '#/state/queries/messages/conversation'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonProps, ButtonText} from '#/components/Button'
+import {
+  Button,
+  ButtonIcon,
+  type ButtonProps,
+  ButtonText,
+} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {ReportDialog} from '#/components/dms/ReportDialog'
+import {
+  EmailDialogScreenID,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
+import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {CircleX_Stroke2_Corner0_Rounded} from '#/components/icons/CircleX'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons/Person'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {ReportDialog} from '#/components/moderation/ReportDialog'
 
 export function RejectMenu({
   convo,
   profile,
   size = 'tiny',
-  variant = 'outline',
   color = 'secondary',
   label,
   showDeleteConvo,
@@ -91,6 +102,7 @@ export function RejectMenu({
   }, [queueBlock, leaveConvo, _])
 
   const reportControl = useDialogControl()
+  const blockOrDeleteControl = useDialogControl()
 
   const lastMessage = ChatBskyConvoDefs.isMessageView(convo.lastMessage)
     ? convo.lastMessage
@@ -107,7 +119,6 @@ export function RejectMenu({
               label={triggerProps.accessibilityLabel}
               style={[a.flex_1]}
               color={color}
-              variant={variant}
               size={size}>
               <ButtonText>
                 {label || (
@@ -119,7 +130,7 @@ export function RejectMenu({
             </Button>
           )}
         </Menu.Trigger>
-        <Menu.Outer>
+        <Menu.Outer showCancel>
           <Menu.Group>
             {showDeleteConvo && (
               <Menu.Item
@@ -154,15 +165,27 @@ export function RejectMenu({
         </Menu.Outer>
       </Menu.Root>
       {lastMessage && (
-        <ReportDialog
-          currentScreen={currentScreen}
-          params={{
-            type: 'convoMessage',
-            convoId: convo.id,
-            message: lastMessage,
-          }}
-          control={reportControl}
-        />
+        <>
+          <ReportDialog
+            subject={{
+              view: 'convo',
+              convoId: convo.id,
+              message: lastMessage,
+            }}
+            control={reportControl}
+            onAfterSubmit={() => {
+              blockOrDeleteControl.open()
+            }}
+          />
+          <AfterReportDialog
+            control={blockOrDeleteControl}
+            currentScreen={currentScreen}
+            params={{
+              convoId: convo.id,
+              message: lastMessage,
+            }}
+          />
+        </>
       )}
     </>
   )
@@ -171,7 +194,6 @@ export function RejectMenu({
 export function AcceptChatButton({
   convo,
   size = 'tiny',
-  variant = 'solid',
   color = 'secondary_inverted',
   label,
   currentScreen,
@@ -186,6 +208,8 @@ export function AcceptChatButton({
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const navigation = useNavigation<NavigationProp>()
+  const {needsEmailVerification} = useEmail()
+  const emailDialogControl = useEmailDialogControl()
 
   const {mutate: acceptConvo, isPending} = useAcceptConversation(convo.id, {
     onMutate: () => {
@@ -216,15 +240,26 @@ export function AcceptChatButton({
   })
 
   const onPressAccept = useCallback(() => {
-    acceptConvo()
-  }, [acceptConvo])
+    if (needsEmailVerification) {
+      emailDialogControl.open({
+        id: EmailDialogScreenID.Verify,
+        instructions: [
+          <Trans key="request-btn">
+            Before you can accept this chat request, you must first verify your
+            email.
+          </Trans>,
+        ],
+      })
+    } else {
+      acceptConvo()
+    }
+  }, [acceptConvo, needsEmailVerification, emailDialogControl])
 
   return (
     <Button
       {...props}
       label={label || _(msg`Accept chat request`)}
       size={size}
-      variant={variant}
       color={color}
       style={a.flex_1}
       onPress={onPressAccept}>
@@ -242,7 +277,6 @@ export function AcceptChatButton({
 export function DeleteChatButton({
   convo,
   size = 'tiny',
-  variant = 'outline',
   color = 'secondary',
   label,
   currentScreen,
@@ -291,7 +325,6 @@ export function DeleteChatButton({
     <Button
       label={label || _(msg`Delete chat`)}
       size={size}
-      variant={variant}
       color={color}
       style={a.flex_1}
       onPress={onPressDelete}

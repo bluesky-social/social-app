@@ -7,18 +7,19 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ComposerOptsPostRef} from '#/state/shell/composer'
-import {MaybeQuoteEmbed} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
+import {QuoteEmbed} from '#/components/Post/Embed'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {parseEmbed} from '#/types/bsky/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
@@ -51,6 +52,12 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
     }
     return null
   }, [embed])
+  const parsedQuoteEmbed = quoteEmbed
+    ? parseEmbed({
+        $type: 'app.bsky.embed.record#view',
+        ...quoteEmbed,
+      })
+    : null
 
   const images = useMemo(() => {
     if (AppBskyEmbedImages.isView(embed)) {
@@ -76,6 +83,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         a.mx_lg,
         a.border_b,
         t.atoms.border_contrast_medium,
+        web(a.user_select_text),
       ]}
       onPress={onPress}
       accessibilityRole="button"
@@ -84,7 +92,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       )}
       accessibilityHint="">
       <PreviewableUserAvatar
-        size={50}
+        size={42}
         profile={replyTo.author}
         moderation={replyTo.moderation?.ui('avatar')}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
@@ -93,7 +101,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       <View style={[a.flex_1, a.pl_md, a.pr_sm, a.gap_2xs]}>
         <View style={[a.flex_row, a.align_center, a.pr_xs]}>
           <Text
-            style={[a.font_bold, a.text_md, a.flex_shrink]}
+            style={[a.font_semi_bold, a.text_md, a.leading_snug, a.flex_shrink]}
             numberOfLines={1}
             emoji>
             {sanitizeDisplayName(
@@ -113,7 +121,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         <View style={[a.flex_row, a.gap_md]}>
           <View style={[a.flex_1, a.flex_grow]}>
             <Text
-              style={[a.text_md]}
+              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}
               numberOfLines={!showFull ? 6 : undefined}
               emoji>
               {replyTo.text}
@@ -123,7 +131,9 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
             <ComposerReplyToImages images={images} showFull={showFull} />
           )}
         </View>
-        {showFull && quoteEmbed && <MaybeQuoteEmbed embed={quoteEmbed} />}
+        {showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
+          <QuoteEmbed embed={parsedQuoteEmbed} linkDisabled />
+        )}
       </View>
     </Pressable>
   )

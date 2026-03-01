@@ -23,6 +23,7 @@ import {
   type GestureUpdateEvent,
   type PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
+import {KeyboardEvents} from 'react-native-keyboard-controller'
 import Animated, {
   clamp,
   interpolate,
@@ -35,12 +36,13 @@ import Animated, {
   type WithSpringConfig,
 } from 'react-native-reanimated'
 import {
+  type EdgeInsets,
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
 import {Image, type ImageErrorEventData} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
 import flattenReactChildren from 'react-keyed-flatten-children'
@@ -49,7 +51,6 @@ import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
 import {atoms as a, platform, tokens, useTheme} from '#/alf'
 import {
   Context,
@@ -71,6 +72,7 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {Backdrop} from './Backdrop'
 
 export {
@@ -81,14 +83,14 @@ export {
 const {Provider: PortalProvider, Outlet, Portal} = createPortalGroup()
 
 const SPRING_IN: WithSpringConfig = {
-  mass: isIOS ? 1.25 : 0.75,
-  damping: 50,
-  stiffness: 1100,
+  mass: 0.75,
+  damping: 300,
+  stiffness: 1200,
   restDisplacementThreshold: 0.01,
 }
 
 const SPRING_OUT: WithSpringConfig = {
-  mass: isIOS ? 1.25 : 0.75,
+  mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 1000,
   restDisplacementThreshold: 0.01,
@@ -110,6 +112,7 @@ export function Root({children}: {children: React.ReactNode}) {
   const playHaptic = useHaptics()
   const [mode, setMode] = useState<'full' | 'auxiliary-only'>('full')
   const [measurement, setMeasurement] = useState<Measurement | null>(null)
+  const returnLocationSV = useSharedValue<{x: number; y: number} | null>(null)
   const animationSV = useSharedValue(0)
   const translationSV = useSharedValue(0)
   const isFocused = useIsFocused()
@@ -119,7 +122,8 @@ export function Root({children}: {children: React.ReactNode}) {
   const hoverablesSV = useSharedValue<
     Record<string, {id: string; rect: Measurement}>
   >({})
-  const syncHoverablesThrottleRef = useRef<ReturnType<typeof setTimeout>>()
+  const syncHoverablesThrottleRef =
+    useRef<ReturnType<typeof setTimeout>>(undefined)
   const [hoveredMenuItem, setHoveredMenuItem] = useState<string | null>(null)
 
   const onHoverableTouchUp = useCallback((id: string) => {
@@ -141,6 +145,7 @@ export function Root({children}: {children: React.ReactNode}) {
       ({
         isOpen: !!measurement && isFocused,
         measurement,
+        returnLocationSV,
         animationSV,
         translationSV,
         mode,
@@ -148,6 +153,8 @@ export function Root({children}: {children: React.ReactNode}) {
           setMeasurement(evt)
           setMode(mode)
           animationSV.set(withSpring(1, SPRING_IN))
+          // reset return location
+          returnLocationSV.set(null)
         },
         close: () => {
           animationSV.set(
@@ -155,6 +162,9 @@ export function Root({children}: {children: React.ReactNode}) {
               if (finished) {
                 hoverablesSV.set({})
                 translationSV.set(0)
+                // note: return location has to be reset on open,
+                // rather than on close, otherwise there's a flicker
+                // where the reanimated update is faster than the react render
                 runOnJS(onCompletedClose)()
               }
             }),
@@ -190,9 +200,10 @@ export function Root({children}: {children: React.ReactNode}) {
           if (item) playHaptic('Light')
           setHoveredMenuItem(item)
         },
-      } satisfies ContextType),
+      }) satisfies ContextType,
     [
       measurement,
+      returnLocationSV,
       setMeasurement,
       onCompletedClose,
       isFocused,
@@ -208,7 +219,7 @@ export function Root({children}: {children: React.ReactNode}) {
   )
 
   useEffect(() => {
-    if (isAndroid && context.isOpen) {
+    if (IS_ANDROID && context.isOpen) {
       const listener = BackHandler.addEventListener('hardwareBackPress', () => {
         context.close()
         return true
@@ -224,7 +235,7 @@ export function Root({children}: {children: React.ReactNode}) {
 export function Trigger({children, label, contentLabel, style}: TriggerProps) {
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
-  const {top: topInset} = useSafeAreaInsets()
+  const insets = useSafeAreaInsets()
   const ref = useRef<View>(null)
   const isFocused = useIsFocused()
   const [image, setImage] = useState<string | null>(null)
@@ -236,23 +247,8 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
   const open = useNonReactiveCallback(
     async (mode: 'full' | 'auxiliary-only') => {
       playHaptic()
-      Keyboard.dismiss()
       const [measurement, capture] = await Promise.all([
-        new Promise<Measurement>(resolve => {
-          ref.current?.measureInWindow((x, y, width, height) =>
-            resolve({
-              x,
-              y:
-                y +
-                platform({
-                  default: 0,
-                  android: topInset, // not included in measurement
-                }),
-              width,
-              height,
-            }),
-          )
-        }),
+        measureView(ref.current, insets),
         captureRef(ref, {result: 'data-uri'}).catch(err => {
           logger.error(err instanceof Error ? err : String(err), {
             message: 'Failed to capture image of context menu trigger',
@@ -261,16 +257,45 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
           return '<failed capture>'
         }),
       ])
+      Keyboard.dismiss()
       setImage(capture)
-      setPendingMeasurement({measurement, mode})
+      if (measurement) {
+        setPendingMeasurement({measurement, mode})
+      }
     },
   )
+
+  // after keyboard hides, the position might change - set a return location
+  useEffect(() => {
+    if (context.isOpen && context.measurement) {
+      const hide = KeyboardEvents.addListener('keyboardDidHide', () => {
+        measureView(ref.current, insets)
+          .then(newMeasurement => {
+            if (!newMeasurement || !context.measurement) return
+            if (
+              newMeasurement.x !== context.measurement.x ||
+              newMeasurement.y !== context.measurement.y
+            ) {
+              context.returnLocationSV.set({
+                x: newMeasurement.x,
+                y: newMeasurement.y,
+              })
+            }
+          })
+          .catch(() => {})
+      })
+
+      return () => {
+        hide.remove()
+      }
+    }
+  }, [context, insets])
 
   const doubleTapGesture = useMemo(() => {
     return Gesture.Tap()
       .numberOfTaps(2)
       .hitSlop(HITSLOP_10)
-      .onEnd(() => open('auxiliary-only'))
+      .onEnd(() => void open('auxiliary-only'))
       .runOnJS(true)
   }, [open])
 
@@ -330,7 +355,7 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
       <GestureDetector gesture={composedGestures}>
         <View ref={ref} style={[{opacity: context.isOpen ? 0 : 1}, style]}>
           {children({
-            isNative: true,
+            IS_NATIVE: true,
             control: {isOpen: context.isOpen, open},
             state: {
               pressed: false,
@@ -359,6 +384,7 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
             animation={animationSV}
             image={image}
             measurement={measurement}
+            returnLocation={context.returnLocationSV}
             onDisplay={() => {
               if (pendingMeasurement) {
                 context.open(
@@ -383,6 +409,7 @@ function TriggerClone({
   animation,
   image,
   measurement,
+  returnLocation,
   onDisplay,
   label,
 }: {
@@ -390,14 +417,29 @@ function TriggerClone({
   animation: SharedValue<number>
   image: string
   measurement: Measurement
+  returnLocation: SharedValue<{x: number; y: number} | null>
   onDisplay: () => void
   label: string
 }) {
   const {_} = useLingui()
 
-  const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{translateY: translation.get() * animation.get()}],
-  }))
+  const animatedStyles = useAnimatedStyle(() => {
+    const anim = animation.get()
+    const ret = returnLocation.get()
+    const returnOffsetX = ret
+      ? interpolate(anim, [0, 1], [ret.x - measurement.x, 0])
+      : 0
+    const returnOffsetY = ret
+      ? interpolate(anim, [0, 1], [ret.y - measurement.y, 0])
+      : 0
+
+    return {
+      transform: [
+        {translateX: returnOffsetX},
+        {translateY: translation.get() * anim + returnOffsetY},
+      ],
+    }
+  })
 
   const handleError = useCallback(
     (evt: ImageErrorEventData) => {
@@ -556,7 +598,7 @@ export function Outer({
       // pure vibes based
       const TOP_INSET = insets.top + 80
       const BOTTOM_INSET_IOS = insets.bottom + 20
-      const BOTTOM_INSET_ANDROID = 12 // TODO: revisit when edge-to-edge mode is enabled -sfn
+      const BOTTOM_INSET_ANDROID = insets.bottom + 12
 
       const {height} = evt.nativeEvent.layout
       const topPosition =
@@ -710,8 +752,8 @@ export function Item({
       const xOffset = position
         ? position.x
         : align === 'left'
-        ? measurement.x
-        : measurement.x + measurement.width - layout.width
+          ? measurement.x
+          : measurement.x + measurement.width - layout.width
 
       registerHoverable(
         id,
@@ -795,7 +837,7 @@ export function ItemText({children, style}: ItemTextProps) {
       style={[
         a.flex_1,
         a.text_md,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_high,
         {paddingTop: 3},
         style,
@@ -854,7 +896,11 @@ export function LabelText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
     <Text
-      style={[a.font_bold, t.atoms.text_contrast_medium, {marginBottom: -8}]}>
+      style={[
+        a.font_semi_bold,
+        t.atoms.text_contrast_medium,
+        {marginBottom: -8},
+      ]}>
       {children}
     </Text>
   )
@@ -867,6 +913,25 @@ export function Divider() {
       style={[t.atoms.border_contrast_low, a.flex_1, {borderTopWidth: 3}]}
     />
   )
+}
+
+function measureView(view: View | null, insets: EdgeInsets) {
+  if (!view) return Promise.resolve(null)
+  return new Promise<Measurement>(resolve => {
+    view?.measureInWindow((x, y, width, height) =>
+      resolve({
+        x,
+        y:
+          y +
+          platform({
+            default: 0,
+            android: insets.top, // not included in measurement
+          }),
+        width,
+        height,
+      }),
+    )
+  })
 }
 
 function getHoveredHoverable(

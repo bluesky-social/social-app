@@ -1,19 +1,18 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {useEmail} from '#/lib/hooks/useEmail'
-import {logEvent} from '#/lib/statsig/statsig'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {logger} from '#/logger'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {useDialogControl} from '#/components/Dialog'
 import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {useAnalytics} from '#/analytics'
 
 export function NewChat({
   control,
@@ -24,17 +23,17 @@ export function NewChat({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {needsEmailVerification} = useEmail()
-  const verifyEmailControl = useDialogControl()
+  const ax = useAnalytics()
+  const requireEmailVerification = useRequireEmailVerification()
 
   const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
       onNewChat(data.convo.id)
 
       if (!data.convo.lastMessage) {
-        logEvent('chat:create', {logContext: 'NewChatDialog'})
+        ax.metric('chat:create', {logContext: 'NewChatDialog'})
       }
-      logEvent('chat:open', {logContext: 'NewChatDialog'})
+      ax.metric('chat:open', {logContext: 'NewChatDialog'})
     },
     onError: error => {
       logger.error('Failed to create chat', {safeMessage: error})
@@ -49,17 +48,22 @@ export function NewChat({
     [control, createChat],
   )
 
+  const onPress = useCallback(() => {
+    control.open()
+  }, [control])
+  const wrappedOnPress = requireEmailVerification(onPress, {
+    instructions: [
+      <Trans key="new-chat">
+        Before you can message another user, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
   return (
     <>
       <FAB
         testID="newChatFAB"
-        onPress={() => {
-          if (needsEmailVerification) {
-            verifyEmailControl.open()
-          } else {
-            control.open()
-          }
-        }}
+        onPress={wrappedOnPress}
         icon={<Plus size="lg" fill={t.palette.white} />}
         accessibilityRole="button"
         accessibilityLabel={_(msg`New chat`)}
@@ -74,13 +78,6 @@ export function NewChat({
           sortByMessageDeclaration
         />
       </Dialog.Outer>
-
-      <VerifyEmailDialog
-        reasonText={_(
-          msg`Before you may message another user, you must first verify your email.`,
-        )}
-        control={verifyEmailControl}
-      />
     </>
   )
 }

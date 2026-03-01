@@ -2,12 +2,13 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 
@@ -22,6 +23,7 @@ export function ViewFullThread({uri}: {uri: string}) {
     const urip = new AtUri(uri)
     return makeProfileLink({did: urip.hostname, handle: ''}, 'post', urip.rkey)
   }, [uri])
+  const {_} = useLingui()
 
   return (
     <Link
@@ -31,7 +33,7 @@ export function ViewFullThread({uri}: {uri: string}) {
       noFeedback
       onPointerEnter={onHoverIn}
       onPointerLeave={onHoverOut}>
-      <SubtleWebHover
+      <SubtleHover
         hover={hover}
         // adjust position for visual alignment - the actual box has lots of top padding and not much bottom padding -sfn
         style={{top: 8, bottom: -5}}
@@ -53,7 +55,8 @@ export function ViewFullThread({uri}: {uri: string}) {
       </View>
 
       <Text type="md" style={[pal.link, {paddingTop: 18, paddingBottom: 4}]}>
-        <Trans>View full thread</Trans>
+        {/* HACKFIX: Trans isn't working after SDK 53 upgrade -sfn */}
+        {_(msg`View full thread`)}
       </Text>
     </Link>
   )

@@ -1,5 +1,12 @@
-import {AppBskyFeedGetActorFeeds, moderateFeedGenerator} from '@atproto/api'
-import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
+import {
+  type AppBskyFeedGetActorFeeds,
+  moderateFeedGenerator,
+} from '@atproto/api'
+import {
+  type InfiniteData,
+  type QueryKey,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
 import {useModerationOpts} from '../preferences/moderation-opts'
