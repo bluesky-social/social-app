@@ -152,6 +152,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   // Observe the content view's bounds via KVO so that height changes are detected
   // purely on the native side, without a JS bridge round-trip through onLayout.
+  // Calls updateDetents directly with the observed height rather than going through
+  // updateLayout(), which has a prevLayoutDetentIdentifier guard that can block
+  // legitimate content-driven updates when detent identifiers drift during animations.
   private func startObservingContentHeight() {
     self.contentHeightObservation?.invalidate()
 
@@ -167,7 +170,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
             let newBounds = change.newValue,
             oldBounds.height != newBounds.height,
             newBounds.height > 0 else { return }
-      self.updateLayout()
+      let clampedHeight = self.clampHeight(newBounds.height)
+      self.sheetVc?.updateDetents(contentHeight: clampedHeight, preventExpansion: self.preventExpansion)
+      self.selectedDetentIdentifier = self.sheetVc?.getCurrentDetentIdentifier()
     }
   }
 
