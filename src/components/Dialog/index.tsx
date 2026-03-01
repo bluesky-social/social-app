@@ -371,12 +371,7 @@ export function FlatListFooter({
         t.atoms.border_contrast_low,
         a.px_lg,
         a.pt_md,
-        {
-          paddingBottom: platform({
-            ios: tokens.space.sm + bottom,
-            android: tokens.space.md + bottom,
-          }),
-        },
+        {paddingBottom: bottom + tokens.space.md},
         // TODO: had to admit defeat here, but we should
         // try and get this to work for Android as well -sfn
         ios(animatedStyle),
