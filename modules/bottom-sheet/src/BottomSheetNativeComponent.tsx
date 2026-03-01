@@ -71,10 +71,6 @@ export class BottomSheetNativeComponent extends React.Component<
     this.props.onStateChange?.(event)
   }
 
-  private updateLayout = () => {
-    this.ref.current?.updateLayout()
-  }
-
   static dismissAll = async () => {
     await NativeModule.dismissAll()
   }

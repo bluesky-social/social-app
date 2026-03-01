@@ -25,10 +25,6 @@ class BottomSheetModule : Module() {
           view.dismiss()
         }
 
-        AsyncFunction("updateLayout") { view: BottomSheetView ->
-          view.updateLayout()
-        }
-
         Prop("disableDrag") { view: BottomSheetView, prop: Boolean ->
           view.disableDrag = prop
         }
