@@ -56,11 +56,7 @@ export function LanguageSelectDialog({
   )
 
   return (
-    <Dialog.Outer
-      control={control}
-      nativeOptions={{
-        fullHeight: true,
-      }}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
         <DialogInner
