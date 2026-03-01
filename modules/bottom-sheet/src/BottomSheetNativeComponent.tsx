@@ -12,7 +12,6 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import {IS_IOS} from '#/env'
 import {
   type BottomSheetState,
   type BottomSheetViewProps,
@@ -145,8 +144,6 @@ function BottomSheetNativeComponentInner({
   const cornerRadius = rest.cornerRadius ?? 0
   const {height: screenHeight} = useWindowDimensions()
 
-  const sheetHeight = IS_IOS ? screenHeight - insets.top : screenHeight
-
   return (
     <NativeView
       {...rest}
@@ -154,7 +151,7 @@ function BottomSheetNativeComponentInner({
       ref={nativeViewRef}
       style={{
         position: 'absolute',
-        height: sheetHeight,
+        height: screenHeight - insets.top,
         width: '100%',
       }}
       containerBackgroundColor={backgroundColor}>

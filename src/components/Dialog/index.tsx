@@ -207,19 +207,8 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     ref,
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
-    const insets = useSafeAreaInsets()
     const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
-
-    let paddingBottom = 0
-    if (IS_IOS) {
-      paddingBottom = tokens.space._2xl
-    } else {
-      paddingBottom =
-        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
-      if (isAtMaxSnapPoint) {
-        paddingBottom += insets.top
-      }
-    }
+    const insets = useSafeAreaInsets()
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!IS_ANDROID) {
@@ -238,8 +227,14 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
-          {paddingBottom},
+          platform({
+            ios: a.pb_2xl,
+            android: {
+              paddingBottom: insets.bottom + tokens.space.xl,
+            },
+          }),
           contentContainerStyle,
+          a.debug,
         ]}
         ref={ref}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
@@ -250,14 +245,19 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         {...props}
         bounces={isAtMaxSnapPoint}
         scrollEventThrottle={50}
-        onScroll={IS_ANDROID ? onScroll : undefined}
+        // set drag state based on scroll on android.
+        // we want to detect if it's at the top or not, so watch
+        // scrollEndDrag and momentumScrollEnd as well
+        onScroll={android(onScroll)}
+        onScrollEndDrag={android(onScroll)}
+        onMomentumScrollEnd={android(onScroll)}
         keyboardShouldPersistTaps="handled"
         // TODO: figure out why this positions the header absolutely (rather than stickily)
         // on Android. fine to disable for now, because we don't have any
         // dialogs that use this that actually scroll -sfn
         stickyHeaderIndices={ios(header ? [0] : undefined)}>
         {header}
-        {children}
+        <View style={a.debug}>{children}</View>
       </ScrollView>
     )
   },
@@ -293,7 +293,10 @@ export const InnerFlatList = React.forwardRef<
   }
 
   return (
-    <ScrollProvider onScroll={onScroll}>
+    <ScrollProvider
+      onScroll={onScroll}
+      onEndDrag={onScroll}
+      onMomentumEnd={onScroll}>
       <List
         keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior={
