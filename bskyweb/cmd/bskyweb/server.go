@@ -155,9 +155,11 @@ func serve(cctx *cli.Context) error {
 		ContentTypeNosniff: "nosniff",
 		XFrameOptions:      "SAMEORIGIN",
 		HSTSMaxAge:         31536000, // 365 days
-		// TODO:
-		// ContentSecurityPolicy
-		// XSSProtection
+		// Note: If you're reading this because CSP broke something important, you can temporarily disable it by commenting the below line.
+		ContentSecurityPolicy: fmt.Sprintf("default-src * 'unsafe-inline' blob:; script-src 'self' %s www.youtube.com;", staticCDNHost),
+		// Our Youtube embeds are double-iframed. The outer iframe is on bsky.app and needs to run scripts from https://www.youtube.com/iframe_api
+
+		// Note: XSSProtection not configured because it is deprecated, superseded by CSP
 	}))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		// Don't log requests for static content.
