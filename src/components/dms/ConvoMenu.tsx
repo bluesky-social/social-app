@@ -5,6 +5,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {type Shadow} from '#/state/cache/types'
@@ -13,7 +14,10 @@ import {
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
-import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import {
+  unstableCacheProfileView,
+  useProfileBlockMutationQueue,
+} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
 import {type ViewStyleProp} from '#/alf'
 import {atoms as a} from '#/alf'
@@ -63,6 +67,7 @@ let ConvoMenu = ({
   style?: ViewStyleProp['style']
 }): React.ReactNode => {
   const {_} = useLingui()
+  const queryClient = useQueryClient()
 
   const leaveConvoControl = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
@@ -125,6 +130,12 @@ let ConvoMenu = ({
             }}
             control={reportControl}
             onAfterSubmit={() => {
+              const sender = convo.members.find(
+                member => member.did === latestReportableMessage.sender.did,
+              )
+              if (sender) {
+                unstableCacheProfileView(queryClient, sender)
+              }
               blockOrDeleteControl.open()
             }}
           />

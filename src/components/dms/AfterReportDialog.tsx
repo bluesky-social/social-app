@@ -69,13 +69,13 @@ function DialogInner({
   const control = Dialog.useDialogContext()
   const {
     data: profile,
-    isLoading,
+    isPending,
     isError,
   } = useProfileQuery({
     did: params.message.sender.did,
   })
 
-  return isLoading ? (
+  return isPending ? (
     <View style={[a.w_full, a.py_5xl, a.align_center]}>
       <Loader size="lg" />
     </View>
