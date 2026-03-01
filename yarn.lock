@@ -3726,10 +3726,10 @@
   dependencies:
     react-responsive "^10.0.1"
 
-"@bsky.app/expo-guess-language@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@bsky.app/expo-guess-language/-/expo-guess-language-0.2.1.tgz#e8c634da78771a4ef9d899973d14c82061000f32"
-  integrity sha512-XWXsbCwRwSxHWq6ymBEl6FlOEslMM2bmYncYerTghWjzP1d5MTqvV2JFyqFUfkdrcb3m89WXEwSaEPLHzE/1Kg==
+"@bsky.app/expo-guess-language@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@bsky.app/expo-guess-language/-/expo-guess-language-0.2.2.tgz#b02a04f8bf61d5b36972c2dd70188a53d89b3556"
+  integrity sha512-/qCfEd79ucJPzZzhnFD/N9HHnFykf/JSTo4ly3qI4bbifRX748/I0EjBVfMC+z5q+yAGYnnsnvn5zd4Zf7kGEQ==
   dependencies:
     lande "^1.0.10"
 
