@@ -6,10 +6,12 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {TextInput} from 'react-native-gesture-handler'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {useFocusSearchInputKeyboardShortcut} from '#/lib/hooks/useFocusSearchInputKeyboardShortcut'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -77,12 +79,15 @@ export function DesktopSearch() {
   const navigation = useNavigation<NavigationProp>()
   const [isActive, setIsActive] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
+  const inputRef = React.useRef<TextInput>(null)
   const {data: autocompleteData, isFetching} = useActorAutocompleteQuery(
     query,
     true,
   )
 
   const moderationOpts = useModerationOpts()
+
+  useFocusSearchInputKeyboardShortcut(isActive, inputRef)
 
   const onChangeText = React.useCallback((text: string) => {
     setQuery(text)
@@ -109,6 +114,7 @@ export function DesktopSearch() {
     <View style={[styles.container, pal.view]}>
       <SearchInput
         value={query}
+        inputRef={inputRef}
         onChangeText={onChangeText}
         onClearText={onPressCancelSearch}
         onSubmitEditing={onSubmit}
