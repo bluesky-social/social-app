@@ -19,10 +19,6 @@ public class BottomSheetModule: Module {
         view.dismiss()
       }
 
-      AsyncFunction("updateLayout") { (view: SheetView) in
-        view.updateLayout()
-      }
-
       Prop("cornerRadius") { (view: SheetView, prop: Float) in
         view.cornerRadius = CGFloat(prop)
       }
