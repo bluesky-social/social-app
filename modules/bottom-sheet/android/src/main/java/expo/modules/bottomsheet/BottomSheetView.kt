@@ -324,7 +324,7 @@ class BottomSheetView(
     val innerViewGroup = this.innerView as? ViewGroup ?: return
     val contentView = innerViewGroup.getChildAt(0) ?: return
 
-    val listener = View.OnLayoutChangeListener { _, _, top, _, bottom, _, _, oldTop, _, oldBottom ->
+    val listener = View.OnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom ->
       val newHeight = bottom - top
       val oldHeight = oldBottom - oldTop
       if (newHeight != oldHeight && newHeight > 0 && (isOpen || isOpening) && !isClosing) {
