@@ -131,7 +131,7 @@ import {
 import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
-import {type Theme, useTheme} from '#/alf'
+import {type Theme, useTheme, web} from '#/alf'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -168,31 +168,37 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="NotFound"
         getComponent={() => NotFoundScreen}
         options={{title: title(msg`Not Found`)}}
+        getId={web(() => 'not-found')}
       />
       <Stack.Screen
         name="Lists"
         component={ListsScreen}
         options={{title: title(msg`Lists`), requireAuth: true}}
+        getId={web(() => 'lists')}
       />
       <Stack.Screen
         name="Moderation"
         getComponent={() => ModerationScreen}
         options={{title: title(msg`Moderation`), requireAuth: true}}
+        getId={web(() => 'moderation')}
       />
       <Stack.Screen
         name="ModerationModlists"
         getComponent={() => ModerationModlistsScreen}
         options={{title: title(msg`Moderation Lists`), requireAuth: true}}
+        getId={web(() => 'moderation-modlists')}
       />
       <Stack.Screen
         name="ModerationMutedAccounts"
         getComponent={() => ModerationMutedAccounts}
         options={{title: title(msg`Muted Accounts`), requireAuth: true}}
+        getId={web(() => 'moderation-muted-accounts')}
       />
       <Stack.Screen
         name="ModerationBlockedAccounts"
         getComponent={() => ModerationBlockedAccounts}
         options={{title: title(msg`Blocked Accounts`), requireAuth: true}}
+        getId={web(() => 'moderation-blocked-accounts')}
       />
       <Stack.Screen
         name="ModerationInteractionSettings"
@@ -201,6 +207,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Post Interaction Settings`),
           requireAuth: true,
         }}
+        getId={web(() => 'moderation-interaction-settings')}
       />
       <Stack.Screen
         name="ModerationVerificationSettings"
@@ -209,16 +216,19 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Verification Settings`),
           requireAuth: true,
         }}
+        getId={web(() => 'moderation-verification-settings')}
       />
       <Stack.Screen
         name="Settings"
         getComponent={() => SettingsScreen}
         options={{title: title(msg`Settings`), requireAuth: true}}
+        getId={web(() => 'settings')}
       />
       <Stack.Screen
         name="LanguageSettings"
         getComponent={() => LanguageSettingsScreen}
         options={{title: title(msg`Language Settings`), requireAuth: true}}
+        getId={web(() => 'language-settings')}
       />
       <Stack.Screen
         name="Profile"
@@ -226,6 +236,10 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: bskyTitle(`@${route.params.name}`, unreadCountLabel),
         })}
+        getId={web(
+          (route: React.ComponentProps<typeof ProfileScreen>['route']) =>
+            `profile-${route.params.name}`,
+        )}
       />
       <Stack.Screen
         name="ProfileFollowers"
@@ -233,6 +247,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: title(msg`People following @${route.params.name}`),
         })}
+        getId={web(
+          (
+            route: React.ComponentProps<typeof ProfileFollowersScreen>['route'],
+          ) => `profile-followers-${route.params.name}`,
+        )}
       />
       <Stack.Screen
         name="ProfileFollows"
@@ -240,6 +259,10 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: title(msg`People followed by @${route.params.name}`),
         })}
+        getId={web(
+          (route: React.ComponentProps<typeof ProfileFollowsScreen>['route']) =>
+            `profile-follows-${route.params.name}`,
+        )}
       />
       <Stack.Screen
         name="ProfileKnownFollowers"
@@ -247,11 +270,22 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: title(msg`Followers of @${route.params.name} that you know`),
         })}
+        getId={web(
+          (
+            route: React.ComponentProps<
+              typeof ProfileKnownFollowersScreen
+            >['route'],
+          ) => `profile-known-followers-${route.params.name}`,
+        )}
       />
       <Stack.Screen
         name="ProfileList"
         getComponent={() => ProfileListScreen}
         options={{title: title(msg`List`), requireAuth: true}}
+        getId={web(
+          (route: React.ComponentProps<typeof ProfileListScreen>['route']) =>
+            `profile-list-${route.params.name}`,
+        )}
       />
       <Stack.Screen
         name="ProfileSearch"
@@ -259,6 +293,10 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: title(msg`Search @${route.params.name}'s posts`),
         })}
+        getId={web(
+          (route: React.ComponentProps<typeof ProfileSearchScreen>['route']) =>
+            `profile-search-${route.params.name}`,
+        )}
       />
       <Stack.Screen
         name="PostThread"
@@ -266,6 +304,10 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: title(msg`Post by @${route.params.name}`),
         })}
+        getId={web(
+          (route: React.ComponentProps<typeof PostThreadScreen>['route']) =>
+            `post-thread-${route.params.name}-${route.params.rkey}`,
+        )}
       />
       <Stack.Screen
         name="PostLikedBy"
@@ -273,6 +315,10 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: title(msg`Post by @${route.params.name}`),
         })}
+        getId={web(
+          (route: React.ComponentProps<typeof PostLikedByScreen>['route']) =>
+            `post-liked-by-${route.params.name}-${route.params.rkey}`,
+        )}
       />
       <Stack.Screen
         name="PostRepostedBy"
@@ -280,6 +326,10 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: title(msg`Post by @${route.params.name}`),
         })}
+        getId={web(
+          (route: React.ComponentProps<typeof PostRepostedByScreen>['route']) =>
+            `post-reposted-by-${route.params.name}-${route.params.rkey}`,
+        )}
       />
       <Stack.Screen
         name="PostQuotes"
@@ -287,41 +337,68 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={({route}) => ({
           title: title(msg`Post by @${route.params.name}`),
         })}
+        getId={web(
+          (route: React.ComponentProps<typeof PostQuotesScreen>['route']) =>
+            `post-quotes-${route.params.name}-${route.params.rkey}`,
+        )}
       />
       <Stack.Screen
         name="ProfileFeed"
         getComponent={() => ProfileFeedScreen}
         options={{title: title(msg`Feed`)}}
+        getId={web(
+          (route: React.ComponentProps<typeof ProfileFeedScreen>['route']) =>
+            `profile-feed-${route.params.name}-${route.params.rkey}`,
+        )}
       />
       <Stack.Screen
         name="ProfileFeedLikedBy"
         getComponent={() => ProfileFeedLikedByScreen}
         options={{title: title(msg`Liked by`)}}
+        getId={web(
+          (
+            route: React.ComponentProps<
+              typeof ProfileFeedLikedByScreen
+            >['route'],
+          ) =>
+            `profile-feed-liked-by-${route.params.name}-${route.params.rkey}`,
+        )}
       />
       <Stack.Screen
         name="ProfileLabelerLikedBy"
         getComponent={() => ProfileLabelerLikedByScreen}
         options={{title: title(msg`Liked by`)}}
+        getId={web(
+          (
+            route: React.ComponentProps<
+              typeof ProfileLabelerLikedByScreen
+            >['route'],
+          ) => `profile-labeler-liked-by-${route.params.name}`,
+        )}
       />
       <Stack.Screen
         name="Debug"
         getComponent={() => StorybookScreen}
         options={{title: title(msg`Storybook`), requireAuth: true}}
+        getId={web(() => 'storybook')}
       />
       <Stack.Screen
         name="DebugMod"
         getComponent={() => DebugModScreen}
         options={{title: title(msg`Moderation states`), requireAuth: true}}
+        getId={web(() => 'debug-mod')}
       />
       <Stack.Screen
         name="SharedPreferencesTester"
         getComponent={() => SharedPreferencesTesterScreen}
         options={{title: title(msg`Shared Preferences Tester`)}}
+        getId={web(() => 'shared-preferences-tester')}
       />
       <Stack.Screen
         name="Log"
         getComponent={() => LogScreen}
         options={{title: title(msg`Log`), requireAuth: true}}
+        getId={web(() => 'log')}
       />
       <Stack.Screen
         name="Support"
@@ -352,11 +429,13 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="AppPasswords"
         getComponent={() => AppPasswordsScreen}
         options={{title: title(msg`App Passwords`), requireAuth: true}}
+        getId={web(() => 'app-passwords')}
       />
       <Stack.Screen
         name="SavedFeeds"
         getComponent={() => SavedFeeds}
         options={{title: title(msg`Edit My Feeds`), requireAuth: true}}
+        getId={web(() => 'saved-feeds')}
       />
       <Stack.Screen
         name="PreferencesFollowingFeed"
@@ -365,11 +444,13 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Following Feed Preferences`),
           requireAuth: true,
         }}
+        getId={web(() => 'following-feed-preferences')}
       />
       <Stack.Screen
         name="PreferencesThreads"
         getComponent={() => ThreadPreferencesScreen}
         options={{title: title(msg`Threads Preferences`), requireAuth: true}}
+        getId={web(() => 'threads-preferences')}
       />
       <Stack.Screen
         name="PreferencesExternalEmbeds"
@@ -378,6 +459,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`External Media Preferences`),
           requireAuth: true,
         }}
+        getId={web(() => 'external-media-preferences')}
       />
       <Stack.Screen
         name="AccessibilitySettings"
@@ -386,6 +468,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Accessibility Settings`),
           requireAuth: true,
         }}
+        getId={web(() => 'accessibility-settings')}
       />
       <Stack.Screen
         name="AppearanceSettings"
@@ -394,6 +477,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Appearance`),
           requireAuth: true,
         }}
+        getId={web(() => 'appearance-settings')}
       />
       <Stack.Screen
         name="AccountSettings"
@@ -402,6 +486,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Account`),
           requireAuth: true,
         }}
+        getId={web(() => 'account-settings')}
       />
       <Stack.Screen
         name="PrivacyAndSecuritySettings"
@@ -410,6 +495,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Privacy and Security`),
           requireAuth: true,
         }}
+        getId={web(() => 'privacy-and-security-settings')}
       />
       <Stack.Screen
         name="ActivityPrivacySettings"
@@ -418,6 +504,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Privacy and Security`),
           requireAuth: true,
         }}
+        getId={web(() => 'activity-privacy-settings')}
       />
       <Stack.Screen
         name="FindContactsSettings"
@@ -431,6 +518,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="NotificationSettings"
         getComponent={() => NotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
+        getId={web(() => 'notification-settings')}
       />
       <Stack.Screen
         name="ReplyNotificationSettings"
@@ -439,6 +527,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Reply notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'reply-notification-settings')}
       />
       <Stack.Screen
         name="MentionNotificationSettings"
@@ -447,6 +536,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Mention notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'mention-notification-settings')}
       />
       <Stack.Screen
         name="QuoteNotificationSettings"
@@ -455,6 +545,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Quote notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'quote-notification-settings')}
       />
       <Stack.Screen
         name="LikeNotificationSettings"
@@ -463,6 +554,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Like notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'like-notification-settings')}
       />
       <Stack.Screen
         name="RepostNotificationSettings"
@@ -471,6 +563,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Repost notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'repost-notification-settings')}
       />
       <Stack.Screen
         name="NewFollowerNotificationSettings"
@@ -479,6 +572,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`New follower notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'new-follower-notification-settings')}
       />
       <Stack.Screen
         name="LikesOnRepostsNotificationSettings"
@@ -487,6 +581,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Likes of your reposts notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'likes-on-reposts-notification-settings')}
       />
       <Stack.Screen
         name="RepostsOnRepostsNotificationSettings"
@@ -495,6 +590,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Reposts of your reposts notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'reposts-on-reposts-notification-settings')}
       />
       <Stack.Screen
         name="ActivityNotificationSettings"
@@ -503,6 +599,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Activity notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'activity-notification-settings')}
       />
       <Stack.Screen
         name="MiscellaneousNotificationSettings"
@@ -511,6 +608,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Miscellaneous notifications`),
           requireAuth: true,
         }}
+        getId={web(() => 'miscellaneous-notification-settings')}
       />
       <Stack.Screen
         name="ContentAndMediaSettings"
@@ -519,6 +617,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Content and Media`),
           requireAuth: true,
         }}
+        getId={web(() => 'content-and-media-settings')}
       />
       <Stack.Screen
         name="InterestsSettings"
@@ -527,6 +626,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Your interests`),
           requireAuth: true,
         }}
+        getId={web(() => 'interests-settings')}
       />
       <Stack.Screen
         name="AboutSettings"
@@ -535,6 +635,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`About`),
           requireAuth: true,
         }}
+        getId={web(() => 'about-settings')}
       />
       <Stack.Screen
         name="AppIconSettings"
@@ -543,66 +644,91 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`App Icon`),
           requireAuth: true,
         }}
+        getId={web(() => 'app-icon-settings')}
       />
       <Stack.Screen
         name="Hashtag"
         getComponent={() => HashtagScreen}
         options={{title: title(msg`Hashtag`)}}
+        getId={web(
+          (route: React.ComponentProps<typeof HashtagScreen>['route']) =>
+            `hashtag-${route.params.tag}-${route.params.author ?? 'all'}`,
+        )}
       />
       <Stack.Screen
         name="Topic"
         getComponent={() => TopicScreen}
         options={{title: title(msg`Topic`)}}
+        getId={web(
+          (route: React.ComponentProps<typeof TopicScreen>['route']) =>
+            `topic-${route.params.topic}`,
+        )}
       />
       <Stack.Screen
         name="MessagesConversation"
         getComponent={() => MessagesConversationScreen}
         options={{title: title(msg`Chat`), requireAuth: true}}
+        getId={web(
+          (
+            route: React.ComponentProps<
+              typeof MessagesConversationScreen
+            >['route'],
+          ) => `conversation-${route.params.conversation}`,
+        )}
       />
       <Stack.Screen
         name="MessagesSettings"
         getComponent={() => MessagesSettingsScreen}
         options={{title: title(msg`Chat settings`), requireAuth: true}}
+        getId={web(() => 'chat-settings')}
       />
       <Stack.Screen
         name="MessagesInbox"
         getComponent={() => MessagesInboxScreen}
         options={{title: title(msg`Chat request inbox`), requireAuth: true}}
+        getId={web(() => 'chat-inbox')}
       />
       <Stack.Screen
         name="NotificationsActivityList"
         getComponent={() => NotificationsActivityListScreen}
         options={{title: title(msg`Notifications`), requireAuth: true}}
+        getId={web(() => 'notifications-activity-list')}
       />
       <Stack.Screen
         name="LegacyNotificationSettings"
         getComponent={() => LegacyNotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
+        getId={web(() => 'legacy-notification-settings')}
       />
       <Stack.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}
         options={{title: title(msg`Feeds`)}}
+        getId={web(() => 'feeds')}
       />
       <Stack.Screen
         name="StarterPack"
         getComponent={() => StarterPackScreen}
         options={{title: title(msg`Starter Pack`)}}
+        // leave id blank
       />
       <Stack.Screen
         name="StarterPackShort"
         getComponent={() => StarterPackScreenShort}
         options={{title: title(msg`Starter Pack`)}}
+        // leave id blank
       />
       <Stack.Screen
         name="StarterPackWizard"
         getComponent={() => Wizard}
         options={{title: title(msg`Create a starter pack`), requireAuth: true}}
+        // leave id blank
       />
       <Stack.Screen
         name="StarterPackEdit"
         getComponent={() => Wizard}
         options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+        // leave id blank
       />
       <Stack.Screen
         name="VideoFeed"
@@ -611,6 +737,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           title: title(msg`Video Feed`),
           requireAuth: true,
         }}
+        // native only, no id needed
       />
       <Stack.Screen
         name="Bookmarks"
@@ -801,26 +928,31 @@ const FlatNavigator = ({
         name="Home"
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`)}}
+        getId={() => 'home'}
       />
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
         options={{title: title(msg`Explore`)}}
+        getId={() => 'search'}
       />
       <Flat.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
         options={{title: title(msg`Notifications`), requireAuth: true}}
+        getId={() => 'notifications'}
       />
       <Flat.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
         options={{title: title(msg`Messages`), requireAuth: true}}
+        getId={() => 'messages'}
       />
       <Flat.Screen
         name="Start"
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`)}}
+        getId={() => 'start'}
       />
       {commonScreens(Flat, numUnread)}
     </Flat.Navigator>
