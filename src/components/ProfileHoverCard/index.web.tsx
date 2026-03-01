@@ -430,7 +430,7 @@ function Inner({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
-  const [descriptionRT] = useRichText(profile.description ?? '')
+  const descriptionRT = useRichText(profile.description ?? '')
   const profileShadow = useProfileShadow(profile)
   const {follow, unfollow} = useFollowMethods({
     profile: profileShadow,
