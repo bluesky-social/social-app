@@ -31,8 +31,9 @@ import {TabBar} from './TabBar'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
+  collapsedHeaderHeight: number
   isFocused: boolean
-  scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
+  scrollElRef: React.RefObject<ListMethods | ScrollView | null>
 }
 
 export interface PagerWithHeaderProps {
@@ -68,6 +69,7 @@ export function PagerWithHeader({
   const [currentPage, setCurrentPage] = useState(0)
   const [tabBarHeight, setTabBarHeight] = useState(0)
   const [headerOnlyHeight, setHeaderOnlyHeight] = useState(0)
+  const [minimumHeaderHeight, setMinimumHeaderHeight] = useState(0)
   const scrollY = useSharedValue(0)
   const headerHeight = headerOnlyHeight + tabBarHeight
 
@@ -92,6 +94,8 @@ export function PagerWithHeader({
         <PagerHeaderProvider scrollY={scrollY} headerHeight={headerOnlyHeight}>
           <PagerTabBar
             headerOnlyHeight={headerOnlyHeight}
+            minimumHeaderHeight={minimumHeaderHeight}
+            setMinimumHeaderHeight={setMinimumHeaderHeight}
             items={items}
             isHeaderReady={isHeaderReady}
             renderHeader={renderHeader}
@@ -111,6 +115,8 @@ export function PagerWithHeader({
     },
     [
       headerOnlyHeight,
+      minimumHeaderHeight,
+      setMinimumHeaderHeight,
       items,
       isHeaderReady,
       renderHeader,
@@ -203,6 +209,7 @@ export function PagerWithHeader({
             <View key={i} collapsable={false}>
               <PagerItem
                 headerHeight={headerHeight}
+                collapsedHeaderHeight={minimumHeaderHeight + tabBarHeight}
                 index={i}
                 isReady={isReady}
                 isFocused={i === currentPage}
@@ -220,6 +227,8 @@ export function PagerWithHeader({
 let PagerTabBar = ({
   currentPage,
   headerOnlyHeight,
+  minimumHeaderHeight,
+  setMinimumHeaderHeight,
   isHeaderReady,
   items,
   scrollY,
@@ -235,6 +244,8 @@ let PagerTabBar = ({
 }: {
   currentPage: number
   headerOnlyHeight: number
+  minimumHeaderHeight: number
+  setMinimumHeaderHeight: (height: number) => void
   isHeaderReady: boolean
   items: string[]
   testID?: string
@@ -253,7 +264,6 @@ let PagerTabBar = ({
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }): React.ReactNode => {
   const t = useTheme()
-  const [minimumHeaderHeight, setMinimumHeaderHeight] = useState(0)
   const headerTransform = useAnimatedStyle(() => {
     const translateY =
       Math.min(
@@ -326,6 +336,7 @@ PagerTabBar = memo(PagerTabBar)
 
 function PagerItem({
   headerHeight,
+  collapsedHeaderHeight,
   index,
   isReady,
   isFocused,
@@ -334,6 +345,7 @@ function PagerItem({
   registerRef,
 }: {
   headerHeight: number
+  collapsedHeaderHeight: number
   index: number
   isFocused: boolean
   isReady: boolean
@@ -358,6 +370,7 @@ function PagerItem({
     <ScrollProvider onScroll={onScrollWorklet}>
       {renderTab({
         headerHeight,
+        collapsedHeaderHeight,
         isFocused,
         scrollElRef: scrollElRef as React.MutableRefObject<
           ListMethods | ScrollView | null

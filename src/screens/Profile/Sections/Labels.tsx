@@ -11,7 +11,9 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {List, type ListRef} from '#/view/com/util/List'
+import {useProfileScrollbarAdjustment} from '#/screens/Profile/useProfileScrollbarAdjustment'
 import {atoms as a, ios, tokens, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -31,6 +33,7 @@ interface LabelsSectionProps {
   moderationOpts: ModerationOpts
   scrollElRef: ListRef
   headerHeight: number
+  collapsedHeaderHeight: number
   isFocused: boolean
   setScrollViewTag: (tag: number | null) => void
 }
@@ -43,6 +46,7 @@ export function ProfileLabelsSection({
   moderationOpts,
   scrollElRef,
   headerHeight,
+  collapsedHeaderHeight,
   isFocused,
   setScrollViewTag,
 }: LabelsSectionProps) {
@@ -117,32 +121,40 @@ export function ProfileLabelsSection({
     [labelerInfo, isSubscribed, numItems, t],
   )
 
+  const {scrollHandlers, animatedProps} = useProfileScrollbarAdjustment({
+    headerOffset: headerHeight,
+    collapsedHeaderHeight,
+  })
+
   return (
     <View>
-      <List
-        ref={scrollElRef}
-        data={labelValues}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        contentContainerStyle={a.px_xl}
-        headerOffset={headerHeight}
-        progressViewOffset={ios(0)}
-        ListHeaderComponent={
-          <LabelerListHeader
-            isLabelerLoading={isLabelerLoading}
-            labelerInfo={labelerInfo}
-            labelerError={labelerError}
-            hasValues={labelValues.length !== 0}
-            isSubscribed={isSubscribed}
-          />
-        }
-        ListFooterComponent={
-          <ListFooter
-            height={headerHeight + 180}
-            style={a.border_transparent}
-          />
-        }
-      />
+      <ScrollProvider {...scrollHandlers}>
+        <List
+          ref={scrollElRef}
+          data={labelValues}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          contentContainerStyle={a.px_xl}
+          headerOffset={headerHeight}
+          progressViewOffset={ios(0)}
+          ListHeaderComponent={
+            <LabelerListHeader
+              isLabelerLoading={isLabelerLoading}
+              labelerInfo={labelerInfo}
+              labelerError={labelerError}
+              hasValues={labelValues.length !== 0}
+              isSubscribed={isSubscribed}
+            />
+          }
+          ListFooterComponent={
+            <ListFooter
+              height={headerHeight + 180}
+              style={a.border_transparent}
+            />
+          }
+          animatedProps={animatedProps}
+        />
+      </ScrollProvider>
     </View>
   )
 }
