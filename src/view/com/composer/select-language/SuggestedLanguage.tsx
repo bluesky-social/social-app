@@ -1,22 +1,50 @@
 import {useEffect, useState} from 'react'
 import {Text as RNText, View} from 'react-native'
-import {parseLanguage} from '@atproto/api'
+import {parseLanguageString} from '@atproto/syntax'
+import {guessLanguageAsync} from '@bsky.app/expo-guess-language'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import lande from 'lande'
 
-import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
+import {deviceLanguageCodes} from '#/locale/deviceLocales'
+import {codeToLanguageName} from '#/locale/helpers'
 import {useLanguagePrefs} from '#/state/preferences/languages'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 // fallbacks for safari
 const onIdle =
   globalThis.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1))
 const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
+
+// harsher threshold for web as the model is worse
+const MIN_TEXT_LENGTH = IS_WEB ? 40 : 10
+// Noise floor for candidates. Device locales get a lower bar so they
+// survive into the candidate list more easily. since we discard if
+// multiple candidates are above the noise floor, we want to allow more
+// candidates in if they might be in the device locales
+const MIN_CANDIDATE_CONFIDENCE = IS_WEB ? 0.0002 : 0.1
+const MIN_CANDIDATE_CONFIDENCE_DEVICE_LOCALE = IS_WEB ? 0.0002 : 0.001
+
+// Confidence required to accept the top candidate.
+// Lower bar for device locales — the user is more likely writing
+// in a language they have installed on their device.
+const CONFIDENCE_THRESHOLD = platform({
+  web: 0.97,
+  ios: 0.9,
+  android: 0.9,
+  default: 0.97,
+})
+
+const CONFIDENCE_THRESHOLD_DEVICE_LOCALE = platform({
+  web: 0.97,
+  ios: 0.8,
+  android: 0.8,
+  default: 0.97,
+})
 
 export function SuggestedLanguage({
   text,
@@ -50,7 +78,8 @@ export function SuggestedLanguage({
   >(undefined)
 
   useEffect(() => {
-    if (text.length > 0 && !hasInteracted) {
+    // show reply prompt if there's not enough text to start using the model
+    if (text.length > MIN_TEXT_LENGTH && !hasInteracted) {
       setHasInteracted(true)
     }
   }, [text, hasInteracted])
@@ -60,14 +89,17 @@ export function SuggestedLanguage({
 
     // Don't run the language model on small posts, the results are likely
     // to be inaccurate anyway.
-    if (textTrimmed.length < 40) {
+    if (textTrimmed.length < MIN_TEXT_LENGTH) {
       setSuggestedLanguage(undefined)
       return
     }
 
-    const idle = onIdle(() => {
-      setSuggestedLanguage(guessLanguage(textTrimmed))
-    })
+    const idle = onIdle(
+      () =>
+        void guessLanguage(textTrimmed).then(language =>
+          setSuggestedLanguage(language),
+        ),
+    )
 
     return () => cancelIdle(idle)
   }, [text])
@@ -188,22 +220,37 @@ function LanguageSuggestionButton({
 }
 
 /**
- * This function is using the lande language model to attempt to detect the language
- * We want to only make suggestions when we feel a high degree of certainty
- * The magic numbers are based on debugging sessions against some test strings
+ * This function uses the expo-guess-language module to attempt to detect the language.
+ * We want to only make suggestions when we feel a high degree of certainty.
+ * The magic numbers are based on debugging sessions against some test strings.
  */
-function guessLanguage(text: string): string | undefined {
-  const scores = lande(text).filter(([_lang, value]) => value >= 0.0002)
-  // if the model has multiple items with a score higher than 0.0002, it isn't certain enough
-  if (scores.length !== 1) {
+async function guessLanguage(text: string): Promise<string | undefined> {
+  const results = await guessLanguageAsync(text)
+
+  // Filter candidates above the noise floor. Device locales get a lower
+  // bar so they're less likely to be pruned as noise.
+  const scores = results.filter(r => {
+    const minConfidence = deviceLanguageCodes.includes(r.language)
+      ? MIN_CANDIDATE_CONFIDENCE_DEVICE_LOCALE
+      : MIN_CANDIDATE_CONFIDENCE
+    return r.confidence >= minConfidence
+  })
+
+  if (scores.length === 0) return undefined
+
+  const {language, confidence} = scores[0]
+  const isDeviceLocale = deviceLanguageCodes.includes(language)
+  const threshold = isDeviceLocale
+    ? CONFIDENCE_THRESHOLD_DEVICE_LOCALE
+    : CONFIDENCE_THRESHOLD
+
+  // Multiple candidates above the noise floor - ignore due to uncertainty
+  if (scores.length > 1) {
     return undefined
   }
-  const [lang, value] = scores[0]
-  // if the model doesn't give a score of 0.97 or above, it isn't certain enough
-  if (value < 0.97) {
-    return undefined
-  }
-  return code3ToCode2Strict(lang)
+
+  if (confidence < threshold) return undefined
+  return language
 }
 
 function cleanUpLanguage(text: string | undefined): string | undefined {
@@ -211,5 +258,5 @@ function cleanUpLanguage(text: string | undefined): string | undefined {
     return undefined
   }
 
-  return parseLanguage(text)?.language
+  return parseLanguageString(text)?.language
 }
