@@ -335,6 +335,12 @@ class BottomSheetView(
     contentView.addOnLayoutChangeListener(listener)
     this.contentLayoutListener = listener
     this.observedContentView = contentView
+
+    // The listener only fires on future changes. If content already laid out
+    // (e.g. dialog.show() triggered layout synchronously), pick up that height now.
+    if (contentView.height > 0) {
+      updateLayout()
+    }
   }
 
   private fun stopObservingContentHeight() {
