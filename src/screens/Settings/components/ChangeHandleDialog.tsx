@@ -307,12 +307,19 @@ function ProvidedHandlePage({
   )
 }
 
+// simple domain regex - just catching chars that can't be part of a domain, like @
+// doesn't validate it's *actually* valid, as they might not be finished typing
+// however, does catch leading hypens/dots as well as consecutive dots -sfn
+const SIMPLE_DOMAIN_REGEX =
+  /^(?![.-])(?!.*\.\.)(?!.*[^a-zA-Z0-9.-])[a-zA-Z0-9.-]*-?$/
+
 function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
   const [dnsPanel, setDNSPanel] = useState(true)
   const [domain, setDomain] = useState('')
+  const trimmedDomain = domain.trim()
   const agent = useAgent()
   const control = Dialog.useDialogContext()
   const fetchDid = useFetchDid()
@@ -351,6 +358,8 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
     },
   })
 
+  const isInvalid = !!trimmedDomain && !SIMPLE_DOMAIN_REGEX.test(trimmedDomain)
+
   return (
     <View style={[a.flex_1, a.gap_lg]}>
       {isSuccess && (
@@ -383,7 +392,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           <TextField.LabelText>
             <Trans>Enter the domain you want to use</Trans>
           </TextField.LabelText>
-          <TextField.Root>
+          <TextField.Root isInvalid={isInvalid}>
             <TextField.Icon icon={AtIcon} />
             <Dialog.Input
               label={_(msg`New handle`)}
@@ -478,7 +487,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
                 a.border,
                 t.atoms.border_contrast_low,
               ]}>
-              <Text style={[a.text_md]}>_atproto.{domain}</Text>
+              <Text style={[a.text_md]}>_atproto.{trimmedDomain}</Text>
             </View>
           </>
         ) : (
@@ -495,7 +504,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
                 t.atoms.border_contrast_low,
               ]}>
               <Text style={[a.text_md]}>
-                https://{domain}/.well-known/atproto-did
+                https://{trimmedDomain}/.well-known/atproto-did
               </Text>
             </View>
             <Text>
@@ -543,7 +552,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         <Button
           label={
             isVerified
-              ? _(msg`Update to ${domain}`)
+              ? _(msg`Update to ${trimmedDomain}`)
               : dnsPanel
                 ? _(msg`Verify DNS Record`)
                 : _(msg`Verify Text File`)
@@ -551,10 +560,10 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           variant="solid"
           size="large"
           color="primary"
-          disabled={domain.trim().length === 0}
+          disabled={trimmedDomain.length === 0 || isInvalid}
           onPress={() => {
             if (isVerified) {
-              changeHandle({handle: domain})
+              changeHandle({handle: trimmedDomain})
             } else {
               verify()
             }
@@ -564,7 +573,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           ) : (
             <ButtonText>
               {isVerified ? (
-                <Trans>Update to {domain}</Trans>
+                <Trans>Update to {trimmedDomain}</Trans>
               ) : dnsPanel ? (
                 <Trans>Verify DNS Record</Trans>
               ) : (
