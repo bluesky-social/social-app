@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.allViews
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.UiThreadUtil
@@ -38,7 +37,9 @@ class BottomSheetView(
 
   // Native content height observation (eliminates JS bridge round-trip)
   private var contentLayoutListener: View.OnLayoutChangeListener? = null
-  private var observedContentView: View? = null
+  private var observedChildren: List<View> = emptyList()
+  private var lastObservedContentHeight: Float = 0f
+  private var pendingLayoutUpdate: Boolean = false
 
   private val screenHeight =
     context.resources.displayMetrics.heightPixels
@@ -237,6 +238,13 @@ class BottomSheetView(
               BottomSheetBehavior.STATE_HALF_EXPANDED -> selectedSnapPoint = 1
               BottomSheetBehavior.STATE_HIDDEN -> selectedSnapPoint = 0
             }
+            // Apply deferred layout update after gesture completes
+            if (newState != BottomSheetBehavior.STATE_DRAGGING &&
+                newState != BottomSheetBehavior.STATE_SETTLING &&
+                pendingLayoutUpdate) {
+              pendingLayoutUpdate = false
+              updateLayout()
+            }
           }
 
           override fun onSlide(
@@ -298,6 +306,15 @@ class BottomSheetView(
       val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
       val shouldBeExpanded = targetHeight >= availableHeight
 
+      // Don't force state changes during user gestures — the ratio and maxHeight
+      // are already updated above, so when the gesture settles the sheet will land
+      // at the correct position. Forcing a state change mid-drag interrupts
+      // dismiss swipes and causes visual glitches.
+      if (currentState == BottomSheetBehavior.STATE_DRAGGING || currentState == BottomSheetBehavior.STATE_SETTLING) {
+        pendingLayoutUpdate = true
+        return
+      }
+
       if (isKeyboardVisible) {
         if (behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
           behavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -316,53 +333,67 @@ class BottomSheetView(
     this.dialog?.dismiss()
   }
 
-  // Observe the content view's layout changes so that height updates are detected
-  // purely on the native side, without a JS bridge round-trip through onLayout.
+  // Observe each direct child of innerView via OnLayoutChangeListener so that
+  // height updates are detected purely on the native side. We use OnLayoutChangeListener
+  // (not OnGlobalLayoutListener) because React Native calls view.layout() directly
+  // via Yoga, bypassing requestLayout()/performTraversals(). OnLayoutChangeListener
+  // fires from setFrame() which IS called by layout(), so it catches RN updates.
   private fun startObservingContentHeight() {
     stopObservingContentHeight()
 
     val innerViewGroup = this.innerView as? ViewGroup ?: return
-    val contentView = innerViewGroup.getChildAt(0) ?: return
 
-    val listener = View.OnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom ->
+    val listener = View.OnLayoutChangeListener { _, _, top, _, bottom, _, _, oldTop, oldBottom ->
       val newHeight = bottom - top
       val oldHeight = oldBottom - oldTop
-      if (newHeight != oldHeight && newHeight > 0 && (isOpen || isOpening) && !isClosing) {
-        updateLayout()
+      if (newHeight != oldHeight) {
+        val contentHeight = getContentHeight()
+        if (contentHeight != lastObservedContentHeight && contentHeight > 0 && (isOpen || isOpening) && !isClosing) {
+          lastObservedContentHeight = contentHeight
+          updateLayout()
+        }
       }
     }
 
-    contentView.addOnLayoutChangeListener(listener)
-    this.contentLayoutListener = listener
-    this.observedContentView = contentView
+    val children = mutableListOf<View>()
+    for (i in 0 until innerViewGroup.childCount) {
+      val child = innerViewGroup.getChildAt(i)
+      child.addOnLayoutChangeListener(listener)
+      children.add(child)
+    }
 
-    // The listener only fires on future changes. If content already laid out
-    // (e.g. dialog.show() triggered layout synchronously), pick up that height now.
-    if (contentView.height > 0) {
+    this.contentLayoutListener = listener
+    this.observedChildren = children
+
+    // Pick up current height if content is already laid out
+    val contentHeight = getContentHeight()
+    if (contentHeight > 0 && contentHeight != lastObservedContentHeight) {
+      lastObservedContentHeight = contentHeight
       updateLayout()
     }
   }
 
   private fun stopObservingContentHeight() {
     contentLayoutListener?.let { listener ->
-      observedContentView?.removeOnLayoutChangeListener(listener)
+      observedChildren.forEach { it.removeOnLayoutChangeListener(listener) }
     }
     contentLayoutListener = null
-    observedContentView = null
+    observedChildren = emptyList()
+    lastObservedContentHeight = 0f
   }
 
   // Util
 
   private fun getContentHeight(): Float {
-    val innerView = this.innerView ?: return 0f
-    var index = 0
-    innerView.allViews.forEach {
-      if (index == 1) {
-        return it.height.toFloat()
-      }
-      index++
+    val innerView = this.innerView as? ViewGroup ?: return 0f
+    // Use the tallest direct child's height. The handle is absolutely positioned
+    // (overlaps the content), so summing would double-count its height as padding.
+    var maxChildHeight = 0f
+    for (i in 0 until innerView.childCount) {
+      val h = innerView.getChildAt(i).height.toFloat()
+      if (h > maxChildHeight) maxChildHeight = h
     }
-    return 0f
+    return maxChildHeight
   }
 
   private fun getTargetHeight(): Float {
