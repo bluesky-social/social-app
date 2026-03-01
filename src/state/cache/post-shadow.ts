@@ -1,9 +1,10 @@
-import {useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   type AppBskyFeedDefs,
 } from '@atproto/api'
+import {useFocusEffect} from '@react-navigation/native'
 import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
@@ -54,15 +55,37 @@ export function usePostShadow(
     setShadow(shadows.get(post))
   }
 
+  const isFocusedRef = useRef(true)
+  const hasUpdatedWhileUnfocused = useRef(false)
+  useFocusEffect(
+    useCallback(() => {
+      isFocusedRef.current = true
+      if (hasUpdatedWhileUnfocused.current) {
+        console.log('catching up')
+        setShadow(shadows.get(post))
+        hasUpdatedWhileUnfocused.current = false
+      }
+      return () => {
+        isFocusedRef.current = false
+      }
+    }, [post]),
+  )
+
   useEffect(() => {
     function onUpdate() {
-      setShadow(shadows.get(post))
+      if (isFocusedRef.current) {
+        console.log('updating post', post.uri)
+        setShadow(shadows.get(post))
+      } else {
+        console.log('post changed while unfocused', post.uri)
+        hasUpdatedWhileUnfocused.current = true
+      }
     }
     emitter.addListener(post.uri, onUpdate)
     return () => {
       emitter.removeListener(post.uri, onUpdate)
     }
-  }, [post, setShadow])
+  }, [post])
 
   return useMemo(() => {
     if (shadow) {
