@@ -292,10 +292,7 @@
   "resolutions": {
     "@react-native/babel-preset": "0.81.5",
     "@react-native/normalize-colors": "0.81.5",
-    "**/@expo/image-utils": "0.8.7",
-    "**/@react-native-async-storage/async-storage": "2.2.0",
-    "**/expo-constants": "18.0.8",
-    "**/expo-device": "7.1.4",
+    "**/@expo/image-utils": "0.8.8",
     "**/multiformats": "9.9.0",
     "unicode-segmenter": "0.14.5",
     "@types/estree": "1.0.6"
