@@ -331,6 +331,9 @@ class BottomSheetView(
 
   fun dismiss() {
     val dialog = this.dialog ?: return
+    // Mark as closing so the content observer doesn't fight the dismiss
+    // animation by calling updateLayout() mid-hide.
+    this.isClosing = true
     // Temporarily make cancelable so cancel() works — cancel() gives the
     // slide-out animation, while dismiss() does a plain fade.
     dialog.setCancelable(true)
