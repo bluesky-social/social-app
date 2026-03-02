@@ -314,17 +314,26 @@ export function regionName(countryCode: string, appLang: string): string {
   return countryCode
 }
 
+const regionNamesCache = new Map<string, Intl.DisplayNames>()
+
+function getRegionNames(appLang: string): Intl.DisplayNames {
+  let cached = regionNamesCache.get(appLang)
+  if (!cached) {
+    cached = new Intl.DisplayNames([appLang], {
+      type: 'region',
+      fallback: 'none',
+    })
+    regionNamesCache.set(appLang, cached)
+  }
+  return cached
+}
+
 function getLocalizedRegionName(
   countryCode: string,
   appLang: string,
 ): string | undefined {
   try {
-    const allNames = new Intl.DisplayNames([appLang], {
-      type: 'region',
-      fallback: 'none',
-    })
-
-    return allNames.of(countryCode)
+    return getRegionNames(appLang).of(countryCode)
   } catch (err) {
     console.warn('Error getting localized region name:', err)
     return undefined
