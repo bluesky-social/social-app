@@ -624,6 +624,8 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 
 7. **Testing**: Components should have `testID` props for E2E testing
 
+8. **Licensing**: Code is released under a MIT license; ensure all license notices are preserved
+
 ## Key Files Reference
 
 | Purpose | Location |
