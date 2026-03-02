@@ -60,6 +60,7 @@ module.exports = function (_config) {
             ? './assets/app-icons/ios_icon_default_next.png'
             : './assets/app-icons/ios_icon_default.icon',
         infoPlist: {
+          CADisableMinimumFrameDurationOnPhone: true,
           UIBackgroundModes: ['remote-notification'],
           NSCameraUsageDescription:
             'Used for profile pictures, posts, and other kinds of content.',
