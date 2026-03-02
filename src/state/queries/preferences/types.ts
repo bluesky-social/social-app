@@ -2,7 +2,7 @@ import {type BskyFeedViewPreference, type BskyPreferences} from '@atproto/api'
 
 export type UsePreferencesQueryResponse = Omit<
   BskyPreferences,
-  'contentLabels' | 'feedViewPrefs' | 'feeds'
+  'contentLabels' | 'feedViewPrefs' | 'feeds' | 'bskyAppState'
 > & {
   feedViewPrefs: BskyFeedViewPreference & {
     lab_mergeFeedEnabled?: boolean
@@ -12,6 +12,12 @@ export type UsePreferencesQueryResponse = Omit<
    */
   threadViewPrefs: ThreadViewPreferences
   userAge: number | undefined
+  /**
+   * App-specific state, extended to include autoplay preference
+   */
+  bskyAppState: BskyPreferences['bskyAppState'] & {
+    autoplayDisabled?: boolean
+  }
 }
 
 export type ThreadViewPreferences = {
