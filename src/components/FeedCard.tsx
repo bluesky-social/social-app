@@ -337,9 +337,9 @@ function SaveButtonInner({
         size="small"
         variant="solid"
         color={savedFeedConfig ? 'secondary' : 'primary'}
-        onPress={(e: GestureResponderEvent) => {
+        onPress={(e: GestureResponderEvent) =>
           savedFeedConfig ? onPromptRemoveFeed(e) : void toggleSave(e)
-        }}
+        }
         {...buttonProps}>
         {savedFeedConfig ? (
           <>
@@ -370,9 +370,7 @@ function SaveButtonInner({
         control={removePromptControl}
         title={l`Remove from your feeds?`}
         description={l`Are you sure you want to remove this from your feeds?`}
-        onConfirm={(e: GestureResponderEvent) => {
-          void toggleSave(e)
-        }}
+        onConfirm={(e: GestureResponderEvent) => void toggleSave(e)}
         confirmButtonCta={l`Remove`}
         confirmButtonColor="negative"
       />
