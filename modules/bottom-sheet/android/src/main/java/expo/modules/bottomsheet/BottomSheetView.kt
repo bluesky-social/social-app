@@ -292,6 +292,17 @@ class BottomSheetView(
 
       val oldRatio = behavior.halfExpandedRatio
       val newRatio = getHalfExpandedRatio(contentHeight)
+
+      val targetHeight = this.getTargetHeight()
+      val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
+      val shouldBeExpanded = targetHeight >= availableHeight
+
+      // Don't update during user gestures — defer until the gesture completes.
+      if (currentState == BottomSheetBehavior.STATE_DRAGGING) {
+        pendingLayoutUpdate = true
+        return
+      }
+
       behavior.halfExpandedRatio = newRatio
 
       if (preventExpansion) {
@@ -299,16 +310,12 @@ class BottomSheetView(
         it.requestLayout()
       }
 
-      val targetHeight = this.getTargetHeight()
-      val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
-      val shouldBeExpanded = targetHeight >= availableHeight
-
-      // Don't force state changes during user gestures — the ratio and maxHeight
-      // are already updated above, so when the gesture settles the sheet will land
-      // at the correct position. Forcing a state change mid-drag interrupts
-      // dismiss swipes and causes visual glitches.
-      if (currentState == BottomSheetBehavior.STATE_DRAGGING || currentState == BottomSheetBehavior.STATE_SETTLING) {
-        pendingLayoutUpdate = true
+      // During settling (programmatic animation from our own state change),
+      // redirect the animation to the new position if the ratio changed.
+      if (currentState == BottomSheetBehavior.STATE_SETTLING) {
+        if (oldRatio != newRatio) {
+          behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
         return
       }
 
