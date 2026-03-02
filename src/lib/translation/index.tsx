@@ -1,32 +1,16 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB} from '#/env'
-
-type TranslationState =
-  | {status: 'idle'}
-  | {status: 'loading'}
-  | {
-      status: 'success'
-      translatedText: string
-      sourceLanguage: TranslationTaskResult['sourceLanguage']
-      targetLanguage: TranslationTaskResult['targetLanguage']
-    }
-
-const IDLE: TranslationState = {status: 'idle'}
+import {Context} from './context'
+import {type Options, type TranslationState} from './types'
 
 /**
  * Attempts on-device translation via @bsky.app/expo-translate-text.
@@ -87,21 +71,6 @@ async function attemptTranslation(
   }
 }
 
-const Context = createContext<{
-  translationState: TranslationState
-  translate: (
-    text: string,
-    targetLangCode: string,
-    sourceLangCode?: string,
-  ) => Promise<void>
-  clearTranslation: () => void
-}>({
-  translationState: IDLE,
-  translate: async () => {},
-  clearTranslation: () => {},
-})
-Context.displayName = 'TranslationContext'
-
 /**
  * Native translation hook. Attempts on-device translation using Apple
  * Translation (iOS 18+) or Google ML Kit (Android).
@@ -120,25 +89,108 @@ export function useTranslateOnDevice() {
   return context
 }
 
+/**
+ * Hook to register a component as using a translation key.
+ * Automatically handles ref counting with screen focus management
+ * via useFocusEffect and cleans up the translation when the component
+ * loses focus.
+ */
+export function useTranslationKey(key: string) {
+  const {acquireTranslation} = useTranslateOnDevice()
+
+  useFocusEffect(
+    useCallback(() => {
+      const cleanup = acquireTranslation(key)
+      return cleanup
+    }, [key, acquireTranslation]),
+  )
+}
+
 export function Provider({children}: React.PropsWithChildren<unknown>) {
-  const [translationState, setTranslationState] =
-    useState<TranslationState>(IDLE)
+  const [translationState, setTranslationState] = useState<
+    Record<string, TranslationState>
+  >({})
+  const [refCounts, setRefCounts] = useState<Record<string, number>>({})
   const openLink = useOpenLink()
   const ax = useAnalytics()
   const {primaryLanguage} = useLanguagePrefs()
 
-  const clearTranslation = useCallback(() => {
+  useEffect(() => {
+    setTranslationState(prev => {
+      const keysToDelete: string[] = []
+
+      for (const key of Object.keys(prev)) {
+        if ((refCounts[key] ?? 0) <= 0) {
+          keysToDelete.push(key)
+        }
+      }
+
+      if (keysToDelete.length > 0) {
+        const newState = {...prev}
+        keysToDelete.forEach(key => {
+          delete newState[key]
+        })
+        return newState
+      }
+
+      return prev
+    })
+  }, [refCounts])
+
+  const acquireTranslation = useCallback((key: string) => {
+    setRefCounts(prev => ({
+      ...prev,
+      [key]: (prev[key] ?? 0) + 1,
+    }))
+
+    return () => {
+      setRefCounts(prev => {
+        const newCount = (prev[key] ?? 1) - 1
+        if (newCount <= 0) {
+          const {[key]: _, ...rest} = prev
+          return rest
+        }
+        return {...prev, [key]: newCount}
+      })
+    }
+  }, [])
+
+  const clearTranslation = useCallback((key: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setTranslationState(IDLE)
+    setTranslationState(prev => {
+      delete prev[key]
+      return {...prev}
+    })
   }, [])
 
   const translate = useCallback(
     async (
+      key: string,
       text: string,
       targetLangCode: string = primaryLanguage,
       sourceLangCode?: string,
+      options?: Options,
     ) => {
-      setTranslationState({status: 'loading'})
+      const translateUrl = getTranslatorLink(
+        text,
+        targetLangCode,
+        sourceLangCode,
+      )
+      if (options?.googleTranslate) {
+        ax.metric('translate:result', {
+          method: 'google-translate',
+          os: Platform.OS,
+          sourceLanguage: sourceLangCode ?? null,
+          targetLanguage: targetLangCode,
+        })
+        await openLink(translateUrl)
+        return
+      }
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      setTranslationState(prev => ({
+        ...prev,
+        [key]: {status: 'loading'},
+      }))
       try {
         const result = await attemptTranslation(
           text,
@@ -152,47 +204,39 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           targetLanguage: result.targetLanguage,
         })
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-        setTranslationState({
-          status: 'success',
-          translatedText: result.translatedText,
-          sourceLanguage: result.sourceLanguage,
-          targetLanguage: result.targetLanguage,
-        })
+        setTranslationState(prev => ({
+          ...prev,
+          [key]: {
+            status: 'success',
+            translatedText: result.translatedText,
+            sourceLanguage: result.sourceLanguage,
+            targetLanguage: result.targetLanguage,
+          },
+        }))
       } catch (e) {
-        if (IS_WEB) {
-          // Web always opens Google Translate.
-          ax.metric('translate:result', {
-            method: 'google-translate',
-            os: Platform.OS,
-            sourceLanguage: sourceLangCode ?? null,
-            targetLanguage: targetLangCode,
-          })
-        } else {
-          logger.error('Failed to translate post on device', {safeMessage: e})
-          // On-device translation failed (language pack missing or user dismissed
-          // the download prompt). Fall back to Google Translate.
-          ax.metric('translate:result', {
-            method: 'fallback-alert',
-            os: Platform.OS,
-            sourceLanguage: sourceLangCode ?? null,
-            targetLanguage: targetLangCode,
-          })
-        }
-        setTranslationState({status: 'idle'})
-        const translateUrl = getTranslatorLink(
-          text,
-          targetLangCode,
-          sourceLangCode,
-        )
+        logger.error('Failed to translate post on device', {safeMessage: e})
+        // On-device translation failed (language pack missing or user
+        // dismissed the download prompt). Fall back to Google Translate.
+        ax.metric('translate:result', {
+          method: 'fallback-alert',
+          os: Platform.OS,
+          sourceLanguage: sourceLangCode ?? null,
+          targetLanguage: targetLangCode,
+        })
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setTranslationState(prev => ({
+          ...prev,
+          [key]: {status: 'idle'},
+        }))
         await openLink(translateUrl)
       }
     },
-    [ax, openLink, primaryLanguage, setTranslationState],
+    [ax, openLink, primaryLanguage],
   )
 
   const ctx = useMemo(
-    () => ({clearTranslation, translate, translationState}),
-    [clearTranslation, translate, translationState],
+    () => ({acquireTranslation, clearTranslation, translate, translationState}),
+    [acquireTranslation, clearTranslation, translate, translationState],
   )
 
   return <Context.Provider value={ctx}>{children}</Context.Provider>

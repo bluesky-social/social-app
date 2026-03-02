@@ -1,38 +1,41 @@
 import {useMemo} from 'react'
 import {Platform, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
+import {HITSLOP_30} from '#/lib/constants'
+import {useTranslateOnDevice, useTranslationKey} from '#/lib/translation'
 import {codeToLanguageName, languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {useTranslateOnDevice} from '#/translation'
 
 export function TranslatedPost({
+  translationKey,
   postText,
-  hideLoading = false,
 }: {
+  translationKey: string
   postText: string
-  hideLoading: boolean
 }) {
   const {translationState} = useTranslateOnDevice()
+  // Register this component as using this translation key with focus-based cleanup
+  useTranslationKey(translationKey)
 
-  if (translationState.status === 'loading' && !hideLoading) {
+  if (translationState[translationKey]?.status === 'loading') {
     return <TranslationLoading />
   }
 
-  if (translationState.status === 'success') {
+  if (translationState[translationKey]?.status === 'success') {
     return (
       <TranslationResult
+        translationKey={translationKey}
         postText={postText}
-        sourceLanguage={translationState.sourceLanguage}
-        translatedText={translationState.translatedText}
+        sourceLanguage={translationState[translationKey]?.sourceLanguage}
+        translatedText={translationState[translationKey]?.translatedText}
       />
     )
   }
@@ -44,20 +47,24 @@ function TranslationLoading() {
   const t = useTheme()
 
   return (
-    <View style={[a.flex_row, a.align_center, a.gap_sm, a.py_xs]}>
-      <Loader size="sm" />
-      <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-        <Trans>Translating…</Trans>
-      </Text>
+    <View style={[a.gap_md, a.pt_md, a.align_start]}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+        <Loader size="xs" />
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          <Trans>Translating…</Trans>
+        </Text>
+      </View>
     </View>
   )
 }
 
 function TranslationResult({
+  translationKey,
   postText,
   sourceLanguage,
   translatedText,
 }: {
+  translationKey: string
   postText: string
   sourceLanguage: string | null
   translatedText: string
@@ -71,25 +78,28 @@ function TranslationResult({
 
   return (
     <View style={[a.py_xs, a.gap_xs, a.mt_sm]}>
-      <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-        {langName ? (
-          <Trans>Translated from {langName}</Trans>
-        ) : (
-          <Trans>Translated</Trans>
-        )}
+      <View style={[a.flex_row, a.align_center]}>
+        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+          {langName ? (
+            <Trans>Translated from {langName}</Trans>
+          ) : (
+            <Trans>Translated</Trans>
+          )}
+        </Text>
         {sourceLanguage != null && (
           <>
             <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
               {' '}
-              &middot;
-            </Text>{' '}
+              &middot;{' '}
+            </Text>
             <TranslationLanguageSelect
               sourceLanguage={sourceLanguage}
+              translationKey={translationKey}
               postText={postText}
             />
           </>
         )}
-      </Text>
+      </View>
       <Text emoji selectable style={[a.text_md, a.leading_snug]}>
         {translatedText}
       </Text>
@@ -98,14 +108,16 @@ function TranslationResult({
 }
 
 function TranslationLanguageSelect({
+  translationKey,
   postText,
   sourceLanguage,
 }: {
+  translationKey: string
   postText: string
   sourceLanguage: string
 }) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {translate} = useTranslateOnDevice()
 
@@ -136,24 +148,35 @@ function TranslationLanguageSelect({
       sourceLanguage: sourceLangCode,
       targetLanguage: langPrefs.primaryLanguage,
     })
-    void translate(postText, langPrefs.primaryLanguage, sourceLangCode)
+    void translate(
+      translationKey,
+      postText,
+      langPrefs.primaryLanguage,
+      sourceLangCode,
+    )
   }
 
   return (
     <Select.Root
       value={sourceLanguage}
       onValueChange={handleChangeTranslationLanguage}>
-      <Select.Trigger hitSlop={10} label={_(msg`Change source language`)}>
+      <Select.Trigger label={l`Change the source language`}>
         {({props}) => {
           return (
-            <Text {...props} style={[a.text_xs]}>
-              <Trans>Change</Trans>
-            </Text>
+            <Button
+              label={props.accessibilityLabel}
+              {...props}
+              hitSlop={HITSLOP_30}
+              hoverStyle={native({opacity: 0.5})}>
+              <Text style={[a.text_xs]}>
+                <Trans>Change</Trans>
+              </Text>
+            </Button>
           )
         }}
       </Select.Trigger>
       <Select.Content
-        label={_(msg`Select the source language`)}
+        label={l`Select the source language`}
         renderItem={({label, value}) => (
           <Select.Item value={value} label={label}>
             <Select.ItemIndicator />
