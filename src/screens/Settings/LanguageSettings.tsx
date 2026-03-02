@@ -11,7 +11,7 @@ import {
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import {atoms as a, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -21,6 +21,8 @@ import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/
 import * as Layout from '#/components/Layout'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
+import {device, useStorage} from '#/storage'
 import * as SettingsList from './components/SettingsList'
 
 const DEDUPED_LANGUAGES = LANGUAGES.filter(
@@ -31,8 +33,12 @@ const DEDUPED_LANGUAGES = LANGUAGES.filter(
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 export function LanguageSettingsScreen({}: Props) {
   const {_} = useLingui()
+  const t = useTheme()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
+  const [useKbLang = false, setUseKbLang] = useStorage(device, [
+    'useKeyboardLanguage',
+  ])
 
   const contentLanguagePrefsControl = useDialogControl()
 
@@ -234,6 +240,43 @@ export function LanguageSettingsScreen({}: Props) {
               />
             </View>
           </SettingsList.Group>
+          {IS_NATIVE && (
+            <>
+              <SettingsList.Divider />
+              <SettingsList.Group iconInset={false}>
+                <SettingsList.ItemText>
+                  <Trans>Post language</Trans>
+                </SettingsList.ItemText>
+                <Toggle.Item
+                  name="use_keyboard_language"
+                  label={_(
+                    msg`Automatically detect post language from keyboard`,
+                  )}
+                  value={useKbLang}
+                  onChange={value => setUseKbLang(value)}
+                  style={[a.w_full, a.gap_md]}>
+                  <Text style={[a.flex_1]}>
+                    <Trans>
+                      Automatically detect post language from keyboard
+                    </Trans>
+                  </Text>
+                  <Toggle.Platform />
+                </Toggle.Item>
+                <Text
+                  style={[
+                    a.text_xs,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                    a.mt_sm,
+                  ]}>
+                  <Trans>
+                    Experimental. When enabled, the composer will default to
+                    your keyboard language.
+                  </Trans>
+                </Text>
+              </SettingsList.Group>
+            </>
+          )}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
