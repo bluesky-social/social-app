@@ -5,6 +5,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
@@ -139,8 +140,11 @@ export function DialogInner({
     const recentLanguages = mapCode2List(recentLanguagesCode2)
 
     // NOTE(@elijaharita): helper functions
+    const searchLower = search.toLowerCase()
     const matchesSearch = (lang: Language) =>
-      lang.name.toLowerCase().includes(search.toLowerCase())
+      languageName(lang, langPrefs.appLanguage)
+        .toLowerCase()
+        .includes(searchLower) || lang.name.toLowerCase().includes(searchLower)
     const isChecked = (lang: Language) =>
       checkedLanguagesCode2.includes(lang.code2)
     const isInRecents = (lang: Language) =>
@@ -182,6 +186,7 @@ export function DialogInner({
     search,
     langPrefs.postLanguageHistory,
     checkedLanguagesCode2,
+    langPrefs.appLanguage,
   ])
 
   const listHeader = (
@@ -297,6 +302,7 @@ export function DialogInner({
             )
           }
           const lang = item.lang
+          const name = languageName(lang, langPrefs.appLanguage)
 
           const isLastItem = index === numItems - 1
 
@@ -304,7 +310,7 @@ export function DialogInner({
             <Toggle.Item
               key={lang.code2}
               name={lang.code2}
-              label={lang.name}
+              label={name}
               style={[
                 t.atoms.border_contrast_low,
                 !isLastItem && a.border_b,
@@ -312,9 +318,7 @@ export function DialogInner({
                 a.px_0,
                 a.py_md,
               ]}>
-              <Toggle.LabelText style={[a.flex_1]}>
-                {lang.name}
-              </Toggle.LabelText>
+              <Toggle.LabelText style={[a.flex_1]}>{name}</Toggle.LabelText>
               <Toggle.Checkbox />
             </Toggle.Item>
           )

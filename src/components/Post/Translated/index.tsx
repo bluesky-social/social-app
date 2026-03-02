@@ -147,7 +147,7 @@ function TranslationLanguageSelect({
         {({props}) => {
           return (
             <Text {...props} style={[a.text_xs]}>
-              <Trans>Edit</Trans>
+              <Trans>Change</Trans>
             </Text>
           )
         }}
