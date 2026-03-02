@@ -106,6 +106,7 @@ export const LoginForm = ({
       if (
         !identifier.includes('@') && // not an email
         !identifier.includes('.') && // not a domain
+        !identifier.startsWith('did:') && // not a DID
         serviceDescription &&
         serviceDescription.availableUserDomains.length > 0
       ) {
