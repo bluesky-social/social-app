@@ -3726,6 +3726,13 @@
   dependencies:
     react-responsive "^10.0.1"
 
+"@bsky.app/expo-guess-language@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@bsky.app/expo-guess-language/-/expo-guess-language-0.2.2.tgz#b02a04f8bf61d5b36972c2dd70188a53d89b3556"
+  integrity sha512-/qCfEd79ucJPzZzhnFD/N9HHnFykf/JSTo4ly3qI4bbifRX748/I0EjBVfMC+z5q+yAGYnnsnvn5zd4Zf7kGEQ==
+  dependencies:
+    lande "^1.0.10"
+
 "@bsky.app/expo-image-crop-tool@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@bsky.app/expo-image-crop-tool/-/expo-image-crop-tool-0.5.0.tgz#4308fbde5c15e6be9122601797bc3d9549c95e31"

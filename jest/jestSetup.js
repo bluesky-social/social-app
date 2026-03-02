@@ -58,9 +58,13 @@ jest.mock('expo-media-library', () => ({
   usePermissions: jest.fn(() => [true]),
 }))
 
-jest.mock('lande', () => ({
-  __esModule: true, // this property makes it work
-  default: jest.fn().mockReturnValue([['eng']]),
+jest.mock('@bsky.app/expo-guess-language', () => ({
+  guessLanguageSync: jest
+    .fn()
+    .mockReturnValue([{language: 'en', confidence: 1}]),
+  guessLanguageAsync: jest
+    .fn()
+    .mockResolvedValue([{language: 'en', confidence: 1}]),
 }))
 
 jest.mock('sentry-expo', () => ({

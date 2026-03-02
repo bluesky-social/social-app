@@ -1,6 +1,6 @@
 import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {guessLanguageSync} from '@bsky.app/expo-guess-language'
 import * as bcp47Match from 'bcp-47-match'
-import lande from 'lande'
 
 import {hasProp} from '#/lib/type-guards'
 import {
@@ -99,19 +99,15 @@ export function getPostLanguage(
   }
 
   // run the language model
-  let langsProbabilityMap = lande(postText)
+  let results = guessLanguageSync(postText)
 
   // filter down using declared languages
   if (candidates?.length) {
-    langsProbabilityMap = langsProbabilityMap.filter(
-      ([lang, _probability]: [string, number]) => {
-        return candidates.includes(code3ToCode2(lang))
-      },
-    )
+    results = results.filter(r => candidates.includes(r.language))
   }
 
-  if (langsProbabilityMap[0]) {
-    return code3ToCode2(langsProbabilityMap[0][0])
+  if (results[0]) {
+    return results[0].language
   }
 }
 
