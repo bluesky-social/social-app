@@ -220,7 +220,7 @@ let PostControls = ({
             a.flex_1,
             a.align_start,
             {marginLeft: big ? -2 : -6},
-            replyDisabled ? {opacity: 0.6} : undefined,
+            replyDisabled ? {opacity: 0.3, cursor: 'not-allowed'} : undefined,
           ]}>
           <PostControlButton
             testID="replyBtn"
