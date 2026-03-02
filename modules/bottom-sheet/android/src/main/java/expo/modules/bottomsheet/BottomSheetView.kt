@@ -66,6 +66,11 @@ class BottomSheetView(
     set(value) {
       field = value
       this.dialog?.setCancelable(!value)
+      // Full-height sheets have no half-expanded snap point, so any drag
+      // would dismiss. Disable dragging when dismiss is prevented.
+      if (fullHeight) {
+        this.setDraggable(!value && !disableDrag)
+      }
     }
 
   var fullHeight = false
@@ -318,7 +323,11 @@ class BottomSheetView(
   }
 
   fun dismiss() {
-    this.dialog?.cancel()
+    val dialog = this.dialog ?: return
+    // Temporarily make cancelable so cancel() works — cancel() gives the
+    // slide-out animation, while dismiss() does a plain fade.
+    dialog.setCancelable(true)
+    dialog.cancel()
   }
 
   // Observe each direct child of innerView via OnLayoutChangeListener so that
