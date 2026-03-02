@@ -12,7 +12,6 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import {IS_IOS} from '#/env'
 import {
   type BottomSheetState,
   type BottomSheetViewProps,
@@ -71,10 +70,6 @@ export class BottomSheetNativeComponent extends React.Component<
     this.props.onStateChange?.(event)
   }
 
-  private updateLayout = () => {
-    this.ref.current?.updateLayout()
-  }
-
   static dismissAll = async () => {
     await NativeModule.dismissAll()
   }
@@ -113,23 +108,14 @@ export class BottomSheetNativeComponent extends React.Component<
           nativeViewRef={this.ref}
           onStateChange={this.onStateChange}
           extraStyles={extraStyles}
-          onLayout={e => {
-            if (IS_IOS15) {
-              const {height} = e.nativeEvent.layout
-              this.setState({viewHeight: height})
-            }
-            if (Platform.OS === 'android') {
-              // TEMP HACKFIX: I had to timebox this, but this is Bad.
-              // On Android, if you run updateLayout() immediately,
-              // it will take ages to actually run on the native side.
-              // However, adding literally any delay will fix this, including
-              // a console.log() - just sending the log to the CLI is enough.
-              // TODO: Get to the bottom of this and fix it properly! -sfn
-              setTimeout(() => this.updateLayout())
-            } else {
-              this.updateLayout()
-            }
-          }}
+          onLayout={
+            IS_IOS15
+              ? e => {
+                  const {height} = e.nativeEvent.layout
+                  this.setState({viewHeight: height})
+                }
+              : undefined
+          }
         />
       </Portal>
     )
@@ -150,13 +136,11 @@ function BottomSheetNativeComponentInner({
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
   nativeViewRef: React.RefObject<View>
-  onLayout: (event: LayoutChangeEvent) => void
+  onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
   const {height: screenHeight} = useWindowDimensions()
-
-  const sheetHeight = IS_IOS ? screenHeight - insets.top : screenHeight
 
   return (
     <NativeView
@@ -165,7 +149,7 @@ function BottomSheetNativeComponentInner({
       ref={nativeViewRef}
       style={{
         position: 'absolute',
-        height: sheetHeight,
+        height: screenHeight - insets.top,
         width: '100%',
       }}
       containerBackgroundColor={backgroundColor}>

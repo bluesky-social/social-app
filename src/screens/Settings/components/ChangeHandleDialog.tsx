@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -53,10 +53,8 @@ export function ChangeHandleDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {height} = useWindowDimensions()
-
   return (
-    <Dialog.Outer control={control} nativeOptions={{minHeight: height}}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <ChangeHandleDialogInner />
     </Dialog.Outer>
   )

@@ -151,7 +151,7 @@ export function Content<T>({
   }, [items, context.value, valueExtractor, setValue])
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <ContentInner
         control={control}
         items={items}
