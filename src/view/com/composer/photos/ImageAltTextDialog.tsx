@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo, useState} from 'react'
 import {type ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
@@ -10,14 +10,14 @@ import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {enforceLen} from '#/lib/strings/helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = {
   control: Dialog.DialogOuterProps['control']
@@ -31,7 +31,7 @@ export const ImageAltTextDialog = ({
   onChange,
 }: Props): React.ReactNode => {
   const {height: minHeight} = useWindowDimensions()
-  const [altText, setAltText] = React.useState(image.alt)
+  const [altText, setAltText] = useState(image.alt)
 
   return (
     <Dialog.Outer
@@ -67,12 +67,15 @@ const ImageAltTextInner = ({
 }): React.ReactNode => {
   const {_, i18n} = useLingui()
   const t = useTheme()
-  const windim = useWindowDimensions()
+  const {width: screenWidth} = useWindowDimensions()
 
   const [isKeyboardVisible] = useIsKeyboardVisible()
 
-  const imageStyle = React.useMemo<ImageStyle>(() => {
-    const maxWidth = IS_WEB ? 450 : windim.width
+  const imageStyle = useMemo<ImageStyle>(() => {
+    const maxWidth = IS_WEB
+      ? 450
+      : screenWidth - // account for dialog padding
+        2 * (IS_LIQUID_GLASS ? tokens.space._2xl : tokens.space.xl)
     const source = image.transformed ?? image.source
 
     if (source.height > source.width) {
@@ -88,16 +91,20 @@ const ImageAltTextInner = ({
       height: (maxWidth / source.width) * source.height,
       borderRadius: 8,
     }
-  }, [image, windim])
+  }, [image, screenWidth])
 
   return (
     <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
       <Dialog.Close />
 
       <View>
-        <Text style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
-          <Trans>Add alt text</Trans>
-        </Text>
+        {/* vertical space is too precious - gets scrolled out of the way anyway */}
+        {IS_WEB && (
+          <Text
+            style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
+            <Trans>Add alt text</Trans>
+          </Text>
+        )}
 
         <View style={[t.atoms.bg_contrast_50, a.rounded_sm, a.overflow_hidden]}>
           <Image

@@ -7,17 +7,18 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useTranslate} from '#/lib/hooks/useTranslate'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
+import {
+  getPostLanguage,
+  getTranslatorLink,
+  isPostInLanguage,
+} from '#/locale/helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -44,11 +45,13 @@ import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {InlineLinkText, Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -60,6 +63,10 @@ import {VerificationCheckButton} from '#/components/verification/VerificationChe
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
+import {
+  Provider as TranslateOnDeviceProvider,
+  useTranslateOnDevice,
+} from '#/translation'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -82,16 +89,18 @@ export function ThreadItemAnchor({
   }
 
   return (
-    <ThreadItemAnchorInner
-      // Safeguard from clobbering per-post state below:
-      key={postShadow.uri}
-      item={item}
-      isRoot={isRoot}
-      postShadow={postShadow}
-      onPostSuccess={onPostSuccess}
-      threadgateRecord={threadgateRecord}
-      postSource={postSource}
-    />
+    <TranslateOnDeviceProvider>
+      <ThreadItemAnchorInner
+        // Safeguard from clobbering per-post state below:
+        key={postShadow.uri}
+        item={item}
+        isRoot={isRoot}
+        postShadow={postShadow}
+        onPostSuccess={onPostSuccess}
+        threadgateRecord={threadgateRecord}
+        postSource={postSource}
+      />
+    </TranslateOnDeviceProvider>
   )
 }
 
@@ -178,7 +187,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
@@ -411,6 +420,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 shouldProxyLinks={true}
               />
             ) : undefined}
+            <TranslatedPost postText={record.text} hideLoading />
+            <TranslateLink post={item.value.post} />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed
@@ -447,7 +458,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 t.atoms.border_contrast_low,
               ]}>
               {post.repostCount != null && post.repostCount !== 0 ? (
-                <Link to={repostsHref} label={_(msg`Reposts of this post`)}>
+                <Link to={repostsHref} label={l`Reposts of this post`}>
                   <Text
                     testID="repostCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -467,7 +478,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               {post.quoteCount != null &&
               post.quoteCount !== 0 &&
               !post.viewer?.embeddingDisabled ? (
-                <Link to={quotesHref} label={_(msg`Quotes of this post`)}>
+                <Link to={quotesHref} label={l`Quotes of this post`}>
                   <Text
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -485,7 +496,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 </Link>
               ) : null}
               {post.likeCount != null && post.likeCount !== 0 ? (
-                <Link to={likesHref} label={_(msg`Likes on this post`)}>
+                <Link to={likesHref} label={l`Likes on this post`}>
                   <Text
                     testID="likeCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -546,19 +557,17 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   )
 })
 
-function ExpandedPostDetails({
+function TranslateLink({
   post,
-  isThreadAuthor,
 }: {
   post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
-  isThreadAuthor: boolean
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_, i18n} = useLingui()
-  const translate = useTranslate()
-  const isRootPost = !('reply' in post.record)
+  const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
+
+  const {translate, clearTranslation, translationState} = useTranslateOnDevice()
 
   const needsTranslation = useMemo(
     () =>
@@ -569,10 +578,16 @@ function ExpandedPostDetails({
     [post, langPrefs.primaryLanguage],
   )
 
+  const sourceLanguage = getPostLanguage(post)
+
   const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
-      translate(post.record.text || '', langPrefs.primaryLanguage)
+      void translate(
+        post.record.text || '',
+        langPrefs.primaryLanguage,
+        sourceLanguage,
+      )
 
       if (
         bsky.dangerousIsType<AppBskyFeedPost.Record>(
@@ -589,8 +604,60 @@ function ExpandedPostDetails({
 
       return false
     },
-    [ax, translate, langPrefs, post],
+    [ax, sourceLanguage, translate, langPrefs, post],
   )
+
+  const onHideTranslation = useCallback(
+    (e: GestureResponderEvent) => {
+      e.preventDefault()
+      clearTranslation()
+      return false
+    },
+    [clearTranslation],
+  )
+
+  return (
+    needsTranslation && (
+      <View style={[a.gap_md, a.pt_md, a.align_start]}>
+        {translationState.status === 'loading' ? (
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <Loader size="xs" />
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Translating…</Trans>
+            </Text>
+          </View>
+        ) : translationState.status === 'success' ? (
+          <InlineLinkText
+            to="#"
+            label={l`Hide translation`}
+            style={[a.text_sm]}
+            onPress={onHideTranslation}>
+            <Trans>Hide translation</Trans>
+          </InlineLinkText>
+        ) : (
+          <InlineLinkText
+            to={getTranslatorLink(post.record.text, langPrefs.primaryLanguage)}
+            label={l`Translate`}
+            style={[a.text_sm]}
+            onPress={onTranslatePress}>
+            <Trans>Translate</Trans>
+          </InlineLinkText>
+        )}
+      </View>
+    )
+  )
+}
+
+function ExpandedPostDetails({
+  post,
+  isThreadAuthor,
+}: {
+  post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
+  isThreadAuthor: boolean
+}) {
+  const t = useTheme()
+  const {i18n} = useLingui()
+  const isRootPost = !('reply' in post.record)
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
@@ -602,26 +669,6 @@ function ExpandedPostDetails({
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
         )}
-        {needsTranslation && (
-          <>
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              &middot;
-            </Text>
-
-            <InlineLinkText
-              // overridden to open an intent on android, but keep
-              // as anchor tag for accessibility
-              to={getTranslatorLink(
-                post.record.text,
-                langPrefs.primaryLanguage,
-              )}
-              label={_(msg`Translate`)}
-              style={[a.text_sm]}
-              onPress={onTranslatePress}>
-              <Trans>Translate</Trans>
-            </InlineLinkText>
-          </>
-        )}
       </View>
     </View>
   )
@@ -629,7 +676,7 @@ function ExpandedPostDetails({
 
 function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
@@ -649,10 +696,8 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   return (
     <>
       <Button
-        label={_(msg`Archived post`)}
-        accessibilityHint={_(
-          msg`Shows information about when this post was created`,
-        )}
+        label={l`Archived post`}
+        accessibilityHint={l`Shows information about when this post was created`}
         onPress={e => {
           e.preventDefault()
           e.stopPropagation()
@@ -711,7 +756,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
           </Prompt.DescriptionText>
         </Prompt.Content>
         <Prompt.Actions>
-          <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
+          <Prompt.Action cta={l`Okay`} onPress={() => {}} />
         </Prompt.Actions>
       </Prompt.Outer>
     </>

@@ -1,19 +1,27 @@
 import {useCallback} from 'react'
 import * as IntentLauncher from 'expo-intent-launcher'
 
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getTranslatorLink} from '#/locale/helpers'
 import {IS_ANDROID} from '#/env'
-import {useOpenLink} from './useOpenLink'
 
+/**
+ * Will always link out to Google Translate. If inline translation is desired,
+ * use `useTranslateOnDevice`
+ */
 export function useTranslate() {
   const openLink = useOpenLink()
 
   return useCallback(
-    async (text: string, language: string) => {
-      const translateUrl = getTranslatorLink(text, language)
+    async (text: string, targetLangCode: string, sourceLanguage?: string) => {
+      const translateUrl = getTranslatorLink(
+        text,
+        targetLangCode,
+        sourceLanguage,
+      )
       if (IS_ANDROID) {
         try {
-          // use getApplicationIconAsync to determine if the translate app is installed
+          // use `getApplicationIconAsync` to determine if the translate app is installed
           if (
             !(await IntentLauncher.getApplicationIconAsync(
               'com.google.android.apps.translate',

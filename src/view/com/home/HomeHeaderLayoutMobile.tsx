@@ -1,6 +1,6 @@
-import {type JSX} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -17,16 +17,18 @@ import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {IS_LIQUID_GLASS} from '#/env'
 
 export function HomeHeaderLayoutMobile({
   children,
 }: {
   children: React.ReactNode
-  tabBarAnchor: JSX.Element | null | undefined
+  tabBarAnchor: React.ReactElement | null | undefined
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const {headerHeight} = useShellLayout()
+  const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
@@ -42,6 +44,7 @@ export function HomeHeaderLayoutMobile({
           left: 0,
           right: 0,
         },
+        IS_LIQUID_GLASS && {paddingTop: insets.top},
         headerMinimalShellTransform,
       ]}
       onLayout={e => {

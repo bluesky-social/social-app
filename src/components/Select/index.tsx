@@ -70,7 +70,7 @@ export function Root({children, value, onValueChange, disabled}: RootProps) {
   )
 }
 
-export function Trigger({children, label}: TriggerProps) {
+export function Trigger({children, hitSlop, label}: TriggerProps) {
   const {control} = useSelectContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
@@ -100,6 +100,7 @@ export function Trigger({children, label}: TriggerProps) {
   } else {
     return (
       <Button
+        hitSlop={hitSlop}
         label={label}
         onPress={control.open}
         style={[a.flex_1, a.justify_between, a.pl_lg, a.pr_md]}

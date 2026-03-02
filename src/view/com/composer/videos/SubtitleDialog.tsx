@@ -60,7 +60,7 @@ export function SubtitleDialogBtn(props: Props) {
           )}
         </ButtonText>
       </Button>
-      <Dialog.Outer control={control}>
+      <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
@@ -180,7 +180,7 @@ function SubtitleDialogInner({
             {subtitleMissingLanguage && (
               <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
                 <Trans>
-                  Ensure you have selected a language for each subtitle file.
+                  Ensure you have selected a language for each caption file.
                 </Trans>
               </Text>
             )}
@@ -283,7 +283,7 @@ function SubtitleFileRow({
       </View>
 
       <Button
-        label={_(msg`Remove subtitle file`)}
+        label={_(msg`Remove caption file`)}
         size="tiny"
         shape="round"
         variant="outline"

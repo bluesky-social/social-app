@@ -1,6 +1,6 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -27,6 +27,7 @@ import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
+import type * as bsky from '#/types/bsky'
 
 let SearchResults = ({
   query,
@@ -87,6 +88,9 @@ let SearchResults = ({
     }[]
   }, [l, query, queryWithParams, activeTab])
 
+  // There may be fewer tabs after changing the search options.
+  const selectedPage = initialPage > sections.length - 1 ? 0 : initialPage
+
   return (
     <Pager
       onPageSelected={onPageSelected}
@@ -95,7 +99,7 @@ let SearchResults = ({
           <TabBar items={sections.map(section => section.title)} {...props} />
         </Layout.Center>
       )}
-      initialPage={initialPage}>
+      initialPage={selectedPage}>
       {sections.map((section, i) => (
         <View key={i}>{section.component}</View>
       ))}
@@ -479,14 +483,12 @@ let SearchScreenUserResults = ({
             item,
             index,
           }: {
-            item: AppBskyActorDefs.ProfileView
+            item: bsky.profile.AnyProfileView
             index: number
           }) => <SearchScreenProfileButton position={index} profile={item} />}
-          keyExtractor={(item: AppBskyActorDefs.ProfileView) => item.did}
+          keyExtractor={(item: bsky.profile.AnyProfileView) => item.did}
           refreshing={isPTR}
-          onRefresh={() => {
-            void onPullToRefresh()
-          }}
+          onRefresh={() => void onPullToRefresh()}
           onEndReached={onEndReached}
           desktopFixedHeight
           ListFooterComponent={
@@ -511,7 +513,7 @@ function SearchScreenProfileButton({
   profile,
 }: {
   position: number
-  profile: AppBskyActorDefs.ProfileView
+  profile: bsky.profile.AnyProfileView
 }) {
   const ax = useAnalytics()
 

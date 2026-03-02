@@ -402,8 +402,8 @@ export function Controls({
           {hasSubtitleTrack && (
             <ControlButton
               active={subtitlesEnabled}
-              activeLabel={_(msg`Disable subtitles`)}
-              inactiveLabel={_(msg`Enable subtitles`)}
+              activeLabel={_(msg`Disable captions`)}
+              inactiveLabel={_(msg`Enable captions`)}
               activeIcon={CCActiveIcon}
               inactiveIcon={CCInactiveIcon}
               onPress={onPressSubtitles}

@@ -6,18 +6,21 @@ import {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import EventEmitter from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
 
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
   const {headerMode} = useMinimalShellMode()
+  const {top: topInset} = useSafeAreaInsets()
+  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
@@ -126,9 +129,10 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         // The "mode" value is always between 0 and 1.
         // Figure out how much to move it based on the current dragged distance.
         const dy = offsetY - startDragOffsetValue
+        const hideDistance = headerHeight.get() - headerPinnedHeight
         const dProgress = interpolate(
           dy,
-          [-headerHeight.get(), headerHeight.get()],
+          [-hideDistance, hideDistance],
           [-1, 1],
         )
         const newValue = clamp(startModeValue + dProgress, 0, 1)
@@ -156,6 +160,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     },
     [
       headerHeight,
+      headerPinnedHeight,
       headerMode,
       setMode,
       startDragOffset,
