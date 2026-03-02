@@ -302,6 +302,7 @@ export function DialogInner({
             )
           }
           const lang = item.lang
+          const name = languageName(lang, langPrefs.appLanguage)
 
           const isLastItem = index === numItems - 1
 
@@ -309,7 +310,7 @@ export function DialogInner({
             <Toggle.Item
               key={lang.code2}
               name={lang.code2}
-              label={languageName(lang, langPrefs.appLanguage)}
+              label={name}
               style={[
                 t.atoms.border_contrast_low,
                 !isLastItem && a.border_b,
@@ -317,9 +318,7 @@ export function DialogInner({
                 a.px_0,
                 a.py_md,
               ]}>
-              <Toggle.LabelText style={[a.flex_1]}>
-                {languageName(lang, langPrefs.appLanguage)}
-              </Toggle.LabelText>
+              <Toggle.LabelText style={[a.flex_1]}>{name}</Toggle.LabelText>
               <Toggle.Checkbox />
             </Toggle.Item>
           )
