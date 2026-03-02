@@ -202,7 +202,9 @@ export function LanguageSettingsScreen({}: Props) {
                       onPress={contentLanguagePrefsControl.open}>
                       <Toggle.Panel adjacent="leading">
                         <Toggle.PanelIcon icon={PlusIcon} />
-                        <Toggle.PanelText>Add more languages…</Toggle.PanelText>
+                        <Toggle.PanelText>
+                          <Trans>Add more languages…</Trans>
+                        </Toggle.PanelText>
                       </Toggle.Panel>
                     </Button>
                   </Toggle.PanelGroup>
