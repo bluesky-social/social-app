@@ -12,16 +12,18 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
-import {type ConvoItem} from '#/state/messages/convo/types'
+import {type ConvoItem, type ConvoState} from '#/state/messages/convo/types'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
+import {
+  type SimpleVerificationState,
+  useSimpleVerificationState,
+} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {IS_WEB} from '#/env'
 
@@ -35,6 +37,10 @@ export function MessagesListHeader({
   moderation?: ModerationDecision
 }) {
   const t = useTheme()
+  const convoState = useConvo()
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const blockInfo = useMemo(() => {
     if (!moderation) return
@@ -50,7 +56,7 @@ export function MessagesListHeader({
 
   return (
     <Layout.Header.Outer>
-      <View style={[a.w_full, a.flex_row, a.gap_xs, a.align_start]}>
+      <View style={[a.flex_1, a.flex_row, a.gap_xs, a.align_start]}>
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
           <Layout.Header.BackButton />
         </View>
@@ -59,6 +65,8 @@ export function MessagesListHeader({
             profile={profile}
             moderation={moderation}
             blockInfo={blockInfo}
+            convoState={convoState}
+            verification={verification}
           />
         ) : (
           <>
@@ -101,6 +109,8 @@ function HeaderReady({
   profile,
   moderation,
   blockInfo,
+  convoState,
+  verification,
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
@@ -108,13 +118,11 @@ function HeaderReady({
     listBlocks: ModerationCause[]
     userBlock?: ModerationCause
   }
+  convoState: ConvoState
+  verification: SimpleVerificationState
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const convoState = useConvo()
-  const verification = useSimpleVerificationState({
-    profile,
-  })
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -136,90 +144,60 @@ function HeaderReady({
       : undefined
 
   return (
-    <View style={[a.flex_1]}>
-      <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
-        <Link
-          label={_(msg`View ${displayName}'s profile`)}
-          style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
-          to={makeProfileLink(profile)}>
-          <PreviewableUserAvatar
-            size={PFP_SIZE}
-            profile={profile}
-            moderation={moderation.ui('avatar')}
-            disableHoverCard={moderation.blocked}
-          />
-          <View style={[a.flex_1]}>
-            <View style={[a.flex_row, a.align_center]}>
-              <Text
-                emoji
-                style={[
-                  a.text_md,
-                  a.font_semi_bold,
-                  a.self_start,
-                  web(a.leading_normal),
-                ]}
-                numberOfLines={1}>
-                {displayName}
-              </Text>
-              {verification.showBadge && (
-                <View style={[a.pl_xs]}>
-                  <VerificationCheck
-                    width={14}
-                    verifier={verification.role === 'verifier'}
-                  />
-                </View>
-              )}
-            </View>
-            {!isDeletedAccount && (
-              <Text
-                style={[
-                  t.atoms.text_contrast_medium,
-                  a.text_xs,
-                  web([a.leading_normal, {marginTop: -2}]),
-                ]}
-                numberOfLines={1}>
-                @{profile.handle}
-                {convoState.convo?.muted && (
-                  <>
-                    {' '}
-                    &middot;{' '}
-                    <BellStroke
-                      size="xs"
-                      style={t.atoms.text_contrast_medium}
-                    />
-                  </>
-                )}
-              </Text>
+    <View style={[a.flex_1, a.flex_row, a.align_center, a.justify_between]}>
+      <Link
+        label={_(msg`View ${displayName}'s profile`)}
+        style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}
+        to={makeProfileLink(profile)}>
+        <PreviewableUserAvatar
+          size={PFP_SIZE}
+          profile={profile}
+          moderation={moderation.ui('avatar')}
+          disableHoverCard={moderation.blocked}
+        />
+        <View style={[a.flex_1]}>
+          <View style={[a.flex_row, a.align_center]}>
+            <Text
+              emoji
+              style={[
+                a.text_md,
+                a.font_semi_bold,
+                a.self_start,
+                web(a.leading_normal),
+              ]}
+              numberOfLines={1}>
+              {displayName}
+            </Text>
+            {verification.showBadge && (
+              <View style={[a.pl_xs]}>
+                <VerificationCheck
+                  width={14}
+                  verifier={verification.role === 'verifier'}
+                />
+              </View>
+            )}
+            {convoState.convo?.muted && (
+              <>
+                <Text> &middot; </Text>
+                <BellStroke size="xs" style={t.atoms.text_contrast_medium} />
+              </>
             )}
           </View>
-        </Link>
-
-        <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
-          <Layout.Header.Slot>
-            {isConvoActive(convoState) && (
-              <ConvoMenu
-                convo={convoState.convo}
-                profile={profile}
-                currentScreen="conversation"
-                blockInfo={blockInfo}
-                latestReportableMessage={latestReportableMessage}
-              />
-            )}
-          </Layout.Header.Slot>
         </View>
-      </View>
+      </Link>
 
-      <View
-        style={[
-          {
-            paddingLeft: PFP_SIZE + a.gap_md.gap,
-          },
-        ]}>
-        <PostAlerts
-          modui={moderation.ui('contentList')}
-          size="lg"
-          style={[a.pt_xs]}
-        />
+      <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
+        <Layout.Header.Slot>
+          {isConvoActive(convoState) && (
+            <ConvoMenu
+              convo={convoState.convo}
+              profile={profile}
+              currentScreen="conversation"
+              blockInfo={blockInfo}
+              latestReportableMessage={latestReportableMessage}
+            />
+          )}
+        </Layout.Header.Slot>
       </View>
     </View>
   )
