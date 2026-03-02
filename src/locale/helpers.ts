@@ -32,21 +32,27 @@ export function code3ToCode2Strict(lang: string): string | undefined {
   return undefined
 }
 
+const displayNamesCache = new Map<string, Intl.DisplayNames>()
+
+function getDisplayNames(appLang: string): Intl.DisplayNames {
+  let cached = displayNamesCache.get(appLang)
+  if (!cached) {
+    cached = new Intl.DisplayNames([appLang], {
+      type: 'language',
+      fallback: 'none',
+      languageDisplay: 'standard',
+    })
+    displayNamesCache.set(appLang, cached)
+  }
+  return cached
+}
+
 function getLocalizedLanguage(
   langCode: string,
   appLang: string,
 ): string | undefined {
   try {
-    const allNames = new Intl.DisplayNames([appLang], {
-      type: 'language',
-      fallback: 'none',
-      languageDisplay: 'standard',
-    })
-    const translatedName = allNames.of(langCode)
-
-    if (translatedName) {
-      return translatedName
-    }
+    return getDisplayNames(appLang).of(langCode) || undefined
   } catch (e) {
     // ignore RangeError from Intl.DisplayNames APIs
     if (!(e instanceof RangeError)) {
