@@ -86,7 +86,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
       )}
       <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
         <ProfileHoverCard did={author.did}>
-          <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
+          <View style={[a.flex_row, a.align_end, a.flex_grow, a.flex_shrink]}>
             <MaybeLinkText
               emoji
               numberOfLines={1}
