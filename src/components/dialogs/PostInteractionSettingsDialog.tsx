@@ -5,14 +5,13 @@ import {
   type AppBskyFeedPostgate,
   AtUri,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
 import {useGetPost} from '#/state/queries/post'
@@ -52,6 +51,8 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS} from '#/env'
 
 export type PostInteractionSettingsFormProps = {
   canSave?: boolean
@@ -80,8 +81,9 @@ export function PostInteractionSettingsControlledDialog({
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
 }) {
+  const ax = useAnalytics()
   const onClose = useNonReactiveCallback(() => {
-    logger.metric('composer:threadgate:save', {
+    ax.metric('composer:threadgate:save', {
       hasChanged: !!rest.isDirty,
       persist: !!rest.persist,
       replyOptions:
@@ -161,6 +163,7 @@ export function PostInteractionSettingsDialog(
 export function PostInteractionSettingsDialogControlledInner(
   props: PostInteractionSettingsDialogProps,
 ) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isSaving, setIsSaving] = useState(false)
@@ -229,7 +232,7 @@ export function PostInteractionSettingsDialogControlledInner(
 
       props.control.close()
     } catch (e: any) {
-      logger.error(`Failed to save post interaction settings`, {
+      ax.logger.error(`Failed to save post interaction settings`, {
         source: 'PostInteractionSettingsDialogControlledInner',
         safeMessage: e.message,
       })
@@ -244,6 +247,7 @@ export function PostInteractionSettingsDialogControlledInner(
     }
   }, [
     _,
+    ax,
     props.postUri,
     props.rootPostUri,
     props.control,
@@ -531,7 +535,7 @@ export function PostInteractionSettingsForm({
                 hitSlop={0}
                 onPress={() => {
                   playHaptic('Light')
-                  if (isIOS && !showLists) {
+                  if (IS_IOS && !showLists) {
                     LayoutAnimation.configureNext({
                       ...LayoutAnimation.Presets.linear,
                       duration: 175,
@@ -689,6 +693,7 @@ export function usePrefetchPostInteractionSettings({
   postUri: string
   rootPostUri: string
 }) {
+  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const agent = useAgent()
   const getPost = useGetPost()
@@ -712,9 +717,9 @@ export function usePrefetchPostInteractionSettings({
         }),
       ])
     } catch (e: any) {
-      logger.error(`Failed to prefetch post interaction settings`, {
+      ax.logger.error(`Failed to prefetch post interaction settings`, {
         safeMessage: e.message,
       })
     }
-  }, [queryClient, agent, postUri, rootPostUri, getPost])
+  }, [ax, queryClient, agent, postUri, rootPostUri, getPost])
 }

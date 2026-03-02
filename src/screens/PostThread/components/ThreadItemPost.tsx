@@ -6,9 +6,8 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -44,6 +43,7 @@ import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {useActorStatus} from '#/features/liveNow'
 
 export type ThreadItemPostProps = {
   item: Extract<ThreadItem, {type: 'threadPost'}>
@@ -237,6 +237,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
         langs: post.record.langs,
       },
       onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record, onPostSuccess, moderation])
 
@@ -302,7 +303,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
-                <>
+                <View style={[a.mb_2xs]}>
                   <RichText
                     enableTags
                     value={richText}
@@ -317,7 +318,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                       onPress={onPressShowMore}
                     />
                   )}
-                </>
+                </View>
               ) : undefined}
               {post.embed && (
                 <View style={[a.pb_xs]}>

@@ -1,16 +1,15 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useGutters, useTheme, type ViewStyleProp, web} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {type Props as SVGIconProps} from '#/components/icons/common'
@@ -19,6 +18,7 @@ import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/ic
 import {Link} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 const TOPIC_COUNT = 5
 
@@ -29,6 +29,7 @@ export function ExploreTrendingTopics() {
 }
 
 function Inner() {
+  const ax = useAnalytics()
   const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
@@ -44,11 +45,7 @@ function Inner() {
           trend={trend}
           rank={index + 1}
           onPress={() => {
-            logger.metric(
-              'trendingTopic:click',
-              {context: 'explore'},
-              {statsig: true},
-            )
+            ax.metric('trendingTopic:click', {context: 'explore'})
           }}
         />
       ))}
@@ -68,7 +65,7 @@ export function TrendRow({
   onPress?: () => void
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const gutters = useGutters([0, 'base'])
 
   const category = useCategoryDisplayName(trend?.category || 'other')
@@ -77,13 +74,6 @@ export function TrendRow({
       (1000 * 60 * 60),
   )
   const badgeType = trend.status === 'hot' ? 'hot' : age < 2 ? 'new' : age
-  const postCount = trend.postCount
-    ? _(
-        plural(trend.postCount, {
-          other: `${formatCount(i18n, trend.postCount)} posts`,
-        }),
-      )
-    : null
 
   const actors = useModerateTrendingActors(trend.actors)
 
@@ -135,8 +125,6 @@ export function TrendRow({
                     web(a.leading_snug),
                   ]}
                   numberOfLines={1}>
-                  {postCount}
-                  {postCount && category && <> &middot; </>}
                   {category}
                 </Text>
               </View>

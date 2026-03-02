@@ -2,8 +2,9 @@ import {useCallback, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {type ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {
   useCameraPermission,
@@ -14,7 +15,6 @@ import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isAndroid, isNative} from '#/platform/detection'
 import {
   type ComposerImage,
   compressImage,
@@ -32,6 +32,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
+import {IS_ANDROID, IS_NATIVE} from '#/env'
 
 export function UserBanner({
   type,
@@ -75,7 +76,7 @@ export function UserBanner({
     }
 
     try {
-      if (isNative) {
+      if (IS_NATIVE) {
         onSelectNewBanner?.(
           await compressIfNeeded(
             await openCropper({
@@ -153,7 +154,7 @@ export function UserBanner({
           </Menu.Trigger>
           <Menu.Outer showCancel>
             <Menu.Group>
-              {isNative && (
+              {IS_NATIVE && (
                 <Menu.Item
                   testID="changeBannerCameraBtn"
                   label={_(msg`Upload from Camera`)}
@@ -170,7 +171,7 @@ export function UserBanner({
                 label={_(msg`Upload from Library`)}
                 onPress={onOpenLibrary}>
                 <Menu.ItemText>
-                  {isNative ? (
+                  {IS_NATIVE ? (
                     <Trans>Upload from Library</Trans>
                   ) : (
                     <Trans>Upload from Files</Trans>
@@ -207,7 +208,7 @@ export function UserBanner({
       />
     </>
   ) : banner &&
-    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
+    !((moderation?.blur && IS_ANDROID) /* android crashes with blur */) ? (
     <Image
       testID="userBannerImage"
       style={[styles.bannerImage, t.atoms.bg_contrast_25]}

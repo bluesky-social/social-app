@@ -1,22 +1,23 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {isWeb} from '#/platform/detection'
 import {useSetInAppBrowser} from '#/state/preferences/in-app-browser'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as External} from '#/components/icons/SquareArrowTopRight'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import {useGlobalDialogsControlContext} from './Context'
 
 export function InAppBrowserConsentDialog() {
   const {inAppBrowserConsentControl} = useGlobalDialogsControlContext()
 
-  if (isWeb) return null
+  if (IS_WEB) return null
 
   return (
     <Dialog.Outer

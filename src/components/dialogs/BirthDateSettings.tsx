@@ -1,13 +1,13 @@
 import React from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {isAppPassword} from '#/lib/jwt'
 import {getAge, getDateAgo} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
 import {
   useBirthdateMutation,
   useIsBirthdateUpdateAllowed,
@@ -26,6 +26,7 @@ import {DateField} from '#/components/forms/DateField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Span, Text} from '#/components/Typography'
+import {IS_IOS, IS_WEB} from '#/env'
 
 export function BirthDateSettingsDialog({
   control,
@@ -72,9 +73,9 @@ export function BirthDateSettingsDialog({
             ) : isUsingAppPassword ? (
               <Admonition type="info">
                 <Trans>
-                  Hmm, it looks like you're logged in with an{' '}
+                  Hmm, it looks like you're signed in with an{' '}
                   <Span style={[a.italic]}>App Password</Span>. To set your
-                  birthdate, you'll need to log in with your main account
+                  birthdate, you'll need to sign in with your main account
                   password, or ask whomever controls this account to do so.
                 </Trans>
               </Admonition>
@@ -154,7 +155,7 @@ function BirthdayInner({
 
   return (
     <View style={a.gap_lg} testID="birthDateSettingsDialog">
-      <View style={isIOS && [a.w_full, a.align_center]}>
+      <View style={IS_IOS && [a.w_full, a.align_center]}>
         <DateField
           testID="birthdayInput"
           value={date}
@@ -191,7 +192,7 @@ function BirthdayInner({
         <ErrorMessage message={errorMessage} style={[a.rounded_sm]} />
       ) : undefined}
 
-      <View style={isWeb && [a.flex_row, a.justify_end]}>
+      <View style={IS_WEB && [a.flex_row, a.justify_end]}>
         <Button
           label={hasChanged ? _(msg`Save birthdate`) : _(msg`Done`)}
           size="large"

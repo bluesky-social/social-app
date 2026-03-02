@@ -1,7 +1,8 @@
 import {useRef} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import type React from 'react'
 
 import {logger} from '#/logger'
@@ -57,14 +58,14 @@ export function SubtitleFilePicker({
       <View style={a.flex_row}>
         <Button
           onPress={handleClick}
-          label={_(msg`Select subtitle file (.vtt)`)}
+          label={_(msg`Select caption file (.vtt)`)}
           size="large"
           color="primary"
           variant="solid"
           disabled={disabled}>
           <ButtonIcon icon={CCIcon} />
           <ButtonText>
-            <Trans>Select subtitle file (.vtt)</Trans>
+            <Trans>Select caption file (.vtt)</Trans>
           </ButtonText>
         </Button>
       </View>

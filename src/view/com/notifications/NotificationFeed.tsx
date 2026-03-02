@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -161,6 +161,12 @@ export function NotificationFeed({
       ),
     [isFetchingNextPage],
   )
+
+  React.useEffect(() => {
+    if (!enabled) {
+      setIsPTRing(false)
+    }
+  }, [enabled])
 
   return (
     <View style={s.hContentRegion}>

@@ -3,12 +3,13 @@ import {
   FlatList,
   type FlatListProps,
   type GestureResponderEvent,
+  type LayoutChangeEvent,
+  Pressable,
   type StyleProp,
-  TouchableWithoutFeedback,
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
@@ -113,7 +114,7 @@ export function Outer({
         <Portal>
           <Context.Provider value={context}>
             <RemoveScrollBar />
-            <TouchableWithoutFeedback
+            <Pressable
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
               onPress={handleBackgroundPress}>
@@ -146,7 +147,7 @@ export function Outer({
                   {children}
                 </View>
               </View>
-            </TouchableWithoutFeedback>
+            </Pressable>
           </Context.Provider>
         </Portal>
       )}
@@ -253,11 +254,18 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function FlatListFooter({children}: {children: React.ReactNode}) {
+export function FlatListFooter({
+  children,
+  onLayout,
+}: {
+  children: React.ReactNode
+  onLayout?: (event: LayoutChangeEvent) => void
+}) {
   const t = useTheme()
 
   return (
     <View
+      onLayout={onLayout}
       style={[
         a.absolute,
         a.bottom_0,
@@ -304,7 +312,7 @@ export function Handle() {
   return null
 }
 
-function Backdrop() {
+export function Backdrop() {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
   return (

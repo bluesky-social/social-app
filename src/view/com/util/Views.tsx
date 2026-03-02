@@ -1,6 +1,5 @@
-import {forwardRef} from 'react'
-import {type FlatListComponent} from 'react-native'
-import {View, type ViewProps} from 'react-native'
+import {forwardRef, memo} from 'react'
+import {type FlatListComponent, View, type ViewProps} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {type FlatListPropsWithLayout} from 'react-native-reanimated'
 
@@ -10,7 +9,7 @@ import {type FlatListPropsWithLayout} from 'react-native-reanimated'
  * Avoid using `FlatList_INTERNAL` and use `List` where possible.
  * The types are a bit wrong on `FlatList_INTERNAL`
  */
-export const FlatList_INTERNAL = Animated.FlatList
+export const FlatList_INTERNAL = memo(Animated.FlatList)
 export type FlatList_INTERNAL<ItemT = any> = Omit<
   FlatListComponent<ItemT, FlatListPropsWithLayout<ItemT>>,
   'CellRendererComponent'

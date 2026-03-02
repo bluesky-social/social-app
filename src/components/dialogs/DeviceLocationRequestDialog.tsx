@@ -1,12 +1,12 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {isNetworkError, useCleanError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -14,6 +14,7 @@ import * as Dialog from '#/components/Dialog'
 import {PinLocation_Stroke2_Corner0_Rounded as LocationIcon} from '#/components/icons/PinLocation'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import {type Geolocation, useRequestDeviceGeolocation} from '#/geolocation'
 
 export type Props = {
@@ -112,18 +113,6 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
             available in your region.
           </Trans>
         </Text>
-
-        <Text
-          style={[
-            a.text_md,
-            a.leading_snug,
-            t.atoms.text_contrast_medium,
-            a.pb_xs,
-          ]}>
-          <Trans>
-            Your location data is not tracked and does not leave your device.
-          </Trans>
-        </Text>
       </View>
 
       {error && (
@@ -138,7 +127,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
             disabled={isRequesting}
             label={_(msg`Allow location access`)}
             onPress={onPressConfirm}
-            size={isWeb ? 'small' : 'large'}
+            size={IS_WEB ? 'small' : 'large'}
             color="primary">
             <ButtonIcon icon={isRequesting ? Loader : LocationIcon} />
             <ButtonText>
@@ -147,11 +136,11 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
           </Button>
         )}
 
-        {!isWeb && (
+        {!IS_WEB && (
           <Button
             label={_(msg`Cancel`)}
             onPress={() => close()}
-            size={isWeb ? 'small' : 'large'}
+            size={IS_WEB ? 'small' : 'large'}
             color="secondary">
             <ButtonText>
               <Trans>Cancel</Trans>

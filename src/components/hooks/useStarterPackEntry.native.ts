@@ -4,9 +4,9 @@ import {
   createStarterPackLinkFromAndroidReferrer,
   httpStarterPackUriToAtUri,
 } from '#/lib/strings/starter-pack'
-import {isAndroid} from '#/platform/detection'
 import {useHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
+import {IS_ANDROID} from '#/env'
 import {Referrer, SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
 
 export function useStarterPackEntry() {
@@ -32,7 +32,7 @@ export function useStarterPackEntry() {
     ;(async () => {
       let uri: string | null | undefined
 
-      if (isAndroid) {
+      if (IS_ANDROID) {
         const res = await Referrer.getGooglePlayReferrerInfoAsync()
 
         if (res && res.installReferrer) {

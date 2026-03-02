@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
@@ -11,6 +11,9 @@ import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
+// lifted from facet detection in `RichText` impl, _without_ `gm` flags
+const URL_REGEX =
+  /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i
 
 export type RichTextProps = TextStyleProp &
   Pick<TextProps, 'selectable' | 'onLayout' | 'onTextLayout'> & {
@@ -24,6 +27,16 @@ export type RichTextProps = TextStyleProp &
     interactiveStyle?: StyleProp<TextStyle>
     emojiMultiplier?: number
     shouldProxyLinks?: boolean
+    /**
+     * DANGEROUS: Disable facet lexicon validation
+     *
+     * `detectFacetsWithoutResolution()` generates technically invalid facets,
+     * with a handle in place of the DID. This means that RichText that uses it
+     * won't be able to render links.
+     *
+     * Use with care - only use if you're rendering facets you're generating yourself.
+     */
+    disableMentionFacetValidation?: true
   }
 
 export function RichText({
@@ -41,12 +54,17 @@ export function RichText({
   onLayout,
   onTextLayout,
   shouldProxyLinks,
+  disableMentionFacetValidation,
 }: RichTextProps) {
-  const richText = React.useMemo(
-    () =>
-      value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
-    [value],
-  )
+  const richText = useMemo(() => {
+    if (value instanceof RichTextAPI) {
+      return value
+    } else {
+      const rt = new RichTextAPI({text: value})
+      rt.detectFacetsWithoutResolution()
+      return rt
+    }
+  }, [value])
 
   const plainStyles = [a.leading_snug, style]
   const interactiveStyles = [plainStyles, interactiveStyle]
@@ -95,9 +113,11 @@ export function RichText({
     const link = segment.link
     const mention = segment.mention
     const tag = segment.tag
+
     if (
       mention &&
-      AppBskyRichtextFacet.validateMention(mention).success &&
+      (disableMentionFacetValidation ||
+        AppBskyRichtextFacet.validateMention(mention).success) &&
       !disableLinks
     ) {
       els.push(
@@ -115,7 +135,8 @@ export function RichText({
         </ProfileHoverCard>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
-      if (disableLinks) {
+      const isValidLink = URL_REGEX.test(link.uri)
+      if (!isValidLink || disableLinks) {
         els.push(toShortUrl(segment.text))
       } else {
         els.push(

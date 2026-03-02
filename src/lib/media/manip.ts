@@ -18,7 +18,7 @@ import {Buffer} from 'buffer'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 
@@ -108,7 +108,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
 
   // save
   try {
-    if (isAndroid) {
+    if (IS_ANDROID) {
       // android triggers an annoying permission prompt if you try and move an image
       // between albums. therefore, we need to either create the album with the image
       // as the starting image, or put it directly into the album
@@ -305,7 +305,7 @@ function joinPath(a: string, b: string) {
 }
 
 function normalizePath(str: string, allPlatforms = false): string {
-  if (isAndroid || allPlatforms) {
+  if (IS_ANDROID || allPlatforms) {
     if (!str.startsWith('file://')) {
       return `file://${str}`
     }
@@ -328,7 +328,7 @@ export async function saveToDevice(
   type: string,
 ) {
   try {
-    if (isIOS) {
+    if (IS_IOS) {
       await withTempFile(filename, encoded, async tmpFileUrl => {
         await Sharing.shareAsync(tmpFileUrl, {UTI: type})
       })

@@ -1,8 +1,9 @@
 import {useCallback, useEffect, useRef} from 'react'
+import {Platform} from 'react-native'
 import * as Location from 'expo-location'
 import {createPermissionHook} from 'expo-modules-core'
 
-import {isNative} from '#/platform/detection'
+import {IS_NATIVE} from '#/env'
 import * as debug from '#/geolocation/debug'
 import {logger} from '#/geolocation/logger'
 import {type Geolocation} from '#/geolocation/types'
@@ -46,7 +47,8 @@ const useForegroundPermissions = createPermissionHook({
 })
 
 export async function getDeviceGeolocation(): Promise<Geolocation> {
-  if (debug.enabled) return debug.resolve(debug.deviceGeolocation)
+  if (debug.enabled && debug.deviceGeolocation)
+    return debug.resolve(debug.deviceGeolocation)
 
   try {
     const geocode = await Location.getCurrentPositionAsync()
@@ -56,6 +58,18 @@ export async function getDeviceGeolocation(): Promise<Geolocation> {
     })
     const location = locations.at(0)
     const normalized = location ? normalizeDeviceLocation(location) : undefined
+    if (normalized?.regionCode && normalized.regionCode.length > 5) {
+      /*
+       * We want short codes only, and we're still seeing some full names here.
+       * 5 is just a heuristic for a region that is probably not formatted as a
+       * short code.
+       */
+      logger.error('getDeviceGeolocation: invalid regionCode', {
+        os: Platform.OS,
+        version: Platform.Version,
+        regionCode: normalized.regionCode,
+      })
+    }
     return {
       countryCode: normalized?.countryCode ?? undefined,
       regionCode: normalized?.regionCode ?? undefined,
@@ -104,7 +118,7 @@ export function useSyncDeviceGeolocationOnStartup(
   const synced = useRef(false)
   const [status] = useForegroundPermissions()
   useEffect(() => {
-    if (!isNative) return
+    if (!IS_NATIVE) return
 
     async function get() {
       // no need to set this more than once per session
@@ -141,4 +155,9 @@ export function useSyncDeviceGeolocationOnStartup(
       )
     })
   }, [status, sync])
+}
+
+export function useIsDeviceGeolocationGranted() {
+  const [status] = useForegroundPermissions()
+  return status?.granted === true
 }

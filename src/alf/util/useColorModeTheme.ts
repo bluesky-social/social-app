@@ -2,9 +2,9 @@ import React from 'react'
 import {type ColorSchemeName, useColorScheme} from 'react-native'
 import {type ThemeName} from '@bsky.app/alf'
 
-import {isWeb} from '#/platform/detection'
 import {useThemePrefs} from '#/state/shell'
 import {dark, dim, light} from '#/alf/themes'
+import {IS_WEB} from '#/env'
 
 export function useColorModeTheme(): ThemeName {
   const theme = useThemeName()
@@ -40,7 +40,7 @@ function getThemeName(
 
 function updateDocument(theme: ThemeName) {
   // @ts-ignore web only
-  if (isWeb && typeof window !== 'undefined') {
+  if (IS_WEB && typeof window !== 'undefined') {
     // @ts-ignore web only
     const html = window.document.documentElement
     // @ts-ignore web only
@@ -51,6 +51,7 @@ function updateDocument(theme: ThemeName) {
     html.classList.add(`theme--${theme}`)
     // set color to 'theme-color' meta tag
     meta?.setAttribute('content', getBackgroundColor(theme))
+    window.localStorage.setItem('ALF_THEME', theme)
   }
 }
 

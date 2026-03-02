@@ -3,7 +3,7 @@ import {
   type ChatBskyConvoDefs,
   type ComAtprotoModerationCreateReport,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
@@ -70,6 +70,7 @@ export function useSubmitReportMutation() {
           }
           break
         }
+        case 'status':
         case 'post':
         case 'list':
         case 'feed':

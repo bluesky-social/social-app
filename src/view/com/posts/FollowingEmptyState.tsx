@@ -4,14 +4,14 @@ import {
   FontAwesomeIcon,
   type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {IS_WEB} from '#/env'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
@@ -21,7 +21,7 @@ export function FollowingEmptyState() {
   const navigation = useNavigation<NavigationProp>()
 
   const onPressFindAccounts = React.useCallback(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       navigation.navigate('Search', {})
     } else {
       navigation.navigate('SearchTab')

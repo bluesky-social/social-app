@@ -1,23 +1,19 @@
-import React, {useCallback, useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useIsFocused, useNavigation} from '@react-navigation/native'
+import {useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {type NavigationProp} from '#/lib/routes/types'
+import {cleanError} from '#/lib/strings/errors'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
-import {s} from '#/lib/styles'
-import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {
@@ -35,72 +31,48 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
+import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
-import {Button} from '#/view/com/util/forms/Button'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {Text} from '#/view/com/util/text/Text'
 import {
   ProfileFeedHeader,
   ProfileFeedHeaderSkeleton,
 } from '#/screens/Profile/components/ProfileFeedHeader'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
+import {IS_NATIVE} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export function ProfileFeedScreen(props: Props) {
   const {rkey, name: handleOrDid} = props.route.params
 
   const feedParams: FeedParams | undefined = props.route.params.feedCacheKey
-    ? {
-        feedCacheKey: props.route.params.feedCacheKey,
-      }
+    ? {feedCacheKey: props.route.params.feedCacheKey}
     : undefined
-  const pal = usePalette('default')
   const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp>()
 
   const uri = useMemo(
     () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
     [rkey, handleOrDid],
   )
-  const {error, data: resolvedUri} = useResolveUriQuery(uri)
+  let {
+    error,
+    data: resolvedUri,
+    refetch,
+    isRefetching,
+  } = useResolveUriQuery(uri)
 
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  if (error) {
+  if (error && !isRefetching) {
     return (
       <Layout.Screen testID="profileFeedScreenError">
-        <Layout.Content>
-          <View style={[pal.view, pal.border, styles.notFoundContainer]}>
-            <Text type="title-lg" style={[pal.text, s.mb10]}>
-              <Trans>Could not load feed</Trans>
-            </Text>
-            <Text type="md" style={[pal.text, s.mb20]}>
-              {error.toString()}
-            </Text>
-
-            <View style={{flexDirection: 'row'}}>
-              <Button
-                type="default"
-                accessibilityLabel={_(msg`Go back`)}
-                accessibilityHint={_(msg`Returns to previous page`)}
-                onPress={onPressBack}
-                style={{flexShrink: 1}}>
-                <Text type="button" style={pal.text}>
-                  <Trans>Go Back</Trans>
-                </Text>
-              </Button>
-            </View>
-          </View>
-        </Layout.Content>
+        <ErrorScreen
+          showHeader
+          title={_(msg`Could not load feed`)}
+          message={cleanError(error)}
+          onPressTryAgain={() => void refetch()}
+        />
       </Layout.Screen>
     )
   }
@@ -167,22 +139,22 @@ export function ProfileFeedScreenInner({
 
   const feed = `feedgen|${feedInfo.uri}` as FeedDescriptor
 
-  const [hasNew, setHasNew] = React.useState(false)
-  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const [hasNew, setHasNew] = useState(false)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const queryClient = useQueryClient()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useAnimatedRef() as ListRef
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: 0, // -headerHeight,
     })
-    truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+    void truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
   }, [scrollElRef, queryClient, feed, setHasNew])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isScreenFocused) {
       return
     }
@@ -199,12 +171,12 @@ export function ProfileFeedScreenInner({
     )
   }, [_])
 
-  const isVideoFeed = React.useMemo(() => {
+  const isVideoFeed = useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
-    return isNative && _isVideoFeed
+    return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
 
   return (
@@ -236,7 +208,7 @@ export function ProfileFeedScreenInner({
       {hasSession && (
         <FAB
           testID="composeFAB"
-          onPress={() => openComposer({})}
+          onPress={() => openComposer({logContext: 'Fab'})}
           icon={
             <ComposeIcon2
               strokeWidth={1.5}
@@ -252,26 +224,3 @@ export function ProfileFeedScreenInner({
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-    borderRadius: 50,
-    marginLeft: 6,
-  },
-  notFoundContainer: {
-    margin: 10,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderRadius: 6,
-  },
-  aboutSectionContainer: {
-    paddingVertical: 4,
-    paddingHorizontal: 16,
-    gap: 12,
-  },
-})

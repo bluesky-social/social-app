@@ -5,7 +5,7 @@ import {
   type TextStyle,
 } from 'react-native'
 
-import {isWeb} from '#/platform/detection'
+import {IS_WEB} from '#/env'
 import {type Theme, type TypographyVariant} from './ThemeContext'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
@@ -186,7 +186,7 @@ export const s = StyleSheet.create({
   // dimensions
   w100pct: {width: '100%'},
   h100pct: {height: '100%'},
-  hContentRegion: isWeb ? {minHeight: '100%'} : {height: '100%'},
+  hContentRegion: IS_WEB ? {minHeight: '100%'} : {height: '100%'},
   window: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,

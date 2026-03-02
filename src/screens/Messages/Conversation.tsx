@@ -5,8 +5,9 @@ import {
   moderateProfile,
   type ModerationDecision,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {
   type RouteProp,
   useFocusEffect,
@@ -15,13 +16,11 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {isWeb} from '#/platform/detection'
 import {type Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useEmail} from '#/state/email-verification'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
@@ -43,6 +42,7 @@ import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -68,13 +68,11 @@ export function MessagesConversationScreenInner({route}: Props) {
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
-  useEnableKeyboardControllerScreen(true)
-
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
 
-      if (isWeb && !gtMobile) {
+      if (IS_WEB && !gtMobile) {
         setMinimalShellMode(true)
       } else {
         setMinimalShellMode(false)

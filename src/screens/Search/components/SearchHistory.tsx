@@ -1,7 +1,8 @@
 import {Pressable, ScrollView, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {createHitslop, HITSLOP_10} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'

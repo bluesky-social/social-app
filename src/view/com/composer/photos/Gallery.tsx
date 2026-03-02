@@ -10,18 +10,19 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
-import {isNative} from '#/platform/detection'
 import {type ComposerImage, cropImage} from '#/state/gallery'
 import {Text} from '#/view/com/util/text/Text'
 import {tokens, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {IS_NATIVE} from '#/env'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
@@ -145,7 +146,7 @@ const GalleryItem = ({
   const editControl = Dialog.useDialogControl()
 
   const onImageEdit = () => {
-    if (isNative) {
+    if (IS_NATIVE) {
       cropImage(image).then(next => {
         onChange(next)
       })

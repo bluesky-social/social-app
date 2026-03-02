@@ -6,12 +6,10 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {isTouchDevice} from '#/lib/browser'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -35,7 +33,6 @@ import {
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
 import {InlineLinkText, Link} from '#/components/Link'
-import {LiveStatus} from '#/components/live/LiveStatusDialog'
 import {Loader} from '#/components/Loader'
 import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
@@ -43,6 +40,9 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {IS_WEB_TOUCH_DEVICE} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
+import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -70,7 +70,7 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
     }
   }
 
-  if (props.disable || isTouchDevice) {
+  if (props.disable || IS_WEB_TOUCH_DEVICE) {
     return props.children
   } else {
     return (
@@ -389,6 +389,7 @@ let Card = ({
       {data && moderationOpts ? (
         status.isActive ? (
           <LiveStatus
+            status={status}
             profile={data}
             embed={status.embed}
             padding="lg"

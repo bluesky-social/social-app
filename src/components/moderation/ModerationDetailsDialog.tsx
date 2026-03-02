@@ -1,19 +1,20 @@
 import {View} from 'react-native'
 import {type ModerationCause} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {makeProfileLink} from '#/lib/routes/links'
 import {listUriToHref} from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {type AppModerationCause} from '#/components/Pills'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export {useDialogControl as useModerationDetailsDialogControl} from '#/components/Dialog'
 
@@ -158,7 +159,7 @@ function ModerationDetailsDialogInner({
             xGutters,
             a.py_md,
             a.border_t,
-            !isNative && t.atoms.bg_contrast_25,
+            !IS_NATIVE && t.atoms.bg_contrast_25,
             t.atoms.border_contrast_low,
             {
               borderBottomLeftRadius: a.rounded_md.borderRadius,
@@ -219,7 +220,7 @@ function ModerationDetailsDialogInner({
         </View>
       )}
 
-      {isNative && <View style={{height: 40}} />}
+      {IS_NATIVE && <View style={{height: 40}} />}
 
       <Dialog.Close />
     </Dialog.ScrollableInner>

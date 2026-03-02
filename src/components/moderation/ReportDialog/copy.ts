@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {type ParsedReportSubject} from './types'
@@ -12,6 +12,12 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
         return {
           title: _(msg`Report this user`),
           subtitle: _(msg`Why should this user be reviewed?`),
+        }
+      }
+      case 'status': {
+        return {
+          title: _(msg`Report this livestream`),
+          subtitle: _(msg`Why should this livestream be reviewed?`),
         }
       }
       case 'post': {

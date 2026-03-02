@@ -18,3 +18,119 @@ index 0000000..3b5b864
 @@ -0,0 +1,2 @@
 +# Keep FullscreenActivity from being stripped by R8/ProGuard
 +-keep class expo.modules.blueskyvideo.FullscreenActivity { *; }
+diff --git a/node_modules/@haileyok/bluesky-video/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt b/node_modules/@haileyok/bluesky-video/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
+index fdabd84..eda8c7c 100644
+--- a/node_modules/@haileyok/bluesky-video/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
++++ b/node_modules/@haileyok/bluesky-video/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
+@@ -1,8 +1,11 @@
+ package expo.modules.blueskyvideo
+ 
++import android.app.Activity
+ import android.content.Context
+ import android.content.Intent
+ import android.graphics.Color
++import android.os.Build
++import android.util.Log
+ import android.graphics.Rect
+ import android.net.Uri
+ import android.view.ViewGroup
+@@ -237,9 +240,44 @@ class BlueskyVideoView(
+     // Fullscreen handling
+ 
+     fun enterFullscreen(keepDisplayOn: Boolean) {
+-        val currentActivity = this.appContext.currentActivity ?: return
++        val tag = "BlueskyVideo"
++
++        Log.d(tag, "enterFullscreen() called - keepDisplayOn=$keepDisplayOn")
++        Log.d(tag, "  isFullscreen=$isFullscreen, isPlaying=$isPlaying, isMuted=$isMuted")
++        Log.d(tag, "  player=${player != null}, url=$url")
++        Log.d(tag, "  isAttachedToWindow=$isAttachedToWindow, isShown=$isShown")
++        Log.d(tag, "  Android SDK: ${Build.VERSION.SDK_INT}, Device: ${Build.MANUFACTURER} ${Build.MODEL}")
++
++        val currentActivity = this.appContext.currentActivity
++        if (currentActivity == null) {
++            Log.e(tag, "enterFullscreen() FAILED: currentActivity is null")
++            Log.e(tag, "  appContext=$appContext")
++            onError(mapOf("error" to "Cannot enter fullscreen: no current activity"))
++            return
++        }
++
++        Log.d(tag, "  currentActivity=$currentActivity")
++        Log.d(tag, "  activity.isFinishing=${currentActivity.isFinishing}")
++        Log.d(tag, "  activity.isDestroyed=${currentActivity.isDestroyed}")
++        Log.d(tag, "  activity.lifecycle=${(currentActivity as? androidx.lifecycle.LifecycleOwner)?.lifecycle?.currentState}")
++        Log.d(tag, "  activity.hasWindowFocus=${currentActivity.hasWindowFocus()}")
++        Log.d(tag, "  activity.window.isActive=${currentActivity.window?.isActive}")
++
++        // Check if activity is in a valid state to start another activity
++        if (currentActivity.isFinishing) {
++            Log.e(tag, "enterFullscreen() FAILED: currentActivity is finishing")
++            onError(mapOf("error" to "Cannot enter fullscreen: activity is finishing"))
++            return
++        }
++
++        if (currentActivity.isDestroyed) {
++            Log.e(tag, "enterFullscreen() FAILED: currentActivity is destroyed")
++            onError(mapOf("error" to "Cannot enter fullscreen: activity is destroyed"))
++            return
++        }
+ 
+         this.enteredFullscreenMuteState = this.isMuted
++        Log.d(tag, "  saved enteredFullscreenMuteState=$enteredFullscreenMuteState")
+ 
+         // We always want to start with unmuted state and playing. Fire those from here so the
+         // event dispatcher gets called
+@@ -247,18 +285,51 @@ class BlueskyVideoView(
+         if (!this.isPlaying) {
+             this.play()
+         }
++        Log.d(tag, "  after unmute/play: isPlaying=$isPlaying, isMuted=$isMuted")
+ 
+         // Remove the player from this view, but don't null the player!
+         this.playerView.player = null
++        Log.d(tag, "  detached player from playerView")
+ 
+         // create the intent and give it a view
+         val intent = Intent(context, FullscreenActivity::class.java)
+         intent.putExtra("keepDisplayOn", keepDisplayOn)
+         FullscreenActivity.asscVideoView = WeakReference(this)
+ 
++        Log.d(tag, "  intent created: $intent")
++        Log.d(tag, "  intent.component=${intent.component}")
++        Log.d(tag, "  intent.flags=${intent.flags} (0x${Integer.toHexString(intent.flags)})")
++        Log.d(tag, "  context for intent=$context")
++        Log.d(tag, "  FullscreenActivity.asscVideoView set to WeakReference(this)")
++
+         // fire the fullscreen event and launch the intent
+-        this.isFullscreen = true
+-        currentActivity.startActivity(intent)
++        try {
++            Log.d(tag, "  calling startActivity()...")
++            currentActivity.startActivity(intent)
++            this.isFullscreen = true
++            Log.d(tag, "  startActivity() SUCCESS - isFullscreen set to true")
++        } catch (e: Exception) {
++            Log.e(tag, "enterFullscreen() FAILED: startActivity() threw exception", e)
++            Log.e(tag, "  exception class: ${e.javaClass.name}")
++            Log.e(tag, "  exception message: ${e.message}")
++            Log.e(tag, "  exception cause: ${e.cause}")
++            e.printStackTrace()
++
++            // Restore state since fullscreen failed
++            this.playerView.player = this.player
++            Log.d(tag, "  restored player to playerView after failure")
++
++            if (this.enteredFullscreenMuteState) {
++                this.mute()
++                Log.d(tag, "  restored mute state after failure")
++            }
++
++            onError(mapOf(
++                "error" to "Failed to enter fullscreen: ${e.message}",
++                "exceptionClass" to e.javaClass.name,
++                "exceptionMessage" to (e.message ?: "unknown")
++            ))
++        }
+     }
+ 
+     fun onExitFullscreen() {

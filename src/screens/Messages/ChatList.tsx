@@ -2,18 +2,18 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useAppState} from '#/lib/hooks/useAppState'
+import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
@@ -38,6 +38,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxPreview} from './components/InboxPreview'
 
@@ -188,7 +189,11 @@ export function MessagesScreenInner({navigation, route}: Props) {
             ]
           : []),
         ...conversations.map(
-          convo => ({type: 'CONVERSATION', conversation: convo}) as const,
+          convo =>
+            ({
+              type: 'CONVERSATION',
+              conversation: convo,
+            }) as const,
         ),
       ] satisfies ListItem[]
     }
@@ -222,7 +227,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
 
   const onSoftReset = useCallback(async () => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: 0,
     })
     try {
@@ -348,7 +353,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
             hasNextPage={hasNextPage}
           />
         }
-        onEndReachedThreshold={isNative ? 1.5 : 0}
+        onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
         initialNumToRender={initialNumToRender}
         windowSize={11}
         desktopFixedHeight

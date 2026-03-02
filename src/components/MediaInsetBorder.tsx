@@ -1,9 +1,9 @@
 import {StyleSheet} from 'react-native'
 import type React from 'react'
 
-import {isHighDPI} from '#/lib/browser'
 import {atoms as a, platform, useTheme, type ViewStyleProp} from '#/alf'
 import {Fill} from '#/components/Fill'
+import {IS_HIGH_DPI} from '#/env'
 
 /**
  * Applies and thin border within a bounding box. Used to contrast media from
@@ -33,7 +33,7 @@ export function MediaInsetBorder({
             // while we generally use hairlineWidth (aka 1px),
             // we make an exception here for high DPI screens
             // as the 1px border is very noticeable -sfn
-            web: isHighDPI ? 0.5 : StyleSheet.hairlineWidth,
+            web: IS_HIGH_DPI ? 0.5 : StyleSheet.hairlineWidth,
           }),
         },
         opaque

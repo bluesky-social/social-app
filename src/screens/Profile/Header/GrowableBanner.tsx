@@ -15,13 +15,13 @@ import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
 import type React from 'react'
 
-import {isIOS} from '#/platform/detection'
 import {RQKEY_ROOT as STARTERPACK_RQKEY_ROOT} from '#/state/queries/actor-starter-packs'
 import {RQKEY_ROOT as FEED_RQKEY_ROOT} from '#/state/queries/post-feed'
 import {RQKEY_ROOT as FEEDGEN_RQKEY_ROOT} from '#/state/queries/profile-feedgens'
 import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
+import {IS_IOS} from '#/env'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
@@ -39,7 +39,7 @@ export function GrowableBanner({
   const pagerContext = usePagerHeaderContext()
 
   // plain non-growable mode for Android/Web
-  if (!pagerContext || !isIOS) {
+  if (!pagerContext || !IS_IOS) {
     return (
       <Pressable
         onPress={onPress}
@@ -164,7 +164,7 @@ function GrowableBannerInner({
         style={[
           a.absolute,
           a.inset_0,
-          {top: topInset - (isIOS ? 15 : 0)},
+          {top: topInset - (IS_IOS ? 15 : 0)},
           a.justify_center,
           a.align_center,
         ]}>

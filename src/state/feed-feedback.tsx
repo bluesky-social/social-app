@@ -11,7 +11,6 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
 import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
-import {Logger} from '#/logger'
 import {
   type FeedSourceFeedInfo,
   type FeedSourceInfo,
@@ -22,6 +21,7 @@ import {
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
+import {useAnalytics} from '#/analytics'
 import {useAgent} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
@@ -41,8 +41,6 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
   // so it is fine to send. It is crucial for third party algorithmic feeds to receive these.
   'app.bsky.feed.defs#interactionSeen',
 ])
-
-const logger = Logger.create(Logger.Context.FeedFeedback)
 
 export type StateContext = {
   enabled: boolean
@@ -65,6 +63,8 @@ export function useFeedFeedback(
   feedSourceInfo: FeedSourceInfo | undefined,
   hasSession: boolean,
 ) {
+  const ax = useAnalytics()
+  const logger = ax.logger.useChild(ax.logger.Context.FeedFeedback)
   const agent = useAgent()
 
   const feed =
@@ -85,12 +85,45 @@ export function useFeedFeedback(
     WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
   >(new WeakSet())
 
+  const flushEvents = useCallback(
+    (stats: AggregatedStats | null, feedDescriptor: string) => {
+      if (stats === null) {
+        return
+      }
+
+      if (stats.clickthroughCount > 0) {
+        ax.metric('feed:clickthrough', {
+          count: stats.clickthroughCount,
+          feed: feedDescriptor,
+        })
+        stats.clickthroughCount = 0
+      }
+
+      if (stats.engagedCount > 0) {
+        ax.metric('feed:engaged', {
+          count: stats.engagedCount,
+          feed: feedDescriptor,
+        })
+        stats.engagedCount = 0
+      }
+
+      if (stats.seenCount > 0) {
+        ax.metric('feed:seen', {
+          count: stats.seenCount,
+          feed: feedDescriptor,
+        })
+        stats.seenCount = 0
+      }
+    },
+    [ax],
+  )
+
   const aggregatedStats = useRef<AggregatedStats | null>(null)
   const throttledFlushAggregatedStats = useMemo(
     () =>
       throttle(
         () =>
-          flushToStatsig(
+          flushEvents(
             aggregatedStats.current,
             feed?.feedDescriptor ?? 'unknown',
           ),
@@ -100,7 +133,7 @@ export function useFeedFeedback(
           trailing: true,
         },
       ),
-    [feed?.feedDescriptor],
+    [feed?.feedDescriptor, flushEvents],
   )
 
   const sendToFeedNoDelay = useCallback(() => {
@@ -130,14 +163,12 @@ export function useFeedFeedback(
       )
       .catch(() => {}) // ignore upstream errors
 
-    // Send to Statsig
     if (aggregatedStats.current === null) {
       aggregatedStats.current = createAggregatedStats()
     }
     sendOrAggregateInteractionsForStats(
       aggregatedStats.current,
       interactionsToSend,
-      feed?.feedDescriptor ?? 'unknown',
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
@@ -274,28 +305,10 @@ function createAggregatedStats(): AggregatedStats {
 function sendOrAggregateInteractionsForStats(
   stats: AggregatedStats,
   interactions: AppBskyFeedDefs.Interaction[],
-  feed: string,
 ) {
   for (let interaction of interactions) {
     switch (interaction.event) {
-      // Pressing "Show more" / "Show less" is relatively uncommon so we won't aggregate them.
-      // This lets us send the feed context together with them.
-      case 'app.bsky.feed.defs#requestLess': {
-        logger.metric('feed:showLess', {
-          feed,
-          feedContext: interaction.feedContext ?? '',
-        })
-        break
-      }
-      case 'app.bsky.feed.defs#requestMore': {
-        logger.metric('feed:showMore', {
-          feed,
-          feedContext: interaction.feedContext ?? '',
-        })
-        break
-      }
-
-      // The rest of the events are aggregated and sent later in batches.
+      // The events are aggregated and sent later in batches.
       case 'app.bsky.feed.defs#clickthroughAuthor':
       case 'app.bsky.feed.defs#clickthroughEmbed':
       case 'app.bsky.feed.defs#clickthroughItem':
@@ -316,39 +329,5 @@ function sendOrAggregateInteractionsForStats(
         break
       }
     }
-  }
-}
-
-function flushToStatsig(stats: AggregatedStats | null, feedDescriptor: string) {
-  if (stats === null) {
-    return
-  }
-
-  if (stats.clickthroughCount > 0) {
-    logger.metric('feed:clickthrough', {
-      count: stats.clickthroughCount,
-      feed: feedDescriptor,
-    })
-    stats.clickthroughCount = 0
-  }
-
-  if (stats.engagedCount > 0) {
-    logger.metric('feed:engaged', {
-      count: stats.engagedCount,
-      feed: feedDescriptor,
-    })
-    stats.engagedCount = 0
-  }
-
-  if (stats.seenCount > 0) {
-    logger.metric(
-      'feed:seen',
-      {
-        count: stats.seenCount,
-        feed: feedDescriptor,
-      },
-      {statsig: false},
-    )
-    stats.seenCount = 0
   }
 }

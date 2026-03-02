@@ -4,7 +4,6 @@ import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {makeCustomFeedLink} from '#/lib/routes/links'
-import {logger} from '#/logger'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -13,6 +12,7 @@ import {sizes as iconSizes} from '#/components/icons/common'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 import {Link} from '#/components/Link'
 import {Text, type TextProps} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 export function Container({
   style,
@@ -126,6 +126,7 @@ export function SearchButton({
   metricsTag: 'suggestedAccounts' | 'suggestedFeeds'
   onPress?: () => void
 }) {
+  const ax = useAnalytics()
   return (
     <Button
       label={label}
@@ -135,11 +136,7 @@ export function SearchButton({
       shape="round"
       PressableComponent={native(PressableScale)}
       onPress={() => {
-        logger.metric(
-          'explore:module:searchButtonPress',
-          {module: metricsTag},
-          {statsig: true},
-        )
+        ax.metric('explore:module:searchButtonPress', {module: metricsTag})
         onPress?.()
       }}
       style={[

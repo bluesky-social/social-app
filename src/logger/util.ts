@@ -24,6 +24,14 @@ export function prepareMetadata(
     if (value instanceof Error) {
       value = value.toString()
     }
+    if (
+      typeof value === 'object' &&
+      value !== null &&
+      Object.keys(value).length === 0 &&
+      value.constructor === Object
+    ) {
+      return acc
+    }
     return {...acc, [key]: value}
   }, {})
 }

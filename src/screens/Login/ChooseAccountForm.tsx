@@ -1,9 +1,9 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -12,6 +12,8 @@ import {atoms as a, web} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
 export const ChooseAccountForm = ({
@@ -21,13 +23,14 @@ export const ChooseAccountForm = ({
   onSelectAccount: (account?: SessionAccount) => void
   onPressBack: () => void
 }) => {
-  const [pendingDid, setPendingDid] = React.useState<string | null>(null)
+  const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
-  const onSelect = React.useCallback(
+  const onSelect = useCallback(
     async (account: SessionAccount) => {
       if (pendingDid) {
         // The session API isn't resilient to race conditions so let's just ignore this.
@@ -46,14 +49,14 @@ export const ChooseAccountForm = ({
       try {
         setPendingDid(account.did)
         await resumeSession(account, true)
-        logEvent('account:loggedIn', {
+        ax.metric('account:loggedIn', {
           logContext: 'ChooseAccountForm',
           withPassword: false,
         })
         Toast.show(_(msg`Signed in as @${account.handle}`))
       } catch (e: any) {
         logger.error('choose account: initSession failed', {
-          message: e.message,
+          message: e instanceof Error ? e.message : 'Unknown error',
         })
         // Move to login form.
         onSelectAccount(account)
@@ -68,6 +71,7 @@ export const ChooseAccountForm = ({
       onSelectAccount,
       setShowLoggedOut,
       _,
+      ax,
     ],
   )
 
@@ -77,26 +81,29 @@ export const ChooseAccountForm = ({
       titleText={<Trans>Select account</Trans>}
       style={web([a.py_2xl])}>
       <View>
-        <TextField.LabelText>
-          <Trans>Sign in as...</Trans>
-        </TextField.LabelText>
+        {IS_WEB && (
+          <TextField.LabelText>
+            <Trans>Sign in as...</Trans>
+          </TextField.LabelText>
+        )}
         <AccountList
           onSelectAccount={onSelect}
           onSelectOther={() => onSelectAccount()}
           pendingDid={pendingDid}
         />
       </View>
-      <View style={[a.flex_row]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>{_(msg`Back`)}</ButtonText>
-        </Button>
-        <View style={[a.flex_1]} />
-      </View>
+      {IS_WEB && (
+        <View style={[a.flex_row]}>
+          <Button
+            label={_(msg`Back`)}
+            color="secondary"
+            size="large"
+            onPress={onPressBack}>
+            <ButtonText>{_(msg`Back`)}</ButtonText>
+          </Button>
+          <View style={[a.flex_1]} />
+        </View>
+      )}
     </FormContainer>
   )
 }

@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -14,7 +15,6 @@ import {
 } from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {emitSoftReset, listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
@@ -31,14 +31,14 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {atoms as a, useTheme} from '#/alf'
-import {web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {IS_NATIVE} from '#/env'
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
@@ -161,7 +161,7 @@ export function NotificationsScreen({}: Props) {
       </Pager>
       <FAB
         testID="composeFAB"
-        onPress={() => openComposer({})}
+        onPress={() => openComposer({logContext: 'Fab'})}
         icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
         accessibilityRole="button"
         accessibilityLabel={_(msg`New post`)}
@@ -197,7 +197,7 @@ function NotificationsTab({
   // event handlers
   // =
   const scrollToTop = useCallback(() => {
-    scrollElRef.current?.scrollToOffset({animated: isNative, offset: 0})
+    scrollElRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
     setMinimalShellMode(false)
   }, [scrollElRef, setMinimalShellMode])
 
@@ -227,7 +227,7 @@ function NotificationsTab({
     // on focus, check for latest, but only invalidate if the user
     // isnt scrolled down to avoid moving content underneath them
     let currentIsScrolledDown
-    if (isNative) {
+    if (IS_NATIVE) {
       currentIsScrolledDown = isScrolledDown
     } else {
       // On the web, this isn't always updated in time so

@@ -49,6 +49,7 @@ export type ContextType = {
   translationSV: SharedValue<number>
   mode: 'full' | 'auxiliary-only'
   open: (evt: Measurement, mode: 'full' | 'auxiliary-only') => void
+  returnLocationSV: SharedValue<{x: number; y: number} | null>
   close: () => void
   registerHoverable: (
     id: string,
@@ -85,7 +86,7 @@ export type TriggerProps = {
 }
 export type TriggerChildProps =
   | {
-      isNative: true
+      IS_NATIVE: true
       control: {
         isOpen: boolean
         open: (mode: 'full' | 'auxiliary-only') => void
@@ -115,7 +116,7 @@ export type TriggerChildProps =
       }
     }
   | {
-      isNative: false
+      IS_NATIVE: false
       control: Dialog.DialogOuterProps['control']
       state: {
         hovered: false

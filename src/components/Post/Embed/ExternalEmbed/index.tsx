@@ -2,7 +2,7 @@ import React, {useCallback} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
@@ -10,13 +10,13 @@ import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {ExternalGif} from './ExternalGif'
 import {ExternalPlayer} from './ExternalPlayer'
 import {GifEmbed} from './Gif'
@@ -53,7 +53,7 @@ export const ExternalEmbed = ({
   }, [playHaptic, onOpen])
 
   const onShareExternal = useCallback(() => {
-    if (link.uri && isNative) {
+    if (link.uri && IS_NATIVE) {
       playHaptic('Heavy')
       shareUrl(link.uri)
     }
@@ -100,6 +100,7 @@ export const ExternalEmbed = ({
               style={[a.aspect_card]}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
+              loading="lazy"
             />
           ) : undefined}
 

@@ -17,7 +17,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
@@ -26,7 +26,6 @@ import {
   type EmbedPlayerParams,
   getPlayerAspect,
 } from '#/lib/strings/embed-player'
-import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {atoms as a, useTheme} from '#/alf'
@@ -34,6 +33,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {IS_NATIVE} from '#/env'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -148,7 +148,7 @@ export function ExternalPlayer({
     const {height: winHeight, width: winWidth} = windowDims
 
     // Get the proper screen height depending on what is going on
-    const realWinHeight = isNative // If it is native, we always want the larger number
+    const realWinHeight = IS_NATIVE // If it is native, we always want the larger number
       ? winHeight > winWidth
         ? winHeight
         : winWidth
@@ -226,6 +226,7 @@ export function ExternalPlayer({
               style={[a.flex_1]}
               source={{uri: link.thumb}}
               accessibilityIgnoresInvertColors
+              loading="lazy"
             />
             <Fill
               style={[

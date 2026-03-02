@@ -3,11 +3,11 @@ import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
-import {isNative, isWeb} from '#/platform/detection'
 import {List, type ListRef} from '#/view/com/util/List'
 import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
   return item.uri
@@ -27,7 +27,7 @@ export const FeedsList = React.forwardRef<SectionRef, ProfilesListProps>(
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
-        animated: isNative,
+        animated: IS_NATIVE,
         offset: -headerHeight,
       })
     }, [scrollElRef, headerHeight])
@@ -44,7 +44,7 @@ export const FeedsList = React.forwardRef<SectionRef, ProfilesListProps>(
         <View
           style={[
             a.p_lg,
-            (isWeb || index !== 0) && a.border_t,
+            (IS_WEB || index !== 0) && a.border_t,
             t.atoms.border_contrast_low,
           ]}>
           <FeedCard.Default view={item} />

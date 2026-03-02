@@ -10,19 +10,18 @@ import {
   AtUri,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
@@ -31,7 +30,6 @@ import {
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAllListMembersQuery} from '#/state/queries/list-members'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -59,6 +57,8 @@ import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {Provider} from './State'
 
@@ -167,6 +167,7 @@ function WizardInner({
   onSuccess?: () => void
 }) {
   const navigation = useNavigation<NavigationProp>()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [state, dispatch] = useWizardState()
@@ -183,8 +184,6 @@ function WizardInner({
       gestureEnabled: false,
     })
   }, [navigation])
-
-  useEnableKeyboardControllerScreen(true)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -222,7 +221,7 @@ function WizardInner({
 
   const onSuccessCreate = (data: {uri: string; cid: string}) => {
     const rkey = new AtUri(data.uri).rkey
-    logEvent('starterPack:create', {
+    ax.metric('starterPack:create', {
       setName: state.name != null,
       setDescription: state.description != null,
       profilesCount: state.profiles.length,
@@ -236,7 +235,7 @@ function WizardInner({
       onSuccess?.()
     } else {
       navigation.replace('StarterPack', {
-        name: profile!.handle,
+        name: profile.handle,
         rkey,
         new: true,
       })
@@ -435,7 +434,7 @@ function Footer({
         {
           paddingBottom: a.pb_lg.paddingBottom + bottomInset,
         },
-        isNative && [
+        IS_NATIVE && [
           a.border_l,
           a.border_r,
           t.atoms.shadow_md,
@@ -601,7 +600,7 @@ function Footer({
           a.w_full,
           a.align_center,
           a.gap_2xl,
-          isNative ? a.mt_sm : a.mt_md,
+          IS_NATIVE ? a.mt_sm : a.mt_md,
         ]}>
         {state.currentStep === 'Profiles' && items.length < 8 && (
           <Text

@@ -5,21 +5,22 @@ import {
   type NativeSyntheticEvent,
   Platform,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import {isIOS} from '#/platform/detection'
+import {IS_IOS} from '#/env'
 import {
   type BottomSheetState,
   type BottomSheetViewProps,
 } from './BottomSheet.types'
-import {BottomSheetPortalProvider} from './BottomSheetPortal'
-import {Context as PortalContext} from './BottomSheetPortal'
-
-const screenHeight = Dimensions.get('screen').height
+import {
+  BottomSheetPortalProvider,
+  Context as PortalContext,
+} from './BottomSheetPortal'
 
 const NativeView: React.ComponentType<
   BottomSheetViewProps & {
@@ -30,7 +31,7 @@ const NativeView: React.ComponentType<
 
 const NativeModule = requireNativeModule('BottomSheet')
 
-const isIOS15 =
+const IS_IOS15 =
   Platform.OS === 'ios' &&
   // semvar - can be 3 segments, so can't use Number(Platform.Version)
   Number(Platform.Version.split('.').at(0)) < 16
@@ -91,7 +92,8 @@ export class BottomSheetNativeComponent extends React.Component<
     }
 
     let extraStyles
-    if (isIOS15 && this.state.viewHeight) {
+    if (IS_IOS15 && this.state.viewHeight) {
+      const screenHeight = Dimensions.get('screen').height
       const {viewHeight} = this.state
       const cornerRadius = this.props.cornerRadius ?? 0
       if (viewHeight < screenHeight / 2) {
@@ -112,7 +114,7 @@ export class BottomSheetNativeComponent extends React.Component<
           onStateChange={this.onStateChange}
           extraStyles={extraStyles}
           onLayout={e => {
-            if (isIOS15) {
+            if (IS_IOS15) {
               const {height} = e.nativeEvent.layout
               this.setState({viewHeight: height})
             }
@@ -152,8 +154,9 @@ function BottomSheetNativeComponentInner({
 }) {
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
+  const {height: screenHeight} = useWindowDimensions()
 
-  const sheetHeight = isIOS ? screenHeight - insets.top : screenHeight
+  const sheetHeight = IS_IOS ? screenHeight - insets.top : screenHeight
 
   return (
     <NativeView
@@ -175,6 +178,7 @@ function BottomSheetNativeComponentInner({
           Platform.OS === 'android' && {
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
+            overflow: 'hidden',
           },
           extraStyles,
         ]}>

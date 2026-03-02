@@ -3,7 +3,7 @@ import {type ChatBskyConvoDefs} from '@atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/hooks/useAppState'
+import {useAppState} from '#/lib/appState'
 import {Convo} from '#/state/messages/convo/agent'
 import {
   type ConvoParams,

@@ -33,6 +33,14 @@ export function parseReportSubject(
       did: subject.did,
       nsid: 'app.bsky.actor.profile',
     }
+  } else if (AppBskyActorDefs.isStatusView(subject)) {
+    if (!subject.uri || !subject.cid) return
+    return {
+      type: 'status',
+      uri: subject.uri,
+      cid: subject.cid,
+      nsid: 'app.bsky.actor.status',
+    }
   } else if (AppBskyGraphDefs.isListView(subject)) {
     return {
       type: 'list',

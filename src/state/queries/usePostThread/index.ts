@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {
@@ -31,6 +30,7 @@ import * as views from '#/state/queries/usePostThread/views'
 import {useAgent, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useBreakpoints} from '#/alf'
+import {IS_WEB} from '#/env'
 
 export * from '#/state/queries/usePostThread/context'
 export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
@@ -53,7 +53,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
   const below = useMemo(() => {
     return view === 'linear'
       ? LINEAR_VIEW_BELOW
-      : isWeb && gtPhone
+      : IS_WEB && gtPhone
         ? TREE_VIEW_BELOW_DESKTOP
         : TREE_VIEW_BELOW
   }, [view, gtPhone])

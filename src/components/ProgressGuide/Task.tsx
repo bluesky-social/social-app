@@ -31,11 +31,11 @@ export function ProgressGuideTask({
           size={20}
           thickness={3}
           borderWidth={0}
-          unfilledColor={t.palette.contrast_50}
+          unfilledColor={t.palette.contrast_100}
         />
       )}
 
-      <View style={[a.flex_col, a.gap_2xs, subtitle && {marginTop: -2}]}>
+      <View style={[a.flex_col, a.gap_xs, subtitle && {marginTop: -2}]}>
         <Text
           style={[
             a.text_sm,

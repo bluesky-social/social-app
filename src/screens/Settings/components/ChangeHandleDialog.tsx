@@ -11,14 +11,18 @@ import Animated, {
   SlideOutRight,
 } from 'react-native-reanimated'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
-import {sanitizeHandle} from '#/lib/strings/handles'
+import {
+  createFullHandle,
+  sanitizeHandle,
+  validateServiceHandle,
+} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'

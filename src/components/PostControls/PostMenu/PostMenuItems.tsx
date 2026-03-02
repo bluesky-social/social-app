@@ -13,7 +13,7 @@ import {
   AtUri,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
@@ -26,15 +26,17 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {useLanguagePrefs} from '#/state/preferences'
-import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
+import {
+  useHiddenPosts,
+  useHiddenPostsApi,
+  useLanguagePrefs,
+} from '#/state/preferences'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -71,13 +73,17 @@ import {
 import {Eye_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/Eye'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
-import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
-import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
+import {
+  Mute_Stroke2_Corner0_Rounded as Mute,
+  Mute_Stroke2_Corner0_Rounded as MuteIcon,
+} from '#/components/icons/Mute'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import {
+  SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute,
+  SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon,
+} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
@@ -87,6 +93,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -98,6 +105,7 @@ let PostMenuItems = ({
   richText,
   threadgateRecord,
   onShowLess,
+  logContext,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -111,9 +119,11 @@ let PostMenuItems = ({
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const langPrefs = useLanguagePrefs()
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
   const {mutateAsync: pinPostMutate, isPending: isPinPending} =
@@ -209,15 +219,28 @@ let PostMenuItems = ({
   const onToggleThreadMute = () => {
     try {
       if (isThreadMuted) {
-        unmuteThread()
+        void unmuteThread()
+        ax.metric('post:unmute', {
+          uri: postUri,
+          authorDid: postAuthor.did,
+          logContext,
+          feedDescriptor: feedFeedback.feedDescriptor,
+        })
         Toast.show(_(msg`You will now receive notifications for this thread`))
       } else {
-        muteThread()
+        void muteThread()
+        ax.metric('post:mute', {
+          uri: postUri,
+          authorDid: postAuthor.did,
+          logContext,
+          feedDescriptor: feedFeedback.feedDescriptor,
+        })
         Toast.show(
           _(msg`You will no longer receive notifications for this thread`),
         )
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         logger.error('Failed to toggle thread mute', {message: e})
         Toast.show(
@@ -231,12 +254,12 @@ let PostMenuItems = ({
   const onCopyPostText = () => {
     const str = richTextToString(richText, true)
 
-    Clipboard.setStringAsync(str)
+    void Clipboard.setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }
 
   const onPressTranslate = () => {
-    translate(record.text, langPrefs.primaryLanguage)
+    void translate(record.text, langPrefs.primaryLanguage)
 
     if (
       bsky.dangerousIsType<AppBskyFeedPost.Record>(
@@ -244,21 +267,17 @@ let PostMenuItems = ({
         AppBskyFeedPost.isRecord,
       )
     ) {
-      logger.metric(
-        'translate',
-        {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
-        },
-        {statsig: false},
-      )
+      ax.metric('translate', {
+        sourceLanguages: post.record.langs ?? [],
+        targetLanguage: langPrefs.primaryLanguage,
+        textLength: post.record.text.length,
+      })
     }
   }
 
   const onHidePost = () => {
     hidePost({uri: postUri})
-    logEvent('thread:click:hideReplyForMe', {})
+    ax.metric('thread:click:hideReplyForMe', {})
   }
 
   const hideInPWI = !!postAuthor.labels?.find(
@@ -272,6 +291,12 @@ let PostMenuItems = ({
       feedContext: postFeedContext,
       reqId: postReqId,
     })
+    ax.metric('post:showMore', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
     Toast.show(
       _(msg({message: 'Feedback sent to feed operator', context: 'toast'})),
     )
@@ -283,6 +308,12 @@ let PostMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
       reqId: postReqId,
+    })
+    ax.metric('post:showLess', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
     })
     if (onShowLess) {
       onShowLess({
@@ -313,7 +344,8 @@ let PostMenuItems = ({
           ? _(msg`Quote post was successfully detached`)
           : _(msg`Quote post was re-attached`),
       )
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       Toast.show(
         _(msg({message: 'Updating quote attachment failed', context: 'toast'})),
       )
@@ -342,7 +374,7 @@ let PostMenuItems = ({
 
       // Log metric only when hiding (not when showing)
       if (isHide) {
-        logEvent('thread:click:hideReplyForEveryone', {})
+        ax.metric('thread:click:hideReplyForEveryone', {})
       }
 
       Toast.show(
@@ -350,13 +382,13 @@ let PostMenuItems = ({
           ? _(msg`Reply was successfully hidden`)
           : _(msg({message: 'Reply visibility updated', context: 'toast'})),
       )
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e instanceof MaxHiddenRepliesError) {
         Toast.show(
           _(
-            msg({
-              message: `You can hide a maximum of ${MAX_HIDDEN_REPLIES} replies.`,
-              context: 'toast',
+            plural(MAX_HIDDEN_REPLIES, {
+              other: 'You can hide a maximum of # replies.',
             }),
           ),
         )
@@ -379,8 +411,8 @@ let PostMenuItems = ({
   }
 
   const onPressPin = () => {
-    logEvent(isPinned ? 'post:unpin' : 'post:pin', {})
-    pinPostMutate({
+    ax.metric(isPinned ? 'post:unpin' : 'post:pin', {})
+    void pinPostMutate({
       postUri,
       postCid,
       action: isPinned ? 'unpin' : 'pin',
@@ -391,7 +423,8 @@ let PostMenuItems = ({
     try {
       await queueBlock()
       Toast.show(_(msg({message: 'Account blocked', context: 'toast'})))
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         logger.error('Failed to block account', {message: e})
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
@@ -404,7 +437,8 @@ let PostMenuItems = ({
       try {
         await queueUnmute()
         Toast.show(_(msg({message: 'Account unmuted', context: 'toast'})))
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as Error
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unmute account', {message: e})
           Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
@@ -414,7 +448,8 @@ let PostMenuItems = ({
       try {
         await queueMute()
         Toast.show(_(msg({message: 'Account muted', context: 'toast'})))
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as Error
         if (e?.name !== 'AbortError') {
           logger.error('Failed to mute account', {message: e})
           Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
@@ -427,16 +462,15 @@ let PostMenuItems = ({
     const url = `https://docs.google.com/forms/d/e/1FAIpQLSd0QPqhNFksDQf1YyOos7r1ofCLvmrKAH1lU042TaS3GAZaWQ/viewform?entry.1756031717=${toShareUrl(
       href,
     )}`
-    openLink(url)
+    void openLink(url)
   }
 
   const onSignIn = () => requireSignIn(() => {})
 
-  const gate = useGate()
   const isDiscoverDebugUser =
     IS_INTERNAL ||
     DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
-    gate('debug_show_feedcontext')
+    ax.features.enabled(ax.features.DebugFeedContext)
 
   return (
     <>
@@ -659,7 +693,7 @@ let PostMenuItems = ({
                         ? _(msg`Unmute account`)
                         : _(msg`Mute account`)
                     }
-                    onPress={onMuteAuthor}>
+                    onPress={() => void onMuteAuthor()}>
                     <Menu.ItemText>
                       {postAuthor.viewer?.muted
                         ? _(msg`Unmute account`)
@@ -768,7 +802,7 @@ let PostMenuItems = ({
         description={_(
           msg`This will remove your post from this quote post for all users, and replace it with a placeholder.`,
         )}
-        onConfirm={onToggleQuotePostAttachment}
+        onConfirm={() => void onToggleQuotePostAttachment()}
         confirmButtonCta={_(msg`Yes, detach`)}
       />
 
@@ -778,7 +812,7 @@ let PostMenuItems = ({
         description={_(
           msg`This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others.`,
         )}
-        onConfirm={onToggleReplyVisibility}
+        onConfirm={() => void onToggleReplyVisibility()}
         confirmButtonCta={_(msg`Yes, hide`)}
       />
 
@@ -788,7 +822,7 @@ let PostMenuItems = ({
         description={_(
           msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
         )}
-        onConfirm={onBlockAuthor}
+        onConfirm={() => void onBlockAuthor()}
         confirmButtonCta={_(msg`Block`)}
         confirmButtonColor="negative"
       />

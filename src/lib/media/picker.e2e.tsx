@@ -3,13 +3,13 @@ import {
   getInfoAsync,
   readDirectoryAsync,
 } from 'expo-file-system/legacy'
+import {type ImagePickerResult} from 'expo-image-picker'
 import ExpoImageCropTool, {
   type OpenCropperOptions,
 } from '@bsky.app/expo-image-crop-tool'
 
 import {compressIfNeeded} from './manip'
 import {type PickerImage} from './picker.shared'
-import {ImagePickerResult} from 'expo-image-picker'
 
 async function getFile() {
   const imagesDir = documentDirectory!

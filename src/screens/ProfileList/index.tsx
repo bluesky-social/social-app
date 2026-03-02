@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {
@@ -7,8 +7,9 @@ import {
   moderateUserList,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -35,12 +36,13 @@ import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
-import {atoms as a, platform} from '#/alf'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ListAddRemoveUsersDialog} from '#/components/dialogs/lists/ListAddRemoveUsersDialog'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Hider from '#/components/moderation/Hider'
+import {IS_WEB} from '#/env'
 import {AboutSection} from './AboutSection'
 import {ErrorScreen} from './components/ErrorScreen'
 import {Header} from './components/Header'
@@ -149,6 +151,7 @@ function ProfileListScreenLoaded({
   moderationOpts: ModerationOpts
   preferences: UsePreferencesQueryResponse
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
@@ -164,6 +167,8 @@ function ProfileListScreenLoaded({
   const scrollElRef = useAnimatedRef()
   const addUserDialogControl = useDialogControl()
   const sectionTitlesCurate = [_(msg`Posts`), _(msg`People`)]
+  // modlist only
+  const [headerHeight, setHeaderHeight] = useState<number | null>(null)
 
   const moderation = useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -234,7 +239,7 @@ function ProfileListScreenLoaded({
             </PagerWithHeader>
             <FAB
               testID="composeFAB"
-              onPress={() => openComposer({})}
+              onPress={() => openComposer({logContext: 'Fab'})}
               icon={
                 <ComposeIcon2
                   strokeWidth={1.5}
@@ -263,16 +268,27 @@ function ProfileListScreenLoaded({
       </Hider.Mask>
       <Hider.Content>
         <View style={[a.util_screen_outer]}>
-          <Layout.Center>{renderHeader()}</Layout.Center>
-          <AboutSection
-            list={list}
-            scrollElRef={scrollElRef as ListRef}
-            onPressAddUser={addUserDialogControl.open}
-            headerHeight={0}
-          />
+          <Layout.Center
+            onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
+            style={[
+              native([a.absolute, a.z_10, t.atoms.bg]),
+
+              a.border_b,
+              t.atoms.border_contrast_low,
+            ]}>
+            {renderHeader()}
+          </Layout.Center>
+          {headerHeight !== null && (
+            <AboutSection
+              list={list}
+              scrollElRef={scrollElRef as ListRef}
+              onPressAddUser={addUserDialogControl.open}
+              headerHeight={IS_WEB ? 0 : headerHeight}
+            />
+          )}
           <FAB
             testID="composeFAB"
-            onPress={() => openComposer({})}
+            onPress={() => openComposer({logContext: 'Fab'})}
             icon={
               <ComposeIcon2
                 strokeWidth={1.5}

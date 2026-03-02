@@ -6,11 +6,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {isAndroid, isIOS, isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -30,6 +30,7 @@ import {
   type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
 
 export {
   type DialogControlProps as MenuControlProps,
@@ -70,7 +71,7 @@ export function Trigger({
   } = useInteractionState()
 
   return children({
-    isNative: true,
+    IS_NATIVE: true,
     control: context.control,
     state: {
       hovered: false,
@@ -111,7 +112,7 @@ export function Outer({
         <Dialog.ScrollableInner label={_(msg`Menu`)}>
           <View style={[a.gap_lg]}>
             {children}
-            {isNative && showCancel && <Cancel />}
+            {IS_NATIVE && showCancel && <Cancel />}
           </View>
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -137,13 +138,13 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       onFocus={onFocus}
       onBlur={onBlur}
       onPress={async e => {
-        if (isAndroid) {
+        if (IS_ANDROID) {
           /**
            * Below fix for iOS doesn't work for Android, this does.
            */
           onPress?.(e)
           context.control.close()
-        } else if (isIOS) {
+        } else if (IS_IOS) {
           /**
            * Fixes a subtle bug on iOS
            * {@link https://github.com/bluesky-social/social-app/pull/5849/files#diff-de516ef5e7bd9840cd639213301df38cf03acfcad5bda85a1d63efd249ba79deL124-L127}
@@ -167,6 +168,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         a.gap_sm,
         a.px_md,
         a.rounded_md,
+        a.overflow_hidden,
         a.border,
         t.atoms.bg_contrast_25,
         t.atoms.border_contrast_low,
@@ -193,7 +195,6 @@ export function ItemText({children, style}: ItemTextProps) {
         a.text_md,
         a.font_semi_bold,
         t.atoms.text_contrast_high,
-        {paddingTop: 3},
         style,
         disabled && t.atoms.text_contrast_low,
       ]}>
@@ -202,16 +203,18 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp}: ItemIconProps) {
+export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
   const t = useTheme()
   const {disabled} = useMenuItemContext()
   return (
     <Comp
       size="lg"
       fill={
-        disabled
-          ? t.atoms.text_contrast_low.color
-          : t.atoms.text_contrast_medium.color
+        fill
+          ? fill({disabled})
+          : disabled
+            ? t.atoms.text_contrast_low.color
+            : t.atoms.text_contrast_medium.color
       }
     />
   )
@@ -270,7 +273,8 @@ export function ContainerItem({
         a.align_center,
         a.gap_sm,
         a.px_md,
-        a.rounded_md,
+        a.rounded_lg,
+        a.curve_continuous,
         a.border,
         t.atoms.bg_contrast_25,
         t.atoms.border_contrast_low,
@@ -308,7 +312,8 @@ export function Group({children, style}: GroupProps) {
   return (
     <View
       style={[
-        a.rounded_md,
+        a.rounded_lg,
+        a.curve_continuous,
         a.overflow_hidden,
         a.border,
         t.atoms.border_contrast_low,

@@ -172,15 +172,6 @@ export function reducer(
     }
   }
 
-  if (a.type === 'next') {
-    if (next.activeStep === 'find-contacts-intro') {
-      logger.metric('onboarding:contacts:presented', {})
-    }
-    if (next.activeStep === 'find-contacts') {
-      logger.metric('onboarding:contacts:begin', {})
-    }
-  }
-
   const state = {
     ...next,
     hasPrev: next.activeStep !== 'profile',

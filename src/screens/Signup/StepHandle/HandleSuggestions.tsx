@@ -1,7 +1,8 @@
 import Animated, {Easing, FadeInDown, FadeOut} from 'react-native-reanimated'
 import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, native, useTheme} from '#/alf'
 import {borderRadius} from '#/alf/tokens'

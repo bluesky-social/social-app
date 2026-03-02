@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {type ModerationCause} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {listUriToHref} from '#/lib/strings/url-helpers'

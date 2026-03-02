@@ -5,8 +5,9 @@ import {
   type AppBskyBookmarkDefs,
   AppBskyFeedDefs,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {
   type NavigationProp,
   useFocusEffect,
@@ -20,8 +21,6 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -38,17 +37,20 @@ import {ListFooter} from '#/components/Lists'
 import * as Skele from '#/components/Skeleton'
 import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
 
 export function BookmarksScreen({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
+  const ax = useAnalytics()
 
   useFocusEffect(
     useCallback(() => {
       setMinimalShellMode(false)
-      logger.metric('bookmarks:view', {})
-    }, [setMinimalShellMode]),
+      ax.metric('bookmarks:view', {})
+    }, [setMinimalShellMode, ax]),
   )
 
   return (
@@ -144,7 +146,7 @@ function BookmarksInner() {
               key: bookmark.item.uri,
               bookmark: {
                 ...bookmark,
-                item: bookmark.item as $Typed<AppBskyFeedDefs.NotFoundPost>,
+                item: bookmark.item,
               },
             })
           }
@@ -154,7 +156,7 @@ function BookmarksInner() {
               key: bookmark.item.uri,
               bookmark: {
                 ...bookmark,
-                item: bookmark.item as $Typed<AppBskyFeedDefs.PostView>,
+                item: bookmark.item,
               },
             })
           }
@@ -193,7 +195,7 @@ function BookmarksInner() {
       }
       initialNumToRender={initialNumToRender}
       windowSize={9}
-      maxToRenderPerBatch={isIOS ? 5 : 1}
+      maxToRenderPerBatch={IS_IOS ? 5 : 1}
       updateCellsBatchingPeriod={40}
       sideBorders={false}
     />
@@ -270,6 +272,25 @@ function BookmarkNotFound({
   )
 }
 
+function BookmarkItem({
+  item,
+  hideTopBorder,
+}: {
+  item: Extract<ListItem, {type: 'bookmark'}>
+  hideTopBorder: boolean
+}) {
+  const ax = useAnalytics()
+  return (
+    <Post
+      post={item.bookmark.item}
+      hideTopBorder={hideTopBorder}
+      onBeforePress={() => {
+        ax.metric('bookmarks:post-clicked', {})
+      }}
+    />
+  )
+}
+
 function BookmarksEmpty() {
   const t = useTheme()
   const {_} = useLingui()
@@ -301,15 +322,7 @@ function renderItem({item, index}: {item: ListItem; index: number}) {
       return <BookmarksEmpty />
     }
     case 'bookmark': {
-      return (
-        <Post
-          post={item.bookmark.item}
-          hideTopBorder={index === 0}
-          onBeforePress={() => {
-            logger.metric('bookmarks:post-clicked', {})
-          }}
-        />
-      )
+      return <BookmarkItem item={item} hideTopBorder={index === 0} />
     }
     case 'bookmarkNotFound': {
       return (

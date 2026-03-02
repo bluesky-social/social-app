@@ -1,7 +1,7 @@
 import {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
 
@@ -21,7 +21,7 @@ export function VideoEmbedInnerWeb({
   active: boolean
   setActive: () => void
   onScreen: boolean
-  lastKnownTime: React.MutableRefObject<number | undefined>
+  lastKnownTime: React.RefObject<number | undefined>
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -37,7 +37,7 @@ export function VideoEmbedInnerWeb({
     throw error
   }
 
-  const hlsRef = useHLS({
+  const {hlsRef, loop} = useHLS({
     playlist: embed.playlist,
     setHasSubtitleTrack,
     setError,
@@ -64,26 +64,15 @@ export function VideoEmbedInnerWeb({
             style={{width: '100%', height: '100%', objectFit: 'contain'}}
             playsInline
             preload="none"
-            muted={!focused}
+            muted={embed.presentation === 'gif' || !focused}
             aria-labelledby={embed.alt ? figId : undefined}
             onTimeUpdate={e => {
               lastKnownTime.current = e.currentTarget.currentTime
             }}
+            loop={loop}
           />
           {embed.alt && (
-            <figcaption
-              id={figId}
-              style={{
-                position: 'absolute',
-                width: 1,
-                height: 1,
-                padding: 0,
-                margin: -1,
-                overflow: 'hidden',
-                clip: 'rect(0, 0, 0, 0)',
-                whiteSpace: 'nowrap',
-                borderWidth: 0,
-              }}>
+            <figcaption id={figId} style={a.sr_only}>
               {embed.alt}
             </figcaption>
           )}
@@ -99,6 +88,8 @@ export function VideoEmbedInnerWeb({
           onScreen={onScreen}
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
+          isGif={embed.presentation === 'gif'}
+          altText={embed.alt}
         />
       </div>
     </View>
@@ -192,29 +183,6 @@ function useHLS({
     },
   )
 
-  const flushOnLoop = useNonReactiveCallback(() => {
-    if (!Hls) return
-    if (!hlsRef.current) return
-    const hls = hlsRef.current
-    // the above callback will catch most stale frags, but there's a corner case -
-    // if there's only one segment in the video, it won't get flushed because it avoids
-    // flushing the currently active segment. Therefore, we have to catch it when we loop
-    if (
-      hls.nextAutoLevel > 0 &&
-      lowQualityFragments.length === 1 &&
-      lowQualityFragments[0].start === 0
-    ) {
-      const lowQualFrag = lowQualityFragments[0]
-
-      hls.trigger(Hls.Events.BUFFER_FLUSHING, {
-        startOffset: lowQualFrag.start,
-        endOffset: lowQualFrag.end,
-        type: 'video',
-      })
-      setLowQualityFragments([])
-    }
-  })
-
   useEffect(() => {
     if (!videoRef.current) return
     if (!Hls) return
@@ -241,20 +209,6 @@ function useHLS({
 
     hls.attachMedia(videoRef.current)
     hls.loadSource(playlist)
-
-    // manually loop, so if we've flushed the first buffer it doesn't get confused
-    const abortController = new AbortController()
-    const {signal} = abortController
-    const videoNode = videoRef.current
-    videoNode.addEventListener(
-      'ended',
-      () => {
-        flushOnLoop()
-        videoNode.currentTime = 0
-        videoNode.play()
-      },
-      {signal},
-    )
 
     hls.on(Hls.Events.FRAG_LOADED, () => {
       BandwidthEstimate.set(hls.bandwidthEstimate)
@@ -293,17 +247,65 @@ function useHLS({
       hlsRef.current = undefined
       hls.detachMedia()
       hls.destroy()
+    }
+  }, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange, Hls])
+
+  const flushOnLoop = useNonReactiveCallback(() => {
+    if (!Hls) return
+    if (!hlsRef.current) return
+    const hls = hlsRef.current
+    // `handleFragChange` will catch most stale frags, but there's a corner case -
+    // if there's only one segment in the video, it won't get flushed because it avoids
+    // flushing the currently active segment. Therefore, we have to catch it when we loop
+    if (
+      hls.nextAutoLevel > 0 &&
+      lowQualityFragments.length === 1 &&
+      lowQualityFragments[0].start === 0
+    ) {
+      const lowQualFrag = lowQualityFragments[0]
+
+      hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+        startOffset: lowQualFrag.start,
+        endOffset: lowQualFrag.end,
+        type: 'video',
+      })
+      setLowQualityFragments([])
+    }
+  })
+
+  // manually loop, so if we've flushed the first buffer it doesn't get confused
+  const hasLowQualityFragmentAtStart = lowQualityFragments.some(
+    frag => frag.start === 0,
+  )
+  useEffect(() => {
+    if (!videoRef.current) return
+
+    // use `loop` prop on `<video>` element if the starting frag is high quality.
+    // otherwise, we need to do it with an event listener as we may need to manually flush the frag
+    if (!hasLowQualityFragmentAtStart) return
+
+    const abortController = new AbortController()
+    const {signal} = abortController
+    const videoNode = videoRef.current
+    videoNode.addEventListener(
+      'ended',
+      () => {
+        flushOnLoop()
+        videoNode.currentTime = 0
+        const maybePromise = videoNode.play() as Promise<void> | undefined
+        if (maybePromise) {
+          maybePromise.catch(() => {})
+        }
+      },
+      {signal},
+    )
+    return () => {
       abortController.abort()
     }
-  }, [
-    playlist,
-    setError,
-    setHasSubtitleTrack,
-    videoRef,
-    handleFragChange,
-    flushOnLoop,
-    Hls,
-  ])
+  }, [videoRef, flushOnLoop, hasLowQualityFragmentAtStart])
 
-  return hlsRef
+  return {
+    hlsRef,
+    loop: !hasLowQualityFragmentAtStart,
+  }
 }

@@ -12,7 +12,10 @@ import {type Geolocation} from '#/geolocation/types'
 import {mergeGeolocations} from '#/geolocation/util'
 import {device, useStorage} from '#/storage'
 
-export {useRequestDeviceGeolocation} from '#/geolocation/device'
+export {
+  useIsDeviceGeolocationGranted,
+  useRequestDeviceGeolocation,
+} from '#/geolocation/device'
 export {resolve} from '#/geolocation/service'
 export * from '#/geolocation/types'
 

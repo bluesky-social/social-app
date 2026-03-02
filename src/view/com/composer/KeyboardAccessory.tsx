@@ -3,8 +3,8 @@ import {KeyboardStickyView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import type React from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
+import {IS_WEB} from '#/env'
 
 export function KeyboardAccessory({children}: {children: React.ReactNode}) {
   const t = useTheme()
@@ -22,7 +22,7 @@ export function KeyboardAccessory({children}: {children: React.ReactNode}) {
   ]
 
   // todo: when iPad support is added, it should also not use the KeyboardStickyView
-  if (isWeb) {
+  if (IS_WEB) {
     return <View style={style}>{children}</View>
   }
 

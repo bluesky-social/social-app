@@ -127,8 +127,12 @@ export function isPostInLanguage(
   return bcp47Match.basicFilter(lang, targetLangs).length > 0
 }
 
-export function getTranslatorLink(text: string, lang: string): string {
-  return `https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(
+export function getTranslatorLink(
+  text: string,
+  targetLangCode: string,
+  sourceLanguage?: string,
+): string {
+  return `https://translate.google.com/?sl=${sourceLanguage ?? 'auto'}&tl=${targetLangCode}&text=${encodeURIComponent(
     text,
   )}`
 }

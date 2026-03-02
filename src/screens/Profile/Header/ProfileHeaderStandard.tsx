@@ -7,15 +7,14 @@ import {
   type ModerationOpts,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {useHaptics} from '#/lib/haptics'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {type Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   useProfileBlockMutationQueue,
@@ -39,11 +38,14 @@ import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
+import {IS_IOS} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
+import {GermButton} from '../components/GermButton'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
-import {AnimatedProfileHeaderSuggestedFollows} from './SuggestedFollows'
+import {ProfileHeaderSuggestedFollows} from './SuggestedFollows'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -103,7 +105,7 @@ let ProfileHeaderStandard = ({
         isPlaceholderProfile={isPlaceholderProfile}>
         <View
           style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
-          pointerEvents={isIOS ? 'auto' : 'box-none'}>
+          pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
           <View
             style={[
               {paddingLeft: 90},
@@ -114,7 +116,7 @@ let ProfileHeaderStandard = ({
               a.pb_sm,
               a.flex_wrap,
             ]}
-            pointerEvents={isIOS ? 'auto' : 'box-none'}>
+            pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
             <HeaderStandardButtons
               profile={profile}
               moderation={moderation}
@@ -156,12 +158,17 @@ let ProfileHeaderStandard = ({
                     testID="profileHeaderDescription"
                     style={[a.text_md]}
                     numberOfLines={15}
+                    selectable
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}
                   />
                 </View>
               ) : undefined}
+
+              {profile.associated?.germ && (
+                <GermButton germ={profile.associated.germ} profile={profile} />
+              )}
 
               {!isMe &&
                 !isBlockedUser &&
@@ -193,7 +200,7 @@ let ProfileHeaderStandard = ({
         />
       </ProfileHeaderShell>
 
-      <AnimatedProfileHeaderSuggestedFollows
+      <ProfileHeaderSuggestedFollows
         isExpanded={showSuggestedFollows}
         actorDid={profile.did}
       />
@@ -317,7 +324,10 @@ export function HeaderStandardButtons({
             testID="profileHeaderEditProfileButton"
             size="small"
             color="secondary"
-            onPress={editProfileControl.open}
+            onPress={() => {
+              playHaptic('Light')
+              editProfileControl.open()
+            }}
             label={_(msg`Edit profile`)}>
             <ButtonText>
               <Trans>Edit Profile</Trans>

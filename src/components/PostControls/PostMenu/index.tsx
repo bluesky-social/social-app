@@ -6,12 +6,12 @@ import {
   type AppBskyFeedThreadgate,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
@@ -29,6 +29,7 @@ let PostMenuButton = ({
   threadgateRecord,
   onShowLess,
   hitSlop,
+  logContext,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -41,6 +42,7 @@ let PostMenuButton = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
   hitSlop?: Insets
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }): React.ReactNode => {
   const {_} = useLingui()
 
@@ -87,6 +89,7 @@ let PostMenuButton = ({
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
             onShowLess={onShowLess}
+            logContext={logContext}
           />
         )}
       </Menu.Root>

@@ -62,6 +62,8 @@ export const MAX_DESCRIPTION = 256
 
 export const MAX_GRAPHEME_LENGTH = 300
 
+export const MAX_DRAFT_GRAPHEME_LENGTH = 1000
+
 export const MAX_DM_GRAPHEME_LENGTH = 1000
 
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
@@ -239,6 +241,10 @@ export const DM_SERVICE_HEADERS = {
 
 export const BLUESKY_MOD_SERVICE_HEADERS = {
   'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
+}
+
+export const BLUESKY_NOTIF_SERVICE_HEADERS = {
+  'atproto-proxy': `${BLUESKY_PROXY_DID}#bsky_notif`,
 }
 
 export const webLinks = {

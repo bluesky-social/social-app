@@ -6,18 +6,17 @@ import {
   launchImageLibraryAsync,
   UIImagePickerPreferredAssetRepresentationMode,
 } from 'expo-image-picker'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
 import {
   OnboardingControls,
   OnboardingDescriptionText,
@@ -38,6 +37,8 @@ import * as Dialog from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {type AvatarColor, avatarColors, type Emoji, emojiItems} from './types'
 
 export interface Avatar {
@@ -66,11 +67,11 @@ const randomColor =
   avatarColors[Math.floor(Math.random() * avatarColors.length)]
 
 export function StepProfile() {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
-  const gate = useGate()
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const creatorControl = Dialog.useDialogControl()
@@ -89,7 +90,7 @@ export function StepProfile() {
 
   React.useEffect(() => {
     requestNotificationsPermission('StartOnboarding')
-  }, [gate, requestNotificationsPermission])
+  }, [requestNotificationsPermission])
 
   const sheetWrapper = useSheetWrapper()
   const openPicker = React.useCallback(
@@ -156,8 +157,8 @@ export function StepProfile() {
     }
 
     dispatch({type: 'next'})
-    logEvent('onboarding:profile:nextPressed', {})
-  }, [avatar, dispatch])
+    ax.metric('onboarding:profile:nextPressed', {})
+  }, [ax, avatar, dispatch])
 
   const onDoneCreating = React.useCallback(() => {
     setAvatar(prev => ({
@@ -183,7 +184,7 @@ export function StepProfile() {
     let image = items[0]
     if (!image) return
 
-    if (!isWeb) {
+    if (!IS_WEB) {
       try {
         image = await openCropper({
           imageUri: image.path,
@@ -200,7 +201,7 @@ export function StepProfile() {
 
     // If we are on mobile, prefetching the image will load the image into memory before we try and display it,
     // stopping any brief flickers.
-    if (isNative) {
+    if (IS_NATIVE) {
       await ExpoImage.prefetch(image.path)
     }
 

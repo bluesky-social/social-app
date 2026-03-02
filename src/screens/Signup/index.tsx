@@ -3,12 +3,12 @@ import {AppState, type AppStateStatus, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
 import {useServiceQuery} from '#/state/queries/service'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {useActiveStarterPack} from '#/state/shell/starter-pack'
@@ -30,15 +30,27 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
-import {GCP_PROJECT_ID} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {GCP_PROJECT_ID, IS_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    analytics: ax,
+  })
   const {gtMobile} = useBreakpoints()
   const submit = useSubmitSignup()
+
+  useEffect(() => {
+    dispatch({
+      type: 'setAnalytics',
+      value: ax,
+    })
+  }, [ax])
 
   const activeStarterPack = useActiveStarterPack()
   const {
@@ -108,7 +120,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
   // On Android, warmup the Play Integrity API on the signup screen so it is ready by the time we get to the gate screen.
   useEffect(() => {
-    if (!isAndroid) {
+    if (!IS_ANDROID) {
       return
     }
     ReactNativeDeviceAttest.warmupIntegrity(GCP_PROJECT_ID).catch(err =>

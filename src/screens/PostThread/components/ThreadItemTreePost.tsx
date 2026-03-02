@@ -6,7 +6,7 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -302,6 +302,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
         langs: post.record.langs,
       },
       onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record, onPostSuccess, moderation])
 
@@ -342,7 +343,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     additionalCauses={additionalPostAlerts}
                   />
                   {richText?.text ? (
-                    <>
+                    <View style={[a.mb_2xs]}>
                       <RichText
                         enableTags
                         value={richText}
@@ -357,7 +358,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                           onPress={onPressShowMore}
                         />
                       )}
-                    </>
+                    </View>
                   ) : null}
                   {post.embed && (
                     <View style={[a.pb_xs]}>
