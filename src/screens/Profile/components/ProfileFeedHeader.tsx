@@ -399,7 +399,6 @@ function DialogInner({
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
-  const {gtMobile} = useBreakpoints()
 
   const isLiked = !!likeUri
   const feedRkey = React.useMemo(() => new AtUri(info.uri).rkey, [info.uri])
@@ -552,8 +551,7 @@ function DialogInner({
                 size="small"
                 variant="solid"
                 color="secondary"
-                onPress={onPressReport}
-                style={[gtMobile ? undefined : a.w_full]}>
+                onPress={onPressReport}>
                 <ButtonText>
                   <Trans>Report feed</Trans>
                 </ButtonText>
