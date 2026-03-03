@@ -199,6 +199,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         await googleTranslate(text, targetLangCode, sourceLangCode)
         return
       }
+
+      // Delay the translation until the animation completes for cases where the
+      // `attemptTranslation` call resolves very quickly.
       const translateAfterAnimation = async () => {
         try {
           const result = await attemptTranslation(
@@ -240,6 +243,8 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           await googleTranslate(text, targetLangCode, sourceLangCode)
         }
       }
+
+      // Translate after the next state change.
       LayoutAnimation.configureNext(
         LayoutAnimation.Presets.easeInEaseOut,
         () => void translateAfterAnimation(),
