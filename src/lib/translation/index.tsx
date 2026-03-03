@@ -4,8 +4,7 @@ import {getLocales} from 'expo-localization'
 import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {getTranslatorLink} from '#/locale/helpers'
+import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useAnalytics} from '#/analytics'
@@ -111,9 +110,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
     Record<string, TranslationState>
   >({})
   const [refCounts, setRefCounts] = useState<Record<string, number>>({})
-  const openLink = useOpenLink()
   const ax = useAnalytics()
   const {primaryLanguage} = useLanguagePrefs()
+  const googleTranslate = useGoogleTranslate()
 
   useEffect(() => {
     setTranslationState(prev => {
@@ -171,11 +170,6 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       sourceLangCode?: string,
       options?: Options,
     ) => {
-      const translateUrl = getTranslatorLink(
-        text,
-        targetLangCode,
-        sourceLangCode,
-      )
       if (options?.googleTranslate) {
         ax.metric('translate:result', {
           method: 'google-translate',
@@ -183,7 +177,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           sourceLanguage: sourceLangCode ?? null,
           targetLanguage: targetLangCode,
         })
-        await openLink(translateUrl)
+        await googleTranslate(text, targetLangCode, sourceLangCode)
         return
       }
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -228,10 +222,10 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           ...prev,
           [key]: {status: 'idle'},
         }))
-        await openLink(translateUrl)
+        await googleTranslate(text, targetLangCode, sourceLangCode)
       }
     },
-    [ax, openLink, primaryLanguage],
+    [ax, googleTranslate, primaryLanguage],
   )
 
   const ctx = useMemo(

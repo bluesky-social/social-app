@@ -1,7 +1,6 @@
 import {useCallback, useContext, useMemo} from 'react'
 
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {getTranslatorLink} from '#/locale/helpers'
+import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useAnalytics} from '#/analytics'
 import {Context} from './context'
@@ -29,9 +28,9 @@ export function useTranslateOnDevice() {
 }
 
 export function Provider({children}: React.PropsWithChildren<unknown>) {
-  const openLink = useOpenLink()
   const ax = useAnalytics()
   const {primaryLanguage} = useLanguagePrefs()
+  const googleTranslate = useGoogleTranslate()
 
   const translate = useCallback(
     async (
@@ -47,14 +46,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         sourceLanguage: sourceLangCode ?? null,
         targetLanguage: targetLangCode,
       })
-      const translateUrl = getTranslatorLink(
-        text,
-        targetLangCode,
-        sourceLangCode,
-      )
-      await openLink(translateUrl)
+      await googleTranslate(text, targetLangCode, sourceLangCode)
     },
-    [ax, openLink, primaryLanguage],
+    [ax, googleTranslate, primaryLanguage],
   )
 
   const ctx = useMemo(
