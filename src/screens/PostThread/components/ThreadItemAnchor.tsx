@@ -407,7 +407,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 shouldProxyLinks={true}
               />
             ) : undefined}
-            <TranslatedPost translationKey={post.uri} postText={record.text} />
+            <TranslatedPost post={post} postText={record.text} />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed

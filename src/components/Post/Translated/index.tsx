@@ -1,28 +1,49 @@
-import {useMemo} from 'react'
-import {Platform, View} from 'react-native'
+import {useCallback, useMemo} from 'react'
+import {type GestureResponderEvent, Platform, View} from 'react-native'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation/types'
-import {codeToLanguageName, languageName} from '#/locale/helpers'
+import {
+  codeToLanguageName,
+  getTranslatorLink,
+  isPostInLanguage,
+  languageName,
+} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
+import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
+import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
 export function TranslatedPost({
-  translationKey,
+  post,
   postText,
 }: {
-  translationKey: string
+  post: AppBskyFeedDefs.PostView
   postText: string
 }) {
-  const {translate, translationState} = useTranslate({key: translationKey})
+  const langPrefs = useLanguagePrefs()
+  const {clearTranslation, translate, translationState} = useTranslate({
+    key: post.uri,
+  })
+
+  const needsTranslation = useMemo(
+    () =>
+      Boolean(
+        langPrefs.primaryLanguage &&
+          !isPostInLanguage(post, [langPrefs.primaryLanguage]),
+      ),
+    [post, langPrefs.primaryLanguage],
+  )
 
   if (translationState.status === 'loading') {
     return <TranslationLoading />
@@ -31,6 +52,7 @@ export function TranslatedPost({
   if (translationState.status === 'success') {
     return (
       <TranslationResult
+        clearTranslation={clearTranslation}
         translate={translate}
         postText={postText}
         sourceLanguage={translationState.sourceLanguage}
@@ -39,7 +61,15 @@ export function TranslatedPost({
     )
   }
 
-  return null
+  return (
+    needsTranslation && (
+      <TranslationLink
+        postText={postText}
+        primaryLanguage={langPrefs.primaryLanguage}
+        translate={translate}
+      />
+    )
+  )
 }
 
 function TranslationLoading() {
@@ -57,51 +87,157 @@ function TranslationLoading() {
   )
 }
 
+function TranslationLink({
+  postText,
+  primaryLanguage,
+  translate,
+}: {
+  postText: string
+  primaryLanguage: string
+  translate: TranslationFunction
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
+
+  const handleTranslate = useCallback(
+    (e: GestureResponderEvent) => {
+      e.preventDefault()
+      void translate({
+        text: postText,
+        targetLangCode: primaryLanguage,
+      })
+
+      ax.metric('translate', {
+        sourceLanguages: [],
+        targetLanguage: primaryLanguage,
+        textLength: postText.length,
+      })
+
+      return false
+    },
+    [ax, postText, primaryLanguage, translate],
+  )
+
+  return (
+    <View style={[a.gap_md, a.pt_md, a.align_start]}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          <InlineLinkText
+            // Overridden to open an intent on android, but keep as anchor tag
+            // for accessibility
+            to={getTranslatorLink(postText, primaryLanguage)}
+            label={l`Translate`}
+            style={[a.text_sm]}
+            onPress={handleTranslate}>
+            <Trans>Translate</Trans>
+          </InlineLinkText>
+        </Text>
+      </View>
+    </View>
+  )
+}
+
 function TranslationResult({
+  clearTranslation,
   translate,
   postText,
   sourceLanguage,
   translatedText,
 }: {
+  clearTranslation: () => void
   translate: TranslationFunction
   postText: string
   sourceLanguage: string | null
   translatedText: string
 }) {
   const t = useTheme()
-  const {i18n} = useLingui()
+  const langPrefs = useLanguagePrefs()
+  const {i18n, t: l} = useLingui()
 
   const langName = sourceLanguage
     ? codeToLanguageName(sourceLanguage, i18n.locale)
     : undefined
 
   return (
-    <View style={[a.py_xs, a.gap_xs, a.mt_sm]}>
-      <View style={[a.flex_row, a.align_center]}>
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+    <View>
+      <View
+        style={[
+          a.px_lg,
+          a.pt_sm,
+          a.pb_md,
+          a.mt_sm,
+          a.border,
+          a.rounded_md,
+          t.atoms.border_contrast_high,
+        ]}>
+        <View style={[a.flex_row, a.align_center, a.mb_xs]}>
           {langName ? (
-            <Trans>Translated from {langName}</Trans>
+            <View style={[a.flex_row, a.align_center]}>
+              <Text
+                style={[
+                  a.text_xs,
+                  a.font_medium,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {langName}{' '}
+              </Text>
+              <View>
+                <ArrowRight
+                  size="sm"
+                  fill={t.atoms.text_contrast_medium.color}
+                />
+              </View>
+              <Text
+                style={[
+                  a.text_xs,
+                  a.font_medium,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {' '}
+                {codeToLanguageName(
+                  langPrefs.primaryLanguage,
+                  langPrefs.appLanguage,
+                )}
+              </Text>
+            </View>
           ) : (
-            <Trans>Translated</Trans>
-          )}
-        </Text>
-        {sourceLanguage != null && (
-          <>
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              {' '}
-              &middot;{' '}
+            <Text
+              style={[
+                a.text_xs,
+                a.font_medium,
+                t.atoms.text_contrast_medium,
+                a.mb_xs,
+              ]}>
+              <Trans>Translated</Trans>
             </Text>
-            <TranslationLanguageSelect
-              sourceLanguage={sourceLanguage}
-              translate={translate}
-              postText={postText}
-            />
-          </>
-        )}
+          )}
+          {sourceLanguage != null && (
+            <>
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                {' '}
+                &middot;{' '}
+              </Text>
+              <TranslationLanguageSelect
+                sourceLanguage={sourceLanguage}
+                translate={translate}
+                postText={postText}
+              />
+            </>
+          )}
+        </View>
+        <Text emoji selectable style={[a.text_md, a.leading_snug]}>
+          {translatedText}
+        </Text>
+        <Button
+          label={l`Hide translation`}
+          hitSlop={HITSLOP_30}
+          hoverStyle={native({opacity: 0.5})}
+          style={[a.absolute, a.z_10, {top: 12, right: 14}]}
+          onPress={clearTranslation}>
+          <Times size="sm" fill={t.atoms.text_contrast_medium.color} />
+        </Button>
       </View>
-      <Text emoji selectable style={[a.text_md, a.leading_snug]}>
-        {translatedText}
-      </Text>
     </View>
   )
 }
@@ -165,7 +301,7 @@ function TranslationLanguageSelect({
               {...props}
               hitSlop={HITSLOP_30}
               hoverStyle={native({opacity: 0.5})}>
-              <Text style={[a.text_xs]}>
+              <Text style={[a.text_xs, a.font_medium]}>
                 <Trans>Change</Trans>
               </Text>
             </Button>
