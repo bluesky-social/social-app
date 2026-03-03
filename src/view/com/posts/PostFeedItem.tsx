@@ -42,12 +42,14 @@ import {Embed} from '#/components/Post/Embed'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
+import {Provider as OnDeviceTranslationProvider} from '#/translation'
 import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
 
@@ -108,27 +110,29 @@ export function PostFeedItem({
   }
   if (richText && moderation) {
     return (
-      <FeedItemInner
-        // Safeguard from clobbering per-post state below:
-        key={postShadowed.uri}
-        post={postShadowed}
-        record={record}
-        reason={reason}
-        feedContext={feedContext}
-        reqId={reqId}
-        richText={richText}
-        parentAuthor={parentAuthor}
-        showReplyTo={showReplyTo}
-        moderation={moderation}
-        isThreadChild={isThreadChild}
-        isThreadLastChild={isThreadLastChild}
-        isThreadParent={isThreadParent}
-        hideTopBorder={hideTopBorder}
-        isParentBlocked={isParentBlocked}
-        isParentNotFound={isParentNotFound}
-        rootPost={rootPost}
-        onShowLess={onShowLess}
-      />
+      <OnDeviceTranslationProvider>
+        <FeedItemInner
+          // Safeguard from clobbering per-post state below:
+          key={postShadowed.uri}
+          post={postShadowed}
+          record={record}
+          reason={reason}
+          feedContext={feedContext}
+          reqId={reqId}
+          richText={richText}
+          parentAuthor={parentAuthor}
+          showReplyTo={showReplyTo}
+          moderation={moderation}
+          isThreadChild={isThreadChild}
+          isThreadLastChild={isThreadLastChild}
+          isThreadParent={isThreadParent}
+          hideTopBorder={hideTopBorder}
+          isParentBlocked={isParentBlocked}
+          isParentNotFound={isParentNotFound}
+          rootPost={rootPost}
+          onShowLess={onShowLess}
+        />
+      </OnDeviceTranslationProvider>
     )
   }
   return null
@@ -479,6 +483,7 @@ let PostContent = ({
           {limitLines && (
             <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />
           )}
+          <TranslatedPost postText={richText.text} standalone />
         </View>
       ) : undefined}
       {postEmbed ? (

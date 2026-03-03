@@ -1,13 +1,14 @@
 import {useMemo} from 'react'
 import {Platform, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
+import {HITSLOP_30} from '#/lib/constants'
 import {codeToLanguageName, languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
@@ -16,24 +17,43 @@ import {useTranslateOnDevice} from '#/translation'
 
 export function TranslatedPost({
   postText,
-  hideLoading = false,
+  standalone = false,
 }: {
   postText: string
-  hideLoading: boolean
+  /**
+   * Hides the loading state, and adds its own "hide translation button"
+   */
+  standalone?: boolean
 }) {
-  const {translationState} = useTranslateOnDevice()
+  const {translationState, clearTranslation} = useTranslateOnDevice()
+  const {t: l} = useLingui()
+  const t = useTheme()
 
-  if (translationState.status === 'loading' && !hideLoading) {
+  if (translationState.status === 'loading' && standalone) {
     return <TranslationLoading />
   }
 
   if (translationState.status === 'success') {
     return (
-      <TranslationResult
-        postText={postText}
-        sourceLanguage={translationState.sourceLanguage}
-        translatedText={translationState.translatedText}
-      />
+      <>
+        <TranslationResult
+          postText={postText}
+          sourceLanguage={translationState.sourceLanguage}
+          translatedText={translationState.translatedText}
+        />
+        {standalone && (
+          <Button
+            label={l`Hide translation`}
+            onPress={clearTranslation}
+            style={[a.self_start, a.mt_sm]}
+            hoverStyle={native({opacity: 0.5})}
+            hitSlop={HITSLOP_30}>
+            <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
+              <Trans>Hide translation</Trans>
+            </Text>
+          </Button>
+        )}
+      </>
     )
   }
 
@@ -45,7 +65,7 @@ function TranslationLoading() {
 
   return (
     <View style={[a.flex_row, a.align_center, a.gap_sm, a.py_xs]}>
-      <Loader size="sm" />
+      <Loader size="xs" />
       <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
         <Trans>Translating…</Trans>
       </Text>

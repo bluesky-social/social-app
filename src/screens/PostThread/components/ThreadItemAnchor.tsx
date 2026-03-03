@@ -420,7 +420,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 shouldProxyLinks={true}
               />
             ) : undefined}
-            <TranslatedPost postText={record.text} hideLoading />
+            <TranslatedPost postText={record.text} />
             <TranslateLink post={item.value.post} />
             {post.embed && (
               <View style={[a.py_xs]}>
@@ -617,7 +617,7 @@ function TranslateLink({
   )
 
   return (
-    needsTranslation && (
+    (needsTranslation || translationState.status !== 'idle') && (
       <View style={[a.gap_md, a.pt_md, a.align_start]}>
         {translationState.status === 'loading' ? (
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
