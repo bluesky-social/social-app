@@ -38,11 +38,13 @@ import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {Provider as OnDeviceTranslationProvider} from '#/translation'
 
 /**
  * Mimic the space in PostMeta
@@ -70,15 +72,17 @@ export function ThreadItemTreePost({
   }
 
   return (
-    <ThreadItemTreePostInner
-      // Safeguard from clobbering per-post state below:
-      key={postShadow.uri}
-      item={item}
-      postShadow={postShadow}
-      threadgateRecord={threadgateRecord}
-      overrides={overrides}
-      onPostSuccess={onPostSuccess}
-    />
+    <OnDeviceTranslationProvider>
+      <ThreadItemTreePostInner
+        // Safeguard from clobbering per-post state below:
+        key={postShadow.uri}
+        item={item}
+        postShadow={postShadow}
+        threadgateRecord={threadgateRecord}
+        overrides={overrides}
+        onPostSuccess={onPostSuccess}
+      />
+    </OnDeviceTranslationProvider>
   )
 }
 
@@ -358,6 +362,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                           onPress={onPressShowMore}
                         />
                       )}
+                      <TranslatedPost postText={richText.text} standalone />
                     </View>
                   ) : null}
                   {post.embed && (

@@ -38,12 +38,14 @@ import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useActorStatus} from '#/features/liveNow'
+import {Provider as OnDeviceTranslationProvider} from '#/translation'
 
 export type ThreadItemPostProps = {
   item: Extract<ThreadItem, {type: 'threadPost'}>
@@ -68,13 +70,15 @@ export function ThreadItemPost({
   }
 
   return (
-    <ThreadItemPostInner
-      item={item}
-      postShadow={postShadow}
-      threadgateRecord={threadgateRecord}
-      overrides={overrides}
-      onPostSuccess={onPostSuccess}
-    />
+    <OnDeviceTranslationProvider>
+      <ThreadItemPostInner
+        item={item}
+        postShadow={postShadow}
+        threadgateRecord={threadgateRecord}
+        overrides={overrides}
+        onPostSuccess={onPostSuccess}
+      />
+    </OnDeviceTranslationProvider>
   )
 }
 
@@ -318,6 +322,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                       onPress={onPressShowMore}
                     />
                   )}
+                  <TranslatedPost postText={richText.text} standalone />
                 </View>
               ) : undefined}
               {post.embed && (
