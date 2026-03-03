@@ -5,14 +5,16 @@ import {guessLanguageAsync} from '@bsky.app/expo-guess-language'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
+import lande from 'lande'
 
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
-import {codeToLanguageName} from '#/locale/helpers'
+import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 // fallbacks for safari
@@ -68,6 +70,7 @@ export function SuggestedLanguage({
    */
   onAcceptSuggestedLanguage: (language: string | null) => void
 }) {
+  const ax = useAnalytics()
   const langPrefs = useLanguagePrefs()
   const replyToLanguages = replyToLanguagesProp
     .map(lang => cleanUpLanguage(lang))
@@ -87,6 +90,10 @@ export function SuggestedLanguage({
   useEffect(() => {
     const textTrimmed = text.trim()
 
+    const enableNativeDetection = !ax.features.enabled(
+      ax.features.NativeLanguageDetectionDisable,
+    )
+
     // Don't run the language model on small posts, the results are likely
     // to be inaccurate anyway.
     if (textTrimmed.length < MIN_TEXT_LENGTH) {
@@ -96,7 +103,7 @@ export function SuggestedLanguage({
 
     const idle = onIdle(
       () =>
-        void guessLanguage(textTrimmed).then(language =>
+        void guessLanguage(textTrimmed, enableNativeDetection).then(language =>
           setSuggestedLanguage(language),
         ),
     )
@@ -224,33 +231,51 @@ function LanguageSuggestionButton({
  * We want to only make suggestions when we feel a high degree of certainty.
  * The magic numbers are based on debugging sessions against some test strings.
  */
-async function guessLanguage(text: string): Promise<string | undefined> {
-  const results = await guessLanguageAsync(text)
+async function guessLanguage(
+  text: string,
+  enableNativeDetection: boolean,
+): Promise<string | undefined> {
+  if (enableNativeDetection) {
+    const results = await guessLanguageAsync(text)
 
-  // Filter candidates above the noise floor. Device locales get a lower
-  // bar so they're less likely to be pruned as noise.
-  const scores = results.filter(r => {
-    const minConfidence = deviceLanguageCodes.includes(r.language)
-      ? MIN_CANDIDATE_CONFIDENCE_DEVICE_LOCALE
-      : MIN_CANDIDATE_CONFIDENCE
-    return r.confidence >= minConfidence
-  })
+    // Filter candidates above the noise floor. Device locales get a lower
+    // bar so they're less likely to be pruned as noise.
+    const scores = results.filter(r => {
+      const minConfidence = deviceLanguageCodes.includes(r.language)
+        ? MIN_CANDIDATE_CONFIDENCE_DEVICE_LOCALE
+        : MIN_CANDIDATE_CONFIDENCE
+      return r.confidence >= minConfidence
+    })
 
-  if (scores.length === 0) return undefined
+    if (scores.length === 0) return undefined
 
-  const {language, confidence} = scores[0]
-  const isDeviceLocale = deviceLanguageCodes.includes(language)
-  const threshold = isDeviceLocale
-    ? CONFIDENCE_THRESHOLD_DEVICE_LOCALE
-    : CONFIDENCE_THRESHOLD
+    const {language, confidence} = scores[0]
+    const isDeviceLocale = deviceLanguageCodes.includes(language)
+    const threshold = isDeviceLocale
+      ? CONFIDENCE_THRESHOLD_DEVICE_LOCALE
+      : CONFIDENCE_THRESHOLD
 
-  // Multiple candidates above the noise floor - ignore due to uncertainty
-  if (scores.length > 1) {
-    return undefined
+    // Multiple candidates above the noise floor - ignore due to uncertainty
+    if (scores.length > 1) {
+      return undefined
+    }
+
+    if (confidence < threshold) return undefined
+    return language
+  } else {
+    // LEGACY BEHAVIOUR
+    const scores = lande(text).filter(([_lang, value]) => value >= 0.0002)
+    // if the model has multiple items with a score higher than 0.0002, it isn't certain enough
+    if (scores.length !== 1) {
+      return undefined
+    }
+    const [lang, value] = scores[0]
+    // if the model doesn't give a score of 0.97 or above, it isn't certain enough
+    if (value < 0.97) {
+      return undefined
+    }
+    return code3ToCode2Strict(lang)
   }
-
-  if (confidence < threshold) return undefined
-  return language
 }
 
 function cleanUpLanguage(text: string | undefined): string | undefined {
