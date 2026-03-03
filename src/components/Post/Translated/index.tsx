@@ -167,7 +167,8 @@ function TranslationError({
     <View
       style={[
         a.px_lg,
-        a.py_md,
+        a.pt_sm,
+        a.pb_md,
         a.mt_sm,
         a.border,
         a.rounded_lg,
