@@ -137,6 +137,7 @@ let PostMenuItems = ({
   const openLink = useOpenLink()
   const {clearTranslation, translate, translationState} = useTranslate({
     key: post.uri,
+    forceGoogleTranslate,
   })
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
@@ -261,7 +262,6 @@ let PostMenuItems = ({
     void translate({
       text: record.text,
       targetLangCode: langPrefs.primaryLanguage,
-      forceGoogleTranslate,
     })
 
     if (

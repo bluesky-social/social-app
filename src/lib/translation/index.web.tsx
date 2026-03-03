@@ -3,7 +3,7 @@ import {useCallback, useContext, useMemo} from 'react'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {useAnalytics} from '#/analytics'
 import {Context} from './context'
-import {type TranslationState} from './types'
+import {type TranslationFunctionParams, type TranslationState} from './types'
 
 const translationState: Record<string, TranslationState> = {}
 const acquireTranslation = (_key: string) => {
@@ -14,7 +14,12 @@ const clearTranslation = (_key: string) => {}
 /**
  * Web always opens Google Translate.
  */
-export function useTranslate(key: string) {
+export function useTranslate({
+  key,
+}: {
+  key: string
+  forceGoogleTranslate?: boolean
+}) {
   const context = useContext(Context)
   if (!context) {
     throw new Error(
@@ -24,42 +29,23 @@ export function useTranslate(key: string) {
 
   // Always call hooks in consistent order
   const translate = useCallback(
-    async (params: {
-      text: string
-      targetLangCode: string
-      sourceLangCode?: string
-    }) => {
-      if (!key) {
-        throw new Error(
-          'translate requires a key. Either pass key to useTranslate() or use context.translate() with key parameter',
-        )
-      }
-      return context.translate({...params, key})
+    async (params: TranslationFunctionParams) => {
+      return context.translate({...params, key, forceGoogleTranslate: true})
     },
     [key, context],
   )
 
   const clearTranslation = useCallback(() => {
-    if (!key) {
-      throw new Error(
-        'clearTranslation requires a key. Either pass key to useTranslate() or use context.clearTranslation() with key parameter',
-      )
-    }
     return context.clearTranslation(key)
   }, [key, context])
 
-  // If a key is provided, return wrapped versions that automatically use the key
-  if (key) {
-    return {
-      translationState: context.translationState[key] ?? {
-        status: 'idle' as const,
-      },
-      translate,
-      clearTranslation,
-    }
+  return {
+    translationState: context.translationState[key] ?? {
+      status: 'idle' as const,
+    },
+    translate,
+    clearTranslation,
   }
-
-  return context
 }
 
 export function Provider({children}: React.PropsWithChildren<unknown>) {

@@ -7,6 +7,7 @@ export const Context = createContext<{
   translate: (
     parameters: TranslationFunctionParams & {
       key: string
+      forceGoogleTranslate: boolean
     },
   ) => Promise<void>
   clearTranslation: (key: string) => void

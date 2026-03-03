@@ -23,10 +23,6 @@ export type TranslationFunctionParams = {
    * The source language of the text. Will auto-detect if not provided.
    */
   sourceLangCode?: string
-  /**
-   * Whether to force the use of Google Translate. Default is false.
-   */
-  forceGoogleTranslate?: boolean
 }
 
 export type TranslationFunction = (

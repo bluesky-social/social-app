@@ -77,7 +77,13 @@ async function attemptTranslation(
  *
  * Web uses index.web.ts which always opens Google Translate.
  */
-export function useTranslate({key}: {key: string}) {
+export function useTranslate({
+  key,
+  forceGoogleTranslate = false,
+}: {
+  key: string
+  forceGoogleTranslate?: boolean
+}) {
   const context = useContext(Context)
   if (!context) {
     throw new Error(
@@ -94,14 +100,14 @@ export function useTranslate({key}: {key: string}) {
 
   const translate = useCallback(
     async (params: TranslationFunctionParams) => {
-      return context.translate({...params, key})
+      return context.translate({...params, key, forceGoogleTranslate})
     },
-    [key, context],
+    [context, forceGoogleTranslate, key],
   )
 
   const clearTranslation = useCallback(
     () => context.clearTranslation(key),
-    [key, context],
+    [context, key],
   )
 
   return {
