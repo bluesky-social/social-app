@@ -8,7 +8,7 @@ import {HITSLOP_30} from '#/lib/constants'
 import {codeToLanguageName, languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
@@ -154,7 +154,7 @@ function TranslationLanguageSelect({
               label={props.accessibilityLabel}
               {...props}
               hitSlop={HITSLOP_30}
-              hoverStyle={{opacity: 0.5}}>
+              hoverStyle={native({opacity: 0.5})}>
               <Text style={[a.text_xs]}>
                 <Trans>Change</Trans>
               </Text>
