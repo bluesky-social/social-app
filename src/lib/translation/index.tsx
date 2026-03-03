@@ -2,6 +2,7 @@ import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
+import {useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
@@ -61,9 +62,15 @@ async function attemptTranslation(
   })
 
   // Since `input` is always a string, the result should always be a string.
+  const translatedText =
+    typeof result.translatedTexts === 'string' ? result.translatedTexts : ''
+
+  if (translatedText === input) {
+    throw new Error('Translation result is the same as the source text.')
+  }
+
   return {
-    translatedText:
-      typeof result.translatedTexts === 'string' ? result.translatedTexts : '',
+    translatedText,
     targetLanguage: result.targetLanguage,
     sourceLanguage: result.sourceLanguage ?? sourceLangCode ?? null, // iOS doesn't return the source language
   }
@@ -125,6 +132,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   >({})
   const [refCounts, setRefCounts] = useState<Record<string, number>>({})
   const ax = useAnalytics()
+  const {t: l} = useLingui()
   const googleTranslate = useGoogleTranslate()
 
   useEffect(() => {
@@ -235,12 +243,12 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
             sourceLanguage: sourceLangCode ?? null,
             targetLanguage: targetLangCode,
           })
+          let errorMessage = l`Device failed to translate. :(`
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           setTranslationState(prev => ({
             ...prev,
-            [key]: {status: 'idle'},
+            [key]: {status: 'error', message: errorMessage},
           }))
-          await googleTranslate(text, targetLangCode, sourceLangCode)
         }
       }
 
@@ -254,7 +262,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         [key]: {status: 'loading'},
       }))
     },
-    [ax, googleTranslate],
+    [ax, googleTranslate, l],
   )
 
   const ctx = useMemo(

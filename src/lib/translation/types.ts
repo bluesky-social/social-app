@@ -9,6 +9,10 @@ export type TranslationState =
       sourceLanguage: TranslationTaskResult['sourceLanguage']
       targetLanguage: TranslationTaskResult['targetLanguage']
     }
+  | {
+      status: 'error'
+      message: string
+    }
 
 export type TranslationFunctionParams = {
   /**

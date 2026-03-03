@@ -18,6 +18,7 @@ import {atoms as a, native, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
@@ -44,6 +45,17 @@ export function TranslatedPost({
       ),
     [post, langPrefs.primaryLanguage],
   )
+
+  if (translationState.status === 'error') {
+    return (
+      <TranslationError
+        clearTranslation={clearTranslation}
+        message={translationState.message}
+        postText={postText}
+        primaryLanguage={langPrefs.primaryLanguage}
+      />
+    )
+  }
 
   if (translationState.status === 'loading') {
     return <TranslationLoading />
@@ -137,6 +149,63 @@ function TranslationLink({
   )
 }
 
+function TranslationError({
+  clearTranslation,
+  message,
+  postText,
+  primaryLanguage,
+}: {
+  clearTranslation: () => void
+  message: string
+  postText: string
+  primaryLanguage: string
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <View
+      style={[
+        a.px_lg,
+        a.py_md,
+        a.mt_sm,
+        a.border,
+        a.rounded_lg,
+        t.atoms.border_contrast_high,
+      ]}>
+      <View
+        style={[a.flex_row, a.flex_wrap, a.align_center, a.justify_between]}>
+        <View style={[a.flex_row, a.align_center, a.mb_sm]}>
+          <Warning size="sm" fill={t.atoms.text_contrast_medium.color} />
+          <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
+            {' '}
+            {message}
+          </Text>
+        </View>
+        <View style={[a.flex_row, a.align_center, a.mb_xs]}>
+          <Button
+            label={l`Hide translation`}
+            hitSlop={HITSLOP_30}
+            hoverStyle={native({opacity: 0.5})}
+            onPress={clearTranslation}>
+            <Times size="sm" fill={t.atoms.text_contrast_medium.color} />
+          </Button>
+        </View>
+      </View>
+      <View style={[a.flex_row, a.align_center]}>
+        <Text>
+          <InlineLinkText
+            to={getTranslatorLink(postText, primaryLanguage)}
+            label={l`Try Google Translate`}
+            style={[a.text_xs, a.font_medium]}>
+            <Trans>Try Google Translate</Trans>
+          </InlineLinkText>
+        </Text>
+      </View>
+    </View>
+  )
+}
+
 function TranslationResult({
   clearTranslation,
   translate,
@@ -213,7 +282,12 @@ function TranslationResult({
           )}
           {sourceLanguage != null && (
             <>
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Text
+                style={[
+                  a.text_xs,
+                  a.font_medium,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 {' '}
                 &middot;{' '}
               </Text>
@@ -250,6 +324,7 @@ function TranslationLanguageSelect({
   postText: string
   sourceLanguage: string
 }) {
+  const t = useTheme()
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
@@ -300,7 +375,8 @@ function TranslationLanguageSelect({
               {...props}
               hitSlop={HITSLOP_30}
               hoverStyle={native({opacity: 0.5})}>
-              <Text style={[a.text_xs, a.font_medium]}>
+              <Text
+                style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
                 <Trans>Change</Trans>
               </Text>
             </Button>
