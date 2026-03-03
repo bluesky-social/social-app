@@ -160,8 +160,8 @@ export function PagerWithHeader({
   // load. We filter it out, but only until the first real scroll event has
   // been accepted. After that we stop filtering so that legitimate
   // scroll-to-top events (which also target -headerHeight) are not rejected.
-  // The old heuristic assumed "you'd never be overscrolled by 400px" but
-  // profiles with very large headers DO scroll to -headerHeight normally. -sfn
+  // profiles with very large headers DO scroll to -headerHeight normally,
+  // so we need to adjust the heuristic. - sfp
   const hasReceivedScroll = useSharedValue(false)
   const onScrollWorklet = useCallback(
     (e: NativeScrollEvent) => {
@@ -301,7 +301,7 @@ let PagerTabBar = ({
             // Re-measure when the header content changes size (e.g.
             // SuggestedFollows accordion expanding/collapsing). The sentinel
             // view below only fires onLayout once on mount, so without this
-            // the headerOnlyHeight goes stale.
+            // the headerOnlyHeight goes stale. - sfp
             const rounded = Math.round(height * 2) / 2
             if (rounded > 0 && rounded !== headerOnlyHeight) {
               onHeaderOnlyLayout(height)
