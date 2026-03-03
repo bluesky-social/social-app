@@ -17,6 +17,7 @@ import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
+import {useFocusSearchInputKeyboardShortcut} from '#/lib/hooks/useFocusSearchInputKeyboardShortcut'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -282,6 +283,8 @@ export function SearchScreenShell({
       return listenSoftReset(onSoftReset)
     }, [onSoftReset, setMinimalShellMode]),
   )
+
+  useFocusSearchInputKeyboardShortcut(showAutocomplete, textInput)
 
   const onSearchInputFocus = useCallback(() => {
     if (IS_WEB) {
