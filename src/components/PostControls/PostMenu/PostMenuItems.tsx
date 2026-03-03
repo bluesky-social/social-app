@@ -27,7 +27,7 @@ import {
 } from '#/lib/routes/types'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
-import {useTranslateOnDevice} from '#/lib/translation'
+import {useTranslate} from '#/lib/translation'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -135,7 +135,7 @@ let PostMenuItems = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const {clearTranslation, translate, translationState} = useTranslateOnDevice()
+  const {clearTranslation, translate, translationState} = useTranslate()
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()

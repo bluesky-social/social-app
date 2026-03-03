@@ -3,7 +3,7 @@ import {Platform, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {useTranslateOnDevice, useTranslationKey} from '#/lib/translation'
+import {useTranslate, useTranslationKey} from '#/lib/translation'
 import {codeToLanguageName, languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -21,7 +21,7 @@ export function TranslatedPost({
   translationKey: string
   postText: string
 }) {
-  const {translationState} = useTranslateOnDevice()
+  const {translationState} = useTranslate()
   // Register this component as using this translation key with focus-based cleanup
   useTranslationKey(translationKey)
 
@@ -119,7 +119,7 @@ function TranslationLanguageSelect({
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const {translate} = useTranslateOnDevice()
+  const {translate} = useTranslate()
 
   const items = useMemo(
     () =>

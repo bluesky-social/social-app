@@ -78,11 +78,11 @@ async function attemptTranslation(
  *
  * Web uses index.web.ts which always opens Google Translate.
  */
-export function useTranslateOnDevice() {
+export function useTranslate() {
   const context = useContext(Context)
   if (!context) {
     throw new Error(
-      'useTranslateOnDevice must be used within a TranslateOnDeviceProvider',
+      'useTranslate must be used within a TranslateOnDeviceProvider',
     )
   }
   return context
@@ -95,7 +95,7 @@ export function useTranslateOnDevice() {
  * loses focus.
  */
 export function useTranslationKey(key: string) {
-  const {acquireTranslation} = useTranslateOnDevice()
+  const {acquireTranslation} = useTranslate()
 
   useFocusEffect(
     useCallback(() => {

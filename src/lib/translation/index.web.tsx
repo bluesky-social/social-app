@@ -17,11 +17,11 @@ export function useTranslationKey(_key: string) {}
 /**
  * Web always opens Google Translate.
  */
-export function useTranslateOnDevice() {
+export function useTranslate() {
   const context = useContext(Context)
   if (!context) {
     throw new Error(
-      'useTranslateOnDevice must be used within a TranslateOnDeviceProvider',
+      'useTranslate must be used within a TranslateOnDeviceProvider',
     )
   }
   return context
