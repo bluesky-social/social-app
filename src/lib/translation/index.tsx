@@ -37,7 +37,7 @@ async function attemptTranslation(
       : sourceLangCodeOriginal
 
   // Special cases for regional languages
-  if (Platform.OS !== 'android') {
+  if (Platform.OS === 'ios') {
     const deviceLocales = getLocales()
     const primaryLanguageTag = deviceLocales[0]?.languageTag
     switch (targetLangCodeOriginal) {
