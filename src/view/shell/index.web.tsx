@@ -7,7 +7,6 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {type NavigationProp} from '#/lib/routes/types'
-import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import {useSession} from '#/state/session'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
@@ -176,9 +175,7 @@ export function Shell() {
             <NoAccessScreen />
           ) : (
             <RoutesContainer>
-              <TranslateOnDeviceProvider>
-                <ShellInner />
-              </TranslateOnDeviceProvider>
+              <ShellInner />
             </RoutesContainer>
           )}
 

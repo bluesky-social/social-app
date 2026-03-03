@@ -10,6 +10,7 @@ import * as Sentry from '@sentry/react-native'
 
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
+import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
@@ -154,8 +155,10 @@ function InnerApp() {
                                                         <EmailVerificationProvider>
                                                           <HideBottomBarBorderProvider>
                                                             <IntentDialogProvider>
-                                                              <Shell />
-                                                              <ToastOutlet />
+                                                              <TranslateOnDeviceProvider>
+                                                                <Shell />
+                                                                <ToastOutlet />
+                                                              </TranslateOnDeviceProvider>
                                                             </IntentDialogProvider>
                                                           </HideBottomBarBorderProvider>
                                                         </EmailVerificationProvider>

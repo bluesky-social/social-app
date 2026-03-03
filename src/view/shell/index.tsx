@@ -11,7 +11,6 @@ import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
-import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
 import {
@@ -241,9 +240,7 @@ export function Shell() {
             <NoAccessScreen />
           ) : (
             <RoutesContainer>
-              <TranslateOnDeviceProvider>
-                <ShellInner />
-              </TranslateOnDeviceProvider>
+              <ShellInner />
             </RoutesContainer>
           )}
 
