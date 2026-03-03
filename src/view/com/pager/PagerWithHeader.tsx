@@ -160,7 +160,7 @@ export function PagerWithHeader({
   // load. We filter it out, but only until the first real scroll event has
   // been accepted. After that we stop filtering so that legitimate
   // scroll-to-top events (which also target -headerHeight) are not rejected.
-  // profiles with very large headers DO scroll to -headerHeight normally,
+  // profiles with very large headers do scroll to -headerHeight normally,
   // so we need to adjust the heuristic. - sfp
   const hasReceivedScroll = useSharedValue(false)
   const onScrollWorklet = useCallback(
