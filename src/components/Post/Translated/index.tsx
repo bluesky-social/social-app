@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {Platform, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
@@ -125,7 +124,7 @@ function TranslationLanguageSelect({
   sourceLanguage: string
 }) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {translate} = useTranslateOnDevice()
 
@@ -163,7 +162,7 @@ function TranslationLanguageSelect({
     <Select.Root
       value={sourceLanguage}
       onValueChange={handleChangeTranslationLanguage}>
-      <Select.Trigger hitSlop={10} label={_(msg`Change source language`)}>
+      <Select.Trigger hitSlop={10} label={l`Change source language`}>
         {({props}) => {
           return (
             <Text {...props} style={[a.text_xs]}>
@@ -173,7 +172,7 @@ function TranslationLanguageSelect({
         }}
       </Select.Trigger>
       <Select.Content
-        label={_(msg`Select the source language`)}
+        label={l`Select the source language`}
         renderItem={({label, value}) => (
           <Select.Item value={value} label={label}>
             <Select.ItemIndicator />
