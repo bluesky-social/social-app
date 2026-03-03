@@ -77,8 +77,9 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
 
     if sender.state == .began {
       // Use max(0) so gesture deltas compute correctly, but don't mutate
-      // contentOffset — snapping it to 0 causes a visible jump on profiles
-      // with large headers where the user is scrolled into negative territory.
+      // contentOffset
+      // snapping it to 0 causes a visible jump on profiles with large headers
+      // where the user is scrolled into negative territory. - sfp
       self.initialOffset = max(sv.contentOffset.y, 0)
     }
 
