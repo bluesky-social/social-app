@@ -128,7 +128,6 @@ function TranslationLink({
             // for accessibility
             to={getTranslatorLink(postText, primaryLanguage)}
             label={l`Translate`}
-            style={[a.text_sm]}
             onPress={handleTranslate}>
             <Trans>Translate</Trans>
           </InlineLinkText>
@@ -168,7 +167,7 @@ function TranslationResult({
           a.pb_md,
           a.mt_sm,
           a.border,
-          a.rounded_md,
+          a.rounded_lg,
           t.atoms.border_contrast_high,
         ]}>
         <View style={[a.flex_row, a.align_center, a.mb_xs]}>
