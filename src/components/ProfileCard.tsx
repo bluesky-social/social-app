@@ -30,6 +30,7 @@ import {
   useTheme,
   type ViewStyleProp,
 } from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {
   Button,
   ButtonIcon,
@@ -272,6 +273,7 @@ function InlineNameAndHandle({
           />
         </View>
       )}
+      <BotBadge profile={profile} />
       <Text
         emoji
         style={[
@@ -326,6 +328,7 @@ export function Name({
           />
         </View>
       )}
+      <BotBadge profile={profile} />
     </View>
   )
 }

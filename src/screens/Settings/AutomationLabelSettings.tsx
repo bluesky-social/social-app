@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {isBotAccount} from '#/lib/bots'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {
   useProfileQuery,
@@ -17,12 +16,12 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {BotBadge} from '#/components/BotBadge'
 import * as Toggle from '#/components/forms/Toggle'
-import {Robot_Stroke2_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
+import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
-import {getVerificationState} from '../../../bskyembed/src/util/verification-state'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -34,7 +33,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const updateProfile = useProfileUpdateMutation()
-  const verification = getVerificationState({profile: profile})
+  const verification = useSimpleVerificationState({profile})
 
   const isBotLabeled =
     profile?.labels?.some(l => l.val === 'bot' && l.src === profile.did) ??
@@ -125,14 +124,8 @@ export function AutomationLabelSettingsScreen({}: Props) {
                         size="xs"
                       />
                     )}
-                    {isBotAccount(profile) && (
-                      <RobotIcon
-                        width={15}
-                        fill={t.atoms.text_contrast_medium.color}
-                      />
-                    )}
+                    <BotBadge profile={profile} alwaysShow size={16} />
                   </View>
-                  <BotBadge profile={profile} />
                 </View>
                 <Text
                   style={[a.text_md, t.atoms.text_contrast_medium]}

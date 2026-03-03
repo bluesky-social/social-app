@@ -6,7 +6,7 @@ import {Trans} from '@lingui/react/macro'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Robot_Stroke2_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
+import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
 import {Text} from '#/components/Typography'
 
 export function BotAccountInfoDialog({
@@ -32,12 +32,12 @@ function BotAccountInfoDialogInner({
 
   return (
     <Dialog.ScrollableInner label={_(msg`Automated account`)}>
-      <View style={[a.align_center, a.gap_lg, a.py_md]}>
-        <RobotIcon width={48} fill={t.atoms.text_contrast_medium.color} />
-        <Text style={[a.text_lg, a.text_center, a.leading_snug]}>
-          <Trans>
-            This account has been marked as automated by its owner.
-          </Trans>
+      <View style={[a.align_center, a.gap_2xl, a.py_md]}>
+        <View style={[t.atoms.shadow_sm]}>
+          <RobotIcon width={48} fill={t.atoms.text_contrast_medium.color} />
+        </View>
+        <Text style={[a.text_lg, a.text_center, a.font_semi_bold]}>
+          <Trans>This account has been marked as automated by its owner</Trans>
         </Text>
         <Button
           label={_(msg`Okay`)}
