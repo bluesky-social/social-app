@@ -9,16 +9,13 @@ import {
 } from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {HITSLOP_30} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {
-  getPostLanguage,
-  getTranslatorLink,
-  isPostInLanguage,
-} from '#/locale/helpers'
+import {getPostLanguage, isPostInLanguage} from '#/locale/helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -39,12 +36,12 @@ import {
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {InlineLinkText, Link} from '#/components/Link'
+import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
@@ -627,21 +624,25 @@ function TranslateLink({
             </Text>
           </View>
         ) : translationState.status === 'success' ? (
-          <InlineLinkText
-            to="#"
+          <Button
             label={l`Hide translation`}
-            style={[a.text_sm]}
-            onPress={onHideTranslation}>
-            <Trans>Hide translation</Trans>
-          </InlineLinkText>
+            onPress={onHideTranslation}
+            hoverStyle={native({opacity: 0.5})}
+            hitSlop={HITSLOP_30}>
+            <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
+              <Trans>Hide translation</Trans>
+            </Text>
+          </Button>
         ) : (
-          <InlineLinkText
-            to={getTranslatorLink(post.record.text, langPrefs.primaryLanguage)}
+          <Button
             label={l`Translate`}
-            style={[a.text_sm]}
-            onPress={onTranslatePress}>
-            <Trans>Translate</Trans>
-          </InlineLinkText>
+            onPress={onTranslatePress}
+            hoverStyle={native({opacity: 0.5})}
+            hitSlop={HITSLOP_30}>
+            <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
+              <Trans>Translate</Trans>
+            </Text>
+          </Button>
         )}
       </View>
     )

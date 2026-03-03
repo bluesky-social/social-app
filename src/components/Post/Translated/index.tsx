@@ -4,10 +4,12 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {HITSLOP_30} from '#/lib/constants'
 import {codeToLanguageName, languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
@@ -71,25 +73,27 @@ function TranslationResult({
 
   return (
     <View style={[a.py_xs, a.gap_xs, a.mt_sm]}>
-      <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-        {langName ? (
-          <Trans>Translated from {langName}</Trans>
-        ) : (
-          <Trans>Translated</Trans>
-        )}
+      <View style={[a.flex_row, a.align_center]}>
+        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+          {langName ? (
+            <Trans>Translated from {langName}</Trans>
+          ) : (
+            <Trans>Translated</Trans>
+          )}
+        </Text>
         {sourceLanguage != null && (
           <>
             <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
               {' '}
-              &middot;
-            </Text>{' '}
+              &middot;{' '}
+            </Text>
             <TranslationLanguageSelect
               sourceLanguage={sourceLanguage}
               postText={postText}
             />
           </>
         )}
-      </Text>
+      </View>
       <Text emoji selectable style={[a.text_md, a.leading_snug]}>
         {translatedText}
       </Text>
@@ -143,12 +147,18 @@ function TranslationLanguageSelect({
     <Select.Root
       value={sourceLanguage}
       onValueChange={handleChangeTranslationLanguage}>
-      <Select.Trigger hitSlop={10} label={_(msg`Change source language`)}>
+      <Select.Trigger label={_(msg`Change source language`)}>
         {({props}) => {
           return (
-            <Text {...props} style={[a.text_xs]}>
-              <Trans>Change</Trans>
-            </Text>
+            <Button
+              label={props.accessibilityLabel}
+              {...props}
+              hitSlop={HITSLOP_30}
+              hoverStyle={{opacity: 0.5}}>
+              <Text style={[a.text_xs]}>
+                <Trans>Change</Trans>
+              </Text>
+            </Button>
           )
         }}
       </Select.Trigger>
