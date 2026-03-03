@@ -533,7 +533,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 feedContext={postSource?.post?.feedContext}
                 reqId={postSource?.post?.reqId}
                 viaRepost={viaRepost}
-                forceGoogleTranslate={true}
               />
             </FeedFeedbackProvider>
           </View>
