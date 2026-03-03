@@ -1142,6 +1142,8 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
+#: src/components/images/AutoSizedImage.tsx:190
+#: src/components/images/Gallery.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:102
 #: src/view/com/composer/photos/Gallery.tsx:189
@@ -5169,7 +5171,7 @@ msgstr ""
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr ""
 
-#: src/components/images/Gallery.tsx:75
+#: src/components/images/Gallery.tsx:76
 msgid "Image"
 msgstr ""
 
@@ -8231,8 +8233,8 @@ msgstr ""
 msgid "Report dialog"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:544
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:550
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:556
 msgid "Report feed"
 msgstr ""
 
@@ -9500,7 +9502,7 @@ msgstr ""
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:540
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:546
 msgid "Something wrong? Let us know."
 msgstr ""
 
@@ -11336,8 +11338,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/components/images/AutoSizedImage.tsx:206
-#: src/components/images/AutoSizedImage.tsx:233
+#: src/components/images/AutoSizedImage.tsx:207
+#: src/components/images/AutoSizedImage.tsx:234
 msgid "Views full image"
 msgstr ""
 
