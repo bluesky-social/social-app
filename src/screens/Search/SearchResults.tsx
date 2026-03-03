@@ -2,10 +2,10 @@ import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
+import {useCallOnce} from '#/lib/once'
 import {cleanError} from '#/lib/strings/errors'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
@@ -285,16 +285,18 @@ let SearchScreenPostResults = ({
   const closeAllActiveElements = useCloseAllActiveElements()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
-  useFocusEffect(
-    useCallback(() => {
-      if (isFetched && sort) {
-        ax.metric('search:results:loaded', {
-          tab: sort,
-          initialCount: items.length,
-        })
-      }
-    }, [ax, isFetched, items, sort]),
-  )
+  const fireTracking = useCallOnce(() => {
+    if (sort) {
+      // ts only
+      ax.metric('search:results:loaded', {
+        tab: sort,
+        initialCount: items.length,
+      })
+    }
+  })
+  if (isFetched && sort) {
+    fireTracking()
+  }
 
   const showSignIn = () => {
     closeAllActiveElements()
@@ -454,16 +456,15 @@ let SearchScreenUserResults = ({
     return results?.pages.flatMap(page => page.actors) || []
   }, [results])
 
-  useFocusEffect(
-    useCallback(() => {
-      if (isFetched) {
-        ax.metric('search:results:loaded', {
-          tab: 'people',
-          initialCount: profiles.length,
-        })
-      }
-    }, [ax, isFetched, profiles]),
-  )
+  const fireTracking = useCallOnce(() => {
+    ax.metric('search:results:loaded', {
+      tab: 'people',
+      initialCount: profiles.length,
+    })
+  })
+  if (isFetched) {
+    fireTracking()
+  }
 
   if (error) {
     return (
@@ -543,16 +544,15 @@ let SearchScreenFeedsResults = ({
     enabled: active,
   })
 
-  useFocusEffect(
-    useCallback(() => {
-      if (isFetched) {
-        ax.metric('search:results:loaded', {
-          tab: 'feeds',
-          initialCount: results?.length ?? 0,
-        })
-      }
-    }, [ax, isFetched, results]),
-  )
+  const fireTracking = useCallOnce(() => {
+    ax.metric('search:results:loaded', {
+      tab: 'feeds',
+      initialCount: results?.length ?? 0,
+    })
+  })
+  if (isFetched) {
+    fireTracking()
+  }
 
   return isFetched && results ? (
     <>
