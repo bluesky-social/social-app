@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import {LayoutAnimation, Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
-import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
+import {onTranslateTask} from '@bsky.app/expo-translate-text'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getTranslatorLink} from '#/locale/helpers'
@@ -15,6 +15,8 @@ import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+
+type TranslationTaskResult = Awaited<ReturnType<typeof onTranslateTask>>
 
 type TranslationState =
   | {status: 'idle'}
@@ -68,10 +70,6 @@ async function attemptTranslation(
     }
   }
 
-  const {onTranslateTask} =
-    // Needed in order to type check the dynamically imported module.
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    require('@bsky.app/expo-translate-text') as typeof import('@bsky.app/expo-translate-text')
   const result = await onTranslateTask({
     input,
     targetLangCode,

@@ -1,107 +1,21 @@
 import {useMemo} from 'react'
-import {Platform, View} from 'react-native'
+import {Platform} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {codeToLanguageName, languageName} from '#/locale/helpers'
+import {languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native} from '#/alf'
 import {Button} from '#/components/Button'
-import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {useTranslateOnDevice} from '#/translation'
+import {useTranslateOnDevice} from '#/features/translation'
 
-export function TranslatedPost({
-  postText,
-  hideLoading = false,
-}: {
-  postText: string
-  hideLoading: boolean
-}) {
-  const {translationState} = useTranslateOnDevice()
-
-  if (translationState.status === 'loading' && !hideLoading) {
-    return <TranslationLoading />
-  }
-
-  if (translationState.status === 'success') {
-    return (
-      <TranslationResult
-        postText={postText}
-        sourceLanguage={translationState.sourceLanguage}
-        translatedText={translationState.translatedText}
-      />
-    )
-  }
-
-  return null
-}
-
-function TranslationLoading() {
-  const t = useTheme()
-
-  return (
-    <View style={[a.flex_row, a.align_center, a.gap_sm, a.py_xs]}>
-      <Loader size="sm" />
-      <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-        <Trans>Translating…</Trans>
-      </Text>
-    </View>
-  )
-}
-
-function TranslationResult({
-  postText,
-  sourceLanguage,
-  translatedText,
-}: {
-  postText: string
-  sourceLanguage: string | null
-  translatedText: string
-}) {
-  const t = useTheme()
-  const {i18n} = useLingui()
-
-  const langName = sourceLanguage
-    ? codeToLanguageName(sourceLanguage, i18n.locale)
-    : undefined
-
-  return (
-    <View style={[a.py_xs, a.gap_xs, a.mt_sm]}>
-      <View style={[a.flex_row, a.align_center]}>
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          {langName ? (
-            <Trans>Translated from {langName}</Trans>
-          ) : (
-            <Trans>Translated</Trans>
-          )}
-        </Text>
-        {sourceLanguage != null && (
-          <>
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              {' '}
-              &middot;{' '}
-            </Text>
-            <TranslationLanguageSelect
-              sourceLanguage={sourceLanguage}
-              postText={postText}
-            />
-          </>
-        )}
-      </View>
-      <Text emoji selectable style={[a.text_md, a.leading_snug]}>
-        {translatedText}
-      </Text>
-    </View>
-  )
-}
-
-function TranslationLanguageSelect({
+export function TranslationLanguageSelect({
   postText,
   sourceLanguage,
 }: {

@@ -1,5 +1,5 @@
 import {memo, useCallback, useMemo} from 'react'
-import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
+import {Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -9,13 +9,11 @@ import {
 } from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
-import {HITSLOP_30} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {getPostLanguage, isPostInLanguage} from '#/locale/helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -23,7 +21,6 @@ import {
 } from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
-import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
@@ -36,19 +33,17 @@ import {
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
-import {Loader} from '#/components/Loader'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
-import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -60,10 +55,9 @@ import {VerificationCheckButton} from '#/components/verification/VerificationChe
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
-import {
-  Provider as TranslateOnDeviceProvider,
-  useTranslateOnDevice,
-} from '#/translation'
+import {Provider as TranslateOnDeviceProvider} from '#/features/translation'
+import {InlineTranslateButton} from '#/features/translation/components/InlineTranslateButton'
+import {TranslationResult} from '#/features/translation/components/TranslationResult'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -417,8 +411,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 shouldProxyLinks={true}
               />
             ) : undefined}
-            <TranslatedPost postText={record.text} hideLoading />
-            <TranslateLink post={item.value.post} />
+            <TranslationResult postText={record.text} hideLoading />
+            <InlineTranslateButton post={item.value.post} />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed
@@ -553,101 +547,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     </>
   )
 })
-
-function TranslateLink({
-  post,
-}: {
-  post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
-}) {
-  const t = useTheme()
-  const ax = useAnalytics()
-  const {t: l} = useLingui()
-  const langPrefs = useLanguagePrefs()
-
-  const {translate, clearTranslation, translationState} = useTranslateOnDevice()
-
-  const needsTranslation = useMemo(
-    () =>
-      Boolean(
-        langPrefs.primaryLanguage &&
-          !isPostInLanguage(post, [langPrefs.primaryLanguage]),
-      ),
-    [post, langPrefs.primaryLanguage],
-  )
-
-  const sourceLanguage = getPostLanguage(post)
-
-  const onTranslatePress = useCallback(
-    (e: GestureResponderEvent) => {
-      e.preventDefault()
-      void translate(
-        post.record.text || '',
-        langPrefs.primaryLanguage,
-        sourceLanguage,
-      )
-
-      if (
-        bsky.dangerousIsType<AppBskyFeedPost.Record>(
-          post.record,
-          AppBskyFeedPost.isRecord,
-        )
-      ) {
-        ax.metric('translate', {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
-        })
-      }
-
-      return false
-    },
-    [ax, sourceLanguage, translate, langPrefs, post],
-  )
-
-  const onHideTranslation = useCallback(
-    (e: GestureResponderEvent) => {
-      e.preventDefault()
-      clearTranslation()
-      return false
-    },
-    [clearTranslation],
-  )
-
-  return (
-    needsTranslation && (
-      <View style={[a.gap_md, a.pt_md, a.align_start]}>
-        {translationState.status === 'loading' ? (
-          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <Loader size="xs" />
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              <Trans>Translating…</Trans>
-            </Text>
-          </View>
-        ) : translationState.status === 'success' ? (
-          <Button
-            label={l`Hide translation`}
-            onPress={onHideTranslation}
-            hoverStyle={native({opacity: 0.5})}
-            hitSlop={HITSLOP_30}>
-            <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
-              <Trans>Hide translation</Trans>
-            </Text>
-          </Button>
-        ) : (
-          <Button
-            label={l`Translate`}
-            onPress={onTranslatePress}
-            hoverStyle={native({opacity: 0.5})}
-            hitSlop={HITSLOP_30}>
-            <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
-              <Trans>Translate</Trans>
-            </Text>
-          </Button>
-        )}
-      </View>
-    )
-  )
-}
 
 function ExpandedPostDetails({
   post,
