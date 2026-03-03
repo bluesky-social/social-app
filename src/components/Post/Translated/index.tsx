@@ -4,6 +4,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useTranslate} from '#/lib/translation'
+import {type TranslationFunction} from '#/lib/translation/types'
 import {codeToLanguageName, languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -21,7 +22,7 @@ export function TranslatedPost({
   translationKey: string
   postText: string
 }) {
-  const {translationState} = useTranslate({key: translationKey})
+  const {translate, translationState} = useTranslate({key: translationKey})
 
   if (translationState.status === 'loading') {
     return <TranslationLoading />
@@ -30,7 +31,7 @@ export function TranslatedPost({
   if (translationState.status === 'success') {
     return (
       <TranslationResult
-        translationKey={translationKey}
+        translate={translate}
         postText={postText}
         sourceLanguage={translationState.sourceLanguage}
         translatedText={translationState.translatedText}
@@ -57,12 +58,12 @@ function TranslationLoading() {
 }
 
 function TranslationResult({
-  translationKey,
+  translate,
   postText,
   sourceLanguage,
   translatedText,
 }: {
-  translationKey: string
+  translate: TranslationFunction
   postText: string
   sourceLanguage: string | null
   translatedText: string
@@ -92,7 +93,7 @@ function TranslationResult({
             </Text>
             <TranslationLanguageSelect
               sourceLanguage={sourceLanguage}
-              translationKey={translationKey}
+              translate={translate}
               postText={postText}
             />
           </>
@@ -106,18 +107,17 @@ function TranslationResult({
 }
 
 function TranslationLanguageSelect({
-  translationKey,
+  translate,
   postText,
   sourceLanguage,
 }: {
-  translationKey: string
+  translate: TranslationFunction
   postText: string
   sourceLanguage: string
 }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const {translate} = useTranslate({key: translationKey})
 
   const items = useMemo(
     () =>

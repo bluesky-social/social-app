@@ -8,7 +8,7 @@ import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/analytics'
 import {Context} from './context'
-import {type TranslationState} from './types'
+import {type TranslationFunctionParams, type TranslationState} from './types'
 
 /**
  * Attempts on-device translation via @bsky.app/expo-translate-text.
@@ -94,12 +94,7 @@ export function useTranslate({key}: {key: string}) {
   )
 
   const translate = useCallback(
-    async (params: {
-      text: string
-      targetLangCode: string
-      sourceLangCode?: string
-      forceGoogleTranslate?: boolean
-    }) => {
+    async (params: TranslationFunctionParams) => {
       return context.translate({...params, key})
     },
     [key, context],

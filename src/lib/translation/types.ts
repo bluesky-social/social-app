@@ -9,3 +9,26 @@ export type TranslationState =
       sourceLanguage: TranslationTaskResult['sourceLanguage']
       targetLanguage: TranslationTaskResult['targetLanguage']
     }
+
+export type TranslationFunctionParams = {
+  /**
+   * The text to be translated.
+   */
+  text: string
+  /**
+   * The language to translate the text into.
+   */
+  targetLangCode: string
+  /**
+   * The source language of the text. Will auto-detect if not provided.
+   */
+  sourceLangCode?: string
+  /**
+   * Whether to force the use of Google Translate. Default is false.
+   */
+  forceGoogleTranslate?: boolean
+}
+
+export type TranslationFunction = (
+  parameters: TranslationFunctionParams,
+) => Promise<void>
