@@ -87,7 +87,6 @@ export function useTranslate({key}: {key: string}) {
 
   useFocusEffect(
     useCallback(() => {
-      if (!key) return
       const cleanup = context.acquireTranslation(key)
       return cleanup
     }, [key, context]),
