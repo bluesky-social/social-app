@@ -12,7 +12,10 @@ import {useEmail} from '#/state/email-verification'
 import {useAcceptConversation} from '#/state/queries/messages/accept-conversation'
 import {precacheConvoQuery} from '#/state/queries/messages/conversation'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
-import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import {
+  unstableCacheProfileView,
+  useProfileBlockMutationQueue,
+} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {
@@ -53,6 +56,8 @@ export function RejectMenu({
   const {_} = useLingui()
   const shadowedProfile = useProfileShadow(profile)
   const navigation = useNavigation<NavigationProp>()
+  const queryClient = useQueryClient()
+
   const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
@@ -174,6 +179,12 @@ export function RejectMenu({
             }}
             control={reportControl}
             onAfterSubmit={() => {
+              const sender = convo.members.find(
+                member => member.did === lastMessage.sender.did,
+              )
+              if (sender) {
+                unstableCacheProfileView(queryClient, sender)
+              }
               blockOrDeleteControl.open()
             }}
           />
