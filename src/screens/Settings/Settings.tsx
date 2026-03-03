@@ -34,6 +34,7 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceDismissibleNotice} from '#/components/ageAssurance/AgeAssuranceDismissibleNotice'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
+import {BotBadgeButton} from '#/components/BotBadge'
 import {Button, ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {useDialogControl} from '#/components/Dialog'
@@ -374,6 +375,14 @@ function ProfilePreview({
             <VerificationCheckButton profile={shadow} size="lg" />
           </View>
         )}
+        <View
+          style={[
+            {
+              marginTop: platform({web: 8, ios: 8, android: 10}),
+            },
+          ]}>
+          <BotBadgeButton profile={shadow} size="lg" />
+        </View>
       </View>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {sanitizeHandle(profile.handle, '@')}

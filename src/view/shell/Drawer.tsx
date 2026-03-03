@@ -23,6 +23,7 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
@@ -108,6 +109,7 @@ let DrawerProfileCard = ({
               />
             </View>
           )}
+          {profile && <BotBadge profile={profile} size={16} />}
         </View>
         <Text
           emoji
