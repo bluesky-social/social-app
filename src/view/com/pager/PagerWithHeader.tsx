@@ -156,20 +156,28 @@ export function PagerWithHeader({
     [currentPage, headerOnlyHeight, lastForcedScrollY, scrollRefs, scrollY],
   )
 
+  // HACK: onScroll reports a bogus value of exactly -headerHeight on initial
+  // load. We filter it out, but only until the first real scroll event has
+  // been accepted. After that we stop filtering so that legitimate
+  // scroll-to-top events (which also target -headerHeight) are not rejected.
+  // The old heuristic assumed "you'd never be overscrolled by 400px" but
+  // profiles with very large headers DO scroll to -headerHeight normally. -sfn
+  const hasReceivedScroll = useSharedValue(false)
   const onScrollWorklet = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       const nextScrollY = e.contentOffset.y
-      // HACK: onScroll is reporting some strange values on load (negative header height).
-      // Highly improbable that you'd be overscrolled by over 400px -
-      // in fact, I actually can't do it, so let's just ignore those. -sfn
-      const isPossiblyInvalid =
-        headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
-      if (!isPossiblyInvalid) {
-        scrollY.set(nextScrollY)
+      if (!hasReceivedScroll.get()) {
+        const isPossiblyInvalid =
+          headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
+        if (isPossiblyInvalid) {
+          return
+        }
+        hasReceivedScroll.set(true)
       }
+      scrollY.set(nextScrollY)
     },
-    [scrollY, headerHeight],
+    [scrollY, headerHeight, hasReceivedScroll],
   )
 
   const onPageSelectedInner = useCallback(
@@ -280,6 +288,7 @@ let PagerTabBar = ({
         pointerEvents={IS_IOS ? 'auto' : 'box-none'}
         collapsable={false}
         onLayout={(e: LayoutChangeEvent) => {
+          const height = e.nativeEvent.layout.height
           // Fallback measurement using onLayout directly on the header wrapper.
           // This is more reliable than .measure() on Android after certain
           // navigation transitions (e.g. returning from the logged-out view)
@@ -288,7 +297,15 @@ let PagerTabBar = ({
           // fire too early and cause layout thrashing.
           // ref: https://github.com/bluesky-social/social-app/pull/9964 -sfp
           if (isHeaderReady) {
-            fallbackHeaderOnlyHeight.current = e.nativeEvent.layout.height
+            fallbackHeaderOnlyHeight.current = height
+            // Re-measure when the header content changes size (e.g.
+            // SuggestedFollows accordion expanding/collapsing). The sentinel
+            // view below only fires onLayout once on mount, so without this
+            // the headerOnlyHeight goes stale.
+            const rounded = Math.round(height * 2) / 2
+            if (rounded > 0 && rounded !== headerOnlyHeight) {
+              onHeaderOnlyLayout(height)
+            }
           }
         }}>
         {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
