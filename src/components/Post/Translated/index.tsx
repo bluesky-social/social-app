@@ -46,42 +46,39 @@ export function TranslatedPost({
     [post, langPrefs.primaryLanguage],
   )
 
-  if (translationState.status === 'error') {
-    return (
-      <TranslationError
-        clearTranslation={clearTranslation}
-        message={translationState.message}
-        postText={postText}
-        primaryLanguage={langPrefs.primaryLanguage}
-      />
-    )
+  switch (translationState.status) {
+    case 'loading':
+      return <TranslationLoading />
+    case 'success':
+      return (
+        <TranslationResult
+          clearTranslation={clearTranslation}
+          translate={translate}
+          postText={postText}
+          sourceLanguage={translationState.sourceLanguage}
+          translatedText={translationState.translatedText}
+        />
+      )
+    case 'error':
+      return (
+        <TranslationError
+          clearTranslation={clearTranslation}
+          message={translationState.message}
+          postText={postText}
+          primaryLanguage={langPrefs.primaryLanguage}
+        />
+      )
+    default:
+      return (
+        needsTranslation && (
+          <TranslationLink
+            postText={postText}
+            primaryLanguage={langPrefs.primaryLanguage}
+            translate={translate}
+          />
+        )
+      )
   }
-
-  if (translationState.status === 'loading') {
-    return <TranslationLoading />
-  }
-
-  if (translationState.status === 'success') {
-    return (
-      <TranslationResult
-        clearTranslation={clearTranslation}
-        translate={translate}
-        postText={postText}
-        sourceLanguage={translationState.sourceLanguage}
-        translatedText={translationState.translatedText}
-      />
-    )
-  }
-
-  return (
-    needsTranslation && (
-      <TranslationLink
-        postText={postText}
-        primaryLanguage={langPrefs.primaryLanguage}
-        translate={translate}
-      />
-    )
-  )
 }
 
 function TranslationLoading() {
