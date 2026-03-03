@@ -77,31 +77,46 @@ async function attemptTranslation(
  *
  * Web uses index.web.ts which always opens Google Translate.
  */
-export function useTranslate() {
+export function useTranslate({key}: {key: string}) {
   const context = useContext(Context)
   if (!context) {
     throw new Error(
       'useTranslate must be used within a TranslateOnDeviceProvider',
     )
   }
-  return context
-}
-
-/**
- * Hook to register a component as using a translation key.
- * Automatically handles ref counting with screen focus management
- * via useFocusEffect and cleans up the translation when the component
- * loses focus.
- */
-export function useTranslationKey(key: string) {
-  const {acquireTranslation} = useTranslate()
 
   useFocusEffect(
     useCallback(() => {
-      const cleanup = acquireTranslation(key)
+      if (!key) return
+      const cleanup = context.acquireTranslation(key)
       return cleanup
-    }, [key, acquireTranslation]),
+    }, [key, context]),
   )
+
+  const translate = useCallback(
+    async (params: {
+      text: string
+      targetLangCode: string
+      sourceLangCode?: string
+      forceGoogleTranslate?: boolean
+    }) => {
+      return context.translate({...params, key})
+    },
+    [key, context],
+  )
+
+  const clearTranslation = useCallback(
+    () => context.clearTranslation(key),
+    [key, context],
+  )
+
+  return {
+    translationState: context.translationState[key] ?? {
+      status: 'idle',
+    },
+    translate,
+    clearTranslation,
+  }
 }
 
 export function Provider({children}: React.PropsWithChildren<unknown>) {
@@ -184,7 +199,6 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         await googleTranslate(text, targetLangCode, sourceLangCode)
         return
       }
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setTranslationState(prev => ({
         ...prev,
         [key]: {status: 'loading'},

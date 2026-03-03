@@ -135,7 +135,9 @@ let PostMenuItems = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const {clearTranslation, translate, translationState} = useTranslate()
+  const {clearTranslation, translate, translationState} = useTranslate({
+    key: post.uri,
+  })
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()
@@ -189,8 +191,6 @@ let PostMenuItems = ({
     const urip = new AtUri(postUri)
     return makeProfileLink(postAuthor, 'post', urip.rkey)
   }, [postUri, postAuthor])
-
-  const translationKey = post.uri
 
   const onDeletePost = () => {
     deletePostMutate({uri: postUri}).then(
@@ -259,7 +259,6 @@ let PostMenuItems = ({
 
   const onPressTranslate = () => {
     void translate({
-      key: translationKey,
       text: record.text,
       targetLangCode: langPrefs.primaryLanguage,
       forceGoogleTranslate,
@@ -465,7 +464,7 @@ let PostMenuItems = ({
 
   const onSignIn = () => requireSignIn(() => {})
 
-  const onPressHideTranslation = () => clearTranslation(translationKey)
+  const onPressHideTranslation = () => clearTranslation()
 
   const isDiscoverDebugUser =
     IS_INTERNAL ||
@@ -501,7 +500,7 @@ let PostMenuItems = ({
         <Menu.Group>
           {!hideInPWI || hasSession ? (
             <>
-              {translationState[translationKey]?.status === 'loading' ? (
+              {translationState.status === 'loading' ? (
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
                   label={l`Translating…`}
@@ -509,7 +508,7 @@ let PostMenuItems = ({
                   <Menu.ItemText>{l`Translating…`}</Menu.ItemText>
                   <Menu.ItemIcon icon={Translate} position="right" />
                 </Menu.Item>
-              ) : translationState[translationKey]?.status === 'success' ? (
+              ) : translationState.status === 'success' ? (
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
                   label={l`Hide translation`}

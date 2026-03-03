@@ -3,7 +3,7 @@ import {Platform, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {useTranslate, useTranslationKey} from '#/lib/translation'
+import {useTranslate} from '#/lib/translation'
 import {codeToLanguageName, languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -21,21 +21,19 @@ export function TranslatedPost({
   translationKey: string
   postText: string
 }) {
-  const {translationState} = useTranslate()
-  // Register this component as using this translation key with focus-based cleanup
-  useTranslationKey(translationKey)
+  const {translationState} = useTranslate({key: translationKey})
 
-  if (translationState[translationKey]?.status === 'loading') {
+  if (translationState.status === 'loading') {
     return <TranslationLoading />
   }
 
-  if (translationState[translationKey]?.status === 'success') {
+  if (translationState.status === 'success') {
     return (
       <TranslationResult
         translationKey={translationKey}
         postText={postText}
-        sourceLanguage={translationState[translationKey]?.sourceLanguage}
-        translatedText={translationState[translationKey]?.translatedText}
+        sourceLanguage={translationState.sourceLanguage}
+        translatedText={translationState.translatedText}
       />
     )
   }
@@ -119,7 +117,7 @@ function TranslationLanguageSelect({
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const {translate} = useTranslate()
+  const {translate} = useTranslate({key: translationKey})
 
   const items = useMemo(
     () =>
@@ -149,7 +147,6 @@ function TranslationLanguageSelect({
       targetLanguage: langPrefs.primaryLanguage,
     })
     void translate({
-      key: translationKey,
       text: postText,
       targetLangCode: langPrefs.primaryLanguage,
       sourceLangCode,
