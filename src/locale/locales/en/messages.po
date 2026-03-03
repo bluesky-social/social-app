@@ -900,7 +900,8 @@ msgstr ""
 msgid "Add more details (optional)"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:207
+#: src/screens/Settings/LanguageSettings.tsx:201
+#: src/screens/Settings/LanguageSettings.tsx:206
 msgid "Add more languages…"
 msgstr "Add more languages…"
 
@@ -1063,14 +1064,14 @@ msgstr ""
 msgid "All friends followed!"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:258
+#: src/components/dialogs/LanguageSelectDialog.tsx:263
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:65
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:100
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:102
 msgid "All languages"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:173
+#: src/screens/Settings/LanguageSettings.tsx:172
 msgid "All languages will be shown in your feeds."
 msgstr ""
 
@@ -1142,6 +1143,8 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
+#: src/components/images/AutoSizedImage.tsx:190
+#: src/components/images/Gallery.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:102
 #: src/view/com/composer/photos/Gallery.tsx:189
@@ -1178,7 +1181,7 @@ msgid "An email has been sent to {0}. It includes a confirmation code which you 
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:254
-#: src/components/dialogs/LanguageSelectDialog.tsx:348
+#: src/components/dialogs/LanguageSelectDialog.tsx:352
 msgid "An error has occurred"
 msgstr ""
 
@@ -1966,6 +1969,7 @@ msgstr ""
 msgid "Cashtag {tag}"
 msgstr ""
 
+#: src/components/Post/Translated/index.tsx:150
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
 msgstr ""
@@ -2130,7 +2134,7 @@ msgstr ""
 msgid "Choose for me"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:202
+#: src/components/dialogs/LanguageSelectDialog.tsx:207
 msgid "Choose languages"
 msgstr ""
 
@@ -2235,7 +2239,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:233
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:239
 #: src/components/dialogs/GifSelect.tsx:270
-#: src/components/dialogs/LanguageSelectDialog.tsx:363
+#: src/components/dialogs/LanguageSelectDialog.tsx:367
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:159
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:168
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:164
@@ -2287,9 +2291,9 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:223
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:229
 #: src/components/dialogs/GifSelect.tsx:264
-#: src/components/dialogs/LanguageSelectDialog.tsx:224
-#: src/components/dialogs/LanguageSelectDialog.tsx:326
-#: src/components/dialogs/LanguageSelectDialog.tsx:358
+#: src/components/dialogs/LanguageSelectDialog.tsx:229
+#: src/components/dialogs/LanguageSelectDialog.tsx:330
+#: src/components/dialogs/LanguageSelectDialog.tsx:362
 #: src/components/verification/VerificationsDialog.tsx:138
 #: src/components/verification/VerifierDialog.tsx:139
 msgid "Close dialog"
@@ -2513,7 +2517,7 @@ msgstr ""
 msgid "Content from across the network we think you might like."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:161
+#: src/screens/Settings/LanguageSettings.tsx:160
 msgid "Content languages"
 msgstr ""
 
@@ -2544,7 +2548,7 @@ msgstr ""
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:163
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:171
 #: src/screens/Onboarding/StepInterests/index.tsx:93
-#: src/screens/Onboarding/StepProfile/index.tsx:288
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:302
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:117
 msgid "Continue"
@@ -2564,7 +2568,7 @@ msgid "Continue thread..."
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:90
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:299
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 #: src/screens/Signup/BackNextButtons.tsx:61
@@ -2833,7 +2837,7 @@ msgstr ""
 msgid "Create an account without using this starter pack"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:301
+#: src/screens/Onboarding/StepProfile/index.tsx:308
 msgid "Create an avatar instead"
 msgstr ""
 
@@ -3299,15 +3303,15 @@ msgstr ""
 #: src/components/contacts/screens/ViewMatches.tsx:412
 #: src/components/dialogs/BirthDateSettings.tsx:197
 #: src/components/dialogs/BirthDateSettings.tsx:204
-#: src/components/dialogs/LanguageSelectDialog.tsx:331
+#: src/components/dialogs/LanguageSelectDialog.tsx:335
 #: src/components/dialogs/ServerInput.tsx:241
 #: src/components/dialogs/ServerInput.tsx:243
 #: src/components/dms/AfterReportDialog.tsx:143
 #: src/components/forms/DateField/index.tsx:104
 #: src/components/forms/DateField/index.tsx:110
 #: src/lib/media/picker.tsx:37
-#: src/screens/Onboarding/StepProfile/index.tsx:338
-#: src/screens/Onboarding/StepProfile/index.tsx:341
+#: src/screens/Onboarding/StepProfile/index.tsx:345
+#: src/screens/Onboarding/StepProfile/index.tsx:348
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/composer/labels/LabelsBtn.tsx:219
@@ -3408,7 +3412,6 @@ msgstr ""
 msgid "Eating disorders"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:150
 #: src/screens/Settings/AccountSettings.tsx:146
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:255
 #: src/screens/StarterPack/StarterPackScreen.tsx:602
@@ -4654,7 +4657,7 @@ msgstr ""
 msgid "GIF uploaded"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:243
+#: src/screens/Onboarding/StepProfile/index.tsx:250
 msgid "Give your profile a face"
 msgstr ""
 
@@ -4875,7 +4878,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:246
+#: src/screens/Onboarding/StepProfile/index.tsx:253
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr ""
 
@@ -5108,7 +5111,7 @@ msgstr ""
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:222
+#: src/screens/Settings/LanguageSettings.tsx:218
 msgid "If none are selected, all languages will be shown in your feeds."
 msgstr ""
 
@@ -5169,7 +5172,7 @@ msgstr ""
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr ""
 
-#: src/components/images/Gallery.tsx:75
+#: src/components/images/Gallery.tsx:76
 msgid "Image"
 msgstr ""
 
@@ -6767,7 +6770,7 @@ msgid "Off"
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:257
-#: src/components/dialogs/LanguageSelectDialog.tsx:351
+#: src/components/dialogs/LanguageSelectDialog.tsx:355
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
 msgstr ""
@@ -6825,10 +6828,6 @@ msgstr ""
 msgid "One or more videos is missing alt text."
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:119
-msgid "Only .jpg and .png files are supported"
-msgstr ""
-
 #. placeholder {0}: settings.map((rule, i) => ( <Fragment key={`rule-${i}`}> <Rule rule={rule} post={post} lists={post.threadgate!.lists} /> <Separator i={i} length={settings.length} /> </Fragment> ))
 #: src/components/WhoCanReply.tsx:283
 msgid "Only {0} can reply."
@@ -6861,7 +6860,7 @@ msgstr ""
 msgid "Oops!"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:295
+#: src/screens/Onboarding/StepProfile/index.tsx:302
 msgid "Open avatar creator"
 msgstr ""
 
@@ -7902,7 +7901,7 @@ msgstr ""
 msgid "Recent Searches"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:252
+#: src/components/dialogs/LanguageSelectDialog.tsx:257
 msgid "Recently used"
 msgstr ""
 
@@ -8690,8 +8689,8 @@ msgstr ""
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:235
-#: src/components/dialogs/LanguageSelectDialog.tsx:236
+#: src/components/dialogs/LanguageSelectDialog.tsx:240
+#: src/components/dialogs/LanguageSelectDialog.tsx:241
 msgid "Search languages"
 msgstr ""
 
@@ -8831,8 +8830,8 @@ msgstr ""
 msgid "Select caption file (.vtt)"
 msgstr "Select caption file (.vtt)"
 
-#: src/screens/Settings/LanguageSettings.tsx:179
-#: src/screens/Settings/LanguageSettings.tsx:220
+#: src/screens/Settings/LanguageSettings.tsx:178
+#: src/screens/Settings/LanguageSettings.tsx:216
 msgid "Select content languages"
 msgstr ""
 
@@ -8875,7 +8874,7 @@ msgstr ""
 msgid "Select language..."
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:270
+#: src/components/dialogs/LanguageSelectDialog.tsx:275
 msgid "Select languages"
 msgstr ""
 
@@ -8916,7 +8915,7 @@ msgstr ""
 msgid "Select which language to use for the app's user interface."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:165
+#: src/screens/Settings/LanguageSettings.tsx:164
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
@@ -10113,7 +10112,7 @@ msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:259
-#: src/components/dialogs/LanguageSelectDialog.tsx:353
+#: src/components/dialogs/LanguageSelectDialog.tsx:357
 #: src/view/com/util/ErrorBoundary.tsx:59
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
@@ -10255,6 +10254,10 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:613
 msgid "This handle is reserved. Please try a different one."
 msgstr ""
+
+#: src/screens/Onboarding/StepProfile/index.tsx:133
+msgid "This image could not be used. Try a different format like .jpg or .png."
+msgstr "This image could not be used. Try a different format like .jpg or .png."
 
 #: src/components/dialogs/BirthDateSettings.tsx:56
 msgid "This information is private and not shared with other users."
@@ -10880,7 +10883,7 @@ msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:299
+#: src/screens/Onboarding/StepProfile/index.tsx:306
 msgid "Upload a photo instead"
 msgstr ""
 
@@ -11336,8 +11339,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/components/images/AutoSizedImage.tsx:206
-#: src/components/images/AutoSizedImage.tsx:233
+#: src/components/images/AutoSizedImage.tsx:207
+#: src/components/images/AutoSizedImage.tsx:234
 msgid "Views full image"
 msgstr ""
 
