@@ -37,7 +37,8 @@ async function attemptTranslation(
       ? sourceLangCodeOriginal?.split('-')[0]
       : sourceLangCodeOriginal
 
-  // Special cases for regional languages
+  // Special cases for regional languages since iOS differentiates and missing
+  // language packs must be downloaded and installed.
   if (Platform.OS === 'ios') {
     const deviceLocales = getLocales()
     const primaryLanguageTag = deviceLocales[0]?.languageTag
