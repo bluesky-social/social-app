@@ -132,7 +132,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
                       />
                     )}
                   </View>
-                  {/* <BotBadge profile={profile} /> */}
+                  <BotBadge profile={profile} />
                 </View>
                 <Text
                   style={[a.text_md, t.atoms.text_contrast_medium]}
