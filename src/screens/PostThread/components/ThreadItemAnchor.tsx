@@ -578,7 +578,10 @@ function TranslateLink({
     [post, langPrefs.primaryLanguage],
   )
 
-  const sourceLanguage = getPostLanguage(post)
+  const sourceLanguage = getPostLanguage(
+    post,
+    !ax.features.enabled(ax.features.NativeLanguageDetectionDisable),
+  )
 
   const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
