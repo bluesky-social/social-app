@@ -33,9 +33,11 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
+import {Provider as OnDeviceTranslationProvider} from '#/translation'
 import * as bsky from '#/types/bsky'
 
 export function Post({
@@ -79,16 +81,18 @@ export function Post({
   }
   if (record && richText && moderation) {
     return (
-      <PostInner
-        post={postShadowed}
-        record={record}
-        richText={richText}
-        moderation={moderation}
-        showReplyLine={showReplyLine}
-        hideTopBorder={hideTopBorder}
-        style={style}
-        onBeforePress={onBeforePress}
-      />
+      <OnDeviceTranslationProvider>
+        <PostInner
+          post={postShadowed}
+          record={record}
+          richText={richText}
+          moderation={moderation}
+          showReplyLine={showReplyLine}
+          hideTopBorder={hideTopBorder}
+          style={style}
+          onBeforePress={onBeforePress}
+        />
+      </OnDeviceTranslationProvider>
     )
   }
   return null
@@ -215,6 +219,7 @@ function PostInner({
                     onPress={onPressShowMore}
                   />
                 )}
+                <TranslatedPost postText={richText.text} standalone />
               </View>
             ) : undefined}
             {post.embed ? (
