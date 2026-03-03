@@ -19,7 +19,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {useTranslate} from '#/lib/hooks/useTranslate'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -95,6 +94,7 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
+import {useMaybeTranslateOnDevice} from '#/translation'
 import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
@@ -133,7 +133,7 @@ let PostMenuItems = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const translate = useTranslate()
+  const translate = useMaybeTranslateOnDevice()
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()

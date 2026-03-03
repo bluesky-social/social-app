@@ -10,6 +10,7 @@ import {getLocales} from 'expo-localization'
 import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {useTranslate} from '#/lib/hooks/useTranslate'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -95,11 +96,7 @@ const Context = createContext<{
     sourceLangCode?: string,
   ) => Promise<void>
   clearTranslation: () => void
-}>({
-  translationState: IDLE,
-  translate: async () => {},
-  clearTranslation: () => {},
-})
+} | null>(null)
 Context.displayName = 'TranslationContext'
 
 /**
@@ -118,6 +115,29 @@ export function useTranslateOnDevice() {
     )
   }
   return context
+}
+
+/**
+ * Triggers the on-device translation, if within the TranslateOnDeviceProvider.
+ * Otherwise, falls back to linking out to Google Translate.
+ */
+export function useMaybeTranslateOnDevice() {
+  const onDeviceTranslation = useContext(Context)
+  const fallbackTranslation = useTranslate()
+
+  return useCallback(
+    (text: string, targetLangCode: string, sourceLangCode?: string) => {
+      if (onDeviceTranslation) {
+        return onDeviceTranslation.translate(
+          text,
+          targetLangCode,
+          sourceLangCode,
+        )
+      }
+      return fallbackTranslation(text, targetLangCode, sourceLangCode)
+    },
+    [onDeviceTranslation, fallbackTranslation],
+  )
 }
 
 export function Provider({children}: React.PropsWithChildren<unknown>) {
