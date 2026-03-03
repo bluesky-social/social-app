@@ -523,7 +523,7 @@ function SearchScreenProfileButton({
       tab: 'people',
       resultType: 'profile',
       position,
-      uri: `at://${profile.did}`,
+      uri: profile.did,
     })
   }
   return <ProfileCardWithFollowBtn profile={profile} onPress={handlePress} />
