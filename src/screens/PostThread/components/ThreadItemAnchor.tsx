@@ -312,8 +312,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     }
   }
 
-  const translationKey = post.uri
-
   return (
     <>
       <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
@@ -409,10 +407,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 shouldProxyLinks={true}
               />
             ) : undefined}
-            <TranslatedPost
-              translationKey={translationKey}
-              postText={record.text}
-            />
+            <TranslatedPost translationKey={post.uri} postText={record.text} />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed
@@ -538,7 +533,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 feedContext={postSource?.post?.feedContext}
                 reqId={postSource?.post?.reqId}
                 viaRepost={viaRepost}
-                googleTranslate={false}
+                forceGoogleTranslate={true}
               />
             </FeedFeedbackProvider>
           </View>

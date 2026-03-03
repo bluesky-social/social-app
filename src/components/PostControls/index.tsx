@@ -55,7 +55,7 @@ let PostControls = ({
   onShowLess,
   viaRepost,
   variant,
-  googleTranslate = true,
+  forceGoogleTranslate = false,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -71,7 +71,7 @@ let PostControls = ({
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
   viaRepost?: {uri: string; cid: string}
   variant?: 'compact' | 'normal' | 'large'
-  googleTranslate?: boolean
+  forceGoogleTranslate?: boolean
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {t: l} = useLingui()
@@ -125,7 +125,8 @@ let PostControls = ({
       } else {
         await queueUnlike()
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         throw e
       }
@@ -150,7 +151,8 @@ let PostControls = ({
       } else {
         await queueUnrepost()
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         throw e
       }
@@ -252,7 +254,7 @@ let PostControls = ({
           <RepostButton
             isReposted={!!post.viewer?.repost}
             repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
-            onRepost={onRepost}
+            onRepost={() => void onRepost()}
             onQuote={onQuote}
             big={big}
             embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
@@ -337,7 +339,7 @@ let PostControls = ({
             left: secondaryControlSpacingStyles.gap / 2,
           }}
           logContext={logContext}
-          googleTranslate={googleTranslate}
+          forceGoogleTranslate={forceGoogleTranslate}
         />
       </View>
     </View>

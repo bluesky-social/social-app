@@ -148,12 +148,12 @@ function TranslationLanguageSelect({
       sourceLanguage: sourceLangCode,
       targetLanguage: langPrefs.primaryLanguage,
     })
-    void translate(
-      translationKey,
-      postText,
-      langPrefs.primaryLanguage,
+    void translate({
+      key: translationKey,
+      text: postText,
+      targetLangCode: langPrefs.primaryLanguage,
       sourceLangCode,
-    )
+    })
   }
 
   return (

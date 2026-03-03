@@ -9,10 +9,3 @@ export type TranslationState =
       sourceLanguage: TranslationTaskResult['sourceLanguage']
       targetLanguage: TranslationTaskResult['targetLanguage']
     }
-
-export type Options = {
-  /**
-   * Whether to force the use of Google Translate. Default is false.
-   */
-  googleTranslate?: boolean
-}

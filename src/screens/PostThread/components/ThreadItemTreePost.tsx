@@ -377,6 +377,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     onPressReply={onPressReply}
                     logContext="PostThreadItem"
                     threadgateRecord={threadgateRecord}
+                    forceGoogleTranslate={true}
                   />
                   <DebugFieldDisplay subject={post} />
                 </View>

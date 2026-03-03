@@ -6,10 +6,9 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {logger} from '#/logger'
-import {useLanguagePrefs} from '#/state/preferences'
 import {useAnalytics} from '#/analytics'
 import {Context} from './context'
-import {type Options, type TranslationState} from './types'
+import {type TranslationState} from './types'
 
 /**
  * Attempts on-device translation via @bsky.app/expo-translate-text.
@@ -111,7 +110,6 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   >({})
   const [refCounts, setRefCounts] = useState<Record<string, number>>({})
   const ax = useAnalytics()
-  const {primaryLanguage} = useLanguagePrefs()
   const googleTranslate = useGoogleTranslate()
 
   useEffect(() => {
@@ -163,14 +161,20 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   }, [])
 
   const translate = useCallback(
-    async (
-      key: string,
-      text: string,
-      targetLangCode: string = primaryLanguage,
-      sourceLangCode?: string,
-      options?: Options,
-    ) => {
-      if (options?.googleTranslate) {
+    async ({
+      key,
+      text,
+      targetLangCode,
+      sourceLangCode,
+      ...options
+    }: {
+      key: string
+      text: string
+      targetLangCode: string
+      sourceLangCode?: string
+      forceGoogleTranslate?: boolean
+    }) => {
+      if (options?.forceGoogleTranslate) {
         ax.metric('translate:result', {
           method: 'google-translate',
           os: Platform.OS,
@@ -225,7 +229,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         await googleTranslate(text, targetLangCode, sourceLangCode)
       }
     },
-    [ax, googleTranslate, primaryLanguage],
+    [ax, googleTranslate],
   )
 
   const ctx = useMemo(

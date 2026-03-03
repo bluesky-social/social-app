@@ -106,7 +106,7 @@ let PostMenuItems = ({
   threadgateRecord,
   onShowLess,
   logContext,
-  googleTranslate,
+  forceGoogleTranslate,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -121,7 +121,7 @@ let PostMenuItems = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
-  googleTranslate: boolean
+  forceGoogleTranslate: boolean
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const {t: l} = useLingui()
@@ -258,15 +258,12 @@ let PostMenuItems = ({
   }
 
   const onPressTranslate = () => {
-    void translate(
-      translationKey,
-      record.text,
-      langPrefs.primaryLanguage,
-      undefined,
-      {
-        googleTranslate,
-      },
-    )
+    void translate({
+      key: translationKey,
+      text: record.text,
+      targetLangCode: langPrefs.primaryLanguage,
+      forceGoogleTranslate,
+    })
 
     if (
       bsky.dangerousIsType<AppBskyFeedPost.Record>(

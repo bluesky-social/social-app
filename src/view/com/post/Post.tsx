@@ -154,8 +154,6 @@ function PostInner({
 
   const [hover, setHover] = useState(false)
 
-  const translationKey = post.uri
-
   return (
     <Link
       href={itemHref}
@@ -220,7 +218,7 @@ function PostInner({
                   />
                 )}
                 <TranslatedPost
-                  translationKey={translationKey}
+                  translationKey={post.uri}
                   postText={record.text}
                 />
               </View>
@@ -239,7 +237,6 @@ function PostInner({
             richText={richText}
             onPressReply={onPressReply}
             logContext="Post"
-            googleTranslate={false}
           />
         </View>
       </View>
