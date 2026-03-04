@@ -60,7 +60,7 @@ export function TranslatedPost({
           translate={translate}
           postText={postText}
           sourceLanguage={
-            translationState.sourceLanguage ?? getPostLanguage(post) ?? null
+            translationState.sourceLanguage ?? getPostLanguage(post) ?? null // Fallback primarily for iOS
           }
           translatedText={translationState.translatedText}
         />
