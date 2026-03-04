@@ -196,8 +196,7 @@ function TranslationError({
         a.rounded_lg,
         t.atoms.border_contrast_high,
       ]}>
-      <View
-        style={[a.flex_row, a.flex_wrap, a.align_center, a.justify_between]}>
+      <View style={[a.flex_row, a.align_center, a.justify_between]}>
         <View style={[a.flex_row, a.align_center, a.mb_sm, a.gap_xs]}>
           <WarningIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
           <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
