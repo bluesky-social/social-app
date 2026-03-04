@@ -10,6 +10,7 @@ import logo from '../../assets/logo_full_name.svg'
 import {Like as LikeIcon} from '../icons/Like'
 import {Reply as ReplyIcon} from '../icons/Reply'
 import {Repost as RepostIcon} from '../icons/Repost'
+import {Robot as RobotIcon} from '../icons/Robot'
 import {CONTENT_LABELS} from '../labels'
 import * as bsky from '../types/bsky'
 import {niceDate} from '../util/nice-date'
@@ -43,6 +44,9 @@ export function Post({thread}: Props) {
   }
 
   const verification = getVerificationState({profile: post.author})
+  const isBot = post.author.labels?.some(
+    l => l.val === 'bot' && l.src === post.author.did,
+  )
 
   const href = `/profile/${post.author.did}/post/${getRkey(post)}`
 
@@ -73,6 +77,12 @@ export function Post({thread}: Props) {
                 <VerificationCheck
                   className="pl-[3px] mt-px shrink-0"
                   verifier={verification.role === 'verifier'}
+                  size={15}
+                />
+              )}
+              {isBot && (
+                <RobotIcon
+                  className="pl-[3px] mt-px shrink-0 text-slate-500 dark:text-slate-400"
                   size={15}
                 />
               )}
