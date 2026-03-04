@@ -1,6 +1,7 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
+import {onTranslateTask} from '@bsky.app/expo-translate-text'
 import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
 import {useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
@@ -57,10 +58,6 @@ async function attemptTranslation(
     }
   }
 
-  const {onTranslateTask} =
-    // Needed in order to type check the dynamically imported module.
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    require('@bsky.app/expo-translate-text') as typeof import('@bsky.app/expo-translate-text')
   const result = await onTranslateTask({
     input,
     targetLangCode,
