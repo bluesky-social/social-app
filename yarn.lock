@@ -3731,10 +3731,10 @@
   resolved "https://registry.yarnpkg.com/@bsky.app/expo-image-crop-tool/-/expo-image-crop-tool-0.5.0.tgz#4308fbde5c15e6be9122601797bc3d9549c95e31"
   integrity sha512-gmhQr2HWTRFyPO00fn5OmtiEVtikXusHMrN5Zoq26pu1VZX3zVE+aoc668etTqrvsQcm2Qu8fo96k5F3Wu+6wg==
 
-"@bsky.app/expo-translate-text@^0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@bsky.app/expo-translate-text/-/expo-translate-text-0.2.5.tgz#eb0bf41522b710b11e64d14a06d4ec770a72ad20"
-  integrity sha512-nWGxK8bwKN6G7AtN7bvCIyO3Ynbzeg+NDzfGcWh0nEfuP4gKTrFO6QnBMMcZ9r+SzLP3EryqEs0AzeZ56n6Y+A==
+"@bsky.app/expo-translate-text@^0.2.6":
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/@bsky.app/expo-translate-text/-/expo-translate-text-0.2.6.tgz#04bf66a3768e742ea193258b65373b3df23daf72"
+  integrity sha512-VahweznNSg9OJSwrVWSh97mNk3LJw1rkQxw4zf9c9TuEZEws/68ARtrUmxT/j7aP8WpT+PfNop+Eg8ooam806A==
 
 "@bsky.app/react-native-mmkv@2.12.5":
   version "2.12.5"
