@@ -9,6 +9,7 @@ import {useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation/types'
 import {
   codeToLanguageName,
+  getPostLanguage,
   isPostInLanguage,
   languageName,
 } from '#/locale/helpers'
@@ -58,7 +59,9 @@ export function TranslatedPost({
           clearTranslation={clearTranslation}
           translate={translate}
           postText={postText}
-          sourceLanguage={translationState.sourceLanguage}
+          sourceLanguage={
+            translationState.sourceLanguage ?? getPostLanguage(post) ?? null
+          }
           translatedText={translationState.translatedText}
         />
       )
@@ -353,18 +356,21 @@ function TranslationLanguageSelect({
           !langPrefs.primaryLanguage.startsWith(lang.code2) && // Don't show the current language as it would be redundant
           index === self.findIndex(t => t.code2 === lang.code2), // Remove dupes (which will happen due to multiple code3 values mapping to the same code2)
       )
-        .sort(
-          (a, b) =>
-            languageName(a, langPrefs.appLanguage).localeCompare(
-              languageName(b, langPrefs.appLanguage),
-              langPrefs.appLanguage,
-            ), // Localized sort
-        )
+        .sort((a, b) => {
+          // Prioritize sourceLanguage at the top
+          if (a.code2 === sourceLanguage) return -1
+          if (b.code2 === sourceLanguage) return 1
+          // Localized sort
+          return languageName(a, langPrefs.appLanguage).localeCompare(
+            languageName(b, langPrefs.appLanguage),
+            langPrefs.appLanguage,
+          )
+        })
         .map(l => ({
           label: languageName(l, langPrefs.appLanguage), // The viewer may not be familiar with the source language, so localize the name
           value: l.code2,
         })),
-    [langPrefs],
+    [langPrefs, sourceLanguage],
   )
 
   const handleChangeTranslationLanguage = (sourceLangCode: string) => {
