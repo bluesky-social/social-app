@@ -316,6 +316,7 @@ let PagerTabBar = ({
           // Instead, we'll render a brand node conditionally and get fresh layout.
           isHeaderReady && (
             <View
+              testID="layout-sentinel"
               collapsable={false}
               // It wouldn't be enough to do this in a `ref` of an effect because,
               // even if `isHeaderReady` might have turned `true`, the associated

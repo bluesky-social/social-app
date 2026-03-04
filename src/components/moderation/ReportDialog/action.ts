@@ -102,7 +102,7 @@ export function useSubmitReportMutation() {
       }
 
       if (__DEV__) {
-        logger.info('Submitting report', {
+        logger.info('Submitting report (dry run)', {
           labeler: {
             handle: labeler.creator.handle,
           },
