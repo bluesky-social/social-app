@@ -227,22 +227,22 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
     setDismissedDids(prev => new Set(prev).add(dismissedDid))
   }, [])
 
-  // Combine profiles from the actor-specific query with fallback suggestions
+  // Filter seen profiles from the results
   const allProfiles = useMemo(() => {
     const actorProfiles = data?.suggestions ?? []
 
     // Dedupe by did, preferring actor-specific profiles
     const seen = new Set<string>()
-    const combined: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
+    const filtered: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
 
     for (const profile of actorProfiles) {
       if (!seen.has(profile.did)) {
         seen.add(profile.did)
-        combined.push({actor: profile, recId: data?.recId})
+        filtered.push({actor: profile, recId: data?.recId})
       }
     }
 
-    return combined
+    return filtered
   }, [data?.suggestions, data?.recId])
 
   const filteredProfiles = useMemo(() => {
