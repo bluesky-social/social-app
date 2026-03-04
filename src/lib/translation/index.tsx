@@ -5,24 +5,17 @@ import {onTranslateTask} from '@bsky.app/expo-translate-text'
 import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
 import {useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
-import lande from 'lande'
 
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
-import {code3ToCode2Strict} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/analytics'
 import {HAS_ON_DEVICE_TRANSLATION} from '#/env'
 import {Context} from './context'
 import {type TranslationFunctionParams, type TranslationState} from './types'
+import {guessLanguage} from './utils'
 
-export function guessLanguage(text: string): string | null {
-  const results = lande(text)
-  // only return high-confidence results
-  if (results[0] && results[0][1] > 0.97) {
-    return code3ToCode2Strict(results[0][0]) ?? null
-  }
-  return null
-}
+export * from './types'
+export * from './utils'
 
 /**
  * Attempts on-device translation via @bsky.app/expo-translate-text.

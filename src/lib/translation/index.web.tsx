@@ -5,6 +5,9 @@ import {useAnalytics} from '#/analytics'
 import {Context} from './context'
 import {type TranslationFunctionParams, type TranslationState} from './types'
 
+export * from './types'
+export * from './utils'
+
 const translationState: Record<string, TranslationState> = {}
 const acquireTranslation = (_key: string) => {
   return () => {}
