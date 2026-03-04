@@ -1,14 +1,14 @@
 import {useCallback, useMemo} from 'react'
-import {type GestureResponderEvent, Platform, View} from 'react-native'
+import {Platform, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
+import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation/types'
 import {
   codeToLanguageName,
-  getTranslatorLink,
   isPostInLanguage,
   languageName,
 } from '#/locale/helpers'
@@ -19,7 +19,6 @@ import {Button} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
-import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
@@ -109,39 +108,38 @@ function TranslationLink({
   const {t: l} = useLingui()
   const ax = useAnalytics()
 
-  const handleTranslate = useCallback(
-    (e: GestureResponderEvent) => {
-      e.preventDefault()
-      void translate({
-        text: postText,
-        targetLangCode: primaryLanguage,
-      })
+  const handleTranslate = useCallback(() => {
+    void translate({
+      text: postText,
+      targetLangCode: primaryLanguage,
+    })
 
-      ax.metric('translate', {
-        sourceLanguages: [],
-        targetLanguage: primaryLanguage,
-        textLength: postText.length,
-      })
-
-      return false
-    },
-    [ax, postText, primaryLanguage, translate],
-  )
+    ax.metric('translate', {
+      sourceLanguages: [],
+      targetLanguage: primaryLanguage,
+      textLength: postText.length,
+    })
+  }, [ax, postText, primaryLanguage, translate])
 
   return (
-    <View style={[a.gap_md, a.pt_md, a.align_start]}>
-      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          <InlineLinkText
-            // Overridden to translate on-device, but keep as anchor tag
-            // for accessibility
-            to={getTranslatorLink(postText, primaryLanguage)}
-            label={l`Translate`}
-            onPress={handleTranslate}>
-            <Trans>Translate</Trans>
-          </InlineLinkText>
+    <View
+      style={[
+        a.gap_md,
+        a.pt_md,
+        a.align_start,
+        a.flex_row,
+        a.align_center,
+        a.gap_xs,
+      ]}>
+      <Button
+        onPress={handleTranslate}
+        label={l`Translate`}
+        hoverStyle={native({opacity: 0.5})}
+        hitSlop={HITSLOP_30}>
+        <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
+          <Trans>Translate</Trans>
         </Text>
-      </View>
+      </Button>
     </View>
   )
 }
@@ -159,6 +157,7 @@ function TranslationError({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const translate = useGoogleTranslate()
 
   return (
     <View
@@ -173,10 +172,9 @@ function TranslationError({
       ]}>
       <View
         style={[a.flex_row, a.flex_wrap, a.align_center, a.justify_between]}>
-        <View style={[a.flex_row, a.align_center, a.mb_sm]}>
+        <View style={[a.flex_row, a.align_center, a.mb_sm, a.gap_xs]}>
           <Warning size="sm" fill={t.atoms.text_contrast_medium.color} />
           <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
-            {' '}
             {message}
           </Text>
         </View>
@@ -191,14 +189,16 @@ function TranslationError({
         </View>
       </View>
       <View style={[a.flex_row, a.align_center]}>
-        <Text>
-          <InlineLinkText
-            to={getTranslatorLink(postText, primaryLanguage)}
-            label={l`Try Google Translate`}
-            style={[a.text_xs, a.font_medium]}>
+        <Button
+          onPress={() => void translate(postText, primaryLanguage)}
+          label={l`Try Google Translate`}
+          hoverStyle={native({opacity: 0.5})}
+          hitSlop={HITSLOP_30}>
+          <Text
+            style={[a.text_xs, a.font_medium, {color: t.palette.primary_500}]}>
             <Trans>Try Google Translate</Trans>
-          </InlineLinkText>
-        </Text>
+          </Text>
+        </Button>
       </View>
     </View>
   )

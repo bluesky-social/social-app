@@ -244,7 +244,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
             sourceLanguage: sourceLangCode ?? null,
             targetLanguage: targetLangCode,
           })
-          let errorMessage = l`Device failed to translate. :(`
+          let errorMessage = l`Device failed to translate :(`
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           setTranslationState(prev => ({
             ...prev,
