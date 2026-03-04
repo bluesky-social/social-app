@@ -68,7 +68,7 @@ async function attemptTranslation(
   const translatedText =
     typeof result.translatedTexts === 'string' ? result.translatedTexts : ''
 
-  if (translatedText === input) {
+  if (translatedText === input || translatedText === '') {
     throw new Error('Translation result is the same as the source text.')
   }
 
