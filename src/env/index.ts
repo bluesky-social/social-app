@@ -49,3 +49,5 @@ export const IS_WEB_FIREFOX: boolean = false
 export const IS_HIGH_DPI: boolean = true
 // ideally we'd use isLiquidGlassAvailable() from expo-glass-effect but checking iOS version is good enough for now
 export const IS_LIQUID_GLASS: boolean = iOSMajorVersion >= 26
+// So we can avoid attempting on-device translation when we know it's unsupported.
+export const HAS_ON_DEVICE_TRANSLATION: boolean = iOSMajorVersion >= 18

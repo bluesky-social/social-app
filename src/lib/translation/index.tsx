@@ -11,6 +11,7 @@ import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {code3ToCode2Strict} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/analytics'
+import {HAS_ON_DEVICE_TRANSLATION} from '#/env'
 import {Context} from './context'
 import {type TranslationFunctionParams, type TranslationState} from './types'
 
@@ -216,7 +217,10 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       sourceLangCode?: string
       forceGoogleTranslate?: boolean
     }) => {
-      if (options?.forceGoogleTranslate) {
+      if (
+        options?.forceGoogleTranslate ||
+        (Platform.OS === 'ios' && !HAS_ON_DEVICE_TRANSLATION) // Version check for iOS >= 18
+      ) {
         ax.metric('translate:result', {
           method: 'google-translate',
           os: Platform.OS,
