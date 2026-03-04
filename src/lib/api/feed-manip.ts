@@ -335,6 +335,29 @@ export class FeedTuner {
     return slices
   }
 
+  static removeRepostsFromMuted(mutedDids: string[]) {
+    return (
+      _tuner: FeedTuner,
+      slices: FeedViewPostsSlice[],
+      _dryRun: boolean,
+    ): FeedViewPostsSlice[] => {
+      for (let i = 0; i < slices.length; i++) {
+        const slice = slices[i]
+        if (slice.isRepost) {
+          const reason = slice._feedPost.reason
+          if (
+            AppBskyFeedDefs.isReasonRepost(reason) &&
+            mutedDids.includes(reason.by.did)
+          ) {
+            slices.splice(i, 1)
+            i--
+          }
+        }
+      }
+      return slices
+    }
+  }
+
   static removeQuotePosts(
     tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
