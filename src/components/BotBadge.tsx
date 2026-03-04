@@ -3,6 +3,7 @@ import {type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {useAnalytics} from '#/analytics'
 import {isBotAccount} from '#/lib/bots'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {BotAccountInfoDialog} from '#/components/BotAccountInfoDialog'
@@ -40,6 +41,7 @@ export function BotBadgeButton({
   size: 'lg' | 'md' | 'sm'
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtPhone} = useBreakpoints()
   const control = useDialogControl()
@@ -62,6 +64,7 @@ export function BotBadgeButton({
         hitSlop={20}
         onPress={evt => {
           evt.preventDefault()
+          ax.metric('bot:badge:click', {})
           control.open()
         }}>
         {({hovered}) => (

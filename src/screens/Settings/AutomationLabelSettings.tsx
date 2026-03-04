@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useAnalytics} from '#/analytics'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {
   useProfileQuery,
@@ -29,6 +30,7 @@ type Props = NativeStackScreenProps<
 >
 export function AutomationLabelSettingsScreen({}: Props) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
@@ -45,6 +47,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
       return
     }
     let wasAdded = false
+    ax.metric('bot:label:toggle', {state: isBotLabeled ? 'remove' : 'add'})
     updateProfile.mutate({
       profile,
       updates: existing => {
