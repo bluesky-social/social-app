@@ -233,7 +233,7 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
 
     // Dedupe by did, preferring actor-specific profiles
     const seen = new Set<string>()
-    const combined: {actor: bsky.profile.AnyProfileView; recId?: number}[] = []
+    const combined: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
 
     for (const profile of actorProfiles) {
       if (!seen.has(profile.did)) {
@@ -280,7 +280,7 @@ export function SuggestedFollowsHome() {
     const seen = new Set<string>()
     const combined: Array<{
       actor: bsky.profile.AnyProfileView
-      recId?: number
+      recId?: string
     }> = []
 
     for (const profile of experimentalProfiles) {
@@ -319,7 +319,7 @@ export function ProfileGrid({
   isVisible = true,
 }: {
   isSuggestionsLoading: boolean
-  profiles: {actor: bsky.profile.AnyProfileView; recId?: number}[]
+  profiles: {actor: bsky.profile.AnyProfileView; recId?: string}[]
   totalProfileCount?: number
   error: Error | null
   viewContext: 'profile' | 'profileHeader' | 'feed'

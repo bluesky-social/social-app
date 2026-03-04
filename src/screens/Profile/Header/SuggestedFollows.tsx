@@ -57,7 +57,7 @@ function useProfileHeaderSuggestions(actorDid: string) {
 
     // Dedupe by did, preferring actor-specific profiles
     const seen = new Set<string>()
-    const combined: {actor: bsky.profile.AnyProfileView; recId?: number}[] = []
+    const combined: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
 
     for (const profile of actorProfiles) {
       if (!seen.has(profile.did)) {

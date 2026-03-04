@@ -40,7 +40,7 @@ export function useSuggestedFollowsByActorQuery({
       const suggestions = res.data.suggestions.filter(
         profile => !profile.viewer?.following,
       )
-      return {suggestions, recId: res.data.recId}
+      return {suggestions, recId: res.data.recIdStr}
     },
     enabled,
   })
