@@ -7,11 +7,7 @@ import {HITSLOP_30} from '#/lib/constants'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {guessLanguage, useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation/types'
-import {
-  codeToLanguageName,
-  getPostLanguage,
-  languageName,
-} from '#/locale/helpers'
+import {codeToLanguageName, languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, native, useTheme, web} from '#/alf'
@@ -40,18 +36,8 @@ export function TranslatedPost({
     key: post.uri,
   })
 
-  const needsTranslation = useMemo(
-    () => guessLanguage(postText) !== langPrefs.primaryLanguage,
-    [langPrefs.primaryLanguage, postText],
-  )
-
-  console.log(
-    'DEBUG >>>>>>',
-    'needsTranslation',
-    needsTranslation,
-    'hideTranslateLink',
-    hideTranslateLink,
-  )
+  const postLanguage = useMemo(() => guessLanguage(postText), [postText])
+  const needsTranslation = postLanguage !== langPrefs.primaryLanguage
 
   switch (translationState.status) {
     case 'loading':
@@ -63,7 +49,7 @@ export function TranslatedPost({
           translate={translate}
           postText={postText}
           sourceLanguage={
-            translationState.sourceLanguage ?? getPostLanguage(post) ?? null // Fallback primarily for iOS
+            translationState.sourceLanguage ?? postLanguage ?? null // Fallback primarily for iOS
           }
           translatedText={translationState.translatedText}
         />
