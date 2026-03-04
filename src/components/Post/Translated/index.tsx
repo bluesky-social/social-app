@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {type GestureResponderEvent, Platform, View} from 'react-native'
+import {Platform, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -9,7 +9,6 @@ import {useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation/types'
 import {
   codeToLanguageName,
-  getTranslatorLink,
   isPostInLanguage,
   languageName,
 } from '#/locale/helpers'
@@ -20,7 +19,7 @@ import {Button} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
-import {Link} from '#/components/Link'
+import {createStaticClick, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
@@ -114,25 +113,18 @@ function TranslationLink({
   const {t: l} = useLingui()
   const ax = useAnalytics()
 
-  const handleTranslate = useCallback(
-    (evt: GestureResponderEvent) => {
-      evt.preventDefault()
+  const handleTranslate = useCallback(() => {
+    void translate({
+      text: postText,
+      targetLangCode: primaryLanguage,
+    })
 
-      void translate({
-        text: postText,
-        targetLangCode: primaryLanguage,
-      })
-
-      ax.metric('translate', {
-        sourceLanguages: [],
-        targetLanguage: primaryLanguage,
-        textLength: postText.length,
-      })
-
-      return false
-    },
-    [ax, postText, primaryLanguage, translate],
-  )
+    ax.metric('translate', {
+      sourceLanguages: [],
+      targetLanguage: primaryLanguage,
+      textLength: postText.length,
+    })
+  }, [ax, postText, primaryLanguage, translate])
 
   return (
     <View
@@ -145,9 +137,10 @@ function TranslationLink({
         a.gap_xs,
       ]}>
       <Link
-        to={getTranslatorLink(postText, primaryLanguage)}
         role={IS_WEB ? 'link' : 'button'}
-        onPress={handleTranslate}
+        {...createStaticClick(() => {
+          handleTranslate()
+        })}
         label={l`Translate`}
         hoverStyle={[
           native({opacity: 0.5}),
@@ -177,12 +170,8 @@ function TranslationError({
   const {t: l} = useLingui()
   const translate = useGoogleTranslate()
 
-  const handleFallback = (evt: GestureResponderEvent) => {
-    evt.preventDefault()
-
+  const handleFallback = () => {
     void translate(postText, primaryLanguage)
-
-    return false as const
   }
 
   return (
@@ -215,8 +204,9 @@ function TranslationError({
       </View>
       <View style={[a.flex_row, a.align_center]}>
         <Link
-          to={getTranslatorLink(postText, primaryLanguage)}
-          onPress={handleFallback}
+          {...createStaticClick(() => {
+            handleFallback()
+          })}
           label={l`Try Google Translate`}
           hoverStyle={[
             native({opacity: 0.5}),
