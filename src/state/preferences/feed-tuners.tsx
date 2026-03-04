@@ -5,11 +5,13 @@ import {type FeedDescriptor} from '../queries/post-feed'
 import {usePreferencesQuery} from '../queries/preferences'
 import {useSession} from '../session'
 import {useLanguagePrefs} from './languages'
+import {useMutedReposts} from './muted-reposts'
 
 export function useFeedTuners(feedDesc: FeedDescriptor) {
   const langPrefs = useLanguagePrefs()
   const {data: preferences} = usePreferencesQuery()
   const {currentAccount} = useSession()
+  const mutedReposts = useMutedReposts()
 
   return useMemo(() => {
     if (feedDesc.startsWith('author')) {
@@ -29,6 +31,8 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
 
       if (preferences?.feedViewPrefs.hideReposts) {
         feedTuners.push(FeedTuner.removeReposts)
+      } else if (mutedReposts && mutedReposts.length > 0) {
+        feedTuners.push(FeedTuner.removeRepostsFromMuted(mutedReposts))
       }
       if (preferences?.feedViewPrefs.hideReplies) {
         feedTuners.push(FeedTuner.removeReplies)
@@ -48,5 +52,5 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       return feedTuners
     }
     return []
-  }, [feedDesc, currentAccount, preferences, langPrefs])
+  }, [feedDesc, currentAccount, preferences, langPrefs, mutedReposts])
 }
