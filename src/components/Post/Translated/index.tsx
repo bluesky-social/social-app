@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {Platform, View} from 'react-native'
+import {type GestureResponderEvent, Platform, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -9,20 +9,23 @@ import {useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation/types'
 import {
   codeToLanguageName,
+  getTranslatorLink,
   isPostInLanguage,
   languageName,
 } from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
+import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 
 export function TranslatedPost({
   post,
@@ -108,18 +111,25 @@ function TranslationLink({
   const {t: l} = useLingui()
   const ax = useAnalytics()
 
-  const handleTranslate = useCallback(() => {
-    void translate({
-      text: postText,
-      targetLangCode: primaryLanguage,
-    })
+  const handleTranslate = useCallback(
+    (evt: GestureResponderEvent) => {
+      evt.preventDefault()
 
-    ax.metric('translate', {
-      sourceLanguages: [],
-      targetLanguage: primaryLanguage,
-      textLength: postText.length,
-    })
-  }, [ax, postText, primaryLanguage, translate])
+      void translate({
+        text: postText,
+        targetLangCode: primaryLanguage,
+      })
+
+      ax.metric('translate', {
+        sourceLanguages: [],
+        targetLanguage: primaryLanguage,
+        textLength: postText.length,
+      })
+
+      return false
+    },
+    [ax, postText, primaryLanguage, translate],
+  )
 
   return (
     <View
@@ -131,15 +141,20 @@ function TranslationLink({
         a.align_center,
         a.gap_xs,
       ]}>
-      <Button
+      <Link
+        to={getTranslatorLink(postText, primaryLanguage)}
+        role={IS_WEB ? 'link' : 'button'}
         onPress={handleTranslate}
         label={l`Translate`}
-        hoverStyle={native({opacity: 0.5})}
+        hoverStyle={[
+          native({opacity: 0.5}),
+          web([a.underline, {textDecorationColor: t.palette.primary_500}]),
+        ]}
         hitSlop={HITSLOP_30}>
         <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
           <Trans>Translate</Trans>
         </Text>
-      </Button>
+      </Link>
     </View>
   )
 }
@@ -158,6 +173,14 @@ function TranslationError({
   const t = useTheme()
   const {t: l} = useLingui()
   const translate = useGoogleTranslate()
+
+  const handleFallback = (evt: GestureResponderEvent) => {
+    evt.preventDefault()
+
+    void translate(postText, primaryLanguage)
+
+    return false
+  }
 
   return (
     <View
@@ -182,23 +205,27 @@ function TranslationError({
           <Button
             label={l`Hide translation`}
             hitSlop={HITSLOP_30}
-            hoverStyle={native({opacity: 0.5})}
+            hoverStyle={{opacity: 0.5}}
             onPress={clearTranslation}>
             <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
           </Button>
         </View>
       </View>
       <View style={[a.flex_row, a.align_center]}>
-        <Button
-          onPress={() => void translate(postText, primaryLanguage)}
+        <Link
+          to={getTranslatorLink(postText, primaryLanguage)}
+          onPress={handleFallback}
           label={l`Try Google Translate`}
-          hoverStyle={native({opacity: 0.5})}
+          hoverStyle={[
+            native({opacity: 0.5}),
+            web([a.underline, {textDecorationColor: t.palette.primary_500}]),
+          ]}
           hitSlop={HITSLOP_30}>
           <Text
             style={[a.text_xs, a.font_medium, {color: t.palette.primary_500}]}>
             <Trans>Try Google Translate</Trans>
           </Text>
-        </Button>
+        </Link>
       </View>
     </View>
   )
