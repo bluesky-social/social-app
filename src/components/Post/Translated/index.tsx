@@ -179,7 +179,7 @@ function TranslationError({
 
     void translate(postText, primaryLanguage)
 
-    return false
+    return false as const
   }
 
   return (
