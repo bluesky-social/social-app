@@ -16,9 +16,9 @@ import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
-import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
-import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
@@ -173,7 +173,7 @@ function TranslationError({
       <View
         style={[a.flex_row, a.flex_wrap, a.align_center, a.justify_between]}>
         <View style={[a.flex_row, a.align_center, a.mb_sm, a.gap_xs]}>
-          <Warning size="sm" fill={t.atoms.text_contrast_medium.color} />
+          <WarningIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
           <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
             {message}
           </Text>
@@ -184,7 +184,7 @@ function TranslationError({
             hitSlop={HITSLOP_30}
             hoverStyle={native({opacity: 0.5})}
             onPress={clearTranslation}>
-            <Times size="sm" fill={t.atoms.text_contrast_medium.color} />
+            <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
           </Button>
         </View>
       </View>
@@ -248,9 +248,9 @@ function TranslationResult({
                 ]}>
                 {langName}{' '}
               </Text>
-              <View>
-                <ArrowRight
-                  size="sm"
+              <View style={[a.mt_2xs]}>
+                <ArrowRightIcon
+                  size="xs"
                   fill={t.atoms.text_contrast_medium.color}
                 />
               </View>
@@ -306,7 +306,7 @@ function TranslationResult({
           hoverStyle={native({opacity: 0.5})}
           style={[a.absolute, a.z_10, {top: 12, right: 14}]}
           onPress={clearTranslation}>
-          <Times size="sm" fill={t.atoms.text_contrast_medium.color} />
+          <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
         </Button>
       </View>
     </View>
