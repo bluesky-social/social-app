@@ -47,7 +47,10 @@ async function attemptTranslation(
       case 'es': // es-419, es-ES
       case 'pt': // pt-BR, pt-PT
       case 'zh': // zh-Hans-CN, zh-Hant-HK, zh-Hant-TW
-        if (primaryLanguageTag && primaryLanguageTag.startsWith(targetLangCodeOriginal)) {
+        if (
+          primaryLanguageTag &&
+          primaryLanguageTag.startsWith(targetLangCodeOriginal)
+        ) {
           targetLangCode = primaryLanguageTag
         }
         break
