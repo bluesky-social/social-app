@@ -57,6 +57,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const agent = useAgent()
   useEffect(() => {
     const actors = accounts.map(acc => acc.did)
+    if (actors.length === 0) return
     void queryClient.prefetchQuery({
       queryKey: profilesQueryKey(actors),
       staleTime: STALE.MINUTES.FIVE,
