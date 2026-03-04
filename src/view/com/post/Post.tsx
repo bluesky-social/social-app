@@ -217,7 +217,11 @@ function PostInner({
                     onPress={onPressShowMore}
                   />
                 )}
-                <TranslatedPost post={post} postText={record.text} />
+                <TranslatedPost
+                  hideTranslateLink={true}
+                  post={post}
+                  postText={record.text}
+                />
               </View>
             ) : undefined}
             {post.embed ? (

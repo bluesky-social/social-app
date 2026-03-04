@@ -28,9 +28,11 @@ import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 export function TranslatedPost({
+  hideTranslateLink = false,
   post,
   postText,
 }: {
+  hideTranslateLink?: boolean
   post: AppBskyFeedDefs.PostView
   postText: string
 }) {
@@ -72,6 +74,7 @@ export function TranslatedPost({
       )
     default:
       return (
+        !hideTranslateLink &&
         needsTranslation && (
           <TranslationLink
             postText={postText}

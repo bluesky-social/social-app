@@ -493,7 +493,13 @@ let PostContent = ({
               />
             )}
           </View>
-          {record && <TranslatedPost post={post} postText={record.text} />}
+          {record && (
+            <TranslatedPost
+              hideTranslateLink={true}
+              post={post}
+              postText={record.text}
+            />
+          )}
         </>
       ) : undefined}
       {postEmbed ? (
