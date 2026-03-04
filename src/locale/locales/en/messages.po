@@ -157,13 +157,13 @@ msgstr ""
 
 #. Pattern: {wordValue} in tags
 #. placeholder {0}: word.value
-#: src/components/dialogs/MutedWords.tsx:494
+#: src/components/dialogs/MutedWords.tsx:495
 msgid "{0} <0>in <1>tags</1></0>"
 msgstr ""
 
 #. Pattern: {wordValue} in text, tags
 #. placeholder {0}: word.value
-#: src/components/dialogs/MutedWords.tsx:483
+#: src/components/dialogs/MutedWords.tsx:484
 msgid "{0} <0>in <1>text & tags</1></0>"
 msgstr ""
 
@@ -601,7 +601,7 @@ msgid "<0>{date}</0> at {time}"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:239
-#: src/screens/Search/SearchResults.tsx:294
+#: src/screens/Search/SearchResults.tsx:315
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr ""
 
@@ -614,9 +614,9 @@ msgstr ""
 msgid "⚠Invalid Handle"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:201
-#: src/components/dialogs/MutedWords.tsx:550
-#: src/components/dialogs/MutedWords.tsx:553
+#: src/components/dialogs/MutedWords.tsx:202
+#: src/components/dialogs/MutedWords.tsx:551
+#: src/components/dialogs/MutedWords.tsx:554
 msgid "24 hours"
 msgstr ""
 
@@ -624,15 +624,15 @@ msgstr ""
 msgid "2FA Confirmation"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:240
-#: src/components/dialogs/MutedWords.tsx:564
-#: src/components/dialogs/MutedWords.tsx:567
+#: src/components/dialogs/MutedWords.tsx:241
+#: src/components/dialogs/MutedWords.tsx:565
+#: src/components/dialogs/MutedWords.tsx:568
 msgid "30 days"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:225
-#: src/components/dialogs/MutedWords.tsx:557
-#: src/components/dialogs/MutedWords.tsx:560
+#: src/components/dialogs/MutedWords.tsx:226
+#: src/components/dialogs/MutedWords.tsx:558
+#: src/components/dialogs/MutedWords.tsx:561
 msgid "7 days"
 msgstr ""
 
@@ -693,11 +693,11 @@ msgid "Abusive or discriminatory behavior"
 msgstr ""
 
 #. Accept a chat request
-#: src/screens/Messages/components/RequestButtons.tsx:270
+#: src/screens/Messages/components/RequestButtons.tsx:281
 msgid "Accept"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:261
+#: src/screens/Messages/components/RequestButtons.tsx:272
 msgid "Accept chat request"
 msgstr ""
 
@@ -729,7 +729,7 @@ msgid "Account"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:425
-#: src/screens/Messages/components/RequestButtons.tsx:92
+#: src/screens/Messages/components/RequestButtons.tsx:97
 #: src/view/com/profile/ProfileMenu.tsx:182
 msgctxt "toast"
 msgid "Account blocked"
@@ -808,7 +808,7 @@ msgid "Activity notifications"
 msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:170
-#: src/components/dialogs/MutedWords.tsx:336
+#: src/components/dialogs/MutedWords.tsx:337
 #: src/components/dialogs/StarterPackDialog.tsx:373
 #: src/components/dialogs/StarterPackDialog.tsx:380
 #: src/view/com/modals/UserAddRemoveLists.tsx:236
@@ -905,7 +905,7 @@ msgstr ""
 msgid "Add more languages…"
 msgstr "Add more languages…"
 
-#: src/components/dialogs/MutedWords.tsx:329
+#: src/components/dialogs/MutedWords.tsx:330
 msgid "Add mute word with chosen settings"
 msgstr ""
 
@@ -942,7 +942,7 @@ msgstr ""
 msgid "Add the following DNS record to your domain:"
 msgstr ""
 
-#: src/components/FeedCard.tsx:338
+#: src/components/FeedCard.tsx:336
 msgid "Add this feed to your feeds"
 msgstr ""
 
@@ -1277,8 +1277,8 @@ msgstr ""
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:519
-#: src/components/ProfileCard.tsx:540
+#: src/components/ProfileCard.tsx:518
+#: src/components/ProfileCard.tsx:538
 #: src/view/com/notifications/NotificationFeedItem.tsx:779
 #: src/view/com/notifications/NotificationFeedItem.tsx:799
 msgid "An issue occurred, please try again."
@@ -1455,7 +1455,7 @@ msgstr ""
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:197
+#: src/components/dms/MessageContextMenu.tsx:202
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr ""
 
@@ -1476,7 +1476,7 @@ msgstr ""
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr ""
 
-#: src/components/FeedCard.tsx:373
+#: src/components/FeedCard.tsx:372
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
@@ -1484,7 +1484,7 @@ msgstr ""
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:451
+#: src/components/dialogs/MutedWords.tsx:452
 msgid "Are you sure?"
 msgstr ""
 
@@ -1574,7 +1574,7 @@ msgstr ""
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:247
+#: src/screens/Messages/components/RequestButtons.tsx:258
 msgid "Before you can accept this chat request, you must first verify your email."
 msgstr ""
 
@@ -1619,12 +1619,12 @@ msgstr ""
 msgid "Block"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:262
-#: src/components/dms/ConvoMenu.tsx:265
+#: src/components/dms/ConvoMenu.tsx:273
+#: src/components/dms/ConvoMenu.tsx:276
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:711
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:713
-#: src/screens/Messages/components/RequestButtons.tsx:145
-#: src/screens/Messages/components/RequestButtons.tsx:147
+#: src/screens/Messages/components/RequestButtons.tsx:150
+#: src/screens/Messages/components/RequestButtons.tsx:152
 #: src/view/com/profile/ProfileMenu.tsx:459
 #: src/view/com/profile/ProfileMenu.tsx:466
 msgid "Block account"
@@ -1919,7 +1919,7 @@ msgstr ""
 #: src/screens/Deactivated.tsx:152
 #: src/screens/Profile/Header/EditProfileDialog.tsx:219
 #: src/screens/Profile/Header/EditProfileDialog.tsx:227
-#: src/screens/Search/Shell.tsx:388
+#: src/screens/Search/Shell.tsx:396
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:82
@@ -1945,7 +1945,7 @@ msgstr ""
 msgid "Cancel reactivation and sign out"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:379
+#: src/screens/Search/Shell.tsx:387
 msgid "Cancel search"
 msgstr ""
 
@@ -2048,8 +2048,8 @@ msgstr ""
 msgid "Chat"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:79
-#: src/screens/Messages/components/RequestButtons.tsx:314
+#: src/screens/Messages/components/RequestButtons.tsx:84
+#: src/screens/Messages/components/RequestButtons.tsx:325
 msgctxt "toast"
 msgid "Chat deleted"
 msgstr ""
@@ -2062,7 +2062,7 @@ msgstr ""
 msgid "Chat messages - sound"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:191
+#: src/components/dms/ConvoMenu.tsx:202
 msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
@@ -2078,7 +2078,7 @@ msgstr ""
 msgid "Chat requests"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:79
+#: src/components/dms/ConvoMenu.tsx:84
 #: src/Navigation.tsx:565
 #: src/screens/Messages/ChatList.tsx:82
 #: src/screens/Messages/ChatList.tsx:86
@@ -2090,7 +2090,7 @@ msgstr ""
 msgid "Chat Settings"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:193
+#: src/components/dms/ConvoMenu.tsx:204
 msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
@@ -2184,7 +2184,7 @@ msgstr ""
 msgid "Clear image cache"
 msgstr ""
 
-#: src/components/forms/SearchInput.tsx:70
+#: src/components/forms/SearchInput.tsx:69
 msgid "Clear search query"
 msgstr ""
 
@@ -2593,7 +2593,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:58
+#: src/components/dms/MessageContextMenu.tsx:61
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:258
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:74
@@ -2674,8 +2674,8 @@ msgstr ""
 msgid "Copy link to starter pack"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:143
 #: src/components/dms/MessageContextMenu.tsx:146
+#: src/components/dms/MessageContextMenu.tsx:149
 msgid "Copy message text"
 msgstr ""
 
@@ -2742,7 +2742,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:197
+#: src/components/dms/ConvoMenu.tsx:208
 msgid "Could not mute chat"
 msgstr ""
 
@@ -2828,7 +2828,7 @@ msgstr ""
 #: src/components/dialogs/Signin.tsx:87
 #: src/components/dialogs/Signin.tsx:89
 #: src/screens/Hashtag.tsx:248
-#: src/screens/Search/SearchResults.tsx:300
+#: src/screens/Search/SearchResults.tsx:321
 msgid "Create an account"
 msgstr ""
 
@@ -2964,7 +2964,7 @@ msgstr ""
 msgid "Default icons"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:199
+#: src/components/dms/MessageContextMenu.tsx:204
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:770
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:275
@@ -2993,8 +2993,8 @@ msgstr ""
 msgid "Delete app password?"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:326
-#: src/screens/Messages/components/RequestButtons.tsx:332
+#: src/screens/Messages/components/RequestButtons.tsx:337
+#: src/screens/Messages/components/RequestButtons.tsx:343
 msgid "Delete chat"
 msgstr ""
 
@@ -3008,8 +3008,8 @@ msgstr ""
 
 #: src/components/dms/AfterReportDialog.tsx:191
 #: src/components/dms/AfterReportDialog.tsx:194
-#: src/screens/Messages/components/RequestButtons.tsx:137
-#: src/screens/Messages/components/RequestButtons.tsx:140
+#: src/screens/Messages/components/RequestButtons.tsx:142
+#: src/screens/Messages/components/RequestButtons.tsx:145
 msgid "Delete conversation"
 msgstr ""
 
@@ -3017,7 +3017,7 @@ msgstr ""
 msgid "Delete Conversation"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:157
+#: src/components/dms/MessageContextMenu.tsx:160
 msgid "Delete for me"
 msgstr ""
 
@@ -3026,11 +3026,11 @@ msgstr ""
 msgid "Delete list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:195
+#: src/components/dms/MessageContextMenu.tsx:200
 msgid "Delete message"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:155
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete message for me"
 msgstr ""
 
@@ -3264,7 +3264,7 @@ msgstr ""
 msgid "DNS Panel"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:310
+#: src/components/dialogs/MutedWords.tsx:311
 msgid "Do not apply this mute word to users you follow"
 msgstr ""
 
@@ -3372,7 +3372,7 @@ msgstr ""
 msgid "Due to laws in your region, certain features on Bluesky are currently restricted until you're able to verify you're an adult."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:161
+#: src/components/dialogs/MutedWords.tsx:162
 msgid "Duration:"
 msgstr ""
 
@@ -3659,8 +3659,8 @@ msgstr ""
 msgid "Enter a password"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:135
 #: src/components/dialogs/MutedWords.tsx:136
+#: src/components/dialogs/MutedWords.tsx:137
 msgid "Enter a word or tag"
 msgstr ""
 
@@ -3746,7 +3746,7 @@ msgstr ""
 msgid "Error receiving captcha response."
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:152
+#: src/screens/Search/SearchResults.tsx:154
 msgid "Error: {error}"
 msgstr ""
 
@@ -3770,11 +3770,11 @@ msgstr ""
 msgid "Everything else"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:319
+#: src/components/dialogs/MutedWords.tsx:320
 msgid "Exclude users you follow"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:604
+#: src/components/dialogs/MutedWords.tsx:605
 msgid "Excludes users you follow"
 msgstr ""
 
@@ -3810,12 +3810,12 @@ msgstr ""
 msgid "Experimental"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:519
+#: src/components/dialogs/MutedWords.tsx:520
 msgid "Expired"
 msgstr ""
 
 #. placeholder {0}: formatDistance(expiryDate, new Date(), { addSuffix: true, })
-#: src/components/dialogs/MutedWords.tsx:588
+#: src/components/dialogs/MutedWords.tsx:589
 msgid "Expires {0}"
 msgstr ""
 
@@ -3842,7 +3842,7 @@ msgid "Explicit sexual images."
 msgstr ""
 
 #: src/Navigation.tsx:808
-#: src/screens/Search/Shell.tsx:346
+#: src/screens/Search/Shell.tsx:354
 #: src/view/shell/desktop/LeftNav.tsx:689
 #: src/view/shell/Drawer.tsx:417
 msgid "Explore"
@@ -3886,13 +3886,13 @@ msgstr ""
 msgid "Extremist content"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:232
+#: src/screens/Messages/components/RequestButtons.tsx:243
 msgctxt "toast"
 msgid "Failed to accept chat"
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:66
-#: src/components/dms/MessageContextMenu.tsx:98
+#: src/components/dms/MessageContextMenu.tsx:101
 msgid "Failed to add emoji reaction"
 msgstr ""
 
@@ -3917,13 +3917,13 @@ msgstr ""
 msgid "Failed to create starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:65
-#: src/screens/Messages/components/RequestButtons.tsx:301
+#: src/screens/Messages/components/RequestButtons.tsx:70
+#: src/screens/Messages/components/RequestButtons.tsx:312
 msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:78
+#: src/components/dms/MessageContextMenu.tsx:81
 msgid "Failed to delete message"
 msgstr ""
 
@@ -4035,7 +4035,7 @@ msgid "Failed to remove data. {0}"
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:60
-#: src/components/dms/MessageContextMenu.tsx:92
+#: src/components/dms/MessageContextMenu.tsx:95
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
@@ -4102,7 +4102,7 @@ msgstr ""
 msgid "Failed to update email, please try again."
 msgstr ""
 
-#: src/components/FeedCard.tsx:318
+#: src/components/FeedCard.tsx:316
 msgid "Failed to update feeds"
 msgstr ""
 
@@ -4144,7 +4144,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
-#: src/components/FeedCard.tsx:172
+#: src/components/FeedCard.tsx:170
 #: src/state/queries/feed.ts:121
 #: src/view/com/feeds/FeedSourceCard.tsx:151
 msgid "Feed by {0}"
@@ -4185,7 +4185,7 @@ msgstr ""
 #: src/Navigation.tsx:585
 #: src/screens/SavedFeeds.tsx:118
 #: src/screens/SavedFeeds.tsx:314
-#: src/screens/Search/SearchResults.tsx:78
+#: src/screens/Search/SearchResults.tsx:80
 #: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:512
 #: src/view/screens/Profile.tsx:240
@@ -4199,7 +4199,7 @@ msgstr ""
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0>See this guide</0> for more information."
 msgstr ""
 
-#: src/components/FeedCard.tsx:315
+#: src/components/FeedCard.tsx:313
 #: src/screens/SavedFeeds.tsx:100
 #: src/screens/SavedFeeds.tsx:284
 msgctxt "toast"
@@ -4288,7 +4288,7 @@ msgstr ""
 msgid "Find people to follow"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:521
+#: src/screens/Search/Shell.tsx:529
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
@@ -4333,7 +4333,7 @@ msgid "Focus code input"
 msgstr ""
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:559
+#: src/components/ProfileCard.tsx:552
 #: src/components/ProfileHoverCard/index.web.tsx:497
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:153
@@ -4388,7 +4388,7 @@ msgid "Follow all accounts"
 msgstr ""
 
 #. User is not following this account, click to follow back
-#: src/components/ProfileCard.tsx:553
+#: src/components/ProfileCard.tsx:548
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:151
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:386
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
@@ -4440,7 +4440,7 @@ msgstr ""
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:546
+#: src/components/ProfileCard.tsx:543
 #: src/components/ProfileHoverCard/index.web.tsx:496
 #: src/components/ProfileHoverCard/index.web.tsx:507
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:156
@@ -4458,9 +4458,9 @@ msgid "Following"
 msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
-#: src/components/ProfileCard.tsx:509
+#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
+#: src/components/ProfileCard.tsx:508
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:251
 #: src/view/com/notifications/NotificationFeedItem.tsx:772
 msgid "Following {0}"
@@ -4521,9 +4521,9 @@ msgstr ""
 msgid "For You"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:186
-#: src/components/dialogs/MutedWords.tsx:571
-#: src/components/dialogs/MutedWords.tsx:574
+#: src/components/dialogs/MutedWords.tsx:187
+#: src/components/dialogs/MutedWords.tsx:572
+#: src/components/dialogs/MutedWords.tsx:575
 msgid "Forever"
 msgstr ""
 
@@ -4759,13 +4759,13 @@ msgstr ""
 msgid "Go to next"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:242
+#: src/components/dms/ConvoMenu.tsx:253
 #: src/view/shell/desktop/LeftNav.tsx:318
 #: src/view/shell/desktop/LeftNav.tsx:324
 msgid "Go to profile"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:239
+#: src/components/dms/ConvoMenu.tsx:250
 msgid "Go to user's profile"
 msgstr ""
 
@@ -4820,7 +4820,7 @@ msgstr ""
 msgid "Handle too long. Please try a shorter one."
 msgstr ""
 
-#: src/components/FeedCard.tsx:158
+#: src/components/FeedCard.tsx:156
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:122
 msgid "Happening now"
 msgstr ""
@@ -5488,7 +5488,7 @@ msgid "Last initiated just now"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:112
-#: src/screens/Search/SearchResults.tsx:62
+#: src/screens/Search/SearchResults.tsx:64
 #: src/screens/Topic.tsx:78
 msgid "Latest"
 msgstr ""
@@ -5585,10 +5585,10 @@ msgstr ""
 msgid "Leave chat"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:218
-#: src/components/dms/ConvoMenu.tsx:221
-#: src/components/dms/ConvoMenu.tsx:281
-#: src/components/dms/ConvoMenu.tsx:284
+#: src/components/dms/ConvoMenu.tsx:229
+#: src/components/dms/ConvoMenu.tsx:232
+#: src/components/dms/ConvoMenu.tsx:292
+#: src/components/dms/ConvoMenu.tsx:295
 #: src/components/dms/LeaveConvoPrompt.tsx:42
 msgid "Leave conversation"
 msgstr ""
@@ -5670,7 +5670,7 @@ msgstr ""
 
 #. placeholder {0}: count || 0
 #. placeholder {0}: feed.likeCount || 0
-#: src/components/FeedCard.tsx:251
+#: src/components/FeedCard.tsx:249
 #: src/view/com/feeds/FeedSourceCard.tsx:173
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
@@ -5956,8 +5956,8 @@ msgstr ""
 msgid "Mark all as read"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:230
-#: src/components/dms/ConvoMenu.tsx:233
+#: src/components/dms/ConvoMenu.tsx:241
+#: src/components/dms/ConvoMenu.tsx:244
 msgid "Mark as read"
 msgstr ""
 
@@ -6017,14 +6017,14 @@ msgstr ""
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:76
+#: src/components/dms/MessageContextMenu.tsx:79
 msgctxt "toast"
 msgid "Message deleted"
 msgstr ""
 
 #. placeholder {0}: sender?.handle ?? 'unknown'
 #. placeholder {1}: message.text
-#: src/components/dms/MessageContextMenu.tsx:124
+#: src/components/dms/MessageContextMenu.tsx:127
 msgid "Message from @{0}: {1}"
 msgstr ""
 
@@ -6042,7 +6042,7 @@ msgstr ""
 msgid "Message is too long"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:122
+#: src/components/dms/MessageContextMenu.tsx:125
 msgid "Message options"
 msgstr ""
 
@@ -6191,12 +6191,12 @@ msgstr ""
 msgid "Mute accounts"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:247
-#: src/components/dms/ConvoMenu.tsx:253
+#: src/components/dms/ConvoMenu.tsx:258
+#: src/components/dms/ConvoMenu.tsx:264
 msgid "Mute conversation"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:261
+#: src/components/dialogs/MutedWords.tsx:262
 msgid "Mute in:"
 msgstr ""
 
@@ -6208,27 +6208,27 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:193
+#: src/components/dialogs/MutedWords.tsx:194
 msgid "Mute this word for 24 hours"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:232
+#: src/components/dialogs/MutedWords.tsx:233
 msgid "Mute this word for 30 days"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:217
+#: src/components/dialogs/MutedWords.tsx:218
 msgid "Mute this word for 7 days"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:266
+#: src/components/dialogs/MutedWords.tsx:267
 msgid "Mute this word in post text and tags"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:282
+#: src/components/dialogs/MutedWords.tsx:283
 msgid "Mute this word in tags only"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:178
+#: src/components/dialogs/MutedWords.tsx:179
 msgid "Mute this word until you unmute it"
 msgstr ""
 
@@ -6519,9 +6519,9 @@ msgid "No lists"
 msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
-#: src/components/ProfileCard.tsx:531
+#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
+#: src/components/ProfileCard.tsx:529
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:276
 #: src/view/com/notifications/NotificationFeedItem.tsx:792
 msgid "No longer following {0}"
@@ -6609,7 +6609,7 @@ msgstr ""
 msgid "No results found for \"{query}\""
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:171
+#: src/screens/Search/SearchResults.tsx:178
 msgid "No results found for “<0>{query}</0>”."
 msgstr "No results found for “<0>{query}</0>”."
 
@@ -7051,7 +7051,7 @@ msgstr ""
 msgid "Opens this profile"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:307
+#: src/components/dialogs/MutedWords.tsx:308
 msgid "Options:"
 msgstr ""
 
@@ -7178,7 +7178,7 @@ msgid "Pause video"
 msgstr ""
 
 #: src/screens/ProfileList/index.tsx:169
-#: src/screens/Search/SearchResults.tsx:72
+#: src/screens/Search/SearchResults.tsx:74
 #: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr ""
@@ -7239,14 +7239,11 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr ""
 
+#: src/components/FeedCard.tsx:362
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:522
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:528
 #: src/screens/SavedFeeds.tsx:570
 msgid "Pin feed"
-msgstr ""
-
-#: src/components/FeedCard.tsx:362
-msgid "Pin Feed"
 msgstr ""
 
 #: src/screens/ProfileList/components/Header.tsx:151
@@ -7836,7 +7833,7 @@ msgstr ""
 msgid "Read {0, plural, one {# more reply} other {# more replies}}"
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:182
+#: src/screens/Search/SearchResults.tsx:189
 msgctxt "english-only-resource"
 msgid "read about how to use search filters"
 msgstr ""
@@ -7898,8 +7895,8 @@ msgid "Receive push notifications"
 msgstr ""
 
 #: src/screens/Search/components/SearchHistory.tsx:50
-msgid "Recent Searches"
-msgstr ""
+msgid "Recent searches"
+msgstr "Recent searches"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:257
 msgid "Recently used"
@@ -7914,11 +7911,11 @@ msgid "Reconnect"
 msgstr ""
 
 #. Reject a chat request, this opens a menu with options
-#: src/screens/Messages/components/RequestButtons.tsx:125
+#: src/screens/Messages/components/RequestButtons.tsx:130
 msgid "Reject"
 msgstr ""
 
-#: src/screens/Messages/components/RequestButtons.tsx:114
+#: src/screens/Messages/components/RequestButtons.tsx:119
 msgid "Reject chat request"
 msgstr ""
 
@@ -7928,10 +7925,10 @@ msgid "Reload conversations"
 msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:172
-#: src/components/dialogs/MutedWords.tsx:456
+#: src/components/dialogs/MutedWords.tsx:457
 #: src/components/dialogs/StarterPackDialog.tsx:373
 #: src/components/dialogs/StarterPackDialog.tsx:380
-#: src/components/FeedCard.tsx:376
+#: src/components/FeedCard.tsx:374
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:106
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:113
 #: src/screens/Bookmarks/index.tsx:268
@@ -7946,7 +7943,7 @@ msgstr ""
 msgid "Remove {displayName} from starter pack"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:95
+#: src/screens/Search/components/SearchHistory.tsx:106
 msgid "Remove {historyItem}"
 msgstr ""
 
@@ -8027,11 +8024,11 @@ msgstr ""
 msgid "Remove live status"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:612
+#: src/components/dialogs/MutedWords.tsx:613
 msgid "Remove mute word from your list"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:168
+#: src/screens/Search/components/SearchHistory.tsx:179
 msgid "Remove profile"
 msgstr ""
 
@@ -8108,15 +8105,15 @@ msgstr ""
 msgid "Removed verification"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:540
+#: src/components/dialogs/MutedWords.tsx:541
 msgid "Renew"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:546
+#: src/components/dialogs/MutedWords.tsx:547
 msgid "Renew duration"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:530
+#: src/components/dialogs/MutedWords.tsx:531
 msgid "Renew mute word"
 msgstr ""
 
@@ -8205,7 +8202,7 @@ msgstr ""
 msgid "Reply was successfully hidden"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:165
+#: src/components/dms/MessageContextMenu.tsx:168
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
 #: src/features/liveNow/components/LiveStatusDialog.tsx:251
@@ -8217,11 +8214,11 @@ msgstr ""
 msgid "Report account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:270
-#: src/components/dms/ConvoMenu.tsx:273
+#: src/components/dms/ConvoMenu.tsx:281
+#: src/components/dms/ConvoMenu.tsx:284
 #: src/components/dms/ReportConversationPrompt.tsx:17
-#: src/screens/Messages/components/RequestButtons.tsx:156
-#: src/screens/Messages/components/RequestButtons.tsx:159
+#: src/screens/Messages/components/RequestButtons.tsx:161
+#: src/screens/Messages/components/RequestButtons.tsx:164
 msgid "Report conversation"
 msgstr ""
 
@@ -8240,7 +8237,7 @@ msgstr ""
 msgid "Report list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:163
+#: src/components/dms/MessageContextMenu.tsx:166
 msgid "Report message"
 msgstr ""
 
@@ -8619,10 +8616,10 @@ msgid "Scroll to top"
 msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:515
-#: src/components/forms/SearchInput.tsx:34
-#: src/components/forms/SearchInput.tsx:36
-#: src/screens/Search/Shell.tsx:346
-#: src/screens/Search/Shell.tsx:509
+#: src/components/forms/SearchInput.tsx:33
+#: src/components/forms/SearchInput.tsx:35
+#: src/screens/Search/Shell.tsx:354
+#: src/screens/Search/Shell.tsx:517
 #: src/view/shell/bottom-bar/BottomBar.tsx:197
 msgid "Search"
 msgstr ""
@@ -8656,11 +8653,11 @@ msgstr ""
 msgid "Search for \"{interestsDisplayName}\" (active)"
 msgstr ""
 
-#: src/view/shell/desktop/Search.tsx:131
+#: src/view/shell/desktop/Search.tsx:130
 msgid "Search for \"{query}\""
 msgstr ""
 
-#: src/screens/Search/components/AutocompleteResults.tsx:45
+#: src/screens/Search/components/AutocompleteResults.tsx:47
 msgid "Search for \"{searchText}\""
 msgstr ""
 
@@ -8676,7 +8673,7 @@ msgstr ""
 msgid "Search for more feeds"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:372
+#: src/screens/Search/Shell.tsx:380
 msgid "Search for posts, users, or feeds"
 msgstr ""
 
@@ -8685,7 +8682,7 @@ msgid "Search GIFs"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:237
-#: src/screens/Search/SearchResults.tsx:292
+#: src/screens/Search/SearchResults.tsx:313
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
@@ -8860,7 +8857,7 @@ msgstr ""
 msgid "Select GIF \"{0}\""
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:150
+#: src/components/dialogs/MutedWords.tsx:151
 msgid "Select how long to mute this word for."
 msgstr ""
 
@@ -8907,7 +8904,7 @@ msgstr "Select the source language"
 msgid "Select up to 3 languages used in this post"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:250
+#: src/components/dialogs/MutedWords.tsx:251
 msgid "Select what content this mute word should apply to."
 msgstr ""
 
@@ -9315,7 +9312,7 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:179
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/LoginForm.tsx:356
-#: src/screens/Search/SearchResults.tsx:295
+#: src/screens/Search/SearchResults.tsx:316
 #: src/view/com/auth/SplashScreen.tsx:118
 #: src/view/com/auth/SplashScreen.tsx:124
 #: src/view/com/auth/SplashScreen.web.tsx:128
@@ -9767,7 +9764,7 @@ msgstr ""
 msgid "System log"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:290
+#: src/components/dialogs/MutedWords.tsx:291
 msgid "Tags only"
 msgstr ""
 
@@ -9850,7 +9847,7 @@ msgstr ""
 msgid "Terms of Service"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:274
+#: src/components/dialogs/MutedWords.tsx:275
 msgid "Text & tags"
 msgstr ""
 
@@ -10399,7 +10396,7 @@ msgid "This will create a new list with the same name, description, and members 
 msgstr ""
 
 #. placeholder {0}: word.value
-#: src/components/dialogs/MutedWords.tsx:453
+#: src/components/dialogs/MutedWords.tsx:454
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
@@ -10491,7 +10488,7 @@ msgid "Too many contacts - you've exceeded the number of contacts you can import
 msgstr ""
 
 #: src/screens/Hashtag.tsx:101
-#: src/screens/Search/SearchResults.tsx:52
+#: src/screens/Search/SearchResults.tsx:54
 #: src/screens/Topic.tsx:72
 msgid "Top"
 msgstr ""
@@ -10507,8 +10504,8 @@ msgstr ""
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:136
-#: src/components/dms/MessageContextMenu.tsx:138
+#: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/dms/MessageContextMenu.tsx:141
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:510
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:512
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:640
@@ -10554,10 +10551,10 @@ msgstr ""
 msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:179
+#: src/screens/Search/SearchResults.tsx:186
 msgctxt "english-only-resource"
-msgid "Try a different search term, or <0>read about how to use search filters</0>."
-msgstr ""
+msgid "Try a different search term, or <0>read about how to use search filters.</0>."
+msgstr "Try a different search term, or <0>read about how to use search filters.</0>."
 
 #: src/view/com/util/error/ErrorScreen.tsx:104
 msgctxt "action"
@@ -10644,8 +10641,8 @@ msgctxt "action"
 msgid "Unblock"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:262
-#: src/components/dms/ConvoMenu.tsx:265
+#: src/components/dms/ConvoMenu.tsx:273
+#: src/components/dms/ConvoMenu.tsx:276
 #: src/view/com/profile/ProfileMenu.tsx:458
 #: src/view/com/profile/ProfileMenu.tsx:464
 msgid "Unblock account"
@@ -10761,7 +10758,7 @@ msgstr "Unmute {0}"
 msgid "Unmute account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:251
+#: src/components/dms/ConvoMenu.tsx:262
 msgid "Unmute conversation"
 msgstr ""
 
@@ -10784,14 +10781,11 @@ msgstr ""
 msgid "Unpin"
 msgstr ""
 
+#: src/components/FeedCard.tsx:353
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:522
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:528
 #: src/screens/SavedFeeds.tsx:478
 msgid "Unpin feed"
-msgstr ""
-
-#: src/components/FeedCard.tsx:353
-msgid "Unpin Feed"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:313
@@ -11231,14 +11225,18 @@ msgstr ""
 
 #. placeholder {0}: authors[0].profile.displayName || authors[0].profile.handle
 #. placeholder {0}: info.creatorHandle
-#. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
-#: src/components/ProfileCard.tsx:142
+#. placeholder {0}: profile.handle
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:459
 #: src/screens/Search/components/SearchProfileCard.tsx:36
 #: src/screens/VideoFeed/index.tsx:815
 #: src/view/com/notifications/NotificationFeedItem.tsx:609
 msgid "View {0}'s profile"
 msgstr ""
+
+#. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
+#: src/components/ProfileCard.tsx:143
+msgid "View {0}’s profile"
+msgstr "View {0}’s profile"
 
 #: src/components/dms/MessagesListHeader.tsx:142
 msgid "View {displayName}'s profile"
@@ -11535,15 +11533,12 @@ msgstr ""
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:386
+#: src/components/dialogs/MutedWords.tsx:387
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:318
-msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
-msgstr ""
-
-#: src/screens/Search/SearchResults.tsx:409
+#: src/screens/Search/SearchResults.tsx:339
+#: src/screens/Search/SearchResults.tsx:472
 msgid "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 
@@ -12000,7 +11995,7 @@ msgstr ""
 msgid "You haven't made any custom feeds yet."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:406
+#: src/components/dialogs/MutedWords.tsx:407
 msgid "You haven't muted any words or tags yet"
 msgstr ""
 
@@ -12330,7 +12325,7 @@ msgstr ""
 msgid "Your location has been updated."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:377
+#: src/components/dialogs/MutedWords.tsx:378
 msgid "Your muted words"
 msgstr ""
 
