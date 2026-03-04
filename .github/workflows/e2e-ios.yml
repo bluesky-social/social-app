@@ -1,0 +1,143 @@
+---
+name: E2E Tests (iOS)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  e2e-ios:
+    name: E2E Tests (iOS)
+    runs-on: macos-26-xlarge
+    timeout-minutes: 60
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: ⚙️ Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "26.0"
+
+      - name: ☕️ Setup Cocoapods
+        uses: maxim-lobanov/setup-cocoapods@v1
+        with:
+          version: 1.16.2
+
+      - name: 💾 Cache Pods
+        uses: actions/cache@v4
+        with:
+          path: ./ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
+
+      - name: 🔤 Compile translations
+        run: yarn intl:build
+
+      - name: ✏️ Write .env
+        run: |
+          cp .env.example .env
+          sed -i '' 's/^EXPO_PUBLIC_ENV=.*/EXPO_PUBLIC_ENV=e2e/' .env
+
+      - name: 🏗️ Build iOS app (release)
+        run: >
+          EXPO_PUBLIC_ENV=e2e
+          NODE_ENV=test
+          RN_SRC_EXT=e2e.ts,e2e.tsx
+          npx expo run:ios --configuration Release --no-install
+
+      - name: 📱 Find .app path
+        id: find-app
+        run: |
+          APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "Bluesky.app" -path "*/Release-iphonesimulator/*" | head -1)
+          if [ -z "$APP_PATH" ]; then
+            echo "Could not find built .app"
+            exit 1
+          fi
+          echo "APP_PATH=$APP_PATH" >> $GITHUB_OUTPUT
+          echo "Found app at: $APP_PATH"
+
+      - name: 🐘 Setup Postgres
+        run: |
+          brew install postgresql@14
+          export PATH="/opt/homebrew/opt/postgresql@14/bin:$PATH"
+          initdb -D /tmp/pgdata -U pg
+          echo "password" > /tmp/pgpassfile
+          pg_ctl -D /tmp/pgdata -o "-p 5433 -k /tmp" -l /tmp/pg.log start
+          # Set password for pg user
+          psql -h /tmp -p 5433 -U pg -d postgres -c "ALTER USER pg PASSWORD 'password';"
+          # Update pg_hba.conf to use md5 auth for TCP connections
+          echo "host all all 127.0.0.1/32 md5" >> /tmp/pgdata/pg_hba.conf
+          echo "host all all ::1/128 md5" >> /tmp/pgdata/pg_hba.conf
+          pg_ctl -D /tmp/pgdata -o "-p 5433 -k /tmp" reload
+
+      - name: 🔴 Setup Redis
+        run: |
+          brew install redis
+          redis-server --port 6380 --daemonize yes --logfile /tmp/redis.log
+
+      - name: 🖥️ Start mock server
+        run: |
+          DB_POSTGRES_URL="postgresql://pg:password@127.0.0.1:5433/postgres" \
+          REDIS_HOST="127.0.0.1:6380" \
+          yarn ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts &
+          # Wait for mock server to be ready
+          echo "Waiting for mock server on port 1986..."
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:1986 > /dev/null 2>&1; then
+              echo "Mock server is ready"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "Mock server failed to start"
+              exit 1
+            fi
+            sleep 1
+          done
+
+      - name: 📲 Boot simulator and install app
+        id: sim
+        run: |
+          SIM_UDID=$(xcrun simctl create "E2E-iPhone" "iPhone 16 Pro")
+          echo "SIM_UDID=$SIM_UDID" >> $GITHUB_OUTPUT
+          xcrun simctl boot "$SIM_UDID"
+          xcrun simctl install "$SIM_UDID" "${{ steps.find-app.outputs.APP_PATH }}"
+
+      - name: 🔄 Swap setupApp for CI
+        run: cp __e2e__/setupApp.ci.yml __e2e__/setupApp.yml
+
+      - name: 🎭 Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: 🧪 Run Maestro tests
+        run: >
+          $HOME/.maestro/bin/maestro
+          --device "${{ steps.sim.outputs.SIM_UDID }}"
+          test __e2e__/flows
+          --format junit
+          --output maestro-results.xml
+
+      - name: 📊 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-results
+          path: maestro-results.xml
+
+      - name: 📋 Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-logs
+          path: |
+            /tmp/pg.log
+            /tmp/redis.log
+            ~/.maestro/tests/**/*
