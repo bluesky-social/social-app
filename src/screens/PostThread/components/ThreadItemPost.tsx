@@ -319,13 +319,13 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                       onPress={onPressShowMore}
                     />
                   )}
-                  <TranslatedPost
-                    hideTranslateLink={true}
-                    post={post}
-                    postText={record.text}
-                  />
                 </View>
               ) : undefined}
+              <TranslatedPost
+                hideTranslateLink={true}
+                post={post}
+                postText={record.text}
+              />
               {post.embed && (
                 <View style={[a.pb_xs]}>
                   <Embed

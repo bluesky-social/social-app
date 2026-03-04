@@ -359,13 +359,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                           onPress={onPressShowMore}
                         />
                       )}
-                      <TranslatedPost
-                        hideTranslateLink={true}
-                        post={post}
-                        postText={record.text}
-                      />
                     </View>
                   ) : null}
+                  <TranslatedPost
+                    hideTranslateLink={true}
+                    post={post}
+                    postText={record.text}
+                  />
                   {post.embed && (
                     <View style={[a.pb_xs]}>
                       <Embed

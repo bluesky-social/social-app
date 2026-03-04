@@ -5,12 +5,11 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
-import {useTranslate} from '#/lib/translation'
+import {guessLanguage, useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation/types'
 import {
   codeToLanguageName,
   getPostLanguage,
-  isPostInLanguage,
   languageName,
 } from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
@@ -42,12 +41,16 @@ export function TranslatedPost({
   })
 
   const needsTranslation = useMemo(
-    () =>
-      Boolean(
-        langPrefs.primaryLanguage &&
-          !isPostInLanguage(post, [langPrefs.primaryLanguage]),
-      ),
-    [post, langPrefs.primaryLanguage],
+    () => guessLanguage(postText) !== langPrefs.primaryLanguage,
+    [langPrefs.primaryLanguage, postText],
+  )
+
+  console.log(
+    'DEBUG >>>>>>',
+    'needsTranslation',
+    needsTranslation,
+    'hideTranslateLink',
+    hideTranslateLink,
   )
 
   switch (translationState.status) {
