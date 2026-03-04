@@ -133,7 +133,7 @@ function TranslationLink({
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
           <InlineLinkText
-            // Overridden to open an intent on android, but keep as anchor tag
+            // Overridden to translate on-device, but keep as anchor tag
             // for accessibility
             to={getTranslatorLink(postText, primaryLanguage)}
             label={l`Translate`}
