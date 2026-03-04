@@ -68,8 +68,12 @@ async function attemptTranslation(
   const translatedText =
     typeof result.translatedTexts === 'string' ? result.translatedTexts : ''
 
-  if (translatedText === input || translatedText === '') {
+  if (translatedText === input) {
     throw new Error('Translation result is the same as the source text.')
+  }
+
+  if (translatedText === '') {
+    throw new Error('Translation result is empty.')
   }
 
   return {
