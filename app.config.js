@@ -35,6 +35,13 @@ module.exports = function (_config) {
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
+  const IOS_ICON_FILE =
+    PLATFORM === 'web' // web build doesn't like .icon files
+      ? './assets/app-icons/ios_icon_default_next.png'
+      : IS_TESTFLIGHT
+        ? './assets/app-icons/ios_icon_testflight.icon'
+        : './assets/app-icons/ios_icon_default.icon'
+
   return {
     expo: {
       version: VERSION,
@@ -55,10 +62,7 @@ module.exports = function (_config) {
         config: {
           usesNonExemptEncryption: false,
         },
-        icon:
-          PLATFORM === 'web' // web build doesn't like .icon files
-            ? './assets/app-icons/ios_icon_default_next.png'
-            : './assets/app-icons/ios_icon_default.icon',
+        icon: IOS_ICON_FILE,
         infoPlist: {
           UIBackgroundModes: ['remote-notification'],
           NSCameraUsageDescription:
