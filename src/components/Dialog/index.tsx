@@ -121,11 +121,13 @@ function OuterAlert({
           style={[
             t.atoms.bg,
             a.w_full,
-            {borderRadius: 48, maxWidth: 320},
+            {borderRadius: 48, maxWidth: 320, maxHeight: '90%'},
             a.overflow_hidden,
           ]}>
           <Context.Provider value={context}>
-            <View testID={testID}>{children}</View>
+            <View testID={testID} style={[a.flex_1]}>
+              {children}
+            </View>
           </Context.Provider>
         </Pressable>
       </Pressable>
