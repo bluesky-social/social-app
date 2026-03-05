@@ -23,7 +23,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {tokens, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {IS_NATIVE} from '#/env'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
@@ -148,7 +148,8 @@ const GalleryItem = ({
   const [altBtnViewTag, setAltBtnViewTag] = useState<number>()
 
   const altBtnRef = (node: View | null) => {
-    if (node) {
+    // for iOS 26 fluid transition
+    if (IS_IOS && node) {
       const tag = findNodeHandle(node)
       if (tag != null) setAltBtnViewTag(tag)
     }
