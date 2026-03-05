@@ -261,18 +261,8 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     {children, contentContainerStyle, header, ...props},
     ref,
   ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag, type} =
-      useDialogContext()
+    const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
-
-    if (type === 'alert') {
-      return (
-        <View style={[a.p_2xl, contentContainerStyle]} {...props}>
-          {header}
-          {children}
-        </View>
-      )
-    }
     const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
 
     let paddingBottom = 0
@@ -440,11 +430,7 @@ export function Handle({
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
-  const {close, type} = useDialogContext()
-
-  if (type === 'alert') {
-    return null
-  }
+  const {close} = useDialogContext()
 
   return (
     <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 20}]}>
