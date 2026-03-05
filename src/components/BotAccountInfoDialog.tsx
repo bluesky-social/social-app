@@ -8,24 +8,29 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
 import {Text} from '#/components/Typography'
+import {navigate} from '#/Navigation'
 
 export function BotAccountInfoDialog({
   control,
+  isMe,
 }: {
   control: Dialog.DialogControlProps
+  isMe?: boolean
 }) {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <BotAccountInfoDialogInner control={control} />
+      <BotAccountInfoDialogInner control={control} isMe={isMe} />
     </Dialog.Outer>
   )
 }
 
 function BotAccountInfoDialogInner({
   control,
+  isMe,
 }: {
   control: Dialog.DialogControlProps
+  isMe?: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -37,7 +42,16 @@ function BotAccountInfoDialogInner({
           <RobotIcon width={48} fill={t.atoms.text_contrast_medium.color} />
         </View>
         <Text style={[a.text_lg, a.text_center, a.font_semi_bold]}>
-          <Trans>This account has been marked as automated by its owner</Trans>
+          {isMe ? (
+            <Trans>
+              You have marked this account as automated. You can remove it at
+              any time from your account settings.
+            </Trans>
+          ) : (
+            <Trans>
+              This account has been marked as automated by its owner
+            </Trans>
+          )}
         </Text>
         <Button
           label={_(msg`Okay`)}
@@ -49,6 +63,23 @@ function BotAccountInfoDialogInner({
             <Trans>Okay</Trans>
           </ButtonText>
         </Button>
+        {isMe && (
+          <Button
+            label={_(msg`Open settings`)}
+            onPress={() => {
+              control.close(() => {
+                navigate('AutomationLabelSettings')
+              })
+            }}
+            color="secondary"
+            size="large"
+            variant="ghost"
+            style={[a.w_full]}>
+            <ButtonText>
+              <Trans>Open settings</Trans>
+            </ButtonText>
+          </Button>
+        )}
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
