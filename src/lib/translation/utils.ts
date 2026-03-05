@@ -2,6 +2,7 @@ import lande from 'lande'
 
 import {code3ToCode2Strict} from '#/locale/helpers'
 
+// TODO: Replace with expo-guess-language
 export function guessLanguage(text: string): string | null {
   const results = lande(text)
   // only return high-confidence results
