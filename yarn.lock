@@ -110,6 +110,20 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
+"@atproto/api@^0.19.3":
+  version "0.19.3"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.3.tgz#61de8d2e31abe9eb2b4c8f4ad124ed79d4a77e89"
+  integrity sha512-G8YpBpRouHdTAIagi/QQIUZOhGd1jfBQWkJy9QfxAzjjEpPvaVOSk4e1S85QzGLm/xbzVONzGkmdtiOSfP6wVg==
+  dependencies:
+    "@atproto/common-web" "^0.4.18"
+    "@atproto/lexicon" "^0.6.2"
+    "@atproto/syntax" "^0.5.0"
+    "@atproto/xrpc" "^0.7.7"
+    await-lock "^2.2.2"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    zod "^3.23.8"
+
 "@atproto/aws@^0.2.31":
   version "0.2.31"
   resolved "https://registry.yarnpkg.com/@atproto/aws/-/aws-0.2.31.tgz#e46d7db34ee57c4f9817269f1e73a7eddba2b9b8"
@@ -222,6 +236,16 @@
     "@atproto/lex-data" "^0.0.11"
     "@atproto/lex-json" "^0.0.11"
     "@atproto/syntax" "^0.4.3"
+    zod "^3.23.8"
+
+"@atproto/common-web@^0.4.18":
+  version "0.4.18"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.18.tgz#832976340457afd3d29345ad2c6f0ac0bff087dd"
+  integrity sha512-ilImzP+9N/mtse440kN60pGrEzG7wi4xsV13nGeLrS+Zocybc/ISOpKlbZM13o+twPJ+Q7veGLw9CtGg0GAFoQ==
+  dependencies:
+    "@atproto/lex-data" "^0.0.13"
+    "@atproto/lex-json" "^0.0.13"
+    "@atproto/syntax" "^0.5.0"
     zod "^3.23.8"
 
 "@atproto/common@0.1.0":
@@ -409,6 +433,16 @@
     uint8arrays "3.0.0"
     unicode-segmenter "^0.14.0"
 
+"@atproto/lex-data@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-data/-/lex-data-0.0.13.tgz#db1bcfa12d5056210f6eb7f3b8bac909909d6b9c"
+  integrity sha512-7Z7RwZ1Y/JzBF/Tcn/I4UJ/vIGfh5zn1zjv0KX+flke2JtgFkSE8uh2hOtqgBQMNqE3zdJFM+dcSWln86hR3MQ==
+  dependencies:
+    multiformats "^9.9.0"
+    tslib "^2.8.1"
+    uint8arrays "3.0.0"
+    unicode-segmenter "^0.14.0"
+
 "@atproto/lex-document@^0.0.13":
   version "0.0.13"
   resolved "https://registry.yarnpkg.com/@atproto/lex-document/-/lex-document-0.0.13.tgz#fcf794addf6cb328c78d4393e91ec0050a43c623"
@@ -442,6 +476,14 @@
     "@atproto/lex-data" "^0.0.11"
     tslib "^2.8.1"
 
+"@atproto/lex-json@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-json/-/lex-json-0.0.13.tgz#b0081f786aeeb1707087318fb03c928e75c19059"
+  integrity sha512-hwLhkKaIHulGJpt0EfXAEWdrxqM2L1tV/tvilzhMp3QxPqYgXchFnrfVmLsyFDx6P6qkH1GsX/XC2V36U0UlPQ==
+  dependencies:
+    "@atproto/lex-data" "^0.0.13"
+    tslib "^2.8.1"
+
 "@atproto/lex-resolver@^0.0.14":
   version "0.0.14"
   resolved "https://registry.yarnpkg.com/@atproto/lex-resolver/-/lex-resolver-0.0.14.tgz#8bc32e49c231bc29ca0d1ea927b33d7a21447de3"
@@ -473,6 +515,17 @@
   dependencies:
     "@atproto/common-web" "^0.4.13"
     "@atproto/syntax" "^0.4.3"
+    iso-datestring-validator "^2.2.2"
+    multiformats "^9.9.0"
+    zod "^3.23.8"
+
+"@atproto/lexicon@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.6.2.tgz#f6152a2119df953236ca127c4b30e332265e81e7"
+  integrity sha512-p3Ly6hinVZW0ETuAXZMeUGwuMm3g8HvQMQ41yyEE6AL0hAkfeKFaZKos6BdBrr6CjkpbrDZqE8M+5+QOceysMw==
+  dependencies:
+    "@atproto/common-web" "^0.4.18"
+    "@atproto/syntax" "^0.5.0"
     iso-datestring-validator "^2.2.2"
     multiformats "^9.9.0"
     zod "^3.23.8"
@@ -676,6 +729,13 @@
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.4.3.tgz#3889469daa5458a3c8e27a2cb16016e89cfafaf9"
   integrity sha512-YoZUz40YAJr5nPwvCDWgodEOlt5IftZqPJvA0JDWjuZKD8yXddTwSzXSaKQAzGOpuM+/A3uXRtPzJJqlScc+iA==
+  dependencies:
+    tslib "^2.8.1"
+
+"@atproto/syntax@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.5.0.tgz#061ef538aee784f8e5fa1ea50a7f5beb4c276c9b"
+  integrity sha512-UA2DSpGdOQzUQ4gi5SH+NEJz/YR3a3Fg3y2oh+xETDSiTRmA4VhHRCojhXAVsBxUT6EnItw190C/KN+DWW90kw==
   dependencies:
     tslib "^2.8.1"
 
@@ -3731,10 +3791,10 @@
   resolved "https://registry.yarnpkg.com/@bsky.app/expo-image-crop-tool/-/expo-image-crop-tool-0.5.0.tgz#4308fbde5c15e6be9122601797bc3d9549c95e31"
   integrity sha512-gmhQr2HWTRFyPO00fn5OmtiEVtikXusHMrN5Zoq26pu1VZX3zVE+aoc668etTqrvsQcm2Qu8fo96k5F3Wu+6wg==
 
-"@bsky.app/expo-translate-text@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@bsky.app/expo-translate-text/-/expo-translate-text-0.2.4.tgz#6e7f20f286111ee4d550c0c84f57393fc215a675"
-  integrity sha512-7mvFggNfkJEufI5A3WnjfjdN3H9P6Dpx7CpDkA9npWqA8Cb2icXq3k3nz3MaXGrVKTYiJnytAffYtos7mPoeOg==
+"@bsky.app/expo-translate-text@^0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@bsky.app/expo-translate-text/-/expo-translate-text-0.2.7.tgz#e34811d0f0300f8808762e5676aa50790ca5d5e8"
+  integrity sha512-J9zctP9hLxX0eustTKk5CBnCkk6cEdlu1s7GzUnpT65qkCSNbYqbbUCpcU2Z2S2dN/1+w6L/iHb+vmCEbZMOaQ==
 
 "@bsky.app/react-native-mmkv@2.12.5":
   version "2.12.5"
@@ -3864,6 +3924,11 @@
   integrity sha512-WI0DdZ8xFSbgMjR1sFsKABJ/C5OnRrjT06JXbZKexJGrDuPTzZdDYfFlsgcCXCyf+suG5QU2e/y1Wo2V/OapLQ==
   dependencies:
     tslib "^2.4.0"
+
+"@emoji-mart/data@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@emoji-mart/data/-/data-1.2.1.tgz#0ad70c662e3bc603e23e7d98413bd1e64c4fcb6c"
+  integrity sha512-no2pQMWiBy6gpBEiqGeU77/bFejDqUTRY7KX+0+iur13op3bqUsXdnwoZs6Xb1zbv0gAj5VvS1PWoUUckSr5Dw==
 
 "@emoji-mart/react@^1.1.1":
   version "1.1.1"
@@ -10789,10 +10854,10 @@ emittery@^0.13.1:
   resolved "https://registry.yarnpkg.com/emittery/-/emittery-0.13.1.tgz#c04b8c3457490e0847ae51fced3af52d338e3dad"
   integrity sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==
 
-emoji-mart@^5.5.2:
-  version "5.5.2"
-  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-5.5.2.tgz#3ddbaf053139cf4aa217650078bc1c50ca8381af"
-  integrity sha512-Sqc/nso4cjxhOwWJsp9xkVm8OF5c+mJLZJFoFfzRuKO+yWiN7K8c96xmtughYb0d/fZ8UC6cLIQ/p4BR6Pv3/A==
+emoji-mart@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-5.6.0.tgz#71b3ed0091d3e8c68487b240d9d6d9a73c27f023"
+  integrity sha512-eJp3QRe79pjwa+duv+n7+5YsNhRcMl812EcFVwrnRvYKoNPoQb5qxU8DG6Bgwji0akHdp6D4Ln6tYLG58MFSow==
 
 emoji-regex@^10.4.0:
   version "10.4.0"

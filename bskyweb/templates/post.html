@@ -35,8 +35,8 @@
   {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
   {% else %}
-  <meta property="og:image" content="{{ postView.Author.Avatar }}">
-  <meta property="twitter:image" content="{{ postView.Author.Avatar }}">
+  <meta property="og:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
+  <meta property="twitter:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
   <meta name="twitter:card" content="summary">
   {% endif %}
   <meta name="twitter:label1" content="Posted At">

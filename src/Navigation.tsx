@@ -690,6 +690,7 @@ function HomeTabNavigator() {
         headerShown: true,
         headerTransparent: true,
         headerTitle: '',
+        headerBackVisible: false,
         scrollEdgeEffects: {
           top: 'soft',
         },

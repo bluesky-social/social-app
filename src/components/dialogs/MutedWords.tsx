@@ -132,6 +132,7 @@ function MutedWordsInner() {
             autoCorrect={false}
             autoCapitalize="none"
             autoComplete="off"
+            returnKeyType="done"
             label={_(msg`Enter a word or tag`)}
             placeholder={_(msg`Enter a word or tag`)}
             value={field}

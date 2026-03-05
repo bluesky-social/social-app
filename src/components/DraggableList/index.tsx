@@ -454,6 +454,7 @@ function SortableItem<T>({
   const dragHandle = (
     <GestureDetector gesture={gesture}>
       <Animated.View
+        testID="feed-drag-handle"
         style={[
           a.justify_center,
           a.align_center,

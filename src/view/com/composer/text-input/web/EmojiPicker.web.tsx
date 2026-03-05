@@ -158,7 +158,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
               onDismiss={close}>
               <Picker
                 data={async () => {
-                  return (await import('./EmojiPickerData.json')).default
+                  return (await import('@emoji-mart/data')).default
                 }}
                 onEmojiSelect={onInsert}
                 autoFocus={true}
