@@ -19,6 +19,7 @@ import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottom
 import {QueryProvider} from '#/lib/react-query'
 import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
+import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
@@ -179,9 +180,11 @@ function InnerApp() {
                                                           style={s.h100pct}>
                                                           <GlobalGestureEventsProvider>
                                                             <IntentDialogProvider>
-                                                              <TestCtrls />
-                                                              <Shell />
-                                                              <ToastOutlet />
+                                                              <TranslateOnDeviceProvider>
+                                                                <TestCtrls />
+                                                                <Shell />
+                                                                <ToastOutlet />
+                                                              </TranslateOnDeviceProvider>
                                                             </IntentDialogProvider>
                                                           </GlobalGestureEventsProvider>
                                                         </GestureHandlerRootView>

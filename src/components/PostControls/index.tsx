@@ -6,8 +6,8 @@ import {
   type AppBskyFeedThreadgate,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
@@ -55,6 +55,7 @@ let PostControls = ({
   onShowLess,
   viaRepost,
   variant,
+  forceGoogleTranslate = false,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -70,9 +71,10 @@ let PostControls = ({
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
   viaRepost?: {uri: string; cid: string}
   variant?: 'compact' | 'normal' | 'large'
+  forceGoogleTranslate?: boolean
 }): React.ReactNode => {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const {feedDescriptor} = useFeedFeedbackContext()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(
@@ -104,10 +106,7 @@ let PostControls = ({
 
   const onPressToggleLike = async () => {
     if (isBlocked) {
-      Toast.show(
-        _(msg`Cannot interact with a blocked user`),
-        'exclamation-circle',
-      )
+      Toast.show(l`Cannot interact with a blocked user`, 'exclamation-circle')
       return
     }
 
@@ -126,7 +125,8 @@ let PostControls = ({
       } else {
         await queueUnlike()
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         throw e
       }
@@ -135,10 +135,7 @@ let PostControls = ({
 
   const onRepost = async () => {
     if (isBlocked) {
-      Toast.show(
-        _(msg`Cannot interact with a blocked user`),
-        'exclamation-circle',
-      )
+      Toast.show(l`Cannot interact with a blocked user`, 'exclamation-circle')
       return
     }
 
@@ -154,7 +151,8 @@ let PostControls = ({
       } else {
         await queueUnrepost()
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         throw e
       }
@@ -163,10 +161,7 @@ let PostControls = ({
 
   const onQuote = () => {
     if (isBlocked) {
-      Toast.show(
-        _(msg`Cannot interact with a blocked user`),
-        'exclamation-circle',
-      )
+      Toast.show(l`Cannot interact with a blocked user`, 'exclamation-circle')
       return
     }
 
@@ -238,16 +233,14 @@ let PostControls = ({
                     })
                 : undefined
             }
-            label={_(
-              msg({
-                message: `Reply (${plural(post.replyCount || 0, {
-                  one: '# reply',
-                  other: '# replies',
-                })})`,
-                comment:
-                  'Accessibility label for the reply button, verb form followed by number of replies and noun form',
-              }),
-            )}
+            label={l({
+              message: `Reply (${plural(post.replyCount || 0, {
+                one: '# reply',
+                other: '# replies',
+              })})`,
+              comment:
+                'Accessibility label for the reply button, verb form followed by number of replies and noun form',
+            })}
             big={big}>
             <PostControlButtonIcon icon={Bubble} />
             {typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
@@ -261,7 +254,7 @@ let PostControls = ({
           <RepostButton
             isReposted={!!post.viewer?.repost}
             repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
-            onRepost={onRepost}
+            onRepost={() => void onRepost()}
             onQuote={onQuote}
             big={big}
             embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
@@ -274,26 +267,22 @@ let PostControls = ({
             onPress={() => requireAuth(() => onPressToggleLike())}
             label={
               post.viewer?.like
-                ? _(
-                    msg({
-                      message: `Unlike (${plural(post.likeCount || 0, {
-                        one: '# like',
-                        other: '# likes',
-                      })})`,
-                      comment:
-                        'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
-                    }),
-                  )
-                : _(
-                    msg({
-                      message: `Like (${plural(post.likeCount || 0, {
-                        one: '# like',
-                        other: '# likes',
-                      })})`,
-                      comment:
-                        'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
-                    }),
-                  )
+                ? l({
+                    message: `Unlike (${plural(post.likeCount || 0, {
+                      one: '# like',
+                      other: '# likes',
+                    })})`,
+                    comment:
+                      'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
+                  })
+                : l({
+                    message: `Like (${plural(post.likeCount || 0, {
+                      one: '# like',
+                      other: '# likes',
+                    })})`,
+                    comment:
+                      'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
+                  })
             }>
             <AnimatedLikeIcon
               isLiked={Boolean(post.viewer?.like)}
@@ -350,6 +339,7 @@ let PostControls = ({
             left: secondaryControlSpacingStyles.gap / 2,
           }}
           logContext={logContext}
+          forceGoogleTranslate={forceGoogleTranslate}
         />
       </View>
     </View>
