@@ -160,7 +160,7 @@ related code together and gives us a better visual cue that there are probably
 other files contained within this "macro" feature, whereas `Component.tsx` on
 its own looks more like a single component file.
 
-### Documentation Within Features
+### Documentation and Tests Within Features
 
 For larger features or components, it's helpful to include a README.md file
 within the directory that explains the purpose of the feature, how it works, and
@@ -169,6 +169,12 @@ itself well to this, since the `index.tsx` can be the main component file, and
 the `README.md` can provide documentation for the whole feature. This is
 optional, but can be a nice way to keep documentation close to the code it
 describes.
+
+Similarly, if there are tests that are specific to a component or feature, it
+can be helpful to include them in the same directory, either as
+`Component.test.tsx` or in a `__tests__/` subdirectory. This keeps everything
+related to the component or feature in one place and makes it easier to find and
+maintain tests.
 
 ## Styling System (ALF)
 
