@@ -36,8 +36,15 @@ export function TranslatedPost({
     key: post.uri,
   })
 
-  const postLanguage = useMemo(() => guessLanguage(postText), [postText])
-  const needsTranslation = postLanguage !== langPrefs.primaryLanguage
+  const {needsTranslation, postLanguage} = useMemo(() => {
+    if (hideTranslateLink) return {needsTranslation: false, postLanguage: null}
+    const postLanguage = guessLanguage(postText)
+    if (!postLanguage) return {needsTranslation: false, postLanguage: null}
+    return {
+      needsTranslation: postLanguage !== langPrefs.primaryLanguage,
+      postLanguage,
+    }
+  }, [hideTranslateLink, postText, langPrefs.primaryLanguage])
 
   switch (translationState.status) {
     case 'loading':
@@ -65,7 +72,6 @@ export function TranslatedPost({
       )
     default:
       return (
-        !hideTranslateLink &&
         needsTranslation && (
           <TranslationLink
             postText={postText}
