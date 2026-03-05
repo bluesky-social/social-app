@@ -5,9 +5,13 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
-import {guessLanguage, useTranslate} from '#/lib/translation'
+import {useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation'
-import {codeToLanguageName, languageName} from '#/locale/helpers'
+import {
+  codeToLanguageName,
+  isPostInLanguage,
+  languageName,
+} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, native, useTheme, web} from '#/alf'
@@ -36,8 +40,10 @@ export function TranslatedPost({
     key: post.uri,
   })
 
-  const postLanguage = useMemo(() => guessLanguage(postText), [postText])
-  const needsTranslation = postLanguage !== langPrefs.primaryLanguage
+  const needsTranslation = useMemo(() => {
+    if (hideTranslateLink) return false
+    return !isPostInLanguage(post, [langPrefs.primaryLanguage])
+  }, [hideTranslateLink, post, langPrefs.primaryLanguage])
 
   switch (translationState.status) {
     case 'loading':
@@ -49,7 +55,7 @@ export function TranslatedPost({
           translate={translate}
           postText={postText}
           sourceLanguage={
-            translationState.sourceLanguage ?? postLanguage ?? null // Fallback primarily for iOS
+            translationState.sourceLanguage ?? null // Fallback primarily for iOS
           }
           translatedText={translationState.translatedText}
         />
@@ -65,12 +71,10 @@ export function TranslatedPost({
       )
     default:
       return (
-        !hideTranslateLink &&
         needsTranslation && (
           <TranslationLink
             postText={postText}
             primaryLanguage={langPrefs.primaryLanguage}
-            sourceLanguage={postLanguage}
             translate={translate}
           />
         )
@@ -96,12 +100,10 @@ function TranslationLoading() {
 function TranslationLink({
   postText,
   primaryLanguage,
-  sourceLanguage,
   translate,
 }: {
   postText: string
   primaryLanguage: string
-  sourceLanguage: string | null
   translate: TranslationFunction
 }) {
   const t = useTheme()
@@ -115,11 +117,11 @@ function TranslationLink({
     })
 
     ax.metric('translate', {
-      sourceLanguages: sourceLanguage ? [sourceLanguage] : [],
+      sourceLanguages: [], // todo: get from post maybe?
       targetLanguage: primaryLanguage,
       textLength: postText.length,
     })
-  }, [ax, postText, primaryLanguage, translate, sourceLanguage])
+  }, [ax, postText, primaryLanguage, translate])
 
   return (
     <View
