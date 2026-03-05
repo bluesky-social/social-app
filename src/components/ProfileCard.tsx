@@ -273,7 +273,14 @@ function InlineNameAndHandle({
           />
         </View>
       )}
-      <BotBadge profile={profile} />
+      <View
+        style={[
+          a.pl_2xs,
+          a.self_center,
+          {marginTop: platform({default: 0, android: -1})},
+        ]}>
+        <BotBadge profile={profile} />
+      </View>
       <Text
         emoji
         style={[
@@ -328,7 +335,9 @@ export function Name({
           />
         </View>
       )}
-      <BotBadge profile={profile} />
+      <View style={[a.pl_xs]}>
+        <BotBadge profile={profile} />
+      </View>
     </View>
   )
 }
