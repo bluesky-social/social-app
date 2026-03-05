@@ -5,9 +5,9 @@ import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import type * as Dialog from '#/components/Dialog'
+import * as Dialog from '#/components/Dialog'
 import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
-import * as Prompt from '#/components/Prompt'
+import {Text} from '#/components/Typography'
 import {navigate} from '#/Navigation'
 
 export function BotAccountAlert({
@@ -25,33 +25,49 @@ export function BotAccountAlert({
     : 'This account has been marked as automated by its owner'
 
   return (
-    <Prompt.Outer control={control} type="alert">
-      <Prompt.Content>
-        <View style={[a.align_center, a.pb_sm]}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+      <Dialog.ScrollableInner label={_(msg`Automated account`)}>
+        <View style={[a.align_center, a.pb_md, a.shadow_sm]}>
           <RobotIcon width={48} fill={t.atoms.text_contrast_medium.color} />
         </View>
-        <Prompt.DescriptionText>
+        <Text
+          style={[
+            a.leading_snug,
+            a.text_center,
+            a.pb_xl,
+            t.atoms.text_contrast_high,
+            ...(isOwn ? [a.text_md] : [a.text_lg]),
+            ...(!isOwn ? [a.font_semi_bold] : []),
+          ]}>
           <Trans>{description}</Trans>
-        </Prompt.DescriptionText>
-      </Prompt.Content>
-      <Prompt.Actions>
-        <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} color="primary" />
-        {isOwn ? (
+        </Text>
+        <View style={[a.w_full, a.gap_sm]}>
           <Button
-            label={_(msg`Open settings`)}
-            onPress={() => {
-              control.close(() => {
-                navigate('AutomationLabelSettings')
-              })
-            }}
-            color="secondary"
+            label={_(msg`Okay`)}
+            onPress={() => control.close()}
+            color="primary"
             size="large">
             <ButtonText>
-              <Trans>Open settings</Trans>
+              <Trans>Okay</Trans>
             </ButtonText>
           </Button>
-        ) : null}
-      </Prompt.Actions>
-    </Prompt.Outer>
+          {isOwn ? (
+            <Button
+              label={_(msg`Open settings`)}
+              onPress={() => {
+                control.close(() => {
+                  navigate('AutomationLabelSettings')
+                })
+              }}
+              color="secondary"
+              size="large">
+              <ButtonText>
+                <Trans>Open settings</Trans>
+              </ButtonText>
+            </Button>
+          ) : null}
+        </View>
+      </Dialog.ScrollableInner>
+    </Dialog.Outer>
   )
 }
