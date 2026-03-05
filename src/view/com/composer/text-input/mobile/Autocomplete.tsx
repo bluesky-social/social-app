@@ -9,6 +9,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -128,6 +129,7 @@ function AutocompleteProfileCard({
                 />
               </View>
             )}
+            <BotBadge profile={profile} />
           </View>
         </View>
         <Text

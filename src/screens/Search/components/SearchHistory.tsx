@@ -10,6 +10,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
@@ -173,6 +174,7 @@ function RecentProfileItem({
               />
             </View>
           )}
+          <BotBadge profile={profile} />
         </View>
       </Link>
       <Button

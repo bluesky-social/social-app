@@ -3,7 +3,9 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {isBotAccount} from '#/lib/bots'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
@@ -21,6 +23,7 @@ import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/ico
 import {Freeze_Stroke2_Corner2_Rounded as FreezeIcon} from '#/components/icons/Freeze'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
 import {PencilLine_Stroke2_Corner2_Rounded as PencilIcon} from '#/components/icons/Pencil'
+import {Robot_Stroke2_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
@@ -35,6 +38,7 @@ export function AccountSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const emailDialogControl = useEmailDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
@@ -148,6 +152,19 @@ export function AccountSettingsScreen({}: Props) {
             />
           </SettingsList.Item>
           <AgeAssuranceAccountCard style={[a.px_xl, a.pt_xs, a.pb_md]} />
+          <SettingsList.LinkItem
+            to="/settings/automation-label"
+            label={_(msg`Automation label`)}>
+            <SettingsList.ItemIcon icon={RobotIcon} />
+            <SettingsList.ItemText>
+              <Trans>Automation label</Trans>
+            </SettingsList.ItemText>
+            {profile && (
+              <SettingsList.BadgeText>
+                {isBotAccount(profile) ? _(msg`On`) : _(msg`Off`)}
+              </SettingsList.BadgeText>
+            )}
+          </SettingsList.LinkItem>
           <SettingsList.Divider />
           <SettingsList.PressableItem
             label={_(msg`Export my data`)}

@@ -15,6 +15,7 @@ import {isConvoActive, useConvo} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import * as Layout from '#/components/Layout'
@@ -169,6 +170,7 @@ function HeaderReady({
                   />
                 </View>
               )}
+              <BotBadge profile={profile} />
             </View>
             {!isDeletedAccount && (
               <Text

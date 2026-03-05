@@ -47,6 +47,7 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
@@ -264,6 +265,7 @@ let NotificationFeedItem = ({
             />
           </View>
         )}
+        <BotBadge profile={firstAuthor.profile} />
       </InlineLinkText>
     </ProfileHoverCard>
   )
@@ -1063,6 +1065,7 @@ function ExpandedAuthorCard({author}: {author: Author}) {
               />
             </View>
           )}
+          <BotBadge profile={author.profile} />
           <Text
             numberOfLines={1}
             style={[
