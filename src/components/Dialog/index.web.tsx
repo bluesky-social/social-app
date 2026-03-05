@@ -45,6 +45,7 @@ export function Outer({
   control,
   onClose,
   webOptions,
+  type = 'sheet',
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
@@ -96,6 +97,8 @@ export function Outer({
     [close, open],
   )
 
+  const isAlert = type === 'alert'
+
   const context = React.useMemo(
     () => ({
       close,
@@ -104,8 +107,9 @@ export function Outer({
       disableDrag: false,
       setDisableDrag: () => {},
       isWithinDialog: true,
+      type,
     }),
-    [close],
+    [close, type],
   )
 
   return (
@@ -124,7 +128,9 @@ export function Outer({
                   a.inset_0,
                   a.z_10,
                   a.px_xl,
-                  webOptions?.alignCenter ? a.justify_center : undefined,
+                  webOptions?.alignCenter || isAlert
+                    ? a.justify_center
+                    : undefined,
                   a.align_center,
                   {
                     overflowY: 'auto',
@@ -165,9 +171,10 @@ export function Inner({
   contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
-  const {close} = React.useContext(Context)
+  const {close, type} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
+  const isAlert = type === 'alert'
   FocusGuards.useFocusGuards()
   return (
     <FocusScope.FocusScope loop asChild trapped>
@@ -189,12 +196,13 @@ export function Inner({
           a.border,
           t.atoms.bg,
           {
-            maxWidth: 600,
+            maxWidth: isAlert ? 320 : 600,
             borderColor: t.palette.contrast_200,
             shadowColor: t.palette.black,
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
           },
+          isAlert && {borderRadius: 36},
           !reduceMotionEnabled && a.zoom_fade_in,
           style,
         ])}>
