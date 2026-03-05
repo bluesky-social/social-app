@@ -46,6 +46,7 @@ src/
 ├── alf/                    # Design system (ALF) - themes, atoms, tokens
 ├── components/             # Shared UI components (Button, Dialog, Menu, etc.)
 ├── screens/                # Full-page screen components (newer pattern)
+├── features/               # Macro-features that bridge components/screens
 ├── view/
 │   ├── screens/            # Full-page screens (legacy location)
 │   ├── com/                # Reusable view components
@@ -59,6 +60,115 @@ src/
 ├── locale/                 # i18n configuration and language files
 └── Navigation.tsx          # Main navigation configuration
 ```
+
+### Project Structure in Depth
+
+When building new things, follow these guidelines for where to put code.
+
+#### Components vs Screens vs Features
+
+**Components** are reusable UI elements that are not full screens. Should be
+platform-agnostic when possible. Examples: Button, Dialog, Menu, TextField. Put
+these in `/components` if they are shared across screens.
+
+**Screens** are full-page components that represent a route in the app. They
+often contain multiple components and handle layout for a page. New screens
+should go in `/screens` (not `/view/screens`) to encourage better organization
+and separation from legacy code.
+
+For complex screens that have specific components or data needs that _are not
+shared by other screens_, we encourage subdirectoreis within `/screens/<name>`
+e.g. `/screens/ProfileScreen/ProfileScreen.tsx` and
+`/screens/ProfileScreen/components/`.
+
+**Features** are higher-level modules that may include context, data fetching,
+components, and utilities related to a specific feature e.g.
+`/features/liveNow`. They don't neatly fit into components or screens and often
+span multiple screens. This is an optional pattern for organizing complex
+features.
+
+#### Legacy Directories
+
+For the most part, avoid writing new files into the `/view` directory and
+subdirectories. This is the older pattern for organizing screens and components,
+and it has become a bit disorganized over time. New development should go into
+`/screens`, `/components`, and `/features`.
+
+#### State
+
+The `/state` directory is where we've historically put all our data fetching and
+state management logic. This is perfectly fine, but for new features, consider
+organizing state logic closer to the components that use it, either within a
+feature directory or co-located with a screen. The key is to keep related code
+together and avoid having "god files" with too much unrelated logic.
+
+#### Lib
+
+The `/lib` directory is for utilities and helpers that don't fit into other
+categories. This can include things like API clients, formatting functions,
+constants, and other shared logic.
+
+#### Top Level Directories
+
+Avoid writing new top-level subdirectories within `/src`. We've done this for a
+few things in the past that, but we have stronger patterns now. Examples:
+`/logger` should probably have been written into `/lib`. And `ageAssurance` is
+better classified within `/features`. We will probably migrate these things
+eventually.
+
+### File and Directory Naming Conventions
+
+Typicaly JS style for variables, functions, etc. We use ProudCamelCase for
+components, and camelCase directories and files.
+
+When organizing new code, consider if it fits into a single file, or if it
+should be broken down into multiple files. For "macro" component cases, or
+things that live in `/features` or `/screens`, we often follow a pattern of
+having an `index.tsx` for the main component, and then co-locating related
+components, hooks, and utilities in the same directory. For example:
+
+```
+src
+├── screens/
+│   ├── ProfileScreen/
+│   │   ├── index.tsx          # Main screen component
+│   │   ├── components/       # Sub-components used only by this screen
+```
+
+Similar patterns can be found in `/features` and `/components`. The idea here is
+to keep related code together and make it easier to navigate.
+
+You should ask yourself: if someone new was looking for the code related to this
+feature or screen, where would they expect to find it? Organizing code in a way
+that matches developer expectations can make the codebase much more
+approachable. Being able to say "Live Now stuff lives in `/features/liveNow`" is
+easier to understand than having it scattered across multiple directories.
+
+No need to go overboard with this. If a component or feature fits into a single
+file, there's no reason to have a `/Component/index.tsx` file when it could just
+be `/Component.tsx`. Use your judgment based on the complexity and amount of
+related code.
+
+#### Platform Specific Files
+
+We have conflicting patterns in the app for this. The preferred approach is to
+group platform-specific files into a directory as much as possible. For example,
+rather than having `Component.tsx`, `Component.web.tsx`, and
+`Component.native.tsx` in the same directory, we prefer to have a `Component/`
+directory with `index.tsx`, `index.web.tsx`, and `index.native.tsx`. This keeps
+related code together and gives us a better visual cue that there are probably
+other files contained within this "macro" feature, whereas `Component.tsx` on
+its own looks more like a single component file.
+
+### Documentation Within Features
+
+For larger features or components, it's helpful to include a README.md file
+within the directory that explains the purpose of the feature, how it works, and
+any important implementation details. The `/Component/index.tsx` pattern lends
+itself well to this, since the `index.tsx` can be the main component file, and
+the `README.md` can provide documentation for the whole feature. This is
+optional, but can be a nice way to keep documentation close to the code it
+describes.
 
 ## Styling System (ALF)
 
