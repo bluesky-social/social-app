@@ -125,9 +125,7 @@ function OuterAlert({
             a.overflow_hidden,
           ]}>
           <Context.Provider value={context}>
-            <View testID={testID} style={[a.flex_1]}>
-              {children}
-            </View>
+            <View testID={testID}>{children}</View>
           </Context.Provider>
         </Pressable>
       </Pressable>
