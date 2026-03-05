@@ -70,6 +70,7 @@ export function TranslatedPost({
           <TranslationLink
             postText={postText}
             primaryLanguage={langPrefs.primaryLanguage}
+            sourceLanguage={postLanguage}
             translate={translate}
           />
         )
@@ -95,10 +96,12 @@ function TranslationLoading() {
 function TranslationLink({
   postText,
   primaryLanguage,
+  sourceLanguage,
   translate,
 }: {
   postText: string
   primaryLanguage: string
+  sourceLanguage: string | null
   translate: TranslationFunction
 }) {
   const t = useTheme()
@@ -112,11 +115,11 @@ function TranslationLink({
     })
 
     ax.metric('translate', {
-      sourceLanguages: [],
+      sourceLanguages: sourceLanguage ? [sourceLanguage] : [],
       targetLanguage: primaryLanguage,
       textLength: postText.length,
     })
-  }, [ax, postText, primaryLanguage, translate])
+  }, [ax, postText, primaryLanguage, translate, sourceLanguage])
 
   return (
     <View
