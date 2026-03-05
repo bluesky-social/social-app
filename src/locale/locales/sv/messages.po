@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 02:45\n"
+"PO-Revision-Date: 2026-03-05 20:12\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -851,8 +851,8 @@ msgstr "Lägg till konto"
 #: src/view/com/composer/GifAltText.tsx:78
 #: src/view/com/composer/GifAltText.tsx:147
 #: src/view/com/composer/GifAltText.tsx:214
-#: src/view/com/composer/photos/Gallery.tsx:181
-#: src/view/com/composer/photos/Gallery.tsx:228
+#: src/view/com/composer/photos/Gallery.tsx:182
+#: src/view/com/composer/photos/Gallery.tsx:229
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:99
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:107
 msgid "Add alt text"
@@ -1152,7 +1152,7 @@ msgstr "Redan inloggad som @{0}"
 #: src/components/images/Gallery.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:102
-#: src/view/com/composer/photos/Gallery.tsx:199
+#: src/view/com/composer/photos/Gallery.tsx:200
 msgid "ALT"
 msgstr "ALT"
 
@@ -1170,7 +1170,7 @@ msgstr "Alternativtext"
 msgid "Alt Text"
 msgstr "Alternativtext"
 
-#: src/view/com/composer/photos/Gallery.tsx:273
+#: src/view/com/composer/photos/Gallery.tsx:274
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "Alternativtexter beskriver bilder för blinda och användare med nedsatt syn. De hjälper också gemene man med kontext och sammanhang."
 
@@ -1974,7 +1974,7 @@ msgstr "Undertexter och alternativtexter"
 msgid "Cashtag {tag}"
 msgstr "Cashtagg {tag}"
 
-#: src/components/Post/Translated/index.tsx:395
+#: src/components/Post/Translated/index.tsx:397
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
 msgstr "Ändra"
@@ -2020,9 +2020,9 @@ msgstr "Ändra kategori för anmälan"
 msgid "Change report reason"
 msgstr "Ändra skäl till anmälan"
 
-#: src/components/Post/Translated/index.tsx:385
+#: src/components/Post/Translated/index.tsx:387
 msgid "Change the source language"
-msgstr ""
+msgstr "Ändra källspråk"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:58
 msgid "Change your password"
@@ -3123,7 +3123,7 @@ msgstr "Utvecklaralternativ"
 
 #: src/lib/translation/index.tsx:265
 msgid "Device failed to translate :("
-msgstr ""
+msgstr "Enheten kunde inte översätta :("
 
 #: src/components/WhoCanReply.tsx:222
 msgid "Dialog: adjust who can interact with this post"
@@ -3446,7 +3446,7 @@ msgstr "Redigera flöden"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:86
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:90
-#: src/view/com/composer/photos/Gallery.tsx:206
+#: src/view/com/composer/photos/Gallery.tsx:207
 msgid "Edit image"
 msgstr "Redigera bild"
 
@@ -4986,8 +4986,8 @@ msgstr "Dölj det här inlägget?"
 msgid "Hide this reply?"
 msgstr "Dölj det här svaret?"
 
-#: src/components/Post/Translated/index.tsx:192
-#: src/components/Post/Translated/index.tsx:318
+#: src/components/Post/Translated/index.tsx:194
+#: src/components/Post/Translated/index.tsx:320
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:514
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:516
 msgid "Hide translation"
@@ -7713,7 +7713,7 @@ msgstr "Profil"
 
 #: src/screens/Profile/Header/Shell.tsx:174
 msgid "Profile banner placeholder"
-msgstr ""
+msgstr "Platshållare för profilbanderoll"
 
 #: src/lib/strings/errors.ts:40
 msgid "Profile not found"
@@ -7984,7 +7984,7 @@ msgstr "Ta bort avatar"
 #: src/view/com/util/UserBanner.tsx:189
 #: src/view/com/util/UserBanner.tsx:192
 msgid "Remove Banner"
-msgstr "Ta bort omslag"
+msgstr "Ta bort banderoll"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:286
 msgid "Remove caption file"
@@ -8030,7 +8030,7 @@ msgstr "Ta bort från sparade inlägg"
 msgid "Remove from your feeds?"
 msgstr "Ta bort från dina flöden?"
 
-#: src/view/com/composer/photos/Gallery.tsx:215
+#: src/view/com/composer/photos/Gallery.tsx:216
 msgid "Remove image"
 msgstr "Ta bort bild"
 
@@ -8910,7 +8910,7 @@ msgstr "Välj landskod"
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr "Välj emojin {emojiName} som din avatar"
 
-#: src/components/Post/Translated/index.tsx:402
+#: src/components/Post/Translated/index.tsx:404
 msgid "Select the source language"
 msgstr "Välj källspråk"
 
@@ -10521,18 +10521,18 @@ msgstr "Ämne"
 
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/dms/MessageContextMenu.tsx:141
-#: src/components/Post/Translated/index.tsx:139
-#: src/components/Post/Translated/index.tsx:146
+#: src/components/Post/Translated/index.tsx:141
+#: src/components/Post/Translated/index.tsx:148
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:522
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:524
 msgid "Translate"
 msgstr "Översätt"
 
-#: src/components/Post/Translated/index.tsx:292
+#: src/components/Post/Translated/index.tsx:294
 msgid "Translated"
 msgstr "Översatt"
 
-#: src/components/Post/Translated/index.tsx:89
+#: src/components/Post/Translated/index.tsx:93
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:506
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:508
 msgid "Translating…"
@@ -10565,18 +10565,18 @@ msgstr "Förtroende skapas genom relationer, gemenskaper och delade sammanhang. 
 
 #: src/screens/Search/SearchResults.tsx:186
 msgctxt "english-only-resource"
-msgid "Try a different search term, or <0>read about how to use search filters.</0>."
-msgstr "Prova ett annat sökord eller <0>läs om hur du använder sökfilter</0>."
+msgid "Try a different search term, or <0>read about how to use search filters</0>."
+msgstr ""
 
 #: src/view/com/util/error/ErrorScreen.tsx:104
 msgctxt "action"
 msgid "Try again"
 msgstr "Försök igen"
 
-#: src/components/Post/Translated/index.tsx:205
-#: src/components/Post/Translated/index.tsx:213
+#: src/components/Post/Translated/index.tsx:207
+#: src/components/Post/Translated/index.tsx:215
 msgid "Try Google Translate"
-msgstr ""
+msgstr "Försök med Google Översätt"
 
 #: src/lib/interests.ts:74
 msgid "TV"
@@ -11310,7 +11310,7 @@ msgstr "Visa profil"
 
 #: src/screens/Profile/Header/Shell.tsx:173
 msgid "View profile banner"
-msgstr ""
+msgstr "Visa profilbanderoll"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:124
 msgid "View the avatar"

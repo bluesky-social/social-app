@@ -8,7 +8,7 @@ msgstr ""
 "Language: ne\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 02:45\n"
+"PO-Revision-Date: 2026-03-05 20:12\n"
 "Last-Translator: \n"
 "Language-Team: Nepali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -851,8 +851,8 @@ msgstr "खाता थप्नुहोस्"
 #: src/view/com/composer/GifAltText.tsx:78
 #: src/view/com/composer/GifAltText.tsx:147
 #: src/view/com/composer/GifAltText.tsx:214
-#: src/view/com/composer/photos/Gallery.tsx:181
-#: src/view/com/composer/photos/Gallery.tsx:228
+#: src/view/com/composer/photos/Gallery.tsx:182
+#: src/view/com/composer/photos/Gallery.tsx:229
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:99
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:107
 msgid "Add alt text"
@@ -1152,7 +1152,7 @@ msgstr "पहिले नै @{0} को रूपमा साइन इन �
 #: src/components/images/Gallery.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:102
-#: src/view/com/composer/photos/Gallery.tsx:199
+#: src/view/com/composer/photos/Gallery.tsx:200
 msgid "ALT"
 msgstr "वैकल्पिक"
 
@@ -1170,7 +1170,7 @@ msgstr "वैकल्पिक पाठ"
 msgid "Alt Text"
 msgstr "वैकल्पिक पाठ"
 
-#: src/view/com/composer/photos/Gallery.tsx:273
+#: src/view/com/composer/photos/Gallery.tsx:274
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "वैकल्पिक पाठले दृष्टिहीन र कमजोर दृष्टि भएका प्रयोगकर्ताहरूका लागि चित्रहरू वर्णन गर्छ, र सबैलाई सन्दर्भ दिन मद्दत गर्दछ।"
 
@@ -1974,7 +1974,7 @@ msgstr "उपशीर्षक र वैकल्पिक पाठ"
 msgid "Cashtag {tag}"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:395
+#: src/components/Post/Translated/index.tsx:397
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
 msgstr "परिवर्तन गर्नुहोस्"
@@ -2020,7 +2020,7 @@ msgstr ""
 msgid "Change report reason"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:385
+#: src/components/Post/Translated/index.tsx:387
 msgid "Change the source language"
 msgstr ""
 
@@ -3446,7 +3446,7 @@ msgstr "फिड सम्पादन गर्नुहोस्"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:86
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:90
-#: src/view/com/composer/photos/Gallery.tsx:206
+#: src/view/com/composer/photos/Gallery.tsx:207
 msgid "Edit image"
 msgstr "चित्र सम्पादन गर्नुहोस्"
 
@@ -4986,8 +4986,8 @@ msgstr "यो पोस्ट लुकाउनुहोस्?"
 msgid "Hide this reply?"
 msgstr "यो उत्तर लुकाउनुहोस्?"
 
-#: src/components/Post/Translated/index.tsx:192
-#: src/components/Post/Translated/index.tsx:318
+#: src/components/Post/Translated/index.tsx:194
+#: src/components/Post/Translated/index.tsx:320
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:514
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:516
 msgid "Hide translation"
@@ -8030,7 +8030,7 @@ msgstr ""
 msgid "Remove from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/photos/Gallery.tsx:215
+#: src/view/com/composer/photos/Gallery.tsx:216
 msgid "Remove image"
 msgstr "तस्बिर हटाउनुहोस्"
 
@@ -8910,7 +8910,7 @@ msgstr ""
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr "{emojiName} इमोजीलाई आफ्नो अवतारको रूपमा चयन गर्नुहोस्"
 
-#: src/components/Post/Translated/index.tsx:402
+#: src/components/Post/Translated/index.tsx:404
 msgid "Select the source language"
 msgstr ""
 
@@ -10521,18 +10521,18 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/dms/MessageContextMenu.tsx:141
-#: src/components/Post/Translated/index.tsx:139
-#: src/components/Post/Translated/index.tsx:146
+#: src/components/Post/Translated/index.tsx:141
+#: src/components/Post/Translated/index.tsx:148
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:522
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:524
 msgid "Translate"
 msgstr "अनुवाद गर्नुहोस्"
 
-#: src/components/Post/Translated/index.tsx:292
+#: src/components/Post/Translated/index.tsx:294
 msgid "Translated"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:89
+#: src/components/Post/Translated/index.tsx:93
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:506
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:508
 msgid "Translating…"
@@ -10565,7 +10565,7 @@ msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:186
 msgctxt "english-only-resource"
-msgid "Try a different search term, or <0>read about how to use search filters.</0>."
+msgid "Try a different search term, or <0>read about how to use search filters</0>."
 msgstr ""
 
 #: src/view/com/util/error/ErrorScreen.tsx:104
@@ -10573,8 +10573,8 @@ msgctxt "action"
 msgid "Try again"
 msgstr "पुनः प्रयास गर्नुहोस्"
 
-#: src/components/Post/Translated/index.tsx:205
-#: src/components/Post/Translated/index.tsx:213
+#: src/components/Post/Translated/index.tsx:207
+#: src/components/Post/Translated/index.tsx:215
 msgid "Try Google Translate"
 msgstr ""
 

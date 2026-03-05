@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 02:45\n"
+"PO-Revision-Date: 2026-03-05 20:12\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -851,8 +851,8 @@ msgstr "Afegeix un compte"
 #: src/view/com/composer/GifAltText.tsx:78
 #: src/view/com/composer/GifAltText.tsx:147
 #: src/view/com/composer/GifAltText.tsx:214
-#: src/view/com/composer/photos/Gallery.tsx:181
-#: src/view/com/composer/photos/Gallery.tsx:228
+#: src/view/com/composer/photos/Gallery.tsx:182
+#: src/view/com/composer/photos/Gallery.tsx:229
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:99
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:107
 msgid "Add alt text"
@@ -1152,7 +1152,7 @@ msgstr "Ja estàs registrat com a @{0}"
 #: src/components/images/Gallery.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:102
-#: src/view/com/composer/photos/Gallery.tsx:199
+#: src/view/com/composer/photos/Gallery.tsx:200
 msgid "ALT"
 msgstr "ALT"
 
@@ -1170,7 +1170,7 @@ msgstr "Text alternatiu"
 msgid "Alt Text"
 msgstr "Text alternatiu"
 
-#: src/view/com/composer/photos/Gallery.tsx:273
+#: src/view/com/composer/photos/Gallery.tsx:274
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "El text alternatiu descriu les imatges per a les persones cegues o amb problemes de visió, i ajuda donar context a tothom."
 
@@ -1974,7 +1974,7 @@ msgstr "Subtítols i text alternatiu"
 msgid "Cashtag {tag}"
 msgstr "Cashtag {tag}"
 
-#: src/components/Post/Translated/index.tsx:395
+#: src/components/Post/Translated/index.tsx:397
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
 msgstr "Canvia"
@@ -2020,9 +2020,9 @@ msgstr "Canvia la categoria de l'informe"
 msgid "Change report reason"
 msgstr "Canvia"
 
-#: src/components/Post/Translated/index.tsx:385
+#: src/components/Post/Translated/index.tsx:387
 msgid "Change the source language"
-msgstr ""
+msgstr "Canvia l'idioma d'origen"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:58
 msgid "Change your password"
@@ -3123,7 +3123,7 @@ msgstr "Opcions de desenvolupador"
 
 #: src/lib/translation/index.tsx:265
 msgid "Device failed to translate :("
-msgstr ""
+msgstr "El dispositiu no ha pogut traduir :("
 
 #: src/components/WhoCanReply.tsx:222
 msgid "Dialog: adjust who can interact with this post"
@@ -3446,7 +3446,7 @@ msgstr "Edita els canals"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:86
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:90
-#: src/view/com/composer/photos/Gallery.tsx:206
+#: src/view/com/composer/photos/Gallery.tsx:207
 msgid "Edit image"
 msgstr "Edita la imatge"
 
@@ -4986,8 +4986,8 @@ msgstr "Vols amagar aquesta entrada?"
 msgid "Hide this reply?"
 msgstr "Vols amagar aquesta resposta?"
 
-#: src/components/Post/Translated/index.tsx:192
-#: src/components/Post/Translated/index.tsx:318
+#: src/components/Post/Translated/index.tsx:194
+#: src/components/Post/Translated/index.tsx:320
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:514
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:516
 msgid "Hide translation"
@@ -7713,7 +7713,7 @@ msgstr "Perfil"
 
 #: src/screens/Profile/Header/Shell.tsx:174
 msgid "Profile banner placeholder"
-msgstr ""
+msgstr "Marcador de posició del bàner de perfil"
 
 #: src/lib/strings/errors.ts:40
 msgid "Profile not found"
@@ -8030,7 +8030,7 @@ msgstr "Elimina de les publicacions desades"
 msgid "Remove from your feeds?"
 msgstr "Vols eliminar-lo dels teus canals?"
 
-#: src/view/com/composer/photos/Gallery.tsx:215
+#: src/view/com/composer/photos/Gallery.tsx:216
 msgid "Remove image"
 msgstr "Elimina la imatge"
 
@@ -8910,7 +8910,7 @@ msgstr "Tria el codi de telèfon"
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr "Selecciona el {emojiName} emoji com al teu avatar"
 
-#: src/components/Post/Translated/index.tsx:402
+#: src/components/Post/Translated/index.tsx:404
 msgid "Select the source language"
 msgstr "Selecciona l'idioma d'origen"
 
@@ -10521,18 +10521,18 @@ msgstr "Tema"
 
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/dms/MessageContextMenu.tsx:141
-#: src/components/Post/Translated/index.tsx:139
-#: src/components/Post/Translated/index.tsx:146
+#: src/components/Post/Translated/index.tsx:141
+#: src/components/Post/Translated/index.tsx:148
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:522
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:524
 msgid "Translate"
 msgstr "Tradueix"
 
-#: src/components/Post/Translated/index.tsx:292
+#: src/components/Post/Translated/index.tsx:294
 msgid "Translated"
 msgstr "Traduït"
 
-#: src/components/Post/Translated/index.tsx:89
+#: src/components/Post/Translated/index.tsx:93
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:506
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:508
 msgid "Translating…"
@@ -10565,18 +10565,18 @@ msgstr "La confiança sorgeix de les relacions, les comunitats i el context comp
 
 #: src/screens/Search/SearchResults.tsx:186
 msgctxt "english-only-resource"
-msgid "Try a different search term, or <0>read about how to use search filters.</0>."
-msgstr "Prova un terme de cerca diferent o <0>consulta com utilitzar els filtres de cerca.</0>."
+msgid "Try a different search term, or <0>read about how to use search filters</0>."
+msgstr ""
 
 #: src/view/com/util/error/ErrorScreen.tsx:104
 msgctxt "action"
 msgid "Try again"
 msgstr "Torna-ho a provar"
 
-#: src/components/Post/Translated/index.tsx:205
-#: src/components/Post/Translated/index.tsx:213
+#: src/components/Post/Translated/index.tsx:207
+#: src/components/Post/Translated/index.tsx:215
 msgid "Try Google Translate"
-msgstr ""
+msgstr "Prova el traductor de Google"
 
 #: src/lib/interests.ts:74
 msgid "TV"
@@ -11310,7 +11310,7 @@ msgstr "Veure el perfil"
 
 #: src/screens/Profile/Header/Shell.tsx:173
 msgid "View profile banner"
-msgstr ""
+msgstr "Mostra el bàner del perfil"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:124
 msgid "View the avatar"
