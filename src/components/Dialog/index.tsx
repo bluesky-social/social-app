@@ -10,6 +10,7 @@ import {
   Keyboard,
   type KeyboardEventListener,
   type LayoutChangeEvent,
+  Modal,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   Pressable,
@@ -59,7 +60,112 @@ export * from '#/components/Dialog/utils'
 
 export const Input = createInput(TextInput)
 
-export function Outer({
+export function Outer(props: React.PropsWithChildren<DialogOuterProps>) {
+  if (props.type === 'alert') {
+    return <OuterAlert {...props} />
+  }
+  return <OuterSheet {...props} />
+}
+
+function OuterAlert({
+  children,
+  control,
+  onClose,
+  testID,
+}: React.PropsWithChildren<DialogOuterProps>) {
+  const t = useTheme()
+  const [isOpen, setIsOpen] = React.useState(false)
+  const closeCallbacks = React.useRef<(() => void)[]>([])
+  const {setDialogIsOpen} = useDialogStateControlContext()
+
+  const callQueuedCallbacks = React.useCallback(() => {
+    for (const cb of closeCallbacks.current) {
+      try {
+        cb()
+      } catch (e: any) {
+        logger.error(e || 'Error running close callback')
+      }
+    }
+    closeCallbacks.current = []
+  }, [])
+
+  const open = React.useCallback<DialogControlProps['open']>(() => {
+    callQueuedCallbacks()
+    setDialogIsOpen(control.id, true)
+    setIsOpen(true)
+  }, [setDialogIsOpen, control.id, callQueuedCallbacks])
+
+  const close = React.useCallback<DialogControlProps['close']>(cb => {
+    if (typeof cb === 'function') {
+      closeCallbacks.current.push(cb)
+    }
+    setIsOpen(false)
+  }, [])
+
+  const onDismiss = React.useCallback(() => {
+    setDialogIsOpen(control.id, false)
+    callQueuedCallbacks()
+    onClose?.()
+  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
+
+  useImperativeHandle(
+    control.ref,
+    () => ({
+      open,
+      close,
+    }),
+    [open, close],
+  )
+
+  const context = React.useMemo(
+    () => ({
+      close,
+      isNativeDialog: true,
+      nativeSnapPoint: BottomSheetSnapPoint.Hidden,
+      disableDrag: false,
+      setDisableDrag: () => {},
+      isWithinDialog: true,
+      type: 'alert' as const,
+    }),
+    [close],
+  )
+
+  return (
+    <Modal
+      visible={isOpen}
+      transparent
+      animationType="fade"
+      onRequestClose={() => close()}
+      onDismiss={onDismiss}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => close()}
+        style={[
+          a.flex_1,
+          a.justify_center,
+          a.align_center,
+          a.px_xl,
+          {backgroundColor: 'rgba(0,0,0,0.5)'},
+        ]}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={e => e.stopPropagation()}
+          style={[
+            t.atoms.bg,
+            a.w_full,
+            {borderRadius: 48, maxWidth: 320},
+            a.overflow_hidden,
+          ]}>
+          <Context.Provider value={context}>
+            <View testID={testID}>{children}</View>
+          </Context.Provider>
+        </Pressable>
+      </Pressable>
+    </Modal>
+  )
+}
+
+function OuterSheet({
   children,
   control,
   onClose,
@@ -165,6 +271,7 @@ export function Outer({
       disableDrag,
       setDisableDrag,
       isWithinDialog: true,
+      type: 'sheet' as const,
     }),
     [close, snapPoint, disableDrag, setDisableDrag],
   )
@@ -216,7 +323,17 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
     {children, contentContainerStyle, header, ...props},
     ref,
   ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+    const {nativeSnapPoint, disableDrag, setDisableDrag, type} =
+      useDialogContext()
+
+    if (type === 'alert') {
+      return (
+        <View style={[a.p_2xl, contentContainerStyle]} {...props}>
+          {header}
+          {children}
+        </View>
+      )
+    }
     const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
     const insets = useSafeAreaInsets()
     const [keyboardHeight, setKeyboardHeight] = useState(() =>
@@ -391,7 +508,11 @@ export function Handle({
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
-  const {close} = useDialogContext()
+  const {close, type} = useDialogContext()
+
+  if (type === 'alert') {
+    return null
+  }
 
   return (
     <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 20}]}>

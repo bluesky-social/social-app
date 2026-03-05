@@ -23,6 +23,7 @@ export const Context = createContext<DialogContextProps>({
   disableDrag: false,
   setDisableDrag: () => {},
   isWithinDialog: false,
+  type: 'sheet',
 })
 Context.displayName = 'DialogContext'
 
