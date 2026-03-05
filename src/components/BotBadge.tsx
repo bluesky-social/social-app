@@ -5,10 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {isBotAccount} from '#/lib/bots'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {
-  BotAccountInfoDialog,
-  BotAccountOwnAlert,
-} from '#/components/BotAccountInfoDialog'
+import {BotAccountAlert} from '#/components/BotAccountAlert'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
@@ -91,11 +88,7 @@ export function BotBadgeButton({
           </View>
         )}
       </Button>
-      {isMe ? (
-        <BotAccountOwnAlert control={control} />
-      ) : (
-        <BotAccountInfoDialog control={control} />
-      )}
+      <BotAccountAlert control={control} isOwn={isMe} />
     </>
   )
 }
