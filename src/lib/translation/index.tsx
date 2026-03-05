@@ -224,59 +224,51 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         return
       }
 
-      // Delay the translation until the animation completes for cases where the
-      // `attemptTranslation` call resolves very quickly.
-      const translateAfterAnimation = async () => {
-        try {
-          const result = await attemptTranslation(
-            text,
-            targetLangCode,
-            sourceLangCode,
-          )
-          ax.metric('translate:result', {
-            method: 'on-device',
-            os: Platform.OS,
-            sourceLanguage: result.sourceLanguage,
-            targetLanguage: result.targetLanguage,
-          })
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-          setTranslationState(prev => ({
-            ...prev,
-            [key]: {
-              status: 'success',
-              translatedText: result.translatedText,
-              sourceLanguage: result.sourceLanguage,
-              targetLanguage: result.targetLanguage,
-            },
-          }))
-        } catch (e) {
-          logger.error('Failed to translate post on device', {safeMessage: e})
-          // On-device translation failed (language pack missing or user
-          // dismissed the download prompt). Fall back to Google Translate.
-          ax.metric('translate:result', {
-            method: 'fallback-alert',
-            os: Platform.OS,
-            sourceLanguage: sourceLangCode ?? null,
-            targetLanguage: targetLangCode,
-          })
-          let errorMessage = l`Device failed to translate :(`
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-          setTranslationState(prev => ({
-            ...prev,
-            [key]: {status: 'error', message: errorMessage},
-          }))
-        }
-      }
-
       // Translate after the next state change.
-      LayoutAnimation.configureNext(
-        LayoutAnimation.Presets.easeInEaseOut,
-        () => void translateAfterAnimation(),
-      )
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setTranslationState(prev => ({
         ...prev,
         [key]: {status: 'loading'},
       }))
+      try {
+        const result = await attemptTranslation(
+          text,
+          targetLangCode,
+          sourceLangCode,
+        )
+        ax.metric('translate:result', {
+          method: 'on-device',
+          os: Platform.OS,
+          sourceLanguage: result.sourceLanguage,
+          targetLanguage: result.targetLanguage,
+        })
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setTranslationState(prev => ({
+          ...prev,
+          [key]: {
+            status: 'success',
+            translatedText: result.translatedText,
+            sourceLanguage: result.sourceLanguage,
+            targetLanguage: result.targetLanguage,
+          },
+        }))
+      } catch (e) {
+        logger.error('Failed to translate post on device', {safeMessage: e})
+        // On-device translation failed (language pack missing or user
+        // dismissed the download prompt). Fall back to Google Translate.
+        ax.metric('translate:result', {
+          method: 'fallback-alert',
+          os: Platform.OS,
+          sourceLanguage: sourceLangCode ?? null,
+          targetLanguage: targetLangCode,
+        })
+        let errorMessage = l`Device failed to translate :(`
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setTranslationState(prev => ({
+          ...prev,
+          [key]: {status: 'error', message: errorMessage},
+        }))
+      }
     },
     [ax, googleTranslate, l],
   )
