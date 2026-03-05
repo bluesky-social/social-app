@@ -1,21 +1,18 @@
-import {useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/analytics'
-import {IS_NATIVE} from '#/env'
 import {isBotAccount} from '#/lib/bots'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {
   BotAccountInfoDialog,
   BotAccountOwnAlert,
-  BotAccountOwnAlertWeb,
 } from '#/components/BotAccountInfoDialog'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
+import {useAnalytics} from '#/analytics'
 
 export function BotBadge({
   profile,
@@ -53,7 +50,6 @@ export function BotBadgeButton({
   const {_} = useLingui()
   const {gtPhone} = useBreakpoints()
   const control = useDialogControl()
-  const [alertVisible, setAlertVisible] = useState(false)
 
   if (!isBotAccount(profile)) {
     return null
@@ -66,8 +62,6 @@ export function BotBadgeButton({
     dimensions = 14
   }
 
-  const useNativeAlert = isMe && IS_NATIVE
-
   return (
     <>
       <Button
@@ -76,11 +70,7 @@ export function BotBadgeButton({
         onPress={evt => {
           evt.preventDefault()
           ax.metric('bot:badge:click', {})
-          if (useNativeAlert) {
-            setAlertVisible(true)
-          } else {
-            control.open()
-          }
+          control.open()
         }}>
         {({hovered}) => (
           <View
@@ -101,16 +91,8 @@ export function BotBadgeButton({
           </View>
         )}
       </Button>
-      {useNativeAlert ? (
-        <BotAccountOwnAlert
-          visible={alertVisible}
-          onClose={cb => {
-            setAlertVisible(false)
-            cb?.()
-          }}
-        />
-      ) : isMe ? (
-        <BotAccountOwnAlertWeb control={control} />
+      {isMe ? (
+        <BotAccountOwnAlert control={control} />
       ) : (
         <BotAccountInfoDialog control={control} />
       )}
