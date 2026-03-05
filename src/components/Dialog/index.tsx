@@ -456,11 +456,7 @@ export function Handle({
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
-  const {close, type} = useDialogContext()
-
-  if (type === 'alert') {
-    return null
-  }
+  const {close} = useDialogContext()
 
   return (
     <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 20}]}>
