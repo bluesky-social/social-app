@@ -3,13 +3,13 @@ import {type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/analytics'
 import {isBotAccount} from '#/lib/bots'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {BotAccountInfoDialog} from '#/components/BotAccountInfoDialog'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
+import {useAnalytics} from '#/analytics'
 
 export function BotBadge({
   profile,
@@ -36,9 +36,11 @@ export function BotBadge({
 export function BotBadgeButton({
   profile,
   size,
+  isMe,
 }: {
   profile: {did: string; labels?: ComAtprotoLabelDefs.Label[]}
   size: 'lg' | 'md' | 'sm'
+  isMe?: boolean
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -86,7 +88,7 @@ export function BotBadgeButton({
           </View>
         )}
       </Button>
-      <BotAccountInfoDialog control={control} />
+      <BotAccountInfoDialog control={control} isMe={isMe} />
     </>
   )
 }
