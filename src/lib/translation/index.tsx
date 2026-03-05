@@ -9,7 +9,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/analytics'
-import {HAS_ON_DEVICE_TRANSLATION} from '#/env'
+import {HAS_ON_DEVICE_TRANSLATION, IS_ANDROID} from '#/env'
 import {Context} from './context'
 import {type TranslationFunctionParams, type TranslationState} from './types'
 import {guessLanguage} from './utils'
@@ -192,7 +192,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   }, [])
 
   const clearTranslation = useCallback((key: string) => {
-    if (Platform.OS !== 'android') {
+    if (IS_ANDROID) {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     }
     setTranslationState(prev => {
@@ -226,7 +226,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         return
       }
 
-      if (Platform.OS !== 'android') {
+      if (IS_ANDROID) {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       }
       setTranslationState(prev => ({
@@ -245,7 +245,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           sourceLanguage: result.sourceLanguage,
           targetLanguage: result.targetLanguage,
         })
-        if (Platform.OS !== 'android') {
+        if (IS_ANDROID) {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         }
         setTranslationState(prev => ({
@@ -268,7 +268,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           targetLanguage: targetLangCode,
         })
         let errorMessage = l`Device failed to translate :(`
-        if (Platform.OS !== 'android') {
+        if (IS_ANDROID) {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         }
         setTranslationState(prev => ({
