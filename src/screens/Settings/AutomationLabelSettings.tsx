@@ -1,6 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
+import {useQueryClient} from '@tanstack/react-query'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -8,6 +9,8 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAnalytics} from '#/analytics'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {RQKEY_ROOT as POST_FEED_RQKEY_ROOT} from '#/state/queries/post-feed'
+import {postThreadQueryKeyRoot} from '#/state/queries/usePostThread/types'
 import {
   useProfileQuery,
   useProfileUpdateMutation,
@@ -32,6 +35,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
+  const queryClient = useQueryClient()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const updateProfile = useProfileUpdateMutation()
@@ -48,41 +52,50 @@ export function AutomationLabelSettingsScreen({}: Props) {
     }
     let wasAdded = false
     ax.metric('bot:label:toggle', {state: isBotLabeled ? 'remove' : 'add'})
-    updateProfile.mutate({
-      profile,
-      updates: existing => {
-        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
-          existing.labels,
-          ComAtprotoLabelDefs.validateSelfLabels,
-        )
-          ? existing.labels
-          : {
-              $type: 'com.atproto.label.defs#selfLabels',
-              values: [],
-            }
+    updateProfile.mutate(
+      {
+        profile,
+        updates: existing => {
+          const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> =
+            bsky.validate(
+              existing.labels,
+              ComAtprotoLabelDefs.validateSelfLabels,
+            )
+              ? existing.labels
+              : {
+                  $type: 'com.atproto.label.defs#selfLabels',
+                  values: [],
+                }
 
-        const hasLabel = labels.values.some(l => l.val === 'bot')
-        if (hasLabel) {
-          wasAdded = false
-          labels.values = labels.values.filter(l => l.val !== 'bot')
-        } else {
-          wasAdded = true
-          labels.values.push({val: 'bot'})
-        }
+          const hasLabel = labels.values.some(l => l.val === 'bot')
+          if (hasLabel) {
+            wasAdded = false
+            labels.values = labels.values.filter(l => l.val !== 'bot')
+          } else {
+            wasAdded = true
+            labels.values.push({val: 'bot'})
+          }
 
-        if (labels.values.length === 0) {
-          delete existing.labels
-        } else {
-          existing.labels = labels
-        }
+          if (labels.values.length === 0) {
+            delete existing.labels
+          } else {
+            existing.labels = labels
+          }
 
-        return existing
+          return existing
+        },
+        checkCommitted: res => {
+          const exists = !!res.data.labels?.some(l => l.val === 'bot')
+          return exists === wasAdded
+        },
       },
-      checkCommitted: res => {
-        const exists = !!res.data.labels?.some(l => l.val === 'bot')
-        return exists === wasAdded
+      {
+        onSuccess() {
+          queryClient.invalidateQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
+          queryClient.invalidateQueries({queryKey: [postThreadQueryKeyRoot]})
+        },
       },
-    })
+    )
   }, [updateProfile, profile])
 
   return (
