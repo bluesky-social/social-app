@@ -9,6 +9,7 @@ import {useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation'
 import {
   codeToLanguageName,
+  getPostLanguageTags,
   isPostInLanguage,
   languageName,
 } from '#/locale/helpers'
@@ -38,6 +39,7 @@ export function TranslatedPost({
   const langPrefs = useLanguagePrefs()
   const {clearTranslation, translate, translationState} = useTranslate({
     key: post.uri,
+    postLangCodes: getPostLanguageTags(post),
   })
 
   const needsTranslation = useMemo(() => {

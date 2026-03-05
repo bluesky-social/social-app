@@ -1,3 +1,4 @@
+import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
 import {code3ToCode2Strict} from '#/locale/helpers'
@@ -10,4 +11,16 @@ export function guessLanguage(text: string): string | null {
     return code3ToCode2Strict(results[0][0]) ?? null
   }
   return null
+}
+
+export function isPostLanguageAccurate({
+  sourceLanguage,
+  postLanguages,
+}: {
+  sourceLanguage: string | null
+  postLanguages?: string[]
+}) {
+  return sourceLanguage && Array.isArray(postLanguages)
+    ? bcp47Match.basicFilter(sourceLanguage, postLanguages).length > 0
+    : undefined
 }

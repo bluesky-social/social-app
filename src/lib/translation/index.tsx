@@ -12,7 +12,7 @@ import {useAnalytics} from '#/analytics'
 import {HAS_ON_DEVICE_TRANSLATION} from '#/env'
 import {Context} from './context'
 import {type TranslationFunctionParams, type TranslationState} from './types'
-import {guessLanguage} from './utils'
+import {guessLanguage, isPostLanguageAccurate} from './utils'
 
 export * from './types'
 export * from './utils'
@@ -100,9 +100,11 @@ async function attemptTranslation(
 export function useTranslate({
   key,
   forceGoogleTranslate = false,
+  postLangCodes,
 }: {
   key: string
   forceGoogleTranslate?: boolean
+  postLangCodes?: string[]
 }) {
   const context = useContext(Context)
   if (!context) {
@@ -120,9 +122,14 @@ export function useTranslate({
 
   const translate = useCallback(
     async (params: TranslationFunctionParams) => {
-      return context.translate({...params, key, forceGoogleTranslate})
+      return context.translate({
+        ...params,
+        key,
+        forceGoogleTranslate,
+        postLangCodes,
+      })
     },
-    [context, forceGoogleTranslate, key],
+    [context, forceGoogleTranslate, key, postLangCodes],
   )
 
   const clearTranslation = useCallback(
@@ -205,12 +212,14 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       text,
       targetLangCode,
       sourceLangCode,
+      postLangCodes,
       ...options
     }: {
       key: string
       text: string
       targetLangCode: string
       sourceLangCode?: string
+      postLangCodes?: string[]
       forceGoogleTranslate?: boolean
     }) => {
       if (options?.forceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
@@ -219,6 +228,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           os: Platform.OS,
           sourceLanguage: sourceLangCode ?? null,
           targetLanguage: targetLangCode,
+          postLanguages: postLangCodes,
         })
         await googleTranslate(text, targetLangCode, sourceLangCode)
         return
@@ -241,6 +251,11 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           os: Platform.OS,
           sourceLanguage: result.sourceLanguage,
           targetLanguage: result.targetLanguage,
+          postLanguages: postLangCodes,
+          isPostLanguageAccurate: isPostLanguageAccurate({
+            sourceLanguage: result.sourceLanguage,
+            postLanguages: postLangCodes,
+          }),
         })
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         setTranslationState(prev => ({
@@ -250,17 +265,24 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
             translatedText: result.translatedText,
             sourceLanguage: result.sourceLanguage,
             targetLanguage: result.targetLanguage,
+            postLanguages: postLangCodes,
           },
         }))
       } catch (e) {
-        logger.error('Failed to translate post on device', {safeMessage: e})
+        const sourceLanguage = sourceLangCode ?? guessLanguage(text)
+        logger.error('Failed to translate text on device', {safeMessage: e})
         // On-device translation failed (language pack missing or user
-        // dismissed the download prompt). Fall back to Google Translate.
+        // dismissed the download prompt).
         ax.metric('translate:result', {
           method: 'fallback-alert',
           os: Platform.OS,
-          sourceLanguage: sourceLangCode ?? null,
+          sourceLanguage,
           targetLanguage: targetLangCode,
+          postLanguages: postLangCodes,
+          isPostLanguageAccurate: isPostLanguageAccurate({
+            sourceLanguage,
+            postLanguages: postLangCodes,
+          }),
         })
         let errorMessage = l`Device failed to translate :(`
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

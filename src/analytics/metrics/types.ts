@@ -712,6 +712,11 @@ export type Events = {
     os: Platform['OS']
     sourceLanguage: string | null
     targetLanguage: string
+
+    /* Only relevant to posts */
+    postLanguages?: string[]
+    /* Only relevant to posts */
+    isPostLanguageAccurate?: boolean
   }
   'translate:override': {
     os: Platform['OS']
