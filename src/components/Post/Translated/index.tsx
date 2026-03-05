@@ -5,9 +5,13 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
-import {guessLanguage, useTranslate} from '#/lib/translation'
+import {useTranslate} from '#/lib/translation'
 import {type TranslationFunction} from '#/lib/translation'
-import {codeToLanguageName, languageName} from '#/locale/helpers'
+import {
+  codeToLanguageName,
+  isPostInLanguage,
+  languageName,
+} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, native, useTheme, web} from '#/alf'
@@ -36,15 +40,10 @@ export function TranslatedPost({
     key: post.uri,
   })
 
-  const {needsTranslation, postLanguage} = useMemo(() => {
-    if (hideTranslateLink) return {needsTranslation: false, postLanguage: null}
-    const postLanguage = guessLanguage(postText)
-    if (!postLanguage) return {needsTranslation: false, postLanguage: null}
-    return {
-      needsTranslation: postLanguage !== langPrefs.primaryLanguage,
-      postLanguage,
-    }
-  }, [hideTranslateLink, postText, langPrefs.primaryLanguage])
+  const needsTranslation = useMemo(() => {
+    if (hideTranslateLink) return false
+    return !isPostInLanguage(post, [langPrefs.primaryLanguage])
+  }, [hideTranslateLink, post, langPrefs.primaryLanguage])
 
   switch (translationState.status) {
     case 'loading':
@@ -56,7 +55,7 @@ export function TranslatedPost({
           translate={translate}
           postText={postText}
           sourceLanguage={
-            translationState.sourceLanguage ?? postLanguage ?? null // Fallback primarily for iOS
+            translationState.sourceLanguage ?? null // Fallback primarily for iOS
           }
           translatedText={translationState.translatedText}
         />
