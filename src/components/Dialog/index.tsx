@@ -1,4 +1,4 @@
-import React, {useImperativeHandle} from 'react'
+import React, {useImperativeHandle, useMemo, useRef, useState} from 'react'
 import {
   type LayoutChangeEvent,
   Modal,
@@ -22,9 +22,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
-import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
 import {android, atoms as a, ios, platform, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
@@ -34,6 +32,7 @@ import {
   type DialogInnerProps,
   type DialogOuterProps,
 } from '#/components/Dialog/types'
+import {useDialogCallbackQueue} from '#/components/Dialog/utils'
 import {createInput} from '#/components/forms/TextField'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
@@ -64,50 +63,29 @@ function OuterAlert({
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
-  const [isOpen, setIsOpen] = React.useState(false)
-  const closeCallbacks = React.useRef<(() => void)[]>([])
-  const {setDialogIsOpen} = useDialogStateControlContext()
-
-  const callQueuedCallbacks = React.useCallback(() => {
-    for (const cb of closeCallbacks.current) {
-      try {
-        cb()
-      } catch (e: any) {
-        logger.error(e || 'Error running close callback')
-      }
-    }
-    closeCallbacks.current = []
-  }, [])
-
-  const open = React.useCallback<DialogControlProps['open']>(() => {
-    callQueuedCallbacks()
-    setDialogIsOpen(control.id, true)
-    setIsOpen(true)
-  }, [setDialogIsOpen, control.id, callQueuedCallbacks])
-
-  const close = React.useCallback<DialogControlProps['close']>(cb => {
-    if (typeof cb === 'function') {
-      closeCallbacks.current.push(cb)
-    }
-    setIsOpen(false)
-  }, [])
-
-  const onDismiss = React.useCallback(() => {
-    setDialogIsOpen(control.id, false)
-    callQueuedCallbacks()
-    onClose?.()
-  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
-
-  useImperativeHandle(
-    control.ref,
-    () => ({
-      open,
-      close,
-    }),
-    [open, close],
+  const [isOpen, setIsOpen] = useState(false)
+  const {enqueueCallback, handleOpen, handleClose} = useDialogCallbackQueue(
+    control,
+    onClose,
   )
 
-  const context = React.useMemo(
+  const open: DialogControlProps['open'] = () => {
+    handleOpen()
+    setIsOpen(true)
+  }
+
+  const close: DialogControlProps['close'] = cb => {
+    enqueueCallback(cb)
+    setIsOpen(false)
+  }
+
+  const onDismiss = () => {
+    handleClose()
+  }
+
+  useImperativeHandle(control.ref, () => ({open, close}), [open, close])
+
+  const context = useMemo(
     () => ({
       close,
       isNativeDialog: true,
@@ -164,56 +142,33 @@ function OuterSheet({
 }: React.PropsWithChildren<DialogOuterProps>) {
   const themeName = useThemeName()
   const t = useTheme(themeName)
-  const ref = React.useRef<BottomSheetNativeComponent>(null)
-  const closeCallbacks = React.useRef<(() => void)[]>([])
-  const {setDialogIsOpen, setFullyExpandedCount} =
-    useDialogStateControlContext()
+  const ref = useRef<BottomSheetNativeComponent>(null)
+  const {enqueueCallback, handleOpen, handleClose, setFullyExpandedCount} =
+    useDialogCallbackQueue(control, onClose)
 
-  const prevSnapPoint = React.useRef<BottomSheetSnapPoint>(
+  const prevSnapPoint = useRef<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Hidden,
   )
 
-  const [disableDrag, setDisableDrag] = React.useState(false)
-  const [snapPoint, setSnapPoint] = React.useState<BottomSheetSnapPoint>(
+  const [disableDrag, setDisableDrag] = useState(false)
+  const [snapPoint, setSnapPoint] = useState<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Partial,
   )
 
-  const callQueuedCallbacks = React.useCallback(() => {
-    for (const cb of closeCallbacks.current) {
-      try {
-        cb()
-      } catch (e: any) {
-        logger.error(e || 'Error running close callback')
-      }
-    }
-
-    closeCallbacks.current = []
-  }, [])
-
-  const open = React.useCallback<DialogControlProps['open']>(() => {
-    // Run any leftover callbacks that might have been queued up before calling `.open()`
-    callQueuedCallbacks()
-    setDialogIsOpen(control.id, true)
+  const open: DialogControlProps['open'] = () => {
+    handleOpen()
     ref.current?.present()
-  }, [setDialogIsOpen, control.id, callQueuedCallbacks])
+  }
 
-  // This is the function that we call when we want to dismiss the dialog.
-  const close = React.useCallback<DialogControlProps['close']>(cb => {
-    if (typeof cb === 'function') {
-      closeCallbacks.current.push(cb)
-    }
+  const close: DialogControlProps['close'] = cb => {
+    enqueueCallback(cb)
     ref.current?.dismiss()
-  }, [])
+  }
 
-  // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
-  // happen before we run this. It is passed to the `BottomSheet` component.
-  const onCloseAnimationComplete = React.useCallback(() => {
-    // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
-    // tells us that we need to toggle the accessibility overlay setting
-    setDialogIsOpen(control.id, false)
-    callQueuedCallbacks()
-    onClose?.()
-  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
+  // Runs after the bottom sheet close animation completes.
+  const onCloseAnimationComplete = () => {
+    handleClose()
+  }
 
   const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
     const {snapPoint} = e.nativeEvent
@@ -244,16 +199,9 @@ function OuterSheet({
     }
   }
 
-  useImperativeHandle(
-    control.ref,
-    () => ({
-      open,
-      close,
-    }),
-    [open, close],
-  )
+  useImperativeHandle(control.ref, () => ({open, close}), [open, close])
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       close,
       isNativeDialog: true,
