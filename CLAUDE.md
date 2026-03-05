@@ -118,7 +118,7 @@ eventually.
 
 ### File and Directory Naming Conventions
 
-Typicaly JS style for variables, functions, etc. We use ProudCamelCase for
+Typically JS style for variables, functions, etc. We use ProudCamelCase for
 components, and camelCase directories and files.
 
 When organizing new code, consider if it fits into a single file, or if it
