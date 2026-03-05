@@ -1,8 +1,9 @@
 import {useCallback, useEffect, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'

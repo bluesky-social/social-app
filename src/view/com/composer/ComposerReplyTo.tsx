@@ -7,7 +7,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -132,7 +132,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
           )}
         </View>
         {showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
-          <QuoteEmbed embed={parsedQuoteEmbed} />
+          <QuoteEmbed embed={parsedQuoteEmbed} linkDisabled />
         )}
       </View>
     </Pressable>

@@ -1,6 +1,6 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'

@@ -1,13 +1,15 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image as ExpoImage} from 'expo-image'
+import {ImageManipulator, SaveFormat} from 'expo-image-manipulator'
 import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
   UIImagePickerPreferredAssetRepresentationMode,
 } from 'expo-image-picker'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
@@ -106,27 +108,33 @@ export function StepProfile() {
         }),
       )
 
-      return (response.assets ?? [])
-        .slice(0, 1)
-        .filter(asset => {
-          if (
-            !asset.mimeType?.startsWith('image/') ||
-            (!asset.mimeType?.endsWith('jpeg') &&
-              !asset.mimeType?.endsWith('jpg') &&
-              !asset.mimeType?.endsWith('png'))
-          ) {
-            setError(_(msg`Only .jpg and .png files are supported`))
-            return false
-          }
-          return true
+      const asset = (response.assets ?? [])[0]
+      if (!asset) return []
+
+      try {
+        const context = ImageManipulator.manipulate(asset.uri)
+        const rendered = await context.renderAsync()
+        const result = await rendered.saveAsync({
+          format: SaveFormat.JPEG,
+          compress: 1.0,
         })
-        .map(image => ({
-          mime: 'image/jpeg',
-          height: image.height,
-          width: image.width,
-          path: image.uri,
-          size: getDataUriSize(image.uri),
-        }))
+        return [
+          {
+            mime: 'image/jpeg',
+            height: rendered.height,
+            width: rendered.width,
+            path: result.uri,
+            size: getDataUriSize(result.uri),
+          },
+        ]
+      } catch {
+        setError(
+          _(
+            msg`This image could not be used. Try a different format like .jpg or .png.`,
+          ),
+        )
+        return []
+      }
     },
     [_, setError, sheetWrapper],
   )

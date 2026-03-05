@@ -1,9 +1,11 @@
 import React, {useCallback} from 'react'
 import {Keyboard, View} from 'react-native'
 import {type ChatBskyConvoDefs, type ModerationCause} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {type Shadow} from '#/state/cache/types'
@@ -12,7 +14,10 @@ import {
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
-import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import {
+  unstableCacheProfileView,
+  useProfileBlockMutationQueue,
+} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
 import {type ViewStyleProp} from '#/alf'
 import {atoms as a} from '#/alf'
@@ -23,7 +28,7 @@ import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {
@@ -62,6 +67,7 @@ let ConvoMenu = ({
   style?: ViewStyleProp['style']
 }): React.ReactNode => {
   const {_} = useLingui()
+  const queryClient = useQueryClient()
 
   const leaveConvoControl = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
@@ -124,6 +130,12 @@ let ConvoMenu = ({
             }}
             control={reportControl}
             onAfterSubmit={() => {
+              const sender = convo.members.find(
+                member => member.did === latestReportableMessage.sender.did,
+              )
+              if (sender) {
+                unstableCacheProfileView(queryClient, sender)
+              }
               blockOrDeleteControl.open()
             }}
           />

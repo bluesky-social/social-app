@@ -9,4 +9,6 @@ export enum Features {
   ImportContactsOnboardingDisable = 'import_contacts:onboarding:disable',
   ImportContactsSettingsDisable = 'import_contacts:settings:disable',
   LiveNowBetaDisable = 'live_now_beta:disable',
+
+  AATest = 'aa-test',
 }

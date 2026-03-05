@@ -1,6 +1,7 @@
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -59,7 +60,7 @@ export function AgeRestrictedScreen({
           <View style={[a.gap_sm, a.pb_lg]}>
             <Text style={[a.text_xl, a.leading_snug, a.font_bold]}>
               <Trans>
-                You must complete age assurance in order to access this screen.
+                We're sorry, you cannot access this screen at this time.
               </Trans>
             </Text>
 

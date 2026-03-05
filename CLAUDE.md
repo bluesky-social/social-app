@@ -24,6 +24,7 @@ yarn android            # Run on Android
 yarn ios                # Run on iOS
 
 # Testing & Quality
+# IMPORTANT: Always use these yarn scripts, never call the underlying tools directly
 yarn test               # Run Jest tests
 yarn lint               # Run ESLint
 yarn typecheck          # Run TypeScript type checking
@@ -270,7 +271,8 @@ import * as TextField from '#/components/forms/TextField'
 All user-facing strings must be wrapped for translation using Lingui.
 
 ```tsx
-import {msg, Trans, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import {useLingui} from '@lingui/react'
 
 function MyComponent() {

@@ -2,27 +2,16 @@ import {createContext, useContext, useMemo} from 'react'
 
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useServiceConfigQuery} from '#/state/queries/service-config'
-import {useSession} from '#/state/session'
-import {useAnalytics} from '#/analytics'
-import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
 type TrendingContext = {
   enabled: boolean
 }
 
-type LiveNowContext = {
-  did: string
-  domains: string[]
-}[]
-
 const TrendingContext = createContext<TrendingContext>({
   enabled: false,
 })
 TrendingContext.displayName = 'TrendingContext'
-
-const LiveNowContext = createContext<LiveNowContext>([])
-LiveNowContext.displayName = 'LiveNowContext'
 
 const CheckEmailConfirmedContext = createContext<boolean | null>(null)
 
@@ -60,74 +49,21 @@ export function Provider({children}: {children: React.ReactNode}) {
     return {enabled}
   }, [isInitialLoad, config, langPrefs.contentLanguages])
 
-  const liveNow = useMemo<LiveNowContext>(() => config?.liveNow ?? [], [config])
-
   // probably true, so default to true when loading
   // if the call fails, the query will set it to false for us
   const checkEmailConfirmed = config?.checkEmailConfirmed ?? true
 
   return (
     <TrendingContext.Provider value={trending}>
-      <LiveNowContext.Provider value={liveNow}>
-        <CheckEmailConfirmedContext.Provider value={checkEmailConfirmed}>
-          {children}
-        </CheckEmailConfirmedContext.Provider>
-      </LiveNowContext.Provider>
+      <CheckEmailConfirmedContext.Provider value={checkEmailConfirmed}>
+        {children}
+      </CheckEmailConfirmedContext.Provider>
     </TrendingContext.Provider>
   )
 }
 
 export function useTrendingConfig() {
   return useContext(TrendingContext)
-}
-
-const DEFAULT_LIVE_ALLOWED_DOMAINS = [
-  'twitch.tv',
-  'www.twitch.tv',
-  'stream.place',
-  'bluecast.app',
-  'www.bluecast.app',
-]
-export type LiveNowConfig = {
-  currentAccountAllowedHosts: Set<string>
-  defaultAllowedHosts: Set<string>
-  allowedHostsExceptionsByDid: Map<string, Set<string>>
-}
-export function useLiveNowConfig(): LiveNowConfig {
-  const ctx = useContext(LiveNowContext)
-  const canGoLive = useCanGoLive()
-  const {currentAccount} = useSession()
-  return useMemo(() => {
-    const defaultAllowedHosts = new Set(DEFAULT_LIVE_ALLOWED_DOMAINS)
-    const allowedHostsExceptionsByDid = new Map<string, Set<string>>()
-    for (const live of ctx) {
-      allowedHostsExceptionsByDid.set(
-        live.did,
-        new Set(DEFAULT_LIVE_ALLOWED_DOMAINS.concat(live.domains)),
-      )
-    }
-    if (!currentAccount?.did || !canGoLive)
-      return {
-        currentAccountAllowedHosts: new Set(),
-        defaultAllowedHosts,
-        allowedHostsExceptionsByDid,
-      }
-    const vip = ctx.find(live => live.did === currentAccount.did)
-    return {
-      currentAccountAllowedHosts: new Set(
-        DEFAULT_LIVE_ALLOWED_DOMAINS.concat(vip ? vip.domains : []),
-      ),
-      defaultAllowedHosts,
-      allowedHostsExceptionsByDid,
-    }
-  }, [ctx, currentAccount, canGoLive])
-}
-
-export function useCanGoLive() {
-  const ax = useAnalytics()
-  const {hasSession} = useSession()
-  if (!hasSession) return false
-  return IS_DEV ? true : !ax.features.enabled(ax.features.LiveNowBetaDisable)
 }
 
 export function useCheckEmailConfirmed() {

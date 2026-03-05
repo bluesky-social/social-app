@@ -5,6 +5,7 @@ import {
   type NativeSyntheticEvent,
   Platform,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -16,10 +17,10 @@ import {
   type BottomSheetState,
   type BottomSheetViewProps,
 } from './BottomSheet.types'
-import {BottomSheetPortalProvider} from './BottomSheetPortal'
-import {Context as PortalContext} from './BottomSheetPortal'
-
-const screenHeight = Dimensions.get('screen').height
+import {
+  BottomSheetPortalProvider,
+  Context as PortalContext,
+} from './BottomSheetPortal'
 
 const NativeView: React.ComponentType<
   BottomSheetViewProps & {
@@ -92,6 +93,7 @@ export class BottomSheetNativeComponent extends React.Component<
 
     let extraStyles
     if (IS_IOS15 && this.state.viewHeight) {
+      const screenHeight = Dimensions.get('screen').height
       const {viewHeight} = this.state
       const cornerRadius = this.props.cornerRadius ?? 0
       if (viewHeight < screenHeight / 2) {
@@ -152,6 +154,7 @@ function BottomSheetNativeComponentInner({
 }) {
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
+  const {height: screenHeight} = useWindowDimensions()
 
   const sheetHeight = IS_IOS ? screenHeight - insets.top : screenHeight
 

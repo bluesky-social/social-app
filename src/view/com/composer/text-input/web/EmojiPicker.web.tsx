@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, useWindowDimensions, View} from 'react-native'
 import Picker from '@emoji-mart/react'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {DismissableLayer, FocusScope} from 'radix-ui/internal'
 
@@ -158,7 +158,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
               onDismiss={close}>
               <Picker
                 data={async () => {
-                  return (await import('./EmojiPickerData.json')).default
+                  return (await import('@emoji-mart/data')).default
                 }}
                 onEmojiSelect={onInsert}
                 autoFocus={true}

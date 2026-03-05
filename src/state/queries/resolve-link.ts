@@ -6,10 +6,10 @@ import {STALE} from '#/state/queries/index'
 import {useAgent} from '#/state/session'
 import {type Gif} from './tenor'
 
-const RQKEY_LINK_ROOT = 'resolve-link'
+export const RQKEY_LINK_ROOT = 'resolve-link'
 export const RQKEY_LINK = (url: string) => [RQKEY_LINK_ROOT, url]
 
-const RQKEY_GIF_ROOT = 'resolve-gif'
+export const RQKEY_GIF_ROOT = 'resolve-gif'
 export const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url]
 
 export function useResolveLinkQuery(url: string) {

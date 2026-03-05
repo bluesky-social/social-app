@@ -1,8 +1,9 @@
 import React from 'react'
 import {Pressable, type ScrollView, View} from 'react-native'
 import {type AppBskyLabelerDefs, BSKY_LABELER_DID} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {getLabelingServiceTitle} from '#/lib/moderation'
@@ -168,8 +169,7 @@ function Inner(props: ReportDialogProps) {
         if (supportedReasonTypes === undefined) return true
         return (
           // supports new reason type
-          supportedReasonTypes.includes(state.selectedOption.reason) ||
-          // supports old reason type (backwards compat)
+          supportedReasonTypes.includes(state.selectedOption.reason) || // supports old reason type (backwards compat)
           supportedReasonTypes.includes(
             NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
           )
@@ -575,7 +575,6 @@ function Inner(props: ReportDialogProps) {
           )}
         </StepOuter>
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

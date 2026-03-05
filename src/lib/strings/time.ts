@@ -1,5 +1,5 @@
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 
 export function niceDate(
   i18n: I18n,

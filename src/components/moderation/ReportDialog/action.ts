@@ -3,7 +3,7 @@ import {
   type ChatBskyConvoDefs,
   type ComAtprotoModerationCreateReport,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
@@ -102,7 +102,7 @@ export function useSubmitReportMutation() {
       }
 
       if (__DEV__) {
-        logger.info('Submitting report', {
+        logger.info('Submitting report (dry run)', {
           labeler: {
             handle: labeler.creator.handle,
           },

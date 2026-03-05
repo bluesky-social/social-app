@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image as ExpoImage} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'

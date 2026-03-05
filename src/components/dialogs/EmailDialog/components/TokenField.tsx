@@ -1,5 +1,5 @@
 import {type TextInputProps, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import * as TextField from '#/components/forms/TextField'
@@ -32,8 +32,11 @@ export function TokenField({
       <TextField.Root>
         <TextField.Icon icon={Shield} />
         <TextField.Input
+          autoComplete="off"
+          autoCorrect={false}
           isInvalid={isInvalid}
           label={_(msg`Confirmation code`)}
+          maxLength={11}
           placeholder="XXXXX-XXXXX"
           value={value}
           onChangeText={handleOnChangeText}

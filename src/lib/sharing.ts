@@ -1,8 +1,7 @@
 import {Share} from 'react-native'
 // import * as Sharing from 'expo-sharing'
 import {setStringAsync} from 'expo-clipboard'
-// TODO: replace global i18n instance with one returned from useLingui -sfn
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 
 import * as Toast from '#/view/com/util/Toast'
 import {IS_ANDROID, IS_IOS} from '#/env'

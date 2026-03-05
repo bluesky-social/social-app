@@ -62,6 +62,8 @@ export const MAX_DESCRIPTION = 256
 
 export const MAX_GRAPHEME_LENGTH = 300
 
+export const MAX_DRAFT_GRAPHEME_LENGTH = 1000
+
 export const MAX_DM_GRAPHEME_LENGTH = 1000
 
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html

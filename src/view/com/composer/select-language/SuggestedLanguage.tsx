@@ -1,8 +1,9 @@
 import {useEffect, useState} from 'react'
 import {Text as RNText, View} from 'react-native'
 import {parseLanguage} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import lande from 'lande'
 
 import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
@@ -13,7 +14,8 @@ import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Glo
 import {Text} from '#/components/Typography'
 
 // fallbacks for safari
-const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
+const onIdle =
+  globalThis.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1))
 const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
 export function SuggestedLanguage({

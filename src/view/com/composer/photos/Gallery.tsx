@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
+  findNodeHandle,
   type ImageStyle,
   Keyboard,
   type LayoutChangeEvent,
@@ -10,8 +11,9 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
@@ -143,6 +145,14 @@ const GalleryItem = ({
 
   const altTextControl = Dialog.useDialogControl()
   const editControl = Dialog.useDialogControl()
+  const [altBtnViewTag, setAltBtnViewTag] = useState<number>()
+
+  const altBtnRef = (node: View | null) => {
+    if (node) {
+      const tag = findNodeHandle(node)
+      if (tag != null) setAltBtnViewTag(tag)
+    }
+  }
 
   const onImageEdit = () => {
     if (IS_NATIVE) {
@@ -161,6 +171,7 @@ const GalleryItem = ({
 
   return (
     <View
+      ref={altBtnRef}
       style={imageStyle as ViewStyle}
       // Fixes ALT and icons appearing with half opacity when the post is inactive
       renderToHardwareTextureAndroid>
@@ -239,6 +250,7 @@ const GalleryItem = ({
         control={altTextControl}
         image={image}
         onChange={onChange}
+        sourceViewTag={altBtnViewTag}
       />
 
       <EditImageDialog

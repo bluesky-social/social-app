@@ -1,6 +1,7 @@
 import {Keyboard, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {
   ADULT_CONTENT_LABELS,
@@ -36,9 +37,7 @@ export function LabelsBtn({
     const filtered = labels.filter(
       l => !ADULT_CONTENT_LABELS.includes(l as AdultSelfLabel),
     )
-    onChange([
-      ...new Set([...filtered, newLabel].filter(Boolean) as SelfLabel[]),
-    ])
+    onChange([...new Set([...filtered, newLabel].filter(Boolean))])
   }
 
   const updateOtherLabels = (newLabels: OtherSelfLabel[]) => {
@@ -46,9 +45,7 @@ export function LabelsBtn({
     const filtered = labels.filter(
       l => !OTHER_SELF_LABELS.includes(l as OtherSelfLabel),
     )
-    onChange([
-      ...new Set([...filtered, newLabel].filter(Boolean) as SelfLabel[]),
-    ])
+    onChange([...new Set([...filtered, newLabel].filter(Boolean))])
   }
 
   return (

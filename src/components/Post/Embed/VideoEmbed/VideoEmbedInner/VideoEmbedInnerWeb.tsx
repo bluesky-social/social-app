@@ -1,7 +1,7 @@
 import {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
 
@@ -72,19 +72,7 @@ export function VideoEmbedInnerWeb({
             loop={loop}
           />
           {embed.alt && (
-            <figcaption
-              id={figId}
-              style={{
-                position: 'absolute',
-                width: 1,
-                height: 1,
-                padding: 0,
-                margin: -1,
-                overflow: 'hidden',
-                clip: 'rect(0, 0, 0, 0)',
-                whiteSpace: 'nowrap',
-                borderWidth: 0,
-              }}>
+            <figcaption id={figId} style={a.sr_only}>
               {embed.alt}
             </figcaption>
           )}

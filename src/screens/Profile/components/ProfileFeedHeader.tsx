@@ -1,8 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {makeCustomFeedLink, makeProfileLink} from '#/lib/routes/links'
@@ -29,7 +30,7 @@ import {Divider} from '#/components/Divider'
 import {useRichText} from '#/components/hooks/useRichText'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -259,7 +260,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                             size="xs"
                             fill={
                               likeUri
-                                ? t.palette.like
+                                ? t.palette.pink
                                 : t.atoms.text_contrast_low.color
                             }
                           />
@@ -503,14 +504,13 @@ function DialogInner({
               disabled={isLikePending || isUnlikePending}
               label={_(msg`Like this feed`)}
               size="small"
-              variant="solid"
               color="secondary"
               onPress={onToggleLiked}
               style={[a.flex_1]}>
               {isLiked ? (
-                <HeartFilled size="sm" fill={t.palette.like} />
+                <HeartFilled size="sm" fill={t.palette.pink} />
               ) : (
-                <ButtonIcon icon={Heart} position="left" />
+                <ButtonIcon icon={Heart} />
               )}
 
               <ButtonText>
@@ -521,7 +521,6 @@ function DialogInner({
               disabled={isFeedStateChangePending}
               label={isPinned ? _(msg`Unpin feed`) : _(msg`Pin feed`)}
               size="small"
-              variant="solid"
               color={isPinned ? 'secondary' : 'primary'}
               onPress={onTogglePinned}
               style={[a.flex_1]}>

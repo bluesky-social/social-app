@@ -1,5 +1,6 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {codeToLanguageName} from '#/locale/helpers'
@@ -11,11 +12,11 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {LanguageSelectDialog} from '#/components/dialogs/LanguageSelectDialog'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
-import {PostLanguageSelectDialog} from './PostLanguageSelectDialog'
 
 export function PostLanguageSelect({
   currentLanguages: currentLanguagesProp,
@@ -36,6 +37,15 @@ export function PostLanguageSelect({
   const currentLanguages =
     currentLanguagesProp ?? toPostLanguages(langPrefs.postLanguage)
 
+  const onSelectLanguages = (languages: string[]) => {
+    let langsString = languages.join(',')
+    if (!langsString) {
+      langsString = langPrefs.primaryLanguage
+    }
+    setLangPrefs.setPostLanguage(langsString)
+    onSelectLanguage?.(langsString)
+  }
+
   if (
     dedupedHistory.length === 1 &&
     dedupedHistory[0] === langPrefs.postLanguage
@@ -43,9 +53,15 @@ export function PostLanguageSelect({
     return (
       <>
         <LanguageBtn onPress={languageDialogControl.open} />
-        <PostLanguageSelectDialog
+        <LanguageSelectDialog
+          titleText={<Trans>Choose post languages</Trans>}
+          subtitleText={
+            <Trans>Select up to 3 languages used in this post</Trans>
+          }
           control={languageDialogControl}
           currentLanguages={currentLanguages}
+          onSelectLanguages={onSelectLanguages}
+          maxLanguages={3}
         />
       </>
     )
@@ -94,10 +110,13 @@ export function PostLanguageSelect({
         </Menu.Outer>
       </Menu.Root>
 
-      <PostLanguageSelectDialog
+      <LanguageSelectDialog
+        titleText={<Trans>Choose post languages</Trans>}
+        subtitleText={<Trans>Select up to 3 languages used in this post</Trans>}
         control={languageDialogControl}
         currentLanguages={currentLanguages}
-        onSelectLanguage={onSelectLanguage}
+        onSelectLanguages={onSelectLanguages}
+        maxLanguages={3}
       />
     </>
   )

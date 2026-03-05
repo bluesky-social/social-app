@@ -24,7 +24,7 @@ export const embedPlayerSources = [
   'giphy',
   'tenor',
   'flickr',
-  'kakaoTv',
+  'bandcamp',
   'naverTv',
   'chzzk',
   'soop',
@@ -48,7 +48,8 @@ export type EmbedPlayerType =
   | 'giphy_gif'
   | 'tenor_gif'
   | 'flickr_album'
-  | 'kakaoTv_video'
+  | 'bandcamp_album'
+  | 'bandcamp_track'
   | 'naverTv_video'
   | 'naverTv_clip'
   | 'chzzk_video'
@@ -66,7 +67,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
-  kakaoTv: 'Kakao TV',
+  bandcamp: 'Bandcamp',
   naverTv: 'Naver TV',
   chzzk: 'CHZZK',
   soop: 'SOOP',
@@ -474,17 +475,29 @@ export function parseEmbedPlayerFromUrl(
     }
   }
 
-  if (urlp.hostname === 'tv.kakao.com') {
-    const [__, channel, channelId, type, videoId] = urlp.pathname.split('/')
-    const isLive = type === 'livelink'
-    const isVideo = type === 'cliplink'
+  const bandcampRegex = /^[a-z\d][a-z\d-]{2,}[a-z\d]\.bandcamp\.com$/i
 
-    if (channel === 'channel' && channelId && videoId && (isLive || isVideo)) {
-      return {
-        type: 'kakaoTv_video',
-        source: 'kakaoTv',
-        playerUri: `https://tv.kakao.com/embed/player/${type}/${videoId}?autoplay=1`,
-      }
+  if (bandcampRegex.test(urlp.hostname)) {
+    const pathComponents = urlp.pathname.split('/')
+    switch (pathComponents[1]) {
+      case 'album':
+        return {
+          type: 'bandcamp_album',
+          source: 'bandcamp',
+          playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
+            urlp.href,
+          )}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
+        }
+      case 'track':
+        return {
+          type: 'bandcamp_track',
+          source: 'bandcamp',
+          playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
+            urlp.href,
+          )}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
+        }
+      default:
+        return undefined
     }
   }
 
@@ -582,7 +595,6 @@ export function getPlayerAspect({
     case 'youtube_video':
     case 'twitch_video':
     case 'vimeo_video':
-    case 'kakaoTv_video':
     case 'naverTv_video':
     case 'chzzk_video':
     case 'soop_video':
@@ -610,6 +622,9 @@ export function getPlayerAspect({
       return {height: 165}
     case 'apple_music_song':
       return {height: 150}
+    case 'bandcamp_album':
+    case 'bandcamp_track':
+      return {aspectRatio: 1}
     default:
       return {aspectRatio: 16 / 9}
   }

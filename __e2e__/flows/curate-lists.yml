@@ -39,7 +39,6 @@ appId: xyz.blueskyweb.app
     id: "editListNameInput"
 - eraseText
 - inputText: "Bad Ppl"
-- hideKeyboard
 - tapOn:
     id: "editListDescriptionInput"
 - eraseText

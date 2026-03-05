@@ -1,7 +1,8 @@
 import {useState} from 'react'
-import {TouchableOpacity, View} from 'react-native'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
@@ -68,6 +69,7 @@ export function GifAltTextDialogLoaded({
   const {_} = useLingui()
   const t = useTheme()
   const [altTextDraft, setAltTextDraft] = useState(altText || vendorAltText)
+  const {height: minHeight} = useWindowDimensions()
   return (
     <>
       <TouchableOpacity
@@ -107,7 +109,8 @@ export function GifAltTextDialogLoaded({
         control={control}
         onClose={() => {
           onSubmit(altTextDraft)
-        }}>
+        }}
+        nativeOptions={{minHeight}}>
         <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}

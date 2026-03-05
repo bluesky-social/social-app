@@ -3,6 +3,7 @@ import {type LocationGeocodedAddress} from 'expo-location'
 import {IS_ANDROID} from '#/env'
 import {logger} from '#/geolocation/logger'
 import {type Geolocation} from '#/geolocation/types'
+import {device} from '#/storage'
 
 /**
  * Maps full US region names to their short codes.
@@ -124,4 +125,27 @@ export function mergeGeolocations(
     merged: geolocation,
   })
   return geolocation
+}
+
+/**
+ * Gets the IP-based geolocation as a string in the format of
+ * "countryCode-regionCode", or just "countryCode" if regionCode is not
+ * available.
+ *
+ * IMPORTANT: this method should only return IP-based data, not the user's GPS
+ * based data. IP-based data we can already infer from requests, but for
+ * consistency between frontend and backend, we sometimes want to share the
+ * value we have on the frontend with the backend.
+ */
+export function getIPGeolocationString() {
+  const geo = device.get(['geolocationServiceResponse'])
+  if (!geo) return
+  const {countryCode, regionCode} = geo
+  if (countryCode) {
+    if (regionCode) {
+      return `${countryCode}-${regionCode}`
+    } else {
+      return countryCode
+    }
+  }
 }
