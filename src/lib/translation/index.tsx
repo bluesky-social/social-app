@@ -210,10 +210,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       sourceLangCode?: string
       forceGoogleTranslate?: boolean
     }) => {
-      if (
-        options?.forceGoogleTranslate ||
-        (Platform.OS === 'ios' && !HAS_ON_DEVICE_TRANSLATION) // Version check for iOS >= 18
-      ) {
+      if (options?.forceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
         ax.metric('translate:result', {
           method: 'google-translate',
           os: Platform.OS,
