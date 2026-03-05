@@ -192,7 +192,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   }, [])
 
   const clearTranslation = useCallback((key: string) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    if (Platform.OS !== 'android') {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    }
     setTranslationState(prev => {
       delete prev[key]
       return {...prev}
@@ -224,8 +226,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         return
       }
 
-      // Translate after the next state change.
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      if (Platform.OS !== 'android') {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      }
       setTranslationState(prev => ({
         ...prev,
         [key]: {status: 'loading'},
@@ -242,7 +245,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           sourceLanguage: result.sourceLanguage,
           targetLanguage: result.targetLanguage,
         })
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        if (Platform.OS !== 'android') {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        }
         setTranslationState(prev => ({
           ...prev,
           [key]: {
@@ -263,7 +268,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           targetLanguage: targetLangCode,
         })
         let errorMessage = l`Device failed to translate :(`
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        if (Platform.OS !== 'android') {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        }
         setTranslationState(prev => ({
           ...prev,
           [key]: {status: 'error', message: errorMessage},
