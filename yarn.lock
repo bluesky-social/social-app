@@ -110,10 +110,10 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
-"@atproto/api@^0.19.1":
-  version "0.19.1"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.1.tgz#62c48595def4c968d94a96f83ed9ee369768de5d"
-  integrity sha512-GE94kx6PBsBAUcFne+cX3c77ZVr3/pvfeeG+GtZ1QFE8U9brrXoCoN6qwtOg6PfZk8UvpyCxLyWNfiC2GfCSJg==
+"@atproto/api@^0.19.3":
+  version "0.19.3"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.3.tgz#61de8d2e31abe9eb2b4c8f4ad124ed79d4a77e89"
+  integrity sha512-G8YpBpRouHdTAIagi/QQIUZOhGd1jfBQWkJy9QfxAzjjEpPvaVOSk4e1S85QzGLm/xbzVONzGkmdtiOSfP6wVg==
   dependencies:
     "@atproto/common-web" "^0.4.18"
     "@atproto/lexicon" "^0.6.2"
