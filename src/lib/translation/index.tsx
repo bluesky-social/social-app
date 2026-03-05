@@ -130,13 +130,16 @@ export function useTranslate({
     [context, key],
   )
 
-  return {
-    translationState: context.translationState[key] ?? {
-      status: 'idle',
-    },
-    translate,
-    clearTranslation,
-  }
+  return useMemo(
+    () => ({
+      translationState: context.translationState[key] ?? {
+        status: 'idle',
+      },
+      translate,
+      clearTranslation,
+    }),
+    [clearTranslation, context.translationState, key, translate],
+  )
 }
 
 export function Provider({children}: React.PropsWithChildren<unknown>) {
