@@ -82,35 +82,7 @@
     "@atproto/xrpc" "^0.7.6"
     "@atproto/xrpc-server" "^0.10.0"
 
-"@atproto/api@^0.18.20":
-  version "0.18.20"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.20.tgz#3fdbb7b7fae90bd59101970c2b56cc31e8cf417d"
-  integrity sha512-BZYZkh2VJIFCXEnc/vzKwAwWjAQQTgbNJ8FBxpBK+z+KYh99O0uPCsRYKoCQsRrnkgrhzdU9+g2G+7zanTIGbw==
-  dependencies:
-    "@atproto/common-web" "^0.4.15"
-    "@atproto/lexicon" "^0.6.1"
-    "@atproto/syntax" "^0.4.3"
-    "@atproto/xrpc" "^0.7.7"
-    await-lock "^2.2.2"
-    multiformats "^9.9.0"
-    tlds "^1.234.0"
-    zod "^3.23.8"
-
-"@atproto/api@^0.18.21":
-  version "0.18.21"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.18.21.tgz#19dbea422de22e7f5253f1c5475e3588c3a9d4a0"
-  integrity sha512-s35MIJerGT/pKe2xJtKKswqlIr/ola2r2iURBKBL0Mk1OKe6jP4YvTMh1N2d2PEANFzNNTbKoDaLfJPo2Uvc/w==
-  dependencies:
-    "@atproto/common-web" "^0.4.16"
-    "@atproto/lexicon" "^0.6.1"
-    "@atproto/syntax" "^0.4.3"
-    "@atproto/xrpc" "^0.7.7"
-    await-lock "^2.2.2"
-    multiformats "^9.9.0"
-    tlds "^1.234.0"
-    zod "^3.23.8"
-
-"@atproto/api@^0.19.3":
+"@atproto/api@0.19.3", "@atproto/api@^0.18.20", "@atproto/api@^0.18.21", "@atproto/api@^0.19.3":
   version "0.19.3"
   resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.3.tgz#61de8d2e31abe9eb2b4c8f4ad124ed79d4a77e89"
   integrity sha512-G8YpBpRouHdTAIagi/QQIUZOhGd1jfBQWkJy9QfxAzjjEpPvaVOSk4e1S85QzGLm/xbzVONzGkmdtiOSfP6wVg==
@@ -216,16 +188,6 @@
     "@atproto/lex-data" "0.0.9"
     "@atproto/lex-json" "0.0.9"
     "@atproto/syntax" "0.4.3"
-    zod "^3.23.8"
-
-"@atproto/common-web@^0.4.15":
-  version "0.4.15"
-  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.15.tgz#1fffedf62d69b8c96f7b360e11c4180446a2cc82"
-  integrity sha512-A4l9gyqUNez8CjZp/Trypz/D3WIQsNj8dN05WR6+RoBbvwc9JhWjKPrm+WoVYc/F16RPdXHLkE3BEJlGIyYIiA==
-  dependencies:
-    "@atproto/lex-data" "^0.0.10"
-    "@atproto/lex-json" "^0.0.10"
-    "@atproto/syntax" "^0.4.3"
     zod "^3.23.8"
 
 "@atproto/common-web@^0.4.16":
@@ -413,16 +375,6 @@
     uint8arrays "3.0.0"
     unicode-segmenter "^0.14.0"
 
-"@atproto/lex-data@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@atproto/lex-data/-/lex-data-0.0.10.tgz#091c012af817a869951ce0e61eb757bd6c29797a"
-  integrity sha512-FDbcy8VIUVzS9Mi1F8SMxbkL/jOUmRRpqbeM1xB4A0fMxeZJTxf6naAbFt4gYF3quu/+TPJGmio6/7cav05FqQ==
-  dependencies:
-    multiformats "^9.9.0"
-    tslib "^2.8.1"
-    uint8arrays "3.0.0"
-    unicode-segmenter "^0.14.0"
-
 "@atproto/lex-data@^0.0.11":
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/@atproto/lex-data/-/lex-data-0.0.11.tgz#de98894a80ff907f9cd6c3faa561d3a16e21dd8d"
@@ -458,14 +410,6 @@
   integrity sha512-Q2v1EVZcnd+ndyZj1r2UlGikA7q6It24CFPLbxokcf5Ba4RBupH8IkkQX7mqUDSRWPgQdmZYIdW9wUln+MKDqw==
   dependencies:
     "@atproto/lex-data" "0.0.9"
-    tslib "^2.8.1"
-
-"@atproto/lex-json@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@atproto/lex-json/-/lex-json-0.0.10.tgz#18de1c8cc3ba564e5412bce1f8e22c198c956e64"
-  integrity sha512-L6MyXU17C5ODMeob8myQ2F3xvgCTvJUtM0ew8qSApnN//iDasB/FDGgd7ty4UVNmx4NQ/rtvz8xV94YpG6kneQ==
-  dependencies:
-    "@atproto/lex-data" "^0.0.10"
     tslib "^2.8.1"
 
 "@atproto/lex-json@^0.0.11":
@@ -508,18 +452,7 @@
     "@atproto/syntax" "^0.4.3"
     tslib "^2.8.1"
 
-"@atproto/lexicon@^0.6.0", "@atproto/lexicon@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.6.1.tgz#cdde25248083b39cc903cb845f632abfd64ef51a"
-  integrity sha512-/vI1kVlY50Si+5MXpvOucelnYwb0UJ6Qto5mCp+7Q5C+Jtp+SoSykAPVvjVtTnQUH2vrKOFOwpb3C375vSKzXw==
-  dependencies:
-    "@atproto/common-web" "^0.4.13"
-    "@atproto/syntax" "^0.4.3"
-    iso-datestring-validator "^2.2.2"
-    multiformats "^9.9.0"
-    zod "^3.23.8"
-
-"@atproto/lexicon@^0.6.2":
+"@atproto/lexicon@0.6.2", "@atproto/lexicon@^0.6.0", "@atproto/lexicon@^0.6.1", "@atproto/lexicon@^0.6.2":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.6.2.tgz#f6152a2119df953236ca127c4b30e332265e81e7"
   integrity sha512-p3Ly6hinVZW0ETuAXZMeUGwuMm3g8HvQMQ41yyEE6AL0hAkfeKFaZKos6BdBrr6CjkpbrDZqE8M+5+QOceysMw==
