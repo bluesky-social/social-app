@@ -111,6 +111,7 @@ export function TitleText({
   style,
 }: React.PropsWithChildren<ViewStyleProp>) {
   const {titleId} = useContext(Context)
+  const {type} = Dialog.useDialogContext()
   return (
     <Text
       nativeID={titleId}
@@ -120,6 +121,7 @@ export function TitleText({
         a.font_semi_bold,
         a.pb_xs,
         a.leading_snug,
+        type === 'alert' && a.text_center,
         style,
       ]}>
       {children}
@@ -133,11 +135,18 @@ export function DescriptionText({
 }: React.PropsWithChildren<{selectable?: boolean}>) {
   const t = useTheme()
   const {descriptionId} = useContext(Context)
+  const {type} = Dialog.useDialogContext()
   return (
     <Text
       nativeID={descriptionId}
       selectable={selectable}
-      style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg]}>
+      style={[
+        a.text_md,
+        a.leading_snug,
+        t.atoms.text_contrast_high,
+        a.pb_lg,
+        type === 'alert' && a.text_center,
+      ]}>
       {children}
     </Text>
   )
