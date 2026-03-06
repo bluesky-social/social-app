@@ -200,7 +200,6 @@ function TranslationError({
           style={[
             a.flex_1,
             a.text_xs,
-            a.font_medium,
             a.leading_snug,
             t.atoms.text_contrast_high,
           ]}>
@@ -293,22 +292,18 @@ function TranslationResult({
               <Text
                 style={[
                   a.text_xs,
-                  a.font_medium,
                   a.leading_snug,
                   t.atoms.text_contrast_medium,
                 ]}>
                 {langName}{' '}
               </Text>
-              <View style={[a.mt_2xs]}>
-                <ArrowRightIcon
-                  size="xs"
-                  fill={t.atoms.text_contrast_medium.color}
-                />
-              </View>
+              <ArrowRightIcon
+                size="xs"
+                fill={t.atoms.text_contrast_medium.color}
+              />
               <Text
                 style={[
                   a.text_xs,
-                  a.font_medium,
                   a.leading_snug,
                   t.atoms.text_contrast_medium,
                 ]}>
@@ -321,12 +316,7 @@ function TranslationResult({
             </>
           ) : (
             <Text
-              style={[
-                a.text_xs,
-                a.font_medium,
-                a.leading_snug,
-                t.atoms.text_contrast_medium,
-              ]}>
+              style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>Translated</Trans>
             </Text>
           )}
