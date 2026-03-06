@@ -8,13 +8,13 @@ import {
   type BskyAgent,
   RichText,
 } from '@atproto/api'
+import {chunkArray} from '@atproto/common-web'
 import {
   type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
 import {createStarterPackList} from '#/lib/generate-starterpack'
@@ -201,7 +201,7 @@ export function useEditStarterPackMutation({
           !profiles.find(p => p.did === i.subject.did && p.did),
       )
       if (removedItems.length !== 0) {
-        const chunks = chunk(removedItems, 50)
+        const chunks = chunkArray(removedItems, 50)
         for (const chunk of chunks) {
           await agent.com.atproto.repo.applyWrites({
             repo: agent.session!.did,
@@ -218,7 +218,7 @@ export function useEditStarterPackMutation({
         p => !currentListItems.find(i => i.subject.did === p.did),
       )
       if (addedProfiles.length > 0) {
-        const chunks = chunk(addedProfiles, 50)
+        const chunks = chunkArray(addedProfiles, 50)
         for (const chunk of chunks) {
           await agent.com.atproto.repo.applyWrites({
             repo: agent.session!.did,

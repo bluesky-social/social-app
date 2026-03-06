@@ -6,8 +6,7 @@ import {
   type ComAtprotoRepoApplyWrites,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
-import {TID} from '@atproto/common-web'
-import chunk from 'lodash.chunk'
+import {chunkArray, TID} from '@atproto/common-web'
 
 import {until} from '#/lib/async/until'
 
@@ -39,7 +38,7 @@ export async function bulkWriteFollows(
       value: r,
     }))
 
-  const chunks = chunk(followWrites, 50)
+  const chunks = chunkArray(followWrites, 50)
   for (const chunk of chunks) {
     await agent.com.atproto.repo.applyWrites({
       repo: session.did,
