@@ -4,52 +4,62 @@ on:
   workflow_dispatch:
     inputs:
       image_name:
-        description: Local image name
+        description: Image name (at ghcr.io/<owner>/<image_name>)
         type: string
         default: protosky-web
       tag:
-        description: Tag (leave blank to use short SHA)
+        description: Protosky-web docker container
         type: string
         default: ""
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write  # needed to push to GHCR
     steps:
       - uses: actions/checkout@v4
 
-      - name: Compute tag
+      - name: Compute tags
         id: meta
         shell: bash
         run: |
+          OWNER_LC="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          IMAGE_NAME="${{ inputs.image_name }}"
           SHORT_SHA="${GITHUB_SHA::7}"
-          TAG="${{ inputs.tag }}"
-          if [ -z "$TAG" ]; then TAG="$SHORT_SHA"; fi
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          TAG_IN="${{ inputs.tag }}"
+          TAG="${TAG_IN:-$SHORT_SHA}"
+          GHCR_IMAGE="ghcr.io/${OWNER_LC}/${IMAGE_NAME}"
+          echo "owner_lc=$OWNER_LC"       >> "$GITHUB_OUTPUT"
+          echo "image_name=$IMAGE_NAME"   >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG"                 >> "$GITHUB_OUTPUT"
+          echo "ghcr_image=$GHCR_IMAGE"   >> "$GITHUB_OUTPUT"
+          echo "ghcr_tag=${GHCR_IMAGE}:${TAG}"     >> "$GITHUB_OUTPUT"
+          echo "ghcr_latest=${GHCR_IMAGE}:latest"  >> "$GITHUB_OUTPUT"
 
-      - name: Build Docker image (web)
-        env:
-          IMAGE_NAME: ${{ inputs.image_name }}
-          TAG: ${{ steps.meta.outputs.tag }}
+      - name: Build image (Dockerfile.web)
         run: |
-          docker build -f Dockerfile.web -t "${IMAGE_NAME}:${TAG}" .
-          docker images | head -n 20
+          docker build -f Dockerfile.web \
+            -t "${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.tag }}" \
+            -t "${{ steps.meta.outputs.ghcr_tag }}" \
+            -t "${{ steps.meta.outputs.ghcr_latest }}" \
+            .
 
-      - name: Save image as artifact
-        env:
-          IMAGE_NAME: ${{ inputs.image_name }}
-          TAG: ${{ steps.meta.outputs.tag }}
+      - name: Login to GHCR
         run: |
-          OUT="${IMAGE_NAME}-${TAG}.tar.gz"
-          docker save "${IMAGE_NAME}:${TAG}" | gzip > "$OUT"
-          sha256sum "$OUT" > "${OUT}.sha256"
-          echo "artifact_name=${IMAGE_NAME}-${TAG}" >> "$GITHUB_ENV"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.artifact_name }}
-          path: |
-            ${{ env.artifact_name }}.tar.gz
-            ${{ env.artifact_name }}.tar.gz.sha256
-          retention-days: 14
+      - name: Push to GHCR
+        run: |
+          docker push "${{ steps.meta.outputs.ghcr_tag }}"
+          docker push "${{ steps.meta.outputs.ghcr_latest }}"
+          {
+            echo "Pushed:"
+            echo "  ${{ steps.meta.outputs.ghcr_tag }}"
+            echo "  ${{ steps.meta.outputs.ghcr_latest }}"
+            echo ""
+            echo "Pull on your host:"
+            echo "  docker pull ${{ steps.meta.outputs.ghcr_tag }}"
+            echo "  docker run --rm -p 8080:80 ${{ steps.meta.outputs.ghcr_tag }}"
+          } >> "$GITHUB_STEP_SUMMARY"
