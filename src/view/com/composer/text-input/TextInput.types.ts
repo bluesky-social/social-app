@@ -22,6 +22,7 @@ export type TextInputRef = {
 export type TextInputProps = {
   ref: React.Ref<TextInputRef>
   richtext: RichText
+  language: string
   webForceMinHeight: boolean
   hasRightPadding: boolean
   isActive: boolean
