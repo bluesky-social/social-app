@@ -2,27 +2,25 @@
 FROM node:20-bookworm-slim AS builder
 
 ENV CI=true \
-    NODE_ENV=production \
     EXPO_NO_TELEMETRY=1
 
-# Optional deps for node-gyp during web build (kept minimal)
+# Minimal build deps for any node-gyp modules used during web build
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 make g++ git ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Use Yarn v1 per package.json
-COPY package.json yarn.lock ./
-RUN corepack enable && corepack prepare yarn@1.22.22 --activate
-RUN yarn install --frozen-lockfile
-
-# Copy the rest of the source
+# Copy everything so link: deps (e.g., ./eslint) and patches are present
 COPY . .
 
-# Prefer your repo script; fallback to Expo export if missing
-# Output goes to /app/dist
-RUN (yarn build-web) || (npx --yes expo@^54 export --platform web --output-dir dist)
+# Use Yarn v1 per package.json and install (include devDeps so postinstall works)
+RUN corepack enable && corepack prepare yarn@1.22.22 --activate \
+  && yarn config set network-timeout 600000 -g \
+  && yarn install --frozen-lockfile --non-interactive
+
+# Build static site (outputs to ./dist via your script)
+RUN yarn build-web
 
 # --- Runtime stage: serve static via nginx ---
 FROM nginx:1.27-alpine AS runtime
@@ -34,7 +32,4 @@ COPY nginx.web.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist/ /usr/share/nginx/html/
 
 EXPOSE 80
-# Busybox wget is available in alpine
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1
-
-# nginx default CMD is fine
