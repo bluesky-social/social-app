@@ -1,0 +1,11 @@
+.git
+.gitignore
+.github
+node_modules
+.expo
+dist
+ios
+android
+**/__tests__/
+**/*.log
+.DS_Store

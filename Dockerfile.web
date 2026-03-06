@@ -1,0 +1,40 @@
+# --- Build stage: export static web app ---
+FROM node:20-bookworm-slim AS builder
+
+ENV CI=true \
+    NODE_ENV=production \
+    EXPO_NO_TELEMETRY=1
+
+# Optional deps for node-gyp during web build (kept minimal)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 make g++ git ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Use Yarn v1 per package.json
+COPY package.json yarn.lock ./
+RUN corepack enable && corepack prepare yarn@1.22.22 --activate
+RUN yarn install --frozen-lockfile
+
+# Copy the rest of the source
+COPY . .
+
+# Prefer your repo script; fallback to Expo export if missing
+# Output goes to /app/dist
+RUN (yarn build-web) || (npx --yes expo@^54 export --platform web --output-dir dist)
+
+# --- Runtime stage: serve static via nginx ---
+FROM nginx:1.27-alpine AS runtime
+
+# SPA-friendly nginx config
+COPY nginx.web.conf /etc/nginx/conf.d/default.conf
+
+# Static export from build stage
+COPY --from=builder /app/dist/ /usr/share/nginx/html/
+
+EXPOSE 80
+# Busybox wget is available in alpine
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1
+
+# nginx default CMD is fine
