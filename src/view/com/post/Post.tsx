@@ -223,7 +223,6 @@ function PostInner({
               hideTranslateLink={true}
               post={post}
               postText={record.text}
-              postTextStyle={[a.text_md]}
             />
             {post.embed ? (
               <Embed

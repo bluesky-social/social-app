@@ -495,7 +495,6 @@ let PostContent = ({
           hideTranslateLink={true}
           post={post}
           postText={record.text}
-          postTextStyle={[a.text_md]}
         />
       )}
       {postEmbed ? (

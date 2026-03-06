@@ -325,7 +325,6 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 hideTranslateLink={true}
                 post={post}
                 postText={record.text}
-                postTextStyle={[a.text_md]}
               />
               {post.embed && (
                 <View style={[a.pb_xs]}>

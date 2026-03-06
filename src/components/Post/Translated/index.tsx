@@ -32,13 +32,13 @@ export function TranslatedPost({
   hideTranslateLink = false,
   post,
   postText,
-  postTextStyle,
+  postTextStyle = a.text_md,
 }: {
   emojiMultiplier?: number
   hideTranslateLink?: boolean
   post: AppBskyFeedDefs.PostView
   postText: string
-  postTextStyle: StyleProp<TextStyle>
+  postTextStyle?: StyleProp<TextStyle>
 }) {
   const langPrefs = useLanguagePrefs()
   const {clearTranslation, translate, translationState} = useTranslate({
@@ -252,7 +252,7 @@ function TranslationResult({
   emojiMultiplier: number
   translate: TranslationFunction
   postText: string
-  postTextStyle: StyleProp<TextStyle>
+  postTextStyle?: StyleProp<TextStyle>
   sourceLanguage: string | null
   translatedText: string
 }) {
