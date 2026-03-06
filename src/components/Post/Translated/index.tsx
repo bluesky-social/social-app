@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {Platform, View} from 'react-native'
+import {Platform, type StyleProp, type TextStyle, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -14,7 +14,7 @@ import {
 } from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, flatten, native, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -26,14 +26,18 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
+const X_ICON_OFFSET = 16
+
 export function TranslatedPost({
   hideTranslateLink = false,
   post,
   postText,
+  postTextStyle = a.text_md,
 }: {
   hideTranslateLink?: boolean
   post: AppBskyFeedDefs.PostView
   postText: string
+  postTextStyle?: StyleProp<TextStyle>
 }) {
   const langPrefs = useLanguagePrefs()
   const {clearTranslation, translate, translationState} = useTranslate({
@@ -54,6 +58,7 @@ export function TranslatedPost({
           clearTranslation={clearTranslation}
           translate={translate}
           postText={postText}
+          postTextStyle={postTextStyle}
           sourceLanguage={
             translationState.sourceLanguage ?? null // Fallback primarily for iOS
           }
@@ -86,12 +91,12 @@ function TranslationLoading() {
   const t = useTheme()
 
   return (
-    <View style={[a.gap_md, a.pt_md, a.align_start]}>
+    <View style={[a.gap_md, a.mt_sm, a.align_start]}>
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <Loader size="xs" />
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          <Trans>Translating…</Trans>
+          <Trans>Translating</Trans>
         </Text>
+        <Loader size="xs" fill={t.atoms.text_contrast_medium.color} />
       </View>
     </View>
   )
@@ -127,7 +132,7 @@ function TranslationLink({
     <View
       style={[
         a.gap_md,
-        a.pt_md,
+        a.mt_sm,
         a.align_start,
         a.flex_row,
         a.align_center,
@@ -174,30 +179,41 @@ function TranslationError({
   return (
     <View
       style={[
-        a.px_lg,
-        a.pt_sm,
-        a.pb_md,
+        a.p_md,
         a.mt_sm,
         a.border,
         a.rounded_lg,
+        a.gap_xs,
         t.atoms.border_contrast_high,
       ]}>
-      <View style={[a.flex_row, a.align_center, a.justify_between]}>
-        <View style={[a.flex_row, a.align_center, a.mb_sm, a.gap_xs]}>
-          <WarningIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-          <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
-            {message}
-          </Text>
-        </View>
-        <View style={[a.flex_row, a.align_center, a.mb_xs]}>
-          <Button
-            label={l`Hide translation`}
-            hitSlop={HITSLOP_30}
-            hoverStyle={{opacity: 0.5}}
-            onPress={clearTranslation}>
-            <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-          </Button>
-        </View>
+      <View
+        style={[
+          a.flex_row,
+          a.align_start,
+          a.gap_xs,
+          {
+            paddingRight: X_ICON_OFFSET,
+          },
+        ]}>
+        <WarningIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+        <Text
+          style={[
+            a.flex_1,
+            a.text_xs,
+            a.leading_snug,
+            t.atoms.text_contrast_high,
+          ]}>
+          {message}
+        </Text>
+
+        <Button
+          label={l`Hide translation`}
+          hitSlop={HITSLOP_30}
+          hoverStyle={native({opacity: 0.5})}
+          style={[a.absolute, a.z_10, {top: 0, right: 0}]}
+          onPress={clearTranslation}>
+          <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+        </Button>
       </View>
       <View style={[a.flex_row, a.align_center]}>
         <Link
@@ -211,7 +227,12 @@ function TranslationError({
           ]}
           hitSlop={HITSLOP_30}>
           <Text
-            style={[a.text_xs, a.font_medium, {color: t.palette.primary_500}]}>
+            style={[
+              a.text_xs,
+              a.font_medium,
+              a.leading_snug,
+              {color: t.palette.primary_500},
+            ]}>
             <Trans>Try Google Translate</Trans>
           </Text>
         </Link>
@@ -224,12 +245,14 @@ function TranslationResult({
   clearTranslation,
   translate,
   postText,
+  postTextStyle,
   sourceLanguage,
   translatedText,
 }: {
   clearTranslation: () => void
   translate: TranslationFunction
   postText: string
+  postTextStyle?: StyleProp<TextStyle>
   sourceLanguage: string | null
   translatedText: string
 }) {
@@ -241,39 +264,47 @@ function TranslationResult({
     ? codeToLanguageName(sourceLanguage, i18n.locale)
     : undefined
 
+  const flattenedStyle = flatten(postTextStyle) ?? {}
+  const fontSize = flattenedStyle.fontSize
+
   return (
     <View>
       <View
         style={[
-          a.px_lg,
-          a.pt_sm,
-          a.pb_md,
+          a.p_md,
           a.mt_sm,
           a.border,
           a.rounded_lg,
+          a.gap_xs,
           t.atoms.border_contrast_high,
         ]}>
-        <View style={[a.flex_row, a.align_center, a.mb_xs]}>
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.flex_wrap,
+            {
+              paddingRight: X_ICON_OFFSET,
+            },
+          ]}>
           {langName ? (
-            <View style={[a.flex_row, a.align_center]}>
+            <>
               <Text
                 style={[
                   a.text_xs,
-                  a.font_medium,
+                  a.leading_snug,
                   t.atoms.text_contrast_medium,
                 ]}>
                 {langName}{' '}
               </Text>
-              <View style={[a.mt_2xs]}>
-                <ArrowRightIcon
-                  size="xs"
-                  fill={t.atoms.text_contrast_medium.color}
-                />
-              </View>
+              <ArrowRightIcon
+                size="xs"
+                fill={t.atoms.text_contrast_medium.color}
+              />
               <Text
                 style={[
                   a.text_xs,
-                  a.font_medium,
+                  a.leading_snug,
                   t.atoms.text_contrast_medium,
                 ]}>
                 {' '}
@@ -282,15 +313,10 @@ function TranslationResult({
                   langPrefs.appLanguage,
                 )}
               </Text>
-            </View>
+            </>
           ) : (
             <Text
-              style={[
-                a.text_xs,
-                a.font_medium,
-                t.atoms.text_contrast_medium,
-                a.mb_xs,
-              ]}>
+              style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>Translated</Trans>
             </Text>
           )}
@@ -300,6 +326,7 @@ function TranslationResult({
                 style={[
                   a.text_xs,
                   a.font_medium,
+                  a.leading_snug,
                   t.atoms.text_contrast_medium,
                 ]}>
                 {' '}
@@ -312,18 +339,19 @@ function TranslationResult({
               />
             </>
           )}
+
+          <Button
+            label={l`Hide translation`}
+            hitSlop={HITSLOP_30}
+            hoverStyle={native({opacity: 0.5})}
+            style={[a.absolute, a.z_10, {top: 0, right: 0}]}
+            onPress={clearTranslation}>
+            <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+          </Button>
         </View>
-        <Text emoji selectable style={[a.text_md, a.leading_snug]}>
+        <Text emoji selectable style={[a.leading_snug, {fontSize}]}>
           {translatedText}
         </Text>
-        <Button
-          label={l`Hide translation`}
-          hitSlop={HITSLOP_30}
-          hoverStyle={native({opacity: 0.5})}
-          style={[a.absolute, a.z_10, {top: 12, right: 14}]}
-          onPress={clearTranslation}>
-          <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-        </Button>
       </View>
     </View>
   )
@@ -393,7 +421,12 @@ function TranslationLanguageSelect({
               hitSlop={HITSLOP_30}
               hoverStyle={native({opacity: 0.5})}>
               <Text
-                style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
+                style={[
+                  a.text_xs,
+                  a.font_medium,
+                  a.leading_snug,
+                  t.atoms.text_contrast_high,
+                ]}>
                 <Trans>Change</Trans>
               </Text>
             </Button>
