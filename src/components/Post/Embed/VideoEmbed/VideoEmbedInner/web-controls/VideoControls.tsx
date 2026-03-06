@@ -196,11 +196,7 @@ export function Controls({
   const onSeek = useCallback(
     (time: number) => {
       if (!videoRef.current) return
-      if (videoRef.current.fastSeek) {
-        videoRef.current.fastSeek(time)
-      } else {
-        videoRef.current.currentTime = time
-      }
+      videoRef.current.currentTime = time
     },
     [videoRef],
   )
