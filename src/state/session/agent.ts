@@ -72,19 +72,6 @@ export async function createAgentAndResume(
     await networkRetry(1, () => agent.resumeSession(prevSession))
   } else {
     agent.sessionManager.session = prevSession
-    if (!storedAccount.signupQueued) {
-      networkRetry(3, () => agent.resumeSession(prevSession)).catch(
-        (e: any) => {
-          logger.error(`networkRetry failed to resume session`, {
-            status: e?.status || 'unknown',
-            // this field name is ignored by Sentry scrubbers
-            safeMessage: e?.message || 'unknown',
-          })
-
-          throw e
-        },
-      )
-    }
   }
 
   // after session is attached
