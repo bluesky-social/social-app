@@ -48,7 +48,7 @@ export function Controls({
   hasSubtitleTrack,
   isGif,
   altText,
-  cueLineRef,
+  updateCuePositions,
 }: {
   videoRef: React.RefObject<HTMLVideoElement | null>
   hlsRef: React.RefObject<Hls | undefined | null>
@@ -62,7 +62,7 @@ export function Controls({
   hasSubtitleTrack: boolean
   isGif: boolean
   altText?: string
-  cueLineRef: React.RefObject<number>
+  updateCuePositions: (controlsVisible?: boolean) => void
 }) {
   const {
     play,
@@ -297,25 +297,11 @@ export function Controls({
     (interactingViaKeypress ? hasFocus : hovered)
 
   // adjust subtitle cue positioning to avoid occlusion by controls
-  const cueLine = showControls ? -4 : -2
+  // uses percentage-based positioning (snapToLines=false) so wrapped
+  // multi-line cues grow upward instead of extending offscreen
   useEffect(() => {
-    cueLineRef.current = cueLine
-    const video = videoRef.current
-    if (!video) return
-    for (let i = 0; i < video.textTracks.length; i++) {
-      const track = video.textTracks[i]
-      if (track.cues) {
-        for (let j = 0; j < track.cues.length; j++) {
-          ;(track.cues[j] as VTTCue).line = cueLine
-        }
-      }
-      // toggle track mode to force the browser to re-render active cues
-      if (track.mode === 'showing') {
-        track.mode = 'hidden'
-        track.mode = 'showing'
-      }
-    }
-  }, [cueLine, videoRef, cueLineRef])
+    updateCuePositions(showControls)
+  }, [showControls, updateCuePositions])
 
   if (isGif) {
     return (
