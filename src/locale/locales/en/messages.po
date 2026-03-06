@@ -8237,8 +8237,8 @@ msgstr ""
 msgid "Report dialog"
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:544
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:550
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:556
 msgid "Report feed"
 msgstr ""
 
@@ -9506,7 +9506,7 @@ msgstr ""
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:540
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:546
 msgid "Something wrong? Let us know."
 msgstr ""
 
