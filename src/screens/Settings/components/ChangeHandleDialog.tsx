@@ -313,6 +313,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
   const {currentAccount} = useSession()
   const [dnsPanel, setDNSPanel] = useState(true)
   const [domain, setDomain] = useState('')
+  const [subDomain, setSubDomain] = useState('')
   const agent = useAgent()
   const control = Dialog.useDialogContext()
   const fetchDid = useFetchDid()
@@ -391,6 +392,13 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               editable={!isPending}
               defaultValue={domain}
               onChangeText={text => {
+                const domainParts = text.trim().split('.').filter(Boolean)
+                if (domainParts.length === 3) {
+                  setSubDomain(domainParts[0])
+                } else {
+                  setSubdomain('')
+                }
+
                 setDomain(text)
                 resetVerification()
               }}
@@ -434,12 +442,14 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               <View style={[a.py_xs]}>
                 <CopyButton
                   color="secondary"
-                  value="_atproto"
+                  value={'_atproto' + subDomain ? '.' + domain : ''}
                   label={_(msg`Copy host`)}
                   style={[a.bg_transparent]}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
-                  <Text style={[a.text_md, a.flex_1]}>_atproto</Text>
+                  <Text style={[a.text_md, a.flex_1]}>
+                    _atproto{subDomain ? '.' + domain : ''}
+                  </Text>
                   <ButtonIcon icon={CopyIcon} />
                 </CopyButton>
               </View>
