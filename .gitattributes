@@ -1,0 +1,18 @@
+# Always keep our Protosky versions of branding/identity files on merge
+
+# Public PWA/web assets and icons (favicons, maskable, apple-touch, og images)
+public/** merge=protosky
+web/public/** merge=protosky
+static/** merge=protosky
+
+# PWA identity and titles
+**/manifest.json merge=protosky
+**/index.html merge=protosky
+
+# Expo config (where app name/slug/web manifest live)
+app.json merge=protosky
+app.config.js merge=protosky
+app.config.ts merge=protosky
+
+# App-level images if logos live here
+assets/** merge=protosky
