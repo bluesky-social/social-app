@@ -179,38 +179,44 @@ function TranslationError({
   return (
     <View
       style={[
-        a.px_lg,
-        a.py_lg,
+        a.p_md,
         a.mt_sm,
         a.border,
         a.rounded_lg,
+        a.gap_xs,
         t.atoms.border_contrast_high,
       ]}>
       <View
-        style={[a.flex_row, a.align_center, a.justify_between, a.flex_wrap]}>
-        <View
+        style={[
+          a.flex_row,
+          a.align_start,
+          a.gap_xs,
+          {
+            paddingRight: X_ICON_OFFSET,
+          },
+        ]}>
+        <WarningIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+        <Text
           style={[
-            a.flex_row,
-            a.align_center,
-            a.flex_wrap,
-            {
-              paddingRight: X_ICON_OFFSET,
-            },
+            a.flex_1,
+            a.text_xs,
+            a.font_medium,
+            a.leading_snug,
+            t.atoms.text_contrast_high,
           ]}>
-          <WarningIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-          <Text
-            style={[
-              a.text_xs,
-              a.font_medium,
-              a.leading_snug,
-              t.atoms.text_contrast_high,
-            ]}>
-            {' '}
-            {message}
-          </Text>
-        </View>
+          {message}
+        </Text>
+
+        <Button
+          label={l`Hide translation`}
+          hitSlop={HITSLOP_30}
+          hoverStyle={native({opacity: 0.5})}
+          style={[a.absolute, a.z_10, {top: 0, right: 0}]}
+          onPress={clearTranslation}>
+          <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+        </Button>
       </View>
-      <View style={[a.flex_row, a.align_center, a.mt_sm]}>
+      <View style={[a.flex_row, a.align_center]}>
         <Link
           {...createStaticClick(() => {
             handleFallback()
@@ -232,14 +238,6 @@ function TranslationError({
           </Text>
         </Link>
       </View>
-      <Button
-        label={l`Hide translation`}
-        hitSlop={HITSLOP_30}
-        hoverStyle={native({opacity: 0.5})}
-        style={[a.absolute, a.z_10, {top: X_ICON_OFFSET, right: X_ICON_OFFSET}]}
-        onPress={clearTranslation}>
-        <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-      </Button>
     </View>
   )
 }
@@ -274,8 +272,7 @@ function TranslationResult({
     <View>
       <View
         style={[
-          a.px_lg,
-          a.py_lg,
+          a.p_md,
           a.mt_sm,
           a.border,
           a.rounded_lg,
