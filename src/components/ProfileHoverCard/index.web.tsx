@@ -304,7 +304,10 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     dispatch('unhovered-card')
   }, [])
 
-  const onPress = React.useCallback(() => {
+  const onPress = React.useCallback((event?: React.MouseEvent) => {
+    if (event?.ctrlKey) {
+      return
+    }
     dispatch('pressed')
   }, [])
 
