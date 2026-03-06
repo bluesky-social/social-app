@@ -4,7 +4,6 @@ import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {useAnalytics} from '#/analytics'
 import {Context} from './context'
 import {type TranslationFunctionParams, type TranslationState} from './types'
-import {guessLanguage} from './utils'
 
 export * from './types'
 export * from './utils'
@@ -78,16 +77,15 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       sourceSelection?: 'automatic' | 'manual'
       postLangCodes?: string[]
     }) => {
-      const sourceLanguage = sourceLangCode ?? guessLanguage(text)
       ax.metric('translate:result', {
         method: 'google-translate',
         os: 'web',
         sourceSelection,
-        sourceLanguage,
+        sourceLanguage: sourceLangCode ?? null,
         targetLanguage: targetLangCode,
         postLanguages: postLangCodes,
       })
-      await googleTranslate(text, targetLangCode, sourceLanguage ?? undefined)
+      await googleTranslate(text, targetLangCode, sourceLangCode)
     },
     [ax, googleTranslate],
   )
