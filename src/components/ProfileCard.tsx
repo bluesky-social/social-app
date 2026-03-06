@@ -14,6 +14,7 @@ import {
 import {useLingui} from '@lingui/react/macro'
 
 import {getModerationCauseKey} from '#/lib/moderation'
+import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
 import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -138,15 +139,17 @@ export function Link({
 } & Omit<LinkProps, 'to' | 'label'>) {
   const {t: l} = useLingui()
 
+  const profileURL = makeProfileLink({
+    did: profile.did,
+    handle: profile.handle,
+  })
+
   return (
     <InternalLink
       label={l`View ${
         profile.displayName || sanitizeHandle(profile.handle)
       }’s profile`}
-      to={{
-        screen: 'Profile',
-        params: {name: profile.did},
-      }}
+      to={profileURL}
       style={[a.flex_col, style]}
       {...rest}>
       {children}

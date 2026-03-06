@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
+  findNodeHandle,
   type ImageStyle,
   Keyboard,
   type LayoutChangeEvent,
@@ -22,7 +23,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {tokens, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {IS_NATIVE} from '#/env'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
@@ -144,6 +145,15 @@ const GalleryItem = ({
 
   const altTextControl = Dialog.useDialogControl()
   const editControl = Dialog.useDialogControl()
+  const [altBtnViewTag, setAltBtnViewTag] = useState<number>()
+
+  const altBtnRef = (node: View | null) => {
+    // for iOS 26 fluid transition
+    if (IS_IOS && node) {
+      const tag = findNodeHandle(node)
+      if (tag != null) setAltBtnViewTag(tag)
+    }
+  }
 
   const onImageEdit = () => {
     if (IS_NATIVE) {
@@ -162,6 +172,7 @@ const GalleryItem = ({
 
   return (
     <View
+      ref={altBtnRef}
       style={imageStyle as ViewStyle}
       // Fixes ALT and icons appearing with half opacity when the post is inactive
       renderToHardwareTextureAndroid>
@@ -240,6 +251,7 @@ const GalleryItem = ({
         control={altTextControl}
         image={image}
         onChange={onChange}
+        sourceViewTag={altBtnViewTag}
       />
 
       <EditImageDialog

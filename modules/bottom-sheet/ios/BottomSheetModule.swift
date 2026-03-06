@@ -42,6 +42,10 @@ public class BottomSheetModule: Module {
       Prop("preventExpansion") { (view: SheetView, prop: Bool) in
         view.preventExpansion = prop
       }
+
+      Prop("sourceViewTag") { (view: SheetView, prop: Int?) in
+        view.sourceViewTag = prop
+      }
     }
   }
 }

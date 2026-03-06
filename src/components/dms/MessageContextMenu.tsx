@@ -6,7 +6,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useTranslate} from '#/lib/hooks/useTranslate'
+import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -44,7 +44,7 @@ export let MessageContextMenu = ({
   const reportControl = usePromptControl()
   const blockOrDeleteControl = usePromptControl()
   const langPrefs = useLanguagePrefs()
-  const translate = useTranslate()
+  const translate = useGoogleTranslate()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
@@ -57,12 +57,12 @@ export let MessageContextMenu = ({
       true,
     )
 
-    Clipboard.setStringAsync(str)
+    void Clipboard.setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [_, message.text, message.facets])
 
   const onPressTranslateMessage = useCallback(() => {
-    translate(message.text, langPrefs.primaryLanguage)
+    void translate(message.text, langPrefs.primaryLanguage)
 
     ax.metric('translate', {
       sourceLanguages: [],

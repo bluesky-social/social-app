@@ -154,7 +154,7 @@ export function MoreOptionsMenu({
             </Button>
           )}
         </Menu.Trigger>
-        <Menu.Outer>
+        <Menu.Outer showCancel>
           <Menu.Group>
             <Menu.Item
               label={IS_WEB ? _(msg`Copy link to list`) : _(msg`Share via...`)}

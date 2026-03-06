@@ -1,5 +1,5 @@
 import {memo, useCallback, useMemo} from 'react'
-import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
+import {Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -15,18 +15,12 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {
-  getPostLanguage,
-  getTranslatorLink,
-  isPostInLanguage,
-} from '#/locale/helpers'
-import {
   POST_TOMBSTONE,
   type Shadow,
   usePostShadow,
 } from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
-import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
@@ -44,8 +38,7 @@ import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {InlineLinkText, Link} from '#/components/Link'
-import {Loader} from '#/components/Loader'
+import {Link} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -63,10 +56,6 @@ import {VerificationCheckButton} from '#/components/verification/VerificationChe
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
-import {
-  Provider as TranslateOnDeviceProvider,
-  useTranslateOnDevice,
-} from '#/translation'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -89,18 +78,16 @@ export function ThreadItemAnchor({
   }
 
   return (
-    <TranslateOnDeviceProvider>
-      <ThreadItemAnchorInner
-        // Safeguard from clobbering per-post state below:
-        key={postShadow.uri}
-        item={item}
-        isRoot={isRoot}
-        postShadow={postShadow}
-        onPostSuccess={onPostSuccess}
-        threadgateRecord={threadgateRecord}
-        postSource={postSource}
-      />
-    </TranslateOnDeviceProvider>
+    <ThreadItemAnchorInner
+      // Safeguard from clobbering per-post state below:
+      key={postShadow.uri}
+      item={item}
+      isRoot={isRoot}
+      postShadow={postShadow}
+      onPostSuccess={onPostSuccess}
+      threadgateRecord={threadgateRecord}
+      postSource={postSource}
+    />
   )
 }
 
@@ -420,8 +407,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 shouldProxyLinks={true}
               />
             ) : undefined}
-            <TranslatedPost postText={record.text} hideLoading />
-            <TranslateLink post={item.value.post} />
+            <TranslatedPost
+              post={post}
+              postText={record.text}
+              postTextStyle={[a.text_lg]}
+            />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed
@@ -556,97 +546,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     </>
   )
 })
-
-function TranslateLink({
-  post,
-}: {
-  post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
-}) {
-  const t = useTheme()
-  const ax = useAnalytics()
-  const {t: l} = useLingui()
-  const langPrefs = useLanguagePrefs()
-
-  const {translate, clearTranslation, translationState} = useTranslateOnDevice()
-
-  const needsTranslation = useMemo(
-    () =>
-      Boolean(
-        langPrefs.primaryLanguage &&
-          !isPostInLanguage(post, [langPrefs.primaryLanguage]),
-      ),
-    [post, langPrefs.primaryLanguage],
-  )
-
-  const sourceLanguage = getPostLanguage(post)
-
-  const onTranslatePress = useCallback(
-    (e: GestureResponderEvent) => {
-      e.preventDefault()
-      void translate(
-        post.record.text || '',
-        langPrefs.primaryLanguage,
-        sourceLanguage,
-      )
-
-      if (
-        bsky.dangerousIsType<AppBskyFeedPost.Record>(
-          post.record,
-          AppBskyFeedPost.isRecord,
-        )
-      ) {
-        ax.metric('translate', {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
-        })
-      }
-
-      return false
-    },
-    [ax, sourceLanguage, translate, langPrefs, post],
-  )
-
-  const onHideTranslation = useCallback(
-    (e: GestureResponderEvent) => {
-      e.preventDefault()
-      clearTranslation()
-      return false
-    },
-    [clearTranslation],
-  )
-
-  return (
-    needsTranslation && (
-      <View style={[a.gap_md, a.pt_md, a.align_start]}>
-        {translationState.status === 'loading' ? (
-          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <Loader size="xs" />
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              <Trans>Translating…</Trans>
-            </Text>
-          </View>
-        ) : translationState.status === 'success' ? (
-          <InlineLinkText
-            to="#"
-            label={l`Hide translation`}
-            style={[a.text_sm]}
-            onPress={onHideTranslation}>
-            <Trans>Hide translation</Trans>
-          </InlineLinkText>
-        ) : (
-          <InlineLinkText
-            to={getTranslatorLink(post.record.text, langPrefs.primaryLanguage)}
-            label={l`Translate`}
-            style={[a.text_sm]}
-            onPress={onTranslatePress}>
-            <Trans>Translate</Trans>
-          </InlineLinkText>
-        )}
-      </View>
-    )
-  )
-}
 
 function ExpandedPostDetails({
   post,

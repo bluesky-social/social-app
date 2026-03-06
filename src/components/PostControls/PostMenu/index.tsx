@@ -6,8 +6,7 @@ import {
   type AppBskyFeedThreadgate,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
@@ -30,6 +29,7 @@ let PostMenuButton = ({
   onShowLess,
   hitSlop,
   logContext,
+  forceGoogleTranslate,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -43,8 +43,9 @@ let PostMenuButton = ({
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+  forceGoogleTranslate: boolean
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const menuControl = useMenuControl()
   const [hasBeenOpen, setHasBeenOpen] = useState(false)
@@ -63,7 +64,7 @@ let PostMenuButton = ({
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root control={lazyMenuControl}>
-        <Menu.Trigger label={_(msg`Open post options menu`)}>
+        <Menu.Trigger label={l`Open post options menu`}>
           {({props}) => {
             return (
               <PostControlButton
@@ -90,6 +91,7 @@ let PostMenuButton = ({
             threadgateRecord={threadgateRecord}
             onShowLess={onShowLess}
             logContext={logContext}
+            forceGoogleTranslate={forceGoogleTranslate}
           />
         )}
       </Menu.Root>

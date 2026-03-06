@@ -35,9 +35,12 @@ appId: xyz.blueskyweb.app
     id: "menuItemButton-Feeds"
 - tapOn:
     id: "editFeedsBtn"
-- tapOn:
-    label: "Tap on down arrow"
-    id: "feed-timeline-moveDown"
+- swipe:
+    label: "Drag feed down"
+    from:
+      id: "feed-drag-handle"
+    direction: "DOWN"
+    duration: 1000
 - tapOn:
       label: "Save button"
       id: "saveChangesBtn"
@@ -55,9 +58,12 @@ appId: xyz.blueskyweb.app
     id: "menuItemButton-Feeds"
 - tapOn:
     id: "editFeedsBtn"
-- tapOn:
-    label: "Tap on down arrow"
-    id: "feed-feed-moveDown"
+- swipe:
+    label: "Drag feed down"
+    from:
+      id: "feed-drag-handle"
+    direction: "DOWN"
+    duration: 1000
 - tapOn:
     label: "Save button"
     id: "saveChangesBtn"
