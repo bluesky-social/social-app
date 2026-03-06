@@ -37,7 +37,7 @@ export function VideoEmbedInnerWeb({
     throw error
   }
 
-  const {hlsRef, loop} = useHLS({
+  const {hlsRef, loop, cueLineRef} = useHLS({
     playlist: embed.playlist,
     setHasSubtitleTrack,
     setError,
@@ -90,6 +90,7 @@ export function VideoEmbedInnerWeb({
           hasSubtitleTrack={hasSubtitleTrack}
           isGif={embed.presentation === 'gif'}
           altText={embed.alt}
+          cueLineRef={cueLineRef}
         />
       </div>
     </View>
@@ -145,6 +146,7 @@ function useHLS({
   }, [Hls, setHlsLoading])
 
   const hlsRef = useRef<HlsTypes.default | undefined>(undefined)
+  const cueLineRef = useRef<number>(-2)
   const [lowQualityFragments, setLowQualityFragments] = useState<
     HlsTypes.Fragment[]
   >([])
@@ -217,6 +219,14 @@ function useHLS({
     hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
       if (data.subtitleTracks.length > 0) {
         setHasSubtitleTrack(true)
+      }
+    })
+
+    hls.on(Hls.Events.CUES_PARSED, (_event, data) => {
+      if (Array.isArray(data.cues)) {
+        for (const cue of data.cues) {
+          cue.line = cueLineRef.current
+        }
       }
     })
 
@@ -307,5 +317,6 @@ function useHLS({
   return {
     hlsRef,
     loop: !hasLowQualityFragmentAtStart,
+    cueLineRef,
   }
 }
