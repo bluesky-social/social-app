@@ -4,6 +4,7 @@ import {LINK_META_PROXY} from '#/lib/constants'
 import {getGiphyMetaUri} from '#/lib/strings/embed-player'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {isBskyAppUrl} from '../strings/url-helpers'
+import {InvalidUrlError, InvalidUrlHostIPError} from './errors'
 
 export enum LikelyType {
   HTML,
@@ -16,7 +17,6 @@ export enum LikelyType {
 }
 
 export interface LinkMeta {
-  error?: string
   likelyType: LikelyType
   url: string
   title?: string
@@ -51,11 +51,7 @@ export async function getLinkMeta(
     // QUESTION - do we want to follow redirects in other cases? -sfn
     shouldFollowRedirect = urlp.hostname === 'on.soundcloud.com'
   } catch (e) {
-    return {
-      error: 'Invalid URL',
-      likelyType: LikelyType.Other,
-      url,
-    }
+    throw new InvalidUrlError()
   }
   const likelyType = getLikelyType(urlp)
   const meta: LinkMeta = {
@@ -82,8 +78,14 @@ export async function getLinkMeta(
 
     const body = await response.json()
 
-    if (body.error !== '') {
-      throw new Error(body.error)
+    const errorMessage: string = body.error ?? body.Error ?? ''
+    if (errorMessage !== '') {
+      // Check for host IP specific errors
+      if (errorMessage.toLowerCase().includes('invalid url: host ip')) {
+        throw new InvalidUrlHostIPError(errorMessage)
+      }
+      // For all other errors, just throw a generic Error
+      throw new Error(errorMessage)
     }
 
     meta.description = body.description
@@ -92,10 +94,6 @@ export async function getLinkMeta(
     if (shouldFollowRedirect) {
       meta.url = body.url
     }
-  } catch (e) {
-    // failed
-    console.error(e)
-    meta.error = e instanceof Error ? e.toString() : 'Failed to fetch link'
   } finally {
     clearTimeout(to)
   }

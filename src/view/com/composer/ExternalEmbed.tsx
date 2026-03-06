@@ -127,6 +127,13 @@ export const ExternalEmbedLink = ({
     }
   }, [data, uri])
 
+  if (error instanceof Error) {
+    // Remove the embed so that the user can try again with a different link
+    onRemove()
+    // Don't preview links that have errors
+    return null
+  }
+
   if (data?.type === 'record' && hasQuote) {
     // This is not currently supported by the data model so don't preview it.
     return null
@@ -136,15 +143,6 @@ export const ExternalEmbedLink = ({
     <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {linkComponent ? (
         <View style={{pointerEvents: 'none'}}>{linkComponent}</View>
-      ) : error ? (
-        <Container style={[a.align_start, a.p_md, a.gap_xs]}>
-          <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
-            {uri}
-          </Text>
-          <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
-            {cleanError(error)}
-          </Text>
-        </Container>
       ) : (
         <Container>
           <Loader size="xl" />
