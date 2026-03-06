@@ -43,6 +43,7 @@ import {
   useProgressGuideControls,
 } from '../shell/progress-guide'
 import {RQKEY_ROOT as RQKEY_LIST_CONVOS} from './messages/list-conversations'
+import {RQKEY_ROOT as RQKEY_POST_FEED} from './post-feed'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 
@@ -236,6 +237,16 @@ export function useProfileUpdateMutation() {
       })
       queryClient.invalidateQueries({
         queryKey: [profilesQueryKeyRoot, [variables.profile.did]],
+      })
+      queryClient.invalidateQueries({
+        predicate: query => {
+          return (
+            query.queryKey[0] === RQKEY_POST_FEED &&
+            query.queryKey[1].startsWith(
+              `author|${variables.profile.did}|`
+            )
+          )
+        },
       })
       await updateProfileVerificationCache({profile: variables.profile})
     },
