@@ -18,6 +18,8 @@
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -189,6 +191,12 @@ export function useNotificationFeedQuery(opts: {
                     return !isHiddenReply
                   })
                   .filter(item => {
+                    if (item.type === 'quote' && item.subject) {
+                      return !hasDetachedQuoteEmbed(item.subject)
+                    }
+                    return true
+                  })
+                  .filter(item => {
                     if (
                       item.type === 'reply' ||
                       item.type === 'mention' ||
@@ -271,6 +279,16 @@ export function useNotificationFeedQuery(opts: {
   }, [query])
 
   return query
+}
+
+function hasDetachedQuoteEmbed(subject: AppBskyFeedDefs.PostView): boolean {
+  if (AppBskyEmbedRecord.isView(subject.embed)) {
+    return AppBskyEmbedRecord.isViewDetached(subject.embed.record)
+  }
+  if (AppBskyEmbedRecordWithMedia.isView(subject.embed)) {
+    return AppBskyEmbedRecord.isViewDetached(subject.embed.record.record)
+  }
+  return false
 }
 
 export function* findAllPostsInQueryData(
