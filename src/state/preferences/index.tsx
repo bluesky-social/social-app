@@ -9,6 +9,7 @@ import {Provider as InAppBrowserProvider} from './in-app-browser'
 import {Provider as KawaiiProvider} from './kawaii'
 import {Provider as LanguagesProvider} from './languages'
 import {Provider as LargeAltBadgeProvider} from './large-alt-badge'
+import {Provider as SimilarAccountProvider} from './similar-accounts'
 import {Provider as SubtitlesProvider} from './subtitles'
 import {Provider as TrendingSettingsProvider} from './trending'
 import {Provider as UsedStarterPacksProvider} from './used-starter-packs'
@@ -26,6 +27,10 @@ export {
 export {useHiddenPosts, useHiddenPostsApi} from './hidden-posts'
 export {useLabelDefinitions} from './label-defs'
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
+export {
+  useSetSimilarAccountsDisabled,
+  useSimilarAccountsDisabled,
+} from './similar-accounts'
 export {useSetSubtitlesEnabled, useSubtitlesEnabled} from './subtitles'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
@@ -41,7 +46,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                     <UsedStarterPacksProvider>
                       <SubtitlesProvider>
                         <TrendingSettingsProvider>
-                          <KawaiiProvider>{children}</KawaiiProvider>
+                          <SimilarAccountProvider>
+                            <KawaiiProvider>{children}</KawaiiProvider>
+                          </SimilarAccountProvider>
                         </TrendingSettingsProvider>
                       </SubtitlesProvider>
                     </UsedStarterPacksProvider>
