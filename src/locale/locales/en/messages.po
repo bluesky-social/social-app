@@ -1277,8 +1277,8 @@ msgstr ""
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:518
-#: src/components/ProfileCard.tsx:538
+#: src/components/ProfileCard.tsx:521
+#: src/components/ProfileCard.tsx:541
 #: src/view/com/notifications/NotificationFeedItem.tsx:779
 #: src/view/com/notifications/NotificationFeedItem.tsx:799
 msgid "An issue occurred, please try again."
@@ -3116,7 +3116,7 @@ msgstr ""
 msgid "Developer options"
 msgstr ""
 
-#: src/lib/translation/index.tsx:265
+#: src/lib/translation/index.tsx:268
 msgid "Device failed to translate :("
 msgstr "Device failed to translate :("
 
@@ -4337,7 +4337,7 @@ msgid "Focus code input"
 msgstr ""
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:552
+#: src/components/ProfileCard.tsx:555
 #: src/components/ProfileHoverCard/index.web.tsx:497
 #: src/components/ProfileHoverCard/index.web.tsx:508
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:153
@@ -4392,7 +4392,7 @@ msgid "Follow all accounts"
 msgstr ""
 
 #. User is not following this account, click to follow back
-#: src/components/ProfileCard.tsx:548
+#: src/components/ProfileCard.tsx:551
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:151
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:386
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
@@ -4444,7 +4444,7 @@ msgstr ""
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:543
+#: src/components/ProfileCard.tsx:546
 #: src/components/ProfileHoverCard/index.web.tsx:496
 #: src/components/ProfileHoverCard/index.web.tsx:507
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:156
@@ -4464,7 +4464,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
-#: src/components/ProfileCard.tsx:508
+#: src/components/ProfileCard.tsx:511
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:251
 #: src/view/com/notifications/NotificationFeedItem.tsx:772
 msgid "Following {0}"
@@ -6527,7 +6527,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
-#: src/components/ProfileCard.tsx:529
+#: src/components/ProfileCard.tsx:532
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:276
 #: src/view/com/notifications/NotificationFeedItem.tsx:792
 msgid "No longer following {0}"
@@ -11246,7 +11246,7 @@ msgid "View {0}'s profile"
 msgstr ""
 
 #. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
-#: src/components/ProfileCard.tsx:143
+#: src/components/ProfileCard.tsx:149
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
