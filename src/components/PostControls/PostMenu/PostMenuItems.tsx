@@ -273,6 +273,7 @@ let PostMenuItems = ({
       )
     ) {
       ax.metric('translate', {
+        os: Platform.OS,
         sourceLanguages: post.record.langs ?? [],
         targetLanguage: langPrefs.primaryLanguage,
         textLength: post.record.text.length,

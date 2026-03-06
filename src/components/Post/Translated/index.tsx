@@ -124,6 +124,7 @@ function TranslationLink({
     })
 
     ax.metric('translate', {
+      os: Platform.OS,
       sourceLanguages: [], // todo: get from post maybe?
       targetLanguage: primaryLanguage,
       textLength: postText.length,

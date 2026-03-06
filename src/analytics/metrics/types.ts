@@ -703,6 +703,7 @@ export type Events = {
   'reportDialog:failure': {}
 
   translate: {
+    os: Platform['OS']
     sourceLanguages: string[]
     targetLanguage: string
     textLength: number
