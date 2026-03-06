@@ -156,7 +156,8 @@ export function Pager({
           ref={pagerView}
           style={a.flex_1}
           initialPage={initialPage}
-          onPageScroll={handlePageScroll}>
+          onPageScroll={handlePageScroll}
+          overScrollMode="never">
           {children}
         </MemoizedAnimatedPagerView>
       </DrawerGestureRequireFail>
