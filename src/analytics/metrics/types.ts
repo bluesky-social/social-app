@@ -719,6 +719,42 @@ export type Events = {
     targetLanguage: string
   }
 
+  'postMenu:muteThread': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'postMenu:muteWordsAndTags': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'postMenu:muteAccount': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'postMenu:blockAccount': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+  'postMenu:reportPost': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+    position?: number
+  }
+
   'verification:create': {}
   'verification:revoke': {}
   'verification:badge:click': {}

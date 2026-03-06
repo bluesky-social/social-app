@@ -222,6 +222,12 @@ let PostMenuItems = ({
   }
 
   const onToggleThreadMute = () => {
+    ax.metric('postMenu:muteThread', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
     try {
       if (isThreadMuted) {
         void unmuteThread()
@@ -249,6 +255,36 @@ let PostMenuItems = ({
         Toast.show(l`Failed to toggle thread mute, please try again`, 'xmark')
       }
     }
+  }
+
+  const onToggleWordsAndTagsMute = () => {
+    ax.metric('postMenu:muteWordsAndTags', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
+    mutedWordsDialogControl.open()
+  }
+
+  const onBlockAccount = () => {
+    ax.metric('postMenu:blockAccount', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
+    blockPromptControl.open()
+  }
+
+  const onReportPost = () => {
+    ax.metric('postMenu:reportPost', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
+    reportDialogControl.open()
   }
 
   const onCopyPostText = () => {
@@ -455,6 +491,16 @@ let PostMenuItems = ({
     }
   }
 
+  const onMuteAccount = () => {
+    ax.metric('postMenu:muteAccount', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
+    void onMuteAuthor()
+  }
+
   const onReportMisclassification = () => {
     const url = `https://docs.google.com/forms/d/e/1FAIpQLSd0QPqhNFksDQf1YyOos7r1ofCLvmrKAH1lU042TaS3GAZaWQ/viewform?entry.1756031717=${toShareUrl(
       href,
@@ -601,7 +647,7 @@ let PostMenuItems = ({
               <Menu.Item
                 testID="postDropdownMuteWordsBtn"
                 label={l`Mute words & tags`}
-                onPress={() => mutedWordsDialogControl.open()}>
+                onPress={onToggleWordsAndTagsMute}>
                 <Menu.ItemText>{l`Mute words & tags`}</Menu.ItemText>
                 <Menu.ItemIcon icon={Filter} position="right" />
               </Menu.Item>
@@ -698,7 +744,7 @@ let PostMenuItems = ({
                         ? l`Unmute account`
                         : l`Mute account`
                     }
-                    onPress={() => void onMuteAuthor()}>
+                    onPress={onMuteAccount}>
                     <Menu.ItemText>
                       {postAuthor.viewer?.muted
                         ? l`Unmute account`
@@ -714,7 +760,7 @@ let PostMenuItems = ({
                     <Menu.Item
                       testID="postDropdownBlockBtn"
                       label={l`Block account`}
-                      onPress={() => blockPromptControl.open()}>
+                      onPress={onBlockAccount}>
                       <Menu.ItemText>{l`Block account`}</Menu.ItemText>
                       <Menu.ItemIcon icon={PersonX} position="right" />
                     </Menu.Item>
@@ -723,7 +769,7 @@ let PostMenuItems = ({
                   <Menu.Item
                     testID="postDropdownReportBtn"
                     label={l`Report post`}
-                    onPress={() => reportDialogControl.open()}>
+                    onPress={onReportPost}>
                     <Menu.ItemText>{l`Report post`}</Menu.ItemText>
                     <Menu.ItemIcon icon={Warning} position="right" />
                   </Menu.Item>
