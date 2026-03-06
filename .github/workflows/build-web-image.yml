@@ -1,10 +1,10 @@
-name: Build Web (PWA) Docker image (Manual)
+name: Docker Image CI (Artifact only)
 
 on:
   workflow_dispatch:
     inputs:
       image_name:
-        description: Docker image name (local only)
+        description: Local image name
         type: string
         default: protosky-web
       tag:
@@ -26,7 +26,6 @@ jobs:
           TAG="${{ inputs.tag }}"
           if [ -z "$TAG" ]; then TAG="$SHORT_SHA"; fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "short_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
 
       - name: Build Docker image (web)
         env:
@@ -34,6 +33,7 @@ jobs:
           TAG: ${{ steps.meta.outputs.tag }}
         run: |
           docker build -f Dockerfile.web -t "${IMAGE_NAME}:${TAG}" .
+          docker images | head -n 20
 
       - name: Save image as artifact
         env:

@@ -1,35 +1,113 @@
-# --- Build stage: export static web app ---
-FROM node:20-bookworm-slim AS builder
+FROM golang:1.25-bookworm AS build-env
 
-ENV CI=true \
-    EXPO_NO_TELEMETRY=1
+WORKDIR /usr/src/social-app
 
-# Minimal build deps for any node-gyp modules used during web build
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 make g++ git ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
 
-WORKDIR /app
+#
+# Node
+#
+ENV NODE_VERSION=20
+ENV NVM_DIR=/usr/share/nvm
 
-# Copy everything so link: deps (e.g., ./eslint) and patches are present
+#
+# Go
+#
+ENV GODEBUG="netdns=go"
+ENV GOOS="linux"
+ENV GOARCH="amd64"
+ENV CGO_ENABLED=1
+ENV GOEXPERIMENT="loopvar"
+
+# The latest git hash of the preview branch on render.com
+# https://render.com/docs/docker-secrets#environment-variables-in-docker-builds
+ARG RENDER_GIT_COMMIT
+
+#
+# Expo
+#
+ARG EXPO_PUBLIC_ENV
+ENV EXPO_PUBLIC_ENV=${EXPO_PUBLIC_ENV:-development}
+ARG EXPO_PUBLIC_RELEASE_VERSION
+ENV EXPO_PUBLIC_RELEASE_VERSION=$EXPO_PUBLIC_RELEASE_VERSION
+ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
+# If not set by GitHub workflows, we're probably in Render
+ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-$RENDER_GIT_COMMIT}
+
+#
+# Sentry
+#
+ARG SENTRY_AUTH_TOKEN
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN:-unknown}
+ARG EXPO_PUBLIC_SENTRY_DSN
+ENV EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN
+
+#
+# Copy everything into the container
+#
 COPY . .
 
-# Use Yarn v1 per package.json and install (include devDeps so postinstall works)
-RUN corepack enable && corepack prepare yarn@1.22.22 --activate \
-  && yarn config set network-timeout 600000 -g \
-  && yarn install --frozen-lockfile --non-interactive
+#
+# Generate the JavaScript webpack.
+#
+RUN mkdir --parents $NVM_DIR && \
+  wget \
+    --output-document=/tmp/nvm-install.sh \
+    https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh && \
+  bash /tmp/nvm-install.sh
 
-# Build static site (outputs to ./dist via your script)
-RUN yarn build-web
+RUN \. "$NVM_DIR/nvm.sh" && \
+  nvm install $NODE_VERSION && \
+  nvm use $NODE_VERSION && \
+  echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
+  echo "EXPO_PUBLIC_ENV=$EXPO_PUBLIC_ENV" >> .env && \
+  echo "EXPO_PUBLIC_RELEASE_VERSION=$EXPO_PUBLIC_RELEASE_VERSION" >> .env && \
+  echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER" >> .env && \
+  echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env && \
+  echo "EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN" >> .env && \
+  npm install --global yarn && \
+  yarn && \
+  yarn intl:build 2>&1 | tee i18n.log && \
+  if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi && \
+  SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER yarn build-web
 
-# --- Runtime stage: serve static via nginx ---
-FROM nginx:1.27-alpine AS runtime
+# DEBUG
+RUN find ./bskyweb/static && find ./web-build/static
 
-# SPA-friendly nginx config
-COPY nginx.web.conf /etc/nginx/conf.d/default.conf
+#
+# Generate the bskyweb Go binary.
+#
+RUN cd bskyweb/ && \
+  go mod download && \
+  go mod verify
 
-# Static export from build stage
-COPY --from=builder /app/dist/ /usr/share/nginx/html/
+RUN cd bskyweb/ && \
+  go build \
+    -v  \
+    -trimpath \
+    -tags timetzdata \
+    -o /bskyweb \
+    ./cmd/bskyweb
 
-EXPOSE 80
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1
+FROM debian:bookworm-slim
+
+ENV GODEBUG=netdns=go
+ENV TZ=Etc/UTC
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install --yes \
+  dumb-init \
+  ca-certificates
+
+ENTRYPOINT ["dumb-init", "--"]
+
+WORKDIR /bskyweb
+COPY --from=build-env /bskyweb /usr/bin/bskyweb
+
+CMD ["/usr/bin/bskyweb"]
+
+LABEL org.opencontainers.image.source=https://github.com/bluesky-social/social-app
+LABEL org.opencontainers.image.description="bsky.app Web App"
+LABEL org.opencontainers.image.licenses=MIT
+
+# NOOP
