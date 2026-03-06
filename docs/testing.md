@@ -3,6 +3,12 @@
 Make sure you've copied `.env.example` to `.env.test` and provided any required
 values.
 
+Install dependencies in `/dev-env`
+
+```
+cd dev-env && yarn
+```
+
 ## Using Maestro
 
 1. Install Maestro by following [these instructions](https://maestro.mobile.dev/getting-started/installing-maestro). This will help us run the E2E tests.
