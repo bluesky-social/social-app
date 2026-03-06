@@ -724,35 +724,30 @@ export type Events = {
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
-    position?: number
   }
   'postMenu:muteWordsAndTags': {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
-    position?: number
   }
   'postMenu:muteAccount': {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
-    position?: number
   }
   'postMenu:blockAccount': {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
-    position?: number
   }
   'postMenu:reportPost': {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
-    position?: number
   }
 
   'verification:create': {}
