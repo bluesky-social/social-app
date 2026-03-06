@@ -15,7 +15,6 @@ import {
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, flatten, native, useTheme, web} from '#/alf'
-import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -30,13 +29,11 @@ import {IS_WEB} from '#/env'
 const X_ICON_OFFSET = 16
 
 export function TranslatedPost({
-  emojiMultiplier = 1.85,
   hideTranslateLink = false,
   post,
   postText,
   postTextStyle = a.text_md,
 }: {
-  emojiMultiplier?: number
   hideTranslateLink?: boolean
   post: AppBskyFeedDefs.PostView
   postText: string
@@ -59,7 +56,6 @@ export function TranslatedPost({
       return (
         <TranslationResult
           clearTranslation={clearTranslation}
-          emojiMultiplier={emojiMultiplier}
           translate={translate}
           postText={postText}
           postTextStyle={postTextStyle}
@@ -250,7 +246,6 @@ function TranslationError({
 
 function TranslationResult({
   clearTranslation,
-  emojiMultiplier,
   translate,
   postText,
   postTextStyle,
@@ -258,7 +253,6 @@ function TranslationResult({
   translatedText,
 }: {
   clearTranslation: () => void
-  emojiMultiplier: number
   translate: TranslationFunction
   postText: string
   postTextStyle?: StyleProp<TextStyle>
@@ -274,9 +268,7 @@ function TranslationResult({
     : undefined
 
   const flattenedStyle = flatten(postTextStyle) ?? {}
-  const fontSize = isOnlyEmoji(postText)
-    ? (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
-    : flattenedStyle.fontSize
+  const fontSize = flattenedStyle.fontSize
 
   return (
     <View>
