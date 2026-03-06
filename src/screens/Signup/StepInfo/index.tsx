@@ -4,7 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
-import type tldts from 'tldts'
+import type * as tldts from 'tldts'
 
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'

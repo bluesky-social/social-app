@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import type tldts from 'tldts'
+import type * as tldts from 'tldts'
 
 export function useTLDs() {
   const [tlds, setTlds] = useState<typeof tldts>()
