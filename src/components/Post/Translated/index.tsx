@@ -91,12 +91,12 @@ function TranslationLoading() {
   const t = useTheme()
 
   return (
-    <View style={[a.gap_md, a.pt_md, a.align_start]}>
+    <View style={[a.gap_md, a.mt_sm, a.align_start]}>
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <Loader size="xs" />
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          <Trans>Translating…</Trans>
+          <Trans>Translating</Trans>
         </Text>
+        <Loader size="xs" />
       </View>
     </View>
   )
@@ -132,7 +132,7 @@ function TranslationLink({
     <View
       style={[
         a.gap_md,
-        a.pt_md,
+        a.mt_sm,
         a.align_start,
         a.flex_row,
         a.align_center,
