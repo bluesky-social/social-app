@@ -9,7 +9,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/analytics'
-import {HAS_ON_DEVICE_TRANSLATION} from '#/env'
+import {HAS_ON_DEVICE_TRANSLATION, IS_ANDROID, IS_IOS} from '#/env'
 import {Context} from './context'
 import {type TranslationFunctionParams, type TranslationState} from './types'
 import {guessLanguage} from './utils'
@@ -34,18 +34,16 @@ async function attemptTranslation(
   // Note that Android only supports two-character language codes and will fail
   // on other input.
   // https://developers.google.com/android/reference/com/google/mlkit/nl/translate/TranslateLanguage
-  let targetLangCode =
-    Platform.OS === 'android'
-      ? targetLangCodeOriginal.split('-')[0]
-      : targetLangCodeOriginal
-  const sourceLangCode =
-    Platform.OS === 'android'
-      ? sourceLangCodeOriginal?.split('-')[0]
-      : sourceLangCodeOriginal
+  let targetLangCode = IS_ANDROID
+    ? targetLangCodeOriginal.split('-')[0]
+    : targetLangCodeOriginal
+  const sourceLangCode = IS_ANDROID
+    ? sourceLangCodeOriginal?.split('-')[0]
+    : sourceLangCodeOriginal
 
   // Special cases for regional languages since iOS differentiates and missing
   // language packs must be downloaded and installed.
-  if (Platform.OS === 'ios') {
+  if (IS_IOS) {
     const deviceLocales = getLocales()
     const primaryLanguageTag = deviceLocales[0]?.languageTag
     switch (targetLangCodeOriginal) {
@@ -199,7 +197,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   }, [])
 
   const clearTranslation = useCallback((key: string) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    if (!IS_ANDROID) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    }
     setTranslationState(prev => {
       delete prev[key]
       return {...prev}
@@ -237,8 +237,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         return
       }
 
-      // Translate after the next state change.
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      if (!IS_ANDROID) {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      }
       setTranslationState(prev => ({
         ...prev,
         [key]: {status: 'loading'},
@@ -257,7 +258,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           targetLanguage: result.targetLanguage,
           postLanguages: postLangCodes,
         })
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        if (!IS_ANDROID) {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        }
         setTranslationState(prev => ({
           ...prev,
           [key]: {
@@ -281,7 +284,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           postLanguages: postLangCodes,
         })
         let errorMessage = l`Device failed to translate :(`
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        if (!IS_ANDROID) {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        }
         setTranslationState(prev => ({
           ...prev,
           [key]: {status: 'error', message: errorMessage},

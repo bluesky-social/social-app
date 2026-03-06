@@ -321,6 +321,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentAgentState.did) {
+          /*
+           * Web handling: if leader tab has switched to a diff account that is
+           * stale, it will refresh the session before triggering the update to
+           * follower tabs. Follower tabs will therefore receive the fresh
+           * session. See APP-1960, or ask Eric.
+           */
           resumeSession(syncedAccount)
         } else {
           const agent = state.currentAgentState.agent as BskyAgent

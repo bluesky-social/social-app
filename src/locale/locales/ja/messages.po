@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 02:45\n"
+"PO-Revision-Date: 2026-03-05 20:12\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -851,8 +851,8 @@ msgstr "アカウントを追加"
 #: src/view/com/composer/GifAltText.tsx:78
 #: src/view/com/composer/GifAltText.tsx:147
 #: src/view/com/composer/GifAltText.tsx:214
-#: src/view/com/composer/photos/Gallery.tsx:181
-#: src/view/com/composer/photos/Gallery.tsx:228
+#: src/view/com/composer/photos/Gallery.tsx:182
+#: src/view/com/composer/photos/Gallery.tsx:229
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:99
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:107
 msgid "Add alt text"
@@ -1152,7 +1152,7 @@ msgstr "@{0}としてすでにサインイン済み"
 #: src/components/images/Gallery.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:102
-#: src/view/com/composer/photos/Gallery.tsx:199
+#: src/view/com/composer/photos/Gallery.tsx:200
 msgid "ALT"
 msgstr "ALT"
 
@@ -1170,7 +1170,7 @@ msgstr "ALTテキスト"
 msgid "Alt Text"
 msgstr "ALTテキスト"
 
-#: src/view/com/composer/photos/Gallery.tsx:273
+#: src/view/com/composer/photos/Gallery.tsx:274
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "ALTテキストは、すべての人が文脈を理解できるようにするために、視覚障害者や低視力者向けに提供する画像の説明文です。"
 
@@ -1974,7 +1974,7 @@ msgstr "キャプション＆ALTテキスト"
 msgid "Cashtag {tag}"
 msgstr "キャッシュタグ {tag}"
 
-#: src/components/Post/Translated/index.tsx:395
+#: src/components/Post/Translated/index.tsx:397
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
 msgstr "変更"
@@ -2020,9 +2020,9 @@ msgstr "レポートカテゴリの変更"
 msgid "Change report reason"
 msgstr "報告の理由を変更"
 
-#: src/components/Post/Translated/index.tsx:385
+#: src/components/Post/Translated/index.tsx:387
 msgid "Change the source language"
-msgstr ""
+msgstr "翻訳元の言語を変更"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:58
 msgid "Change your password"
@@ -3123,7 +3123,7 @@ msgstr "開発者用オプション"
 
 #: src/lib/translation/index.tsx:265
 msgid "Device failed to translate :("
-msgstr ""
+msgstr "デバイスによる翻訳に失敗しました :("
 
 #: src/components/WhoCanReply.tsx:222
 msgid "Dialog: adjust who can interact with this post"
@@ -3446,7 +3446,7 @@ msgstr "フィードを編集"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:86
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:90
-#: src/view/com/composer/photos/Gallery.tsx:206
+#: src/view/com/composer/photos/Gallery.tsx:207
 msgid "Edit image"
 msgstr "画像を編集"
 
@@ -4986,8 +4986,8 @@ msgstr "この投稿を非表示にしますか？"
 msgid "Hide this reply?"
 msgstr "この返信を非表示にしますか？"
 
-#: src/components/Post/Translated/index.tsx:192
-#: src/components/Post/Translated/index.tsx:318
+#: src/components/Post/Translated/index.tsx:194
+#: src/components/Post/Translated/index.tsx:320
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:514
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:516
 msgid "Hide translation"
@@ -7713,7 +7713,7 @@ msgstr "プロフィール"
 
 #: src/screens/Profile/Header/Shell.tsx:174
 msgid "Profile banner placeholder"
-msgstr ""
+msgstr "プロファイルバナーのプレースホルダー"
 
 #: src/lib/strings/errors.ts:40
 msgid "Profile not found"
@@ -7911,7 +7911,7 @@ msgstr "プッシュ通知を受け取る"
 
 #: src/screens/Search/components/SearchHistory.tsx:50
 msgid "Recent searches"
-msgstr ""
+msgstr "検索履歴"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:257
 msgid "Recently used"
@@ -8030,7 +8030,7 @@ msgstr "保存済投稿から削除"
 msgid "Remove from your feeds?"
 msgstr "フィードから削除しますか？"
 
-#: src/view/com/composer/photos/Gallery.tsx:215
+#: src/view/com/composer/photos/Gallery.tsx:216
 msgid "Remove image"
 msgstr "イメージを削除"
 
@@ -8910,7 +8910,7 @@ msgstr "電話の国番号を選択"
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr "絵文字{emojiName}をアバターとして選択"
 
-#: src/components/Post/Translated/index.tsx:402
+#: src/components/Post/Translated/index.tsx:404
 msgid "Select the source language"
 msgstr "翻訳元の言語を選択"
 
@@ -10521,18 +10521,18 @@ msgstr "トピック"
 
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/dms/MessageContextMenu.tsx:141
-#: src/components/Post/Translated/index.tsx:139
-#: src/components/Post/Translated/index.tsx:146
+#: src/components/Post/Translated/index.tsx:141
+#: src/components/Post/Translated/index.tsx:148
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:522
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:524
 msgid "Translate"
 msgstr "翻訳"
 
-#: src/components/Post/Translated/index.tsx:292
+#: src/components/Post/Translated/index.tsx:294
 msgid "Translated"
 msgstr "翻訳"
 
-#: src/components/Post/Translated/index.tsx:89
+#: src/components/Post/Translated/index.tsx:93
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:506
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:508
 msgid "Translating…"
@@ -10565,7 +10565,7 @@ msgstr "信頼は人間関係、コミュニティ、共有されている文脈
 
 #: src/screens/Search/SearchResults.tsx:186
 msgctxt "english-only-resource"
-msgid "Try a different search term, or <0>read about how to use search filters.</0>."
+msgid "Try a different search term, or <0>read about how to use search filters</0>."
 msgstr ""
 
 #: src/view/com/util/error/ErrorScreen.tsx:104
@@ -10573,10 +10573,10 @@ msgctxt "action"
 msgid "Try again"
 msgstr "再試行"
 
-#: src/components/Post/Translated/index.tsx:205
-#: src/components/Post/Translated/index.tsx:213
+#: src/components/Post/Translated/index.tsx:207
+#: src/components/Post/Translated/index.tsx:215
 msgid "Try Google Translate"
-msgstr ""
+msgstr "Google翻訳を試す"
 
 #: src/lib/interests.ts:74
 msgid "TV"
@@ -11253,7 +11253,7 @@ msgstr "{0}のプロフィールを表示"
 #. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
 #: src/components/ProfileCard.tsx:143
 msgid "View {0}’s profile"
-msgstr ""
+msgstr "{0}のプロフィールを見る"
 
 #: src/components/dms/MessagesListHeader.tsx:142
 msgid "View {displayName}'s profile"
@@ -11310,7 +11310,7 @@ msgstr "プロフィールを表示"
 
 #: src/screens/Profile/Header/Shell.tsx:173
 msgid "View profile banner"
-msgstr ""
+msgstr "プロフィールのバナーを見る"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:124
 msgid "View the avatar"
