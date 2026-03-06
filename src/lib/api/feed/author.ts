@@ -31,6 +31,7 @@ export class AuthorFeedAPI implements FeedAPI {
     const res = await this.agent.getAuthorFeed({
       ...this.params,
       limit: 1,
+      includePins: false,
     })
     return res.data.feed[0]
   }
