@@ -96,7 +96,7 @@ function TranslationLoading() {
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
           <Trans>Translating</Trans>
         </Text>
-        <Loader size="xs" />
+        <Loader size="xs" fill={t.atoms.text_contrast_medium.color} />
       </View>
     </View>
   )
