@@ -9,7 +9,9 @@
   -->
   <link rel="preconnect" href="https://bsky.social">
   <link rel="preconnect" href="https://go.bsky.app">
-  <title>{%- block head_title -%}Bluesky{%- endblock -%}</title>
+  <link rel="preload" as="image" href="/static/logo.svg" type="image/svg+xml">
+
+  <title>{%- block head_title -%}Protosky{%- endblock -%}</title>
 
   <!-- Hello Humans! API docs at https://atproto.com -->
 
@@ -137,11 +139,10 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{{ staticCDNHost }}/static/favicon-16x16.png">
   <link rel="mask-icon" href="{{ staticCDNHost }}/static/safari-pinned-tab.svg" color="#1185fe">
   <meta name="theme-color">
-  <meta name="application-name" content="Bluesky">
+  <meta name="application-name" content="Protosky">
   <meta name="generator" content="bskyweb">
-  <meta property="og:site_name" content="Bluesky Social">
+  <meta property="og:site_name" content="Protosky Social">
   <meta property="og:logo" content="{{ favicon }}">
-  <meta name="twitter:site" content="@bluesky" />
   <link type="application/activity+json" href="" />
 
   {% block html_head_extra -%}{%- endblock %}
@@ -149,8 +150,7 @@
 <body>
 {%- block body_all %}
   <div id="splash">
-    <!-- Bluesky SVG -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 57"><path fill="#006AFF" d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.13.044.41.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"/></svg>
+      <img src="/static/logo.svg" alt="Protosky" width="100" height="89" decoding="async" fetchpriority="high"> </div>
   </div>
   <div id="root">
   </div>
@@ -158,7 +158,7 @@
   <noscript>
     <h1 lang="en">JavaScript Required</h1>
     <p lang="en">This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
-    <p lang="en">Learn more about Bluesky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>.
+    <p lang="en">Learn more about Protosky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>.
     {% block noscript_extra %}{% endblock %}
   </noscript>
 {% endblock -%}
