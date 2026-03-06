@@ -18,22 +18,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Compute image tag
+      - name: Compute tag
         id: meta
         shell: bash
         run: |
           SHORT_SHA="${GITHUB_SHA::7}"
           TAG="${{ inputs.tag }}"
           if [ -z "$TAG" ]; then TAG="$SHORT_SHA"; fi
-          echo "short_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "short_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
 
-      - name: Build Docker image
+      - name: Build Docker image (web)
         env:
           IMAGE_NAME: ${{ inputs.image_name }}
           TAG: ${{ steps.meta.outputs.tag }}
         run: |
-          docker build -t "${IMAGE_NAME}:${TAG}" .
+          docker build -f Dockerfile.web -t "${IMAGE_NAME}:${TAG}" .
 
       - name: Save image as artifact
         env:
@@ -43,12 +43,13 @@ jobs:
           OUT="${IMAGE_NAME}-${TAG}.tar.gz"
           docker save "${IMAGE_NAME}:${TAG}" | gzip > "$OUT"
           sha256sum "$OUT" > "${OUT}.sha256"
+          echo "artifact_name=${IMAGE_NAME}-${TAG}" >> "$GITHUB_ENV"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.image_name }}-${{ steps.meta.outputs.tag }}
+          name: ${{ env.artifact_name }}
           path: |
-            ${{ inputs.image_name }}-${{ steps.meta.outputs.tag }}.tar.gz
-            ${{ inputs.image_name }}-${{ steps.meta.outputs.tag }}.tar.gz.sha256
+            ${{ env.artifact_name }}.tar.gz
+            ${{ env.artifact_name }}.tar.gz.sha256
           retention-days: 14
