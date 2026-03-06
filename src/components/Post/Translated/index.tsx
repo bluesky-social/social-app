@@ -27,6 +27,8 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
+const X_ICON_OFFSET = 16
+
 export function TranslatedPost({
   emojiMultiplier = 1.85,
   hideTranslateLink = false,
@@ -186,12 +188,19 @@ function TranslationError({
         a.mt_sm,
         a.border,
         a.rounded_lg,
-        a.flex_nowrap,
         t.atoms.border_contrast_high,
       ]}>
       <View
         style={[a.flex_row, a.align_center, a.justify_between, a.flex_wrap]}>
-        <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.flex_wrap,
+            {
+              paddingRight: X_ICON_OFFSET,
+            },
+          ]}>
           <WarningIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
           <Text
             style={[
@@ -204,14 +213,6 @@ function TranslationError({
             {message}
           </Text>
         </View>
-        <Button
-          label={l`Hide translation`}
-          hitSlop={HITSLOP_30}
-          hoverStyle={{opacity: 0.5}}
-          style={[a.self_end]}
-          onPress={clearTranslation}>
-          <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-        </Button>
       </View>
       <View style={[a.flex_row, a.align_center, a.mt_sm]}>
         <Link
@@ -235,6 +236,14 @@ function TranslationError({
           </Text>
         </Link>
       </View>
+      <Button
+        label={l`Hide translation`}
+        hitSlop={HITSLOP_30}
+        hoverStyle={native({opacity: 0.5})}
+        style={[a.absolute, a.z_10, {top: X_ICON_OFFSET, right: X_ICON_OFFSET}]}
+        onPress={clearTranslation}>
+        <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+      </Button>
     </View>
   )
 }
@@ -278,12 +287,19 @@ function TranslationResult({
           a.mt_sm,
           a.border,
           a.rounded_lg,
-          a.flex_nowrap,
           t.atoms.border_contrast_high,
         ]}>
         <View
           style={[a.flex_row, a.align_center, a.justify_between, a.flex_wrap]}>
-          <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.flex_wrap,
+              {
+                paddingRight: X_ICON_OFFSET,
+              },
+            ]}>
             {langName ? (
               <>
                 <Text
@@ -347,18 +363,22 @@ function TranslationResult({
               </>
             )}
           </View>
-          <Button
-            label={l`Hide translation`}
-            hitSlop={HITSLOP_30}
-            hoverStyle={{opacity: 0.5}}
-            style={[a.self_end]}
-            onPress={clearTranslation}>
-            <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-          </Button>
         </View>
         <Text emoji selectable style={[a.leading_snug, a.mt_sm, {fontSize}]}>
           {translatedText}
         </Text>
+        <Button
+          label={l`Hide translation`}
+          hitSlop={HITSLOP_30}
+          hoverStyle={native({opacity: 0.5})}
+          style={[
+            a.absolute,
+            a.z_10,
+            {top: X_ICON_OFFSET, right: X_ICON_OFFSET},
+          ]}
+          onPress={clearTranslation}>
+          <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+        </Button>
       </View>
     </View>
   )
