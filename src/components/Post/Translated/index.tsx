@@ -276,98 +276,92 @@ function TranslationResult({
           a.mt_sm,
           a.border,
           a.rounded_lg,
+          a.gap_xs,
           t.atoms.border_contrast_high,
         ]}>
         <View
-          style={[a.flex_row, a.align_center, a.justify_between, a.flex_wrap]}>
-          <View
-            style={[
-              a.flex_row,
-              a.align_center,
-              a.flex_wrap,
-              {
-                paddingRight: X_ICON_OFFSET,
-              },
-            ]}>
-            {langName ? (
-              <>
-                <Text
-                  style={[
-                    a.text_xs,
-                    a.font_medium,
-                    a.leading_snug,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  {langName}{' '}
-                </Text>
-                <View style={[a.mt_2xs]}>
-                  <ArrowRightIcon
-                    size="xs"
-                    fill={t.atoms.text_contrast_medium.color}
-                  />
-                </View>
-                <Text
-                  style={[
-                    a.text_xs,
-                    a.font_medium,
-                    a.leading_snug,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  {' '}
-                  {codeToLanguageName(
-                    langPrefs.primaryLanguage,
-                    langPrefs.appLanguage,
-                  )}
-                </Text>
-              </>
-            ) : (
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.flex_wrap,
+            {
+              paddingRight: X_ICON_OFFSET,
+            },
+          ]}>
+          {langName ? (
+            <>
               <Text
                 style={[
                   a.text_xs,
                   a.font_medium,
                   a.leading_snug,
                   t.atoms.text_contrast_medium,
-                  a.mb_xs,
                 ]}>
-                <Trans>Translated</Trans>
+                {langName}{' '}
               </Text>
-            )}
-            {sourceLanguage != null && (
-              <>
-                <Text
-                  style={[
-                    a.text_xs,
-                    a.font_medium,
-                    a.leading_snug,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  {' '}
-                  &middot;{' '}
-                </Text>
-                <TranslationLanguageSelect
-                  sourceLanguage={sourceLanguage}
-                  translate={translate}
-                  postText={postText}
+              <View style={[a.mt_2xs]}>
+                <ArrowRightIcon
+                  size="xs"
+                  fill={t.atoms.text_contrast_medium.color}
                 />
-              </>
-            )}
-          </View>
+              </View>
+              <Text
+                style={[
+                  a.text_xs,
+                  a.font_medium,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {' '}
+                {codeToLanguageName(
+                  langPrefs.primaryLanguage,
+                  langPrefs.appLanguage,
+                )}
+              </Text>
+            </>
+          ) : (
+            <Text
+              style={[
+                a.text_xs,
+                a.font_medium,
+                a.leading_snug,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Translated</Trans>
+            </Text>
+          )}
+          {sourceLanguage != null && (
+            <>
+              <Text
+                style={[
+                  a.text_xs,
+                  a.font_medium,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {' '}
+                &middot;{' '}
+              </Text>
+              <TranslationLanguageSelect
+                sourceLanguage={sourceLanguage}
+                translate={translate}
+                postText={postText}
+              />
+            </>
+          )}
+
+          <Button
+            label={l`Hide translation`}
+            hitSlop={HITSLOP_30}
+            hoverStyle={native({opacity: 0.5})}
+            style={[a.absolute, a.z_10, {top: 0, right: 0}]}
+            onPress={clearTranslation}>
+            <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+          </Button>
         </View>
-        <Text emoji selectable style={[a.leading_snug, a.mt_sm, {fontSize}]}>
+        <Text emoji selectable style={[a.leading_snug, {fontSize}]}>
           {translatedText}
         </Text>
-        <Button
-          label={l`Hide translation`}
-          hitSlop={HITSLOP_30}
-          hoverStyle={native({opacity: 0.5})}
-          style={[
-            a.absolute,
-            a.z_10,
-            {top: X_ICON_OFFSET, right: X_ICON_OFFSET},
-          ]}
-          onPress={clearTranslation}>
-          <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-        </Button>
       </View>
     </View>
   )
