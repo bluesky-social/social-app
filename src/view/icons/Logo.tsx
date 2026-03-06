@@ -13,6 +13,7 @@ import {Image} from 'expo-image'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {flatten, useTheme} from '#/alf'
 import LogoSvg from '../../../assets/icons/logomark.svg'
+import {IS_WEB} from '#/env'
 
 const ratio = 57 / 64
 
@@ -50,7 +51,30 @@ export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
     )
   }
 
+  // handle web where SVG import may be a URL string
+  const SvgImport: any = LogoSvg
+  const isUrl = typeof SvgImport === 'string'
+
+  if (IS_WEB && isUrl) {
+    // Render a standard <img> on web when import is a URL
+    // @ts-ignore
+    return (
+      // plain img is fine on web build
+      <img
+        src={SvgImport}
+        width={size}
+        height={size * ratio}
+        style={styles as any}
+        alt="Bluesky"
+        // @ts-ignore
+        ref={ref}
+      />
+    )
+  }
+
   return (
+    // SVG component (native / transformer-enabled web)
+    // @ts-ignore
     <LogoSvg
       width={size}
       height={size * ratio}
