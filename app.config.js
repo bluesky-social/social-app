@@ -45,9 +45,9 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
-      slug: 'bluesky',
-      scheme: 'bluesky',
+      name: 'Protosky',
+      slug: 'protosky',
+      scheme: 'protosky',
       owner: 'blueskysocial',
       runtimeVersion: {
         policy: 'appVersion',
@@ -73,7 +73,7 @@ module.exports = function (_config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
-          CFBundleSpokenName: 'Blue Sky',
+          CFBundleSpokenName: 'Protosky',
           CFBundleLocalizations: [
             'en',
             'an',
@@ -215,6 +215,7 @@ module.exports = function (_config) {
         ],
       },
       web: {
+        name: 'Protosky',
         favicon: './assets/favicon.png',
       },
       updates: {
@@ -418,7 +419,7 @@ module.exports = function (_config) {
           'expo-contacts',
           {
             contactsPermission:
-              'I agree to allow Bluesky to use my contacts for friend discovery until I opt out.',
+              'I agree to allow Protosky to use my contacts for friend discovery until I opt out.',
           },
         ],
       ],
