@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {Platform, View} from 'react-native'
+import {Platform, type StyleProp, type TextStyle, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -14,7 +14,8 @@ import {
 } from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, flatten, native, useTheme, web} from '#/alf'
+import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -27,13 +28,17 @@ import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 export function TranslatedPost({
+  emojiMultiplier = 1.85,
   hideTranslateLink = false,
   post,
   postText,
+  postTextStyle,
 }: {
+  emojiMultiplier?: number
   hideTranslateLink?: boolean
   post: AppBskyFeedDefs.PostView
   postText: string
+  postTextStyle: StyleProp<TextStyle>
 }) {
   const langPrefs = useLanguagePrefs()
   const {clearTranslation, translate, translationState} = useTranslate({
@@ -52,8 +57,10 @@ export function TranslatedPost({
       return (
         <TranslationResult
           clearTranslation={clearTranslation}
+          emojiMultiplier={emojiMultiplier}
           translate={translate}
           postText={postText}
+          postTextStyle={postTextStyle}
           sourceLanguage={
             translationState.sourceLanguage ?? null // Fallback primarily for iOS
           }
@@ -175,31 +182,38 @@ function TranslationError({
     <View
       style={[
         a.px_lg,
-        a.pt_sm,
-        a.pb_md,
+        a.py_lg,
         a.mt_sm,
         a.border,
         a.rounded_lg,
+        a.flex_nowrap,
         t.atoms.border_contrast_high,
       ]}>
-      <View style={[a.flex_row, a.align_center, a.justify_between]}>
-        <View style={[a.flex_row, a.align_center, a.mb_sm, a.gap_xs]}>
+      <View
+        style={[a.flex_row, a.align_center, a.justify_between, a.flex_wrap]}>
+        <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
           <WarningIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-          <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
+          <Text
+            style={[
+              a.text_xs,
+              a.font_medium,
+              a.leading_snug,
+              t.atoms.text_contrast_high,
+            ]}>
+            {' '}
             {message}
           </Text>
         </View>
-        <View style={[a.flex_row, a.align_center, a.mb_xs]}>
-          <Button
-            label={l`Hide translation`}
-            hitSlop={HITSLOP_30}
-            hoverStyle={{opacity: 0.5}}
-            onPress={clearTranslation}>
-            <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-          </Button>
-        </View>
+        <Button
+          label={l`Hide translation`}
+          hitSlop={HITSLOP_30}
+          hoverStyle={{opacity: 0.5}}
+          style={[a.self_end]}
+          onPress={clearTranslation}>
+          <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+        </Button>
       </View>
-      <View style={[a.flex_row, a.align_center]}>
+      <View style={[a.flex_row, a.align_center, a.mt_sm]}>
         <Link
           {...createStaticClick(() => {
             handleFallback()
@@ -211,7 +225,12 @@ function TranslationError({
           ]}
           hitSlop={HITSLOP_30}>
           <Text
-            style={[a.text_xs, a.font_medium, {color: t.palette.primary_500}]}>
+            style={[
+              a.text_xs,
+              a.font_medium,
+              a.leading_snug,
+              {color: t.palette.primary_500},
+            ]}>
             <Trans>Try Google Translate</Trans>
           </Text>
         </Link>
@@ -222,14 +241,18 @@ function TranslationError({
 
 function TranslationResult({
   clearTranslation,
+  emojiMultiplier,
   translate,
   postText,
+  postTextStyle,
   sourceLanguage,
   translatedText,
 }: {
   clearTranslation: () => void
+  emojiMultiplier: number
   translate: TranslationFunction
   postText: string
+  postTextStyle: StyleProp<TextStyle>
   sourceLanguage: string | null
   translatedText: string
 }) {
@@ -241,89 +264,101 @@ function TranslationResult({
     ? codeToLanguageName(sourceLanguage, i18n.locale)
     : undefined
 
+  const flattenedStyle = flatten(postTextStyle) ?? {}
+  const fontSize = isOnlyEmoji(postText)
+    ? (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
+    : flattenedStyle.fontSize
+
   return (
     <View>
       <View
         style={[
           a.px_lg,
-          a.pt_sm,
-          a.pb_md,
+          a.py_lg,
           a.mt_sm,
           a.border,
           a.rounded_lg,
+          a.flex_nowrap,
           t.atoms.border_contrast_high,
         ]}>
-        <View style={[a.flex_row, a.align_center, a.mb_xs]}>
-          {langName ? (
-            <View style={[a.flex_row, a.align_center]}>
+        <View
+          style={[a.flex_row, a.align_center, a.justify_between, a.flex_wrap]}>
+          <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
+            {langName ? (
+              <>
+                <Text
+                  style={[
+                    a.text_xs,
+                    a.font_medium,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  {langName}{' '}
+                </Text>
+                <View style={[a.mt_2xs]}>
+                  <ArrowRightIcon
+                    size="xs"
+                    fill={t.atoms.text_contrast_medium.color}
+                  />
+                </View>
+                <Text
+                  style={[
+                    a.text_xs,
+                    a.font_medium,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  {' '}
+                  {codeToLanguageName(
+                    langPrefs.primaryLanguage,
+                    langPrefs.appLanguage,
+                  )}
+                </Text>
+              </>
+            ) : (
               <Text
                 style={[
                   a.text_xs,
                   a.font_medium,
+                  a.leading_snug,
                   t.atoms.text_contrast_medium,
+                  a.mb_xs,
                 ]}>
-                {langName}{' '}
+                <Trans>Translated</Trans>
               </Text>
-              <View style={[a.mt_2xs]}>
-                <ArrowRightIcon
-                  size="xs"
-                  fill={t.atoms.text_contrast_medium.color}
+            )}
+            {sourceLanguage != null && (
+              <>
+                <Text
+                  style={[
+                    a.text_xs,
+                    a.font_medium,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  {' '}
+                  &middot;{' '}
+                </Text>
+                <TranslationLanguageSelect
+                  sourceLanguage={sourceLanguage}
+                  translate={translate}
+                  postText={postText}
                 />
-              </View>
-              <Text
-                style={[
-                  a.text_xs,
-                  a.font_medium,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                {' '}
-                {codeToLanguageName(
-                  langPrefs.primaryLanguage,
-                  langPrefs.appLanguage,
-                )}
-              </Text>
-            </View>
-          ) : (
-            <Text
-              style={[
-                a.text_xs,
-                a.font_medium,
-                t.atoms.text_contrast_medium,
-                a.mb_xs,
-              ]}>
-              <Trans>Translated</Trans>
-            </Text>
-          )}
-          {sourceLanguage != null && (
-            <>
-              <Text
-                style={[
-                  a.text_xs,
-                  a.font_medium,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                {' '}
-                &middot;{' '}
-              </Text>
-              <TranslationLanguageSelect
-                sourceLanguage={sourceLanguage}
-                translate={translate}
-                postText={postText}
-              />
-            </>
-          )}
+              </>
+            )}
+          </View>
+          <Button
+            label={l`Hide translation`}
+            hitSlop={HITSLOP_30}
+            hoverStyle={{opacity: 0.5}}
+            style={[a.self_end]}
+            onPress={clearTranslation}>
+            <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+          </Button>
         </View>
-        <Text emoji selectable style={[a.text_md, a.leading_snug]}>
+        <Text emoji selectable style={[a.leading_snug, a.mt_sm, {fontSize}]}>
           {translatedText}
         </Text>
-        <Button
-          label={l`Hide translation`}
-          hitSlop={HITSLOP_30}
-          hoverStyle={native({opacity: 0.5})}
-          style={[a.absolute, a.z_10, {top: 12, right: 14}]}
-          onPress={clearTranslation}>
-          <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
-        </Button>
       </View>
     </View>
   )
@@ -393,7 +428,12 @@ function TranslationLanguageSelect({
               hitSlop={HITSLOP_30}
               hoverStyle={native({opacity: 0.5})}>
               <Text
-                style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
+                style={[
+                  a.text_xs,
+                  a.font_medium,
+                  a.leading_snug,
+                  t.atoms.text_contrast_high,
+                ]}>
                 <Trans>Change</Trans>
               </Text>
             </Button>
