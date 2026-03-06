@@ -379,6 +379,7 @@ function TranslationLanguageSelect({
       text: postText,
       targetLangCode: langPrefs.primaryLanguage,
       sourceLangCode,
+      sourceSelection: 'manual',
     })
   }
 

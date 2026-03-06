@@ -710,13 +710,12 @@ export type Events = {
   'translate:result': {
     method: 'on-device' | 'google-translate' | 'fallback-alert'
     os: Platform['OS']
+    sourceSelection: 'automatic' | 'manual'
     sourceLanguage: string | null
     targetLanguage: string
 
     /* Only relevant to posts */
     postLanguages?: string[]
-    /* Only relevant to posts */
-    isPostLanguageAccurate?: boolean
   }
   'translate:override': {
     os: Platform['OS']

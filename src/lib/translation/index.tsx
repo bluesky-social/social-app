@@ -12,7 +12,7 @@ import {useAnalytics} from '#/analytics'
 import {HAS_ON_DEVICE_TRANSLATION} from '#/env'
 import {Context} from './context'
 import {type TranslationFunctionParams, type TranslationState} from './types'
-import {guessLanguage, isPostLanguageAccurate} from './utils'
+import {guessLanguage} from './utils'
 
 export * from './types'
 export * from './utils'
@@ -212,6 +212,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       text,
       targetLangCode,
       sourceLangCode,
+      sourceSelection = 'automatic',
       postLangCodes,
       ...options
     }: {
@@ -220,12 +221,14 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       targetLangCode: string
       sourceLangCode?: string
       postLangCodes?: string[]
+      sourceSelection?: 'automatic' | 'manual'
       forceGoogleTranslate?: boolean
     }) => {
       if (options?.forceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
         ax.metric('translate:result', {
           method: 'google-translate',
           os: Platform.OS,
+          sourceSelection,
           sourceLanguage: sourceLangCode ?? null,
           targetLanguage: targetLangCode,
           postLanguages: postLangCodes,
@@ -249,13 +252,10 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         ax.metric('translate:result', {
           method: 'on-device',
           os: Platform.OS,
+          sourceSelection,
           sourceLanguage: result.sourceLanguage,
           targetLanguage: result.targetLanguage,
           postLanguages: postLangCodes,
-          isPostLanguageAccurate: isPostLanguageAccurate({
-            sourceLanguage: result.sourceLanguage,
-            postLanguages: postLangCodes,
-          }),
         })
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         setTranslationState(prev => ({
@@ -269,20 +269,16 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
           },
         }))
       } catch (e) {
-        const sourceLanguage = sourceLangCode ?? guessLanguage(text)
         logger.error('Failed to translate text on device', {safeMessage: e})
         // On-device translation failed (language pack missing or user
         // dismissed the download prompt).
         ax.metric('translate:result', {
           method: 'fallback-alert',
           os: Platform.OS,
-          sourceLanguage,
+          sourceSelection,
+          sourceLanguage: sourceLangCode ?? null,
           targetLanguage: targetLangCode,
           postLanguages: postLangCodes,
-          isPostLanguageAccurate: isPostLanguageAccurate({
-            sourceLanguage,
-            postLanguages: postLangCodes,
-          }),
         })
         let errorMessage = l`Device failed to translate :(`
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
