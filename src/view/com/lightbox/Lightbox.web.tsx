@@ -7,6 +7,7 @@ import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
+import {saveImageToMediaLibrary} from '#/lib/media/manip'
 import {useA11y} from '#/state/a11y'
 import {useLightbox, useLightboxControls} from '#/state/lightbox'
 import {
@@ -16,7 +17,6 @@ import {
   useBreakpoints,
   useTheme,
 } from '#/alf'
-import {saveImageToMediaLibrary} from '#/lib/media/manip'
 import {Button} from '#/components/Button'
 import {Backdrop} from '#/components/Dialog'
 import {
@@ -25,9 +25,9 @@ import {
 } from '#/components/icons/Chevron'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
-import * as Menu from '#/components/Menu'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
+import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {type ImageSource} from './ImageViewing/@types'
 
@@ -275,7 +275,9 @@ function LightboxGallery({
           <Menu.Group>
             <Menu.Item
               label={_(msg`Download image`)}
-              onPress={() => saveImageToMediaLibrary({uri: img.uri, format: 'jpeg'})}>
+              onPress={() => {
+                void saveImageToMediaLibrary({uri: img.uri, format: 'jpeg'})
+              }}>
               <Menu.ItemIcon icon={DownloadIcon} />
               <Menu.ItemText>
                 <Trans>Download image</Trans>
