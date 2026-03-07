@@ -8,10 +8,7 @@ import android.view.ViewStructure
 import android.view.Window
 import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.allViews
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.UiThreadUtil
@@ -34,7 +31,12 @@ class BottomSheetView(
 
   private lateinit var dialogRootViewGroup: DialogRootViewGroup
   private var eventDispatcher: EventDispatcher? = null
-  private var isKeyboardVisible: Boolean = false
+
+  // Native content height observation (eliminates JS bridge round-trip)
+  private var contentLayoutListener: View.OnLayoutChangeListener? = null
+  private var observedChildren: List<View> = emptyList()
+  private var lastObservedContentHeight: Float = 0f
+  private var pendingLayoutUpdate: Boolean = false
 
   private val screenHeight =
     context.resources.displayMetrics.heightPixels
@@ -64,7 +66,14 @@ class BottomSheetView(
     set(value) {
       field = value
       this.dialog?.setCancelable(!value)
+      // Full-height sheets have no half-expanded snap point, so any drag
+      // would dismiss. Disable dragging when dismiss is prevented.
+      if (fullHeight) {
+        this.setDraggable(!value && !disableDrag)
+      }
     }
+
+  var fullHeight = false
 
   var preventExpansion = false
 
@@ -129,6 +138,7 @@ class BottomSheetView(
   }
 
   private fun destroy() {
+    this.stopObservingContentHeight()
     this.isClosing = false
     this.isOpen = false
     this.dialog = null
@@ -196,28 +206,36 @@ class BottomSheetView(
 
       val behavior = BottomSheetBehavior.from(it)
       behavior.state = BottomSheetBehavior.STATE_HIDDEN
-      behavior.isFitToContents = true
-      behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
       behavior.skipCollapsed = true
       behavior.isDraggable = true
       behavior.isHideable = true
-
-      if (preventExpansion) {
-        behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
-      } else {
-        behavior.maxHeight = (screenHeight - getStatusBarHeight()).toInt()
-      }
-
-      val targetHeight = this.getTargetHeight()
-      val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
-      val shouldBeExpanded = targetHeight >= availableHeight
-
-      if (shouldBeExpanded) {
+      if (fullHeight) {
+        behavior.isFitToContents = false
+        behavior.expandedOffset = getStatusBarHeight()
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.selectedSnapPoint = 2
-      } else {
+      } else if (preventExpansion) {
+        behavior.isFitToContents = true
+        behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
+        behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         this.selectedSnapPoint = 1
+      } else {
+        behavior.isFitToContents = false
+        behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
+        behavior.expandedOffset = getStatusBarHeight()
+
+        val targetHeight = this.getTargetHeight()
+        val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
+        val shouldBeExpanded = targetHeight >= availableHeight
+
+        if (shouldBeExpanded) {
+          behavior.state = BottomSheetBehavior.STATE_EXPANDED
+          this.selectedSnapPoint = 2
+        } else {
+          behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+          this.selectedSnapPoint = 1
+        }
       }
 
       behavior.addBottomSheetCallback(
@@ -226,11 +244,22 @@ class BottomSheetView(
             bottomSheet: View,
             newState: Int,
           ) {
+            if (newState == BottomSheetBehavior.STATE_EXPANDED && preventExpansion) {
+              behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+              return
+            }
             when (newState) {
               BottomSheetBehavior.STATE_EXPANDED -> selectedSnapPoint = 2
               BottomSheetBehavior.STATE_COLLAPSED -> selectedSnapPoint = 1
               BottomSheetBehavior.STATE_HALF_EXPANDED -> selectedSnapPoint = 1
               BottomSheetBehavior.STATE_HIDDEN -> selectedSnapPoint = 0
+            }
+            // Apply deferred layout update after gesture completes
+            if (newState != BottomSheetBehavior.STATE_DRAGGING &&
+                newState != BottomSheetBehavior.STATE_SETTLING &&
+                pendingLayoutUpdate) {
+              pendingLayoutUpdate = false
+              updateLayout()
             }
           }
 
@@ -245,25 +274,14 @@ class BottomSheetView(
     this.isOpening = true
     dialog.show()
     this.dialog = dialog
-
-    ViewCompat.setOnApplyWindowInsetsListener(dialogRootViewGroup) { view, insets ->
-      val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
-      val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-      val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
-
-      val wasKeyboardVisible = isKeyboardVisible
-      isKeyboardVisible = imeVisible
-
-      if (imeVisible && behavior?.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-      } else if (!imeVisible && wasKeyboardVisible) {
-        updateLayout()
-      }
-      insets
+    if (!fullHeight) {
+      this.startObservingContentHeight()
     }
+
   }
 
   fun updateLayout() {
+    if (fullHeight) return
     val dialog = this.dialog ?: return
     val contentHeight = this.getContentHeight()
 
@@ -274,21 +292,34 @@ class BottomSheetView(
 
       val oldRatio = behavior.halfExpandedRatio
       val newRatio = getHalfExpandedRatio(contentHeight)
-      behavior.halfExpandedRatio = newRatio
-
-      if (preventExpansion) {
-        behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
-      }
 
       val targetHeight = this.getTargetHeight()
       val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
       val shouldBeExpanded = targetHeight >= availableHeight
 
-      if (isKeyboardVisible) {
-        if (behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-          behavior.state = BottomSheetBehavior.STATE_EXPANDED
+      // Don't update during user gestures — defer until the gesture completes.
+      if (currentState == BottomSheetBehavior.STATE_DRAGGING) {
+        pendingLayoutUpdate = true
+        return
+      }
+
+      behavior.halfExpandedRatio = newRatio
+
+      if (preventExpansion) {
+        behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
+        it.requestLayout()
+      }
+
+      // During settling (programmatic animation from our own state change),
+      // redirect the animation to the new position if the ratio changed.
+      if (currentState == BottomSheetBehavior.STATE_SETTLING) {
+        if (oldRatio != newRatio) {
+          behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
-      } else if (shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_EXPANDED && !preventExpansion) {
+        return
+      }
+
+      if (shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_EXPANDED && !preventExpansion) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
       } else if (!shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -299,21 +330,77 @@ class BottomSheetView(
   }
 
   fun dismiss() {
-    this.dialog?.dismiss()
+    val dialog = this.dialog ?: return
+    // Mark as closing so the content observer doesn't fight the dismiss
+    // animation by calling updateLayout() mid-hide.
+    this.isClosing = true
+    // Temporarily make cancelable so cancel() works — cancel() gives the
+    // slide-out animation, while dismiss() does a plain fade.
+    dialog.setCancelable(true)
+    dialog.cancel()
+  }
+
+  // Observe each direct child of innerView via OnLayoutChangeListener so that
+  // height updates are detected purely on the native side. We use OnLayoutChangeListener
+  // (not OnGlobalLayoutListener) because React Native calls view.layout() directly
+  // via Yoga, bypassing requestLayout()/performTraversals(). OnLayoutChangeListener
+  // fires from setFrame() which IS called by layout(), so it catches RN updates.
+  private fun startObservingContentHeight() {
+    stopObservingContentHeight()
+
+    val innerViewGroup = this.innerView as? ViewGroup ?: return
+
+    val listener = View.OnLayoutChangeListener { _, _, top, _, bottom, _, _, oldTop, oldBottom ->
+      val newHeight = bottom - top
+      val oldHeight = oldBottom - oldTop
+      if (newHeight != oldHeight) {
+        val contentHeight = getContentHeight()
+        if (contentHeight != lastObservedContentHeight && contentHeight > 0 && (isOpen || isOpening) && !isClosing) {
+          lastObservedContentHeight = contentHeight
+          updateLayout()
+        }
+      }
+    }
+
+    val children = mutableListOf<View>()
+    for (i in 0 until innerViewGroup.childCount) {
+      val child = innerViewGroup.getChildAt(i)
+      child.addOnLayoutChangeListener(listener)
+      children.add(child)
+    }
+
+    this.contentLayoutListener = listener
+    this.observedChildren = children
+
+    // Pick up current height if content is already laid out
+    val contentHeight = getContentHeight()
+    if (contentHeight > 0 && contentHeight != lastObservedContentHeight) {
+      lastObservedContentHeight = contentHeight
+      updateLayout()
+    }
+  }
+
+  private fun stopObservingContentHeight() {
+    contentLayoutListener?.let { listener ->
+      observedChildren.forEach { it.removeOnLayoutChangeListener(listener) }
+    }
+    contentLayoutListener = null
+    observedChildren = emptyList()
+    lastObservedContentHeight = 0f
   }
 
   // Util
 
   private fun getContentHeight(): Float {
-    val innerView = this.innerView ?: return 0f
-    var index = 0
-    innerView.allViews.forEach {
-      if (index == 1) {
-        return it.height.toFloat()
-      }
-      index++
+    val innerView = this.innerView as? ViewGroup ?: return 0f
+    // Use the tallest direct child's height. The handle is absolutely positioned
+    // (overlaps the content), so summing would double-count its height as padding.
+    var maxChildHeight = 0f
+    for (i in 0 until innerView.childCount) {
+      val h = innerView.getChildAt(i).height.toFloat()
+      if (h > maxChildHeight) maxChildHeight = h
     }
-    return 0f
+    return maxChildHeight
   }
 
   private fun getTargetHeight(): Float {
