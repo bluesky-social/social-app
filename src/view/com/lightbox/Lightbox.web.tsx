@@ -24,6 +24,7 @@ import {
   ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
 } from '#/components/icons/Chevron'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import * as Menu from '#/components/Menu'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
@@ -275,6 +276,7 @@ function LightboxGallery({
             <Menu.Item
               label={_(msg`Download image`)}
               onPress={() => downloadImageAs(img.uri, 'jpeg')}>
+              <Menu.ItemIcon icon={DownloadIcon} />
               <Menu.ItemText>
                 <Trans>Download image</Trans>
               </Menu.ItemText>
