@@ -31,6 +31,7 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import * as tokens from '#/alf/tokens'
+import {BotBadge} from '#/components/BotBadge'
 import {useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
@@ -422,6 +423,7 @@ function ChatListItemReady({
                         />
                       </View>
                     )}
+                    <BotBadge profile={profile} />
                     {lastMessageSentAt && (
                       <View style={[a.pl_xs]}>
                         <TimeElapsed timestamp={lastMessageSentAt}>

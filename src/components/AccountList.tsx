@@ -12,6 +12,7 @@ import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {Button} from '#/components/Button'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/icons/Chevron'
@@ -170,6 +171,11 @@ function AccountItem({
                     width={12}
                     verifier={verification.role === 'verifier'}
                   />
+                </View>
+              )}
+              {profile && (
+                <View style={{marginTop: -2}}>
+                  <BotBadge profile={profile} />
                 </View>
               )}
             </View>

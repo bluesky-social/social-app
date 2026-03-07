@@ -15,6 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ComposerOptsPostRef} from '#/state/shell/composer'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {QuoteEmbed} from '#/components/Post/Embed'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
@@ -117,6 +118,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
               />
             </View>
           )}
+          <BotBadge profile={replyTo.author} />
         </View>
         <View style={[a.flex_row, a.gap_md]}>
           <View style={[a.flex_1, a.flex_grow]}>

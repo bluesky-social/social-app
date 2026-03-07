@@ -23,6 +23,7 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
 import {atoms as a, useTheme} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useFollowMethods} from '#/components/hooks/useFollowMethods'
 import {useRichText} from '#/components/hooks/useRichText'
@@ -541,6 +542,7 @@ function Inner({
                 />
               </View>
             )}
+            <BotBadge profile={profile} size={16} />
           </View>
 
           <ProfileHeaderHandle profile={profileShadow} disableTaps />

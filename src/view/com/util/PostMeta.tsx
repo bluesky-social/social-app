@@ -14,6 +14,7 @@ import {niceDate} from '#/lib/strings/time'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {atoms as a, platform, useTheme, web} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
@@ -124,6 +125,16 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 />
               </View>
             )}
+            <View
+              style={[
+                a.pl_xs,
+                a.self_center,
+                {
+                  marginTop: -1,
+                },
+              ]}>
+              <BotBadge profile={author} />
+            </View>
             <MaybeLinkText
               emoji
               numberOfLines={1}

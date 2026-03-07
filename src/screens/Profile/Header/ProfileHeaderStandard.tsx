@@ -24,6 +24,7 @@ import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
+import {BotBadgeButton} from '#/components/BotBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useDialogControl} from '#/components/Dialog'
@@ -144,6 +145,9 @@ let ProfileHeaderStandard = ({
                 )}
                 <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
                   <VerificationCheckButton profile={profile} size="lg" />
+                </View>
+                <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
+                  <BotBadgeButton profile={profile} size="lg" isMe={isMe} />
                 </View>
               </Text>
             </View>

@@ -34,6 +34,7 @@ import {
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
@@ -364,6 +365,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <View style={[a.pl_xs]}>
                     <VerificationCheckButton profile={authorShadow} size="md" />
                   </View>
+                  <BotBadge profile={authorShadow} size={14} />
                 </View>
                 <Text
                   style={[

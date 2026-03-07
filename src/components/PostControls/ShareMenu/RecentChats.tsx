@@ -15,6 +15,7 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, tokens, useTheme} from '#/alf'
+import {BotBadge} from '#/components/BotBadge'
 import {Button} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
 import {Text} from '#/components/Typography'
@@ -149,6 +150,7 @@ function RecentChatItem({
             />
           </View>
         )}
+        <BotBadge profile={profile} />
       </View>
     </Button>
   )
