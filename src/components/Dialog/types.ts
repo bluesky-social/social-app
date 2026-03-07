@@ -45,6 +45,7 @@ export type DialogContextProps = {
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
   // in the event that the hook is used outside of a dialog
   isWithinDialog: boolean
+  type: 'sheet' | 'alert'
 }
 
 export type DialogControlOpenOptions = {
@@ -65,6 +66,12 @@ export type DialogOuterProps = {
     alignCenter?: boolean
     onBackgroundPress?: (e: GestureResponderEvent) => void
   }
+  /**
+   * The presentation style of the dialog.
+   * - `sheet` (default): Bottom sheet on native, standard modal on web.
+   * - `alert`: Centered alert modal on all platforms.
+   */
+  type?: 'sheet' | 'alert'
   testID?: string
 }
 

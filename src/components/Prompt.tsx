@@ -34,6 +34,7 @@ export function Outer({
   control,
   testID,
   nativeOptions,
+  type = 'sheet',
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
@@ -41,6 +42,12 @@ export function Outer({
    * Native-specific options for the prompt. Extends `BottomSheetViewProps`
    */
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
+  /**
+   * The presentation style of the prompt.
+   * - `sheet` (default): Bottom sheet on native, standard modal on web.
+   * - `alert`: Centered alert modal on all platforms.
+   */
+  type?: 'sheet' | 'alert'
 }>) {
   const titleId = useId()
   const descriptionId = useId()
@@ -54,9 +61,10 @@ export function Outer({
     <Dialog.Outer
       control={control}
       testID={testID}
+      type={type}
       webOptions={{alignCenter: true}}
       nativeOptions={{preventExpansion: true, ...nativeOptions}}>
-      <Dialog.Handle />
+      {type !== 'alert' && <Dialog.Handle />}
       <Context.Provider value={context}>
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
@@ -69,11 +77,41 @@ export function Outer({
   )
 }
 
+export function Icon({
+  icon: Comp,
+  color,
+}: {
+  icon: React.ComponentType<SVGIconProps>
+  color?: ButtonColor
+}) {
+  const t = useTheme()
+
+  let iconColor: string
+  switch (color) {
+    case 'negative':
+      iconColor = t.palette.negative_500
+      break
+    case 'primary':
+      iconColor = t.palette.primary_500
+      break
+    default:
+      iconColor = t.atoms.text.color
+      break
+  }
+
+  return (
+    <View style={[a.pb_sm]}>
+      <Comp size="xl" style={{color: iconColor}} />
+    </View>
+  )
+}
+
 export function TitleText({
   children,
   style,
 }: React.PropsWithChildren<ViewStyleProp>) {
   const {titleId} = useContext(Context)
+  const {type} = Dialog.useDialogContext()
   return (
     <Text
       nativeID={titleId}
@@ -83,6 +121,7 @@ export function TitleText({
         a.font_semi_bold,
         a.pb_xs,
         a.leading_snug,
+        type === 'alert' && a.text_center,
         style,
       ]}>
       {children}
@@ -96,11 +135,18 @@ export function DescriptionText({
 }: React.PropsWithChildren<{selectable?: boolean}>) {
   const t = useTheme()
   const {descriptionId} = useContext(Context)
+  const {type} = Dialog.useDialogContext()
   return (
     <Text
       nativeID={descriptionId}
       selectable={selectable}
-      style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg]}>
+      style={[
+        a.text_md,
+        a.leading_snug,
+        t.atoms.text_contrast_high,
+        a.pb_lg,
+        type === 'alert' && a.text_center,
+      ]}>
       {children}
     </Text>
   )
@@ -210,6 +256,8 @@ export function Basic({
   onConfirm,
   confirmButtonColor,
   showCancel = true,
+  type,
+  icon,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   title: string
@@ -226,10 +274,13 @@ export function Basic({
   onConfirm: (e: GestureResponderEvent) => void
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
+  type?: 'sheet' | 'alert'
+  icon?: React.ComponentType<SVGIconProps>
 }>) {
   return (
-    <Outer control={control} testID="confirmModal">
+    <Outer control={control} testID="confirmModal" type={type}>
       <Content>
+        {icon && <Icon icon={icon} color={confirmButtonColor} />}
         <TitleText>{title}</TitleText>
         {description && <DescriptionText>{description}</DescriptionText>}
       </Content>
