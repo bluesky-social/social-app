@@ -16,7 +16,7 @@ import {
   useBreakpoints,
   useTheme,
 } from '#/alf'
-import {downloadImageAs} from '#/lib/media/manip.web'
+import {saveImageToMediaLibrary} from '#/lib/media/manip'
 import {Button} from '#/components/Button'
 import {Backdrop} from '#/components/Dialog'
 import {
@@ -275,7 +275,7 @@ function LightboxGallery({
           <Menu.Group>
             <Menu.Item
               label={_(msg`Download image`)}
-              onPress={() => downloadImageAs(img.uri, 'jpeg')}>
+              onPress={() => saveImageToMediaLibrary({uri: img.uri, format: 'jpeg'})}>
               <Menu.ItemIcon icon={DownloadIcon} />
               <Menu.ItemText>
                 <Trans>Download image</Trans>
