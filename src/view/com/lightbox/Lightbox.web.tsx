@@ -249,9 +249,9 @@ function LightboxGallery({
       )}
       <Menu.Root>
         <Menu.Trigger label={_(msg`Image options`)}>
-          {({props: triggerProps}) => (
+          {({props}) => (
             <Button
-              {...triggerProps}
+              {...props}
               style={[
                 a.absolute,
                 styles.menuBtn,
