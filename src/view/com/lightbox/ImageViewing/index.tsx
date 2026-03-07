@@ -619,7 +619,7 @@ function LightboxFooter({
             <Text type="xl" style={s.white}>
               <Trans context="action">Share</Trans>
             </Text>
-          </LegacyButton>
+          </Button>
         </View>
       </SafeAreaView>
     </ScrollView>
