@@ -21,7 +21,7 @@ import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
-import {cdnUriWithFormat, type Dimensions} from './types'
+import {cdnUriWithFormat, type Dimensions, type ImageSaveFormat} from './types'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -273,6 +273,13 @@ async function moveToPermanentPath(path: string, ext: string): Promise<string> {
   })
   safeDeleteAsync(path)
   return normalizePath(destinationPath)
+}
+
+export async function downloadImageAs(
+  _uri: string,
+  _format: ImageSaveFormat,
+) {
+  throw new Error('downloadImageAs is web only')
 }
 
 export async function safeDeleteAsync(path: string) {
