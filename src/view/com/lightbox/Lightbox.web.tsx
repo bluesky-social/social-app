@@ -275,9 +275,9 @@ function LightboxGallery({
           <Menu.Group>
             <Menu.Item
               label={_(msg`Download image`)}
-              onPress={() => {
+              onPress={() =>
                 void saveImageToMediaLibrary({uri: img.uri, format: 'jpeg'})
-              }}>
+              }>
               <Menu.ItemIcon icon={DownloadIcon} />
               <Menu.ItemText>
                 <Trans>Download image</Trans>

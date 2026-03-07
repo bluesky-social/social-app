@@ -112,11 +112,7 @@ export async function saveImageToMediaLibrary({
   format?: ImageSaveFormat
 }) {
   const formatUri = cdnUriWithFormat(uri, format)
-  const downloadedPath = await downloadImage(
-    formatUri,
-    String(uuid.v4()),
-    15e3,
-  )
+  const downloadedPath = await downloadImage(formatUri, String(uuid.v4()), 15e3)
   const imagePath = await moveToPermanentPath(
     downloadedPath,
     extForFormat(format),
