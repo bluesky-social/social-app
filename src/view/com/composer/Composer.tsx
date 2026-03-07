@@ -880,7 +880,10 @@ export const ComposePost = ({
       })
 
       let err = cleanError(e.message)
-      if (err.includes('not locate record')) {
+      if (
+        e instanceof apilib.ReplyDeletedError ||
+        err.includes('not locate record')
+      ) {
         err = _(
           msg`We're sorry! The post you are replying to has been deleted.`,
         )
