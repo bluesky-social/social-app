@@ -23,7 +23,7 @@ import {
   ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
   ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
 } from '#/components/icons/Chevron'
-import {DotGrid3x1_Stroke2_Corner0_Rounded as MeatballIcon} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import * as Menu from '#/components/Menu'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
@@ -263,7 +263,7 @@ function LightboxGallery({
               label={_(msg`Image options`)}
               shape="round"
               size={gtPhone ? 'large' : 'small'}>
-              <MeatballIcon
+              <EllipsisIcon
                 size={gtPhone ? 'md' : 'sm'}
                 style={{color: t.palette.white}}
               />
