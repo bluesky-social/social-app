@@ -1,7 +1,12 @@
 /// <reference lib="dom" />
 
 import {type PickerImage} from './picker.shared'
-import {type Dimensions} from './types'
+import {
+  cdnUriWithFormat,
+  type Dimensions,
+  extForFormat,
+  type ImageSaveFormat,
+} from './types'
 import {blobToDataUri, getDataUriSize} from './util'
 
 export async function compressIfNeeded(
@@ -44,9 +49,27 @@ export async function shareImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
-export async function saveImageToMediaLibrary(_opts: {uri: string}) {
-  // TODO
-  throw new Error('TODO')
+/**
+ * Saves an image to the user's device. Uses the CDN's @format URL suffix to
+ * request the desired format directly, avoiding re-encoding. On native this
+ * saves to the media library; on web it triggers a browser download.
+ */
+export async function saveImageToMediaLibrary({
+  uri,
+  format = 'jpeg',
+}: {
+  uri: string
+  format?: ImageSaveFormat
+}) {
+  const formatUri = cdnUriWithFormat(uri, format)
+  const filename = `bluesky-image${extForFormat(format)}`
+  // Fetch as blob so the download attribute works cross-origin.
+  const res = await fetch(formatUri)
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const blob = await res.blob()
+  const url = URL.createObjectURL(blob)
+  downloadUrl(url, filename)
+  setTimeout(() => URL.revokeObjectURL(url), 100)
 }
 
 export async function getImageDim(path: string): Promise<Dimensions> {
@@ -162,17 +185,20 @@ export async function saveBytesToDisk(
 ) {
   const blob = new Blob([bytes], {type})
   const url = URL.createObjectURL(blob)
-  await downloadUrl(url, filename)
+  downloadUrl(url, filename)
   // Firefox requires a small delay
   setTimeout(() => URL.revokeObjectURL(url), 100)
   return true
 }
 
-async function downloadUrl(href: string, filename: string) {
+function downloadUrl(href: string, filename: string) {
   const a = document.createElement('a')
   a.href = href
   a.download = filename
+  a.style.display = 'none'
+  document.body.appendChild(a)
   a.click()
+  document.body.removeChild(a)
 }
 
 export async function safeDeleteAsync() {
