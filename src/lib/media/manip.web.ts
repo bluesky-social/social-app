@@ -49,9 +49,21 @@ export async function shareImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
-export async function saveImageToMediaLibrary(_opts: {uri: string}) {
-  // TODO
-  throw new Error('TODO')
+/**
+ * Saves an image to the user's device. Uses the CDN's @format URL suffix to
+ * request the desired format directly, avoiding re-encoding. On native this
+ * saves to the media library; on web it triggers a browser download.
+ */
+export async function saveImageToMediaLibrary({
+  uri,
+  format = 'jpeg',
+}: {
+  uri: string
+  format?: ImageSaveFormat
+}) {
+  const formatUri = cdnUriWithFormat(uri, format)
+  const filename = `bluesky-image${extForFormat(format)}`
+  await downloadUrl(formatUri, filename)
 }
 
 export async function getImageDim(path: string): Promise<Dimensions> {
@@ -171,12 +183,6 @@ export async function saveBytesToDisk(
   // Firefox requires a small delay
   setTimeout(() => URL.revokeObjectURL(url), 100)
   return true
-}
-
-export async function downloadImageAs(uri: string, format: ImageSaveFormat) {
-  const formatUri = cdnUriWithFormat(uri, format)
-  const filename = `bluesky-image${extForFormat(format)}`
-  await downloadUrl(formatUri, filename)
 }
 
 async function downloadUrl(href: string, filename: string) {

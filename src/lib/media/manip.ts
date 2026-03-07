@@ -21,7 +21,12 @@ import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
-import {cdnUriWithFormat, type Dimensions, type ImageSaveFormat} from './types'
+import {
+  cdnUriWithFormat,
+  type Dimensions,
+  extForFormat,
+  type ImageSaveFormat,
+} from './types'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -94,10 +99,28 @@ export async function shareImageModal({uri}: {uri: string}) {
 
 const ALBUM_NAME = 'Bluesky'
 
-export async function saveImageToMediaLibrary({uri}: {uri: string}) {
-  const jpegUri = cdnUriWithFormat(uri, 'jpeg')
-  const downloadedPath = await downloadImage(jpegUri, String(uuid.v4()), 15e3)
-  const imagePath = await moveToPermanentPath(downloadedPath, '.jpg')
+/**
+ * Saves an image to the user's device. Uses the CDN's @format URL suffix to
+ * request the desired format directly, avoiding re-encoding. On native this
+ * saves to the media library; on web it triggers a browser download.
+ */
+export async function saveImageToMediaLibrary({
+  uri,
+  format = 'jpeg',
+}: {
+  uri: string
+  format?: ImageSaveFormat
+}) {
+  const formatUri = cdnUriWithFormat(uri, format)
+  const downloadedPath = await downloadImage(
+    formatUri,
+    String(uuid.v4()),
+    15e3,
+  )
+  const imagePath = await moveToPermanentPath(
+    downloadedPath,
+    extForFormat(format),
+  )
 
   // save
   try {
@@ -273,13 +296,6 @@ async function moveToPermanentPath(path: string, ext: string): Promise<string> {
   })
   safeDeleteAsync(path)
   return normalizePath(destinationPath)
-}
-
-export async function downloadImageAs(
-  _uri: string,
-  _format: ImageSaveFormat,
-) {
-  throw new Error('downloadImageAs is web only')
 }
 
 export async function safeDeleteAsync(path: string) {
