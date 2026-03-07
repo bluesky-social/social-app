@@ -186,10 +186,17 @@ export async function saveBytesToDisk(
 }
 
 async function downloadUrl(href: string, filename: string) {
+  // Fetch as blob so the download attribute works on iOS Safari,
+  // which ignores it for cross-origin URLs.
+  const res = await fetch(href)
+  const blob = await res.blob()
+  const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
-  a.href = href
+  a.href = url
   a.download = filename
   a.click()
+  // Firefox requires a small delay before revoking
+  setTimeout(() => URL.revokeObjectURL(url), 100)
 }
 
 export async function safeDeleteAsync() {
