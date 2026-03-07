@@ -273,24 +273,10 @@ function LightboxGallery({
         <Menu.Outer>
           <Menu.Group>
             <Menu.Item
-              label={_(msg`Save as WebP`)}
-              onPress={() => downloadImageAs(img.uri, 'webp')}>
-              <Menu.ItemText>
-                <Trans>Save as WebP</Trans>
-              </Menu.ItemText>
-            </Menu.Item>
-            <Menu.Item
-              label={_(msg`Save as JPEG`)}
+              label={_(msg`Download image`)}
               onPress={() => downloadImageAs(img.uri, 'jpeg')}>
               <Menu.ItemText>
-                <Trans>Save as JPEG</Trans>
-              </Menu.ItemText>
-            </Menu.Item>
-            <Menu.Item
-              label={_(msg`Save as PNG`)}
-              onPress={() => downloadImageAs(img.uri, 'png')}>
-              <Menu.ItemText>
-                <Trans>Save as PNG</Trans>
+                <Trans>Download image</Trans>
               </Menu.ItemText>
             </Menu.Item>
           </Menu.Group>

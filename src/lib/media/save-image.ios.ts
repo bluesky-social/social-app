@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import * as Toast from '#/components/Toast'
 import {IS_NATIVE} from '#/env'
 import {saveImageToMediaLibrary} from './manip'
-import {type ImageSaveFormat} from './types'
 
 /**
  * Same as `saveImageToMediaLibrary`, but also handles permissions and toasts
@@ -16,13 +15,13 @@ import {type ImageSaveFormat} from './types'
 export function useSaveImageToMediaLibrary() {
   const {_} = useLingui()
   return useCallback(
-    async (uri: string, format?: ImageSaveFormat) => {
+    async (uri: string) => {
       if (!IS_NATIVE) {
         throw new Error('useSaveImageToMediaLibrary is native only')
       }
 
       try {
-        await saveImageToMediaLibrary({uri, format})
+        await saveImageToMediaLibrary({uri})
         Toast.show(_(msg`Image saved`))
       } catch (e: any) {
         Toast.show(_(msg`Failed to save image: ${String(e)}`), {type: 'error'})

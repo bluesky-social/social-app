@@ -21,12 +21,7 @@ import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
-import {
-  cdnUriWithFormat,
-  type Dimensions,
-  extForFormat,
-  type ImageSaveFormat,
-} from './types'
+import {cdnUriWithFormat, type Dimensions} from './types'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -99,23 +94,10 @@ export async function shareImageModal({uri}: {uri: string}) {
 
 const ALBUM_NAME = 'Bluesky'
 
-export async function saveImageToMediaLibrary({
-  uri,
-  format = 'jpeg',
-}: {
-  uri: string
-  format?: ImageSaveFormat
-}) {
-  const formatUri = cdnUriWithFormat(uri, format)
-  const downloadedPath = await downloadImage(
-    formatUri,
-    String(uuid.v4()),
-    15e3,
-  )
-  const imagePath = await moveToPermanentPath(
-    downloadedPath,
-    extForFormat(format),
-  )
+export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+  const jpegUri = cdnUriWithFormat(uri, 'jpeg')
+  const downloadedPath = await downloadImage(jpegUri, String(uuid.v4()), 15e3)
+  const imagePath = await moveToPermanentPath(downloadedPath, '.jpg')
 
   // save
   try {
