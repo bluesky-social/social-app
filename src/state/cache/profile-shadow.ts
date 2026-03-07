@@ -1,5 +1,6 @@
-import {useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type AppBskyActorDefs, type AppBskyNotificationDefs} from '@atproto/api'
+import {useFocusEffect} from '@react-navigation/native'
 import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
@@ -58,9 +59,31 @@ export function useProfileShadow<
     setShadow(shadows.get(profile))
   }
 
+  const isFocusedRef = useRef(true)
+  const hasUpdatedWhileUnfocused = useRef(false)
+  useFocusEffect(
+    useCallback(() => {
+      isFocusedRef.current = true
+      if (hasUpdatedWhileUnfocused.current) {
+        console.log('catching up')
+        setShadow(shadows.get(profile))
+        hasUpdatedWhileUnfocused.current = false
+      }
+      return () => {
+        isFocusedRef.current = false
+      }
+    }, [profile]),
+  )
+
   useEffect(() => {
     function onUpdate() {
-      setShadow(shadows.get(profile))
+      if (isFocusedRef.current) {
+        console.log('updating profile', profile.did)
+        setShadow(shadows.get(profile))
+      } else {
+        console.log('profile updated while unfocused', profile.did)
+        hasUpdatedWhileUnfocused.current = true
+      }
     }
     emitter.addListener(profile.did, onUpdate)
     return () => {
