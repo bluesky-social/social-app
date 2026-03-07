@@ -4,6 +4,7 @@ import {type PickerImage} from './picker.shared'
 import {
   cdnUriWithFormat,
   type Dimensions,
+  extForFormat,
   type ImageSaveFormat,
 } from './types'
 import {blobToDataUri, getDataUriSize} from './util'
@@ -174,15 +175,8 @@ export async function saveBytesToDisk(
 
 export async function downloadImageAs(uri: string, format: ImageSaveFormat) {
   const formatUri = cdnUriWithFormat(uri, format)
-  const ext = format === 'jpeg' ? 'jpg' : format
-  const filename = `bluesky-image.${ext}`
-  // Fetch as blob to work around cross-origin download restrictions
-  const res = await fetch(formatUri)
-  const blob = await res.blob()
-  const url = URL.createObjectURL(blob)
-  await downloadUrl(url, filename)
-  // Firefox requires a small delay before revoking
-  setTimeout(() => URL.revokeObjectURL(url), 100)
+  const filename = `bluesky-image${extForFormat(format)}`
+  await downloadUrl(formatUri, filename)
 }
 
 async function downloadUrl(href: string, filename: string) {
