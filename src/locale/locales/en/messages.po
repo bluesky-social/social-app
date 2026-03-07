@@ -553,28 +553,28 @@ msgstr ""
 #. Like count display, the <0> tags enclose the number of likes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.likeCount)
 #. placeholder {1}: post.likeCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:489
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:493
 msgid "<0>{0}</0> {1, plural, one {like} other {likes}}"
 msgstr ""
 
 #. Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.quoteCount)
 #. placeholder {1}: post.quoteCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:471
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:475
 msgid "<0>{0}</0> {1, plural, one {quote} other {quotes}}"
 msgstr ""
 
 #. Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.repostCount)
 #. placeholder {1}: post.repostCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:451
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:455
 msgid "<0>{0}</0> {1, plural, one {repost} other {reposts}}"
 msgstr ""
 
 #. Save count display, the <0> tags enclose the number of saves in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.bookmarkCount)
 #. placeholder {1}: post.bookmarkCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:502
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:506
 msgid "<0>{0}</0> {1, plural, one {save} other {saves}}"
 msgstr ""
 
@@ -1437,12 +1437,12 @@ msgid "Apply Pull Request"
 msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:623
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:594
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:632
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:598
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:636
 msgid "Archived post"
 msgstr ""
 
@@ -1712,7 +1712,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:648
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:652
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -1969,7 +1969,7 @@ msgstr ""
 msgid "Cashtag {tag}"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:397
+#: src/components/Post/Translated/index.tsx:430
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
 msgstr ""
@@ -2015,7 +2015,7 @@ msgstr ""
 msgid "Change report reason"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:387
+#: src/components/Post/Translated/index.tsx:415
 msgid "Change the source language"
 msgstr "Change the source language"
 
@@ -4981,8 +4981,8 @@ msgstr ""
 msgid "Hide this reply?"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:194
-#: src/components/Post/Translated/index.tsx:320
+#: src/components/Post/Translated/index.tsx:210
+#: src/components/Post/Translated/index.tsx:344
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:514
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:516
 msgid "Hide translation"
@@ -5705,7 +5705,7 @@ msgstr ""
 msgid "Likes of your reposts notifications"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:485
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:489
 msgid "Likes on this post"
 msgstr ""
 
@@ -6791,7 +6791,7 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:654
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:658
 msgid "Okay"
 msgstr ""
 
@@ -7813,7 +7813,7 @@ msgstr ""
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:467
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:471
 msgid "Quotes of this post"
 msgstr ""
 
@@ -8344,7 +8344,7 @@ msgstr ""
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:447
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:451
 msgid "Reposts of this post"
 msgstr ""
 
@@ -8905,7 +8905,7 @@ msgstr ""
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:404
+#: src/components/Post/Translated/index.tsx:437
 msgid "Select the source language"
 msgstr "Select the source language"
 
@@ -9299,7 +9299,7 @@ msgstr ""
 msgid "Show when you’re live"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:595
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:599
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -10314,7 +10314,7 @@ msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:635
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:639
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -10516,18 +10516,21 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/dms/MessageContextMenu.tsx:141
-#: src/components/Post/Translated/index.tsx:141
-#: src/components/Post/Translated/index.tsx:148
+#: src/components/Post/Translated/index.tsx:146
+#: src/components/Post/Translated/index.tsx:153
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:522
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:524
 msgid "Translate"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:294
+#: src/components/Post/Translated/index.tsx:320
 msgid "Translated"
 msgstr "Translated"
 
-#: src/components/Post/Translated/index.tsx:93
+#: src/components/Post/Translated/index.tsx:97
+msgid "Translating"
+msgstr "Translating"
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:506
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:508
 msgid "Translating…"
@@ -10568,8 +10571,8 @@ msgctxt "action"
 msgid "Try again"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:207
-#: src/components/Post/Translated/index.tsx:215
+#: src/components/Post/Translated/index.tsx:223
+#: src/components/Post/Translated/index.tsx:236
 msgid "Try Google Translate"
 msgstr "Try Google Translate"
 
