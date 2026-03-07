@@ -703,6 +703,7 @@ export type Events = {
   'reportDialog:failure': {}
 
   translate: {
+    os: Platform['OS']
     sourceLanguages: string[]
     targetLanguage: string
     textLength: number
@@ -710,8 +711,12 @@ export type Events = {
   'translate:result': {
     method: 'on-device' | 'google-translate' | 'fallback-alert'
     os: Platform['OS']
+    sourceSelection: 'automatic' | 'manual'
     sourceLanguage: string | null
     targetLanguage: string
+
+    /* Only relevant to posts */
+    postLanguages?: string[]
   }
   'translate:override': {
     os: Platform['OS']

@@ -28,6 +28,7 @@ import {
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useTranslate} from '#/lib/translation'
+import {getPostLanguageTags} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -137,6 +138,7 @@ let PostMenuItems = ({
   const openLink = useOpenLink()
   const {clearTranslation, translate, translationState} = useTranslate({
     key: post.uri,
+    postLangCodes: getPostLanguageTags(post),
     forceGoogleTranslate,
   })
   const navigation = useNavigation<NavigationProp>()
@@ -271,6 +273,7 @@ let PostMenuItems = ({
       )
     ) {
       ax.metric('translate', {
+        os: Platform.OS,
         sourceLanguages: post.record.langs ?? [],
         targetLanguage: langPrefs.primaryLanguage,
         textLength: post.record.text.length,

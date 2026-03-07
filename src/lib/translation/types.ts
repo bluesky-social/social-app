@@ -27,6 +27,10 @@ export type TranslationFunctionParams = {
    * The source language of the text. Will auto-detect if not provided.
    */
   sourceLangCode?: string
+  /**
+   * Whether we auto-detected the language or it was selected manually. Defaults to 'automatic'.
+   */
+  sourceSelection?: 'automatic' | 'manual'
 }
 
 export type TranslationFunction = (
