@@ -63,19 +63,13 @@ export async function saveImageToMediaLibrary({
 }) {
   const formatUri = cdnUriWithFormat(uri, format)
   const filename = `bluesky-image${extForFormat(format)}`
-  try {
-    // Fetch as blob so the download attribute works cross-origin.
-    const res = await fetch(formatUri)
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const blob = await res.blob()
-    const url = URL.createObjectURL(blob)
-    downloadUrl(url, filename)
-    setTimeout(() => URL.revokeObjectURL(url), 100)
-  } catch {
-    // Fallback for iOS Safari where cross-origin fetch may fail.
-    // Open the image directly — the browser will display/download it.
-    window.open(formatUri, '_blank')
-  }
+  // Fetch as blob so the download attribute works cross-origin.
+  const res = await fetch(formatUri)
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const blob = await res.blob()
+  const url = URL.createObjectURL(blob)
+  downloadUrl(url, filename)
+  setTimeout(() => URL.revokeObjectURL(url), 100)
 }
 
 export async function getImageDim(path: string): Promise<Dimensions> {
