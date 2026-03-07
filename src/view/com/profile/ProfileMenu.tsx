@@ -13,6 +13,7 @@ import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
+import {useMutedRepostsApi} from '#/state/preferences'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {
   RQKEY as profileQueryKey,
@@ -44,6 +45,10 @@ import {
   PersonX_Stroke2_Corner0_Rounded as PersonX,
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {
+  Repost_Stroke2_Corner2_Rounded as RepostIcon,
+  RepostSlash_Stroke2_Corner2_Rounded as RepostSlashIcon,
+} from '#/components/icons/Repost'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {StarterPack} from '#/components/icons/StarterPack'
 import * as Menu from '#/components/Menu'
@@ -95,6 +100,7 @@ let ProfileMenu = ({
     !statusNudge.nux?.completed
   const {mutate: saveNux} = useSaveNux()
 
+  const {muteReposts, unmuteReposts, isMutedReposts} = useMutedRepostsApi()
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -164,6 +170,16 @@ let ProfileMenu = ({
       }
     }
   }, [ax, profile.viewer?.muted, queueUnmute, _, queueMute])
+
+  const onPressMuteReposts = () => {
+    if (isMutedReposts({did: profile.did})) {
+      unmuteReposts({did: profile.did})
+      Toast.show(_(msg`Reposts from @${profile.handle} unmuted`))
+    } else {
+      muteReposts({did: profile.did})
+      Toast.show(_(msg`Reposts from @${profile.handle} muted`))
+    }
+  }
 
   const blockAccount = React.useCallback(async () => {
     if (profile.viewer?.blocking) {
@@ -450,6 +466,29 @@ let ProfileMenu = ({
                           />
                         </Menu.Item>
                       )}
+                    <Menu.Item
+                      testID="profileHeaderDropdownMuteRepostsBtn"
+                      label={
+                        isMutedReposts({did: profile.did})
+                          ? _(msg`Unmute reposts`)
+                          : _(msg`Mute reposts`)
+                      }
+                      onPress={onPressMuteReposts}>
+                      <Menu.ItemText>
+                        {isMutedReposts({did: profile.did}) ? (
+                          <Trans>Unmute reposts</Trans>
+                        ) : (
+                          <Trans>Mute reposts</Trans>
+                        )}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={
+                          isMutedReposts({did: profile.did})
+                            ? RepostIcon
+                            : RepostSlashIcon
+                        }
+                      />
+                    </Menu.Item>
                     {!profile.viewer?.blockingByList && (
                       <Menu.Item
                         testID="profileHeaderDropdownBlockBtn"
