@@ -9,6 +9,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {getCanvas} from '#/lib/canvas'
 import {logger} from '#/logger'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -40,22 +41,6 @@ export function QrCodeDialog({
   const [isCopyProcessing, setIsCopyProcessing] = useState(false)
 
   const ref = useRef<ViewShot>(null)
-
-  const getCanvas = (base64: string): Promise<HTMLCanvasElement> => {
-    return new Promise(resolve => {
-      const image = new Image()
-      image.onload = () => {
-        const canvas = document.createElement('canvas')
-        canvas.width = image.width
-        canvas.height = image.height
-
-        const ctx = canvas.getContext('2d')
-        ctx?.drawImage(image, 0, 0)
-        resolve(canvas)
-      }
-      image.src = base64
-    })
-  }
 
   const onSavePress = async () => {
     ref.current?.capture?.().then(async (uri: string) => {
