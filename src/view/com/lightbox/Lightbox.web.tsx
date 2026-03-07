@@ -3,6 +3,7 @@ import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
@@ -15,12 +16,15 @@ import {
   useBreakpoints,
   useTheme,
 } from '#/alf'
+import {downloadImageAs} from '#/lib/media/manip.web'
 import {Button} from '#/components/Button'
 import {Backdrop} from '#/components/Dialog'
 import {
   ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
   ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
 } from '#/components/icons/Chevron'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as MeatballIcon} from '#/components/icons/DotGrid'
+import * as Menu from '#/components/Menu'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -242,6 +246,56 @@ function LightboxGallery({
           <Text>{_(msg`Image ${index + 1} of ${imgs.length}`)}</Text>
         </div>
       )}
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Image options`)}>
+          {({props: triggerProps}) => (
+            <Button
+              {...triggerProps}
+              style={[
+                a.absolute,
+                styles.menuBtn,
+                styles.blurredBackdrop,
+                a.transition_color,
+                delayedFadeInAnim,
+              ]}
+              hoverStyle={styles.blurredBackdropHover}
+              color="secondary"
+              label={_(msg`Image options`)}
+              shape="round"
+              size={gtPhone ? 'large' : 'small'}>
+              <MeatballIcon
+                size={gtPhone ? 'md' : 'sm'}
+                style={{color: t.palette.white}}
+              />
+            </Button>
+          )}
+        </Menu.Trigger>
+        <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item
+              label={_(msg`Save as WebP`)}
+              onPress={() => downloadImageAs(img.uri, 'webp')}>
+              <Menu.ItemText>
+                <Trans>Save as WebP</Trans>
+              </Menu.ItemText>
+            </Menu.Item>
+            <Menu.Item
+              label={_(msg`Save as JPEG`)}
+              onPress={() => downloadImageAs(img.uri, 'jpeg')}>
+              <Menu.ItemText>
+                <Trans>Save as JPEG</Trans>
+              </Menu.ItemText>
+            </Menu.Item>
+            <Menu.Item
+              label={_(msg`Save as PNG`)}
+              onPress={() => downloadImageAs(img.uri, 'png')}>
+              <Menu.ItemText>
+                <Trans>Save as PNG</Trans>
+              </Menu.ItemText>
+            </Menu.Item>
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
       <Button
         onPress={onClose}
         style={[
@@ -368,6 +422,10 @@ const styles = StyleSheet.create({
     maxHeight: `calc(min(400px, 100vh))`,
     padding: 16,
     boxSizing: 'border-box',
+  },
+  menuBtn: {
+    top: 20,
+    left: 20,
   },
   closeBtn: {
     top: 20,

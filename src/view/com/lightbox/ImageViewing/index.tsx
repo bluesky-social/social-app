@@ -38,15 +38,19 @@ import Animated, {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {type Dimensions} from '#/lib/media/types'
+import {type Dimensions, type ImageSaveFormat} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
 import {type Lightbox} from '#/state/lightbox'
-import {Button} from '#/view/com/util/forms/Button'
+import {Button as LegacyButton} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Menu from '#/components/Menu'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {IS_IOS} from '#/env'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
@@ -89,7 +93,7 @@ export default function ImageViewRoot({
 }: {
   lightbox: Lightbox | null
   onRequestClose: () => void
-  onPressSave: (uri: string) => void
+  onPressSave: (uri: string, format?: ImageSaveFormat) => void
   onPressShare: (uri: string) => void
 }) {
   'use no memo'
@@ -559,9 +563,10 @@ function LightboxFooter({
   index: number
   isAltExpanded: boolean
   toggleAltExpanded: () => void
-  onPressSave: (uri: string) => void
+  onPressSave: (uri: string, format?: ImageSaveFormat) => void
   onPressShare: (uri: string) => void
 }) {
+  const {_} = useLingui()
   const {alt: altText, uri} = images[index]
   const isMomentumScrolling = React.useRef(false)
   return (
@@ -602,16 +607,55 @@ function LightboxFooter({
           </View>
         ) : null}
         <View style={styles.footerBtns}>
-          <Button
-            type="primary-outline"
-            style={styles.footerBtn}
-            onPress={() => onPressSave(uri)}>
-            <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
-            <Text type="xl" style={s.white}>
-              <Trans context="action">Save</Trans>
-            </Text>
-          </Button>
-          <Button
+          <Menu.Root>
+            <Menu.Trigger label={_(msg`Save image options`)}>
+              {({props: {onPress: onLongPress, ...props}}) => (
+                <Button
+                  {...props}
+                  label={_(msg`Save`)}
+                  variant="outline"
+                  color="secondary"
+                  size="large"
+                  style={styles.footerBtn}
+                  onPress={() => onPressSave(uri)}
+                  onLongPress={onLongPress}>
+                  <FontAwesomeIcon
+                    icon={['far', 'floppy-disk']}
+                    style={s.white}
+                  />
+                  <ButtonText style={s.white}>
+                    <Trans context="action">Save</Trans>
+                  </ButtonText>
+                </Button>
+              )}
+            </Menu.Trigger>
+            <Menu.Outer>
+              <Menu.Group>
+                <Menu.Item
+                  label={_(msg`Save as WebP`)}
+                  onPress={() => onPressSave(uri, 'webp')}>
+                  <Menu.ItemText>
+                    <Trans>Save as WebP</Trans>
+                  </Menu.ItemText>
+                </Menu.Item>
+                <Menu.Item
+                  label={_(msg`Save as JPEG`)}
+                  onPress={() => onPressSave(uri, 'jpeg')}>
+                  <Menu.ItemText>
+                    <Trans>Save as JPEG</Trans>
+                  </Menu.ItemText>
+                </Menu.Item>
+                <Menu.Item
+                  label={_(msg`Save as PNG`)}
+                  onPress={() => onPressSave(uri, 'png')}>
+                  <Menu.ItemText>
+                    <Trans>Save as PNG</Trans>
+                  </Menu.ItemText>
+                </Menu.Item>
+              </Menu.Group>
+            </Menu.Outer>
+          </Menu.Root>
+          <LegacyButton
             type="primary-outline"
             style={styles.footerBtn}
             onPress={() => onPressShare(uri)}>
@@ -619,7 +663,7 @@ function LightboxFooter({
             <Text type="xl" style={s.white}>
               <Trans context="action">Share</Trans>
             </Text>
-          </Button>
+          </LegacyButton>
         </View>
       </SafeAreaView>
     </ScrollView>
