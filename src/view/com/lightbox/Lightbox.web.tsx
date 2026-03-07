@@ -28,6 +28,7 @@ import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/ico
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {type ImageSource} from './ImageViewing/@types'
 
@@ -275,13 +276,20 @@ function LightboxGallery({
           <Menu.Group>
             <Menu.Item
               label={_(msg`Download image`)}
-              onPress={() =>
-                void saveImageToMediaLibrary({uri: img.uri, format: 'jpeg'})
-              }>
-              <Menu.ItemIcon icon={DownloadIcon} />
+              onPress={() => {
+                saveImageToMediaLibrary({uri: img.uri, format: 'jpeg'}).then(
+                  () => {
+                    Toast.show(_(msg`Image saved`))
+                  },
+                  () => {
+                    Toast.show(_(msg`Failed to save image`), {type: 'error'})
+                  },
+                )
+              }}>
               <Menu.ItemText>
                 <Trans>Download image</Trans>
               </Menu.ItemText>
+              <Menu.ItemIcon icon={DownloadIcon} position="right" />
             </Menu.Item>
           </Menu.Group>
         </Menu.Outer>
