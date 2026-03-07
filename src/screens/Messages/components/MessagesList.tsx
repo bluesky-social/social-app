@@ -50,8 +50,7 @@ import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
-import {IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 
@@ -421,6 +420,8 @@ export function MessagesList({
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
       <ScrollProvider onScroll={onScroll}>
         <List
+          contentInsetAdjustmentBehavior="automatic"
+          automaticallyAdjustsScrollIndicatorInsets
           ref={flatListRef}
           data={convoState.items}
           renderItem={renderItem}
