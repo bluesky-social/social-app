@@ -62,6 +62,12 @@ export type Device = {
   threadgateNudged?: boolean
 
   /**
+   * Whether to automatically detect post language from the keyboard language.
+   * Experimental feature, opt-in.
+   */
+  useKeyboardLanguage?: boolean
+
+  /**
    * Policy update overlays. New IDs are required for each new announcement.
    */
   policyUpdateDebugOverride?: boolean

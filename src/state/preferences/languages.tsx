@@ -12,7 +12,7 @@ type ApiContext = {
   setPrimaryLanguage: (code2: string) => void
   setPostLanguage: (commaSeparatedLangCodes: string) => void
   setContentLanguages: (code2s: string[]) => void
-  savePostLanguageToHistory: () => void
+  savePostLanguageToHistory: (resolvedLanguage?: string) => void
   setAppLanguage: (code2: AppLanguage) => void
 }
 
@@ -61,21 +61,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       /**
        * Saves whatever language codes are currently selected into a history array,
        * which is then used to populate the language selector menu.
+       *
+       * If `resolvedLanguage` is provided (e.g. from auto-detected keyboard
+       * language), it will be saved to history instead of the current
+       * `postLanguage` preference.
        */
-      savePostLanguageToHistory() {
+      savePostLanguageToHistory(resolvedLanguage?: string) {
         // filter out duplicate `this.postLanguage` if exists, and prepend
         // value to start of array
-        setStateWrapped(s => ({
-          ...s,
-          postLanguageHistory: [s.postLanguage]
-            .concat(
-              s.postLanguageHistory.filter(
-                commaSeparatedLangCodes =>
-                  commaSeparatedLangCodes !== s.postLanguage,
-              ),
-            )
-            .slice(0, 6),
-        }))
+        setStateWrapped(s => {
+          const langToSave = resolvedLanguage ?? s.postLanguage
+          return {
+            ...s,
+            postLanguageHistory: [langToSave]
+              .concat(
+                s.postLanguageHistory.filter(
+                  commaSeparatedLangCodes =>
+                    commaSeparatedLangCodes !== langToSave,
+                ),
+              )
+              .slice(0, 6),
+          }
+        })
       },
       setAppLanguage(code2: AppLanguage) {
         setStateWrapped(s => ({...s, appLanguage: code2}))
