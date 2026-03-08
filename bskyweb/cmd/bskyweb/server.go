@@ -5,7 +5,6 @@ import (
 	"context"
 	"crypto/subtle"
 	"crypto/tls"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -55,7 +54,7 @@ type Config struct {
 	appviewHost   string
 	ogcardHost    string
 	linkHost      string
-	ipccHost      string
+	ipccLookupURL string
 	staticCDNHost string
 }
 
@@ -72,6 +71,8 @@ func serve(cctx *cli.Context) error {
 	staticCDNHost = strings.TrimSuffix(staticCDNHost, "/")
 	canonicalInstance := cctx.Bool("bsky-canonical-instance")
 	robotsDisallowAll := cctx.Bool("robots-disallow-all")
+
+	ipccLookupURL := fmt.Sprintf("%s/ipccdata.Service/Lookup", ipccHost)
 
 	// Echo
 	e := echo.New()
@@ -113,7 +114,7 @@ func serve(cctx *cli.Context) error {
 			appviewHost:   appviewHost,
 			ogcardHost:    ogcardHost,
 			linkHost:      linkHost,
-			ipccHost:      ipccHost,
+			ipccLookupURL: ipccLookupURL,
 			staticCDNHost: staticCDNHost,
 		},
 		ipccClient: http.Client{
@@ -748,40 +749,48 @@ func (srv *Server) WebIpCC(c echo.Context) error {
 		log.Warnf("could not parse IP %q %s", realIP, err)
 		return c.JSON(400, IPCCResponse{})
 	}
-	var request []byte
-	if addr.Is4() {
-		ip4 := addr.As4()
-		var dest [8]byte
-		base64.StdEncoding.Encode(dest[:], ip4[:])
-		request, _ = json.Marshal(IPCCRequest{IP: string(dest[:])})
-	} else if addr.Is6() {
-		ip6 := addr.As16()
-		var dest [24]byte
-		base64.StdEncoding.Encode(dest[:], ip6[:])
-		request, _ = json.Marshal(IPCCRequest{IP: string(dest[:])})
+
+	ipccReq := &IPCCRequest{
+		IP: addr.String(),
 	}
 
-	ipccUrlBuilder, err := url.Parse(srv.cfg.ipccHost)
+	data, err := json.Marshal(ipccReq)
 	if err != nil {
-		log.Errorf("ipcc misconfigured bad url %s", err)
+		log.Warnf("failed to marshal IPCC request %s", err)
+		return c.JSON(400, IPCCResponse{})
+	}
+
+	req, err := http.NewRequestWithContext(c.Request().Context(), http.MethodPost, srv.cfg.ipccLookupURL, bytes.NewBuffer(data))
+	if err != nil {
+		log.Warnf("failed to create IPCC request %s", err)
 		return c.JSON(500, IPCCResponse{})
 	}
-	ipccUrlBuilder.Path = "ipccdata.IpCcService/Lookup"
-	ipccUrl := ipccUrlBuilder.String()
-	postBodyReader := bytes.NewReader(request)
-	response, err := srv.ipccClient.Post(ipccUrl, "application/json", postBodyReader)
-	if err != nil {
-		log.Warnf("ipcc backend error %s", err)
-		return c.JSON(500, IPCCResponse{})
-	}
-	defer response.Body.Close()
-	dec := json.NewDecoder(response.Body)
-	var outResponse IPCCResponse
-	err = dec.Decode(&outResponse)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := srv.ipccClient.Do(req)
 	if err != nil {
 		log.Warnf("ipcc bad response %s", err)
 		return c.JSON(500, IPCCResponse{})
 	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Warnf("ipcc read response body error %s", err)
+		return c.JSON(500, IPCCResponse{})
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		log.Warnf("ipcc bad response status %d %s", resp.StatusCode, respBody)
+		return c.JSON(500, IPCCResponse{})
+	}
+
+	var outResponse IPCCResponse
+	if err := json.Unmarshal(respBody, &outResponse); err != nil {
+		log.Warnf("ipcc unmarshal response error %s", err)
+		return c.JSON(500, IPCCResponse{})
+	}
+
 	return c.JSON(200, outResponse)
 }
 
