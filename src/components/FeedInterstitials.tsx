@@ -18,10 +18,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
-import {
-  useSuggestedFollowsByActorQuery,
-  useSuggestedFollowsQuery,
-} from '#/state/queries/suggested-follows'
+import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {type SeenPost} from '#/state/userActionHistory'
@@ -157,7 +154,7 @@ function sortSeenPosts(postA: SeenPost, postB: SeenPost): 0 | 1 | -1 {
   }
 }
 
-function useExperimentalSuggestedUsersQuery() {
+function useExperimentalSuggestedUsersQuery(randomizer = Math.random) {
   const {currentAccount} = useSession()
   const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
   const dids = useMemo(() => {
@@ -170,10 +167,10 @@ function useExperimentalSuggestedUsersQuery() {
     if (followSuggestions.length > 0) {
       suggestedDids = [
         // It's ok if these will pick the same item (weighed by its frequency)
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        followSuggestions[Math.floor(randomizer() * followSuggestions.length)],
+        followSuggestions[Math.floor(randomizer() * followSuggestions.length)],
+        followSuggestions[Math.floor(randomizer() * followSuggestions.length)],
+        followSuggestions[Math.floor(randomizer() * followSuggestions.length)],
       ]
     }
     const seenDids = seen
@@ -183,7 +180,7 @@ function useExperimentalSuggestedUsersQuery() {
     return [...new Set([...suggestedDids, ...likeDids, ...seenDids])].filter(
       did => did !== currentAccount?.did,
     )
-  }, [userActionSnapshot, currentAccount])
+  }, [userActionSnapshot, currentAccount, randomizer])
   const {data, isLoading, error} = useProfilesQuery({
     handles: dids.slice(0, 16),
   })
@@ -216,9 +213,6 @@ export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
 }
 
 export function SuggestedFollowsProfile({did}: {did: string}) {
-  const {gtMobile} = useBreakpoints()
-  const moderationOpts = useModerationOpts()
-  const maxLength = gtMobile ? 4 : 6
   const {
     isLoading: isSuggestionsLoading,
     data,
@@ -226,12 +220,6 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
   } = useSuggestedFollowsByActorQuery({
     did,
   })
-  const {
-    data: moreSuggestions,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useSuggestedFollowsQuery({limit: 25})
 
   const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
 
@@ -239,57 +227,27 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
     setDismissedDids(prev => new Set(prev).add(dismissedDid))
   }, [])
 
-  // Combine profiles from the actor-specific query with fallback suggestions
+  // Filter seen profiles from the results
   const allProfiles = useMemo(() => {
     const actorProfiles = data?.suggestions ?? []
-    const fallbackProfiles =
-      moreSuggestions?.pages.flatMap(page =>
-        page.actors.map(actor => ({actor, recId: page.recId})),
-      ) ?? []
 
     // Dedupe by did, preferring actor-specific profiles
     const seen = new Set<string>()
-    const combined: {actor: bsky.profile.AnyProfileView; recId?: number}[] = []
+    const filtered: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
 
     for (const profile of actorProfiles) {
       if (!seen.has(profile.did)) {
         seen.add(profile.did)
-        combined.push({actor: profile, recId: data?.recId})
+        filtered.push({actor: profile, recId: data?.recId})
       }
     }
 
-    for (const profile of fallbackProfiles) {
-      if (!seen.has(profile.actor.did) && profile.actor.did !== did) {
-        seen.add(profile.actor.did)
-        combined.push(profile)
-      }
-    }
-
-    return combined
-  }, [data?.suggestions, moreSuggestions?.pages, did, data?.recId])
+    return filtered
+  }, [data?.suggestions, data?.recId])
 
   const filteredProfiles = useMemo(() => {
     return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
   }, [allProfiles, dismissedDids])
-
-  // Fetch more when running low
-  useEffect(() => {
-    if (
-      moderationOpts &&
-      filteredProfiles.length < maxLength &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      void fetchNextPage()
-    }
-  }, [
-    filteredProfiles.length,
-    maxLength,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    moderationOpts,
-  ])
 
   return (
     <ProfileGrid
@@ -304,21 +262,11 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
 }
 
 export function SuggestedFollowsHome() {
-  const {gtMobile} = useBreakpoints()
-  const moderationOpts = useModerationOpts()
-  const maxLength = gtMobile ? 4 : 6
   const {
     isLoading: isSuggestionsLoading,
     profiles: experimentalProfiles,
     error: experimentalError,
   } = useExperimentalSuggestedUsersQuery()
-  const {
-    data: moreSuggestions,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    error: suggestionsError,
-  } = useSuggestedFollowsQuery({limit: 25})
 
   const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
 
@@ -328,16 +276,11 @@ export function SuggestedFollowsHome() {
 
   // Combine profiles from experimental query with paginated suggestions
   const allProfiles = useMemo(() => {
-    const fallbackProfiles =
-      moreSuggestions?.pages.flatMap(page =>
-        page.actors.map(actor => ({actor, recId: page.recId})),
-      ) ?? []
-
     // Dedupe by did, preferring experimental profiles
     const seen = new Set<string>()
     const combined: Array<{
       actor: bsky.profile.AnyProfileView
-      recId?: number
+      recId?: string
     }> = []
 
     for (const profile of experimentalProfiles) {
@@ -347,45 +290,19 @@ export function SuggestedFollowsHome() {
       }
     }
 
-    for (const profile of fallbackProfiles) {
-      if (!seen.has(profile.actor.did)) {
-        seen.add(profile.actor.did)
-        combined.push(profile)
-      }
-    }
-
     return combined
-  }, [experimentalProfiles, moreSuggestions?.pages])
+  }, [experimentalProfiles])
 
   const filteredProfiles = useMemo(() => {
     return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
   }, [allProfiles, dismissedDids])
-
-  // Fetch more when running low
-  useEffect(() => {
-    if (
-      moderationOpts &&
-      filteredProfiles.length < maxLength &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      void fetchNextPage()
-    }
-  }, [
-    filteredProfiles.length,
-    maxLength,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    moderationOpts,
-  ])
 
   return (
     <ProfileGrid
       isSuggestionsLoading={isSuggestionsLoading}
       profiles={filteredProfiles}
       totalProfileCount={allProfiles.length}
-      error={experimentalError || suggestionsError}
+      error={experimentalError}
       viewContext="feed"
       onDismiss={onDismiss}
     />
@@ -402,7 +319,7 @@ export function ProfileGrid({
   isVisible = true,
 }: {
   isSuggestionsLoading: boolean
-  profiles: {actor: bsky.profile.AnyProfileView; recId?: number}[]
+  profiles: {actor: bsky.profile.AnyProfileView; recId?: string}[]
   totalProfileCount?: number
   error: Error | null
   viewContext: 'profile' | 'profileHeader' | 'feed'

@@ -1,12 +1,7 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 
 import {AccordionAnimation} from '#/lib/custom-animations/AccordionAnimation'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {
-  useSuggestedFollowsByActorQuery,
-  useSuggestedFollowsQuery,
-} from '#/state/queries/suggested-follows'
-import {useBreakpoints} from '#/alf'
+import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {ProfileGrid} from '#/components/FeedInterstitials'
 import {IS_ANDROID} from '#/env'
 import type * as bsky from '#/types/bsky'
@@ -46,18 +41,9 @@ export function ProfileHeaderSuggestedFollows({
 }
 
 function useProfileHeaderSuggestions(actorDid: string) {
-  const {gtMobile} = useBreakpoints()
-  const moderationOpts = useModerationOpts()
-  const maxLength = gtMobile ? 4 : 12
   const {isLoading, data, error} = useSuggestedFollowsByActorQuery({
     did: actorDid,
   })
-  const {
-    data: moreSuggestions,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useSuggestedFollowsQuery({limit: 25})
 
   const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
 
@@ -65,57 +51,27 @@ function useProfileHeaderSuggestions(actorDid: string) {
     setDismissedDids(prev => new Set(prev).add(did))
   }, [])
 
-  // Combine profiles from the actor-specific query with fallback suggestions
+  // Filter seen profiles from the results
   const allProfiles = useMemo(() => {
     const actorProfiles = data?.suggestions ?? []
-    const fallbackProfiles =
-      moreSuggestions?.pages.flatMap(page =>
-        page.actors.map(actor => ({actor, recId: page.recId})),
-      ) ?? []
 
     // Dedupe by did, preferring actor-specific profiles
     const seen = new Set<string>()
-    const combined: {actor: bsky.profile.AnyProfileView; recId?: number}[] = []
+    const filtered: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
 
     for (const profile of actorProfiles) {
       if (!seen.has(profile.did)) {
         seen.add(profile.did)
-        combined.push({actor: profile, recId: data?.recId})
+        filtered.push({actor: profile, recId: data?.recId})
       }
     }
 
-    for (const profile of fallbackProfiles) {
-      if (!seen.has(profile.actor.did) && profile.actor.did !== actorDid) {
-        seen.add(profile.actor.did)
-        combined.push(profile)
-      }
-    }
-
-    return combined
-  }, [data?.suggestions, moreSuggestions?.pages, actorDid, data?.recId])
+    return filtered
+  }, [data?.suggestions, data?.recId])
 
   const filteredProfiles = useMemo(() => {
     return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
   }, [allProfiles, dismissedDids])
-
-  // Fetch more when running low
-  useEffect(() => {
-    if (
-      moderationOpts &&
-      filteredProfiles.length < maxLength &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      void fetchNextPage()
-    }
-  }, [
-    filteredProfiles.length,
-    maxLength,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    moderationOpts,
-  ])
 
   return {
     allProfiles,

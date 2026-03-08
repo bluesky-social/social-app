@@ -15,8 +15,7 @@ import {
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
@@ -204,6 +203,7 @@ let PostFeed = ({
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
   isVideoFeed = false,
+  lastFetchDate = Date.now,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -226,15 +226,16 @@ let PostFeed = ({
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
+  lastFetchDate?: () => number
 }): React.ReactNode => {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = useState(false)
-  const lastFetchRef = useRef<number>(Date.now())
+  const lastFetchRef = useRef<number>(lastFetchDate())
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
@@ -271,13 +272,16 @@ let PostFeed = ({
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
   const lastFetchedAt = data?.pages[0].fetchedAt
-  if (lastFetchedAt) {
-    lastFetchRef.current = lastFetchedAt
-  }
   const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],
   )
+
+  useEffect(() => {
+    if (lastFetchedAt) {
+      lastFetchRef.current = lastFetchedAt
+    }
+  }, [lastFetchedAt])
 
   const checkForNew = useNonReactiveCallback(async () => {
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
@@ -292,7 +296,7 @@ let PostFeed = ({
     try {
       if (await pollLatest(data.pages[0])) {
         if (isEmpty) {
-          refetch()
+          void refetch()
         } else {
           onHasNew(true)
         }
@@ -333,7 +337,7 @@ let PostFeed = ({
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
       if (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) {
         // check for new on enable (aka on focus)
-        checkForNew()
+        void checkForNew()
       }
     }
   }, [enabled, isEmpty, disablePoll, checkForNew])
@@ -343,14 +347,14 @@ let PostFeed = ({
     const subscription = AppState.addEventListener('change', nextAppState => {
       // check for new on app foreground
       if (nextAppState === 'active') {
-        checkForNew()
+        void checkForNew()
       }
     })
     cleanup1 = () => subscription.remove()
     if (pollInterval) {
       // check for new on interval
       const i = setInterval(() => {
-        checkForNew()
+        void checkForNew()
       }, pollInterval)
       cleanup2 = () => clearInterval(i)
     }
@@ -363,7 +367,7 @@ let PostFeed = ({
   const followProgressGuide = useProgressGuide('follow-10')
   const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
 
-  const showProgressIntersitial =
+  const showProgressInterstitial =
     (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
 
   const {trendingVideoDisabled} = useTrendingSettings()
@@ -494,7 +498,7 @@ let PostFeed = ({
               if (hasSession) {
                 if (feedKind === 'discover') {
                   if (sliceIndex === 0) {
-                    if (showProgressIntersitial) {
+                    if (showProgressInterstitial) {
                       arr.push({
                         type: 'interstitialProgressGuide',
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -672,7 +676,7 @@ let PostFeed = ({
     feedUriOrActorDid,
     feedTab,
     hasSession,
-    showProgressIntersitial,
+    showProgressInterstitial,
     trendingVideoDisabled,
     gtMobile,
     isVideoFeed,
@@ -683,16 +687,12 @@ let PostFeed = ({
     blockedOrMutedAuthors,
   ])
 
-  useEffect(() => {
-    if (enabled === false) {
-      setIsPTRing(false)
-    }
-  }, [enabled])
-
   // events
   // =
 
   const onRefresh = useCallback(async () => {
+    if (!enabled) return
+
     ax.metric('feed:refresh', {
       feedType: feedType,
       feedUrl: feed,
@@ -706,7 +706,7 @@ let PostFeed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [ax, refetch, setIsPTRing, onHasNew, feed, feedType])
+  }, [ax, refetch, setIsPTRing, onHasNew, feed, feedType, enabled])
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -733,12 +733,12 @@ let PostFeed = ({
   ])
 
   const onPressTryAgain = useCallback(() => {
-    refetch()
+    void refetch()
     onHasNew?.(false)
   }, [refetch, onHasNew])
 
   const onPressRetryLoadMore = useCallback(() => {
-    fetchNextPage()
+    void fetchNextPage()
   }, [fetchNextPage])
 
   // rendering
@@ -760,9 +760,7 @@ let PostFeed = ({
       } else if (row.type === 'loadMoreError') {
         return (
           <LoadMoreRetryBtn
-            label={_(
-              msg`There was an issue fetching posts. Tap here to try again.`,
-            )}
+            label={l`There was an issue fetching posts. Tap here to try again.`}
             onPress={onPressRetryLoadMore}
           />
         )
@@ -861,7 +859,7 @@ let PostFeed = ({
       error,
       onPressTryAgain,
       savedFeedConfig,
-      _,
+      l,
       onPressRetryLoadMore,
       feedType,
       feedUriOrActorDid,
@@ -997,19 +995,19 @@ let PostFeed = ({
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={feedItems}
-        keyExtractor={item => item.key}
+        keyExtractor={(item: FeedRow) => item.key}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}
         ListHeaderComponent={ListHeaderComponent}
         refreshing={isPTRing}
-        onRefresh={onRefresh}
+        onRefresh={() => void onRefresh()}
         headerOffset={headerOffset}
         progressViewOffset={progressViewOffset}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
         onScrolledDownChange={handleScrolledDownChange}
-        onEndReached={onEndReached}
+        onEndReached={() => void onEndReached()}
         onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
         extraData={extraData}
