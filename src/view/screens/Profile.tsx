@@ -5,7 +5,6 @@ import {
   type AppBskyActorDefs,
   moderateProfile,
   type ModerationOpts,
-  RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -33,7 +32,7 @@ import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useAgent, useSession} from '#/state/session'
+import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
 import {ProfileLists} from '#/view/com/lists/ProfileLists'
@@ -45,6 +44,7 @@ import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {atoms as a} from '#/alf'
+import {useRichText} from '#/components/hooks/useRichText'
 import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
 import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {Image_Stroke1_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
@@ -206,8 +206,8 @@ function ProfileScreenLoaded({
 
   const description = profile.description ?? ''
   const hasDescription = description !== ''
-  const [descriptionRT, isResolvingDescriptionRT] = useRichText(description)
-  const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT
+  const descriptionRT = useRichText(description)
+  const showPlaceholder = isPlaceholderProfile
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -598,36 +598,6 @@ function ProfileScreenLoaded({
       )}
     </ScreenHider>
   )
-}
-
-function useRichText(text: string): [RichTextAPI, boolean] {
-  const agent = useAgent()
-  const [prevText, setPrevText] = useState(text)
-  const [rawRT, setRawRT] = useState(() => new RichTextAPI({text}))
-  const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null)
-  if (text !== prevText) {
-    setPrevText(text)
-    setRawRT(new RichTextAPI({text}))
-    setResolvedRT(null)
-    // This will queue an immediate re-render
-  }
-  useEffect(() => {
-    let ignore = false
-    async function resolveRTFacets() {
-      // new each time
-      const resolvedRT = new RichTextAPI({text})
-      await resolvedRT.detectFacets(agent)
-      if (!ignore) {
-        setResolvedRT(resolvedRT)
-      }
-    }
-    void resolveRTFacets()
-    return () => {
-      ignore = true
-    }
-  }, [text, agent])
-  const isResolving = resolvedRT === null
-  return [resolvedRT ?? rawRT, isResolving]
 }
 
 const styles = StyleSheet.create({
