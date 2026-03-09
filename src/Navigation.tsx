@@ -18,6 +18,7 @@ import {
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
+import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -833,10 +834,59 @@ const FlatNavigator = ({
  * to the navigation context.
  */
 
+// Prevents re-processing the initial deep link URL on remount
+// (e.g. when account switch changes the key in App.native.tsx)
+let initialUrlConsumed = false
+
 const LINKING = {
   // TODO figure out what we are going to use
   // note: `bluesky://` is what is used in app.config.js
   prefixes: ['bsky://', 'bluesky://', 'https://bsky.app'],
+
+  async getInitialURL(): Promise<string | null> {
+    if (initialUrlConsumed) {
+      return null
+    }
+    initialUrlConsumed = true
+    return Linking.getInitialURL()
+  },
+
+  subscribe(listener: (url: string) => void) {
+    const sub = Linking.addEventListener('url', ({url}: {url: string}) => {
+      if (IS_NATIVE && navigationRef.isReady()) {
+        const urlp = parseLinkingUrl(url)
+        const path = urlp.pathname
+
+        // Intent URLs are handled by useIntentHandler
+        if (path.includes('intent/')) {
+          return
+        }
+
+        const [name, params] = router.matchPath(path)
+
+        // For tab roots, switch to the tab
+        if (name === 'Search') {
+          resetToTab('SearchTab')
+        } else if (name === 'Notifications') {
+          resetToTab('NotificationsTab')
+        } else if (name === 'Home') {
+          resetToTab('HomeTab')
+        } else if (name === 'Messages') {
+          resetToTab('MessagesTab')
+        } else {
+          // Navigate (push) instead of resetting state, so that the
+          // native back gesture is properly set up
+          // @ts-ignore nested navigators aren't typed -sfn
+          navigate('HomeTab', {screen: name, params})
+        }
+        return
+      }
+
+      // Web or navigation not ready: use default React Navigation behavior
+      listener(url)
+    })
+    return () => sub.remove()
+  },
 
   getPathFromState(state: State) {
     // find the current node in the navigation tree

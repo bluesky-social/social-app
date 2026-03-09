@@ -25,11 +25,11 @@ export function getCurrentRoute(state?: State) {
 
 export function isStateAtTabRoot(state: State | undefined) {
   if (!state) {
-    // NOTE
-    // if state is not defined it's because init is occurring
-    // and therefore we can safely assume we're at root
-    // -prf
-    return true
+    // During initialization (before navigation state is set), default to
+    // not-at-root. This prevents the drawer gesture from activating during
+    // the async window before the initial URL is resolved, which would
+    // compete with the native stack's back gesture on deep link opens.
+    return false
   }
   const currentRoute = getCurrentRoute(state)
   return (
