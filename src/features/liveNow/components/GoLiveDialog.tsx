@@ -35,10 +35,12 @@ export function GoLiveDialog({
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
 }) {
+  const [dirty, setDirty] = useState(false)
+
   return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+    <Dialog.Outer control={control} nativeOptions={{preventDismiss: dirty}}>
       <Dialog.Handle />
-      <DialogInner profile={profile} />
+      <DialogInner profile={profile} setDirty={setDirty} />
     </Dialog.Outer>
   )
 }
@@ -46,7 +48,13 @@ export function GoLiveDialog({
 // Possible durations: max 4 hours, 5 minute intervals
 const DURATIONS = Array.from({length: (4 * 60) / 5}).map((_, i) => (i + 1) * 5)
 
-function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
+function DialogInner({
+  profile,
+  setDirty,
+}: {
+  profile: bsky.profile.AnyProfileView
+  setDirty: (dirty: boolean) => void
+}) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()
@@ -74,6 +82,14 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const onChangeDuration = useCallback((newDuration: string) => {
     setDuration(Number(newDuration))
   }, [])
+
+  const handleLiveLinkChange = useCallback(
+    (text: string) => {
+      setLiveLink(text)
+      setDirty(text.length > 0)
+    },
+    [setDirty],
+  )
 
   const liveLinkUrl = definitelyUrl(liveLink)
   const debouncedUrl = useDebouncedValue(liveLinkUrl, 500)
@@ -135,7 +151,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
                 label={_(msg`Live link`)}
                 placeholder={_(msg`www.mylivestream.tv`)}
                 value={liveLink}
-                onChangeText={setLiveLink}
+                onChangeText={handleLiveLinkChange}
                 onFocus={() => setLiveLinkError('')}
                 onBlur={() => {
                   if (!definitelyUrl(liveLink)) {
