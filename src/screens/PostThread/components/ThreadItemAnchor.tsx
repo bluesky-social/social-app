@@ -34,7 +34,6 @@ import {
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
-import {BotBadge} from '#/components/BotBadge'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
@@ -48,12 +47,12 @@ import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
-import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
@@ -363,9 +362,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   </Text>
 
                   <View style={[a.pl_xs]}>
-                    <VerificationCheckButton profile={authorShadow} size="md" />
+                    <ProfileBadges
+                      profile={authorShadow}
+                      size="md"
+                      interactive
+                    />
                   </View>
-                  <BotBadge profile={authorShadow} size={14} />
                 </View>
                 <Text
                   style={[

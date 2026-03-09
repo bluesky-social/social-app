@@ -23,7 +23,6 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
-import {BotBadge} from '#/components/BotBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
@@ -54,9 +53,8 @@ import {
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
 import {InlineLinkText} from '#/components/Link'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {IS_WEB} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 
@@ -72,7 +70,6 @@ let DrawerProfileCard = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const {data: profile} = useProfileQuery({did: account.did})
-  const verification = useSimpleVerificationState({profile})
   const {isActive: live} = useActorStatus(profile)
 
   return (
@@ -98,18 +95,7 @@ let DrawerProfileCard = ({
             numberOfLines={1}>
             {profile?.displayName || account.handle}
           </Text>
-          {verification.showBadge && (
-            <View
-              style={{
-                top: 0,
-              }}>
-              <VerificationCheck
-                width={16}
-                verifier={verification.role === 'verifier'}
-              />
-            </View>
-          )}
-          {profile && <BotBadge profile={profile} size={16} />}
+          {profile && <ProfileBadges profile={profile} size="md" />}
         </View>
         <Text
           emoji

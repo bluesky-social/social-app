@@ -15,15 +15,13 @@ import {isConvoActive, useConvo} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
-import {BotBadge} from '#/components/BotBadge'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {IS_WEB} from '#/env'
 
 const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
@@ -113,9 +111,6 @@ function HeaderReady({
   const {_} = useLingui()
   const t = useTheme()
   const convoState = useConvo()
-  const verification = useSimpleVerificationState({
-    profile,
-  })
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -162,15 +157,7 @@ function HeaderReady({
                 numberOfLines={1}>
                 {displayName}
               </Text>
-              {verification.showBadge && (
-                <View style={[a.pl_xs]}>
-                  <VerificationCheck
-                    width={14}
-                    verifier={verification.role === 'verifier'}
-                  />
-                </View>
-              )}
-              <BotBadge profile={profile} />
+              <ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
             </View>
             {!isDeletedAccount && (
               <Text

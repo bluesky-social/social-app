@@ -3,23 +3,27 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
 import {Text} from '#/components/Typography'
 import {navigate} from '#/Navigation'
+import type * as bsky from '#/types/bsky'
 
 export function BotAccountAlert({
   control,
-  isSelf,
+  profile,
 }: {
   control: Dialog.DialogControlProps
-  isSelf: boolean
+  profile: bsky.profile.AnyProfileView
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const {currentAccount} = useSession()
 
+  const isSelf = profile.did === currentAccount?.did
   const description = isSelf
     ? 'You have marked this account as automated. You can remove it at any time from your account settings.'
     : 'This account has been marked as automated by its owner'

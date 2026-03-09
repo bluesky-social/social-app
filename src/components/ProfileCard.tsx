@@ -31,7 +31,6 @@ import {
   useTheme,
   type ViewStyleProp,
 } from '#/alf'
-import {BotBadge} from '#/components/BotBadge'
 import {
   Button,
   ButtonIcon,
@@ -42,10 +41,9 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Pills from '#/components/Pills'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {type Metrics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
@@ -243,7 +241,6 @@ function InlineNameAndHandle({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  const verification = useSimpleVerificationState({profile})
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
@@ -263,27 +260,15 @@ function InlineNameAndHandle({
         numberOfLines={1}>
         {forceLTR(name)}
       </Text>
-      {verification.showBadge && (
-        <View
-          style={[
-            a.pl_2xs,
-            a.self_center,
-            {marginTop: platform({default: 0, android: -1})},
-          ]}>
-          <VerificationCheck
-            width={platform({android: 13, default: 12})}
-            verifier={verification.role === 'verifier'}
-          />
-        </View>
-      )}
-      <View
+      <ProfileBadges
+        profile={profile}
+        size="sm"
         style={[
           a.pl_2xs,
           a.self_center,
           {marginTop: platform({default: 0, android: -1})},
-        ]}>
-        <BotBadge profile={profile} />
-      </View>
+        ]}
+      />
       <Text
         emoji
         style={[
@@ -314,7 +299,6 @@ export function Name({
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
-  const verification = useSimpleVerificationState({profile})
   return (
     <View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
       <Text
@@ -330,17 +314,7 @@ export function Name({
         numberOfLines={1}>
         {name}
       </Text>
-      {verification.showBadge && (
-        <View style={[a.pl_xs]}>
-          <VerificationCheck
-            width={14}
-            verifier={verification.role === 'verifier'}
-          />
-        </View>
-      )}
-      <View style={[a.pl_xs]}>
-        <BotBadge profile={profile} />
-      </View>
+      <ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
     </View>
   )
 }

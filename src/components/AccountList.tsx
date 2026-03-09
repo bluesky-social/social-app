@@ -12,14 +12,12 @@ import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {BotBadge} from '#/components/BotBadge'
 import {Button} from '#/components/Button'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/icons/Chevron'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {useActorStatus} from '#/features/liveNow'
 
 export function AccountList({
@@ -53,18 +51,26 @@ export function AccountList({
         a.border,
         t.atoms.border_contrast_low,
       ]}>
-      {accounts.map(account => (
-        <React.Fragment key={account.did}>
-          <AccountItem
-            profile={profiles?.profiles.find(p => p.did === account.did)}
-            account={account}
-            onSelect={onSelectAccount}
-            isCurrentAccount={account.did === currentAccount?.did}
-            isPendingAccount={account.did === pendingDid}
-          />
-          <View style={[a.border_b, t.atoms.border_contrast_low]} />
-        </React.Fragment>
-      ))}
+      {accounts
+        .map(account => ({
+          account,
+          profile: profiles?.profiles.find(p => p.did === account.did),
+        }))
+        .filter(item => {
+          return !!item.profile
+        })
+        .map(({account, profile}) => (
+          <React.Fragment key={account.did}>
+            <AccountItem
+              profile={profile!}
+              account={account}
+              onSelect={onSelectAccount}
+              isCurrentAccount={account.did === currentAccount?.did}
+              isPendingAccount={account.did === pendingDid}
+            />
+            <View style={[a.border_b, t.atoms.border_contrast_low]} />
+          </React.Fragment>
+        ))}
       <Button
         testID="chooseAddAccountBtn"
         style={[a.flex_1]}
@@ -109,7 +115,7 @@ function AccountItem({
   isCurrentAccount,
   isPendingAccount,
 }: {
-  profile?: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppBskyActorDefs.ProfileViewDetailed
   account: SessionAccount
   onSelect: (account: SessionAccount) => void
   isCurrentAccount: boolean
@@ -117,7 +123,6 @@ function AccountItem({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const verification = useSimpleVerificationState({profile})
   const {isActive: live} = useActorStatus(profile)
 
   const onPress = useCallback(() => {
@@ -165,19 +170,11 @@ function AccountItem({
                   profile?.displayName || profile?.handle || account.handle,
                 )}
               </Text>
-              {verification.showBadge && (
-                <View>
-                  <VerificationCheck
-                    width={12}
-                    verifier={verification.role === 'verifier'}
-                  />
-                </View>
-              )}
-              {profile && (
-                <View style={{marginTop: -2}}>
-                  <BotBadge profile={profile} />
-                </View>
-              )}
+              <ProfileBadges
+                profile={profile}
+                size="sm"
+                style={[{marginTop: -2}]}
+              />
             </View>
             <Text
               style={[

@@ -24,7 +24,6 @@ import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
-import {BotBadgeButton} from '#/components/BotBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useDialogControl} from '#/components/Dialog'
@@ -34,11 +33,11 @@ import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {IS_IOS} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {GermButton} from '../components/GermButton'
@@ -144,10 +143,7 @@ let ProfileHeaderStandard = ({
                   moderation.ui('displayName'),
                 )}
                 <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
-                  <VerificationCheckButton profile={profile} size="lg" />
-                </View>
-                <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
-                  <BotBadgeButton profile={profile} size="lg" isSelf={isMe} />
+                  <ProfileBadges profile={profile} size="lg" interactive />
                 </View>
               </Text>
             </View>

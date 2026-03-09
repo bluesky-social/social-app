@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,17 +7,19 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {BotAccountAlert} from '#/components/BotAccountAlert'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {type Props} from '#/components/icons/common'
 import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
 import {useAnalytics} from '#/analytics'
+import type * as bsky from '#/types/bsky'
 
 export function BotBadge({
   profile,
   alwaysShow = false,
-  size = 14,
+  size,
 }: {
-  profile: {did: string; labels?: ComAtprotoLabelDefs.Label[]}
+  profile: bsky.profile.AnyProfileView
   alwaysShow?: boolean
-  size?: number
+  size: Props['size']
 }) {
   const t = useTheme()
 
@@ -28,7 +29,7 @@ export function BotBadge({
 
   return (
     <View>
-      <RobotIcon width={size} fill={t.atoms.text_contrast_medium.color} />
+      <RobotIcon size={size} fill={t.atoms.text_contrast_medium.color} />
     </View>
   )
 }
@@ -36,11 +37,9 @@ export function BotBadge({
 export function BotBadgeButton({
   profile,
   size,
-  isSelf = false,
 }: {
-  profile: {did: string; labels?: ComAtprotoLabelDefs.Label[]}
+  profile: bsky.profile.AnyProfileView
   size: 'lg' | 'md' | 'sm'
-  isSelf?: boolean
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -52,6 +51,7 @@ export function BotBadgeButton({
     return null
   }
 
+  console.log({size})
   let dimensions = 12
   if (size === 'lg') {
     dimensions = gtPhone ? 20 : 18
@@ -88,7 +88,7 @@ export function BotBadgeButton({
           </View>
         )}
       </Button>
-      <BotAccountAlert control={control} isSelf={isSelf} />
+      <BotAccountAlert control={control} profile={profile} />
     </>
   )
 }

@@ -9,10 +9,8 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
-import {BotBadge} from '#/components/BotBadge'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 export function Autocomplete({
   prefix,
@@ -78,7 +76,6 @@ function AutocompleteProfileCard({
   onPress: () => void
 }) {
   const t = useTheme()
-  const state = useSimpleVerificationState({profile})
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
   )
@@ -116,20 +113,15 @@ function AutocompleteProfileCard({
               numberOfLines={1}>
               {displayName}
             </Text>
-            {state.isVerified && (
-              <View
-                style={[
-                  {
-                    marginTop: platform({android: -2}),
-                  },
-                ]}>
-                <VerificationCheck
-                  width={12}
-                  verifier={state.role === 'verifier'}
-                />
-              </View>
-            )}
-            <BotBadge profile={profile} />
+            <ProfileBadges
+              profile={profile}
+              size="sm"
+              style={[
+                {
+                  marginTop: platform({android: -2}),
+                },
+              ]}
+            />
           </View>
         </View>
         <Text

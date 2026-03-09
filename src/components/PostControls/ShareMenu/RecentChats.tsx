@@ -15,12 +15,10 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, tokens, useTheme} from '#/alf'
-import {BotBadge} from '#/components/BotBadge'
 import {Button} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
@@ -112,7 +110,6 @@ function RecentChatItem({
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
-  const verification = useSimpleVerificationState({profile})
 
   if (isBlockedOrBlocking(profile) || isMuted(profile)) {
     return null
@@ -142,15 +139,7 @@ function RecentChatItem({
           numberOfLines={1}>
           {name}
         </Text>
-        {verification.showBadge && (
-          <View style={[a.pl_2xs]}>
-            <VerificationCheck
-              width={10}
-              verifier={verification.role === 'verifier'}
-            />
-          </View>
-        )}
-        <BotBadge profile={profile} />
+        <ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
       </View>
     </Button>
   )

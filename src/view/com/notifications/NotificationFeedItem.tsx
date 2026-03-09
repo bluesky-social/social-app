@@ -47,7 +47,6 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
-import {BotBadge} from '#/components/BotBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
@@ -64,12 +63,11 @@ import {StarterPack} from '#/components/icons/StarterPack'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
 
 const MAX_AUTHORS = 5
@@ -174,9 +172,6 @@ let NotificationFeedItem = ({
 
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const firstAuthor = authors[0]
-  const firstAuthorVerification = useSimpleVerificationState({
-    profile: firstAuthor.profile,
-  })
   const firstAuthorName = sanitizeDisplayName(
     firstAuthor.profile.displayName || firstAuthor.profile.handle,
   )
@@ -247,25 +242,20 @@ let NotificationFeedItem = ({
         emoji
         label={_(msg`Go to ${firstAuthorName}'s profile`)}>
         {forceLTR(firstAuthorName)}
-        {firstAuthorVerification.showBadge && (
-          <View
-            style={[
-              a.relative,
-              {
-                paddingTop: platform({android: 2}),
-                marginBottom: platform({ios: -7}),
-                top: platform({web: 1}),
-                paddingLeft: 3,
-                paddingRight: 2,
-              },
-            ]}>
-            <VerificationCheck
-              width={14}
-              verifier={firstAuthorVerification.role === 'verifier'}
-            />
-          </View>
-        )}
-        <BotBadge profile={firstAuthor.profile} />
+        <ProfileBadges
+          profile={firstAuthor.profile}
+          size="sm"
+          style={[
+            a.relative,
+            {
+              paddingTop: platform({android: 2}),
+              marginBottom: platform({ios: -7}),
+              top: platform({web: 1}),
+              paddingLeft: 3,
+              paddingRight: 2,
+            },
+          ]}
+        />
       </InlineLinkText>
     </ProfileHoverCard>
   )
@@ -1019,9 +1009,6 @@ function ExpandedAuthorsList({
 function ExpandedAuthorCard({author}: {author: Author}) {
   const t = useTheme()
   const {_} = useLingui()
-  const verification = useSimpleVerificationState({
-    profile: author.profile,
-  })
   return (
     <Link
       key={author.profile.did}
@@ -1057,15 +1044,11 @@ function ExpandedAuthorCard({author}: {author: Author}) {
               author.profile.displayName || author.profile.handle,
             )}
           </Text>
-          {verification.showBadge && (
-            <View style={[a.pl_xs, a.self_center]}>
-              <VerificationCheck
-                width={14}
-                verifier={verification.role === 'verifier'}
-              />
-            </View>
-          )}
-          <BotBadge profile={author.profile} />
+          <ProfileBadges
+            profile={author.profile}
+            size="sm"
+            style={[a.pl_xs, a.self_center]}
+          />
           <Text
             numberOfLines={1}
             style={[

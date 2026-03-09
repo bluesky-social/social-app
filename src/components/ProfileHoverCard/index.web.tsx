@@ -23,7 +23,6 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
 import {atoms as a, useTheme} from '#/alf'
-import {BotBadge} from '#/components/BotBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useFollowMethods} from '#/components/hooks/useFollowMethods'
 import {useRichText} from '#/components/hooks/useRichText'
@@ -37,10 +36,9 @@ import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
@@ -460,7 +458,6 @@ function Inner({
     [currentAccount, profile],
   )
   const isLabeler = profile.associated?.labeler
-  const verification = useSimpleVerificationState({profile})
 
   return (
     <View>
@@ -528,21 +525,16 @@ function Inner({
                 moderation.ui('displayName'),
               )}
             </Text>
-            {verification.showBadge && (
-              <View
-                style={[
-                  a.pl_xs,
-                  {
-                    marginTop: -2,
-                  },
-                ]}>
-                <VerificationCheck
-                  width={16}
-                  verifier={verification.role === 'verifier'}
-                />
-              </View>
-            )}
-            <BotBadge profile={profile} size={16} />
+            <ProfileBadges
+              profile={profile}
+              size="md"
+              style={[
+                a.pl_xs,
+                {
+                  marginTop: -2,
+                },
+              ]}
+            />
           </View>
 
           <ProfileHeaderHandle profile={profileShadow} disableTaps />

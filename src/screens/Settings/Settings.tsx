@@ -34,7 +34,6 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceDismissibleNotice} from '#/components/ageAssurance/AgeAssuranceDismissibleNotice'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
-import {BotBadgeButton} from '#/components/BotBadge'
 import {Button, ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {useDialogControl} from '#/components/Dialog'
@@ -62,13 +61,9 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {useFullVerificationState} from '#/components/verification'
-import {
-  shouldShowVerificationCheckButton,
-  VerificationCheckButton,
-} from '#/components/verification/VerificationCheckButton'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
@@ -322,9 +317,6 @@ function ProfilePreview({
   const {gtMobile} = useBreakpoints()
   const shadow = useProfileShadow(profile)
   const moderationOpts = useModerationOpts()
-  const verificationState = useFullVerificationState({
-    profile: shadow,
-  })
   const {isActive: live} = useActorStatus(profile)
 
   if (!moderationOpts) return null
@@ -365,24 +357,16 @@ function ProfilePreview({
           ]}>
           {displayName}
         </Text>
-        {shouldShowVerificationCheckButton(verificationState) && (
-          <View
-            style={[
-              {
-                marginTop: platform({web: 8, ios: 8, android: 10}),
-              },
-            ]}>
-            <VerificationCheckButton profile={shadow} size="lg" />
-          </View>
-        )}
-        <View
+        <ProfileBadges
+          profile={shadow}
+          size="lg"
+          interactive
           style={[
             {
               marginTop: platform({web: 8, ios: 8, android: 10}),
             },
-          ]}>
-          <BotBadgeButton profile={shadow} size="lg" isSelf />
-        </View>
+          ]}
+        />
       </View>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {sanitizeHandle(profile.handle, '@')}
