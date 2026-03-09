@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -53,7 +53,6 @@ export function CreateOrEditListDialog({
   const {_} = useLingui()
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
-  const {height} = useWindowDimensions()
 
   // 'You might lose unsaved changes' warning
   useEffect(() => {
@@ -82,7 +81,7 @@ export function CreateOrEditListDialog({
       control={control}
       nativeOptions={{
         preventDismiss: dirty,
-        minHeight: height,
+        fullHeight: true,
       }}
       testID="createOrEditListDialog">
       <DialogInner
