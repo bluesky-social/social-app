@@ -12,8 +12,8 @@
  *   const {t: l} = useLingui()
  *   l`Lorem ipsum`
  *
- * Usage: jscodeshift -t codemods/lingui-v5.js <file-path>
- * Example: jscodeshift -t codemods/lingui-v5.js src/App.native.tsx
+ * Usage: jscodeshift -t .jscodeshift/lingui-v5.js <file-path>
+ * Example: jscodeshift -t .jscodeshift/lingui-v5.js modules/bottom-sheet/src/lib/Portal.tsx
  */
 
 /* eslint-disable */
