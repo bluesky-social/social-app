@@ -109,7 +109,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             </MaybeLinkText>
             <ProfileBadges
               profile={author}
-              size="sm"
+              size="xs"
               style={[
                 a.pl_2xs,
                 a.self_center,

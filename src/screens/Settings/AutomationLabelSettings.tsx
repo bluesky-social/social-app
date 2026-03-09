@@ -139,7 +139,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
                         size="xs"
                       />
                     )}
-                    <BotBadge profile={profile} alwaysShow size={16} />
+                    <BotBadge profile={profile} alwaysShow size="md" />
                   </View>
                 </View>
                 <Text
