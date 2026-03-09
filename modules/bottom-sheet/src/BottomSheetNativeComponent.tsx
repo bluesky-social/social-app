@@ -34,6 +34,10 @@ const IS_IOS15 =
   Platform.OS === 'ios' &&
   // semvar - can be 3 segments, so can't use Number(Platform.Version)
   Number(Platform.Version.split('.').at(0)) < 16
+// older android versions (15 and below) aren't naturally edge-to-edge
+// and behave a little differently
+const IS_NON_E2E_ANDROID =
+  Platform.OS === 'android' && Number(Platform.Version) < 35
 
 export class BottomSheetNativeComponent extends React.Component<
   BottomSheetViewProps,
@@ -142,6 +146,13 @@ function BottomSheetNativeComponentInner({
   const cornerRadius = rest.cornerRadius ?? 0
   const {height: screenHeight} = useWindowDimensions()
 
+  // sigh... on older Android versions, screenHeight does not include safe area insets
+  // on newer Androids + iOS, it does. we need to find the inner bit + the bottom inset
+  // for the sheet content
+  const sheetHeight = IS_NON_E2E_ANDROID
+    ? screenHeight + insets.bottom
+    : screenHeight - insets.top
+
   return (
     <NativeView
       {...rest}
@@ -149,7 +160,7 @@ function BottomSheetNativeComponentInner({
       ref={nativeViewRef}
       style={{
         position: 'absolute',
-        height: screenHeight - insets.top,
+        height: sheetHeight,
         width: '100%',
       }}
       containerBackgroundColor={backgroundColor}>

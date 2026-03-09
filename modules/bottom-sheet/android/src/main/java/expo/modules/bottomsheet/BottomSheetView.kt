@@ -38,9 +38,13 @@ class BottomSheetView(
   private var lastObservedContentHeight: Float = 0f
   private var pendingLayoutUpdate: Boolean = false
 
-  private val screenHeight =
-    context.resources.displayMetrics.heightPixels
-      .toFloat()
+  private val screenHeight: Float =
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+      context.resources.displayMetrics.heightPixels.toFloat()
+    } else {
+      val wm = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
+      wm.currentWindowMetrics.bounds.height().toFloat()
+    }
 
   private fun getNavigationBarHeight(): Int {
     val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
@@ -203,6 +207,7 @@ class BottomSheetView(
     val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
     bottomSheet?.let {
       it.setBackgroundColor(0)
+      it.elevation = 0f
 
       val behavior = BottomSheetBehavior.from(it)
       behavior.state = BottomSheetBehavior.STATE_HIDDEN
