@@ -36,11 +36,11 @@ export function BotBadge({
 export function BotBadgeButton({
   profile,
   size,
-  isMe,
+  isSelf = false,
 }: {
   profile: {did: string; labels?: ComAtprotoLabelDefs.Label[]}
   size: 'lg' | 'md' | 'sm'
-  isMe?: boolean
+  isSelf?: boolean
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -88,7 +88,7 @@ export function BotBadgeButton({
           </View>
         )}
       </Button>
-      <BotAccountAlert control={control} isOwn={isMe} />
+      <BotAccountAlert control={control} isSelf={isSelf} />
     </>
   )
 }

@@ -67,7 +67,7 @@ export function VerificationCheckButton({
   return null
 }
 
-export function Badge({
+function Badge({
   profile,
   verificationState: state,
   size,

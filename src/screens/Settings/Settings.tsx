@@ -381,7 +381,7 @@ function ProfilePreview({
               marginTop: platform({web: 8, ios: 8, android: 10}),
             },
           ]}>
-          <BotBadgeButton profile={shadow} size="lg" isMe />
+          <BotBadgeButton profile={shadow} size="lg" isSelf />
         </View>
       </View>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>

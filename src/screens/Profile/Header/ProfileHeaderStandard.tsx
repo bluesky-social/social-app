@@ -147,7 +147,7 @@ let ProfileHeaderStandard = ({
                   <VerificationCheckButton profile={profile} size="lg" />
                 </View>
                 <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
-                  <BotBadgeButton profile={profile} size="lg" isMe={isMe} />
+                  <BotBadgeButton profile={profile} size="lg" isSelf={isMe} />
                 </View>
               </Text>
             </View>
