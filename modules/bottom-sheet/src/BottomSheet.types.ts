@@ -26,6 +26,7 @@ export interface BottomSheetViewProps {
   disableDrag?: boolean
   sourceViewTag?: number
 
+  fullHeight?: boolean
   minHeight?: number
   maxHeight?: number
 

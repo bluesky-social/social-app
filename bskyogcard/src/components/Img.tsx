@@ -1,5 +1,6 @@
 import React from 'react'
 
+// @NOTE satori does not currently support webp, see vercel/satori#273
 function detectMime(buf: Buffer): string {
   if (buf[0] === 0xff && buf[1] === 0xd8) return 'image/jpeg'
   if (buf[0] === 0x89 && buf[1] === 0x50) return 'image/png'

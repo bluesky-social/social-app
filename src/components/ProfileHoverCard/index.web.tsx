@@ -36,10 +36,9 @@ import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
@@ -459,7 +458,6 @@ function Inner({
     [currentAccount, profile],
   )
   const isLabeler = profile.associated?.labeler
-  const verification = useSimpleVerificationState({profile})
 
   return (
     <View>
@@ -527,20 +525,16 @@ function Inner({
                 moderation.ui('displayName'),
               )}
             </Text>
-            {verification.showBadge && (
-              <View
-                style={[
-                  a.pl_xs,
-                  {
-                    marginTop: -2,
-                  },
-                ]}>
-                <VerificationCheck
-                  width={16}
-                  verifier={verification.role === 'verifier'}
-                />
-              </View>
-            )}
+            <ProfileBadges
+              profile={profile}
+              size="md"
+              style={[
+                a.pl_xs,
+                {
+                  marginTop: -1,
+                },
+              ]}
+            />
           </View>
 
           <ProfileHeaderHandle profile={profileShadow} disableTaps />

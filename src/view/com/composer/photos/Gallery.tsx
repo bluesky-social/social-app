@@ -17,12 +17,13 @@ import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
-import {colors, s} from '#/lib/styles'
+import {colors} from '#/lib/styles'
 import {type ComposerImage, cropImage} from '#/state/gallery'
-import {Text} from '#/view/com/util/text/Text'
-import {tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {Text} from '#/components/Typography'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
@@ -118,7 +119,12 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
           )
         })}
       </View>
-      <AltTextReminder />
+      <Admonition type="tip" style={[a.mt_sm]}>
+        <Trans>
+          Alt text describes images for blind and low-vision users, and helps
+          give context to everyone.
+        </Trans>
+      </Admonition>
     </>
   ) : null
 }
@@ -263,23 +269,6 @@ const GalleryItem = ({
   )
 }
 
-export function AltTextReminder() {
-  const t = useTheme()
-  return (
-    <View style={[styles.reminder]}>
-      <View style={[styles.infoIcon, t.atoms.bg_contrast_25]}>
-        <FontAwesomeIcon icon="info" size={12} color={t.atoms.text.color} />
-      </View>
-      <Text type="sm" style={[t.atoms.text_contrast_medium, s.flex1]}>
-        <Trans>
-          Alt text describes images for blind and low-vision users, and helps
-          give context to everyone.
-        </Trans>
-      </Text>
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   gallery: {
     flex: 1,
@@ -322,20 +311,5 @@ const styles = StyleSheet.create({
     bottom: 4,
     top: 30,
     zIndex: 1,
-  },
-
-  reminder: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    borderRadius: 8,
-    paddingVertical: 14,
-  },
-  infoIcon: {
-    width: 22,
-    height: 22,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 })

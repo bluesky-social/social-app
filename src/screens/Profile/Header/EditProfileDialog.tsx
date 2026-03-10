@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -41,7 +41,6 @@ export function EditProfileDialog({
   const {_} = useLingui()
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
-  const {height} = useWindowDimensions()
 
   const onPressCancel = useCallback(() => {
     if (dirty) {
@@ -56,7 +55,7 @@ export function EditProfileDialog({
       control={control}
       nativeOptions={{
         preventDismiss: dirty,
-        minHeight: height,
+        fullHeight: true,
       }}
       webOptions={{
         onBackgroundPress: () => {

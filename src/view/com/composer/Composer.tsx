@@ -1541,7 +1541,7 @@ function ComposerTopBar({
           accessibilityHint={_(
             msg`Closes post composer and discards post draft`,
           )}>
-          <ButtonText style={[a.text_md]}>
+          <ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
             <Trans>Cancel</Trans>
           </ButtonText>
         </Button>
@@ -1608,7 +1608,7 @@ function ComposerTopBar({
               size="small"
               onPress={onPublish}
               disabled={!canPost || isPublishQueued}>
-              <ButtonText style={[a.text_md]}>
+              <ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
                 {isReply ? (
                   <Trans context="action">Reply</Trans>
                 ) : isThread ? (

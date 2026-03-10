@@ -72,10 +72,10 @@ export function DraftsButton({
         color="primary"
         shape="default"
         size="small"
-        style={[a.rounded_full, a.py_sm, a.px_md, a.mx_xs]}
+        style={[a.py_sm, a.px_md, a.mx_xs]}
         disabled={isSaving}
         onPress={handlePress}>
-        <ButtonText style={[a.text_md]}>
+        <ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
           <Trans>Drafts</Trans>
         </ButtonText>
       </Button>
