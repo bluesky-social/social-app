@@ -63,7 +63,7 @@ export function LabelsBtn({
           msg`Opens a dialog to add a content warning to your post`,
         )}>
         <ButtonIcon icon={hasLabel ? Check : Shield_Stroke2_Corner0_Rounded} />
-        <ButtonText numberOfLines={1}>
+        <ButtonText numberOfLines={1} maxFontSizeMultiplier={2}>
           {labels.length > 0 ? (
             <Trans>Labels added</Trans>
           ) : (

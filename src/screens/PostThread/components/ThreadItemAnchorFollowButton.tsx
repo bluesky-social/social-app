@@ -145,7 +145,7 @@ function PostThreadFollowBtnLoaded({
       {gtMobile && (
         <ButtonIcon icon={isFollowing ? CheckIcon : PlusIcon} size="sm" />
       )}
-      <ButtonText>
+      <ButtonText maxFontSizeMultiplier={2}>
         {!isFollowing ? (
           isFollowedBy ? (
             <Trans>Follow back</Trans>
