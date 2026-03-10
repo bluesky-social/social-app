@@ -1,7 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -19,19 +17,19 @@ export function BotAccountAlert({
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
 
   const isSelf = profile.did === currentAccount?.did
   const description = isSelf
-    ? 'You have marked this account as automated. You can remove it at any time from your account settings.'
-    : 'This account has been marked as automated by its owner'
+    ? l`You have marked this account as automated. You can remove it at any time from your account settings.`
+    : l`This account has been marked as automated by its owner.`
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.ScrollableInner
-        label={_(msg`Automated account`)}
+        label={l`Automated account`}
         style={[web({maxWidth: 320})]}>
         <View style={[a.align_center, a.pb_md, a.shadow_sm]}>
           <RobotIcon width={48} fill={t.atoms.text_contrast_medium.color} />
@@ -44,14 +42,14 @@ export function BotAccountAlert({
               a.pb_xl,
               a.text_md,
               t.atoms.text_contrast_high,
-              {maxWidth: 260},
+              {maxWidth: 300},
             ]}>
-            <Trans>{description}</Trans>
+            {description}
           </Text>
         </View>
         <View style={[a.w_full, a.gap_sm]}>
           <Button
-            label={_(msg`Okay`)}
+            label={l`Okay`}
             onPress={() => control.close()}
             color="primary"
             size="large">
@@ -61,7 +59,7 @@ export function BotAccountAlert({
           </Button>
           {isSelf ? (
             <Button
-              label={_(msg`Open settings`)}
+              label={l`Open settings`}
               onPress={() => {
                 control.close(() => {
                   navigate('AutomationLabelSettings')
