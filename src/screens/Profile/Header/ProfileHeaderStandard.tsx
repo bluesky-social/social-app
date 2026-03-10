@@ -75,6 +75,8 @@ let ProfileHeaderStandard = ({
   const [, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const [showSuggestedFollows, setShowSuggestedFollows] = useState(false)
+  const [hasSeenAllSuggestedFollows, setHasSeenAllSuggestedFollows] =
+    useState(false)
   const isBlockedUser =
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
@@ -91,6 +93,11 @@ let ProfileHeaderStandard = ({
         Toast.show(_(msg`There was an issue! ${e.toString()}`), {type: 'error'})
       }
     }
+  }
+
+  const onAllResultsDismissed = () => {
+    setHasSeenAllSuggestedFollows(true)
+    setShowSuggestedFollows(false)
   }
 
   const isMe = currentAccount?.did === profile.did
@@ -204,8 +211,9 @@ let ProfileHeaderStandard = ({
       </ProfileHeaderShell>
 
       <ProfileHeaderSuggestedFollows
-        isExpanded={showSuggestedFollows}
+        isExpanded={!hasSeenAllSuggestedFollows && showSuggestedFollows}
         actorDid={profile.did}
+        onAllResultsDismissed={onAllResultsDismissed}
       />
     </>
   )

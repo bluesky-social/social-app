@@ -9,9 +9,11 @@ import type * as bsky from '#/types/bsky'
 export function ProfileHeaderSuggestedFollows({
   isExpanded,
   actorDid,
+  onAllResultsDismissed,
 }: {
   isExpanded: boolean
   actorDid: string
+  onAllResultsDismissed: () => void
 }) {
   const {allProfiles, filteredProfiles, onDismiss, isLoading, error} =
     useProfileHeaderSuggestions(actorDid)
@@ -35,6 +37,7 @@ export function ProfileHeaderSuggestedFollows({
         viewContext="profileHeader"
         onDismiss={onDismiss}
         isVisible={isExpanded}
+        onAllResultsDismissed={onAllResultsDismissed}
       />
     </AccordionAnimation>
   )
@@ -55,18 +58,13 @@ function useProfileHeaderSuggestions(actorDid: string) {
   const allProfiles = useMemo(() => {
     const actorProfiles = data?.suggestions ?? []
 
-    // Dedupe by did, preferring actor-specific profiles
-    const seen = new Set<string>()
-    const filtered: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
+    const result: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
 
     for (const profile of actorProfiles) {
-      if (!seen.has(profile.did)) {
-        seen.add(profile.did)
-        filtered.push({actor: profile, recId: data?.recId})
-      }
+      result.push({actor: profile, recId: data?.recId})
     }
 
-    return filtered
+    return result
   }, [data?.suggestions, data?.recId])
 
   const filteredProfiles = useMemo(() => {

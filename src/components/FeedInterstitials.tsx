@@ -235,13 +235,17 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
       result.push({actor: profile, recId: data?.recId})
     }
 
-    return result.filter(p => !dismissedDids.has(p.actor.did))
-  }, [data?.suggestions, data?.recId, dismissedDids])
+    return result
+  }, [data?.suggestions, data?.recId])
+
+  const filteredProfiles = useMemo(() => {
+    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
+  }, [allProfiles, dismissedDids])
 
   return (
     <ProfileGrid
       isSuggestionsLoading={isSuggestionsLoading}
-      profiles={allProfiles}
+      profiles={filteredProfiles}
       totalProfileCount={allProfiles.length}
       error={error}
       viewContext="profile"
@@ -273,13 +277,17 @@ export function SuggestedFollowsHome() {
       result.push({actor: profile, recId: undefined})
     }
 
-    return result.filter(p => !dismissedDids.has(p.actor.did))
-  }, [dismissedDids, experimentalProfiles])
+    return result
+  }, [experimentalProfiles])
+
+  const filteredProfiles = useMemo(() => {
+    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
+  }, [allProfiles, dismissedDids])
 
   return (
     <ProfileGrid
       isSuggestionsLoading={isSuggestionsLoading}
-      profiles={allProfiles}
+      profiles={filteredProfiles}
       totalProfileCount={allProfiles.length}
       error={experimentalError}
       viewContext="feed"
@@ -296,6 +304,7 @@ export function ProfileGrid({
   viewContext = 'feed',
   onDismiss,
   isVisible = true,
+  onAllResultsDismissed,
 }: {
   isSuggestionsLoading: boolean
   profiles: {actor: bsky.profile.AnyProfileView; recId?: string}[]
@@ -304,6 +313,7 @@ export function ProfileGrid({
   viewContext: 'profile' | 'profileHeader' | 'feed'
   onDismiss?: (did: string) => void
   isVisible?: boolean
+  onAllResultsDismissed?: () => void
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -547,6 +557,13 @@ export function ProfileGrid({
 
   // Use totalProfileCount (before dismissals) for minLength check on initial render.
   const profileCountForMinCheck = totalProfileCount ?? profiles.length
+
+  useEffect(() => {
+    if (error || (!isLoading && profiles.length < 1)) {
+      onAllResultsDismissed?.()
+    }
+  }, [error, isLoading, onAllResultsDismissed, profiles.length])
+
   if (error || (!isLoading && profileCountForMinCheck < minLength)) {
     ax.logger.debug(`Not enough profiles to show suggested follows`)
     return null
