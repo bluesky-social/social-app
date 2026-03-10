@@ -154,7 +154,9 @@ export function ThreadgateBtn({
               msg`Opens a dialog to choose who can interact with this post`,
             )}>
             <ButtonIcon icon={anyoneCanInteract ? EarthIcon : GroupIcon} />
-            <ButtonText numberOfLines={1}>{label}</ButtonText>
+            <ButtonText numberOfLines={1} maxFontSizeMultiplier={2}>
+              {label}
+            </ButtonText>
             <ButtonIcon icon={TinyChevronIcon} size="2xs" />
           </Button>
         </Tooltip.Target>
