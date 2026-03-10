@@ -14,6 +14,7 @@ import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {type Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
@@ -23,7 +24,6 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
-import {AltTextReminder} from './photos/Gallery'
 
 export function GifAltTextDialog({
   gif,
@@ -101,7 +101,12 @@ export function GifAltTextDialogLoaded({
         </Text>
       </TouchableOpacity>
 
-      <AltTextReminder />
+      <Admonition type="tip" style={[a.mt_sm]}>
+        <Trans>
+          Alt text describes images for blind and low-vision users, and helps
+          give context to everyone.
+        </Trans>
+      </Admonition>
 
       <Dialog.Outer
         control={control}
