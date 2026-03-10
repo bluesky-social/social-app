@@ -15,7 +15,7 @@ import {
 import {postThreadQueryKeyRoot} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {BotBadge} from '#/components/BotBadge'
 import * as Toggle from '#/components/forms/Toggle'
 import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
@@ -116,11 +116,14 @@ export function AutomationLabelSettingsScreen({}: Props) {
                 a.justify_center,
                 a.align_center,
                 a.gap_sm,
-                a.p_5xl,
                 a.rounded_lg,
-                t.atoms.bg_contrast_50,
                 a.border,
+                t.atoms.bg_contrast_50,
                 t.atoms.border_contrast_low,
+                {
+                  height: 160,
+                  paddingRight: 20, // helps visually center
+                },
               ]}>
               <UserAvatar size={42} avatar={profile.avatar} type="user" />
               <View>
@@ -128,21 +131,32 @@ export function AutomationLabelSettingsScreen({}: Props) {
                   <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                     <Text
                       emoji
-                      style={[a.text_xl, a.font_semi_bold, a.flex_shrink]}
+                      style={[
+                        a.text_xl,
+                        a.font_semi_bold,
+                        a.flex_shrink,
+                        a.leading_tight,
+                      ]}
                       numberOfLines={1}>
                       {profile.displayName || profile.handle}
                     </Text>
                     {verification.isVerified && (
                       <VerificationCheck
                         verifier={verification.role === 'verifier'}
-                        size="xs"
+                        size="sm"
                       />
                     )}
-                    <BotBadge profile={profile} alwaysShow size={16} />
+                    <View style={{top: platform({ios: -1})}}>
+                      <BotBadge profile={profile} alwaysShow size={17} />
+                    </View>
                   </View>
                 </View>
                 <Text
-                  style={[a.text_md, t.atoms.text_contrast_medium]}
+                  style={[
+                    a.text_md,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}
                   numberOfLines={1}>
                   @{profile.handle}
                 </Text>
