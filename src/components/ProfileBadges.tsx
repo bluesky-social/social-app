@@ -1,9 +1,8 @@
 import {View} from 'react-native'
 
-import {isBotAccount} from '#/lib/bots'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {atoms as a, type ViewStyleProp} from '#/alf'
-import {BotBadge, BotBadgeButton} from '#/components/BotBadge'
+import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
