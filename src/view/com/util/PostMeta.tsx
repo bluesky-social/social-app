@@ -13,7 +13,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {unstableCacheProfileView} from '#/state/queries/profile'
-import {atoms as a, platform, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -109,14 +109,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             </MaybeLinkText>
             <ProfileBadges
               profile={author}
-              size="xs"
-              style={[
-                a.pl_2xs,
-                a.self_center,
-                {
-                  marginTop: platform({web: 0, ios: 0, android: -1}),
-                },
-              ]}
+              size="sm"
+              style={[a.pl_2xs, a.self_center]}
             />
             <MaybeLinkText
               emoji

@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -139,7 +138,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
                         size="xs"
                       />
                     )}
-                    <BotBadge profile={profile} alwaysShow size="md" />
+                    <BotBadge profile={profile} alwaysShow size={16} />
                   </View>
                 </View>
                 <Text

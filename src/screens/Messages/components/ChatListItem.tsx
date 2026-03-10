@@ -412,7 +412,7 @@ function ChatListItemReady({
                     </View>
                     <ProfileBadges
                       profile={profile}
-                      size="sm"
+                      size="md"
                       style={[a.pl_xs, a.self_center]}
                     />
                     {lastMessageSentAt && (

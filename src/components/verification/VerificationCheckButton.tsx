@@ -14,16 +14,6 @@ import {VerifierDialog} from '#/components/verification/VerifierDialog'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
-const sizes = {
-  xs: 10,
-  sm: 12,
-  md: 14,
-  lg: 18,
-  xl: 22,
-} as const
-
-export type Size = keyof typeof sizes
-
 export function shouldShowVerificationCheckButton(
   state: FullVerificationState,
 ) {
@@ -64,7 +54,7 @@ export function VerificationCheckButton({
   size,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
-  size: Size
+  size: number
 }) {
   const state = useFullVerificationState({
     profile,
@@ -80,18 +70,17 @@ export function VerificationCheckButton({
 function Badge({
   profile,
   verificationState: state,
-  size: _size,
+  size,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   verificationState: FullVerificationState
-  size: Size
+  size: number
 }) {
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const verifierDialogControl = useDialogControl()
-  const size = sizes[_size]
 
   const verifiedByHidden = !state.profile.showBadge && state.profile.isViewer
 

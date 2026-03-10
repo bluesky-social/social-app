@@ -244,13 +244,14 @@ let NotificationFeedItem = ({
         {forceLTR(firstAuthorName)}
         <ProfileBadges
           profile={firstAuthor.profile}
-          size="sm"
+          size="md"
           style={[
             a.relative,
             {
+              // weird stuff here
               paddingTop: platform({android: 2}),
-              marginBottom: platform({ios: -7}),
-              top: platform({web: 1}),
+              marginBottom: platform({ios: -6}),
+              top: platform({web: 2}),
               paddingLeft: 3,
               paddingRight: 2,
             },
@@ -1046,8 +1047,8 @@ function ExpandedAuthorCard({author}: {author: Author}) {
           </Text>
           <ProfileBadges
             profile={author.profile}
-            size="sm"
-            style={[a.pl_xs, a.self_center]}
+            size="md"
+            style={[a.pl_2xs, a.self_center]}
           />
           <Text
             numberOfLines={1}

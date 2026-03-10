@@ -51,26 +51,18 @@ export function AccountList({
         a.border,
         t.atoms.border_contrast_low,
       ]}>
-      {accounts
-        .map(account => ({
-          account,
-          profile: profiles?.profiles.find(p => p.did === account.did),
-        }))
-        .filter(item => {
-          return !!item.profile
-        })
-        .map(({account, profile}) => (
-          <React.Fragment key={account.did}>
-            <AccountItem
-              profile={profile!}
-              account={account}
-              onSelect={onSelectAccount}
-              isCurrentAccount={account.did === currentAccount?.did}
-              isPendingAccount={account.did === pendingDid}
-            />
-            <View style={[a.border_b, t.atoms.border_contrast_low]} />
-          </React.Fragment>
-        ))}
+      {accounts.map(account => (
+        <React.Fragment key={account.did}>
+          <AccountItem
+            profile={profiles?.profiles.find(p => p.did === account.did)}
+            account={account}
+            onSelect={onSelectAccount}
+            isCurrentAccount={account.did === currentAccount?.did}
+            isPendingAccount={account.did === pendingDid}
+          />
+          <View style={[a.border_b, t.atoms.border_contrast_low]} />
+        </React.Fragment>
+      ))}
       <Button
         testID="chooseAddAccountBtn"
         style={[a.flex_1]}
@@ -115,7 +107,7 @@ function AccountItem({
   isCurrentAccount,
   isPendingAccount,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile?: AppBskyActorDefs.ProfileViewDetailed
   account: SessionAccount
   onSelect: (account: SessionAccount) => void
   isCurrentAccount: boolean
@@ -170,11 +162,13 @@ function AccountItem({
                   profile?.displayName || profile?.handle || account.handle,
                 )}
               </Text>
-              <ProfileBadges
-                profile={profile}
-                size="sm"
-                style={[{marginTop: -2}]}
-              />
+              {profile && (
+                <ProfileBadges
+                  profile={profile}
+                  size="sm"
+                  style={[{marginTop: -2}]}
+                />
+              )}
             </View>
             <Text
               style={[

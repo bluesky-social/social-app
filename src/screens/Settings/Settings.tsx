@@ -359,7 +359,7 @@ function ProfilePreview({
         </Text>
         <ProfileBadges
           profile={shadow}
-          size="lg"
+          size="xl"
           interactive
           style={[
             {

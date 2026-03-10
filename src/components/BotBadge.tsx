@@ -11,24 +11,14 @@ import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robo
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
-const sizes = {
-  xs: 10,
-  sm: 12,
-  md: 14,
-  lg: 18,
-  xl: 22,
-} as const
-
-export type Size = keyof typeof sizes
-
 export function BotBadge({
   profile,
   alwaysShow = false,
-  size = 'sm',
+  size,
 }: {
   profile: bsky.profile.AnyProfileView
   alwaysShow?: boolean
-  size: Size
+  size: number
 }) {
   const t = useTheme()
 
@@ -38,20 +28,17 @@ export function BotBadge({
 
   return (
     <View>
-      <RobotIcon
-        width={sizes[size]}
-        fill={t.atoms.text_contrast_medium.color}
-      />
+      <RobotIcon width={size} fill={t.atoms.text_contrast_medium.color} />
     </View>
   )
 }
 
 export function BotBadgeButton({
   profile,
-  size: _size,
+  size,
 }: {
   profile: bsky.profile.AnyProfileView
-  size: Size
+  size: number
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -61,8 +48,6 @@ export function BotBadgeButton({
   if (!isBotAccount(profile)) {
     return null
   }
-
-  const size = sizes[_size]
 
   return (
     <>

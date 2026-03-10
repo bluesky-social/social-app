@@ -531,7 +531,7 @@ function Inner({
               style={[
                 a.pl_xs,
                 {
-                  marginTop: -2,
+                  marginTop: -1,
                 },
               ]}
             />

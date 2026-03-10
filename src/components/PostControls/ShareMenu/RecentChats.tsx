@@ -139,7 +139,7 @@ function RecentChatItem({
           numberOfLines={1}>
           {name}
         </Text>
-        <ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
+        <ProfileBadges profile={profile} size="xs" style={[a.pl_2xs]} />
       </View>
     </Button>
   )

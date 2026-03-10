@@ -262,7 +262,7 @@ function InlineNameAndHandle({
       </Text>
       <ProfileBadges
         profile={profile}
-        size="sm"
+        size="md"
         style={[
           a.pl_2xs,
           a.self_center,
@@ -314,7 +314,7 @@ export function Name({
         numberOfLines={1}>
         {name}
       </Text>
-      <ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
+      <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
     </View>
   )
 }

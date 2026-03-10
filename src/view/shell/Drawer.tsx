@@ -95,7 +95,7 @@ let DrawerProfileCard = ({
             numberOfLines={1}>
             {profile?.displayName || account.handle}
           </Text>
-          {profile && <ProfileBadges profile={profile} size="md" />}
+          {profile && <ProfileBadges profile={profile} size="lg" />}
         </View>
         <Text
           emoji

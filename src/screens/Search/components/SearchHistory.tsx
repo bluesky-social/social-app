@@ -163,7 +163,7 @@ function RecentProfileItem({
           <Text emoji style={[a.text_xs, a.leading_snug]} numberOfLines={1}>
             {name}
           </Text>
-          <ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
+          <ProfileBadges profile={profile} size="xs" style={[a.pl_xs]} />
         </View>
       </Link>
       <Button

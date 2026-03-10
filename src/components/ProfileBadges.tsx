@@ -3,11 +3,29 @@ import {View} from 'react-native'
 import {isBotAccount} from '#/lib/bots'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {atoms as a, type ViewStyleProp} from '#/alf'
-import {BotBadge, BotBadgeButton, type Size} from '#/components/BotBadge'
+import {BotBadge, BotBadgeButton} from '#/components/BotBadge'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import type * as bsky from '#/types/bsky'
+
+export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+
+const verificationIconSizes: Record<Size, number> = {
+  xs: 10,
+  sm: 12,
+  md: 14,
+  lg: 18,
+  xl: 22,
+} as const
+
+const botIconSizes: Record<Size, number> = {
+  xs: 11,
+  sm: 13,
+  md: 15,
+  lg: 19,
+  xl: 23,
+} as const
 
 export function ProfileBadges({
   profile,
@@ -25,22 +43,33 @@ export function ProfileBadges({
   // if nothing to show, don't render the container at all
   if (!verification.showBadge && !isBotAccount(shadowed)) return null
 
+  const isOnTheSmallSide = size === 'xs' || size === 'sm'
+
   return (
-    <View style={[a.flex_row, a.align_center, a.gap_xs, style]}>
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        isOnTheSmallSide ? a.gap_2xs : a.gap_xs,
+        style,
+      ]}>
       {interactive ? (
         <>
-          <VerificationCheckButton profile={shadowed} size={size} />
-          <BotBadgeButton profile={shadowed} size={size} />
+          <VerificationCheckButton
+            profile={shadowed}
+            size={verificationIconSizes[size]}
+          />
+          <BotBadgeButton profile={shadowed} size={botIconSizes[size]} />
         </>
       ) : (
         <>
           {verification.showBadge && (
             <VerificationCheck
               verifier={verification.role === 'verifier'}
-              size={size}
+              width={verificationIconSizes[size]}
             />
           )}
-          <BotBadge profile={shadowed} size={size} />
+          <BotBadge profile={shadowed} size={botIconSizes[size]} />
         </>
       )}
     </View>

@@ -157,7 +157,7 @@ function HeaderReady({
                 numberOfLines={1}>
                 {displayName}
               </Text>
-              <ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
+              <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
             </View>
             {!isDeletedAccount && (
               <Text
