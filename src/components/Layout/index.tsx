@@ -22,32 +22,63 @@ import {
 import {useDialogContext} from '#/components/Dialog'
 import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
+import {ScrollEdgeInteractionProvider} from '#/components/Layout/ScrollEdgeInteraction'
 import {IS_WEB} from '#/env'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
+export {useTransparentHeaderHeight} from '#/components/Layout/ScrollEdgeInteraction'
 
 export type ScreenProps = React.ComponentProps<typeof View> & {
   style?: StyleProp<ViewStyle>
   noInsetTop?: boolean
+  /**
+   * Enables a transparent, absolutely-positioned header with the iOS 26
+   * Liquid Glass scroll-edge blur effect. When set, wraps screen children
+   * in a `ScrollEdgeInteractionProvider`, implies `noInsetTop`, and causes
+   * `Layout.Header.Outer` to render as a transparent overlay.
+   *
+   * The blur effect only works with `List` (native FlatList), not with
+   * `Layout.Content` (Animated.ScrollView). `List` automatically picks up
+   * the header height and applies `contentInset`.
+   *
+   * On non-Liquid-Glass devices this is a no-op.
+   *
+   * @platform ios
+   */
+  transparentHeader?: boolean
 }
 
 /**
  * Outermost component of every screen
  */
 export const Screen = memo(function Screen({
+  children,
   style,
   noInsetTop,
+  transparentHeader,
   ...props
 }: ScreenProps) {
   const {top} = useSafeAreaInsets()
+  const skipInsetTop = noInsetTop || transparentHeader
   return (
     <>
       {IS_WEB && <WebCenterBorders />}
       <View
-        style={[a.util_screen_outer, {paddingTop: noInsetTop ? 0 : top}, style]}
-        {...props}
-      />
+        style={[
+          a.util_screen_outer,
+          {paddingTop: skipInsetTop ? 0 : top},
+          style,
+        ]}
+        {...props}>
+        {transparentHeader ? (
+          <ScrollEdgeInteractionProvider>
+            {children}
+          </ScrollEdgeInteractionProvider>
+        ) : (
+          children
+        )}
+      </View>
     </>
   )
 })
