@@ -227,32 +227,21 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
     setDismissedDids(prev => new Set(prev).add(dismissedDid))
   }, [])
 
-  // Filter seen profiles from the results
   const allProfiles = useMemo(() => {
     const actorProfiles = data?.suggestions ?? []
 
-    // Dedupe by did, preferring actor-specific profiles
-    const seen = new Set<string>()
-    const filtered: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
-
+    const result: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
     for (const profile of actorProfiles) {
-      if (!seen.has(profile.did)) {
-        seen.add(profile.did)
-        filtered.push({actor: profile, recId: data?.recId})
-      }
+      result.push({actor: profile, recId: data?.recId})
     }
 
-    return filtered
-  }, [data?.suggestions, data?.recId])
-
-  const filteredProfiles = useMemo(() => {
-    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
-  }, [allProfiles, dismissedDids])
+    return result.filter(p => !dismissedDids.has(p.actor.did))
+  }, [data?.suggestions, data?.recId, dismissedDids])
 
   return (
     <ProfileGrid
       isSuggestionsLoading={isSuggestionsLoading}
-      profiles={filteredProfiles}
+      profiles={allProfiles}
       totalProfileCount={allProfiles.length}
       error={error}
       viewContext="profile"
@@ -274,33 +263,23 @@ export function SuggestedFollowsHome() {
     setDismissedDids(prev => new Set(prev).add(did))
   }, [])
 
-  // Combine profiles from experimental query with paginated suggestions
   const allProfiles = useMemo(() => {
-    // Dedupe by did, preferring experimental profiles
-    const seen = new Set<string>()
-    const combined: Array<{
+    const result: Array<{
       actor: bsky.profile.AnyProfileView
       recId?: string
     }> = []
 
     for (const profile of experimentalProfiles) {
-      if (!seen.has(profile.did)) {
-        seen.add(profile.did)
-        combined.push({actor: profile, recId: undefined})
-      }
+      result.push({actor: profile, recId: undefined})
     }
 
-    return combined
-  }, [experimentalProfiles])
-
-  const filteredProfiles = useMemo(() => {
-    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
-  }, [allProfiles, dismissedDids])
+    return result.filter(p => !dismissedDids.has(p.actor.did))
+  }, [dismissedDids, experimentalProfiles])
 
   return (
     <ProfileGrid
       isSuggestionsLoading={isSuggestionsLoading}
-      profiles={filteredProfiles}
+      profiles={allProfiles}
       totalProfileCount={allProfiles.length}
       error={experimentalError}
       viewContext="feed"
