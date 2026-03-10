@@ -7,7 +7,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {BotAccountAlert} from '#/components/BotAccountAlert'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {Robot_Filled_Corner2_Rounded as RobotIcon} from '#/components/icons/Robot'
+import {Bot_Filled as RobotIcon} from '#/components/icons/Bot'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
