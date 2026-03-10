@@ -36,16 +36,19 @@ export function BotAccountAlert({
         <View style={[a.align_center, a.pb_md, a.shadow_sm]}>
           <RobotIcon width={48} fill={t.atoms.text_contrast_medium.color} />
         </View>
-        <Text
-          style={[
-            a.leading_snug,
-            a.text_center,
-            a.pb_xl,
-            a.text_md,
-            t.atoms.text_contrast_high,
-          ]}>
-          <Trans>{description}</Trans>
-        </Text>
+        <View style={[a.align_center]}>
+          <Text
+            style={[
+              a.leading_snug,
+              a.text_center,
+              a.pb_xl,
+              a.text_md,
+              t.atoms.text_contrast_high,
+              {maxWidth: 260},
+            ]}>
+            <Trans>{description}</Trans>
+          </Text>
+        </View>
         <View style={[a.w_full, a.gap_sm]}>
           <Button
             label={_(msg`Okay`)}
