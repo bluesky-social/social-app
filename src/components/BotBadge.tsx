@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type ComAtprotoLabelDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {BotAccountAlert} from '#/components/BotAccountAlert'
@@ -51,7 +50,7 @@ export function BotBadgeButton({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = useDialogControl()
 
   if (!isBotAccount(profile)) {
@@ -61,7 +60,7 @@ export function BotBadgeButton({
   return (
     <>
       <Button
-        label={_(msg`Automated account`)}
+        label={l`Automated account`}
         hitSlop={20}
         onPress={evt => {
           evt.preventDefault()

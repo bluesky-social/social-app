@@ -1,8 +1,6 @@
 import {View} from 'react-native'
 import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -33,7 +31,7 @@ type Props = NativeStackScreenProps<
 export function AutomationLabelSettingsScreen({}: Props) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
@@ -147,7 +145,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
                       />
                     )}
                     <View style={{top: platform({ios: -1})}}>
-                      <BotBadge profile={profile} alwaysShow size={17} />
+                      <BotBadge profile={profile} alwaysShow width={17} />
                     </View>
                   </View>
                 </View>
@@ -180,7 +178,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
             disabled={!canToggle || updateProfile.isPending}
             value={isBotLabeled}
             onChange={onToggle}
-            label={_(msg`Show automation label`)}
+            label={l`Show automation label`}
             style={[
               a.w_full,
               a.p_md,
