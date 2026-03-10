@@ -1,6 +1,5 @@
-import {type AppBskyVideoDefs, type BskyAgent} from '@atproto/api'
-import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {type AppBskyVideoDefs, type AtpAgent} from '@atproto/api'
+import {type useLingui} from '@lingui/react/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
@@ -18,11 +17,11 @@ export async function uploadVideo({
   l,
 }: {
   video: CompressedVideo
-  agent: BskyAgent
+  agent: AtpAgent
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
-  l: I18n['t']
+  l: ReturnType<typeof useLingui>['t']
 }) {
   if (signal.aborted) {
     throw new AbortError()
@@ -70,11 +69,11 @@ export async function uploadVideo({
           ) as AppBskyVideoDefs.JobStatus
           resolve(uploadRes)
         } else {
-          reject(new ServerError(l(msg`Failed to upload video`)))
+          reject(new ServerError(l`Failed to upload video`))
         }
       }
       xhr.onerror = () => {
-        reject(new ServerError(l(msg`Failed to upload video`)))
+        reject(new ServerError(l`Failed to upload video`))
       }
       xhr.open('POST', uri)
       xhr.setRequestHeader('Content-Type', video.mimeType)
@@ -84,7 +83,7 @@ export async function uploadVideo({
   )
 
   if (!res.jobId) {
-    throw new ServerError(res.error || l(msg`Failed to upload video`))
+    throw new ServerError(res.error || l`Failed to upload video`)
   }
 
   if (signal.aborted) {
