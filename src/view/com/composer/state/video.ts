@@ -413,15 +413,15 @@ function getUploadErrorMessage(
       case 'User is not allowed to upload videos':
         return l`You are not allowed to upload videos.`
       case 'Uploading is disabled at the moment':
-        return `Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`
+        return l`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`
       case 'Failed to get user’s upload stats':
         return l`We were unable to determine if you are allowed to upload videos. Please try again.`
       case 'User has exceeded daily upload bytes limit':
-        return `You’ve reached your daily limit for video uploads (too many bytes)`
+        return l`You’ve reached your daily limit for video uploads (too many bytes)`
       case 'User has exceeded daily upload videos limit':
-        return `You’ve reached your daily limit for video uploads (too many videos)`
+        return l`You’ve reached your daily limit for video uploads (too many videos)`
       case 'Account is not old enough to upload videos':
-        return `Your account is not yet old enough to upload videos. Please try again later.`
+        return l`Your account is not yet old enough to upload videos. Please try again later.`
       case 'file size (100000001 bytes) is larger than the maximum allowed size (100000000 bytes)':
         return l`The selected video is larger than 100 MB. Please try again with a smaller file.`
       case 'Confirm your email address to upload videos':
