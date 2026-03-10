@@ -57,9 +57,9 @@ export function ProfileBadges({
         <>
           <VerificationCheckButton
             profile={shadowed}
-            size={verificationIconSizes[size]}
+            width={verificationIconSizes[size]}
           />
-          <BotBadgeButton profile={shadowed} size={botIconSizes[size]} />
+          <BotBadgeButton profile={shadowed} width={botIconSizes[size]} />
         </>
       ) : (
         <>
@@ -69,7 +69,7 @@ export function ProfileBadges({
               width={verificationIconSizes[size]}
             />
           )}
-          <BotBadge profile={shadowed} size={botIconSizes[size]} />
+          <BotBadge profile={shadowed} width={botIconSizes[size]} />
         </>
       )}
     </View>

@@ -51,17 +51,17 @@ export function shouldShowVerificationCheckButton(
 
 export function VerificationCheckButton({
   profile,
-  size,
+  width,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
-  size: number
+  width: number
 }) {
   const state = useFullVerificationState({
     profile,
   })
 
   if (shouldShowVerificationCheckButton(state)) {
-    return <Badge profile={profile} verificationState={state} size={size} />
+    return <Badge profile={profile} verificationState={state} width={width} />
   }
 
   return null
@@ -70,11 +70,11 @@ export function VerificationCheckButton({
 function Badge({
   profile,
   verificationState: state,
-  size,
+  width,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   verificationState: FullVerificationState
-  size: number
+  width: number
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -109,8 +109,8 @@ function Badge({
               a.align_end,
               a.transition_transform,
               {
-                width: size,
-                height: size,
+                width: width,
+                height: width,
                 transform: [
                   {
                     scale: hovered ? 1.1 : 1,
@@ -119,7 +119,7 @@ function Badge({
               },
             ]}>
             <VerificationCheck
-              width={size}
+              width={width}
               fill={
                 verifiedByHidden
                   ? t.atoms.bg_contrast_100.backgroundColor

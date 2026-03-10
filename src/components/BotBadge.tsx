@@ -14,11 +14,11 @@ import type * as bsky from '#/types/bsky'
 export function BotBadge({
   profile,
   alwaysShow = false,
-  size,
+  width,
 }: {
   profile: bsky.profile.AnyProfileView
   alwaysShow?: boolean
-  size: number
+  width: number
 }) {
   const t = useTheme()
 
@@ -28,17 +28,17 @@ export function BotBadge({
 
   return (
     <View>
-      <RobotIcon width={size} fill={t.atoms.text_contrast_medium.color} />
+      <RobotIcon width={width} fill={t.atoms.text_contrast_medium.color} />
     </View>
   )
 }
 
 export function BotBadgeButton({
   profile,
-  size,
+  width,
 }: {
   profile: bsky.profile.AnyProfileView
-  size: number
+  width: number
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -66,12 +66,15 @@ export function BotBadgeButton({
               a.align_end,
               a.transition_transform,
               {
-                width: size,
-                height: size,
+                width: width,
+                height: width,
                 transform: [{scale: hovered ? 1.1 : 1}],
               },
             ]}>
-            <RobotIcon width={size} fill={t.atoms.text_contrast_medium.color} />
+            <RobotIcon
+              width={width}
+              fill={t.atoms.text_contrast_medium.color}
+            />
           </View>
         )}
       </Button>
