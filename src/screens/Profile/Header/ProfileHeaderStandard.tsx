@@ -33,11 +33,11 @@ import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {IS_IOS} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {GermButton} from '../components/GermButton'
@@ -143,7 +143,7 @@ let ProfileHeaderStandard = ({
                   moderation.ui('displayName'),
                 )}
                 <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
-                  <VerificationCheckButton profile={profile} size="lg" />
+                  <ProfileBadges profile={profile} size="lg" interactive />
                 </View>
               </Text>
             </View>

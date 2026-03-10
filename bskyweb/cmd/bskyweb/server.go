@@ -292,6 +292,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/accessibility", server.WebGeneric)
 	e.GET("/settings/appearance", server.WebGeneric)
 	e.GET("/settings/account", server.WebGeneric)
+	e.GET("/settings/automation-label", server.WebGeneric)
 	e.GET("/settings/privacy-and-security", server.WebGeneric)
 	e.GET("/settings/privacy-and-security/activity", server.WebGeneric)
 	e.GET("/settings/content-and-media", server.WebGeneric)

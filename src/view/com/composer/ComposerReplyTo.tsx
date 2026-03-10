@@ -16,9 +16,8 @@ import {type ComposerOptsPostRef} from '#/state/shell/composer'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import {QuoteEmbed} from '#/components/Post/Embed'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {parseEmbed} from '#/types/bsky/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
@@ -70,8 +69,6 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
     }
   }, [embed])
 
-  const verification = useSimpleVerificationState({profile: replyTo.author})
-
   return (
     <Pressable
       style={[
@@ -109,14 +106,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
                 sanitizeHandle(replyTo.author.handle),
             )}
           </Text>
-          {verification.showBadge && (
-            <View style={[a.pl_xs]}>
-              <VerificationCheck
-                width={14}
-                verifier={verification.role === 'verifier'}
-              />
-            </View>
-          )}
+          <ProfileBadges profile={replyTo.author} size="sm" style={[a.pl_xs]} />
         </View>
         <View style={[a.flex_row, a.gap_md]}>
           <View style={[a.flex_1, a.flex_grow]}>

@@ -732,6 +732,9 @@ export type Events = {
   'verification:settings:hideBadges': {}
   'verification:settings:unHideBadges': {}
 
+  'bot:label:toggle': {state: 'add' | 'remove'}
+  'bot:badge:click': {}
+
   'live:create': {duration: number}
   'live:edit': {}
   'live:remove': {}
