@@ -1,7 +1,6 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system/legacy'
-import {type AppBskyVideoDefs, type BskyAgent} from '@atproto/api'
-import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {type AppBskyVideoDefs, type AtpAgent} from '@atproto/api'
+import {type useLingui} from '@lingui/react/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
@@ -16,19 +15,19 @@ export async function uploadVideo({
   did,
   setProgress,
   signal,
-  _,
+  l,
 }: {
   video: CompressedVideo
-  agent: BskyAgent
+  agent: AtpAgent
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
-  _: I18n['_']
+  l: ReturnType<typeof useLingui>['t']
 }) {
   if (signal.aborted) {
     throw new AbortError()
   }
-  await getVideoUploadLimits(agent, _)
+  await getVideoUploadLimits(agent, l)
 
   const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
     did,
@@ -69,7 +68,7 @@ export async function uploadVideo({
   const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
 
   if (!responseBody.jobId) {
-    throw new ServerError(responseBody.error || _(msg`Failed to upload video`))
+    throw new ServerError(responseBody.error || l`Failed to upload video`)
   }
 
   if (signal.aborted) {

@@ -1,9 +1,7 @@
 import {memo, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, type AppBskyFeedPost, AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {EMBED_SCRIPT} from '#/lib/constants'
 import {niceDate} from '#/lib/strings/time'
@@ -51,7 +49,7 @@ function EmbedDialogInner({
   timestamp,
 }: Omit<EmbedDialogProps, 'control'>) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const [copied, setCopied] = useState(false)
   const [showCustomisation, setShowCustomisation] = useState(false)
   const [colorMode, setColorMode] = useState<ColorModeValues>('system')
@@ -102,7 +100,7 @@ function EmbedDialogInner({
   }, [i18n, postUri, postCid, record, timestamp, postAuthor, colorMode])
 
   return (
-    <Dialog.Inner label={_(msg`Embed post`)} style={[{maxWidth: 500}]}>
+    <Dialog.Inner label={l`Embed post`} style={[{maxWidth: 500}]}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.text_2xl, a.font_bold]}>
@@ -126,8 +124,8 @@ function EmbedDialogInner({
           <Button
             label={
               showCustomisation
-                ? _(msg`Hide customization options`)
-                : _(msg`Show customization options`)
+                ? l`Hide customization options`
+                : l`Show customization options`
             }
             color="secondary"
             variant="ghost"
@@ -152,21 +150,21 @@ function EmbedDialogInner({
                 <Trans>Color theme</Trans>
               </Text>
               <SegmentedControl.Root
-                label={_(msg`Color mode`)}
+                label={l`Color mode`}
                 type="radio"
                 value={colorMode}
                 onChange={setColorMode}>
-                <SegmentedControl.Item value="system" label={_(msg`System`)}>
+                <SegmentedControl.Item value="system" label={l`System`}>
                   <SegmentedControl.ItemText>
                     <Trans>System</Trans>
                   </SegmentedControl.ItemText>
                 </SegmentedControl.Item>
-                <SegmentedControl.Item value="light" label={_(msg`Light`)}>
+                <SegmentedControl.Item value="light" label={l`Light`}>
                   <SegmentedControl.ItemText>
                     <Trans>Light</Trans>
                   </SegmentedControl.ItemText>
                 </SegmentedControl.Item>
-                <SegmentedControl.Item value="dark" label={_(msg`Dark`)}>
+                <SegmentedControl.Item value="dark" label={l`Dark`}>
                   <SegmentedControl.ItemText>
                     <Trans>Dark</Trans>
                   </SegmentedControl.ItemText>
@@ -180,7 +178,7 @@ function EmbedDialogInner({
             <TextField.Root>
               <TextField.Icon icon={CodeBracketsIcon} />
               <TextField.Input
-                label={_(msg`Embed HTML code`)}
+                label={l`Embed HTML code`}
                 editable={false}
                 selection={{start: 0, end: snippet.length}}
                 value={snippet}
@@ -188,7 +186,7 @@ function EmbedDialogInner({
             </TextField.Root>
           </View>
           <Button
-            label={_(msg`Copy code`)}
+            label={l`Copy code`}
             color="primary"
             variant="solid"
             size="large"

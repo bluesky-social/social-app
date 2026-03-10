@@ -1,8 +1,7 @@
 import {memo, useCallback} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -37,7 +36,7 @@ interface PostMetaOpts {
 
 let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const t = useTheme()
-  const {i18n, _} = useLingui()
+  const {i18n, t: l} = useLingui()
 
   const author = useProfileShadow(opts.author)
   const displayName = author.displayName || author.handle
@@ -89,7 +88,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               emoji
               numberOfLines={1}
               to={profileLink}
-              label={_(msg`View profile`)}
+              label={l`View profile`}
               disableMismatchWarning
               onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
               style={[
@@ -116,7 +115,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               emoji
               numberOfLines={1}
               to={profileLink}
-              label={_(msg`View profile`)}
+              label={l`View profile`}
               disableMismatchWarning
               disableUnderline
               onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
