@@ -277,7 +277,7 @@ function LightboxGallery({
             <Menu.Item
               label={_(msg`Download image`)}
               onPress={() => {
-                saveImageToMediaLibrary({uri: img.uri, format: 'jpeg'}).then(
+                saveImageToMediaLibrary({uri: img.uri}).then(
                   () => {
                     Toast.show(_(msg`Image saved`))
                   },

@@ -21,12 +21,7 @@ import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
-import {
-  cdnUriWithFormat,
-  type Dimensions,
-  extForFormat,
-  type ImageSaveFormat,
-} from './types'
+import {cdnUriConvertToDownload, type Dimensions} from './types'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -104,19 +99,14 @@ const ALBUM_NAME = 'Bluesky'
  * request the desired format directly, avoiding re-encoding. On native this
  * saves to the media library; on web it triggers a browser download.
  */
-export async function saveImageToMediaLibrary({
-  uri,
-  format = 'jpeg',
-}: {
-  uri: string
-  format?: ImageSaveFormat
-}) {
-  const formatUri = cdnUriWithFormat(uri, format)
-  const downloadedPath = await downloadImage(formatUri, String(uuid.v4()), 15e3)
-  const imagePath = await moveToPermanentPath(
-    downloadedPath,
-    extForFormat(format),
+export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+  const downloadUri = cdnUriConvertToDownload(uri)
+  const downloadedPath = await downloadImage(
+    downloadUri,
+    String(uuid.v4()),
+    20e3,
   )
+  const imagePath = await moveToPermanentPath(downloadedPath, '.jpg')
 
   // save
   try {
