@@ -1,4 +1,5 @@
-import React, {useCallback} from 'react'
+import {useCallback} from 'react'
+import * as React from 'react'
 import {Keyboard, View} from 'react-native'
 import {type ChatBskyConvoDefs, type ModerationCause} from '@atproto/api'
 import {msg} from '@lingui/core/macro'

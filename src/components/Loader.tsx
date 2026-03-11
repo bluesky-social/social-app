@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect} from 'react'
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -20,7 +20,7 @@ export function Loader(props: Props) {
     transform: [{rotate: rotation.get() + 'deg'}],
   }))
 
-  React.useEffect(() => {
+  useEffect(() => {
     rotation.set(() =>
       withRepeat(withTiming(360, {duration: 500, easing: Easing.linear}), -1),
     )

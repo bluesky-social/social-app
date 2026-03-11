@@ -1,4 +1,17 @@
-import React from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
+  type Dispatch,
+  type MutableRefObject,
+  type PropsWithChildren,
+  type SetStateAction,
+} from 'react'
 
 import {type DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
@@ -9,26 +22,26 @@ interface IDialogContext {
   /**
    * The currently active `useDialogControl` hooks.
    */
-  activeDialogs: React.MutableRefObject<
-    Map<string, React.MutableRefObject<DialogControlRefProps>>
+  activeDialogs: MutableRefObject<
+    Map<string, MutableRefObject<DialogControlRefProps>>
   >
   /**
    * The currently open dialogs, referenced by their IDs, generated from
    * `useId`.
    */
-  openDialogs: React.MutableRefObject<Set<string>>
+  openDialogs: MutableRefObject<Set<string>>
 }
 
 interface IDialogControlContext {
   closeAllDialogs(): boolean
   setDialogIsOpen(id: string, isOpen: boolean): void
-  setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>
+  setFullyExpandedCount: Dispatch<SetStateAction<number>>
 }
 
-const DialogContext = React.createContext<IDialogContext>({} as IDialogContext)
+const DialogContext = createContext<IDialogContext>({} as IDialogContext)
 DialogContext.displayName = 'DialogContext'
 
-const DialogControlContext = React.createContext<IDialogControlContext>(
+const DialogControlContext = createContext<IDialogControlContext>(
   {} as IDialogControlContext,
 )
 DialogControlContext.displayName = 'DialogControlContext'
@@ -37,31 +50,31 @@ DialogControlContext.displayName = 'DialogControlContext'
  * The number of dialogs that are fully expanded. This is used to determine the background color of the status bar
  * on iOS.
  */
-const DialogFullyExpandedCountContext = React.createContext<number>(0)
+const DialogFullyExpandedCountContext = createContext<number>(0)
 DialogFullyExpandedCountContext.displayName = 'DialogFullyExpandedCountContext'
 
 export function useDialogStateContext() {
-  return React.useContext(DialogContext)
+  return useContext(DialogContext)
 }
 
 export function useDialogStateControlContext() {
-  return React.useContext(DialogControlContext)
+  return useContext(DialogControlContext)
 }
 
 /** The number of dialogs that are fully expanded */
 export function useDialogFullyExpandedCountContext() {
-  return React.useContext(DialogFullyExpandedCountContext)
+  return useContext(DialogFullyExpandedCountContext)
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [fullyExpandedCount, setFullyExpandedCount] = React.useState(0)
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [fullyExpandedCount, setFullyExpandedCount] = useState(0)
 
-  const activeDialogs = React.useRef<
+  const activeDialogs = useRef<
     Map<string, React.MutableRefObject<DialogControlRefProps>>
   >(new Map())
-  const openDialogs = React.useRef<Set<string>>(new Set())
+  const openDialogs = useRef<Set<string>>(new Set())
 
-  const closeAllDialogs = React.useCallback(() => {
+  const closeAllDialogs = useCallback(() => {
     if (IS_WEB) {
       openDialogs.current.forEach(id => {
         const dialog = activeDialogs.current.get(id)
@@ -75,7 +88,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [])
 
-  const setDialogIsOpen = React.useCallback((id: string, isOpen: boolean) => {
+  const setDialogIsOpen = useCallback((id: string, isOpen: boolean) => {
     if (isOpen) {
       openDialogs.current.add(id)
     } else {
@@ -83,14 +96,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [])
 
-  const context = React.useMemo<IDialogContext>(
+  const context = useMemo<IDialogContext>(
     () => ({
       activeDialogs,
       openDialogs,
     }),
     [activeDialogs, openDialogs],
   )
-  const controls = React.useMemo(
+  const controls = useMemo(
     () => ({
       closeAllDialogs,
       setDialogIsOpen,

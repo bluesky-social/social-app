@@ -1,4 +1,5 @@
-import React from 'react'
+import {createContext, useContext, useEffect, useReducer} from 'react'
+import {type PropsWithChildren} from 'react'
 
 import * as persisted from '#/state/persisted'
 
@@ -26,11 +27,11 @@ export type StateContext = persisted.Schema['onboarding'] & {
 }
 export type DispatchContext = (action: Action) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   compute(persisted.defaults.onboarding),
 )
 stateContext.displayName = 'OnboardingStateContext'
-const dispatchContext = React.createContext<DispatchContext>((_: Action) => {})
+const dispatchContext = createContext<DispatchContext>((_: Action) => {})
 dispatchContext.displayName = 'OnboardingDispatchContext'
 
 function reducer(state: StateContext, action: Action): StateContext {
@@ -73,13 +74,13 @@ function reducer(state: StateContext, action: Action): StateContext {
   }
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, dispatch] = React.useReducer(
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, dispatch] = useReducer(
     reducer,
     compute(persisted.get('onboarding')),
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate('onboarding', nextOnboarding => {
       const next = nextOnboarding.step
       // TODO we've introduced a footgun
@@ -102,11 +103,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useOnboardingState() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useOnboardingDispatch() {
-  return React.useContext(dispatchContext)
+  return useContext(dispatchContext)
 }
 
 export function isOnboardingActive() {

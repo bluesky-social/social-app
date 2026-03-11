@@ -1,4 +1,5 @@
-import React from 'react'
+import {createContext, useContext} from 'react'
+import {type PropsWithChildren} from 'react'
 import {
   type AppBskyLabelerDefs,
   type InterpretedLabelValueDefinition,
@@ -11,17 +12,17 @@ interface StateContext {
   labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
 }
 
-const stateContext = React.createContext<StateContext>({
+const stateContext = createContext<StateContext>({
   labelDefs: {},
   labelers: [],
 })
 stateContext.displayName = 'LabelDefsStateContext'
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
+export function Provider({children}: PropsWithChildren<{}>) {
   const state = useLabelDefinitionsQuery()
   return <stateContext.Provider value={state}>{children}</stateContext.Provider>
 }
 
 export function useLabelDefinitions() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }

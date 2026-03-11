@@ -1,4 +1,5 @@
-import React from 'react'
+import {memo} from 'react'
+import {type ReactNode} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -28,7 +29,7 @@ const longDateFormatterWithYear = new Intl.DateTimeFormat(undefined, {
   year: 'numeric',
 })
 
-let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
+let DateDivider = ({date: dateStr}: {date: string}): ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
 
@@ -78,5 +79,5 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
     </View>
   )
 }
-DateDivider = React.memo(DateDivider)
+DateDivider = memo(DateDivider)
 export {DateDivider}

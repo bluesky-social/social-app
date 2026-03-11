@@ -1,4 +1,5 @@
-import React from 'react'
+import {createContext, useContext, useState} from 'react'
+import {type PropsWithChildren, type ReactNode} from 'react'
 import {type ModerationUI} from '@atproto/api'
 
 import {
@@ -21,24 +22,24 @@ type Context = {
   }
 }
 
-const Context = React.createContext<Context>({} as Context)
+const Context = createContext<Context>({} as Context)
 Context.displayName = 'HiderContext'
 
-export const useHider = () => React.useContext(Context)
+export const useHider = () => useContext(Context)
 
 export function Outer({
   modui,
   isContentVisibleInitialState,
   allowOverride,
   children,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   isContentVisibleInitialState?: boolean
   allowOverride?: boolean
   modui: ModerationUI | undefined
 }>) {
   const control = useModerationDetailsDialogControl()
   const blur = modui?.blurs[0]
-  const [isContentVisible, setIsContentVisible] = React.useState(
+  const [isContentVisible, setIsContentVisible] = useState(
     isContentVisibleInitialState || !blur,
   )
   const info = useModerationCauseDescription(blur)
@@ -79,12 +80,12 @@ export function Outer({
   )
 }
 
-export function Content({children}: {children: React.ReactNode}) {
+export function Content({children}: {children: ReactNode}) {
   const ctx = useHider()
   return ctx.isContentVisible ? children : null
 }
 
-export function Mask({children}: {children: React.ReactNode}) {
+export function Mask({children}: {children: ReactNode}) {
   const ctx = useHider()
   return ctx.isContentVisible ? null : children
 }

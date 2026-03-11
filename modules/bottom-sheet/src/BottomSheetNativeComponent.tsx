@@ -1,4 +1,5 @@
-import * as React from 'react'
+import {Component, createRef} from 'react'
+import {type ComponentType, type ContextType, type RefObject} from 'react'
 import {
   Dimensions,
   type LayoutChangeEvent,
@@ -21,9 +22,9 @@ import {
   Context as PortalContext,
 } from './BottomSheetPortal'
 
-const NativeView: React.ComponentType<
+const NativeView: ComponentType<
   BottomSheetViewProps & {
-    ref: React.RefObject<any>
+    ref: RefObject<any>
     style: StyleProp<ViewStyle>
   }
 > = requireNativeViewManager('BottomSheet')
@@ -39,14 +40,14 @@ const IS_IOS15 =
 const IS_NON_E2E_ANDROID =
   Platform.OS === 'android' && Number(Platform.Version) < 35
 
-export class BottomSheetNativeComponent extends React.Component<
+export class BottomSheetNativeComponent extends Component<
   BottomSheetViewProps,
   {
     open: boolean
     viewHeight?: number
   }
 > {
-  ref = React.createRef<any>()
+  ref = createRef<any>()
 
   static contextType = PortalContext
 
@@ -79,7 +80,7 @@ export class BottomSheetNativeComponent extends React.Component<
   }
 
   render() {
-    const Portal = this.context as React.ContextType<typeof PortalContext>
+    const Portal = this.context as ContextType<typeof PortalContext>
     if (!Portal) {
       throw new Error(
         'BottomSheet: You need to wrap your component tree with a <BottomSheetPortalProvider> to use the bottom sheet.',
@@ -139,7 +140,7 @@ function BottomSheetNativeComponentInner({
   onStateChange: (
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
-  nativeViewRef: React.RefObject<View>
+  nativeViewRef: RefObject<View>
   onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const insets = useSafeAreaInsets()

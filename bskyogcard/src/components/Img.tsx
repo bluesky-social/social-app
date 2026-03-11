@@ -1,4 +1,4 @@
-import React from 'react'
+import {type ImgHTMLAttributes} from 'react'
 
 // @NOTE satori does not currently support webp, see vercel/satori#273
 function detectMime(buf: Buffer): string {
@@ -10,7 +10,7 @@ function detectMime(buf: Buffer): string {
 }
 
 export function Img(
-  props: Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & {src: Buffer},
+  props: Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {src: Buffer},
 ) {
   const {src, ...others} = props
   return (

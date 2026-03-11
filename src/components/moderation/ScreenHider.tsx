@@ -1,4 +1,5 @@
-import React from 'react'
+import {useState} from 'react'
+import {type PropsWithChildren} from 'react'
 import {
   type StyleProp,
   TouchableWithoutFeedback,
@@ -30,7 +31,7 @@ export function ScreenHider({
   style,
   containerStyle,
   children,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   testID?: string
   screenDescription: string
   modui: ModerationUI
@@ -39,7 +40,7 @@ export function ScreenHider({
 }>) {
   const t = useTheme()
   const {_} = useLingui()
-  const [override, setOverride] = React.useState(false)
+  const [override, setOverride] = useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const control = useModerationDetailsDialogControl()

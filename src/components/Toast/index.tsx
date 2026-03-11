@@ -1,4 +1,5 @@
-import React from 'react'
+import {isValidElement} from 'react'
+import {type ReactNode} from 'react'
 import {View} from 'react-native'
 import {nanoid} from 'nanoid/non-secure'
 import {toast as sonner, Toaster} from 'sonner-native'
@@ -25,7 +26,7 @@ export function ToastOutlet() {
   return <Toaster pauseWhenPageIsHidden gap={a.gap_sm.gap} />
 }
 
-export function Outer({children}: {children: React.ReactNode}) {
+export function Outer({children}: {children: ReactNode}) {
   return (
     <View style={[a.px_xl, a.w_full]}>
       <BaseOuter>{children}</BaseOuter>
@@ -42,7 +43,7 @@ export const api = sonner
  * Our base toast API, using the `Toast` export of this file.
  */
 export function show(
-  content: React.ReactNode,
+  content: ReactNode,
   {type = 'default', ...options}: BaseToastOptions = {},
 ) {
   const id = nanoid()
@@ -61,7 +62,7 @@ export function show(
         duration: options?.duration ?? DURATION,
       },
     )
-  } else if (React.isValidElement(content)) {
+  } else if (isValidElement(content)) {
     sonner.custom(
       <ToastConfigProvider id={id} type={type}>
         {content}

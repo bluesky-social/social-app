@@ -1,4 +1,7 @@
-import React, {
+import {
+  cloneElement,
+  Fragment,
+  isValidElement,
   useCallback,
   useEffect,
   useId,
@@ -6,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import {type ReactNode} from 'react'
 import {
   BackHandler,
   Keyboard,
@@ -99,7 +103,7 @@ const SPRING_OUT: WithSpringConfig = {
 /**
  * Needs placing near the top of the provider stack, but BELOW the theme provider.
  */
-export function Provider({children}: {children: React.ReactNode}) {
+export function Provider({children}: {children: ReactNode}) {
   return (
     <PortalProvider>
       {children}
@@ -108,7 +112,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-export function Root({children}: {children: React.ReactNode}) {
+export function Root({children}: {children: ReactNode}) {
   const playHaptic = useHaptics()
   const [mode, setMode] = useState<'full' | 'auxiliary-only'>('full')
   const [measurement, setMeasurement] = useState<Measurement | null>(null)
@@ -569,7 +573,7 @@ export function Outer({
   style,
   align = 'left',
 }: {
-  children: React.ReactNode
+  children: ReactNode
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
 }) {
@@ -689,22 +693,22 @@ export function Outer({
                     t.atoms.border_contrast_low,
                   ]}>
                   {flattenReactChildren(children).map((child, i) => {
-                    return React.isValidElement(child) &&
+                    return isValidElement(child) &&
                       (child.type === Item || child.type === Divider) ? (
-                      <React.Fragment key={i}>
+                      <Fragment key={i}>
                         {i > 0 ? (
                           <View
                             style={[a.border_b, t.atoms.border_contrast_low]}
                           />
                         ) : null}
-                        {React.cloneElement(child, {
+                        {cloneElement(child, {
                           // @ts-expect-error not typed
                           style: {
                             borderRadius: 0,
                             borderWidth: 0,
                           },
                         })}
-                      </React.Fragment>
+                      </Fragment>
                     ) : null
                   })}
                 </View>
@@ -892,7 +896,7 @@ export function ItemRadio({selected}: {selected: boolean}) {
   )
 }
 
-export function LabelText({children}: {children: React.ReactNode}) {
+export function LabelText({children}: {children: ReactNode}) {
   const t = useTheme()
   return (
     <Text

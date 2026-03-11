@@ -1,7 +1,8 @@
 import '#/logger/sentry/setup'
 import '#/view/icons'
 
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
+import * as React from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {

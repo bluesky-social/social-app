@@ -1,4 +1,5 @@
-import React from 'react'
+import {isValidElement} from 'react'
+import {type ReactNode} from 'react'
 import {nanoid} from 'nanoid/non-secure'
 import {toast as sonner, Toaster} from 'sonner'
 
@@ -40,7 +41,7 @@ export const api = sonner
  * Our base toast API, using the `Toast` export of this file.
  */
 export function show(
-  content: React.ReactNode,
+  content: ReactNode,
   {type = 'default', ...options}: BaseToastOptions = {},
 ) {
   const id = nanoid()
@@ -60,7 +61,7 @@ export function show(
         duration: options?.duration ?? DURATION,
       },
     )
-  } else if (React.isValidElement(content)) {
+  } else if (isValidElement(content)) {
     sonner(
       <ToastConfigProvider id={id} type={type}>
         {content}

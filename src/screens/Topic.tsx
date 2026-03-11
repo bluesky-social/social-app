@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -39,26 +39,26 @@ export default function TopicScreen({
   const {topic} = route.params
   const {_} = useLingui()
 
-  const headerTitle = React.useMemo(() => {
+  const headerTitle = useMemo(() => {
     return enforceLen(decodeURIComponent(topic), 24, true, 'middle')
   }, [topic])
 
-  const onShare = React.useCallback(() => {
+  const onShare = useCallback(() => {
     const url = new URL('https://bsky.app')
     url.pathname = `/topic/${topic}`
     shareUrl(url.toString())
   }, [topic])
 
-  const [activeTab, setActiveTab] = React.useState(0)
+  const [activeTab, setActiveTab] = useState(0)
   const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPageSelected = React.useCallback(
+  const onPageSelected = useCallback(
     (index: number) => {
       setMinimalShellMode(false)
       setActiveTab(index)
@@ -66,7 +66,7 @@ export default function TopicScreen({
     [setMinimalShellMode],
   )
 
-  const sections = React.useMemo(() => {
+  const sections = useMemo(() => {
     return [
       {
         title: _(msg`Top`),
@@ -135,7 +135,7 @@ function TopicScreenTab({
 }) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const [isPTR, setIsPTR] = React.useState(false)
+  const [isPTR, setIsPTR] = useState(false)
   const trackPostView = usePostViewTracking('Topic')
 
   const {
@@ -154,17 +154,17 @@ function TopicScreenTab({
     enabled: active,
   })
 
-  const posts = React.useMemo(() => {
+  const posts = useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTR(true)
     await refetch()
     setIsPTR(false)
   }, [refetch])
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
