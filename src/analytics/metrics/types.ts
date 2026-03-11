@@ -723,8 +723,6 @@ export type Events = {
     targetLanguage: string
   }
 
-  muteWords: {}
-
   'postMenu:openMuteWordsDialog': {
     uri: string
     authorDid: string
