@@ -26,3 +26,22 @@ export function blobToDataUri(blob: Blob): Promise<string> {
     reader.readAsDataURL(blob)
   })
 }
+
+export type ImgproxyPreset =
+  | 'default'
+  | 'avatar_thumbnail'
+  | 'avatar'
+  | 'banner'
+  | 'feed_fullsize'
+  | 'feed_thumbnail'
+  | 'download'
+
+const IMGPROXY_PRESET_RE =
+  /(?<=\/img\/)(default|avatar_thumbnail|avatar|banner|feed_fullsize|feed_thumbnail|download)(?=\/)/
+
+/**
+ * Replaces any imgproxy preset in a CDN URI with the given preset.
+ */
+export function convertCdnPreset(uri: string, preset: ImgproxyPreset): string {
+  return uri.replace(IMGPROXY_PRESET_RE, preset)
+}

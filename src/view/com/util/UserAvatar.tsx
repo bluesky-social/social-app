@@ -24,6 +24,7 @@ import {
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
+import {convertCdnPreset} from '#/lib/media/util'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isCancelledError} from '#/lib/strings/errors'
@@ -616,9 +617,7 @@ export {PreviewableUserAvatar}
 // manually string-replace to use the smaller ones
 // -prf
 function hackModifyThumbnailPath(uri: string, isEnabled: boolean): string {
-  return isEnabled
-    ? uri.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/')
-    : uri
+  return isEnabled ? convertCdnPreset(uri, 'avatar_thumbnail') : uri
 }
 
 const styles = StyleSheet.create({
