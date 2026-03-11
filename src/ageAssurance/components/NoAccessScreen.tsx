@@ -12,6 +12,8 @@ import {
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useSessionApi} from '#/state/session'
+import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
+import {DeleteAccountDialog} from '#/screens/Settings/components/DeleteAccountDialog'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -49,6 +51,8 @@ export function NoAccessScreen() {
   const {gtPhone} = useBreakpoints()
   const insets = useSafeAreaInsets()
   const birthdateControl = useDialogControl()
+  const deactivateAccountControl = useDialogControl()
+  const deleteAccountControl = useDialogControl()
   const {data} = useAgeAssuranceDataContext()
   const region = useAgeAssuranceRegionConfig()
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
@@ -107,6 +111,24 @@ export function NoAccessScreen() {
             {...createStaticClick(() => {
               ax.metric('ageAssurance:noAccessScreen:openBirthdateDialog', {})
               birthdateControl.open()
+            })}>
+            clicking here
+          </SimpleInlineLinkText>
+          .
+        </Trans>
+      </Text>
+      <Text style={[textStyles]}>
+        <Trans>
+          If you would prefer to delete your account, you can do so by{' '}
+          <SimpleInlineLinkText
+            label={_(msg`Click here to delete your account`)}
+            style={[textStyles]}
+            {...createStaticClick(() => {
+              ax.metric(
+                'ageAssurance:noAccessScreen:openDeleteAccountDialog',
+                {},
+              )
+              deleteAccountControl.open()
             })}>
             clicking here
           </SimpleInlineLinkText>
@@ -256,6 +278,11 @@ export function NoAccessScreen() {
       </View>
 
       <BirthDateSettingsDialog control={birthdateControl} />
+      <DeactivateAccountDialog control={deactivateAccountControl} />
+      <DeleteAccountDialog
+        control={deleteAccountControl}
+        deactivateDialogControl={deactivateAccountControl}
+      />
 
       {/*
        * While this blocking overlay is up, other dialogs in the shell
