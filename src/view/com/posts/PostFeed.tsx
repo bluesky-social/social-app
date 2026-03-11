@@ -203,7 +203,6 @@ let PostFeed = ({
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
   isVideoFeed = false,
-  lastFetchDate = Date.now,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -235,7 +234,8 @@ let PostFeed = ({
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = useState(false)
-  const lastFetchRef = useRef<number>(lastFetchDate())
+  // eslint-disable-next-line react-hooks/purity
+  const lastFetchRef = useRef<number>(Date.now())
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()

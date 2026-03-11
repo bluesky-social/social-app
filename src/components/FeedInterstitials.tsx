@@ -154,7 +154,7 @@ function sortSeenPosts(postA: SeenPost, postB: SeenPost): 0 | 1 | -1 {
   }
 }
 
-function useExperimentalSuggestedUsersQuery(randomizer = Math.random) {
+function useExperimentalSuggestedUsersQuery() {
   const {currentAccount} = useSession()
   const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
   const dids = useMemo(() => {
@@ -167,10 +167,12 @@ function useExperimentalSuggestedUsersQuery(randomizer = Math.random) {
     if (followSuggestions.length > 0) {
       suggestedDids = [
         // It's ok if these will pick the same item (weighed by its frequency)
-        followSuggestions[Math.floor(randomizer() * followSuggestions.length)],
-        followSuggestions[Math.floor(randomizer() * followSuggestions.length)],
-        followSuggestions[Math.floor(randomizer() * followSuggestions.length)],
-        followSuggestions[Math.floor(randomizer() * followSuggestions.length)],
+        /* eslint-disable react-hooks/purity */
+        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        /* eslint-enable react-hooks/purity */
       ]
     }
     const seenDids = seen
@@ -180,7 +182,7 @@ function useExperimentalSuggestedUsersQuery(randomizer = Math.random) {
     return [...new Set([...suggestedDids, ...likeDids, ...seenDids])].filter(
       did => did !== currentAccount?.did,
     )
-  }, [userActionSnapshot, currentAccount, randomizer])
+  }, [userActionSnapshot, currentAccount])
   const {data, isLoading, error} = useProfilesQuery({
     handles: dids.slice(0, 16),
   })
