@@ -357,13 +357,8 @@ class VideoCompressor {
 
     let mediaSubType = CMFormatDescriptionGetMediaSubType(formatDesc)
 
-    // Only passthrough AAC audio
-    guard mediaSubType == kAudioFormatMPEG4AAC else {
-      return false
-    }
-
-    // Check bitrate - passthrough if <= 128kbps
-    let estimatedDataRate = try await audioTrack.load(.estimatedDataRate)
-    return estimatedDataRate <= 128_000
+    // Always passthrough AAC regardless of bitrate — the server re-encodes
+    // everything anyway, and the bitrate difference is negligible.
+    return mediaSubType == kAudioFormatMPEG4AAC
   }
 }
