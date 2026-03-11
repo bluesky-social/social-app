@@ -470,6 +470,10 @@ export type Events = {
     profileDid: string
     position?: number
   }
+  'profile:mute': {}
+  'profile:unmute': {}
+  'profile:block': {}
+  'profile:unblock': {}
   'suggestedUser:follow': {
     logContext:
       | 'Explore'
