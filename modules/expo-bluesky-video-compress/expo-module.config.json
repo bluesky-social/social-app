@@ -4,6 +4,6 @@
     "modules": ["ExpoVideoCompressModule"]
   },
   "android": {
-    "modules": ["expo.modules.blueskyvideo.ExpoVideoCompressModule"]
+    "modules": ["expo.modules.blueskyvideocompress.ExpoVideoCompressModule"]
   }
 }

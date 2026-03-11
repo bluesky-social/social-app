@@ -1,4 +1,4 @@
-package expo.modules.blueskyvideo
+package expo.modules.blueskyvideocompress
 
 import android.content.Context
 import android.media.MediaExtractor

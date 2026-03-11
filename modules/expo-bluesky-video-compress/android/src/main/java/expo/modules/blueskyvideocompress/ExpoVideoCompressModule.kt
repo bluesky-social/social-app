@@ -1,4 +1,4 @@
-package expo.modules.blueskyvideo
+package expo.modules.blueskyvideocompress
 
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
