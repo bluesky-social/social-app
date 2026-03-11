@@ -236,7 +236,7 @@ export function Shell() {
         <Deactivated />
       ) : (
         <>
-          {aa.state.access !== aa.Access.None ? (
+          {aa.state.access === aa.Access.None ? (
             <NoAccessScreen />
           ) : (
             <RoutesContainer>
