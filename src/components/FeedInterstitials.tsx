@@ -306,7 +306,7 @@ export function ProfileGrid({
   viewContext = 'feed',
   onDismiss,
   isVisible = true,
-  onAllResultsDismissed,
+  onRequestHide,
 }: {
   isSuggestionsLoading: boolean
   profiles: {actor: bsky.profile.AnyProfileView; recId?: string}[]
@@ -315,7 +315,7 @@ export function ProfileGrid({
   viewContext: 'profile' | 'profileHeader' | 'feed'
   onDismiss?: (did: string) => void
   isVisible?: boolean
-  onAllResultsDismissed?: () => void
+  onRequestHide?: () => void
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -562,9 +562,9 @@ export function ProfileGrid({
 
   useEffect(() => {
     if (error || (!isLoading && profiles.length < 1)) {
-      onAllResultsDismissed?.()
+      onRequestHide?.()
     }
-  }, [error, isLoading, onAllResultsDismissed, profiles.length])
+  }, [error, isLoading, onRequestHide, profiles.length])
 
   if (error || (!isLoading && profileCountForMinCheck < minLength)) {
     ax.logger.debug(`Not enough profiles to show suggested follows`)

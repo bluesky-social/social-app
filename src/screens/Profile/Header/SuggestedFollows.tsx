@@ -9,11 +9,11 @@ import type * as bsky from '#/types/bsky'
 export function ProfileHeaderSuggestedFollows({
   isExpanded,
   actorDid,
-  onAllResultsDismissed,
+  onRequestHide,
 }: {
   isExpanded: boolean
   actorDid: string
-  onAllResultsDismissed: () => void
+  onRequestHide: () => void
 }) {
   const {allProfiles, filteredProfiles, onDismiss, isLoading, error} =
     useProfileHeaderSuggestions(actorDid)
@@ -37,7 +37,7 @@ export function ProfileHeaderSuggestedFollows({
         viewContext="profileHeader"
         onDismiss={onDismiss}
         isVisible={isExpanded}
-        onAllResultsDismissed={onAllResultsDismissed}
+        onRequestHide={onRequestHide}
       />
     </AccordionAnimation>
   )

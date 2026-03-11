@@ -95,7 +95,7 @@ let ProfileHeaderStandard = ({
     }
   }
 
-  const onAllResultsDismissed = () => {
+  const onRequestHide = () => {
     setHasSeenAllSuggestedFollows(true)
     setShowSuggestedFollows(false)
   }
@@ -213,7 +213,7 @@ let ProfileHeaderStandard = ({
       <ProfileHeaderSuggestedFollows
         isExpanded={!hasSeenAllSuggestedFollows && showSuggestedFollows}
         actorDid={profile.did}
-        onAllResultsDismissed={onAllResultsDismissed}
+        onRequestHide={onRequestHide}
       />
     </>
   )
