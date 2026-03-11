@@ -239,7 +239,7 @@ export function NoAccessScreen() {
                 </Text>
                 <Text style={[textStyles]}>
                   <Trans>
-                    Set your birthdate below and we’ll get you back to posting
+                    Set your birthdate below and we'll get you back to posting
                     and exploring in no time!
                   </Trans>
                 </Text>
@@ -411,14 +411,14 @@ function AccessSection() {
                     props.disableDialogAction()
                     props.setDialogError(
                       _(
-                        msg`We’re sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
+                        msg`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
                       ),
                     )
                   } else {
                     props.closeDialog(() => {
                       // set this after close!
                       setDeviceGeolocation(props.geolocation)
-                      Toast.show(_(msg`Thanks! You’re all set.`), {
+                      Toast.show(_(msg`Thanks! You're all set.`), {
                         type: 'success',
                       })
                     })

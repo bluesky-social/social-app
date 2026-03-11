@@ -33,7 +33,7 @@ export function hasSnoozedBirthdateUpdateForDid(did: string) {
  * Returns whether a birthdate update is currently allowed, based on the
  * last update timestamp stored locally.
  */
-export function useIsBirthdateUpdateAllowed(now: () => number = Date.now) {
+export function useIsBirthdateUpdateAllowed() {
   const {currentAccount} = useSession()
   return useMemo(() => {
     if (!currentAccount) return false
@@ -43,10 +43,11 @@ export function useIsBirthdateUpdateAllowed(now: () => number = Date.now) {
     ])
     if (!lastUpdated) return true
     const lastUpdatedDate = new Date(lastUpdated)
-    const diffMs = now() - lastUpdatedDate.getTime()
+    // eslint-disable-next-line react-hooks/purity
+    const diffMs = Date.now() - lastUpdatedDate.getTime()
     const diffHours = diffMs / (1000 * 60 * 60)
     return diffHours >= BIRTHDATE_DELAY_HOURS
-  }, [currentAccount, now])
+  }, [currentAccount])
 }
 
 export function useBirthdateMutation() {
