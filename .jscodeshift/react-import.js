@@ -87,8 +87,23 @@ export default function transformer(file, api) {
     j.importSpecifier(j.identifier(name), j.identifier(name)),
   )
 
+  // Get the existing import specifiers
+  const sortedImports = Array.from(reactImportPath.value.specifiers).sort()
+  const existingSpecifiers = sortedImports.filter(
+    specifier => specifier.type !== 'ImportDefaultSpecifier',
+  )
+
+  const allSpecifiers = [
+    ...new Map(
+      [...existingSpecifiers, ...newSpecifiers].map(item => [
+        item.imported.name,
+        item,
+      ]),
+    ).values(),
+  ]
+
   // Update the import declaration
-  reactImportPath.value.specifiers = newSpecifiers
+  reactImportPath.value.specifiers = allSpecifiers
 
   // Replace all React.* member expressions with just the identifier
   root
