@@ -15,10 +15,3 @@ export interface CameraOpts {
   freeStyleCropEnabled?: boolean
   cropperCircleOverlay?: boolean
 }
-
-/**
- * Converts a CDN URI to a download URI by replacing `feed_fullsize` with `download`.
- */
-export function cdnUriConvertToDownload(uri: string): string {
-  return uri.replace(/feed_fullsize/g, 'download')
-}

@@ -1,6 +1,6 @@
 import {type PickerImage} from './picker.shared'
-import {cdnUriConvertToDownload, type Dimensions} from './types'
-import {blobToDataUri, getDataUriSize} from './util'
+import {type Dimensions} from './types'
+import {blobToDataUri, convertCdnPreset, getDataUriSize} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -48,7 +48,7 @@ export async function shareImageModal(_opts: {uri: string}) {
  * saves to the media library; on web it triggers a browser download.
  */
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
-  const downloadUri = cdnUriConvertToDownload(uri)
+  const downloadUri = convertCdnPreset(uri, 'download')
   const segments = downloadUri.split('/')
   const filename = `bluesky-${segments.at(-1)}.jpg`
   downloadUrl(downloadUri, filename)

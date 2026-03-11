@@ -21,7 +21,8 @@ import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
-import {cdnUriConvertToDownload, type Dimensions} from './types'
+import {type Dimensions} from './types'
+import {convertCdnPreset} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -100,7 +101,7 @@ const ALBUM_NAME = 'Bluesky'
  * saves to the media library; on web it triggers a browser download.
  */
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
-  const downloadUri = cdnUriConvertToDownload(uri)
+  const downloadUri = convertCdnPreset(uri, 'download')
   const downloadedPath = await downloadImage(
     downloadUri,
     String(uuid.v4()),
