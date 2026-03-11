@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {
   type AppBskyActorDefs,
   moderateProfile,
@@ -47,7 +47,7 @@ export function useActorAutocompleteQuery(
         : undefined
       return res?.data.actors || []
     },
-    select: React.useCallback(
+    select: useCallback(
       (data: AppBskyActorDefs.ProfileViewBasic[]) => {
         return computeSuggestions({
           q: prefix,
@@ -67,7 +67,7 @@ export function useActorAutocompleteFn() {
   const moderationOpts = useModerationOpts()
   const agent = useAgent()
 
-  return React.useCallback(
+  return useCallback(
     async ({query, limit = 8}: {query: string; limit?: number}) => {
       query = query.toLowerCase()
       let res

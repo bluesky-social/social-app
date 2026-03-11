@@ -2,7 +2,6 @@ import {type JSX} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'

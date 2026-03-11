@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {
@@ -201,16 +201,16 @@ function StarterPackScreenLoaded({
   const shareDialogControl = useDialogControl()
 
   const shortenLink = useShortenLink()
-  const [link, setLink] = React.useState<string>()
-  const [imageLoaded, setImageLoaded] = React.useState(false)
+  const [link, setLink] = useState<string>()
+  const [imageLoaded, setImageLoaded] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     ax.metric('starterPack:opened', {
       starterPack: starterPack.uri,
     })
   }, [ax, starterPack.uri])
 
-  const onOpenShareDialog = React.useCallback(() => {
+  const onOpenShareDialog = useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
     shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then(
       res => {
@@ -227,7 +227,7 @@ function StarterPackScreenLoaded({
     shareDialogControl.open()
   }, [shareDialogControl, shortenLink, starterPack])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (routeParams.new) {
       onOpenShareDialog()
     }
@@ -316,7 +316,7 @@ function Header({
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {captureAction} = useProgressGuideControls()
 
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const {record, creator} = starterPack
   const isOwn = creator?.did === currentAccount?.did
@@ -325,7 +325,7 @@ function Header({
 
   const navigation = useNavigation<NavigationProp>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onFocus = () => {
       if (hasSession) return
       setActiveStarterPack({
@@ -731,7 +731,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const goBack = () => {
     if (navigation.canGoBack()) {

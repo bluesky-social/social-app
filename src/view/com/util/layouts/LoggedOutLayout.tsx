@@ -1,5 +1,4 @@
 import {ScrollView, StyleSheet, View} from 'react-native'
-import type React from 'react'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'

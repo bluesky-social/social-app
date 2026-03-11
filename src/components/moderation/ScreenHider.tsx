@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {
   type StyleProp,
   TouchableWithoutFeedback,
@@ -39,7 +39,7 @@ export function ScreenHider({
 }>) {
   const t = useTheme()
   const {_} = useLingui()
-  const [override, setOverride] = React.useState(false)
+  const [override, setOverride] = useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const control = useModerationDetailsDialogControl()

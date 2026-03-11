@@ -1,4 +1,7 @@
-import React, {
+import {
+  cloneElement,
+  Fragment,
+  isValidElement,
   useCallback,
   useEffect,
   useId,
@@ -689,22 +692,22 @@ export function Outer({
                     t.atoms.border_contrast_low,
                   ]}>
                   {flattenReactChildren(children).map((child, i) => {
-                    return React.isValidElement(child) &&
+                    return isValidElement(child) &&
                       (child.type === Item || child.type === Divider) ? (
-                      <React.Fragment key={i}>
+                      <Fragment key={i}>
                         {i > 0 ? (
                           <View
                             style={[a.border_b, t.atoms.border_contrast_low]}
                           />
                         ) : null}
-                        {React.cloneElement(child, {
+                        {cloneElement(child, {
                           // @ts-expect-error not typed
                           style: {
                             borderRadius: 0,
                             borderWidth: 0,
                           },
                         })}
-                      </React.Fragment>
+                      </Fragment>
                     ) : null
                   })}
                 </View>

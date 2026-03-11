@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {memo, useCallback, useEffect, useMemo, useReducer, useRef} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -61,7 +61,7 @@ const floatingMiddlewares = [
 
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
   const prefetchProfileQuery = usePrefetchProfileQuery()
-  const prefetchedProfile = React.useRef(false)
+  const prefetchedProfile = useRef(false)
   const onPointerMove = () => {
     if (!prefetchedProfile.current) {
       prefetchedProfile.current = true
@@ -116,7 +116,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     middleware: floatingMiddlewares,
   })
 
-  const [currentState, dispatch] = React.useReducer(
+  const [currentState, dispatch] = useReducer(
     // Tip: console.log(state, action) when debugging.
     (state: State, action: Action): State => {
       // Pressing within a card should always hide it.
@@ -262,7 +262,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     {stage: 'hidden'},
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentState.effect) {
       const effect = currentState.effect
       return effect()
@@ -270,16 +270,16 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   }, [currentState])
 
   const prefetchProfileQuery = usePrefetchProfileQuery()
-  const prefetchedProfile = React.useRef(false)
-  const prefetchIfNeeded = React.useCallback(async () => {
+  const prefetchedProfile = useRef(false)
+  const prefetchIfNeeded = useCallback(async () => {
     if (!prefetchedProfile.current) {
       prefetchedProfile.current = true
       prefetchProfileQuery(props.did)
     }
   }, [prefetchProfileQuery, props.did])
 
-  const didFireHover = React.useRef(false)
-  const onPointerMoveTarget = React.useCallback(() => {
+  const didFireHover = useRef(false)
+  const onPointerMoveTarget = useCallback(() => {
     prefetchIfNeeded()
     // Conceptually we want something like onPointerEnter,
     // but we want to ignore entering only due to scrolling.
@@ -290,20 +290,20 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     }
   }, [prefetchIfNeeded])
 
-  const onPointerLeaveTarget = React.useCallback(() => {
+  const onPointerLeaveTarget = useCallback(() => {
     didFireHover.current = false
     dispatch('unhovered-target')
   }, [])
 
-  const onPointerEnterCard = React.useCallback(() => {
+  const onPointerEnterCard = useCallback(() => {
     dispatch('hovered-card')
   }, [])
 
-  const onPointerLeaveCard = React.useCallback(() => {
+  const onPointerLeaveCard = useCallback(() => {
     dispatch('unhovered-card')
   }, [])
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     dispatch('pressed')
   }, [])
 
@@ -411,7 +411,7 @@ let Card = ({
     </View>
   )
 }
-Card = React.memo(Card)
+Card = memo(Card)
 
 function Inner({
   profile,
@@ -425,7 +425,7 @@ function Inner({
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
-  const moderation = React.useMemo(
+  const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
@@ -453,7 +453,7 @@ function Inner({
     did: profile.did,
     handle: profile.handle,
   })
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )

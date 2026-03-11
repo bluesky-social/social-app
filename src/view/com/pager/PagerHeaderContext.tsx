@@ -1,9 +1,9 @@
-import React, {useContext} from 'react'
+import {createContext, useContext, useMemo} from 'react'
 import {type SharedValue} from 'react-native-reanimated'
 
 import {IS_NATIVE} from '#/env'
 
-export const PagerHeaderContext = React.createContext<{
+export const PagerHeaderContext = createContext<{
   scrollY: SharedValue<number>
   headerHeight: number
 } | null>(null)
@@ -24,7 +24,7 @@ export function PagerHeaderProvider({
   headerHeight: number
   children: React.ReactNode
 }) {
-  const value = React.useMemo(
+  const value = useMemo(
     () => ({scrollY, headerHeight}),
     [scrollY, headerHeight],
   )

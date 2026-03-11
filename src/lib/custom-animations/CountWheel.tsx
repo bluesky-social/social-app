@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import Animated, {
   Easing,
@@ -105,14 +105,14 @@ export function CountWheel({
   // animation
   // The initial entering/exiting animations will get skipped, since these will happen on screen mounts and would
   // be unnecessary
-  const [key, setKey] = React.useState(0)
-  const [prevCount, setPrevCount] = React.useState(likeCount)
-  const prevIsLiked = React.useRef(isLiked)
+  const [key, setKey] = useState(0)
+  const [prevCount, setPrevCount] = useState(likeCount)
+  const prevIsLiked = useRef(isLiked)
   const formatPostStatCount = useFormatPostStatCount()
   const formattedCount = formatPostStatCount(likeCount)
   const formattedPrevCount = formatPostStatCount(prevCount)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLiked === prevIsLiked.current) {
       return
     }

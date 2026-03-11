@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {memo, useCallback} from 'react'
 import {Keyboard, View} from 'react-native'
 import {type ChatBskyConvoDefs, type ModerationCause} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -159,7 +159,7 @@ let ConvoMenu = ({
     </>
   )
 }
-ConvoMenu = React.memo(ConvoMenu)
+ConvoMenu = memo(ConvoMenu)
 
 function MenuContent({
   convo: initialConvo,
@@ -211,7 +211,7 @@ function MenuContent({
 
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
 
-  const toggleBlock = React.useCallback(() => {
+  const toggleBlock = useCallback(() => {
     if (listBlocks.length) {
       blockedByListControl.open()
       return

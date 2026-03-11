@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -45,7 +45,7 @@ export function ListHiddenScreen({
 
   const isModList = list.purpose === AppBskyGraphDefs.MODLIST
 
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
   const listBlockMutation = useListBlockMutation()
   const listMuteMutation = useListMuteMutation()
   const {mutateAsync: removeSavedFeed} = useRemoveFeedMutation()

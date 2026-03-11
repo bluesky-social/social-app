@@ -37,6 +37,7 @@ export default defineConfig(
       '*.e2e.ts',
       '*.e2e.tsx',
       'eslint.config.mjs',
+      '.jscodeshift/**',
     ],
   },
 

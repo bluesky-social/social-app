@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyEmbedRecord,
@@ -80,7 +80,7 @@ export let ChatListItem = ({
   )
 }
 
-ChatListItem = React.memo(ChatListItem)
+ChatListItem = memo(ChatListItem)
 
 function ChatListItemReady({
   convo,
@@ -104,7 +104,7 @@ function ChatListItemReady({
   const {gtMobile} = useBreakpoints()
   const profile = useProfileShadow(profileUnshadowed)
   const {mutate: markAsRead} = useMarkAsReadMutation()
-  const moderation = React.useMemo(
+  const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )

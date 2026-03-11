@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {
   measure,
@@ -60,7 +60,7 @@ export function ProfileSubpageHeader({
   const canGoBack = navigation.canGoBack()
   const aviRef = useAnimatedRef()
 
-  const _openLightbox = React.useCallback(
+  const _openLightbox = useCallback(
     (uri: string, thumbRect: MeasuredDimensions | null) => {
       openLightbox({
         images: [
@@ -83,7 +83,7 @@ export function ProfileSubpageHeader({
     [openLightbox],
   )
 
-  const onPressAvi = React.useCallback(() => {
+  const onPressAvi = useCallback(() => {
     if (
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {

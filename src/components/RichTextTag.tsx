@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -68,7 +68,7 @@ export function RichTextTag({
   /*
    * Mute word records that exactly match the tag in question.
    */
-  const removeableMuteWords = React.useMemo(() => {
+  const removeableMuteWords = useMemo(() => {
     return (
       preferences?.moderationPrefs.mutedWords?.filter(word => {
         return word.value === tag

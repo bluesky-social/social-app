@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, useContext, useReducer} from 'react'
 import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
@@ -41,12 +41,12 @@ interface State {
 
 type TStateContext = [State, (action: Action) => void]
 
-const StateContext = React.createContext<TStateContext>([
+const StateContext = createContext<TStateContext>([
   {} as State,
   (_: Action) => {},
 ])
 StateContext.displayName = 'StarterPackWizardStateContext'
-export const useWizardState = () => React.useContext(StateContext)
+export const useWizardState = () => useContext(StateContext)
 
 function reducer(state: State, action: Action): State {
   let updatedState = state
@@ -157,7 +157,7 @@ export function Provider({
     }
   }
 
-  const [state, dispatch] = React.useReducer(reducer, null, createInitialState)
+  const [state, dispatch] = useReducer(reducer, null, createInitialState)
 
   return (
     <StateContext.Provider value={[state, dispatch]}>

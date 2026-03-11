@@ -8,7 +8,6 @@ import Animated, {
 import {type BottomSheetBackdropProps} from '@discord/bottom-sheet/src'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 export function createCustomBackdrop(
   onClose?: () => void,

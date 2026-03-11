@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useMemo, useRef} from 'react'
 import {Pressable, useWindowDimensions, View} from 'react-native'
 import Picker from '@emoji-mart/react'
 import {msg} from '@lingui/core/macro'
@@ -52,9 +52,9 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
   const {_} = useLingui()
   const {height, width} = useWindowDimensions()
 
-  const isShiftDown = React.useRef(false)
+  const isShiftDown = useRef(false)
 
-  const position = React.useMemo(() => {
+  const position = useMemo(() => {
     if (pinToTop) {
       return {
         top: state.pos.top - PICKER_HEIGHT + HEIGHT_OFFSET - 10,
@@ -86,7 +86,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
     }
   }, [state.pos, height, width, pinToTop])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!state.isOpen) return
 
     const onKeyDown = (e: KeyboardEvent) => {

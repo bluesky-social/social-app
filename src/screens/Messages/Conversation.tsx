@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -105,7 +105,7 @@ function Inner() {
   })
   const recipient = useMaybeProfileShadow(recipientUnshadowed)
 
-  const moderation = React.useMemo(() => {
+  const moderation = useMemo(() => {
     if (!recipient || !moderationOpts) return null
     return moderateProfile(recipient, moderationOpts)
   }, [recipient, moderationOpts])
@@ -113,7 +113,7 @@ function Inner() {
   // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
   // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
   // empty. So, we also check for that possible state as well and render once we can.
-  const [hasScrolled, setHasScrolled] = React.useState(false)
+  const [hasScrolled, setHasScrolled] = useState(false)
   const readyToShow =
     hasScrolled ||
     (isConvoActive(convoState) &&
@@ -122,7 +122,7 @@ function Inner() {
 
   // Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
   // state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
-  React.useEffect(() => {
+  useEffect(() => {
     if (convoState.status === ConvoStatus.Initializing) {
       setHasScrolled(false)
     }

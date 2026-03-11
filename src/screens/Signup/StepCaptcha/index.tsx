@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {ActivityIndicator, Platform, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import {msg} from '@lingui/core/macro'
@@ -75,10 +75,10 @@ function StepCaptchaInner({
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
 
-  const [completed, setCompleted] = React.useState(false)
+  const [completed, setCompleted] = useState(false)
 
-  const stateParam = React.useMemo(() => nanoid(15), [])
-  const url = React.useMemo(() => {
+  const stateParam = useMemo(() => nanoid(15), [])
+  const url = useMemo(() => {
     const newUrl = new URL(state.serviceUrl)
     newUrl.pathname = CAPTCHA_PATH
     newUrl.searchParams.set(
@@ -107,7 +107,7 @@ function StepCaptchaInner({
     payload,
   ])
 
-  const onSuccess = React.useCallback(
+  const onSuccess = useCallback(
     (code: string) => {
       setCompleted(true)
       ax.metric('signup:captchaSuccess', {})
@@ -119,7 +119,7 @@ function StepCaptchaInner({
     [ax, dispatch],
   )
 
-  const onError = React.useCallback(
+  const onError = useCallback(
     (error?: unknown) => {
       dispatch({
         type: 'setError',
@@ -134,7 +134,7 @@ function StepCaptchaInner({
     [_, ax, dispatch, state.handle],
   )
 
-  const onBackPress = React.useCallback(() => {
+  const onBackPress = useCallback(() => {
     logger.error('Signup Flow Error', {
       errorMessage:
         'User went back from captcha step. Possibly encountered an error.',

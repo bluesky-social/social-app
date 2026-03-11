@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type TextStyle, View, type ViewStyle} from 'react-native'
 
 import {type Interest, useInterestsDisplayNames} from '#/lib/interests'
@@ -12,7 +12,7 @@ export function InterestButton({interest}: {interest: Interest}) {
   const interestsDisplayNames = useInterestsDisplayNames()
   const ctx = Toggle.useItemContext()
 
-  const styles = React.useMemo(() => {
+  const styles = useMemo(() => {
     const hovered: ViewStyle[] = [
       {
         backgroundColor:

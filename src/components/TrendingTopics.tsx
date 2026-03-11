@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {type AtUri} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -170,7 +170,7 @@ type ParsedTrendingTopic =
 
 export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
   const {_} = useLingui()
-  return React.useMemo(() => {
+  return useMemo(() => {
     const {topic: displayName, link} = raw
 
     if (link.startsWith('/search')) {
