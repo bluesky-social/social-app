@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {ScrollView, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -36,7 +36,7 @@ export function Inner() {
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
-  const onConfirmHide = React.useCallback(() => {
+  const onConfirmHide = useCallback(() => {
     ax.metric('trendingTopics:hide', {context: 'interstitial'})
     setTrendingDisabled(true)
   }, [ax, setTrendingDisabled])

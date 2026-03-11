@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {memo, useState} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
   Gesture,
@@ -472,4 +472,4 @@ function withClampedSpring(value: any) {
   return withSpring(value, {overshootClamping: true})
 }
 
-export default React.memo(ImageItem)
+export default memo(ImageItem)

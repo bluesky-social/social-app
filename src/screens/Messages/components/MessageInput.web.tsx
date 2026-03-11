@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -43,16 +43,16 @@ export function MessageInput({
   const {_} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
-  const [message, setMessage] = React.useState(getDraft)
+  const [message, setMessage] = useState(getDraft)
 
   const inputStyles = useSharedInputStyles()
-  const isComposing = React.useRef(false)
-  const [isFocused, setIsFocused] = React.useState(false)
-  const [isHovered, setIsHovered] = React.useState(false)
-  const [textAreaHeight, setTextAreaHeight] = React.useState(38)
-  const textAreaRef = React.useRef<HTMLTextAreaElement>(null)
+  const isComposing = useRef(false)
+  const [isFocused, setIsFocused] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const [textAreaHeight, setTextAreaHeight] = useState(38)
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     if (!hasEmbed && message.trim() === '') {
       return
     }
@@ -66,7 +66,7 @@ export function MessageInput({
     setEmbed(undefined)
   }, [message, onSendMessage, _, clearDraft, hasEmbed, setEmbed])
 
-  const onKeyDown = React.useCallback(
+  const onKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       // Don't submit the form when the Japanese or any other IME is composing
       if (isComposing.current) return
@@ -98,14 +98,11 @@ export function MessageInput({
     [onSubmit],
   )
 
-  const onChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setMessage(e.target.value)
-    },
-    [],
-  )
+  const onChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value)
+  }, [])
 
-  const onEmojiInserted = React.useCallback(
+  const onEmojiInserted = useCallback(
     (emoji: Emoji) => {
       if (!textAreaRef.current) {
         return
@@ -123,7 +120,7 @@ export function MessageInput({
     },
     [setMessage],
   )
-  React.useEffect(() => {
+  useEffect(() => {
     textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
     return () => {
       textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)

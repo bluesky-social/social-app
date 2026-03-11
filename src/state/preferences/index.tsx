@@ -1,5 +1,3 @@
-import type React from 'react'
-
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'
 import {Provider as DisableHapticsProvider} from './disable-haptics'

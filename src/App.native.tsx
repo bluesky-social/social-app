@@ -1,7 +1,7 @@
 import '#/logger/sentry/setup'
 import '#/view/icons'
 
-import React, {useEffect, useState} from 'react'
+import {Fragment, useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {
@@ -111,7 +111,7 @@ prefetchLiveEvents()
 prefetchAppConfig()
 
 function InnerApp() {
-  const [isReady, setIsReady] = React.useState(false)
+  const [isReady, setIsReady] = useState(false)
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
@@ -152,7 +152,7 @@ function InnerApp() {
         <ContextMenuProvider>
           <Splash isReady={isReady && hasCheckedReferrer}>
             <VideoVolumeProvider>
-              <React.Fragment
+              <Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <AnalyticsFeaturesContext>
@@ -208,7 +208,7 @@ function InnerApp() {
                     </PolicyUpdateOverlayProvider>
                   </QueryProvider>
                 </AnalyticsFeaturesContext>
-              </React.Fragment>
+              </Fragment>
             </VideoVolumeProvider>
           </Splash>
         </ContextMenuProvider>
@@ -220,7 +220,7 @@ function InnerApp() {
 function App() {
   const [isReady, setReady] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(() =>
       setReady(true),
     )

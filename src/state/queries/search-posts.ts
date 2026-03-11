@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useRef} from 'react'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
@@ -39,14 +39,14 @@ export function useSearchPostsQuery({
 }) {
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
-  const selectArgs = React.useMemo(
+  const selectArgs = useMemo(
     () => ({
       isSearchingSpecificUser: /from:(\w+)/.test(query),
       moderationOpts,
     }),
     [query, moderationOpts],
   )
-  const lastRun = React.useRef<{
+  const lastRun = useRef<{
     data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
     args: typeof selectArgs
     result: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
@@ -72,7 +72,7 @@ export function useSearchPostsQuery({
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: enabled ?? !!moderationOpts,
-    select: React.useCallback(
+    select: useCallback(
       (data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>) => {
         const {moderationOpts, isSearchingSpecificUser} = selectArgs
 

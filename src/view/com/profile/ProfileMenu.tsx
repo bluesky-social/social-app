@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import {memo, useCallback, useMemo} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -108,29 +108,29 @@ let ProfileMenu = ({
   const goLiveDisabledDialogControl = useDialogControl()
   const addToStarterPacksDialogControl = useDialogControl()
 
-  const showLoggedOutWarning = React.useMemo(() => {
+  const showLoggedOutWarning = useMemo(() => {
     return (
       profile.did !== currentAccount?.did &&
       !!profile.labels?.find(label => label.val === '!no-unauthenticated')
     )
   }, [currentAccount, profile])
 
-  const invalidateProfileQuery = React.useCallback(() => {
+  const invalidateProfileQuery = useCallback(() => {
     queryClient.invalidateQueries({
       queryKey: profileQueryKey(profile.did),
     })
   }, [queryClient, profile.did])
 
-  const onPressAddToStarterPacks = React.useCallback(() => {
+  const onPressAddToStarterPacks = useCallback(() => {
     ax.metric('profile:addToStarterPack', {})
     addToStarterPacksDialogControl.open()
   }, [addToStarterPacksDialogControl])
 
-  const onPressShare = React.useCallback(() => {
+  const onPressShare = useCallback(() => {
     shareUrl(toShareUrl(makeProfileLink(profile)))
   }, [profile])
 
-  const onPressAddRemoveLists = React.useCallback(() => {
+  const onPressAddRemoveLists = useCallback(() => {
     openModal({
       name: 'user-add-remove-lists',
       subject: profile.did,
@@ -141,7 +141,7 @@ let ProfileMenu = ({
     })
   }, [profile, openModal, invalidateProfileQuery])
 
-  const onPressMuteAccount = React.useCallback(async () => {
+  const onPressMuteAccount = useCallback(async () => {
     if (profile.viewer?.muted) {
       try {
         await queueUnmute()
@@ -165,7 +165,7 @@ let ProfileMenu = ({
     }
   }, [ax, profile.viewer?.muted, queueUnmute, _, queueMute])
 
-  const blockAccount = React.useCallback(async () => {
+  const blockAccount = useCallback(async () => {
     if (profile.viewer?.blocking) {
       try {
         await queueUnblock()
@@ -189,7 +189,7 @@ let ProfileMenu = ({
     }
   }, [ax, profile.viewer?.blocking, _, queueUnblock, queueBlock])
 
-  const onPressFollowAccount = React.useCallback(async () => {
+  const onPressFollowAccount = useCallback(async () => {
     try {
       await queueFollow()
       Toast.show(_(msg({message: 'Account followed', context: 'toast'})))
@@ -201,7 +201,7 @@ let ProfileMenu = ({
     }
   }, [_, ax, queueFollow])
 
-  const onPressUnfollowAccount = React.useCallback(async () => {
+  const onPressUnfollowAccount = useCallback(async () => {
     try {
       await queueUnfollow()
       Toast.show(_(msg({message: 'Account unfollowed', context: 'toast'})))
@@ -213,19 +213,19 @@ let ProfileMenu = ({
     }
   }, [_, ax, queueUnfollow])
 
-  const onPressReportAccount = React.useCallback(() => {
+  const onPressReportAccount = useCallback(() => {
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  const onPressShareATUri = React.useCallback(() => {
+  const onPressShareATUri = useCallback(() => {
     shareText(`at://${profile.did}`)
   }, [profile.did])
 
-  const onPressShareDID = React.useCallback(() => {
+  const onPressShareDID = useCallback(() => {
     shareText(profile.did)
   }, [profile.did])
 
-  const onPressSearch = React.useCallback(() => {
+  const onPressSearch = useCallback(() => {
     navigation.navigate('ProfileSearch', {name: profile.handle})
   }, [navigation, profile.handle])
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {
   findNodeHandle,
   type ImageStyle,
@@ -37,7 +37,7 @@ interface GalleryProps {
 }
 
 export let Gallery = (props: GalleryProps): React.ReactNode => {
-  const [containerInfo, setContainerInfo] = React.useState<Dimensions>()
+  const [containerInfo, setContainerInfo] = useState<Dimensions>()
 
   const onLayout = (evt: LayoutChangeEvent) => {
     const {width, height} = evt.nativeEvent.layout
@@ -55,7 +55,7 @@ export let Gallery = (props: GalleryProps): React.ReactNode => {
     </View>
   )
 }
-Gallery = React.memo(Gallery)
+Gallery = memo(Gallery)
 
 interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
@@ -64,39 +64,38 @@ interface GalleryInnerProps extends GalleryProps {
 const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
 
-  const {altTextControlStyle, imageControlsStyle, imageStyle} =
-    React.useMemo(() => {
-      const side =
-        images.length === 1
-          ? 250
-          : (containerInfo.width - IMAGE_GAP * (images.length - 1)) /
-            images.length
+  const {altTextControlStyle, imageControlsStyle, imageStyle} = useMemo(() => {
+    const side =
+      images.length === 1
+        ? 250
+        : (containerInfo.width - IMAGE_GAP * (images.length - 1)) /
+          images.length
 
-      const isOverflow = isMobile && images.length > 2
+    const isOverflow = isMobile && images.length > 2
 
-      return {
-        altTextControlStyle: isOverflow
-          ? {left: 4, bottom: 4}
+    return {
+      altTextControlStyle: isOverflow
+        ? {left: 4, bottom: 4}
+        : !isMobile && images.length < 3
+          ? {left: 8, top: 8}
+          : {left: 4, top: 4},
+      imageControlsStyle: {
+        display: 'flex' as const,
+        flexDirection: 'row' as const,
+        position: 'absolute' as const,
+        ...(isOverflow
+          ? {top: 4, right: 4, gap: 4}
           : !isMobile && images.length < 3
-            ? {left: 8, top: 8}
-            : {left: 4, top: 4},
-        imageControlsStyle: {
-          display: 'flex' as const,
-          flexDirection: 'row' as const,
-          position: 'absolute' as const,
-          ...(isOverflow
-            ? {top: 4, right: 4, gap: 4}
-            : !isMobile && images.length < 3
-              ? {top: 8, right: 8, gap: 8}
-              : {top: 4, right: 4, gap: 4}),
-          zIndex: 1,
-        },
-        imageStyle: {
-          height: side,
-          width: side,
-        },
-      }
-    }, [images.length, containerInfo, isMobile])
+            ? {top: 8, right: 8, gap: 8}
+            : {top: 4, right: 4, gap: 4}),
+        zIndex: 1,
+      },
+      imageStyle: {
+        height: side,
+        width: side,
+      },
+    }
+  }, [images.length, containerInfo, isMobile])
 
   return images.length !== 0 ? (
     <>

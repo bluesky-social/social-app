@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 
 import {ScrollView} from '#/view/com/util/Views'
@@ -9,7 +9,7 @@ import {Text} from '#/components/Typography'
 import {SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
 
 export function SharedPreferencesTesterScreen() {
-  const [currentTestOutput, setCurrentTestOutput] = React.useState<string>('')
+  const [currentTestOutput, setCurrentTestOutput] = useState<string>('')
 
   return (
     <Layout.Screen>

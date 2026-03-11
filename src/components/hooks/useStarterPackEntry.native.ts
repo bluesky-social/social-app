@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 
 import {
   createStarterPackLinkFromAndroidReferrer,
@@ -10,11 +10,11 @@ import {IS_ANDROID} from '#/env'
 import {Referrer, SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
 
 export function useStarterPackEntry() {
-  const [ready, setReady] = React.useState(false)
+  const [ready, setReady] = useState(false)
   const setActiveStarterPack = useSetActiveStarterPack()
   const hasCheckedForStarterPack = useHasCheckedForStarterPack()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (ready) return
 
     // On Android, we cannot clear the referral link. It gets stored for 90 days and all we can do is query for it. So,

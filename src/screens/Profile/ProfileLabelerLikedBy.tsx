@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -22,7 +22,7 @@ export function ProfileLabelerLikedByScreen({
   const {_} = useLingui()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )

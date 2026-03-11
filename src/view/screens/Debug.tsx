@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -28,9 +28,7 @@ export const DebugScreen = ({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'Debug'
 >) => {
-  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
-    'light',
-  )
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light')
   const onToggleColorScheme = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
   }
@@ -50,7 +48,7 @@ function DebugInner({}: {
   colorScheme: 'light' | 'dark'
   onToggleColorScheme: () => void
 }) {
-  const [currentView, setCurrentView] = React.useState<number>(0)
+  const [currentView, setCurrentView] = useState<number>(0)
   const pal = usePalette('default')
   const {_} = useLingui()
 

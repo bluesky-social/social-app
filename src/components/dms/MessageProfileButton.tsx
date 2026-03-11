@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -39,7 +39,7 @@ export function MessageProfileButton({
     },
   })
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     if (!convoAvailability?.canChat) {
       return
     }

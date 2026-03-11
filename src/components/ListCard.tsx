@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyGraphDefs,
@@ -88,11 +88,11 @@ export function Link({
 }: Props & Omit<LinkProps, 'to' | 'label'>) {
   const queryClient = useQueryClient()
 
-  const href = React.useMemo(() => {
+  const href = useMemo(() => {
     return createProfileListHref({list: view})
   }, [view])
 
-  React.useEffect(() => {
+  useEffect(() => {
     precacheList(queryClient, view)
   }, [view, queryClient])
 

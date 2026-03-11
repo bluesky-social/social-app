@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {ToolsOzoneReportDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -44,7 +44,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
   const {gtPhone} = useBreakpoints()
   const agent = useAgent()
 
-  const [details, setDetails] = React.useState('')
+  const [details, setDetails] = useState('')
   const isInvalid = details.length > 1000
 
   const {mutate, isPending} = useMutation({

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect} from 'react'
 import {Keyboard, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -179,14 +179,14 @@ function WizardInner({
   })
   const parsed = parseStarterPackUri(currentStarterPack?.uri)
 
-  React.useEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       gestureEnabled: false,
     })
   }, [navigation])
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(true)
 
       return () => {

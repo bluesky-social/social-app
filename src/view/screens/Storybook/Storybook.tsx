@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
@@ -28,7 +28,7 @@ import {Typography} from './Typography'
 
 export default function Storybook() {
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
-  const [showContainedList, setShowContainedList] = React.useState(false)
+  const [showContainedList, setShowContainedList] = useState(false)
   const navigation = useNavigation<NavigationProp>()
   const requestDeviceGeolocation = useRequestDeviceGeolocation()
   const {setDeviceGeolocation} = useDeviceGeolocationApi()

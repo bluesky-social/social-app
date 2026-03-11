@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import {useCallback, useEffect} from 'react'
 import {type NativeScrollEvent} from 'react-native'
 import {
   clamp,
@@ -25,7 +25,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
 
-  const setMode = React.useCallback(
+  const setMode = useCallback(
     (v: boolean) => {
       'worklet'
       headerMode.set(() =>

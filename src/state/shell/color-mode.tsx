@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 
 import * as persisted from '#/state/persisted'
 
@@ -11,23 +11,19 @@ type SetContext = {
   setDarkTheme: (v: persisted.Schema['darkTheme']) => void
 }
 
-const stateContext = React.createContext<StateContext>({
+const stateContext = createContext<StateContext>({
   colorMode: 'system',
   darkTheme: 'dark',
 })
 stateContext.displayName = 'ColorModeStateContext'
-const setContext = React.createContext<SetContext>({} as SetContext)
+const setContext = createContext<SetContext>({} as SetContext)
 setContext.displayName = 'ColorModeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [colorMode, setColorMode] = React.useState(() =>
-    persisted.get('colorMode'),
-  )
-  const [darkTheme, setDarkTheme] = React.useState(() =>
-    persisted.get('darkTheme'),
-  )
+  const [colorMode, setColorMode] = useState(() => persisted.get('colorMode'))
+  const [darkTheme, setDarkTheme] = useState(() => persisted.get('darkTheme'))
 
-  const stateContextValue = React.useMemo(
+  const stateContextValue = useMemo(
     () => ({
       colorMode,
       darkTheme,
@@ -35,7 +31,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [colorMode, darkTheme],
   )
 
-  const setContextValue = React.useMemo(
+  const setContextValue = useMemo(
     () => ({
       setColorMode: (_colorMode: persisted.Schema['colorMode']) => {
         setColorMode(_colorMode)
@@ -49,7 +45,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsub1 = persisted.onUpdate('darkTheme', nextDarkTheme => {
       setDarkTheme(nextDarkTheme)
     })
@@ -72,9 +68,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useThemePrefs() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetThemePrefs() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

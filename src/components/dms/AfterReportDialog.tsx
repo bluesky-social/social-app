@@ -5,7 +5,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
-import type React from 'react'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -95,7 +95,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
 
   const {data: preferences} = usePreferencesQuery()
 
-  const [likeUri, setLikeUri] = React.useState(info.likeUri || '')
+  const [likeUri, setLikeUri] = useState(info.likeUri || '')
   const likeCount =
     (info.likeCount || 0) +
     (likeUri && !info.likeUri ? 1 : !likeUri && info.likeUri ? -1 : 0)
@@ -401,7 +401,7 @@ function DialogInner({
     useUnlikeMutation()
 
   const isLiked = !!likeUri
-  const feedRkey = React.useMemo(() => new AtUri(info.uri).rkey, [info.uri])
+  const feedRkey = useMemo(() => new AtUri(info.uri).rkey, [info.uri])
 
   const onToggleLiked = async () => {
     try {
@@ -427,14 +427,14 @@ function DialogInner({
     }
   }
 
-  const onPressShare = React.useCallback(() => {
+  const onPressShare = useCallback(() => {
     playHaptic()
     const url = toShareUrl(info.route.href)
     shareUrl(url)
     ax.metric('feed:share', {feedUrl: info.uri})
   }, [info, playHaptic])
 
-  const onPressReport = React.useCallback(() => {
+  const onPressReport = useCallback(() => {
     reportDialogControl.open()
   }, [reportDialogControl])
 
