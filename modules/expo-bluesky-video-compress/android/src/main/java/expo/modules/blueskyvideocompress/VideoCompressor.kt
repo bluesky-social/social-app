@@ -1,4 +1,4 @@
-package expo.modules.blueskyvideo
+package expo.modules.blueskyvideocompress
 
 import android.content.Context
 import android.media.MediaCodec
@@ -559,15 +559,10 @@ class VideoCompressor(
   }
 
   private fun findSoftwareEncoder(): String? {
-    val codecList = MediaCodecList(MediaCodecList.REGULAR_CODECS)
-    for (codecInfo in codecList.codecInfos) {
-      if (!codecInfo.isEncoder) continue
-      if (!codecInfo.supportedTypes.any { it.equals("video/avc", ignoreCase = true) }) continue
-      val name = codecInfo.name.lowercase()
-      if (name.contains("sw") || name.contains("google") || name.contains("c2.android")) {
-        return codecInfo.name
-      }
+    return try {
+      CodecSelector.selectSoftwareEncoder()?.name
+    } catch (_: Exception) {
+      null
     }
-    return null
   }
 }

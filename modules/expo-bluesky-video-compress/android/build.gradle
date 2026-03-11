@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-group = 'expo.modules.blueskyvideo'
+group = 'expo.modules.blueskyvideocompress'
 version = '1.0.0'
 
 def expoModulesCorePlugin = new File(project(":expo-modules-core").projectDir.absolutePath, "ExpoModulesCorePlugin.gradle")
@@ -18,7 +18,7 @@ buildscript {
 android {
   compileSdkVersion safeExtGet("compileSdkVersion", 34)
 
-  namespace "expo.modules.blueskyvideo"
+  namespace "expo.modules.blueskyvideocompress"
   defaultConfig {
     minSdkVersion safeExtGet("minSdkVersion", 21)
     targetSdkVersion safeExtGet("targetSdkVersion", 34)

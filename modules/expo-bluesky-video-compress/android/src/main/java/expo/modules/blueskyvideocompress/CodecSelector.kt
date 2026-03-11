@@ -1,4 +1,4 @@
-package expo.modules.blueskyvideo
+package expo.modules.blueskyvideocompress
 
 import android.media.MediaCodecInfo
 import android.media.MediaCodecList
@@ -68,5 +68,29 @@ object CodecSelector {
       name = selected.name,
       isHardware = isHardware
     )
+  }
+
+  fun selectSoftwareEncoder(): EncoderInfo? {
+    val codecList = MediaCodecList(MediaCodecList.REGULAR_CODECS)
+
+    for (codecInfo in codecList.codecInfos) {
+      if (!codecInfo.isEncoder) continue
+      if (!codecInfo.supportedTypes.any { it.equals(VIDEO_AVC, ignoreCase = true) }) continue
+      if (DENYLIST.contains(codecInfo.name)) continue
+
+      val isSoftware = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        codecInfo.isSoftwareOnly
+      } else {
+        val name = codecInfo.name.lowercase()
+        name.contains("sw") || name.contains("google") || name.contains("c2.android")
+      }
+
+      if (isSoftware) {
+        Log.d(TAG, "Selected software encoder: ${codecInfo.name}")
+        return EncoderInfo(name = codecInfo.name, isHardware = false)
+      }
+    }
+
+    return null
   }
 }
