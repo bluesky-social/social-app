@@ -34,6 +34,14 @@
   <meta property="twitter:image" content="{{ imgThumbUrl }}">
   {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
+  {%- if videoUrl %}
+  <meta property="og:video" content="{{ videoUrl }}">
+  <meta property="og:video:type" content="{{ videoType }}">
+  {%- if videoWidth %}
+  <meta property="og:video:width" content="{{ videoWidth }}">
+  <meta property="og:video:height" content="{{ videoHeight }}">
+  {% endif -%}
+  {% endif -%}
   {% else %}
   <meta property="og:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
   <meta property="twitter:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
