@@ -9,7 +9,6 @@ import android.media.MediaMuxer
 import android.net.Uri
 import android.os.Build
 import android.util.Log
-import android.view.Surface
 import java.io.File
 import java.nio.ByteBuffer
 
@@ -23,11 +22,8 @@ class VideoCompressor(
 ) {
   companion object {
     private const val TAG = "VideoCompressor"
-    private const val TIMEOUT_US = 10_000L
+    private const val TIMEOUT_DEQUEUE = 100L // 100us
     private const val I_FRAME_INTERVAL = 3
-    private const val AUDIO_AAC_BITRATE = 128_000
-    private const val AUDIO_SAMPLE_RATE = 44100
-    private const val AUDIO_CHANNELS = 2
   }
 
   @Volatile
@@ -156,12 +152,19 @@ class VideoCompressor(
           MediaFormat.KEY_LEVEL,
           MediaCodecInfo.CodecProfileLevel.AVCLevel41
         )
+        setInteger(MediaFormat.KEY_PRIORITY, 0) // realtime
+        setInteger(MediaFormat.KEY_OPERATING_RATE, Short.MAX_VALUE.toInt()) // max speed
       }
     }
 
     val encoder = MediaCodec.createByCodecName(encoderName)
     encoder.configure(encoderFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-    val inputSurface = encoder.createInputSurface()
+
+    // GL pipeline: Decoder -> SurfaceTexture -> OpenGL ES 2.0 -> EGL Surface -> Encoder
+    val inputSurface = InputSurface(encoder.createInputSurface())
+    inputSurface.makeCurrent()
+    val outputSurface = OutputSurface()
+
     encoder.start()
 
     // Set up video decoder
@@ -169,23 +172,28 @@ class VideoCompressor(
     val decoder = MediaCodec.createDecoderByType(
       videoFormat.getString(MediaFormat.KEY_MIME) ?: "video/avc"
     )
-    // Output surface is the encoder's input surface for zero-copy pipeline
-    decoder.configure(decoderFormat, inputSurface, null, 0)
+    decoder.configure(decoderFormat, outputSurface.surface, null, 0)
     decoder.start()
 
     extractor.selectTrack(videoTrackIndex)
 
+    // Frame rate capping: drop frames above 30fps
+    val targetFps = frameRate.coerceAtMost(30)
+    val frameIntervalUs = 1_000_000L / targetFps
+
     // Process video frames
     val bufferInfo = MediaCodec.BufferInfo()
     var inputDone = false
+    var decoderDone = false
     var outputDone = false
     var lastProgressTime = 0L
+    var lastRenderedPtsUs = -1L
 
     try {
       while (!outputDone && !isCancelled) {
         // Feed decoder
         if (!inputDone) {
-          val inputIndex = decoder.dequeueInputBuffer(TIMEOUT_US)
+          val inputIndex = decoder.dequeueInputBuffer(TIMEOUT_DEQUEUE)
           if (inputIndex >= 0) {
             val inputBuffer = decoder.getInputBuffer(inputIndex) ?: continue
             val sampleSize = extractor.readSampleData(inputBuffer, 0)
@@ -205,71 +213,66 @@ class VideoCompressor(
           }
         }
 
-        // Drain decoder -> surface -> encoder
-        drainDecoder(decoder, bufferInfo)
+        // Drain decoder -> GL pipeline -> encoder
+        if (!decoderDone) {
+          decoderDone = drainDecoder(
+            decoder, encoder, inputSurface, outputSurface,
+            bufferInfo, frameIntervalUs, lastRenderedPtsUs
+          ) { pts -> lastRenderedPtsUs = pts }
+        }
 
-        // Drain encoder
-        val encoderOutputIndex = encoder.dequeueOutputBuffer(bufferInfo, TIMEOUT_US)
-        when {
-          encoderOutputIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
-            if (!muxerStarted) {
-              muxerVideoTrack = muxer.addTrack(encoder.outputFormat)
-              // If we have audio, add it now too before starting muxer
-              if (audioTrackIndex != -1 && audioFormat != null) {
-                muxerAudioTrack = if (shouldPassthroughAudio) {
-                  muxer.addTrack(audioFormat)
-                } else {
-                  // Audio re-encode track will be added when audio encoder outputs format
-                  -1
+        // Drain all available encoder output
+        while (!outputDone && !isCancelled) {
+          val encoderOutputIndex = encoder.dequeueOutputBuffer(bufferInfo, TIMEOUT_DEQUEUE)
+          when {
+            encoderOutputIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+              if (!muxerStarted) {
+                muxerVideoTrack = muxer.addTrack(encoder.outputFormat)
+                // Add audio track for passthrough (format known upfront)
+                if (audioTrackIndex != -1 && audioFormat != null && shouldPassthroughAudio) {
+                  muxerAudioTrack = muxer.addTrack(audioFormat)
                 }
-              }
-              if (audioTrackIndex == -1 || muxerAudioTrack >= 0) {
                 muxer.start()
                 muxerStarted = true
               }
             }
-          }
-          encoderOutputIndex >= 0 -> {
-            val outputBuffer = encoder.getOutputBuffer(encoderOutputIndex)
-            if (outputBuffer != null &&
-                bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG == 0 &&
-                bufferInfo.size > 0 &&
-                muxerStarted) {
-              muxer.writeSampleData(muxerVideoTrack, outputBuffer, bufferInfo)
-            }
+            encoderOutputIndex >= 0 -> {
+              val outputBuffer = encoder.getOutputBuffer(encoderOutputIndex)
+              if (outputBuffer != null &&
+                  bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG == 0 &&
+                  bufferInfo.size > 0 &&
+                  muxerStarted) {
+                muxer.writeSampleData(muxerVideoTrack, outputBuffer, bufferInfo)
+              }
 
-            val isEos = bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
-            encoder.releaseOutputBuffer(encoderOutputIndex, false)
+              val isEos = bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
+              encoder.releaseOutputBuffer(encoderOutputIndex, false)
 
-            if (isEos) {
-              outputDone = true
-            }
+              if (isEos) {
+                outputDone = true
+              }
 
-            // Progress reporting
-            if (durationUs > 0) {
-              val now = System.currentTimeMillis()
-              if (now - lastProgressTime >= 100) {
-                lastProgressTime = now
-                val progress = (bufferInfo.presentationTimeUs.toDouble() / durationUs)
-                  .coerceIn(0.0, 1.0)
-                onProgress(jobId, progress)
+              // Progress reporting
+              if (durationUs > 0) {
+                val now = System.currentTimeMillis()
+                if (now - lastProgressTime >= 100) {
+                  lastProgressTime = now
+                  val progress = (bufferInfo.presentationTimeUs.toDouble() / durationUs)
+                    .coerceIn(0.0, 1.0)
+                  onProgress(jobId, progress)
+                }
               }
             }
+            else -> break // No more encoder output available right now
           }
         }
       }
 
-      // Process audio track
-      if (audioTrackIndex != -1 && audioFormat != null && !isCancelled) {
-        if (shouldPassthroughAudio) {
-          processAudioPassthrough(
-            extractor, audioTrackIndex, muxer, muxerAudioTrack, muxerStarted
-          )
-        } else {
-          processAudioReencode(
-            extractor, audioTrackIndex, audioFormat, muxer, muxerStarted
-          )
-        }
+      // Process audio track (passthrough only — non-AAC audio is skipped)
+      if (muxerAudioTrack >= 0 && muxerStarted && !isCancelled) {
+        processAudioPassthrough(
+          audioTrackIndex, muxer, muxerAudioTrack
+        )
       }
     } finally {
       // Clean up resources
@@ -277,6 +280,7 @@ class VideoCompressor(
       try { decoder.release() } catch (_: Exception) {}
       try { encoder.stop() } catch (_: Exception) {}
       try { encoder.release() } catch (_: Exception) {}
+      try { outputSurface.release() } catch (_: Exception) {}
       try { inputSurface.release() } catch (_: Exception) {}
       try { extractor.release() } catch (_: Exception) {}
       try {
@@ -303,41 +307,66 @@ class VideoCompressor(
     )
   }
 
-  private fun drainDecoder(decoder: MediaCodec, bufferInfo: MediaCodec.BufferInfo) {
+  /**
+   * Drains decoded frames through the GL pipeline to the encoder.
+   * Drops frames to cap at the target frame rate.
+   *
+   * @return true if the decoder signaled EOS (all frames decoded)
+   */
+  private fun drainDecoder(
+    decoder: MediaCodec,
+    encoder: MediaCodec,
+    inputSurface: InputSurface,
+    outputSurface: OutputSurface,
+    bufferInfo: MediaCodec.BufferInfo,
+    frameIntervalUs: Long,
+    lastRenderedPtsUs: Long,
+    onRendered: (Long) -> Unit
+  ): Boolean {
+    var currentLastPts = lastRenderedPtsUs
+
     while (true) {
-      val outputIndex = decoder.dequeueOutputBuffer(bufferInfo, TIMEOUT_US)
+      val outputIndex = decoder.dequeueOutputBuffer(bufferInfo, TIMEOUT_DEQUEUE)
       if (outputIndex < 0) break
 
       val isEos = bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
-      // Render to surface (encoder's input) - true means render
-      decoder.releaseOutputBuffer(outputIndex, bufferInfo.size > 0)
 
-      if (isEos) {
-        // Signal encoder that input is done
-        // Note: with Surface input, we signal EOS by calling signalEndOfInputStream
-        break
+      if (!isEos) {
+        // Frame rate capping: decide whether to render or drop this frame
+        val shouldRender = if (currentLastPts < 0) {
+          true
+        } else {
+          bufferInfo.presentationTimeUs - currentLastPts >= frameIntervalUs
+        }
+
+        if (shouldRender && bufferInfo.size > 0) {
+          // Render through GL pipeline: decoder -> SurfaceTexture -> GL -> encoder
+          decoder.releaseOutputBuffer(outputIndex, true)
+          outputSurface.awaitNewImage()
+          outputSurface.drawImage()
+          inputSurface.setPresentationTime(bufferInfo.presentationTimeUs * 1000)
+          inputSurface.swapBuffers()
+          currentLastPts = bufferInfo.presentationTimeUs
+          onRendered(currentLastPts)
+        } else {
+          // Drop frame (don't render to surface)
+          decoder.releaseOutputBuffer(outputIndex, false)
+        }
+      } else {
+        decoder.releaseOutputBuffer(outputIndex, false)
+        encoder.signalEndOfInputStream()
+        return true
       }
     }
-
-    // If decoder flagged EOS, signal encoder
-    if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
-      // This may throw if already signaled - that's fine
-      try {
-        // We need access to encoder here - this is handled in the main loop
-      } catch (_: Exception) {}
-    }
+    return false
   }
 
   private fun processAudioPassthrough(
-    extractor: MediaExtractor,
     audioTrackIndex: Int,
     muxer: MediaMuxer,
-    muxerAudioTrack: Int,
-    muxerStarted: Boolean
+    muxerAudioTrack: Int
   ) {
-    if (!muxerStarted || muxerAudioTrack < 0) return
-
-    // Need a separate extractor for audio since the first one is used for video
+    // Need a separate extractor for audio since the first one was used for video
     val audioExtractor = MediaExtractor()
     if (uri.startsWith("content://") || uri.startsWith("file://")) {
       audioExtractor.setDataSource(context, Uri.parse(uri), null)
@@ -367,162 +396,13 @@ class VideoCompressor(
     }
   }
 
-  private fun processAudioReencode(
-    extractor: MediaExtractor,
-    audioTrackIndex: Int,
-    audioFormat: MediaFormat,
-    muxer: MediaMuxer,
-    muxerStarted: Boolean
-  ) {
-    // Set up separate extractor for audio
-    val audioExtractor = MediaExtractor()
-    if (uri.startsWith("content://") || uri.startsWith("file://")) {
-      audioExtractor.setDataSource(context, Uri.parse(uri), null)
-    } else {
-      audioExtractor.setDataSource(uri)
-    }
-    audioExtractor.selectTrack(audioTrackIndex)
-
-    val audioMime = audioFormat.getString(MediaFormat.KEY_MIME) ?: "audio/mp4a-latm"
-    val sampleRate = if (audioFormat.containsKey(MediaFormat.KEY_SAMPLE_RATE)) {
-      audioFormat.getInteger(MediaFormat.KEY_SAMPLE_RATE)
-    } else {
-      AUDIO_SAMPLE_RATE
-    }
-    val channelCount = if (audioFormat.containsKey(MediaFormat.KEY_CHANNEL_COUNT)) {
-      audioFormat.getInteger(MediaFormat.KEY_CHANNEL_COUNT)
-    } else {
-      AUDIO_CHANNELS
-    }
-
-    // Audio decoder
-    val audioDecoder = MediaCodec.createDecoderByType(audioMime)
-    audioDecoder.configure(audioFormat, null, null, 0)
-    audioDecoder.start()
-
-    // Audio encoder
-    val audioEncoderFormat = MediaFormat.createAudioFormat(
-      MediaFormat.MIMETYPE_AUDIO_AAC,
-      sampleRate,
-      channelCount
-    ).apply {
-      setInteger(MediaFormat.KEY_BIT_RATE, AUDIO_AAC_BITRATE)
-      setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC)
-    }
-    val audioEncoder = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_AUDIO_AAC)
-    audioEncoder.configure(audioEncoderFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-    audioEncoder.start()
-
-    var muxerTrack = -1
-    var localMuxerStarted = muxerStarted
-    val bufferInfo = MediaCodec.BufferInfo()
-    var inputDone = false
-    var decoderDone = false
-    var encoderDone = false
-
-    try {
-      while (!encoderDone && !isCancelled) {
-        // Feed decoder
-        if (!inputDone) {
-          val inputIndex = audioDecoder.dequeueInputBuffer(TIMEOUT_US)
-          if (inputIndex >= 0) {
-            val inputBuffer = audioDecoder.getInputBuffer(inputIndex) ?: continue
-            val sampleSize = audioExtractor.readSampleData(inputBuffer, 0)
-            if (sampleSize < 0) {
-              audioDecoder.queueInputBuffer(
-                inputIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM
-              )
-              inputDone = true
-            } else {
-              audioDecoder.queueInputBuffer(
-                inputIndex, 0, sampleSize, audioExtractor.sampleTime, 0
-              )
-              audioExtractor.advance()
-            }
-          }
-        }
-
-        // Drain decoder -> feed encoder
-        if (!decoderDone) {
-          val decoderOutputIndex = audioDecoder.dequeueOutputBuffer(bufferInfo, TIMEOUT_US)
-          if (decoderOutputIndex >= 0) {
-            val isEos = bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
-            val decodedBuffer = audioDecoder.getOutputBuffer(decoderOutputIndex)
-
-            if (decodedBuffer != null && bufferInfo.size > 0) {
-              val encoderInputIndex = audioEncoder.dequeueInputBuffer(TIMEOUT_US)
-              if (encoderInputIndex >= 0) {
-                val encoderInputBuffer = audioEncoder.getInputBuffer(encoderInputIndex)
-                if (encoderInputBuffer != null) {
-                  encoderInputBuffer.clear()
-                  encoderInputBuffer.put(decodedBuffer)
-                  audioEncoder.queueInputBuffer(
-                    encoderInputIndex, 0, bufferInfo.size,
-                    bufferInfo.presentationTimeUs,
-                    if (isEos) MediaCodec.BUFFER_FLAG_END_OF_STREAM else 0
-                  )
-                }
-              }
-            } else if (isEos) {
-              val encoderInputIndex = audioEncoder.dequeueInputBuffer(TIMEOUT_US)
-              if (encoderInputIndex >= 0) {
-                audioEncoder.queueInputBuffer(
-                  encoderInputIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM
-                )
-              }
-            }
-
-            audioDecoder.releaseOutputBuffer(decoderOutputIndex, false)
-            if (isEos) decoderDone = true
-          }
-        }
-
-        // Drain encoder -> muxer
-        val encoderOutputIndex = audioEncoder.dequeueOutputBuffer(bufferInfo, TIMEOUT_US)
-        when {
-          encoderOutputIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
-            if (muxerTrack < 0) {
-              muxerTrack = muxer.addTrack(audioEncoder.outputFormat)
-              if (!localMuxerStarted) {
-                muxer.start()
-                localMuxerStarted = true
-              }
-            }
-          }
-          encoderOutputIndex >= 0 -> {
-            val outputBuffer = audioEncoder.getOutputBuffer(encoderOutputIndex)
-            if (outputBuffer != null &&
-                bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG == 0 &&
-                bufferInfo.size > 0 &&
-                muxerTrack >= 0) {
-              muxer.writeSampleData(muxerTrack, outputBuffer, bufferInfo)
-            }
-            encoderDone = bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
-            audioEncoder.releaseOutputBuffer(encoderOutputIndex, false)
-          }
-        }
-      }
-    } finally {
-      try { audioDecoder.stop() } catch (_: Exception) {}
-      try { audioDecoder.release() } catch (_: Exception) {}
-      try { audioEncoder.stop() } catch (_: Exception) {}
-      try { audioEncoder.release() } catch (_: Exception) {}
-      audioExtractor.release()
-    }
-  }
-
   private fun canPassthroughAudio(format: MediaFormat): Boolean {
     val mime = format.getString(MediaFormat.KEY_MIME) ?: return false
-    if (mime != MediaFormat.MIMETYPE_AUDIO_AAC) return false
-
-    // Check bitrate if available
-    if (format.containsKey(MediaFormat.KEY_BIT_RATE)) {
-      val bitrate = format.getInteger(MediaFormat.KEY_BIT_RATE)
-      return bitrate <= AUDIO_AAC_BITRATE
-    }
-
-    // If no bitrate info, assume we should passthrough AAC
-    return true
+    // Always passthrough AAC regardless of bitrate — the server re-encodes
+    // everything anyway, and re-encoding audio here complicates muxer startup
+    // (MediaMuxer needs all tracks added before start(), but audio encoder
+    // output format isn't known until it produces FORMAT_CHANGED).
+    return mime == MediaFormat.MIMETYPE_AUDIO_AAC
   }
 
   private fun calculateOutputSize(

@@ -9,6 +9,13 @@ import {
 
 export type {CompressOptions, CompressResult, VideoMetadata}
 
+class AbortError extends Error {
+  name = 'AbortError'
+  constructor() {
+    super('Aborted')
+  }
+}
+
 let jobIdCounter = 0
 
 export function probe(uri: string): Promise<VideoMetadata> {
@@ -27,7 +34,7 @@ export function compress(
   let subscription: EventSubscription | undefined
 
   if (callbacks?.signal?.aborted) {
-    return Promise.reject(new DOMException('Aborted', 'AbortError'))
+    return Promise.reject(new AbortError())
   }
 
   return new Promise<CompressResult>((resolve, reject) => {
@@ -45,7 +52,7 @@ export function compress(
     const abortHandler = () => {
       NativeModule.cancel()
       subscription?.remove()
-      reject(new DOMException('Aborted', 'AbortError'))
+      reject(new AbortError())
     }
 
     if (callbacks?.signal) {
