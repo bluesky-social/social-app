@@ -117,24 +117,6 @@ export function NoAccessScreen() {
           .
         </Trans>
       </Text>
-      <Text style={[textStyles]}>
-        <Trans>
-          If you would prefer to delete your account, you can do so by{' '}
-          <SimpleInlineLinkText
-            label={_(msg`Click here to delete your account`)}
-            style={[textStyles]}
-            {...createStaticClick(() => {
-              ax.metric(
-                'ageAssurance:noAccessScreen:openDeleteAccountDialog',
-                {},
-              )
-              deleteAccountControl.open()
-            })}>
-            clicking here
-          </SimpleInlineLinkText>
-          .
-        </Trans>
-      </Text>
 
       {orgAdmonition}
     </>
@@ -257,9 +239,15 @@ export function NoAccessScreen() {
               </View>
             )}
 
-            <View style={[a.pt_lg, a.gap_xl]}>
+            <View style={[a.pt_lg, a.gap_xl, {maxWidth: 280}]}>
               <Logo width={120} textFill={t.atoms.text.color} />
-              <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
+              <Text
+                style={[
+                  a.text_sm,
+                  a.italic,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 <Trans>
                   To log out,{' '}
                   <SimpleInlineLinkText
@@ -268,6 +256,18 @@ export function NoAccessScreen() {
                       onPressLogout()
                     })}>
                     click here
+                  </SimpleInlineLinkText>
+                  . Or if you’d prefer, you can{' '}
+                  <SimpleInlineLinkText
+                    label={_(msg`Click here to delete your account`)}
+                    {...createStaticClick(() => {
+                      ax.metric(
+                        'ageAssurance:noAccessScreen:openDeleteAccountDialog',
+                        {},
+                      )
+                      deleteAccountControl.open()
+                    })}>
+                    delete your account
                   </SimpleInlineLinkText>
                   .
                 </Trans>
