@@ -1,38 +1,4 @@
-import {type ImagePickerAsset, type ImagePickerResult} from 'expo-image-picker'
-
-import {SUPPORTED_MIME_TYPES} from '#/lib/constants'
-
-// mostly copied from expo-image-picker and adapted to support gifs
-// also adds support for reading video metadata
-
-export async function pickVideo(): Promise<ImagePickerResult> {
-  const input = document.createElement('input')
-  input.style.display = 'none'
-  input.setAttribute('type', 'file')
-  // TODO: do we need video/* here? -sfn
-  input.setAttribute('accept', SUPPORTED_MIME_TYPES.join(','))
-  input.setAttribute('id', String(Math.random()))
-
-  document.body.appendChild(input)
-
-  return new Promise(resolve => {
-    input.addEventListener('change', async () => {
-      if (input.files) {
-        const file = input.files[0]
-        resolve({
-          canceled: false,
-          assets: [await getVideoMetadata(file)],
-        })
-      } else {
-        resolve({canceled: true, assets: null})
-      }
-      document.body.removeChild(input)
-    })
-
-    const event = new MouseEvent('click')
-    input.dispatchEvent(event)
-  })
-}
+import {type ImagePickerAsset} from 'expo-image-picker'
 
 // TODO: we're converting to a dataUrl here, and then converting back to an
 // ArrayBuffer in the compressVideo function. This is a bit wasteful, but it

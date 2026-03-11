@@ -1,4 +1,5 @@
 import AVFoundation
+import UniformTypeIdentifiers
 
 struct VideoProber {
   static func probe(url: URL) async throws -> [String: Any] {
@@ -49,6 +50,14 @@ struct VideoProber {
       fileSize = 0
     }
 
+    // MIME type from file extension
+    let mimeType: String
+    if let utType = UTType(filenameExtension: url.pathExtension) {
+      mimeType = utType.preferredMIMEType ?? "video/mp4"
+    } else {
+      mimeType = "video/mp4"
+    }
+
     // Bitrate: use estimated data rate, or calculate from file size
     let durationSeconds = CMTimeGetSeconds(duration)
     var bitrate = Int(estimatedDataRate)
@@ -62,6 +71,7 @@ struct VideoProber {
       "duration": durationSeconds,
       "bitrate": bitrate,
       "fileSize": fileSize,
+      "mimeType": mimeType,
       "codec": codec,
       "hasAudio": hasAudio,
       "frameRate": nominalFrameRate,

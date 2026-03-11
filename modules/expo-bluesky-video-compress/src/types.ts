@@ -4,6 +4,7 @@ export type VideoMetadata = {
   duration: number // seconds
   bitrate: number // bps
   fileSize: number // bytes
+  mimeType: string
   codec: string
   hasAudio: boolean
   frameRate: number

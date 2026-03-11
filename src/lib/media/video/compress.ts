@@ -1,14 +1,16 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 
-import * as Toast from '#/components/Toast'
-import {IS_DEV} from '#/env'
+import {SUPPORTED_MIME_TYPES, type SupportedMimeTypes} from '#/lib/constants'
+import {logger} from '#/logger'
+import {compress, probe} from '../../../../modules/expo-bluesky-video-compress'
 import {type CompressedVideo} from './types'
 
-// Toggle for A/B comparison. Set to true to use the new Expo module.
-const USE_NEW_COMPRESSOR = false
-
-// In dev, run both compressors and show a comparison toast.
-const DEV_COMPARE_BOTH = true
+// Skip compression if bitrate is at/below this threshold (bps)
+const PASSTHROUGH_BITRATE = 5_000_000
+// Max dimension that doesn't need downscaling
+const PASSTHROUGH_MAX_DIMENSION = 1920
+// Max file size the server accepts (bytes)
+const MAX_UPLOAD_SIZE = 100 * 1000 * 1000 // 100MB
 
 export async function compressVideo(
   file: ImagePickerAsset,
@@ -17,49 +19,85 @@ export async function compressVideo(
     onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  if (IS_DEV && DEV_COMPARE_BOTH) {
-    return compressAndCompare(file, opts)
+  if (file.mimeType === 'image/gif') {
+    return {uri: file.uri, size: file.fileSize ?? -1, mimeType: 'image/gif'}
   }
 
-  if (USE_NEW_COMPRESSOR) {
-    const {compressVideo: compressVideoNew} = await import('./compress.new')
-    return compressVideoNew(file, opts)
-  } else {
-    const {compressVideo: compressVideoLegacy} = await import(
-      './compress.legacy'
-    )
-    return compressVideoLegacy(file, opts)
+  const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
+    file.mimeType as SupportedMimeTypes,
+  )
+
+  // Probe the video to make a smart compression decision
+  const metadata = await probe(file.uri)
+
+  const needsCompression = shouldCompress(metadata, isAcceptableFormat)
+
+  if (!needsCompression) {
+    return {
+      uri: file.uri,
+      size: metadata.fileSize,
+      mimeType: file.mimeType ?? 'video/mp4',
+    }
+  }
+
+  const result = await compress(
+    file.uri,
+    {
+      targetBitrate: 3_000_000,
+      maxSize: 1920,
+    },
+    {
+      onProgress: opts?.onProgress,
+      signal: opts?.signal,
+    },
+  )
+
+  return {
+    uri: result.uri,
+    size: result.size,
+    mimeType: result.mimeType,
   }
 }
 
-async function compressAndCompare(
-  file: ImagePickerAsset,
-  opts?: {
-    signal?: AbortSignal
-    onProgress?: (progress: number) => void
-  },
-): Promise<CompressedVideo> {
-  const {compressVideo: compressVideoLegacy} = await import('./compress.legacy')
-  const {compressVideo: compressVideoNew} = await import('./compress.new')
+function shouldCompress(
+  metadata: {bitrate: number; width: number; height: number; fileSize: number},
+  isAcceptableFormat: boolean,
+): boolean {
+  const maxDimension = Math.max(metadata.width, metadata.height)
+  const bitrateKbps = Math.round(metadata.bitrate / 1000)
+  const sizeMB = (metadata.fileSize / 1_000_000).toFixed(1)
 
-  // Run legacy first (progress goes to UI)
-  const legacyStart = performance.now()
-  const legacyResult = await compressVideoLegacy(file, opts)
-  const legacyMs = performance.now() - legacyStart
+  // Always compress unacceptable formats (e.g. MOV → MP4)
+  if (!isAcceptableFormat) {
+    logger.debug('shouldCompress: yes (unsupported format)')
+    return true
+  }
 
-  // Run new second
-  const newStart = performance.now()
-  const newResult = await compressVideoNew(file, opts)
-  const newMs = performance.now() - newStart
+  // Must compress if over upload limit
+  if (metadata.fileSize > MAX_UPLOAD_SIZE) {
+    logger.debug(`shouldCompress: yes (file too large: ${sizeMB}MB)`)
+    return true
+  }
 
-  const fmt = (ms: number, size: number) =>
-    `${(ms / 1000).toFixed(1)}s → ${(size / 1_000_000).toFixed(1)}MB`
+  // Skip if already low bitrate, small resolution, and under upload limit
+  if (
+    metadata.bitrate <= PASSTHROUGH_BITRATE &&
+    maxDimension <= PASSTHROUGH_MAX_DIMENSION
+  ) {
+    logger.debug(
+      `shouldCompress: no (${bitrateKbps}kbps, ${maxDimension}px, ${sizeMB}MB)`,
+    )
+    return false
+  }
 
-  Toast.show(
-    `legacy: ${fmt(legacyMs, legacyResult.size)}\nnew: ${fmt(newMs, newResult.size)}`,
-    {duration: 8000},
-  )
-
-  // Return whichever is selected
-  return USE_NEW_COMPRESSOR ? newResult : legacyResult
+  if (metadata.bitrate > PASSTHROUGH_BITRATE) {
+    logger.debug(
+      `shouldCompress: yes (bitrate ${bitrateKbps}kbps > ${PASSTHROUGH_BITRATE / 1000}kbps)`,
+    )
+  } else {
+    logger.debug(
+      `shouldCompress: yes (dimension ${maxDimension}px > ${PASSTHROUGH_MAX_DIMENSION}px)`,
+    )
+  }
+  return true
 }
