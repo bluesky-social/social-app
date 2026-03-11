@@ -39,6 +39,7 @@ object VideoProber {
       // Get codec and frame rate from MediaExtractor for more accuracy
       val extractor = MediaExtractor()
       var codec = "unknown"
+      var mimeType = "video/mp4"
       var extractedFrameRate = frameRate
 
       try {
@@ -52,6 +53,7 @@ object VideoProber {
           val format = extractor.getTrackFormat(i)
           val mime = format.getString(MediaFormat.KEY_MIME)
           if (mime?.startsWith("video/") == true) {
+            mimeType = mime
             codec = mime.removePrefix("video/")
             if (format.containsKey(MediaFormat.KEY_FRAME_RATE)) {
               extractedFrameRate = format.getInteger(MediaFormat.KEY_FRAME_RATE).toFloat()
@@ -79,6 +81,7 @@ object VideoProber {
         "duration" to durationSeconds,
         "bitrate" to effectiveBitrate,
         "fileSize" to fileSize,
+        "mimeType" to mimeType,
         "codec" to codec,
         "hasAudio" to hasAudio,
         "frameRate" to extractedFrameRate.toDouble(),
