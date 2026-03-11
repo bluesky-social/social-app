@@ -254,7 +254,8 @@ export function NoAccessScreen() {
                     label={_(msg`Click here to log out`)}
                     {...createStaticClick(() => {
                       onPressLogout()
-                    })}>
+                    })}
+                    style={[a.italic]}>
                     click here
                   </SimpleInlineLinkText>
                   . Or if you’d prefer, you can{' '}
@@ -266,7 +267,8 @@ export function NoAccessScreen() {
                         {},
                       )
                       deleteAccountControl.open()
-                    })}>
+                    })}
+                    style={[a.italic]}>
                     delete your account
                   </SimpleInlineLinkText>
                   .
