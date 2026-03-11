@@ -168,11 +168,16 @@ class VideoCompressor(
     encoder.start()
 
     // Set up video decoder
-    val decoderFormat = videoFormat
+    // Strip rotation from decoder format so the decoder outputs frames in storage
+    // orientation. Some decoders apply rotation themselves when KEY_ROTATION is set,
+    // which double-rotates since we handle it via muxer.setOrientationHint().
+    if (videoFormat.containsKey(MediaFormat.KEY_ROTATION)) {
+      videoFormat.setInteger(MediaFormat.KEY_ROTATION, 0)
+    }
     val decoder = MediaCodec.createDecoderByType(
       videoFormat.getString(MediaFormat.KEY_MIME) ?: "video/avc"
     )
-    decoder.configure(decoderFormat, outputSurface.surface, null, 0)
+    decoder.configure(videoFormat, outputSurface.surface, null, 0)
     decoder.start()
 
     extractor.selectTrack(videoTrackIndex)
@@ -411,26 +416,29 @@ class VideoCompressor(
     rotation: Int,
     maxSize: Int
   ): Pair<Int, Int> {
-    // Apply rotation to get display dimensions
+    // Use display dimensions (rotated) to determine the scale factor,
+    // but return storage dimensions (unrotated) for the encoder.
+    // The muxer's orientationHint handles rotation separately.
     val isRotated = rotation == 90 || rotation == 270
-    val sourceWidth = if (isRotated) height else width
-    val sourceHeight = if (isRotated) width else height
+    val displayWidth = if (isRotated) height else width
+    val displayHeight = if (isRotated) width else height
 
-    // If within bounds, keep original (rounded to even)
-    if (sourceWidth <= maxSize && sourceHeight <= maxSize) {
-      return Pair(roundToEven(sourceWidth), roundToEven(sourceHeight))
+    // If display dimensions within bounds, keep original storage size (rounded to even)
+    if (displayWidth <= maxSize && displayHeight <= maxSize) {
+      return Pair(roundToEven(width), roundToEven(height))
     }
 
-    // Scale down maintaining aspect ratio
-    val scale = if (sourceWidth > sourceHeight) {
-      maxSize.toFloat() / sourceWidth.toFloat()
+    // Scale based on display dimensions
+    val scale = if (displayWidth > displayHeight) {
+      maxSize.toFloat() / displayWidth.toFloat()
     } else {
-      maxSize.toFloat() / sourceHeight.toFloat()
+      maxSize.toFloat() / displayHeight.toFloat()
     }
 
+    // Return storage dimensions (unrotated)
     return Pair(
-      roundToEven((sourceWidth * scale).toInt()),
-      roundToEven((sourceHeight * scale).toInt())
+      roundToEven((width * scale).toInt()),
+      roundToEven((height * scale).toInt())
     )
   }
 

@@ -316,32 +316,35 @@ class VideoCompressor {
     transform: CGAffineTransform,
     maxSize: Int
   ) -> (width: Int, height: Int) {
-    // Apply transform to get actual display dimensions
+    // Use display dimensions (rotated) to determine the scale factor,
+    // but return storage dimensions (unrotated) for the encoder.
+    // The writer's transform handles rotation separately.
     let isRotated = abs(transform.b) == 1.0 && abs(transform.c) == 1.0
-    let sourceWidth = isRotated ? naturalSize.height : naturalSize.width
-    let sourceHeight = isRotated ? naturalSize.width : naturalSize.height
+    let displayWidth = isRotated ? naturalSize.height : naturalSize.width
+    let displayHeight = isRotated ? naturalSize.width : naturalSize.height
 
     let maxDimension = CGFloat(maxSize)
 
-    // If already within bounds, keep original size (rounded to even)
-    if sourceWidth <= maxDimension && sourceHeight <= maxDimension {
+    // If display dimensions within bounds, keep original storage size (rounded to even)
+    if displayWidth <= maxDimension && displayHeight <= maxDimension {
       return (
-        width: roundToEven(Int(sourceWidth)),
-        height: roundToEven(Int(sourceHeight))
+        width: roundToEven(Int(naturalSize.width)),
+        height: roundToEven(Int(naturalSize.height))
       )
     }
 
-    // Scale down maintaining aspect ratio
+    // Scale based on display dimensions
     let scale: CGFloat
-    if sourceWidth > sourceHeight {
-      scale = maxDimension / sourceWidth
+    if displayWidth > displayHeight {
+      scale = maxDimension / displayWidth
     } else {
-      scale = maxDimension / sourceHeight
+      scale = maxDimension / displayHeight
     }
 
+    // Return storage dimensions (unrotated)
     return (
-      width: roundToEven(Int(sourceWidth * scale)),
-      height: roundToEven(Int(sourceHeight * scale))
+      width: roundToEven(Int(naturalSize.width * scale)),
+      height: roundToEven(Int(naturalSize.height * scale))
     )
   }
 
