@@ -43,9 +43,10 @@ export async function shareImageModal(_opts: {uri: string}) {
 }
 
 /**
- * Saves an image to the user's device. Uses the CDN's @format URL suffix to
- * request the desired format directly, avoiding re-encoding. On native this
- * saves to the media library; on web it triggers a browser download.
+ * Saves an image to the user's device. Uses the CDN's `download` preset
+ * which uses the JPEG version with the Content-Disposition header set to
+ * `attachment; filename=<filename>`. On native this saves to the media library;
+ * on web it triggers a browser download.
  */
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   const downloadUri = convertCdnPreset(uri, 'download')
