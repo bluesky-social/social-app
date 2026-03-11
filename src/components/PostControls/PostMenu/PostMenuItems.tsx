@@ -222,12 +222,6 @@ let PostMenuItems = ({
   }
 
   const onToggleThreadMute = () => {
-    ax.metric('postMenu:muteThread', {
-      uri: postUri,
-      authorDid: postAuthor.did,
-      logContext,
-      feedDescriptor: feedFeedback.feedDescriptor,
-    })
     try {
       if (isThreadMuted) {
         void unmuteThread()
@@ -258,33 +252,13 @@ let PostMenuItems = ({
   }
 
   const onToggleWordsAndTagsMute = () => {
-    ax.metric('postMenu:muteWordsAndTags', {
+    ax.metric('postMenu:openMuteWordsDialog', {
       uri: postUri,
       authorDid: postAuthor.did,
       logContext,
       feedDescriptor: feedFeedback.feedDescriptor,
     })
     mutedWordsDialogControl.open()
-  }
-
-  const onBlockAccount = () => {
-    ax.metric('postMenu:blockAccount', {
-      uri: postUri,
-      authorDid: postAuthor.did,
-      logContext,
-      feedDescriptor: feedFeedback.feedDescriptor,
-    })
-    blockPromptControl.open()
-  }
-
-  const onReportPost = () => {
-    ax.metric('postMenu:reportPost', {
-      uri: postUri,
-      authorDid: postAuthor.did,
-      logContext,
-      feedDescriptor: feedFeedback.feedDescriptor,
-    })
-    reportDialogControl.open()
   }
 
   const onCopyPostText = () => {
@@ -462,6 +436,13 @@ let PostMenuItems = ({
         logger.error('Failed to block account', {message: e})
         Toast.show(l`There was an issue! ${e.toString()}`, 'xmark')
       }
+    } finally {
+      ax.metric('postMenu:blockAccount', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
     }
   }
 
@@ -476,6 +457,13 @@ let PostMenuItems = ({
           logger.error('Failed to unmute account', {message: e})
           Toast.show(l`There was an issue! ${e.toString()}`, 'xmark')
         }
+      } finally {
+        ax.metric('postMenu:unmuteAccount', {
+          uri: postUri,
+          authorDid: postAuthor.did,
+          logContext,
+          feedDescriptor: feedFeedback.feedDescriptor,
+        })
       }
     } else {
       try {
@@ -487,18 +475,15 @@ let PostMenuItems = ({
           logger.error('Failed to mute account', {message: e})
           Toast.show(l`There was an issue! ${e.toString()}`, 'xmark')
         }
+      } finally {
+        ax.metric('postMenu:muteAccount', {
+          uri: postUri,
+          authorDid: postAuthor.did,
+          logContext,
+          feedDescriptor: feedFeedback.feedDescriptor,
+        })
       }
     }
-  }
-
-  const onMuteAccount = () => {
-    ax.metric('postMenu:muteAccount', {
-      uri: postUri,
-      authorDid: postAuthor.did,
-      logContext,
-      feedDescriptor: feedFeedback.feedDescriptor,
-    })
-    void onMuteAuthor()
   }
 
   const onReportMisclassification = () => {
@@ -744,7 +729,7 @@ let PostMenuItems = ({
                         ? l`Unmute account`
                         : l`Mute account`
                     }
-                    onPress={onMuteAccount}>
+                    onPress={() => void onMuteAuthor()}>
                     <Menu.ItemText>
                       {postAuthor.viewer?.muted
                         ? l`Unmute account`
@@ -760,7 +745,7 @@ let PostMenuItems = ({
                     <Menu.Item
                       testID="postDropdownBlockBtn"
                       label={l`Block account`}
-                      onPress={onBlockAccount}>
+                      onPress={() => blockPromptControl.open()}>
                       <Menu.ItemText>{l`Block account`}</Menu.ItemText>
                       <Menu.ItemIcon icon={PersonX} position="right" />
                     </Menu.Item>
@@ -769,7 +754,7 @@ let PostMenuItems = ({
                   <Menu.Item
                     testID="postDropdownReportBtn"
                     label={l`Report post`}
-                    onPress={onReportPost}>
+                    onPress={() => reportDialogControl.open()}>
                     <Menu.ItemText>{l`Report post`}</Menu.ItemText>
                     <Menu.ItemIcon icon={Warning} position="right" />
                   </Menu.Item>
@@ -830,6 +815,14 @@ let PostMenuItems = ({
         subject={{
           ...post,
           $type: 'app.bsky.feed.defs#postView',
+        }}
+        onAfterSubmit={() => {
+          ax.metric('postMenu:reportPost', {
+            uri: postUri,
+            authorDid: postAuthor.did,
+            logContext,
+            feedDescriptor: feedFeedback.feedDescriptor,
+          })
         }}
       />
       <PostInteractionSettingsDialog

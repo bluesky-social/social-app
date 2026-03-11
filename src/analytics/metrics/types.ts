@@ -719,19 +719,21 @@ export type Events = {
     targetLanguage: string
   }
 
-  'postMenu:muteThread': {
-    uri: string
-    authorDid: string
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
-    feedDescriptor?: string
-  }
-  'postMenu:muteWordsAndTags': {
+  muteWords: {}
+
+  'postMenu:openMuteWordsDialog': {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
     feedDescriptor?: string
   }
   'postMenu:muteAccount': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
+  'postMenu:unmuteAccount': {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
