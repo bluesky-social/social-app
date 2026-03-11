@@ -470,6 +470,10 @@ export type Events = {
     profileDid: string
     position?: number
   }
+  'profile:mute': {}
+  'profile:unmute': {}
+  'profile:block': {}
+  'profile:unblock': {}
   'suggestedUser:follow': {
     logContext:
       | 'Explore'
@@ -717,6 +721,37 @@ export type Events = {
     os: Platform['OS']
     sourceLanguage: string
     targetLanguage: string
+  }
+
+  'postMenu:openMuteWordsDialog': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
+  'postMenu:muteAccount': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
+  'postMenu:unmuteAccount': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
+  'postMenu:blockAccount': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
+  'postMenu:reportPost': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
 
   'verification:create': {}

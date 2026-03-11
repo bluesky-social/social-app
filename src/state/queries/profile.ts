@@ -417,6 +417,7 @@ function useProfileUnfollowMutation(
 export function useProfileMuteMutationQueue(
   profile: Shadow<bsky.profile.AnyProfileView>,
 ) {
+  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const did = profile.did
   const initialMuted = profile.viewer?.muted
@@ -430,11 +431,13 @@ export function useProfileMuteMutationQueue(
         await muteMutation.mutateAsync({
           did,
         })
+        ax.metric('profile:mute', {})
         return true
       } else {
         await unmuteMutation.mutateAsync({
           did,
         })
+        ax.metric('profile:unmute', {})
         return false
       }
     },
@@ -492,6 +495,7 @@ function useProfileUnmuteMutation() {
 export function useProfileBlockMutationQueue(
   profile: Shadow<bsky.profile.AnyProfileView>,
 ) {
+  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const did = profile.did
   const initialBlockingUri = profile.viewer?.blocking
@@ -505,6 +509,7 @@ export function useProfileBlockMutationQueue(
         const {uri} = await blockMutation.mutateAsync({
           did,
         })
+        ax.metric('profile:block', {})
         return uri
       } else {
         if (prevBlockUri) {
@@ -512,6 +517,7 @@ export function useProfileBlockMutationQueue(
             did,
             blockUri: prevBlockUri,
           })
+          ax.metric('profile:unblock', {})
         }
         return undefined
       }
