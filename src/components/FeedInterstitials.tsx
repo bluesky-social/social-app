@@ -232,11 +232,13 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
     (dismissedDid: string) => {
       queryClient.setQueryData(
         suggestedFollowsByActorQueryKey(did),
-        (old: typeof data) => {
-          if (!old) return old
+        (previous: typeof data) => {
+          if (!previous) return previous
           return {
-            ...old,
-            suggestions: old.suggestions.filter(s => s.did !== dismissedDid),
+            ...previous,
+            suggestions: previous.suggestions.filter(
+              s => s.did !== dismissedDid,
+            ),
           }
         },
       )
@@ -567,10 +569,10 @@ export function ProfileGrid({
   const profileCountForMinCheck = totalProfileCount ?? profiles.length
 
   useEffect(() => {
-    if (error || (!isLoading && profiles.length < 1)) {
+    if (error || (!isLoading && profileCountForMinCheck < minLength)) {
       onRequestHide?.()
     }
-  }, [error, isLoading, onRequestHide, profiles.length])
+  }, [error, isLoading, onRequestHide, profileCountForMinCheck, minLength])
 
   if (error || (!isLoading && profileCountForMinCheck < minLength)) {
     ax.logger.debug(`Not enough profiles to show suggested follows`)

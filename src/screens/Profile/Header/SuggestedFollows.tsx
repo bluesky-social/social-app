@@ -22,8 +22,6 @@ export function ProfileHeaderSuggestedFollows({
   const {profiles, onDismiss, isLoading, error} =
     useProfileHeaderSuggestions(actorDid)
 
-  if (!profiles.length && !isLoading) return null
-
   /* NOTE (caidanw):
    * Android does not work well with this feature yet.
    * This issue stems from Android not allowing dragging on clickable elements in the profile header.
@@ -57,11 +55,13 @@ function useProfileHeaderSuggestions(actorDid: string) {
     (dismissedDid: string) => {
       queryClient.setQueryData(
         suggestedFollowsByActorQueryKey(actorDid),
-        (old: typeof data) => {
-          if (!old) return old
+        (previous: typeof data) => {
+          if (!previous) return previous
           return {
-            ...old,
-            suggestions: old.suggestions.filter(s => s.did !== dismissedDid),
+            ...previous,
+            suggestions: previous.suggestions.filter(
+              s => s.did !== dismissedDid,
+            ),
           }
         },
       )
