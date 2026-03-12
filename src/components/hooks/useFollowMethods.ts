@@ -6,7 +6,7 @@ import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useRequireAuth} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 import {type Metrics} from '#/analytics/metrics'
 import type * as bsky from '#/types/bsky'
 
@@ -32,7 +32,9 @@ export function useFollowMethods({
       } catch (e: any) {
         logger.error(`useFollowMethods: failed to follow`, {message: String(e)})
         if (e?.name !== 'AbortError') {
-          Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+          Toast.show(_(msg`An issue occurred, please try again.`), {
+            type: 'error',
+          })
         }
       }
     })
@@ -47,7 +49,9 @@ export function useFollowMethods({
           message: String(e),
         })
         if (e?.name !== 'AbortError') {
-          Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+          Toast.show(_(msg`An issue occurred, please try again.`), {
+            type: 'error',
+          })
         }
       }
     })

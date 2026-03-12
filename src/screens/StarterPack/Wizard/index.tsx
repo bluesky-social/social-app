@@ -40,7 +40,6 @@ import {
 } from '#/state/queries/starter-packs'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   useWizardState,
@@ -56,6 +55,7 @@ import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
@@ -258,7 +258,9 @@ function WizardInner({
     onError: e => {
       logger.error('Failed to create starter pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`), 'xmark')
+      Toast.show(_(msg`Failed to create starter pack`), {
+        type: 'error',
+      })
     },
   })
   const {mutate: editStarterPack} = useEditStarterPackMutation({
@@ -266,7 +268,9 @@ function WizardInner({
     onError: e => {
       logger.error('Failed to edit starter pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`), 'xmark')
+      Toast.show(_(msg`Failed to create starter pack`), {
+        type: 'error',
+      })
     },
   })
 

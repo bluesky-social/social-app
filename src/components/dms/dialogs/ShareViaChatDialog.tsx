@@ -4,9 +4,9 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
-import * as Toast from '#/view/com/util/Toast'
 import * as Dialog from '#/components/Dialog'
 import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
+import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 
 export function SendViaChatDialog({
@@ -47,10 +47,9 @@ function SendViaChatDialogInner({
     },
     onError: error => {
       logger.error('Failed to share post to chat', {message: error})
-      Toast.show(
-        _(msg`An issue occurred while trying to open the chat`),
-        'xmark',
-      )
+      Toast.show(_(msg`An issue occurred while trying to open the chat`), {
+        type: 'error',
+      })
     },
   })
 

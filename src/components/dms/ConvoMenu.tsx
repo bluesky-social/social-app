@@ -18,7 +18,6 @@ import {
   unstableCacheProfileView,
   useProfileBlockMutationQueue,
 } from '#/state/queries/profile'
-import * as Toast from '#/view/com/util/Toast'
 import {type ViewStyleProp} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -40,6 +39,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/
 import * as Menu from '#/components/Menu'
 import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
 import type * as bsky from '#/types/bsky'
 
 let ConvoMenu = ({
@@ -205,7 +205,9 @@ function MenuContent({
       }
     },
     onError: () => {
-      Toast.show(_(msg`Could not mute chat`), 'xmark')
+      Toast.show(_(msg`Could not mute chat`), {
+        type: 'error',
+      })
     },
   })
 

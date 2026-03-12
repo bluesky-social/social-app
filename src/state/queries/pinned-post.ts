@@ -4,7 +4,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 import {updatePostShadow} from '../cache/post-shadow'
 import {useAgent, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'

@@ -4,9 +4,9 @@ import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
-import * as Toast from '#/view/com/util/Toast'
 import {type DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
 import {IS_NATIVE} from '#/env'
 
 export function LeaveConvoPrompt({
@@ -32,7 +32,9 @@ export function LeaveConvoPrompt({
       }
     },
     onError: () => {
-      Toast.show(_(msg`Could not leave chat`), 'xmark')
+      Toast.show(_(msg`Could not leave chat`), {
+        type: 'error',
+      })
     },
   })
 

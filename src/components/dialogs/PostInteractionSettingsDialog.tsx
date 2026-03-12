@@ -37,7 +37,6 @@ import {
   usePostThreadContext,
 } from '#/state/queries/usePostThread'
 import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -50,6 +49,7 @@ import {
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
@@ -240,7 +240,9 @@ export function PostInteractionSettingsDialogControlledInner(
         _(
           msg`There was an issue. Please check your internet connection and try again.`,
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
     } finally {
       setIsSaving(false)

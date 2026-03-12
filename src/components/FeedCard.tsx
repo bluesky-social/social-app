@@ -18,7 +18,6 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, select, useTheme} from '#/alf'
 import {
@@ -33,6 +32,7 @@ import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {RichText, type RichTextProps} from '#/components/RichText'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useActiveLiveEventFeedUris} from '#/features/liveEvents/context'
 import type * as bsky from '#/types/bsky'
@@ -313,7 +313,9 @@ function SaveButtonInner({
         Toast.show(l({message: 'Feeds updated!', context: 'toast'}))
       } catch (err: any) {
         logger.error(err, {message: `FeedCard: failed to update feeds`, pin})
-        Toast.show(l`Failed to update feeds`, 'xmark')
+        Toast.show(l`Failed to update feeds`, {
+          type: 'error',
+        })
       }
     },
     [l, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],

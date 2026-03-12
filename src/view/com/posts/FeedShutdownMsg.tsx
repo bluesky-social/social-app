@@ -12,11 +12,11 @@ import {
   useReplaceForYouWithDiscoverFeedMutation,
 } from '#/state/queries/preferences'
 import {useSetSelectedFeed} from '#/state/shell/selected-feed'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
@@ -52,7 +52,9 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         _(
           msg`There was an issue updating your feeds, please check your internet connection and try again.`,
         ),
-        'exclamation-circle',
+        {
+          type: 'warning',
+        },
       )
       logger.error('Failed to update feeds', {message: err})
     }
@@ -71,7 +73,9 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         _(
           msg`There was an issue updating your feeds, please check your internet connection and try again.`,
         ),
-        'exclamation-circle',
+        {
+          type: 'warning',
+        },
       )
       logger.error('Failed to update feeds', {message: err})
     }

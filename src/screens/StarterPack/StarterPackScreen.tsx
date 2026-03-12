@@ -46,7 +46,6 @@ import {
 import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
-import * as Toast from '#/view/com/util/Toast'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -74,6 +73,7 @@ import {PostsList} from '#/components/StarterPack/Main/PostsList'
 import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
@@ -356,7 +356,9 @@ function Header({
       listItems = await getAllListMembers(agent, starterPack.list.uri)
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
+      Toast.show(_(msg`An error occurred while trying to follow all`), {
+        type: 'error',
+      })
       logger.error('Failed to get list members for starter pack', {
         safeMessage: e,
       })
@@ -381,7 +383,9 @@ function Header({
       })
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
+      Toast.show(_(msg`An error occurred while trying to follow all`), {
+        type: 'error',
+      })
       logger.error('Failed to follow all accounts', {safeMessage: e})
     }
 
@@ -749,7 +753,9 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
     onError: e => {
       setIsProcessing(false)
       logger.error('Failed to delete invalid starter pack', {safeMessage: e})
-      Toast.show(_(msg`Failed to delete starter pack`), 'xmark')
+      Toast.show(_(msg`Failed to delete starter pack`), {
+        type: 'error',
+      })
     },
   })
 

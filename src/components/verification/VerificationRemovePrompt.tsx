@@ -5,9 +5,9 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useVerificationsRemoveMutation} from '#/state/queries/verification/useVerificationsRemoveMutation'
-import * as Toast from '#/view/com/util/Toast'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'
@@ -31,7 +31,9 @@ export function VerificationRemovePrompt({
       await remove({profile, verifications})
       Toast.show(_(msg`Removed verification`))
     } catch (e) {
-      Toast.show(_(msg`Failed to remove verification`), 'xmark')
+      Toast.show(_(msg`Failed to remove verification`), {
+        type: 'error',
+      })
       logger.error('Failed to remove verification', {
         safeMessage: e,
       })

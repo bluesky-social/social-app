@@ -5,10 +5,10 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CC_Stroke2_Corner0_Rounded as CCIcon} from '#/components/icons/CC'
+import * as Toast from '#/components/Toast'
 
 export function SubtitleFilePicker({
   onSelectFile,

@@ -21,7 +21,6 @@ import {
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -50,6 +49,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import {RichText} from '#/components/RichText'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
@@ -139,7 +139,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
         _(
           msg`There was an issue updating your feeds, please check your internet connection and try again.`,
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
       logger.error('Failed to update feeds', {message: err})
     }
@@ -177,7 +179,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
         ax.metric('feed:pin', {feedUrl: info.uri})
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
+      Toast.show(_(msg`There was an issue contacting the server`), {
+        type: 'error',
+      })
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }
@@ -421,7 +425,9 @@ function DialogInner({
         _(
           msg`There was an issue contacting the server, please check your internet connection and try again.`,
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
       logger.error('Failed to toggle like', {message: err})
     }
