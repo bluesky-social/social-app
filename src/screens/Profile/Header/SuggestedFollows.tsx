@@ -1,7 +1,11 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo} from 'react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {AccordionAnimation} from '#/lib/custom-animations/AccordionAnimation'
-import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
+import {
+  suggestedFollowsByActorQueryKey,
+  useSuggestedFollowsByActorQuery,
+} from '#/state/queries/suggested-follows'
 import {ProfileGrid} from '#/components/FeedInterstitials'
 import {IS_ANDROID} from '#/env'
 import type * as bsky from '#/types/bsky'
@@ -15,10 +19,10 @@ export function ProfileHeaderSuggestedFollows({
   actorDid: string
   onRequestHide: () => void
 }) {
-  const {allProfiles, filteredProfiles, onDismiss, isLoading, error} =
+  const {profiles, onDismiss, isLoading, error} =
     useProfileHeaderSuggestions(actorDid)
 
-  if (!allProfiles.length && !isLoading) return null
+  if (!profiles.length && !isLoading) return null
 
   /* NOTE (caidanw):
    * Android does not work well with this feature yet.
@@ -31,8 +35,8 @@ export function ProfileHeaderSuggestedFollows({
     <AccordionAnimation isExpanded={isExpanded}>
       <ProfileGrid
         isSuggestionsLoading={isLoading}
-        profiles={filteredProfiles}
-        totalProfileCount={allProfiles.length}
+        profiles={profiles}
+        totalProfileCount={profiles.length}
         error={error}
         viewContext="profileHeader"
         onDismiss={onDismiss}
@@ -47,33 +51,33 @@ function useProfileHeaderSuggestions(actorDid: string) {
   const {isLoading, data, error} = useSuggestedFollowsByActorQuery({
     did: actorDid,
   })
+  const queryClient = useQueryClient()
 
-  const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
+  const onDismiss = useCallback(
+    (dismissedDid: string) => {
+      queryClient.setQueryData(
+        suggestedFollowsByActorQueryKey(actorDid),
+        (old: typeof data) => {
+          if (!old) return old
+          return {
+            ...old,
+            suggestions: old.suggestions.filter(s => s.did !== dismissedDid),
+          }
+        },
+      )
+    },
+    [actorDid, queryClient],
+  )
 
-  const onDismiss = useCallback((did: string) => {
-    setDismissedDids(prev => new Set(prev).add(did))
-  }, [])
-
-  // Filter seen profiles from the results
-  const allProfiles = useMemo(() => {
-    const actorProfiles = data?.suggestions ?? []
-
-    const result: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
-
-    for (const profile of actorProfiles) {
-      result.push({actor: profile, recId: data?.recId})
-    }
-
-    return result
+  const profiles = useMemo(() => {
+    return (data?.suggestions ?? []).map(profile => ({
+      actor: profile as bsky.profile.AnyProfileView,
+      recId: data?.recId,
+    }))
   }, [data?.suggestions, data?.recId])
 
-  const filteredProfiles = useMemo(() => {
-    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
-  }, [allProfiles, dismissedDids])
-
   return {
-    allProfiles,
-    filteredProfiles,
+    profiles,
     onDismiss,
     isLoading,
     error,

@@ -15,7 +15,7 @@ import {useAgent} from '#/state/session'
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
 
 const suggestedFollowsByActorQueryKeyRoot = 'suggested-follows-by-actor'
-const suggestedFollowsByActorQueryKey = (did: string) => [
+export const suggestedFollowsByActorQueryKey = (did: string) => [
   suggestedFollowsByActorQueryKeyRoot,
   did,
 ]

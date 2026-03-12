@@ -12,13 +12,17 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
-import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
+import {
+  suggestedFollowsByActorQueryKey,
+  useSuggestedFollowsByActorQuery,
+} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {type SeenPost} from '#/state/userActionHistory'
@@ -222,33 +226,35 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
   } = useSuggestedFollowsByActorQuery({
     did,
   })
+  const queryClient = useQueryClient()
 
-  const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
+  const onDismiss = useCallback(
+    (dismissedDid: string) => {
+      queryClient.setQueryData(
+        suggestedFollowsByActorQueryKey(did),
+        (old: typeof data) => {
+          if (!old) return old
+          return {
+            ...old,
+            suggestions: old.suggestions.filter(s => s.did !== dismissedDid),
+          }
+        },
+      )
+    },
+    [did, queryClient],
+  )
 
-  const onDismiss = useCallback((dismissedDid: string) => {
-    setDismissedDids(prev => new Set(prev).add(dismissedDid))
-  }, [])
-
-  const allProfiles = useMemo(() => {
-    const actorProfiles = data?.suggestions ?? []
-
-    const result: {actor: bsky.profile.AnyProfileView; recId?: string}[] = []
-    for (const profile of actorProfiles) {
-      result.push({actor: profile, recId: data?.recId})
-    }
-
-    return result
+  const profiles = useMemo(() => {
+    return (data?.suggestions ?? []).map(profile => ({
+      actor: profile,
+      recId: data?.recId,
+    }))
   }, [data?.suggestions, data?.recId])
-
-  const filteredProfiles = useMemo(() => {
-    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
-  }, [allProfiles, dismissedDids])
 
   return (
     <ProfileGrid
       isSuggestionsLoading={isSuggestionsLoading}
-      profiles={filteredProfiles}
-      totalProfileCount={allProfiles.length}
+      profiles={profiles}
       error={error}
       viewContext="profile"
       onDismiss={onDismiss}
