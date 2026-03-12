@@ -12,11 +12,11 @@ import {
   useProfileQuery,
 } from '#/state/queries/profile'
 import {useRequireAuth} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import * as Toast from '#/components/Toast'
 import {IS_IOS} from '#/env'
 import {GrowthHack} from './GrowthHack'
 
@@ -114,7 +114,9 @@ function PostThreadFollowBtnLoaded({
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to follow', {message: String(e)})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
+            Toast.show(_(msg`There was an issue! ${e.toString()}`), {
+              type: 'error',
+            })
           }
         }
       })
@@ -125,7 +127,9 @@ function PostThreadFollowBtnLoaded({
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to unfollow', {message: String(e)})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
+            Toast.show(_(msg`There was an issue! ${e.toString()}`), {
+              type: 'error',
+            })
           }
         }
       })

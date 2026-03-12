@@ -7,11 +7,11 @@ import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerificati
 import {logger} from '#/logger'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {FAB} from '#/view/com/util/fab/FAB'
-import * as Toast from '#/view/com/util/Toast'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 
 export function NewChat({
@@ -37,7 +37,9 @@ export function NewChat({
     },
     onError: error => {
       logger.error('Failed to create chat', {safeMessage: error})
-      Toast.show(_(msg`An issue occurred starting the chat`), 'xmark')
+      Toast.show(_(msg`An issue occurred starting the chat`), {
+        type: 'error',
+      })
     },
   })
 

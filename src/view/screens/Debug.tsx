@@ -16,11 +16,11 @@ import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Button} from '#/view/com/util/forms/Button'
 import * as LoadingPlaceholder from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
-import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ViewSelector} from '#/view/com/util/ViewSelector'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
+import * as Toast from '#/components/Toast'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 

@@ -8,12 +8,12 @@ import {useMutation} from '@tanstack/react-query'
 
 import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
 import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {logger} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
@@ -70,7 +70,9 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
       logger.error('AgeAssuranceAppealDialog failed', {safeMessage: err})
       Toast.show(
         _(msg`Age assurance inquiry failed to send, please try again.`),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
     },
     onSuccess: () => {

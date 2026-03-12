@@ -4,11 +4,11 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
-import * as Toast from '#/view/com/util/Toast'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import * as SettingsList from '../components/SettingsList'
 
 export function OTAInfo() {
@@ -34,7 +34,9 @@ export function OTAInfo() {
         await Updates.reloadAsync()
       },
       onError: error =>
-        Toast.show(`Failed to update: ${error.message}`, 'xmark'),
+        Toast.show(`Failed to update: ${error.message}`, {
+          type: 'error',
+        }),
     })
 
   if (!Updates.isEnabled || __DEV__) {

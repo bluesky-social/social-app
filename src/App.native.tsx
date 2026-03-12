@@ -58,7 +58,6 @@ import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
-import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
@@ -68,6 +67,7 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
 import {
   prefetchAgeAssuranceConfig,
@@ -139,10 +139,9 @@ function InnerApp() {
 
   useEffect(() => {
     return listenSessionDropped(() => {
-      Toast.show(
-        _(msg`Sorry! Your session expired. Please sign in again.`),
-        'info',
-      )
+      Toast.show(_(msg`Sorry! Your session expired. Please sign in again.`), {
+        type: 'info',
+      })
     })
   }, [_])
 

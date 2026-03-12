@@ -3,7 +3,7 @@ import {Share} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import {t} from '@lingui/core/macro'
 
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS} from '#/env'
 
 /**
@@ -21,7 +21,9 @@ export async function shareUrl(url: string) {
     // React Native Share is not supported by web. Web Share API
     // has increasing but not full support, so default to clipboard
     setStringAsync(url)
-    Toast.show(t`Copied to clipboard`, 'clipboard-check')
+    Toast.show(t`Copied to clipboard`, {
+      type: 'success',
+    })
   }
 }
 
@@ -37,6 +39,8 @@ export async function shareText(text: string) {
     await Share.share({message: text})
   } else {
     await setStringAsync(text)
-    Toast.show(t`Copied to clipboard`, 'clipboard-check')
+    Toast.show(t`Copied to clipboard`, {
+      type: 'success',
+    })
   }
 }

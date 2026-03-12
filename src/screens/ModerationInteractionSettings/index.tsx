@@ -16,12 +16,12 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
   threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useGutters} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {PostInteractionSettingsForm} from '#/components/dialogs/PostInteractionSettingsDialog'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 
 export function Screen() {
   const gutters = useGutters(['base'])

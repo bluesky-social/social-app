@@ -7,7 +7,7 @@ import {
 import {msg, plural} from '@lingui/core/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 import * as bsky from '#/types/bsky'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const
@@ -80,7 +80,9 @@ function reducer(state: State, action: Action): State {
           msg`You may only add up to ${plural(STARTER_PACK_MAX_SIZE, {
             other: `${STARTER_PACK_MAX_SIZE} profiles`,
           })}`.message ?? '',
-          'info',
+          {
+            type: 'info',
+          },
         )
       } else {
         updatedState = {...state, profiles: [...state.profiles, action.profile]}
@@ -96,7 +98,9 @@ function reducer(state: State, action: Action): State {
       break
     case 'AddFeed':
       if (state.feeds.length >= 3) {
-        Toast.show(msg`You may only add up to 3 feeds`.message ?? '', 'info')
+        Toast.show(msg`You may only add up to 3 feeds`.message ?? '', {
+          type: 'info',
+        })
       } else {
         updatedState = {...state, feeds: [...state.feeds, action.feed]}
       }

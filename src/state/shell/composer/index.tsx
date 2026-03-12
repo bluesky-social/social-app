@@ -18,7 +18,7 @@ import {
   RQKEY_LINK_ROOT,
 } from '#/state/queries/resolve-link'
 import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 
 export interface ComposerOptsPostRef {
   uri: string
@@ -104,10 +104,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           author.viewer?.blockingByList),
     )
     if (isBlocked) {
-      Toast.show(
-        _(msg`Cannot interact with a blocked user`),
-        'exclamation-circle',
-      )
+      Toast.show(_(msg`Cannot interact with a blocked user`), {
+        type: 'warning',
+      })
     } else {
       setState(prevOpts => {
         if (prevOpts) {

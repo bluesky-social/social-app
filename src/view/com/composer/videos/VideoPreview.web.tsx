@@ -7,8 +7,8 @@ import {type CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
+import * as Toast from '#/components/Toast'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
 export function VideoPreview({
@@ -63,7 +63,9 @@ export function VideoPreview({
             playsInline
             onError={err => {
               console.error('Error loading video', err)
-              Toast.show(_(msg`Could not process your video`), 'xmark')
+              Toast.show(_(msg`Could not process your video`), {
+                type: 'error',
+              })
               clear()
             }}
           />

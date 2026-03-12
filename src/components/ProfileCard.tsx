@@ -22,7 +22,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   atoms as a,
@@ -43,6 +42,7 @@ import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Pills from '#/components/Pills'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {type Metrics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
@@ -504,7 +504,9 @@ export function FollowButtonInner({
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(l`An issue occurred, please try again.`, 'xmark')
+        Toast.show(l`An issue occurred, please try again.`, {
+          type: 'error',
+        })
       }
     }
   }
@@ -524,7 +526,9 @@ export function FollowButtonInner({
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(l`An issue occurred, please try again.`, 'xmark')
+        Toast.show(l`An issue occurred, please try again.`, {
+          type: 'error',
+        })
       }
     }
   }
