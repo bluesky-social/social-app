@@ -215,7 +215,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 )
               }
               onPress={onPressMessages}
-              notificationCount={numUnreadMessages.numUnread}
+              notificationCount={
+                aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
+              }
               hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
               accessible={true}
               accessibilityRole="tab"
