@@ -16,8 +16,8 @@ import {useNavigation} from '@react-navigation/native'
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
@@ -26,8 +26,9 @@ import {
   type EmptyStateButtonProps,
 } from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, ios, useTheme} from '#/alf'
+import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {useProfileScrollbarAdjustment} from '#/screens/Profile/useProfileScrollbarAdjustment'
+import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -47,6 +48,7 @@ interface ProfileFeedgensProps {
   scrollElRef: ListRef
   did: string
   headerOffset: number
+  collapsedHeaderHeight?: number
   enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
@@ -66,6 +68,7 @@ export function ProfileStarterPacks({
   scrollElRef,
   did,
   headerOffset,
+  collapsedHeaderHeight = 0,
   enabled,
   style,
   testID,
@@ -79,6 +82,8 @@ export function ProfileStarterPacks({
   const bottomBarOffset = useBottomBarOffset(100)
   const {height} = useWindowDimensions()
   const [isPTRing, setIsPTRing] = useState(false)
+  const {gtMobile} = useBreakpoints()
+
   const {
     data,
     refetch,
@@ -87,7 +92,6 @@ export function ProfileStarterPacks({
     isFetchingNextPage,
     fetchNextPage,
   } = useActorStarterPacksQuery({did, enabled})
-  const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
   const {_} = useLingui()
@@ -149,42 +153,54 @@ export function ProfileStarterPacks({
         <View
           style={[
             a.p_lg,
-            (isTabletOrDesktop || index !== 0) && a.border_t,
+            (gtMobile || index !== 0) && a.border_t,
             t.atoms.border_contrast_low,
           ]}>
           <StarterPackCard starterPack={item} />
         </View>
       )
     },
-    [isTabletOrDesktop, t.atoms.border_contrast_low],
+    [gtMobile, t.atoms.border_contrast_low],
   )
+
+  const {scrollHandlers, animatedProps} = useProfileScrollbarAdjustment({
+    headerOffset,
+    collapsedHeaderHeight,
+  })
 
   return (
     <View testID={testID} style={style}>
-      <List
-        testID={testID ? `${testID}-flatlist` : undefined}
-        ref={scrollElRef}
-        data={items}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        refreshing={isPTRing}
-        headerOffset={headerOffset}
-        progressViewOffset={ios(0)}
-        contentContainerStyle={{
-          minHeight: height + headerOffset,
-          paddingBottom: bottomBarOffset,
-        }}
-        removeClippedSubviews={true}
-        desktopFixedHeight
-        onEndReached={onEndReached}
-        onRefresh={onRefresh}
-        ListEmptyComponent={
-          data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
-        }
-        ListFooterComponent={
-          !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
-        }
-      />
+      <ScrollProvider {...scrollHandlers}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={items}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          refreshing={isPTRing}
+          headerOffset={headerOffset}
+          progressViewOffset={ios(0)}
+          contentContainerStyle={{
+            minHeight: height + headerOffset,
+            paddingBottom: bottomBarOffset,
+          }}
+          removeClippedSubviews={true}
+          desktopFixedHeight
+          onEndReached={onEndReached}
+          onRefresh={onRefresh}
+          ListEmptyComponent={
+            data
+              ? isMe
+                ? EmptyComponent
+                : undefined
+              : FeedFeedLoadingPlaceholder
+          }
+          ListFooterComponent={
+            !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
+          }
+          animatedProps={animatedProps}
+        />
+      </ScrollProvider>
     </View>
   )
 }
