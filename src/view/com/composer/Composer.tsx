@@ -378,7 +378,7 @@ export const ComposePost = ({
         let asset: ImagePickerAsset
 
         if (IS_WEB) {
-          // Web: Convert blob URL to a File, then get video metadata (returns data URL)
+          // Web: Convert blob URL to a File, then get video metadata
           const response = await fetch(videoInfo.uri)
           const blob = await response.blob()
           const file = new File([blob], 'restored-video', {
@@ -1346,26 +1346,18 @@ let ComposerPost = React.memo(function ComposerPost({
   )
 
   const onPhotoPasted = useCallback(
-    async (uri: string) => {
-      if (
-        uri.startsWith('data:video/') ||
-        (IS_WEB && uri.startsWith('data:image/gif'))
-      ) {
-        if (IS_NATIVE) return // web only
-        const [mimeType] = uri.slice('data:'.length).split(';')
+    async (uriOrFile: string | File) => {
+      if (uriOrFile instanceof File) {
+        const mimeType = uriOrFile.type
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
           Toast.show(_(msg`Unsupported video type: ${mimeType}`), {
             type: 'error',
           })
           return
         }
-        const name = `pasted.${mimeToExt(mimeType)}`
-        const file = await fetch(uri)
-          .then(res => res.blob())
-          .then(blob => new File([blob], name, {type: mimeType}))
-        onSelectVideo(post.id, await getVideoMetadata(file))
+        onSelectVideo(post.id, await getVideoMetadata(uriOrFile))
       } else {
-        const res = await pasteImage(uri)
+        const res = await pasteImage(uriOrFile)
         onImageAdd([res])
       }
     },
