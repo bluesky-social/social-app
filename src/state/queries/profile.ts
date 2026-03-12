@@ -5,8 +5,8 @@ import {
   type AppBskyActorGetProfiles,
   type AppBskyActorProfile,
   type AppBskyGraphGetFollows,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
   type ComAtprotoRepoUploadBlob,
   type Un$Typed,
 } from '@atproto/api'
@@ -203,19 +203,19 @@ export function useProfileUpdateMutation() {
           (res => {
             if (typeof newUserAvatar !== 'undefined') {
               if (newUserAvatar === null && res.data.avatar) {
-                // url hasnt cleared yet
+                // url hasn't cleared yet
                 return false
               } else if (res.data.avatar === profile.avatar) {
-                // url hasnt changed yet
+                // url hasn't changed yet
                 return false
               }
             }
             if (typeof newUserBanner !== 'undefined') {
               if (newUserBanner === null && res.data.banner) {
-                // url hasnt cleared yet
+                // url hasn't cleared yet
                 return false
               } else if (res.data.banner === profile.banner) {
-                // url hasnt changed yet
+                // url hasn't changed yet
                 return false
               }
             }
@@ -231,10 +231,10 @@ export function useProfileUpdateMutation() {
     },
     async onSuccess(_, variables) {
       // invalidate cache
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey: RQKEY(variables.profile.did),
       })
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey: [profilesQueryKeyRoot, [variables.profile.did]],
       })
       await updateProfileVerificationCache({profile: variables.profile})
@@ -329,7 +329,7 @@ export function useProfileFollowMutationQueue(
       }
 
       if (finalFollowingUri) {
-        agent.app.bsky.graph
+        void agent.app.bsky.graph
           .getSuggestedFollowsByActor({
             actor: did,
           })
@@ -474,7 +474,7 @@ function useProfileMuteMutation() {
       await agent.mute(did)
     },
     onSuccess() {
-      queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
+      void queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
     },
   })
 }
@@ -487,7 +487,7 @@ function useProfileUnmuteMutation() {
       await agent.unmute(did)
     },
     onSuccess() {
-      queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
+      void queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
     },
   })
 }
@@ -527,7 +527,7 @@ export function useProfileBlockMutationQueue(
       updateProfileShadow(queryClient, did, {
         blockingUri: finalBlockingUri,
       })
-      queryClient.invalidateQueries({queryKey: [RQKEY_LIST_CONVOS]})
+      void queryClient.invalidateQueries({queryKey: [RQKEY_LIST_CONVOS]})
     },
   })
 
@@ -565,7 +565,7 @@ function useProfileBlockMutation() {
       )
     },
     onSuccess(_, {did}) {
-      queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
+      void queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
       resetProfilePostsQueries(queryClient, did, 1000)
     },
   })
@@ -593,7 +593,7 @@ function useProfileUnblockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: AtpAgent,
   actor: string,
   fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {
