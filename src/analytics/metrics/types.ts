@@ -847,6 +847,7 @@ export type Events = {
     canUpdateBirthday: boolean
   }
   'ageAssurance:noAccessScreen:openBirthdateDialog': {}
+  'ageAssurance:noAccessScreen:openDeleteAccountDialog': {}
 
   /*
    * Specifically for the `BlockedGeoOverlay`
