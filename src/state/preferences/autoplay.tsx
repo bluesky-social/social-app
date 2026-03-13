@@ -1,4 +1,10 @@
-import React from 'react'
+import {
+  createContext, 
+  useContext, 
+  useEffect, 
+  useState,
+  useMemo, 
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 
@@ -13,23 +19,23 @@ type SetContext = {
   setGifAutoplayDisabled: (v: persisted.Schema['disableGifAutoplay']) => void
 }
 
-const stateContext = React.createContext<StateContext>({
-  videoAutoplayState: true,
-  gifAutoplayState: true,
+const stateContext = createContext<StateContext>({
+  videoAutoplayState: Boolean(persisted.defaults.disableVideoAutoplay),
+  gifAutoplayState: Boolean(persisted.defaults.disableGifAutoplay),
 })
 stateContext.displayName = 'AutoplayStateContext'
-const setContext = React.createContext<SetContext>({} as SetContext)
+const setContext = createContext<SetContext>({} as SetContext)
 setContext.displayName = 'AutoplaySetContext'
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [videoAutoplayState, setVideoAutoplayState] = React.useState(
+export function Provider({children}: {children: React.ReactNode}) {
+  const [videoAutoplayState, setVideoAutoplayState] = useState(
     persisted.get('disableVideoAutoplay'),
   )
-  const [gifAutoplayState, setGifAutoplayState] = React.useState(
+  const [gifAutoplayState, setGifAutoplayState] = useState(
     persisted.get('disableGifAutoplay'),
   )
 
-  const stateContextValue = React.useMemo(
+  const stateContextValue = useMemo(
     () => ({
       videoAutoplayState,
       gifAutoplayState,
@@ -37,7 +43,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [videoAutoplayState, gifAutoplayState],
   )
 
-  const setContextValue = React.useMemo(
+  const setContextValue = useMemo(
     () => ({
       setVideoAutoplayDisabled: (
         _videoAutoplayState: persisted.Schema['disableVideoAutoplay'],
@@ -55,7 +61,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsub1 = persisted.onUpdate(
       'disableVideoAutoplay',
       nextVideoAutoplayState => {
@@ -84,9 +90,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useAutoplayDisabledPref() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetAutoplayDisabledPref() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

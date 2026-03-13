@@ -4,6 +4,7 @@ import {Logger} from '#/logger'
 import * as env from '#/env'
 
 type Event<M extends Record<string, any>> = {
+  source: 'app'
   time: number
   event: keyof M
   payload: M[keyof M]
@@ -43,7 +44,8 @@ export class MetricsClient<M extends Record<string, any>> {
   ) {
     this.start()
 
-    const e = {
+    const e: Event<M> = {
+      source: 'app',
       time: Date.now(),
       event,
       payload,

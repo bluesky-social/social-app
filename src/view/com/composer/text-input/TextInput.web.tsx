@@ -9,7 +9,7 @@ import {
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {Document} from '@tiptap/extension-document'
 import Hardbreak from '@tiptap/extension-hard-break'
 import History from '@tiptap/extension-history'
@@ -52,6 +52,7 @@ export function TextInput({
   onPressPublish,
   onNewLink,
   onFocus,
+  autoFocus,
 }: TextInputProps) {
   const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
@@ -244,20 +245,10 @@ export function TextInput({
       content: generateJSON(richTextToHTML(richtext), extensions, {
         preserveWhitespace: 'full',
       }),
-      autofocus: 'end',
+      autofocus: autoFocus ? 'end' : null,
       editable: true,
       injectCSS: true,
       shouldRerenderOnTransaction: false,
-      onCreate({editor: editorProp}) {
-        // HACK
-        // the 'enter' animation sometimes causes autofocus to fail
-        // (see Composer.web.tsx in shell)
-        // so we wait 200ms (the anim is 150ms) and then focus manually
-        // -prf
-        setTimeout(() => {
-          editorProp.chain().focus('end').run()
-        }, 200)
-      },
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
         const newText = editorJsonToText(json)

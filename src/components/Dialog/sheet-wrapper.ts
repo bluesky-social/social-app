@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {SystemBars} from 'react-native-edge-to-edge'
 
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_LIQUID_GLASS} from '#/env'
 
 /**
  * If we're calling a system API like the image picker that opens a sheet
@@ -9,7 +9,7 @@ import {IS_IOS} from '#/env'
  */
 export function useSheetWrapper() {
   return useCallback(async <T>(promise: Promise<T>): Promise<T> => {
-    if (IS_IOS) {
+    if (IS_IOS && !IS_LIQUID_GLASS) {
       const entry = SystemBars.pushStackEntry({
         style: {
           statusBar: 'light',

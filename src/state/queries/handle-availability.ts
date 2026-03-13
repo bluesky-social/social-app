@@ -6,8 +6,8 @@ import {
   BSKY_SERVICE_DID,
   PUBLIC_BSKY_SERVICE,
 } from '#/lib/constants'
+import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {createFullHandle} from '#/lib/strings/handles'
-import {useDebouncedValue} from '#/components/live/utils'
 import {useAnalytics} from '#/analytics'
 import * as bsky from '#/types/bsky'
 import {Agent} from '../session/agent'

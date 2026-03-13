@@ -292,6 +292,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/accessibility", server.WebGeneric)
 	e.GET("/settings/appearance", server.WebGeneric)
 	e.GET("/settings/account", server.WebGeneric)
+	e.GET("/settings/automation-label", server.WebGeneric)
 	e.GET("/settings/privacy-and-security", server.WebGeneric)
 	e.GET("/settings/privacy-and-security/activity", server.WebGeneric)
 	e.GET("/settings/content-and-media", server.WebGeneric)
@@ -574,7 +575,10 @@ func (srv *Server) WebPost(c echo.Context) error {
 
 	if postView.Embed != nil && !isEmbedHidden {
 		hasImages := postView.Embed.EmbedImages_View != nil
-		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
+		hasVideo := postView.Embed.EmbedVideo_View != nil
+		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil
+		hasMediaImages := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
+		hasMediaVideo := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View != nil
 
 		if hasImages {
 			var thumbUrls []string
@@ -582,12 +586,36 @@ func (srv *Server) WebPost(c echo.Context) error {
 				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
 			}
 			data["imgThumbUrls"] = thumbUrls
-		} else if hasMedia {
+		} else if hasVideo {
+			if postView.Embed.EmbedVideo_View.Thumbnail != nil {
+				data["imgThumbUrls"] = []string{*postView.Embed.EmbedVideo_View.Thumbnail}
+			}
+			if postView.Embed.EmbedVideo_View.Playlist != "" {
+				data["videoUrl"] = postView.Embed.EmbedVideo_View.Playlist
+				data["videoType"] = "application/vnd.apple.mpegurl"
+				if postView.Embed.EmbedVideo_View.AspectRatio != nil {
+					data["videoWidth"] = postView.Embed.EmbedVideo_View.AspectRatio.Width
+					data["videoHeight"] = postView.Embed.EmbedVideo_View.AspectRatio.Height
+				}
+			}
+		} else if hasMediaImages {
 			var thumbUrls []string
 			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
 				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
 			}
 			data["imgThumbUrls"] = thumbUrls
+		} else if hasMediaVideo {
+			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail != nil {
+				data["imgThumbUrls"] = []string{*postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail}
+			}
+			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Playlist != "" {
+				data["videoUrl"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Playlist
+				data["videoType"] = "application/vnd.apple.mpegurl"
+				if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio != nil {
+					data["videoWidth"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio.Width
+					data["videoHeight"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio.Height
+				}
+			}
 		}
 	}
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
@@ -41,23 +41,20 @@ function Inner({state}: {state: ComposerOpts}) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
-  const [pickerState, setPickerState] = React.useState<EmojiPickerState>({
+  const [pickerState, setPickerState] = useState<EmojiPickerState>({
     isOpen: false,
     pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
   })
 
-  const onOpenPicker = React.useCallback(
-    (pos: EmojiPickerPosition | undefined) => {
-      if (!pos) return
-      setPickerState({
-        isOpen: true,
-        pos,
-      })
-    },
-    [],
-  )
+  const onOpenPicker = useCallback((pos: EmojiPickerPosition | undefined) => {
+    if (!pos) return
+    setPickerState({
+      isOpen: true,
+      pos,
+    })
+  }, [])
 
-  const onClosePicker = React.useCallback(() => {
+  const onClosePicker = useCallback(() => {
     setPickerState(prev => ({
       ...prev,
       isOpen: false,

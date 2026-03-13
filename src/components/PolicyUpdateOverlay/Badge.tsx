@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'

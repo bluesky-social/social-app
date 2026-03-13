@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyGraphDefs,
@@ -6,8 +6,9 @@ import {
   moderateUserList,
   type ModerationUI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -87,11 +88,11 @@ export function Link({
 }: Props & Omit<LinkProps, 'to' | 'label'>) {
   const queryClient = useQueryClient()
 
-  const href = React.useMemo(() => {
+  const href = useMemo(() => {
     return createProfileListHref({list: view})
   }, [view])
 
-  React.useEffect(() => {
+  useEffect(() => {
     precacheList(queryClient, view)
   }, [view, queryClient])
 

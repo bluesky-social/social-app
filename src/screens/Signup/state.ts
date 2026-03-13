@@ -1,10 +1,10 @@
-import React, {useCallback} from 'react'
+import {createContext, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
 import {
   ComAtprotoServerCreateAccount,
   type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 
@@ -250,9 +250,9 @@ interface IContext {
   state: SignupState
   dispatch: React.Dispatch<SignupAction>
 }
-export const SignupContext = React.createContext<IContext>({} as IContext)
+export const SignupContext = createContext<IContext>({} as IContext)
 SignupContext.displayName = 'SignupContext'
-export const useSignupContext = () => React.useContext(SignupContext)
+export const useSignupContext = () => useContext(SignupContext)
 
 export function useSubmitSignup() {
   const ax = useAnalytics()

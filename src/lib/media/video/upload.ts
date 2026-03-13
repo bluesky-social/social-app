@@ -1,7 +1,7 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system/legacy'
 import {type AppBskyVideoDefs, type BskyAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'

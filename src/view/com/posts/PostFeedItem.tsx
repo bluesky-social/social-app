@@ -11,7 +11,6 @@ import {
 } from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {type ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -43,11 +42,13 @@ import {Embed} from '#/components/Post/Embed'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
 import {useAnalytics} from '#/analytics'
+import {useActorStatus} from '#/features/liveNow'
 import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
 
@@ -450,6 +451,14 @@ let PostContent = ({
       : []
   }, [post, currentAccount?.did, threadgateHiddenReplies])
 
+  const record = useMemo<AppBskyFeedPost.Record | undefined>(
+    () =>
+      bsky.validate(post.record, AppBskyFeedPost.validateRecord)
+        ? post.record
+        : undefined,
+    [post],
+  )
+
   const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
@@ -481,6 +490,13 @@ let PostContent = ({
           )}
         </View>
       ) : undefined}
+      {record && (
+        <TranslatedPost
+          hideTranslateLink={true}
+          post={post}
+          postText={record.text}
+        />
+      )}
       {postEmbed ? (
         <View style={[a.pb_xs]}>
           <Embed

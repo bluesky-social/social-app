@@ -19,9 +19,9 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {
-  enabled as isLiveNowBetaDialogEnabled,
-  LiveNowBetaDialog,
-} from '#/components/dialogs/nuxs/LiveNowBetaDialog'
+  DraftsAnnouncement,
+  enabled as isDraftsAnnouncementEnabled,
+} from '#/components/dialogs/nuxs/DraftsAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
 import {useAnalytics} from '#/analytics'
@@ -37,8 +37,8 @@ const queuedNuxs: {
   enabled?: (props: EnabledCheckProps) => boolean
 }[] = [
   {
-    id: Nux.LiveNowBetaDialog,
-    enabled: isLiveNowBetaDialogEnabled,
+    id: Nux.DraftsAnnouncement,
+    enabled: isDraftsAnnouncementEnabled,
   },
 ]
 
@@ -186,7 +186,7 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.LiveNowBetaDialog && <LiveNowBetaDialog />}
+      {activeNux === Nux.DraftsAnnouncement && <DraftsAnnouncement />}
     </Context.Provider>
   )
 }

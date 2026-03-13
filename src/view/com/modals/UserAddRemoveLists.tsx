@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -6,8 +6,9 @@ import {
   View,
 } from 'react-native'
 import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -55,7 +56,7 @@ export function Component({
     closeModal()
   }, [closeModal])
 
-  const listStyle = React.useMemo(() => {
+  const listStyle = useMemo(() => {
     if (IS_WEB_MOBILE) {
       return [pal.border, {height: screenHeight / 2}]
     } else if (IS_WEB) {
@@ -140,8 +141,8 @@ function ListItem({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [isProcessing, setIsProcessing] = React.useState(false)
-  const membership = React.useMemo(
+  const [isProcessing, setIsProcessing] = useState(false)
+  const membership = useMemo(
     () => getMembership(memberships, list.uri, subject),
     [memberships, list.uri, subject],
   )

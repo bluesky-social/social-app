@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import * as VideoThumbnails from 'expo-video-thumbnails'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import * as device from '#/lib/deviceName'
@@ -11,7 +11,7 @@ import {atoms as a, select, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {CirclePlus_Stroke2_Corner0_Rounded as CirclePlusIcon} from '#/components/icons/CirclePlus'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
 import {CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon} from '#/components/icons/Quote'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as MediaPreview from '#/components/MediaPreview'
@@ -95,12 +95,15 @@ export function DraftItem({
                 paddingTop: 20 + a.pt_md.paddingTop,
               },
             ]}>
-            <RichText
-              style={[a.text_md, a.leading_snug, a.pointer_events_none]}
-              value={post.text}
-              enableTags
-              disableMentionFacetValidation
-            />
+            {!!post.text.trim().length && (
+              <RichText
+                style={[a.text_md, a.leading_snug, a.pointer_events_none]}
+                numberOfLines={8}
+                value={post.text}
+                enableTags
+                disableMentionFacetValidation
+              />
+            )}
 
             {!mediaExistsOnOtherDevice && <DraftMediaPreview post={post} />}
 

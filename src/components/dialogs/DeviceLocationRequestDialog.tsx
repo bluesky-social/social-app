@@ -1,7 +1,8 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {isNetworkError, useCleanError} from '#/lib/hooks/useCleanError'
@@ -110,18 +111,6 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
             Tap below to allow Bluesky to access your GPS location. We will then
             use that data to more accurately determine the content and features
             available in your region.
-          </Trans>
-        </Text>
-
-        <Text
-          style={[
-            a.text_md,
-            a.leading_snug,
-            t.atoms.text_contrast_medium,
-            a.pb_xs,
-          ]}>
-          <Trans>
-            Your location data is not tracked and does not leave your device.
           </Trans>
         </Text>
       </View>

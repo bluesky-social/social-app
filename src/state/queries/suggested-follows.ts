@@ -2,106 +2,23 @@ import {
   type AppBskyActorDefs,
   type AppBskyActorGetSuggestions,
   type AppBskyGraphGetSuggestedFollowsByActor,
-  moderateProfile,
 } from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
   useQuery,
 } from '@tanstack/react-query'
 
-import {
-  aggregateUserInterests,
-  createBskyTopicsHeader,
-} from '#/lib/api/feed/utils'
-import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent, useSession} from '#/state/session'
-import {useModerationOpts} from '../preferences/moderation-opts'
+import {useAgent} from '#/state/session'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
-const suggestedFollowsQueryKey = (options?: SuggestedFollowsOptions) => [
-  suggestedFollowsQueryKeyRoot,
-  options,
-]
 
 const suggestedFollowsByActorQueryKeyRoot = 'suggested-follows-by-actor'
-const suggestedFollowsByActorQueryKey = (did: string) => [
+export const suggestedFollowsByActorQueryKey = (did: string) => [
   suggestedFollowsByActorQueryKeyRoot,
   did,
 ]
-
-type SuggestedFollowsOptions = {limit?: number; subsequentPageLimit?: number}
-
-export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
-  const {currentAccount} = useSession()
-  const agent = useAgent()
-  const moderationOpts = useModerationOpts()
-  const {data: preferences} = usePreferencesQuery()
-  const limit = options?.limit || 25
-
-  return useInfiniteQuery<
-    AppBskyActorGetSuggestions.OutputSchema,
-    Error,
-    InfiniteData<AppBskyActorGetSuggestions.OutputSchema>,
-    QueryKey,
-    string | undefined
-  >({
-    enabled: !!moderationOpts && !!preferences,
-    staleTime: STALE.HOURS.ONE,
-    queryKey: suggestedFollowsQueryKey(options),
-    queryFn: async ({pageParam}) => {
-      const contentLangs = getContentLanguages().join(',')
-      const maybeDifferentLimit =
-        options?.subsequentPageLimit && pageParam
-          ? options.subsequentPageLimit
-          : limit
-      const res = await agent.app.bsky.actor.getSuggestions(
-        {
-          limit: maybeDifferentLimit,
-          cursor: pageParam,
-        },
-        {
-          headers: {
-            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
-            'Accept-Language': contentLangs,
-          },
-        },
-      )
-
-      res.data.actors = res.data.actors
-        .filter(
-          actor =>
-            !moderateProfile(actor, moderationOpts!).ui('profileList').filter,
-        )
-        .filter(actor => {
-          const viewer = actor.viewer
-          if (viewer) {
-            if (
-              viewer.following ||
-              viewer.muted ||
-              viewer.mutedByList ||
-              viewer.blockedBy ||
-              viewer.blocking
-            ) {
-              return false
-            }
-          }
-          if (actor.did === currentAccount?.did) {
-            return false
-          }
-          return true
-        })
-
-      return res.data
-    },
-    initialPageParam: undefined,
-    getNextPageParam: lastPage => lastPage.cursor,
-  })
-}
 
 export function useSuggestedFollowsByActorQuery({
   did,
@@ -120,10 +37,10 @@ export function useSuggestedFollowsByActorQuery({
       const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
         actor: did,
       })
-      const suggestions = res.data.isFallback
-        ? []
-        : res.data.suggestions.filter(profile => !profile.viewer?.following)
-      return {suggestions, recId: res.data.recId}
+      const suggestions = res.data.suggestions.filter(
+        profile => !profile.viewer?.following,
+      )
+      return {suggestions, recId: res.data.recIdStr}
     },
     enabled,
   })

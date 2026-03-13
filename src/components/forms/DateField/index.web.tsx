@@ -1,4 +1,4 @@
-import React from 'react'
+import {forwardRef, useCallback} from 'react'
 import {StyleSheet, type TextInput, type TextInputProps} from 'react-native'
 // @ts-expect-error untyped
 import {unstable_createElement} from 'react-native-web'
@@ -11,7 +11,7 @@ import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components
 export * as utils from '#/components/forms/DateField/utils'
 export const LabelText = TextField.LabelText
 
-const InputBase = React.forwardRef<HTMLInputElement, TextInputProps>(
+const InputBase = forwardRef<HTMLInputElement, TextInputProps>(
   ({style, ...props}, ref) => {
     return unstable_createElement('input', {
       ...props,
@@ -42,7 +42,7 @@ export function DateField({
   accessibilityHint,
   maximumDate,
 }: DateFieldProps) {
-  const handleOnChange = React.useCallback(
+  const handleOnChange = useCallback(
     (e: any) => {
       const date = e.target.valueAsDate || e.target.value
 

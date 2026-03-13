@@ -1,4 +1,4 @@
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {type DialogControlProps} from '#/components/Dialog'

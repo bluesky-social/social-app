@@ -178,6 +178,13 @@ func serve(cctx *cli.Context) error {
 		return http.FS(fsys)
 	}())
 
+	// Create CORS middleware for oembed
+	oembedCORS := middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowOrigins: []string{"*"},
+			AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodOptions},
+			AllowHeaders: []string{"Origin", "Content-Type", "Accept"},
+	})
+
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	e.GET("/ips-v4", echo.WrapHandler(staticHandler))
 	e.GET("/ips-v6", echo.WrapHandler(staticHandler))
@@ -205,7 +212,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/", server.WebHome)
 	e.GET("/iframe-resize.js", echo.WrapHandler(staticHandler))
 	e.GET("/embed.js", echo.WrapHandler(staticHandler))
-	e.GET("/oembed", server.WebOEmbed)
+	e.GET("/oembed", server.WebOEmbed, oembedCORS)
 	e.GET("/embed/:did/app.bsky.feed.post/:rkey", server.WebPostEmbed)
 
 	// Start the server.

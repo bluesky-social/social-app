@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useRef} from 'react'
 import {Modal, View} from 'react-native'
 
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -14,9 +14,9 @@ export function Composer({}: {winHeight: number}) {
   const ref = useComposerCancelRef()
 
   const open = !!state
-  const prevOpen = React.useRef(open)
+  const prevOpen = useRef(open)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open && !prevOpen.current) {
       setFullyExpandedCount(c => c + 1)
     } else if (!open && prevOpen.current) {
@@ -32,8 +32,9 @@ export function Composer({}: {winHeight: number}) {
       visible={open}
       presentationStyle="pageSheet"
       animationType="slide"
-      onRequestClose={() => ref.current?.onPressCancel()}>
-      <View style={[t.atoms.bg, a.flex_1]}>
+      onRequestClose={() => ref.current?.onPressCancel()}
+      backdropColor="transparent">
+      <View style={[a.flex_1, t.atoms.bg]}>
         <TooltipSheetCompatProvider>
           <ComposePost
             cancelRef={ref}
@@ -45,7 +46,6 @@ export function Composer({}: {winHeight: number}) {
             text={state?.text}
             imageUris={state?.imageUris}
             videoUri={state?.videoUri}
-            openGallery={state?.openGallery}
           />
         </TooltipSheetCompatProvider>
       </View>

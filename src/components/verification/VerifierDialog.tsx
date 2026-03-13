@@ -1,7 +1,8 @@
 import {Text as RNText, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
@@ -28,7 +29,7 @@ export function VerifierDialog({
   verificationState: FullVerificationState
 }) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Inner
         control={control}
@@ -123,7 +124,6 @@ function Inner({
               }),
             )}
             size="small"
-            variant="solid"
             color="primary"
             style={[a.justify_center]}
             onPress={() => {
@@ -138,7 +138,6 @@ function Inner({
           <Button
             label={_(msg`Close dialog`)}
             size="small"
-            variant="solid"
             color="secondary"
             onPress={() => {
               control.close()

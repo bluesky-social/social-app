@@ -10,11 +10,9 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {BACK_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -28,13 +26,14 @@ import {atoms as a, platform, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
-import {EditLiveDialog} from '#/components/live/EditLiveDialog'
-import {LiveIndicator} from '#/components/live/LiveIndicator'
-import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
+import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
+import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
+import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
 import {StatusBarShadow} from './StatusBarShadow'
@@ -56,7 +55,7 @@ let ProfileHeaderShell = ({
   const t = useTheme()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
@@ -168,6 +167,12 @@ let ProfileHeaderShell = ({
         style={[a.relative, {height: 150}]}>
         <StatusBarShadow />
         <GrowableBanner
+          testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
+          label={
+            profile.banner
+              ? l`View profile banner`
+              : l`Profile banner placeholder`
+          }
           onPress={isPlaceholderProfile ? undefined : onPressBanner}
           bannerRef={bannerRef}
           backButton={
@@ -176,7 +181,7 @@ let ProfileHeaderShell = ({
                 testID="profileHeaderBackBtn"
                 onPress={onPressBack}
                 hitSlop={BACK_HITSLOP}
-                label={_(msg`Back`)}
+                label={l`Back`}
                 style={[
                   a.absolute,
                   a.pointer,
@@ -259,7 +264,7 @@ let ProfileHeaderShell = ({
           testID="profileHeaderAviButton"
           onPress={onPressAvi}
           accessibilityRole="image"
-          accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
+          accessibilityLabel={l`View ${profile.handle}'s avatar`}
           accessibilityHint="">
           <View
             style={[

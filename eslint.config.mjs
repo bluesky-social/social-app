@@ -23,8 +23,6 @@ export default defineConfig(
   {
     ignores: [
       '**/__mocks__/*.ts',
-      'src/platform/polyfills.ts',
-      'src/third-party/**',
       'ios/**',
       'android/**',
       'coverage/**',
@@ -39,6 +37,7 @@ export default defineConfig(
       '*.e2e.ts',
       '*.e2e.tsx',
       'eslint.config.mjs',
+      '.jscodeshift/**',
     ],
   },
 

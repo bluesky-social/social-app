@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useMemo} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {Keyboard, View} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -11,6 +12,7 @@ import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {DraftItem} from './DraftItem'
@@ -53,6 +55,12 @@ export function DraftsListDialog({
 
   const handleSelectDraft = useCallback(
     (summary: DraftSummary) => {
+      // Dismiss keyboard immediately to prevent flicker. Without this,
+      // the text input regains focus (showing the keyboard) after the
+      // drafts sheet closes, then loses it again when the post component
+      // remounts with the draft content, causing a show-hide-show cycle -sfn
+      Keyboard.dismiss()
+
       control.close(() => {
         onSelectDraft(summary)
       })
@@ -140,17 +148,26 @@ export function DraftsListDialog({
 
   const footerComponent = useMemo(
     () => (
-      <ListFooter
-        isFetchingNextPage={isFetchingNextPage}
-        hasNextPage={hasNextPage}
-        style={[a.border_transparent]}
-      />
+      <>
+        {drafts.length > 5 && (
+          <View style={[a.align_center, a.py_2xl]}>
+            <Text style={[a.text_center, t.atoms.text_contrast_medium]}>
+              <Trans>So many thoughts, you should post one</Trans>
+            </Text>
+          </View>
+        )}
+        <ListFooter
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage}
+          style={[a.border_transparent]}
+        />
+      </>
     ),
-    [isFetchingNextPage, hasNextPage],
+    [isFetchingNextPage, hasNextPage, drafts.length, t],
   )
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       {/* We really really need to figure out a nice, consistent API for doing a header cross-platform -sfn */}
       {IS_NATIVE && header}
       <Dialog.InnerFlatList

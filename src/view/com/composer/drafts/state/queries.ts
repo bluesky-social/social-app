@@ -184,7 +184,7 @@ export function useSaveDraftMutation() {
         }
       }
 
-      queryClient.invalidateQueries({queryKey: DRAFTS_QUERY_KEY})
+      await queryClient.invalidateQueries({queryKey: DRAFTS_QUERY_KEY})
     },
     onError: error => {
       // Check for draft limit error

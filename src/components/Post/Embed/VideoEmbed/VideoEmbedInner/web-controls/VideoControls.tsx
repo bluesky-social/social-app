@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import type Hls from 'hls.js'
 
 import {clamp} from '#/lib/numbers'
@@ -27,6 +28,7 @@ import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE} from '#/env'
+import {GifPresentationControls} from '../../GifPresentationControls'
 import {TimeIndicator} from '../TimeIndicator'
 import {ControlButton} from './ControlButton'
 import {Scrubber} from './Scrubber'
@@ -44,6 +46,8 @@ export function Controls({
   fullscreenRef,
   hlsLoading,
   hasSubtitleTrack,
+  isGif,
+  altText,
 }: {
   videoRef: React.RefObject<HTMLVideoElement | null>
   hlsRef: React.RefObject<Hls | undefined | null>
@@ -55,6 +59,8 @@ export function Controls({
   fullscreenRef: React.RefObject<HTMLDivElement | null>
   hlsLoading: boolean
   hasSubtitleTrack: boolean
+  isGif: boolean
+  altText?: string
 }) {
   const {
     play,
@@ -125,13 +131,14 @@ export function Controls({
   const {videoAutoplayState} = useAutoplayDisabledPref() || isWithinMessage
   useEffect(() => {
     if (active) {
-      if (onScreen) {
+      // GIFs play immediately, videos wait until onScreen
+      if (onScreen || isGif) {
         if (!videoAutoplayState) play()
       } else {
         pause()
       }
     }
-  }, [onScreen, pause, active, play, videoAutoplayState])
+  }, [onScreen, pause, active, play, videoAutoplayState, isGif])
 
   // use minimal quality when not focused
   useEffect(() => {
@@ -287,6 +294,17 @@ export function Controls({
     ((focused || videoAutoplayState) && !playing) ||
     (interactingViaKeypress ? hasFocus : hovered)
 
+  if (isGif) {
+    return (
+      <GifPresentationControls
+        isPlaying={playing}
+        isLoading={showSpinner}
+        onPress={onPressPlayPause}
+        altText={altText}
+      />
+    )
+  }
+
   return (
     <div
       style={{
@@ -384,8 +402,8 @@ export function Controls({
           {hasSubtitleTrack && (
             <ControlButton
               active={subtitlesEnabled}
-              activeLabel={_(msg`Disable subtitles`)}
-              inactiveLabel={_(msg`Enable subtitles`)}
+              activeLabel={_(msg`Disable captions`)}
+              inactiveLabel={_(msg`Enable captions`)}
               activeIcon={CCActiveIcon}
               inactiveIcon={CCInactiveIcon}
               onPress={onPressSubtitles}

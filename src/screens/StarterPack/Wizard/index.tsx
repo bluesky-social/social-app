@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect} from 'react'
 import {Keyboard, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -10,13 +10,13 @@ import {
   AtUri,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
   type CommonNavigatorParams,
@@ -40,7 +40,6 @@ import {
 } from '#/state/queries/starter-packs'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   useWizardState,
@@ -56,6 +55,7 @@ import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
@@ -179,16 +179,14 @@ function WizardInner({
   })
   const parsed = parseStarterPackUri(currentStarterPack?.uri)
 
-  React.useEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       gestureEnabled: false,
     })
   }, [navigation])
 
-  useEnableKeyboardControllerScreen(true)
-
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(true)
 
       return () => {
@@ -260,7 +258,9 @@ function WizardInner({
     onError: e => {
       logger.error('Failed to create starter pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`), 'xmark')
+      Toast.show(_(msg`Failed to create starter pack`), {
+        type: 'error',
+      })
     },
   })
   const {mutate: editStarterPack} = useEditStarterPackMutation({
@@ -268,7 +268,9 @@ function WizardInner({
     onError: e => {
       logger.error('Failed to edit starter pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`), 'xmark')
+      Toast.show(_(msg`Failed to create starter pack`), {
+        type: 'error',
+      })
     },
   })
 

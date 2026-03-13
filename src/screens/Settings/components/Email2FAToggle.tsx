@@ -1,5 +1,5 @@
-import React from 'react'
-import {msg} from '@lingui/macro'
+import {useCallback} from 'react'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
@@ -17,7 +17,7 @@ export function Email2FAToggle() {
   const disableDialogControl = useDialogControl()
   const emailDialogControl = useEmailDialogControl()
 
-  const onToggle = React.useCallback(() => {
+  const onToggle = useCallback(() => {
     emailDialogControl.open({
       id: EmailDialogScreenID.Manage2FA,
     })

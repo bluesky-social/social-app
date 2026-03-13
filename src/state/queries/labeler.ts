@@ -3,8 +3,11 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
 import {MAX_LABELERS} from '#/lib/constants'
-import {labelersDetailedInfoQueryKeyRoot} from '#/lib/react-query'
-import {STALE} from '#/state/queries'
+import {
+  PERSISTED_QUERY_GCTIME,
+  PERSISTED_QUERY_ROOT,
+  STALE,
+} from '#/state/queries'
 import {
   preferencesQueryKey,
   usePreferencesQuery,
@@ -23,8 +26,9 @@ export const labelersInfoQueryKey = (dids: string[]) => [
   dids.slice().sort(),
 ]
 
-export const labelersDetailedInfoQueryKey = (dids: string[]) => [
-  labelersDetailedInfoQueryKeyRoot,
+const persistedLabelersDetailedInfoQueryKey = (dids: string[]) => [
+  PERSISTED_QUERY_ROOT,
+  'labelers-detailed-info',
   dids,
 ]
 
@@ -65,8 +69,8 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
   const agent = useAgent()
   return useQuery({
     enabled: !!dids.length,
-    queryKey: labelersDetailedInfoQueryKey(dids),
-    gcTime: 1000 * 60 * 60 * 6, // 6 hours
+    queryKey: persistedLabelersDetailedInfoQueryKey(dids),
+    gcTime: PERSISTED_QUERY_GCTIME,
     staleTime: STALE.MINUTES.ONE,
     queryFn: async () => {
       const res = await agent.app.bsky.labeler.getServices({
@@ -74,6 +78,22 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
         detailed: true,
       })
       return res.data.views as AppBskyLabelerDefs.LabelerViewDetailed[]
+    },
+  })
+}
+
+export function useRemoveLabelersMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    async mutationFn({dids}: {dids: string[]}) {
+      await Promise.all(dids.map(did => agent.removeLabeler(did)))
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
     },
   })
 }

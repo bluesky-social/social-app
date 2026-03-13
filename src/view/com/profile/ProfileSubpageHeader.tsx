@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {
   measure,
@@ -8,8 +8,9 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -59,7 +60,7 @@ export function ProfileSubpageHeader({
   const canGoBack = navigation.canGoBack()
   const aviRef = useAnimatedRef()
 
-  const _openLightbox = React.useCallback(
+  const _openLightbox = useCallback(
     (uri: string, thumbRect: MeasuredDimensions | null) => {
       openLightbox({
         images: [
@@ -82,7 +83,7 @@ export function ProfileSubpageHeader({
     [openLightbox],
   )
 
-  const onPressAvi = React.useCallback(() => {
+  const onPressAvi = useCallback(() => {
     if (
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {

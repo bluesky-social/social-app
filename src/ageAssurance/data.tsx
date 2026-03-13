@@ -6,7 +6,6 @@ import {
   AtpAgent,
   getAgeAssuranceRegionConfig,
 } from '@atproto/api'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
 import {persistQueryClient} from '@tanstack/react-query-persist-client'
@@ -14,6 +13,7 @@ import debounce from 'lodash.debounce'
 
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {getAge} from '#/lib/strings/time'
 import {
   hasSnoozedBirthdateUpdateForDid,
@@ -45,7 +45,7 @@ const qc = new QueryClient({
   },
 })
 const persister = createAsyncStoragePersister({
-  storage: AsyncStorage,
+  storage: createPersistedQueryStorage('age-assurance'),
   key: 'age-assurance-query-client',
 })
 const [, cacheHydrationPromise] = persistQueryClient({

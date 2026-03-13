@@ -1,11 +1,13 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
+import {saveImageToMediaLibrary} from '#/lib/media/manip'
 import {useA11y} from '#/state/a11y'
 import {useLightbox, useLightboxControls} from '#/state/lightbox'
 import {
@@ -21,8 +23,12 @@ import {
   ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
   ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
 } from '#/components/icons/Chevron'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
+import * as Menu from '#/components/Menu'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {type ImageSource} from './ImageViewing/@types'
 
@@ -69,7 +75,13 @@ function LightboxContainer({
       <Backdrop />
       <RemoveScrollBar />
       <FocusScope.FocusScope loop trapped asChild>
-        <div style={{position: 'absolute', inset: 0}}>{children}</div>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={_(msg`Image viewer`)}
+          style={{position: 'absolute', inset: 0}}>
+          {children}
+        </div>
       </FocusScope.FocusScope>
     </Pressable>
   )
@@ -124,6 +136,32 @@ function LightboxGallery({
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [onKeyDown])
+
+  // Push a history entry so the browser back button closes the lightbox
+  // instead of navigating away from the page.
+  const closedByPopStateRef = useRef(false)
+  useEffect(() => {
+    history.pushState({lightbox: true}, '')
+
+    const handlePopState = () => {
+      closedByPopStateRef.current = true
+      onClose()
+    }
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+      // Only pop our entry if it's still the current one. If navigation
+      // already pushed a new entry on top, leave the orphaned entry —
+      // it shares the same URL so traversing through it is harmless.
+      if (
+        !closedByPopStateRef.current &&
+        (history.state as {lightbox?: boolean})?.lightbox
+      ) {
+        history.back()
+      }
+    }
+  }, [onClose])
 
   const delayedFadeInAnim = !reduceMotionEnabled && [
     a.fade_in,
@@ -205,6 +243,57 @@ function LightboxGallery({
           </Pressable>
         </View>
       ) : null}
+      {imgs.length > 1 && (
+        <div aria-live="polite" aria-atomic="true" style={a.sr_only}>
+          <Text>{_(msg`Image ${index + 1} of ${imgs.length}`)}</Text>
+        </div>
+      )}
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Image options`)}>
+          {({props}) => (
+            <Button
+              {...props}
+              style={[
+                a.absolute,
+                styles.menuBtn,
+                styles.blurredBackdrop,
+                a.transition_color,
+                delayedFadeInAnim,
+              ]}
+              hoverStyle={styles.blurredBackdropHover}
+              color="secondary"
+              label={_(msg`Image options`)}
+              shape="round"
+              size={gtPhone ? 'large' : 'small'}>
+              <EllipsisIcon
+                size={gtPhone ? 'md' : 'sm'}
+                style={{color: t.palette.white}}
+              />
+            </Button>
+          )}
+        </Menu.Trigger>
+        <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item
+              label={_(msg`Download image`)}
+              onPress={() => {
+                saveImageToMediaLibrary({uri: img.uri}).then(
+                  () => {
+                    Toast.show(_(msg`Image saved`))
+                  },
+                  () => {
+                    Toast.show(_(msg`Failed to save image`), {type: 'error'})
+                  },
+                )
+              }}>
+              <Menu.ItemText>
+                <Trans>Download image</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={DownloadIcon} position="right" />
+            </Menu.Item>
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
       <Button
         onPress={onClose}
         style={[
@@ -331,6 +420,10 @@ const styles = StyleSheet.create({
     maxHeight: `calc(min(400px, 100vh))`,
     padding: 16,
     boxSizing: 'border-box',
+  },
+  menuBtn: {
+    top: 20,
+    left: 20,
   },
   closeBtn: {
     top: 20,

@@ -6,8 +6,9 @@ import {
   type ModerationOpts,
   type Un$Typed,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {
   type InfiniteData,
   useMutation,
@@ -20,7 +21,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
 import {useAgent} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {
@@ -33,6 +33,7 @@ import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
@@ -138,7 +139,9 @@ function DialogInner({
             _(
               msg`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
             ),
-            'check',
+            {
+              type: 'success',
+            },
           )
 
           // filter out the subscription
@@ -168,10 +171,14 @@ function DialogInner({
               _(
                 msg`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`,
               ),
-              'check',
+              {
+                type: 'success',
+              },
             )
           } else {
-            Toast.show(_(msg`Changes saved`), 'check')
+            Toast.show(_(msg`Changes saved`), {
+              type: 'success',
+            })
           }
         }
       })

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import {type GestureResponderEvent, Linking} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {
@@ -117,7 +117,7 @@ export function useLink({
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
 
-  const onPress = React.useCallback(
+  const onPress = useCallback(
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnPress?.(e)
 
@@ -217,7 +217,7 @@ export function useLink({
     ],
   )
 
-  const handleLongPress = React.useCallback(() => {
+  const handleLongPress = useCallback(() => {
     const requiresWarning = Boolean(
       !disableMismatchWarning &&
         displayText &&
@@ -242,7 +242,7 @@ export function useLink({
     linkWarningDialogControl,
   ])
 
-  const onLongPress = React.useCallback(
+  const onLongPress = useCallback(
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnLongPress?.(e)
       if (exitEarlyIfFalse === false) return

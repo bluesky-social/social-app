@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {
   type StyleProp,
   TouchableWithoutFeedback,
@@ -6,8 +6,9 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -38,7 +39,7 @@ export function ScreenHider({
 }>) {
   const t = useTheme()
   const {_} = useLingui()
-  const [override, setOverride] = React.useState(false)
+  const [override, setOverride] = useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const control = useModerationDetailsDialogControl()

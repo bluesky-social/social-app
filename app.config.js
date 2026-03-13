@@ -35,6 +35,13 @@ module.exports = function (_config) {
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
+  const IOS_ICON_FILE =
+    PLATFORM === 'web' // web build doesn't like .icon files
+      ? './assets/app-icons/ios_icon_default_next.png'
+      : IS_TESTFLIGHT
+        ? './assets/app-icons/ios_icon_testflight.icon'
+        : './assets/app-icons/ios_icon_default.icon'
+
   return {
     expo: {
       version: VERSION,
@@ -55,10 +62,7 @@ module.exports = function (_config) {
         config: {
           usesNonExemptEncryption: false,
         },
-        icon:
-          PLATFORM === 'web' // web build doesn't like .icon files
-            ? './assets/app-icons/ios_icon_default_next.png'
-            : './assets/app-icons/ios_icon_default.icon',
+        icon: IOS_ICON_FILE,
         infoPlist: {
           UIBackgroundModes: ['remote-notification'],
           NSCameraUsageDescription:
@@ -112,7 +116,6 @@ module.exports = function (_config) {
             'zh-Hans',
             'zh-Hant',
           ],
-          UIDesignRequiresCompatibility: true,
         },
         associatedDomains: ASSOCIATED_DOMAINS,
         entitlements: {
@@ -256,9 +259,16 @@ module.exports = function (_config) {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
               ccacheEnabled: IS_DEV,
+              extraPods: [
+                {
+                  name: 'MCEmojiPicker',
+                  git: 'https://github.com/bluesky-social/MCEmojiPicker.git',
+                  branch: 'main',
+                },
+              ],
             },
             android: {
-              compileSdkVersion: 35,
+              compileSdkVersion: 36,
               targetSdkVersion: 35,
               buildToolsVersion: '35.0.0',
               buildReactNativeFromSource: IS_PRODUCTION,
@@ -313,22 +323,22 @@ module.exports = function (_config) {
           {
             ios: {
               enableFullScreenImage_legacy: true, // iOS only
-              backgroundColor: '#A8CCFF', // primary_200
+              backgroundColor: '#006AFF', // primary_500
               image: './assets/splash/splash.png',
               resizeMode: 'cover',
               dark: {
                 enableFullScreenImage_legacy: true, // iOS only
-                backgroundColor: '#00398A', // primary_800
+                backgroundColor: '#002861', // primary_900
                 image: './assets/splash/splash-dark.png',
                 resizeMode: 'cover',
               },
             },
             android: {
-              backgroundColor: '#A8CCFF', // primary_200
+              backgroundColor: '#006AFF', // primary_500
               image: './assets/splash/android-splash-logo-white.png',
               imageWidth: 102, // even division of 306px
               dark: {
-                backgroundColor: '#00398A', // primary_800
+                backgroundColor: '#002861', // primary_900
                 image: './assets/splash/android-splash-logo-white.png',
                 imageWidth: 102,
               },

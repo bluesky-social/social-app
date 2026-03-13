@@ -1,8 +1,9 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
@@ -72,7 +73,10 @@ export function StarterPackCard({
 
     let followUris: Map<string, string>
     try {
-      followUris = await bulkWriteFollows(agent, dids)
+      followUris = await bulkWriteFollows(agent, dids, {
+        uri: view.uri,
+        cid: view.cid,
+      })
     } catch (e) {
       setIsProcessing(false)
       Toast.show(_(msg`An error occurred while trying to follow all`), {

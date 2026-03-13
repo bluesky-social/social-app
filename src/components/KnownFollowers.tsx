@@ -1,12 +1,13 @@
-import React from 'react'
+import {useRef} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
   moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -45,9 +46,7 @@ export function KnownFollowers({
   minimal?: boolean
   showIfEmpty?: boolean
 }) {
-  const cache = React.useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(
-    new Map(),
-  )
+  const cache = useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(new Map())
 
   /*
    * Results for `knownFollowers` are not sorted consistently, so when
@@ -189,7 +188,7 @@ function KnownFollowersInner({
             numberOfLines={2}>
             {slice.length >= 2 ? (
               // 2-n followers, including blocks
-              serverCount > 2 ? (
+              serverCount > 2 ? ( // only 2
                 <Trans>
                   Followed by{' '}
                   <Text emoji key={slice[0].profile.did} style={textStyle}>
@@ -207,7 +206,6 @@ function KnownFollowersInner({
                   />
                 </Trans>
               ) : (
-                // only 2
                 <Trans>
                   Followed by{' '}
                   <Text emoji key={slice[0].profile.did} style={textStyle}>

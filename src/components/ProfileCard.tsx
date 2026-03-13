@@ -11,11 +11,10 @@ import {
   type ModerationOpts,
   RichText as RichTextApi,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {getModerationCauseKey} from '#/lib/moderation'
+import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
 import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -23,7 +22,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   atoms as a,
@@ -42,11 +40,12 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Pills from '#/components/Pills'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {type Metrics} from '#/analytics'
+import {useActorStatus} from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 
 export function Default({
@@ -56,6 +55,7 @@ export function Default({
   testID,
   position,
   contextProfileDid,
+  onPress,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
@@ -63,9 +63,10 @@ export function Default({
   testID?: string
   position?: number
   contextProfileDid?: string
+  onPress?: (e: GestureResponderEvent) => void
 }) {
   return (
-    <Link testID={testID} profile={profile}>
+    <Link testID={testID} profile={profile} onPress={onPress}>
       <Card
         profile={profile}
         moderationOpts={moderationOpts}
@@ -135,18 +136,19 @@ export function Link({
 }: {
   profile: bsky.profile.AnyProfileView
 } & Omit<LinkProps, 'to' | 'label'>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+
+  const profileURL = makeProfileLink({
+    did: profile.did,
+    handle: profile.handle,
+  })
+
   return (
     <InternalLink
-      label={_(
-        msg`View ${
-          profile.displayName || sanitizeHandle(profile.handle)
-        }'s profile`,
-      )}
-      to={{
-        screen: 'Profile',
-        params: {name: profile.did},
-      }}
+      label={l`View ${
+        profile.displayName || sanitizeHandle(profile.handle)
+      }’s profile`}
+      to={profileURL}
       style={[a.flex_col, style]}
       {...rest}>
       {children}
@@ -239,7 +241,6 @@ function InlineNameAndHandle({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  const verification = useSimpleVerificationState({profile})
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
@@ -259,19 +260,15 @@ function InlineNameAndHandle({
         numberOfLines={1}>
         {forceLTR(name)}
       </Text>
-      {verification.showBadge && (
-        <View
-          style={[
-            a.pl_2xs,
-            a.self_center,
-            {marginTop: platform({default: 0, android: -1})},
-          ]}>
-          <VerificationCheck
-            width={platform({android: 13, default: 12})}
-            verifier={verification.role === 'verifier'}
-          />
-        </View>
-      )}
+      <ProfileBadges
+        profile={profile}
+        size="md"
+        style={[
+          a.pl_2xs,
+          a.self_center,
+          {marginTop: platform({default: 0, android: -1})},
+        ]}
+      />
       <Text
         emoji
         style={[
@@ -302,7 +299,6 @@ export function Name({
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
-  const verification = useSimpleVerificationState({profile})
   return (
     <View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
       <Text
@@ -318,14 +314,7 @@ export function Name({
         numberOfLines={1}>
         {name}
       </Text>
-      {verification.showBadge && (
-        <View style={[a.pl_xs]}>
-          <VerificationCheck
-            width={14}
-            verifier={verification.role === 'verifier'}
-          />
-        </View>
-      )}
+      <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
     </View>
   )
 }
@@ -488,7 +477,7 @@ export function FollowButtonInner({
   contextProfileDid,
   ...rest
 }: FollowButtonProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const profile = useProfileShadow(profileUnshadowed)
   const moderation = moderateProfile(profile, moderationOpts)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -505,18 +494,19 @@ export function FollowButtonInner({
     try {
       await queueFollow()
       Toast.show(
-        _(
-          msg`Following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-            moderation.ui('displayName'),
-          )}`,
-        ),
+        l`Following ${sanitizeDisplayName(
+          profile.displayName || profile.handle,
+          moderation.ui('displayName'),
+        )}`,
       )
       onPressProp?.(e)
       onFollow?.()
-    } catch (err: any) {
+    } catch (e) {
+      const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+        Toast.show(l`An issue occurred, please try again.`, {
+          type: 'error',
+        })
       }
     }
   }
@@ -527,40 +517,35 @@ export function FollowButtonInner({
     try {
       await queueUnfollow()
       Toast.show(
-        _(
-          msg`No longer following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-            moderation.ui('displayName'),
-          )}`,
-        ),
+        l`No longer following ${sanitizeDisplayName(
+          profile.displayName || profile.handle,
+          moderation.ui('displayName'),
+        )}`,
       )
       onPressProp?.(e)
-    } catch (err: any) {
+    } catch (e) {
+      const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+        Toast.show(l`An issue occurred, please try again.`, {
+          type: 'error',
+        })
       }
     }
   }
 
-  const unfollowLabel = _(
-    msg({
-      message: 'Following',
-      comment: 'User is following this account, click to unfollow',
-    }),
-  )
+  const unfollowLabel = l({
+    message: 'Following',
+    comment: 'User is following this account, click to unfollow',
+  })
   const followLabel = profile.viewer?.followedBy
-    ? _(
-        msg({
-          message: 'Follow back',
-          comment: 'User is not following this account, click to follow back',
-        }),
-      )
-    : _(
-        msg({
-          message: 'Follow',
-          comment: 'User is not following this account, click to follow',
-        }),
-      )
+    ? l({
+        message: 'Follow back',
+        comment: 'User is not following this account, click to follow back',
+      })
+    : l({
+        message: 'Follow',
+        comment: 'User is not following this account, click to follow',
+      })
 
   if (!profile.viewer) return null
   if (
@@ -579,7 +564,9 @@ export function FollowButtonInner({
           variant="solid"
           color="secondary"
           {...rest}
-          onPress={onPressUnfollow}>
+          onPress={(e: GestureResponderEvent) => {
+            void onPressUnfollow(e)
+          }}>
           {withIcon && (
             <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />
           )}
@@ -592,7 +579,9 @@ export function FollowButtonInner({
           variant="solid"
           color={colorInverted ? 'secondary_inverted' : 'primary'}
           {...rest}
-          onPress={onPressFollow}>
+          onPress={(e: GestureResponderEvent) => {
+            void onPressFollow(e)
+          }}>
           {withIcon && (
             <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />
           )}

@@ -1,16 +1,16 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useConvoActive} from '#/state/messages/convo'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
+import * as Toast from '#/components/Toast'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {hasReachedReactionLimit} from './util'
 
@@ -60,11 +60,11 @@ export function ActionsWrapper({
           .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
       } else {
         if (hasReachedReactionLimit(message, currentAccount?.did)) return
-        convo
-          .addReaction(message.id, emoji)
-          .catch(() =>
-            Toast.show(_(msg`Failed to add emoji reaction`), 'xmark'),
-          )
+        convo.addReaction(message.id, emoji).catch(() =>
+          Toast.show(_(msg`Failed to add emoji reaction`), {
+            type: 'error',
+          }),
+        )
       }
     },
     [_, convo, message, currentAccount?.did],

@@ -14,12 +14,23 @@
  * -prf
  */
 
-import {AtUri} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  type AppBskyActorDefs,
+  type AppBskyGraphGetStarterPacksWithMembership,
+  AtUri,
+} from '@atproto/api'
+import {
+  type InfiniteData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
+import type * as bsky from '#/types/bsky'
+import {RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY} from './actor-starter-packs'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
 const SANITY_PAGE_LIMIT = 1000
@@ -91,9 +102,14 @@ export function getMembership(
 }
 
 export function useListMembershipAddMutation({
+  subject,
   onSuccess,
   onError,
 }: {
+  /**
+   * Needed for optimistic update of starter pack query
+   */
+  subject?: bsky.profile.AnyProfileView
   onSuccess?: (data: {uri: string; cid: string}) => void
   onError?: (error: Error) => void
 } = {}) {
@@ -151,6 +167,60 @@ export function useListMembershipAddMutation({
           queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
         })
       }, 1e3)
+
+      // update WITH_MEMBERSHIPS query
+
+      if (subject) {
+        queryClient.setQueryData<
+          InfiniteData<AppBskyGraphGetStarterPacksWithMembership.OutputSchema>
+        >(STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid), old => {
+          if (!old) return old
+
+          return {
+            ...old,
+            pages: old.pages.map(page => ({
+              ...page,
+              starterPacksWithMembership: page.starterPacksWithMembership.map(
+                spWithMembership => {
+                  if (
+                    spWithMembership.starterPack.list &&
+                    spWithMembership.starterPack.list?.uri === variables.listUri
+                  ) {
+                    return {
+                      ...spWithMembership,
+                      starterPack: {
+                        ...spWithMembership.starterPack,
+                        listItemsSample: [
+                          {
+                            uri: data.uri,
+                            subject: subject as AppBskyActorDefs.ProfileView,
+                          },
+                          ...(spWithMembership.starterPack.listItemsSample?.filter(
+                            item => item.subject.did !== variables.actorDid,
+                          ) ?? []),
+                        ],
+                        list: {
+                          ...spWithMembership.starterPack.list,
+                          listItemCount:
+                            (spWithMembership.starterPack.list.listItemCount ??
+                              0) + 1,
+                        },
+                      },
+                      listItem: {
+                        uri: data.uri,
+                        subject: subject as AppBskyActorDefs.ProfileView,
+                      },
+                    }
+                  }
+
+                  return spWithMembership
+                },
+              ),
+            })),
+          }
+        })
+      }
+
       onSuccess?.(data)
     },
     onError,
@@ -206,6 +276,50 @@ export function useListMembershipRemoveMutation({
           queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
         })
       }, 1e3)
+
+      queryClient.setQueryData<
+        InfiniteData<AppBskyGraphGetStarterPacksWithMembership.OutputSchema>
+      >(STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid), old => {
+        if (!old) return old
+
+        return {
+          ...old,
+          pages: old.pages.map(page => ({
+            ...page,
+            starterPacksWithMembership: page.starterPacksWithMembership.map(
+              spWithMembership => {
+                if (
+                  spWithMembership.starterPack.list &&
+                  spWithMembership.starterPack.list.uri === variables.listUri
+                ) {
+                  return {
+                    ...spWithMembership,
+                    starterPack: {
+                      ...spWithMembership.starterPack,
+                      listItemsSample:
+                        spWithMembership.starterPack.listItemsSample?.filter(
+                          item => item.subject.did !== variables.actorDid,
+                        ),
+                      list: {
+                        ...spWithMembership.starterPack.list,
+                        listItemCount: Math.max(
+                          0,
+                          (spWithMembership.starterPack.list.listItemCount ??
+                            1) - 1,
+                        ),
+                      },
+                    },
+                    listItem: undefined,
+                  }
+                }
+
+                return spWithMembership
+              },
+            ),
+          })),
+        }
+      })
+
       onSuccess?.(data)
     },
     onError,

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {useAccountEmailState} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
 import {Disable} from '#/components/dialogs/EmailDialog/screens/Manage2FA/Disable'

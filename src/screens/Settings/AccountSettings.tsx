@@ -1,13 +1,15 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {useModalControls} from '#/state/modals'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {AgeAssuranceAccountCard} from '#/components/ageAssurance/AgeAssuranceAccountCard'
+import {isBotAccount} from '#/components/BotBadge'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {
@@ -16,6 +18,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon} from '#/components/icons/BirthdayCake'
+import {Bot_Stroke as RobotIcon} from '#/components/icons/Bot'
 import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
 import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
 import {Freeze_Stroke2_Corner2_Rounded as FreezeIcon} from '#/components/icons/Freeze'
@@ -27,6 +30,7 @@ import * as Layout from '#/components/Layout'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {ChangePasswordDialog} from './components/ChangePasswordDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
+import {DeleteAccountDialog} from './components/DeleteAccountDialog'
 import {ExportCarDialog} from './components/ExportCarDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>
@@ -34,13 +38,14 @@ export function AccountSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {openModal} = useModalControls()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const emailDialogControl = useEmailDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
   const changePasswordControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
+  const deleteAccountControl = useDialogControl()
 
   return (
     <Layout.Screen>
@@ -147,6 +152,19 @@ export function AccountSettingsScreen({}: Props) {
             />
           </SettingsList.Item>
           <AgeAssuranceAccountCard style={[a.px_xl, a.pt_xs, a.pb_md]} />
+          <SettingsList.LinkItem
+            to="/settings/automation-label"
+            label={_(msg`Automation label`)}>
+            <SettingsList.ItemIcon icon={RobotIcon} />
+            <SettingsList.ItemText>
+              <Trans>Automation label</Trans>
+            </SettingsList.ItemText>
+            {profile && (
+              <SettingsList.BadgeText>
+                {isBotAccount(profile) ? _(msg`On`) : _(msg`Off`)}
+              </SettingsList.BadgeText>
+            )}
+          </SettingsList.LinkItem>
           <SettingsList.Divider />
           <SettingsList.PressableItem
             label={_(msg`Export my data`)}
@@ -169,7 +187,7 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
           <SettingsList.PressableItem
             label={_(msg`Delete account`)}
-            onPress={() => openModal({name: 'delete-account'})}
+            onPress={() => deleteAccountControl.open()}
             destructive>
             <SettingsList.ItemIcon icon={Trash_Stroke2_Corner2_Rounded} />
             <SettingsList.ItemText>
@@ -185,6 +203,10 @@ export function AccountSettingsScreen({}: Props) {
       <ChangePasswordDialog control={changePasswordControl} />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
+      <DeleteAccountDialog
+        control={deleteAccountControl}
+        deactivateDialogControl={deactivateAccountControl}
+      />
     </Layout.Screen>
   )
 }

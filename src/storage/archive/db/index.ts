@@ -6,17 +6,17 @@ export function create({id}: {id: string}): DB {
   const store = new MMKV({id})
 
   return {
-    async get(key: string): Promise<string | undefined> {
-      return store.getString(key) ?? undefined
+    get(key: string) {
+      return store.getString(key)
     },
-    async set(key: string, value: string): Promise<void> {
-      store.set(key, value)
+    set(key: string, value: string) {
+      return store.set(key, value)
     },
-    async delete(key: string): Promise<void> {
-      store.delete(key)
+    delete(key: string) {
+      return store.delete(key)
     },
-    async clear(): Promise<void> {
-      store.clearAll()
+    clear() {
+      return store.clearAll()
     },
   }
 }
