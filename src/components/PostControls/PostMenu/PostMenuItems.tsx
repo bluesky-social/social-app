@@ -64,6 +64,7 @@ import {
 } from '#/components/dialogs/PostInteractionSettingsDialog'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
@@ -94,7 +95,7 @@ import {
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {IS_INTERNAL} from '#/env'
+import {IS_INTERNAL, IS_IOS} from '#/env'
 import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
@@ -272,6 +273,16 @@ let PostMenuItems = ({
     Toast.show(l`Copied to clipboard`, {
       type: 'success',
     })
+  }
+
+  const onCopyPostLink = async () => {
+    const url = toShareUrl(href)
+    if (IS_IOS) {
+      await Clipboard.setUrlAsync(url)
+    } else {
+      await Clipboard.setStringAsync(url)
+    }
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }
 
   const onPressTranslate = () => {
@@ -575,6 +586,14 @@ let PostMenuItems = ({
                 onPress={onCopyPostText}>
                 <Menu.ItemText>{l`Copy post text`}</Menu.ItemText>
                 <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+              </Menu.Item>
+
+              <Menu.Item
+                testID="postDropdownCopyLinkBtn"
+                label={_(msg`Copy link to post`)}
+                onPress={onCopyPostLink}>
+                <Menu.ItemText>{_(msg`Copy link to post`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={ChainLinkIcon} position="right" />
               </Menu.Item>
             </>
           ) : (
