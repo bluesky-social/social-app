@@ -130,7 +130,7 @@ msgstr "{0, plural, one {Folge ich} other {Folge ich}}"
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {Post} other {Posts}}"
+msgstr "{0, plural, one {# Beitrag} other {# Beiträge}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
