@@ -67,7 +67,7 @@ export function augmentSearchQuery(query: string, {did}: {did?: string}) {
   return splits
     .map((str, idx) => {
       if (idx % 2 === 0) {
-        return str.replaceAll(/(^|\s)from:me(\s|$)/g, `$1${did}$2`)
+        return str.replaceAll(/(^|\s)from:@?me(\s|$)/g, `$1${did}$2`)
       }
 
       return str
