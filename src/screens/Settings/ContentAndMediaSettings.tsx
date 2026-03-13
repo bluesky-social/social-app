@@ -38,7 +38,7 @@ type Props = NativeStackScreenProps<
 export function ContentAndMediaSettingsScreen({}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()
-  const {videoAutoplayState, gifAutoplayState} = useAutoplayDisabledPref()
+  const {videoAutoplayDisabled, gifAutoplayDisabled} = useAutoplayDisabledPref()
   const {setVideoAutoplayDisabled, setGifAutoplayDisabled} =
     useSetAutoplayDisabledPref()
   const inAppBrowserPref = useInAppBrowser()
@@ -120,7 +120,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
           <Toggle.Item
             name="disable_video_autoplay"
             label={_(msg`Autoplay videos`)}
-            value={!videoAutoplayState}
+            value={!videoAutoplayDisabled}
             onChange={value => setVideoAutoplayDisabled(!value)}>
             <SettingsList.Item>
               <SettingsList.ItemIcon icon={PlayIcon} />
@@ -133,7 +133,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
           <Toggle.Item
             name="disable_gif_autoplay"
             label={_(msg`Autoplay GIFs`)}
-            value={!gifAutoplayState}
+            value={!gifAutoplayDisabled}
             onChange={value => setGifAutoplayDisabled(!value)}>
             <SettingsList.Item>
               <SettingsList.ItemIcon icon={PlayIcon} />

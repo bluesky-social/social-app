@@ -25,7 +25,7 @@ export function VideoPreview({
   const {_} = useLingui()
   // TODO: figure out how to pause a GIF for reduced motion
   // it's not possible using an img tag -sfn
-  const {videoAutoplayState} = useAutoplayDisabledPref()
+  const {videoAutoplayDisabled} = useAutoplayDisabledPref()
 
   let aspectRatio = asset.width / asset.height
 
@@ -57,7 +57,7 @@ export function VideoPreview({
           <video
             src={video.uri}
             style={{width: '100%', height: '100%', objectFit: 'cover'}}
-            autoPlay={!videoAutoplayState}
+            autoPlay={!videoAutoplayDisabled}
             loop
             muted
             playsInline
@@ -69,7 +69,7 @@ export function VideoPreview({
               clear()
             }}
           />
-          {videoAutoplayState && (
+          {videoAutoplayDisabled && (
             <View
               style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
               <PlayButtonIcon />

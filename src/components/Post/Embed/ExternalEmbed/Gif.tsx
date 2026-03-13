@@ -30,7 +30,7 @@ export function GifEmbed({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {gifAutoplayState} = useAutoplayDisabledPref()
+  const {gifAutoplayDisabled} = useAutoplayDisabledPref()
 
   const playerRef = useRef<GifView>(null)
 
@@ -38,7 +38,7 @@ export function GifEmbed({
     isPlaying: boolean
     isLoaded: boolean
   }>({
-    isPlaying: !gifAutoplayState,
+    isPlaying: !gifAutoplayDisabled,
     isLoaded: false,
   })
 
@@ -89,7 +89,7 @@ export function GifEmbed({
           source={params.playerUri}
           placeholderSource={thumb}
           style={[a.flex_1]}
-          autoplay={!gifAutoplayState}
+          autoplay={!gifAutoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}

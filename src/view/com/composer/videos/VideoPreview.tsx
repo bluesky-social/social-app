@@ -25,7 +25,7 @@ export function VideoPreview({
 }) {
   const t = useTheme()
   const playerRef = useRef<BlueskyVideoView>(null)
-  const {videoAutoplayState} = useAutoplayDisabledPref()
+  const {videoAutoplayDisabled} = useAutoplayDisabledPref()
   let aspectRatio = asset.width / asset.height
 
   if (isNaN(aspectRatio)) {
@@ -53,7 +53,7 @@ export function VideoPreview({
           {video.mimeType === 'image/gif' ? (
             <Image
               style={[a.flex_1]}
-              autoplay={!videoAutoplayState}
+              autoplay={!videoAutoplayDisabled}
               source={{uri: video.uri}}
               accessibilityIgnoresInvertColors
               cachePolicy="none"
@@ -61,7 +61,7 @@ export function VideoPreview({
           ) : (
             <BlueskyVideoView
               url={video.uri}
-              autoplay={!videoAutoplayState}
+              autoplay={!videoAutoplayDisabled}
               beginMuted={true}
               forceTakeover={true}
               ref={playerRef}
@@ -70,7 +70,7 @@ export function VideoPreview({
         </>
       )}
       <ExternalEmbedRemoveBtn onRemove={clear} />
-      {videoAutoplayState && (
+      {videoAutoplayDisabled && (
         <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
           <PlayButtonIcon />
         </View>

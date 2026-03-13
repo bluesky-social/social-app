@@ -121,6 +121,8 @@ const schema = z.object({
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
   disableHaptics: z.boolean().optional(),
+  /** @deprecated */
+  disableAutoplay: z.boolean().optional(),
   disableVideoAutoplay: z.boolean().optional(),
   disableGifAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
@@ -171,8 +173,8 @@ export const defaults: Schema = {
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
   disableHaptics: false,
-  disableGifAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   disableVideoAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
+  disableGifAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   kawaii: false,
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
@@ -193,13 +195,9 @@ export function tryParse(rawData: string): Schema | undefined {
     return undefined
   }
   if (objData.disableAutoplay !== undefined) {
-    if (objData.disableVideoAutoplay === undefined) {
-      objData.disableVideoAutoplay = objData.disableAutoplay
-    }
-    if (objData.disableGifAutoplay === undefined) {
-      objData.disableGifAutoplay = objData.disableAutoplay
-    }
-    delete (objData as any).disableAutoplay
+    objData.disableVideoAutoplay ??= objData.disableAutoplay
+    objData.disableGifAutoplay ??= objData.disableAutoplay
+    delete objData.disableAutoplay
   }
   const parsed = schema.safeParse(objData)
   if (parsed.success) {

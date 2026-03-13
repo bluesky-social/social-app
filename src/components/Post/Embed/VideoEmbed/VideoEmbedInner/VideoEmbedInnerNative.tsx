@@ -33,7 +33,7 @@ export function VideoEmbedInnerNative({
 }) {
   const {_} = useLingui()
   const videoRef = useRef<BlueskyVideoView>(null)
-  const {videoAutoplayState} = useAutoplayDisabledPref()
+  const {videoAutoplayDisabled} = useAutoplayDisabledPref()
   const isWithinMessage = useIsWithinMessage()
   const [muted, setMuted] = useVideoMuteState()
 
@@ -57,8 +57,8 @@ export function VideoEmbedInnerNative({
     <View style={[a.flex_1, a.relative]}>
       <BlueskyVideoView
         url={embed.playlist}
-        autoplay={!autoplayDisabled && !isWithinMessage}
-        beginMuted={isGif || (videoAutoplayState ? false : muted)}
+        autoplay={!videoAutoplayDisabled && !isWithinMessage}
+        beginMuted={isGif || (videoAutoplayDisabled ? false : muted)}
         style={[a.rounded_sm]}
         onActiveChange={e => {
           setIsActive(e.nativeEvent.isActive)
