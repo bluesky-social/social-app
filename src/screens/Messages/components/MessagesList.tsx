@@ -4,19 +4,25 @@ import {useKeyboardHandler} from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
   scrollTo,
+  useAnimatedProps,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
 import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   type $Typed,
   type AppBskyEmbedRecord,
   AppBskyRichtextFacet,
   RichText,
 } from '@atproto/api'
+import {
+  ScrollEdgeEffect,
+  useScrollEdgeEffectRef,
+} from '@bsky.app/expo-scroll-edge-effect'
 
-import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorder'
+import {mergeRefs} from '#/lib/merge-refs'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
@@ -36,23 +42,23 @@ import {
 } from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
-import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   EmojiPicker,
   type EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker'
-import {List, type ListMethods} from '#/view/com/util/List'
+import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 
@@ -104,12 +110,12 @@ export function MessagesList({
   hasAcceptOverride?: boolean
 }) {
   const ax = useAnalytics()
+  const scrollEdgeRef = useScrollEdgeEffectRef()
+  const t = useTheme()
   const convoState = useConvoActive()
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
-
-  useHideBottomBarBorderForScreen()
 
   const flatListRef = useAnimatedRef<ListMethods>()
 
@@ -122,6 +128,8 @@ export function MessagesList({
     isOpen: false,
     pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
   })
+
+  const [inputHeight, setInputHeight] = useState(0)
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
   // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
@@ -226,7 +234,7 @@ export function MessagesList({
 
   const onStartReached = useCallback(() => {
     if (hasScrolled && prevContentHeight.current > layoutHeight.get()) {
-      convoState.fetchMessageHistory()
+      void convoState.fetchMessageHistory()
     }
   }, [convoState, hasScrolled, layoutHeight])
 
@@ -256,8 +264,8 @@ export function MessagesList({
   )
 
   // -- Keyboard animation handling
-  const {footerHeight} = useShellLayout()
 
+  const {bottom: bottomInset} = useSafeAreaInsets()
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
 
@@ -281,29 +289,56 @@ export function MessagesList({
       onMove: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > footerHeight.get()) {
+        if (e.height > bottomInset) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
-      onEnd: e => {
+      onInteractive: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > footerHeight.get()) {
+      },
+      onEnd: e => {
+        'worklet'
+        console.log('keyboard end', e)
+        keyboardHeight.set(e.height)
+        if (e.height > bottomInset) {
           scrollTo(flatListRef, 0, 1e7, false)
+        } else {
+          scrollTo(flatListRef, 0, 1e7, true)
         }
         keyboardIsOpening.set(false)
       },
     },
-    [footerHeight],
+    [bottomInset],
   )
 
-  const animatedListStyle = useAnimatedStyle(() => ({
-    marginBottom: Math.max(keyboardHeight.get(), footerHeight.get()),
-  }))
+  const onInputLayout = useCallback((evt: LayoutChangeEvent) => {
+    setInputHeight(evt.nativeEvent.layout.height)
+  }, [])
+
+  const animatedListProps_IOS = useAnimatedProps<ListProps>(() => {
+    if (!IS_IOS) {
+      return {}
+    }
+
+    return {
+      contentInset: {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: Math.max(keyboardHeight.get(), inputHeight),
+      },
+    }
+  })
 
   const animatedStickyViewStyle = useAnimatedStyle(() => ({
     transform: [
-      {translateY: -Math.max(keyboardHeight.get(), footerHeight.get())},
+      {
+        translateY: -Math.max(
+          keyboardHeight.get() + (IS_IOS ? tokens.space.sm : 0),
+          bottomInset,
+        ),
+      },
     ],
   }))
 
@@ -423,17 +458,20 @@ export function MessagesList({
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
       <ScrollProvider onScroll={onScroll}>
         <List
-          ref={flatListRef}
+          ref={
+            scrollEdgeRef
+              ? mergeRefs([flatListRef, scrollEdgeRef])
+              : flatListRef
+          }
           data={convoState.items}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           disableFullWindowScroll={true}
           disableVirtualization={true}
-          style={animatedListStyle}
           // The extra two items account for the header and the footer components
           initialNumToRender={IS_NATIVE ? 32 : 62}
           maxToRenderPerBatch={IS_WEB ? 32 : 62}
-          keyboardDismissMode="on-drag"
+          keyboardDismissMode={IS_IOS ? 'interactive' : 'on-drag'}
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
             minIndexForVisible: 0,
@@ -448,36 +486,43 @@ export function MessagesList({
           ListHeaderComponent={
             <MaybeLoader isLoading={convoState.isFetchingHistory} />
           }
+          animatedProps={animatedListProps_IOS}
         />
       </ScrollProvider>
-      <Animated.View style={animatedStickyViewStyle}>
-        {convoState.status === ConvoStatus.Disabled ? (
-          <ChatDisabled />
-        ) : blocked ? (
-          footer
-        ) : (
-          <ConversationFooter
-            convoState={convoState}
-            hasAcceptOverride={hasAcceptOverride}>
-            {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
-              <MessageComposer
-                onSendMessage={onSendMessage}
-                hasEmbed={!!embedUri}
-                setEmbed={setEmbed}>
-                <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-              </MessageComposer>
-            ) : (
-              <MessageInput
-                onSendMessage={onSendMessage}
-                hasEmbed={!!embedUri}
-                setEmbed={setEmbed}
-                openEmojiPicker={onOpenEmojiPicker}>
-                <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-              </MessageInput>
-            )}
-          </ConversationFooter>
-        )}
-      </Animated.View>
+      <ScrollEdgeEffect
+        edge="bottom"
+        style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
+        fallbackStyle={[t.atoms.bg]}
+        onLayout={onInputLayout}>
+        <Animated.View style={animatedStickyViewStyle}>
+          {convoState.status === ConvoStatus.Disabled ? (
+            <ChatDisabled />
+          ) : blocked ? (
+            footer
+          ) : (
+            <ConversationFooter
+              convoState={convoState}
+              hasAcceptOverride={hasAcceptOverride}>
+              {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
+                <MessageComposer
+                  onSendMessage={onSendMessage}
+                  hasEmbed={!!embedUri}
+                  setEmbed={setEmbed}>
+                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+                </MessageComposer>
+              ) : (
+                <MessageInput
+                  onSendMessage={onSendMessage}
+                  hasEmbed={!!embedUri}
+                  setEmbed={setEmbed}
+                  openEmojiPicker={onOpenEmojiPicker}>
+                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+                </MessageInput>
+              )}
+            </ConversationFooter>
+          )}
+        </Animated.View>
+      </ScrollEdgeEffect>
 
       {IS_WEB && (
         <EmojiPicker
