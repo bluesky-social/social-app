@@ -1818,20 +1818,20 @@ msgstr ""
 msgid "Browse custom feeds"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:672
+#: src/components/FeedInterstitials.tsx:637
 msgid "Browse more accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:802
+#: src/components/FeedInterstitials.tsx:767
 msgid "Browse more feeds on the Explore page"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:783
-#: src/components/FeedInterstitials.tsx:786
+#: src/components/FeedInterstitials.tsx:748
+#: src/components/FeedInterstitials.tsx:751
 msgid "Browse more suggestions"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:811
+#: src/components/FeedInterstitials.tsx:776
 msgid "Browse more suggestions on the Explore page"
 msgstr ""
 
@@ -3269,7 +3269,7 @@ msgstr ""
 msgid "Dismiss this section"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:477
+#: src/components/FeedInterstitials.tsx:442
 msgid "Dismiss this suggestion"
 msgstr ""
 
@@ -8813,12 +8813,12 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:623
-#: src/components/FeedInterstitials.tsx:686
+#: src/components/FeedInterstitials.tsx:588
+#: src/components/FeedInterstitials.tsx:651
 msgid "See more"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:605
+#: src/components/FeedInterstitials.tsx:570
 msgid "See more suggested profiles"
 msgstr ""
 
@@ -9510,7 +9510,7 @@ msgstr ""
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:765
+#: src/components/FeedInterstitials.tsx:730
 msgid "Some other feeds you might like"
 msgstr ""
 
@@ -9768,7 +9768,7 @@ msgid "Suggested accounts"
 msgstr ""
 
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:601
+#: src/components/FeedInterstitials.tsx:566
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:180
 msgid "Suggested for you"
 msgstr ""
