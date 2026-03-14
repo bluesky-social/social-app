@@ -7,7 +7,7 @@ import type Hls from 'hls.js'
 
 import {clamp} from '#/lib/numbers'
 import {
-  useAutoplayDisabled,
+  useAutoplayDisabledPref,
   useSetSubtitlesEnabled,
   useSubtitlesEnabled,
 } from '#/state/preferences'
@@ -128,17 +128,17 @@ export function Controls({
 
   // autoplay/pause based on visibility
   const isWithinMessage = useIsWithinMessage()
-  const autoplayDisabled = useAutoplayDisabled() || isWithinMessage
+  const {videoAutoplayDisabled} = useAutoplayDisabledPref() || isWithinMessage
   useEffect(() => {
     if (active) {
       // GIFs play immediately, videos wait until onScreen
       if (onScreen || isGif) {
-        if (!autoplayDisabled) play()
+        if (!videoAutoplayDisabled) play()
       } else {
         pause()
       }
     }
-  }, [onScreen, pause, active, play, autoplayDisabled, isGif])
+  }, [onScreen, pause, active, play, videoAutoplayDisabled, isGif])
 
   // use minimal quality when not focused
   useEffect(() => {
@@ -172,11 +172,11 @@ export function Controls({
   const onPressEmptySpace = useCallback(() => {
     if (!focused) {
       drawFocus()
-      if (autoplayDisabled) play()
+      if (videoAutoplayDisabled) play()
     } else {
       togglePlayPause()
     }
-  }, [togglePlayPause, drawFocus, focused, autoplayDisabled, play])
+  }, [togglePlayPause, drawFocus, focused, videoAutoplayDisabled, play])
 
   const onPressPlayPause = useCallback(() => {
     drawFocus()
@@ -291,7 +291,7 @@ export function Controls({
   )
 
   const showControls =
-    ((focused || autoplayDisabled) && !playing) ||
+    ((focused || videoAutoplayDisabled) && !playing) ||
     (interactingViaKeypress ? hasFocus : hovered)
 
   if (isGif) {
