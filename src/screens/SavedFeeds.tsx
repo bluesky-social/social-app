@@ -25,7 +25,6 @@ import {
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
-import * as Toast from '#/view/com/util/Toast'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -43,6 +42,7 @@ import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Tra
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
@@ -104,7 +104,9 @@ function SavedFeedsInner({
         navigation.navigate('Feeds')
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
+      Toast.show(_(msg`There was an issue contacting the server`), {
+        type: 'error',
+      })
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }
@@ -288,7 +290,9 @@ function SavedFeedsA11y({
         navigation.navigate('Feeds')
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
+      Toast.show(_(msg`There was an issue contacting the server`), {
+        type: 'error',
+      })
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }

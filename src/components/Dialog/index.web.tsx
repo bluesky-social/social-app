@@ -1,4 +1,11 @@
-import React, {useImperativeHandle} from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useContext,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 import {
   FlatList,
   type FlatListProps,
@@ -48,15 +55,15 @@ export function Outer({
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const {setDialogIsOpen} = useDialogStateControlContext()
 
-  const open = React.useCallback(() => {
+  const open = useCallback(() => {
     setDialogIsOpen(control.id, true)
     setIsOpen(true)
   }, [setIsOpen, setDialogIsOpen, control.id])
 
-  const close = React.useCallback<DialogControlProps['close']>(
+  const close = useCallback<DialogControlProps['close']>(
     cb => {
       setDialogIsOpen(control.id, false)
       setIsOpen(false)
@@ -80,7 +87,7 @@ export function Outer({
     [control.id, onClose, setDialogIsOpen],
   )
 
-  const handleBackgroundPress = React.useCallback(
+  const handleBackgroundPress = useCallback(
     async (e: GestureResponderEvent) => {
       webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
     },
@@ -96,7 +103,7 @@ export function Outer({
     [close, open],
   )
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       close,
       isNativeDialog: false,
@@ -165,7 +172,7 @@ export function Inner({
   contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
-  const {close} = React.useContext(Context)
+  const {close} = useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
   FocusGuards.useFocusGuards()
@@ -215,7 +222,7 @@ export function Inner({
 
 export const ScrollableInner = Inner
 
-export const InnerFlatList = React.forwardRef<
+export const InnerFlatList = forwardRef<
   FlatList,
   FlatListProps<any> & {label: string} & {
     webInnerStyle?: StyleProp<ViewStyle>
@@ -284,7 +291,7 @@ export function FlatListFooter({
 
 export function Close() {
   const {_} = useLingui()
-  const {close} = React.useContext(Context)
+  const {close} = useContext(Context)
   return (
     <View
       style={[

@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-05 02:45\n"
+"PO-Revision-Date: 2026-03-05 20:12\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -851,8 +851,8 @@ msgstr "Tilføj konto"
 #: src/view/com/composer/GifAltText.tsx:78
 #: src/view/com/composer/GifAltText.tsx:147
 #: src/view/com/composer/GifAltText.tsx:214
-#: src/view/com/composer/photos/Gallery.tsx:181
-#: src/view/com/composer/photos/Gallery.tsx:228
+#: src/view/com/composer/photos/Gallery.tsx:182
+#: src/view/com/composer/photos/Gallery.tsx:229
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:99
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:107
 msgid "Add alt text"
@@ -908,7 +908,7 @@ msgstr "Tilføj yderligere oplysninger (valgfrit)"
 #: src/screens/Settings/LanguageSettings.tsx:201
 #: src/screens/Settings/LanguageSettings.tsx:206
 msgid "Add more languages…"
-msgstr ""
+msgstr "Tilføj flere sprog …"
 
 #: src/components/dialogs/MutedWords.tsx:330
 msgid "Add mute word with chosen settings"
@@ -1152,7 +1152,7 @@ msgstr "Allerede logget ind som @{0}"
 #: src/components/images/Gallery.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:102
-#: src/view/com/composer/photos/Gallery.tsx:199
+#: src/view/com/composer/photos/Gallery.tsx:200
 msgid "ALT"
 msgstr "ALT"
 
@@ -1170,7 +1170,7 @@ msgstr "Alt-tekst"
 msgid "Alt Text"
 msgstr "Alt-tekst"
 
-#: src/view/com/composer/photos/Gallery.tsx:273
+#: src/view/com/composer/photos/Gallery.tsx:274
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "Alt-tekst beskriver billeder for blinde og svagtseende brugere og bidrager med kontekst til glæde for alle."
 
@@ -1974,7 +1974,7 @@ msgstr "Undertekster og alt-tekst"
 msgid "Cashtag {tag}"
 msgstr "Cashtag {tag}"
 
-#: src/components/Post/Translated/index.tsx:395
+#: src/components/Post/Translated/index.tsx:397
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Change"
 msgstr "Skift"
@@ -2020,9 +2020,9 @@ msgstr "Skift anmeldelseskategori"
 msgid "Change report reason"
 msgstr "Skift årsag til anmeldelse"
 
-#: src/components/Post/Translated/index.tsx:385
+#: src/components/Post/Translated/index.tsx:387
 msgid "Change the source language"
-msgstr ""
+msgstr "Skift kildesproget"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:58
 msgid "Change your password"
@@ -3123,7 +3123,7 @@ msgstr "Udviklingerindstillinger"
 
 #: src/lib/translation/index.tsx:265
 msgid "Device failed to translate :("
-msgstr ""
+msgstr "Enhed kunne ikke oversætte :("
 
 #: src/components/WhoCanReply.tsx:222
 msgid "Dialog: adjust who can interact with this post"
@@ -3446,7 +3446,7 @@ msgstr "Rediger feeds"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:86
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:90
-#: src/view/com/composer/photos/Gallery.tsx:206
+#: src/view/com/composer/photos/Gallery.tsx:207
 msgid "Edit image"
 msgstr "Rediger billede"
 
@@ -4986,12 +4986,12 @@ msgstr "Skjul dette opslag?"
 msgid "Hide this reply?"
 msgstr "Skjul dette svar?"
 
-#: src/components/Post/Translated/index.tsx:192
-#: src/components/Post/Translated/index.tsx:318
+#: src/components/Post/Translated/index.tsx:194
+#: src/components/Post/Translated/index.tsx:320
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:514
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:516
 msgid "Hide translation"
-msgstr ""
+msgstr "Skjul oversættelse"
 
 #: src/components/interstitials/Trending.tsx:115
 msgid "Hide trending topics"
@@ -6622,7 +6622,7 @@ msgstr "Ingen resultater fundet for \"{query}\""
 
 #: src/screens/Search/SearchResults.tsx:178
 msgid "No results found for “<0>{query}</0>”."
-msgstr ""
+msgstr "Ingen resultater fundet for “<0>{query}</0>”."
 
 #: src/screens/Search/Explore.tsx:830
 msgid "No results."
@@ -7911,7 +7911,7 @@ msgstr "Modtag push-notifikationer"
 
 #: src/screens/Search/components/SearchHistory.tsx:50
 msgid "Recent searches"
-msgstr ""
+msgstr "Seneste søgninger"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:257
 msgid "Recently used"
@@ -8030,7 +8030,7 @@ msgstr "Fjern fra gemte opslag"
 msgid "Remove from your feeds?"
 msgstr "Fjern fra dine feeds?"
 
-#: src/view/com/composer/photos/Gallery.tsx:215
+#: src/view/com/composer/photos/Gallery.tsx:216
 msgid "Remove image"
 msgstr "Fjern billede"
 
@@ -8910,9 +8910,9 @@ msgstr "Vælg landekode"
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr "Vælg emojien {emojiName} som din avatar"
 
-#: src/components/Post/Translated/index.tsx:402
+#: src/components/Post/Translated/index.tsx:404
 msgid "Select the source language"
-msgstr ""
+msgstr "Vælg kildesprog"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:59
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:115
@@ -10269,7 +10269,7 @@ msgstr "Dette handle er reserveret. Prøv et andet."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:133
 msgid "This image could not be used. Try a different format like .jpg or .png."
-msgstr ""
+msgstr "Dette billede kunne ikke bruges. Prøv et andet format som .jpg eller .png."
 
 #: src/components/dialogs/BirthDateSettings.tsx:56
 msgid "This information is private and not shared with other users."
@@ -10521,22 +10521,22 @@ msgstr "Emne"
 
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/dms/MessageContextMenu.tsx:141
-#: src/components/Post/Translated/index.tsx:139
-#: src/components/Post/Translated/index.tsx:146
+#: src/components/Post/Translated/index.tsx:141
+#: src/components/Post/Translated/index.tsx:148
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:522
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:524
 msgid "Translate"
 msgstr "Oversæt"
 
-#: src/components/Post/Translated/index.tsx:292
+#: src/components/Post/Translated/index.tsx:294
 msgid "Translated"
-msgstr ""
+msgstr "Oversat"
 
-#: src/components/Post/Translated/index.tsx:89
+#: src/components/Post/Translated/index.tsx:93
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:506
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:508
 msgid "Translating…"
-msgstr ""
+msgstr "Oversætter …"
 
 #: src/screens/Settings/ThreadPreferences.tsx:87
 #: src/screens/Settings/ThreadPreferences.tsx:92
@@ -10565,7 +10565,7 @@ msgstr "Tillid opstår gennem forbindelser, fællesskaber og delt indhold, så v
 
 #: src/screens/Search/SearchResults.tsx:186
 msgctxt "english-only-resource"
-msgid "Try a different search term, or <0>read about how to use search filters.</0>."
+msgid "Try a different search term, or <0>read about how to use search filters</0>."
 msgstr ""
 
 #: src/view/com/util/error/ErrorScreen.tsx:104
@@ -10573,10 +10573,10 @@ msgctxt "action"
 msgid "Try again"
 msgstr "Prøv igen"
 
-#: src/components/Post/Translated/index.tsx:205
-#: src/components/Post/Translated/index.tsx:213
+#: src/components/Post/Translated/index.tsx:207
+#: src/components/Post/Translated/index.tsx:215
 msgid "Try Google Translate"
-msgstr ""
+msgstr "Prøv Google Translate"
 
 #: src/lib/interests.ts:74
 msgid "TV"
@@ -11253,7 +11253,7 @@ msgstr "Se {0}s profil"
 #. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
 #: src/components/ProfileCard.tsx:143
 msgid "View {0}’s profile"
-msgstr ""
+msgstr "Se {0}s profil"
 
 #: src/components/dms/MessagesListHeader.tsx:142
 msgid "View {displayName}'s profile"
@@ -11310,7 +11310,7 @@ msgstr "Vis profil"
 
 #: src/screens/Profile/Header/Shell.tsx:173
 msgid "View profile banner"
-msgstr ""
+msgstr "Se profilbanner"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:124
 msgid "View the avatar"
@@ -11561,7 +11561,7 @@ msgstr "Beklager, men vi kunne ikke indlæse dine skjulte ord. Prøv igen."
 #: src/screens/Search/SearchResults.tsx:339
 #: src/screens/Search/SearchResults.tsx:472
 msgid "We’re sorry, but your search could not be completed. Please try again in a few minutes."
-msgstr ""
+msgstr "Beklager, men din søgning kunne ikke gennemføres. Prøv igen om lidt."
 
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:62
 msgid "We're sorry, you cannot access this screen at this time."

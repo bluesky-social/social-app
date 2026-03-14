@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {logger} from '#/logger'
 import {type SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {type Metrics} from '#/analytics/metrics'
 import {IS_WEB} from '#/env'
@@ -42,20 +42,18 @@ export function useAccountSwitcher() {
           Toast.show(_(msg`Signed in as @${account.handle}`))
         } else {
           requestSwitchToAccount({requestedAccount: account.did})
-          Toast.show(
-            _(msg`Please sign in as @${account.handle}`),
-            'circle-exclamation',
-          )
+          Toast.show(_(msg`Please sign in as @${account.handle}`), {
+            type: 'warning',
+          })
         }
       } catch (e: any) {
         logger.error(`switch account: selectAccount failed`, {
           message: e.message,
         })
         requestSwitchToAccount({requestedAccount: account.did})
-        Toast.show(
-          _(msg`Please sign in as @${account.handle}`),
-          'circle-exclamation',
-        )
+        Toast.show(_(msg`Please sign in as @${account.handle}`), {
+          type: 'warning',
+        })
       } finally {
         setPendingDid(null)
       }

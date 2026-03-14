@@ -9,11 +9,11 @@ import {useMutation} from '@tanstack/react-query'
 import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function ChatDisabled() {
@@ -97,7 +97,9 @@ function DialogInner() {
     },
     onError: err => {
       logger.error('Failed to submit chat appeal', {message: err})
-      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
+      Toast.show(_(msg`Failed to submit appeal, please try again.`), {
+        type: 'error',
+      })
     },
     onSuccess: () => {
       control.close()

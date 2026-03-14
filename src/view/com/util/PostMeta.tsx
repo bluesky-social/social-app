@@ -13,12 +13,11 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {unstableCacheProfileView} from '#/state/queries/profile'
-import {atoms as a, platform, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {IS_ANDROID} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {TimeElapsed} from './TimeElapsed'
@@ -55,7 +54,6 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   }, [queryClient, author])
 
   const timestampLabel = niceDate(i18n, opts.timestamp)
-  const verification = useSimpleVerificationState({profile: author})
   const {isActive: live} = useActorStatus(author)
 
   const MaybeLinkText = opts.linkDisabled ? Text : WebOnlyInlineLinkText
@@ -109,21 +107,11 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 ),
               )}
             </MaybeLinkText>
-            {verification.showBadge && (
-              <View
-                style={[
-                  a.pl_2xs,
-                  a.self_center,
-                  {
-                    marginTop: platform({web: 0, ios: 0, android: -1}),
-                  },
-                ]}>
-                <VerificationCheck
-                  width={platform({android: 13, default: 12})}
-                  verifier={verification.role === 'verifier'}
-                />
-              </View>
-            )}
+            <ProfileBadges
+              profile={author}
+              size="sm"
+              style={[a.pl_2xs, a.self_center]}
+            />
             <MaybeLinkText
               emoji
               numberOfLines={1}

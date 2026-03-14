@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 
@@ -19,9 +19,9 @@ interface ProfilesListProps {
   scrollElRef: ListRef
 }
 
-export const FeedsList = React.forwardRef<SectionRef, ProfilesListProps>(
+export const FeedsList = forwardRef<SectionRef, ProfilesListProps>(
   function FeedsListImpl({feeds, headerHeight, scrollElRef}, ref) {
-    const [initialHeaderHeight] = React.useState(headerHeight)
+    const [initialHeaderHeight] = useState(headerHeight)
     const bottomBarOffset = useBottomBarOffset(20)
     const t = useTheme()
 
@@ -32,7 +32,7 @@ export const FeedsList = React.forwardRef<SectionRef, ProfilesListProps>(
       })
     }, [scrollElRef, headerHeight])
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 

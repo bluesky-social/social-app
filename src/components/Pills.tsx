@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {BSKY_LABELER_DID, type ModerationCause} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
@@ -32,7 +32,7 @@ export function Row({
   size = 'sm',
 }: {children: React.ReactNode | React.ReactNode[]} & CommonProps &
   ViewStyleProp) {
-  const styles = React.useMemo(() => {
+  const styles = useMemo(() => {
     switch (size) {
       case 'lg':
         return [{gap: 5}]
@@ -67,7 +67,7 @@ export function Label({
   const isBlueskyLabel =
     desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID
 
-  const {outer, avi, text} = React.useMemo(() => {
+  const {outer, avi, text} = useMemo(() => {
     switch (size) {
       case 'lg': {
         return {
@@ -154,7 +154,7 @@ export function Label({
 export function FollowsYou({size = 'sm'}: CommonProps) {
   const t = useTheme()
 
-  const variantStyles = React.useMemo(() => {
+  const variantStyles = useMemo(() => {
     switch (size) {
       case 'sm':
       case 'lg':

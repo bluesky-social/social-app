@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyGraphDefs,
@@ -143,7 +143,7 @@ export function AvatarStack({
   const computedTotal = (total ?? numPending) - numPending
   const circlesCount = numPending + 1 // add total at end
   const widthPerc = 100 / circlesCount
-  const [size, setSize] = React.useState<number | null>(null)
+  const [size, setSize] = useState<number | null>(null)
 
   const isPending = (numPending && profiles.length === 0) || !moderationOpts
 

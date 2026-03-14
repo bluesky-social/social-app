@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
 import {msg} from '@lingui/core/macro'
@@ -27,7 +27,7 @@ export function NoFeedsPinned({
   const {isPending, mutateAsync: overwriteSavedFeeds} =
     useOverwriteSavedFeedsMutation()
 
-  const addRecommendedFeeds = React.useCallback(async () => {
+  const addRecommendedFeeds = useCallback(async () => {
     let skippedTimeline = false
     let skippedDiscover = false
     let remainingSavedFeeds = []

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {init} from 'emoji-mart'
 
 /**
@@ -11,7 +11,7 @@ let loadRequested = false
  * {@link https://github.com/missive/emoji-mart/blob/16978d04a766eec6455e2e8bb21cd8dc0b3c7436/README.md?plain=1#L194}
  */
 export function useWebPreloadEmoji({immediate}: {immediate?: boolean} = {}) {
-  const preload = React.useCallback(async () => {
+  const preload = useCallback(async () => {
     if (loadRequested) return
     loadRequested = true
     try {

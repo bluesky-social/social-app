@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {type AppBskyUnspeccedGetTrends, hasMutedWord} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
@@ -18,7 +18,7 @@ export const createGetTrendsQueryKey = () => ['trends']
 export function useGetTrendsQuery() {
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
-  const mutedWords = React.useMemo(() => {
+  const mutedWords = useMemo(() => {
     return preferences?.moderationPrefs?.mutedWords || []
   }, [preferences?.moderationPrefs])
 
@@ -41,7 +41,7 @@ export function useGetTrendsQuery() {
       )
       return data
     },
-    select: React.useCallback(
+    select: useCallback(
       (data: AppBskyUnspeccedGetTrends.OutputSchema) => {
         return {
           trends: (data.trends ?? []).filter(t => {

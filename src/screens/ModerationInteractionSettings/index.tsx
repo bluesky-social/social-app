@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -16,12 +16,12 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
   threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useGutters} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {PostInteractionSettingsForm} from '#/components/dialogs/PostInteractionSettingsDialog'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 
 export function Screen() {
   const gutters = useGutters(['base'])
@@ -63,9 +63,9 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   const {_} = useLingui()
   const {mutateAsync: setPostInteractionSettings, isPending} =
     usePostInteractionSettingsMutation()
-  const [error, setError] = React.useState<string | undefined>(undefined)
+  const [error, setError] = useState<string | undefined>(undefined)
 
-  const allowUI = React.useMemo(() => {
+  const allowUI = useMemo(() => {
     return threadgateRecordToAllowUISetting({
       $type: 'app.bsky.feed.threadgate',
       post: '',
@@ -73,7 +73,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
       allow: preferences.postInteractionSettings.threadgateAllowRules,
     })
   }, [preferences.postInteractionSettings.threadgateAllowRules])
-  const postgate = React.useMemo(() => {
+  const postgate = useMemo(() => {
     return createPostgateRecord({
       post: '',
       embeddingRules:
@@ -81,17 +81,17 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
     })
   }, [preferences.postInteractionSettings.postgateEmbeddingRules])
 
-  const [maybeEditedAllowUI, setAllowUI] = React.useState(allowUI)
-  const [maybeEditedPostgate, setEditedPostgate] = React.useState(postgate)
+  const [maybeEditedAllowUI, setAllowUI] = useState(allowUI)
+  const [maybeEditedPostgate, setEditedPostgate] = useState(postgate)
 
-  const wasEdited = React.useMemo(() => {
+  const wasEdited = useMemo(() => {
     return (
       !deepEqual(allowUI, maybeEditedAllowUI) ||
       !deepEqual(postgate.embeddingRules, maybeEditedPostgate.embeddingRules)
     )
   }, [postgate, allowUI, maybeEditedAllowUI, maybeEditedPostgate])
 
-  const onSave = React.useCallback(async () => {
+  const onSave = useCallback(async () => {
     setError('')
 
     try {

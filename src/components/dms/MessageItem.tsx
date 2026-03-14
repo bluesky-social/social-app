@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import {memo, useCallback, useMemo} from 'react'
 import {
   type GestureResponderEvent,
   type StyleProp,
@@ -233,7 +233,7 @@ let MessageItem = ({
     </>
   )
 }
-MessageItem = React.memo(MessageItem)
+MessageItem = memo(MessageItem)
 export {MessageItem}
 
 let MessageItemMetadata = ({
@@ -328,5 +328,5 @@ let MessageItemMetadata = ({
     </Text>
   )
 }
-MessageItemMetadata = React.memo(MessageItemMetadata)
+MessageItemMetadata = memo(MessageItemMetadata)
 export {MessageItemMetadata}

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   type GestureResponderEvent,
@@ -31,16 +31,16 @@ export function ExternalGif({
   const consentDialogControl = useDialogControl()
 
   // Tracking if the placer has been activated
-  const [isPlayerActive, setIsPlayerActive] = React.useState(false)
+  const [isPlayerActive, setIsPlayerActive] = useState(false)
   // Tracking whether the gif has been loaded yet
-  const [isPrefetched, setIsPrefetched] = React.useState(false)
+  const [isPrefetched, setIsPrefetched] = useState(false)
   // Tracking whether the image is animating
-  const [isAnimating, setIsAnimating] = React.useState(true)
+  const [isAnimating, setIsAnimating] = useState(true)
 
   // Used for controlling animation
-  const imageRef = React.useRef<Image>(null)
+  const imageRef = useRef<Image>(null)
 
-  const load = React.useCallback(() => {
+  const load = useCallback(() => {
     setIsPlayerActive(true)
     Image.prefetch(params.playerUri).then(() => {
       // Replace the image once it's fetched
@@ -48,7 +48,7 @@ export function ExternalGif({
     })
   }, [params.playerUri])
 
-  const onPlayPress = React.useCallback(
+  const onPlayPress = useCallback(
     (event: GestureResponderEvent) => {
       // Don't propagate on web
       event.preventDefault()

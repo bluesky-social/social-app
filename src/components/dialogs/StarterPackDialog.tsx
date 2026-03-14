@@ -75,7 +75,7 @@ export function StarterPackDialog({
   })
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <StarterPackList
         onStartWizard={wrappedNavToWizard}

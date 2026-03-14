@@ -5,7 +5,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
-import type React from 'react'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -14,12 +13,12 @@ import {
   useProfileBlockMutationQueue,
   useProfileQuery,
 } from '#/state/queries/profile'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 
@@ -136,7 +135,9 @@ function DoneStep({
       }
     },
     onError: () => {
-      Toast.show(_(msg`Could not leave chat`), 'xmark')
+      Toast.show(_(msg`Could not leave chat`), {
+        type: 'error',
+      })
     },
   })
 
@@ -162,7 +163,9 @@ function DoneStep({
         leaveConvo()
       }
       if (toastMsg) {
-        Toast.show(toastMsg, 'check')
+        Toast.show(toastMsg, {
+          type: 'success',
+        })
       }
     })
   }

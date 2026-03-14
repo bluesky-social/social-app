@@ -9,7 +9,7 @@ import {
 
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 
 const RQKEY_ROOT = 'notification-settings'
 const RQKEY = [RQKEY_ROOT]
@@ -46,7 +46,9 @@ export function useNotificationSettingsUpdateMutation() {
     onError: e => {
       logger.error('Could not update notification settings', {message: e})
       queryClient.invalidateQueries({queryKey: RQKEY})
-      Toast.show(t`Could not update notification settings`, 'xmark')
+      Toast.show(t`Could not update notification settings`, {
+        type: 'error',
+      })
     },
   })
 }

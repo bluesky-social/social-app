@@ -16,7 +16,6 @@ import {
   unstableCacheProfileView,
   useProfileBlockMutationQueue,
 } from '#/state/queries/profile'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {
   Button,
@@ -36,6 +35,7 @@ import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {ReportDialog} from '#/components/moderation/ReportDialog'
+import * as Toast from '#/components/Toast'
 
 export function RejectMenu({
   convo,
@@ -72,7 +72,9 @@ export function RejectMenu({
             message: 'Failed to delete chat',
           }),
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
     },
   })
@@ -86,7 +88,9 @@ export function RejectMenu({
           message: 'Chat deleted',
         }),
       ),
-      'check',
+      {
+        type: 'success',
+      },
     )
     leaveConvo()
   }, [leaveConvo, _])
@@ -99,7 +103,9 @@ export function RejectMenu({
           message: 'Account blocked',
         }),
       ),
-      'check',
+      {
+        type: 'success',
+      },
     )
     // block and also delete convo
     queueBlock()
@@ -245,7 +251,9 @@ export function AcceptChatButton({
             message: 'Failed to accept chat',
           }),
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
     },
   })
@@ -314,7 +322,9 @@ export function DeleteChatButton({
             message: 'Failed to delete chat',
           }),
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
     },
   })
@@ -327,7 +337,9 @@ export function DeleteChatButton({
           message: 'Chat deleted',
         }),
       ),
-      'check',
+      {
+        type: 'success',
+      },
     )
     leaveConvo()
   }, [leaveConvo, _])

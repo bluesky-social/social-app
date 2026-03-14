@@ -67,7 +67,9 @@ export function HeaderText({
   style?: StyleProp<TextStyle>
 }) {
   return (
-    <Text style={[a.text_lg, a.text_center, a.font_semi_bold, style]}>
+    <Text
+      style={[a.text_lg, a.text_center, a.font_semi_bold, style]}
+      maxFontSizeMultiplier={2}>
       {children}
     </Text>
   )
