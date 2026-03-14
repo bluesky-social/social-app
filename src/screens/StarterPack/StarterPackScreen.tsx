@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {
@@ -46,7 +46,6 @@ import {
 import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
-import * as Toast from '#/view/com/util/Toast'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -74,6 +73,7 @@ import {PostsList} from '#/components/StarterPack/Main/PostsList'
 import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
@@ -201,16 +201,16 @@ function StarterPackScreenLoaded({
   const shareDialogControl = useDialogControl()
 
   const shortenLink = useShortenLink()
-  const [link, setLink] = React.useState<string>()
-  const [imageLoaded, setImageLoaded] = React.useState(false)
+  const [link, setLink] = useState<string>()
+  const [imageLoaded, setImageLoaded] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     ax.metric('starterPack:opened', {
       starterPack: starterPack.uri,
     })
   }, [ax, starterPack.uri])
 
-  const onOpenShareDialog = React.useCallback(() => {
+  const onOpenShareDialog = useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
     shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then(
       res => {
@@ -227,7 +227,7 @@ function StarterPackScreenLoaded({
     shareDialogControl.open()
   }, [shareDialogControl, shortenLink, starterPack])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (routeParams.new) {
       onOpenShareDialog()
     }
@@ -316,7 +316,7 @@ function Header({
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {captureAction} = useProgressGuideControls()
 
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const {record, creator} = starterPack
   const isOwn = creator?.did === currentAccount?.did
@@ -325,7 +325,7 @@ function Header({
 
   const navigation = useNavigation<NavigationProp>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onFocus = () => {
       if (hasSession) return
       setActiveStarterPack({
@@ -356,7 +356,9 @@ function Header({
       listItems = await getAllListMembers(agent, starterPack.list.uri)
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
+      Toast.show(_(msg`An error occurred while trying to follow all`), {
+        type: 'error',
+      })
       logger.error('Failed to get list members for starter pack', {
         safeMessage: e,
       })
@@ -381,7 +383,9 @@ function Header({
       })
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
+      Toast.show(_(msg`An error occurred while trying to follow all`), {
+        type: 'error',
+      })
       logger.error('Failed to follow all accounts', {safeMessage: e})
     }
 
@@ -731,7 +735,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const goBack = () => {
     if (navigation.canGoBack()) {
@@ -749,7 +753,9 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
     onError: e => {
       setIsProcessing(false)
       logger.error('Failed to delete invalid starter pack', {safeMessage: e})
-      Toast.show(_(msg`Failed to delete starter pack`), 'xmark')
+      Toast.show(_(msg`Failed to delete starter pack`), {
+        type: 'error',
+      })
     },
   })
 

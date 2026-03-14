@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {msg, plural} from '@lingui/core/macro'
@@ -43,6 +43,7 @@ import {
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
@@ -60,19 +61,20 @@ export function BottomBarWeb() {
 
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
+  const aa = useAgeAssurance()
 
-  const showSignIn = React.useCallback(() => {
+  const showSignIn = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = React.useCallback(() => {
+  const showCreateAccount = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const onLongPressProfile = React.useCallback(() => {
+  const onLongPressProfile = useCallback(() => {
     accountSwitchControl.open()
   }, [accountSwitchControl])
 
@@ -124,8 +126,14 @@ export function BottomBarWeb() {
                 <NavItem
                   routeName="Messages"
                   href="/messages"
-                  notificationCount={unreadMessageCount.numUnread}
-                  hasNew={unreadMessageCount.hasNew}>
+                  notificationCount={
+                    aa.flags.chatDisabled
+                      ? undefined
+                      : unreadMessageCount.numUnread
+                  }
+                  hasNew={
+                    aa.flags.chatDisabled ? false : unreadMessageCount.hasNew
+                  }>
                   {({isActive}) => {
                     const Icon = isActive ? MessageFilled : Message
                     return (

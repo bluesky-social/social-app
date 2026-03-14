@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
@@ -115,7 +115,7 @@ export function useStarterPackLink({
 }) {
   const {_} = useLingui()
   const qc = useQueryClient()
-  const {rkey, handleOrDid} = React.useMemo(() => {
+  const {rkey, handleOrDid} = useMemo(() => {
     const rkey = new AtUri(view.uri).rkey
     const {creator} = view
     return {rkey, handleOrDid: creator.handle || creator.did}
@@ -148,7 +148,7 @@ export function Link({
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {record} = starterPack
-  const {rkey, handleOrDid} = React.useMemo(() => {
+  const {rkey, handleOrDid} = useMemo(() => {
     const rkey = new AtUri(starterPack.uri).rkey
     const {creator} = starterPack
     return {rkey, handleOrDid: creator.handle || creator.did}

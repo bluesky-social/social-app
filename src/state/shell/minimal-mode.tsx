@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, useCallback, useContext, useMemo} from 'react'
 import {
   type SharedValue,
   useSharedValue,
@@ -11,7 +11,7 @@ type StateContext = {
 }
 type SetContext = (v: boolean) => void
 
-const stateContext = React.createContext<StateContext>({
+const stateContext = createContext<StateContext>({
   headerMode: {
     value: 0,
     addListener() {},
@@ -34,13 +34,13 @@ const stateContext = React.createContext<StateContext>({
   },
 })
 stateContext.displayName = 'MinimalModeStateContext'
-const setContext = React.createContext<SetContext>((_: boolean) => {})
+const setContext = createContext<SetContext>((_: boolean) => {})
 setContext.displayName = 'MinimalModeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const headerMode = useSharedValue(0)
   const footerMode = useSharedValue(0)
-  const setMode = React.useCallback(
+  const setMode = useCallback(
     (v: boolean) => {
       'worklet'
       headerMode.set(() =>
@@ -56,7 +56,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     },
     [headerMode, footerMode],
   )
-  const value = React.useMemo(
+  const value = useMemo(
     () => ({
       headerMode,
       footerMode,
@@ -71,9 +71,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useMinimalShellMode() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetMinimalShellMode() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

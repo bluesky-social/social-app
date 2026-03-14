@@ -1,5 +1,5 @@
 name: "Bug Report"
-description: "Create a report for an issue you have experience in the app."
+description: "Create a report for an issue you have experienced in the app."
 labels: ["bug"]
 body:
   - type: markdown
@@ -19,13 +19,14 @@ body:
         4. See error
     validations:
       required: true
-  - type: textarea
+  - type: upload
     attributes:
       label: Attachments
       description: |
         If possible, please provide any images or videos that may help us understand the issue you are experiencing.
     validations:
       required: false
+      accept: ".png,.jpg,.jpeg,.gif,.webp,.mp4,.mov,.webm"
   - type: dropdown
     attributes:
       label: What platform(s) does this occur on?

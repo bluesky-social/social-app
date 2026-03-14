@@ -103,6 +103,7 @@ import {ActivityPrivacySettingsScreen} from '#/screens/Settings/ActivityPrivacyS
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
+import {AutomationLabelSettingsScreen} from '#/screens/Settings/AutomationLabelSettings'
 import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FindContactsSettingsScreen} from '#/screens/Settings/FindContactsSettings'
@@ -138,7 +139,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 
@@ -400,6 +401,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => AccountSettingsScreen}
         options={{
           title: title(msg`Account`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AutomationLabelSettings"
+        getComponent={() => AutomationLabelSettingsScreen}
+        options={{
+          title: title(msg`Automation Label`),
           requireAuth: true,
         }}
       />
@@ -685,10 +694,30 @@ function screenOptions(t: Theme) {
 function HomeTabNavigator() {
   const t = useTheme()
 
+  const BLURRED_SCROLL_EDGE_EFFECT = IS_LIQUID_GLASS
+    ? ({
+        headerShown: true,
+        headerTransparent: true,
+        headerTitle: '',
+        headerBackVisible: false,
+        scrollEdgeEffects: {
+          top: 'soft',
+        },
+      } as const)
+    : {}
+
   return (
     <HomeTab.Navigator screenOptions={screenOptions(t)} initialRouteName="Home">
-      <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
-      <HomeTab.Screen name="Start" getComponent={() => HomeScreen} />
+      <HomeTab.Screen
+        name="Home"
+        getComponent={() => HomeScreen}
+        options={BLURRED_SCROLL_EDGE_EFFECT}
+      />
+      <HomeTab.Screen
+        name="Start"
+        getComponent={() => HomeScreen}
+        options={BLURRED_SCROLL_EDGE_EFFECT}
+      />
       {commonScreens(HomeTab as typeof Flat)}
     </HomeTab.Navigator>
   )

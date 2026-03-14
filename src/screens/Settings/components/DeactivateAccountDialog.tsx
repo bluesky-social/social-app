@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -36,10 +36,10 @@ function DeactivateAccountDialogInner({
   const {_} = useLingui()
   const agent = useAgent()
   const {logoutCurrentAccount} = useSessionApi()
-  const [pending, setPending] = React.useState(false)
-  const [error, setError] = React.useState<string | undefined>()
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | undefined>()
 
-  const handleDeactivate = React.useCallback(async () => {
+  const handleDeactivate = useCallback(async () => {
     try {
       setPending(true)
       await agent.com.atproto.server.deactivateAccount({})

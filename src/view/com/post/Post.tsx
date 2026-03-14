@@ -33,6 +33,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
@@ -152,6 +153,7 @@ function PostInner({
   }, [queryClient, post.author, outerOnBeforePress])
 
   const [hover, setHover] = useState(false)
+
   return (
     <Link
       href={itemHref}
@@ -217,6 +219,11 @@ function PostInner({
                 )}
               </View>
             ) : undefined}
+            <TranslatedPost
+              hideTranslateLink={true}
+              post={post}
+              postText={record.text}
+            />
             {post.embed ? (
               <Embed
                 embed={post.embed}

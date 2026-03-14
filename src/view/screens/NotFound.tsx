@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -25,13 +25,13 @@ export const NotFoundScreen = () => {
   const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
   const canGoBack = navigation.canGoBack()
-  const onPressHome = React.useCallback(() => {
+  const onPressHome = useCallback(() => {
     if (canGoBack) {
       navigation.goBack()
     } else {

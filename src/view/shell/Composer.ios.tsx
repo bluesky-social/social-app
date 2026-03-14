@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useRef} from 'react'
 import {Modal, View} from 'react-native'
 
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -14,9 +14,9 @@ export function Composer({}: {winHeight: number}) {
   const ref = useComposerCancelRef()
 
   const open = !!state
-  const prevOpen = React.useRef(open)
+  const prevOpen = useRef(open)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open && !prevOpen.current) {
       setFullyExpandedCount(c => c + 1)
     } else if (!open && prevOpen.current) {

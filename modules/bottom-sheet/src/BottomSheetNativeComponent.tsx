@@ -12,7 +12,6 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import {IS_IOS} from '#/env'
 import {
   type BottomSheetState,
   type BottomSheetViewProps,
@@ -35,6 +34,10 @@ const IS_IOS15 =
   Platform.OS === 'ios' &&
   // semvar - can be 3 segments, so can't use Number(Platform.Version)
   Number(Platform.Version.split('.').at(0)) < 16
+// older android versions (15 and below) aren't naturally edge-to-edge
+// and behave a little differently
+const IS_NON_E2E_ANDROID =
+  Platform.OS === 'android' && Number(Platform.Version) < 35
 
 export class BottomSheetNativeComponent extends React.Component<
   BottomSheetViewProps,
@@ -69,10 +72,6 @@ export class BottomSheetNativeComponent extends React.Component<
     const isOpen = state !== 'closed'
     this.setState({open: isOpen})
     this.props.onStateChange?.(event)
-  }
-
-  private updateLayout = () => {
-    this.ref.current?.updateLayout()
   }
 
   static dismissAll = async () => {
@@ -113,23 +112,14 @@ export class BottomSheetNativeComponent extends React.Component<
           nativeViewRef={this.ref}
           onStateChange={this.onStateChange}
           extraStyles={extraStyles}
-          onLayout={e => {
-            if (IS_IOS15) {
-              const {height} = e.nativeEvent.layout
-              this.setState({viewHeight: height})
-            }
-            if (Platform.OS === 'android') {
-              // TEMP HACKFIX: I had to timebox this, but this is Bad.
-              // On Android, if you run updateLayout() immediately,
-              // it will take ages to actually run on the native side.
-              // However, adding literally any delay will fix this, including
-              // a console.log() - just sending the log to the CLI is enough.
-              // TODO: Get to the bottom of this and fix it properly! -sfn
-              setTimeout(() => this.updateLayout())
-            } else {
-              this.updateLayout()
-            }
-          }}
+          onLayout={
+            IS_IOS15
+              ? e => {
+                  const {height} = e.nativeEvent.layout
+                  this.setState({viewHeight: height})
+                }
+              : undefined
+          }
         />
       </Portal>
     )
@@ -150,13 +140,18 @@ function BottomSheetNativeComponentInner({
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
   nativeViewRef: React.RefObject<View>
-  onLayout: (event: LayoutChangeEvent) => void
+  onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
   const {height: screenHeight} = useWindowDimensions()
 
-  const sheetHeight = IS_IOS ? screenHeight - insets.top : screenHeight
+  // sigh... on older Android versions, screenHeight does not include safe area insets
+  // on newer Androids + iOS, it does. we need to find the inner bit + the bottom inset
+  // for the sheet content
+  const sheetHeight = IS_NON_E2E_ANDROID
+    ? screenHeight + insets.bottom
+    : screenHeight - insets.top
 
   return (
     <NativeView

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -20,7 +20,7 @@ export function FollowingEmptyState() {
   const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()
 
-  const onPressFindAccounts = React.useCallback(() => {
+  const onPressFindAccounts = useCallback(() => {
     if (IS_WEB) {
       navigation.navigate('Search', {})
     } else {
@@ -29,7 +29,7 @@ export function FollowingEmptyState() {
     }
   }, [navigation])
 
-  const onPressDiscoverFeeds = React.useCallback(() => {
+  const onPressDiscoverFeeds = useCallback(() => {
     navigation.navigate('Feeds')
   }, [navigation])
 

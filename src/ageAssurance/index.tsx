@@ -2,8 +2,10 @@ import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
-import {AgeAssuranceDataProvider} from '#/ageAssurance/data'
-import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
+import {
+  AgeAssuranceDataProvider,
+  useAgeAssuranceDataContext,
+} from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
 import {
   useAgeAssuranceState,

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {
   BskyAgent,
   DEFAULT_LABEL_SETTINGS,
@@ -36,7 +36,7 @@ export function useMyLabelersQuery({
   const labelers = useLabelersDetailedInfoQuery({dids})
   const isLoading = prefs.isLoading || labelers.isLoading
   const error = prefs.error || labelers.error
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       isLoading,
       error,
@@ -48,7 +48,7 @@ export function useMyLabelersQuery({
 
 export function useLabelDefinitionsQuery() {
   const labelers = useMyLabelersQuery()
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       labelDefs: Object.fromEntries(
         (labelers.data || []).map(labeler => [

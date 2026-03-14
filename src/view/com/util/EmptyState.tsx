@@ -1,4 +1,4 @@
-import React from 'react'
+import {isValidElement} from 'react'
 import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
 import {View} from 'react-native'
 
@@ -45,7 +45,7 @@ export function EmptyState({
       return placeholderIcon
     }
 
-    if (React.isValidElement(icon)) {
+    if (isValidElement(icon)) {
       return icon
     }
 
@@ -77,7 +77,7 @@ export function EmptyState({
           a.rounded_full,
           a.mt_5xl,
           {height: 64, width: 64},
-          React.isValidElement(icon)
+          isValidElement(icon)
             ? a.bg_transparent
             : [isTabletOrDesktop && {marginTop: 50}],
         ]}>

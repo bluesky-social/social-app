@@ -1,4 +1,4 @@
-import React from 'react'
+import {useLayoutEffect} from 'react'
 import {type ColorSchemeName, useColorScheme} from 'react-native'
 import {type ThemeName} from '@bsky.app/alf'
 
@@ -9,7 +9,7 @@ import {IS_WEB} from '#/env'
 export function useColorModeTheme(): ThemeName {
   const theme = useThemeName()
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     updateDocument(theme)
   }, [theme])
 

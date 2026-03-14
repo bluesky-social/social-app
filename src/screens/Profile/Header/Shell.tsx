@@ -10,8 +10,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
@@ -56,7 +55,7 @@ let ProfileHeaderShell = ({
   const t = useTheme()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
@@ -168,6 +167,12 @@ let ProfileHeaderShell = ({
         style={[a.relative, {height: 150}]}>
         <StatusBarShadow />
         <GrowableBanner
+          testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
+          label={
+            profile.banner
+              ? l`View profile banner`
+              : l`Profile banner placeholder`
+          }
           onPress={isPlaceholderProfile ? undefined : onPressBanner}
           bannerRef={bannerRef}
           backButton={
@@ -176,7 +181,7 @@ let ProfileHeaderShell = ({
                 testID="profileHeaderBackBtn"
                 onPress={onPressBack}
                 hitSlop={BACK_HITSLOP}
-                label={_(msg`Back`)}
+                label={l`Back`}
                 style={[
                   a.absolute,
                   a.pointer,
@@ -259,7 +264,7 @@ let ProfileHeaderShell = ({
           testID="profileHeaderAviButton"
           onPress={onPressAvi}
           accessibilityRole="image"
-          accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
+          accessibilityLabel={l`View ${profile.handle}'s avatar`}
           accessibilityHint="">
           <View
             style={[

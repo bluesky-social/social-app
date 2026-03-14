@@ -1,14 +1,17 @@
 import {useWindowDimensions} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useBreakpoints} from '#/alf'
+import {IS_LIQUID_GLASS} from '#/env'
 
 export function useHeaderOffset() {
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {gtMobile} = useBreakpoints()
   const {fontScale} = useWindowDimensions()
-  if (isDesktop || isTablet) {
+  const insets = useSafeAreaInsets()
+  if (gtMobile) {
     return 0
   }
-  const navBarHeight = 52
+  const navBarHeight = 52 + (IS_LIQUID_GLASS ? insets.top : 0)
   const tabBarPad = 10 + 10 + 3 // padding + border
   const normalLineHeight = 20 // matches tab bar
   const tabBarText = normalLineHeight * fontScale

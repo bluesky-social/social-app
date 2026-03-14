@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, useContext} from 'react'
 
 interface PostProgressState {
   progress: number
@@ -6,7 +6,7 @@ interface PostProgressState {
   error?: string
 }
 
-const PostProgressContext = React.createContext<PostProgressState>({
+const PostProgressContext = createContext<PostProgressState>({
   progress: 0,
   status: 'idle',
 })
@@ -15,5 +15,5 @@ PostProgressContext.displayName = 'PostProgressContext'
 export function Provider() {}
 
 export function usePostProgress() {
-  return React.useContext(PostProgressContext)
+  return useContext(PostProgressContext)
 }

@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -89,10 +89,10 @@ export function StepInfo({
     : true
   const isDeviceGeolocationGranted = useIsDeviceGeolocationGranted()
 
-  const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
+  const [hasWarnedEmail, setHasWarnedEmail] = useState<boolean>(false)
 
-  const tldtsRef = React.useRef<typeof tldts>(undefined)
-  React.useEffect(() => {
+  const tldtsRef = useRef<typeof tldts>(undefined)
+  useEffect(() => {
     // @ts-expect-error - valid path
     import('tldts/dist/index.cjs.min.js').then(tldts => {
       tldtsRef.current = tldts

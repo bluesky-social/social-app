@@ -42,6 +42,7 @@ import {Embed} from '#/components/Post/Embed'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {RichText} from '#/components/RichText'
@@ -450,6 +451,14 @@ let PostContent = ({
       : []
   }, [post, currentAccount?.did, threadgateHiddenReplies])
 
+  const record = useMemo<AppBskyFeedPost.Record | undefined>(
+    () =>
+      bsky.validate(post.record, AppBskyFeedPost.validateRecord)
+        ? post.record
+        : undefined,
+    [post],
+  )
+
   const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
@@ -481,6 +490,13 @@ let PostContent = ({
           )}
         </View>
       ) : undefined}
+      {record && (
+        <TranslatedPost
+          hideTranslateLink={true}
+          post={post}
+          postText={record.text}
+        />
+      )}
       {postEmbed ? (
         <View style={[a.pb_xs]}>
           <Embed

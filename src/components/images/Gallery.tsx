@@ -5,6 +5,7 @@ import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
@@ -116,7 +117,7 @@ export function GalleryItem({
           ]}>
           <Text
             style={[a.font_bold, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
-            ALT
+            <Trans>ALT</Trans>
           </Text>
         </View>
       ) : null}

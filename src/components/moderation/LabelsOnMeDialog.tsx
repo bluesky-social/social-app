@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
 import {XRPCError} from '@atproto/xrpc'
@@ -14,11 +14,11 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
 import {Admonition} from '../Admonition'
@@ -47,12 +47,12 @@ export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
 function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [appealingLabel, setAppealingLabel] = React.useState<
+  const [appealingLabel, setAppealingLabel] = useState<
     ComAtprotoLabelDefs.Label | undefined
   >(undefined)
   const {labels} = props
   const isAccount = props.type === 'account'
-  const containsSelfLabel = React.useMemo(
+  const containsSelfLabel = useMemo(
     () => labels.some(l => l.src === currentAccount?.did),
     [currentAccount?.did, labels],
   )
@@ -224,7 +224,7 @@ function AppealForm({
   const {_} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
   const {gtMobile} = useBreakpoints()
-  const [details, setDetails] = React.useState('')
+  const [details, setDetails] = useState('')
   const {subject} = useLabelSubject({label})
   const isAccountReport = 'did' in subject
   const agent = useAgent()
@@ -273,7 +273,7 @@ function AppealForm({
     },
   })
 
-  const onSubmit = React.useCallback(() => mutate(), [mutate])
+  const onSubmit = useCallback(() => mutate(), [mutate])
 
   return (
     <>

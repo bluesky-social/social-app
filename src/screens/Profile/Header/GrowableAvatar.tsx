@@ -5,7 +5,6 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import type React from 'react'
 
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {IS_IOS} from '#/env'

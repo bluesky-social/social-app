@@ -6,7 +6,7 @@ import {
 import {t} from '@lingui/core/macro'
 
 import {type ImageMeta} from '#/state/gallery'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 import {IS_IOS, IS_WEB} from '#/env'
 import {VIDEO_MAX_DURATION_MS} from '../constants'
 import {getDataUriSize} from './util'
@@ -30,7 +30,9 @@ export async function openPicker(opts?: ImagePickerOptions) {
   return (response.assets ?? [])
     .filter(asset => {
       if (asset.mimeType?.startsWith('image/')) return true
-      Toast.show(t`Only image files are supported`, 'exclamation-circle')
+      Toast.show(t`Only image files are supported`, {
+        type: 'warning',
+      })
       return false
     })
     .map(image => ({

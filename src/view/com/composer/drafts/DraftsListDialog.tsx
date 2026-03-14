@@ -167,7 +167,7 @@ export function DraftsListDialog({
   )
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       {/* We really really need to figure out a nice, consistent API for doing a header cross-platform -sfn */}
       {IS_NATIVE && header}
       <Dialog.InnerFlatList

@@ -49,6 +49,7 @@ export type ContextType = {
   translationSV: SharedValue<number>
   mode: 'full' | 'auxiliary-only'
   open: (evt: Measurement, mode: 'full' | 'auxiliary-only') => void
+  returnLocationSV: SharedValue<{x: number; y: number} | null>
   close: () => void
   registerHoverable: (
     id: string,
