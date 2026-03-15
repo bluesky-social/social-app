@@ -16,6 +16,7 @@ import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
 import {Forms} from './Forms'
+import {Haptics} from './Haptics'
 import {Icons} from './Icons'
 import {Links} from './Links'
 import {Menus} from './Menus'
@@ -107,6 +108,7 @@ export default function Storybook() {
               <Theming />
             </ThemeProvider>
 
+            <Haptics />
             <Toasts />
             <Buttons />
             <Forms />
