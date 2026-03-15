@@ -1,7 +1,7 @@
 import {useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'

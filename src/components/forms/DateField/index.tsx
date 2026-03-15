@@ -1,8 +1,9 @@
 import {useCallback, useImperativeHandle} from 'react'
 import {Keyboard, View} from 'react-native'
 import DatePicker from 'react-native-date-picker'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'

@@ -1,8 +1,8 @@
 import {View} from 'react-native'
 import {type AppBskyLabelerDefs} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {sanitizeHandle} from '#/lib/strings/handles'

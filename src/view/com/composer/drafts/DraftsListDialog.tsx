@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useMemo} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {Keyboard, View} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -54,6 +55,12 @@ export function DraftsListDialog({
 
   const handleSelectDraft = useCallback(
     (summary: DraftSummary) => {
+      // Dismiss keyboard immediately to prevent flicker. Without this,
+      // the text input regains focus (showing the keyboard) after the
+      // drafts sheet closes, then loses it again when the post component
+      // remounts with the draft content, causing a show-hide-show cycle -sfn
+      Keyboard.dismiss()
+
       control.close(() => {
         onSelectDraft(summary)
       })
@@ -160,7 +167,7 @@ export function DraftsListDialog({
   )
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       {/* We really really need to figure out a nice, consistent API for doing a header cross-platform -sfn */}
       {IS_NATIVE && header}
       <Dialog.InnerFlatList

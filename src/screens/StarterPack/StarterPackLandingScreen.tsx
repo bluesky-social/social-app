@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {
@@ -8,8 +8,9 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -74,7 +75,7 @@ export function LandingScreen({
     AppBskyGraphDefs.validateStarterPackView(starterPack) &&
     AppBskyGraphStarterpack.validateRecord(starterPack.record)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isErrorStarterPack || (starterPack && !isValid)) {
       setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
     }
@@ -127,8 +128,7 @@ function LandingScreenLoaded({
   const androidDialogControl = useDialogControl()
   const [descriptionRt] = useRichText(record.description || '')
 
-  const [appClipOverlayVisible, setAppClipOverlayVisible] =
-    React.useState(false)
+  const [appClipOverlayVisible, setAppClipOverlayVisible] = useState(false)
 
   const listItemsCount = starterPack.list?.listItemCount ?? 0
 

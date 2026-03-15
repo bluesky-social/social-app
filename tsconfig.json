@@ -3,6 +3,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "esnext",
+    "lib": ["dom", "esnext"],
     "types": ["node", "jest"],
     "baseUrl": ".",
     "paths": {
@@ -14,7 +15,7 @@
     "plugins": [
       {
         "name": "ts-plugin-sort-import-suggestions",
-        "moveUpPatterns": ["#/", "@lingui/macro"],
+        "moveUpPatterns": ["#/", "@lingui/react/macro"],
         "moveDownPatterns": ["react-native-reanimated/lib"],
       }
     ]

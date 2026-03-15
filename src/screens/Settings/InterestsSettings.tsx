@@ -1,7 +1,8 @@
 import {useMemo, useState} from 'react'
 import {type TextStyle, View, type ViewStyle} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 import debounce from 'lodash.debounce'
@@ -21,13 +22,13 @@ import {createGetSuggestedFeedsQueryKey} from '#/state/queries/trending/useGetSu
 import {createGetSuggestedUsersQueryKey} from '#/state/queries/trending/useGetSuggestedUsersQuery'
 import {createSuggestedStarterPacksQueryKey} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useAgent} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'InterestsSettings'>
@@ -138,7 +139,9 @@ function Inner({
               context: 'toast',
             }),
           ),
-          'xmark',
+          {
+            type: 'error',
+          },
         )
       } finally {
         setIsSaving(false)

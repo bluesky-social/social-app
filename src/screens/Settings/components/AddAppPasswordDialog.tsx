@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -9,8 +9,9 @@ import Animated, {
   SlideOutLeft,
 } from 'react-native-reanimated'
 import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {useAppPasswordCreateMutation} from '#/state/queries/app-passwords'
@@ -33,9 +34,8 @@ export function AddAppPasswordDialog({
   control: Dialog.DialogControlProps
   passwords: string[]
 }) {
-  const {height} = useWindowDimensions()
   return (
-    <Dialog.Outer control={control} nativeOptions={{minHeight: height}}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <CreateDialogInner passwords={passwords} />
     </Dialog.Outer>

@@ -2,8 +2,9 @@ import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -95,7 +96,7 @@ export function DraftsAnnouncement() {
             ]}
             alt={_(
               msg({
-                message: `A screenshot of a the post composer with a new button next to the post button that says "Drafts", with a rainbow firework effect. Below, the text in the composer reads "Hey, did you hear the news? Bluesky has drafts now???".`,
+                message: `A screenshot of the post composer with a new button next to the post button that says "Drafts", with a rainbow firework effect. Below, the text in the composer reads "Hey, did you hear the news? Bluesky has drafts now!!!".`,
                 comment:
                   'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
               }),

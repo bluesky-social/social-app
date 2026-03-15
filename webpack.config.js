@@ -28,6 +28,7 @@ module.exports = async function (env, argv) {
       .resolve('unicode-segmenter/grapheme')
       .replace(/\.cjs$/, '.js'),
     'react-native-gesture-handler': false, // RNGH should not be used on web, so let's cause a build error if it sneaks in
+    '@sentry-internal/replay': false, // not used, ~300kb of dead weight
   })
   config.module.rules = [
     ...(config.module.rules || []),
@@ -35,6 +36,15 @@ module.exports = async function (env, argv) {
   ]
   if (env.mode === 'development') {
     config.plugins.push(new ReactRefreshWebpackPlugin())
+    // Reap zombie HMR WebSocket connections that linger after refresh.
+    // Without this, dead sockets exhaust the browser's per-origin connection
+    // pool and the dev server stops responding.
+    config.devServer.onListening = devServer => {
+      devServer.server.on('connection', socket => {
+        socket.setTimeout(10000)
+        socket.on('timeout', () => socket.destroy())
+      })
+    }
   } else {
     // Support static CDN for chunks
     config.output.publicPath = 'auto'

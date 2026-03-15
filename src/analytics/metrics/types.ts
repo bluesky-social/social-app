@@ -2,6 +2,8 @@
  * Do not import runtime code into this file
  */
 
+import {type Platform} from 'react-native'
+
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -14,6 +16,14 @@ export type Events = {
   'experiment:viewed': {
     experimentId: string
     variationId: string
+  }
+  'feature:viewed': {
+    featureId: string
+    featureResultValue: unknown
+    /** Only available if feature has experiment rules applied */
+    experimentId?: string
+    /** Only available if feature has experiment rules applied */
+    variationId?: string
   }
 
   'account:loggedIn': {
@@ -460,6 +470,10 @@ export type Events = {
     profileDid: string
     position?: number
   }
+  'profile:mute': {}
+  'profile:unmute': {}
+  'profile:block': {}
+  'profile:unblock': {}
   'suggestedUser:follow': {
     logContext:
       | 'Explore'
@@ -563,6 +577,10 @@ export type Events = {
     profilesCount: number
     feedsCount: number
   }
+  'starterPack:convertToList': {
+    starterPack: string
+    memberCount: number
+  }
   'starterPack:ctaPress': {
     starterPack: string
   }
@@ -635,6 +653,32 @@ export type Events = {
     tab: string
   }
 
+  'search:query': {
+    source: 'typed' | 'history' | 'autocomplete'
+  }
+
+  'search:results:loaded': {
+    tab: 'top' | 'latest' | 'people' | 'feeds'
+    initialCount: number
+  }
+
+  'search:result:press': {
+    tab?: 'top' | 'latest' | 'people' | 'feeds'
+    resultType: 'post' | 'profile' | 'feed'
+    position: number
+    uri: string
+  }
+
+  'search:recent:press': {
+    profileDid: string
+    position: number
+  }
+
+  'search:autocomplete:press': {
+    profileDid: string
+    position: number
+  }
+
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
 
@@ -667,6 +711,48 @@ export type Events = {
     targetLanguage: string
     textLength: number
   }
+  'translate:result': {
+    method: 'on-device' | 'google-translate' | 'fallback-alert'
+    os: Platform['OS']
+    sourceLanguage: string | null
+    targetLanguage: string
+  }
+  'translate:override': {
+    os: Platform['OS']
+    sourceLanguage: string
+    targetLanguage: string
+  }
+
+  'postMenu:openMuteWordsDialog': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
+  'postMenu:muteAccount': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
+  'postMenu:unmuteAccount': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
+  'postMenu:blockAccount': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
+  'postMenu:reportPost': {
+    uri: string
+    authorDid: string
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
+  }
 
   'verification:create': {}
   'verification:revoke': {}
@@ -680,6 +766,9 @@ export type Events = {
   }
   'verification:settings:hideBadges': {}
   'verification:settings:unHideBadges': {}
+
+  'bot:label:toggle': {state: 'add' | 'remove'}
+  'bot:badge:click': {}
 
   'live:create': {duration: number}
   'live:edit': {}
@@ -758,6 +847,7 @@ export type Events = {
     canUpdateBirthday: boolean
   }
   'ageAssurance:noAccessScreen:openBirthdateDialog': {}
+  'ageAssurance:noAccessScreen:openDeleteAccountDialog': {}
 
   /*
    * Specifically for the `BlockedGeoOverlay`
@@ -875,4 +965,9 @@ export type Events = {
   'liveEvents:unhideAllFeedBanners': {
     context: LiveEventFeedMetricContext
   }
+
+  'profile:associated:germ:click-to-chat': {}
+  'profile:associated:germ:click-self-info': {}
+  'profile:associated:germ:self-disconnect': {}
+  'profile:associated:germ:self-reconnect': {}
 }

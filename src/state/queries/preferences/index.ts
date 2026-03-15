@@ -200,7 +200,13 @@ export function useSetFeedViewPreferencesMutation() {
   })
 }
 
-export function useSetThreadViewPreferencesMutation() {
+export function useSetThreadViewPreferencesMutation({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: (data: void, variables: Partial<ThreadViewPreferences>) => void
+  onError?: (error: unknown) => void
+}) {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -212,6 +218,8 @@ export function useSetThreadViewPreferencesMutation() {
         queryKey: preferencesQueryKey,
       })
     },
+    onSuccess,
+    onError,
   })
 }
 

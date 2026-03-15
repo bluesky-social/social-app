@@ -1,7 +1,8 @@
-import React, {useRef} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
@@ -88,10 +89,10 @@ export function StepInfo({
     : true
   const isDeviceGeolocationGranted = useIsDeviceGeolocationGranted()
 
-  const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
+  const [hasWarnedEmail, setHasWarnedEmail] = useState<boolean>(false)
 
-  const tldtsRef = React.useRef<typeof tldts>(undefined)
-  React.useEffect(() => {
+  const tldtsRef = useRef<typeof tldts>(undefined)
+  useEffect(() => {
     // @ts-expect-error - valid path
     import('tldts/dist/index.cjs.min.js').then(tldts => {
       tldtsRef.current = tldts
@@ -312,15 +313,15 @@ export function StepInfo({
                     <Admonition.Content>
                       <Admonition.Text>
                         {!isOverAppMinAccessAge ? (
-                          <Trans>
-                            You must be {MIN_ACCESS_AGE} years of age or older
-                            to create an account.
-                          </Trans>
+                          <Plural
+                            value={MIN_ACCESS_AGE}
+                            other="You must be # years of age or older to create an account."
+                          />
                         ) : (
-                          <Trans>
-                            You must be {aaRegionConfig.minAccessAge} years of
-                            age or older to create an account in your region.
-                          </Trans>
+                          <Plural
+                            value={aaRegionConfig.minAccessAge}
+                            other="You must be # years of age or older to create an account in your region."
+                          />
                         )}
                       </Admonition.Text>
                       {IS_NATIVE &&

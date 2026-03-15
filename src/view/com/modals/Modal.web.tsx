@@ -6,8 +6,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
-import * as DeleteAccountModal from './DeleteAccount'
-import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as UserAddRemoveLists from './UserAddRemoveLists'
 
 export function ModalsContainer() {
@@ -48,10 +46,6 @@ function Modal({modal}: {modal: ModalIface}) {
   let element
   if (modal.name === 'user-add-remove-lists') {
     element = <UserAddRemoveLists.Component {...modal} />
-  } else if (modal.name === 'delete-account') {
-    element = <DeleteAccountModal.Component />
-  } else if (modal.name === 'content-languages-settings') {
-    element = <ContentLanguagesSettingsModal.Component />
   } else {
     return null
   }

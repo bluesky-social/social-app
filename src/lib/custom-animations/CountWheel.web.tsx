@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 
@@ -49,16 +49,16 @@ export function CountWheel({
   const shouldAnimate = !useReducedMotion() && hasBeenToggled
   const shouldRoll = decideShouldRoll(isLiked, likeCount)
 
-  const countView = React.useRef<HTMLDivElement>(null)
-  const prevCountView = React.useRef<HTMLDivElement>(null)
+  const countView = useRef<HTMLDivElement>(null)
+  const prevCountView = useRef<HTMLDivElement>(null)
 
-  const [prevCount, setPrevCount] = React.useState(likeCount)
-  const prevIsLiked = React.useRef(isLiked)
+  const [prevCount, setPrevCount] = useState(likeCount)
+  const prevIsLiked = useRef(isLiked)
   const formatPostStatCount = useFormatPostStatCount()
   const formattedCount = formatPostStatCount(likeCount)
   const formattedPrevCount = formatPostStatCount(prevCount)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLiked === prevIsLiked.current) {
       return
     }

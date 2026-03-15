@@ -1,8 +1,9 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
 import {atoms as a, platform, useTheme} from '#/alf'

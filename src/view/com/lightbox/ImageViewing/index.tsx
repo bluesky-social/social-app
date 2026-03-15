@@ -7,8 +7,7 @@
  */
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
-
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
   PixelRatio,
@@ -39,7 +38,7 @@ import Animated, {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {type Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
@@ -105,7 +104,7 @@ export default function ImageViewRoot({
     setActiveLightbox(nextLightbox)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!nextLightbox) {
       return
     }
@@ -151,7 +150,7 @@ export default function ImageViewRoot({
     },
   )
 
-  const onFlyAway = React.useCallback(() => {
+  const onFlyAway = useCallback(() => {
     'worklet'
     openProgress.set(0)
     runOnJS(onRequestClose)()
@@ -217,7 +216,7 @@ function ImageView({
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
-  const [isAltExpanded, setAltExpanded] = React.useState(false)
+  const [isAltExpanded, setAltExpanded] = useState(false)
   const dismissSwipeTranslateY = useSharedValue(0)
   const isFlyingAway = useSharedValue(false)
 
@@ -419,7 +418,7 @@ function LightboxImage({
   openProgress: SharedValue<number>
   dismissSwipeTranslateY: SharedValue<number>
 }) {
-  const [fetchedDims, setFetchedDims] = React.useState<Dimensions | null>(null)
+  const [fetchedDims, setFetchedDims] = useState<Dimensions | null>(null)
   const dims = fetchedDims ?? imageSrc.dimensions ?? imageSrc.thumbDimensions
   let imageAspect: number | undefined
   if (dims) {
@@ -433,7 +432,7 @@ function LightboxImage({
     width: widthDelayedForJSThreadOnly,
     height: heightDelayedForJSThreadOnly,
   } = useWindowDimensions()
-  const measureSafeArea = React.useCallback(() => {
+  const measureSafeArea = useCallback(() => {
     'worklet'
     let safeArea: Rect | null = measure(safeAreaRef)
     if (!safeArea) {
@@ -564,7 +563,7 @@ function LightboxFooter({
   onPressShare: (uri: string) => void
 }) {
   const {alt: altText, uri} = images[index]
-  const isMomentumScrolling = React.useRef(false)
+  const isMomentumScrolling = useRef(false)
   return (
     <ScrollView
       style={styles.footerScrollView}

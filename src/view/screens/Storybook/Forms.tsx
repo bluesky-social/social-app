@@ -1,4 +1,4 @@
-import React from 'react'
+import {useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
 
 import {APP_LANGUAGES} from '#/lib/../locale/languages'
@@ -16,21 +16,21 @@ import * as Select from '#/components/Select'
 import {H1, H3} from '#/components/Typography'
 
 export function Forms() {
-  const [toggleGroupAValues, setToggleGroupAValues] = React.useState(['a'])
-  const [toggleGroupBValues, setToggleGroupBValues] = React.useState(['a', 'b'])
-  const [toggleGroupCValues, setToggleGroupCValues] = React.useState(['a', 'b'])
-  const [toggleGroupDValues, setToggleGroupDValues] = React.useState(['warn'])
-  const [segmentedControlValue, setSegmentedControlValue] = React.useState<
+  const [toggleGroupAValues, setToggleGroupAValues] = useState(['a'])
+  const [toggleGroupBValues, setToggleGroupBValues] = useState(['a', 'b'])
+  const [toggleGroupCValues, setToggleGroupCValues] = useState(['a', 'b'])
+  const [toggleGroupDValues, setToggleGroupDValues] = useState(['warn'])
+  const [segmentedControlValue, setSegmentedControlValue] = useState<
     'hide' | 'warn' | 'show'
   >('warn')
 
-  const [value, setValue] = React.useState('')
-  const [date, setDate] = React.useState('2001-01-01')
-  const [countryCode, setCountryCode] = React.useState<CountryCode>('US')
-  const [phoneNumber, setPhoneNumber] = React.useState('')
-  const [lang, setLang] = React.useState('en')
+  const [value, setValue] = useState('')
+  const [date, setDate] = useState('2001-01-01')
+  const [countryCode, setCountryCode] = useState<CountryCode>('US')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [lang, setLang] = useState('en')
 
-  const inputRef = React.useRef<TextInput>(null)
+  const inputRef = useRef<TextInput>(null)
 
   return (
     <View style={[a.gap_4xl, a.align_start]}>

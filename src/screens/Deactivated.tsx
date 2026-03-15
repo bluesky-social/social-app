@@ -1,8 +1,9 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -37,11 +38,11 @@ export function Deactivated() {
   const hasOtherAccounts = accounts.length > 1
   const {logoutCurrentAccount} = useSessionApi()
   const agent = useAgent()
-  const [pending, setPending] = React.useState(false)
-  const [error, setError] = React.useState<string | undefined>()
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | undefined>()
   const queryClient = useQueryClient()
 
-  const onSelectAccount = React.useCallback(
+  const onSelectAccount = useCallback(
     (account: SessionAccount) => {
       if (account.did !== currentAccount?.did) {
         onPressSwitchAccount(account, 'SwitchAccount')
@@ -50,11 +51,11 @@ export function Deactivated() {
     [currentAccount, onPressSwitchAccount],
   )
 
-  const onPressAddAccount = React.useCallback(() => {
+  const onPressAddAccount = useCallback(() => {
     setShowLoggedOut(true)
   }, [setShowLoggedOut])
 
-  const onPressLogout = React.useCallback(() => {
+  const onPressLogout = useCallback(() => {
     if (IS_WEB) {
       // We're switching accounts, which remounts the entire app.
       // On mobile, this gets us Home, but on the web we also need reset the URL.
@@ -66,7 +67,7 @@ export function Deactivated() {
     logoutCurrentAccount('Deactivated')
   }, [logoutCurrentAccount])
 
-  const handleActivate = React.useCallback(async () => {
+  const handleActivate = useCallback(async () => {
     try {
       setPending(true)
       await agent.com.atproto.server.activateAccount()

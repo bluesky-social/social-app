@@ -43,6 +43,7 @@ export function useIsBirthdateUpdateAllowed() {
     ])
     if (!lastUpdated) return true
     const lastUpdatedDate = new Date(lastUpdated)
+    // eslint-disable-next-line react-hooks/purity
     const diffMs = Date.now() - lastUpdatedDate.getTime()
     const diffHours = diffMs / (1000 * 60 * 60)
     return diffHours >= BIRTHDATE_DELAY_HOURS
@@ -66,7 +67,7 @@ export function useBirthdateMutation() {
        * Also patch the age assurance other required data with the new
        * birthdate, which may change the user's age assurance access level.
        */
-      patchOtherRequiredData({birthdate: bday})
+      void patchOtherRequiredData({birthdate: bday})
       snoozeBirthdateUpdateAllowedForDid(agent.sessionManager.did!)
     },
   })

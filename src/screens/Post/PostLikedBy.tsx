@@ -1,5 +1,5 @@
-import React from 'react'
-import {Plural, Trans} from '@lingui/macro'
+import {useCallback} from 'react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {
@@ -25,7 +25,7 @@ export const PostLikedByScreen = ({route}: Props) => {
   }
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )

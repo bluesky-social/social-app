@@ -1,5 +1,5 @@
 import {memo, useCallback, useMemo} from 'react'
-import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
+import {Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -7,17 +7,13 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useTranslate} from '#/lib/hooks/useTranslate'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -25,7 +21,6 @@ import {
 } from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
-import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
@@ -39,27 +34,28 @@ import {
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
-import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {InlineLinkText, Link} from '#/components/Link'
+import {Link} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
-import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
+import {useActorStatus} from '#/features/liveNow'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -178,7 +174,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
@@ -319,7 +315,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   return (
     <>
       <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
-
       <View
         testID={`postThreadItem-by-${post.author.handle}`}
         style={[
@@ -367,7 +362,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   </Text>
 
                   <View style={[a.pl_xs]}>
-                    <VerificationCheckButton profile={authorShadow} size="md" />
+                    <ProfileBadges
+                      profile={authorShadow}
+                      size="md"
+                      interactive
+                    />
                   </View>
                 </View>
                 <Text
@@ -412,6 +411,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 shouldProxyLinks={true}
               />
             ) : undefined}
+            <TranslatedPost
+              post={post}
+              postText={record.text}
+              postTextStyle={[a.text_lg]}
+            />
             {post.embed && (
               <View style={[a.py_xs]}>
                 <Embed
@@ -448,48 +452,54 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 t.atoms.border_contrast_low,
               ]}>
               {post.repostCount != null && post.repostCount !== 0 ? (
-                <Link to={repostsHref} label={_(msg`Reposts of this post`)}>
+                <Link to={repostsHref} label={l`Reposts of this post`}>
                   <Text
                     testID="repostCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.repostCount)}
-                    </Text>{' '}
-                    <Plural
-                      value={post.repostCount}
-                      one="repost"
-                      other="reposts"
-                    />
+                    <Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.repostCount)}
+                      </Text>{' '}
+                      <Plural
+                        value={post.repostCount}
+                        one="repost"
+                        other="reposts"
+                      />
+                    </Trans>
                   </Text>
                 </Link>
               ) : null}
               {post.quoteCount != null &&
               post.quoteCount !== 0 &&
               !post.viewer?.embeddingDisabled ? (
-                <Link to={quotesHref} label={_(msg`Quotes of this post`)}>
+                <Link to={quotesHref} label={l`Quotes of this post`}>
                   <Text
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.quoteCount)}
-                    </Text>{' '}
-                    <Plural
-                      value={post.quoteCount}
-                      one="quote"
-                      other="quotes"
-                    />
+                    <Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.quoteCount)}
+                      </Text>{' '}
+                      <Plural
+                        value={post.quoteCount}
+                        one="quote"
+                        other="quotes"
+                      />
+                    </Trans>
                   </Text>
                 </Link>
               ) : null}
               {post.likeCount != null && post.likeCount !== 0 ? (
-                <Link to={likesHref} label={_(msg`Likes on this post`)}>
+                <Link to={likesHref} label={l`Likes on this post`}>
                   <Text
                     testID="likeCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.likeCount)}
-                    </Text>{' '}
-                    <Plural value={post.likeCount} one="like" other="likes" />
+                    <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.likeCount)}
+                      </Text>{' '}
+                      <Plural value={post.likeCount} one="like" other="likes" />
+                    </Trans>
                   </Text>
                 </Link>
               ) : null}
@@ -497,10 +507,16 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 <Text
                   testID="bookmarkCount-expanded"
                   style={[a.text_md, t.atoms.text_contrast_medium]}>
-                  <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                    {formatPostStatCount(post.bookmarkCount)}
-                  </Text>{' '}
-                  <Plural value={post.bookmarkCount} one="save" other="saves" />
+                  <Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
+                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                      {formatPostStatCount(post.bookmarkCount)}
+                    </Text>{' '}
+                    <Plural
+                      value={post.bookmarkCount}
+                      one="save"
+                      other="saves"
+                    />
+                  </Trans>
                 </Text>
               ) : null}
             </View>
@@ -543,43 +559,8 @@ function ExpandedPostDetails({
   isThreadAuthor: boolean
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
-  const {_, i18n} = useLingui()
-  const translate = useTranslate()
+  const {i18n} = useLingui()
   const isRootPost = !('reply' in post.record)
-  const langPrefs = useLanguagePrefs()
-
-  const needsTranslation = useMemo(
-    () =>
-      Boolean(
-        langPrefs.primaryLanguage &&
-          !isPostInLanguage(post, [langPrefs.primaryLanguage]),
-      ),
-    [post, langPrefs.primaryLanguage],
-  )
-
-  const onTranslatePress = useCallback(
-    (e: GestureResponderEvent) => {
-      e.preventDefault()
-      translate(post.record.text || '', langPrefs.primaryLanguage)
-
-      if (
-        bsky.dangerousIsType<AppBskyFeedPost.Record>(
-          post.record,
-          AppBskyFeedPost.isRecord,
-        )
-      ) {
-        ax.metric('translate', {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
-        })
-      }
-
-      return false
-    },
-    [ax, translate, langPrefs, post],
-  )
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
@@ -591,26 +572,6 @@ function ExpandedPostDetails({
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
         )}
-        {needsTranslation && (
-          <>
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              &middot;
-            </Text>
-
-            <InlineLinkText
-              // overridden to open an intent on android, but keep
-              // as anchor tag for accessibility
-              to={getTranslatorLink(
-                post.record.text,
-                langPrefs.primaryLanguage,
-              )}
-              label={_(msg`Translate`)}
-              style={[a.text_sm]}
-              onPress={onTranslatePress}>
-              <Trans>Translate</Trans>
-            </InlineLinkText>
-          </>
-        )}
       </View>
     </View>
   )
@@ -618,7 +579,7 @@ function ExpandedPostDetails({
 
 function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
@@ -635,15 +596,11 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
 
   if (!isBackdated) return null
 
-  const orange = colors.warning
-
   return (
     <>
       <Button
-        label={_(msg`Archived post`)}
-        accessibilityHint={_(
-          msg`Shows information about when this post was created`,
-        )}
+        label={l`Archived post`}
+        accessibilityHint={l`Shows information about when this post was created`}
         onPress={e => {
           e.preventDefault()
           e.stopPropagation()
@@ -663,7 +620,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
                 paddingVertical: 3,
               },
             ]}>
-            <CalendarClockIcon fill={orange} size="sm" aria-hidden />
+            <CalendarClockIcon fill={t.palette.yellow} size="sm" aria-hidden />
             <Text
               style={[
                 a.text_xs,
@@ -702,7 +659,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
           </Prompt.DescriptionText>
         </Prompt.Content>
         <Prompt.Actions>
-          <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
+          <Prompt.Action cta={l`Okay`} onPress={() => {}} />
         </Prompt.Actions>
       </Prompt.Outer>
     </>

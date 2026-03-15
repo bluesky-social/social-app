@@ -8,8 +8,9 @@ import Animated, {
   LinearTransition,
 } from 'react-native-reanimated'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -17,10 +18,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
-import {
-  useSuggestedFollowsByActorQuery,
-  useSuggestedFollowsQuery,
-} from '#/state/queries/suggested-follows'
+import {useSuggestedFollowsByActorWithDismiss} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {type SeenPost} from '#/state/userActionHistory'
@@ -169,10 +167,12 @@ function useExperimentalSuggestedUsersQuery() {
     if (followSuggestions.length > 0) {
       suggestedDids = [
         // It's ok if these will pick the same item (weighed by its frequency)
+        /* eslint-disable react-hooks/purity */
         followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
         followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
         followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
         followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        /* eslint-enable react-hooks/purity */
       ]
     }
     const seenDids = seen
@@ -215,86 +215,13 @@ export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
 }
 
 export function SuggestedFollowsProfile({did}: {did: string}) {
-  const {gtMobile} = useBreakpoints()
-  const moderationOpts = useModerationOpts()
-  const maxLength = gtMobile ? 4 : 6
-  const {
-    isLoading: isSuggestionsLoading,
-    data,
-    error,
-  } = useSuggestedFollowsByActorQuery({
-    did,
-  })
-  const {
-    data: moreSuggestions,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useSuggestedFollowsQuery({limit: 25})
-
-  const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
-
-  const onDismiss = useCallback((dismissedDid: string) => {
-    setDismissedDids(prev => new Set(prev).add(dismissedDid))
-  }, [])
-
-  // Combine profiles from the actor-specific query with fallback suggestions
-  const allProfiles = useMemo(() => {
-    const actorProfiles = data?.suggestions ?? []
-    const fallbackProfiles =
-      moreSuggestions?.pages.flatMap(page =>
-        page.actors.map(actor => ({actor, recId: page.recId})),
-      ) ?? []
-
-    // Dedupe by did, preferring actor-specific profiles
-    const seen = new Set<string>()
-    const combined: {actor: bsky.profile.AnyProfileView; recId?: number}[] = []
-
-    for (const profile of actorProfiles) {
-      if (!seen.has(profile.did)) {
-        seen.add(profile.did)
-        combined.push({actor: profile, recId: data?.recId})
-      }
-    }
-
-    for (const profile of fallbackProfiles) {
-      if (!seen.has(profile.actor.did) && profile.actor.did !== did) {
-        seen.add(profile.actor.did)
-        combined.push(profile)
-      }
-    }
-
-    return combined
-  }, [data?.suggestions, moreSuggestions?.pages, did, data?.recId])
-
-  const filteredProfiles = useMemo(() => {
-    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
-  }, [allProfiles, dismissedDids])
-
-  // Fetch more when running low
-  useEffect(() => {
-    if (
-      moderationOpts &&
-      filteredProfiles.length < maxLength &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      void fetchNextPage()
-    }
-  }, [
-    filteredProfiles.length,
-    maxLength,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    moderationOpts,
-  ])
+  const {profiles, onDismiss, isLoading, error} =
+    useSuggestedFollowsByActorWithDismiss({did})
 
   return (
     <ProfileGrid
-      isSuggestionsLoading={isSuggestionsLoading}
-      profiles={filteredProfiles}
-      totalProfileCount={allProfiles.length}
+      isSuggestionsLoading={isLoading}
+      profiles={profiles}
       error={error}
       viewContext="profile"
       onDismiss={onDismiss}
@@ -303,21 +230,11 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
 }
 
 export function SuggestedFollowsHome() {
-  const {gtMobile} = useBreakpoints()
-  const moderationOpts = useModerationOpts()
-  const maxLength = gtMobile ? 4 : 6
   const {
     isLoading: isSuggestionsLoading,
     profiles: experimentalProfiles,
     error: experimentalError,
   } = useExperimentalSuggestedUsersQuery()
-  const {
-    data: moreSuggestions,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    error: suggestionsError,
-  } = useSuggestedFollowsQuery({limit: 25})
 
   const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
 
@@ -325,66 +242,29 @@ export function SuggestedFollowsHome() {
     setDismissedDids(prev => new Set(prev).add(did))
   }, [])
 
-  // Combine profiles from experimental query with paginated suggestions
   const allProfiles = useMemo(() => {
-    const fallbackProfiles =
-      moreSuggestions?.pages.flatMap(page =>
-        page.actors.map(actor => ({actor, recId: page.recId})),
-      ) ?? []
-
-    // Dedupe by did, preferring experimental profiles
-    const seen = new Set<string>()
-    const combined: Array<{
+    const result: Array<{
       actor: bsky.profile.AnyProfileView
-      recId?: number
+      recId?: string
     }> = []
 
     for (const profile of experimentalProfiles) {
-      if (!seen.has(profile.did)) {
-        seen.add(profile.did)
-        combined.push({actor: profile, recId: undefined})
-      }
+      result.push({actor: profile, recId: undefined})
     }
 
-    for (const profile of fallbackProfiles) {
-      if (!seen.has(profile.actor.did)) {
-        seen.add(profile.actor.did)
-        combined.push(profile)
-      }
-    }
-
-    return combined
-  }, [experimentalProfiles, moreSuggestions?.pages])
+    return result
+  }, [experimentalProfiles])
 
   const filteredProfiles = useMemo(() => {
     return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
   }, [allProfiles, dismissedDids])
-
-  // Fetch more when running low
-  useEffect(() => {
-    if (
-      moderationOpts &&
-      filteredProfiles.length < maxLength &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      void fetchNextPage()
-    }
-  }, [
-    filteredProfiles.length,
-    maxLength,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    moderationOpts,
-  ])
 
   return (
     <ProfileGrid
       isSuggestionsLoading={isSuggestionsLoading}
       profiles={filteredProfiles}
       totalProfileCount={allProfiles.length}
-      error={experimentalError || suggestionsError}
+      error={experimentalError}
       viewContext="feed"
       onDismiss={onDismiss}
     />
@@ -399,14 +279,16 @@ export function ProfileGrid({
   viewContext = 'feed',
   onDismiss,
   isVisible = true,
+  onRequestHide,
 }: {
   isSuggestionsLoading: boolean
-  profiles: {actor: bsky.profile.AnyProfileView; recId?: number}[]
+  profiles: {actor: bsky.profile.AnyProfileView; recId?: string}[]
   totalProfileCount?: number
   error: Error | null
   viewContext: 'profile' | 'profileHeader' | 'feed'
   onDismiss?: (did: string) => void
   isVisible?: boolean
+  onRequestHide?: () => void
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -650,6 +532,13 @@ export function ProfileGrid({
 
   // Use totalProfileCount (before dismissals) for minLength check on initial render.
   const profileCountForMinCheck = totalProfileCount ?? profiles.length
+
+  useEffect(() => {
+    if (error || (!isLoading && profileCountForMinCheck < minLength)) {
+      onRequestHide?.()
+    }
+  }, [error, isLoading, onRequestHide, profileCountForMinCheck, minLength])
+
   if (error || (!isLoading && profileCountForMinCheck < minLength)) {
     ax.logger.debug(`Not enough profiles to show suggested follows`)
     return null

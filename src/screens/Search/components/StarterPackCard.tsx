@@ -1,12 +1,13 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   moderateProfile,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -142,7 +143,7 @@ export function AvatarStack({
   const computedTotal = (total ?? numPending) - numPending
   const circlesCount = numPending + 1 // add total at end
   const widthPerc = 100 / circlesCount
-  const [size, setSize] = React.useState<number | null>(null)
+  const [size, setSize] = useState<number | null>(null)
 
   const isPending = (numPending && profiles.length === 0) || !moderationOpts
 

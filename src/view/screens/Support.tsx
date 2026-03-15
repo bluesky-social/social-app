@@ -1,6 +1,7 @@
-import React from 'react'
-import {msg, Trans} from '@lingui/macro'
+import {useCallback} from 'react'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {HELP_DESK_URL} from '#/lib/constants'
@@ -24,7 +25,7 @@ export const SupportScreen = (_props: Props) => {
   const {_} = useLingui()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )

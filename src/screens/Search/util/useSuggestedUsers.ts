@@ -11,25 +11,18 @@ import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggeste
 export function useSuggestedUsers({
   category = null,
   search = false,
-  overrideInterests,
 }: {
   category?: string | null
   /**
    * If true, we'll search for users using the translated value of `category`,
-   * based on the user's "app language setting
+   * based on the user's app language setting
    */
   search?: boolean
-  /**
-   * In onboarding, interests haven't been saved to prefs yet, so we need to
-   * pass them down through here
-   */
-  overrideInterests?: string[]
 }) {
   const interestsDisplayNames = useInterestsDisplayNames()
   const curated = useGetSuggestedUsersQuery({
     enabled: !search,
     category,
-    overrideInterests,
   })
   const searched = useActorSearch({
     enabled: !!search,

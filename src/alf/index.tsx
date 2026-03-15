@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, useCallback, useContext, useMemo, useState} from 'react'
 import {type Theme, type ThemeName} from '@bsky.app/alf'
 
 import {
@@ -46,7 +46,7 @@ export type Alf = {
 /*
  * Context
  */
-export const Context = React.createContext<Alf>({
+export const Context = createContext<Alf>({
   themeName: 'light',
   theme: themes.light,
   themes,
@@ -65,15 +65,13 @@ export function ThemeProvider({
   children,
   theme: themeName,
 }: React.PropsWithChildren<{theme: ThemeName}>) {
-  const [fontScale, setFontScale] = React.useState<Alf['fonts']['scale']>(() =>
+  const [fontScale, setFontScale] = useState<Alf['fonts']['scale']>(() =>
     getFontScale(),
   )
-  const [fontScaleMultiplier, setFontScaleMultiplier] = React.useState(() =>
+  const [fontScaleMultiplier, setFontScaleMultiplier] = useState(() =>
     computeFontScaleMultiplier(fontScale),
   )
-  const setFontScaleAndPersist = React.useCallback<
-    Alf['fonts']['setFontScale']
-  >(
+  const setFontScaleAndPersist = useCallback<Alf['fonts']['setFontScale']>(
     fs => {
       setFontScale(fs)
       persistFontScale(fs)
@@ -81,12 +79,10 @@ export function ThemeProvider({
     },
     [setFontScale],
   )
-  const [fontFamily, setFontFamily] = React.useState<Alf['fonts']['family']>(
-    () => getFontFamily(),
+  const [fontFamily, setFontFamily] = useState<Alf['fonts']['family']>(() =>
+    getFontFamily(),
   )
-  const setFontFamilyAndPersist = React.useCallback<
-    Alf['fonts']['setFontFamily']
-  >(
+  const setFontFamilyAndPersist = useCallback<Alf['fonts']['setFontFamily']>(
     ff => {
       setFontFamily(ff)
       persistFontFamily(ff)
@@ -94,7 +90,7 @@ export function ThemeProvider({
     [setFontFamily],
   )
 
-  const value = React.useMemo<Alf>(
+  const value = useMemo<Alf>(
     () => ({
       themes,
       themeName: themeName,
@@ -122,12 +118,12 @@ export function ThemeProvider({
 }
 
 export function useAlf() {
-  return React.useContext(Context)
+  return useContext(Context)
 }
 
 export function useTheme(theme?: ThemeName) {
   const alf = useAlf()
-  return React.useMemo(() => {
+  return useMemo(() => {
     return theme ? alf.themes[theme] : alf.theme
   }, [theme, alf])
 }

@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {type AppBskyUnspeccedDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,

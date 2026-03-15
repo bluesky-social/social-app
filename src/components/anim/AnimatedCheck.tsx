@@ -1,4 +1,4 @@
-import React from 'react'
+import {forwardRef, useCallback, useEffect, useImperativeHandle} from 'react'
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -23,74 +23,73 @@ export interface AnimatedCheckProps extends Props {
   playOnMount?: boolean
 }
 
-export const AnimatedCheck = React.forwardRef<
-  AnimatedCheckRef,
-  AnimatedCheckProps
->(function AnimatedCheck({playOnMount, ...props}, ref) {
-  const {fill, size, style, ...rest} = useCommonSVGProps(props)
-  const circleAnim = useSharedValue(0)
-  const checkAnim = useSharedValue(0)
+export const AnimatedCheck = forwardRef<AnimatedCheckRef, AnimatedCheckProps>(
+  function AnimatedCheck({playOnMount, ...props}, ref) {
+    const {fill, size, style, ...rest} = useCommonSVGProps(props)
+    const circleAnim = useSharedValue(0)
+    const checkAnim = useSharedValue(0)
 
-  const circleAnimatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: 166 - circleAnim.get() * 166,
-  }))
-  const checkAnimatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: 48 - 48 * checkAnim.get(),
-  }))
+    const circleAnimatedProps = useAnimatedProps(() => ({
+      strokeDashoffset: 166 - circleAnim.get() * 166,
+    }))
+    const checkAnimatedProps = useAnimatedProps(() => ({
+      strokeDashoffset: 48 - 48 * checkAnim.get(),
+    }))
 
-  const play = React.useCallback(
-    (cb?: () => void) => {
-      circleAnim.set(0)
-      checkAnim.set(0)
+    const play = useCallback(
+      (cb?: () => void) => {
+        circleAnim.set(0)
+        checkAnim.set(0)
 
-      circleAnim.set(() =>
-        withTiming(1, {duration: 500, easing: Easing.linear}),
-      )
-      checkAnim.set(() =>
-        withDelay(
-          500,
-          withTiming(1, {duration: 300, easing: Easing.linear}, cb),
-        ),
-      )
-    },
-    [circleAnim, checkAnim],
-  )
+        circleAnim.set(() =>
+          withTiming(1, {duration: 500, easing: Easing.linear}),
+        )
+        checkAnim.set(() =>
+          withDelay(
+            500,
+            withTiming(1, {duration: 300, easing: Easing.linear}, cb),
+          ),
+        )
+      },
+      [circleAnim, checkAnim],
+    )
 
-  React.useImperativeHandle(ref, () => ({
-    play,
-  }))
+    useImperativeHandle(ref, () => ({
+      play,
+    }))
 
-  React.useEffect(() => {
-    if (playOnMount) {
-      play()
-    }
-  }, [play, playOnMount])
+    useEffect(() => {
+      if (playOnMount) {
+        play()
+      }
+    }, [play, playOnMount])
 
-  return (
-    <Svg
-      fill="none"
-      {...rest}
-      viewBox="0 0 52 52"
-      width={size}
-      height={size}
-      style={style}>
-      <AnimatedCircle
-        animatedProps={circleAnimatedProps}
-        cx="26"
-        cy="26"
-        r="24"
+    return (
+      <Svg
         fill="none"
-        stroke={fill}
-        strokeWidth={4}
-        strokeDasharray={166}
-      />
-      <AnimatedPath
-        animatedProps={checkAnimatedProps}
-        stroke={fill}
-        d={PATH}
-        strokeWidth={4}
-        strokeDasharray={48}
-      />
-    </Svg>
-  )
-})
+        {...rest}
+        viewBox="0 0 52 52"
+        width={size}
+        height={size}
+        style={style}>
+        <AnimatedCircle
+          animatedProps={circleAnimatedProps}
+          cx="26"
+          cy="26"
+          r="24"
+          fill="none"
+          stroke={fill}
+          strokeWidth={4}
+          strokeDasharray={166}
+        />
+        <AnimatedPath
+          animatedProps={checkAnimatedProps}
+          stroke={fill}
+          d={PATH}
+          strokeWidth={4}
+          strokeDasharray={48}
+        />
+      </Svg>
+    )
+  },
+)

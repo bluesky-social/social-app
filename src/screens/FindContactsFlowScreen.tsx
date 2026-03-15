@@ -1,10 +1,9 @@
 import {useCallback, useLayoutEffect, useState} from 'react'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {usePreventRemove} from '@react-navigation/native'
 
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
@@ -36,8 +35,6 @@ export function FindContactsFlowScreen({navigation}: Props) {
       setTransitionDirection('Forward')
     })
   })
-
-  useEnableKeyboardControllerScreen(true)
 
   const setMinimalShellMode = useSetMinimalShellMode()
   const effect = useCallback(() => {

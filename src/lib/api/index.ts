@@ -16,7 +16,7 @@ import {
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import * as dcbor from '@ipld/dag-cbor'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
 import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'

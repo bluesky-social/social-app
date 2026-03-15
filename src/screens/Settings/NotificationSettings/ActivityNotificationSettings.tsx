@@ -1,8 +1,9 @@
 import {useCallback, useMemo} from 'react'
 import {type ListRenderItemInfo, Text as RNText, View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
@@ -21,8 +22,10 @@ import {SubscribeProfileDialog} from '#/components/activity-notifications/Subscr
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon} from '#/components/icons/BellRinging'
-import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
+import {
+  BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon,
+  BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon,
+} from '#/components/icons/BellRinging'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'

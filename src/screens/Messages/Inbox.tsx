@@ -4,8 +4,9 @@ import {
   type ChatBskyConvoDefs,
   type ChatBskyConvoListConvos,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
   type InfiniteData,
@@ -29,7 +30,6 @@ import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
@@ -42,6 +42,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {RequestListItem} from './components/RequestListItem'
@@ -312,10 +313,14 @@ function MarkAllReadFAB() {
   const t = useTheme()
   const {mutate: markAllRead} = useUpdateAllRead('request', {
     onMutate: () => {
-      Toast.show(_(msg`Marked all as read`), 'check')
+      Toast.show(_(msg`Marked all as read`), {
+        type: 'success',
+      })
     },
     onError: () => {
-      Toast.show(_(msg`Failed to mark all requests as read`), 'xmark')
+      Toast.show(_(msg`Failed to mark all requests as read`), {
+        type: 'error',
+      })
     },
   })
 
@@ -335,10 +340,14 @@ function MarkAsReadHeaderButton() {
   const {_} = useLingui()
   const {mutate: markAllRead} = useUpdateAllRead('request', {
     onMutate: () => {
-      Toast.show(_(msg`Marked all as read`), 'check')
+      Toast.show(_(msg`Marked all as read`), {
+        type: 'success',
+      })
     },
     onError: () => {
-      Toast.show(_(msg`Failed to mark all requests as read`), 'xmark')
+      Toast.show(_(msg`Failed to mark all requests as read`), {
+        type: 'error',
+      })
     },
   })
 

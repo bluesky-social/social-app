@@ -1,5 +1,5 @@
-import React from 'react'
-import {Plural} from '@lingui/macro'
+import {useCallback} from 'react'
+import {Plural} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {
@@ -24,7 +24,7 @@ export const ProfileFollowersScreen = ({route}: Props) => {
   })
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
