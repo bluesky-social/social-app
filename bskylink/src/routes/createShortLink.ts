@@ -13,16 +13,22 @@ export default function (ctx: AppContext, app: Express) {
     '/link',
     bodyParser.json(),
     handler(async (req, res) => {
+      const addMetrics = (statusCode: number) => {
+        ctx.shortLinkRequests.labels('POST', statusCode.toString()).inc()
+      }
+
       let path: string
       if (typeof req.body?.path === 'string') {
         path = req.body.path
       } else {
+        addMetrics(400)
         return res.status(400).json({
           error: 'InvalidPath',
           message: '"path" parameter is missing or not a string',
         })
       }
       if (!path.startsWith('/')) {
+        addMetrics(400)
         return res.status(400).json({
           error: 'InvalidPath',
           message:
@@ -34,6 +40,7 @@ export default function (ctx: AppContext, app: Express) {
         // link pattern: /start/{did}/{rkey}
         if (!parts[1].startsWith('did:')) {
           // enforce strong links
+          addMetrics(400)
           return res.status(400).json({
             error: 'InvalidPath',
             message:
@@ -41,8 +48,11 @@ export default function (ctx: AppContext, app: Express) {
           })
         }
         const id = await ensureLink(ctx, LinkType.StarterPack, parts)
+        addMetrics(200)
         return res.json({url: getUrl(ctx, req, id)})
       }
+
+      addMetrics(400)
       return res.status(400).json({
         error: 'InvalidPath',
         message: '"path" parameter does not have a known format',
