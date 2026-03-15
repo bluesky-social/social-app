@@ -4,7 +4,7 @@ import Animated, {FadeIn} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useImageDropZone} from '#/lib/hooks/useImageDropZone'
+import {type MediaUri, useImageDropZone} from '#/lib/hooks/useImageDropZone'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
   useCameraPermission,
@@ -39,18 +39,27 @@ export function ComposerPrompt() {
   const sheetWrapper = useSheetWrapper()
   const composerState = useComposerState()
 
-  const handleImageDrop = (
-    imageUris: {uri: string; width: number; height: number}[],
-  ) => {
-    openComposer({
-      imageUris: imageUris.slice(0, MAX_IMAGES),
-      logContext: 'Fab',
-    })
+  const handleMediaDrop = (media: MediaUri[]) => {
+    const images = media.filter(m => m.type === 'image')
+    const video = media.find(m => m.type === 'video')
+
+    if (video) {
+      openComposer({
+        videoUri: {uri: video.uri, width: video.width, height: video.height},
+        logContext: 'Fab',
+      })
+    } else if (images.length > 0) {
+      openComposer({
+        imageUris: images.slice(0, MAX_IMAGES),
+        logContext: 'Fab',
+      })
+    }
   }
 
   const {isDraggingOver} = useImageDropZone({
-    enabled: !composerState && !!profile,
-    onDrop: handleImageDrop,
+    enabled: !!profile,
+    composerOpen: !!composerState,
+    onDrop: handleMediaDrop,
   })
 
   const onPress = useCallback(() => {
@@ -183,7 +192,7 @@ export function ComposerPrompt() {
             a.font_semi_bold,
             {color: t.palette.primary_500},
           ]}>
-          <Trans>Drop image to start a post</Trans>
+          <Trans>Drop to start a post</Trans>
         </Text>
       </Animated.View>
     )

@@ -23,7 +23,7 @@ import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
 import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
-import {blobToDataUri, isUriImage} from '#/lib/media/util'
+import {getImageOrVideoFromUri} from '#/lib/hooks/useImageDropZone'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {
   type LinkFacetMatch,
@@ -107,42 +107,13 @@ export function TextInput({
       return
     }
 
-    const handleDrop = (event: DragEvent) => {
-      const transfer = event.dataTransfer
-      if (transfer) {
-        const items = transfer.items
-
-        getImageOrVideoFromUri(items, (uri: string) => {
-          textInputWebEmitter.emit('media-pasted', uri)
-        })
-      }
-
-      event.preventDefault()
-      setIsDropping(false)
-    }
-    const handleDragEnter = (event: DragEvent) => {
-      const transfer = event.dataTransfer
-
-      event.preventDefault()
-      if (transfer && transfer.types.includes('Files')) {
-        setIsDropping(true)
-      }
-    }
-    const handleDragLeave = (event: DragEvent) => {
-      event.preventDefault()
-      setIsDropping(false)
+    const handleDragState = (dragging: boolean) => {
+      setIsDropping(dragging)
     }
 
-    document.body.addEventListener('drop', handleDrop)
-    document.body.addEventListener('dragenter', handleDragEnter)
-    document.body.addEventListener('dragover', handleDragEnter)
-    document.body.addEventListener('dragleave', handleDragLeave)
-
+    textInputWebEmitter.addListener('drag-state', handleDragState)
     return () => {
-      document.body.removeEventListener('drop', handleDrop)
-      document.body.removeEventListener('dragenter', handleDragEnter)
-      document.body.removeEventListener('dragover', handleDragEnter)
-      document.body.removeEventListener('dragleave', handleDragLeave)
+      textInputWebEmitter.removeListener('drag-state', handleDragState)
     }
   }, [setIsDropping, isActive])
 
@@ -485,41 +456,3 @@ const styles = StyleSheet.create({
   },
 })
 
-function getImageOrVideoFromUri(
-  items: DataTransferItemList,
-  callback: (uri: string) => void,
-) {
-  for (let index = 0; index < items.length; index++) {
-    const item = items[index]
-    const type = item.type
-
-    if (type === 'text/plain') {
-      item.getAsString(async itemString => {
-        if (isUriImage(itemString)) {
-          const response = await fetch(itemString)
-          const blob = await response.blob()
-
-          if (blob.type.startsWith('image/')) {
-            blobToDataUri(blob).then(callback, err => console.error(err))
-          }
-
-          if (blob.type.startsWith('video/')) {
-            blobToDataUri(blob).then(callback, err => console.error(err))
-          }
-        }
-      })
-    } else if (type.startsWith('image/')) {
-      const file = item.getAsFile()
-
-      if (file) {
-        blobToDataUri(file).then(callback, err => console.error(err))
-      }
-    } else if (type.startsWith('video/')) {
-      const file = item.getAsFile()
-
-      if (file) {
-        blobToDataUri(file).then(callback, err => console.error(err))
-      }
-    }
-  }
-}
