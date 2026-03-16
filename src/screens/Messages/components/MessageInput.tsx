@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
+import {Pressable, TextInput, useWindowDimensions} from 'react-native'
 import {
   useFocusedInputHandler,
   useReanimatedKeyboardAnimation,
@@ -13,12 +13,14 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {GlassContainer} from 'expo-glass-effect'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
@@ -37,11 +39,13 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 const MIN_HEIGHT = 40
 
 export function MessageInput({
+  textInputId,
   onSendMessage,
   hasEmbed,
   setEmbed,
   children,
 }: {
+  textInputId?: string
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
@@ -59,6 +63,7 @@ export function MessageInput({
   const {height: keyboardHeight, progress} = useReanimatedKeyboardAnimation()
   const maxHeight = useSharedValue<undefined | number>(undefined)
   const isInputScrollable = useSharedValue(false)
+  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
 
   const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
@@ -142,26 +147,28 @@ export function MessageInput({
     ),
   }))
 
+  const submitDisabled = needsEmailVerification || message.trim().length === 0
+
   return (
     <Animated.View
       style={[
         a.w_full,
-        IS_LIQUID_GLASS
-          ? [animatedContainerStyle]
-          : [a.pt_xs, a.px_md, a.pb_sm],
+        a.pb_sm,
+        IS_LIQUID_GLASS ? [animatedContainerStyle] : [a.px_md],
       ]}>
       {children}
-      <View style={[a.flex_row, a.align_end, a.gap_sm]}>
+      <GlassContainer style={[a.flex_row, a.align_end, a.gap_sm]}>
         <GlassView
           glassEffectStyle="regular"
           isInteractive
-          style={[a.flex_1, {borderRadius: 23}]}
+          style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
           tintColor={t.palette.contrast_50}
           fallbackStyle={[t.atoms.bg_contrast_50]}>
           <AnimatedTextInput
+            nativeID={textInputId}
             accessibilityLabel={_(msg`Message input field`)}
             accessibilityHint={_(msg`Type your message here`)}
-            placeholder={_(msg`Write a message`)}
+            placeholder={_(msg`Message`)}
             placeholderTextColor={t.palette.contrast_500}
             value={message}
             onChange={evt => {
@@ -185,11 +192,10 @@ export function MessageInput({
               a.flex_grow,
               a.text_md,
               a.px_lg,
-              {borderRadius: 23},
               t.atoms.text,
               platform({
                 android: {paddingTop: 2, paddingBottom: 3},
-                ios: {paddingTop: 12, paddingBottom: 5},
+                ios: {paddingTop: 10, paddingBottom: 5},
               }),
               animatedStyle,
             ]}
@@ -202,26 +208,43 @@ export function MessageInput({
             editable={!needsEmailVerification}
           />
         </GlassView>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Send message`)}
-          accessibilityHint=""
-          hitSlop={HITSLOP_10}
-          style={[
-            a.rounded_full,
-            a.align_center,
-            a.justify_center,
-            {
-              height: MIN_HEIGHT,
-              width: MIN_HEIGHT,
-              backgroundColor: t.palette.primary_500,
-            },
-          ]}
-          onPress={onSubmit}
-          disabled={needsEmailVerification}>
-          <PaperPlaneIcon size="md" fill={t.palette.white} />
-        </Pressable>
-      </View>
+        {isKeyboardVisible && (
+          <GlassView
+            glassEffectStyle="regular"
+            style={[a.rounded_full]}
+            tintColor={
+              submitDisabled ? t.palette.contrast_100 : t.palette.primary_500
+            }
+            fallbackStyle={{
+              backgroundColor: submitDisabled
+                ? t.palette.contrast_100
+                : t.palette.primary_500,
+            }}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Send message`)}
+              accessibilityHint=""
+              hitSlop={HITSLOP_10}
+              style={[
+                a.rounded_full,
+                a.align_center,
+                a.justify_center,
+                {
+                  height: MIN_HEIGHT,
+                  width: MIN_HEIGHT,
+                },
+              ]}
+              onPress={onSubmit}
+              disabled={submitDisabled}>
+              <PaperPlaneIcon
+                size="md"
+                fill={t.palette.white}
+                style={[a.mb_2xs]}
+              />
+            </Pressable>
+          </GlassView>
+        )}
+      </GlassContainer>
     </Animated.View>
   )
 }
