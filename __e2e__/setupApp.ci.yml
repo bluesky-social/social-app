@@ -1,0 +1,11 @@
+appId: xyz.blueskyweb.app
+---
+- launchApp:
+    appId: "xyz.blueskyweb.app"
+    clearState: true
+    arguments:
+      "-EXDevMenuIsOnboardingFinished": true
+- tapOn:
+    id: e2eProxyHeaderInput
+- inputText: ${output.result}
+- pressKey: Enter
