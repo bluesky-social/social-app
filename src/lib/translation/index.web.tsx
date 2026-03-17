@@ -75,6 +75,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         possibleSourceLanguages,
         expectedTargetLanguage,
         textLength: text.length,
+        googleTranslate: true,
       })
       await googleTranslate(
         text,

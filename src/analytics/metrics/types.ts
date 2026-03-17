@@ -722,7 +722,7 @@ export type Events = {
      * more likely to have inaccurate translations.
      */
     textLength: number
-    forceGoogleTranslate: boolean
+    googleTranslate: boolean
   }
   'translate:result': {
     success: boolean

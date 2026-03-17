@@ -71,6 +71,7 @@ export let MessageContextMenu = ({
       possibleSourceLanguages: [], // N/A for chats
       expectedTargetLanguage: langPrefs.primaryLanguage,
       textLength: message.text.length,
+      googleTranslate: true,
     })
   }, [ax, langPrefs.primaryLanguage, message.text, translate])
 

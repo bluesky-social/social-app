@@ -229,7 +229,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         possibleSourceLanguages,
         expectedTargetLanguage: expectedTargetLanguage,
         textLength: text.length,
-        forceGoogleTranslate: shouldForceGoogleTranslate,
+        googleTranslate: shouldForceGoogleTranslate,
       })
 
       if (shouldForceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
