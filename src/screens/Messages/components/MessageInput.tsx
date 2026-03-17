@@ -1,10 +1,11 @@
 import {useCallback, useState} from 'react'
-import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
+import {Pressable, TextInput, useWindowDimensions} from 'react-native'
 import {
   useFocusedInputHandler,
   useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller'
 import Animated, {
+  interpolate,
   measure,
   useAnimatedProps,
   useAnimatedRef,
@@ -12,33 +13,39 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {GlassContainer} from 'expo-glass-effect'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
 import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
-import {android, atoms as a, useTheme} from '#/alf'
-import {useSharedInputStyles} from '#/components/forms/TextField'
-import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {atoms as a, platform, tokens, useTheme} from '#/alf'
+import {GlassView} from '#/components/GlassView'
+import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
-import {IS_IOS, IS_WEB} from '#/env'
+import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
+const MIN_HEIGHT = 40
+
 export function MessageInput({
+  textInputId,
   onSendMessage,
   hasEmbed,
   setEmbed,
   children,
 }: {
+  textInputId?: string
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
@@ -53,12 +60,11 @@ export function MessageInput({
   // Input layout
   const {top: topInset} = useSafeAreaInsets()
   const {height: windowHeight} = useWindowDimensions()
-  const {height: keyboardHeight} = useReanimatedKeyboardAnimation()
+  const {height: keyboardHeight, progress} = useReanimatedKeyboardAnimation()
   const maxHeight = useSharedValue<undefined | number>(undefined)
   const isInputScrollable = useSharedValue(false)
+  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
 
-  const inputStyles = useSharedInputStyles()
-  const [isFocused, setIsFocused] = useState(false)
   const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
   const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
@@ -133,78 +139,112 @@ export function MessageInput({
     scrollEnabled: isInputScrollable.get(),
   }))
 
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    paddingHorizontal: interpolate(
+      progress.get(),
+      [0, 1],
+      [tokens.space.xl, tokens.space.sm],
+    ),
+  }))
+
+  const submitDisabled = needsEmailVerification || message.trim().length === 0
+
   return (
-    <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
+    <Animated.View
+      style={[
+        a.w_full,
+        a.pb_sm,
+        IS_LIQUID_GLASS ? [animatedContainerStyle] : [a.px_md],
+      ]}>
       {children}
-      <View
-        style={[
-          a.w_full,
-          a.flex_row,
-          t.atoms.bg_contrast_25,
-          {
-            padding: a.p_sm.padding - 2,
-            paddingLeft: a.p_md.padding - 2,
-            borderWidth: 1,
-            borderRadius: 23,
-            borderColor: 'transparent',
-          },
-          isFocused && inputStyles.chromeFocus,
-        ]}>
-        <AnimatedTextInput
-          accessibilityLabel={_(msg`Message input field`)}
-          accessibilityHint={_(msg`Type your message here`)}
-          placeholder={_(msg`Write a message`)}
-          placeholderTextColor={t.palette.contrast_500}
-          value={message}
-          onChange={evt => {
-            // bit of a hack: iOS automatically accepts autocomplete suggestions when you tap anywhere on the screen
-            // including the button we just pressed - and this overrides clearing the input! so we watch for the
-            // next change and double make sure the input is cleared. It should *always* send an onChange event after
-            // clearing via setMessage('') that happens in onSubmit()
-            // -sfn
-            if (IS_IOS && shouldEnforceClear) {
-              setShouldEnforceClear(false)
-              setMessage('')
-              return
+      <GlassContainer style={[a.flex_row, a.align_end, a.gap_sm]}>
+        <GlassView
+          glassEffectStyle="regular"
+          isInteractive
+          style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
+          tintColor={t.palette.contrast_50}
+          fallbackStyle={[t.atoms.bg_contrast_50]}>
+          <AnimatedTextInput
+            nativeID={textInputId}
+            accessibilityLabel={_(msg`Message input field`)}
+            accessibilityHint={_(msg`Type your message here`)}
+            placeholder={_(msg`Message`)}
+            placeholderTextColor={t.palette.contrast_500}
+            value={message}
+            onChange={evt => {
+              // bit of a hack: iOS automatically accepts autocomplete suggestions when you tap anywhere on the screen
+              // including the button we just pressed - and this overrides clearing the input! so we watch for the
+              // next change and double make sure the input is cleared. It should *always* send an onChange event after
+              // clearing via setMessage('') that happens in onSubmit()
+              // -sfn
+              if (IS_IOS && shouldEnforceClear) {
+                setShouldEnforceClear(false)
+                setMessage('')
+                return
+              }
+              const text = evt.nativeEvent.text
+              setMessage(text)
+            }}
+            multiline={true}
+            style={[
+              {flexBasis: 'auto', minHeight: MIN_HEIGHT},
+              a.flex_shrink_0,
+              a.flex_grow,
+              a.text_md,
+              a.px_lg,
+              t.atoms.text,
+              platform({
+                android: {paddingTop: 2, paddingBottom: 3},
+                ios: {paddingTop: 10, paddingBottom: 5},
+              }),
+              animatedStyle,
+            ]}
+            verticalAlign="middle"
+            keyboardAppearance={t.scheme}
+            submitBehavior="newline"
+            ref={inputRef}
+            hitSlop={HITSLOP_10}
+            animatedProps={animatedProps}
+            editable={!needsEmailVerification}
+          />
+        </GlassView>
+        {isKeyboardVisible && (
+          <GlassView
+            glassEffectStyle="regular"
+            style={[a.rounded_full]}
+            tintColor={
+              submitDisabled ? t.palette.contrast_100 : t.palette.primary_500
             }
-            const text = evt.nativeEvent.text
-            setMessage(text)
-          }}
-          multiline={true}
-          style={[
-            a.flex_1,
-            a.text_md,
-            a.px_sm,
-            t.atoms.text,
-            android({paddingTop: 0}),
-            {paddingBottom: IS_IOS ? 5 : 0},
-            animatedStyle,
-          ]}
-          keyboardAppearance={t.scheme}
-          submitBehavior="newline"
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          ref={inputRef}
-          hitSlop={HITSLOP_10}
-          animatedProps={animatedProps}
-          editable={!needsEmailVerification}
-        />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Send message`)}
-          accessibilityHint=""
-          hitSlop={HITSLOP_10}
-          style={[
-            a.rounded_full,
-            a.align_center,
-            a.justify_center,
-            {height: 30, width: 30, backgroundColor: t.palette.primary_500},
-          ]}
-          onPress={onSubmit}
-          disabled={needsEmailVerification}>
-          <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
-        </Pressable>
-      </View>
-    </View>
+            fallbackStyle={{
+              backgroundColor: submitDisabled
+                ? t.palette.contrast_100
+                : t.palette.primary_500,
+            }}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Send message`)}
+              accessibilityHint=""
+              hitSlop={HITSLOP_10}
+              style={[
+                a.rounded_full,
+                a.align_center,
+                a.justify_center,
+                {
+                  height: MIN_HEIGHT,
+                  width: MIN_HEIGHT,
+                },
+              ]}
+              onPress={onSubmit}
+              disabled={submitDisabled}>
+              <PaperPlaneIcon
+                size="md"
+                fill={t.palette.white}
+                style={[a.mb_2xs]}
+              />
+            </Pressable>
+          </GlassView>
+        )}
+      </GlassContainer>
+    </Animated.View>
   )
 }
