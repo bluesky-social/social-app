@@ -11,7 +11,12 @@ import {logger} from '#/logger'
 import {useAnalytics} from '#/analytics'
 import {HAS_ON_DEVICE_TRANSLATION, IS_ANDROID, IS_IOS} from '#/env'
 import {Context} from './context'
-import {type TranslationFunctionParams, type TranslationState} from './types'
+import {
+  type ContextType,
+  type TranslationFunctionParams,
+  type TranslationOptions,
+  type TranslationState,
+} from './types'
 import {guessLanguage} from './utils'
 
 export * from './types'
@@ -99,11 +104,7 @@ export function useTranslate({
   key,
   forceGoogleTranslate = false,
   postLangCodes,
-}: {
-  key: string
-  forceGoogleTranslate?: boolean
-  postLangCodes?: string[]
-}) {
+}: TranslationOptions) {
   const context = useContext(Context)
   if (!context) {
     throw new Error(
@@ -206,7 +207,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
     })
   }, [])
 
-  const translate = useCallback(
+  const translate = useCallback<ContextType['translate']>(
     async ({
       key,
       text,
@@ -215,14 +216,6 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       sourceSelection = 'automatic',
       postLangCodes,
       ...options
-    }: {
-      key: string
-      text: string
-      targetLangCode: string
-      sourceLangCode?: string
-      postLangCodes?: string[]
-      sourceSelection?: 'automatic' | 'manual'
-      forceGoogleTranslate?: boolean
     }) => {
       if (options?.forceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
         await googleTranslate(text, targetLangCode, sourceLangCode)

@@ -3,7 +3,12 @@ import {useCallback, useContext, useMemo} from 'react'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {useAnalytics} from '#/analytics'
 import {Context} from './context'
-import {type TranslationFunctionParams, type TranslationState} from './types'
+import {
+  type ContextType,
+  type TranslationFunctionParams,
+  type TranslationOptions,
+  type TranslationState,
+} from './types'
 
 export * from './types'
 export * from './utils'
@@ -17,14 +22,7 @@ const clearTranslation = (_key: string) => {}
 /**
  * Web always opens Google Translate.
  */
-export function useTranslate({
-  key,
-  postLangCodes,
-}: {
-  key: string
-  forceGoogleTranslate?: boolean
-  postLangCodes?: string[]
-}) {
+export function useTranslate({key, postLangCodes}: TranslationOptions) {
   const context = useContext(Context)
   if (!context) {
     throw new Error(
@@ -62,19 +60,8 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   const ax = useAnalytics()
   const googleTranslate = useGoogleTranslate()
 
-  const translate = useCallback(
-    async ({
-      text,
-      targetLangCode,
-      sourceLangCode,
-    }: {
-      key: string
-      text: string
-      targetLangCode: string
-      sourceLangCode?: string
-      sourceSelection?: 'automatic' | 'manual'
-      postLangCodes?: string[]
-    }) => {
+  const translate = useCallback<ContextType['translate']>(
+    async ({text, targetLangCode, sourceLangCode}) => {
       await googleTranslate(text, targetLangCode, sourceLangCode)
     },
     [ax, googleTranslate],
