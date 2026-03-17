@@ -33,11 +33,15 @@ export function useTranslate({key}: TranslationOptions) {
   // Always call hooks in consistent order
   const translate = useCallback(
     async (params: TranslationFunctionParams) => {
-      return context.translate({
-        ...params,
-        key,
-        forceGoogleTranslate: true,
-      })
+      return context.translate(
+        {
+          ...params,
+        },
+        {
+          key,
+          forceGoogleTranslate: true,
+        },
+      )
     },
     [key, context],
   )
@@ -60,14 +64,23 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   const googleTranslate = useGoogleTranslate()
 
   const translate = useCallback<ContextType['translate']>(
-    async ({text, targetLangCode, sourceLangCode, possibleSourceLanguages}) => {
+    async ({
+      text,
+      expectedTargetLanguage,
+      expectedSourceLanguage,
+      possibleSourceLanguages,
+    }) => {
       ax.metric('translate', {
         os: 'web',
         possibleSourceLanguages,
-        expectedTargetLanguage: targetLangCode,
+        expectedTargetLanguage,
         textLength: text.length,
       })
-      await googleTranslate(text, targetLangCode, sourceLangCode)
+      await googleTranslate(
+        text,
+        expectedTargetLanguage,
+        expectedSourceLanguage,
+      )
     },
     [ax, googleTranslate],
   )

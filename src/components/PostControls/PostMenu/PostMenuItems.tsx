@@ -277,7 +277,7 @@ let PostMenuItems = ({
   const onPressTranslate = () => {
     void translate({
       text: record.text,
-      targetLangCode: langPrefs.primaryLanguage,
+      expectedTargetLanguage: langPrefs.primaryLanguage,
       possibleSourceLanguages: getPostLanguageTags(post),
     })
   }

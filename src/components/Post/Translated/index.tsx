@@ -57,7 +57,7 @@ export function TranslatedPost({
   const initialTranslationParams = useMemo<TranslationFunctionParams>(() => {
     return {
       text: record?.text || '',
-      targetLangCode: langPrefs.primaryLanguage,
+      expectedTargetLanguage: langPrefs.primaryLanguage,
       possibleSourceLanguages: getPostLanguageTags(post),
     }
   }, [post, record, langPrefs])
@@ -406,13 +406,13 @@ function TranslationLanguageSelect({
       os: Platform.OS,
       possibleSourceLanguages: initialTranslationParams.possibleSourceLanguages,
       expectedSourceLanguage: sourceLangCode,
-      expectedTargetLanguage: initialTranslationParams.targetLangCode,
+      expectedTargetLanguage: initialTranslationParams.expectedTargetLanguage,
       resultSourceLanguage,
     })
     void translate({
       text: initialTranslationParams.text,
-      targetLangCode: initialTranslationParams.targetLangCode,
-      sourceLangCode,
+      expectedTargetLanguage: initialTranslationParams.expectedTargetLanguage,
+      expectedSourceLanguage: sourceLangCode,
       possibleSourceLanguages: initialTranslationParams.possibleSourceLanguages,
     })
   }
