@@ -22,7 +22,7 @@ const clearTranslation = (_key: string) => {}
 /**
  * Web always opens Google Translate.
  */
-export function useTranslate({key, postLangCodes}: TranslationOptions) {
+export function useTranslate({key}: TranslationOptions) {
   const context = useContext(Context)
   if (!context) {
     throw new Error(
@@ -33,14 +33,17 @@ export function useTranslate({key, postLangCodes}: TranslationOptions) {
   // Always call hooks in consistent order
   const translate = useCallback(
     async (params: TranslationFunctionParams) => {
-      return context.translate({
-        ...params,
-        key,
-        forceGoogleTranslate: true,
-        postLangCodes,
-      })
+      return context.translate(
+        {
+          ...params,
+        },
+        {
+          key,
+          forceGoogleTranslate: true,
+        },
+      )
     },
-    [key, context, postLangCodes],
+    [key, context],
   )
 
   const clearTranslation = useCallback(() => {
@@ -61,8 +64,24 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   const googleTranslate = useGoogleTranslate()
 
   const translate = useCallback<ContextType['translate']>(
-    async ({text, targetLangCode, sourceLangCode}) => {
-      await googleTranslate(text, targetLangCode, sourceLangCode)
+    async ({
+      text,
+      expectedTargetLanguage,
+      expectedSourceLanguage,
+      possibleSourceLanguages,
+    }) => {
+      ax.metric('translate', {
+        os: 'web',
+        possibleSourceLanguages,
+        expectedTargetLanguage,
+        textLength: text.length,
+        googleTranslate: true,
+      })
+      await googleTranslate(
+        text,
+        expectedTargetLanguage,
+        expectedSourceLanguage,
+      )
     },
     [ax, googleTranslate],
   )

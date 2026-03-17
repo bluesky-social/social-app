@@ -219,11 +219,7 @@ function PostInner({
                 )}
               </View>
             ) : undefined}
-            <TranslatedPost
-              hideTranslateLink={true}
-              post={post}
-              postText={record.text}
-            />
+            <TranslatedPost hideTranslateLink post={post} />
             {post.embed ? (
               <Embed
                 embed={post.embed}

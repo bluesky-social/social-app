@@ -68,9 +68,10 @@ export let MessageContextMenu = ({
 
     ax.metric('translate', {
       os: Platform.OS,
-      sourceLanguages: [],
-      targetLanguage: langPrefs.primaryLanguage,
+      possibleSourceLanguages: [], // N/A for chats
+      expectedTargetLanguage: langPrefs.primaryLanguage,
       textLength: message.text.length,
+      googleTranslate: true,
     })
   }, [ax, langPrefs.primaryLanguage, message.text, translate])
 

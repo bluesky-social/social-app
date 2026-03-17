@@ -103,7 +103,6 @@ async function attemptTranslation(
 export function useTranslate({
   key,
   forceGoogleTranslate = false,
-  postLangCodes,
 }: TranslationOptions) {
   const context = useContext(Context)
   if (!context) {
@@ -121,14 +120,17 @@ export function useTranslate({
 
   const translate = useCallback(
     async (params: TranslationFunctionParams) => {
-      return context.translate({
-        ...params,
-        key,
-        forceGoogleTranslate,
-        postLangCodes,
-      })
+      return context.translate(
+        {
+          ...params,
+        },
+        {
+          key,
+          forceGoogleTranslate,
+        },
+      )
     },
-    [context, forceGoogleTranslate, key, postLangCodes],
+    [context, forceGoogleTranslate, key],
   )
 
   const clearTranslation = useCallback(
@@ -208,17 +210,34 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   }, [])
 
   const translate = useCallback<ContextType['translate']>(
-    async ({
-      key,
-      text,
-      targetLangCode,
-      sourceLangCode,
-      sourceSelection = 'automatic',
-      postLangCodes,
-      ...options
-    }) => {
-      if (options?.forceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
-        await googleTranslate(text, targetLangCode, sourceLangCode)
+    async (
+      {
+        text,
+        expectedTargetLanguage,
+        expectedSourceLanguage,
+        possibleSourceLanguages,
+        forceGoogleTranslate: forceGoogleTranslateOverride,
+      },
+      {key, forceGoogleTranslate},
+    ) => {
+      const shouldForceGoogleTranslate = Boolean(
+        forceGoogleTranslateOverride ?? forceGoogleTranslate,
+      )
+
+      ax.metric('translate', {
+        os: Platform.OS,
+        possibleSourceLanguages,
+        expectedTargetLanguage: expectedTargetLanguage,
+        textLength: text.length,
+        googleTranslate: shouldForceGoogleTranslate,
+      })
+
+      if (shouldForceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
+        await googleTranslate(
+          text,
+          expectedTargetLanguage,
+          expectedSourceLanguage,
+        )
         return
       }
 
@@ -232,16 +251,18 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       try {
         const result = await attemptTranslation(
           text,
-          targetLangCode,
-          sourceLangCode,
+          expectedTargetLanguage,
+          expectedSourceLanguage,
         )
         ax.metric('translate:result', {
-          method: 'on-device',
+          success: true,
           os: Platform.OS,
-          sourceSelection,
-          sourceLanguage: result.sourceLanguage,
-          targetLanguage: result.targetLanguage,
-          postLanguages: postLangCodes,
+          possibleSourceLanguages,
+          expectedSourceLanguage: expectedSourceLanguage ?? null,
+          expectedTargetLanguage,
+          resultSourceLanguage: result.sourceLanguage,
+          resultTargetLanguage: result.targetLanguage,
+          textLength: text.length,
         })
         if (!IS_ANDROID) {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -253,7 +274,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
             translatedText: result.translatedText,
             sourceLanguage: result.sourceLanguage,
             targetLanguage: result.targetLanguage,
-            postLanguages: postLangCodes,
+            postLanguages: possibleSourceLanguages,
           },
         }))
       } catch (e) {
@@ -261,12 +282,14 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         // On-device translation failed (language pack missing or user
         // dismissed the download prompt).
         ax.metric('translate:result', {
-          method: 'fallback-alert',
+          success: false,
           os: Platform.OS,
-          sourceSelection,
-          sourceLanguage: sourceLangCode ?? null,
-          targetLanguage: targetLangCode,
-          postLanguages: postLangCodes,
+          possibleSourceLanguages,
+          expectedSourceLanguage: expectedSourceLanguage ?? null,
+          expectedTargetLanguage,
+          resultSourceLanguage: null,
+          resultTargetLanguage: null,
+          textLength: text.length,
         })
         let errorMessage = l`Device failed to translate :(`
         if (!IS_ANDROID) {

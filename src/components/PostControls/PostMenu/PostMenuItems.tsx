@@ -8,7 +8,7 @@ import {
 import * as Clipboard from 'expo-clipboard'
 import {
   type AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
   AtUri,
   type RichText as RichTextAPI,
@@ -96,7 +96,6 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
-import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
   post,
@@ -138,7 +137,6 @@ let PostMenuItems = ({
   const openLink = useOpenLink()
   const {clearTranslation, translate, translationState} = useTranslate({
     key: post.uri,
-    postLangCodes: getPostLanguageTags(post),
     forceGoogleTranslate,
   })
   const navigation = useNavigation<NavigationProp>()
@@ -279,22 +277,9 @@ let PostMenuItems = ({
   const onPressTranslate = () => {
     void translate({
       text: record.text,
-      targetLangCode: langPrefs.primaryLanguage,
+      expectedTargetLanguage: langPrefs.primaryLanguage,
+      possibleSourceLanguages: getPostLanguageTags(post),
     })
-
-    if (
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        post.record,
-        AppBskyFeedPost.isRecord,
-      )
-    ) {
-      ax.metric('translate', {
-        os: Platform.OS,
-        sourceLanguages: post.record.langs ?? [],
-        targetLanguage: langPrefs.primaryLanguage,
-        textLength: post.record.text.length,
-      })
-    }
   }
 
   const onHidePost = () => {
