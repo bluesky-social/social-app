@@ -220,15 +220,17 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       },
       {key, forceGoogleTranslate},
     ) => {
+      const shouldForceGoogleTranslate = Boolean(
+        forceGoogleTranslateOverride ?? forceGoogleTranslate,
+      )
+
       ax.metric('translate', {
         os: Platform.OS,
         possibleSourceLanguages,
         expectedTargetLanguage: expectedTargetLanguage,
         textLength: text.length,
+        forceGoogleTranslate: shouldForceGoogleTranslate,
       })
-
-      const shouldForceGoogleTranslate =
-        forceGoogleTranslateOverride ?? forceGoogleTranslate
 
       if (shouldForceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
         await googleTranslate(
