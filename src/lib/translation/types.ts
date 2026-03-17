@@ -35,7 +35,7 @@ export type TranslationFunctionParams = {
 
 export type TranslationOptions = {
   key: string
-  forceGoogleTranslate: boolean
+  forceGoogleTranslate?: boolean
   /**
    * The language(s) of the post being translated. Used for analytics purposes
    * to understand translation usage patterns better. Optional because it may
