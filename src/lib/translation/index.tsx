@@ -103,7 +103,6 @@ async function attemptTranslation(
 export function useTranslate({
   key,
   forceGoogleTranslate = false,
-  postLangCodes,
 }: TranslationOptions) {
   const context = useContext(Context)
   if (!context) {
@@ -125,10 +124,9 @@ export function useTranslate({
         ...params,
         key,
         forceGoogleTranslate,
-        postLangCodes,
       })
     },
-    [context, forceGoogleTranslate, key, postLangCodes],
+    [context, forceGoogleTranslate, key],
   )
 
   const clearTranslation = useCallback(
@@ -213,9 +211,16 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       text,
       targetLangCode,
       sourceLangCode: expectedSourceLanguage,
-      postLangCodes,
+      possibleSourceLanguages,
       ...options
     }) => {
+      ax.metric('translate', {
+        os: Platform.OS,
+        possibleSourceLanguages,
+        expectedTargetLanguage: targetLangCode,
+        textLength: text.length,
+      })
+
       if (options?.forceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
         await googleTranslate(text, targetLangCode, expectedSourceLanguage)
         return
@@ -237,7 +242,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         ax.metric('translate:result', {
           success: true,
           os: Platform.OS,
-          possibleSourceLanguages: postLangCodes,
+          possibleSourceLanguages,
           expectedSourceLanguage: expectedSourceLanguage ?? null,
           expectedTargetLanguage: targetLangCode,
           resultSourceLanguage: result.sourceLanguage,
@@ -254,7 +259,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
             translatedText: result.translatedText,
             sourceLanguage: result.sourceLanguage,
             targetLanguage: result.targetLanguage,
-            postLanguages: postLangCodes,
+            postLanguages: possibleSourceLanguages,
           },
         }))
       } catch (e) {
@@ -264,7 +269,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         ax.metric('translate:result', {
           success: false,
           os: Platform.OS,
-          possibleSourceLanguages: postLangCodes,
+          possibleSourceLanguages,
           expectedSourceLanguage: expectedSourceLanguage ?? null,
           expectedTargetLanguage: targetLangCode,
           resultSourceLanguage: null,

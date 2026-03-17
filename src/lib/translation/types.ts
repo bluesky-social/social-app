@@ -30,19 +30,26 @@ export type TranslationFunctionParams = {
    * source language and want to specify it explicitly.
    */
   sourceLangCode?: string
+  /**
+   * The languages the content might be in, such as the user-supplied
+   * language codes on posts. Currently only available on posts.
+   */
+  possibleSourceLanguages?: string[]
+  /**
+   * Override the default behavior and always use Google Translate.
+   */
+  forceGoogleTranslate?: boolean
 }
 
 export type TranslationOptions = {
-  key: string
-  forceGoogleTranslate?: boolean
   /**
-   * The language(s) of the post being translated. Used for analytics purposes
-   * to understand translation usage patterns better. Optional because it may
-   * not always be available (e.g. if the post text is empty or if the
-   * translation is triggered from a non-post
-   * context).
+   * A unique key to identify this translation instance e.g. the post URI
    */
-  postLangCodes?: string[]
+  key: string
+  /**
+   * Override the default behavior and always use Google Translate.
+   */
+  forceGoogleTranslate?: boolean
 }
 
 export type TranslationFunction = (

@@ -708,8 +708,19 @@ export type Events = {
 
   translate: {
     os: Platform['OS']
-    sourceLanguages: string[]
-    targetLanguage: string
+    /**
+     * The languages the content might be in, such as the user-supplied
+     * language codes on posts. Currently only available on posts.
+     */
+    possibleSourceLanguages: string[] | undefined
+    /**
+     * This is the user's configured primary language, which is always defined.
+     */
+    expectedTargetLanguage: string
+    /**
+     * The length of the text being translated. We assume shorter texts are
+     * more likely to have inaccurate translations.
+     */
     textLength: number
   }
   'translate:result': {
@@ -752,8 +763,27 @@ export type Events = {
   }
   'translate:override': {
     os: Platform['OS']
-    sourceLanguage: string
-    targetLanguage: string
+    /**
+     * The languages the content might be in, such as the user-supplied
+     * language codes on posts. Currently only available on posts.
+     */
+    possibleSourceLanguages: string[] | undefined
+    /**
+     * The language the user has indicated the content is actually in, which
+     * may be different from the expected source language if the user is
+     * overriding the auto-detected language. This is the language the user
+     * wants to translate from after overriding.
+     */
+    expectedSourceLanguage: string
+    /**
+     * This is the user's configured primary language, which is always defined.
+     */
+    expectedTargetLanguage: string
+    /**
+     * The language the translation result was actually in, which the user now
+     * wishes to override.
+     */
+    resultSourceLanguage: string
   }
 
   'postMenu:openMuteWordsDialog': {
