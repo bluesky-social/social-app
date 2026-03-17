@@ -2,7 +2,7 @@
   "name": "dev-env",
   "version": "0.0.0",
   "scripts": {
-    "e2e:mock-server": "NODE_ENV=development ./dev-infra/with-test-redis-and-db.sh ts-node ./mock-server.ts"
+    "start": "NODE_ENV=development ./dev-infra/with-test-redis-and-db.sh ts-node ./mock-server.ts"
   },
   "dependencies": {
     "@atproto/dev-env": "^0.3.213",

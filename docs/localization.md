@@ -47,8 +47,7 @@ Every night, a GitHub action will run `yarn intl:extract` to update the english 
 ### Release process
 
 1. Pull main and create a branch.
-1. Run `yarn intl:pull` to fetch all translation updates from Crowdin. Commit.
-1. Run `yarn intl:extract:all` to ensure all `.po` files are synced with the current state of the code. Commit.
+1. Run `yarn intl:release` to fetch all translation updates from Crowdin and extract all `.po` files so that they're synced with the latest code. Commit that.
 1. Create a PR, ensure the translations all look correct, and merge.
 1. If needed:
   1. Merge all approved translation PRs (contributions from outside crowdin).
