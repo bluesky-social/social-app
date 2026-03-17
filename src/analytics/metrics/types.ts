@@ -713,14 +713,42 @@ export type Events = {
     textLength: number
   }
   'translate:result': {
-    method: 'on-device' | 'fallback-alert'
+    success: boolean
     os: Platform['OS']
-    sourceSelection: 'automatic' | 'manual'
-    sourceLanguage: string | null
-    targetLanguage: string
-
-    /* Only relevant to posts */
-    postLanguages?: string[]
+    /**
+     * The languages the content might be in, such as the user-supplied
+     * language codes on posts. Currently only available on posts.
+     */
+    possibleSourceLanguages: string[] | undefined
+    /**
+     * The language we expected the content to be in. This could be based on
+     * user selection or on our confidence in the detected language. This is
+     * nullable because we may not always have an expected source language.
+     */
+    expectedSourceLanguage: string | null
+    /**
+     * This is the user's configured primary language, which is always defined.
+     */
+    expectedTargetLanguage: string
+    /**
+     * The language the translation result was actually in. This is nullable
+     * because the translation could have failed, in which case we won't have a
+     * result source language.
+     */
+    resultSourceLanguage: string | null
+    /**
+     * The language the translation result was translated into. This should be
+     * the same as `expectedTargetLanguage`, but we include it for completeness
+     * and in case there are any edge cases where they differ. This is nullable
+     * because if the translation failed, we won't have a result target
+     * language.
+     */
+    resultTargetLanguage: string | null
+    /**
+     * The length of the text being translated. We assume shorter texts are
+     * more likely to have inaccurate translations.
+     */
+    textLength: number
   }
   'translate:override': {
     os: Platform['OS']

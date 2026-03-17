@@ -24,13 +24,12 @@ export type TranslationFunctionParams = {
    */
   targetLangCode: string
   /**
-   * The source language of the text. Will auto-detect if not provided.
+   * We auto-detect the source language by default, but the user has the option
+   * to specify a source language if they want to. If this value is present, it
+   * means the user selected a source language, or we were certain of the
+   * source language and want to specify it explicitly.
    */
   sourceLangCode?: string
-  /**
-   * Whether we auto-detected the language or it was selected manually. Defaults to 'automatic'.
-   */
-  sourceSelection?: 'automatic' | 'manual'
 }
 
 export type TranslationOptions = {

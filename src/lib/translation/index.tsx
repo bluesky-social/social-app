@@ -212,13 +212,12 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       key,
       text,
       targetLangCode,
-      sourceLangCode,
-      sourceSelection = 'automatic',
+      sourceLangCode: expectedSourceLanguage,
       postLangCodes,
       ...options
     }) => {
       if (options?.forceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
-        await googleTranslate(text, targetLangCode, sourceLangCode)
+        await googleTranslate(text, targetLangCode, expectedSourceLanguage)
         return
       }
 
@@ -233,15 +232,17 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         const result = await attemptTranslation(
           text,
           targetLangCode,
-          sourceLangCode,
+          expectedSourceLanguage,
         )
         ax.metric('translate:result', {
-          method: 'on-device',
+          success: true,
           os: Platform.OS,
-          sourceSelection,
-          sourceLanguage: result.sourceLanguage,
-          targetLanguage: result.targetLanguage,
-          postLanguages: postLangCodes,
+          possibleSourceLanguages: postLangCodes,
+          expectedSourceLanguage: expectedSourceLanguage ?? null,
+          expectedTargetLanguage: targetLangCode,
+          resultSourceLanguage: result.sourceLanguage,
+          resultTargetLanguage: result.targetLanguage,
+          textLength: text.length,
         })
         if (!IS_ANDROID) {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -261,12 +262,14 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         // On-device translation failed (language pack missing or user
         // dismissed the download prompt).
         ax.metric('translate:result', {
-          method: 'fallback-alert',
+          success: false,
           os: Platform.OS,
-          sourceSelection,
-          sourceLanguage: sourceLangCode ?? null,
-          targetLanguage: targetLangCode,
-          postLanguages: postLangCodes,
+          possibleSourceLanguages: postLangCodes,
+          expectedSourceLanguage: expectedSourceLanguage ?? null,
+          expectedTargetLanguage: targetLangCode,
+          resultSourceLanguage: null,
+          resultTargetLanguage: null,
+          textLength: text.length,
         })
         let errorMessage = l`Device failed to translate :(`
         if (!IS_ANDROID) {
