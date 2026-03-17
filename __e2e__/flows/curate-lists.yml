@@ -91,7 +91,8 @@ appId: xyz.blueskyweb.app
 - tapOn: "Add user to list"
 - swipe:
     direction: DOWN
-- assertVisible: "View Bob's profile"
+- assertVisible:
+    id: "profileCard-bob.test-link"
 
 - tapOn: "Posts"
 - assertVisible:
@@ -123,7 +124,8 @@ appId: xyz.blueskyweb.app
 - tapOn: "Good Ppl"
 
 - tapOn: "People"
-- assertVisible: "View Bob's profile"
+- assertVisible:
+    id: "profileCard-bob.test-link"
 - tapOn:
     point: "90%,43%"
 - tapOn:
