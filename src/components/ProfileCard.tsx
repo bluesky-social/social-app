@@ -145,6 +145,7 @@ export function Link({
 
   return (
     <InternalLink
+      testID={`profileCard-${profile.handle}-link`}
       label={l`View ${
         profile.displayName || sanitizeHandle(profile.handle)
       }’s profile`}
