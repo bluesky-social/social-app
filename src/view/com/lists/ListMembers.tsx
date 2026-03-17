@@ -1,4 +1,4 @@
-import React, {type JSX, useCallback} from 'react'
+import {type JSX, useCallback, useMemo, useState} from 'react'
 import {
   Dimensions,
   type GestureResponderEvent,
@@ -57,7 +57,7 @@ export function ListMembers({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const {openModal} = useModalControls()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -77,7 +77,7 @@ export function ListMembers({
   const isOwner =
     currentAccount && data?.pages[0].list.creator.did === currentAccount.did
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let items: any[] = []
     if (isFetched) {
       if (isEmpty && isError) {
@@ -102,7 +102,7 @@ export function ListMembers({
   // events
   // =
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsRefreshing(true)
     try {
       await refetch()
@@ -112,7 +112,7 @@ export function ListMembers({
     setIsRefreshing(false)
   }, [refetch, setIsRefreshing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -121,11 +121,11 @@ export function ListMembers({
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  const onPressRetryLoadMore = React.useCallback(() => {
+  const onPressRetryLoadMore = useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
 
-  const onPressEditMembership = React.useCallback(
+  const onPressEditMembership = useCallback(
     (e: GestureResponderEvent, profile: bsky.profile.AnyProfileView) => {
       e.preventDefault()
       openModal({
@@ -141,7 +141,7 @@ export function ListMembers({
   // rendering
   // =
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item}: {item: any}) => {
       if (item === EMPTY_ITEM) {
         return renderEmptyState()

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {forwardRef, useCallback, useImperativeHandle} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -17,7 +17,7 @@ interface ProfilesListProps {
   scrollElRef: ListRef
 }
 
-export const PostsList = React.forwardRef<SectionRef, ProfilesListProps>(
+export const PostsList = forwardRef<SectionRef, ProfilesListProps>(
   function PostsListImpl({listUri, headerHeight, scrollElRef}, ref) {
     const feed: FeedDescriptor = `list|${listUri}`
     const {_} = useLingui()
@@ -29,7 +29,7 @@ export const PostsList = React.forwardRef<SectionRef, ProfilesListProps>(
       })
     }, [scrollElRef, headerHeight])
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 

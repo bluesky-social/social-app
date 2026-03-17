@@ -28,7 +28,6 @@ import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
@@ -61,13 +60,10 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useFullVerificationState} from '#/components/verification'
-import {
-  shouldShowVerificationCheckButton,
-  VerificationCheckButton,
-} from '#/components/verification/VerificationCheckButton'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
@@ -321,9 +317,6 @@ function ProfilePreview({
   const {gtMobile} = useBreakpoints()
   const shadow = useProfileShadow(profile)
   const moderationOpts = useModerationOpts()
-  const verificationState = useFullVerificationState({
-    profile: shadow,
-  })
   const {isActive: live} = useActorStatus(profile)
 
   if (!moderationOpts) return null
@@ -364,16 +357,16 @@ function ProfilePreview({
           ]}>
           {displayName}
         </Text>
-        {shouldShowVerificationCheckButton(verificationState) && (
-          <View
-            style={[
-              {
-                marginTop: platform({web: 8, ios: 8, android: 10}),
-              },
-            ]}>
-            <VerificationCheckButton profile={shadow} size="lg" />
-          </View>
-        )}
+        <ProfileBadges
+          profile={shadow}
+          size="xl"
+          interactive
+          style={[
+            {
+              marginTop: platform({web: 8, ios: 8, android: 10}),
+            },
+          ]}
+        />
       </View>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {sanitizeHandle(profile.handle, '@')}
@@ -527,7 +520,6 @@ function DevOptions() {
           </SettingsList.ItemText>
         </SettingsList.PressableItem>
       ) : null}
-
       <SettingsList.Divider />
       <View style={[a.p_xl, a.gap_md]}>
         <Text style={[a.text_lg, a.font_semi_bold]}>
@@ -552,7 +544,9 @@ function DevOptions() {
             onPress={() => {
               device.set([PolicyUpdate202508], false)
               agent.bskyAppRemoveNuxs([PolicyUpdate202508])
-              Toast.show(`Done`, 'info')
+              Toast.show(`Done`, {
+                type: 'info',
+              })
             }}
             label="Reset policy update nux"
             color="secondary"

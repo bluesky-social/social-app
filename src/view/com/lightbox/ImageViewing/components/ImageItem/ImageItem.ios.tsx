@@ -6,7 +6,7 @@
  *
  */
 
-import React, {useState} from 'react'
+import {memo, useState} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
   Gesture,
@@ -363,4 +363,4 @@ const getZoomRectAfterDoubleTap = (
   }
 }
 
-export default React.memo(ImageItem)
+export default memo(ImageItem)

@@ -1,4 +1,10 @@
-import React, {useEffect} from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 import {useAgent, useSession} from '../session'
@@ -6,17 +12,15 @@ import {useAgent, useSession} from '../session'
 type StateContext = Map<string, boolean>
 type SetStateContext = (uri: string, value: boolean) => void
 
-const stateContext = React.createContext<StateContext>(new Map())
+const stateContext = createContext<StateContext>(new Map())
 stateContext.displayName = 'ThreadMutesStateContext'
-const setStateContext = React.createContext<SetStateContext>(
-  (_: string) => false,
-)
+const setStateContext = createContext<SetStateContext>((_: string) => false)
 setStateContext.displayName = 'ThreadMutesSetStateContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState<StateContext>(() => new Map())
+  const [state, setState] = useState<StateContext>(() => new Map())
 
-  const setThreadMute = React.useCallback(
+  const setThreadMute = useCallback(
     (uri: string, value: boolean) => {
       setState(prev => {
         const next = new Map(prev)
@@ -39,16 +43,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useMutedThreads() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useIsThreadMuted(uri: string, defaultValue = false) {
-  const state = React.useContext(stateContext)
+  const state = useContext(stateContext)
   return state.get(uri) ?? defaultValue
 }
 
 export function useSetThreadMute() {
-  return React.useContext(setStateContext)
+  return useContext(setStateContext)
 }
 
 function useMigrateMutes(setThreadMute: SetStateContext) {

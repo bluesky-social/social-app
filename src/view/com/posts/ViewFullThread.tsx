@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '@atproto/api'
@@ -19,7 +19,7 @@ export function ViewFullThread({uri}: {uri: string}) {
     onOut: onHoverOut,
   } = useInteractionState()
   const pal = usePalette('default')
-  const itemHref = React.useMemo(() => {
+  const itemHref = useMemo(() => {
     const urip = new AtUri(uri)
     return makeProfileLink({did: urip.hostname, handle: ''}, 'post', urip.rkey)
   }, [uri])

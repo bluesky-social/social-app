@@ -161,7 +161,8 @@ function LanguageBtn(
                 a.leading_snug,
                 {maxWidth: 100},
               ]}
-              numberOfLines={1}>
+              numberOfLines={1}
+              maxFontSizeMultiplier={1.5}>
               {currentLanguages
                 .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
                 .join(', ')}

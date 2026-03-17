@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -78,5 +78,5 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
     </View>
   )
 }
-DateDivider = React.memo(DateDivider)
+DateDivider = memo(DateDivider)
 export {DateDivider}

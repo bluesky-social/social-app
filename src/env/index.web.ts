@@ -48,3 +48,4 @@ export const IS_HIGH_DPI: boolean = window.matchMedia(
   '(min-resolution: 2dppx)',
 ).matches
 export const IS_LIQUID_GLASS: boolean = false
+export const HAS_ON_DEVICE_TRANSLATION: boolean = false

@@ -103,6 +103,7 @@ import {ActivityPrivacySettingsScreen} from '#/screens/Settings/ActivityPrivacyS
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
+import {AutomationLabelSettingsScreen} from '#/screens/Settings/AutomationLabelSettings'
 import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FindContactsSettingsScreen} from '#/screens/Settings/FindContactsSettings'
@@ -404,6 +405,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="AutomationLabelSettings"
+        getComponent={() => AutomationLabelSettingsScreen}
+        options={{
+          title: title(msg`Automation Label`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="PrivacyAndSecuritySettings"
         getComponent={() => PrivacyAndSecuritySettingsScreen}
         options={{
@@ -690,6 +699,7 @@ function HomeTabNavigator() {
         headerShown: true,
         headerTransparent: true,
         headerTitle: '',
+        headerBackVisible: false,
         scrollEdgeEffects: {
           top: 'soft',
         },

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
@@ -14,7 +14,6 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
-import {agentToSessionAccountOrThrow} from '#/state/session/agent'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -37,13 +36,13 @@ export function Deactivated() {
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
-  const {logoutCurrentAccount, resumeSession} = useSessionApi()
+  const {logoutCurrentAccount} = useSessionApi()
   const agent = useAgent()
-  const [pending, setPending] = React.useState(false)
-  const [error, setError] = React.useState<string | undefined>()
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | undefined>()
   const queryClient = useQueryClient()
 
-  const onSelectAccount = React.useCallback(
+  const onSelectAccount = useCallback(
     (account: SessionAccount) => {
       if (account.did !== currentAccount?.did) {
         onPressSwitchAccount(account, 'SwitchAccount')
@@ -52,11 +51,11 @@ export function Deactivated() {
     [currentAccount, onPressSwitchAccount],
   )
 
-  const onPressAddAccount = React.useCallback(() => {
+  const onPressAddAccount = useCallback(() => {
     setShowLoggedOut(true)
   }, [setShowLoggedOut])
 
-  const onPressLogout = React.useCallback(() => {
+  const onPressLogout = useCallback(() => {
     if (IS_WEB) {
       // We're switching accounts, which remounts the entire app.
       // On mobile, this gets us Home, but on the web we also need reset the URL.
@@ -68,13 +67,12 @@ export function Deactivated() {
     logoutCurrentAccount('Deactivated')
   }, [logoutCurrentAccount])
 
-  const handleActivate = React.useCallback(async () => {
+  const handleActivate = useCallback(async () => {
     try {
       setPending(true)
       await agent.com.atproto.server.activateAccount()
       await queryClient.resetQueries()
-      const account = agentToSessionAccountOrThrow(agent)
-      await resumeSession({...account, active: true, status: undefined})
+      await agent.resumeSession(agent.session!)
     } catch (e: any) {
       switch (e.message) {
         case 'Bad token scope':
@@ -95,7 +93,7 @@ export function Deactivated() {
     } finally {
       setPending(false)
     }
-  }, [_, agent, queryClient, resumeSession])
+  }, [_, agent, setPending, setError, queryClient])
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>

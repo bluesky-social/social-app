@@ -1,7 +1,7 @@
 import '#/logger/sentry/setup'
 import '#/view/icons'
 
-import React, {useEffect, useState} from 'react'
+import {Fragment, useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {
@@ -19,6 +19,7 @@ import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottom
 import {QueryProvider} from '#/lib/react-query'
 import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
+import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
@@ -57,7 +58,6 @@ import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
-import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
@@ -67,6 +67,7 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
 import {
   prefetchAgeAssuranceConfig,
@@ -110,7 +111,7 @@ prefetchLiveEvents()
 prefetchAppConfig()
 
 function InnerApp() {
-  const [isReady, setIsReady] = React.useState(false)
+  const [isReady, setIsReady] = useState(false)
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
@@ -138,10 +139,9 @@ function InnerApp() {
 
   useEffect(() => {
     return listenSessionDropped(() => {
-      Toast.show(
-        _(msg`Sorry! Your session expired. Please sign in again.`),
-        'info',
-      )
+      Toast.show(_(msg`Sorry! Your session expired. Please sign in again.`), {
+        type: 'info',
+      })
     })
   }, [_])
 
@@ -151,7 +151,7 @@ function InnerApp() {
         <ContextMenuProvider>
           <Splash isReady={isReady && hasCheckedReferrer}>
             <VideoVolumeProvider>
-              <React.Fragment
+              <Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <AnalyticsFeaturesContext>
@@ -179,9 +179,11 @@ function InnerApp() {
                                                           style={s.h100pct}>
                                                           <GlobalGestureEventsProvider>
                                                             <IntentDialogProvider>
-                                                              <TestCtrls />
-                                                              <Shell />
-                                                              <ToastOutlet />
+                                                              <TranslateOnDeviceProvider>
+                                                                <TestCtrls />
+                                                                <Shell />
+                                                                <ToastOutlet />
+                                                              </TranslateOnDeviceProvider>
                                                             </IntentDialogProvider>
                                                           </GlobalGestureEventsProvider>
                                                         </GestureHandlerRootView>
@@ -205,7 +207,7 @@ function InnerApp() {
                     </PolicyUpdateOverlayProvider>
                   </QueryProvider>
                 </AnalyticsFeaturesContext>
-              </React.Fragment>
+              </Fragment>
             </VideoVolumeProvider>
           </Splash>
         </ContextMenuProvider>
@@ -217,7 +219,7 @@ function InnerApp() {
 function App() {
   const [isReady, setReady] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(() =>
       setReady(true),
     )

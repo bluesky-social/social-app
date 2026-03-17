@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {
   BSKY_LABELER_DID,
   type ModerationCause,
@@ -39,7 +39,7 @@ export function useModerationCauseDescription(
   const {labelDefs, labelers} = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     if (!cause) {
       return {
         icon: Warning,

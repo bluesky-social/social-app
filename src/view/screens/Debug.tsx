@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -16,11 +16,11 @@ import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Button} from '#/view/com/util/forms/Button'
 import * as LoadingPlaceholder from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
-import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ViewSelector} from '#/view/com/util/ViewSelector'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
+import * as Toast from '#/components/Toast'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 
@@ -28,9 +28,7 @@ export const DebugScreen = ({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'Debug'
 >) => {
-  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
-    'light',
-  )
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light')
   const onToggleColorScheme = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
   }
@@ -50,7 +48,7 @@ function DebugInner({}: {
   colorScheme: 'light' | 'dark'
   onToggleColorScheme: () => void
 }) {
-  const [currentView, setCurrentView] = React.useState<number>(0)
+  const [currentView, setCurrentView] = useState<number>(0)
   const pal = usePalette('default')
   const {_} = useLingui()
 

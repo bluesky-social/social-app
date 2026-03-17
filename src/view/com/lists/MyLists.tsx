@@ -1,4 +1,4 @@
-import React, {type JSX} from 'react'
+import {type JSX, useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   FlatList as RNFlatList,
@@ -45,12 +45,12 @@ export function MyLists({
   const t = useTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const {data, isFetching, isFetched, isError, error, refetch} =
     useMyListsQuery(filter)
   const isEmpty = !isFetching && !data?.length
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let items: any[] = []
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
@@ -85,7 +85,7 @@ export function MyLists({
   // events
   // =
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -98,7 +98,7 @@ export function MyLists({
   // rendering
   // =
 
-  const renderItemInner = React.useCallback(
+  const renderItemInner = useCallback(
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (

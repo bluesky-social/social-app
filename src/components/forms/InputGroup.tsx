@@ -1,4 +1,4 @@
-import React from 'react'
+import {Children, cloneElement, Fragment, isValidElement} from 'react'
 import {View} from 'react-native'
 
 import {atoms, useTheme} from '#/alf'
@@ -8,19 +8,19 @@ import {atoms, useTheme} from '#/alf'
  */
 export function InputGroup(props: React.PropsWithChildren<{}>) {
   const t = useTheme()
-  const children = React.Children.toArray(props.children)
+  const children = Children.toArray(props.children)
   const total = children.length
   return (
     <View style={[atoms.w_full]}>
       {children.map((child, i) => {
-        return React.isValidElement(child) ? (
-          <React.Fragment key={i}>
+        return isValidElement(child) ? (
+          <Fragment key={i}>
             {i > 0 ? (
               <View
                 style={[atoms.border_b, {borderColor: t.palette.contrast_500}]}
               />
             ) : null}
-            {React.cloneElement(child, {
+            {cloneElement(child, {
               // @ts-ignore
               style: [
                 // @ts-ignore
@@ -38,7 +38,7 @@ export function InputGroup(props: React.PropsWithChildren<{}>) {
                 },
               ],
             })}
-          </React.Fragment>
+          </Fragment>
         ) : null
       })}
     </View>

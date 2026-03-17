@@ -1,4 +1,11 @@
-import React, {useImperativeHandle} from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {Pressable, useWindowDimensions, View} from 'react-native'
 import Animated, {
   Easing,
@@ -28,25 +35,25 @@ export interface ProgressGuideToastProps {
   visibleDuration?: number // default 5s
 }
 
-export const ProgressGuideToast = React.forwardRef<
+export const ProgressGuideToast = forwardRef<
   ProgressGuideToastRef,
   ProgressGuideToastProps
 >(function ProgressGuideToast({title, subtitle, visibleDuration}, ref) {
   const t = useTheme()
   const {_} = useLingui()
   const insets = useSafeAreaInsets()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const translateY = useSharedValue(0)
   const opacity = useSharedValue(0)
-  const animatedCheckRef = React.useRef<AnimatedCheckRef | null>(null)
-  const timeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined)
+  const animatedCheckRef = useRef<AnimatedCheckRef | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
   const winDim = useWindowDimensions()
 
   /**
    * Methods
    */
 
-  const close = React.useCallback(() => {
+  const close = useCallback(() => {
     // clear the timeout, in case this was called imperatively
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
@@ -67,7 +74,7 @@ export const ProgressGuideToast = React.forwardRef<
     )
   }, [setIsOpen, opacity])
 
-  const open = React.useCallback(() => {
+  const open = useCallback(() => {
     // set isOpen=true to render
     setIsOpen(true)
 
@@ -105,7 +112,7 @@ export const ProgressGuideToast = React.forwardRef<
     [open, close],
   )
 
-  const containerStyle = React.useMemo(() => {
+  const containerStyle = useMemo(() => {
     let left = 10
     let right = 10
     if (IS_WEB && winDim.width > 400) {

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -47,29 +47,29 @@ export default function HashtagScreen({
   const {tag, author} = route.params
   const {_} = useLingui()
 
-  const decodedTag = React.useMemo(() => {
+  const decodedTag = useMemo(() => {
     return decodeURIComponent(tag)
   }, [tag])
 
   const isCashtag = decodedTag.startsWith('$')
 
-  const fullTag = React.useMemo(() => {
+  const fullTag = useMemo(() => {
     // Cashtags already include the $ prefix, hashtags need # added
     return isCashtag ? decodedTag : `#${decodedTag}`
   }, [decodedTag, isCashtag])
 
-  const headerTitle = React.useMemo(() => {
+  const headerTitle = useMemo(() => {
     // Keep cashtags uppercase, lowercase hashtags
     const displayTag = isCashtag ? fullTag.toUpperCase() : fullTag.toLowerCase()
     return enforceLen(displayTag, 24, true, 'middle')
   }, [fullTag, isCashtag])
 
-  const sanitizedAuthor = React.useMemo(() => {
+  const sanitizedAuthor = useMemo(() => {
     if (!author) return ''
     return sanitizeHandle(author)
   }, [author])
 
-  const onShare = React.useCallback(() => {
+  const onShare = useCallback(() => {
     const url = new URL('https://bsky.app')
     url.pathname = `/hashtag/${decodeURIComponent(tag)}`
     if (author) {
@@ -78,16 +78,16 @@ export default function HashtagScreen({
     shareUrl(url.toString())
   }, [tag, author])
 
-  const [activeTab, setActiveTab] = React.useState(0)
+  const [activeTab, setActiveTab] = useState(0)
   const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPageSelected = React.useCallback(
+  const onPageSelected = useCallback(
     (index: number) => {
       setMinimalShellMode(false)
       setActiveTab(index)
@@ -95,7 +95,7 @@ export default function HashtagScreen({
     [setMinimalShellMode],
   )
 
-  const sections = React.useMemo(() => {
+  const sections = useMemo(() => {
     return [
       {
         title: _(msg`Top`),
@@ -177,14 +177,14 @@ function HashtagScreenTab({
 }) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const [isPTR, setIsPTR] = React.useState(false)
+  const [isPTR, setIsPTR] = useState(false)
   const t = useTheme()
   const {hasSession} = useSession()
   const trackPostView = usePostViewTracking('Hashtag')
 
   const isCashtag = fullTag.startsWith('$')
 
-  const queryParam = React.useMemo(() => {
+  const queryParam = useMemo(() => {
     // Cashtags need # prefix for search: "#$BTC" or "#$BTC from:author"
     const searchTag = isCashtag ? `#${fullTag}` : fullTag
     if (!author) return searchTag
@@ -203,17 +203,17 @@ function HashtagScreenTab({
     hasNextPage,
   } = useSearchPostsQuery({query: queryParam, sort, enabled: active})
 
-  const posts = React.useMemo(() => {
+  const posts = useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTR(true)
     await refetch()
     setIsPTR(false)
   }, [refetch])
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])

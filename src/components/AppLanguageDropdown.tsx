@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -20,7 +20,7 @@ export function AppLanguageDropdown() {
   const setLangPrefs = useLanguagePrefsApi()
   const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage)
 
-  const onChangeAppLanguage = React.useCallback(
+  const onChangeAppLanguage = useCallback(
     (value: string) => {
       if (!value) return
       if (sanitizedLang !== value) {

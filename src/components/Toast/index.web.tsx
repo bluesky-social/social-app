@@ -1,4 +1,4 @@
-import React from 'react'
+import {isValidElement} from 'react'
 import {nanoid} from 'nanoid/non-secure'
 import {toast as sonner, Toaster} from 'sonner'
 
@@ -60,7 +60,7 @@ export function show(
         duration: options?.duration ?? DURATION,
       },
     )
-  } else if (React.isValidElement(content)) {
+  } else if (isValidElement(content)) {
     sonner(
       <ToastConfigProvider id={id} type={type}>
         {content}

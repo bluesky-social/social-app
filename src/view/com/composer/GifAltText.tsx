@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -14,6 +14,7 @@ import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {type Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
@@ -23,8 +24,6 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID} from '#/env'
-import {AltTextReminder} from './photos/Gallery'
 
 export function GifAltTextDialog({
   gif,
@@ -69,7 +68,6 @@ export function GifAltTextDialogLoaded({
   const {_} = useLingui()
   const t = useTheme()
   const [altTextDraft, setAltTextDraft] = useState(altText || vendorAltText)
-  const {height: minHeight} = useWindowDimensions()
   return (
     <>
       <TouchableOpacity
@@ -103,14 +101,19 @@ export function GifAltTextDialogLoaded({
         </Text>
       </TouchableOpacity>
 
-      <AltTextReminder />
+      <Admonition type="tip" style={[a.mt_sm]}>
+        <Trans>
+          Alt text describes images for blind and low-vision users, and helps
+          give context to everyone.
+        </Trans>
+      </Admonition>
 
       <Dialog.Outer
         control={control}
         onClose={() => {
           onSubmit(altTextDraft)
         }}
-        nativeOptions={{minHeight}}>
+        nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}
@@ -226,8 +229,6 @@ function AltTextInner({
         </View>
       </View>
       <Dialog.Close />
-      {/* Maybe fix this later -h */}
-      {IS_ANDROID ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }
