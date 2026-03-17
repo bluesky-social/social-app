@@ -14,6 +14,7 @@ import {android, atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged} from '#/components/dms/util'
+import * as Toggle from '#/components/forms/Toggle'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -98,6 +99,7 @@ export function InitiateChatFlow({
 
   const [chatState, setChatState] = useState(ChatState.NEW_CHAT)
   const [chatTitle, setChatTitle] = useState(title)
+  const [groupChatDids, setGroupChatDids] = useState<string[]>([])
 
   const items = useMemo(() => {
     let _items: Item[] = []
@@ -207,7 +209,13 @@ export function InitiateChatFlow({
           return <Label key={item.key} message={item.message} />
         }
         case 'profile': {
-          return (
+          return chatState === ChatState.NEW_GROUP_CHAT ? (
+            <GroupChatProfileCard
+              key={item.key}
+              profile={item.profile}
+              moderationOpts={moderationOpts!}
+            />
+          ) : (
             <DefaultProfileCard
               key={item.key}
               profile={item.profile}
@@ -226,7 +234,7 @@ export function InitiateChatFlow({
           return null
       }
     },
-    [handlePressNewGroupChat, moderationOpts, onSelectChat],
+    [chatState, handlePressNewGroupChat, moderationOpts, onSelectChat],
   )
 
   useLayoutEffect(() => {
@@ -312,22 +320,33 @@ export function InitiateChatFlow({
   ])
 
   return (
-    <Dialog.InnerFlatList
-      ref={listRef}
-      data={items}
-      renderItem={renderItems}
-      ListHeaderComponent={listHeader}
-      stickyHeaderIndices={[0]}
-      keyExtractor={(item: Item) => item.key}
-      style={[
-        web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-        native({height: '100%'}),
-      ]}
-      webInnerContentContainerStyle={a.py_0}
-      webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
-      scrollIndicatorInsets={{top: headerHeight}}
-      keyboardDismissMode="on-drag"
-    />
+    <Toggle.Group
+      values={groupChatDids}
+      onChange={setGroupChatDids}
+      type="checkbox"
+      label={
+        chatState === ChatState.NEW_GROUP_CHAT
+          ? l`Select group chat members`
+          : l`Start chat`
+      }
+      style={web([a.contents])}>
+      <Dialog.InnerFlatList
+        ref={listRef}
+        data={items}
+        renderItem={renderItems}
+        ListHeaderComponent={listHeader}
+        stickyHeaderIndices={[0]}
+        keyExtractor={(item: Item) => item.key}
+        style={[
+          web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
+          native({height: '100%'}),
+        ]}
+        webInnerContentContainerStyle={a.py_0}
+        webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
+        scrollIndicatorInsets={{top: headerHeight}}
+        keyboardDismissMode="on-drag"
+      />
+    </Toggle.Group>
   )
 }
 
@@ -443,6 +462,59 @@ function DefaultProfileCard({
         </View>
       )}
     </Button>
+  )
+}
+
+function GroupChatProfileCard({
+  profile,
+  moderationOpts,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+}) {
+  const t = useTheme()
+  const enabled = canBeMessaged(profile)
+  const moderation = moderateProfile(profile, moderationOpts)
+  const handle = sanitizeHandle(profile.handle, '@')
+  const displayName = sanitizeDisplayName(
+    profile.displayName || sanitizeHandle(profile.handle),
+    moderation.ui('displayName'),
+  )
+
+  return (
+    <Toggle.Item
+      key={profile.did}
+      disabled={!enabled}
+      name={profile.did}
+      label={displayName}
+      style={[a.flex_1, a.py_sm, a.px_lg]}>
+      <View style={[a.flex_grow, !enabled ? {opacity: 0.5} : null]}>
+        <ProfileCard.Header>
+          <ProfileCard.Avatar
+            profile={profile}
+            moderationOpts={moderationOpts}
+            size={44}
+            disabledPreview
+          />
+          <View>
+            <ProfileCard.Name
+              profile={profile}
+              moderationOpts={moderationOpts}
+            />
+            {enabled ? (
+              <ProfileCard.Handle profile={profile} />
+            ) : (
+              <Text
+                style={[a.leading_snug, t.atoms.text_contrast_high]}
+                numberOfLines={2}>
+                <Trans>{handle} can’t be messaged</Trans>
+              </Text>
+            )}
+          </View>
+        </ProfileCard.Header>
+      </View>
+      {enabled ? <Toggle.Checkbox /> : null}
+    </Toggle.Item>
   )
 }
 
