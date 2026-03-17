@@ -1287,8 +1287,8 @@ msgstr "Yritettäessä avata chattia ilmenei ongelma"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:52
-#: src/components/ProfileCard.tsx:507
-#: src/components/ProfileCard.tsx:529
+#: src/components/ProfileCard.tsx:508
+#: src/components/ProfileCard.tsx:530
 #: src/view/com/notifications/NotificationFeedItem.tsx:772
 #: src/view/com/notifications/NotificationFeedItem.tsx:794
 msgid "An issue occurred, please try again."
@@ -4375,7 +4375,7 @@ msgid "Focus code input"
 msgstr ""
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:545
+#: src/components/ProfileCard.tsx:546
 #: src/components/ProfileHoverCard/index.web.tsx:495
 #: src/components/ProfileHoverCard/index.web.tsx:506
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
@@ -4430,7 +4430,7 @@ msgid "Follow all accounts"
 msgstr ""
 
 #. User is not following this account, click to follow back
-#: src/components/ProfileCard.tsx:541
+#: src/components/ProfileCard.tsx:542
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:400
 #: src/view/com/notifications/NotificationFeedItem.tsx:838
@@ -4482,7 +4482,7 @@ msgstr "Tuntemasi seuraajat"
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:536
+#: src/components/ProfileCard.tsx:537
 #: src/components/ProfileHoverCard/index.web.tsx:494
 #: src/components/ProfileHoverCard/index.web.tsx:505
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
@@ -4502,7 +4502,7 @@ msgstr "Seuratut"
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
-#: src/components/ProfileCard.tsx:497
+#: src/components/ProfileCard.tsx:498
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:262
 #: src/view/com/notifications/NotificationFeedItem.tsx:765
 msgid "Following {0}"
@@ -6571,7 +6571,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
-#: src/components/ProfileCard.tsx:520
+#: src/components/ProfileCard.tsx:521
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:288
 #: src/view/com/notifications/NotificationFeedItem.tsx:787
 msgid "No longer following {0}"
@@ -11318,7 +11318,7 @@ msgid "View {0}'s profile"
 msgstr "Näytä käyttäjän {0} profiili"
 
 #. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
-#: src/components/ProfileCard.tsx:148
+#: src/components/ProfileCard.tsx:149
 msgid "View {0}’s profile"
 msgstr ""
 
