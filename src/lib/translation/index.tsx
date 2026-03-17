@@ -225,14 +225,6 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       forceGoogleTranslate?: boolean
     }) => {
       if (options?.forceGoogleTranslate || !HAS_ON_DEVICE_TRANSLATION) {
-        ax.metric('translate:result', {
-          method: 'google-translate',
-          os: Platform.OS,
-          sourceSelection,
-          sourceLanguage: sourceLangCode ?? null,
-          targetLanguage: targetLangCode,
-          postLanguages: postLangCodes,
-        })
         await googleTranslate(text, targetLangCode, sourceLangCode)
         return
       }

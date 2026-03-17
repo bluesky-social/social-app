@@ -709,7 +709,7 @@ export type Events = {
     textLength: number
   }
   'translate:result': {
-    method: 'on-device' | 'google-translate' | 'fallback-alert'
+    method: 'on-device' | 'fallback-alert'
     os: Platform['OS']
     sourceSelection: 'automatic' | 'manual'
     sourceLanguage: string | null

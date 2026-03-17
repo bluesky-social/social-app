@@ -67,8 +67,6 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       text,
       targetLangCode,
       sourceLangCode,
-      sourceSelection = 'automatic',
-      postLangCodes,
     }: {
       key: string
       text: string
@@ -77,14 +75,6 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       sourceSelection?: 'automatic' | 'manual'
       postLangCodes?: string[]
     }) => {
-      ax.metric('translate:result', {
-        method: 'google-translate',
-        os: 'web',
-        sourceSelection,
-        sourceLanguage: sourceLangCode ?? null,
-        targetLanguage: targetLangCode,
-        postLanguages: postLangCodes,
-      })
       await googleTranslate(text, targetLangCode, sourceLangCode)
     },
     [ax, googleTranslate],
