@@ -4,6 +4,7 @@ import {
   type ImageStyle,
   Keyboard,
   type LayoutChangeEvent,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -24,6 +25,7 @@ import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
@@ -147,6 +149,7 @@ const GalleryItem = ({
 }: GalleryItemProps): React.ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
 
   const altTextControl = Dialog.useDialogControl()
   const editControl = Dialog.useDialogControl()
@@ -161,6 +164,10 @@ const GalleryItem = ({
   }
 
   const onImageEdit = () => {
+    ax.metric('composer:image:edit', {
+      platform: Platform.OS,
+    })
+
     if (IS_NATIVE) {
       cropImage(image).then(next => {
         onChange(next)
