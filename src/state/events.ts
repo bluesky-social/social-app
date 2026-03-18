@@ -45,3 +45,11 @@ export function listenPostCreated(fn: () => void): UnlistenFn {
   emitter.on('post-created', fn)
   return () => emitter.off('post-created', fn)
 }
+
+export function emitFocusSearch() {
+  emitter.emit('focus-search')
+}
+export function listenFocusSearch(fn: () => void): UnlistenFn {
+  emitter.on('focus-search', fn)
+  return () => emitter.off('focus-search', fn)
+}

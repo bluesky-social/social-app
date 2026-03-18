@@ -8,6 +8,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import * as Sentry from '@sentry/react-native'
+import {HotkeysProvider} from 'react-hotkeys-hook'
 
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
@@ -156,8 +157,14 @@ function InnerApp() {
                                                           <HideBottomBarBorderProvider>
                                                             <IntentDialogProvider>
                                                               <TranslateOnDeviceProvider>
-                                                                <Shell />
-                                                                <ToastOutlet />
+                                                                <HotkeysProvider
+                                                                  initiallyActiveScopes={[
+                                                                    'composer',
+                                                                    'search',
+                                                                  ]}>
+                                                                  <Shell />
+                                                                  <ToastOutlet />
+                                                                </HotkeysProvider>
                                                               </TranslateOnDeviceProvider>
                                                             </IntentDialogProvider>
                                                           </HideBottomBarBorderProvider>

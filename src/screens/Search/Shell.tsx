@@ -380,6 +380,7 @@ export function SearchScreenShell({
                       inputPlaceholder ?? l`Search for posts, users, or feeds`
                     }
                     hitSlop={{...HITSLOP_20, top: 0}}
+                    hotkey={true}
                   />
                 </View>
                 {showAutocomplete && (

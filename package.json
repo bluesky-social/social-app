@@ -199,6 +199,7 @@
     "react": "19.1.0",
     "react-compiler-runtime": "^19.1.0-rc.1",
     "react-dom": "19.1.0",
+    "react-hotkeys-hook": "5.2.4",
     "react-image-crop": "^11.0.7",
     "react-is": "19",
     "react-keyed-flatten-children": "^5.0.0",
