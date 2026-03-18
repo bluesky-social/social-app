@@ -3,6 +3,7 @@ import '#/view/icons'
 import './style.css'
 
 import {Fragment, useEffect, useState} from 'react'
+import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -211,29 +212,31 @@ function App() {
     <Geo.Provider>
       <AppConfigProvider>
         <A11yProvider>
-          <OnboardingProvider>
-            <AnalyticsContext>
-              <SessionProvider>
-                <PrefsStateProvider>
-                  <I18nProvider>
-                    <ShellStateProvider>
-                      <ModalStateProvider>
-                        <DialogStateProvider>
-                          <LightboxStateProvider>
-                            <PortalProvider>
-                              <StarterPackProvider>
-                                <InnerApp />
-                              </StarterPackProvider>
-                            </PortalProvider>
-                          </LightboxStateProvider>
-                        </DialogStateProvider>
-                      </ModalStateProvider>
-                    </ShellStateProvider>
-                  </I18nProvider>
-                </PrefsStateProvider>
-              </SessionProvider>
-            </AnalyticsContext>
-          </OnboardingProvider>
+          <KeyboardControllerProvider>
+            <OnboardingProvider>
+              <AnalyticsContext>
+                <SessionProvider>
+                  <PrefsStateProvider>
+                    <I18nProvider>
+                      <ShellStateProvider>
+                        <ModalStateProvider>
+                          <DialogStateProvider>
+                            <LightboxStateProvider>
+                              <PortalProvider>
+                                <StarterPackProvider>
+                                  <InnerApp />
+                                </StarterPackProvider>
+                              </PortalProvider>
+                            </LightboxStateProvider>
+                          </DialogStateProvider>
+                        </ModalStateProvider>
+                      </ShellStateProvider>
+                    </I18nProvider>
+                  </PrefsStateProvider>
+                </SessionProvider>
+              </AnalyticsContext>
+            </OnboardingProvider>
+          </KeyboardControllerProvider>
         </A11yProvider>
       </AppConfigProvider>
     </Geo.Provider>
