@@ -300,6 +300,7 @@ export function useLink({
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
   Omit<ButtonProps, 'onPress' | 'disabled'> & {
     overridePresentation?: boolean
+    ref?: React.Ref<typeof Link>
   }
 
 /**
@@ -320,6 +321,7 @@ export function Link({
   shouldProxy,
   overridePresentation,
   peek,
+  ref,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress, openExternally} = useLink({
@@ -337,6 +339,7 @@ export function Link({
 
   const button = (
     <Button
+      ref={ref}
       {...rest}
       style={[a.justify_start, rest.style]}
       role="link"

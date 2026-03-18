@@ -1,8 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useInterestsDisplayNames} from '#/lib/interests'
 import {Nux, useSaveNux} from '#/state/queries/nuxs'
@@ -17,7 +15,7 @@ import {Text} from '#/components/Typography'
 
 export function ExploreInterestsCard() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {mutateAsync: saveNux} = useSaveNux()
@@ -41,27 +39,18 @@ export function ExploreInterestsCard() {
     <>
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Dismiss interests`)}
-        description={_(
-          msg`You can adjust your interests at any time from "Content and media" settings.`,
-        )}
-        confirmButtonCta={_(
-          msg({
-            message: `OK`,
-            comment: `Confirm button text.`,
-          }),
-        )}
+        title={l`Dismiss interests`}
+        description={l`You can adjust your interests at any time from "Content and media" settings.`}
+        confirmButtonCta={l({
+          message: `OK`,
+          comment: `Confirm button text.`,
+        })}
         onConfirm={onConfirmClose}
       />
 
-      <View style={[a.pb_2xs]}>
+      <View>
         <View
-          style={[
-            a.p_lg,
-            a.border_b,
-            a.gap_md,
-            t.atoms.border_contrast_medium,
-          ]}>
+          style={[a.p_lg, a.border_b, a.gap_md, t.atoms.border_contrast_low]}>
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             <Shapes />
             <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
@@ -96,7 +85,7 @@ export function ExploreInterestsCard() {
           </Text>
 
           <Link
-            label={_(msg`Edit interests`)}
+            label={l`Edit interests`}
             to="/settings/interests"
             size="small"
             variant="solid"
@@ -108,7 +97,7 @@ export function ExploreInterestsCard() {
           </Link>
 
           <Button
-            label={_(msg`Hide this card`)}
+            label={l`Hide this card`}
             size="small"
             variant="ghost"
             color="secondary"
