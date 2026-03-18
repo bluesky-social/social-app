@@ -850,6 +850,16 @@ export class Convo {
     this.commit()
   }
 
+  updateMuted(muted: boolean) {
+    if (this.convo) {
+      this.convo = {
+        ...this.convo,
+        muted,
+      }
+    }
+    this.commit()
+  }
+
   async processPendingMessages() {
     logger.debug(
       `processing messages (${this.pendingMessages.size} remaining)`,

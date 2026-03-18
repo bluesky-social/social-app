@@ -119,5 +119,20 @@ export function ConvoProvider({
     })
   }, [convo, queryClient])
 
+  useEffect(() => {
+    const [root, id] = getConvoKey(convoId)
+    return queryClient.getQueryCache().subscribe(event => {
+      const queryKey = event.query.queryKey as string[]
+      if (queryKey[0] === root && queryKey[1] === id) {
+        const data = event.query.state.data as
+          | ChatBskyConvoDefs.ConvoView
+          | undefined
+        if (data && convo.convo && data.muted !== convo.convo.muted) {
+          convo.updateMuted(data.muted)
+        }
+      }
+    })
+  }, [convo, convoId, queryClient])
+
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }
