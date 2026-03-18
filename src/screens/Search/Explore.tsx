@@ -1,21 +1,21 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig} from 'react-native'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
+  type AppBskyUnspeccedDefs,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
-
+import {useFeedKeyboardNav, useHotkeysContext} from '#/lib/hotkeys'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useTrendingSettings} from '#/state/preferences/trending'
 import {RQKEY_ROOT as useActorSearchQueryKeyRoot} from '#/state/queries/actor-search'
 import {
   type FeedPreviewItem,
@@ -32,11 +32,15 @@ import {
   getSuggestedUsersForExploreQueryKeyRoot,
   useGetSuggestedUsersForExploreQuery,
 } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery'
-import {createGetTrendsQueryKey} from '#/state/queries/trending/useGetTrendsQuery'
+import {
+  createGetTrendsQueryKey,
+  useGetTrendsQuery,
+} from '#/state/queries/trending/useGetTrendsQuery'
 import {
   createSuggestedStarterPacksQueryKey,
   useSuggestedStarterPacksQuery,
 } from '#/state/queries/useSuggestedStarterPacksQuery'
+import {useTrendingConfig} from '#/state/service-config'
 import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
@@ -49,7 +53,10 @@ import {
 } from '#/screens/Search/components/StarterPackCard'
 import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCard'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
-import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
+import {
+  ExploreTrendingTopics,
+  TrendRow,
+} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -79,7 +86,7 @@ import {
 
 function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const handleOnPress = () => {
     void item.onLoadMore()
@@ -87,7 +94,7 @@ function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
 
   return (
     <Button
-      label={_(msg`Load more`)}
+      label={l`Load more`}
       onPress={handleOnPress}
       style={[a.relative, a.w_full]}>
       {({hovered, pressed}) => (
@@ -149,6 +156,12 @@ type ExploreScreenItems =
   | {
       type: 'trendingTopics'
       key: string
+    }
+  | {
+      type: 'trendingTopic'
+      key: string
+      trend: AppBskyUnspeccedDefs.TrendView
+      rank: number
     }
   | {
       type: 'trendingVideos'
@@ -220,11 +233,24 @@ export function Explore({
   headerHeight: number
 }) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
+
+  const {enabled: trendingEnabled} = useTrendingConfig()
+  const {trendingDisabled} = useTrendingSettings()
+  const {data: trending} = useGetTrendsQuery()
+
+  const {disableScope, enableScope} = useHotkeysContext()
+
+  useEffect(() => {
+    enableScope('feed')
+    return () => {
+      disableScope('feed')
+    }
+  }, [disableScope, enableScope])
 
   /*
    * Begin special language handling
@@ -359,23 +385,31 @@ export function Explore({
       }) as const,
     [],
   )
-  const trendingTopicsModule = useMemo(
-    () =>
-      ({
-        type: 'trendingTopics',
-        key: 'trending-topics',
-      }) as const,
-    [],
-  )
+  const trendingTopicsModule = useMemo<ExploreScreenItems[]>(() => {
+    const showTrending = trendingEnabled && !trendingDisabled
+    if (!showTrending) return []
+
+    if (trending?.trends?.length) {
+      return trending.trends.map((trend, i) => ({
+        type: 'trendingTopic' as const,
+        key: `trendingTopic-${trend.link}`,
+        trend,
+        rank: i + 1,
+      }))
+    }
+
+    // Loading/empty state — fall back to the block component
+    return [{type: 'trendingTopics' as const, key: 'trending-topics'}]
+  }, [trendingEnabled, trendingDisabled, trending])
   const suggestedFollowsModule = useMemo(() => {
     const i: ExploreScreenItems[] = []
     i.push({
       type: 'tabbedHeader',
       key: 'suggested-accounts-header',
-      title: _(msg`Suggested accounts`),
+      title: l`Suggested accounts`,
       icon: Person,
       searchButton: {
-        label: _(msg`Search for more accounts`),
+        label: l`Search for more accounts`,
         metricsTag: 'suggestedAccounts',
         tab: 'user',
       },
@@ -388,7 +422,7 @@ export function Explore({
       i.push({
         type: 'error',
         key: 'suggestedUsersError',
-        message: _(msg`Failed to load suggested follows`),
+        message: l`Failed to load suggested follows`,
         error: cleanError(suggestedUsersError),
       })
     } else {
@@ -436,7 +470,7 @@ export function Explore({
     }
     return i
   }, [
-    _,
+    l,
     moderationOpts,
     suggestedUsers,
     suggestedUsersIsLoading,
@@ -450,10 +484,10 @@ export function Explore({
     i.push({
       type: 'header',
       key: 'suggested-feeds-header',
-      title: _(msg`Discover new feeds`),
+      title: l`Discover new feeds`,
       icon: ListSparkle,
       searchButton: {
-        label: _(msg`Search for more feeds`),
+        label: l`Search for more feeds`,
         metricsTag: 'suggestedFeeds',
         tab: 'feed',
       },
@@ -479,14 +513,14 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'suggestedFeedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: l`Failed to load suggested feeds`,
             error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
             type: 'error',
             key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
+            message: l`Failed to load feeds preferences`,
             error: cleanError(preferencesError),
           })
         } else {
@@ -516,7 +550,7 @@ export function Explore({
             i.push({
               type: 'loadMore',
               key: 'loadMoreFeeds',
-              message: _(msg`Load more suggested feeds`),
+              message: l`Load more suggested feeds`,
               isLoadingMore: isLoadingMoreFeeds,
               onLoadMore: onLoadMoreFeeds,
             })
@@ -527,21 +561,21 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load feeds`),
+            message: l`Failed to load feeds`,
             error: cleanError(feedsError),
           })
         } else if (suggestedFeedsError) {
           i.push({
             type: 'error',
             key: 'suggestedFeedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: l`Failed to load suggested feeds`,
             error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
             type: 'error',
             key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
+            message: l`Failed to load feeds preferences`,
             error: cleanError(preferencesError),
           })
         } else {
@@ -572,21 +606,21 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load feeds`),
+            message: l`Failed to load feeds`,
             error: cleanError(feedsError),
           })
         } else if (suggestedFeedsError) {
           i.push({
             type: 'error',
             key: 'suggestedFeedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: l`Failed to load suggested feeds`,
             error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
             type: 'error',
             key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
+            message: l`Failed to load feeds preferences`,
             error: cleanError(preferencesError),
           })
         } else {
@@ -607,7 +641,7 @@ export function Explore({
             i.push({
               type: 'loadMore',
               key: 'loadMoreFeeds',
-              message: _(msg`Load more suggested feeds`),
+              message: l`Load more suggested feeds`,
               isLoadingMore: isLoadingMoreFeeds,
               onLoadMore: onLoadMoreFeeds,
             })
@@ -618,21 +652,21 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load feeds`),
+            message: l`Failed to load feeds`,
             error: cleanError(feedsError),
           })
         } else if (suggestedFeedsError) {
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: l`Failed to load suggested feeds`,
             error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
             type: 'error',
             key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
+            message: l`Failed to load feeds preferences`,
             error: cleanError(preferencesError),
           })
         } else {
@@ -642,7 +676,7 @@ export function Explore({
     }
     return i
   }, [
-    _,
+    l,
     ax,
     useFullExperience,
     suggestedFeeds,
@@ -662,7 +696,7 @@ export function Explore({
     i.push({
       type: 'header',
       key: 'suggested-starterPacks-header',
-      title: _(msg`Starter Packs`),
+      title: l`Starter Packs`,
       icon: StarterPack,
       iconSize: 'xl',
     })
@@ -689,7 +723,7 @@ export function Explore({
     return i
   }, [
     suggestedSPs,
-    _,
+    l,
     isLoadingSuggestedSPs,
     suggestedSPsError,
     isRefetchingSuggestedSPs,
@@ -716,6 +750,7 @@ export function Explore({
     ]
   }, [showInterestsNux])
 
+  // Keyboard nav: Keep track of focused elements
   const items = useMemo<ExploreScreenItems[]>(() => {
     const i: ExploreScreenItems[] = []
 
@@ -727,7 +762,7 @@ export function Explore({
     i.push({type: 'liveEventFeedsBanner', key: 'liveEventFeedsBanner'})
 
     if (useFullExperience) {
-      i.push(trendingTopicsModule)
+      i.push(...trendingTopicsModule)
       i.push(...suggestedFeedsModule)
       i.push(...suggestedFollowsModule)
       i.push(...suggestedStarterPacksModule)
@@ -747,6 +782,28 @@ export function Explore({
     interestsNuxModule,
     useFullExperience,
   ])
+
+  // Keyboard nav: Indices within items that are focusable
+  const focusableIndices = useMemo(() => {
+    const indices: number[] = []
+    for (let i = 0; i < items.length; i++) {
+      const row = items[i]
+      if (
+        row.type === 'trendingTopic' ||
+        row.type === 'profile' ||
+        row.type === 'feed' ||
+        row.type === 'starterPack' ||
+        row.type === 'preview:header' ||
+        (row.type === 'preview:sliceItem' && row.indexInSlice === 0)
+      ) {
+        indices.push(i)
+      }
+    }
+    return indices
+  }, [items])
+
+  const {focusedIndex: focusedFeedItemIndex, itemRef: feedItemRef} =
+    useFeedKeyboardNav({focusableIndices})
 
   const renderItem = useCallback(
     ({item, index}: {item: ExploreScreenItems; index: number}) => {
@@ -804,6 +861,20 @@ export function Explore({
             </View>
           )
         }
+        case 'trendingTopic': {
+          return (
+            <View style={[a.relative]} ref={feedItemRef(index)}>
+              <SubtleHover hover={index === focusedFeedItemIndex} />
+              <TrendRow
+                trend={item.trend}
+                rank={item.rank}
+                onPress={() => {
+                  ax.metric('trendingTopic:click', {context: 'explore'})
+                }}
+              />
+            </View>
+          )
+        }
         case 'trendingVideos': {
           return <ExploreTrendingVideos />
         }
@@ -812,12 +883,15 @@ export function Explore({
         }
         case 'profile': {
           return (
-            <SuggestedProfileCard
-              profile={item.profile}
-              moderationOpts={moderationOpts!}
-              recId={item.recId}
-              position={index}
-            />
+            <View ref={feedItemRef(index)}>
+              <SubtleHover hover={index === focusedFeedItemIndex} />
+              <SuggestedProfileCard
+                profile={item.profile}
+                moderationOpts={moderationOpts!}
+                recId={item.recId}
+                position={index}
+              />
+            </View>
           )
         }
         case 'profileEmpty': {
@@ -843,7 +917,10 @@ export function Explore({
                 t.atoms.border_contrast_low,
                 a.px_lg,
                 a.py_lg,
-              ]}>
+                a.relative,
+              ]}
+              ref={feedItemRef(index)}>
+              <SubtleHover hover={index === focusedFeedItemIndex} />
               <FeedCard.Default
                 view={item.feed}
                 onPress={() => {
@@ -861,7 +938,10 @@ export function Explore({
         case 'starterPack': {
           return (
             <View style={[a.px_lg, a.pb_lg]}>
-              <StarterPackCard view={item.view} />
+              <View style={[a.relative]} ref={feedItemRef(index)}>
+                <SubtleHover hover={index === focusedFeedItemIndex} />
+                <StarterPackCard view={item.view} />
+              </View>
             </View>
           )
         }
@@ -958,24 +1038,35 @@ export function Explore({
         }
         case 'preview:header': {
           return (
-            <ModuleHeader.Container style={[a.pt_xs]} bottomBorder>
-              {/* Very non-scientific way to avoid small gap on scroll */}
-              <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
-              <ModuleHeader.FeedLink feed={item.feed}>
-                <ModuleHeader.FeedAvatar feed={item.feed} />
-                <View style={[a.flex_1, a.gap_2xs]}>
-                  <ModuleHeader.TitleText style={[a.text_lg]}>
-                    {item.feed.displayName}
-                  </ModuleHeader.TitleText>
-                  <ModuleHeader.SubtitleText>
-                    <Trans>
-                      By {sanitizeHandle(item.feed.creator.handle, '@')}
-                    </Trans>
-                  </ModuleHeader.SubtitleText>
+            <View ref={feedItemRef(index)}>
+              <ModuleHeader.Container style={[a.pt_xs]} bottomBorder>
+                {/* Very non-scientific way to avoid small gap on scroll */}
+                <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
+                <View
+                  style={[
+                    a.relative,
+                    a.flex_1,
+                    a.rounded_md,
+                    a.overflow_hidden,
+                  ]}>
+                  <SubtleHover hover={index === focusedFeedItemIndex} />
+                  <ModuleHeader.FeedLink feed={item.feed}>
+                    <ModuleHeader.FeedAvatar feed={item.feed} />
+                    <View style={[a.flex_1, a.gap_2xs]}>
+                      <ModuleHeader.TitleText style={[a.text_lg]}>
+                        {item.feed.displayName}
+                      </ModuleHeader.TitleText>
+                      <ModuleHeader.SubtitleText>
+                        <Trans>
+                          By {sanitizeHandle(item.feed.creator.handle, '@')}
+                        </Trans>
+                      </ModuleHeader.SubtitleText>
+                    </View>
+                  </ModuleHeader.FeedLink>
                 </View>
-              </ModuleHeader.FeedLink>
-              <ModuleHeader.PinButton feed={item.feed} />
-            </ModuleHeader.Container>
+                <ModuleHeader.PinButton feed={item.feed} />
+              </ModuleHeader.Container>
+            </View>
           )
         }
         case 'preview:footer': {
@@ -1014,6 +1105,9 @@ export function Explore({
               isParentNotFound={subItem.isParentNotFound}
               hideTopBorder={item.hideTopBorder}
               rootPost={slice.items[0].post}
+              feedItemIndex={indexInSlice === 0 ? index : undefined}
+              feedItemRef={indexInSlice === 0 ? feedItemRef(index) : undefined}
+              isFocused={indexInSlice === 0 && index === focusedFeedItemIndex}
             />
           )
         }
@@ -1023,9 +1117,7 @@ export function Explore({
         case 'preview:loadMoreError': {
           return (
             <LoadMoreRetryBtn
-              label={_(
-                msg`There was an issue fetching posts. Tap here to try again.`,
-              )}
+              label={l`There was an issue fetching posts. Tap here to try again.`}
               onPress={handleOnPressRetry}
             />
           )
@@ -1050,8 +1142,10 @@ export function Explore({
       moderationOpts,
       interestsDisplayNames,
       useFullExperience,
-      _,
+      l,
       fetchNextPageFeedPreviews,
+      feedItemRef,
+      focusedFeedItemIndex,
     ],
   )
 

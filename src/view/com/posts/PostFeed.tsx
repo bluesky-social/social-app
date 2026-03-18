@@ -20,10 +20,10 @@ import {
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
-
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useFeedKeyboardNav, useHotkeysContext} from '#/lib/hotkeys'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
@@ -246,6 +246,15 @@ let PostFeed = ({
   const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = IS_NATIVE
 
+  const {disableScope, enableScope} = useHotkeysContext()
+
+  useEffect(() => {
+    enableScope('feed')
+    return () => {
+      disableScope('feed')
+    }
+  }, [disableScope, enableScope])
+
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
   )
@@ -383,6 +392,7 @@ let PostFeed = ({
    * Cached value of whether the current feed was selected at startup. We don't
    * want this to update when user swipes.
    */
+  // eslint-disable-next-line react/hook-use-state
   const [isCurrentFeedAtStartupSelected] = useState(selectedFeed === feed)
 
   const blockedOrMutedAuthors = usePostAuthorShadowFilter(
@@ -692,6 +702,29 @@ let PostFeed = ({
     blockedOrMutedAuthors,
   ])
 
+  // Keyboard nav: Indices within feedItems that are focusable.
+  const focusableIndices = useMemo(() => {
+    const indices: number[] = []
+    for (let i = 0; i < feedItems.length; i++) {
+      const row = feedItems[i]
+      if (row.type === 'sliceItem' && row.indexInSlice === 0) {
+        indices.push(i)
+      }
+    }
+    return indices
+  }, [feedItems])
+
+  const {
+    focusedIndex: focusedFeedItemIndex,
+    setFocusedIndex: setFocusedFeedItemIndex,
+    itemRef: feedItemRef,
+  } = useFeedKeyboardNav({focusableIndices})
+
+  // Keyboard nav: Reset keyboard focus when feed data changes.
+  useEffect(() => {
+    setFocusedFeedItemIndex(-1)
+  }, [lastFetchedAt, setFocusedFeedItemIndex])
+
   // events
   // =
 
@@ -827,6 +860,9 @@ let PostFeed = ({
             hideTopBorder={rowIndex === 0 && indexInSlice === 0}
             rootPost={slice.items[0].post}
             onShowLess={onPressShowLess}
+            feedItemIndex={indexInSlice === 0 ? rowIndex : undefined}
+            feedItemRef={indexInSlice === 0 ? feedItemRef(rowIndex) : undefined}
+            isFocused={indexInSlice === 0 && rowIndex === focusedFeedItemIndex}
           />
         )
       } else if (row.type === 'sliceViewFullThread') {
@@ -880,6 +916,8 @@ let PostFeed = ({
       feedTab,
       feedCacheKey,
       onPressShowLess,
+      feedItemRef,
+      focusedFeedItemIndex,
     ],
   )
 
