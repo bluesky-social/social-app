@@ -19,6 +19,7 @@ import {
   useNavigationDeduped,
 } from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import * as KeyboardActivation from '#/lib/hotkeys/KeyboardActivation'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {
   convertBskyAppUrlIfNeeded,
@@ -55,6 +56,7 @@ interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   onPointerEnter?: () => void
   onPointerLeave?: () => void
   onBeforePress?: () => void
+  ref?: React.Ref<View>
 }
 
 /**
@@ -75,6 +77,7 @@ export const Link = memo(function Link({
   accessibilityActions,
   onAccessibilityAction,
   dataSet: dataSetProp,
+  ref,
   ...props
 }: Props) {
   const t = useTheme()
@@ -106,6 +109,8 @@ export const Link = memo(function Link({
       groupChatJoinIntent,
     ],
   )
+  const activate = useCallback(() => onPress(), [onPress])
+  KeyboardActivation.useRegistration(activate)
 
   const accessibilityActionsWithActivate = [
     ...(accessibilityActions || []),
@@ -118,51 +123,57 @@ export const Link = memo(function Link({
 
   if (noFeedback) {
     return (
-      <WebAuxClickWrapper>
-        <Pressable
-          testID={testID}
-          onPress={onPress}
-          accessible={accessible}
-          accessibilityRole="link"
-          accessibilityActions={accessibilityActionsWithActivate}
-          onAccessibilityAction={e => {
-            if (e.nativeEvent.actionName === 'activate') {
-              onPress()
-            } else {
-              onAccessibilityAction?.(e)
-            }
-          }}
-          // @ts-ignore web only -sfn
-          dataSet={dataSet}
-          {...props}
-          android_ripple={{
-            color: t.atoms.bg_contrast_25.backgroundColor,
-          }}>
-          {/* @ts-ignore web only -prf */}
-          <View style={style} href={anchorHref}>
-            {children ? children : <Text>{title || 'link'}</Text>}
-          </View>
-        </Pressable>
-      </WebAuxClickWrapper>
+      <KeyboardActivation.Isolation>
+        <WebAuxClickWrapper>
+          <Pressable
+            ref={ref}
+            testID={testID}
+            onPress={onPress}
+            accessible={accessible}
+            accessibilityRole="link"
+            accessibilityActions={accessibilityActionsWithActivate}
+            onAccessibilityAction={e => {
+              if (e.nativeEvent.actionName === 'activate') {
+                onPress()
+              } else {
+                onAccessibilityAction?.(e)
+              }
+            }}
+            // @ts-ignore web only -sfn
+            dataSet={dataSet}
+            {...props}
+            android_ripple={{
+              color: t.atoms.bg_contrast_25.backgroundColor,
+            }}>
+            {/* @ts-ignore web only -prf */}
+            <View style={style} href={anchorHref}>
+              {children ? children : <Text>{title || 'link'}</Text>}
+            </View>
+          </Pressable>
+        </WebAuxClickWrapper>
+      </KeyboardActivation.Isolation>
     )
   }
 
   const Com = props.hoverStyle ? PressableWithHover : Pressable
   return (
-    <Com
-      testID={testID}
-      style={style}
-      onPress={onPress}
-      accessible={accessible}
-      accessibilityRole="link"
-      accessibilityLabel={props.accessibilityLabel ?? title}
-      accessibilityHint={props.accessibilityHint}
-      // @ts-ignore web only -prf
-      href={anchorHref}
-      dataSet={dataSet}
-      {...props}>
-      {children ? children : <Text>{title || 'link'}</Text>}
-    </Com>
+    <KeyboardActivation.Isolation>
+      <Com
+        ref={ref}
+        testID={testID}
+        style={style}
+        onPress={onPress}
+        accessible={accessible}
+        accessibilityRole="link"
+        accessibilityLabel={props.accessibilityLabel ?? title}
+        accessibilityHint={props.accessibilityHint}
+        // @ts-ignore web only -prf
+        href={anchorHref}
+        dataSet={dataSet}
+        {...props}>
+        {children ? children : <Text>{title || 'link'}</Text>}
+      </Com>
+    </KeyboardActivation.Isolation>
   )
 })
 
@@ -379,7 +390,7 @@ function onPressInner(
   navigation: DebouncedNavigationProp,
   href: string,
   navigationAction: 'push' | 'replace' | 'navigate' = 'push',
-  openLink: (href: string) => void,
+  openLink: (href: string) => void | Promise<void>,
   groupChatJoinIntent: (code: string, uri?: string) => void,
   e?: Event,
 ) {
@@ -419,7 +430,7 @@ function onPressInner(
       href.startsWith('mailto') ||
       EXEMPT_PATHS.some(path => href.startsWith(path))
     ) {
-      openLink(href)
+      void openLink(href)
     } else {
       const [routeName, params] = router.matchPath(href)
       if (navigationAction === 'push') {

@@ -19,13 +19,16 @@ export function Container({
   style,
   children,
   bottomBorder,
+  ref,
 }: {
   children: React.ReactNode
   bottomBorder?: boolean
+  ref?: React.Ref<View | null>
 } & ViewStyleProp) {
   const t = useTheme()
   return (
     <View
+      ref={ref}
       style={[
         a.flex_row,
         a.align_center,
