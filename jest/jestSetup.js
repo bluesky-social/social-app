@@ -33,6 +33,8 @@ jest.mock('react-native-safe-area-context', () => {
 })
 
 jest.mock('expo-file-system/legacy', () => ({
+  cacheDirectory: 'file://cache',
+  copyAsync: jest.fn().mockResolvedValue(undefined),
   getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
   deleteAsync: jest.fn(),
   moveAsync: jest.fn().mockResolvedValue(undefined),
@@ -45,6 +47,7 @@ jest.mock('expo-image-manipulator', () => ({
   }),
   SaveFormat: {
     JPEG: 'jpeg',
+    PNG: 'png',
     WEBP: 'webp',
   },
 }))

@@ -1,7 +1,12 @@
-import {createDownloadResumable, deleteAsync} from 'expo-file-system/legacy'
+import {
+  copyAsync,
+  createDownloadResumable,
+  deleteAsync,
+} from 'expo-file-system/legacy'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 
 import {
+  compressIfNeeded,
   downloadAndResize,
   type DownloadAndResizeOpts,
   getResizedDimensions,
@@ -123,5 +128,49 @@ describe('downloadAndResize', () => {
       width: 1000,
       height: 2000,
     })
+  })
+
+  it('should preserve PNG format when compressing a PNG input', async () => {
+    const img = {
+      path: 'file://input-image.png',
+      size: 2_000_000,
+      width: 100,
+      height: 100,
+      mime: 'image/png',
+    }
+
+    const result = await compressIfNeeded(img, 500_000)
+
+    expect(manipulateAsync).toHaveBeenCalledWith(
+      expect.any(String),
+      [{resize: {height: img.height, width: img.width}}],
+      expect.objectContaining({format: SaveFormat.PNG}),
+    )
+    expect(copyAsync).toHaveBeenCalledWith(
+      expect.objectContaining({to: expect.stringMatching(/\.png$/)}),
+    )
+    expect(result.mime).toBe('image/png')
+  })
+
+  it('should keep JPEG output when compressing a JPEG input', async () => {
+    const img = {
+      path: 'file://input-image.jpg',
+      size: 2_000_000,
+      width: 100,
+      height: 100,
+      mime: 'image/jpeg',
+    }
+
+    const result = await compressIfNeeded(img, 500_000)
+
+    expect(manipulateAsync).toHaveBeenCalledWith(
+      expect.any(String),
+      [{resize: {height: img.height, width: img.width}}],
+      expect.objectContaining({format: SaveFormat.JPEG}),
+    )
+    expect(copyAsync).toHaveBeenCalledWith(
+      expect.objectContaining({to: expect.stringMatching(/\.jpg$/)}),
+    )
+    expect(result.mime).toBe('image/jpeg')
   })
 })

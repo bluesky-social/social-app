@@ -205,6 +205,7 @@ export async function compressImage(
   options?: {
     highResolution?: boolean
     increasedBlobSizeLimit?: boolean
+    preserveTransparency?: boolean
   },
 ): Promise<PickerImage> {
   const source = img.transformed || img.source
@@ -213,6 +214,9 @@ export async function compressImage(
   let attempts = 0
   let maxDimension = highResolution ? 4000 : POST_IMG_MAX.width
   let maxBytes = options?.increasedBlobSizeLimit ? 2000000 : POST_IMG_MAX.size
+
+  const preserveTransparencyPNG =
+    options?.preserveTransparency && source.mime === 'image/png'
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
@@ -246,7 +250,7 @@ export async function compressImage(
       [{resize: {width: w, height: h}}],
       {
         compress: qualityPercentage / 100,
-        format: SaveFormat.JPEG,
+        format: preserveTransparencyPNG ? SaveFormat.PNG : SaveFormat.JPEG,
         base64: true,
       },
     )
@@ -259,7 +263,7 @@ export async function compressImage(
         path: await moveIfNecessary(res.uri),
         width: res.width,
         height: res.height,
-        mime: 'image/jpeg',
+        mime: preserveTransparencyPNG ? 'image/png' : 'image/jpeg',
         size,
       }
     } else {

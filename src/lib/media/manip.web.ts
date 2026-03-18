@@ -14,6 +14,7 @@ export async function compressIfNeeded(
     height: img.height,
     mode: 'stretch',
     maxSize,
+    mimeType: img.mime,
   })
 }
 
@@ -74,6 +75,7 @@ interface DoResizeOpts {
   height: number
   mode: 'contain' | 'cover' | 'stretch'
   maxSize: number
+  mimeType?: string
 }
 
 async function doResize(
@@ -85,6 +87,9 @@ async function doResize(
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 //exclusive
 
+  const preserveTransparencyPNG = opts.mimeType === 'image/png'
+  const outputMime = preserveTransparencyPNG ? 'image/png' : 'image/jpeg'
+
   while (maxQualityPercentage - minQualityPercentage > 1) {
     const qualityPercentage = Math.round(
       (maxQualityPercentage + minQualityPercentage) / 2,
@@ -94,6 +99,7 @@ async function doResize(
       height: opts.height,
       quality: qualityPercentage / 100,
       mode: opts.mode,
+      outputMime,
     })
 
     if (getDataUriSize(tempDataUri) < opts.maxSize) {
@@ -109,7 +115,7 @@ async function doResize(
   }
   return {
     path: newDataUri,
-    mime: 'image/jpeg',
+    mime: outputMime,
     size: getDataUriSize(newDataUri),
     width: opts.width,
     height: opts.height,
@@ -123,11 +129,13 @@ function createResizedImage(
     height,
     quality,
     mode,
+    outputMime,
   }: {
     width: number
     height: number
     quality: number
     mode: 'contain' | 'cover' | 'stretch'
+    outputMime?: string
   },
 ): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -152,7 +160,7 @@ function createResizedImage(
       canvas.height = h
 
       ctx.drawImage(img, 0, 0, w, h)
-      resolve(canvas.toDataURL('image/jpeg', quality))
+      resolve(canvas.toDataURL(outputMime || 'image/jpeg', quality))
     })
     img.addEventListener('error', ev => {
       reject(ev.error)
