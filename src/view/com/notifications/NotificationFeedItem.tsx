@@ -33,7 +33,6 @@ import {forceLTR} from '#/lib/strings/bidi'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type FeedNotification} from '#/state/queries/notifications/feed'
@@ -268,15 +267,7 @@ let NotificationFeedItem = ({
 
   let a11yLabel = ''
   let notificationContent: React.ReactElement<any>
-  let icon = (
-    <HeartIconFilled
-      size="xl"
-      style={[
-        s.likeColor,
-        // {position: 'relative', top: -4}
-      ]}
-    />
-  )
+  let icon = <HeartIconFilled size="xl" fill={t.palette.pink} />
 
   if (item.type === 'post-like') {
     a11yLabel = hasMultipleAuthors
@@ -952,7 +943,7 @@ function CondensedAuthorsList({
       onPress={onToggleAuthorsExpanded}>
       <View style={[a.flex_row, a.align_center]}>
         {authors.slice(0, MAX_AUTHORS).map(author => (
-          <View key={author.href} style={s.mr5}>
+          <View key={author.href} style={{marginRight: 5}}>
             <PreviewableUserAvatar
               size={35}
               profile={author.profile}
