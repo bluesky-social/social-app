@@ -3,10 +3,9 @@ import {View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 
 import {decideShouldRoll} from '#/lib/custom-animations/util'
-import {s} from '#/lib/styles'
-import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
+import {Text} from '#/components/Typography'
 
 const animationConfig = {
   duration: 400,
@@ -49,8 +48,8 @@ export function CountWheel({
   const shouldAnimate = !useReducedMotion() && hasBeenToggled
   const shouldRoll = decideShouldRoll(isLiked, likeCount)
 
-  const countView = useRef<HTMLDivElement>(null)
-  const prevCountView = useRef<HTMLDivElement>(null)
+  const countView = useRef<View>(null)
+  const prevCountView = useRef<View>(null)
 
   const [prevCount, setPrevCount] = useState(likeCount)
   const prevIsLiked = useRef(isLiked)
@@ -59,17 +58,20 @@ export function CountWheel({
   const formattedPrevCount = formatPostStatCount(prevCount)
 
   useEffect(() => {
+    const countViewRef = countView.current as HTMLDivElement | null
+    const prevCountViewRef = prevCountView.current as HTMLDivElement | null
+
     if (isLiked === prevIsLiked.current) {
       return
     }
 
     const newPrevCount = isLiked ? likeCount - 1 : likeCount + 1
     if (shouldAnimate && shouldRoll) {
-      countView.current?.animate?.(
+      countViewRef?.animate?.(
         isLiked ? enteringUpKeyframe : enteringDownKeyframe,
         animationConfig,
       )
-      prevCountView.current?.animate?.(
+      prevCountViewRef?.animate?.(
         isLiked ? exitingUpKeyframe : exitingDownKeyframe,
         animationConfig,
       )
@@ -84,16 +86,14 @@ export function CountWheel({
 
   return (
     <View>
-      <View
-        // @ts-expect-error is div
-        ref={countView}>
+      <View ref={countView}>
         <Text
           testID="likeCount"
           style={[
             big ? a.text_md : a.text_sm,
             a.user_select_none,
             isLiked
-              ? [a.font_semi_bold, s.likeColor]
+              ? [a.font_semi_bold, {color: t.palette.pink}]
               : {color: t.palette.contrast_500},
           ]}>
           {formattedCount}
@@ -103,14 +103,13 @@ export function CountWheel({
         <View
           style={{position: 'absolute', opacity: 0}}
           aria-disabled={true}
-          // @ts-expect-error is div
           ref={prevCountView}>
           <Text
             style={[
               big ? a.text_md : a.text_sm,
               a.user_select_none,
               isLiked
-                ? [a.font_semi_bold, s.likeColor]
+                ? [a.font_semi_bold, {color: t.palette.pink}]
                 : {color: t.palette.contrast_500},
             ]}>
             {formattedPrevCount}

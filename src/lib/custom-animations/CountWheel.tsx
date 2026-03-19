@@ -8,10 +8,9 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {decideShouldRoll} from '#/lib/custom-animations/util'
-import {s} from '#/lib/styles'
-import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
+import {Text} from '#/components/Typography'
 
 const animationConfig = {
   duration: 400,
@@ -147,7 +146,7 @@ export function CountWheel({
                 big ? a.text_md : a.text_sm,
                 a.user_select_none,
                 isLiked
-                  ? [a.font_semi_bold, s.likeColor]
+                  ? [a.font_semi_bold, {color: t.palette.pink}]
                   : {color: t.palette.contrast_500},
               ]}>
               {formattedCount}
@@ -165,7 +164,7 @@ export function CountWheel({
                   big ? a.text_md : a.text_sm,
                   a.user_select_none,
                   isLiked
-                    ? [a.font_semi_bold, s.likeColor]
+                    ? [a.font_semi_bold, {color: t.palette.pink}]
                     : {color: t.palette.contrast_500},
                 ]}>
                 {formattedPrevCount}
