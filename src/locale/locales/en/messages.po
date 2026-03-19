@@ -890,7 +890,7 @@ msgstr "Add automation label to account"
 msgid "Add emoji reaction"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:224
+#: src/view/com/feeds/ComposerPrompt.tsx:284
 msgid "Add image"
 msgstr ""
 
@@ -2415,7 +2415,7 @@ msgstr ""
 msgid "Complete the challenge"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:147
+#: src/view/com/feeds/ComposerPrompt.tsx:207
 #: src/view/shell/desktop/LeftNav.tsx:575
 msgid "Compose new post"
 msgstr ""
@@ -3397,9 +3397,13 @@ msgstr ""
 msgid "Drafts"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:366
+#: src/view/com/composer/text-input/TextInput.web.tsx:337
 msgid "Drop to add images"
 msgstr ""
+
+#: src/view/com/feeds/ComposerPrompt.tsx:196
+msgid "Drop to start a post"
+msgstr "Drop to start a post"
 
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:20
 msgid "Due to laws in your region, certain features on Bluesky are currently restricted until you're able to verify you're an adult."
@@ -6916,7 +6920,7 @@ msgstr ""
 msgid "Open avatar creator"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:202
+#: src/view/com/feeds/ComposerPrompt.tsx:262
 msgid "Open camera"
 msgstr ""
 
@@ -7043,7 +7047,7 @@ msgstr ""
 msgid "Opens composer"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:203
+#: src/view/com/feeds/ComposerPrompt.tsx:263
 msgid "Opens device camera"
 msgstr ""
 
@@ -7074,7 +7078,7 @@ msgstr ""
 msgid "Opens helpdesk in browser"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:225
+#: src/view/com/feeds/ComposerPrompt.tsx:285
 msgid "Opens image picker"
 msgstr ""
 
@@ -7095,7 +7099,7 @@ msgstr ""
 msgid "Opens post language settings"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:148
+#: src/view/com/feeds/ComposerPrompt.tsx:208
 msgid "Opens the post composer"
 msgstr ""
 
@@ -11685,7 +11689,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:104
 #: src/view/com/composer/Composer.tsx:1320
-#: src/view/com/feeds/ComposerPrompt.tsx:193
+#: src/view/com/feeds/ComposerPrompt.tsx:253
 msgid "What's up?"
 msgstr ""
 
