@@ -335,7 +335,10 @@ function usePostUnrepostMutation(
   })
 }
 
-export function usePostDeleteMutation() {
+export function usePostDeleteMutation({
+  onSuccess,
+  onError,
+}: {onSuccess?: () => void; onError?: (error: Error) => void} = {}) {
   const queryClient = useQueryClient()
   const agent = useAgent()
   return useMutation<void, Error, {uri: string}>({
@@ -344,7 +347,9 @@ export function usePostDeleteMutation() {
     },
     onSuccess(_, variables) {
       updatePostShadow(queryClient, variables.uri, {isDeleted: true})
+      onSuccess?.()
     },
+    onError,
   })
 }
 
