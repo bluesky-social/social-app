@@ -99,7 +99,7 @@ export function FollowDialogWithoutGuide({
   viewContext,
 }: {
   control: Dialog.DialogOuterProps['control']
-  viewContext: 'profile' | 'feed'
+  viewContext: 'profile' | 'profileHeader' | 'feed'
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
@@ -118,7 +118,7 @@ function DialogInner({
   viewContext,
 }: {
   guide?: Follow10ProgressGuide
-  viewContext: 'profile' | 'feed' | 'guide'
+  viewContext: 'profile' | 'profileHeader' | 'feed' | 'guide'
 }) {
   const {_} = useLingui()
   const ax = useAnalytics()
@@ -142,13 +142,16 @@ function DialogInner({
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
 
+  const isProfileHeaderContext = viewContext === 'profileHeader'
   const isFeedContext = viewContext === 'feed'
   const isGuideContext = viewContext === 'guide'
   const logContext: Metrics['suggestedUser:seen']['logContext'] = isFeedContext
     ? 'InterstitialDiscover'
-    : isGuideContext
-      ? 'ProgressGuide'
-      : 'InterstitialProfile'
+    : isProfileHeaderContext
+      ? 'Profile'
+      : isGuideContext
+        ? 'ProgressGuide'
+        : 'InterstitialProfile'
 
   useEffect(() => {
     lastSearchText = searchText
