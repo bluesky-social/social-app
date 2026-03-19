@@ -12,6 +12,7 @@ import {countGraphemes} from 'unicode-segmenter/grapheme'
 import {
   BLUESKY_MOD_SERVICE_HEADERS,
   MAX_REPORT_REASON_GRAPHEME_LENGTH,
+  urls,
 } from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
@@ -211,7 +212,7 @@ export function Takendown() {
                   Your account was found to be in violation of the{' '}
                   <SimpleInlineLinkText
                     label={_(msg`Bluesky Social Terms of Service`)}
-                    to="https://bsky.social/about/support/tos"
+                    to={urls.website.support.tos}
                     style={[a.text_md, a.leading_snug]}>
                     Bluesky Social Terms of Service
                   </SimpleInlineLinkText>
