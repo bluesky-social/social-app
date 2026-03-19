@@ -25,6 +25,7 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {isNetworkError} from '#/lib/strings/errors'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useTranslate} from '#/lib/translation'
@@ -127,8 +128,36 @@ let PostMenuItems = ({
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const langPrefs = useLanguagePrefs()
-  const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
-  const {mutateAsync: pinPostMutate, isPending: isPinPending} =
+  const {mutate: deletePostMutate} = usePostDeleteMutation({
+    onSuccess: () => {
+      Toast.show(l({message: 'Post deleted', context: 'toast'}))
+
+      const route = getCurrentRoute(navigation.getState())
+      if (route.name === 'PostThread') {
+        const params = route.params as CommonNavigatorParams['PostThread']
+        if (
+          currentAccount &&
+          isAuthor &&
+          (params.name === currentAccount.handle ||
+            params.name === currentAccount.did)
+        ) {
+          const currentHref = makeProfileLink(postAuthor, 'post', params.rkey)
+          if (currentHref === href && navigation.canGoBack()) {
+            navigation.goBack()
+          }
+        }
+      }
+    },
+    onError: err => {
+      Toast.show(l`Failed to delete post, please try again`, {
+        type: 'error',
+      })
+      if (!isNetworkError(err)) {
+        logger.error('Failed to delete post', {safeMessage: err})
+      }
+    },
+  })
+  const {mutate: pinPostMutate, isPending: isPinPending} =
     usePinnedPostMutation()
   const requireSignIn = useRequireAuth()
   const hiddenPosts = useHiddenPosts()
@@ -194,33 +223,7 @@ let PostMenuItems = ({
   }, [postUri, postAuthor])
 
   const onDeletePost = () => {
-    deletePostMutate({uri: postUri}).then(
-      () => {
-        Toast.show(l({message: 'Post deleted', context: 'toast'}))
-
-        const route = getCurrentRoute(navigation.getState())
-        if (route.name === 'PostThread') {
-          const params = route.params as CommonNavigatorParams['PostThread']
-          if (
-            currentAccount &&
-            isAuthor &&
-            (params.name === currentAccount.handle ||
-              params.name === currentAccount.did)
-          ) {
-            const currentHref = makeProfileLink(postAuthor, 'post', params.rkey)
-            if (currentHref === href && navigation.canGoBack()) {
-              navigation.goBack()
-            }
-          }
-        }
-      },
-      e => {
-        logger.error('Failed to delete post', {message: e})
-        Toast.show(l`Failed to delete post, please try again`, {
-          type: 'error',
-        })
-      },
-    )
+    deletePostMutate({uri: postUri})
   }
 
   const onToggleThreadMute = () => {
@@ -413,7 +416,7 @@ let PostMenuItems = ({
 
   const onPressPin = () => {
     ax.metric(isPinned ? 'post:unpin' : 'post:pin', {})
-    void pinPostMutate({
+    pinPostMutate({
       postUri,
       postCid,
       action: isPinned ? 'unpin' : 'pin',
