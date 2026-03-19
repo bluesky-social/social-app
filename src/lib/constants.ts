@@ -204,7 +204,7 @@ export const EMOJI_REACTION_LIMIT = 5
 
 export const urls = {
   website: {
-    about: 'https://bsky.social/about',
+    home: 'https://bsky.social/about',
     faq: 'https://bsky.social/about/faq',
     jobs: 'https://bsky.social/about/join',
     blog: {
