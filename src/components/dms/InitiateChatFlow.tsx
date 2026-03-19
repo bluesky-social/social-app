@@ -81,7 +81,7 @@ enum ChatState {
   GROUP_NAME,
 }
 
-export function InitiateChatDialog({
+export function InitiateChatFlow({
   title,
   showRecentConvos,
   sortByMessageDeclaration,
@@ -548,8 +548,6 @@ function DefaultProfileCard({
 }
 
 function ProfileCardSkeleton() {
-  const t = useTheme()
-
   return (
     <View
       style={[
@@ -560,30 +558,8 @@ function ProfileCardSkeleton() {
         a.align_center,
         a.flex_row,
       ]}>
-      <View
-        style={[
-          a.rounded_full,
-          {width: 42, height: 42},
-          t.atoms.bg_contrast_25,
-        ]}
-      />
-
-      <View style={[a.flex_1, a.gap_sm]}>
-        <View
-          style={[
-            a.rounded_xs,
-            {width: 80, height: 14},
-            t.atoms.bg_contrast_25,
-          ]}
-        />
-        <View
-          style={[
-            a.rounded_xs,
-            {width: 120, height: 10},
-            t.atoms.bg_contrast_25,
-          ]}
-        />
-      </View>
+      <ProfileCard.AvatarPlaceholder size={42} />
+      <ProfileCard.NameAndHandlePlaceholder />
     </View>
   )
 }
