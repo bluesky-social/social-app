@@ -44,39 +44,62 @@ export function useMuteConvo(
         return data
       }
     },
-    onSuccess: (data, params) => {
+    onMutate: ({mute}) => {
+      if (!convoId) return
+
+      const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
+        CONVO_KEY(convoId),
+      )
+      const prevListEntries = queryClient.getQueriesData<
+        InfiniteData<ChatBskyConvoListConvos.OutputSchema>
+      >({queryKey: [CONVO_LIST_KEY]})
+
+      // Update for a single chat thread
       queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
-        CONVO_KEY(data.convo.id),
+        CONVO_KEY(convoId),
         prev => {
           if (!prev) return
           return {
             ...prev,
-            muted: params.mute,
+            muted: mute,
           }
         },
       )
-      queryClient.setQueryData<
+
+      // Update for the chat list
+      queryClient.setQueriesData<
         InfiniteData<ChatBskyConvoListConvos.OutputSchema>
-      >([CONVO_LIST_KEY], prev => {
+      >({queryKey: [CONVO_LIST_KEY]}, prev => {
         if (!prev?.pages) return
         return {
           ...prev,
           pages: prev.pages.map(page => ({
             ...page,
             convos: page.convos.map(convo => {
-              if (convo.id !== data.convo.id) return convo
+              if (convo.id !== convoId) return convo
               return {
                 ...convo,
-                muted: params.mute,
+                muted: mute,
               }
             }),
           })),
         }
       })
 
+      return {prevConvo, prevListEntries}
+    },
+    onSuccess: data => {
       onSuccess?.(data)
     },
-    onError: e => {
+    onError: (e, _variables, context) => {
+      if (context?.prevConvo && convoId) {
+        queryClient.setQueryData(CONVO_KEY(convoId), context.prevConvo)
+      }
+      if (context?.prevListEntries) {
+        for (const [key, data] of context.prevListEntries) {
+          queryClient.setQueryData(key, data)
+        }
+      }
       onError?.(e)
     },
   })
