@@ -10,6 +10,7 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
+import {InitiateChatFlow} from '#/components/dms/InitiateChatFlow'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
@@ -25,6 +26,8 @@ export function NewChat({
   const {_} = useLingui()
   const ax = useAnalytics()
   const requireEmailVerification = useRequireEmailVerification()
+
+  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
 
   const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
@@ -77,11 +80,19 @@ export function NewChat({
         testID="newChatDialog"
         nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
-        <SearchablePeopleList
-          title={_(msg`Start a new chat`)}
-          onSelectChat={onCreateChat}
-          sortByMessageDeclaration
-        />
+        {isGroupChatEnabled ? (
+          <InitiateChatFlow
+            title={_(msg`New chat`)}
+            onSelectChat={onCreateChat}
+            sortByMessageDeclaration
+          />
+        ) : (
+          <SearchablePeopleList
+            title={_(msg`Start a new chat`)}
+            onSelectChat={onCreateChat}
+            sortByMessageDeclaration
+          />
+        )}
       </Dialog.Outer>
     </>
   )
