@@ -76,7 +76,7 @@ let PostControls = ({
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
-  const {feedDescriptor} = useFeedFeedbackContext()
+  const {feedDescriptor, sendInteraction} = useFeedFeedbackContext()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(
     post,
     viaRepost,
@@ -90,7 +90,6 @@ let PostControls = ({
     logContext,
   )
   const requireAuth = useRequireAuth()
-  const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
   const isBlocked = Boolean(
