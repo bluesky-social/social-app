@@ -172,7 +172,7 @@ function Footer() {
       ]}>
       <InlineLinkText
         label={_(msg`Learn more about Bluesky`)}
-        to={urls.website.about}>
+        to={urls.website.home}>
         <Trans>Business</Trans>
       </InlineLinkText>
       <InlineLinkText
