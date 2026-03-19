@@ -518,6 +518,7 @@ export type Events = {
       | 'InterstitialProfile'
       | 'Profile'
       | 'Onboarding'
+    recId?: number | string
   }
   'suggestedUser:dismiss': {
     logContext: 'InterstitialDiscover' | 'InterstitialProfile'
