@@ -17,7 +17,6 @@ import * as Sentry from '@sentry/react-native'
 
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
-import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
@@ -59,7 +58,7 @@ import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import {Shell} from '#/view/shell'
-import {ThemeProvider as Alf} from '#/alf'
+import {atoms as a, ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
@@ -176,7 +175,7 @@ function InnerApp() {
                                                     <EmailVerificationProvider>
                                                       <HideBottomBarBorderProvider>
                                                         <GestureHandlerRootView
-                                                          style={s.h100pct}>
+                                                          style={a.h_full}>
                                                           <GlobalGestureEventsProvider>
                                                             <IntentDialogProvider>
                                                               <TranslateOnDeviceProvider>
