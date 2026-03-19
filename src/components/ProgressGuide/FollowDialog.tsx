@@ -31,7 +31,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
+import {type Metrics, useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ProgressGuideTask} from './Task'
@@ -85,7 +85,7 @@ export function FollowDialog({
       </Button>
       <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
-        <DialogInner guide={guide} />
+        <DialogInner guide={guide} viewContext="guide" />
       </Dialog.Outer>
     </>
   )
@@ -96,13 +96,15 @@ export function FollowDialog({
  */
 export function FollowDialogWithoutGuide({
   control,
+  viewContext,
 }: {
   control: Dialog.DialogOuterProps['control']
+  viewContext: 'profile' | 'feed'
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
-      <DialogInner />
+      <DialogInner viewContext={viewContext} />
     </Dialog.Outer>
   )
 }
@@ -111,7 +113,13 @@ export function FollowDialogWithoutGuide({
 let lastSelectedInterest = ''
 let lastSearchText = ''
 
-function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
+function DialogInner({
+  guide,
+  viewContext,
+}: {
+  guide?: Follow10ProgressGuide
+  viewContext: 'profile' | 'feed' | 'guide'
+}) {
   const {_} = useLingui()
   const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
@@ -133,6 +141,14 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const inputRef = useRef<TextInput>(null)
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
+
+  const isFeedContext = viewContext === 'feed'
+  const isGuideContext = viewContext === 'guide'
+  const logContext: Metrics['suggestedUser:seen']['logContext'] = isFeedContext
+    ? 'InterstitialDiscover'
+    : isGuideContext
+      ? 'ProgressGuide'
+      : 'InterstitialProfile'
 
   useEffect(() => {
     lastSearchText = searchText
@@ -269,7 +285,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
               i => i.type === 'profile' && i.profile.did === item.profile.did,
             )
             ax.metric('suggestedUser:seen', {
-              logContext: 'ProgressGuide',
+              logContext,
               recId: hasSearchText ? undefined : suggestions?.recId,
               position: position !== -1 ? position : 0,
               suggestedDid: item.profile.did,
