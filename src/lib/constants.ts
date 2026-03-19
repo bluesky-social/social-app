@@ -228,11 +228,6 @@ export const urls = {
       communityDeprecated: `https://bsky.social/about/support/community-guidelines-deprecated`,
       copyright: `https://bsky.social/about/support/copyright`,
     },
-    atproto: {
-      website: {
-        faq: 'https://atproto.com/guides/faq',
-      },
-    },
   },
 } as const
 
