@@ -5,6 +5,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {urls} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
@@ -171,17 +172,17 @@ function Footer() {
       ]}>
       <InlineLinkText
         label={_(msg`Learn more about Bluesky`)}
-        to="https://bsky.social">
+        to={urls.website.home}>
         <Trans>Business</Trans>
       </InlineLinkText>
       <InlineLinkText
         label={_(msg`Read the Bluesky blog`)}
-        to="https://bsky.social/about/blog">
+        to={urls.website.blog.index}>
         <Trans>Blog</Trans>
       </InlineLinkText>
       <InlineLinkText
         label={_(msg`See jobs at Bluesky`)}
-        to="https://bsky.social/about/join">
+        to={urls.website.jobs}>
         <Trans comment="Link to a page with job openings at Bluesky">
           Jobs
         </Trans>

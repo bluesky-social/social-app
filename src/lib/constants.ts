@@ -204,18 +204,32 @@ export const EMOJI_REACTION_LIMIT = 5
 
 export const urls = {
   website: {
+    home: 'https://bsky.social/about',
+    faq: 'https://bsky.social/about/faq',
+    jobs: 'https://bsky.social/about/join',
     blog: {
+      index: 'https://bsky.social/about/blog',
       findFriendsAnnouncement:
         'https://bsky.social/about/blog/12-16-2025-find-friends',
       initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
       searchTipsAndTricks: 'https://bsky.social/about/blog/05-31-2024-search',
+      updatedTermsAndPolicies:
+        'https://bsky.social/about/blog/08-14-2025-updated-terms-and-policies',
+      handleTutorial:
+        'https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial',
     },
     support: {
+      index: `https://bsky.social/about/support`,
       findFriendsPrivacyPolicy:
         'https://bsky.social/about/support/find-friends-privacy-policy',
+      tos: `https://bsky.social/about/support/tos`,
+      privacy: `https://bsky.social/about/support/privacy-policy`,
+      community: `https://bsky.social/about/support/community-guidelines`,
+      communityDeprecated: `https://bsky.social/about/support/community-guidelines-deprecated`,
+      copyright: `https://bsky.social/about/support/copyright`,
     },
   },
-}
+} as const
 
 export const PUBLIC_APPVIEW = 'https://api.bsky.app'
 export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
@@ -245,11 +259,4 @@ export const BLUESKY_MOD_SERVICE_HEADERS = {
 
 export const BLUESKY_NOTIF_SERVICE_HEADERS = {
   'atproto-proxy': `${BLUESKY_PROXY_DID}#bsky_notif`,
-}
-
-export const webLinks = {
-  tos: `https://bsky.social/about/support/tos`,
-  privacy: `https://bsky.social/about/support/privacy-policy`,
-  community: `https://bsky.social/about/support/community-guidelines`,
-  communityDeprecated: `https://bsky.social/about/support/community-guidelines-deprecated`,
 }

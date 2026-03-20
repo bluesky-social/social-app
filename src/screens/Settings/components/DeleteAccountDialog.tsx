@@ -4,7 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
+import {DM_SERVICE_HEADERS, urls} from '#/lib/constants'
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
@@ -343,7 +343,7 @@ function DeleteAccountDialogInner({
                 <InlineLinkText
                   label={_(msg`Learn more about the AT Protocol.`)}
                   style={[a.text_md]}
-                  to="https://bsky.social/about/faq">
+                  to={urls.website.faq}>
                   AT Protocol
                 </InlineLinkText>{' '}
                 services you use with this account.

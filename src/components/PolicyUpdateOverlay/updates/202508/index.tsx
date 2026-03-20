@@ -4,6 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {urls} from '#/lib/constants'
 import {useA11y} from '#/state/a11y'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -27,27 +28,27 @@ export function Content({state}: {state: PolicyUpdateState}) {
   const links = {
     terms: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support/tos`,
+      to: urls.website.support.tos,
       label: _(msg`Terms of Service`),
     },
     privacy: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support/privacy-policy`,
+      to: urls.website.support.privacy,
       label: _(msg`Privacy Policy`),
     },
     copyright: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support/copyright`,
+      to: urls.website.support.copyright,
       label: _(msg`Copyright Policy`),
     },
     guidelines: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support/community-guidelines`,
+      to: urls.website.support.community,
       label: _(msg`Community Guidelines`),
     },
     blog: {
       overridePresentation: false,
-      to: `https://bsky.social/about/blog/08-14-2025-updated-terms-and-policies`,
+      to: urls.website.blog.updatedTermsAndPolicies,
       label: _(msg`Our blog post`),
     },
   }
