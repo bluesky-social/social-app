@@ -8,6 +8,8 @@ import android.view.ViewStructure
 import android.view.Window
 import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
@@ -16,7 +18,6 @@ import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.internal.EdgeToEdgeUtils
 import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
@@ -47,13 +48,15 @@ class BottomSheetView(
     }
 
   private fun getNavigationBarHeight(): Int {
-    val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-    return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
+    val insets = ViewCompat.getRootWindowInsets(this)
+      ?: return 0
+    return insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
   }
 
   private fun getStatusBarHeight(): Int {
-    val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-    return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
+    val insets = ViewCompat.getRootWindowInsets(this)
+      ?: return 0
+    return insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
   }
 
   private val onAttemptDismiss by EventDispatcher()
@@ -199,7 +202,7 @@ class BottomSheetView(
           insetsController.isAppearanceLightNavigationBars = originalNavBarAppearance
         }
         if (originalStatusBarAppearance != null) {
-          EdgeToEdgeUtils.setLightStatusBar(window, originalStatusBarAppearance)
+          insetsController.isAppearanceLightStatusBars = originalStatusBarAppearance
         }
       }
     }
@@ -258,6 +261,8 @@ class BottomSheetView(
               BottomSheetBehavior.STATE_COLLAPSED -> selectedSnapPoint = 1
               BottomSheetBehavior.STATE_HALF_EXPANDED -> selectedSnapPoint = 1
               BottomSheetBehavior.STATE_HIDDEN -> selectedSnapPoint = 0
+              BottomSheetBehavior.STATE_DRAGGING,
+              BottomSheetBehavior.STATE_SETTLING -> { /* transient states, no snap point change */ }
             }
             // Apply deferred layout update after gesture completes
             if (newState != BottomSheetBehavior.STATE_DRAGGING &&
