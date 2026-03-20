@@ -40,10 +40,11 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
-import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
+import {atoms as a, platform, useBreakpoints} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
@@ -153,6 +154,8 @@ export function PostThread({uri}: {uri: string}) {
   const listRef = useRef<ListMethods>(null)
   const anchorRef = useRef<View | null>(null)
   const headerRef = useRef<View | null>(null)
+  const prevContentHeight = useRef(0)
+  const needsScrollCompensation = useRef(false)
 
   /*
    * On a cold load, parents are not prepended until the anchor post has
@@ -175,6 +178,7 @@ export function PostThread({uri}: {uri: string}) {
    * manually set this to true.
    */
   const shouldHandleScroll = useRef(true)
+
   /**
    * Called any time the content size of the list changes. Could be a fresh
    * render, items being added to the list, or any resize that changes the
@@ -188,42 +192,50 @@ export function PostThread({uri}: {uri: string}) {
    * The result being: any intentional change in view by the user will result
    * in the anchor being pinned as the first item.
    */
-  const onContentSizeChangeWebOnly = web(() => {
+  const onContentSizeChangeWebOnly = (_w: number, h: number) => {
+    if (!IS_WEB)
+      throw new Error('onContentSizeChangeWebOnly should only be called on web')
+
     const list = listRef.current
     const anchor = anchorRef.current as any as Element
     const header = headerRef.current as any as Element
 
+    /*
+     * Phase 1: Initial scroll positioning.
+     *
+     * `deferParents` is `true` on a cold load, and always reset to `true`
+     * when params change via `prepareForParamsUpdate`.
+     *
+     * On a cold load or a push to a new post, on the first pass of this
+     * logic, the anchor post is the first item in the list. Therefore
+     * `anchorOffsetTop - headerHeight` will be 0.
+     *
+     * When a user changes thread params, on the first pass of this logic,
+     * the anchor post may not move (if there are no parents above it), or
+     * it may have gone off the screen above, because of the sudden lack of
+     * parents due to `deferParents === true`. This negative value (minus
+     * `headerHeight`) will result in a _negative_ `offset` value, which
+     * will scroll the anchor post _down_ to the top of the screen.
+     *
+     * However, `prepareForParamsUpdate` also resets scroll to `0`, so when
+     * a user changes params, the anchor post's offset will actually be
+     * equivalent to the `headerHeight` because of how the DOM is stacked
+     * on web. Therefore, `anchorOffsetTop - headerHeight` will once again
+     * be 0, which means the first pass in this case will result in no
+     * scroll.
+     *
+     * Then, once parents are prepended, this will fire again. Now, the
+     * `anchorOffsetTop` will be positive, which minus the header height,
+     * will give us a _positive_ offset, which will scroll the anchor post
+     * back _up_ to the top of the screen.
+     *
+     * On native, `maintainVisibleContentPosition` handles this for free.
+     */
     if (list && anchor && header && shouldHandleScroll.current) {
-      const anchorOffsetTop = anchor.getBoundingClientRect().top
-      const headerHeight = header.getBoundingClientRect().height
+      const anchorRect = anchor.getBoundingClientRect()
+      const headerRect = header.getBoundingClientRect()
+      const offset = anchorRect.top - headerRect.height
 
-      /*
-       * `deferParents` is `true` on a cold load, and always reset to
-       * `true` when params change via `prepareForParamsUpdate`.
-       *
-       * On a cold load or a push to a new post, on the first pass of this
-       * logic, the anchor post is the first item in the list. Therefore
-       * `anchorOffsetTop - headerHeight` will be 0.
-       *
-       * When a user changes thread params, on the first pass of this logic,
-       * the anchor post may not move (if there are no parents above it), or it
-       * may have gone off the screen above, because of the sudden lack of
-       * parents due to `deferParents === true`. This negative value (minus
-       * `headerHeight`) will result in a _negative_ `offset` value, which will
-       * scroll the anchor post _down_ to the top of the screen.
-       *
-       * However, `prepareForParamsUpdate` also resets scroll to `0`, so when a user
-       * changes params, the anchor post's offset will actually be equivalent
-       * to the `headerHeight` because of how the DOM is stacked on web.
-       * Therefore, `anchorOffsetTop - headerHeight` will once again be 0,
-       * which means the first pass in this case will result in no scroll.
-       *
-       * Then, once parents are prepended, this will fire again. Now, the
-       * `anchorOffsetTop` will be positive, which minus the header height,
-       * will give us a _positive_ offset, which will scroll the anchor post
-       * back _up_ to the top of the screen.
-       */
-      const offset = anchorOffsetTop - headerHeight
       list.scrollToOffset({offset})
 
       /*
@@ -234,19 +246,53 @@ export function PostThread({uri}: {uri: string}) {
        *
        * The `isRoot` here is needed because if we're looking at the anchor
        * post, this handler will not fire after `deferParents` is set to
-       * `false`, since there are no parents to render above it. In this case,
-       * we want to make sure `shouldHandleScroll` is set to `false` right away
-       * so that subsequent size changes unrelated to a params change (like
-       * pagination) do not affect scroll.
+       * `false`, since there are no parents to render above it. In this
+       * case, we want to make sure `shouldHandleScroll` is set to `false`
+       * right away so that subsequent size changes unrelated to a params
+       * change (like pagination) do not affect scroll.
        */
-      if (offset > 0 || isRoot) shouldHandleScroll.current = false
+      if (offset > 0 || isRoot) {
+        shouldHandleScroll.current = false
+      }
+
+      prevContentHeight.current = h
+      return
     }
-  })
+
+    /*
+     * Phase 2: Parent pagination scroll compensation.
+     *
+     * After the initial scroll positioning is done, subsequent parent
+     * pagination (5→10→15→...) prepends content above the viewport. Without
+     * compensation the anchor (and the user's scroll position) gets pushed
+     * down by the height of the new content.
+     *
+     * `needsScrollCompensation` is set in `onStartReached` right before
+     * incrementing `maxParentCount`. The resulting re-render adds more
+     * parents, which changes the content height. We compensate by scrolling
+     * down by the exact delta so the user's viewport stays in place.
+     *
+     * On native, `maintainVisibleContentPosition` handles this for free.
+     */
+    if (needsScrollCompensation.current) {
+      needsScrollCompensation.current = false
+      const delta = h - prevContentHeight.current
+      if (delta > 0) {
+        window.scrollBy({top: delta, behavior: 'instant'})
+      }
+    }
+    prevContentHeight.current = h
+  }
 
   /**
    * Ditto the above, but for native.
    */
-  const onContentSizeChangeNativeOnly = native(() => {
+  const onContentSizeChangeNativeOnly = () => {
+    if (!IS_NATIVE)
+      throw new Error(
+        'onContentSizeChangeNativeOnly should only be called on native',
+      )
+
     const list = listRef.current
     const anchor = anchorRef.current
 
@@ -277,7 +323,7 @@ export function PostThread({uri}: {uri: string}) {
        */
       shouldHandleScroll.current = false
     }
-  })
+  }
 
   /**
    * Called any time the user changes thread params, such as `view` or `sort`.
@@ -322,6 +368,9 @@ export function PostThread({uri}: {uri: string}) {
     if (deferParents) return
     // prevent any state mutations if we know we're done
     if (maxParentCount >= totalParentCount.current) return
+    if (IS_WEB) {
+      needsScrollCompensation.current = true
+    }
     setMaxParentCount(n => n + PARENT_CHUNK_SIZE)
   }
 
