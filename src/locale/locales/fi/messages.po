@@ -8,7 +8,7 @@ msgstr ""
 "Language: fi\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-17 19:42\n"
+"PO-Revision-Date: 2026-03-20 16:42\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -139,7 +139,7 @@ msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr ""
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
-#: src/components/dialogs/StarterPackDialog.tsx:359
+#: src/components/dialogs/StarterPackDialog.tsx:362
 msgid "{0, plural, other {+# more}}"
 msgstr ""
 
@@ -491,11 +491,11 @@ msgstr ""
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:114
+#: src/components/NewskieDialog.tsx:115
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:111
+#: src/components/NewskieDialog.tsx:112
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr ""
 
@@ -814,8 +814,8 @@ msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 #: src/components/dialogs/MutedWords.tsx:337
-#: src/components/dialogs/StarterPackDialog.tsx:373
-#: src/components/dialogs/StarterPackDialog.tsx:380
+#: src/components/dialogs/StarterPackDialog.tsx:376
+#: src/components/dialogs/StarterPackDialog.tsx:388
 #: src/view/com/modals/UserAddRemoveLists.tsx:236
 msgid "Add"
 msgstr "Lisää"
@@ -851,8 +851,8 @@ msgstr "Lisää tili"
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/GifAltText.tsx:217
-#: src/view/com/composer/photos/Gallery.tsx:187
-#: src/view/com/composer/photos/Gallery.tsx:234
+#: src/view/com/composer/photos/Gallery.tsx:194
+#: src/view/com/composer/photos/Gallery.tsx:241
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:95
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:103
 msgid "Add alt text"
@@ -869,11 +869,11 @@ msgstr "Lisää tekstivastine (valinnainen)"
 msgid "Add another account"
 msgstr "Lisää toinen tili"
 
-#: src/view/com/composer/Composer.tsx:1319
+#: src/view/com/composer/Composer.tsx:1328
 msgid "Add another post"
 msgstr "Lisää toinen julkaisu"
 
-#: src/view/com/composer/Composer.tsx:1985
+#: src/view/com/composer/Composer.tsx:1994
 msgid "Add another post to thread"
 msgstr ""
 
@@ -955,8 +955,8 @@ msgstr "Lisää seuraava DNS-tietue verkkotunnukseesi:"
 msgid "Add this feed to your feeds"
 msgstr "Lisää tämä syöte syötteisiisi"
 
-#: src/view/com/profile/ProfileMenu.tsx:357
-#: src/view/com/profile/ProfileMenu.tsx:360
+#: src/view/com/profile/ProfileMenu.tsx:355
+#: src/view/com/profile/ProfileMenu.tsx:358
 msgid "Add to lists"
 msgstr "Lisää listoihin"
 
@@ -964,9 +964,9 @@ msgstr "Lisää listoihin"
 msgid "Add to saved posts"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:183
-#: src/view/com/profile/ProfileMenu.tsx:347
-#: src/view/com/profile/ProfileMenu.tsx:350
+#: src/components/dialogs/StarterPackDialog.tsx:184
+#: src/view/com/profile/ProfileMenu.tsx:346
+#: src/view/com/profile/ProfileMenu.tsx:349
 msgid "Add to starter packs"
 msgstr ""
 
@@ -983,7 +983,7 @@ msgstr ""
 msgid "Added to list"
 msgstr "Lisätty listaan"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:274
 msgid "Added to starter pack"
 msgstr ""
 
@@ -1156,7 +1156,7 @@ msgstr "Kirjautuneena jo sisään käyttäjänä @{0}"
 #: src/components/images/Gallery.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:100
-#: src/view/com/composer/photos/Gallery.tsx:205
+#: src/view/com/composer/photos/Gallery.tsx:212
 msgid "ALT"
 msgstr "ALT"
 
@@ -1175,7 +1175,7 @@ msgid "Alt Text"
 msgstr "Tekstivastine"
 
 #: src/view/com/composer/GifAltText.tsx:105
-#: src/view/com/composer/photos/Gallery.tsx:122
+#: src/view/com/composer/photos/Gallery.tsx:124
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "Tekstivastine kuvailee kuvia sokeille ja heikkonäköisille käyttäjille sekä lisää kontekstia kaikille."
 
@@ -1490,7 +1490,7 @@ msgstr "Haluatko varmasti poistua tästä keskustelusta? Viestisi poistuvat sinu
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Haluatko varmasti poistaa tämän syötteistäsi?"
 
-#: src/view/com/composer/Composer.tsx:1458
+#: src/view/com/composer/Composer.tsx:1467
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Haluatko varmasti hylätä tämän julkaisun?"
 
@@ -1592,7 +1592,7 @@ msgstr "Ennen listan luomista sinun on vahvistettava sähköpostiosoitteesi."
 msgid "Before creating a post or replying, you must first verify your email."
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:71
+#: src/components/dialogs/StarterPackDialog.tsx:72
 #: src/components/StarterPack/ProfileStarterPacks.tsx:264
 #: src/components/StarterPack/ProfileStarterPacks.tsx:274
 #: src/view/screens/Profile.tsx:352
@@ -1640,7 +1640,7 @@ msgstr "Syntymäpäivä"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:853
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:207
-#: src/view/com/profile/ProfileMenu.tsx:565
+#: src/view/com/profile/ProfileMenu.tsx:563
 msgid "Block"
 msgstr "Estä"
 
@@ -1650,13 +1650,13 @@ msgstr "Estä"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:749
 #: src/screens/Messages/components/RequestButtons.tsx:156
 #: src/screens/Messages/components/RequestButtons.tsx:158
-#: src/view/com/profile/ProfileMenu.tsx:471
-#: src/view/com/profile/ProfileMenu.tsx:478
+#: src/view/com/profile/ProfileMenu.tsx:469
+#: src/view/com/profile/ProfileMenu.tsx:476
 msgid "Block account"
 msgstr "Estä tili"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:850
-#: src/view/com/profile/ProfileMenu.tsx:548
+#: src/view/com/profile/ProfileMenu.tsx:546
 msgid "Block Account?"
 msgstr "Estetäänkö tili?"
 
@@ -1708,7 +1708,7 @@ msgid "Blocked Accounts"
 msgstr "Estetyt tilit"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:851
-#: src/view/com/profile/ProfileMenu.tsx:560
+#: src/view/com/profile/ProfileMenu.tsx:558
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Estetyt tilit eivät voi vastata ketjuihisi, mainita sinua tai olla muuten vuorovaikutuksessa kanssasi."
 
@@ -1724,7 +1724,7 @@ msgstr "Estäminen ei estä tätä merkitsijää asettamasta merkintöjä tilill
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Estäminen on julkista. Estetyt tilit eivät voi vastata ketjuihisi, mainita sinua tai olla muuten vuorovaikutuksessa kanssasi."
 
-#: src/view/com/profile/ProfileMenu.tsx:557
+#: src/view/com/profile/ProfileMenu.tsx:555
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr "Estäminen ei estä merkintöjen asettamista tilillesi, mutta se estää tätä tiliä vastaamasta ketjuihisi tai olemasta muuten vuorovaikutuksessa kanssasi."
 
@@ -1823,20 +1823,20 @@ msgstr ""
 msgid "Browse custom feeds"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:637
+#: src/components/FeedInterstitials.tsx:641
 msgid "Browse more accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:767
+#: src/components/FeedInterstitials.tsx:771
 msgid "Browse more feeds on the Explore page"
 msgstr "Selaa lisää syötteitä Explore-sivulla"
 
-#: src/components/FeedInterstitials.tsx:748
-#: src/components/FeedInterstitials.tsx:751
+#: src/components/FeedInterstitials.tsx:752
+#: src/components/FeedInterstitials.tsx:755
 msgid "Browse more suggestions"
 msgstr "Selaa lisää ehdotuksia"
 
-#: src/components/FeedInterstitials.tsx:776
+#: src/components/FeedInterstitials.tsx:780
 msgid "Browse more suggestions on the Explore page"
 msgstr "Selaa lisää ehdotuksia Explore-sivulla"
 
@@ -1954,8 +1954,8 @@ msgstr "Kamera"
 #: src/screens/Settings/Settings.tsx:302
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1535
-#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1544
+#: src/view/com/composer/Composer.tsx:1556
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:215
@@ -2279,14 +2279,14 @@ msgstr "Kopoti 🐴 kopoti 🐴"
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:191
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:199
 #: src/components/dialogs/SearchablePeopleList.tsx:296
-#: src/components/dialogs/StarterPackDialog.tsx:186
+#: src/components/dialogs/StarterPackDialog.tsx:187
 #: src/components/dms/AfterReportDialog.tsx:93
 #: src/components/dms/AfterReportDialog.tsx:98
 #: src/components/dms/AfterReportDialog.tsx:212
 #: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
-#: src/components/NewskieDialog.tsx:168
-#: src/components/NewskieDialog.tsx:174
+#: src/components/NewskieDialog.tsx:169
+#: src/components/NewskieDialog.tsx:175
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:107
 #: src/components/ProgressGuide/FollowDialog.tsx:441
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:122
@@ -2368,7 +2368,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr "Sulkee salasanan päivityshälytyksen"
 
-#: src/view/com/composer/Composer.tsx:1544
+#: src/view/com/composer/Composer.tsx:1553
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2426,7 +2426,7 @@ msgid "Compose new post"
 msgstr "Laadi uusi julkaisu"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1422
+#: src/view/com/composer/Composer.tsx:1431
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2434,11 +2434,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr "Laadi vastaus"
 
-#: src/view/com/composer/Composer.tsx:2381
+#: src/view/com/composer/Composer.tsx:2390
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2383
+#: src/view/com/composer/Composer.tsx:2392
 msgid "Compressing video..."
 msgstr "Pakataan videota…"
 
@@ -2648,8 +2648,8 @@ msgstr "Kopioi"
 msgid "Copy App Password"
 msgstr "Kopioi sovellussalasana"
 
-#: src/view/com/profile/ProfileMenu.tsx:508
-#: src/view/com/profile/ProfileMenu.tsx:511
+#: src/view/com/profile/ProfileMenu.tsx:506
+#: src/view/com/profile/ProfileMenu.tsx:509
 msgid "Copy at:// URI"
 msgstr ""
 
@@ -2664,8 +2664,8 @@ msgid "Copy code"
 msgstr "Kopioi koodi"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:504
-#: src/view/com/profile/ProfileMenu.tsx:517
-#: src/view/com/profile/ProfileMenu.tsx:520
+#: src/view/com/profile/ProfileMenu.tsx:515
+#: src/view/com/profile/ProfileMenu.tsx:518
 msgid "Copy DID"
 msgstr "Kopioi DID"
 
@@ -2803,8 +2803,8 @@ msgstr ""
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:112
-#: src/components/dialogs/StarterPackDialog.tsx:209
+#: src/components/dialogs/StarterPackDialog.tsx:113
+#: src/components/dialogs/StarterPackDialog.tsx:210
 #: src/components/StarterPack/ProfileStarterPacks.tsx:329
 msgid "Create"
 msgstr "Luo"
@@ -2904,8 +2904,8 @@ msgstr "Luo uusi tili"
 msgid "Create report for {0}"
 msgstr "Luo raportti: {0}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:107
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:108
+#: src/components/dialogs/StarterPackDialog.tsx:205
 msgid "Create starter pack"
 msgstr ""
 
@@ -3069,7 +3069,7 @@ msgstr "Poista tilini"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/composer/Composer.tsx:1432
+#: src/view/com/composer/Composer.tsx:1441
 msgid "Delete post"
 msgstr "Poista julkaisu"
 
@@ -3198,9 +3198,9 @@ msgstr "Poissa käytöstä"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1217
-#: src/view/com/composer/Composer.tsx:1265
-#: src/view/com/composer/Composer.tsx:1465
+#: src/view/com/composer/Composer.tsx:1226
+#: src/view/com/composer/Composer.tsx:1274
+#: src/view/com/composer/Composer.tsx:1474
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3211,14 +3211,14 @@ msgstr "Hylkää"
 msgid "Discard changes?"
 msgstr "Hylätäänkö muutokset?"
 
-#: src/view/com/composer/Composer.tsx:1215
+#: src/view/com/composer/Composer.tsx:1224
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "Hylätäänkö luonnos?"
 
-#: src/view/com/composer/Composer.tsx:1232
-#: src/view/com/composer/Composer.tsx:1457
+#: src/view/com/composer/Composer.tsx:1241
+#: src/view/com/composer/Composer.tsx:1466
 msgid "Discard post?"
 msgstr "Hylätäänkö julkaisu?"
 
@@ -3253,7 +3253,7 @@ msgstr "Hylkää"
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2302
+#: src/view/com/composer/Composer.tsx:2311
 msgid "Dismiss error"
 msgstr "Hylkää virhe"
 
@@ -3274,7 +3274,7 @@ msgstr ""
 msgid "Dismiss this section"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:442
+#: src/components/FeedInterstitials.tsx:445
 msgid "Dismiss this suggestion"
 msgstr ""
 
@@ -3475,7 +3475,7 @@ msgstr "Muokkaa syötteitä"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:86
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:90
-#: src/view/com/composer/photos/Gallery.tsx:212
+#: src/view/com/composer/photos/Gallery.tsx:219
 msgid "Edit image"
 msgstr "Muokkaa kuvaa"
 
@@ -3494,8 +3494,8 @@ msgstr ""
 msgid "Edit list details"
 msgstr "Muokkaa listan tietoja"
 
-#: src/view/com/profile/ProfileMenu.tsx:371
-#: src/view/com/profile/ProfileMenu.tsx:391
+#: src/view/com/profile/ProfileMenu.tsx:369
+#: src/view/com/profile/ProfileMenu.tsx:389
 msgid "Edit live status"
 msgstr ""
 
@@ -3754,7 +3754,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2401
+#: src/view/com/composer/Composer.tsx:2410
 #: src/view/com/util/error/ErrorScreen.tsx:43
 msgid "Error"
 msgstr "Virhe"
@@ -3840,7 +3840,7 @@ msgstr ""
 msgid "Expands or collapses post text"
 msgstr ""
 
-#: src/lib/api/index.ts:420
+#: src/lib/api/index.ts:437
 msgid "Expected uri to resolve to a record"
 msgstr "Odotettiin URIn resolvoituvan tietueeseen"
 
@@ -3934,7 +3934,7 @@ msgstr ""
 msgid "Failed to add emoji reaction"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:277
+#: src/components/dialogs/StarterPackDialog.tsx:280
 msgid "Failed to add to starter pack"
 msgstr ""
 
@@ -4077,7 +4077,7 @@ msgstr ""
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:293
 msgid "Failed to remove from starter pack"
 msgstr ""
 
@@ -4695,7 +4695,7 @@ msgstr ""
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2406
+#: src/view/com/composer/Composer.tsx:2415
 msgid "GIF uploaded"
 msgstr ""
 
@@ -4756,8 +4756,8 @@ msgstr "Palaa kotinäkymään"
 msgid "Go Home"
 msgstr "Palaa kotinäkymään"
 
-#: src/view/com/profile/ProfileMenu.tsx:372
-#: src/view/com/profile/ProfileMenu.tsx:393
+#: src/view/com/profile/ProfileMenu.tsx:370
+#: src/view/com/profile/ProfileMenu.tsx:391
 msgid "Go live"
 msgstr ""
 
@@ -4768,8 +4768,8 @@ msgstr ""
 msgid "Go Live"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:369
-#: src/view/com/profile/ProfileMenu.tsx:389
+#: src/view/com/profile/ProfileMenu.tsx:367
+#: src/view/com/profile/ProfileMenu.tsx:387
 msgid "Go live (disabled)"
 msgstr ""
 
@@ -5445,7 +5445,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Vain sinä olet nyt tässä! Lisää muita käyttäjiä aloituspakettiisi yllä olevalla haulla."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2321
+#: src/view/com/composer/Composer.tsx:2330
 msgid "Job ID: {0}"
 msgstr "Työpaikan tunnus: {0}"
 
@@ -5470,7 +5470,7 @@ msgstr "Liity keskusteluun"
 msgid "Journalism"
 msgstr "Journalismi"
 
-#: src/view/com/composer/Composer.tsx:1269
+#: src/view/com/composer/Composer.tsx:1278
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr ""
@@ -6231,8 +6231,8 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:730
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:736
-#: src/view/com/profile/ProfileMenu.tsx:450
-#: src/view/com/profile/ProfileMenu.tsx:457
+#: src/view/com/profile/ProfileMenu.tsx:448
+#: src/view/com/profile/ProfileMenu.tsx:455
 msgid "Mute account"
 msgstr "Mykistä tili"
 
@@ -6374,7 +6374,7 @@ msgid "Nevermind, create a handle for me"
 msgstr "Ei se mitään, luo minulle käyttäjätunnus"
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:184
-#: src/view/com/profile/ProfileMenu.tsx:405
+#: src/view/com/profile/ProfileMenu.tsx:403
 msgid "New"
 msgstr "Uusi"
 
@@ -6467,11 +6467,11 @@ msgstr ""
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:201
+#: src/components/dialogs/StarterPackDialog.tsx:202
 msgid "New starter pack"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:121
+#: src/components/NewskieDialog.tsx:122
 msgid "New user info dialog"
 msgstr "Käyttäjän uusien tietojen valintaikkuna"
 
@@ -6735,7 +6735,7 @@ msgstr "Ei löydy"
 msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:572
+#: src/view/com/profile/ProfileMenu.tsx:570
 msgid "Note about sharing"
 msgstr "Huomio jakamisesta"
 
@@ -6939,7 +6939,7 @@ msgid "Open drawer menu"
 msgstr "Avaa alavalikko"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:180
-#: src/view/com/composer/Composer.tsx:1970
+#: src/view/com/composer/Composer.tsx:1979
 msgid "Open emoji picker"
 msgstr "Avaa emojinvalitsin"
 
@@ -7057,7 +7057,7 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1971
+#: src/view/com/composer/Composer.tsx:1980
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -7191,6 +7191,10 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:35
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "Moderaattorimme ovat arvioineet raportteja ja päättäneet estää pääsysi Blueskyn chatteihin."
+
+#: src/components/dialogs/StarterPackDialog.tsx:384
+msgid "Owner"
+msgstr ""
 
 #: src/components/Lists.tsx:205
 #: src/components/Lists.tsx:220
@@ -7544,7 +7548,7 @@ msgstr "Politiikka"
 msgid "Porn"
 msgstr "Porno"
 
-#: src/view/com/composer/Composer.tsx:1619
+#: src/view/com/composer/Composer.tsx:1628
 msgctxt "action"
 msgid "Post"
 msgstr "Julkaise"
@@ -7564,7 +7568,7 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1617
+#: src/view/com/composer/Composer.tsx:1626
 msgctxt "action"
 msgid "Post All"
 msgstr "Julkaise kaikki"
@@ -7586,7 +7590,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr "Julkaisu poistettu"
 
-#: src/lib/api/index.ts:186
+#: src/lib/api/index.ts:192
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "Julkaisun lataaminen palveluun epäonnistui. Tarkista internetyhteytesi ja yritä uudelleen."
 
@@ -7738,15 +7742,15 @@ msgstr "Tietosuojakäytäntö"
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2395
+#: src/view/com/composer/Composer.tsx:2404
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2397
+#: src/view/com/composer/Composer.tsx:2406
 msgid "Processing video..."
 msgstr "Käsitellään videota…"
 
-#: src/lib/api/index.ts:60
+#: src/lib/api/index.ts:65
 msgid "Processing..."
 msgstr "Käsitellään…"
 
@@ -7788,22 +7792,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Julkisia, jaettavia listoja käyttäjistä, joita voi mykistää tai estää massoittain."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1602
+#: src/view/com/composer/Composer.tsx:1611
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1595
+#: src/view/com/composer/Composer.tsx:1604
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1580
+#: src/view/com/composer/Composer.tsx:1589
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1596
 msgid "Publish reply"
 msgstr ""
 
@@ -7992,8 +7996,8 @@ msgstr "Lataa keskustelut uudelleen"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:181
 #: src/components/dialogs/MutedWords.tsx:457
-#: src/components/dialogs/StarterPackDialog.tsx:373
-#: src/components/dialogs/StarterPackDialog.tsx:380
+#: src/components/dialogs/StarterPackDialog.tsx:376
+#: src/components/dialogs/StarterPackDialog.tsx:386
 #: src/components/FeedCard.tsx:376
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:106
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:113
@@ -8081,7 +8085,7 @@ msgstr ""
 msgid "Remove from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/photos/Gallery.tsx:221
+#: src/view/com/composer/photos/Gallery.tsx:228
 msgid "Remove image"
 msgstr "Poista kuva"
 
@@ -8122,8 +8126,8 @@ msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
 #: src/components/verification/VerificationsDialog.tsx:250
-#: src/view/com/profile/ProfileMenu.tsx:423
-#: src/view/com/profile/ProfileMenu.tsx:426
+#: src/view/com/profile/ProfileMenu.tsx:421
+#: src/view/com/profile/ProfileMenu.tsx:424
 msgid "Remove verification"
 msgstr ""
 
@@ -8153,7 +8157,7 @@ msgstr "Poistettu tallennetuista syötteistä"
 msgid "Removed from saved posts"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:284
+#: src/components/dialogs/StarterPackDialog.tsx:287
 msgid "Removed from starter pack"
 msgstr ""
 
@@ -8226,7 +8230,7 @@ msgstr "Vastaaminen poissa käytöstä"
 msgid "Replies to this post are disabled."
 msgstr "Tähän julkaisuun vastaaminen on poissa käytöstä."
 
-#: src/view/com/composer/Composer.tsx:1615
+#: src/view/com/composer/Composer.tsx:1624
 msgctxt "action"
 msgid "Reply"
 msgstr "Vastaa"
@@ -8275,8 +8279,8 @@ msgstr "Vastaus piilotettiin onnistuneesti"
 msgid "Report"
 msgstr "Ilmianna"
 
-#: src/view/com/profile/ProfileMenu.tsx:490
-#: src/view/com/profile/ProfileMenu.tsx:493
+#: src/view/com/profile/ProfileMenu.tsx:488
+#: src/view/com/profile/ProfileMenu.tsx:491
 msgid "Report account"
 msgstr "Ilmianna tili"
 
@@ -8589,22 +8593,22 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:132
 #: src/screens/SavedFeeds.tsx:326
 #: src/screens/SavedFeeds.tsx:330
-#: src/view/com/composer/Composer.tsx:1257
+#: src/view/com/composer/Composer.tsx:1266
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "Tallenna muutokset"
 
-#: src/view/com/composer/Composer.tsx:1227
+#: src/view/com/composer/Composer.tsx:1236
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1258
+#: src/view/com/composer/Composer.tsx:1267
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1229
+#: src/view/com/composer/Composer.tsx:1238
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr ""
@@ -8655,7 +8659,7 @@ msgid "Saved to your feeds"
 msgstr "Tallennettu syötteisiisi"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
-#: src/components/NewskieDialog.tsx:140
+#: src/components/NewskieDialog.tsx:141
 #: src/view/com/notifications/NotificationFeedItem.tsx:869
 #: src/view/com/notifications/NotificationFeedItem.tsx:894
 msgid "Say hello!"
@@ -8818,12 +8822,12 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr "Katso Blueskyn työpaikat"
 
-#: src/components/FeedInterstitials.tsx:588
-#: src/components/FeedInterstitials.tsx:651
+#: src/components/FeedInterstitials.tsx:592
+#: src/components/FeedInterstitials.tsx:655
 msgid "See more"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:570
+#: src/components/FeedInterstitials.tsx:573
 msgid "See more suggested profiles"
 msgstr ""
 
@@ -9182,7 +9186,7 @@ msgstr "Jaa siisti tarina!"
 msgid "Share a fun fact!"
 msgstr "Jaa hauska fakta!"
 
-#: src/view/com/profile/ProfileMenu.tsx:577
+#: src/view/com/profile/ProfileMenu.tsx:575
 msgid "Share anyway"
 msgstr "Jaa kuitenkin"
 
@@ -9515,7 +9519,7 @@ msgstr ""
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:730
+#: src/components/FeedInterstitials.tsx:734
 msgid "Some other feeds you might like"
 msgstr "Muita syötteitä, joista saattaisit pitää"
 
@@ -9576,7 +9580,7 @@ msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
 #: src/App.native.tsx:142
-#: src/App.web.tsx:118
+#: src/App.web.tsx:119
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Pahoittelut! Istuntosi on vanhentunut. Kirjaudu sisään uudelleen."
 
@@ -9773,7 +9777,7 @@ msgid "Suggested accounts"
 msgstr ""
 
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:566
+#: src/components/FeedInterstitials.tsx:569
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:180
 msgid "Suggested for you"
 msgstr "Ehdotuksia sinulle"
@@ -9968,7 +9972,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:201
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:415
-#: src/view/com/profile/ProfileMenu.tsx:553
+#: src/view/com/profile/ProfileMenu.tsx:551
 msgid "The account will be able to interact with you after unblocking."
 msgstr "Tili voi olla vuorovaikutuksessa kanssasi, kun poistat eston."
 
@@ -10403,11 +10407,11 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Tämä julkaisu piilotetaan syötteistä ja ketjuista. Tätä ei voi kumota."
 
-#: src/view/com/composer/Composer.tsx:890
+#: src/view/com/composer/Composer.tsx:899
 msgid "This post's author has disabled quote posts."
 msgstr "Tämän julkaisun tekijä on poistanut lainausjulkaisut käytöstä."
 
-#: src/view/com/profile/ProfileMenu.tsx:574
+#: src/view/com/profile/ProfileMenu.tsx:572
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Tämä profiili näkyy vain kirjautuneille käyttäjille. Se ei näy kirjautumattomille henkilöille."
 
@@ -10462,7 +10466,7 @@ msgstr "Tämä käyttäjä on listassa <0>{0}</0>, jonka olet estänyt."
 msgid "This user is included in the <0>{0}</0> list which you have muted."
 msgstr "Tämä käyttäjä on listassa <0>{0}</0>, jonka olet mykistänyt."
 
-#: src/components/NewskieDialog.tsx:48
+#: src/components/NewskieDialog.tsx:49
 msgid "This user is new here. Press for more info about when they joined."
 msgstr "Tämä käyttäjä on uusi täällä. Paina tätä nähdäksesi, milloin hän liittyi."
 
@@ -10716,7 +10720,7 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:420
 #: src/screens/ProfileList/components/Header.tsx:166
 #: src/screens/ProfileList/components/Header.tsx:173
-#: src/view/com/profile/ProfileMenu.tsx:565
+#: src/view/com/profile/ProfileMenu.tsx:563
 msgid "Unblock"
 msgstr "Poista esto"
 
@@ -10727,14 +10731,14 @@ msgstr "Poista esto"
 
 #: src/components/dms/ConvoMenu.tsx:275
 #: src/components/dms/ConvoMenu.tsx:278
-#: src/view/com/profile/ProfileMenu.tsx:470
-#: src/view/com/profile/ProfileMenu.tsx:476
+#: src/view/com/profile/ProfileMenu.tsx:468
+#: src/view/com/profile/ProfileMenu.tsx:474
 msgid "Unblock account"
 msgstr "Poista tilin esto"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:199
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:413
-#: src/view/com/profile/ProfileMenu.tsx:547
+#: src/view/com/profile/ProfileMenu.tsx:545
 msgid "Unblock Account?"
 msgstr "Poistetaanko tilin esto?"
 
@@ -10837,8 +10841,8 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:729
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:735
-#: src/view/com/profile/ProfileMenu.tsx:449
-#: src/view/com/profile/ProfileMenu.tsx:455
+#: src/view/com/profile/ProfileMenu.tsx:447
+#: src/view/com/profile/ProfileMenu.tsx:453
 msgid "Unmute account"
 msgstr "Poista tilin mykistys"
 
@@ -10922,7 +10926,7 @@ msgstr "Peruuta merkitsijän tilaus"
 msgid "Unsubscribed from list"
 msgstr "Listan tilaus peruutettu"
 
-#: src/view/com/composer/Composer.tsx:1360
+#: src/view/com/composer/Composer.tsx:1369
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -10988,20 +10992,20 @@ msgstr "Lataa tiedostoista"
 msgid "Upload from Library"
 msgstr "Lataa kirjastosta"
 
-#: src/view/com/composer/Composer.tsx:2388
+#: src/view/com/composer/Composer.tsx:2397
 msgid "Uploading GIF..."
 msgstr ""
 
-#: src/lib/api/index.ts:302
+#: src/lib/api/index.ts:317
 msgid "Uploading images..."
 msgstr "Ladataan kuvia palveluun…"
 
-#: src/lib/api/index.ts:370
-#: src/lib/api/index.ts:394
+#: src/lib/api/index.ts:387
+#: src/lib/api/index.ts:411
 msgid "Uploading link thumbnail..."
 msgstr "Ladataan linkin pikkukuvaa palveluun…"
 
-#: src/view/com/composer/Composer.tsx:2390
+#: src/view/com/composer/Composer.tsx:2399
 msgid "Uploading video..."
 msgstr "Ladataan videota palveluun…"
 
@@ -11153,8 +11157,8 @@ msgstr ""
 
 #: src/components/verification/VerificationCreatePrompt.tsx:85
 #: src/components/verification/VerificationCreatePrompt.tsx:87
-#: src/view/com/profile/ProfileMenu.tsx:433
-#: src/view/com/profile/ProfileMenu.tsx:436
+#: src/view/com/profile/ProfileMenu.tsx:431
+#: src/view/com/profile/ProfileMenu.tsx:434
 msgid "Verify account"
 msgstr ""
 
@@ -11280,7 +11284,7 @@ msgstr "Videota ei löydy."
 msgid "Video settings"
 msgstr "Videon asetukset"
 
-#: src/view/com/composer/Composer.tsx:2408
+#: src/view/com/composer/Composer.tsx:2417
 msgid "Video uploaded"
 msgstr "Video ladattu palveluun"
 
@@ -11297,7 +11301,7 @@ msgstr "Videot"
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:982
+#: src/view/com/composer/Composer.tsx:991
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -11362,7 +11366,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:977
+#: src/view/com/composer/Composer.tsx:986
 msgid "View post"
 msgstr ""
 
@@ -11634,7 +11638,7 @@ msgstr ""
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:887
+#: src/view/com/composer/Composer.tsx:896
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Pahoittelut! Julkaisu, johon olet vastaamassa, on poistettu."
 
@@ -11672,7 +11676,7 @@ msgstr ""
 msgid "Welcome back!"
 msgstr "Tervetuloa takaisin!"
 
-#: src/components/NewskieDialog.tsx:140
+#: src/components/NewskieDialog.tsx:141
 msgid "Welcome, friend!"
 msgstr "Tervetuloa, kaveri!"
 
@@ -11685,7 +11689,7 @@ msgid "What do you want to call your starter pack?"
 msgstr "Millä nimellä haluat kutsua aloituspakettiasi?"
 
 #: src/view/com/auth/SplashScreen.web.tsx:104
-#: src/view/com/composer/Composer.tsx:1320
+#: src/view/com/composer/Composer.tsx:1329
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr "Mitä kuuluu?"
@@ -11762,7 +11766,7 @@ msgstr ""
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1243
+#: src/view/com/composer/Composer.tsx:1252
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -11776,12 +11780,12 @@ msgstr "Kirjoita viesti"
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1420
+#: src/view/com/composer/Composer.tsx:1429
 msgid "Write post"
 msgstr "Kirjoita julkaisu"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1318
+#: src/view/com/composer/Composer.tsx:1327
 msgid "Write your reply"
 msgstr "Kirjoita vastauksesi"
 
@@ -11928,7 +11932,7 @@ msgstr ""
 msgid "You can now sign in with your new password."
 msgstr "Voit nyt kirjautua sisään uudella salasanallasi."
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1257
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
@@ -12043,7 +12047,7 @@ msgstr "Sinulla ei ole vielä keskusteluja. Aloita sellainen!"
 msgid "You have no lists."
 msgstr "Sinulla ei ole listoja."
 
-#: src/components/dialogs/StarterPackDialog.tsx:101
+#: src/components/dialogs/StarterPackDialog.tsx:102
 msgid "You have no starter packs."
 msgstr ""
 
@@ -12067,7 +12071,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Olet väliaikaisesti saavuttanut videolatausten rajoituksen. Yritä myöhemmin uudelleen."
 
-#: src/view/com/composer/Composer.tsx:1238
+#: src/view/com/composer/Composer.tsx:1247
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
@@ -12101,11 +12105,11 @@ msgstr "Piilotit tämän vastauksen."
 msgid "You initiated this flow already, {0} ago. It may take up to 5 minutes for emails to reach your inbox. Please consider waiting a few minutes before trying again."
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:106
+#: src/components/NewskieDialog.tsx:107
 msgid "You joined Bluesky {timeAgoString} ago"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:103
+#: src/components/NewskieDialog.tsx:104
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr ""
 
@@ -12429,11 +12433,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:973
+#: src/view/com/composer/Composer.tsx:982
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:970
+#: src/view/com/composer/Composer.tsx:979
 msgid "Your posts were sent"
 msgstr ""
 
@@ -12454,7 +12458,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Profiilisi, julkaisusi, syötteesi ja listasi eivät enää näy muille Blueskyn käyttäjille. Voit palauttaa tilisi käyttöön milloin tahansa kirjautumalla sisään."
 
-#: src/view/com/composer/Composer.tsx:972
+#: src/view/com/composer/Composer.tsx:981
 msgid "Your reply was sent"
 msgstr ""
 

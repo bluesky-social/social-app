@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-03-17 19:42\n"
+"PO-Revision-Date: 2026-03-20 16:42\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -139,7 +139,7 @@ msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr "{0, plural, other {# persones han}} s'han unit a Bluesky amb aquest starter pack!"
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
-#: src/components/dialogs/StarterPackDialog.tsx:359
+#: src/components/dialogs/StarterPackDialog.tsx:362
 msgid "{0, plural, other {+# more}}"
 msgstr "{0, plural, one {}other {+# més}}"
 
@@ -491,11 +491,11 @@ msgstr "{notificationCount, plural, one {# element sense llegir} other {# elemen
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {# contacte trobat} other {# contactes trobats}}"
 
-#: src/components/NewskieDialog.tsx:114
+#: src/components/NewskieDialog.tsx:115
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
 msgstr "{profileName} es va unir a Bluesky fa {timeAgoString}"
 
-#: src/components/NewskieDialog.tsx:111
+#: src/components/NewskieDialog.tsx:112
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr "{profileName} es va unir a Bluesky, utilitzant un Starter Pack, fa {timeAgoString}"
 
@@ -814,8 +814,8 @@ msgstr "Notificacions d'activitat"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 #: src/components/dialogs/MutedWords.tsx:337
-#: src/components/dialogs/StarterPackDialog.tsx:373
-#: src/components/dialogs/StarterPackDialog.tsx:380
+#: src/components/dialogs/StarterPackDialog.tsx:376
+#: src/components/dialogs/StarterPackDialog.tsx:388
 #: src/view/com/modals/UserAddRemoveLists.tsx:236
 msgid "Add"
 msgstr "Afegeix"
@@ -851,8 +851,8 @@ msgstr "Afegeix un compte"
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/GifAltText.tsx:217
-#: src/view/com/composer/photos/Gallery.tsx:187
-#: src/view/com/composer/photos/Gallery.tsx:234
+#: src/view/com/composer/photos/Gallery.tsx:194
+#: src/view/com/composer/photos/Gallery.tsx:241
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:95
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:103
 msgid "Add alt text"
@@ -869,11 +869,11 @@ msgstr "Afegeix text alternatiu (opcional)"
 msgid "Add another account"
 msgstr "Afegeix un altre compte"
 
-#: src/view/com/composer/Composer.tsx:1319
+#: src/view/com/composer/Composer.tsx:1328
 msgid "Add another post"
 msgstr "Afegeix una altra publicació"
 
-#: src/view/com/composer/Composer.tsx:1985
+#: src/view/com/composer/Composer.tsx:1994
 msgid "Add another post to thread"
 msgstr "Afegeix una altra publicació al fil"
 
@@ -955,8 +955,8 @@ msgstr "Afegeix el següent registre DNS al teu domini:"
 msgid "Add this feed to your feeds"
 msgstr "Afegeix aquest canal als teus canals"
 
-#: src/view/com/profile/ProfileMenu.tsx:357
-#: src/view/com/profile/ProfileMenu.tsx:360
+#: src/view/com/profile/ProfileMenu.tsx:355
+#: src/view/com/profile/ProfileMenu.tsx:358
 msgid "Add to lists"
 msgstr "Afegeix a les llistes"
 
@@ -964,9 +964,9 @@ msgstr "Afegeix a les llistes"
 msgid "Add to saved posts"
 msgstr "Desa la publicació"
 
-#: src/components/dialogs/StarterPackDialog.tsx:183
-#: src/view/com/profile/ProfileMenu.tsx:347
-#: src/view/com/profile/ProfileMenu.tsx:350
+#: src/components/dialogs/StarterPackDialog.tsx:184
+#: src/view/com/profile/ProfileMenu.tsx:346
+#: src/view/com/profile/ProfileMenu.tsx:349
 msgid "Add to starter packs"
 msgstr "Afegeix als starter packs"
 
@@ -983,7 +983,7 @@ msgstr "Afegeix la teva data de naixement"
 msgid "Added to list"
 msgstr "Afegit a la llista"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:274
 msgid "Added to starter pack"
 msgstr "Afegit al teu starter pack"
 
@@ -1156,7 +1156,7 @@ msgstr "Ja estàs registrat com a @{0}"
 #: src/components/images/Gallery.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:100
-#: src/view/com/composer/photos/Gallery.tsx:205
+#: src/view/com/composer/photos/Gallery.tsx:212
 msgid "ALT"
 msgstr "ALT"
 
@@ -1175,7 +1175,7 @@ msgid "Alt Text"
 msgstr "Text alternatiu"
 
 #: src/view/com/composer/GifAltText.tsx:105
-#: src/view/com/composer/photos/Gallery.tsx:122
+#: src/view/com/composer/photos/Gallery.tsx:124
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "El text alternatiu descriu les imatges per a les persones cegues o amb problemes de visió, i ajuda donar context a tothom."
 
@@ -1490,7 +1490,7 @@ msgstr "Estàs segur que vols abandonar aquesta conversa? Els missatges s'esborr
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Segur que vols eliminar-ho dels teus canals?"
 
-#: src/view/com/composer/Composer.tsx:1458
+#: src/view/com/composer/Composer.tsx:1467
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Estàs segur que vols descartar aquesta publicació?"
 
@@ -1592,7 +1592,7 @@ msgstr "Abans de crear una llista, primer has de verificar el teu correu."
 msgid "Before creating a post or replying, you must first verify your email."
 msgstr "Abans de crear una publicació o respondre-la, primer has de verificar el teu correu."
 
-#: src/components/dialogs/StarterPackDialog.tsx:71
+#: src/components/dialogs/StarterPackDialog.tsx:72
 #: src/components/StarterPack/ProfileStarterPacks.tsx:264
 #: src/components/StarterPack/ProfileStarterPacks.tsx:274
 #: src/view/screens/Profile.tsx:352
@@ -1640,7 +1640,7 @@ msgstr "Aniversari"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:853
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:207
-#: src/view/com/profile/ProfileMenu.tsx:565
+#: src/view/com/profile/ProfileMenu.tsx:563
 msgid "Block"
 msgstr "Bloqueja"
 
@@ -1650,13 +1650,13 @@ msgstr "Bloqueja"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:749
 #: src/screens/Messages/components/RequestButtons.tsx:156
 #: src/screens/Messages/components/RequestButtons.tsx:158
-#: src/view/com/profile/ProfileMenu.tsx:471
-#: src/view/com/profile/ProfileMenu.tsx:478
+#: src/view/com/profile/ProfileMenu.tsx:469
+#: src/view/com/profile/ProfileMenu.tsx:476
 msgid "Block account"
 msgstr "Bloqueja el compte"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:850
-#: src/view/com/profile/ProfileMenu.tsx:548
+#: src/view/com/profile/ProfileMenu.tsx:546
 msgid "Block Account?"
 msgstr "Vols bloquejar el compte?"
 
@@ -1708,7 +1708,7 @@ msgid "Blocked Accounts"
 msgstr "Comptes bloquejats"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:851
-#: src/view/com/profile/ProfileMenu.tsx:560
+#: src/view/com/profile/ProfileMenu.tsx:558
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Els comptes bloquejats no poden respondre cap fil teu, ni anomenar-te ni interactuar amb tu de cap manera."
 
@@ -1724,7 +1724,7 @@ msgstr "El bloqueig no evita que aquest etiquetador apliqui etiquetes al teu com
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "El bloqueig és públic. Els comptes bloquejats no poden respondre els teus fils, ni mencionar-te ni interactuar amb tu de cap manera."
 
-#: src/view/com/profile/ProfileMenu.tsx:557
+#: src/view/com/profile/ProfileMenu.tsx:555
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr "Bloquejar no evitarà que s'apliquin etiquetes al teu compte, però no deixarà que aquest compte respongui els teus fils ni interactuï amb tu."
 
@@ -1823,20 +1823,20 @@ msgstr "Incompliment de les normes del lloc"
 msgid "Browse custom feeds"
 msgstr "Navega pels canals personalitzats"
 
-#: src/components/FeedInterstitials.tsx:637
+#: src/components/FeedInterstitials.tsx:641
 msgid "Browse more accounts"
 msgstr "Navega per més comptes"
 
-#: src/components/FeedInterstitials.tsx:767
+#: src/components/FeedInterstitials.tsx:771
 msgid "Browse more feeds on the Explore page"
 msgstr "Explora més canals a la pàgina Explora"
 
-#: src/components/FeedInterstitials.tsx:748
-#: src/components/FeedInterstitials.tsx:751
+#: src/components/FeedInterstitials.tsx:752
+#: src/components/FeedInterstitials.tsx:755
 msgid "Browse more suggestions"
 msgstr "Explora més recomanacions"
 
-#: src/components/FeedInterstitials.tsx:776
+#: src/components/FeedInterstitials.tsx:780
 msgid "Browse more suggestions on the Explore page"
 msgstr "Explora més recomanacions a la pàgina Explora"
 
@@ -1954,8 +1954,8 @@ msgstr "Càmera"
 #: src/screens/Settings/Settings.tsx:302
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1535
-#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1544
+#: src/view/com/composer/Composer.tsx:1556
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:215
@@ -2279,14 +2279,14 @@ msgstr "Clop 🐴 clop 🐴"
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:191
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:199
 #: src/components/dialogs/SearchablePeopleList.tsx:296
-#: src/components/dialogs/StarterPackDialog.tsx:186
+#: src/components/dialogs/StarterPackDialog.tsx:187
 #: src/components/dms/AfterReportDialog.tsx:93
 #: src/components/dms/AfterReportDialog.tsx:98
 #: src/components/dms/AfterReportDialog.tsx:212
 #: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
-#: src/components/NewskieDialog.tsx:168
-#: src/components/NewskieDialog.tsx:174
+#: src/components/NewskieDialog.tsx:169
+#: src/components/NewskieDialog.tsx:175
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:107
 #: src/components/ProgressGuide/FollowDialog.tsx:441
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:122
@@ -2368,7 +2368,7 @@ msgstr "Tanca la finestra emergent de benvinguda"
 msgid "Closes password update alert"
 msgstr "Tanca l'alerta d'actualització de contrasenya"
 
-#: src/view/com/composer/Composer.tsx:1544
+#: src/view/com/composer/Composer.tsx:1553
 msgid "Closes post composer and discards post draft"
 msgstr "Tanca l'editor de la publicació i descarta l'esborrany"
 
@@ -2426,7 +2426,7 @@ msgid "Compose new post"
 msgstr "Crea una nova publicació"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1422
+#: src/view/com/composer/Composer.tsx:1431
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "Crear publicacions de fins a {0, plural, one {}other {# caràcters}} de longitud"
 
@@ -2434,11 +2434,11 @@ msgstr "Crear publicacions de fins a {0, plural, one {}other {# caràcters}} de 
 msgid "Compose reply"
 msgstr "Redacta una resposta"
 
-#: src/view/com/composer/Composer.tsx:2381
+#: src/view/com/composer/Composer.tsx:2390
 msgid "Compressing GIF..."
 msgstr "Comprimint el GIF..."
 
-#: src/view/com/composer/Composer.tsx:2383
+#: src/view/com/composer/Composer.tsx:2392
 msgid "Compressing video..."
 msgstr "Comprimint el vídeo..."
 
@@ -2648,8 +2648,8 @@ msgstr "Copia"
 msgid "Copy App Password"
 msgstr "Copia la contrasenya d'aplicació"
 
-#: src/view/com/profile/ProfileMenu.tsx:508
-#: src/view/com/profile/ProfileMenu.tsx:511
+#: src/view/com/profile/ProfileMenu.tsx:506
+#: src/view/com/profile/ProfileMenu.tsx:509
 msgid "Copy at:// URI"
 msgstr "Copia at:// URI"
 
@@ -2664,8 +2664,8 @@ msgid "Copy code"
 msgstr "Copia el codi"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:504
-#: src/view/com/profile/ProfileMenu.tsx:517
-#: src/view/com/profile/ProfileMenu.tsx:520
+#: src/view/com/profile/ProfileMenu.tsx:515
+#: src/view/com/profile/ProfileMenu.tsx:518
 msgid "Copy DID"
 msgstr "Copia DID"
 
@@ -2803,8 +2803,8 @@ msgstr "Codi de país"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:112
-#: src/components/dialogs/StarterPackDialog.tsx:209
+#: src/components/dialogs/StarterPackDialog.tsx:113
+#: src/components/dialogs/StarterPackDialog.tsx:210
 #: src/components/StarterPack/ProfileStarterPacks.tsx:329
 msgid "Create"
 msgstr "Crea"
@@ -2904,8 +2904,8 @@ msgstr "Crea un nou compte"
 msgid "Create report for {0}"
 msgstr "Crea un informe per a {0}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:107
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:108
+#: src/components/dialogs/StarterPackDialog.tsx:205
 msgid "Create starter pack"
 msgstr "Crea un starter pack"
 
@@ -3069,7 +3069,7 @@ msgstr "Elimina el meu compte"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/composer/Composer.tsx:1432
+#: src/view/com/composer/Composer.tsx:1441
 msgid "Delete post"
 msgstr "Elimina la publicació"
 
@@ -3198,9 +3198,9 @@ msgstr "Desactivat"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1217
-#: src/view/com/composer/Composer.tsx:1265
-#: src/view/com/composer/Composer.tsx:1465
+#: src/view/com/composer/Composer.tsx:1226
+#: src/view/com/composer/Composer.tsx:1274
+#: src/view/com/composer/Composer.tsx:1474
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3211,14 +3211,14 @@ msgstr "Descarta"
 msgid "Discard changes?"
 msgstr "Vols descartar els canvis?"
 
-#: src/view/com/composer/Composer.tsx:1215
+#: src/view/com/composer/Composer.tsx:1224
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "Vols descartar l'esborrany?"
 
-#: src/view/com/composer/Composer.tsx:1232
-#: src/view/com/composer/Composer.tsx:1457
+#: src/view/com/composer/Composer.tsx:1241
+#: src/view/com/composer/Composer.tsx:1466
 msgid "Discard post?"
 msgstr "Vols descartar la publicació?"
 
@@ -3253,7 +3253,7 @@ msgstr "Descarta"
 msgid "Dismiss banner"
 msgstr "Ignora el bàner"
 
-#: src/view/com/composer/Composer.tsx:2302
+#: src/view/com/composer/Composer.tsx:2311
 msgid "Dismiss error"
 msgstr "Descarta l'error"
 
@@ -3274,7 +3274,7 @@ msgstr "Ignora el bàner d'esdeveniment en directe"
 msgid "Dismiss this section"
 msgstr "Amaga aquesta secció"
 
-#: src/components/FeedInterstitials.tsx:442
+#: src/components/FeedInterstitials.tsx:445
 msgid "Dismiss this suggestion"
 msgstr "Descarta aquest suggeriment"
 
@@ -3475,7 +3475,7 @@ msgstr "Edita els canals"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:86
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:90
-#: src/view/com/composer/photos/Gallery.tsx:212
+#: src/view/com/composer/photos/Gallery.tsx:219
 msgid "Edit image"
 msgstr "Edita la imatge"
 
@@ -3494,8 +3494,8 @@ msgstr "Edita els interessos"
 msgid "Edit list details"
 msgstr "Edita els detalls de la llista"
 
-#: src/view/com/profile/ProfileMenu.tsx:371
-#: src/view/com/profile/ProfileMenu.tsx:391
+#: src/view/com/profile/ProfileMenu.tsx:369
+#: src/view/com/profile/ProfileMenu.tsx:389
 msgid "Edit live status"
 msgstr "Edita l'estat en directe"
 
@@ -3754,7 +3754,7 @@ msgstr "Canvia a pantalla completa"
 msgid "Entertainment"
 msgstr "Entreteniment"
 
-#: src/view/com/composer/Composer.tsx:2401
+#: src/view/com/composer/Composer.tsx:2410
 #: src/view/com/util/error/ErrorScreen.tsx:43
 msgid "Error"
 msgstr "Error"
@@ -3840,7 +3840,7 @@ msgstr "Expandeix el text de la publicació"
 msgid "Expands or collapses post text"
 msgstr "Amplia o redueix el text de la publicació"
 
-#: src/lib/api/index.ts:420
+#: src/lib/api/index.ts:437
 msgid "Expected uri to resolve to a record"
 msgstr "S'esperava que l'uri es resolgués en un registre"
 
@@ -3934,7 +3934,7 @@ msgstr "No s'ha pogut acceptar el xat"
 msgid "Failed to add emoji reaction"
 msgstr "No s'ha pogut afegir la reacció d'emoji"
 
-#: src/components/dialogs/StarterPackDialog.tsx:277
+#: src/components/dialogs/StarterPackDialog.tsx:280
 msgid "Failed to add to starter pack"
 msgstr "No s'ha pogut afegir a l'starter pack"
 
@@ -4077,7 +4077,7 @@ msgstr "No s'han pogut eliminar les dades. {0}"
 msgid "Failed to remove emoji reaction"
 msgstr "No s'ha pogut eliminar la reacció d'emoji"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:293
 msgid "Failed to remove from starter pack"
 msgstr "No s'ha pogut eliminar de l'starter pack"
 
@@ -4695,7 +4695,7 @@ msgstr "Comença"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2406
+#: src/view/com/composer/Composer.tsx:2415
 msgid "GIF uploaded"
 msgstr "S'ha penjat el GIF"
 
@@ -4756,8 +4756,8 @@ msgstr "Ves a l'inici"
 msgid "Go Home"
 msgstr "Ves a l'inici"
 
-#: src/view/com/profile/ProfileMenu.tsx:372
-#: src/view/com/profile/ProfileMenu.tsx:393
+#: src/view/com/profile/ProfileMenu.tsx:370
+#: src/view/com/profile/ProfileMenu.tsx:391
 msgid "Go live"
 msgstr "Emet en directe"
 
@@ -4768,8 +4768,8 @@ msgstr "Emet en directe"
 msgid "Go Live"
 msgstr "Emet en directe"
 
-#: src/view/com/profile/ProfileMenu.tsx:369
-#: src/view/com/profile/ProfileMenu.tsx:389
+#: src/view/com/profile/ProfileMenu.tsx:367
+#: src/view/com/profile/ProfileMenu.tsx:387
 msgid "Go live (disabled)"
 msgstr "Emet en directe (deshabilitat)"
 
@@ -5445,7 +5445,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Ara només ets tu! Afegeix més persones al teu starter pack cercant a dalt."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2321
+#: src/view/com/composer/Composer.tsx:2330
 msgid "Job ID: {0}"
 msgstr "Identificador de la tasca: {0}"
 
@@ -5470,7 +5470,7 @@ msgstr "Uneix-te a la conversa"
 msgid "Journalism"
 msgstr "Periodisme"
 
-#: src/view/com/composer/Composer.tsx:1269
+#: src/view/com/composer/Composer.tsx:1278
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "Continua editant"
@@ -6231,8 +6231,8 @@ msgstr "Silencia {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:730
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:736
-#: src/view/com/profile/ProfileMenu.tsx:450
-#: src/view/com/profile/ProfileMenu.tsx:457
+#: src/view/com/profile/ProfileMenu.tsx:448
+#: src/view/com/profile/ProfileMenu.tsx:455
 msgid "Mute account"
 msgstr "Silencia el compte"
 
@@ -6374,7 +6374,7 @@ msgid "Nevermind, create a handle for me"
 msgstr "Tant hi fa, crea'm un identificador"
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:184
-#: src/view/com/profile/ProfileMenu.tsx:405
+#: src/view/com/profile/ProfileMenu.tsx:403
 msgid "New"
 msgstr "Nou"
 
@@ -6467,11 +6467,11 @@ msgstr "Noves publicacions de {firstAuthorLink} i <0>{additionalAuthorsCount, pl
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "Noves publicacions de {firstAuthorName} i{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:201
+#: src/components/dialogs/StarterPackDialog.tsx:202
 msgid "New starter pack"
 msgstr "Nou starter pack"
 
-#: src/components/NewskieDialog.tsx:121
+#: src/components/NewskieDialog.tsx:122
 msgid "New user info dialog"
 msgstr "Diàleg d'informació d'usuari nou"
 
@@ -6735,7 +6735,7 @@ msgstr "No s'ha trobat"
 msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
 msgstr "No estàs a punt per publicar? Guarda les teves millors idees a Esborranys fins que sigui el moment adequat."
 
-#: src/view/com/profile/ProfileMenu.tsx:572
+#: src/view/com/profile/ProfileMenu.tsx:570
 msgid "Note about sharing"
 msgstr "Nota sobre compartir"
 
@@ -6939,7 +6939,7 @@ msgid "Open drawer menu"
 msgstr "Obre el menú del calaix"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:180
-#: src/view/com/composer/Composer.tsx:1970
+#: src/view/com/composer/Composer.tsx:1979
 msgid "Open emoji picker"
 msgstr "Obre el selector d'emojis"
 
@@ -7057,7 +7057,7 @@ msgstr "Obre la càmera del dispositiu"
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Obre la galeria del dispositiu per seleccionar fins a {MAX_IMAGES, plural, other{# imatges}} o un sol vídeo o GIF."
 
-#: src/view/com/composer/Composer.tsx:1971
+#: src/view/com/composer/Composer.tsx:1980
 msgid "Opens emoji picker"
 msgstr "Obre el selector d'emojis"
 
@@ -7191,6 +7191,10 @@ msgstr "L'equip de moderació ha rebut la denúncia."
 #: src/screens/Messages/components/ChatDisabled.tsx:35
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "L'equip de moderació ha revisat els informes i ha decidit desactivar-te l'accés als xats a Bluesky."
+
+#: src/components/dialogs/StarterPackDialog.tsx:384
+msgid "Owner"
+msgstr ""
 
 #: src/components/Lists.tsx:205
 #: src/components/Lists.tsx:220
@@ -7544,7 +7548,7 @@ msgstr "Política"
 msgid "Porn"
 msgstr "Pornografia"
 
-#: src/view/com/composer/Composer.tsx:1619
+#: src/view/com/composer/Composer.tsx:1628
 msgctxt "action"
 msgid "Post"
 msgstr "Publica"
@@ -7564,7 +7568,7 @@ msgstr "Publica una foto"
 msgid "Post a video"
 msgstr "Publica un vídeo"
 
-#: src/view/com/composer/Composer.tsx:1617
+#: src/view/com/composer/Composer.tsx:1626
 msgctxt "action"
 msgid "Post All"
 msgstr "Publica-ho tot"
@@ -7586,7 +7590,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr "Publicació eliminada"
 
-#: src/lib/api/index.ts:186
+#: src/lib/api/index.ts:192
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "No s'ha pogut penjar la publicació. Comprova la tevaa connexió a Internet i torna-ho a provar."
 
@@ -7738,15 +7742,15 @@ msgstr "Política de privacitat"
 msgid "Privacy violation of a minor"
 msgstr "Violació de la privadesa d'un menor"
 
-#: src/view/com/composer/Composer.tsx:2395
+#: src/view/com/composer/Composer.tsx:2404
 msgid "Processing GIF..."
 msgstr "Processant el GIF..."
 
-#: src/view/com/composer/Composer.tsx:2397
+#: src/view/com/composer/Composer.tsx:2406
 msgid "Processing video..."
 msgstr "Processant el vídeo..."
 
-#: src/lib/api/index.ts:60
+#: src/lib/api/index.ts:65
 msgid "Processing..."
 msgstr "Processant…"
 
@@ -7788,22 +7792,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Llistes públiques i compartibles d'usuaris per silenciar o bloquejar de manera massiva."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1602
+#: src/view/com/composer/Composer.tsx:1611
 msgid "Publish post"
 msgstr "Publica la publicació"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1595
+#: src/view/com/composer/Composer.tsx:1604
 msgid "Publish posts"
 msgstr "Publica les publicacions"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1580
+#: src/view/com/composer/Composer.tsx:1589
 msgid "Publish replies"
 msgstr "Publica les respostes"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1596
 msgid "Publish reply"
 msgstr "Publica la resposta"
 
@@ -7992,8 +7996,8 @@ msgstr "Carrega les converses de nou"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:181
 #: src/components/dialogs/MutedWords.tsx:457
-#: src/components/dialogs/StarterPackDialog.tsx:373
-#: src/components/dialogs/StarterPackDialog.tsx:380
+#: src/components/dialogs/StarterPackDialog.tsx:376
+#: src/components/dialogs/StarterPackDialog.tsx:386
 #: src/components/FeedCard.tsx:376
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:106
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:113
@@ -8081,7 +8085,7 @@ msgstr "Elimina de les publicacions desades"
 msgid "Remove from your feeds?"
 msgstr "Vols eliminar-lo dels teus canals?"
 
-#: src/view/com/composer/photos/Gallery.tsx:221
+#: src/view/com/composer/photos/Gallery.tsx:228
 msgid "Remove image"
 msgstr "Elimina la imatge"
 
@@ -8122,8 +8126,8 @@ msgstr "Elimina l'usuari de la llista"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
 #: src/components/verification/VerificationsDialog.tsx:250
-#: src/view/com/profile/ProfileMenu.tsx:423
-#: src/view/com/profile/ProfileMenu.tsx:426
+#: src/view/com/profile/ProfileMenu.tsx:421
+#: src/view/com/profile/ProfileMenu.tsx:424
 msgid "Remove verification"
 msgstr "Elimina la verificació"
 
@@ -8153,7 +8157,7 @@ msgstr "Eliminat dels canals desats"
 msgid "Removed from saved posts"
 msgstr "S'ha eliminat de les publicacions desades"
 
-#: src/components/dialogs/StarterPackDialog.tsx:284
+#: src/components/dialogs/StarterPackDialog.tsx:287
 msgid "Removed from starter pack"
 msgstr "Eliminat de l'starter pack"
 
@@ -8226,7 +8230,7 @@ msgstr "Respostes deshabilitades"
 msgid "Replies to this post are disabled."
 msgstr "Les respostes a aquesta publicació estan deshabilitades."
 
-#: src/view/com/composer/Composer.tsx:1615
+#: src/view/com/composer/Composer.tsx:1624
 msgctxt "action"
 msgid "Reply"
 msgstr "Respon"
@@ -8275,8 +8279,8 @@ msgstr "La resposta s'ha amagat amb èxit"
 msgid "Report"
 msgstr "Informa"
 
-#: src/view/com/profile/ProfileMenu.tsx:490
-#: src/view/com/profile/ProfileMenu.tsx:493
+#: src/view/com/profile/ProfileMenu.tsx:488
+#: src/view/com/profile/ProfileMenu.tsx:491
 msgid "Report account"
 msgstr "Informa del compte"
 
@@ -8589,22 +8593,22 @@ msgstr "Desa la data de naixement"
 #: src/screens/SavedFeeds.tsx:132
 #: src/screens/SavedFeeds.tsx:326
 #: src/screens/SavedFeeds.tsx:330
-#: src/view/com/composer/Composer.tsx:1257
+#: src/view/com/composer/Composer.tsx:1266
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "Desa els canvis"
 
-#: src/view/com/composer/Composer.tsx:1227
+#: src/view/com/composer/Composer.tsx:1236
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "Vols desar els canvis?"
 
-#: src/view/com/composer/Composer.tsx:1258
+#: src/view/com/composer/Composer.tsx:1267
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "Desa l'esborrany"
 
-#: src/view/com/composer/Composer.tsx:1229
+#: src/view/com/composer/Composer.tsx:1238
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "Vols desar l'esborrany?"
@@ -8655,7 +8659,7 @@ msgid "Saved to your feeds"
 msgstr "S'ha desat als teus canals."
 
 #: src/components/dms/ChatEmptyPill.tsx:33
-#: src/components/NewskieDialog.tsx:140
+#: src/components/NewskieDialog.tsx:141
 #: src/view/com/notifications/NotificationFeedItem.tsx:869
 #: src/view/com/notifications/NotificationFeedItem.tsx:894
 msgid "Say hello!"
@@ -8818,12 +8822,12 @@ msgstr "Mostra les publicacions amb #{tag} de l'usuari"
 msgid "See jobs at Bluesky"
 msgstr "Veure les feines a Bluesky"
 
-#: src/components/FeedInterstitials.tsx:588
-#: src/components/FeedInterstitials.tsx:651
+#: src/components/FeedInterstitials.tsx:592
+#: src/components/FeedInterstitials.tsx:655
 msgid "See more"
 msgstr "Veure més"
 
-#: src/components/FeedInterstitials.tsx:570
+#: src/components/FeedInterstitials.tsx:573
 msgid "See more suggested profiles"
 msgstr "Veure més perfils suggerits"
 
@@ -9182,7 +9186,7 @@ msgstr "Comparteix una història interessant!"
 msgid "Share a fun fact!"
 msgstr "Comparteix una dada divertida!"
 
-#: src/view/com/profile/ProfileMenu.tsx:577
+#: src/view/com/profile/ProfileMenu.tsx:575
 msgid "Share anyway"
 msgstr "Comparteix de totes maneres"
 
@@ -9515,7 +9519,7 @@ msgstr "Alguns serveis de moderació de la teva llista ja no estan disponibles."
 msgid "Some of your verifications are invalid."
 msgstr "Algunes de les teves verificacions no són vàlides."
 
-#: src/components/FeedInterstitials.tsx:730
+#: src/components/FeedInterstitials.tsx:734
 msgid "Some other feeds you might like"
 msgstr "Alguns altres canals que potser t'agradaran"
 
@@ -9576,7 +9580,7 @@ msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "Ho sentim, ara mateix no podem carregar els suggeriments de comptes."
 
 #: src/App.native.tsx:142
-#: src/App.web.tsx:118
+#: src/App.web.tsx:119
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "La teva sessió ha caducat. Torna a iniciar-la."
 
@@ -9773,7 +9777,7 @@ msgid "Suggested accounts"
 msgstr "Comptes suggerits"
 
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:566
+#: src/components/FeedInterstitials.tsx:569
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:180
 msgid "Suggested for you"
 msgstr "Suggeriments per tu"
@@ -9968,7 +9972,7 @@ msgstr "Això és tot!"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:201
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:415
-#: src/view/com/profile/ProfileMenu.tsx:553
+#: src/view/com/profile/ProfileMenu.tsx:551
 msgid "The account will be able to interact with you after unblocking."
 msgstr "El compte podrà interactuar amb tu després del desbloqueig."
 
@@ -10403,11 +10407,11 @@ msgstr "L'autor ha eliminat la publicació"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Aquesta publicació s'amagarà dels canals i fils. Això no es pot desfer."
 
-#: src/view/com/composer/Composer.tsx:890
+#: src/view/com/composer/Composer.tsx:899
 msgid "This post's author has disabled quote posts."
 msgstr "L'autor d'aquesta publicació ha deshabilitat les citacions."
 
-#: src/view/com/profile/ProfileMenu.tsx:574
+#: src/view/com/profile/ProfileMenu.tsx:572
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Aquest perfil només és visible per als usuaris que han iniciat sessió. No serà visible per a les persones que no hagin iniciat sessió."
 
@@ -10462,7 +10466,7 @@ msgstr "Aquest usuari està inclòs a la llista <0>{0}</0> que has bloquejat."
 msgid "This user is included in the <0>{0}</0> list which you have muted."
 msgstr "Aquest usuari està inclòs a la llista <0>{0}</0> que has silenciat."
 
-#: src/components/NewskieDialog.tsx:48
+#: src/components/NewskieDialog.tsx:49
 msgid "This user is new here. Press for more info about when they joined."
 msgstr "Aquest usuari és nou aquí. Prem per obtenir més informació sobre quan es van unir."
 
@@ -10716,7 +10720,7 @@ msgstr "Informació del canal no disponible"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:420
 #: src/screens/ProfileList/components/Header.tsx:166
 #: src/screens/ProfileList/components/Header.tsx:173
-#: src/view/com/profile/ProfileMenu.tsx:565
+#: src/view/com/profile/ProfileMenu.tsx:563
 msgid "Unblock"
 msgstr "Desbloqueja"
 
@@ -10727,14 +10731,14 @@ msgstr "Desbloqueja"
 
 #: src/components/dms/ConvoMenu.tsx:275
 #: src/components/dms/ConvoMenu.tsx:278
-#: src/view/com/profile/ProfileMenu.tsx:470
-#: src/view/com/profile/ProfileMenu.tsx:476
+#: src/view/com/profile/ProfileMenu.tsx:468
+#: src/view/com/profile/ProfileMenu.tsx:474
 msgid "Unblock account"
 msgstr "Desbloqueja el compte"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:199
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:413
-#: src/view/com/profile/ProfileMenu.tsx:547
+#: src/view/com/profile/ProfileMenu.tsx:545
 msgid "Unblock Account?"
 msgstr "Vols desbloquejar el compte?"
 
@@ -10837,8 +10841,8 @@ msgstr "Deixa de silenciar {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:729
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:735
-#: src/view/com/profile/ProfileMenu.tsx:449
-#: src/view/com/profile/ProfileMenu.tsx:455
+#: src/view/com/profile/ProfileMenu.tsx:447
+#: src/view/com/profile/ProfileMenu.tsx:453
 msgid "Unmute account"
 msgstr "Deixa de silenciar el compte"
 
@@ -10922,7 +10926,7 @@ msgstr "Dona't de baixa d'aquest etiquetador"
 msgid "Unsubscribed from list"
 msgstr "T'has dona't de baixa de la llista"
 
-#: src/view/com/composer/Composer.tsx:1360
+#: src/view/com/composer/Composer.tsx:1369
 msgid "Unsupported video type: {mimeType}"
 msgstr "Tipus de vídeo no compatible: {mimeType}"
 
@@ -10988,20 +10992,20 @@ msgstr "Puja dels Fitxers"
 msgid "Upload from Library"
 msgstr "Puja de la biblioteca"
 
-#: src/view/com/composer/Composer.tsx:2388
+#: src/view/com/composer/Composer.tsx:2397
 msgid "Uploading GIF..."
 msgstr "S'està penjant el GIF..."
 
-#: src/lib/api/index.ts:302
+#: src/lib/api/index.ts:317
 msgid "Uploading images..."
 msgstr "S'estan penjant imatges..."
 
-#: src/lib/api/index.ts:370
-#: src/lib/api/index.ts:394
+#: src/lib/api/index.ts:387
+#: src/lib/api/index.ts:411
 msgid "Uploading link thumbnail..."
 msgstr "S'està penjant la miniatura de l'enllaç..."
 
-#: src/view/com/composer/Composer.tsx:2390
+#: src/view/com/composer/Composer.tsx:2399
 msgid "Uploading video..."
 msgstr "S'està penjant el vídeo..."
 
@@ -11153,8 +11157,8 @@ msgstr "Verificat per:"
 
 #: src/components/verification/VerificationCreatePrompt.tsx:85
 #: src/components/verification/VerificationCreatePrompt.tsx:87
-#: src/view/com/profile/ProfileMenu.tsx:433
-#: src/view/com/profile/ProfileMenu.tsx:436
+#: src/view/com/profile/ProfileMenu.tsx:431
+#: src/view/com/profile/ProfileMenu.tsx:434
 msgid "Verify account"
 msgstr "Verifica el compte"
 
@@ -11280,7 +11284,7 @@ msgstr "No s'ha trobat el vídeo."
 msgid "Video settings"
 msgstr "Configuració de vídeo"
 
-#: src/view/com/composer/Composer.tsx:2408
+#: src/view/com/composer/Composer.tsx:2417
 msgid "Video uploaded"
 msgstr "Vídeo penjat"
 
@@ -11297,7 +11301,7 @@ msgstr "Vídeos"
 msgid "Videos must be less than 3 minutes long."
 msgstr "Els vídeos han de tenir una durada inferior a 3 minuts."
 
-#: src/view/com/composer/Composer.tsx:982
+#: src/view/com/composer/Composer.tsx:991
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "Veure"
@@ -11362,7 +11366,7 @@ msgstr "Mostra'n més"
 msgid "View more trending videos"
 msgstr "Veure més vídeos del moment"
 
-#: src/view/com/composer/Composer.tsx:977
+#: src/view/com/composer/Composer.tsx:986
 msgid "View post"
 msgstr "Veure la publicació"
 
@@ -11634,7 +11638,7 @@ msgstr "Ens sap greu, però la teva cerca no s'ha pogut fer. Prova-ho d'aquí un
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr "Ho sentim, no pots accedir a aquesta pantalla en aquest moment."
 
-#: src/view/com/composer/Composer.tsx:887
+#: src/view/com/composer/Composer.tsx:896
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Ho sentim! La publicació a la qual estàs responent s'ha suprimit."
 
@@ -11672,7 +11676,7 @@ msgstr "Hem confirmat el teu estat de garantia d'edat. Ara pots tancar aquest qu
 msgid "Welcome back!"
 msgstr "Bentornat!"
 
-#: src/components/NewskieDialog.tsx:140
+#: src/components/NewskieDialog.tsx:141
 msgid "Welcome, friend!"
 msgstr "Benvingut, col·lega!"
 
@@ -11685,7 +11689,7 @@ msgid "What do you want to call your starter pack?"
 msgstr "Com vols anomenar al teu starter pack?"
 
 #: src/view/com/auth/SplashScreen.web.tsx:104
-#: src/view/com/composer/Composer.tsx:1320
+#: src/view/com/composer/Composer.tsx:1329
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr "Què hi ha de nou"
@@ -11762,7 +11766,7 @@ msgstr "Vols bloquejar aquest usuari i/o eliminar aquesta conversa?"
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "Vols desar això com a esborrany abans de veure la resta dels teus esborranys?"
 
-#: src/view/com/composer/Composer.tsx:1243
+#: src/view/com/composer/Composer.tsx:1252
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "Vols desar-ho com a esborrany per editar-ho més tard?"
 
@@ -11776,12 +11780,12 @@ msgstr "Escriu un missatge"
 msgid "Write a post"
 msgstr "Escriu una publicació"
 
-#: src/view/com/composer/Composer.tsx:1420
+#: src/view/com/composer/Composer.tsx:1429
 msgid "Write post"
 msgstr "Escriu una publicació"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1318
+#: src/view/com/composer/Composer.tsx:1327
 msgid "Write your reply"
 msgstr "Escriu la teva resposta"
 
@@ -11928,7 +11932,7 @@ msgstr "Ara pots triar rebre notificacions quan publiquin persones específiques
 msgid "You can now sign in with your new password."
 msgstr "Ara pots iniciar sessió amb la nova contrasenya."
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1257
 msgid "You can only save drafts up to 1000 characters."
 msgstr "Només pots desar esborranys de fins a 1000 caràcters."
 
@@ -12043,7 +12047,7 @@ msgstr "Encara no tens cap conversa. Comença'n una!"
 msgid "You have no lists."
 msgstr "No tens llistes."
 
-#: src/components/dialogs/StarterPackDialog.tsx:101
+#: src/components/dialogs/StarterPackDialog.tsx:102
 msgid "You have no starter packs."
 msgstr "No tens starter packs."
 
@@ -12067,7 +12071,7 @@ msgstr "Has verificat correctament el teu correu. Pots tancar aquest diàleg."
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Has arribat temporalment al límit de pujades de vídeos. Torna-ho a provar més tard."
 
-#: src/view/com/composer/Composer.tsx:1238
+#: src/view/com/composer/Composer.tsx:1247
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "Tens canvis sense desar en aquest esborrany. Vols desar-los?"
 
@@ -12101,11 +12105,11 @@ msgstr "Has amagat aquesta resposta."
 msgid "You initiated this flow already, {0} ago. It may take up to 5 minutes for emails to reach your inbox. Please consider waiting a few minutes before trying again."
 msgstr "Ja vas iniciar aquest procés fa {0}. Els correus electrònics poden trigar fins a 5 minuts a arribar a la safata d'entrada. Espera uns minuts abans de tornar-ho a intentar."
 
-#: src/components/NewskieDialog.tsx:106
+#: src/components/NewskieDialog.tsx:107
 msgid "You joined Bluesky {timeAgoString} ago"
 msgstr "Et vas unir a Bluesky fa {timeAgoString}"
 
-#: src/components/NewskieDialog.tsx:103
+#: src/components/NewskieDialog.tsx:104
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr "Et vas unir a Bluesky, utilitzant un Starter Pack, fa {timeAgoString}"
 
@@ -12429,11 +12433,11 @@ msgstr "La teva contrasenya s'ha canviat correctament! Fes servir la nova contra
 msgid "Your password must be at least 8 characters long."
 msgstr "La contrasenya ha de tenir almenys 8 caràcters."
 
-#: src/view/com/composer/Composer.tsx:973
+#: src/view/com/composer/Composer.tsx:982
 msgid "Your post was sent"
 msgstr "La teva publicació s'ha enviat"
 
-#: src/view/com/composer/Composer.tsx:970
+#: src/view/com/composer/Composer.tsx:979
 msgid "Your posts were sent"
 msgstr "Les teves publicacions s'han enviat"
 
@@ -12454,7 +12458,7 @@ msgstr "La teva foto de perfil envoltada de cercles concèntrics de les fotos de
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "El teu perfil, publicacions, canals i llistes ja no seran visibles per a altres usuaris de Bluesky. Pots reactivar el teu compte en qualsevol moment iniciant sessió."
 
-#: src/view/com/composer/Composer.tsx:972
+#: src/view/com/composer/Composer.tsx:981
 msgid "Your reply was sent"
 msgstr "La teva resposta s'ha enviat"
 
