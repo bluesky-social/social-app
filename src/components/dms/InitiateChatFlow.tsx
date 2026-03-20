@@ -184,6 +184,7 @@ export function InitiateChatFlow({
         setChatTitle(title)
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         setChatState(ChatState.NEW_CHAT)
+        setGroupChatDids([])
         break
     }
   }, [chatState, control, title])
