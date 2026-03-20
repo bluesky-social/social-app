@@ -363,7 +363,10 @@ export function PostThread({uri}: {uri: string}) {
   )
 
   const onStartReached = () => {
-    if (thread.state.isFetching) return
+    // Don't paginate until we have real data. We intentionally don't check
+    // `isFetching` — background refetches shouldn't block pagination when
+    // we already have real cached data.
+    if (thread.state.isPending) return
     // can be true after `prepareForParamsUpdate` is called
     if (deferParents) return
     // prevent any state mutations if we know we're done
@@ -375,7 +378,10 @@ export function PostThread({uri}: {uri: string}) {
   }
 
   const onEndReached = () => {
-    if (thread.state.isFetching) return
+    // Don't paginate until we have real data. We intentionally don't check
+    // `isFetching` — background refetches shouldn't block pagination when
+    // we already have real cached data.
+    if (thread.state.isPending) return
     // can be true after `prepareForParamsUpdate` is called
     if (deferParents) return
     // prevent any state mutations if we know we're done

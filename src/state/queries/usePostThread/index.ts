@@ -286,6 +286,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
         /*
          * Copy in any query state that is useful
          */
+        isPending: query.isPending,
         isFetching: query.isFetching,
         isPlaceholderData: query.isPlaceholderData,
         error: query.error,
