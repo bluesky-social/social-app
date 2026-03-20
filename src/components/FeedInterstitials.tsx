@@ -37,6 +37,10 @@ import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {
+  KnownFollowers,
+  shouldShowKnownFollowers,
+} from '#/components/KnownFollowers'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
@@ -506,6 +510,16 @@ export function ProfileGrid({
                         />
                       </View>
                     </View>
+
+                    {shouldShowKnownFollowers(
+                      profile.actor.viewer?.knownFollowers,
+                    ) && (
+                      <KnownFollowers
+                        profile={profile.actor}
+                        moderationOpts={moderationOpts}
+                        minimal
+                      />
+                    )}
 
                     <ProfileCard.FollowButton
                       profile={profile.actor}
