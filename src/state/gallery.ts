@@ -200,10 +200,24 @@ export function resetImageManipulation(
   return img
 }
 
-export async function compressImage(img: ComposerImage): Promise<PickerImage> {
+export async function compressImage(
+  img: ComposerImage,
+  options?: {
+    highResolution?: boolean
+  },
+): Promise<PickerImage> {
   const source = img.transformed || img.source
 
-  const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)
+  const [w, h] = containImageRes(
+    source.width,
+    source.height,
+    options?.highResolution
+      ? {
+          width: 4000,
+          height: 4000,
+        }
+      : POST_IMG_MAX,
+  )
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
