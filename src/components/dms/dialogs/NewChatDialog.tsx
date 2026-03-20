@@ -78,11 +78,7 @@ export function NewChat({
         nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         {isGroupChatEnabled ? (
-          <InitiateChatFlow
-            title={l`New chat`}
-            onSelectChat={onCreateChat}
-            sortByMessageDeclaration
-          />
+          <InitiateChatFlow title={l`New chat`} onSelectChat={onCreateChat} />
         ) : (
           <SearchablePeopleList
             title={l`Start a new chat`}

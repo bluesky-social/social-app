@@ -82,13 +82,11 @@ enum ChatState {
 export function InitiateChatFlow({
   title,
   showRecentConvos,
-  sortByMessageDeclaration,
   onSelectChat,
   renderProfileCard,
 }: {
   title: string
   showRecentConvos?: boolean
-  sortByMessageDeclaration?: boolean
 } & (
   | {
       renderProfileCard: (item: ProfileItem) => React.ReactNode
@@ -144,13 +142,9 @@ export function InitiateChatFlow({
           })
         }
 
-        if (sortByMessageDeclaration) {
-          _items = _items.sort(item => {
-            return item.type === 'profile' && canBeMessaged(item.profile)
-              ? -1
-              : 1
-          })
-        }
+        _items = _items.sort(item => {
+          return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
+        })
       }
     } else {
       const placeholders: Item[] = Array(10)
@@ -198,12 +192,10 @@ export function InitiateChatFlow({
             }
           }
 
-          if (sortByMessageDeclaration) {
-            // only sort follows
-            followsItems = followsItems.sort(item => {
-              return canBeMessaged(item.profile) ? -1 : 1
-            })
-          }
+          // only sort follows
+          followsItems = followsItems.sort(item => {
+            return canBeMessaged(item.profile) ? -1 : 1
+          })
 
           // then append
           _items.push(...followsItems)
@@ -221,13 +213,9 @@ export function InitiateChatFlow({
           }
         }
 
-        if (sortByMessageDeclaration) {
-          _items = _items.sort(item => {
-            return item.type === 'profile' && canBeMessaged(item.profile)
-              ? -1
-              : 1
-          })
-        }
+        _items = _items.sort(item => {
+          return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
+        })
       } else {
         _items.push(...placeholders)
       }
@@ -260,7 +248,6 @@ export function InitiateChatFlow({
     follows,
     convos,
     showRecentConvos,
-    sortByMessageDeclaration,
   ])
 
   if (searchText && !isFetching && !items.length && !isError) {
