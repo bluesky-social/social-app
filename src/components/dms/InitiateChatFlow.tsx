@@ -1,11 +1,4 @@
-import {
-  Fragment,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import {LayoutAnimation, TextInput, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -14,7 +7,6 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
@@ -81,22 +73,11 @@ enum ChatState {
 
 export function InitiateChatFlow({
   title,
-  showRecentConvos,
   onSelectChat,
-  renderProfileCard,
 }: {
   title: string
-  showRecentConvos?: boolean
-} & (
-  | {
-      renderProfileCard: (item: ProfileItem) => React.ReactNode
-      onSelectChat?: undefined
-    }
-  | {
-      onSelectChat: (did: string) => void
-      renderProfileCard?: undefined
-    }
-)) {
+  onSelectChat: (did: string) => void
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -114,10 +95,6 @@ export function InitiateChatFlow({
     isFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
-  const {data: convos} = useListConvosQuery({
-    enabled: showRecentConvos,
-    status: 'accepted',
-  })
 
   const [chatState, setChatState] = useState(ChatState.NEW_CHAT)
   const [chatTitle, setChatTitle] = useState(title)
@@ -154,55 +131,7 @@ export function InitiateChatFlow({
           key: i + '',
         }))
 
-      if (showRecentConvos) {
-        if (convos && follows) {
-          const usedDids = new Set()
-
-          for (const page of convos.pages) {
-            for (const convo of page.convos) {
-              const profiles = convo.members.filter(
-                m => m.did !== currentAccount?.did,
-              )
-
-              for (const profile of profiles) {
-                if (usedDids.has(profile.did)) continue
-
-                usedDids.add(profile.did)
-
-                _items.push({
-                  type: 'profile',
-                  key: profile.did,
-                  profile,
-                })
-              }
-            }
-          }
-
-          let followsItems: ProfileItem[] = []
-
-          for (const page of follows.pages) {
-            for (const profile of page.follows) {
-              if (usedDids.has(profile.did)) continue
-
-              followsItems.push({
-                type: 'profile',
-                key: profile.did,
-                profile,
-              })
-            }
-          }
-
-          // only sort follows
-          followsItems = followsItems.sort(item => {
-            return canBeMessaged(item.profile) ? -1 : 1
-          })
-
-          // then append
-          _items.push(...followsItems)
-        } else {
-          _items.push(...placeholders)
-        }
-      } else if (follows) {
+      if (follows) {
         for (const page of follows.pages) {
           for (const profile of page.follows) {
             _items.push({
@@ -238,17 +167,7 @@ export function InitiateChatFlow({
     }
 
     return _items
-  }, [
-    l,
-    chatState,
-    searchText,
-    results,
-    isError,
-    currentAccount?.did,
-    follows,
-    convos,
-    showRecentConvos,
-  ])
+  }, [l, chatState, searchText, results, isError, currentAccount?.did, follows])
 
   if (searchText && !isFetching && !items.length && !isError) {
     items.push({type: 'empty', key: 'empty', message: l`No results`})
@@ -288,18 +207,14 @@ export function InitiateChatFlow({
           return <Label key={item.key} message={item.message} />
         }
         case 'profile': {
-          if (renderProfileCard) {
-            return <Fragment key={item.key}>{renderProfileCard(item)}</Fragment>
-          } else {
-            return (
-              <DefaultProfileCard
-                key={item.key}
-                profile={item.profile}
-                moderationOpts={moderationOpts!}
-                onPress={onSelectChat}
-              />
-            )
-          }
+          return (
+            <DefaultProfileCard
+              key={item.key}
+              profile={item.profile}
+              moderationOpts={moderationOpts!}
+              onPress={onSelectChat}
+            />
+          )
         }
         case 'placeholder': {
           return <ProfileCardSkeleton key={item.key} />
@@ -311,7 +226,7 @@ export function InitiateChatFlow({
           return null
       }
     },
-    [handlePressNewGroupChat, moderationOpts, onSelectChat, renderProfileCard],
+    [handlePressNewGroupChat, moderationOpts, onSelectChat],
   )
 
   useLayoutEffect(() => {
