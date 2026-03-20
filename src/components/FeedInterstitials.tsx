@@ -592,7 +592,10 @@ export function ProfileGrid({
         )}
       </View>
 
-      <FollowDialogWithoutGuide control={followDialogControl} />
+      <FollowDialogWithoutGuide
+        control={followDialogControl}
+        viewContext={isFeedContext ? 'feed' : 'profile'}
+      />
 
       <LayoutAnimationConfig skipExiting skipEntering>
         {gtMobile ? (
