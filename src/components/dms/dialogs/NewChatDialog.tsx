@@ -1,7 +1,5 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {logger} from '#/logger'
@@ -23,7 +21,7 @@ export function NewChat({
   onNewChat: (chatId: string) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const requireEmailVerification = useRequireEmailVerification()
 
@@ -40,7 +38,7 @@ export function NewChat({
     },
     onError: error => {
       logger.error('Failed to create chat', {safeMessage: error})
-      Toast.show(_(msg`An issue occurred starting the chat`), {
+      Toast.show(l`An issue occurred starting the chat`, {
         type: 'error',
       })
     },
@@ -71,10 +69,9 @@ export function NewChat({
         onPress={wrappedOnPress}
         icon={<Plus size="lg" fill={t.palette.white} />}
         accessibilityRole="button"
-        accessibilityLabel={_(msg`New chat`)}
+        accessibilityLabel={l`New chat`}
         accessibilityHint=""
       />
-
       <Dialog.Outer
         control={control}
         testID="newChatDialog"
@@ -82,13 +79,13 @@ export function NewChat({
         <Dialog.Handle />
         {isGroupChatEnabled ? (
           <InitiateChatFlow
-            title={_(msg`New chat`)}
+            title={l`New chat`}
             onSelectChat={onCreateChat}
             sortByMessageDeclaration
           />
         ) : (
           <SearchablePeopleList
-            title={_(msg`Start a new chat`)}
+            title={l`Start a new chat`}
             onSelectChat={onCreateChat}
             sortByMessageDeclaration
           />

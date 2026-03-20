@@ -8,9 +8,7 @@ import {
 } from 'react'
 import {LayoutAnimation, TextInput, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -102,7 +100,7 @@ export function InitiateChatFlow({
     }
 )) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
@@ -133,7 +131,7 @@ export function InitiateChatFlow({
       _items.push({
         type: 'empty',
         key: 'empty',
-        message: _(msg`We're having network issues, try again`),
+        message: l`We're having network issues, try again`,
       })
     } else if (searchText.length) {
       if (results?.length) {
@@ -243,7 +241,7 @@ export function InitiateChatFlow({
       _items.unshift({
         type: 'label',
         key: 'suggested',
-        message: _(msg`Suggested`),
+        message: l`Suggested`,
       })
     }
 
@@ -253,7 +251,7 @@ export function InitiateChatFlow({
 
     return _items
   }, [
-    _,
+    l,
     chatState,
     searchText,
     results,
@@ -266,7 +264,7 @@ export function InitiateChatFlow({
   ])
 
   if (searchText && !isFetching && !items.length && !isError) {
-    items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
+    items.push({type: 'empty', key: 'empty', message: l`No results`})
   }
 
   const handlePressBack = useCallback(() => {
@@ -285,8 +283,8 @@ export function InitiateChatFlow({
   const handlePressNewGroupChat = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setChatState(ChatState.NEW_GROUP_CHAT)
-    setChatTitle(_(msg`New group chat`))
-  }, [_])
+    setChatTitle(l`New group chat`)
+  }, [l])
 
   const renderItems = useCallback(
     ({item}: {item: Item}) => {
@@ -364,7 +362,7 @@ export function InitiateChatFlow({
             a.justify_between,
           ]}>
           <Button
-            label={_(msg`Back`)}
+            label={l`Back`}
             size="large"
             shape="round"
             variant="ghost"
@@ -387,7 +385,6 @@ export function InitiateChatFlow({
             {chatTitle}
           </Text>
         </View>
-
         <View style={[web(a.pt_xs), native(a.pt_md)]}>
           <SearchInput
             inputRef={inputRef}
@@ -405,7 +402,7 @@ export function InitiateChatFlow({
     t.atoms.border_contrast_low,
     t.atoms.bg,
     t.atoms.text_contrast_high,
-    _,
+    l,
     handlePressBack,
     chatTitle,
     searchText,
@@ -434,14 +431,14 @@ export function InitiateChatFlow({
 
 function NewGroupChatButton({onPress}: {onPress: () => void}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const handleOnPress = () => {
     onPress()
   }
 
   return (
-    <Button label={_(msg`New group chat`)} onPress={handleOnPress}>
+    <Button label={l`New group chat`} onPress={handleOnPress}>
       {({hovered, pressed, focused}) => (
         <View
           style={[
@@ -488,7 +485,7 @@ function DefaultProfileCard({
   onPress: (did: string) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const enabled = canBeMessaged(profile)
   const moderation = moderateProfile(profile, moderationOpts)
   const handle = sanitizeHandle(profile.handle, '@')
@@ -504,7 +501,7 @@ function DefaultProfileCard({
   return (
     <Button
       disabled={!enabled}
-      label={_(msg`Start chat with ${displayName}`)}
+      label={l`Start chat with ${displayName}`}
       onPress={handleOnPress}>
       {({hovered, pressed, focused}) => (
         <View
@@ -600,7 +597,7 @@ function SearchInput({
   inputRef: React.RefObject<TextInput | null>
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -620,11 +617,10 @@ function SearchInput({
         size="md"
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
       />
-
       <TextInput
         // @ts-ignore bottom sheet input types issue - esb
         ref={inputRef}
-        placeholder={_(msg`Search for people`)}
+        placeholder={l`Search for people`}
         value={value}
         onChangeText={onChangeText}
         onFocus={onFocus}
@@ -644,8 +640,8 @@ function SearchInput({
         autoComplete="off"
         autoCapitalize="none"
         autoFocus
-        accessibilityLabel={_(msg`Search profiles`)}
-        accessibilityHint={_(msg`Searches for profiles`)}
+        accessibilityLabel={l`Search profiles`}
+        accessibilityHint={l`Searches for profiles`}
       />
     </View>
   )
