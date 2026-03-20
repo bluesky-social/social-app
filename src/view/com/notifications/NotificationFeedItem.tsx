@@ -64,6 +64,7 @@ import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import * as Prompt from '#/components/Prompt'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import * as Toast from '#/components/Toast'
@@ -742,6 +743,7 @@ function ExpandListPressable({
 
 function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {_} = useLingui()
+  const unfollowPromptControl = Prompt.usePromptControl()
   const {currentAccount, hasSession} = useSession()
   const profileShadow = useProfileShadow(profile)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -776,10 +778,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
     }
   }
 
-  const onPressUnfollow = async (e: GestureResponderEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
+  const onPressUnfollow = async () => {
     try {
       await queueUnfollow()
       Toast.show(
@@ -827,7 +826,11 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           color="secondary"
           size="small"
           style={[a.self_start]}
-          onPress={onPressUnfollow}>
+          onPress={(e: GestureResponderEvent) => {
+            e.preventDefault()
+            e.stopPropagation()
+            unfollowPromptControl.open()
+          }}>
           <ButtonIcon icon={CheckIcon} />
           <ButtonText>
             <Trans>Following</Trans>
@@ -846,6 +849,17 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           </ButtonText>
         </Button>
       )}
+
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={_(msg`Unfollow Account?`)}
+        description={_(
+          msg`You will no longer follow this account. If you have a prior DM conversation, this account can still message you.`,
+        )}
+        onConfirm={onPressUnfollow}
+        confirmButtonCta={_(msg`Unfollow`)}
+        confirmButtonColor="negative"
+      />
     </View>
   )
 }

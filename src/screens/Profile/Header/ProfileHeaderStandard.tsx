@@ -247,6 +247,7 @@ export function HeaderStandardButtons({
   )
   const [, queueUnblock] = useProfileBlockMutationQueue(profile)
   const editProfileControl = useDialogControl()
+  const unfollowPromptControl = Prompt.usePromptControl()
   const unblockPromptControl = Prompt.usePromptControl()
 
   const isMe = currentAccount?.did === profile.did
@@ -390,7 +391,9 @@ export function HeaderStandardButtons({
                   : _(msg`Follow ${profile.handle}`)
               }
               onPress={
-                profile.viewer?.following ? onPressUnfollow : onPressFollow
+                profile.viewer?.following
+                  ? unfollowPromptControl.open
+                  : onPressFollow
               }>
               {!profile.viewer?.following && <ButtonIcon icon={Plus} />}
               <ButtonText>
@@ -407,6 +410,17 @@ export function HeaderStandardButtons({
         </>
       ) : null}
       <ProfileMenu profile={profile} />
+
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={_(msg`Unfollow Account?`)}
+        description={_(
+          msg`You will no longer follow this account. If you have a prior DM conversation, this account can still message you.`,
+        )}
+        onConfirm={onPressUnfollow}
+        confirmButtonCta={_(msg`Unfollow`)}
+        confirmButtonColor="negative"
+      />
 
       <Prompt.Basic
         control={unblockPromptControl}
