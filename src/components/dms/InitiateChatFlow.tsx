@@ -106,7 +106,7 @@ export function InitiateChatFlow({
       _items.push({
         type: 'empty',
         key: 'empty',
-        message: l`We're having network issues, try again`,
+        message: l`We’re having network issues, try again`,
       })
     } else if (searchText.length) {
       if (results?.length) {
