@@ -45,7 +45,7 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
 
-const PARENT_CHUNK_SIZE = 5
+const PARENT_CHUNK_SIZE = 20
 const CHILDREN_CHUNK_SIZE = 50
 
 export function PostThread({uri}: {uri: string}) {
