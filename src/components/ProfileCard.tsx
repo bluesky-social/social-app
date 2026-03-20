@@ -595,7 +595,7 @@ export function FollowButtonInner({
 
       <Prompt.Basic
         control={unfollowPromptControl}
-        title={l(msg`Unfollow account?`)}
+        title={l(msg`Unfollow Account?`)}
         description={l(
           msg`You will no longer follow this account. If you have a prior DM conversation, this account can still message you.`,
         )}

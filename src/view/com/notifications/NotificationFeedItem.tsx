@@ -852,7 +852,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
 
       <Prompt.Basic
         control={unfollowPromptControl}
-        title={_(msg`Unfollow account?`)}
+        title={_(msg`Unfollow Account?`)}
         description={_(
           msg`You will no longer follow this account. If you have a prior DM conversation, this account can still message you.`,
         )}
