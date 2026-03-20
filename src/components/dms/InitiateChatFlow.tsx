@@ -520,7 +520,7 @@ function DefaultProfileCard({
                 <Text
                   style={[a.leading_snug, t.atoms.text_contrast_high]}
                   numberOfLines={2}>
-                  <Trans>{handle} can't be messaged</Trans>
+                  <Trans>{handle} can’t be messaged</Trans>
                 </Text>
               )}
             </View>
