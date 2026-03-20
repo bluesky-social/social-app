@@ -24,6 +24,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
+import {ChatProfileTabs} from './ChatProfileTabs'
 
 type NewGroupChatItem = {
   type: 'newGroupChat'
@@ -100,6 +101,17 @@ export function InitiateChatFlow({
   const [chatState, setChatState] = useState(ChatState.NEW_CHAT)
   const [chatTitle, setChatTitle] = useState(title)
   const [groupChatDids, setGroupChatDids] = useState<string[]>([])
+  const [groupChatProfiles, setGroupChatProfiles] = useState<
+    bsky.profile.AnyProfileView[]
+  >([])
+
+  const onRemoveDid = (did: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setGroupChatDids(prev => [...prev].filter(d => d !== did))
+    setGroupChatProfiles(prev =>
+      [...prev].filter(profile => profile.did !== did),
+    )
+  }
 
   const items = useMemo(() => {
     let _items: Item[] = []
@@ -164,7 +176,7 @@ export function InitiateChatFlow({
       })
     }
 
-    if (chatState === ChatState.NEW_CHAT) {
+    if (chatState === ChatState.NEW_CHAT && searchText === '') {
       _items.unshift({type: 'newGroupChat', key: 'newGroupChat'})
     }
 
@@ -185,6 +197,8 @@ export function InitiateChatFlow({
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         setChatState(ChatState.NEW_CHAT)
         setGroupChatDids([])
+        setGroupChatProfiles([])
+        setSearchText('')
         break
     }
   }, [chatState, control, title])
@@ -248,65 +262,75 @@ export function InitiateChatFlow({
 
   const listHeader = useMemo(() => {
     return (
-      <View
-        onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
-        style={[
-          a.relative,
-          web(a.pt_lg),
-          native(a.pt_4xl),
-          android({
-            borderTopLeftRadius: a.rounded_md.borderRadius,
-            borderTopRightRadius: a.rounded_md.borderRadius,
-          }),
-          a.pb_xs,
-          a.px_lg,
-          a.border_b,
-          t.atoms.border_contrast_low,
-          t.atoms.bg,
-        ]}>
+      <View onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}>
         <View
           style={[
-            a.flex_row,
-            a.gap_sm,
             a.relative,
-            a.align_center,
-            a.justify_between,
+            web(a.pt_lg),
+            native(a.pt_4xl),
+            android({
+              borderTopLeftRadius: a.rounded_md.borderRadius,
+              borderTopRightRadius: a.rounded_md.borderRadius,
+            }),
+            a.pb_xs,
+            a.px_lg,
+            a.border_b,
+            t.atoms.border_contrast_low,
+            t.atoms.bg,
           ]}>
-          <Button
-            label={l`Back`}
-            size="large"
-            shape="round"
-            variant="ghost"
-            color="secondary"
-            style={[native([a.absolute, a.z_20])]}
-            onPress={handlePressBack}>
-            <ButtonIcon icon={ArrowLeft} size="lg" />
-          </Button>
-          <Text
+          <View
             style={[
-              a.flex_grow,
-              a.z_10,
-              a.text_lg,
-              a.font_bold,
-              a.leading_tight,
-              t.atoms.text_contrast_high,
-              native(a.text_center),
-              native(a.px_5xl),
+              a.flex_row,
+              a.gap_sm,
+              a.relative,
+              a.align_center,
+              a.justify_between,
             ]}>
-            {chatTitle}
-          </Text>
+            <Button
+              label={l`Back`}
+              size="large"
+              shape="round"
+              variant="ghost"
+              color="secondary"
+              style={[native([a.absolute, a.z_20])]}
+              onPress={handlePressBack}>
+              <ButtonIcon icon={ArrowLeft} size="lg" />
+            </Button>
+            <Text
+              style={[
+                a.flex_grow,
+                a.z_10,
+                a.text_lg,
+                a.font_bold,
+                a.leading_tight,
+                t.atoms.text_contrast_high,
+                native(a.text_center),
+                native(a.px_5xl),
+              ]}>
+              {chatTitle}
+            </Text>
+          </View>
+          <View style={[web(a.pt_xs), native(a.pt_md)]}>
+            <SearchInput
+              inputRef={inputRef}
+              value={searchText}
+              onChangeText={text => {
+                setSearchText(text)
+                listRef.current?.scrollToOffset({offset: 0, animated: false})
+              }}
+              onEscape={control.close}
+            />
+          </View>
         </View>
-        <View style={[web(a.pt_xs), native(a.pt_md)]}>
-          <SearchInput
-            inputRef={inputRef}
-            value={searchText}
-            onChangeText={text => {
-              setSearchText(text)
-              listRef.current?.scrollToOffset({offset: 0, animated: false})
-            }}
-            onEscape={control.close}
-          />
-        </View>
+        {groupChatProfiles.length > 0 ? (
+          <View style={[a.pb_sm, a.pt_md, t.atoms.bg]}>
+            <ChatProfileTabs
+              testID="newGroupChatMembers"
+              profiles={groupChatProfiles}
+              onRemove={onRemoveDid}
+            />
+          </View>
+        ) : null}
       </View>
     )
   }, [
@@ -317,13 +341,28 @@ export function InitiateChatFlow({
     handlePressBack,
     chatTitle,
     searchText,
-    control,
+    control.close,
+    groupChatProfiles,
   ])
+
+  const setGroupChatMembers = (dids: string[]) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setGroupChatDids(dids)
+    setGroupChatProfiles(
+      items
+        .filter(
+          (item): item is ProfileItem =>
+            item.type === 'profile' && dids.includes(item.profile.did),
+        )
+        .map(item => item.profile)
+        .sort((a, b) => dids.indexOf(a.did) - dids.indexOf(b.did)),
+    )
+  }
 
   return (
     <Toggle.Group
       values={groupChatDids}
-      onChange={setGroupChatDids}
+      onChange={setGroupChatMembers}
       type="checkbox"
       label={
         chatState === ChatState.NEW_GROUP_CHAT
