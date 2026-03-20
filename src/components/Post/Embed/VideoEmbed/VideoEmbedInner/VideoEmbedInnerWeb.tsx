@@ -211,10 +211,18 @@ function useHLS({
             continue
           }
 
+          // Flush both video and audio buffers to keep them in sync.
+          // Flushing only video leaves stale audio data that can desync,
+          // particularly on Firefox.
           hls.trigger(Hls.Events.BUFFER_FLUSHING, {
             startOffset: lowQualFrag.start,
             endOffset: lowQualFrag.end,
             type: 'video',
+          })
+          hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+            startOffset: lowQualFrag.start,
+            endOffset: lowQualFrag.end,
+            type: 'audio',
           })
 
           flushed.push(lowQualFrag)
@@ -314,6 +322,11 @@ function useHLS({
         startOffset: lowQualFrag.start,
         endOffset: lowQualFrag.end,
         type: 'video',
+      })
+      hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+        startOffset: lowQualFrag.start,
+        endOffset: lowQualFrag.end,
+        type: 'audio',
       })
       setLowQualityFragments([])
     }
