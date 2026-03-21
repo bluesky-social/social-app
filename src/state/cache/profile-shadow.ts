@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {type AppBskyActorDefs, type AppBskyNotificationDefs} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
@@ -134,8 +134,9 @@ export function usePostAuthorShadowFilter(data?: FeedPage[]) {
     new Map<string, {muted: boolean; blocked: boolean}>(),
   )
 
-  const [prevData, setPrevData] = useState(data)
-  if (data !== prevData) {
+  const prevDataRef = useRef(data)
+  if (data !== prevDataRef.current) {
+    prevDataRef.current = data
     const newAuthors = new Set(trackedDids)
     let hasNew = false
     for (const slice of data?.flatMap(page => page.slices) ?? []) {
@@ -148,7 +149,6 @@ export function usePostAuthorShadowFilter(data?: FeedPage[]) {
       }
     }
     if (hasNew) setTrackedDids([...newAuthors])
-    setPrevData(data)
   }
 
   useEffect(() => {
