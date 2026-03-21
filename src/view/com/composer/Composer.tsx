@@ -172,7 +172,7 @@ import {
   type VideoState,
 } from './state/video'
 import {type TextInputRef} from './text-input/TextInput.types'
-import {getVideoMetadata} from './videos/pickVideo'
+import {getVideoMetadata} from './videos/videoMetadata'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
@@ -380,7 +380,7 @@ export const ComposePost = ({
         let asset: ImagePickerAsset
 
         if (IS_WEB) {
-          // Web: Convert blob URL to a File, then get video metadata (returns data URL)
+          // Web: Convert blob URL to a File, then get video metadata
           const response = await fetch(videoInfo.uri)
           const blob = await response.blob()
           const file = new File([blob], 'restored-video', {
@@ -391,8 +391,7 @@ export const ComposePost = ({
           let uri = videoInfo.uri
           if (IS_ANDROID) {
             // Android: expo-file-system double-encodes filenames with special chars.
-            // The file exists, but react-native-compressor's MediaMetadataRetriever
-            // can't handle the double-encoded URI. Copy to a temp file with a simple name.
+            // Copy to a temp file with a simple name to avoid URI parsing issues.
             const sourceFile = new FileSystem.File(videoInfo.uri)
             const tempFileName = `draft-video-${Date.now()}.${mimeToExt(videoInfo.mimeType)}`
             const tempFile = new FileSystem.File(
@@ -1358,26 +1357,18 @@ let ComposerPost = memo(function ComposerPost({
   )
 
   const onPhotoPasted = useCallback(
-    async (uri: string) => {
-      if (
-        uri.startsWith('data:video/') ||
-        (IS_WEB && uri.startsWith('data:image/gif'))
-      ) {
-        if (IS_NATIVE) return // web only
-        const [mimeType] = uri.slice('data:'.length).split(';')
+    async (uriOrFile: string | File) => {
+      if (uriOrFile instanceof File) {
+        const mimeType = uriOrFile.type
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
           Toast.show(_(msg`Unsupported video type: ${mimeType}`), {
             type: 'error',
           })
           return
         }
-        const name = `pasted.${mimeToExt(mimeType)}`
-        const file = await fetch(uri)
-          .then(res => res.blob())
-          .then(blob => new File([blob], name, {type: mimeType}))
-        onSelectVideo(post.id, await getVideoMetadata(file))
+        onSelectVideo(post.id, await getVideoMetadata(uriOrFile))
       } else {
-        const res = await pasteImage(uri)
+        const res = await pasteImage(uriOrFile)
         onImageAdd([res])
       }
     },
