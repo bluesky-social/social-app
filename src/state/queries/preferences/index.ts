@@ -52,7 +52,7 @@ export function usePreferencesQuery() {
         const res = await agent.getPreferences()
 
         // save to local storage to ensure there are labels on initial requests
-        saveLabelers(
+        void saveLabelers(
           agent.did,
           res.moderationPrefs.labelers.map(l => l.did),
         )
@@ -73,6 +73,13 @@ export function usePreferencesQuery() {
             ...(res.threadViewPrefs ?? {}),
           },
           userAge: res.birthDate ? getAge(res.birthDate) : undefined,
+          /**
+           * The persisted query cache stores dates as strings, but our
+           * code expects a Date. Coerce it here rather than after the
+           * query hook returns, so we never mutate query.data during
+           * render.
+           */
+          birthDate: res.birthDate ? new Date(res.birthDate) : undefined,
         }
         return preferences
       }
@@ -96,13 +103,6 @@ export function usePreferencesQuery() {
       [aa],
     ),
   })
-
-  if (query.data?.birthDate) {
-    /**
-     * The persisted query cache stores dates as strings, but our code expects a `Date`.
-     */
-    query.data.birthDate = new Date(query.data.birthDate)
-  }
 
   return query
 }
