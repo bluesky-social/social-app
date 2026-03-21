@@ -623,8 +623,10 @@ export function PostThread({uri}: {uri: string}) {
           initialNumToRender={initialNumToRender}
           /**
            * Default: 21
+           *
+           * Smaller for placeholder data so we don't waste time rendering skeletons
            */
-          windowSize={7}
+          windowSize={thread.state.isPlaceholderData ? 1 : 7}
           /**
            * Default: 10
            */
