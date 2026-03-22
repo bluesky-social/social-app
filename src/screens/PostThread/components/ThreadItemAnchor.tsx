@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from 'react'
+import {memo, useMemo} from 'react'
 import {Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -9,6 +9,7 @@ import {
 } from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -245,7 +246,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     }
   }, [postSource])
 
-  const onPressReply = useCallback(() => {
+  const onPressReply = useNonReactiveCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -268,15 +269,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
         reqId: postSource.post.reqId,
       })
     }
-  }, [
-    openComposer,
-    post,
-    record,
-    onPostSuccess,
-    moderation,
-    postSource,
-    feedFeedback,
-  ])
+  })
 
   const onOpenAuthor = () => {
     ax.metric('post:clickthroughAuthor', {

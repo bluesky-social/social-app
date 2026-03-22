@@ -11,6 +11,7 @@ import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useFeedFeedback} from '#/state/feed-feedback'
@@ -105,7 +106,7 @@ export function PostThread({uri}: {uri: string}) {
   const trackThreadItemView = usePostViewTracking('PostThreadItem')
 
   const {openComposer} = useOpenComposer()
-  const optimisticOnPostReply = useCallback(
+  const optimisticOnPostReply = useNonReactiveCallback(
     (payload: OnPostSuccessData) => {
       if (payload) {
         const {replyToUri, posts} = payload
@@ -114,9 +115,8 @@ export function PostThread({uri}: {uri: string}) {
         }
       }
     },
-    [thread],
   )
-  const onReplyToAnchor = useCallback(() => {
+  const onReplyToAnchor = useNonReactiveCallback(() => {
     if (anchor?.type !== 'threadPost') {
       return
     }
@@ -143,13 +143,7 @@ export function PostThread({uri}: {uri: string}) {
         reqId: anchorPostSource.post.reqId,
       })
     }
-  }, [
-    anchor,
-    openComposer,
-    optimisticOnPostReply,
-    anchorPostSource,
-    feedFeedback,
-  ])
+  })
 
   const isRoot = !!anchor && anchor.value.post.record.reply === undefined
   const canReply = !anchor?.value.post?.viewer?.replyDisabled
