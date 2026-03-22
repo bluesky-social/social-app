@@ -15,15 +15,24 @@ import * as Dialog from '#/components/Dialog'
 import {LanguageSelectDialog} from '#/components/dialogs/LanguageSelectDialog'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
+import {Keyboard_Stroke2_Corner0_Rounded as KeyboardIcon} from '#/components/icons/Keyboard'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 
 export function PostLanguageSelect({
   currentLanguages: currentLanguagesProp,
   onSelectLanguage,
+  onSelectAutomatic,
+  keyboardLanguage,
+  isAutoMode,
+  autoLangEnabled,
 }: {
   currentLanguages?: string[]
   onSelectLanguage?: (language: string) => void
+  onSelectAutomatic?: () => void
+  keyboardLanguage?: string | null
+  isAutoMode?: boolean
+  autoLangEnabled?: boolean
 }) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
@@ -46,26 +55,7 @@ export function PostLanguageSelect({
     onSelectLanguage?.(langsString)
   }
 
-  if (
-    dedupedHistory.length === 1 &&
-    dedupedHistory[0] === langPrefs.postLanguage
-  ) {
-    return (
-      <>
-        <LanguageBtn onPress={languageDialogControl.open} />
-        <LanguageSelectDialog
-          titleText={<Trans>Choose post languages</Trans>}
-          subtitleText={
-            <Trans>Select up to 3 languages used in this post</Trans>
-          }
-          control={languageDialogControl}
-          currentLanguages={currentLanguages}
-          onSelectLanguages={onSelectLanguages}
-          maxLanguages={3}
-        />
-      </>
-    )
-  }
+  const showAutoItem = !!autoLangEnabled && !!keyboardLanguage
 
   return (
     <>
@@ -76,6 +66,31 @@ export function PostLanguageSelect({
           )}
         </Menu.Trigger>
         <Menu.Outer>
+          {showAutoItem && (
+            <Menu.Group>
+              <Menu.Item
+                label={_(
+                  msg`Keyboard (${codeToLanguageName(
+                    keyboardLanguage,
+                    langPrefs.appLanguage,
+                  )})`,
+                )}
+                onPress={() => onSelectAutomatic?.()}>
+                <Menu.ItemIcon icon={KeyboardIcon} />
+                <Menu.ItemText>
+                  <Trans>
+                    Keyboard (
+                    {codeToLanguageName(
+                      keyboardLanguage,
+                      langPrefs.appLanguage,
+                    )}
+                    )
+                  </Trans>
+                </Menu.ItemText>
+                <Menu.ItemRadio selected={!!isAutoMode} />
+              </Menu.Item>
+            </Menu.Group>
+          )}
           <Menu.Group>
             {dedupedHistory.map(historyItem => {
               const langCodes = historyItem.split(',')
@@ -92,7 +107,9 @@ export function PostLanguageSelect({
                   }}>
                   <Menu.ItemText>{langName}</Menu.ItemText>
                   <Menu.ItemRadio
-                    selected={currentLanguages.includes(historyItem)}
+                    selected={
+                      !isAutoMode && currentLanguages.includes(historyItem)
+                    }
                   />
                 </Menu.Item>
               )
