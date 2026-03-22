@@ -5,6 +5,7 @@ import {type AppBskyDraftDefs, AtUri, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {resolveLink} from '#/lib/api/resolve'
+import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {getDeviceName} from '#/lib/deviceName'
 import {getImageDim} from '#/lib/media/manip'
 import {mimeToExt} from '#/lib/media/video/util'
@@ -570,7 +571,7 @@ export async function draftToComposerPosts(
       return {
         id: `draft-post-${index}`,
         richtext,
-        shortenedGraphemeLength: richtext.graphemeLength,
+        shortenedGraphemeLength: shortenLinks(richtext).graphemeLength,
         labels,
         embed,
       } as PostDraft
