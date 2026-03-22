@@ -1,0 +1,11 @@
+diff --git a/node_modules/react-native-uitextview/lib/module/Text.web.js b/node_modules/react-native-uitextview/lib/module/Text.web.js
+new file mode 100644
+index 0000000..e80e220
+--- /dev/null
++++ b/node_modules/react-native-uitextview/lib/module/Text.web.js
+@@ -0,0 +1,5 @@
++import { Text as RNText } from 'react-native';
++export const RNUITextViewChild = RNText;
++export function UITextView(props) {
++  return <RNText {...props} />;
++}
