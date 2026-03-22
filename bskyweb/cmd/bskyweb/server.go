@@ -491,6 +491,23 @@ var hideEmbedLabels = map[string]bool{
 	"sensitive":         true,
 }
 
+// externalThumbFromQuotedRecord returns a link-card thumbnail from an embedded post, if present.
+// This fixes the issue of posts shared on messaging apps/elsewhere and the author's profile picture would be the og:image URL.
+func externalThumbFromQuotedRecord(ev *appbsky.EmbedRecord_View) *string {
+	if ev == nil || ev.Record == nil || ev.Record.EmbedRecord_ViewRecord == nil {
+		return nil
+	}
+	for _, elem := range ev.Record.EmbedRecord_ViewRecord.Embeds {
+		if elem == nil || elem.EmbedExternal_View == nil || elem.EmbedExternal_View.External == nil {
+			continue
+		}
+		if elem.EmbedExternal_View.External.Thumb != nil {
+			return elem.EmbedExternal_View.External.Thumb
+		}
+	}
+	return nil
+}
+
 func (srv *Server) WebPost(c echo.Context) error {
 	ctx := c.Request().Context()
 	data := srv.NewTemplateContext()
@@ -576,9 +593,11 @@ func (srv *Server) WebPost(c echo.Context) error {
 	if postView.Embed != nil && !isEmbedHidden {
 		hasImages := postView.Embed.EmbedImages_View != nil
 		hasVideo := postView.Embed.EmbedVideo_View != nil
+		hasExternal := postView.Embed.EmbedExternal_View != nil
 		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil
 		hasMediaImages := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
 		hasMediaVideo := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View != nil
+		hasMediaExternal := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedExternal_View != nil
 
 		if hasImages {
 			var thumbUrls []string
@@ -598,6 +617,10 @@ func (srv *Server) WebPost(c echo.Context) error {
 					data["videoHeight"] = postView.Embed.EmbedVideo_View.AspectRatio.Height
 				}
 			}
+		} else if hasExternal &&
+			postView.Embed.EmbedExternal_View.External != nil &&
+			postView.Embed.EmbedExternal_View.External.Thumb != nil {
+			data["imgThumbUrls"] = []string{*postView.Embed.EmbedExternal_View.External.Thumb}
 		} else if hasMediaImages {
 			var thumbUrls []string
 			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
@@ -616,6 +639,13 @@ func (srv *Server) WebPost(c echo.Context) error {
 					data["videoHeight"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio.Height
 				}
 			}
+		} else if hasMediaExternal {
+			ext := postView.Embed.EmbedRecordWithMedia_View.Media.EmbedExternal_View
+			if ext.External != nil && ext.External.Thumb != nil {
+				data["imgThumbUrls"] = []string{*ext.External.Thumb}
+			}
+		} else if thumb := externalThumbFromQuotedRecord(postView.Embed.EmbedRecord_View); thumb != nil {
+			data["imgThumbUrls"] = []string{*thumb}
 		}
 	}
 
