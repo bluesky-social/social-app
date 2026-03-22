@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
-import {useAutoplayDisabled} from '#/state/preferences'
+import {useAutoplayDisabledPref} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
@@ -30,7 +30,7 @@ export function GifEmbed({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const autoplayDisabled = useAutoplayDisabled()
+  const {gifAutoplayDisabled} = useAutoplayDisabledPref()
 
   const playerRef = useRef<GifView>(null)
 
@@ -38,7 +38,7 @@ export function GifEmbed({
     isPlaying: boolean
     isLoaded: boolean
   }>({
-    isPlaying: !autoplayDisabled,
+    isPlaying: !gifAutoplayDisabled,
     isLoaded: false,
   })
 
@@ -89,7 +89,7 @@ export function GifEmbed({
           source={params.playerUri}
           placeholderSource={thumb}
           style={[a.flex_1]}
-          autoplay={!autoplayDisabled}
+          autoplay={!gifAutoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
