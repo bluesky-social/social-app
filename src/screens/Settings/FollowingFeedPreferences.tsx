@@ -102,6 +102,14 @@ export function FollowingFeedPreferencesScreen({}: Props) {
               <Toggle.Platform />
             </SettingsList.Item>
           </Toggle.Item>
+          <SettingsList.LinkItem
+            to="/settings/hidden-reposts"
+            label={_(msg`Manage hidden reposts`)}>
+            <SettingsList.ItemIcon icon={RepostIcon} />
+            <SettingsList.ItemText>
+              <Trans>Hidden reposts</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
           <Toggle.Item
             type="checkbox"
             name="show-quotes"
