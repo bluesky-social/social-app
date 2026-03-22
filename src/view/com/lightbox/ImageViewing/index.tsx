@@ -89,7 +89,7 @@ export default function ImageViewRoot({
 }: {
   lightbox: Lightbox | null
   onRequestClose: () => void
-  onPressSave: (uri: string) => void
+  onPressSave: (opts: {uri: string; baseSaveName?: string}) => void
   onPressShare: (uri: string) => void
 }) {
   'use no memo'
@@ -204,7 +204,7 @@ function ImageView({
   lightbox: Lightbox
   orientation: 'portrait' | 'landscape'
   onRequestClose: () => void
-  onPressSave: (uri: string) => void
+  onPressSave: (opts: {uri: string; baseSaveName?: string}) => void
   onPressShare: (uri: string) => void
   onFlyAway: () => void
   safeAreaRef: AnimatedRef<View>
@@ -559,10 +559,10 @@ function LightboxFooter({
   index: number
   isAltExpanded: boolean
   toggleAltExpanded: () => void
-  onPressSave: (uri: string) => void
+  onPressSave: (opts: {uri: string; baseSaveName?: string}) => void
   onPressShare: (uri: string) => void
 }) {
-  const {alt: altText, uri} = images[index]
+  const {alt: altText, uri, baseSaveName} = images[index]
   const isMomentumScrolling = useRef(false)
   return (
     <ScrollView
@@ -605,7 +605,7 @@ function LightboxFooter({
           <Button
             type="primary-outline"
             style={styles.footerBtn}
-            onPress={() => onPressSave(uri)}>
+            onPress={() => onPressSave({uri, baseSaveName})}>
             <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
             <Text type="xl" style={s.white}>
               <Trans context="action">Save</Trans>

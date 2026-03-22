@@ -20,6 +20,16 @@ export type CommonProps = {
   allowNestedQuotes?: boolean
 }
 
-export type EmbedProps = CommonProps & {
-  embed?: AppBskyFeedDefs.PostView['embed']
+/**
+ * Optional post context used for media save filenames.
+ */
+export type PostContextProps = {
+  postUri?: string
+  postAuthorHandle?: string
+  postCreatedAt?: string
 }
+
+export type EmbedProps = CommonProps &
+  PostContextProps & {
+    embed?: AppBskyFeedDefs.PostView['embed']
+  }

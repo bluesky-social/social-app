@@ -48,10 +48,18 @@ export async function shareImageModal(_opts: {uri: string}) {
  * `attachment; filename=<filename>`. On native this saves to the media library;
  * on web it triggers a browser download.
  */
-export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+export async function saveImageToMediaLibrary({
+  uri,
+  baseSaveName,
+}: {
+  uri: string
+  baseSaveName?: string
+}) {
   const downloadUri = convertCdnPreset(uri, 'download')
   const segments = downloadUri.split('/')
-  const filename = `bluesky-${segments.at(-1)}.jpg`
+  const filename = baseSaveName
+    ? `${baseSaveName}.jpg`
+    : `bluesky-${segments.at(-1)}.jpg`
   downloadUrl(downloadUri, filename)
 }
 

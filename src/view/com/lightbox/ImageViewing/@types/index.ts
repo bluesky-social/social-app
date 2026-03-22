@@ -27,6 +27,8 @@ export type ImageSource = {
   thumbRect: MeasuredDimensions | null
   alt?: string
   type: 'image' | 'circle-avi' | 'rect-avi'
+  /** Optional base filename (no extension) for the Save action. */
+  baseSaveName?: string
 }
 
 export type Transform = Exclude<
