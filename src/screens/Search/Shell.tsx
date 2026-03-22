@@ -12,6 +12,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import Animated, {FadeInUp, FadeOutDown} from 'react-native-reanimated'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -33,7 +34,7 @@ import {
   type Params,
   parseSearchQuery,
 } from '#/screens/Search/utils'
-import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, native, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
@@ -418,36 +419,7 @@ export function SearchScreenShell({
         </Layout.Center>
       </View>
 
-      <View
-        style={{
-          display: showAutocomplete && !fixedParams ? 'flex' : 'none',
-          flex: 1,
-        }}>
-        {searchText.length > 0 ? (
-          <AutocompleteResults
-            isAutocompleteFetching={isAutocompleteFetching}
-            autocompleteData={autocompleteData}
-            searchText={searchText}
-            onSubmit={onSubmit('autocomplete')}
-            onResultPress={onAutocompleteResultPress}
-            onProfileClick={handleProfileClick}
-          />
-        ) : (
-          <SearchHistory
-            searchHistory={termHistory}
-            selectedProfiles={accountHistoryProfiles?.profiles || []}
-            onItemClick={handleHistoryItemClick}
-            onProfileClick={handleProfileClick}
-            onRemoveItemClick={deleteSearchHistoryItem}
-            onRemoveProfileClick={deleteProfileHistoryItem}
-          />
-        )}
-      </View>
-      <View
-        style={{
-          display: showAutocomplete ? 'none' : 'flex',
-          flex: 1,
-        }}>
+      <View style={[a.flex_1, a.relative]}>
         <SearchScreenInner
           key={params.lang}
           activeTab={activeTab}
@@ -457,6 +429,36 @@ export function SearchScreenShell({
           headerHeight={headerHeight}
           focusSearchInput={focusSearchInput}
         />
+
+        {showAutocomplete && !fixedParams && (
+          <Animated.View
+            entering={native(FadeInUp.duration(200))}
+            exiting={native(FadeOutDown.duration(150))}
+            style={[a.absolute, a.inset_0, t.atoms.bg]}
+            accessibilityViewIsModal
+            accessibilityRole="list"
+            aria-modal>
+            {searchText.length > 0 ? (
+              <AutocompleteResults
+                isAutocompleteFetching={isAutocompleteFetching}
+                autocompleteData={autocompleteData}
+                searchText={searchText}
+                onSubmit={onSubmit('autocomplete')}
+                onResultPress={onAutocompleteResultPress}
+                onProfileClick={handleProfileClick}
+              />
+            ) : (
+              <SearchHistory
+                searchHistory={termHistory}
+                selectedProfiles={accountHistoryProfiles?.profiles || []}
+                onItemClick={handleHistoryItemClick}
+                onProfileClick={handleProfileClick}
+                onRemoveItemClick={deleteSearchHistoryItem}
+                onRemoveProfileClick={deleteProfileHistoryItem}
+              />
+            )}
+          </Animated.View>
+        )}
       </View>
     </Layout.Screen>
   )
