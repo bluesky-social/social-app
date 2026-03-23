@@ -77,10 +77,18 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
     }
 
     /**
-     * Disable contextual alternates in Inter
+     * Disable contextual alternates and emoji overrides in Inter
      * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
      */
-    style.fontVariant = (style.fontVariant || []).concat('no-contextual')
+    if (IS_WEB) {
+      // @ts-expect-error - web supports 'unicode' as a valid value for fontVariant
+      style.fontVariant = (style.fontVariant || []).concat(
+        'no-contextual',
+        'unicode',
+      )
+    } else {
+      style.fontVariant = (style.fontVariant || []).concat('no-contextual')
+    }
   } else {
     // fallback families only supported on web
     if (IS_WEB) {
